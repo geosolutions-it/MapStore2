@@ -9,7 +9,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Dialog from '../misc/Dialog';
 import ShareSocials from './ShareSocials';
 import ShareLink from './ShareLink';
 import ShareEmbed from './ShareEmbed';
@@ -29,10 +28,12 @@ import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
 import { getLonLatFromPoint } from '../../utils/CoordinatesUtils';
+import { getMessageById } from '../../utils/LocaleUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
 import OverlayTrigger from '../misc/OverlayTrigger';
+import ResizableModal from '../misc/ResizableModal';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -112,6 +113,10 @@ class SharePanel extends React.Component {
         isScrollPosition: false,
         hideMarker: () => {},
         addMarker: () => {}
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
     state = {
@@ -218,20 +223,15 @@ class SharePanel extends React.Component {
             {this.props.embedPanel ? <Tab eventKey={3} title={<Message msgId="share.code" />}>{currentTab === 3 && code}</Tab> : null}
         </Tabs>);
         let sharePanel =
-            (<Dialog
+            (<ResizableModal
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
-                className="modal-dialog modal-content share-win"
-                modal={this.props.modal}
+                title={getMessageById(this.context.messages, "share.title")}
+                dialogClassName=" share-win"
+                bodyClassName="share-panel-modal-body"
+                show={this.props.isVisible}
                 draggable={this.props.draggable}
-                style={{zIndex: 1993}}>
-                <span role="header">
-                    <span className="share-panel-title">
-                        <Message msgId="share.title"/>
-                    </span>
-                    <button onClick={this.props.onClose} className="share-panel-close close">
-                        {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
-                    </button>
-                </span>
+                style={{zIndex: 1993}}
+                onClose={this.props.onClose}>
                 <div role="body" className="share-panels">
                     {tabs}
                     {this.props.advancedSettings
@@ -239,9 +239,8 @@ class SharePanel extends React.Component {
                         && this.renderAdvancedSettings()
                     }
                 </div>
-            </Dialog>);
-
-        return this.props.isVisible ? sharePanel : null;
+            </ResizableModal>);
+        return sharePanel;
     }
 
     getCoordinates = (props) => {
