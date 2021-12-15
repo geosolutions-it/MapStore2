@@ -12,6 +12,7 @@ import { createPlugin } from '../../utils/PluginsUtils';
 
 import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
 import { reset } from './actions/timeSeriesPlots';
+import { CONTROL_NAME } from './constants';
 
 import timeSeriesPlots from './reducers/timeseriesplots';
 import * as epics from './epics/timeSeriesPlots';
@@ -38,13 +39,13 @@ const TimeSeriesPlotsPluginContainer = connect(() => ({}), {
  * @class
  */
 export default createPlugin(
-    "TimeSeriesPlots",
+    CONTROL_NAME,
     {
         component: TimeSeriesPlotsPluginContainer,
         containers: {
             TOC: {
                 doNotHide: true,
-                name: "TimeSeriesPlots"
+                name: CONTROL_NAME
             }
         },
         epics,

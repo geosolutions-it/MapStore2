@@ -12,6 +12,7 @@ import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
 import Dialog from "../../../components/misc/Dialog";
+import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
 import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
@@ -74,6 +75,7 @@ const Panel = ({ enabled, onClose = () => {} }) => {
                     width: size.width,
                     height: size.height
                 }}>
+                    <MainToolbar enabled={enabled} />
                 </div>
             </Resizable>
         </div>
