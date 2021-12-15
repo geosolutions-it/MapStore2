@@ -29,7 +29,7 @@
     <dependency>
       <groupId>it.geosolutions.geostore</groupId>
       <artifactId>geostore-webapp</artifactId>
-      <version>1.7.0</version>
+      <version>1.7.1</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -536,7 +536,7 @@
                 <dependency>
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
-                    <version>geosolutions-2.0</version>
+                    <version>geosolutions-2.0.1</version>
                 </dependency>
             </dependencies>
             </profile>
