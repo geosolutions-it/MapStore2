@@ -5,7 +5,6 @@ import expect from "expect";
 import Print from "../Print";
 import { getLazyPluginForTest } from './pluginsTestUtils';
 
-import {Null} from "../print/Null";
 import {setStore} from "../../utils/StateUtils";
 
 import axios from '../../libs/ajax';
@@ -194,7 +193,7 @@ describe('Print Plugin', () => {
 
     it('custom plugin removes existing', (done) => {
         getPrintPlugin({items: [{
-            plugin: Null,
+            plugin: () => {return null;},
             target: "name"
         }]}).then(({ Plugin }) => {
             try {

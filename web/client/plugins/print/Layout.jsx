@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {createPlugin} from "../../utils/PluginsUtils";
 import { getMessageById } from '../../utils/LocaleUtils';
 import { compose } from "redux";
 
@@ -76,18 +75,3 @@ Layout.contextTypes = {
     messages: PropTypes.object
 };
 
-export default createPlugin("PrintLayout", {
-    component: connect(
-        (state) => ({
-            spec: state?.print?.spec || {},
-            layouts: state?.print?.capabilities?.layouts || []
-        }), {
-            onChangeParameter: setPrintParameter
-        }
-    )(Layout),
-    containers: {
-        Print: {
-            priority: 1
-        }
-    }
-});

@@ -1,13 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
-import {createPlugin} from "../../utils/PluginsUtils";
 
 import MapPreviewComp from "../../components/print/MapPreview";
-import {
-    changeMapPrintPreview,
-    changePrintZoomLevel
-} from '../../actions/print';
 
 export const MapPreview = ({mapSize, layout, layoutName, resolutions, useFixedScales,
     localizedLayerStylesEnv, mapPreviewOptions, mapType,
@@ -35,19 +29,3 @@ MapPreview.contextTypes = {
     messages: PropTypes.object
 };
 
-export default createPlugin("PrintMapPreview", {
-    component: connect(
-        (state) => ({
-            map: state.print?.map,
-            capabilities: state.print?.capabilities ?? {}
-        }), {
-            onChangeZoomLevel: changePrintZoomLevel,
-            onMapViewChanges: changeMapPrintPreview
-        }
-    )(MapPreview),
-    containers: {
-        Print: {
-            priority: 1
-        }
-    }
-});
