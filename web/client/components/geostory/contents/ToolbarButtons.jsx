@@ -55,7 +55,7 @@ const getToolbarSizeProps = (size, sizeType) => {
  * @prop {function} filterOptions filter dropdown options by value (eg `({ value }) => value !== 'full'` to exclude `full` option)
  * @prop {function} pullRight pull dropdown right
  */
-export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {}, filterOptions, pullRight, id = 'size', sizeType}) => {
+export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {}, filterOptions, pullRight, sizeType}) => {
     const {pre, _size, glyph, sizeProp} = getToolbarSizeProps(size, sizeType);
     return (<ToolbarDropdownButton
         value={_size}
@@ -81,7 +81,7 @@ export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType
             glyph: 'size-extra-large',
             label: <Message msgId="geostory.contentToolbar.fullSizeLabel"/>
         }].filter((option) => !filterOptions || filterOptions(option))}
-        onSelect={(selected) => update(id, sizeProp(selected))}
+        onSelect={(selected) => update('size', sizeProp(selected))}
         {...sizeType && {showSelectionInTitle: false}}
     />);
 };
