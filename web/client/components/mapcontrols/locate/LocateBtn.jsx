@@ -110,15 +110,22 @@ class LocateBtn extends React.Component {
         if (this.props.locate !== 'PERMISSION_DENIED' && !checkingGeoLocation && !geoLocationAllowed) {
             // check if we are allowed to use geolocation feature
             checkingGeoLocation = true;
-            navigator.geolocation.getCurrentPosition(() => {
+            if (typeof navigator.geolocation !== 'undefined') {
+                navigator.geolocation.getCurrentPosition(() => {
+                    checkingGeoLocation = false;
+                    geoLocationAllowed = true;
+                }, (error) => {
+                    checkingGeoLocation = false;
+                    if (error.code === 1) {
+                        this.props.onClick("PERMISSION_DENIED");
+                    }
+                });
+            } else {
+                // geolocation is deactivated in browser settings
                 checkingGeoLocation = false;
-                geoLocationAllowed = true;
-            }, (error) => {
-                checkingGeoLocation = false;
-                if (error.code === 1) {
-                    this.props.onClick("PERMISSION_DENIED");
-                }
-            });
+                this.props.onClick("PERMISSION_DENIED");
+            }
+
         }
     }
 
