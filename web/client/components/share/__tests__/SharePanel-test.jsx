@@ -81,6 +81,19 @@ describe("The SharePanel component", () => {
         expect(document.querySelectorAll('h4')[1].innerHTML).toBe("<span>share.directLinkTitle</span>");
 
     });
+    it('test hide advancedSettings when no settings configured', () => {
+        const advancedSettings = {};
+        let panel = ReactDOM.render(<SharePanel showAPI={false} advancedSettings={advancedSettings} getCount={() => 2} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        expect(panel.state.eventKey).toBe(1);
+        expect(document.querySelectorAll('h4')[1].innerHTML).toBe("<span>share.directLinkTitle</span>");
+
+        let advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
+        expect(advancedSettingsPanel).toBeFalsy();
+
+        ReactDOM.render(<SharePanel showAPI={false} advancedSettings={false} getCount={() => 2} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
+        expect(advancedSettingsPanel).toBeFalsy();
+    });
     it('test hide advancedSettings in specific tab', () => {
         const advancedSettings = {
             homeButton: true,
