@@ -75,6 +75,28 @@ import { createPlugin } from '../utils/PluginsUtils';
  *     "defaultSrs": "native"
  *  }
  * }
+ * // it is possible to support GeoPackage format when the targeted GeoServer uses wps download extensions
+ * // here an example of configuration that include GeoPackage for wps
+ *
+ *  {
+ *      "name": "LayerDownload",
+ *      "cfg": {
+ *          "formats": [
+ *              { "name": "application/json", "label": "GeoJSON", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/arcgrid", "label": "ArcGrid", "type": "raster", "validServices": ["wps"] },
+ *              { "name": "image/tiff", "label": "TIFF", "type": "raster", "validServices": ["wps"] },
+ *              { "name": "image/png", "label": "PNG", "type": "raster", "validServices": ["wps"] },
+ *              { "name": "image/jpeg", "label": "JPEG", "type": "raster", "validServices": ["wps"]},
+ *              { "name": "application/wfs-collection-1.0", "label": "wfs-collection-1.0", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/wfs-collection-1.1", "label": "wfs-collection-1.1", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/zip", "label": "Shapefile", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "text/csv", "label": "CSV", "type": "vector", "validServices": ["wps"] },
+ *
+ *              { "name": "application/geopackage+sqlite3", "label": "GeoPackage", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/geopackage+sqlite3", "label": "GeoPackage", "type": "raster", "validServices": ["wps"] }
+ *          ]
+ *      }
+ *  }
  */
 const LayerDownloadPlugin = createPlugin('LayerDownload', {
     component: connect(createStructuredSelector({
