@@ -12,11 +12,10 @@ import { createPlugin } from '../../utils/PluginsUtils';
 
 import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
 import { reset } from './actions/timeSeriesPlots';
-// import Message from '../../components/I18N/Message';
 
 import timeSeriesPlots from './reducers/timeseriesplots';
 import * as epics from './epics/timeSeriesPlots';
-// import './css/style.css';
+import './css/style.css';
 
 const TimeSeriesPlotsPluginComponent =({ onMount = () => { }, onUnmount, ...props }) => {
     useEffect(() => {

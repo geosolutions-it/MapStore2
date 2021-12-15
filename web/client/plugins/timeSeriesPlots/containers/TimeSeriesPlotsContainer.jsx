@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {useState} from 'react';
-import {connect} from 'react-redux';
-import {Glyphicon} from 'react-bootstrap';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
-import Message from '../../../components/I18N/Message';
 import Dialog from "../../../components/misc/Dialog";
+import Message from '../../../components/I18N/Message';
+import { Resizable } from 'react-resizable';
+import { toggleControl } from '../../../actions/controls';
 
 import {
     enabledSelector
@@ -26,20 +28,63 @@ import {
 
 const Panel = ({ enabled, onClose = () => {} }) => {
     const margin = 10;
-    const [size, setSize] = useState({width: 400, height: 300});
+    const initialSize = {width: 400, height: 300};
+    const [size, setSize] = useState(initialSize);
     if (!enabled) {
         return null;
     }
 
     return (
-    <Dialog 
+    <Dialog
         bodyClassName={"time-series-plots-window-body"}
         draggable
-    />);
+        style={{
+            zIndex: 10000,
+            position: "absolute",
+            left: "17%",
+            top: "50px",
+            margin: 0,
+            width: size.width}}>
+        <span
+            role="header"
+            style={{ display: "flex", justifyContent: "space-between" }}
+        >
+            <span>
+                <Message msgId={"timeSeriesPlots.title"} />
+            </span>
+            <button onClick={() => {onClose(); setSize(initialSize)}} className="close">
+                <Glyphicon glyph="1-close" />
+            </button>
+        </span>
+        <div
+            role="body"
+            style={ { height: size.height }}
+        >
+            <Resizable
+                width={size.width}
+                height={size.height}
+                minConstraints={[190, 50]}
+                onResize={(event, {size: newSize}) => {
+                    setSize(newSize);
+                }}
+            >
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: size.width,
+                    height: size.height
+                }}>
+                </div>
+            </Resizable>
+        </div>
+    </Dialog>
+    );
 }
 
 const TSPPanel = connect(createStructuredSelector({
     enabled: enabledSelector
-}), {} )(Panel);
+}), {
+    onClose: () => toggleControl("timeSeriesPlots")
+})(Panel);
 
 export default TSPPanel;

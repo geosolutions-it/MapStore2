@@ -1680,6 +1680,9 @@
             },
             "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
         },
+        "timeSeriesPlots": {
+            "title": "Time Series Plots"
+        },
         "exportDataResults": {
             "title": "Export data results",
             "emptyStateMessage": "Export list is empty"
@@ -2842,8 +2845,8 @@
             "title": "Timeline"
           },
           "TimeSeriesPlots": {
-              "description": "Plots time series chart over time bound data",
-              "title": "Time Series Plots"
+            "description": "Plots time series chart over time bound data",
+            "title": "Time Series Plots"
           },
           "Tutorial": {
             "description": "Adds a tutorial to explain the various functionalities",
