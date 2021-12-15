@@ -21,7 +21,7 @@
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
       <artifactId>mapstore-services</artifactId>
-      <version>1.2.1</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>proxy</groupId>
       <artifactId>http_proxy</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
