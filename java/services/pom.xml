@@ -26,7 +26,19 @@
         <groupId>eu.medsea.mimeutil</groupId>
         <artifactId>mime-util</artifactId>
         <version>2.1.3</version>
+        <exclusions>
+            <exclusion>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.17.norce</version>
+    </dependency>
+    <!-- Replace log4j coming from mimeutil with the secure one-->
 
     <!-- Spring -->
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
