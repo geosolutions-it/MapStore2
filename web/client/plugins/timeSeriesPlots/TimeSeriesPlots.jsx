@@ -6,19 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { createPlugin } from '../../utils/PluginsUtils';
 
 import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
-// import {toggleStreetView, configure, reset} from './actions/streetView';
+import { reset } from './actions/timeSeriesPlots';
 // import Message from '../../components/I18N/Message';
 
-// import streetView from './reducers/streetview';
-// import * as epics from './epics/streetView';
+import timeSeriesPlots from './reducers/timeseriesplots';
+import * as epics from './epics/timeSeriesPlots';
 // import './css/style.css';
 
-const TimeSeriesPlotsPluginComponent =({onMount = () => { }, onUnmount = () => { }, ...props}) => {
+const TimeSeriesPlotsPluginComponent =({ onMount = () => { }, onUnmount, ...props }) => {
     useEffect(() => {
         onMount(props);
         return () => {
@@ -29,7 +29,7 @@ const TimeSeriesPlotsPluginComponent =({onMount = () => { }, onUnmount = () => {
 };
 
 const TimeSeriesPlotsPluginContainer = connect(() => ({}), {
-    // onMount: configure, onUnmount: reset
+    onUnmount: reset
 })(TimeSeriesPlotsPluginComponent);
 
 /**
@@ -48,7 +48,9 @@ export default createPlugin(
                 name: "TimeSeriesPlots"
             }
         },
-        epics: {},
-        reducers: {},
+        epics,
+        reducers: {
+            timeSeriesPlots
+        },
     }
 );

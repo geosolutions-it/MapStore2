@@ -13,7 +13,10 @@ import { createStructuredSelector } from 'reselect';
 
 import Message from '../../../components/I18N/Message';
 import Dialog from "../../../components/misc/Dialog";
-import {Resizable} from 'react-resizable';
+
+import {
+    enabledSelector
+} from '../selectors/timeSeriesPlots';
 
 /**
  * Main Panel of TimeSeriesPlotsContainer
@@ -21,10 +24,9 @@ import {Resizable} from 'react-resizable';
  * @returns
  */
 
-const Panel = ({enabled, onClose = () => {}}) => {
+const Panel = ({ enabled, onClose = () => {} }) => {
     const margin = 10;
     const [size, setSize] = useState({width: 400, height: 300});
-
     if (!enabled) {
         return null;
     }
@@ -36,4 +38,8 @@ const Panel = ({enabled, onClose = () => {}}) => {
     />);
 }
 
-export default Panel;
+const TSPPanel = connect(createStructuredSelector({
+    enabled: enabledSelector
+}), {} )(Panel);
+
+export default TSPPanel;
