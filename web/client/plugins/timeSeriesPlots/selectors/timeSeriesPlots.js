@@ -1,5 +1,21 @@
 import { createControlEnabledSelector } from '../../../selectors/controls';
-import { CONTROL_NAME } from '../constants';
 
-// export const timeSeriesPlotsPluginEnabledSelector = state => state?.controls?.timeSeriesPlots?.enabled;
+
+// **********************************************
+// PLUGIN
+// **********************************************
+
+/** gets from the application state if the plugin is enabled (shown)/disabled (hidden) */
 export const enabledSelector = createControlEnabledSelector("timeSeriesPlots");
+
+
+// **********************************************
+// TOOLS
+// **********************************************
+
+/**
+ * gets the current active selection tool for map (id)
+ * @param {object} state
+ * @returns {string} the selection type (one of constants.SELECTION_TYPES)
+ */
+ export function currentSelectionToolSelector(state) { return state?.timeSeriesPlots?.selectionType; }

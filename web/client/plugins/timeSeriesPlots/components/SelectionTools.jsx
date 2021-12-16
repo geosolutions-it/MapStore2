@@ -1,7 +1,10 @@
 import React from 'react';
-import TButton from './TButton';
+import { connect } from 'react-redux';
 
+import { currentSelectionToolSelector } from '../selectors/timeSeriesPlots';
 import { SELECTION_TYPES } from '../constants';
+import TButton from './TButton';
+import { toggleSelectionTool } from '../actions/timeSeriesPlots';
 
 const BUTTONS_SETTINGS = {
     [SELECTION_TYPES.CIRCLE]: {
@@ -21,7 +24,7 @@ const BUTTONS_SETTINGS = {
     }
 };
 
-function SelectionTools({ currentTool = '', onClick = () => {} }) {
+function SelectionTools({ currentTool , onClick = () => {} }) {
     return <>
     {
         Object.keys(SELECTION_TYPES)
@@ -32,11 +35,16 @@ function SelectionTools({ currentTool = '', onClick = () => {} }) {
                     <TButton 
                         bsStyle={isActive && "success"}
                         {...BUTTONS_SETTINGS[toolName]}
-                        onClick={() => onClick()}
+                        // if the current selection button is clicked, it turns off selection
+                        onClick={() => isActive ? onClick() : onClick(toolName)}
                     />);
             })
     }
     </>;
 };
 
-export default SelectionTools;
+export default connect((state) => ({
+    currentTool: currentSelectionToolSelector(state)
+}), {
+    onClick: toggleSelectionTool
+})(SelectionTools);
