@@ -25,7 +25,7 @@ import {
     Tooltip
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join, isNil, isEqual, inRange } from 'lodash';
+import { join, isNil, isEqual, inRange, isEmpty } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
 import { getLonLatFromPoint } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
@@ -234,7 +234,7 @@ class SharePanel extends React.Component {
                 onClose={this.props.onClose}>
                 <div role="body" className="share-panels">
                     {tabs}
-                    {this.props.advancedSettings
+                    {!isEmpty(this.props.advancedSettings)
                         && currentTab !== SHARE_TABS[this.props?.advancedSettings?.hideInTab]
                         && this.renderAdvancedSettings()
                     }
