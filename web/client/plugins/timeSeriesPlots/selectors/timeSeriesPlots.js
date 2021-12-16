@@ -18,4 +18,16 @@ export const enabledSelector = createControlEnabledSelector("timeSeriesPlots");
  * @param {object} state
  * @returns {string} the selection type (one of constants.SELECTION_TYPES)
  */
- export function currentSelectionToolSelector(state) { return state?.timeSeriesPlots?.selectionType; }
+export function currentSelectionToolSelector(state) { return state?.timeSeriesPlots?.selectionType; }
+
+
+// **********************************************
+// LAYERS
+// **********************************************
+
+ /**
+ * gets the current selected Time bound data layerID  
+ * @param {object} state
+ * @returns {string} the id of the layer to be analysed
+ */
+ export function timeSeriesLayerIdSelector(state) { return state?.timeSeriesPlots?.selectedLayer?.id; }

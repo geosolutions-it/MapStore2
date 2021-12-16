@@ -1,5 +1,6 @@
 export const RESET = "TIME_SERIES_PLOTS:RESET";
 export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
+export const STORE_TIME_SERIES_FEATURES = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_FEATURES";
 
 export const reset = () => {
     return {
@@ -15,3 +16,10 @@ export const reset = () => {
     type: TOGGLE_SELECTION,
     selectionType
 });
+
+export const storeTimeSeriesFeatures = (selectionType, layerId, features) => ({
+    type: STORE_TIME_SERIES_FEATURES,
+    selectionType,
+    layerId,
+    features,
+})
