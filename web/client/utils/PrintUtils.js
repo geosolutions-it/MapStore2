@@ -254,23 +254,33 @@ export const localizationFilter = (state, spec) => {
 export const wfsPreloaderFilter = (state, spec) => preloadData(spec);
 export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec));
 
-const defaultPrintingServiceTransformerChain = {
-    localization: localizationFilter,
-    wfspreloader: wfsPreloaderFilter,
-    mapfishSpecCreator: toMapfish
-};
+const defaultPrintingServiceTransformerChain = [
+    {name: "localization", transformer: localizationFilter},
+    {name: "wfspreloader", transformer: wfsPreloaderFilter},
+    {name: "mapfishSpecCreator", transformer: toMapfish}
+];
 
-let userTransformerChain = {};
+let userTransformerChain = [];
+
+function addOrReplaceTransformers(chain, transformers) {
+    return transformers.reduce((res, transformer) => {
+        if (res.findIndex(t => t.name === transformer.name) === -1) {
+            return [...chain, transformer];
+        }
+        return res.map(t => t.name === transformer.name ? transformer : t);
+    }, chain);
+}
 
 function getTransformerChain() {
-    return [...Object.values(defaultPrintingServiceTransformerChain), ...Object.values(userTransformerChain)];
+    return addOrReplaceTransformers(defaultPrintingServiceTransformerChain, userTransformerChain)
+        .map(t => t.transformer);
 }
 
 /**
  * Resets the list of user spec transformers.
  */
 export function resetTransformers() {
-    userTransformerChain = {};
+    userTransformerChain = [];
 }
 
 /**
@@ -279,7 +289,7 @@ export function resetTransformers() {
  * @param {function} transformer (state, spec) => Promise<spec>
  */
 export function addTransformer(name, transformer) {
-    userTransformerChain = {...userTransformerChain, [name]: transformer};
+    userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer}]);
 }
 
 /**
