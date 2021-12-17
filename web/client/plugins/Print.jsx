@@ -21,9 +21,9 @@ import { configurePrintMap, printError, printSubmit, printSubmitting, addPrintPa
 import Message from '../components/I18N/Message';
 import Dialog from '../components/misc/Dialog';
 import printReducers from '../reducers/print';
+import { printSpecificationSelector } from "../selectors/print";
 import { layersSelector } from '../selectors/layers';
-import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
-import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
+import { currentLocaleSelector } from '../selectors/locale';
 import { mapSelector, scalesSelector } from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
 import { reprojectBbox } from '../utils/CoordinatesUtils';
@@ -61,6 +61,15 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  *
  * You can customize Print plugin by creating one custom plugin (or more) that modifies the existing
  * components with your ones. You can configure this plugin in localConfig.json as usual.
+ *
+ * It delegates to a printingService the creation of the final print. The default printingService
+ * implements a mapfish-print v2 compatible workflow. It is possible to override the printingService to
+ * use, via a specific property (printingService).
+ *
+ * It is also possible to customize the payload of the spec sent to the mapfish-print engine, by
+ * adding new transformers to the default chain.
+ *
+ * Each transformer is a function that can add / replace / remove fragments from the JSON payload.
  *
  * @class Print
  * @memberof plugins
@@ -137,6 +146,14 @@ import { isInsideResolutionsLimits } from '../utils/LayersUtils';
  *         ]
  *     }
  * });
+ * @example
+ * // adds a transformer to the printingService chain
+ * import {addTransformer} from "@js/utils/PrintUtils";
+ *
+ * addTransformer("mytranform", (state, spec) => Promise.resolve({
+ *      ...spec,
+ *      custom: "some value"
+ * }));
  */
 
 function overrideItem(item, overrides = []) {
@@ -170,8 +187,7 @@ export default {
                 } = require('./print/index').default;
 
                 const {
-                    preloadData,
-                    getMapfishPrintSpecification,
+                    getDefaultPrintingService,
                     getLayoutName,
                     getPrintScales,
                     getNearestZoom
@@ -200,8 +216,6 @@ export default {
                         onPrint: PropTypes.func,
                         printError: PropTypes.func,
                         configurePrintMap: PropTypes.func,
-                        preloadData: PropTypes.func,
-                        getPrintSpecification: PropTypes.func,
                         getLayoutName: PropTypes.func,
                         error: PropTypes.string,
                         getZoomForExtent: PropTypes.func,
@@ -218,12 +232,10 @@ export default {
                         submitConfig: PropTypes.object,
                         previewOptions: PropTypes.object,
                         currentLocale: PropTypes.string,
-                        currentLocaleLanguage: PropTypes.string,
                         overrideOptions: PropTypes.object,
-                        isLocalizedLayerStylesEnabled: PropTypes.bool,
-                        localizedLayerStylesEnv: PropTypes.object,
                         items: PropTypes.array,
-                        addPrintParameter: PropTypes.func
+                        addPrintParameter: PropTypes.func,
+                        printingService: PropTypes.object
                     };
 
                     static contextTypes = {
@@ -242,8 +254,6 @@ export default {
                         onPrint: () => {},
                         configurePrintMap: () => {},
                         printSpecTemplate: {},
-                        preloadData: preloadData,
-                        getPrintSpecification: getMapfishPrintSpecification,
                         getLayoutName: getLayoutName,
                         getZoomForExtent: defaultGetZoomForExtent,
                         pdfUrl: null,
@@ -275,7 +285,8 @@ export default {
                         style: {},
                         currentLocale: 'en-US',
                         overrideOptions: {},
-                        items: []
+                        items: [],
+                        printingService: getDefaultPrintingService()
                     };
 
                     state = {
@@ -487,20 +498,14 @@ export default {
                     };
 
                     print = () => {
-                        // localize
-                        let pSpec = this.props.printSpec;
-                        if (this.props.isLocalizedLayerStylesEnabled) {
-                            pSpec = { ...pSpec, env: this.props.localizedLayerStylesEnv, language: this.props.currentLocaleLanguage};
-                        }
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.preloadData(pSpec)
-                            .then(printSpec => {
-                                const spec = this.props.getPrintSpecification(printSpec);
-                                this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions });
-                            })
+                        this.props.printingService.print()
+                            .then((spec) =>
+                                this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions })
+                            )
                             .catch(e => {
-                                this.props.printError("Error pre-loading data:" + e.message);
+                                this.props.printError("Error in printing:" + e.message);
                             });
                     };
                 }
@@ -508,7 +513,7 @@ export default {
                 const selector = createSelector([
                     (state) => state.controls.print && state.controls.print.enabled || state.controls.toolbar && state.controls.toolbar.active === 'print',
                     (state) => state.print && state.print.capabilities,
-                    (state) => state.print && state.print.spec && assign({}, state.print.spec, state.print.map || {}),
+                    printSpecificationSelector,
                     (state) => state.print && state.print.pdfUrl,
                     (state) => state.print && state.print.error,
                     mapSelector,
@@ -516,11 +521,8 @@ export default {
                     scalesSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
-                    currentLocaleLanguageSelector,
-                    mapTypeSelector,
-                    isLocalizedLayerStylesEnabledSelector,
-                    localizedLayerStylesEnvSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, currentLocaleLanguage, mapType, isLocalizedLayerStylesEnabled, localizedLayerStylesEnv) => ({
+                    mapTypeSelector
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, mapType) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -531,10 +533,7 @@ export default {
                     scales,
                     usePreview,
                     currentLocale,
-                    currentLocaleLanguage,
-                    mapType,
-                    isLocalizedLayerStylesEnabled,
-                    localizedLayerStylesEnv
+                    mapType
                 }));
 
                 const PrintPlugin = connect(selector, {

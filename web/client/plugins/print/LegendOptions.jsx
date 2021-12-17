@@ -1,10 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
-import {createPlugin} from "../../utils/PluginsUtils";
 import { getMessageById } from '../../utils/LocaleUtils';
 
-import { setPrintParameter } from "../../actions/print";
 import Font from "../../components/print/Font";
 import PrintOption from "../../components/print/PrintOption";
 import { TextInput } from "./TextInput";
@@ -58,17 +55,3 @@ LegendOptions.contextTypes = {
     messages: PropTypes.object
 };
 
-export default createPlugin("PrintLegendOptions", {
-    component: connect(
-        (state) => ({
-            spec: state?.print?.spec || {}
-        }), {
-            onChangeParameter: setPrintParameter
-        }
-    )(LegendOptions),
-    containers: {
-        Print: {
-            priority: 1
-        }
-    }
-});
