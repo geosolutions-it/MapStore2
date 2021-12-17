@@ -1,14 +1,22 @@
 import { timeSeriesPlots } from "../../../actions/layers";
 
-export const RESET = "TIME_SERIES_PLOTS:RESET";
-export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
+export const TEAR_DOWN = "TIME_SERIES_PLOTS:TEAR_DOWN";
+export const SETUP = "TIME_SERIES_PLOTS:SETUP";
 export const STORE_TIME_SERIES_FEATURES = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_FEATURES";
+export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
 
-export const reset = () => {
+
+export const tearDown = () => {
     return {
-        type: RESET
+        type: TEAR_DOWN
     }
 };
+
+export const setUp = () => {
+    return {
+        type: SETUP
+    }
+}
 
 export const showTimeSeriesPlotsPlugin = () => {
     return (dispatch, getState) => {
@@ -16,7 +24,7 @@ export const showTimeSeriesPlotsPlugin = () => {
             // these values are teporarily hard coded to trigger the epic opening the plugin window
             url: 'http://localhost:8082/geoserver/wfs',
             name: 'ale:in_sar_dataset',
-            id: 'ale:in_sar_dataset__6'
+            id: 'ale:in_sar_dataset__5'
         }));
     }
 };

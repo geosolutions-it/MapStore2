@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
+import { CONTROL_NAME } from '../constants';
 import Dialog from "../../../components/misc/Dialog";
 import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
@@ -86,7 +87,7 @@ const Panel = ({ enabled, onClose = () => {} }) => {
 const TSPPanel = connect(createStructuredSelector({
     enabled: enabledSelector
 }), {
-    onClose: () => toggleControl("timeSeriesPlots")
+    onClose: () => toggleControl(CONTROL_NAME)
 })(Panel);
 
 export default TSPPanel;

@@ -13,26 +13,33 @@ import { Glyphicon } from 'react-bootstrap';
 
 import { CONTROL_NAME } from './constants';
 import Message from '../../components/I18N/Message';
-import { reset } from './actions/timeSeriesPlots';
-import { showTimeSeriesPlotsPlugin } from './actions/timeSeriesPlots';
+import { setUp, showTimeSeriesPlotsPlugin, tearDown } from './actions/timeSeriesPlots';
 import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
 
 import timeSeriesPlots from './reducers/timeseriesplots';
 import * as epics from './epics/timeSeriesPlots';
 import './css/style.css';
 
-const TimeSeriesPlotsPluginComponent =({ onMount = () => { }, onUnmount, ...props }) => {
+const TimeSeriesPlotsPluginComponent =({ onMount = () => { }, onUnmount = () => {}, ...props }) => {
+    
+    const { enabled } = props;
+    
     useEffect(() => {
-        onMount(props);
-        return () => {
+        if (enabled) {
+            onMount();
+        } else {
             onUnmount();
         }
-    }, []);
+    }, [enabled]);
+
     return <TimeSeriesPlotsContainer />;
 };
 
-const TimeSeriesPlotsPluginContainer = connect(() => ({}), {
-    onUnmount: reset
+const TimeSeriesPlotsPluginContainer = connect((state) => ({
+    enabled: state.controls && state.controls[CONTROL_NAME] && state.controls[CONTROL_NAME].enabled || false
+}), {
+    onMount: setUp,
+    onUnmount: tearDown
 })(TimeSeriesPlotsPluginComponent);
 
 /**

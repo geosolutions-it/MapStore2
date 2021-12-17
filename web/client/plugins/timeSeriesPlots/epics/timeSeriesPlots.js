@@ -7,7 +7,7 @@ import {
 
 import { getLayerFromId } from '@mapstore/selectors/layers';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
-import { SELECTION_TYPES } from '../constants';
+import { SELECTION_TYPES, CONTROL_NAME } from '../constants';
 import { timeSeriesLayerIdSelector } from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
 import { TOGGLE_CONTROL, toggleControl } from '@mapstore/actions/controls';
@@ -60,14 +60,14 @@ export const openTimeSeriesPlotsPlugin = (action$) =>
     action$.ofType(TIME_SERIES_PLOTS)
         .switchMap(() => {
             return Rx.Observable.from([
-                toggleControl("timeSeriesPlots"),
+                toggleControl(CONTROL_NAME),
             ]);
         });
 
 export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
     action$.ofType(TOGGLE_SELECTION).switchMap(({ selectionType }) => {
         if (selectionType) {
-            const startDrawingAction = changeDrawingStatus('start', drawMethod(selectionType), 'timeSeriesPlots', [], { stopAfterDrawing: true });
+            const startDrawingAction = changeDrawingStatus('start', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: true });
             return action$.ofType(END_DRAWING).flatMap(({geometry}) => {
                 const timeSeriesLayerId = timeSeriesLayerIdSelector(getState());
                 // query WFS

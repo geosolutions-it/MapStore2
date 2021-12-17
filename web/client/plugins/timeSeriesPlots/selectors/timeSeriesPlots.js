@@ -1,3 +1,4 @@
+import { CONTROL_NAME } from '../constants';
 import { createControlEnabledSelector } from '../../../selectors/controls';
 
 
@@ -6,7 +7,7 @@ import { createControlEnabledSelector } from '../../../selectors/controls';
 // **********************************************
 
 /** gets from the application state if the plugin is enabled (shown)/disabled (hidden) */
-export const enabledSelector = createControlEnabledSelector("timeSeriesPlots");
+export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
 
 
 // **********************************************

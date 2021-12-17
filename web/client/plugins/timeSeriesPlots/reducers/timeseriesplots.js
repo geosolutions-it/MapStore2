@@ -1,13 +1,13 @@
 import { set } from '@mapstore/utils/ImmutableUtils';
 import { TIME_SERIES_PLOTS, SELECT_NODE } from '../../../actions/layers';
-import { RESET, TOGGLE_SELECTION } from '../actions/timeSeriesPlots';
+import { TEAR_DOWN, TOGGLE_SELECTION } from '../actions/timeSeriesPlots';
 
 const INITIAL_STATE = {};
 
 export default function timeSeriesPlots(state = INITIAL_STATE, action) {
     const type = action?.type;
     switch(type) {
-        case RESET: {
+        case TEAR_DOWN: {
             return INITIAL_STATE;
         }
         // this is temporary just to wire-up layer selection
