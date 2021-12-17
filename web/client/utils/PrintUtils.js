@@ -291,7 +291,10 @@ export function resetTransformers() {
 /**
  * Adds/Updates a user custom transformer for the default printing service spec transformer chain.
  *
+ * @param {string} name name of the transformer (allows replacing one of the default ones, by specifying its name).
+ *      default transformers are: localization, wfspreloader, mapfishSpecCreator.
  * @param {function} transformer (state, spec) => Promise<spec>
+ * @param {int} position position in the chain (0-indexed), allows inserting a transformer between existing ones
  */
 export function addTransformer(name, transformer, position) {
     userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer, position}]);
