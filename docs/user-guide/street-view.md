@@ -1,15 +1,15 @@
 # Street View
 *******************
 
-The **Street View** is an extension that can be included in the third step of the application context wizard to allow the end user to browse data from Google street view. The <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the pop-up to navigate the map with Google street view. 
+The **Street View** tool allows the user to browse [Google Street View](https://www.google.com/streetview/) contents in MapStore. Through the <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button available in the *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, the tool can be activated so that it is possible to navigate the map with [Google Street View](https://www.google.com/streetview/). 
 
 <img src="../img/street-view/streetview-popup.jpg" class="ms-docimage" width="500px"/>
 
-Once the *Street View* pop-up opens, the streets on the map are highlighted and the user can select one on the map.
+When the tool is activated, a window opens and the streets highlighted on the map so that the user can select one of them with a simple click of the mouse.
 
 <img src="../img/street-view/add-street.gif" class="ms-docimage"/>
 
-At this point the road is visible in the pop-up and the editor can:
+Clicking on a street in map the tool's window visualize the Street View and the user can navigate it as usual.
 
 * **Zoom in/out** <img src="../img/button/zoom-street.jpg"> on the street
 
@@ -20,4 +20,7 @@ At this point the road is visible in the pop-up and the editor can:
 <img src="../img/street-view/pan-street.gif" class="ms-docimage"/>
 
 * Enable/disable the **Full Screen** <img src="../img/button/full-screen-street.jpg">
+
+!!! note
+    By default, the **Street View** plugin is ready to be configured for [application contexts](application-context.md#configure-plugins), and is not available in the default plugin configuration due to licensing reasons.
 
