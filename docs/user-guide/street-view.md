@@ -9,7 +9,7 @@ When the tool is activated, a window opens and the streets highlighted on the ma
 
 <img src="../img/street-view/add-street.gif" class="ms-docimage"/>
 
-Clicking on a street in map the tool's window visualize the Street View and the user can navigate it as usual.
+By clicking on a street in the map, the tool window displays the Street View and the user can navigate it as usual.
 
 * **Zoom in/out** <img src="../img/button/zoom-street.jpg"> on the street
 
