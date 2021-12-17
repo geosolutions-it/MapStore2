@@ -9,10 +9,13 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createPlugin } from '../../utils/PluginsUtils';
+import { Glyphicon } from 'react-bootstrap';
 
-import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
-import { reset } from './actions/timeSeriesPlots';
 import { CONTROL_NAME } from './constants';
+import Message from '../../components/I18N/Message';
+import { reset } from './actions/timeSeriesPlots';
+import { showTimeSeriesPlotsPlugin } from './actions/timeSeriesPlots';
+import TimeSeriesPlotsContainer from './containers/TimeSeriesPlotsContainer';
 
 import timeSeriesPlots from './reducers/timeseriesplots';
 import * as epics from './epics/timeSeriesPlots';
@@ -43,9 +46,15 @@ export default createPlugin(
     {
         component: TimeSeriesPlotsPluginContainer,
         containers: {
-            TOC: {
+            BurgerMenu: {
+                position: 40,
+                priority: 2,
                 doNotHide: true,
-                name: CONTROL_NAME
+                name: CONTROL_NAME,
+                text: <Message msgId="timeSeriesPlots.title"/>,
+                tooltip: "timeSeriesPlots.tooltip",
+                icon: <Glyphicon glyph="time" />,
+                action: () => showTimeSeriesPlotsPlugin()
             }
         },
         epics,

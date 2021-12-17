@@ -62,8 +62,7 @@ class Toolbar extends React.Component {
             onGetMetadataRecord: () => {},
             onHideLayerMetadata: () => {},
             onShow: () => {},
-            onLayerInfo: () => {},
-            onShowTimeSeriesPlotsPlugin: () => {}
+            onLayerInfo: () => {}
         },
         maxDepth: 3,
         text: {
@@ -77,7 +76,6 @@ class Toolbar extends React.Component {
             confirmDeleteConfirmText: '',
             confirmDeleteCancelText: '',
             createWidgetTooltip: '',
-            timeSeriesPlotsTooltip: '',
             addLayerTooltip: '',
             addLayerToGroupTooltip: '',
             addGroupTooltip: '',
@@ -114,7 +112,6 @@ class Toolbar extends React.Component {
             activateZoomTool: true,
             activateQueryTool: true,
             activateDownloadTool: true,
-            activateTimeSeriesPlotsTool: true,
             activateSettingsTool: true,
             activateAddLayer: true,
             activateAddGroup: true,
@@ -309,16 +306,6 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateTimeSeriesPlotsTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ? 
-                    <OverlayTrigger
-                        key="timeSeriesPlots"
-                        placement="top"
-                        overlay={<Tooltip id="toc-tooltip-timeSeriesPlots">{this.props.text.timeSeriesPlotsTooltip}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.showTimeSeriesPlotsPlugin}>
-                            <Glyphicon glyph="time" />
-                        </Button>
-                    </OverlayTrigger>
-                    : null} 
                 {this.props.activateTool.activateDownloadTool && status === 'LAYER' && (this.props.selectedLayers[0].type === 'wms' || this.props.selectedLayers[0].search) && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
                     <OverlayTrigger
                         key="downloadTool"
@@ -445,14 +432,6 @@ class Toolbar extends React.Component {
             showDeleteDialog: true
         });
     };
-
-    showTimeSeriesPlotsPlugin = () => {
-        this.props.onToolsActions.onShowTimeSeriesPlotsPlugin({
-            url: this.props.selectedLayers[0].search?.url || this.props.selectedLayers[0].url,
-            name: this.props.selectedLayers[0].name,
-            id: this.props.selectedLayers[0].id
-        });
-    }
 
 }
 

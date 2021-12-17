@@ -534,7 +534,7 @@
       "name": "TimeSeriesPlots",
       "glyph": "time",
       "title": "plugins.TimeSeriesPlots.title",
-      "description": "plugins.TimeSeriesPlots.description",
+      "description": "plugins.TimeSeriesPlots.description"
     },
     {
       "name": "Playback",

@@ -509,7 +509,6 @@
             "grabGroupIcon": "Grab and sort group",
             "toggleLayerVisibilityWarning": "Toggle layer visibility. Warning: layer didn't load correctly",
             "createWidget": "Create a widget for the selected layer",
-            "timeSeriesPlots": "Plots time bound data for the selected layer",
             "editLayerProperties": "Edit layer properties",
             "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
@@ -1679,9 +1678,6 @@
                 "unexpectedError": "Unexpected error occurred"
             },
             "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
-        },
-        "timeSeriesPlots": {
-            "title": "Time Series Plots"
         },
         "exportDataResults": {
             "title": "Export data results",
@@ -3390,6 +3386,11 @@
           "successRemoved": "User session removed",
           "remove": "Reset User Session",
           "confirmRemove": "Are you sure you want to restore the default configuration?"
-        }
+        },
+        "timeSeriesPlots": {
+            "title": "Time Series Plots",
+            "description": "Plots time bound data for the selected layer",
+            "tooltip": "Time Series Plots tool"
+          }
     }
 }
