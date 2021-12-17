@@ -21,7 +21,7 @@
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
       <artifactId>mapstore-services</artifactId>
-      <version>1.2.1</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
@@ -29,14 +29,14 @@
     <dependency>
       <groupId>it.geosolutions.geostore</groupId>
       <artifactId>geostore-webapp</artifactId>
-      <version>1.7.0</version>
+      <version>1.7.1</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>proxy</groupId>
       <artifactId>http_proxy</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -536,7 +536,7 @@
                 <dependency>
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
-                    <version>geosolutions-2.0</version>
+                    <version>geosolutions-2.0.1</version>
                 </dependency>
             </dependencies>
             </profile>
