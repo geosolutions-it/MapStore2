@@ -27,10 +27,12 @@ import { getStore } from "./StateUtils";
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { currentLocaleLanguageSelector } from '../selectors/locale';
 import { printSpecificationSelector } from "../selectors/print";
+import assign from 'object-assign';
+import sortBy from "lodash/sortBy";
 
 const defaultScales = getGoogleMercatorScales(0, 21);
 let PrintUtils;
-import assign from 'object-assign';
+
 
 // Try to guess geomType, getting the first type available.
 export const getGeomType = function(layer) {
@@ -265,15 +267,18 @@ let userTransformerChain = [];
 function addOrReplaceTransformers(chain, transformers) {
     return transformers.reduce((res, transformer) => {
         if (res.findIndex(t => t.name === transformer.name) === -1) {
-            return [...chain, transformer];
+            return [...res, transformer];
         }
         return res.map(t => t.name === transformer.name ? transformer : t);
     }, chain);
 }
 
-function getTransformerChain() {
-    return addOrReplaceTransformers(defaultPrintingServiceTransformerChain, userTransformerChain)
-        .map(t => t.transformer);
+export function getTransformerChain() {
+    const userOffset = defaultPrintingServiceTransformerChain.length;
+    return sortBy(addOrReplaceTransformers(
+        defaultPrintingServiceTransformerChain.map((t, index) => ({...t, position: index})),
+        userTransformerChain.map((t, index) => ({...t, position: t.position ?? index + userOffset}))
+    ), ["position"]);
 }
 
 /**
@@ -288,8 +293,8 @@ export function resetTransformers() {
  *
  * @param {function} transformer (state, spec) => Promise<spec>
  */
-export function addTransformer(name, transformer) {
-    userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer}]);
+export function addTransformer(name, transformer, position) {
+    userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer, position}]);
 }
 
 /**
@@ -316,7 +321,7 @@ export const getDefaultPrintingService = () => {
         print: () => {
             const state = getStore().getState();
             const intialSpec = printSpecificationSelector(state);
-            return getTransformerChain().reduce((previous, f) => {
+            return getTransformerChain().map(t => t.transformer).reduce((previous, f) => {
                 return previous.then(spec=> f(state, spec));
             }, Promise.resolve(intialSpec));
         }

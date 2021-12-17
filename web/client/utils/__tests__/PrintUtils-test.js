@@ -17,7 +17,10 @@ import {
     getNearestZoom,
     getMapfishPrintSpecification,
     rgbaTorgb,
-    specCreators
+    specCreators,
+    addTransformer,
+    getTransformerChain,
+    resetTransformers
 } from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
@@ -618,6 +621,31 @@ describe('PrintUtils', () => {
                 expect(layerSpec).toExist();
                 expect(layerSpec.resolutions.length).toEqual(testLayer.tileSets.length);
                 expect(layerSpec.format).toBe("png"); // format is mandatory
+            });
+        });
+        describe('transformers', () => {
+            beforeEach(() => {
+                resetTransformers();
+            });
+            it("addTransformer at the end", () => {
+                addTransformer("custom", () => ({}));
+                const chain = getTransformerChain();
+                expect(chain.length).toBe(4);
+                expect(chain[3].name).toBe("custom");
+            });
+            it("addTransformer at desired position", () => {
+                addTransformer("custom", () => ({}), 1.5);
+                const chain = getTransformerChain();
+                expect(chain.length).toBe(4);
+                expect(chain[2].name).toBe("custom");
+            });
+            it("replace default transformer", () => {
+                addTransformer("mapfishSpecCreator", () => "mycustom_transformer");
+                const chain = getTransformerChain();
+                expect(chain.length).toBe(3);
+                const transfomer = chain[2];
+                expect(transfomer.name).toBe("mapfishSpecCreator");
+                expect(transfomer.transformer()).toBe("mycustom_transformer");
             });
         });
     });
