@@ -110,7 +110,7 @@ class LocateBtn extends React.Component {
         if (this.props.locate !== 'PERMISSION_DENIED' && !checkingGeoLocation && !geoLocationAllowed) {
             // check if we are allowed to use geolocation feature
             checkingGeoLocation = true;
-            if (typeof navigator.geolocation !== 'undefined') {
+            if (navigator?.geolocation?.getCurrentPosition) {
                 navigator.geolocation.getCurrentPosition(() => {
                     checkingGeoLocation = false;
                     geoLocationAllowed = true;
