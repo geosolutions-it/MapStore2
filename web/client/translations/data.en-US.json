@@ -1918,6 +1918,8 @@
               "yAxisLabel": "Legend Label",
               "title": "Advanced Options",
               "legend": "Legend",
+              "customLabels": "Custom Labels",
+              "customLabelsExample": "<div>Format legend labels using custom text and Y value. Use the <code>${legendValue}</code> to include the Y value that will be replaced</div>", 
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Linear",

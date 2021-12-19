@@ -7,6 +7,7 @@
  */
 
 import React, {useRef, useState} from 'react';
+import classNames from 'classnames';
 
 import {
     Popover,
@@ -26,6 +27,7 @@ import Overlay from '../../misc/Overlay';
  * @prop {number} left left prop of popover
  * @prop {number} right right prop of popover
  * @prop {string} placement position of popover
+ * @prop {string} popoverClassName additional class of popover
  */
 export default function DisposablePopover({
     showOnRender,
@@ -36,7 +38,8 @@ export default function DisposablePopover({
     title,
     text,
     bsStyle = "info",
-    glyph = "question-sign"
+    glyph = "question-sign",
+    popoverClassName
 }) {
     const [show, setShow] = useState(showOnRender);
     let target = useRef(null);
@@ -59,7 +62,8 @@ export default function DisposablePopover({
                     placement={placement}
                     positionLeft={left}
                     positionTop={top}
-                    title={title}>
+                    title={title}
+                    className={popoverClassName}>
                     <Glyphicon glyph="1-close" style={{
                         position: "absolute",
                         right: 0,

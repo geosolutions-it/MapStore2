@@ -225,15 +225,7 @@ export default ({
                         modalClassName="chart-color-class-modal"
                         show={showModal}
                         chartType={data.type}
-                        onClose={() => {
-                            setShowModal(false);
-                            onChange("autoColorOptions", {
-                                ...data.autoColorOptions,
-                                defaultCustomColor: defaultCustomColor ?? '#0888A1',
-                                classification: formatAutoColorOptions(CLASSIFIED_COLORS)
-                            });
-                            onChange("options.classificationAttribute", undefined);
-                        }}
+                        onClose={() => setShowModal(false)}
                         onSaveClassification={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.defaultCustomColor", defaultCustomColor);

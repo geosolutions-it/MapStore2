@@ -43,7 +43,9 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
 const getLegendLabel = (value, colorCategories, defaultClassLabel) => {
     let displayValue = defaultClassLabel;
     if (includes(colorCategories.map(colorCat => colorCat.value), value)) {
-        displayValue = colorCategories.filter(item => item.value === value)[0].title || value;
+        displayValue = colorCategories
+            .filter(item => item.value === value)[0].title
+            .trim() || value;
         if (!displayValue ?? /^\s*$/.test(displayValue)) {
             displayValue = 'Default';
         }
@@ -118,27 +120,27 @@ function getData({
         let pieChartTrace = {
             name: yAxisLabel || yDataKey,
             hovertemplate: `%{label}<br>${yDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
-            text: x,
             type,
-            textposition: 'inside',
+            textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y
         };
         if (isClassifiedChart && classificationColors.length) {
-            const legendLabels = classifications.map((item, index) => `${x[index]} - ${getLegendLabel(item, colorCategories, defaultClassLabel)}`);
+            const legendLabels = classifications.map((item, index) => {
+                const legendValue = x[index];
+                const customLabel = getLegendLabel(item, colorCategories, defaultClassLabel);
+                if (legendValue === customLabel || !customLabel.trim()) {
+                    return legendValue;
+                }
+                return `${legendValue} - ${customLabel}`;
+            });
             pieChartTrace = {
                 ...pieChartTrace,
                 labels: legendLabels,
-                marker: {colors: classificationColors},
-                legendgrouptitle: {
-                    text: `${xDataKey} - ${classificationAttr}`
-                }
+                marker: {colors: classificationColors}
             };
         } else {
             pieChartTrace = {
-                ...(yDataKey && { legendgroup: yDataKey}),
-                legendgrouptitle: {
-                    text: `${yDataKey}`
-                },
+                ...(yDataKey && { legendgroup: yDataKey }),
                 ...pieChartTrace,
                 labels: x,
                 ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
@@ -158,13 +160,19 @@ function getData({
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel));
             const filteredLegendLabels = union(legendLabels);
+            const customLabels = filteredLegendLabels.reduce((acc, cur) => {
+                return [
+                    ...acc,
+                    includes(cur, '${legendValue}') ? cur.replace('${legendValue}', yAxisLabel || yDataKey || '') : cur
+                ];
+            }, []);
             const [groupedColors, groupedXValues, groupedYValues] = getGroupedTraceValues(legendLabels, filteredLegendLabels, [classificationColors, x, y]);
-            const barChartTraces = filteredLegendLabels.map((item, index) => {
+            const barChartTraces = customLabels.map((item, index) => {
                 const trace = {
                     ...barChartTrace,
                     x: groupedXValues[index],
                     y: groupedYValues[index],
-                    name: `${yAxisLabel || yDataKey}${item && ` - ${item}`}`,
+                    name: item,
                     marker: { color: groupedColors[index] }
                 };
                 return trace;

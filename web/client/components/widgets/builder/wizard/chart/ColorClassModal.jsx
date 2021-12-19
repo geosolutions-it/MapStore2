@@ -17,9 +17,13 @@ import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
 import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 
+import DisposablePopover from '../../../../misc/popover/DisposablePopover';
+import HTML from '../../../../I18N/HTML';
+
 const ColorClassModal = ({
     modalClassName,
     show,
+    chartType,
     onClose,
     onSaveClassification,
     onChangeClassAttribute,
@@ -43,14 +47,8 @@ const ColorClassModal = ({
             onClose={() => onClose()}
             buttons={[
                 {
-                    className: "btn-cancel",
-                    text: <Message msgId="cancel" />,
-                    bsSize: 'sm',
-                    onClick: () => onClose()
-                },
-                {
                     className: "btn-save",
-                    text: <Message msgId="confirm" />,
+                    text: <Message msgId="save" />,
                     bsSize: 'sm',
                     onClick: () => onSaveClassification()
                 }
@@ -112,7 +110,15 @@ const ColorClassModal = ({
                         <Row xs={12}>
                             <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
                             <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
-                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/></Col>
+                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
+                                { chartType === 'bar' &&
+                                    <DisposablePopover
+                                        popoverClassName="chart-color-class-popover"
+                                        placement="right"
+                                        title={<Message msgId="widgets.advanced.customLabels" />}
+                                        text={<HTML msgId="widgets.advanced.customLabelsExample" />}
+                                    /> }
+                            </Col>
                         </Row>
                         <ThemaClassesEditor
                             noEmptyIndex
