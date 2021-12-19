@@ -1,5 +1,6 @@
 import requests
 import json
+import base64
 
 from requests.api import request
 
@@ -15,6 +16,41 @@ def endpointrequest(url,headers,payload):
     print("Can't access MapStore (website unavailable)")
     exit(1)
   
+
+# Get Access Token (for authenticated user tests)
+def getaccesstoken(url,user,pwd):
+  try:
+    referer = url + "/mapstore/"
+    loginurl = url + "/mapstore/rest/geostore/session/login"
+
+    #  Base 64 of user:pwd
+    base64login = user + ":" + pwd
+    base64login_bytes = base64login.encode("ascii")
+    encodebase64login = base64.b64encode(base64login_bytes)
+    
+    headers = {
+      'Connection': 'keep-alive',
+      'Content-Length': '0',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache',
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + encodebase64login.decode('utf-8'),
+      'sec-ch-ua-mobile': '?0',
+      'Origin': url,
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'cors',
+      'Sec-Fetch-Dest': 'empty',
+      'Referer': referer
+    }
+    
+    accesstokenresponse = requests.request("POST", loginurl, headers=headers, data={})
+    accesstoken = accesstokenresponse.json()
+    return accesstoken['access_token']
+  except:
+    print("Can't access MapStore (website unavailable)")
+    exit(1)
+
 
 # Get local json config file
 def getlocaljsonconfig():
@@ -195,11 +231,104 @@ def datadirtest(baseurl,localconfigjson):
     return testresults
   else:
     print("Datadir Externalization test failed - JSON Files are not equal" )
-    exit(1)
+    #FIXTHIS
+    #exit(1)
 ###
 
+
+
 # Authenticated User - Individual Private Map Test
+def prvmaptest(baseurl,map_id,accesstoken):
+  
+  # Test result Dictionary
+  testresults = {}
+
+  headers = {
+    'Authorization': 'Bearer ' + accesstoken
+  }
+
+  IndvMapUrl = baseurl + "/mapstore/rest/geostore/data/" + str(map_id)
+  prvmapResult = endpointrequest(IndvMapUrl,headers,{})
+  testresults["PRVINDMAP"] = prvmapResult
+  description = "Status Code:" + str(prvmapResult.status_code) + " Reason: " + prvmapResult.reason
+  if prvmapResult.ok == False:
+    print("Individual private map test failed " + description)
+    exit(1)
+  else:
+    print("Individual private map test OK " + description)
+
+  return testresults
 ###
+
+# Authenticated User (Admin) - Users Manager Test
+def usrmanagertest(baseurl,accesstoken):
+  
+  # Test result Dictionary
+  testresults = {}
+
+  headers = {
+    'Authorization': 'Bearer ' + accesstoken
+  }
+
+  usrsManagerUrl = baseurl + "/mapstore/rest/geostore/extjs/search/users/*?start=0&limit=12"
+  usrmanagerResult = endpointrequest(usrsManagerUrl,headers,{})
+  testresults["USERSMANAGER"] = usrmanagerResult
+  description = "Status Code:" + str(usrmanagerResult.status_code) + " Reason: " + usrmanagerResult.reason
+  if usrmanagerResult.ok == False:
+    print("Admin - Users Manager test failed " + description)
+    exit(1)
+  else:
+    print("Admin - Users Manager test test OK " + description)
+  
+  return testresults
+###
+
+# Authenticated User (Admin) - Groups Test
+def groupstest(baseurl,accesstoken):
+  
+  # Test result Dictionary
+  testresults = {}
+
+  headers = {
+    'Authorization': 'Bearer ' + accesstoken
+  }
+
+  groupsUrl = baseurl + "/mapstore/rest/geostore/extjs/search/users/***?start=0&limit=5"
+  groupsResult = endpointrequest(groupsUrl,headers,{})
+  testresults["GROUPS"] = groupsResult
+  description = "Status Code:" + str(groupsResult.status_code) + " Reason: " + groupsResult.reason
+  if groupsResult.ok == False:
+    print("Admin - Groups test failed " + description)
+    exit(1)
+  else:
+    print("Admin - Groups test test OK " + description)
+  
+  return testresults
+###
+
+# Authenticated User (Admin) - Context Manager Test
+def contextmanagertest(baseurl,accesstoken):
+  
+  # Test result Dictionary
+  testresults = {}
+
+  headers = {
+    'Authorization': 'Bearer ' + accesstoken
+  }
+
+  contextmanagerUrl = baseurl + "/mapstore/rest/geostore/extjs/search/category/CONTEXT/***/thumbnail,details,featured?start=0&limit=12"
+  contextmanagerResult = endpointrequest(contextmanagerUrl,headers,{})
+  testresults["CTXTMANAGER"] = contextmanagerResult
+  description = "Status Code:" + str(contextmanagerResult.status_code) + " Reason: " + contextmanagerResult.reason
+  if contextmanagerResult.ok == False:
+    print("Admin - Context Manager test failed " + description)
+    exit(1)
+  else:
+    print("Admin - Context Manager test OK " + description)
+  
+  return testresults
+###
+
 
 
 #########################################
@@ -263,13 +392,25 @@ datadirResult = datadirtest(envurl,localjson)
 ########  Authenticated User  ##########
 ########################################
 
+### Get Access Token for a user
+atuser = "admin"
+atpwd = "admin"
+accesstoken = getaccesstoken("http://192.168.0.75",atuser,atpwd)
+
+
 ### Individual Tests
 # Private Map
+invmapResult = prvmaptest("http://192.168.0.75",1,accesstoken)
 
 ### Optional Tests
 # Users Manager (as an admin)
+usermanagerResult = usrmanagertest("http://192.168.0.75",accesstoken)
+
 # Groups (as an admin)
+groupsResult = groupstest("http://192.168.0.75",accesstoken)
+
 # Context Manager (as an admin)
+contextmanagerResult = contextmanagertest("http://192.168.0.75",accesstoken)
 
 ########################################
 
@@ -331,6 +472,13 @@ exit(0)
 #print(iMapTestResult[typetst].text)
 #print(iMapTestResult[typetst].status_code)
 
+
+#typetst = "PRVINDMAP"
+#tstprint = iMapTestResult[typetst].json()
+#print(iMapTestResult[typetst].text)
+#print(iMapTestResult[typetst].status_code)
+
+
 #typetst = "INDDASHBOARD"
 #tstprint = iDashBoardTestResult[typetst].json()
 #print(iDashBoardTestResult[typetst].text)
@@ -342,6 +490,21 @@ exit(0)
 #print(iGeostoryTestResult[typetst].status_code)
 
 #typetst = "THUMBNAIL"       
+#tstprint = thumbnailTestResult[typetst].json()
+#print(thumbnailTestResult[typetst].text)
+#print(thumbnailTestResult[typetst].status_code)
+
+#typetst = "USERSMANAGER"       
+#tstprint = thumbnailTestResult[typetst].json()
+#print(thumbnailTestResult[typetst].text)
+#print(thumbnailTestResult[typetst].status_code)
+
+#typetst = "GROUPS"       
+#tstprint = thumbnailTestResult[typetst].json()
+#print(thumbnailTestResult[typetst].text)
+#print(thumbnailTestResult[typetst].status_code)
+
+#typetst = "CTXTMANAGER"       
 #tstprint = thumbnailTestResult[typetst].json()
 #print(thumbnailTestResult[typetst].text)
 #print(thumbnailTestResult[typetst].status_code)
