@@ -68,12 +68,23 @@
 
 .chart-color-class-modal {
     #ms-resizable-modal {
-        height: 60%;
+        @media (max-width: 1500px) {
+            height: 40%;
+        }
+        height: 30%;
         .row {
             margin: 5% 0 auto;
             .text-info {
                 padding-left: 5px;
             }
+        }
+    }
+    &.menu-open {
+        #ms-resizable-modal {
+            @media (max-width: 1500px) {
+                height: 60%;
+            }
+            height: 50%;
         }
     }
     #chart-color-class-form {

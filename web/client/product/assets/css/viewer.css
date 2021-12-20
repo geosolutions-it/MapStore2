@@ -154,3 +154,8 @@ html, body, #container, .fill {
 #container > .chart-color-class-popover.popover {
     z-index: 10000;
 }
+
+#container > .chart-color-class-popover.popover > .popover-content {
+    max-height: 250px;
+    overflow-y: auto;
+}

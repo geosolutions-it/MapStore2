@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import {Row, Col, Form, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
@@ -36,104 +37,117 @@ const ColorClassModal = ({
     defaultClassLabel,
     onChangeColor,
     onChangeDefaultClassLabel
-}) => (
-    <Portal>
-        <ResizableModal
-            modalClassName={modalClassName}
-            title={<Message msgId="widgets.builder.wizard.classAttributes.title" />}
-            show={show}
-            clickOutEnabled={false}
-            showClose={false}
-            onClose={() => onClose()}
-            buttons={[
-                {
-                    className: "btn-save",
-                    text: <Message msgId="save" />,
-                    bsSize: 'sm',
-                    onClick: () => onSaveClassification()
-                }
-            ]}>
-            <Row xs={12}>
-                <Col componentClass={ControlLabel} xs={6}>
-                    <Message msgId={!classificationAttribute ?
-                        "widgets.builder.wizard.classAttributes.color" :
-                        "widgets.builder.wizard.classAttributes.defaultColor"} />
-                </Col>
-                <Col xs={6}>
-                    <ColorSelector
-                        key={0}
-                        color={defaultCustomColor}
-                        disableAlpha
-                        format="hex"
-                        onChangeColor={(color) => onChangeColor(color)}
-                    />
-                </Col>
-            </Row>
-            <Row xs={12}>
-                <Form id="chart-color-class-form" horizontal>
-                    <FormGroup controlId="classificationAttribute" className="chart-color-class-form-group">
-                        <Col componentClass={ControlLabel} xs={6}>
-                            <Message msgId="widgets.builder.wizard.classAttributes.classificationAttribute" />
-                        </Col>
-                        <Col xs={6}>
-                            <Select
-                                value={classificationAttribute}
-                                options={options}
-                                placeholder={placeHolder}
-                                onChange={ val => {
-                                    const value = val && val.value || undefined;
-                                    onChangeClassAttribute(value);
-                                }}
-                            />
-                        </Col>
-                    </FormGroup>
-                </Form>
-            </Row>
-            { classificationAttribute &&
+}) => {
+    const [selectMenuOpen, setSelectMenuOpen] = useState(false);
+    return (
+        <Portal>
+            <ResizableModal
+                modalClassName={classnames(modalClassName, { 'menu-open': selectMenuOpen || classificationAttribute })}
+                title={<Message msgId="widgets.builder.wizard.classAttributes.title" />}
+                show={show}
+                clickOutEnabled={false}
+                showClose={false}
+                onClose={() => onClose()}
+                buttons={[
+                    {
+                        className: "btn-save",
+                        text: <Message msgId="save" />,
+                        bsSize: 'sm',
+                        onClick: () => onSaveClassification()
+                    }
+                ]}>
                 <Row xs={12}>
                     <Col componentClass={ControlLabel} xs={6}>
-                        <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
+                        <Message msgId={!classificationAttribute ?
+                            "widgets.builder.wizard.classAttributes.color" :
+                            "widgets.builder.wizard.classAttributes.defaultColor"} />
                     </Col>
                     <Col xs={6}>
-                        <FormControl
-                            value={defaultClassLabel}
-                            type="text"
-                            onChange={e => onChangeDefaultClassLabel(e.target.value)}
+                        <ColorSelector
+                            key={0}
+                            color={defaultCustomColor}
+                            disableAlpha
+                            format="hex"
+                            onChangeColor={(color) => onChangeColor(color)}
                         />
                     </Col>
                 </Row>
-            }
-            <Row xs={12}>
-                <Col xs={12}>
-                    { classificationAttribute &&
-                    <>
-                        <Row xs={12}>
-                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
-                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
-                            <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
-                                { chartType === 'bar' &&
-                                    <DisposablePopover
-                                        popoverClassName="chart-color-class-popover"
-                                        placement="right"
-                                        title={<Message msgId="widgets.advanced.customLabels" />}
-                                        text={<HTML msgId="widgets.advanced.customLabelsExample" />}
-                                    /> }
+                <Row xs={12}>
+                    <Form id="chart-color-class-form" horizontal>
+                        <FormGroup controlId="classificationAttribute" className="chart-color-class-form-group">
+                            <Col componentClass={ControlLabel} xs={6}>
+                                <Message msgId="widgets.builder.wizard.classAttributes.classificationAttribute" />
                             </Col>
-                        </Row>
-                        <ThemaClassesEditor
-                            noEmptyIndex
-                            classification={classification}
-                            onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
-                            allowEmpty={false}
-                            customLabels
-                        />
-                    </>
-                    }
-                </Col>
-            </Row>
-        </ResizableModal>
-    </Portal>
-);
+                            <Col xs={6}>
+                                <Select
+                                    value={classificationAttribute}
+                                    options={options}
+                                    placeholder={placeHolder}
+                                    onChange={ val => {
+                                        const value = val && val.value || undefined;
+                                        onChangeClassAttribute(value);
+                                    }}
+                                    onOpen={() => setSelectMenuOpen(!selectMenuOpen)}
+                                    onClose={() => setSelectMenuOpen(!selectMenuOpen)}
+                                />
+                            </Col>
+                        </FormGroup>
+                    </Form>
+                </Row>
+                { classificationAttribute &&
+                    <Row xs={12}>
+                        <Col componentClass={ControlLabel} xs={6}>
+                            <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
+                            {chartType === 'bar' &&
+                                        <DisposablePopover
+                                            popoverClassName="chart-color-class-popover"
+                                            placement="top"
+                                            title={<Message msgId="widgets.advanced.customLabels" />}
+                                            text={<HTML msgId="widgets.advanced.defaultCustomLabelExample" />}
+                                        />}
+                        </Col>
+                        <Col xs={6}>
+                            <FormControl
+                                value={defaultClassLabel}
+                                type="text"
+                                onChange={e => onChangeDefaultClassLabel(e.target.value)}
+                            />
+                        </Col>
+                    </Row>
+                }
+                <Row xs={12}>
+                    <Col xs={12}>
+                        { classificationAttribute &&
+                        <>
+                            <Row xs={12}>
+                                <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
+                                <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
+                                <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
+                                    {chartType === 'bar' &&
+                                        <DisposablePopover
+                                            popoverClassName="chart-color-class-popover"
+                                            placement="right"
+                                            title={<Message msgId="widgets.advanced.customLabels" />}
+                                            text={<HTML msgId="widgets.advanced.customLabelsExample" />}
+                                        />}
+                                </Col>
+                            </Row>
+                            <ThemaClassesEditor
+                                noEmptyIndex
+                                classification={classification}
+                                onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
+                                allowEmpty={false}
+                                customLabels
+                            />
+                        </>
+                        }
+                    </Col>
+                </Row>
+            </ResizableModal>
+        </Portal>
+    );
+};
+
 
 ColorClassModal.propTypes = {
     modalClassName: PropTypes.string,
