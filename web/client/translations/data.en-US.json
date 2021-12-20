@@ -461,7 +461,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Error loading map",
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
                     "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access the map</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul> <p>",
@@ -1436,7 +1435,11 @@
                     "helpText": "Use template with ${searchText} placeholder to capture search string"
                 },
                 "error": "Invalid xml syntax"
-            }
+            },
+           "autoSetVisibilityLimits": {
+                "label": "Set Visibility Limit",
+                "tooltip": "Automatically applies the visibility limits suggested by the server"
+           }
         },
         "uploader": {
             "filename": "File Name",
@@ -1987,18 +1990,16 @@
             "errors":{
                 "loading": {
                     "title": "Error loading context",
-                    "notAccessible": "You don't have permission to access some resource. Please contact the resource owner",
                     "pleaseLogin": "Some resource may not be public. Please try to login",
                     "unknownError": "There was an error loading the map or the context. Please contact the administrator",
                     "notFound": "Resource not found",
-	                "notAccessible": "Resource not accessible"
+	                  "notAccessible": "Resource not accessible"
                 },
                 "context": {
-                    "notAccessible": "You don't have permission to access this context. Please contact the resource owner",
                     "pleaseLogin": "This context is not public. Please try to login",
                     "unknownError": "There was an error loading the context. Please contact the administrator",
                     "notFound": "The context you are trying to access doesn't exist",
-	                "notAccessible": "You don't have the right permission to access to this context. Please contact the administrator to get access"
+	                  "notAccessible": "You don't have the right permission to access to this context. Please contact the administrator to get access"
                 },
                 "template": {
                     "title": "Error loading template",
@@ -2008,11 +2009,10 @@
                     "notFound": "The template you are trying to access doesn't exist"
                 },
                 "map": {
-                    "notAccessible": "You don't have permission to access this map. Please contact the resource owner",
                     "pleaseLogin": "This map or the map is not public. Please try to login",
                     "unknownError": "There was an error loading the map. Please contact the administrator",
                     "notFound": "The map you are trying to access doesn't exist",
-	                "notAccessible": "You don't have the right permission to access to this map. Please contact the administrator to get access"
+	                  "notAccessible": "You don't have the right permission to access to this map. Please contact the administrator to get access"
                 },
                 "plugins": {
                   "upload": "Error during plugin upload",
@@ -2838,6 +2838,10 @@
             "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
             "title": "Share Tool"
           },
+          "StreetView": {
+            "title": "Street View",
+            "description": "Street view tool for browsing Google street view images from the map"
+          },
           "StyleEditor": {
             "description": "Layer's style editor",
             "title": "Style Editor"
@@ -3396,6 +3400,17 @@
           "successRemoved": "User session removed",
           "remove": "Reset User Session",
           "confirmRemove": "Are you sure you want to restore the default configuration?"
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Street view tool for browsing Google street view images from the map",
+          "tooltip": "Open street view tool",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Click on the map to start browsing the images of street view",
+          "messages": {
+            "noDataForPosition": "no street-view data for this position",
+            "unknownError": "unknown error, see console"
+          }
         }
     }
 }

@@ -499,7 +499,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Fehler beim Laden der Karte",
                     "notFound": "Karte nicht gefunden",
                     "notAccessible": "Karte nicht zugänglich",
                     "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li> <li>Die Projektion der Karte ist nicht konfiguriert</li></ul> <p>",
@@ -1474,6 +1473,10 @@
                     "helpText": "Verwenden Sie eine Vorlage mit dem Platzhalter ${searchText}, um die Suchzeichenfolge zu erfassen"
                 },
               "error": "Ungültige XML-Syntax"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Sichtbarkeitslimit festlegen",
+                "tooltip": "Wendet automatisch die vom Server vorgeschlagenen Sichtbarkeitsgrenzen an"
             }
         },
         "uploader": {
@@ -2859,6 +2862,10 @@
             "description": "Ermöglicht das Teilen der Karte auf verschiedene Arten (Link, QR-Code, Einbettung, soziale Netzwerke ...)",
             "title": "Freigabe-Tool"
           },
+          "StreetView": {
+            "title": "Straßenansicht",
+            "description": "Tool zum Durchsuchen von Google Street View-Bildern auf der Karte"
+          },
           "StyleEditor": {
             "description": "Stileditor der Ebene",
             "title": "Stil-Editor"
@@ -3417,6 +3424,17 @@
           "successRemoved": "Benutzersitzung entfernt",
           "remove": "Benutzersitzung zurücksetzen",
           "confirmRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?"
+        },
+        "streetView": {
+          "title": "Straßenansicht",
+          "description": "Tool zum Durchsuchen von Google Street View-Bildern auf der Karte",
+          "tooltip": "Street-View-Tool öffnen",
+          "emptyTitle": "Straßenansicht",
+          "emptyDescription": "Klicken Sie auf die Karte, um die Bilder der Straßenansicht zu durchsuchen",
+          "messages": {
+            "noDataForPosition": "keine Street-View-Daten für diese Position",
+            "unknownError": "Unbekannter Fehler, siehe Konsole"
+          }
         }
     }
 }

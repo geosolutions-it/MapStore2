@@ -120,26 +120,25 @@ const getFeaturesFiltered = (features, filterObj) => {
 };
 
 /**
- * Get Features in json format. Intercepts request with 200 errors and workarounds GEOS-7233 if `totalFeatures` is passed
+ * Get data and query string for WFS query for either JSON or XML formats
  * @param {string} searchUrl URL of WFS service
  * @param {object} filterObj FilterObject
- * @param {number} totalFeatures optional number to use in case of a previews request, needed to workaround GEOS-7233.
- * @return {Observable} a stream that emits the GeoJSON or an error.
+ * @param {*} downloadOption selected format for query
+ * @returns {Object} The data and query string
  */
-export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
+const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption = 'json') => {
     const data = getWFSFilterData(filterObj, options);
 
     const urlParsedObj = urlUtil.parse(searchUrl, true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
     params.service = 'WFS';
-    params.outputFormat = 'json';
+    params.outputFormat = downloadOption;
     const queryString = urlUtil.format({
         protocol: urlParsedObj.protocol,
         host: urlParsedObj.host,
         pathname: urlParsedObj.pathname,
         query: params
     });
-
 
     if (options.layer && options.layer.type === 'vector') {
         return Rx.Observable.defer(() => new Promise((resolve) => {
@@ -148,6 +147,50 @@ export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
             resolve(featuresFiltered);
         }));
     }
+
+    return {
+        data,
+        queryString
+    };
+};
+
+/**
+ * Get Features in xml format.
+ * @param {string} searchUrl URL of WFS service
+ * @param {object} filterObj FilterObject
+ * @param {*} downloadOption selected format for download
+ * @returns {Observable} a stream that emits the XML
+ */
+export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption) => {
+
+    if (options.layer && options.layer.type === 'vector') {
+        return getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
+    }
+
+    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
+
+    return Rx.Observable.defer(() =>
+        axios.post(queryString, data, {
+            timeout: 60000,
+            responseType: 'arraybuffer',
+            headers: { 'Accept': `application/xml`, 'Content-Type': `application/xml` }
+        }));
+};
+
+/**
+ * Get Features in json format. Intercepts request with 200 errors and workarounds GEOS-7233 if `totalFeatures` is passed
+ * @param {string} searchUrl URL of WFS service
+ * @param {object} filterObj FilterObject
+ * @param {number} totalFeatures optional number to use in case of a previews request, needed to workaround GEOS-7233.
+ * @return {Observable} a stream that emits the GeoJSON or an error.
+ */
+export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
+
+    if (options.layer && options.layer.type === 'vector') {
+        return getFeatureUtilities(searchUrl, filterObj, options);
+    }
+
+    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options);
 
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {

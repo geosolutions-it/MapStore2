@@ -19,7 +19,7 @@ class PaginationToolbar extends React.Component {
         page: PropTypes.number,
         total: PropTypes.number,
         pageSize: PropTypes.number,
-        items: PropTypes.array,
+        items: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
         msgId: PropTypes.string,
         loading: PropTypes.bool,
         onSelect: PropTypes.func,

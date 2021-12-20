@@ -5,148 +5,105 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React from 'react';
-import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
+
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 
 import { setControlProperty } from '../../actions/controls';
 import {
-    changeMapPrintPreview,
-    changePrintZoomLevel,
     printCancel,
-    setPrintParameter
+    setPrintParameter,
+    changeMapPrintPreview,
+    changePrintZoomLevel
 } from '../../actions/print';
-import ChoiceComp from '../../components/print/Choice';
-import FontComp from '../../components/print/Font';
-import MapPreviewComp from '../../components/print/MapPreview';
-import PrintOptionComp from '../../components/print/PrintOption';
-import PrintOptionsComp from '../../components/print/PrintOptions';
+
 import PrintPreviewComp from '../../components/print/PrintPreview';
-import PrintSubmitComp from '../../components/print/PrintSubmit';
-import SheetComp from '../../components/print/Sheet';
-import { currentLayouts, twoPageEnabled } from '../../selectors/print';
 import ConfigUtils from '../../utils/ConfigUtils';
 
-export const TextWithLabel = (props) => {
-    return (
-        <FormGroup>
-            {props.label && <ControlLabel>{props.label}</ControlLabel> || null}
-            <FormControl {...props}/>
-        </FormGroup>
-    );
-};
+import {TextInput} from "./TextInput";
+import {Option} from "./Option";
+import {ActionButton} from './ActionButton';
+
+import {Layout as LayoutComp} from "./Layout";
+import {LegendOptions as LegendOptionsComp} from "./LegendOptions";
+import {Resolution as ResolutionComp} from "./Resolution";
+import {MapPreview as MapPreviewComp} from "./MapPreview";
 
 export const Name = connect((state) => ({
-    value: state.print && state.print.spec && state.print.spec.name || '',
-    type: "text"
+    spec: state.print?.spec || {},
+    additionalProperty: false,
+    property: "name",
+    path: "",
+    type: "text",
+    label: "print.title",
+    placeholder: "print.titleplaceholder"
 }), {
-    onChange: compose(setPrintParameter.bind(null, 'name'), (e) => e.target.value)
-})(TextWithLabel);
+    onChangeParameter: setPrintParameter
+})(TextInput);
 
 export const Description = connect((state) => ({
-    value: state.print && state.print.spec && state.print.spec.description || '',
-    componentClass: "textarea"
+    spec: state.print?.spec || {},
+    additionalProperty: false,
+    property: "description",
+    path: "",
+    type: "textarea",
+    label: "print.description",
+    placeholder: "print.descriptionplaceholder"
 }), {
-    onChange: compose(setPrintParameter.bind(null, 'description'), (e) => e.target.value)
-})(TextWithLabel);
+    onChangeParameter: setPrintParameter
+})(TextInput);
+
+export const Layout = connect((state) => ({
+    spec: state.print?.spec || {},
+    layouts: state?.print?.capabilities?.layouts || []
+}), {
+    onChangeParameter: setPrintParameter
+})(LayoutComp);
+
+export const LegendOptions = connect((state) => ({
+    spec: state.print?.spec || {}
+}), {
+    onChangeParameter: setPrintParameter
+})(LegendOptionsComp);
 
 export const Resolution = connect((state) => ({
-    selected: state.print && state.print.spec && state.print.spec.resolution || '',
-    items: state.print && state.print.capabilities && state.print.capabilities.dpis.map((dpi) => ({
+    spec: state.print?.spec || {},
+    items: state?.print?.capabilities?.dpis?.map((dpi) => ({
         name: dpi.name + ' dpi',
         value: dpi.value
-    })) || []
+    })) ?? []
 }), {
-    onChange: setPrintParameter.bind(null, 'resolution')
-})(ChoiceComp);
+    onChangeParameter: setPrintParameter
+})(ResolutionComp);
 
-export const Sheet = connect((state) => ({
-    selected: state.print && state.print.spec && state.print.spec.sheet
+export const MapPreview = connect(
+    (state) => ({
+        map: state.print?.map,
+        capabilities: state.print?.capabilities ?? {}
+    }), {
+        onChangeZoomLevel: changePrintZoomLevel,
+        onMapViewChanges: changeMapPrintPreview
+    }
+)(MapPreviewComp);
+
+export const DefaultBackgrounOption = connect((state) => ({
+    spec: state?.print?.spec || {},
+    enabled: "context.notAllowedLayers",
+    path: "",
+    property: "defaultBackground",
+    additionalProperty: false,
+    label: "print.defaultBackground"
 }), {
-    onChange: setPrintParameter.bind(null, 'sheet')
-})(SheetComp);
-
-
-export const LegendOption = connect((state) => ({
-    checked: state.print && state.print.spec && !!state.print.spec.includeLegend,
-    layouts: currentLayouts(state)
-}), {
-    onChange: setPrintParameter.bind(null, 'includeLegend')
-})(PrintOptionComp);
-
-export const MultiPageOption = connect((state) => ({
-    checked: state.print && state.print.spec.includeLegend && state.print.spec && !!state.print.spec.twoPages,
-    layouts: currentLayouts(state),
-    isEnabled: () => twoPageEnabled(state)
-}), {
-    onChange: setPrintParameter.bind(null, 'twoPages')
-})(PrintOptionComp);
-
-export const LandscapeOption = connect((state) => ({
-    selected: state.print && state.print.spec && state.print.spec.landscape ? 'landscape' : 'portrait',
-    layouts: currentLayouts(state),
-    options: [{label: 'print.alternatives.landscape', value: 'landscape'}, {label: 'print.alternatives.portrait', value: 'portrait'}]
-}), {
-    onChange: compose(setPrintParameter.bind(null, 'landscape'), (selected) => selected === 'landscape')
-})(PrintOptionsComp);
-
-export const ForceLabelsOption = connect((state) => ({
-    checked: state.print && state.print.spec && !!state.print.spec.forceLabels
-}), {
-    onChange: setPrintParameter.bind(null, 'forceLabels')
-})(PrintOptionComp);
-
-export const AntiAliasingOption = connect((state) => ({
-    checked: state.print && state.print.spec && !!state.print.spec.antiAliasing
-}), {
-    onChange: setPrintParameter.bind(null, 'antiAliasing')
-})(PrintOptionComp);
-
-export const IconSizeOption = connect((state) => ({
-    value: state.print && state.print.spec && state.print.spec.iconSize,
-    type: "number"
-}), {
-    onChange: compose(setPrintParameter.bind(null, 'iconSize'), (e) => parseInt(e.target.value, 10))
-})(TextWithLabel);
-
-export const LegendDpiOption = connect((state) => ({
-    value: state.print && state.print.spec && state.print.spec.legendDpi,
-    type: "number"
-}), {
-    onChange: compose(setPrintParameter.bind(null, 'legendDpi'), (e) => parseInt(e.target.value, 10))
-})(TextWithLabel);
-
-export const DefaultBackgroundOption = connect((state) => ({
-    checked: state.print && state.print.spec && !!state.print.spec.defaultBackground
-}), {
-    onChange: setPrintParameter.bind(null, 'defaultBackground')
-})(PrintOptionComp);
-
-export const Font = connect((state) => ({
-    family: state.print && state.print.spec && state.print.spec.fontFamily,
-    size: state.print && state.print.spec && state.print.spec.fontSize,
-    bold: state.print && state.print.spec && state.print.spec.bold,
-    italic: state.print && state.print.spec && state.print.spec.italic
-}), {
-    onChangeFamily: setPrintParameter.bind(null, 'fontFamily'),
-    onChangeSize: setPrintParameter.bind(null, 'fontSize'),
-    onChangeBold: setPrintParameter.bind(null, 'bold'),
-    onChangeItalic: setPrintParameter.bind(null, 'italic')
-})(FontComp);
-
-export const MapPreview = connect((state) => ({
-    map: state.print && state.print.map,
-    layers: state.print && state.print.map && state.print.map.layers || [],
-    scales: state.print && state.print.capabilities && state.print.capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || []
-}), {
-    onChangeZoomLevel: changePrintZoomLevel,
-    onMapViewChanges: changeMapPrintPreview
-})(MapPreviewComp);
+    onChangeParameter: setPrintParameter
+})(Option);
 
 export const PrintSubmit = connect((state) => ({
-    loading: state.print && state.print.isLoading || false
-}))(PrintSubmitComp);
+    spec: state?.print?.spec || {},
+    loading: state.print && state.print.isLoading || false,
+    text: "print.submit",
+    action: "print",
+    enabled: "context.layout",
+    className: "print-submit"
+}))(ActionButton);
 
 export const PrintPreview = connect((state) => ({
     url: state.print && ConfigUtils.getProxiedUrl(state.print.pdfUrl),
@@ -160,21 +117,64 @@ export const PrintPreview = connect((state) => ({
     setScale: setControlProperty.bind(null, 'print', 'viewScale')
 })(PrintPreviewComp);
 
+export const standardItems = {
+    "left-panel": [{
+        id: "name",
+        plugin: Name,
+        cfg: {},
+        position: 1
+    }, {
+        id: "description",
+        plugin: Description,
+        cfg: {},
+        position: 2
+    }],
+    "left-panel-accordion": [{
+        id: "layout",
+        plugin: Layout,
+        cfg: {
+            "title": "print.layout"
+        },
+        position: 1
+    }, {
+        id: "legend-options",
+        plugin: LegendOptions,
+        cfg: {
+            "title": "print.legendoptions"
+        },
+        position: 2
+    }],
+    "right-panel": [{
+        id: "resolution",
+        plugin: Resolution,
+        cfg: {},
+        position: 1
+    }, {
+        id: "map-preview",
+        plugin: MapPreview,
+        cfg: {},
+        position: 2
+    }, {
+        id: "default-background-ignore",
+        plugin: DefaultBackgrounOption,
+        cfg: {},
+        position: 3
+    }],
+    "buttons": [{
+        id: "submit",
+        plugin: PrintSubmit,
+        cfg: {},
+        position: 1
+    }],
+    "preview-panel": [{
+        id: "printpreview",
+        plugin: PrintPreview,
+        cfg: {},
+        position: 1
+    }]
+};
+
 export default {
-    Name,
-    Description,
-    Resolution,
-    DefaultBackgroundOption,
-    Sheet,
-    LegendOption,
-    MultiPageOption,
-    LandscapeOption,
-    ForceLabelsOption,
-    AntiAliasingOption,
-    IconSizeOption,
-    LegendDpiOption,
-    Font,
-    MapPreview,
-    PrintSubmit,
+    standardItems,
     PrintPreview
 };

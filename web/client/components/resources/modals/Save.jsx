@@ -74,7 +74,7 @@ class SaveModal extends React.Component {
         style: PropTypes.object,
         modalSize: PropTypes.string,
         enableDetails: PropTypes.bool,
-        detailsComponent: PropTypes.element,
+        detailsComponent: PropTypes.func,
         detailsEditor: PropTypes.string,
         detailsEditorProps: PropTypes.object,
         // CALLBACKS

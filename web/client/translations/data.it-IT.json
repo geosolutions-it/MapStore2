@@ -461,7 +461,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Errore di caricamento della mappa",
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
                     "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
@@ -1356,7 +1355,6 @@
             "end": "Data di fine ",
             "notAvailable": "Non disponibile",
             "title": "Catalogo",
-            "tooltip": "Aggiungi livelli alla mappa",
             "autoload": "Ricerca alla selezione del servizio",
             "clearValueText": "Cancella selezione",
             "noResultsText": "Nessun risultato trovato",
@@ -1437,6 +1435,10 @@
                     "helpText": "Usa il segnaposto ${searchText} nel modello per inserire la stringa di ricerca"
                 },
                 "error": "Sintassi xml non valida"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Imposta limite di visibilità",
+                "tooltip": "Applica automaticamente i limiti di visibilità suggeriti dal server"
             }
         },
         "uploader": {
@@ -2822,6 +2824,10 @@
             "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
             "title": "Strumento di condivisione"
           },
+          "StreetView": {
+            "title": "Street View",
+            "description": "Strumento Street view, per visualizzare le immagini di Google Street View dalla mappa"
+          },
           "StyleEditor": {
             "description": "Editor degli stili dei layer",
             "title": "Editor degli Stili"
@@ -3379,6 +3385,17 @@
           "successRemoved": "Sessione utente cancellata",
           "remove": "Reset Sessione Utente",
           "confirmRemove": "Sei sicuro di voler ripristinare la configurazione di default?"
-        }
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Strumento Street view, per visualizzare le immagini di Google Street View dalla mappa",
+          "tooltip": "Apri Street View",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Clicca sulla mappa per cominciare a visualizzare le immagini di Street View",
+          "messages": {
+            "noDataForPosition": "Non ci sono dati Street View per questa posizione",
+            "unknownError": "Errore sconosciuto"
+          }
+      }
     }
 }

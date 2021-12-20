@@ -16,6 +16,7 @@ import assign from 'object-assign';
 import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
+import { getConfigProp } from '../../../../utils/ConfigUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
@@ -43,7 +44,7 @@ const loadFunction = (options, headers) => function(image, src) {
     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
     var img = image.getImage();
 
-    if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || Infinity)) {
+    if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity)) {
         // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
         const [url, ...dataEntries] = src.split("&");
 

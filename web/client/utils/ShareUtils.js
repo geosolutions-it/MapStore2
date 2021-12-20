@@ -14,7 +14,7 @@ export const BBOX = 'bbox';
 
 export const DASHBOARD_DEFAULT_SHARE_OPTIONS = {
     embedPanel: true,
-    advancedSettings: false,
+    advancedSettings: {},
     shareUrlRegex: "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
     shareUrlReplaceString: "$1dashboard-embedded.html#/$2",
     embedOptions: {

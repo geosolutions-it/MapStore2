@@ -461,7 +461,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Error al cargar el mapa",
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
                     "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li> <li>La proyección del mapa no está configurada </li></ul> <p>",
@@ -1436,6 +1435,10 @@
                     "helpText": "Utilice la plantilla con el marcador de posición $ {searchText} para capturar la cadena de búsqueda"
                 },
                 "error": "Sintaxis XML no válida"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Establecer límite de visibilidad",
+                "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
             }
         },
         "uploader": {
@@ -2821,6 +2824,10 @@
             "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
             "title": "Compartir herramienta"
           },
+          "StreetView": {
+            "title": "Street View",
+          "description": "Herramienta para buscar imágenes de Google Street View desde el mapa"
+          },
           "StyleEditor": {
             "description": "Editor de estilo de capa",
             "title": "Editor de estilo"
@@ -3379,6 +3386,17 @@
           "successRemoved": "Sesión de usuario eliminada",
           "remove": "Restablecer sesión de usuario",
           "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?"
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Herramienta para buscar imágenes de Google Street View desde el mapa",
+          "tooltip": "Abrir la herramienta Street View",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Haga clic en el mapa para comenzar a navegar por las imágenes de Street View",
+          "messages": {
+            "noDataForPosition": "no hay datos de Street View para esta",
+            "unknownError": "error desconocido, ver consola"
+          }
         }
     }
 }

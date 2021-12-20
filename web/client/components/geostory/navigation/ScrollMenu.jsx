@@ -11,6 +11,7 @@ import { Glyphicon } from 'react-bootstrap';
 import debounce from 'lodash/debounce';
 import useSwipeControls from '../common/hooks/useSwipeControls';
 import { withResizeDetector } from 'react-resize-detector';
+import { SectionTypes } from '../../../utils/GeoStoryUtils';
 
 import Button from '../../misc/Button';
 
@@ -51,7 +52,23 @@ const ScrollMenu = ({
     });
 
     const currentColumn = currentPage && currentPage.columns && currentPage.sectionId && currentPage.columns[currentPage.sectionId];
+
     const selected = currentColumn || currentPage && currentPage.sectionId;
+
+    /**
+     * Indicates which MenuItem is currently active.
+     * In case of GeoCarousel, it checks with sectionId since selectedId would be an inner column
+     * @param {String} itemId column Id or section Id of current page
+     * @param {String} selectedId Id of navigation item for current page
+     * @param {String} type type of geostory section (Paragraph, Carousel, etc)
+     * @returns a Boolean telilng if MenuItem id corresponds to the id of current page
+     */
+    const selectedItem = (itemId, selectedId, type) => {
+        if (type === SectionTypes.CAROUSEL) {
+            return currentPage && currentPage.sectionId === itemId;
+        }
+        return selectedId === itemId;
+    };
 
     const updateItemInView = useRef(null);
     useEffect(() => {
@@ -79,7 +96,7 @@ const ScrollMenu = ({
             { ...containerPropsHandlers() }
             className="ms-horizontal-menu">
             <div { ...contentPropsHandlers() }>
-                {items.map(({ title, id }) => {
+                {items.map(({ title, id, type }) => {
                     const itemProps = itemPropsHandlers({
                         id,
                         onClick: () => {
@@ -96,8 +113,8 @@ const ScrollMenu = ({
                                 tabindex="-1"
                                 id={id}
                                 text={title || "title"}
-                                selected={id === selected}
-                                style={getItemStyle(id === selected)}
+                                selected={selectedItem(id, selected, type)}
+                                style={getItemStyle(selectedItem(id, selected, type))}
                             />
                         </div>
                     );

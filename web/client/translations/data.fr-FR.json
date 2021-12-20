@@ -461,7 +461,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Erreur pendant le chargement de la carte",
                     "notFound": "Carte introuvable",
                     "notAccessible": "Carte inaccessible",
                     "unknownError": "<p><small> L'une des raisons suivantes pourrait être la cause :</small> <ul><li>vous n'avez pas la permission d'accéder à la carte</li> <li>vous essayez d'accéder à une carte qui n'existe pas</li> <li>la carte a été supprimée</li> <li>la projection de la carte n'a pas été définie</li></ul> <p>",
@@ -1437,6 +1436,10 @@
                     "helpText": "Utilisez un modèle avec un espace réservé ${searchText} pour capturer la chaîne de recherche"
                 },
                 "error": "Syntaxe xml non valide"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Définir la limite de visibilité",
+                "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             }
         },
         "uploader": {
@@ -2823,6 +2826,10 @@
             "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
             "title": "Outil de partage"
           },
+          "StreetView": {
+            "title": "Street View",
+            "description": "Outil pour parcourir les images Google Street View à partir de la carte"
+          },
           "StyleEditor": {
             "description": "Éditeur de style de couche",
             "title": "Éditeur de style"
@@ -3380,6 +3387,17 @@
           "successRemoved": "Session utilisateur supprimée",
           "remove": "Réinitialiser la session utilisateur",
           "confirmRemove": "Êtes-vous sûr de vouloir restaurer la configuration par défaut?"
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Outil pour parcourir les images Google Street View à partir de la carte",
+          "tooltip": "Ouvrir l'outil Street View",
+          "emptyTitle": "Vue sur la rue",
+          "emptyDescription": "Cliquez sur la carte pour commencer à parcourir les images de Street View",
+          "messages": {
+            "noDataForPosition": "pas de données Street View pour cette position",
+            "unknownError": "erreur inconnue, voir console"
+          }
         }
     }
 }
