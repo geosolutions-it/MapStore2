@@ -1,14 +1,24 @@
 # Change Log
 
+## [2021.02.01](https://github.com/geosolutions-it/MapStore2/tree/v2021.02.01) (2021-12-21)
+
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2021.02.00...v2021.02.01)**
+
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.01%22+is%3Aclosed+label%3Aenhancement)**
+
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.01%22+is%3Aclosed+label%3Abug)**
+
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.01%22+is%3Aclosed)**
+
 ## [2021.02.00](https://github.com/geosolutions-it/MapStore2/tree/v2021.02.00) (2021-10-28)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2021.01.00...v2021.02.00)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2021.01.00...v2021.02.00)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed)**
 
 ## [2021.01.04](https://github.com/geosolutions-it/MapStore2/tree/v2021.01.04) (2021-06-28)
 
