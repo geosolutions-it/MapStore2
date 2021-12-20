@@ -171,3 +171,7 @@ export const getLazyPluginForTest = ({
     }
     return Promise.resolve(getPluginForTest(plugin, storeState, plugins, testEpics, containersReducers, actions, additionalPlugins, items));
 };
+
+export function getByXPath(xpath) {
+    return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}

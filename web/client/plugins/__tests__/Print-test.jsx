@@ -3,17 +3,13 @@ import ReactDOM from "react-dom";
 import expect from "expect";
 
 import Print from "../Print";
-import { getLazyPluginForTest } from './pluginsTestUtils';
+import { getLazyPluginForTest, getByXPath } from './pluginsTestUtils';
 
 import {setStore} from "../../utils/StateUtils";
 
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 import {addTransformer, resetTransformers} from "../../utils/PrintUtils";
-
-function getByXPath(xpath) {
-    return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-}
 
 const initialState = {
     controls: {

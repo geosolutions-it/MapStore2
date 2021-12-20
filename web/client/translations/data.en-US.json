@@ -642,7 +642,9 @@
                 "iconsSize": "Icons size:",
                 "dpi": "Dpi:"
             },
-            "layoutWarning": "Not allowed layout"
+            "layoutWarning": "Not allowed layout",
+            "scale": "Scale",
+            "includeScale": "Include in print"
         },
         "backgroundSwither":{
             "tooltip": "Select Background"
