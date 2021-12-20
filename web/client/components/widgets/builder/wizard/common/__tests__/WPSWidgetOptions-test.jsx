@@ -135,56 +135,6 @@ describe('WPSWidgetOptions component', () => {
         const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
         expect(colorClassMdBody).toNotExist();
     });
-    it('Test WPSWidgetOptions onChange for color classifications on cancel', () => {
-        const actions = {
-            onChange: () => { }
-        };
-        const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<WPSWidgetOptions
-            hasAggregateProcess
-            featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
-            data={{
-                type: 'bar',
-                autoColorOptions: {
-                    classification: CLASSIFICATION,
-                    name: "global.colors.custom"
-                },
-                options: {
-                    classificationAttribute: 'class2'
-                }
-            }}
-            onChange={actions.onChange}
-            dependencies={{ viewport: {} }} />,
-        document.getElementById("container"));
-        const inputs = document.querySelectorAll('input');
-        expect(inputs.length).toBe(5); // operation is visible
-
-        ReactTestUtils.Simulate.change(inputs[3], { target: { value: 'Custom' } });
-        ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
-        expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
-        expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
-        const customColorsSettingsButton = document.getElementsByClassName('custom-color-btn')[0];
-        expect(customColorsSettingsButton).toExist();
-        ReactTestUtils.Simulate.click(customColorsSettingsButton);
-        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
-        expect(colorClassMd).toExist();
-        const colorClassMdCloseButton = colorClassMd.getElementsByClassName('btn-cancel')[0];
-        ReactTestUtils.Simulate.click(colorClassMdCloseButton);
-        expect(spyonChange).toHaveBeenCalled();
-
-        expect(spyonChange.calls[1].arguments[0]).toBe('autoColorOptions');
-        expect(spyonChange.calls[1].arguments[1]).toEqual({
-            classification: [ { title: "", color: "#ffffff", value: "", unique: "" } ],
-            defaultCustomColor: DEFAULT_CUSTOM_COLOR[0],
-            name: "global.colors.custom"
-        });
-
-        expect(spyonChange.calls[2].arguments[0]).toBe('options.classificationAttribute');
-        expect(spyonChange.calls[2].arguments[1]).toBe(undefined);
-
-        const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
-        expect(colorClassMdBody).toNotExist();
-    });
     it('Test WPSWidgetOptions onChange for counter context', () => {
         const actions = {
             onChange: () => { }

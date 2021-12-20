@@ -43,12 +43,8 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
 const getLegendLabel = (value, colorCategories, defaultClassLabel) => {
     let displayValue = defaultClassLabel;
     if (includes(colorCategories.map(colorCat => colorCat.value), value)) {
-        displayValue = colorCategories
-            .filter(item => item.value === value)[0].title
-            .trim() || value;
-        if (!displayValue ?? /^\s*$/.test(displayValue)) {
-            displayValue = 'Default';
-        }
+        displayValue = colorCategories.filter(item => item.value === value)[0].title;
+        displayValue = displayValue ? displayValue.trim() : value;
     }
     return displayValue;
 };

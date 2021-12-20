@@ -4,7 +4,17 @@ import ReactDOM from 'react-dom';
 import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
 
 import expect from 'expect';
-import { CLASSIFICATIONS, DATASET_1, DATASET_2, DATASET_3, LABELLED_CLASSIFICATION, UNLABELLED_CLASSIFICATION, SPLIT_DATASET_2, SPLIT_DATASET_3 } from './sample_data';
+import {
+    CLASSIFICATIONS,
+    DATASET_1,
+    DATASET_2,
+    DATASET_3,
+    LABELLED_CLASSIFICATION,
+    UNLABELLED_CLASSIFICATION,
+    SPLIT_DATASET_2,
+    SPLIT_DATASET_3,
+    TEMPLATE_LABELS_CLASSIFICATION
+} from './sample_data';
 
 describe('WidgetChart', () => {
     beforeEach((done) => {
@@ -349,7 +359,7 @@ describe('Widget Chart: data conversions ', () => {
                 trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.xAxis.dataKey]));
                 // data labels mapped
                 const classLabel = LABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0]?.title;
-                expect(trace.name).toBe(`${SPLIT_DATASET_2.series[0].dataKey} - ${classLabel}`);
+                expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = LABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
                 trace.marker.color.forEach(item => expect(item).toBe(classColor));
@@ -375,9 +385,36 @@ describe('Widget Chart: data conversions ', () => {
             trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_3.data[i][j][SPLIT_DATASET_3.xAxis.dataKey]));
             // data labels mapped
             const classLabel = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.value ?? autoColorOptions.defaultClassLabel;
-            expect(trace.name).toBe(`${SPLIT_DATASET_3.series[0].dataKey} - ${classLabel}`);
+            expect(trace.name).toBe(classLabel);
             // colors are those defined by the user
             const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
+            trace.marker.color.forEach(item => expect(item).toBe(classColor));
+            expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+        });
+    });
+    it('custom classified colors - using templatized labels and custom colors only', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        traces.forEach((trace, i) => {
+            expect(trace.type).toBe('bar');
+            // data values mapped
+            trace.y.map((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.series[0].dataKey]));
+            trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.xAxis.dataKey]));
+            // data labels mapped
+            const classLabel = TEMPLATE_LABELS_CLASSIFICATION
+                .filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0]?.title
+                .replace('${legendValue}', SPLIT_DATASET_2.series[0].dataKey);
+            expect(trace.name).toBe(classLabel);
+            // colors are those defined by the user
+            const classColor = TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
             trace.marker.color.forEach(item => expect(item).toBe(classColor));
             expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
         });
