@@ -12,7 +12,7 @@ RUN if [ "$TOMCAT_EXTRAS" = false ]; then \
     fi
 
 # Add war files to be deployed
-COPY ./product/target/mapstore.war "${CATALINA_BASE}/webapps/"
+COPY docker/*.war "${CATALINA_BASE}/webapps/"
 
 #name of the external dir
 ENV DATA_DIR="/data"
