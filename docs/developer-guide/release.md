@@ -56,7 +56,7 @@ Replacing:
 - [ ] Get the [latest mapstore.war](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/product/target/mapstore.war) from the Releaser Jenkins build 
 - [ ] Get the [latest mapstore2-YYYY.XX.mm-bin.zip](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/release/target/) from the Releaser Jenkins build
   > from the job [configuration page](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/) there is a link to access the job workspace to easily download the built WAR and binary package
-- [ ] Download `mapstore-printing.zip` [here](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/printing/target/mapstore-printing.zip) from the Releaser Jenkins build workspace
+- [ ] Download `mapstore-printing.zip` [here](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/java/printing/target/mapstore-printing.zip) from the Releaser Jenkins build workspace
 - [ ] Check that the printing plugin is missing in the binary package to release
 - [ ] Remove manually from localConfig the entry for authentication to gs-stable from binary and war packages.
 - [ ] Upload the updated binary, the war package and `mapstore-printing.zip` on github release
