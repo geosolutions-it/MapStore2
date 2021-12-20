@@ -1,5 +1,4 @@
 import requests
-import json
 import base64
 
 from requests.api import request
@@ -52,23 +51,7 @@ def getaccesstoken(url,user,pwd):
     exit(1)
 
 
-# Get local json config file
-def getlocaljsonconfig():
-  
-  # Just for testing 
-  jsontestfile = endpointrequest("https://dev-mapstore.geosolutionsgroup.com/mapstore/configs/localConfig.json",{},{})
-  ###
 
-  #FIXTHIS get local json from the container
-
-  targetjson = jsontestfile.json()
-  return targetjson
-
-
-def getauthtoken(username, password):
-  token = ""
-  
-  return token
 #########################################
 
 
@@ -209,7 +192,7 @@ def thumbnailtest(baseurl,thumbnail_id,datauri):
 ###
 
 # Anonymous User - Datadir Externalization Test
-def datadirtest(baseurl,localconfigjson):
+def datadirtest(baseurl):
   
   # Test result Dictionary
   testresults = {}
@@ -222,17 +205,14 @@ def datadirtest(baseurl,localconfigjson):
     print("Datadir Externalization test failed " + description)
     exit(1)
 
-  # Datadir File Comparison
-  webconfigjson = dataextResult.json()
-  localconfigjson = json.dumps(localconfigjson,sort_keys=True)
-  webconfigjson = json.dumps(webconfigjson,sort_keys=True)
-  if localconfigjson == webconfigjson:
+  # Check the modification of the localConfig.json in base to localConfig.json.patch upload in the MapStore container (See MapStore Dockerfile for more details)
+  webjson = dataextResult.json()
+  if "MyAwesomePlugin" in webjson["plugins"]["desktop"]:
     print("Datadir Externalization test OK " + description)
     return testresults
   else:
-    print("Datadir Externalization test failed - JSON Files are not equal" )
-    #FIXTHIS
-    #exit(1)
+    print("Datadir Externalization test failed" )
+    exit(1)
 ###
 
 
@@ -330,6 +310,78 @@ def contextmanagertest(baseurl,accesstoken):
 ###
 
 
+# Authenticated User - Embedded html for maps Test
+def embmapstest(baseurl,map_id,accesstoken):
+
+  # Test result Dictionary
+  testresults = {}
+
+  headers = {
+    'Authorization': 'Bearer ' + accesstoken
+  }
+  # type html
+  EmbMapsUrl = baseurl + "/mapstore/embedded.html#/" + str(map_id)
+  embmapResult = endpointrequest(EmbMapsUrl,headers,{})
+  testresults["PRVEMBMAP"] = embmapResult
+  description = "Status Code:" + str(embmapResult.status_code) + " Reason: " + embmapResult.reason
+  if embmapResult.ok == False:
+    print("Embedded html for maps test failed " + description)
+    exit(1)
+  else:
+    print("Embedded html for maps test OK " + description)
+
+  return testresults
+###
+
+
+# Authenticated User - Embedded html for dashboards Test
+def embdashtest(baseurl,dashboard_id,accesstoken):
+  
+  # Test result Dictionary
+  testresults = {}
+
+  headers = {
+    'Authorization': 'Bearer ' + accesstoken
+  }
+
+  EmbDashUrl = baseurl + "/mapstore/dashboard-embedded.html#/" + str(dashboard_id)
+  embdashResult = endpointrequest(EmbDashUrl,headers,{})
+  testresults["PRVEMBDASH"] = embdashResult
+  description = "Status Code:" + str(embdashResult.status_code) + " Reason: " + embdashResult.reason
+  if embdashResult.ok == False:
+    print("Embedded html for dashboards test failed " + description)
+    exit(1)
+  else:
+    print("Embedded html for dashboards test OK " + description)
+
+  return testresults
+###
+
+
+# Authenticated User - Embedded html for geostory Test
+def embgeostorytest(baseurl,geostory_id,accesstoken):
+  
+  # Test result Dictionary
+  testresults = {}
+
+  headers = {
+    'Authorization': 'Bearer ' + accesstoken
+  }
+
+  EmbGeostoryUrl = baseurl + "/mapstore/geostory-embedded.html#/" + str(geostory_id)
+  embgeostoryResult = endpointrequest(EmbGeostoryUrl,headers,{})
+  testresults["PRVEMBGEOSTORY"] = embgeostoryResult
+  description = "Status Code:" + str(embgeostoryResult.status_code) + " Reason: " + embgeostoryResult.reason
+  if embgeostoryResult.ok == False:
+    print("Embedded html for geostory test failed " + description)
+    exit(1)
+  else:
+    print("Embedded html for geostory test OK " + description)
+
+  return testresults
+###
+
+
 
 #########################################
 
@@ -381,8 +433,7 @@ thumbnailResult = thumbnailtest(envurl,7595,"f0fa8040-7998-11ea-aac7-2d577d62d1c
 
 
 ### Datadir Externalization Test
-localjson = getlocaljsonconfig()
-datadirResult = datadirtest(envurl,localjson)
+datadirResult = datadirtest("http://192.168.0.75")
 ###
 
 ########################################
@@ -400,6 +451,7 @@ accesstoken = getaccesstoken("http://192.168.0.75",atuser,atpwd)
 
 ### Individual Tests
 # Private Map
+# map_id = 1
 invmapResult = prvmaptest("http://192.168.0.75",1,accesstoken)
 
 ### Optional Tests
@@ -411,6 +463,19 @@ groupsResult = groupstest("http://192.168.0.75",accesstoken)
 
 # Context Manager (as an admin)
 contextmanagerResult = contextmanagertest("http://192.168.0.75",accesstoken)
+
+# Embedded html for maps
+# map_id = 1
+embebbedmapResult = embmapstest("http://192.168.0.75",1,accesstoken)
+
+# Embedded html for dashboards
+# dashboard_id = 2
+embebbeddashboardResult = embdashtest("http://192.168.0.75",2,accesstoken)
+
+# Embedded html for geostory
+# geostory_id = 3 
+embebbedgeostoryResult = embgeostorytest("http://192.168.0.75",3,accesstoken)
+
 
 ########################################
 
@@ -505,6 +570,21 @@ exit(0)
 #print(thumbnailTestResult[typetst].status_code)
 
 #typetst = "CTXTMANAGER"       
+#tstprint = thumbnailTestResult[typetst].json()
+#print(thumbnailTestResult[typetst].text)
+#print(thumbnailTestResult[typetst].status_code)
+
+#typetst = "PRVEMBMAP"       
+#tstprint = thumbnailTestResult[typetst].json()
+#print(thumbnailTestResult[typetst].text)
+#print(thumbnailTestResult[typetst].status_code)
+
+#typetst = "PRVEMBDASH"       
+#tstprint = thumbnailTestResult[typetst].json()
+#print(thumbnailTestResult[typetst].text)
+#print(thumbnailTestResult[typetst].status_code)
+
+#typetst = "PRVEMBGEOSTORY"       
 #tstprint = thumbnailTestResult[typetst].json()
 #print(thumbnailTestResult[typetst].text)
 #print(thumbnailTestResult[typetst].status_code)

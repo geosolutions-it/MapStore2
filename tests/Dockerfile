@@ -5,6 +5,9 @@ RUN apk add --no-cache openssl \
     && apk add --no-cache curl \
     && apk add --no-cache py3-pip
 
+# Request library to execute the tests
+RUN python3 -m pip install requests
+
 # Dockerize is needed to sync containers startup
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -12,3 +15,6 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 WORKDIR /tst
+COPY ./tests/* /tst/
+
+RUN python3 tests.py
