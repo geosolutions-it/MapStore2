@@ -38,7 +38,9 @@ Replacing:
     - [ ] Make sure on YYYY.XX.xx we have the 0.x.&lt;number-of-minor-version&gt;
 - [ ] Update `CHANGELOG.md`. [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation) - both master and stable
 - [ ] Fix `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
-- [ ] Update the version of java modules on the release branch to a stable, incremental version. (use mvn version commands)
+- [ ] Update the version of java modules on the release branch to a stable, incremental version.
+    - [ ] Run `mvn versions:set -DnewVersion=<VERSION> -DprocessAllModules -DgenerateBackupPoms=false` to update package version, where <VERSION> is the version of the java packages (e.g. `1..2.2`).
+    - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`
 - [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp should be deployed for new project system and product).
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
@@ -61,7 +63,7 @@ Replacing:
 - [ ] Publish the release
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
 - [ ] Port needed commits to master branch (Changelog changes, docs changes...)
-- [ ] Reset versions of java modules to `-SNAPSHOT` (`mapstore-services`, `mapstore-webapp`, ...)
+- [ ] Reset versions of java modules to `-SNAPSHOT`. the command is  `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false` where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT).
 - [ ] Create a relese for https://github.com/geosolutions-it/MapStoreExtension with the same name and attach the zip to the release
 - [ ] Create a blog post
 - [ ] Write to the mailing list about the current release news and the next release major changes
