@@ -21,10 +21,18 @@ import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
 import HTML from '../../../../I18N/HTML';
 
+const getLabelPopover = (placement) => (
+    <DisposablePopover
+        popoverClassName="chart-color-class-popover"
+        placement={placement}
+        title={<Message msgId="widgets.advanced.customLabels" />}
+        text={<HTML msgId="widgets.advanced.customLabelsExample" />}
+    />
+);
+
 const ColorClassModal = ({
     modalClassName,
     show,
-    chartType,
     onClose,
     onSaveClassification,
     onChangeClassAttribute,
@@ -98,13 +106,7 @@ const ColorClassModal = ({
                     <Row xs={12}>
                         <Col componentClass={ControlLabel} xs={6}>
                             <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
-                            {chartType === 'bar' &&
-                                        <DisposablePopover
-                                            popoverClassName="chart-color-class-popover"
-                                            placement="top"
-                                            title={<Message msgId="widgets.advanced.customLabels" />}
-                                            text={<HTML msgId="widgets.advanced.defaultCustomLabelExample" />}
-                                        />}
+                            {getLabelPopover('top')}
                         </Col>
                         <Col xs={6}>
                             <FormControl
@@ -123,13 +125,7 @@ const ColorClassModal = ({
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
-                                    {chartType === 'bar' &&
-                                        <DisposablePopover
-                                            popoverClassName="chart-color-class-popover"
-                                            placement="right"
-                                            title={<Message msgId="widgets.advanced.customLabels" />}
-                                            text={<HTML msgId="widgets.advanced.customLabelsExample" />}
-                                        />}
+                                    {getLabelPopover('right')}
                                 </Col>
                             </Row>
                             <ThemaClassesEditor

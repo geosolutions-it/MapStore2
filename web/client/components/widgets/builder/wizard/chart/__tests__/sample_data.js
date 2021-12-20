@@ -28,7 +28,7 @@ export const DATASET_1 = {
 
 export const DEFAULT_CUSTOM_COLOR = ['#0888A1', '#4A4A4A'];
 
-export const DEFAULT_CUSTOM_LABEL = ['Default', 'Others'];
+export const DEFAULT_CUSTOM_LABEL = ['Default', 'Others', ''];
 
 export const OPTIONS = [
     { label: 'classValue', value: 'classValue' },

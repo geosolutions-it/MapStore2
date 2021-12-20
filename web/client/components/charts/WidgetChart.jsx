@@ -40,13 +40,16 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
     })
 );
 
-const getLegendLabel = (value, colorCategories, defaultClassLabel) => {
+const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
     let displayValue = defaultClassLabel;
     if (includes(colorCategories.map(colorCat => colorCat.value), value)) {
         displayValue = colorCategories.filter(item => item.value === value)[0].title;
-        displayValue = displayValue ? displayValue.trim() : value;
+        // if charts are pie replace with groupBy attribute
+        // if charts are bar replace with the class value
+        // line currently do not support custom labels
+        displayValue = displayValue ? displayValue : type === 'pie' ? '' : value;
     }
-    return displayValue;
+    return displayValue.trim();
 };
 
 /**
@@ -108,7 +111,7 @@ function getData({
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     const colorCategories = autoColorOptions?.classification || [];
     const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
-    const { defaultClassLabel = 'Default'} = autoColorOptions;
+    const { defaultClassLabel = ''} = autoColorOptions;
 
     switch (type) {
 
@@ -123,11 +126,11 @@ function getData({
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
                 const legendValue = x[index];
-                const customLabel = getLegendLabel(item, colorCategories, defaultClassLabel);
-                if (legendValue === customLabel || !customLabel.trim()) {
+                const customLabel = getLegendLabel(item, colorCategories, defaultClassLabel, type);
+                if (!customLabel) {
                     return legendValue;
                 }
-                return `${legendValue} - ${customLabel}`;
+                return customLabel.replace('${legendValue}', legendValue);
             });
             pieChartTrace = {
                 ...pieChartTrace,
@@ -154,12 +157,12 @@ function getData({
         };
         /** Bar chart is classified coloured */
         if (isClassifiedChart && classificationColors.length) {
-            const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel));
+            const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type));
             const filteredLegendLabels = union(legendLabels);
             const customLabels = filteredLegendLabels.reduce((acc, cur) => {
                 return [
                     ...acc,
-                    includes(cur, '${legendValue}') ? cur.replace('${legendValue}', yAxisLabel || yDataKey || '') : cur
+                    ...[cur ? cur.replace('${legendValue}', yAxisLabel || yDataKey || '') : yAxisLabel || yDataKey]
                 ];
             }, []);
             const [groupedColors, groupedXValues, groupedYValues] = getGroupedTraceValues(legendLabels, filteredLegendLabels, [classificationColors, x, y]);

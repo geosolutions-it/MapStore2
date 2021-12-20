@@ -104,7 +104,7 @@ export default ({
     const customColor = data.autoColorOptions?.name === 'global.colors.custom';
     const { classificationAttribute = undefined } = data?.options || {};
     const { classification = CLASSIFIED_COLORS } = data?.autoColorOptions || {};
-    const { defaultClassLabel = 'Default' } = data?.autoColorOptions || {};
+    const { defaultClassLabel = '' } = data?.autoColorOptions || {};
     const defaultCustomColor = data?.autoColorOptions?.defaultCustomColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1';
 
     /** line charts do not support custom colors ATM and blue is preselected */
@@ -224,7 +224,6 @@ export default ({
                     <ColorClassModal
                         modalClassName="chart-color-class-modal"
                         show={showModal}
-                        chartType={data.type}
                         onClose={() => setShowModal(false)}
                         onSaveClassification={() => {
                             setShowModal(false);

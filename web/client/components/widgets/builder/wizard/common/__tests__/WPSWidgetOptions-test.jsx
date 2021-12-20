@@ -129,7 +129,7 @@ describe('WPSWidgetOptions component', () => {
         expect(spyonChange.calls[3].arguments[0]).toBe('autoColorOptions');
         expect(spyonChange.calls[3].arguments[1]).toEqual({
             classification: CLASSIFICATION,
-            defaultClassLabel: DEFAULT_CUSTOM_LABEL[0],
+            defaultClassLabel: DEFAULT_CUSTOM_LABEL[2],
             name: 'global.colors.custom'
         });
         const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
