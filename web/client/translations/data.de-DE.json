@@ -1823,7 +1823,7 @@
                         "defaultClassLabel": "Standardklassenbezeichnung",
                         "defaultColorRamp": "Standard-Farbrampe",
                         "defaultColor": "Standardfarbe",
-                        "defaultCustomLabel": "Benutzerdefiniertes Standardlabel",
+                        "defaultCustomLabel": "Standardlabel",
                         "editCustomColors": "Benutzerdefinierte Farben bearbeiten",
                         "title": "Benutzerdefinierte Farbeinstellungen"
                     }

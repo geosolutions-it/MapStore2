@@ -1786,7 +1786,7 @@
                         "defaultClassLabel": "Étiquette de Classe par Défaut",
                         "defaultColorRamp": "Rampe de Couleur par Défaut",
                         "defaultColor": "Couleur par Défaut",
-                        "defaultCustomLabel": "Étiquette par défaut personnalisée",
+                        "defaultCustomLabel": "Étiquette par défaut",
                         "editCustomColors": "Modifie Couleurs Personnalisées",
                         "title": "Paramètres de Couleurs Personnalisées"
                     }

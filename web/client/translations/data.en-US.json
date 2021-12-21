@@ -1786,7 +1786,7 @@
                         "defaultClassLabel": "Default Class Label",
                         "defaultColorRamp": "Default Color Ramp",
                         "defaultColor": "Default Color",
-                        "defaultCustomLabel": "Default Custom Label",
+                        "defaultCustomLabel": "Default Label",
                         "editCustomColors": "Edit Custom Colors",
                         "title": "Custom Colors Settings"
                     }
