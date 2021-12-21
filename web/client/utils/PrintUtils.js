@@ -45,16 +45,17 @@ export const isAnnotationLayer = (layer) => {
 };
 
 /**
+ * Utilities for Print
+ * @module utils/PrintUtils
+ * */
+
+/**
  * Extracts the correct opacity from layer. if Undefined, the opacity is `1`.
  * @ignore
  * @param {object} layer the MapStore layer
  */
 export const getOpacity = layer => layer.opacity || (layer.opacity === 0 ? 0 : 1.0);
 
-/**
- * Utilities for Print
- * @memberof utils
- */
 /**
  * Preload data (e.g. WFS) before to sent it to the print tool.
  *
@@ -292,7 +293,7 @@ export function resetTransformers() {
  * Adds/Updates a user custom transformer for the default printing service spec transformer chain.
  *
  * @param {string} name name of the transformer (allows replacing one of the default ones, by specifying its name).
- *      default transformers are: localization, wfspreloader, mapfishSpecCreator.
+ *      default transformers are: `localization`, `wfspreloader`, `mapfishSpecCreator`.
  * @param {function} transformer (state, spec) => Promise<spec>
  * @param {int} position position in the chain (0-indexed), allows inserting a transformer between existing ones
  */
@@ -310,23 +311,25 @@ export function addTransformer(name, transformer, position) {
  * summing up the defaultPrintingServiceTransformerChain list, to eventual custom transformers,
  * added with addTransformer.
  *
- * Each transformer is a function reiceiving two parameters, the redux global state and the print
+ * Each transformer is a function receiving two parameters, the redux global state and the print
  * specification object returned by the previous chain step, and returning a Promise of the transformed
  * specification:
  *
- *  (state, spec) => Promise.resolve(<transformed spec>)
+ * ```
+ * (state, spec) => Promise.resolve(<transformed spec>)
+ * ```
  *
  * Project specific transformers can be added to the end of the chain using the addTransformer function.
- * @returns the default printint service.
+ * @return {object} the default print service.
  */
 export const getDefaultPrintingService = () => {
     return {
         print: () => {
             const state = getStore().getState();
-            const intialSpec = printSpecificationSelector(state);
+            const initialSpec = printSpecificationSelector(state);
             return getTransformerChain().map(t => t.transformer).reduce((previous, f) => {
                 return previous.then(spec=> f(state, spec));
-            }, Promise.resolve(intialSpec));
+            }, Promise.resolve(initialSpec));
         }
     };
 };
