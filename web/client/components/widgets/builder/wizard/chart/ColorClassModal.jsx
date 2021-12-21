@@ -25,8 +25,8 @@ const getLabelPopover = (placement) => (
     <DisposablePopover
         popoverClassName="chart-color-class-popover"
         placement={placement}
-        title={<Message msgId="widgets.advanced.customLabels" />}
-        text={<HTML msgId="widgets.advanced.customLabelsExample" />}
+        title={<Message msgId="widgets.builder.wizard.classAttributes.customLabels" />}
+        text={<HTML msgId="widgets.builder.wizard.classAttributes.customLabelsExample" />}
     />
 );
 
