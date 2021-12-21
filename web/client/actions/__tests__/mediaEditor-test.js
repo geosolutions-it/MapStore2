@@ -128,8 +128,10 @@ describe('mediaEditor actions', () => {
     });
     it('setMediaType', () => {
         const mediaType = "image";
-        const action = setMediaType(mediaType);
+        const selectedService = 'geonode';
+        const action = setMediaType(mediaType, selectedService);
         expect(action.mediaType).toEqual(mediaType);
+        expect(action.selectedService).toEqual(selectedService);
         expect(action.type).toEqual(SET_MEDIA_TYPE);
     });
     it('show', () => {
