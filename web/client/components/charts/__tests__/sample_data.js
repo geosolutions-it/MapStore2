@@ -10,6 +10,102 @@ export const DATASET_1 = {
     series: [{ dataKey: "value" }]
 };
 
+export const DATASET_2 = {
+    data: [
+        { name: 'Page A', value: 0, classValue: 'class1'},
+        { name: 'Page B', value: 1, classValue: 'class2'},
+        { name: 'Page C', value: 2, classValue: 'class2'},
+        { name: 'Page D', value: 3, classValue: 'class1'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const SPLIT_DATASET_2 = {
+    data: [
+        [
+            { name: 'Page A', value: 0, classValue: 'class1'},
+            { name: 'Page D', value: 3, classValue: 'class1'}
+        ],
+        [
+            { name: 'Page B', value: 1, classValue: 'class2'},
+            { name: 'Page C', value: 2, classValue: 'class2'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const DATASET_3 = {
+    data: [
+        ...DATASET_2.data,
+        { name: 'Page E', value: 4, classValue: 'class3'},
+        { name: 'Page F', value: 5, classValue: 'class3'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const SPLIT_DATASET_3 = {
+    data: [
+        ...SPLIT_DATASET_2.data,
+        [
+            { name: 'Page E', value: 4, classValue: 'class3'},
+            { name: 'Page F', value: 5, classValue: 'class3'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+
+export const CLASSIFICATIONS = {
+    dataKey: 'classValue'
+};
+
+export const LABELLED_CLASSIFICATION = [
+    {
+        title: 'Class 1',
+        color: '#ff0000',
+        value: 'class1',
+        unique: 'class1'
+    },
+    {
+        title: 'Class 2',
+        color: '#0000ff',
+        value: 'class2',
+        unique: 'class2'
+    }
+];
+
+export const TEMPLATE_LABELS_CLASSIFICATION = [
+    {
+        title: '${legendValue} - Class 1',
+        color: '#ff0000',
+        value: 'class1',
+        unique: 'class1'
+    },
+    {
+        title: '${legendValue} - Class 2',
+        color: '#0000ff',
+        value: 'class2',
+        unique: 'class2'
+    }
+];
+
+
+export const UNLABELLED_CLASSIFICATION = [
+    {
+        color: '#ff0000',
+        value: 'class1',
+        unique: 'class1'
+    },
+    {
+        color: '#0000ff',
+        value: 'class2',
+        unique: 'class2'
+    }
+];
 
 export const DATASET_MULTI_SERIES_1 = {
     data: [
@@ -24,4 +120,3 @@ export const DATASET_MULTI_SERIES_1 = {
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "pv" }, { dataKey: "uv" }]
 };
-

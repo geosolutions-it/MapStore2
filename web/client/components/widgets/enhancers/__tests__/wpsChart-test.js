@@ -41,7 +41,8 @@ describe('wpsChart enhancer', () => {
             options: {
                 aggregateFunction: "Count",
                 aggregationAttribute: "test",
-                groupByAttributes: "test"
+                groupByAttributes: "test",
+                classificationAttribute: "S_Region"
             }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
@@ -62,7 +63,8 @@ describe('wpsChart enhancer', () => {
             options: {
                 aggregateFunction: "Count",
                 aggregationAttribute: "test",
-                groupByAttributes: "test"
+                groupByAttributes: "test",
+                classificationAttribute: "S_Region"
             }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));

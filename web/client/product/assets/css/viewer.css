@@ -150,3 +150,12 @@ html, body, #container, .fill {
 .mapstore-right-panel #mapstore-identify-revgeocoder {
     padding: 15px;
 }
+
+#container > .chart-color-class-popover.popover {
+    z-index: 10000;
+}
+
+#container > .chart-color-class-popover.popover > .popover-content {
+    max-height: 250px;
+    overflow-y: auto;
+}
