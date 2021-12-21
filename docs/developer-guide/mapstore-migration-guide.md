@@ -157,9 +157,6 @@ Here the changes in `pom.xml` and `web/pom.xml` to update:
 
 ## Migration from 2021.01.04 to 2021.02.00
 
-
-## Migration from 2021.01.04 to 2021.02.00
-
 ### Theme updates and CSS variables
 
 The theme of MapStore has been updated to support CSS variables for some aspects of the style, in particular colors and font families.
