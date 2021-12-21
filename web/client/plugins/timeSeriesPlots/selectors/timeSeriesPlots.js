@@ -29,6 +29,6 @@ export function currentSelectionToolSelector(state) { return state?.timeSeriesPl
  /**
  * gets the current selected Time bound data layerID  
  * @param {object} state
- * @returns {string} the id of the layer to be analysed
+ * @returns {string} the names of the layers to be analysed
  */
- export function timeSeriesLayerIdSelector(state) { return state?.timeSeriesPlots?.selectedLayer?.id; }
+ export function timeSeriesLayersNameSelector(state) { return state?.timeSeriesPlots?.pluginCfg?.timeSeriesLayers || []; }

@@ -22,11 +22,11 @@ import './css/style.css';
 
 const TimeSeriesPlotsPluginComponent =({ onMount = () => { }, onUnmount = () => {}, ...props }) => {
     
-    const { enabled } = props;
+    const { enabled, pluginCfg } = props;
     
     useEffect(() => {
         if (enabled) {
-            onMount();
+            onMount(pluginCfg);
         } else {
             onUnmount();
         }

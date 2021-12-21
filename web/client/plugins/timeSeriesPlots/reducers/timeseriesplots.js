@@ -1,8 +1,10 @@
 import { set } from '@mapstore/utils/ImmutableUtils';
 import { TIME_SERIES_PLOTS, SELECT_NODE } from '../../../actions/layers';
-import { TEAR_DOWN, TOGGLE_SELECTION } from '../actions/timeSeriesPlots';
+import { STORE_TIME_SERIES_FEATURES, TEAR_DOWN, TOGGLE_SELECTION, SETUP } from '../actions/timeSeriesPlots';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+    selections: []
+};
 
 export default function timeSeriesPlots(state = INITIAL_STATE, action) {
     const type = action?.type;
@@ -17,9 +19,18 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             const { id } = action;
             return set("selectedLayer.id", id, state);
         }
+        case SETUP:
+            const { cfg } = action;
+            return set('pluginCfg', cfg, state);
+        case STORE_TIME_SERIES_FEATURES: {
+            const { selectionType, layerName, features } = action;
+            return {
+                ...state,
+                selections: [...state.selections, {selectionType, layerName, features}]
+            }
+        }
         case TIME_SERIES_PLOTS: {
-            const { layer: { url, id } } = action;
-            return set("selectedLayer", { url, id }, state);
+            return state;
         }
         case TOGGLE_SELECTION: {
             const { selectionType } = action;

@@ -1,6 +1,6 @@
 export const CONTROL_NAME = "TimeSeriesPlots";
 
-export const TIME_SERIES_VECTOR_LAYERS_ID = ["ale:in_sar_dataset__5"];
+export const TIME_SERIES_VECTOR_LAYER_NAMES = ["ale:in_sar_dataset"];
 
 export const SELECTION_TYPES = {
     /** disabling circle selection util I know how to do it*/

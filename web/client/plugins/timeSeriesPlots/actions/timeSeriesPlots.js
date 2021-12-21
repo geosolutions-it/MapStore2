@@ -1,3 +1,11 @@
+/*
+ * Copyright 2021, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { timeSeriesPlots } from "../../../actions/layers";
 
 export const TEAR_DOWN = "TIME_SERIES_PLOTS:TEAR_DOWN";
@@ -12,20 +20,16 @@ export const tearDown = () => {
     }
 };
 
-export const setUp = () => {
+export const setUp = (cfg) => {
     return {
-        type: SETUP
+        type: SETUP,
+        cfg
     }
 }
 
 export const showTimeSeriesPlotsPlugin = () => {
-    return (dispatch, getState) => {
-        dispatch(timeSeriesPlots({
-            // these values are teporarily hard coded to trigger the epic opening the plugin window
-            url: 'http://localhost:8082/geoserver/wfs',
-            name: 'ale:in_sar_dataset',
-            id: 'ale:in_sar_dataset__5'
-        }));
+    return (dispatch) => {
+        dispatch(timeSeriesPlots());
     }
 };
 
@@ -38,9 +42,9 @@ export const showTimeSeriesPlotsPlugin = () => {
     selectionType
 });
 
-export const storeTimeSeriesFeatures = (selectionType, layerId, features) => ({
+export const storeTimeSeriesFeatures = (selectionType, layerName, features) => ({
     type: STORE_TIME_SERIES_FEATURES,
     selectionType,
-    layerId,
+    layerName,
     features,
 });

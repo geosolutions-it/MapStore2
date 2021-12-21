@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export * from './setup';
+import Rx from 'rxjs';
 
-export { openTimeSeriesPlotsPlugin, timeSeriesPlotsSelection } from './mapSelection';
+import {
+    TIME_SERIES_VECTOR_LAYERS_ID
+} from '../constants'

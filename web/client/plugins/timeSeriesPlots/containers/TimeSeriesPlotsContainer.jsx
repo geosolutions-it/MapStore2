@@ -37,50 +37,50 @@ const Panel = ({ enabled, onClose = () => {} }) => {
     }
 
     return (
-    <Dialog
-        bodyClassName={"time-series-plots-window-body"}
-        draggable
-        style={{
-            zIndex: 10000,
-            position: "absolute",
-            left: "17%",
-            top: "50px",
-            margin: 0,
-            width: size.width}}>
-        <span
-            role="header"
-            style={{ display: "flex", justifyContent: "space-between" }}
-        >
-            <span>
-                <Message msgId={"timeSeriesPlots.title"} />
-            </span>
-            <button onClick={() => {onClose(); setSize(initialSize)}} className="close">
-                <Glyphicon glyph="1-close" />
-            </button>
-        </span>
-        <div
-            role="body"
-            style={ { height: size.height }}
-        >
-            <Resizable
-                width={size.width}
-                height={size.height}
-                minConstraints={[190, 50]}
-                onResize={(event, {size: newSize}) => {
-                    setSize(newSize);
-                }}
+        <Dialog
+            bodyClassName={"time-series-plots-window-body"}
+            draggable
+            style={{
+                zIndex: 10000,
+                position: "absolute",
+                left: "17%",
+                top: "50px",
+                margin: 0,
+                width: size.width}}>
+            <span
+                role="header"
+                style={{ display: "flex", justifyContent: "space-between" }}
             >
-                <div style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: size.width,
-                    height: size.height
-                }}>
-                    <MainToolbar enabled={enabled} />
-                </div>
-            </Resizable>
-        </div>
-    </Dialog>
+                <span>
+                    <Message msgId={"timeSeriesPlots.title"} />
+                </span>
+                <button onClick={() => {onClose(); setSize(initialSize)}} className="close">
+                    <Glyphicon glyph="1-close" />
+                </button>
+            </span>
+            <div
+                role="body"
+                style={ { height: size.height }}
+            >
+                <Resizable
+                    width={size.width}
+                    height={size.height}
+                    minConstraints={[190, 50]}
+                    onResize={(event, {size: newSize}) => {
+                        setSize(newSize);
+                    }}
+                >
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: size.width,
+                        height: size.height
+                    }}>
+                        <MainToolbar enabled={enabled} />
+                    </div>
+                </Resizable>
+            </div>
+        </Dialog>
     );
 }
 

@@ -303,9 +303,8 @@ export function updateSettingsParams(newParams, update) {
     };
 }
 
-export function timeSeriesPlots(layer) {
+export function timeSeriesPlots() {
     return {
-        type: TIME_SERIES_PLOTS,
-        layer
+        type: TIME_SERIES_PLOTS
     }
 }
