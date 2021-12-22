@@ -81,8 +81,7 @@ class Catalog extends React.Component {
         formatOptions: PropTypes.array,
         infoFormatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object,
-        service: PropTypes.object,
-        autoSetVisibilityLimits: PropTypes.bool
+        service: PropTypes.object
     };
 
     static contextTypes = {
@@ -277,7 +276,6 @@ class Catalog extends React.Component {
                 onAdd={() => {
                     this.search({ services: this.props.services, selectedService: this.props.selectedService });
                 }}
-                autoSetVisibilityLimits={this.props.autoSetVisibilityLimits}
             />
         </div>);
     };

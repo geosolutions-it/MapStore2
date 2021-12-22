@@ -42,8 +42,7 @@ class RecordGrid extends React.Component {
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array,
         infoFormatOptions: PropTypes.array,
-        layerBaseConfig: PropTypes.object,
-        autoSetVisibilityLimits: PropTypes.bool
+        layerBaseConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -91,7 +90,6 @@ class RecordGrid extends React.Component {
                     formatOptions={this.props.formatOptions}
                     infoFormatOptions={this.props.infoFormatOptions}
                     layerBaseConfig={this.props.layerBaseConfig}
-                    autoSetVisibilityLimits={this.props.autoSetVisibilityLimits}
                 />
             </Col>
         );

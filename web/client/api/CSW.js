@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import { get, head, last, template } from 'lodash';
+import { get, head, last, template, isNil } from 'lodash';
 import assign from 'object-assign';
 
 import axios from '../libs/ajax';
@@ -84,6 +84,12 @@ export const constructXMLBody = (startPosition, maxRecords, searchText, {filter}
 
 let capabilitiesCache = {};
 
+/**
+ * Add capabilities data to CSW records
+ * Currently limited to only scale denominators (visibility limits)
+ * @param {string} url wms url
+ * @param {object} result csw results object
+ */
 const addCapabilitiesToRecords = (url, result) => {
     const cached = capabilitiesCache[url];
     const isCached = cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000;
@@ -100,7 +106,7 @@ const addCapabilitiesToRecords = (url, result) => {
                     data: layers
                 };
             }
-            // Can be modified to allow necessary capabilities data
+            // Add visibility limits scale data of the layer to the record
             return {
                 ...result,
                 records: result?.records?.map(record=> {
@@ -108,10 +114,10 @@ const addCapabilitiesToRecords = (url, result) => {
                         minScaleDenominator: MinScaleDenominator,
                         maxScaleDenominator: MaxScaleDenominator
                     } = layers.find(l=> l.name === record?.dc?.identifier) || {};
-                    return {...record,
-                        ...((MinScaleDenominator || MaxScaleDenominator)
-                        && {capabilities: {MaxScaleDenominator, MinScaleDenominator}}
-                        )
+                    return {
+                        ...record,
+                        ...((!isNil(MinScaleDenominator) || !isNil(MaxScaleDenominator))
+                        && {capabilities: {MaxScaleDenominator, MinScaleDenominator}})
                     };
                 })
             };
@@ -202,7 +208,7 @@ var Api = {
                                     // searchStatus: rawResult.searchStatus
                                 };
                                 let records = [];
-                                let _dctRef;
+                                let _dcRef;
                                 if (rawRecords) {
                                     for (let i = 0; i < rawRecords.length; i++) {
                                         let rawRec = rawRecords[i].value;
@@ -280,8 +286,8 @@ var Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
-                                            if (!_dctRef) {
-                                                _dctRef = dc.references;
+                                            if (!_dcRef) {
+                                                _dcRef = dc.references;
                                             }
                                             obj.dc = dc;
                                         }
@@ -289,7 +295,7 @@ var Api = {
                                     }
                                 }
                                 result.records = records;
-                                const {value: _url} = _dctRef?.find(t=> t.scheme === 'OGC:WMS') || {}; // Get WMS URL from dct references
+                                const {value: _url} = _dcRef?.find(t=> t.scheme === 'OGC:WMS') || {}; // Get WMS URL from references
                                 const [parsedUrl] = _url && _url.split('?') || [];
                                 return addCapabilitiesToRecords(parsedUrl, result);
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {

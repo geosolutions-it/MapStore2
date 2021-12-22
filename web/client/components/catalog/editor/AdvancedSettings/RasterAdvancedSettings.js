@@ -65,9 +65,11 @@ export default ({
     onToggleTemplate = () => { },
     ...props
 }) => {
-    useEffect(()=>{
-        onChangeServiceProperty("autoSetVisibilityLimits", props.autoSetVisibilityLimits);
+    useEffect(() => {
+        // Apply default configuration on new service
+        service.isNew && onChangeServiceProperty("autoSetVisibilityLimits", props.autoSetVisibilityLimits);
     }, [props.autoSetVisibilityLimits]);
+
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
         {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
