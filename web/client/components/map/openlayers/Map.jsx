@@ -10,7 +10,7 @@ import { defaults, DragPan, MouseWheelZoom } from 'ol/interaction';
 import { defaults as defaultControls } from 'ol/control';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { toLonLat } from 'ol/proj';
+import { get as getProjection, toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
 import Units from 'ol/proj/Units';
 
@@ -346,7 +346,7 @@ class OpenlayersMap extends React.Component {
      * - custom tile sizes
      *
      */
-    getResolutions = () => {
+    getResolutions = (srs) => {
         const tileWidth = 256; // TODO: pass as parameters
         const tileHeight = 256; // TODO: pass as parameters - allow different from tileWidth
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
@@ -364,7 +364,8 @@ class OpenlayersMap extends React.Component {
         let zoomFactor = this.props.mapOptions.zoomFactor !== undefined ?
             this.props.mapOptions.zoomFactor : defaultZoomFactor;
 
-        const projection = this.map.getView().getProjection();
+        const projection = srs ? getProjection(srs) : this.map.getView().getProjection();
+
         const extent = projection.getExtent();
 
         const extentWidth = !extent ? 360 * Units.METERS_PER_UNIT[Units.DEGREES] /
@@ -596,8 +597,8 @@ class OpenlayersMap extends React.Component {
     };
 
     registerHooks = () => {
-        this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
-            return this.getResolutions();
+        this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, (srs) => {
+            return this.getResolutions(srs);
         });
         this.props.hookRegister.registerHook(mapUtils.RESOLUTION_HOOK, () => {
             return this.map.getView().getResolution();
