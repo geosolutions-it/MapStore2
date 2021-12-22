@@ -69,7 +69,8 @@ class RecordItem extends React.Component {
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array,
-        infoFormatOptions: PropTypes.array
+        infoFormatOptions: PropTypes.array,
+        autoSetVisibilityLimits: PropTypes.bool
     };
 
     static defaultProps = {
@@ -357,8 +358,7 @@ class RecordItem extends React.Component {
         }
 
         const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
-        const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits;
-
+        const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits ?? this.props.autoSetVisibilityLimits;
         return recordToLayer(
             this.props.record,
             type,

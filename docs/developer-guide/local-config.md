@@ -181,7 +181,6 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   "readOnly": "if true, makes the service not editable from catalog plugin"
   "titleMsgId": "optional, string used to localize the title of the service, the string must be present in translations",
   "format": "image/png8" // the image format to use by default for layers coming from this catalog (or tiles).
-  "autoSetVisibilityLimits": "if true, allows to fetch and set visibility limits of the layer from capabilities on layer add"
   "layerOptions": { // optional
       "format": "image/png8", // image format needs to be configured also inside layerOptions
       "tileSize": 512 // determine the default tile size for the catalog, valid for WMS and CSW catalogs
