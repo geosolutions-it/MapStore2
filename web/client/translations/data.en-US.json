@@ -649,7 +649,8 @@
             },
             "layoutWarning": "Not allowed layout",
             "scale": "Scale",
-            "includeScale": "Include in print"
+            "includeScale": "Include in print",
+            "disabledpreview": "The preview is not available with these print parameters"
         },
         "backgroundSwither":{
             "tooltip": "Select Background"

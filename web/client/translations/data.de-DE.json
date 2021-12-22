@@ -688,7 +688,8 @@
             },
             "layoutWarning": "Layout nicht erlaubt",
             "scale": "Maßstab",
-            "includeScale": "in Druck einschließen"
+            "includeScale": "in Druck einschließen",
+            "disabledpreview": "Die Vorschau ist mit diesen Druckparametern nicht verfügbar"
         },
         "backgroundSwither":{
             "tooltip": "Wähle Hintergrund"

@@ -649,7 +649,8 @@
             },
             "layoutWarning": "Layout non consentito",
             "scale": "Scala",
-            "includeScale": "Includi nella stampa"
+            "includeScale": "Includi nella stampa",
+            "disabledpreview": "La preview non è disponibile con questi parametri di stampa"
         },
         "backgroundSwither":{
             "tooltip": "Scegli lo sfondo"
