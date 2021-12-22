@@ -59,7 +59,7 @@ class DataGrid extends Grid {
             // force scroll top
             if (scrollToTopCounter !== oldProps.scrollToTopCounter && this.canvas) {
                 this.canvas.scrollTop = 0;
-            } else if (this.canvas) {
+            } else if (this.canvas && this.header) {
                 this.canvas.scrollLeft = this.header.scrollLeft; // makes sure header x-scroll matches canvas x-scroll
             }
         }
