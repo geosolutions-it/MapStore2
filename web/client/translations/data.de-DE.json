@@ -681,7 +681,9 @@
                 "iconsSize": "Symbolgröße:",
                 "dpi": "dpi:"
             },
-            "layoutWarning": "Layout nicht erlaubt"
+            "layoutWarning": "Layout nicht erlaubt",
+            "scale": "Maßstab",
+            "includeScale": "in Druck einschließen"
         },
         "backgroundSwither":{
             "tooltip": "Wähle Hintergrund"
