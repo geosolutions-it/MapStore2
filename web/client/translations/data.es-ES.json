@@ -651,7 +651,10 @@
             "scale": "escala",
             "includeScale": "incluir en la impresión",
             "disabledpreview": "La vista previa no está disponible con estos parámetros de impresión",
-            "outputFormat": "Formato"
+            "outputFormat": "Formato",
+            "previewFormatUnsupported": "Formato no compatible para la vista previa",
+            "projection": "Sistema de coordenadas",
+            "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla"
         },
         "backgroundSwither":{
             "tooltip": "Selección del fondo"

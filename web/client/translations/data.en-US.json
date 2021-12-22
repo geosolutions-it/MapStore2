@@ -651,7 +651,10 @@
             "scale": "Scale",
             "includeScale": "Include in print",
             "disabledpreview": "The preview is not available with these print parameters",
-            "outputFormat": "Format"
+            "outputFormat": "Format",
+            "previewFormatUnsupported": "Unsupported format for preview",
+            "projection": "Coordinates System",
+            "projectionmismatch": "Coordinate system mismatch among printed and screen map"
         },
         "backgroundSwither":{
             "tooltip": "Select Background"

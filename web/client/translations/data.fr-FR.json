@@ -651,7 +651,10 @@
             "scale": "échelle",
             "includeScale": "inclure dans l'impression",
             "disabledpreview": "L'aperçu n'est pas disponible avec ces paramètres d'impression",
-            "outputFormat": "Format"
+            "outputFormat": "Format",
+            "previewFormatUnsupported": "Format non pris en charge pour l'aperçu",
+            "projection": "Système de coordonnées",
+            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran"
         },
         "backgroundSwither": {
             "tooltip": "Sélection du fond de plan"

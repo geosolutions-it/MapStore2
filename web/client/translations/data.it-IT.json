@@ -651,7 +651,10 @@
             "scale": "Scala",
             "includeScale": "Includi nella stampa",
             "disabledpreview": "La preview non è disponibile con questi parametri di stampa",
-            "outputFormat": "Formato"
+            "outputFormat": "Formato",
+            "previewFormatUnsupported": "Formato non supportato per la preview",
+            "projection": "Sistema di coordinate",
+            "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo"
         },
         "backgroundSwither":{
             "tooltip": "Scegli lo sfondo"

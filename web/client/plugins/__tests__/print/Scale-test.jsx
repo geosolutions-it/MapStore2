@@ -41,7 +41,10 @@ const initialState = {
 
 const baseSpec = {
     layers: [],
-    center: {x: 0, y: 0, projection: "EPSG:4326"},
+    pages: [{
+        center: {x: 0, y: 0, projection: "EPSG:4326"},
+        scale: 1784
+    }],
     projection: "EPSG:4326"
 };
 

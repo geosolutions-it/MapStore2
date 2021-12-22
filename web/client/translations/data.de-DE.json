@@ -690,7 +690,10 @@
             "scale": "Maßstab",
             "includeScale": "in Druck einschließen",
             "disabledpreview": "Die Vorschau ist mit diesen Druckparametern nicht verfügbar",
-            "outputFormat": "Format"
+            "outputFormat": "Format",
+            "previewFormatUnsupported": "Nicht unterstütztes Format für die Vorschau",
+            "projection": "Koordinatensystem",
+            "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte"
         },
         "backgroundSwither":{
             "tooltip": "Wähle Hintergrund"
