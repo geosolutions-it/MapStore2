@@ -650,7 +650,8 @@
             "layoutWarning": "Lienzo no permitido",
             "scale": "escala",
             "includeScale": "incluir en la impresión",
-            "disabledpreview": "La vista previa no está disponible con estos parámetros de impresión"
+            "disabledpreview": "La vista previa no está disponible con estos parámetros de impresión",
+            "outputFormat": "Formato"
         },
         "backgroundSwither":{
             "tooltip": "Selección del fondo"

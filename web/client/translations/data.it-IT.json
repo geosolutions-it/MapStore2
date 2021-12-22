@@ -650,7 +650,8 @@
             "layoutWarning": "Layout non consentito",
             "scale": "Scala",
             "includeScale": "Includi nella stampa",
-            "disabledpreview": "La preview non è disponibile con questi parametri di stampa"
+            "disabledpreview": "La preview non è disponibile con questi parametri di stampa",
+            "outputFormat": "Formato"
         },
         "backgroundSwither":{
             "tooltip": "Scegli lo sfondo"

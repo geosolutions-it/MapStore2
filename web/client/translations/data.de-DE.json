@@ -689,7 +689,8 @@
             "layoutWarning": "Layout nicht erlaubt",
             "scale": "Maßstab",
             "includeScale": "in Druck einschließen",
-            "disabledpreview": "Die Vorschau ist mit diesen Druckparametern nicht verfügbar"
+            "disabledpreview": "Die Vorschau ist mit diesen Druckparametern nicht verfügbar",
+            "outputFormat": "Format"
         },
         "backgroundSwither":{
             "tooltip": "Wähle Hintergrund"

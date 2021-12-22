@@ -650,7 +650,8 @@
             "layoutWarning": "Not allowed layout",
             "scale": "Scale",
             "includeScale": "Include in print",
-            "disabledpreview": "The preview is not available with these print parameters"
+            "disabledpreview": "The preview is not available with these print parameters",
+            "outputFormat": "Format"
         },
         "backgroundSwither":{
             "tooltip": "Select Background"

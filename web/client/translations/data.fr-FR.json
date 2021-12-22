@@ -650,7 +650,8 @@
             "layoutWarning": "Mise en page non permise",
             "scale": "échelle",
             "includeScale": "inclure dans l'impression",
-            "disabledpreview": "L'aperçu n'est pas disponible avec ces paramètres d'impression"
+            "disabledpreview": "L'aperçu n'est pas disponible avec ces paramètres d'impression",
+            "outputFormat": "Format"
         },
         "backgroundSwither": {
             "tooltip": "Sélection du fond de plan"
