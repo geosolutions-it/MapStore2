@@ -10,7 +10,8 @@ import { timeSeriesPlots } from "../../../actions/layers";
 
 export const TEAR_DOWN = "TIME_SERIES_PLOTS:TEAR_DOWN";
 export const SETUP = "TIME_SERIES_PLOTS:SETUP";
-export const STORE_TIME_SERIES_FEATURES = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_FEATURES";
+export const SET_CURRENT_SELECTION = "TIME_SERIES_PLOTS:SET_CURRENT_SELECTION";
+export const STORE_TIME_SERIES_FEATURES_IDS = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_FEATURES_IDS";
 export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
 
 
@@ -42,9 +43,14 @@ export const showTimeSeriesPlotsPlugin = () => {
     selectionType
 });
 
-export const storeTimeSeriesFeatures = (selectionType, layerName, features) => ({
-    type: STORE_TIME_SERIES_FEATURES,
+export const storeTimeSeriesFeaturesIds = (selectionType, layerName, featuresIds) => ({
+    type: STORE_TIME_SERIES_FEATURES_IDS,
     selectionType,
     layerName,
-    features,
+    featuresIds,
+});
+
+export const setCurrentFeaturesSelectionIndex = (index) => ({
+    type: SET_CURRENT_SELECTION,
+    index
 });

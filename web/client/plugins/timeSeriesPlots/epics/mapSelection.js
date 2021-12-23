@@ -16,10 +16,13 @@ import {
 import { getLayerFromName } from '@mapstore/selectors/layers';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
 import { SELECTION_TYPES, CONTROL_NAME } from '../constants';
-import { timeSeriesLayersNameSelector } from '../selectors/timeSeriesPlots';
+import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
+import wpsAggregate from '@mapstore/observables/wps/aggregate';
+import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
+import { featuresSelectionsSelector, timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName } from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
 import { TOGGLE_CONTROL, toggleControl } from '@mapstore/actions/controls';
-import { TOGGLE_SELECTION, storeTimeSeriesFeatures } from '../actions/timeSeriesPlots';
+import { setCurrentFeaturesSelectionIndex, storeTimeSeriesFeaturesIds, STORE_TIME_SERIES_FEATURES_IDS, TOGGLE_SELECTION } from '../actions/timeSeriesPlots';
 
 /**
  * Extract the drawMethod for DrawSupport from the method
@@ -78,17 +81,49 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
         if (selectionType) {
             const startDrawingAction = changeDrawingStatus('start', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: true });
             return action$.ofType(END_DRAWING).flatMap(({geometry}) => {
-                const timeSeriesLayerNames = timeSeriesLayersNameSelector(getState());
-                return timeSeriesLayerNames.length === 0 ? Rx.Observable.empty() :
+                const timeSeriesLayers = timeSeriesLayersSelector(getState());
+                return timeSeriesLayers.length === 0 ? Rx.Observable.empty() :
                 Rx.Observable.forkJoin(
-                    timeSeriesLayerNames.map( timeSeriesLayerName => 
-                        getTimeSeriesFeatures(geometry, getState, timeSeriesLayerName)
+                    timeSeriesLayers.map( timeSeriesLayer => 
+                        getTimeSeriesFeatures(geometry, getState, timeSeriesLayer.layerName)
                     )
                 ).switchMap(data => {
-                    return Rx.Observable.from(timeSeriesLayerNames.map((item, index) => storeTimeSeriesFeatures(selectionType, item, data[index]))) 
-                });
+                    const features = selectionType === SELECTION_TYPES.POLYGON ? data.map(item => item.features) : [data.feature];
+                    return Rx.Observable.from(timeSeriesLayers.map((item, index) => storeTimeSeriesFeaturesIds(selectionType, item.layerName, 
+                        features[index]
+                        .filter(feature => feature?.properties[item.queryAttribute])
+                        .map(feature => feature.properties[item.queryAttribute] )))) 
+                })
             })
             .startWith(startDrawingAction);
         }
         return Rx.Observable.empty();
     });
+
+export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) => 
+    action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({featuresIds, layerName}) => {
+        const wpsUrl = selectedCatalogSelector(getState()).url;
+        const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);
+        const options = {
+            aggregateFunction: timeSeriesLayer.queryAggregateFunction,
+            aggregationAttribute: timeSeriesLayer.queryAggregationAttribute,
+            groupByAttributes: timeSeriesLayer.queryByAttributes
+        };
+        const queryLayerName = timeSeriesLayer.queryLayerName;
+        const queryAttribute = timeSeriesLayer.queryAttribute
+        const fb = FilterBuilder({});
+        const {property, or, filter} = fb;
+        const ogcFilter = filter(or(featuresIds.map( id => property(queryAttribute).equalTo(id))));
+        return wpsAggregate(wpsUrl, {featureType: queryLayerName, ...options, filter: ogcFilter}, {
+            timeout: 15000
+        })
+        // .map(result => addTimeseriesData(result));
+        .do(x => console.log(x))
+        .ignoreElements()
+    });
+    
+// export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) => 
+//     action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(() => {
+//         const currentSelectionIndex = featuresSelectionsSelector(getState());
+//         return Rx.Observable.of(setCurrentFeaturesSelectionIndex(currentSelectionIndex));
+//     })
