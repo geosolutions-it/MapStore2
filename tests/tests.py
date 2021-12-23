@@ -206,7 +206,7 @@ def datadirtest(baseurl):
     print("Datadir Externalization test failed " + description)
     exit(1)
 
-  # Check the modification of the localConfig.json in base to localConfig.json.patch upload in the MapStore container (See MapStore Dockerfile for more details)
+  # Check the modification of the localConfig.json in base to localConfig.json.patch upload in the MapStore container (See DockerfileMapStoreTest for more details)
   webjson = dataextResult.json()
   if "MyAwesomePlugin" in webjson["plugins"]["desktop"]:
     print("Datadir Externalization test OK " + description)
@@ -399,7 +399,7 @@ def embgeostorytest(baseurl,geostory_id,accesstoken):
 ############
 
 
-# Environment Variables 
+# Environment Variables in the Test Container (Source: .env file)
 '''
 ENV_URL,
 ANN_MAP_ID,
@@ -419,48 +419,36 @@ PRV_GEOSTORY_ID]
 try:
 
   # Main URL of the MapStore environment
-  #envurl = "https://mapstore.geosolutionsgroup.com"
-  #envurl = sys.argv[0]
   envurl = os.environ['ENV_URL']
   
   # Anonymous - Map ID
-  #ann_map_id = sys.argv[1]
   ann_map_id = os.environ['ANN_MAP_ID']
   
   # Anonymous - Dashboard ID
-  #ann_dashboard_id = sys.argv[2]
   ann_dashboard_id = os.environ['ANN_DASHBOARD_ID']
   
   # Anonymous - Geostory ID
-  #ann_geostory_id = sys.argv[3]
   ann_geostory_id = os.environ['ANN_GEOSTORY_ID']
   
   # Anonymous - Thumbnail ID
-  #ann_thumbnail_id = sys.argv[4]
   ann_thumbnail_id = os.environ['ANN_THUMBNAIL_ID']
   
   # Anonymous - Thumbnail Datauri
-  #ann_datauri = sys.argv[5]
   ann_datauri = os.environ['ANN_DATAURI']
   
   # Access Token - User
-  #at_usr = sys.argv[6]
   at_usr = os.environ['AT_USR']
   
   # Access Token - Password
-  #at_pwd = sys.argv[7]
   at_pwd = os.environ['AT_PWD']
     
   #Authenticated User - Map ID
-  #prv_map_id = sys.argv[8]
   prv_map_id = os.environ['PRV_MAP_ID']
   
   #Authenticated User - Dashboard ID
-  #prv_dashboard_id = sys.argv[9]
   prv_dashboard_id = os.environ['PRV_DASHBOARD_ID']
     
   #Authenticated User - Geostory ID
-  #prv_geostory_id = sys.argv[10]
   prv_geostory_id = os.environ['PRV_GEOSTORY_ID']
   
 except:
@@ -481,29 +469,21 @@ homepageResults = homepagetest(envurl)
 ### Individual Tests
 
 # Map Test
-# map_id = 8129
-#mapResult = maptest(envurl,8129)
 mapResult = maptest(envurl,ann_map_id)
 
 # Dashboard Test
-# dashboard_id = 8363
-#dashboardResult = dashboardtest(envurl,8363)
 dashboardResult = dashboardtest(envurl,ann_dashboard_id)
 
 # Geostory Test
-# geostory_id = 8355
-#geostoryResult = geostorytest(envurl,8355)
 geostoryResult = geostorytest(envurl,ann_geostory_id)
 
 # Thumbnail Test
-# thumbnail_id = 7595  datauri = "f0fa8040-7998-11ea-aac7-2d577d62d1c7"
-#thumbnailResult = thumbnailtest(envurl,7595,"f0fa8040-7998-11ea-aac7-2d577d62d1c7")
 thumbnailResult = thumbnailtest(envurl,ann_thumbnail_id,ann_datauri)
 ###
 
 
 ### Datadir Externalization Test
-datadirResult = datadirtest("http://192.168.0.75")
+datadirResult = datadirtest(envurl)
 ###
 
 ########################################
@@ -514,153 +494,40 @@ datadirResult = datadirtest("http://192.168.0.75")
 ########################################
 
 ### Get Access Token for a user
-#atuser = "admin"
-#atpwd = "admin"
- 
-#accesstoken = getaccesstoken("http://192.168.0.75",atuser,atpwd)
-
-accesstoken = getaccesstoken("http://192.168.0.75",at_usr,at_pwd)
+accesstoken = getaccesstoken(envurl,at_usr,at_pwd)
 
 
 ### Individual Tests
 # Private Map
-# map_id = 1
-#invmapResult = prvmaptest("http://192.168.0.75",1,accesstoken)
-invmapResult = prvmaptest("http://192.168.0.75",prv_map_id,accesstoken)
+invmapResult = prvmaptest(envurl,prv_map_id,accesstoken)
 
 
 ### Optional Tests
 # Users Manager (as an admin)
-usermanagerResult = usrmanagertest("http://192.168.0.75",accesstoken)
+usermanagerResult = usrmanagertest(envurl,accesstoken)
 
 # Groups (as an admin)
-groupsResult = groupstest("http://192.168.0.75",accesstoken)
+groupsResult = groupstest(envurl,accesstoken)
 
 # Context Manager (as an admin)
-contextmanagerResult = contextmanagertest("http://192.168.0.75",accesstoken)
+contextmanagerResult = contextmanagertest(envurl,accesstoken)
 
 # Embedded html for maps
-# map_id = 1
-#embebbedmapResult = embmapstest("http://192.168.0.75",1,accesstoken)
-embebbedmapResult = embmapstest("http://192.168.0.75",prv_map_id,accesstoken)
+embebbedmapResult = embmapstest(envurl,prv_map_id,accesstoken)
 
 # Embedded html for dashboards
-# dashboard_id = 2
-#embebbeddashboardResult = embdashtest("http://192.168.0.75",2,accesstoken)
-embebbeddashboardResult = embdashtest("http://192.168.0.75",prv_dashboard_id,accesstoken)
+embebbeddashboardResult = embdashtest(envurl,prv_dashboard_id,accesstoken)
 
 # Embedded html for geostory
-# geostory_id = 3 
-#embebbedgeostoryResult = embgeostorytest("http://192.168.0.75",3,accesstoken)
-embebbedgeostoryResult = embgeostorytest("http://192.168.0.75",prv_geostory_id,accesstoken)
+embebbedgeostoryResult = embgeostorytest(envurl,prv_geostory_id,accesstoken)
 
 ########################################
+
 
 
 print("Success - All test passed")
 exit(0)
 
 
-
-###################################################################
-
-
-
-
-
-
-
-
-
-###################################################################
-
-################
-#### Prints ####
-################
-
-#Home Page and Individual tests prints 
-
-#hpTestResults = homepagetest(envurl)
-
-# map_id = 8129
-#iMapTestResult = maptest(envurl,8129)
-
-# dashboard_id = 8363
-#iDashBoardTestResult = dashboardtest(envurl,8363)
-
-# geostory_id = 8355
-#iGeostoryTestResult = geostorytest(envurl,8355)
-
-# thumbnail_id = 7595  datauri = "f0fa8040-7998-11ea-aac7-2d577d62d1c7"
-#thumbnailTestResult = thumbnailtest(envurl,7595,"f0fa8040-7998-11ea-aac7-2d577d62d1c7")
-
-
-
-#typetst = "MAPS"           
-#typetst = "DASHBOARDS"
-#typetst = "GEOSTORYS"       
-#typetst = "CONTEXTS"
-#tstprint = hpTestResults[typetst].json()
-#print(hpTestResults[typetst].text)
-#print(tstprint['success'])
-#print(hpTestResults[typetst].status_code)
-
-
-#typetst = "INDMAP"
-#tstprint = iMapTestResult[typetst].json()
-#print(iMapTestResult[typetst].text)
-#print(iMapTestResult[typetst].status_code)
-
-
-#typetst = "PRVINDMAP"
-#tstprint = iMapTestResult[typetst].json()
-#print(iMapTestResult[typetst].text)
-#print(iMapTestResult[typetst].status_code)
-
-
-#typetst = "INDDASHBOARD"
-#tstprint = iDashBoardTestResult[typetst].json()
-#print(iDashBoardTestResult[typetst].text)
-#print(iDashBoardTestResult[typetst].status_code)
-
-#typetst = "INDGEOSTORY" 
-#tstprint = iGeostoryTestResult[typetst].json()
-#print(iGeostoryTestResult[typetst].text)
-#print(iGeostoryTestResult[typetst].status_code)
-
-#typetst = "THUMBNAIL"       
-#tstprint = thumbnailTestResult[typetst].json()
-#print(thumbnailTestResult[typetst].text)
-#print(thumbnailTestResult[typetst].status_code)
-
-#typetst = "USERSMANAGER"       
-#tstprint = thumbnailTestResult[typetst].json()
-#print(thumbnailTestResult[typetst].text)
-#print(thumbnailTestResult[typetst].status_code)
-
-#typetst = "GROUPS"       
-#tstprint = thumbnailTestResult[typetst].json()
-#print(thumbnailTestResult[typetst].text)
-#print(thumbnailTestResult[typetst].status_code)
-
-#typetst = "CTXTMANAGER"       
-#tstprint = thumbnailTestResult[typetst].json()
-#print(thumbnailTestResult[typetst].text)
-#print(thumbnailTestResult[typetst].status_code)
-
-#typetst = "PRVEMBMAP"       
-#tstprint = thumbnailTestResult[typetst].json()
-#print(thumbnailTestResult[typetst].text)
-#print(thumbnailTestResult[typetst].status_code)
-
-#typetst = "PRVEMBDASH"       
-#tstprint = thumbnailTestResult[typetst].json()
-#print(thumbnailTestResult[typetst].text)
-#print(thumbnailTestResult[typetst].status_code)
-
-#typetst = "PRVEMBGEOSTORY"       
-#tstprint = thumbnailTestResult[typetst].json()
-#print(thumbnailTestResult[typetst].text)
-#print(thumbnailTestResult[typetst].status_code)
 
 ###################################################################

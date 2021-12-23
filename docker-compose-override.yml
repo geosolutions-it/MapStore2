@@ -2,18 +2,40 @@ version: "3.8"
 
 services:
 
+  postgres:
+    build:
+      context: ./tests/
+      dockerfile: DockerfilePostgresTest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
   mapstore:
     build:
-      dockerfile: ./tests/DockerfileMapStoreTest
+      context: ./tests/
+      dockerfile: DockerfileMapStoreTest
       args:
-        MAPSTORE_WEBAPP_SRC: "/host/drop/path/mapstore.war"
+        MAPSTORE_WEBAPP_SRC: ${MS_DEVSRC}
 
   sut:
     build:
       context: ./tests/
       dockerfile: Dockerfile
-    command: dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 20s
+    command: dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 20s && python3 tests.py
     container_name: sutms
+    environment:
+      - ENV_URL=${ENV_URL}
+      - ANN_MAP_ID=${ANN_MAP_ID}
+      - ANN_DASHBOARD_ID=${ANN_DASHBOARD_ID}
+      - ANN_GEOSTORY_ID=${ANN_GEOSTORY_ID} 
+      - ANN_THUMBNAIL_ID=${ANN_THUMBNAIL_ID}
+      - ANN_DATAURI=${ANN_DATAURI}
+      - AT_USR=${AT_USR}
+      - AT_PWD=${AT_PWD}
+      - PRV_MAP_ID=${PRV_MAP_ID}
+      - PRV_DASHBOARD_ID=${PRV_DASHBOARD_ID}
+      - PRV_GEOSTORY_ID=${PRV_GEOSTORY_ID}
     depends_on:
       - postgres
       - mapstore
