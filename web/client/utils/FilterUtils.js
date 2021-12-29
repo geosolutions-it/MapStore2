@@ -834,21 +834,57 @@ export const cqlArrayField = function(attribute, operator, value) {
     }
 };
 
+/**
+ * Process CQL filter value, properly converts wildcards at the start and end of the string
+ * so that "like" and "ilike" condition will get "*text" or "text*" conditions as "%text" and "text%".
+ * "like" and "ilike" operators value will be turned into "%value%" if no wildcards were used.
+ * All other operators will receive value as-is, no wildcard processing is applied
+ * @param value
+ * @param operator
+ * @returns {string}
+ */
+export const processCqlWildcards = function(value, operator) {
+    const escapedQuotes = escapeCQLStrings(value);
+    const startCharIsWildcard = value.startsWith('*');
+    const endCharIsWildcard = value.endsWith('*');
+    const startsWithWildcard = startCharIsWildcard && !endCharIsWildcard;
+    const endsWithWildcard = endCharIsWildcard && !startCharIsWildcard;
+    const noWildcardValue = escapedQuotes.replace(/^\*+|\*+$/g, '');
+    switch (operator) {
+    case 'ilike':
+    case 'like':
+        const val = operator === 'ilike' ? noWildcardValue.toLowerCase() : noWildcardValue;
+        if (startsWithWildcard) {
+            return "'%" + val + "'";
+        } else if (endsWithWildcard) {
+            return "'" + val + "%'";
+        }
+        return "'%" + val + "%'";
+    default:
+        return "'" + escapedQuotes + "'";
+    }
+};
+
+/**
+ * Creates SQL condition using provided attribute, operator and value
+ * @param attribute
+ * @param operator
+ * @param value
+ * @returns {string}
+ */
 export const cqlStringField = function(attribute, operator, value) {
     let fieldFilter;
     const wrappedAttr = wrapAttributeWithDoubleQuotes(attribute);
     if (!isNil(value)) {
+        const processedValue = processCqlWildcards(value, operator);
         if (operator === "isNull") {
             fieldFilter = "isNull(" + wrappedAttr + ")=true";
         } else if (["<>", "="].includes(operator)) {
-            let val = "'" + escapeCQLStrings(value) + "'";
-            fieldFilter = wrappedAttr + operator + val;
+            fieldFilter = wrappedAttr + operator + processedValue;
         } else if (operator === "ilike") {
-            let val = "'%" + escapeCQLStrings(value).toLowerCase() + "%'";
-            fieldFilter = "strToLowerCase(" + wrappedAttr + ") LIKE " + val;
+            fieldFilter = "strToLowerCase(" + wrappedAttr + ") LIKE " + processedValue;
         } else {
-            let val = "'%" + escapeCQLStrings(value) + "%'";
-            fieldFilter = wrappedAttr + " LIKE " + val;
+            fieldFilter = wrappedAttr + " LIKE " + processedValue;
         }
     }
     return fieldFilter;
