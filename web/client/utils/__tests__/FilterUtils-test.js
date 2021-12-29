@@ -1208,7 +1208,7 @@ describe('FilterUtils', () => {
         expect(cqlStringField("attribute_1", "like", "A*")).toBe("\"attribute_1\" LIKE 'A%'");
         // test ilike wrapped with wildcard
         expect(cqlStringField("attribute_1", "ilike", "*A*")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
-        // test LIKE with wildcard at the end
+        // test LIKE wrapped with wildcard
         expect(cqlStringField("attribute_1", "like", "*A*")).toBe("\"attribute_1\" LIKE '%A%'");
     });
     it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
