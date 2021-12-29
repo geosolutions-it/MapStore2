@@ -15,14 +15,15 @@ import {
 
 import { getLayerFromName } from '@mapstore/selectors/layers';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
-import { SELECTION_TYPES, CONTROL_NAME } from '../constants';
+import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES } from '../constants';
 import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
 import wpsAggregate from '@mapstore/observables/wps/aggregate';
 import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
 import { featuresSelectionsSelector, timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName } from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
+import { MOUSE_MOVE, MOUSE_OUT, registerEventListener, unRegisterEventListener } from '@mapstore/actions/map';
 import { TOGGLE_CONTROL, toggleControl } from '@mapstore/actions/controls';
-import { setCurrentFeaturesSelectionIndex, storeTimeSeriesFeaturesIds, STORE_TIME_SERIES_FEATURES_IDS, TOGGLE_SELECTION } from '../actions/timeSeriesPlots';
+import { setCurrentFeaturesSelectionIndex, storeTimeSeriesFeaturesIds, STORE_TIME_SERIES_FEATURES_IDS, TEAR_DOWN, TOGGLE_SELECTION } from '../actions/timeSeriesPlots';
 
 /**
  * Extract the drawMethod for DrawSupport from the method
@@ -32,8 +33,8 @@ import { setCurrentFeaturesSelectionIndex, storeTimeSeriesFeaturesIds, STORE_TIM
     switch (selection) {
     case SELECTION_TYPES.CIRCLE:
         return "Circle";
-    case SELECTION_TYPES.LINE_STRING:
-        return "LineString";
+    case SELECTION_TYPES.POINT:
+        return "Point";
     case SELECTION_TYPES.POLYGON:
         return "Polygon";
     default:
@@ -48,7 +49,7 @@ const createRequest = (geometry, layer) =>  {
         typeName: layer?.search?.name ?? layer?.name, // the layer name is not used
         ogcVersion: '1.1.0',
         spatialField: {
-            attribute: "the_geom", // TODO: get the geom attribute from config
+            attribute: "geom", // TODO: get the geom attribute from config
             geometry,
             operation: "INTERSECTS"
         }
@@ -75,12 +76,11 @@ export const openTimeSeriesPlotsPlugin = (action$) =>
             ]);
         });
 
-
 export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
     action$.ofType(TOGGLE_SELECTION).switchMap(({ selectionType }) => {
         if (selectionType) {
             const startDrawingAction = changeDrawingStatus('start', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: true });
-            return action$.ofType(END_DRAWING).flatMap(({geometry}) => {
+            return action$.ofType(END_DRAWING).flatMap(({ geometry }) => {
                 const timeSeriesLayers = timeSeriesLayersSelector(getState());
                 return timeSeriesLayers.length === 0 ? Rx.Observable.empty() :
                 Rx.Observable.forkJoin(
@@ -88,14 +88,21 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                         getTimeSeriesFeatures(geometry, getState, timeSeriesLayer.layerName)
                     )
                 ).switchMap(data => {
-                    const features = selectionType === SELECTION_TYPES.POLYGON ? data.map(item => item.features) : [data.feature];
+                    const features = data.map(item => item.features);
                     return Rx.Observable.from(timeSeriesLayers.map((item, index) => storeTimeSeriesFeaturesIds(selectionType, item.layerName, 
                         features[index]
                         .filter(feature => feature?.properties[item.queryAttribute])
                         .map(feature => feature.properties[item.queryAttribute] )))) 
                 })
+                .catch(e => {
+                    console.log("Error in map selection"); // eslint-disable-line no-console
+                    console.log(e); // eslint-disable-line no-console
+                    return Rx.Observable.empty();                
+                })
             })
-            .startWith(startDrawingAction);
+            .merge(Rx.Observable.of(unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME))) // Reset map's mouse event trigger type
+            .startWith(startDrawingAction)
+            .takeUntil(action$.ofType(TEAR_DOWN))
         }
         return Rx.Observable.empty();
     });
@@ -110,7 +117,7 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
             groupByAttributes: timeSeriesLayer.queryByAttributes
         };
         const queryLayerName = timeSeriesLayer.queryLayerName;
-        const queryAttribute = timeSeriesLayer.queryAttribute
+        const queryAttribute = timeSeriesLayer.queryAttribute;
         const fb = FilterBuilder({});
         const {property, or, filter} = fb;
         const ogcFilter = filter(or(featuresIds.map( id => property(queryAttribute).equalTo(id))));

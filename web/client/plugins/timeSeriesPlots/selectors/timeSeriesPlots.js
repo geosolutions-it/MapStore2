@@ -44,7 +44,6 @@ export function timeSeriesCatalogServiceSelector(state) {
     const x = Object.keys(pickBy(services, (value, key) => {
       return key.startsWith((state?.timeSeriesPlots?.pluginCfg?.timeSeriesCatalogService?.title || 'Time Series Layers Service'));
     }))[0];
-    debugger;
     return x;
 }
 
