@@ -1,9 +1,11 @@
+import { startEditingFeature } from '@mapstore/actions/featuregrid';
 import { set } from '@mapstore/utils/ImmutableUtils';
 import { TIME_SERIES_PLOTS, SELECT_NODE } from '../../../actions/layers';
-import { STORE_TIME_SERIES_FEATURES_IDS, TEAR_DOWN, TOGGLE_SELECTION, SETUP, SET_CURRENT_SELECTION } from '../actions/timeSeriesPlots';
+import { STORE_TIME_SERIES_CHART_DATA, STORE_TIME_SERIES_FEATURES_IDS, TEAR_DOWN, TOGGLE_SELECTION, SETUP, SET_CURRENT_SELECTION } from '../actions/timeSeriesPlots';
 
 const INITIAL_STATE = {
-    selections: []
+    selections: [],
+    timePlotsData: []
 };
 
 export default function timeSeriesPlots(state = INITIAL_STATE, action) {
@@ -27,6 +29,13 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 selections: [...state.selections, {selectionType, layerName, featuresIds, isCurrent: true}]
+            }
+        }
+        case STORE_TIME_SERIES_CHART_DATA: {
+            const { selectionId, chartData } = action;
+            return {
+                ...state,
+                timePlotsData: [...state.timePlotsData, {selectionId, chartData}]
             }
         }
         case SET_CURRENT_SELECTION:

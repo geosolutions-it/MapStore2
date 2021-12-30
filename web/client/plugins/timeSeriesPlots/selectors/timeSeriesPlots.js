@@ -63,3 +63,13 @@ export function featuresSelectionsSelector(state) {
     const selectionsLength = state.timeSeriesPlots.selections.length;
     return !selectionsLength ? selectionsLength : selectionsLength -1 
 }
+
+// **********************************************
+// CHART_DATA
+// **********************************************
+
+/**
+ * gets the base data to feed Plotly to design
+ * the time-bound data charts
+ */
+export function timePlotsDataSelector(state) { return state.timeSeriesPlots?.timePlotsData ?? [] }

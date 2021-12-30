@@ -14,7 +14,7 @@ import wpsAggregate from '../../../observables/wps/aggregate';
 import { getWpsUrl } from '../../../utils/LayersUtils';
 import propsStreamFactory from '../../misc/enhancers/propsStreamFactory';
 
-const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
+export const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
     AggregationResults.map((res) => ({
         ...GroupByAttributes.reduce((a, p, i) => {
             let value = res[i];

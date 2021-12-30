@@ -7,6 +7,7 @@
  */
 
 import Rx from 'rxjs';
+import uuid from 'uuid';
 
 import {
     END_DRAWING,
@@ -17,13 +18,20 @@ import { getLayerFromName } from '@mapstore/selectors/layers';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
 import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES } from '../constants';
 import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
+import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
 import wpsAggregate from '@mapstore/observables/wps/aggregate';
 import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
 import { featuresSelectionsSelector, timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName } from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
 import { MOUSE_MOVE, MOUSE_OUT, registerEventListener, unRegisterEventListener } from '@mapstore/actions/map';
 import { TOGGLE_CONTROL, toggleControl } from '@mapstore/actions/controls';
-import { setCurrentFeaturesSelectionIndex, storeTimeSeriesFeaturesIds, STORE_TIME_SERIES_FEATURES_IDS, TEAR_DOWN, TOGGLE_SELECTION } from '../actions/timeSeriesPlots';
+import { 
+    setCurrentFeaturesSelectionIndex,
+    storeTimeSeriesFeaturesIds,
+    storeTimeSeriesChartData,
+    STORE_TIME_SERIES_FEATURES_IDS,
+    TEAR_DOWN, TOGGLE_SELECTION
+} from '../actions/timeSeriesPlots';
 
 /**
  * Extract the drawMethod for DrawSupport from the method
@@ -89,7 +97,11 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                     )
                 ).switchMap(data => {
                     const features = data.map(item => item.features);
-                    return Rx.Observable.from(timeSeriesLayers.map((item, index) => storeTimeSeriesFeaturesIds(selectionType, item.layerName, 
+                    const selectionId = uuid.v1();
+                    return Rx.Observable.from(timeSeriesLayers.map((item, index) => storeTimeSeriesFeaturesIds(
+                        selectionId,
+                        selectionType, 
+                        item.layerName, 
                         features[index]
                         .filter(feature => feature?.properties[item.queryAttribute])
                         .map(feature => feature.properties[item.queryAttribute] )))) 
@@ -108,25 +120,29 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
     });
 
 export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) => 
-    action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({featuresIds, layerName}) => {
+    action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({ selectionId, featuresIds, layerName }) => {
         const wpsUrl = selectedCatalogSelector(getState()).url;
         const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);
+        const {
+            queryAggregateFunction : aggregateFunction,
+            queryAggregationAttribute: aggregationAttribute,
+            queryByAttributes: groupByAttributes,
+            queryLayerName,
+            queryAttribute
+        } = timeSeriesLayer;
         const options = {
-            aggregateFunction: timeSeriesLayer.queryAggregateFunction,
-            aggregationAttribute: timeSeriesLayer.queryAggregationAttribute,
-            groupByAttributes: timeSeriesLayer.queryByAttributes
+            aggregateFunction,
+            aggregationAttribute,
+            groupByAttributes
         };
-        const queryLayerName = timeSeriesLayer.queryLayerName;
-        const queryAttribute = timeSeriesLayer.queryAttribute;
         const fb = FilterBuilder({});
         const {property, or, filter} = fb;
         const ogcFilter = filter(or(featuresIds.map( id => property(queryAttribute).equalTo(id))));
         return wpsAggregate(wpsUrl, {featureType: queryLayerName, ...options, filter: ogcFilter}, {
             timeout: 15000
         })
-        // .map(result => addTimeseriesData(result));
-        .do(x => console.log(x))
-        .ignoreElements()
+        .map(aggregationResults => wpsAggregateToChartData(aggregationResults, [groupByAttributes], [aggregationAttribute], [aggregateFunction]))
+        .map(chartDataResults => storeTimeSeriesChartData(selectionId, chartDataResults));
     });
     
 // export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) => 

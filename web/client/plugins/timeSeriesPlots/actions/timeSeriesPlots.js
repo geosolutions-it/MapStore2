@@ -12,6 +12,7 @@ export const TEAR_DOWN = "TIME_SERIES_PLOTS:TEAR_DOWN";
 export const SETUP = "TIME_SERIES_PLOTS:SETUP";
 export const SET_CURRENT_SELECTION = "TIME_SERIES_PLOTS:SET_CURRENT_SELECTION";
 export const STORE_TIME_SERIES_FEATURES_IDS = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_FEATURES_IDS";
+export const STORE_TIME_SERIES_CHART_DATA = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_CHART_DATA";
 export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
 
 
@@ -43,11 +44,18 @@ export const showTimeSeriesPlotsPlugin = () => {
     selectionType
 });
 
-export const storeTimeSeriesFeaturesIds = (selectionType, layerName, featuresIds) => ({
+export const storeTimeSeriesFeaturesIds = (selectionId, selectionType, layerName, featuresIds) => ({
     type: STORE_TIME_SERIES_FEATURES_IDS,
+    selectionId,
     selectionType,
     layerName,
     featuresIds,
+});
+
+export const storeTimeSeriesChartData = (selectionId, chartData) => ({
+    type: STORE_TIME_SERIES_CHART_DATA,
+    selectionId,
+    chartData
 });
 
 export const setCurrentFeaturesSelectionIndex = (index) => ({

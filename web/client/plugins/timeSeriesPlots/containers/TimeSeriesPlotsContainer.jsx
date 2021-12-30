@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
 import { CONTROL_NAME } from '../constants';
+import SimpleChart from '@mapstore/components/charts/SimpleChart';
 import Dialog from "../../../components/misc/Dialog";
 import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
@@ -19,7 +20,8 @@ import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
 
 import {
-    enabledSelector
+    enabledSelector,
+    timePlotsDataSelector
 } from '../selectors/timeSeriesPlots';
 
 /**
@@ -28,12 +30,26 @@ import {
  * @returns
  */
 
-const Panel = ({ enabled, onClose = () => {} }) => {
+const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
     const margin = 10;
     const initialSize = {width: 400, height: 300};
     const [size, setSize] = useState(initialSize);
     if (!enabled) {
         return null;
+    }
+
+    const timeSeriesChartProps = {
+        cartesian: true,
+        legend: true,
+        options : {
+            aggregateFunction: 'Average',
+            aggregationAttribute: 'VALUE',
+            groupByAttributes: 'DATE',
+        },
+        series: [{dataKey: 'Average(VALUE)'}],
+        type: 'line',
+        xAxis: {dataKey: 'DATE'},
+        yAxis: true
     }
 
     return (
@@ -77,6 +93,9 @@ const Panel = ({ enabled, onClose = () => {} }) => {
                         height: size.height
                     }}>
                         <MainToolbar enabled={enabled} />
+                        <SimpleChart
+                            {...timeSeriesChartProps}
+                            data={timePlotsData.map(item => item.chartData)[0] || []} />
                     </div>
                 </Resizable>
             </div>
@@ -85,7 +104,8 @@ const Panel = ({ enabled, onClose = () => {} }) => {
 }
 
 const TSPPanel = connect(createStructuredSelector({
-    enabled: enabledSelector
+    enabled: enabledSelector,
+    timePlotsData: timePlotsDataSelector
 }), {
     onClose: () => toggleControl(CONTROL_NAME)
 })(Panel);
