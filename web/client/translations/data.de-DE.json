@@ -345,6 +345,7 @@
             "confirm": "Ich stimme zu"
         },
         "manager": {
+            "managerMenu": "Manager-Menü",
             "openInANewTab":"Karte öffnen",
             "deleteMap":"Karte löschen",
             "deleteMapMessage": "Möchten Sie diese Karte wirklich löschen?",
@@ -685,7 +686,7 @@
             "scale": "Maßstab",
             "includeScale": "in Druck einschließen"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Wähle Hintergrund"
         },
         "info":{
@@ -1227,7 +1228,10 @@
             "detailsGroups": "Gruppen",
             "detailsEmail": "E-mail",
             "detailsCompany": "Unternehmen",
-            "detailsNotes": "Anmerkungen"
+            "detailsNotes": "Anmerkungen",
+            "userMenu": "Benutzermenü",
+            "generalInformation": "Allgemein",
+            "attributes": "Attribute"
         },
         "users": {
             "title": "Accounts verwalten",
@@ -1278,7 +1282,9 @@
           "noUsers": "Keine Benutzer für diese Gruppe gefunden",
           "errorSaving": "Es gab einen Fehler beim Speichern dieser Gruppe",
           "errorDelete": "Es gab einen Fehler beim Löschen dieser Gruppe",
-          "confirmDeleteGroup": "Sind Sie sicher, das Sie diese Gruppe löschen möchten?"
+          "confirmDeleteGroup": "Sind Sie sicher, das Sie diese Gruppe löschen möchten?",
+          "generalInformation": "Allgemein",
+          "members": "Mitglied"
         },
         "share":{
             "title": "Teilen",
@@ -2735,6 +2741,8 @@
         "defaultMapBackgroundsServiceTitle": "Standardhintergründe",
         "backgroundSelector": {
             "addTooltip": "Neuen Hintergrund hinzufügen",
+            "editTooltip": "Hintergrund bearbeiten",
+            "deleteTooltip": "Hintergrund löschen",
             "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?"
         },
         "stepper": {

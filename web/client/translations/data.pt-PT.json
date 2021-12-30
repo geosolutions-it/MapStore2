@@ -516,7 +516,7 @@
             },
             "layoutWarning": "Layout não autorizado"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Seleccionar Fundo"
         },
         "info":{

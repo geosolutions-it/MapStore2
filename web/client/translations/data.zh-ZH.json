@@ -495,7 +495,7 @@
             },
             "layoutWarning": "不允许布局"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "选择背景"
         },
         "info":{

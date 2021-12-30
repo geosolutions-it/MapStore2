@@ -525,7 +525,7 @@
             },
             "layoutWarning": "Nedopušten raspored"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Odaberi podlogu"
         },
         "info":{

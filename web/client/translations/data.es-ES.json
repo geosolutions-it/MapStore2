@@ -307,6 +307,7 @@
             "confirm": "Estoy de acuerdo"
         },
         "manager": {
+            "managerMenu": "Menú del administrador",
             "openInANewTab":"Abrir el mapa",
             "deleteMap":"Borrar el mapa",
             "deleteMapMessage": "¿Realmente quiere borrar este mapa?",
@@ -646,7 +647,7 @@
             "scale": "escala",
             "includeScale": "incluir en la impresión"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Selección del fondo"
         },
         "info":{
@@ -1188,7 +1189,10 @@
             "detailsGroups": "Grupos",
             "detailsEmail": "E-mail",
             "detailsCompany": "Empresa",
-            "detailsNotes": "Notas"
+            "detailsNotes": "Notas",
+            "userMenu": "Menú del usuario",
+            "generalInformation": "General",
+            "attributes": "Atributos"
         },
         "users": {
             "title": "Administrador de cuentas de usuario",
@@ -1239,7 +1243,9 @@
           "noUsers": "El grupo no tiene usuarios",
           "errorSaving": "Ha ocurrido un error al guardar el grupo",
           "errorDelete": "Ha ocurrido un error al borrar el grupo",
-          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?"
+          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+          "generalInformation": "General",
+          "members": "Miembros"
         },
         "share":{
             "title": "Compartir",
@@ -2697,6 +2703,8 @@
         "defaultMapBackgroundsServiceTitle": "Fondos predeterminados",
         "backgroundSelector": {
             "addTooltip": "Agregar nuevo fondo",
+            "editTooltip": "Editar fondo",
+            "deleteTooltip": "Eliminar fondo",
             "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
         },
         "stepper": {
