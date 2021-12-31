@@ -559,13 +559,13 @@
             "refreshMessage": "WMS-Layer-Konfiguration vom Server laden",
             "refreshError": "Fehler beim Aktualisieren der Ebenen: ",
             "epsgNotSupported": "KBS {epsg} wird für das Zoomen auf den Layer nicht unterstützt",
-            "compareTool": "Tool vergleichen",
+            "compareTool": "Vergleichswerkzeug",
             "configureTool": "Konfigurieren",
-            "spyconfiguration": "Spyglass Konfiguration",
-            "swipeconfiguration": "Swipe-Konfiguration",
-            "swipe": "Wischen Sie",
-            "spyGlass": "Spion Glas",
-            "direction": "Wischerichtung",
+            "spyconfiguration": "Lupe konfigurieren",
+            "swipeconfiguration": "Schieberegler konfigurieren",
+            "swipe": "Schieberegler",
+            "spyGlass": "Lupe",
+            "direction": "Schieberichtung",
             "radius": "Radius",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
@@ -681,7 +681,9 @@
                 "iconsSize": "Symbolgröße:",
                 "dpi": "dpi:"
             },
-            "layoutWarning": "Layout nicht erlaubt"
+            "layoutWarning": "Layout nicht erlaubt",
+            "scale": "Maßstab",
+            "includeScale": "in Druck einschließen"
         },
         "backgroundSwither":{
             "tooltip": "Wähle Hintergrund"
@@ -1005,7 +1007,7 @@
             "query": "Suche",
             "apply": "Anwenden",
             "reset": "Zurücksetzen",
-            "save": "Sparen",
+            "save": "Speichern",
             "discard": "Rückgängig machen",
             "query_request_exception": "Abfrage Fehler",
             "config": {
@@ -1823,7 +1825,7 @@
                         "defaultClassLabel": "Standardklassenbezeichnung",
                         "defaultColorRamp": "Standard-Farbrampe",
                         "defaultColor": "Standardfarbe",
-                        "defaultCustomLabel": "Benutzerdefiniertes Standardlabel",
+                        "defaultCustomLabel": "Standardlabel",
                         "editCustomColors": "Benutzerdefinierte Farben bearbeiten",
                         "title": "Benutzerdefinierte Farbeinstellungen"
                     }

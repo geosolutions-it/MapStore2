@@ -642,7 +642,9 @@
                 "iconsSize": "Dimensione icone:",
                 "dpi": "Dpi:"
             },
-            "layoutWarning": "Layout non consentito"
+            "layoutWarning": "Layout non consentito",
+            "scale": "Scala",
+            "includeScale": "Includi nella stampa"
         },
         "backgroundSwither":{
             "tooltip": "Scegli lo sfondo"
@@ -1785,7 +1787,7 @@
                         "defaultClassLabel": "Etichetta della Classe di Default",
                         "defaultColorRamp": "Rampa di Colori di Default",
                         "defaultColor": "Colore di Default",
-                        "defaultCustomLabel": "Etichetta di Default personalizzata",
+                        "defaultCustomLabel": "Etichetta di Default",
                         "editCustomColors": "Modifica Colori Personalizzati",
                         "title": "Impostazioni dei Colori Personalizzati"
                     }
