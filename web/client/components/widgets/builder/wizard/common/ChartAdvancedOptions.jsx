@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { isNil } from 'lodash';
 import Select from 'react-select';
 import { Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
@@ -51,9 +51,11 @@ function Header({}) {
 }
 
 export default function ChartAdvancedOptions({
+    classificationAttribute,
     data,
     onChange = () => {}
 }) {
+    const [barChartType, setBarChartType] = useState(data.barChartType || 'group');
     return (<SwitchPanel id="displayCartesian"
         header={<Header data={data}/>}
         collapsible
@@ -70,6 +72,42 @@ export default function ChartAdvancedOptions({
                     onChange={(val) => { onChange("cartesian", !val); }}
                 />
             </Col>
+            { data.type === 'bar' &&
+                classificationAttribute && (
+                <div className="bar-chart-type">
+                    <Col componentClass={ControlLabel} sm={6}>
+                        <Message msgId="Bar Chart Type" />
+                    </Col>
+                    <Col xs={3} className="radio-btn">
+                        <input
+                            type="radio"
+                            id="grouped"
+                            value="group"
+                            name="barChartType"
+                            checked={barChartType === 'group'}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                setBarChartType(value);
+                                onChange("barChartType", value);
+                            }} />
+                        <Message  msgId="Grouped" />
+                    </Col>
+                    <Col xs={3} className="radio-btn">
+                        <input
+                            type="radio"
+                            id="stacked"
+                            value="stack"
+                            name="barChartType"
+                            checked={barChartType === 'stack'}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                setBarChartType(value);
+                                onChange("barChartType", value);
+                            }} />
+                        <Message  msgId="Stacked" />
+                    </Col>
+                </div>
+            )}
             {/* Y AXIS */}
             <Col componentClass={"label"} sm={12}>
                 <Message msgId="widgets.advanced.yAxis" />

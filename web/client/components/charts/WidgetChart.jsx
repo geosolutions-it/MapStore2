@@ -223,38 +223,44 @@ function getMargins({ type, isModeBarVisible}) {
     }
 }
 
-function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled } ) {
+function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled, barChartType = 'group' } ) {
+    const chartsLayoutOptions = {
+        colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
+        yaxis: {
+            type: yAxisOpts?.type,
+            automargin: true,
+            tickformat: yAxisOpts?.format,
+            tickprefix: yAxisOpts?.tickPrefix,
+            ticksuffix: yAxisOpts?.tickSuffix,
+            showticklabels: yAxis === true,
+            // showticklabels,showline for yAxis false
+            showgrid: cartesian
+        },
+        xaxis: {
+            showgrid: cartesian,
+            type: xAxisOpts?.type,
+            showticklabels: !xAxisOpts?.hide,
+            // dtick used to force show all x axis labels.
+            // TODO: enable only when "category" with time dimension
+            // dtick: xAxisAngle ? 0.25 : undefined,
+            nticks: xAxisOpts.nTicks, // max number of ticks, to avoid performance issues
+            automargin: true,
+            tickangle: xAxisAngle ?? 'auto'
+        }
+    };
     switch (type) {
     case 'pie':
         return {
             ...(!customColorEnabled && {colorway: defaultColorGenerator(data.length, autoColorOptions)})
         };
-    // line / bar
-    default :
+    case 'bar':
         return {
-            colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
-            yaxis: {
-                type: yAxisOpts?.type,
-                automargin: true,
-                tickformat: yAxisOpts?.format,
-                tickprefix: yAxisOpts?.tickPrefix,
-                ticksuffix: yAxisOpts?.tickSuffix,
-                showticklabels: yAxis === true,
-                // showticklabels,showline for yAxis false
-                showgrid: cartesian
-            },
-            xaxis: {
-                showgrid: cartesian,
-                type: xAxisOpts?.type,
-                showticklabels: !xAxisOpts?.hide,
-                // dtick used to force show all x axis labels.
-                // TODO: enable only when "category" with time dimension
-                // dtick: xAxisAngle ? 0.25 : undefined,
-                nticks: xAxisOpts.nTicks, // max number of ticks, to avoid performance issues
-                automargin: true,
-                tickangle: xAxisAngle ?? 'auto'
-            }
+            barmode: barChartType,
+            ...chartsLayoutOptions
         };
+    // line / bar
+    default:
+        return chartsLayoutOptions;
     }
 }
 /**
