@@ -101,12 +101,20 @@ export const getCapabilitiesURL = (record = {}) => {
 
 export const getDefaultStyleIdentifier = layer =>{
     if (layer?.Style) {
-        return head(
-            castArray(layer.Style)
-                // default is identified by XML attribute isDefault
-                .filter(({ $ = {} }) => $.isDefault === "true")
-                // the identifier content value is needed
-                .map(l => l["ows:Identifier"]));
+
+        if (castArray(layer.Style).length === 1) {
+            return head(
+                castArray(layer.Style)
+                    // the identifier content value is needed
+                    .map(l => l["ows:Identifier"]));
+        else {
+            return head(
+                castArray(layer.Style)
+                    // default is identified by XML attribute isDefault
+                    .filter(({ $ = {} }) => $.isDefault === "true")
+                    // the identifier content value is needed
+                    .map(l => l["ows:Identifier"]));
+        }
     }
     return null;
 };
