@@ -107,7 +107,7 @@ export const getDefaultStyleIdentifier = layer =>{
                 castArray(layer.Style)
                     // the identifier content value is needed
                     .map(l => l["ows:Identifier"]));
-        else {
+        } else {
             return head(
                 castArray(layer.Style)
                     // default is identified by XML attribute isDefault
