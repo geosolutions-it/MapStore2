@@ -411,6 +411,7 @@
             },
             "header": "Danh sách kết quả tìm kiếm",
             "missingGeometry": "Thiếu hình",
+            "zoomObject": "Phóng to đối tượng",
             "noButton": "Không",
             "noFeaturesAvailable": "Không có tính năng có sẵn",
             "notSupportedGeometry": "Kiểu hình lớp này không được hỗ trợ bằng chỉnh sửa nhưng bạn vẫn có thể chỉnh sửa các thuộc tính",

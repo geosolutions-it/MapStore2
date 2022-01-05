@@ -1603,6 +1603,7 @@
             "featureClose": "¿Realmente desea cerrar la tabla?",
             "delete": "¿Confirma la eliminación de {count} características?",
             "missingGeometry": "Geometría no encontrada",
+            "zoomObject": "Zoom sobre el objeto",
             "filter": {
                 "placeholders": {
                     "default": "Buscar...",
