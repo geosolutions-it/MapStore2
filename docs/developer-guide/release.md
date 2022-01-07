@@ -64,7 +64,7 @@ Replacing:
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
 - [ ] Port needed commits to master branch (Changelog changes, docs changes...)
 - [ ] Reset versions of java modules to `-SNAPSHOT`. the command is  `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false` where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT).
-- [ ] Create a relese for https://github.com/geosolutions-it/MapStoreExtension with the same name and attach the zip to the release
+- [ ] Create a release for https://github.com/geosolutions-it/MapStoreExtension with the same name and attach the zip to the release
 - [ ] Create a blog post
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Update the release procedure if needed.
