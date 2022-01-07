@@ -10,7 +10,7 @@ import React from 'react';
 import Layers from '../../../utils/cesium/Layers';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
-import isNil from 'lodash/isNil';
+import { round, isNil } from 'lodash';
 import { getResolutions } from '../../../utils/MapUtils';
 
 class CesiumLayer extends React.Component {
@@ -136,14 +136,15 @@ class CesiumLayer extends React.Component {
         // use the global resolutions as fallback
         // cesium does not provide resolutions
         const { options = {}, zoom, resolutions = getResolutions() } = props;
+        const intZoom = round(zoom);
         const {
             visibility,
             minResolution = -Infinity,
             maxResolution = Infinity,
             disableResolutionLimits
         } = options || {};
-        if (!disableResolutionLimits && !isNil(resolutions[zoom])) {
-            const resolution = resolutions[zoom];
+        if (!disableResolutionLimits && !isNil(resolutions[intZoom])) {
+            const resolution = resolutions[intZoom];
             // use similar approach of ol
             // maxResolution is exclusive
             // minResolution is inclusive
