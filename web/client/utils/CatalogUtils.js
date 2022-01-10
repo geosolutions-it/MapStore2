@@ -540,7 +540,7 @@ const toURLArray = (url) => {
 export const buildServiceUrl = (service) => {
     switch (service.type) {
     case "wms":
-        return [service.url, ...service.domainAliases].join(',');
+        return [service.url, ...(service.domainAliases ?? [])].join(',');
     default:
         return service.url;
     }

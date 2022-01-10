@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import {FormControl, FormGroup, Col, ControlLabel, Glyphicon, Button} from "react-bootstrap";
 import {debounce, size, map, omit, toInteger} from "lodash";
 import Message from "../../../I18N/Message";
@@ -6,9 +13,9 @@ import React, {useState, useCallback, useEffect} from "react";
 import tooltip from "../../../misc/enhancers/tooltip";
 
 /**
- * @name WMSDomainAliases
- * @param onChangeServiceProperty
- * @param service {Object}
+ * @name WMSDomainAliases - component that renders domain aliases management form
+ * @param {function} onChangeServiceProperty - callback to update service property
+ * @param {object} service - WMS service being edited
  * @returns {JSX.Element}
  */
 export default ({
@@ -28,7 +35,6 @@ export default ({
 
     useEffect(() => {
         onDomainAliasChangeDebounced(aliases);
-        return () => {};
     }, [aliases]);
 
     const onChange = (k) => ({ target }) => setAliases((a) => ({...a, [k]: target.value}));

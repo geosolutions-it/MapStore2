@@ -159,6 +159,6 @@ export default ({
         {!isNil(service.type) && service.type === "csw" &&
         <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
         }
-        {(!isNil(service.type) ? service.type === "wms" : false) && (<WMSDomainAliases service={service} onChangeServiceProperty={onChangeServiceProperty} />)}
+        {!isNil(service.type) && service.type === "wms" && (<WMSDomainAliases service={service} onChangeServiceProperty={onChangeServiceProperty} />)}
     </CommonAdvancedSettings>);
 };
