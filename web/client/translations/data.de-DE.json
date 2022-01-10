@@ -1640,6 +1640,7 @@
             "featureClose": "Wollen Sie das Raster wirklich schließen?",
             "delete": "Wollen Sie die {count} Elemente entfernen?",
             "missingGeometry": "Fehlende Geometrie",
+            "zoomObject": "Zum Objekt zoomen",
             "filter": {
                 "placeholders": {
                     "default": "Beispiele...",

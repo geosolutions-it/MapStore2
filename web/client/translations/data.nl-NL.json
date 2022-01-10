@@ -1589,6 +1589,7 @@
             "featureClose": "Weet u zeker dat u het objectengrid wilt sluiten?",
             "delete": "Bevestigt u dat u {count} objecten wilt verwijderen?",
             "missingGeometry": "Ontbrekende geometrie",
+            "zoomObject": "Zoom naar object",
             "filter": {
                 "placeholders": {
                     "default": "Zoeken...",

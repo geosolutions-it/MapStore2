@@ -15,7 +15,10 @@ export default [{
             return p.geometry ? zoomToExtent(bbox(p), crs || "EPSG:4326", maxZoom) : {type: "NONE"};
         }
     },
-    formatter: ({value} = {}) => value ? <Glyphicon glyph="zoom-to" /> :
+    formatter: ({value} = {}) => value ?
+        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-zoom-object"><Message msgId="featuregrid.zoomObject"/></Tooltip>}>
+            <Glyphicon glyph="zoom-to" />
+        </OverlayTrigger> :
         <OverlayTrigger placement="top" overlay={<Tooltip id="fe-save-features"><Message msgId="featuregrid.missingGeometry"/></Tooltip>}>
             <Glyphicon glyph="exclamation-mark" />
         </OverlayTrigger>
