@@ -237,7 +237,10 @@ export default ({
                                 });
                             }
                         }}
-                        onChangeClassAttribute={(value) => onChange("options.classificationAttribute", value)}
+                        onChangeClassAttribute={(value) => {
+                            onChange("options.classificationAttribute", value);
+                            
+                        }}
                         classificationAttribute={classificationAttribute}
                         onUpdateClasses={(newClassification) => {
                             onChange("autoColorOptions.classification", formatAutoColorOptions(newClassification) || []);

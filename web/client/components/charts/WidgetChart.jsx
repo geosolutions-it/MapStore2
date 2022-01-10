@@ -349,6 +349,11 @@ export default function WidgetChart({
     ...props
 }) {
     const { data, layout, config } = toPlotly(props);
+    /** commenting this code temporarily: this avoids unwanted bar chart segements stacking */
+    // const newData = data.reduce((acc, curr) => [...acc, {
+    //     ...curr,
+    //     type: curr.type === 'bar' ? 'histogram' : curr.type
+    // }], []);
     return (
         <Suspense fallback={<LoadingView />}>
             <Plot

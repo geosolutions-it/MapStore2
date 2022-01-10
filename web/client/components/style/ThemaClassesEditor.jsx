@@ -18,6 +18,7 @@ numberLocalizer();
 import { NumberPicker } from 'react-widgets';
 import assign from 'object-assign';
 import Message from "../../components/I18N/Message";
+import AutocompleteField from '../../components/data/query/AutocompleteFieldHOC';
 
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
@@ -25,7 +26,8 @@ class ThemaClassesEditor extends React.Component {
         onUpdateClasses: PropTypes.func,
         className: PropTypes.string,
         allowEmpty: PropTypes.bool,
-        customLabels: PropTypes.bool
+        customLabels: PropTypes.bool,
+        options: PropTypes.array
     };
 
     static defaultProps = {
@@ -36,7 +38,7 @@ class ThemaClassesEditor extends React.Component {
         customLabels: false
     };
 
-    renderFieldByClassification = (classItem, index) => {
+    renderFieldByClassification = (classItem, index, options) => {
         let fieldRender;
         if (!isNil(classItem.unique)) {
             if (isNumber(classItem.unique)) {
@@ -45,12 +47,19 @@ class ThemaClassesEditor extends React.Component {
                     value={classItem.unique}
                     onChange={(value) => this.updateUnique(index, value, 'number')}
                 />);
+            /** field classes with preset values - drop down input */
+            } else if (options && options.length > 0) {
+                fieldRender = (
+                    <AutocompleteField dropUp filterField={'location'} attType="string"/>);
+            /** field classes without preset values - text input  */
             } else {
-                fieldRender = (<FormControl
-                    value={classItem.unique}
-                    type="text"
-                    onChange={ e => this.updateUnique(index, e.target.value)}
-                />);
+                fieldRender = (
+                    <AutocompleteField dropUp filterField={'location'} attType="string"/>);
+                // fieldRender = (<FormControl
+                //     value={classItem.unique}
+                //     type="text"
+                //     onChange={ e => this.updateUnique(index, e.target.value)}
+                // />);
             }
         } else if (!isNil(classItem.min)) {
             fieldRender =  <>
@@ -90,7 +99,7 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
-                { this.renderFieldByClassification(classItem, index) }
+                { this.renderFieldByClassification(classItem, index, this.props.options) }
                 { this.props.customLabels &&
                     <FormControl
                         value={classItem.title}

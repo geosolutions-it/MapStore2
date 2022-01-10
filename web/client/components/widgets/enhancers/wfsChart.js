@@ -24,6 +24,36 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.groupByAttributes === o2.groupByAttributes
     && o1.classificationAttribute === o2.classificationAttribute
     && o1.viewParams === o2.viewParams;
+const sameClassificationAttribute = (classAttr1, classAtrr2) =>
+    classAttr1 === classAtrr2;
+
+
+const attributesStreamFactory = ($props) => {
+    return $props.filter(({layer = {}, options}) => {
+        return (layer.name && getSearchUrl(layer) && options.classificationAttribute);
+    }).distinctUntilChanged((options = {}, newProps) => {
+        return sameClassificationAttribute(options?.classificationAttribute, newProps?.classificationAttribute);
+    }).switchMap(({layer = {}, options, onLoad = () => {}, onLoadError = () => {}}) => {
+        return getLayerJSONFeature(
+            layer,
+            ...( options.classificationAttribute ? [[options.classificationAttribute]] : [])
+        ).map((response) => ({
+            loading: false,
+            isAnimationActive: false,
+            error: undefined,
+            data: wfsToChartData(response, options),
+            series: [{ dataKey: options.aggregationAttribute }],
+            classifications: {dataKey: options.classificationAttribute},
+            xAxis: { dataKey: options.groupByAttributes}
+        })).do(onLoad)
+            .catch((e) => Rx.Observable.of({
+                loading: false,
+                error: e,
+                data: []
+            }).do(onLoadError)
+            ).startWith({loading: true});
+    });
+};
 
 
 const dataStreamFactory = ($props) =>
