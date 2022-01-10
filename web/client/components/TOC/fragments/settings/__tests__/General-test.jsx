@@ -44,9 +44,8 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(16);
+        expect(inputs.length).toBe(17);
     });
-
     it('tests General component show LayerNameEditField = TRUE', () => {
         const l = {
             name: 'layer00',
@@ -66,7 +65,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(17);
+        expect(inputs.length).toBe(18);
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
@@ -90,7 +89,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(17);
+        expect(inputs.length).toBe(18);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
         expect(spy.calls.length).toBe(1);
