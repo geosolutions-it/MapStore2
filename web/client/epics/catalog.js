@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
 import { DOMParser } from 'xmldom';
-import { head, get, find, isArray, isString, isObject, keys, toPairs } from 'lodash';
+import {head, get, find, isArray, isString, isObject, keys, toPairs, merge} from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -117,30 +117,29 @@ export default (API) => ({
             .filter(({ layers, sources }) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
             // maxRecords is 4 (by default), but there can be a possibility that the record desired is not among
             // the results. In that case a more detailed search with full record name can be helpful
-            .switchMap(({ layers, sources, filters, options, startPosition = 1, maxRecords = 4 }) => {
+            .switchMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
-                const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
                     .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
+                        const layerOptions = get(options, i, searchOptionsSelector(state));
                         const source = sources[i];
                         const service = typeof source === 'object' ? source : services[source];
                         const format = service.type.toLowerCase();
                         const url = service.url;
                         const text = layers[i];
-                        const filter = get(filters, i);
                         return Rx.Observable.defer(() =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, {...addLayerOptions, ...service}).catch(() => ({ results: [] }))
-                        ).map(r => ({ ...r, format, url, text, filter }));
+                            API[format].textSearch(url, startPosition, maxRecords, text, {...layerOptions, ...service}).catch(() => ({ results: [] }))
+                        ).map(r => ({ ...r, format, url, text, layerOptions }));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
                             return Rx.Observable.of(results.map(r => {
-                                const { format, url, text, filter, ...result } = r;
+                                const { format, url, text, layerOptions, ...result } = r;
                                 const locales = currentMessagesSelector(state);
-                                const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
+                                const records = getCatalogRecords(format, result, layerOptions, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
                                 const { wms, wmts, wfs } = extractOGCServicesReferences(record);
                                 let layer = {};
@@ -177,7 +176,7 @@ export default (API) => ({
                                 if (!record) {
                                     return [text];
                                 }
-                                return [layer, filter];
+                                return [layer, layerOptions];
                             }));
                         }
                         return Rx.Observable.empty();
@@ -195,13 +194,7 @@ export default (API) => ({
                     actions = [
                         ...actions,
                         ...results.filter(r => isObject(r[0])).map(r => {
-                            if (r[1]) {
-                                r[0].params = {
-                                    ...r[0].params,
-                                    CQL_FILTER: r[1]
-                                };
-                            }
-                            return addLayer(r[0]);
+                            return addLayer(merge({}, r[0], r[1]));
                         })
                     ];
                     return Rx.Observable.from(actions);
