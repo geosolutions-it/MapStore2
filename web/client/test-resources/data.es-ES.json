@@ -19,7 +19,6 @@
         "about_p5-1": "página.",
         "about_h21": "Créditos",
         "about_p6": "MapStore2 está hecho por:",
-        "enable": "Activar",
         "layers": "Capas",
         "warning": "Atención",
         "version": {
@@ -248,7 +247,7 @@
             },
             "layoutWarning": "Layout no permitido"
         },
-        "backgroundSwitcher":{
+        "backgroundSwither":{
             "tooltip": "Selección del fondo"
         },
         "info":{

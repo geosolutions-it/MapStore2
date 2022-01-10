@@ -15,7 +15,7 @@ import tooltip from '../../components/misc/enhancers/tooltip';
 
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 
-const DropdownButtonT = tooltip(DropdownButton);
+const TDropdownButton = tooltip(DropdownButton);
 const Container = connect(() => ({
     noCaret: true,
     pullRight: true,
@@ -23,7 +23,7 @@ const Container = connect(() => ({
     title: <Glyphicon glyph="1-menu-manage"/>,
     tooltipId: "manager.managerMenu",
     tooltipPosition: "bottom"
-}), {})(DropdownButtonT);
+}), {})(TDropdownButton);
 
 import ToolsContainer from '../containers/ToolsContainer';
 import Message from '../locale/Message';

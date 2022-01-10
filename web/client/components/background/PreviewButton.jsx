@@ -13,7 +13,7 @@ import Toolbar from '../misc/toolbar/Toolbar';
 import './css/previewbutton.css';
 import OverlayTrigger from "../misc/OverlayTrigger";
 import {Tooltip} from "react-bootstrap";
-import Message from "../I18N/HTML";
+import Message from "../I18N/Message";
 
 class PreviewButton extends React.Component {
     static propTypes = {
