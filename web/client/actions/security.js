@@ -35,7 +35,6 @@ export function loginSuccess(userDetails, username, password, authProvider) {
         userDetails: userDetails,
         // set here for compatibility reasons
         // TODO: verify if the compatibility reasons still hold and remove otherwise
-        authHeader: 'Basic ' + btoa(username + ':' + password),
         username: username,
         password: password,
         authProvider: authProvider
@@ -102,8 +101,7 @@ export function login(username, password) {
 export function changePasswordSuccess(user, newPassword) {
     return {
         type: CHANGE_PASSWORD_SUCCESS,
-        user: user,
-        authHeader: 'Basic ' + btoa(user.name + ':' + newPassword)
+        user: user
     };
 }
 

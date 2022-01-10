@@ -154,7 +154,7 @@ const Api = {
         let authData;
         return axios.post(url, null, this.addBaseUrl(merge((username && password) ? {
             auth: {
-                username: username,
+                username: unescape(encodeURIComponent(username)),
                 password: password
             }
         } : {}, options))).then((response) => {
