@@ -1605,6 +1605,7 @@
             "featureClose": "Voulez vous vraiment fermer la grille ?",
             "delete": "Valider pour supprimer les éléments ?",
             "missingGeometry": "Géométrie manquante",
+            "zoomObject": "Zoom sur l'entité",
             "filter": {
                 "placeholders": {
                     "default": "Recherche...",

@@ -1584,6 +1584,7 @@
             "featureClose": "Är du säker på att stänga objektnätet?",
             "delete": "Bekräftar du att radera {count} objekt?",
             "missingGeometry": "Saknad geometri",
+            "zoomObject": "Zooma till objektet",
             "filter": {
                 "placeholders": {
                     "default": "Sök ...",
