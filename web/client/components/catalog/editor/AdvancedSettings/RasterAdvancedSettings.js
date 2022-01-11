@@ -19,6 +19,7 @@ import ReactQuill from "react-quill";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
+import WMSDomainAliases from "./WMSDomainAliases";
 
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
@@ -158,5 +159,6 @@ export default ({
         {!isNil(service.type) && service.type === "csw" &&
         <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
         }
+        {!isNil(service.type) && service.type === "wms" && (<WMSDomainAliases service={service} onChangeServiceProperty={onChangeServiceProperty} />)}
     </CommonAdvancedSettings>);
 };

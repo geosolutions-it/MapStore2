@@ -1441,6 +1441,12 @@
             "autoSetVisibilityLimits": {
                 "label": "Imposta limite di visibilità",
                 "tooltip": "Applica automaticamente i limiti di visibilità suggeriti dal server"
+            },
+            "domainAliases": {
+              "title": "Alias di dominio",
+              "helpTooltip": "Questa opzione viene utilizzata per suddividere il contenuto in più sottodomini",
+              "addAliasTooltip": "Aggiungi alias",
+              "removeAliasTooltip": "Rimuovi alias"
             }
         },
         "uploader": {
