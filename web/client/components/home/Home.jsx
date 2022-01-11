@@ -15,7 +15,10 @@ import Message from '../../components/I18N/Message';
 import ConfirmModal from '../../components/misc/ResizableModal';
 import { get, pick } from "lodash";
 import ConfigUtils from "../../utils/ConfigUtils";
-
+export const getPath = () => {
+    const miscSettings = ConfigUtils.getConfigProp('miscSettings');
+    return get(miscSettings, ['homePath'], '/');
+};
 class Home extends React.Component {
     static propTypes = {
         icon: PropTypes.node,
@@ -87,9 +90,7 @@ class Home extends React.Component {
     }
 
     goHome = () => {
-        const miscSettings = ConfigUtils.getConfigProp('miscSettings');
-        const path = get(miscSettings, ['home', 'path'], '/');
-        this.context.router.history.push(path);
+        this.context.router.history.push(getPath());
     };
 }
 

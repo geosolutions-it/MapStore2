@@ -59,11 +59,6 @@
       "enabled": true
     },
     "projectionDefs": [],
-    "miscSettings": {
-      "home": {
-        "path": "/"
-      }
-    },
     "initialState": {
       "defaultState": {
         "annotations": {
@@ -635,16 +630,6 @@
           },
           {
             "name": "GeoStories",
-            "cfg": {
-              "mapsOptions": {
-                "start": 0,
-                "limit": 12
-              },
-              "fluid": true
-            }
-          },
-          {
-            "name": "Contexts",
             "cfg": {
               "mapsOptions": {
                 "start": 0,
