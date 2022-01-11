@@ -164,9 +164,9 @@ export const createStore = ({
     const epic = rootEpic || combineEpics(...wrapEpics(epics));
     const allMiddlewares = epic ? [persistMiddleware(createEpicMiddleware(epic)), ...middlewares] : middlewares;
     const middleware = applyMiddleware.apply(null, getMiddlewares(allMiddlewares, debug));
-    const finalCreateStore = (window.devToolsExtension && debug ? compose(
+    const finalCreateStore = (window.__REDUX_DEVTOOLS_EXTENSION__ && debug ? compose(
         middleware,
-        window.devToolsExtension()
+        window.__REDUX_DEVTOOLS_EXTENSION__()
     ) : middleware)(createReduxStore);
     return setStore(finalCreateStore(reducer, state, enhancer));
 };
