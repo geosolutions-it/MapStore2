@@ -44,7 +44,8 @@ const ColorClassModal = ({
     defaultCustomColor,
     defaultClassLabel,
     onChangeColor,
-    onChangeDefaultClassLabel
+    onChangeDefaultClassLabel,
+    layer
 }) => {
     const [selectMenuOpen, setSelectMenuOpen] = useState(false);
     return (
@@ -134,8 +135,12 @@ const ColorClassModal = ({
                                 onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
                                 allowEmpty={false}
                                 customLabels
-                                autoComplete
-                                dropUpAutoComplete
+                                uniqueValuesClasses
+                                autoCompleteOptions={{
+                                    classificationAttribute,
+                                    dropUpAutoComplete: true,
+                                    layer
+                                }}
                                 dropUpMenu
                             />
                         </>

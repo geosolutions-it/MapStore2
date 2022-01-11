@@ -36,7 +36,9 @@ const streamEnhancer = mapPropsStream(props$ => {
         selected: props && props.selected,
         value: props.value,
         busy: data.busy,
-        dropUp: props.dropUp
+        dropUp: props.dropUp,
+        attribute: props.column && props.column.key,
+        changeAttribute: props.changeAttribute
     }));
 });
 
@@ -44,12 +46,12 @@ const streamEnhancer = mapPropsStream(props$ => {
 const PagedComboboxEnhanced = streamEnhancer(
     ({ open, toggle, select, focus, change, value, valuesCount,
         loadNextPage, loadPrevPage, maxFeatures, currentPage,
-        busy, data, loading = false, dropUp = false}) => {
+        busy, data, loading = false, dropUp = false, attribute, changeAttribute}) => {
         const numberOfPages = Math.ceil(valuesCount / maxFeatures);
         return (<PagedCombobox
             pagination={{firstPage: currentPage === 1, lastPage: currentPage === numberOfPages, paginated: true, loadPrevPage, loadNextPage}}
-            busy={busy} dropUp={dropUp} data={data} open={open}
-            onFocus={focus} onToggle={toggle} onChange={change} onSelect={select}
+            busy={busy} dropUp={dropUp} data={data} attribute={attribute} open={open}
+            onFocus={focus} onToggle={toggle} onChange={change} onSelect={select} onChangeAttribute={changeAttribute}
             selectedValue={value} loading={loading}/>);
     });
 
@@ -66,7 +68,8 @@ const addStateHandlers = compose(
         typeName: props.typeName,
         value: props.value,
         attribute: props.column && props.column.key,
-        autocompleteStreamFactory: props.autocompleteStreamFactory
+        autocompleteStreamFactory: props.autocompleteStreamFactory,
+        onChange: props.onChange
     }), {
         select: (state) => () => ({
             ...state,
@@ -85,6 +88,9 @@ const addStateHandlers = compose(
                 });
             }
             const value = typeof v === "string" ? v : v.value;
+            /** this onChange handler is passed as prop
+             * and merged to the internal state, it simply forwards the value to the parent */
+            state.onChange && state.onChange(value);
             return ({
                 ...state,
                 delayDebounce: state.selected ? 0 : 500,
@@ -127,6 +133,10 @@ const addStateHandlers = compose(
             changingPage: true,
             delayDebounce: 0,
             value: state.value
+        }),
+        changeAttribute: (state) => (attribute) => ({
+            ...state,
+            attribute
         })
     })
 );

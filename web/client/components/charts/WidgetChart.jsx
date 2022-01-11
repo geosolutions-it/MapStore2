@@ -223,7 +223,7 @@ function getMargins({ type, isModeBarVisible}) {
     }
 }
 
-function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled, barChartType = 'group' } ) {
+function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled, barChartType = 'stack' } ) {
     const chartsLayoutOptions = {
         colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
         yaxis: {

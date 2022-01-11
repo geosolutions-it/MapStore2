@@ -28,8 +28,8 @@ class ThemaClassesEditor extends React.Component {
         className: PropTypes.string,
         allowEmpty: PropTypes.bool,
         customLabels: PropTypes.bool,
-        autoComplete: PropTypes.bool,
-        dropUpAutoComplete: PropTypes.bool,
+        uniqueValuesClasses: PropTypes.bool,
+        autoCompleteOptions: PropTypes.object,
         dropUpMenu: PropTypes.bool
     };
 
@@ -39,12 +39,11 @@ class ThemaClassesEditor extends React.Component {
         className: "",
         allowEmpty: true,
         customLabels: false,
-        autoComplete: false,
-        dropUpAutoComplete: false,
+        uniqueValuesClasses: false,
         dropUpMenu: false
     };
 
-    renderFieldByClassification = (classItem, index, autoComplete, dropUpAutoComplete) => {
+    renderFieldByClassification = (classItem, index, uniqueValuesClasses, autoCompleteOptions) => {
         let fieldRender;
         if (!isNil(classItem.unique)) {
             if (isNumber(classItem.unique)) {
@@ -54,17 +53,19 @@ class ThemaClassesEditor extends React.Component {
                     onChange={(value) => this.updateUnique(index, value, 'number')}
                 />);
             /** field classes with preset values - drop down input */
-            } else if (autoComplete) {
+            } else if (uniqueValuesClasses && autoCompleteOptions) {
+                const { dropUpAutoComplete, classificationAttribute, layer } = autoCompleteOptions;
                 fieldRender = (
                     <AutocompleteCombobox
                         dropUp={dropUpAutoComplete}
                         openOnFocus={false}
                         autocompleteEnabled
-                        column={{key: 'SUB_REGION'}}
+                        column={{key: classificationAttribute}}
+                        onChange={value => this.updateUnique(index, value)}
                         dataType="string"
-                        typeName="terradex:states"
-                        url={ConfigUtils.getParsedUrl("https://gs-stable.geo-solutions.it/geoserver/wfs", {"outputFormat": "json"})}
-                        value=""
+                        typeName={layer.name}
+                        url={ConfigUtils.getParsedUrl(layer.url, {"outputFormat": "json"})}
+                        value={classItem.unique}
                         filter="contains"
                         autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>);
             /** field classes without preset values - text input  */
@@ -113,7 +114,7 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
-                { this.renderFieldByClassification(classItem, index, this.props.autoComplete, this.props.dropUpAutoComplete) }
+                { this.renderFieldByClassification(classItem, index, this.props.uniqueValuesClasses, this.props.autoCompleteOptions) }
                 { this.props.customLabels &&
                     <FormControl
                         value={classItem.title}

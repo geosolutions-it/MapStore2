@@ -98,7 +98,8 @@ export default ({
         advancedOptions: true
     },
     aggregationOptions = [],
-    sampleChart}) => {
+    sampleChart,
+    layer }) => {
 
     const [showModal, setShowModal] = useState(false);
     const customColor = data.autoColorOptions?.name === 'global.colors.custom';
@@ -239,7 +240,6 @@ export default ({
                         }}
                         onChangeClassAttribute={(value) => {
                             onChange("options.classificationAttribute", value);
-                            
                         }}
                         classificationAttribute={classificationAttribute}
                         onUpdateClasses={(newClassification) => {
@@ -252,6 +252,7 @@ export default ({
                         onChangeColor={(color) => onChange("autoColorOptions.defaultCustomColor", color)}
                         defaultClassLabel={defaultClassLabel}
                         onChangeDefaultClassLabel={(value) => onChange("autoColorOptions.defaultClassLabel", value)}
+                        layer={layer}
                     />
 
                     {formOptions.showLegend ?

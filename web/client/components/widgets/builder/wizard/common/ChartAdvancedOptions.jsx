@@ -55,7 +55,7 @@ export default function ChartAdvancedOptions({
     data,
     onChange = () => {}
 }) {
-    const [barChartType, setBarChartType] = useState(data.barChartType || 'group');
+    const [barChartType, setBarChartType] = useState(data.barChartType || 'stack');
     return (<SwitchPanel id="displayCartesian"
         header={<Header data={data}/>}
         collapsible
@@ -81,20 +81,6 @@ export default function ChartAdvancedOptions({
                     <Col xs={3} className="radio-btn">
                         <input
                             type="radio"
-                            id="grouped"
-                            value="group"
-                            name="barChartType"
-                            checked={barChartType === 'group'}
-                            onChange={(e) => {
-                                const { value } = e.target;
-                                setBarChartType(value);
-                                onChange("barChartType", value);
-                            }} />
-                        <Message  msgId="Grouped" />
-                    </Col>
-                    <Col xs={3} className="radio-btn">
-                        <input
-                            type="radio"
                             id="stacked"
                             value="stack"
                             name="barChartType"
@@ -105,6 +91,20 @@ export default function ChartAdvancedOptions({
                                 onChange("barChartType", value);
                             }} />
                         <Message  msgId="Stacked" />
+                    </Col>
+                    <Col xs={3} className="radio-btn">
+                        <input
+                            type="radio"
+                            id="grouped"
+                            value="group"
+                            name="barChartType"
+                            checked={barChartType === 'group'}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                setBarChartType(value);
+                                onChange("barChartType", value);
+                            }} />
+                        <Message  msgId="Grouped" />
                     </Col>
                 </div>
             )}

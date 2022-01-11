@@ -96,6 +96,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         autoColorOptions={data.autoColorOptions}
         legend={data.legend}
         cartesian={data.cartesian}
+        layer={data.layer || layer}
         yAxis={data.yAxis}
     />);
 
