@@ -537,6 +537,15 @@ const toURLArray = (url) => {
     return url;
 };
 
+export const buildServiceUrl = (service) => {
+    switch (service.type) {
+    case "wms":
+        return [service.url, ...(service.domainAliases ?? [])].join(',');
+    default:
+        return service.url;
+    }
+};
+
 
 /**
  * Creates a map of SRS based on the record's srs object
