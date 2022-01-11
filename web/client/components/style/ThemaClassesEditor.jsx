@@ -18,8 +18,9 @@ numberLocalizer();
 import { NumberPicker } from 'react-widgets';
 import assign from 'object-assign';
 import Message from "../../components/I18N/Message";
-import AutocompleteField from '../../components/data/query/AutocompleteFieldHOC';
-
+import { createPagedUniqueAutompleteStream } from '../../observables/autocomplete';
+import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox';
+import ConfigUtils from '../../utils/ConfigUtils';
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
@@ -27,7 +28,9 @@ class ThemaClassesEditor extends React.Component {
         className: PropTypes.string,
         allowEmpty: PropTypes.bool,
         customLabels: PropTypes.bool,
-        options: PropTypes.array
+        autoComplete: PropTypes.bool,
+        dropUpAutoComplete: PropTypes.bool,
+        dropUpMenu: PropTypes.bool
     };
 
     static defaultProps = {
@@ -35,10 +38,13 @@ class ThemaClassesEditor extends React.Component {
         onUpdateClasses: () => {},
         className: "",
         allowEmpty: true,
-        customLabels: false
+        customLabels: false,
+        autoComplete: false,
+        dropUpAutoComplete: false,
+        dropUpMenu: false
     };
 
-    renderFieldByClassification = (classItem, index, options) => {
+    renderFieldByClassification = (classItem, index, autoComplete, dropUpAutoComplete) => {
         let fieldRender;
         if (!isNil(classItem.unique)) {
             if (isNumber(classItem.unique)) {
@@ -48,18 +54,26 @@ class ThemaClassesEditor extends React.Component {
                     onChange={(value) => this.updateUnique(index, value, 'number')}
                 />);
             /** field classes with preset values - drop down input */
-            } else if (options && options.length > 0) {
+            } else if (autoComplete) {
                 fieldRender = (
-                    <AutocompleteField dropUp filterField={'location'} attType="string"/>);
+                    <AutocompleteCombobox
+                        dropUp={dropUpAutoComplete}
+                        openOnFocus={false}
+                        autocompleteEnabled
+                        column={{key: 'SUB_REGION'}}
+                        dataType="string"
+                        typeName="terradex:states"
+                        url={ConfigUtils.getParsedUrl("https://gs-stable.geo-solutions.it/geoserver/wfs", {"outputFormat": "json"})}
+                        value=""
+                        filter="contains"
+                        autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>);
             /** field classes without preset values - text input  */
             } else {
-                fieldRender = (
-                    <AutocompleteField dropUp filterField={'location'} attType="string"/>);
-                // fieldRender = (<FormControl
-                //     value={classItem.unique}
-                //     type="text"
-                //     onChange={ e => this.updateUnique(index, e.target.value)}
-                // />);
+                fieldRender = (<FormControl
+                    value={classItem.unique}
+                    type="text"
+                    onChange={ e => this.updateUnique(index, e.target.value)}
+                />);
             }
         } else if (!isNil(classItem.min)) {
             fieldRender =  <>
@@ -99,7 +113,7 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
-                { this.renderFieldByClassification(classItem, index, this.props.options) }
+                { this.renderFieldByClassification(classItem, index, this.props.autoComplete, this.props.dropUpAutoComplete) }
                 { this.props.customLabels &&
                     <FormControl
                         value={classItem.title}
@@ -112,7 +126,8 @@ class ThemaClassesEditor extends React.Component {
                     className="square-button-md no-border add-rule"
                     noCaret
                     pullRight
-                    title={<Glyphicon glyph="option-vertical"/>}>
+                    title={<Glyphicon glyph="option-vertical"/>}
+                    dropup={this.props.dropUpMenu}>
                     {[
                         {labelId: 'styleeditor.addRuleBefore', glyph: 'add-row-before', value: "before"},
                         {labelId: 'styleeditor.addRuleAfter', glyph: 'add-row-after', value: "after"},

@@ -134,6 +134,9 @@ const ColorClassModal = ({
                                 onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
                                 allowEmpty={false}
                                 customLabels
+                                autoComplete
+                                dropUpAutoComplete
+                                dropUpMenu
                             />
                         </>
                         }

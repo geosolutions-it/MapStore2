@@ -35,7 +35,8 @@ const streamEnhancer = mapPropsStream(props$ => {
         open: props.open,
         selected: props && props.selected,
         value: props.value,
-        busy: data.busy
+        busy: data.busy,
+        dropUp: props.dropUp
     }));
 });
 
@@ -43,11 +44,11 @@ const streamEnhancer = mapPropsStream(props$ => {
 const PagedComboboxEnhanced = streamEnhancer(
     ({ open, toggle, select, focus, change, value, valuesCount,
         loadNextPage, loadPrevPage, maxFeatures, currentPage,
-        busy, data, loading = false }) => {
+        busy, data, loading = false, dropUp = false}) => {
         const numberOfPages = Math.ceil(valuesCount / maxFeatures);
         return (<PagedCombobox
             pagination={{firstPage: currentPage === 1, lastPage: currentPage === numberOfPages, paginated: true, loadPrevPage, loadNextPage}}
-            busy={busy} dropUp={false} data={data} open={open}
+            busy={busy} dropUp={dropUp} data={data} open={open}
             onFocus={focus} onToggle={toggle} onChange={change} onSelect={select}
             selectedValue={value} loading={loading}/>);
     });
@@ -58,6 +59,7 @@ const addStateHandlers = compose(
         delayDebounce: 0,
         performFetch: false,
         open: false,
+        openOnFocus: props.openOnFocus,
         currentPage: 1,
         maxFeatures: 5,
         url: props.url,
@@ -101,7 +103,7 @@ const addStateHandlers = compose(
                     currentPage: 1,
                     performFetch: true,
                     isToggled: false,
-                    open: true
+                    ...(state.openOnFocus ? {open: true} : {} )
                 });
             }
             return (state);
