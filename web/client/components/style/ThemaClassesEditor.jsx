@@ -21,6 +21,7 @@ import Message from "../../components/I18N/Message";
 import { createPagedUniqueAutompleteStream } from '../../observables/autocomplete';
 import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox';
 import ConfigUtils from '../../utils/ConfigUtils';
+import { generateRandomHexColor } from '../../utils/ColorUtils';
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
@@ -30,7 +31,8 @@ class ThemaClassesEditor extends React.Component {
         customLabels: PropTypes.bool,
         uniqueValuesClasses: PropTypes.bool,
         autoCompleteOptions: PropTypes.object,
-        dropUpMenu: PropTypes.bool
+        dropUpMenu: PropTypes.bool,
+        usePreSetColors: PropTypes.bool
     };
 
     static defaultProps = {
@@ -246,7 +248,7 @@ class ThemaClassesEditor extends React.Component {
         }
         let args = [updateIndex, deleteCount];
         if (type !== 'remove') {
-            const color = '#ffffff';
+            const color = this.props.usePreSetColors ?  generateRandomHexColor() : '#ffffff';
             let classifyObj;
             if (!isNil(currentRule.unique)) {
                 const uniqueValue = isNumber(currentRule.unique) ? 0 : '';

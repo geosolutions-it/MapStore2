@@ -187,6 +187,11 @@ export const colorToRgbaStr = (color, alpha, defaultColor) => {
     return color && c.setAlpha(toNumber(alpha !== undefined ? alpha : c.getAlpha())).toRgbString() || defaultColor;
 };
 
+export const generateRandomHexColor = () => {
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    return randomColor;
+};
+
 ColorUtils = {
     decToHex,
     rgbToHex,
@@ -199,6 +204,7 @@ ColorUtils = {
     hexToHsv,
     hexToRgb,
     colorToHexStr,
-    colorToRgbaStr
+    colorToRgbaStr,
+    generateRandomHexColor
 };
 export default ColorUtils;

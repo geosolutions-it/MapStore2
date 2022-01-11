@@ -21,6 +21,8 @@ import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
 import HTML from '../../../../I18N/HTML';
 
+import { generateRandomHexColor } from '../../../../../utils/ColorUtils';
+
 const getLabelPopover = (placement) => (
     <DisposablePopover
         popoverClassName="chart-color-class-popover"
@@ -142,6 +144,7 @@ const ColorClassModal = ({
                                     layer
                                 }}
                                 dropUpMenu
+                                usePreSetColors
                             />
                         </>
                         }
@@ -178,7 +181,7 @@ ColorClassModal.defaultProps = {
     classificationAttribute: '',
     onUpdateClasses: () => {},
     options: [],
-    classification: [{title: '', color: '#ffffff', type: 'Polygon', unique: ''}],
+    classification: [{title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}],
     defaultCustomColor: '#0888A1',
     defaultClassLabel: '',
     onChangeColor: () => {},
