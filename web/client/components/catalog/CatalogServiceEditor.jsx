@@ -48,7 +48,8 @@ export default ({
     tileSizeOptions = [256, 512],
     formatsLoading,
     layerOptions = {},
-    services
+    services,
+    autoSetVisibilityLimits = false
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -85,6 +86,7 @@ export default ({
                 selectedService={selectedService}
                 onFormatOptionsFetch={onFormatOptionsFetch}
                 formatsLoading={formatsLoading}
+                autoSetVisibilityLimits={autoSetVisibilityLimits}
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>
