@@ -14,7 +14,7 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 //
 // // excludes some problematic modules from sharing
 // const excludes = [
-//     "react-draft-wysiwyg", "html-to-draftjs", "geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
+//     "react-draft-wysiwyg", "html-to-draftjs", "@geosolutions/geostyler-geocss-parser", "@geosolutions/wkt-parser", "@turf/bbox-polygon"
 // ];
 
 const packageJson =  require('../package.json');
