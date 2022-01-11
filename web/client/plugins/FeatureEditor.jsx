@@ -165,7 +165,11 @@ const FeatureDock = (props = {
 
     useEffect(() => {
         props.initPlugin({virtualScroll, editingAllowedRoles: props.editingAllowedRoles, maxStoredPages: props.maxStoredPages});
-    }, []);
+    }, [
+        virtualScroll,
+        (props.editingAllowedRoles ?? []).join(","), // this avoids multiple calls when the array remains the equal
+        props.maxStoredPages
+    ]);
 
     return (
         <Dock {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
