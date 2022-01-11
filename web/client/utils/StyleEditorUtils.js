@@ -26,6 +26,7 @@ import uuidv1 from 'uuid/v1';
 import url from 'url';
 
 import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
+import { getStyleParser } from './VectorStyleUtils';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
 
@@ -541,6 +542,37 @@ export const updateExternalGraphicNode = (options, parsedSLD) => {
     return { parsedCode, errorObj };
 };
 
+
+export function compareStyleMetadataAndCode({ metadata = {}, format, code } = {}) {
+
+    const { msStyleJSON } = metadata;
+    if (!msStyleJSON) {
+        return new Promise(resolve => resolve(false));
+    }
+
+    let styleJSON;
+    try {
+        styleJSON = parseJSONStyle(JSON.parse(msStyleJSON));
+    } catch (e) {
+        return new Promise(resolve => resolve(true));
+    }
+
+    return import('md5')
+        .then((mod) => {
+            const md5 = mod.default;
+            return getStyleParser(format)
+                .then(parser =>
+                    parser
+                        .writeStyle(styleJSON)
+                        .then(parsedCode => {
+                            const hash = md5(code);
+                            const parsedHash = md5(parsedCode);
+                            return hash !== parsedHash;
+                        })
+                );
+        });
+}
+
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
@@ -557,5 +589,6 @@ export default {
     parseJSONStyle,
     formatJSONStyle,
     validateImageSrc,
-    updateExternalGraphicNode
+    updateExternalGraphicNode,
+    compareStyleMetadataAndCode
 };

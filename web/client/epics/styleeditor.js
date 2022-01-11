@@ -53,34 +53,51 @@ import {
     loadingStyleSelector,
     styleServiceSelector,
     getUpdatedLayer,
-    editorMetadataSelector,
-    selectedStyleMetadataSelector
+    editorMetadataSelector
 } from '../selectors/styleeditor';
 
 import { getSelectedLayer, layerSettingSelector } from '../selectors/layers';
-import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } from '../utils/StyleEditorUtils';
+import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts, compareStyleMetadataAndCode } from '../utils/StyleEditorUtils';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { updateStyleService } from '../api/StyleEditor';
+
 /*
  * Observable to get code of a style, it works only in edit status
  */
-const getStyleCodeObservable = ({status, styleName, baseUrl}) =>
+const getStyleCodeObservable = ({ status, styleName, baseUrl }) =>
     status === 'edit' ?
         Rx.Observable.defer(() =>
             StylesAPI.getStyleCodeByName({
                 baseUrl,
                 styleName
             })
+                .then(style =>
+                    compareStyleMetadataAndCode(style)
+                        .then(metadataNeedsReset => [style, metadataNeedsReset])
+                        .catch(() => [style, false])
+                )
         )
-            .switchMap(style => Rx.Observable.of(
-                selectStyleTemplate({
-                    languageVersion: style.languageVersion,
-                    code: style.code,
-                    templateId: '',
-                    format: style.format,
-                    init: true
-                })
-            ))
+            .switchMap(([style, metadataNeedsReset]) => {
+                return Rx.Observable.of(
+                    selectStyleTemplate({
+                        languageVersion: style.languageVersion,
+                        code: style.code,
+                        templateId: '',
+                        format: style.format,
+                        init: true
+                    }),
+                    updateEditorMetadata(metadataNeedsReset
+                        ? {
+                            editorType: 'textarea',
+                            styleJSON: null
+                        }
+                        : {
+                            editorType: style?.metadata?.msEditorType || 'textarea',
+                            styleJSON: style?.metadata?.msStyleJSON
+                        }
+                    )
+                );
+            })
             .catch(err => Rx.Observable.of(errorStyle('edit', err)))
         : Rx.Observable.empty();
 /*
@@ -343,7 +360,6 @@ export const updateLayerOnStatusChangeEpic = (action$, store) =>
             const selectedStyle = selectedStyleSelector(state);
             const styleName = selectedStyle || layer.availableStyles && layer.availableStyles[0] && layer.availableStyles[0].name;
 
-            const selectedStyleMetadata = selectedStyleMetadataSelector(state);
             const { baseUrl = '' } = styleServiceSelector(state);
 
             return describeAction && updateLayerSettingsObservable(action$, store,
@@ -360,26 +376,15 @@ export const updateLayerOnStatusChangeEpic = (action$, store) =>
                             setEditPermissionStyleEditor(!(updatedLayer
                                     && updatedLayer.describeLayer
                                     && updatedLayer.describeLayer.error === 401)),
-                            updateEditorMetadata({
-                                editorType: selectedStyleMetadata.msEditorType || 'textarea',
-                                styleJSON: selectedStyleMetadata.msStyleJSON
-                            }),
                             loadedStyle()
                         )
                     );
                 }
-            ) || Rx.Observable.concat(
-                getStyleCodeObservable({
-                    status: action.status,
-                    styleName,
-                    baseUrl
-                }),
-                Rx.Observable.of(
-                    updateEditorMetadata({
-                        editorType: selectedStyleMetadata.msEditorType || 'textarea',
-                        styleJSON: selectedStyleMetadata.msStyleJSON
-                    })
-                ));
+            ) || getStyleCodeObservable({
+                status: action.status,
+                styleName,
+                baseUrl
+            });
         });
 /**
  * Gets every `SELECT_STYLE_TEMPLATE`, `EDIT_STYLE_CODE` events.
