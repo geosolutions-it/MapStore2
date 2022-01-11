@@ -1324,6 +1324,7 @@
             "featureClose": "Želite li zaista zatvoriti tablicu objekata?",
             "delete": "Želite li potvrditi brisanje {count} objekata?",
             "missingGeometry": "Nedostaje geometrija",
+            "zoomObject": "Zumirajte predmet",
             "filter": {
                 "placeholders": {
                     "default": "Traži...",

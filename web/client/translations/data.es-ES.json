@@ -1441,7 +1441,13 @@
             "autoSetVisibilityLimits": {
                 "label": "Establecer límite de visibilidad",
                 "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
-            }
+            },
+          "domainAliases": {
+            "title": "Alias de dominio",
+            "helpTooltip": "Esta opción se utiliza para dividir el contenido en varios subdominios",
+            "addAliasTooltip": "Agregar alias",
+            "removeAliasTooltip": "Eliminar alias"
+          }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -1604,6 +1610,7 @@
             "featureClose": "¿Realmente desea cerrar la tabla?",
             "delete": "¿Confirma la eliminación de {count} características?",
             "missingGeometry": "Geometría no encontrada",
+            "zoomObject": "Acercamiento a objeto espacial",
             "filter": {
                 "placeholders": {
                     "default": "Buscar...",

@@ -1441,6 +1441,12 @@
             "autoSetVisibilityLimits": {
                 "label": "Imposta limite di visibilità",
                 "tooltip": "Applica automaticamente i limiti di visibilità suggeriti dal server"
+            },
+            "domainAliases": {
+              "title": "Alias di dominio",
+              "helpTooltip": "Questa opzione viene utilizzata per suddividere il contenuto in più sottodomini",
+              "addAliasTooltip": "Aggiungi alias",
+              "removeAliasTooltip": "Rimuovi alias"
             }
         },
         "uploader": {
@@ -1604,6 +1610,7 @@
             "featureClose": "Sicuro di voler chiudere la griglia?",
             "delete": "Confermi di cancellare {count} feature?",
             "missingGeometry": "Geometria mancante",
+            "zoomObject": "Zoom alla feature",
             "filter": {
                 "placeholders": {
                     "default": "Cerca...",

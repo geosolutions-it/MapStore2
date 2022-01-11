@@ -37,7 +37,10 @@ Replacing:
     - [ ] Commit on master 0.&lt;x-incremented&gt;.0
     - [ ] Make sure on YYYY.XX.xx we have the 0.x.&lt;number-of-minor-version&gt;
 - [ ] Update `CHANGELOG.md`. [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation) - both master and stable
-- [ ] Fix `pom.xml` to stable versions ( no `-SNAPSHOT` in release).
+- [ ] Fix `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
+- [ ] Update the version of java modules on the release branch to a stable, incremental version.
+    - [ ] Run `mvn versions:set -DnewVersion=<VERSION> -DprocessAllModules -DgenerateBackupPoms=false` to update package version, where <VERSION> is the version of the java packages (e.g. `1.2.2`).
+    - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`
 - [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp should be deployed for new project system and product).
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
@@ -53,14 +56,15 @@ Replacing:
 - [ ] Get the [latest mapstore.war](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/product/target/mapstore.war) from the Releaser Jenkins build 
 - [ ] Get the [latest mapstore2-YYYY.XX.mm-bin.zip](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/release/target/) from the Releaser Jenkins build
   > from the job [configuration page](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/) there is a link to access the job workspace to easily download the built WAR and binary package
-- [ ] Download `mapstore-printing.zip` [here](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/printing/target/mapstore-printing.zip) from the Releaser Jenkins build workspace
+- [ ] Download `mapstore-printing.zip` [here](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/java/printing/target/mapstore-printing.zip) from the Releaser Jenkins build workspace
 - [ ] Check that the printing plugin is missing in the binary package to release
 - [ ] Remove manually from localConfig the entry for authentication to gs-stable from binary and war packages.
 - [ ] Upload the updated binary, the war package and `mapstore-printing.zip` on github release
 - [ ] Publish the release
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
 - [ ] Port needed commits to master branch (Changelog changes, docs changes...)
-- [ ] Create a relese for https://github.com/geosolutions-it/MapStoreExtension with the same name and attach the zip to the release
+- [ ] Reset versions of java modules to `-SNAPSHOT`. the command is  `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false` where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT).
+- [ ] Create a release for https://github.com/geosolutions-it/MapStoreExtension with the same name and attach the zip to the release
 - [ ] Create a blog post
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Update the release procedure if needed.

@@ -1278,6 +1278,7 @@
             "featureClose": "Are you sure to close the feature grid?",
             "delete": "Do you confirm to delete {count} features?",
             "missingGeometry": "Missing geometry",
+            "zoomObject": "Zoom to object",
             "filter": {
                 "placeholders": {
                     "default": "Search...",
