@@ -396,6 +396,10 @@
                 "createANewOne": "Crea una nuova GeoStory",
                 "deleteError": "Si è verificato un errore durante l'eliminazione della GeoStory",
                 "errorLoadingGeostories": "Si è verificato un errore durante il caricamento di GeoStories"
+            },
+            "contexts": {
+              "title": "Contesti ({count})",
+              "noContextAvailable": "Nessun contesto disponibile"
             }
         },
         "map": {

@@ -396,6 +396,10 @@
                 "createANewOne": "Créer une nouvelle GeoStory",
                 "deleteError": "Une erreur s'est produite lors de la suppression du GeoStory",
                 "errorLoadingGeostories": "Une erreur s'est produite lors du chargement de GeoStories"
+            },
+            "contexts": {
+              "title": "Contextes ({count})",
+              "noContextAvailable": "Aucun contexte disponible"
             }
         },
         "map": {

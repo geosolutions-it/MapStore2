@@ -13,7 +13,8 @@ import { Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import Message from '../../components/I18N/Message';
 import ConfirmModal from '../../components/misc/ResizableModal';
-import {pick} from "lodash/object";
+import { get, pick } from "lodash";
+import ConfigUtils from "../../utils/ConfigUtils";
 
 class Home extends React.Component {
     static propTypes = {
@@ -86,7 +87,9 @@ class Home extends React.Component {
     }
 
     goHome = () => {
-        this.context.router.history.push("/");
+        const miscSettings = ConfigUtils.getConfigProp('miscSettings');
+        const path = get(miscSettings, ['home', 'path'], '/');
+        this.context.router.history.push(path);
     };
 }
 

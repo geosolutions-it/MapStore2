@@ -31,6 +31,7 @@ import {scrollIntoViewId} from '../utils/DOMUtil';
 import featuredmaps from '../reducers/featuredmaps';
 import maptype from '../reducers/maptype';
 import {DASHBOARD_DEFAULT_SHARE_OPTIONS, GEOSTORY_DEFAULT_SHARE_OPTIONS} from '../utils/ShareUtils';
+import { editContext } from "../actions/contextmanager";
 
 const ToolTipedNavItem = tooltip(NavItem);
 
@@ -50,7 +51,8 @@ class FeaturedMaps extends React.Component {
         version: PropTypes.string,
         showAPIShare: PropTypes.bool,
         shareOptions: PropTypes.object,
-        shareToolEnabled: PropTypes.bool
+        shareToolEnabled: PropTypes.bool,
+        onEditData: PropTypes.func
     };
 
     static contextTypes = {
@@ -58,7 +60,8 @@ class FeaturedMaps extends React.Component {
     };
 
     static defaultProps = {
-        shareToolEnabled: true
+        shareToolEnabled: true,
+        onEditData: () => {}
     }
 
     UNSAFE_componentWillMount() {
@@ -104,6 +107,8 @@ class FeaturedMaps extends React.Component {
                 getShareUrl={this.makeShareUrl}
                 shareOptions={this.getShareOptions} // TODO: share options depending on the content type
                 shareToolEnabled={this.props.shareToolEnabled}
+                editDataEnabled={(res) => { return res?.category?.name === 'CONTEXT';}}
+                onEditData={this.props.onEditData}
                 bottom={this.props.bottom}
                 style={items.length === 0 ? {display: 'none'} : {}}/>
         );
@@ -119,6 +124,12 @@ class FeaturedMaps extends React.Component {
         if (res.category && res.category.name === "GEOSTORY") {
             return {
                 url: `geostory/${res.id}`,
+                shareApi: false
+            };
+        }
+        if (res.category && res.category.name === "CONTEXT") {
+            return {
+                url: `context/${res.name}`,
                 shareApi: false
             };
         }
@@ -192,7 +203,15 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
 
 const FeaturedMapsPlugin = compose(
     connect(featuredMapsPluginSelector, {
-        enableFeaturedMaps: setFeaturedMapsEnabled
+        enableFeaturedMaps: setFeaturedMapsEnabled,
+        onEditData: (res) => {
+            switch (res?.category?.name) {
+            case "CONTEXT":
+                return editContext(res);
+            default:
+                return () => {};
+            }
+        }
     }),
     defaultProps({
         mapType: 'leaflet',

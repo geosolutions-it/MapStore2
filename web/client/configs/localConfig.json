@@ -59,6 +59,11 @@
       "enabled": true
     },
     "projectionDefs": [],
+    "miscSettings": {
+      "home": {
+        "path": "/"
+      }
+    },
     "initialState": {
       "defaultState": {
         "annotations": {
