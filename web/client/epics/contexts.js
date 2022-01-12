@@ -46,7 +46,7 @@ export const searchContextsOnMapSearch = (action$, store) =>
     action$.ofType(MAPS_LIST_LOADING, SET_CONTEXTS_AVAILABLE)
         .switchMap(({ searchText }) => {
             const state = store.getState();
-            if (state.contexts.available) {
+            if (state.contexts?.available) {
                 return Rx.Observable.of(searchContexts(searchText));
             }
             return Rx.Observable.empty();
