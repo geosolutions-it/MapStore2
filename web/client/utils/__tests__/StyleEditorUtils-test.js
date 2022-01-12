@@ -28,7 +28,8 @@ import {
     parseJSONStyle,
     formatJSONStyle,
     validateImageSrc,
-    updateExternalGraphicNode
+    updateExternalGraphicNode,
+    detectStyleCodeChanges
 } from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
@@ -965,6 +966,84 @@ describe('StyleEditorUtils test', () => {
             expect(errorObj.messageId).toEqual('styleeditor.imageFormatEmpty');
             expect(errorObj.status).toEqual(400);
             expect(parsedCode).toBeFalsy();
+        });
+    });
+
+    describe('test detectStyleCodeChanges', ()=>{
+        it('should not detect changes if msStyleJSON is not defined in metadata', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #ff0000;\n}\n',
+                format: 'css'
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+        it('should not detect changes if the parsed msStyleJSON has same hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #ff0000;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msStyleJSON: JSON.stringify({
+                        name: 'Style',
+                        rules: [ {
+                            name: 'Rule',
+                            symbolizers: [
+                                {
+                                    color: '#ff0000',
+                                    fillOpacity: 1,
+                                    kind: 'Fill'
+                                }
+                            ]
+                        }]
+                    })
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+        it('should detect changes if the parsed msStyleJSON has different hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #0000ff;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msStyleJSON: JSON.stringify({
+                        name: 'Style',
+                        rules: [ {
+                            name: 'Rule',
+                            symbolizers: [
+                                {
+                                    color: '#ff0000',
+                                    fillOpacity: 1,
+                                    kind: 'Fill'
+                                }
+                            ]
+                        }]
+                    })
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
         });
     });
 });

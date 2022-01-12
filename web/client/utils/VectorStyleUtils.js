@@ -338,9 +338,14 @@ export const createStylesAsync = (styles = []) => {
     });
 };
 
+/**
+ * Import a style parser based on the format
+ * @param  {string} format format encoding of the style: css, sld or openlayers
+ * @return {promise} returns the parser instance if available
+ */
 export const getStyleParser = (format = 'sld') => {
     if (!StyleParsers[format]) {
-        return new Promise(resolve => resolve(null));
+        return Promise.resolve(null);
     }
     // import parser libraries dynamically
     return StyleParsers[format]();

@@ -57,7 +57,7 @@ import {
 } from '../selectors/styleeditor';
 
 import { getSelectedLayer, layerSettingSelector } from '../selectors/layers';
-import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts, compareStyleMetadataAndCode } from '../utils/StyleEditorUtils';
+import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts, detectStyleCodeChanges } from '../utils/StyleEditorUtils';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { updateStyleService } from '../api/StyleEditor';
 
@@ -72,7 +72,7 @@ const getStyleCodeObservable = ({ status, styleName, baseUrl }) =>
                 styleName
             })
                 .then(style =>
-                    compareStyleMetadataAndCode(style)
+                    detectStyleCodeChanges(style)
                         .then(metadataNeedsReset => [style, metadataNeedsReset])
                         .catch(() => [style, false])
                 )

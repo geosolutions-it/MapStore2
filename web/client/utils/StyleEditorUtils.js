@@ -542,19 +542,28 @@ export const updateExternalGraphicNode = (options, parsedSLD) => {
     return { parsedCode, errorObj };
 };
 
-
-export function compareStyleMetadataAndCode({ metadata = {}, format, code } = {}) {
+/**
+ * This function detects if the style code has been changed by external style editor
+ * by comparing the parsed JSON style with the style body code via md5 hash
+ * @param  {object} style a style returned from the style api including the code
+ * @param  {string} style.code the style body
+ * @param  {string} style.format format encoding of the style: css or sld
+ * @param  {object} style.metadata the parsed metadata of the style
+ * @param  {object} style.metadata.msStyleJSON the json representation of the style used by the visual style editor
+ * @return {promise} returns a true if the metadata needs a reset
+ */
+export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
 
     const { msStyleJSON } = metadata;
     if (!msStyleJSON) {
-        return new Promise(resolve => resolve(false));
+        return Promise.resolve(false);
     }
 
     let styleJSON;
     try {
         styleJSON = parseJSONStyle(JSON.parse(msStyleJSON));
     } catch (e) {
-        return new Promise(resolve => resolve(true));
+        return Promise.resolve(true);
     }
 
     return import('md5')
@@ -590,5 +599,5 @@ export default {
     formatJSONStyle,
     validateImageSrc,
     updateExternalGraphicNode,
-    compareStyleMetadataAndCode
+    detectStyleCodeChanges
 };
