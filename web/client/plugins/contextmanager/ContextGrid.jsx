@@ -21,6 +21,9 @@ const Grid = compose(
             if (props.invalidateFeaturedMaps) {
                 props.invalidateFeaturedMaps();
             }
+            if (props.onShowSuccessNotification) {
+                props.onShowSuccessNotification();
+            }
         }
     }),
     defaultProps({
