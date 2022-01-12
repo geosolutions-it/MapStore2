@@ -67,7 +67,7 @@ class PasswordReset extends React.Component {
         }
         let pw = this.state.password;
         if (pw !== null && pw.length < this.props.minPasswordSize && pw.length > 0) {
-            return <Alert bsStyle="danger"><Message msgId="user.passwordMinlenght" msgParams={{minSize: this.props.minPasswordSize}}/></Alert>;
+            return <Alert bsStyle="danger"><Message msgId="user.passwordMinlenght" msgParams={{data: this.props.minPasswordSize}}/></Alert>;
         } else if (!this.isMainPasswordValid()) {
             return <Alert bsStyle="danger"><Message msgId="user.passwordInvalid" /></Alert>;
         } else if (pw !== null && pw !== this.state.passwordcheck ) {
