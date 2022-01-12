@@ -13,6 +13,7 @@ import { MAPS_LOAD_MAP, MAPS_LIST_LOADED } from '../../actions/maps';
 import { DASHBOARDS_LIST_LOADED } from '../../actions/dashboards';
 import { GEOSTORIES_LIST_LOADED } from '../../actions/geostories';
 import { updateMapsDashboardTabs } from '../contenttabs';
+import {CONTEXTS_LIST_LOADED} from "../../actions/contextmanager";
 
 describe('Test Maps Dashboard Content Tabs', () => {
     it('test updateMapsDashboardTabs flow ', done => {
@@ -20,7 +21,8 @@ describe('Test Maps Dashboard Content Tabs', () => {
             {type: MAPS_LOAD_MAP},
             {type: MAPS_LIST_LOADED, maps: {totalCount: 0}},
             {type: DASHBOARDS_LIST_LOADED, totalCount: 1},
-            {type: GEOSTORIES_LIST_LOADED, totalCount: 2}
+            {type: GEOSTORIES_LIST_LOADED, totalCount: 2},
+            {type: CONTEXTS_LIST_LOADED, totalCount: 1}
         ];
         testEpic(updateMapsDashboardTabs, 1, act, (res) => {
             const action = res[0];

@@ -14,6 +14,7 @@ import FitIcon from '../misc/FitIcon';
 import thumbUrl from '../maps/style/default.jpg';
 import assign from 'object-assign';
 import ConfirmModal from '../misc/ResizableModal';
+import { isFunction } from "lodash";
 
 class ResourceCard extends React.Component {
     static propTypes = {
@@ -22,7 +23,7 @@ class ResourceCard extends React.Component {
         backgroundOpacityStart: PropTypes.number,
         backgroundOpacityEnd: PropTypes.number,
         resource: PropTypes.object,
-        editDataEnabled: PropTypes.bool,
+        editDataEnabled: PropTypes.oneOfType(PropTypes.bool, PropTypes.func),
         shareToolEnabled: PropTypes.bool,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -104,6 +105,7 @@ class ResourceCard extends React.Component {
 
     render() {
         const isFeatured = this.props.resource && (this.props.resource.featured === 'true' || this.props.resource.featured === 'added');
+        const editDataEnabled = isFunction(this.props.editDataEnabled) ? this.props.editDataEnabled(this.props.resource) : this.props.editDataEnabled;
         const availableAction = [
             {
                 visible: this.props.resource.canEdit === true,
@@ -117,7 +119,7 @@ class ResourceCard extends React.Component {
                 }
             },
             {
-                visible: this.props.resource.canEdit === true && this.props.editDataEnabled === true,
+                visible: this.props.resource.canEdit === true && editDataEnabled === true,
                 glyph: 'pencil',
                 disabled: this.props.resource.updating,
                 loading: this.props.resource.updating,

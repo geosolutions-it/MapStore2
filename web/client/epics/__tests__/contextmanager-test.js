@@ -12,8 +12,8 @@ import { testEpic } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 
 import {
-    searchContextsEpic,
-    reloadOnContexts,
+    contextManagerSearchContextsEpic,
+    contextManagerReloadOnContexts,
     editContext as editContextEpic
 } from '../contextmanager';
 
@@ -50,7 +50,7 @@ describe('contextmanager epics', () => {
         });
 
         const startActions = [searchContexts("Search Text")];
-        testEpic(searchContextsEpic, 3, startActions, actions => {
+        testEpic(contextManagerSearchContextsEpic, 3, startActions, actions => {
             expect(actions.length).toBe(3);
             expect(actions[0].type).toBe(LOADING);
             expect(actions[0].name).toBe("loading");
@@ -65,7 +65,7 @@ describe('contextmanager epics', () => {
     });
     it('reload on contextSaved', (done) => {
         const startActions = [contextSaved("Search Text")];
-        testEpic(reloadOnContexts, 1, startActions, ([a]) => {
+        testEpic(contextManagerReloadOnContexts, 1, startActions, ([a]) => {
             expect(a.type).toBe(SEARCH_CONTEXTS);
             expect(a.options).toExist();
             expect(a.options.params).toExist();
@@ -92,7 +92,7 @@ describe('contextmanager epics', () => {
         });
 
         const startActions = [searchContexts("Search Text")];
-        testEpic(searchContextsEpic, 3, startActions, actions => {
+        testEpic(contextManagerSearchContextsEpic, 3, startActions, actions => {
             expect(actions.length).toBe(3);
             expect(actions[0].type).toBe(LOADING);
             expect(actions[0].name).toBe("loading");
