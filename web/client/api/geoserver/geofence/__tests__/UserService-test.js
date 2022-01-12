@@ -45,7 +45,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getUsersCount', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/usergroup/users.json`);
+            expect(config.url).toBe(`/rest/security/usergroup/users.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, USERS];
         });
@@ -58,7 +58,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getUsers', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/usergroup/users.json`);
+            expect(config.url).toBe(`/rest/security/usergroup/users.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, USERS];
         });
@@ -71,7 +71,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getUsers pagination', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/usergroup/users.json`);
+            expect(config.url).toBe(`/rest/security/usergroup/users.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, USERS];
         });
@@ -85,7 +85,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getUsers from service', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/usergroup/service/geostore/users.json`);
+            expect(config.url).toBe(`/rest/security/usergroup/service/geostore/users.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, USERS];
         });
@@ -100,7 +100,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getUsersCount from service', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/usergroup/service/geostore/users.json`);
+            expect(config.url).toBe(`/rest/security/usergroup/service/geostore/users.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, USERS];
         });
@@ -114,7 +114,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
 
     it('getUsersCount with filter', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/usergroup/users.json`);
+            expect(config.url).toBe(`/rest/security/usergroup/users.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, USERS];
         });
@@ -127,7 +127,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getUsers with filter, case insensitive', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/usergroup/users.json`); // test_user1, test_user10, test_user11
+            expect(config.url).toBe(`/rest/security/usergroup/users.json`); // test_user1, test_user10, test_user11
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, USERS];
         });
@@ -140,7 +140,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getRolesCount, case insensitive', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/roles.json`);
+            expect(config.url).toBe(`/rest/security/roles.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, ROLES];
         });
@@ -153,7 +153,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getRoles', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/roles.json`);
+            expect(config.url).toBe(`/rest/security/roles.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, ROLES];
         });
@@ -166,7 +166,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getRoles pagination', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/roles.json`);
+            expect(config.url).toBe(`/rest/security/roles.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, ROLES];
         });
@@ -179,7 +179,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getRolesCount with filter, case insensitive', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/roles.json`);
+            expect(config.url).toBe(`/rest/security/roles.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, ROLES];
         });
@@ -192,7 +192,7 @@ describe('UserService API for GeoFence StandAlone (GeoServer API)', () => {
     });
     it('getRoles with filter, case insensitive', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rest/security/roles.json`);
+            expect(config.url).toBe(`/rest/security/roles.json`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             return [200, ROLES];
         });
