@@ -98,7 +98,7 @@ export function login(username, password) {
     };
 }
 
-export function changePasswordSuccess(user, newPassword) {
+export function changePasswordSuccess(user) {
     return {
         type: CHANGE_PASSWORD_SUCCESS,
         user: user
