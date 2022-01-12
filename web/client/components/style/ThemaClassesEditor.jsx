@@ -54,7 +54,7 @@ class ThemaClassesEditor extends React.Component {
                     value={classItem.unique}
                     onChange={(value) => this.updateUnique(index, value, 'number')}
                 />);
-            /** field classes with preset values - drop down input */
+            /** field classes with preset values - drop down autocomplete input */
             } else if (uniqueValuesClasses && autoCompleteOptions) {
                 const { dropUpAutoComplete, classificationAttribute, layer } = autoCompleteOptions;
                 fieldRender = (
@@ -106,7 +106,7 @@ class ThemaClassesEditor extends React.Component {
     }
 
     renderClasses = () => {
-        return this.props.classification.map((classItem, index) => (
+        return this.props.classification.map((classItem, index, classification) => (
             <FormGroup
                 key={index}>
                 <ColorSelector
@@ -140,7 +140,7 @@ class ThemaClassesEditor extends React.Component {
                             return  (
                                 <MenuItem
                                     key={option.value}
-                                    onClick={() => this.updateClassification(index, option.value)}>
+                                    onClick={() => this.updateClassification(index, option.value, classification)}>
                                     <><Glyphicon glyph={option.glyph}/>
                                         <Message msgId={option.labelId} />
                                     </>
@@ -227,12 +227,13 @@ class ThemaClassesEditor extends React.Component {
         }
     };
 
-    updateClassification = (classIndex, type) => {
+    updateClassification = (classIndex, type, classification) => {
         let updateIndex;
         let updateMinMax;
         let deleteCount = 0;
         let newClassification = [...this.props.classification];
         const currentRule = newClassification[classIndex];
+        const currentColors = classification.map(item => item.color);
 
         if (type === 'before') {
             const isFirstIndex = classIndex === 0;
@@ -248,7 +249,7 @@ class ThemaClassesEditor extends React.Component {
         }
         let args = [updateIndex, deleteCount];
         if (type !== 'remove') {
-            const color = this.props.usePreSetColors ?  generateRandomHexColor() : '#ffffff';
+            const color = this.props.usePreSetColors ?  generateRandomHexColor(currentColors) : '#ffffff';
             let classifyObj;
             if (!isNil(currentRule.unique)) {
                 const uniqueValue = isNumber(currentRule.unique) ? 0 : '';

@@ -1826,6 +1826,7 @@
                         "classLabel": "Klassenbezeichnung",
                         "classValue": "Klassenwert",
                         "color": "Farbe",
+                        "confirmModalMessage": "Nicht klassifizierte Werte schließen und verwerfen?",
                         "classificationAttribute": "Klassifizierungsattribut",
                         "customLabels": "Benutzerdefinierte Etiketten",
                         "customLabelsExample": "<div><p><code>${legendValue}</code> kann als Platzhalter verwendet werden, um den Wert der ursprünglichen Beschriftung zu ersetzen.</p><p>Legendenelemente mit gleichem Textinhalt werden im Diagramm gruppiert.</p><h5>Beispiel</h5><dl><dt><b>Attribut:</b></dt><dd>POPULATION</dd><dt><b>Klassenbezeichnung:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Ergebnisse:</b></dt><dd>POPULATION California</dd></dl></div>",
@@ -1970,6 +1971,7 @@
                 "yAxisLabel": "Legend Label",
                 "title": "Erweiterte Optionen",
                 "legend": "Legende",
+                "barChartType": "Balkendiagrammtyp",
                 "axisTypes": {
                   "auto": "Auto",
                   "linear": "linear",

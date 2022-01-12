@@ -76,7 +76,7 @@ export default function ChartAdvancedOptions({
                 classificationAttribute && (
                 <div className="bar-chart-type">
                     <Col componentClass={ControlLabel} sm={6}>
-                        <Message msgId="Bar Chart Type" />
+                        <Message msgId="widgets.advanced.barChartType" />
                     </Col>
                     <Col xs={3} className="radio-btn">
                         <input

@@ -11,7 +11,9 @@ import { Row, Col, Form, FormGroup, FormControl, ControlLabel, Glyphicon, Overla
 import Message from '../../../../I18N/Message';
 import Select from 'react-select';
 import ColorRamp from '../../../../styleeditor/ColorRamp';
+import { generateRandomHexColor } from '../../../../../utils/ColorUtils';
 import Button from '../../../../misc/Button';
+import ConfirmModal from '../../../../../components/resources/modals/ConfirmModal';
 import StepHeader from '../../../../misc/wizard/StepHeader';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import ChartAdvancedOptions from './ChartAdvancedOptions';
@@ -60,8 +62,13 @@ const COLORS = [{
     custom: true
 }];
 
-const CLASSIFIED_COLORS = [{title: '', color: '#ffffff', type: 'Polygon', unique: ''}];
+const CLASSIFIED_COLORS = [{title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}];
 
+const getConfirmModal = (show, onClose, onConfirm) => (
+    <ConfirmModal show={show} onClose={onClose} onConfirm={onConfirm}>
+        <Message msgId="widgets.builder.wizard.classAttributes.confirmModalMessage" />
+    </ConfirmModal>
+);
 
 const getColorRangeItems = (type, classification, classificationAttribute, defaultCustomColor) => {
     COLORS.filter(item => item.custom)[0].ramp = !classificationAttribute ? defaultCustomColor : [...classification.map(item => item.color), defaultCustomColor];
@@ -102,11 +109,15 @@ export default ({
     layer }) => {
 
     const [showModal, setShowModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const customColor = data.autoColorOptions?.name === 'global.colors.custom';
     const { classificationAttribute = undefined } = data?.options || {};
     const { classification = CLASSIFIED_COLORS } = data?.autoColorOptions || {};
     const { defaultClassLabel = '' } = data?.autoColorOptions || {};
     const defaultCustomColor = data?.autoColorOptions?.defaultCustomColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1';
+    const discardEmptyClasses = (classifications) => {
+        return classifications.filter(item => item.unique && item.value);
+    };
 
     /** line charts do not support custom colors ATM and blue is preselected */
     useEffect(() => {
@@ -225,7 +236,14 @@ export default ({
                     <ColorClassModal
                         modalClassName="chart-color-class-modal"
                         show={showModal}
-                        onClose={() => setShowModal(false)}
+                        onClose={() => {
+                            const unfinishedClasses = classification.filter(item => !item.unique || !item.value);
+                            if (unfinishedClasses.length > 0) {
+                                setShowConfirmModal(true);
+                            } else {
+                                setShowModal(false);
+                            }
+                        }}
                         onSaveClassification={() => {
                             setShowModal(false);
                             onChange("autoColorOptions.defaultCustomColor", defaultCustomColor);
@@ -254,7 +272,15 @@ export default ({
                         onChangeDefaultClassLabel={(value) => onChange("autoColorOptions.defaultClassLabel", value)}
                         layer={layer}
                     />
-
+                    {getConfirmModal(
+                        showConfirmModal,
+                        () => {setShowConfirmModal(false);},
+                        () => {
+                            const nonEmptyClasses = discardEmptyClasses(classification);
+                            onChange("autoColorOptions.classification", nonEmptyClasses || []);
+                            setShowConfirmModal(false);
+                            setShowModal(false);
+                        })}
                     {formOptions.showLegend ?
                         <FormGroup controlId="displayLegend">
                             <Col componentClass={ControlLabel} sm={6}>

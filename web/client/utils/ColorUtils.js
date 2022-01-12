@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 import tinycolor from 'tinycolor2';
-import { toNumber } from 'lodash';
+import { toNumber, includes } from 'lodash';
 let ColorUtils;
 /**
  * Porting of various MapStore(1) utilities for random/color scale generations
@@ -187,8 +187,23 @@ export const colorToRgbaStr = (color, alpha, defaultColor) => {
     return color && c.setAlpha(toNumber(alpha !== undefined ? alpha : c.getAlpha())).toRgbString() || defaultColor;
 };
 
-export const generateRandomHexColor = () => {
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+/**
+* generate a random HEX stringified value representing a color
+* @param {Array} currentColors array of hexstrings of colors used as unique list
+* @return {string} HEX stringified value for a color
+*/
+export const generateRandomHexColor = (currentColors) => {
+    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    randomColor = `#${randomColor.toUpperCase()}`;
+    if (currentColors) {
+        /** exclude color if already in the palette or black or white  */
+        while (includes(currentColors, randomColor) ||
+            randomColor === '#000000' ||
+            randomColor === '#FFFFFF') {
+            generateRandomHexColor(currentColors);
+        }
+    }
     return randomColor;
 };
 
