@@ -434,6 +434,11 @@
                 "createANewOne": "Erstelle eine neue",
                 "deleteError": "Beim Löschen der GeoStory ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden von GeoStories ist ein Fehler aufgetreten"
+            },
+            "contexts": {
+              "title": "Kontexte ({count})",
+              "titleNoCount": "Kontexte",
+              "noContextAvailable": "Kein Kontext verfügbar"
             }
         },
         "map": {

@@ -200,10 +200,12 @@ export const hideTabsOnSearchFilterChange = (action$) =>
             setTabsHidden(
                 (filterData || []).length === 0 ? {
                     geostories: false,
-                    dashboards: false
+                    dashboards: false,
+                    contexts: false
                 } : {
                     geostories: true,
-                    dashboards: true
+                    dashboards: true,
+                    contexts: true
                 }
             )
         ));

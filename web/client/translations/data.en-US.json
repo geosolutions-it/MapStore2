@@ -396,6 +396,11 @@
                 "createANewOne": "Create a new one",
                 "deleteError": "There was an error deleting the GeoStory",
                 "errorLoadingGeostories": "There was an error loading GeoStories"
+            },
+            "contexts": {
+              "title": "Contexts ({count})",
+              "titleNoCount": "Contexts",
+              "noContextAvailable": "No context available"
             }
         },
         "map": {
