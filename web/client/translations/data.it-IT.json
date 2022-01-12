@@ -1602,6 +1602,7 @@
             "featureClose": "Sicuro di voler chiudere la griglia?",
             "delete": "Confermi di cancellare {count} feature?",
             "missingGeometry": "Geometria mancante",
+            "zoomObject": "Zoom alla feature",
             "filter": {
                 "placeholders": {
                     "default": "Cerca...",
