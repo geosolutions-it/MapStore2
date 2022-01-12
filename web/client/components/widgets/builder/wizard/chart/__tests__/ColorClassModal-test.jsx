@@ -133,8 +133,10 @@ describe('Custom Colors Classification modal', () => {
                 options={OPTIONS}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        const colorPickerNode = colorClassMd.querySelector('.ms-color-picker');
+        // open picker
+        ReactTestUtils.Simulate.click(colorPickerNode);
         const defaultColorClassSwatch = colorClassMd.getElementsByClassName('ms-color-picker-swatch')[0];
-        ReactTestUtils.Simulate.click(defaultColorClassSwatch);
         const sketchPicker = document.getElementsByClassName('ms-sketch-picker')[0];
         expect(sketchPicker).toExist();
         const colorItemButton = sketchPicker.getElementsByClassName('flexbox-fix')[2].childNodes[12].getElementsByTagName('div')[0];
@@ -151,8 +153,8 @@ describe('Custom Colors Classification modal', () => {
         expect(defaultRgbButtonColor[0]).toBe(defaultRgbSwatchColor[0]);
         expect(defaultRgbButtonColor[1]).toBe(defaultRgbSwatchColor[1]);
         expect(defaultRgbButtonColor[2]).toBe(defaultRgbSwatchColor[2]);
-        const colorPickerCover = document.getElementsByClassName('ms-color-picker-cover')[0];
-        ReactTestUtils.Simulate.click(colorPickerCover);
+        // close picker
+        ReactTestUtils.Simulate.click(colorPickerNode);
         expect(spyonChange).toHaveBeenCalled();
         expect(spyonChange.calls[0].arguments[0].toLowerCase()).toBe(DEFAULT_CUSTOM_COLOR[1].toLocaleLowerCase());
     });
@@ -187,11 +189,13 @@ describe('Custom Colors Classification modal', () => {
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        const colorPickerNode = colorClassMd.getElementsByClassName('ms-color-picker')[1];
+        // open picker
+        ReactTestUtils.Simulate.click(colorPickerNode);
         const classColorClassSwatch = colorClassMd.getElementsByClassName('ms-color-picker-swatch')[1];
-        ReactTestUtils.Simulate.click(classColorClassSwatch);
         const sketchPicker = document.getElementsByClassName('ms-sketch-picker')[0];
         expect(sketchPicker).toExist();
-        const colorItemButton = sketchPicker.getElementsByClassName('flexbox-fix')[2].childNodes[5].getElementsByTagName('div')[0];
+        const colorItemButton = sketchPicker.querySelector('div[title="#417505"]');
         expect(colorItemButton).toExist();
         ReactTestUtils.Simulate.click(colorItemButton);
         const defaultRgbButtonColor = colorItemButton.style.backgroundColor
@@ -205,8 +209,8 @@ describe('Custom Colors Classification modal', () => {
         expect(defaultRgbButtonColor[0]).toBe(defaultRgbSwatchColor[0]);
         expect(defaultRgbButtonColor[1]).toBe(defaultRgbSwatchColor[1]);
         expect(defaultRgbButtonColor[2]).toBe(defaultRgbSwatchColor[2]);
-        const colorPickerCover = document.getElementsByClassName('ms-color-picker-cover')[0];
-        ReactTestUtils.Simulate.click(colorPickerCover);
+        // close picker
+        ReactTestUtils.Simulate.click(colorPickerNode);
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0][0].color.toLowerCase()).toBe(CLASSIFICATION[1].color);
     });

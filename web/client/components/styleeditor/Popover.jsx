@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, cloneElement } from 'react';
 import { createPortal } from 'react-dom';
+import clamp from 'lodash/clamp';
 import { getConfigProp } from '../../utils/ConfigUtils';
 import isFunction from 'lodash/isFunction';
 
@@ -23,6 +24,7 @@ import isFunction from 'lodash/isFunction';
  * @prop {node} content content of floating popover
  * @prop {boolean} open open/close content
  * @prop {function} onOpen triggered when child is clicked
+ * @prop {boolean} disabled disable click functionality
  */
 export function ControlledPopover({
     containerNode: containerNodeProp = () => document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body,
@@ -30,7 +32,8 @@ export function ControlledPopover({
     content,
     children,
     open,
-    onOpen = () => {}
+    onOpen = () => {},
+    disabled
 }) {
 
     const margin = 10;
@@ -93,17 +96,8 @@ export function ControlledPopover({
                     height: swatchHeight
                 } = swatchBoundingClientRect;
 
-                const swatchCenter = [
-                    swatchLeft + swatchWidth / 2,
-                    swatchTop + swatchHeight / 2
-                ];
-
-                const isInsideWidth = (swatchCenter[0] - overlayLeft) > (popoverWidth / 2 + margin)
-                    && (overlayLeft + overlayWidth) - swatchCenter[0] > (popoverWidth / 2 + margin);
-
-                const isInsideHeight = (swatchCenter[1] - overlayTop) > (popoverHeight / 2 + margin)
-                    && (overlayTop + overlayHeight) - swatchCenter[1] > (popoverHeight / 2 + margin);
-
+                const isInsideWidth = (popoverWidth + margin * 2) < overlayWidth;
+                const isInsideHeight = (popoverHeight + margin * 2) < overlayHeight;
                 const placements = {
                     top: {
                         filter: () => isInsideWidth
@@ -115,7 +109,7 @@ export function ControlledPopover({
                                 picker: {
                                     position: 'absolute',
                                     top,
-                                    left
+                                    left: clamp(left, overlayLeft + margin, overlayLeft + overlayWidth - popoverWidth - margin)
                                 },
                                 overlay: {},
                                 arrow: {
@@ -135,7 +129,7 @@ export function ControlledPopover({
                             return {
                                 picker: {
                                     position: 'absolute',
-                                    top,
+                                    top: clamp(top, overlayTop + margin, overlayTop + overlayHeight - popoverHeight - margin),
                                     left
                                 },
                                 overlay: {},
@@ -157,7 +151,7 @@ export function ControlledPopover({
                                 picker: {
                                     position: 'absolute',
                                     top,
-                                    left
+                                    left: clamp(left, overlayLeft + margin, overlayLeft + overlayWidth - popoverWidth - margin)
                                 },
                                 overlay: {},
                                 arrow: {
@@ -177,7 +171,7 @@ export function ControlledPopover({
                             return {
                                 picker: {
                                     position: 'absolute',
-                                    top,
+                                    top: clamp(top, overlayTop + margin, overlayTop + overlayHeight - popoverHeight - margin),
                                     left
                                 },
                                 overlay: {},
@@ -234,7 +228,11 @@ export function ControlledPopover({
     useEffect(() => {
         function computeActive(event) {
             const popoverNode = popover.current;
-            const isTargetContained = popoverNode && event.target && popoverNode.contains(event.target);
+            const swatchNode = swatch.current;
+            const isTargetContained = event.target && (
+                popoverNode && popoverNode.contains(event.target)
+                || swatchNode && swatchNode.contains(event.target)
+            );
             if (state.current.open && !isTargetContained) {
                 const { clientX, clientY } = event;
                 const { left, top, width, height } = popover?.current?.getBoundingClientRect?.() || {};
@@ -266,9 +264,11 @@ export function ControlledPopover({
                 ref={swatch}>
                 {cloneElement(children, {
                     onClick: (event) => {
-                        event.stopPropagation();
-                        const newOpen = !open;
-                        onOpen(newOpen);
+                        if (!disabled) {
+                            event.stopPropagation();
+                            const newOpen = !open;
+                            onOpen(newOpen);
+                        }
                     }
                 })}
             </div>
