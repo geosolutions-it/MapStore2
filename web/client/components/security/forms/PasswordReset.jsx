@@ -114,7 +114,7 @@ class PasswordReset extends React.Component {
 
     isMainPasswordValid = (password) => {
         let p = password || this.state.password;
-        return (p.length >= this.props.minPasswordSize) && !(/[^a-zA-Z0-9\!\@\#\$\%\&\*]/.test(p));
+        return (p.length >= this.props.minPasswordSize);
     };
 
     isValid = (password, passwordcheck) => {
