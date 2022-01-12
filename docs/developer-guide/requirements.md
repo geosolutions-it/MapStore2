@@ -42,7 +42,7 @@ These tools needs to be installed (other than **Java** in versions above above):
 
 | Resource  | Minimum | Recommended |
 |-----------|---------|-------------|
-| Processor | 1 Core  | 2 Core      |
+| Processor | 2 Core  | 2 Core      |
 | Memory    | 2 GB    | 4 GB        |
 
 ### Database
