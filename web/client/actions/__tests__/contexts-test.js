@@ -49,7 +49,10 @@ describe('contexts (browse) actions', () => {
             results: [{id: 1}],
             success: true,
             totalCount: 1
-        }, "test", "someOptions"
+        }, {
+            searchText: "test",
+            options: "someOptions"
+        }
         );
         expect(retval).toExist();
         expect(retval.type).toBe(CONTEXTS_LIST_LOADED);
