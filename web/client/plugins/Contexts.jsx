@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { compose } from 'recompose';
@@ -17,9 +17,15 @@ import Message from "../components/I18N/Message";
 import {createPlugin} from '../utils/PluginsUtils';
 import { userRoleSelector } from '../selectors/security';
 import { versionSelector } from '../selectors/version';
-import { totalCountSelector, searchTextSelector, searchOptionsSelector, resultsSelector, isLoadingSelector } from '../selectors/contextmanager';
-import { searchContexts, searchTextChanged, editContext, searchReset } from '../actions/contextmanager';
-import PaginationToolbar from '../plugins/contextmanager/PaginationToolbar';
+import {
+    totalCountSelector,
+    searchTextSelector,
+    searchOptionsSelector,
+    resultsSelector,
+    isLoadingSelector,
+    isAvailableSelector
+} from '../selectors/contexts';
+import PaginationToolbar from '../plugins/contexts/PaginationToolbar';
 import ContextGrid from './contexts/ContextsGrid';
 
 import { mapTypeSelector } from '../selectors/maptype';
@@ -29,15 +35,17 @@ import emptyState from '../components/misc/enhancers/emptyState';
 import EmptyMaps from '../plugins/maps/EmptyMaps';
 
 import { loadMaps } from '../actions/maps';
+import { setContextsAvailable } from '../actions/contexts';
 
-import * as contextManagerEpics from '../epics/contextmanager';
 import * as contextsEpics from '../epics/contexts';
-import contextmanager from '../reducers/contextmanager';
+import maps from '../reducers/maps';
+import contexts from '../reducers/contexts';
 
 
 const contextsCountSelector = createSelector(
     totalCountSelector,
-    count => ({ count })
+    isAvailableSelector,
+    (count, available) => ({ count, available })
 );
 
 class Contexts extends React.Component {
@@ -55,6 +63,8 @@ class Contexts extends React.Component {
         onSearchReset: PropTypes.func,
         onSearchTextChange: PropTypes.func,
         onEditData: PropTypes.func,
+        onMount: PropTypes.func,
+        onUnmount: PropTypes.func,
         resources: PropTypes.array,
         colProps: PropTypes.object,
         fluid: PropTypes.bool,
@@ -91,9 +101,6 @@ class Contexts extends React.Component {
         },
         fluid: true,
         editDataEnabled: true,
-        onSearch: () => {},
-        onSearchReset: () => {},
-        onSearchTextChange: () => {},
         onEditData: () => {}
     };
 
@@ -121,6 +128,18 @@ class Contexts extends React.Component {
         );
     }
 }
+
+const TitleComponent = connect(contextsCountSelector, {
+    setContextsAvailable
+})(({
+    setContextsAvailable: isMounted,
+    count = "", available
+}) => {
+    useEffect(() => {
+        !available && isMounted(true);
+    }, []);
+    return <Message msgId="resources.contexts.title" msgParams={{ count: count + "" }} />;
+});
 
 const contextsPluginSelector = createSelector([
     mapTypeSelector,
@@ -156,35 +175,29 @@ const ContextsPlugin = compose(
 /**
  * Plugin for context resources browsing.
  * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
- * @name Maps
+ * @name Contexts
  * @memberof plugins
  * @class
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
  */
 
 export default createPlugin('Contexts', {
-    component: connect(contextsPluginSelector, {
-        onSearch: searchContexts,
-        onSearchReset: searchReset,
-        onSearchTextChange: searchTextChanged,
-        onEditData: editContext
-    })(ContextsPlugin),
+    component: connect(contextsPluginSelector)(ContextsPlugin),
     containers: {
         ContentTabs: {
             name: 'contexts',
             key: 'contexts',
-            TitleComponent:
-                connect(contextsCountSelector)(({ count = "" }) => <Message msgId="resources.contexts.title" msgParams={{ count: count + "" }} />),
+            TitleComponent,
             position: 4,
             tool: true,
             priority: 1
         }
     },
     reducers: {
-        contextmanager
+        maps,
+        contexts
     },
     epics: {
-        ...contextManagerEpics,
         ...contextsEpics
     }
 });

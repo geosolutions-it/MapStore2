@@ -13,17 +13,21 @@ import { compose } from 'recompose';
 import ContextGridComponent from '../contextmanager/ContextGrid';
 
 import { userSelector } from '../../selectors/security';
-import { deleteContext, reloadContexts} from '../../actions/contextmanager';
-import { updateAttribute } from '../../actions/maps';
+import {deleteContext, editContext, reloadContexts} from '../../actions/contextmanager';
+import {invalidateFeaturedMaps, updateAttribute} from '../../actions/maps';
+import {success} from "../../actions/notifications";
 
 
 const Grid = compose(
     connect(createStructuredSelector({
         user: userSelector
     }), {
+        onEditData: editContext,
         onDelete: deleteContext,
+        onUpdateAttribute: updateAttribute,
         reloadContexts,
-        onUpdateAttribute: updateAttribute
+        invalidateFeaturedMaps,
+        onShowSuccessNotification: () => success({ title: "success", message: "resources.successSaved" })
     })
 )(ContextGridComponent);
 
