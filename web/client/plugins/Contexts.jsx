@@ -83,6 +83,7 @@ class Contexts extends React.Component {
         showOptions: false,
         splitTools: false,
         placeholderMsgId: "contextManager.searchPlaceholder",
+        title: <h3><Message msgId="resources.contexts.titleNoCount" /></h3>,
         typeAhead: false,
         searchText: "",
         searchOptions: {

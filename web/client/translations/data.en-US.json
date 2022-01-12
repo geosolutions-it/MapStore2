@@ -399,6 +399,7 @@
             },
             "contexts": {
               "title": "Contexts ({count})",
+              "titleNoCount": "Contexts",
               "noContextAvailable": "No context available"
             }
         },
