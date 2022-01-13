@@ -465,4 +465,31 @@ describe('Widget Chart: data conversions ', () => {
         expect(data[0].type).toBe('bar');
         expect(layout.colorway).toEqual([autoColorOptions.defaultCustomColor]);
     });
+    it('default classfied bar chart type is stacked', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        expect(layout.barmode).toBe('stack');
+    });
+    it('change classfied bar chart type to grouped', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2,
+            barChartType: 'group'
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        expect(layout.barmode).toBe('group');
+    });
 });
