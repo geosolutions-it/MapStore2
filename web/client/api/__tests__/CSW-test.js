@@ -96,6 +96,18 @@ describe('Test correctness of the CSW APIs', () => {
             }
         });
     });
+    it('getRecords update capabilities', (done) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 1).then((result) => {
+            try {
+                expect(result).toBeTruthy();
+                expect(result.records).toBeTruthy();
+                expect(result.records[0].capabilities).toBeTruthy();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
 });
 
 describe('workspaceSearch', () => {

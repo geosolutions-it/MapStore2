@@ -33,6 +33,7 @@ export default {
         ContextPlugin: require('../plugins/Context').default,
         ContextCreatorPlugin: require('../plugins/ContextCreator').default,
         ContextManagerPlugin: require('../plugins/contextmanager/ContextManager').default,
+        ContextsPlugin: require('../plugins/Contexts').default,
         CookiePlugin: require('../plugins/Cookie').default,
         CreateNewMapPlugin: require('../plugins/CreateNewMap').default,
         Dashboard: require('../plugins/Dashboard').default,

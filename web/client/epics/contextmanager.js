@@ -38,7 +38,7 @@ const calculateNewParams = state => {
     };
 };
 
-export const searchContextsEpic = action$ => action$
+export const contextManagerSearchContextsEpic = action$ => action$
     .ofType(SEARCH_CONTEXTS)
     .map(({text, options}) => ({
         text,
@@ -69,7 +69,7 @@ export const editContext = action$ => action$
         Rx.Observable.empty()
     );
 
-export const deleteContextEpic = action$ => action$
+export const contextManagerDeleteContextEpic = action$ => action$
     .ofType(DELETE_CONTEXT)
     .switchMap(id => deleteResource(id).map(() => contextDeleted(id)))
     .let(wrapStartStop(
@@ -87,7 +87,7 @@ export const resetContextSearch = action$ => action$
     .ofType(SEARCH_RESET)
     .switchMap(() => Rx.Observable.of(searchContexts('', {params: {start: 0, limit: 12}})));
 
-export const reloadOnContexts = (action$, store) => action$
+export const contextManagerReloadOnContexts = (action$, store) => action$
     .ofType(CONTEXT_DELETED, RELOAD_CONTEXTS, ATTRIBUTE_UPDATED, CONTEXT_SAVED)
     .delay(1000)
     .switchMap(() => Rx.Observable.of(searchContexts(

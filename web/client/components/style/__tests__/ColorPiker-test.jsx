@@ -55,11 +55,15 @@ describe("Test the ColorPicker style component", () => {
                 value={`#${OLD_COLOR}`}
                 format="hex"
                 onChangeColor={(newColor) => {
-                    expect(newColor).toBe(`#${COLOR}`);
+                    try {
+                        expect(newColor).toBe(`#${COLOR}`);
+                    } catch (e) {
+                        done(e);
+                    }
                     done();
                 }}
             />, document.getElementById("container"));
-        const swatchNode = document.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         Simulate.click(swatchNode);
         const sketchPickerNode = document.querySelector('.sketch-picker');
@@ -67,8 +71,9 @@ describe("Test the ColorPicker style component", () => {
         const [sketchPickerHexInputNode] = sketchPickerNode.querySelectorAll('input');
         expect(sketchPickerHexInputNode.value.toLowerCase()).toBe(OLD_COLOR);
         Simulate.change(sketchPickerHexInputNode, { target: { value: COLOR } });
-        const coverNode = document.querySelector('.ms-color-picker-cover');
-        Simulate.click(coverNode);
+        act(() => {
+            Simulate.click(swatchNode);
+        });
     });
     it('should render popover in a different container', () => {
         ReactDOM.render(
@@ -77,16 +82,14 @@ describe("Test the ColorPicker style component", () => {
                 containerNode={document.body}
             />
             , document.getElementById("container"));
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         Simulate.click(swatchNode);
 
-        let overlayNode = colorPickerNode.querySelector('.ms-color-picker-overlay');
+        let overlayNode = swatchNode.querySelector('.ms-popover-overlay');
         expect(overlayNode).toBeFalsy();
 
-        overlayNode = document.querySelector('body > .ms-color-picker-overlay');
+        overlayNode = document.querySelector('body > .ms-popover-overlay');
         expect(overlayNode).toBeTruthy();
     });
 
@@ -115,14 +118,12 @@ describe("Test the ColorPicker style component", () => {
                 </div>
                 , document.getElementById("container"));
         });
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         act(() => {
             Simulate.click(swatchNode);
         });
-        const pickerArrow = document.querySelector('.ms-sketch-picker-arrow');
+        const pickerArrow = document.querySelector('.ms-popover-arrow');
         expect(pickerArrow).toBeTruthy();
         expect(pickerArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
     });
@@ -141,7 +142,7 @@ describe("Test the ColorPicker style component", () => {
                     <div
                         style={{
                             position: 'absolute',
-                            top: '50%',
+                            top: 0,
                             left: 0
                         }}>
                         <ColorPicker
@@ -151,14 +152,12 @@ describe("Test the ColorPicker style component", () => {
                 </div>
                 , document.getElementById("container"));
         });
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         act(() => {
             Simulate.click(swatchNode);
         });
-        const pickerArrow = document.querySelector('.ms-sketch-picker-arrow');
+        const pickerArrow = document.querySelector('.ms-popover-arrow');
         expect(pickerArrow).toBeTruthy();
         expect(pickerArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
     });
@@ -177,7 +176,7 @@ describe("Test the ColorPicker style component", () => {
                     <div
                         style={{
                             position: 'absolute',
-                            left: '50%',
+                            left: '100%',
                             top: 0
                         }}>
                         <ColorPicker
@@ -188,55 +187,18 @@ describe("Test the ColorPicker style component", () => {
                 </div>
                 , document.getElementById("container"));
         });
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         act(() => {
             Simulate.click(swatchNode);
         });
-        const pickerArrow = document.querySelector('.ms-sketch-picker-arrow');
+        const pickerArrow = document.querySelector('.ms-popover-arrow');
         expect(pickerArrow).toBeTruthy();
         expect(pickerArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
     });
-    it('should be placed on left', () => {
-        const ARROW_ROTATION = 180;
-        act(() => {
-            ReactDOM.render(
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: 1920,
-                        height: 1080
-                    }}>
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            right: 0
-                        }}>
-                        <ColorPicker
-                            format="hex"
-                            containerNode={document.getElementById("test-overlay-target")}
-                        />
-                    </div>
-                </div>
-                , document.getElementById("container"));
-        });
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
-        expect(swatchNode).toBeTruthy();
-        act(() => {
-            Simulate.click(swatchNode);
-        });
-        const pickerArrow = document.querySelector('.ms-sketch-picker-arrow');
-        expect(pickerArrow).toBeTruthy();
-        expect(pickerArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
-    });
-    it('should be placed on center (not found available position)', () => {
+
+    it('should find a space for picker also on corner and avoid central popover', () => {
+        const ARROW_ROTATION = 0;
         act(() => {
             ReactDOM.render(
                 <div
@@ -261,16 +223,14 @@ describe("Test the ColorPicker style component", () => {
                 </div>
                 , document.getElementById("container"));
         });
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         act(() => {
             Simulate.click(swatchNode);
         });
-        const pickerArrow = document.querySelector('.ms-sketch-picker-arrow');
+        const pickerArrow = document.querySelector('.ms-popover-arrow');
         expect(pickerArrow).toBeTruthy();
-        expect(pickerArrow.style.opacity).toBe('0');
+        expect(pickerArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
     });
 
     it('should use declared placement', () => {
@@ -299,14 +259,12 @@ describe("Test the ColorPicker style component", () => {
                 </div>
                 , document.getElementById("container"));
         });
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         act(() => {
             Simulate.click(swatchNode);
         });
-        const pickerArrow = document.querySelector('.ms-sketch-picker-arrow');
+        const pickerArrow = document.querySelector('.ms-popover-arrow');
         expect(pickerArrow).toBeTruthy();
         expect(pickerArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
     });
@@ -337,14 +295,12 @@ describe("Test the ColorPicker style component", () => {
                 </div>
                 , document.getElementById("container"));
         });
-        const colorPickerNode = document.querySelector('.ms-color-picker');
-        expect(colorPickerNode).toBeTruthy();
-        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = document.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         act(() => {
             Simulate.click(swatchNode);
         });
-        const colorPickerOverlaynode = document.querySelector('.ms-color-picker-overlay');
+        const colorPickerOverlaynode = document.querySelector('.ms-popover-overlay');
         expect(colorPickerOverlaynode).toBeTruthy();
         expect(colorPickerOverlaynode.parentNode.getAttribute('id')).toBe('test-overlay-target');
     });

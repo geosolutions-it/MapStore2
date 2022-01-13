@@ -29,6 +29,9 @@ html, body, #container, .fill {
 #home-button {
     float: left;
 }
+#navigationBar #home-button {
+    float: none;
+}
 
 .leaflet-control-attribution > a:first-child{
     display: none;

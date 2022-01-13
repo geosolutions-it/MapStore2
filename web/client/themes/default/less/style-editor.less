@@ -60,20 +60,15 @@
         .background-color-var(@theme-vars[main-bg]);
     }
 
-    .ms-color-picker-overlay {
-        .ms-sketch-picker,
-        .ms-sketch-picker input {
-            .background-color-var(@theme-vars[main-bg]);
-        }
-        .ms-sketch-picker span {
-            .color-var(@theme-vars[main-color], true);
-        }
-        .ms-sketch-picker-arrow {
-            .border-right-color-var(@theme-vars[main-bg]);
-        }
-        .flexbox-fix {
-            .border-color-var(@theme-vars[main-border-color], true);
-        }
+    .ms-sketch-picker,
+    .ms-sketch-picker input {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    .ms-sketch-picker span {
+        .color-var(@theme-vars[main-color], true);
+    }
+    .ms-sketch-picker-arrow {
+        .border-right-color-var(@theme-vars[main-bg]);
     }
 
     .ms-dash-array {
@@ -90,7 +85,7 @@
         .border-color-var(@theme-vars[main-border-color]);
     }
 
-    .ms-style-editor-switch {
+    .ms-style-editor-toolbar {
         .border-bottom-color-var(@theme-vars[main-border-color]);
         .btn-group {
             .border-color-var(@theme-vars[main-border-color]);
@@ -421,20 +416,9 @@ Ported to CodeMirror by Peter Kroon
     }
 }
 
-.ms-color-picker-overlay {
-    z-index: 9999;
-    .ms-sketch-picker {
-        background: @ms-main-bg;
-        .shadow-far();
-    }
-    .ms-sketch-picker-arrow {
-        @ms-arrow-size: 12px;
-        border-top: @ms-arrow-size solid transparent;
-        border-bottom: @ms-arrow-size solid transparent;
-        border-right: @ms-arrow-size solid @ms-main-bg;
-        -webkit-filter: drop-shadow(-4px 2px 4px rgba(0, 0, 0, 0.2));
-        filter: drop-shadow(-4px 2px 4px rgba(0, 0, 0, 0.2));
-    }
+.ms-sketch-picker {
+    background: @ms-main-bg;
+    .shadow-far();
 }
 
 .ms-color-selector {
@@ -444,6 +428,11 @@ Ported to CodeMirror by Peter Kroon
     width: 100%;
     border: 1px solid @ms-main-border-color;
     padding: 4px;
+    .ms-popover {
+        position: relative;
+        display: flex;
+        width: 100%;
+    }
     .ms-color-picker .ms-color-picker-swatch {
         padding: 0;
         min-width: auto;
@@ -486,17 +475,16 @@ Ported to CodeMirror by Peter Kroon
     }
 }
 
-.ms-style-editor-switch {
-    text-align: right;
+.ms-style-editor-toolbar {
     padding: 4px;
+    display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid @ms-main-border-color;
+    .ms-style-editor-toolbar-left {
+        display: flex;
+    }
     .btn-group {
         border: 1px solid @ms-main-border-color;
-    }
-    .btn-group span {
-
-        display: inline-flex;
-        align-items: center;
     }
 }
 
@@ -683,6 +671,7 @@ Ported to CodeMirror by Peter Kroon
 }
 
 .ms-popover-overlay {
+    z-index: 4000; // over modals and dialogs
     .ms-style-rule-scale {
         background-color: @ms-main-bg;
         .shadow-far;

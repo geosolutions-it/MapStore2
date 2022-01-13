@@ -45,9 +45,11 @@ export const isAnnotationLayer = (layer) => {
 };
 
 /**
- * Utilities for Print
- * @module utils/PrintUtils
- * */
+ * Utility functions for thumbnails
+ * @memberof utils
+ * @static
+ * @name PrintUtils
+ */
 
 /**
  * Extracts the correct opacity from layer. if Undefined, the opacity is `1`.
@@ -58,7 +60,7 @@ export const getOpacity = layer => layer.opacity || (layer.opacity === 0 ? 0 : 1
 
 /**
  * Preload data (e.g. WFS) before to sent it to the print tool.
- *
+ * @memberof utils.PrintUtils
  */
 export const preloadData = (spec) => {
     // check if remote data
@@ -102,6 +104,7 @@ export const preloadData = (spec) => {
  * URL. Supports file paths with or without origin/protocol.
  * @param {string} uri the uri to transform
  * @param {string} [origin=window.location.origin] the origin to use
+ * @memberof utils.PrintUtils
  */
 export const toAbsoluteURL = (uri, origin) => {
     // Handle absolute URLs (with protocol-relative prefix)
@@ -127,7 +130,8 @@ export const toAbsoluteURL = (uri, origin) => {
  * Tranform the original URL configuration of the layer into a URL
  * usable for the print service.
  * @param  {string|array} input Original URL
- * @return {string}       the URL modified as GeoServer requires
+ * @returns {string}       the URL modified as GeoServer requires
+ * @memberof utils.PrintUtils
  */
 export const normalizeUrl = (input) => {
     let result = isArray(input) ? input[0] : input;
@@ -140,7 +144,7 @@ export const normalizeUrl = (input) => {
  * Find the layout name for the given options.
  * The convention is: `PAGE_FORMAT + ("_2_pages_legend"|"_2_pages_legend"|"") + ("_landscape"|"")``
  * @param  {object} spec the spec with the options
- * @return {string}      the layout name.
+ * @returns {string}      the layout name.
  */
 export const getLayoutName = (spec) => {
     let layoutName = [spec.sheet];
@@ -159,7 +163,8 @@ export const getLayoutName = (spec) => {
 /**
  * Gets the print scales allowed from the capabilities of the print service.
  * @param  {capabilities} capabilities the capabilities of the print service
- * @return {array}              the scales array
+ * @returns {array}              the scales array
+ * @memberof utils.PrintUtils
  */
 export const getPrintScales = (capabilities) => {
     return capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || [];
@@ -169,7 +174,8 @@ export const getPrintScales = (capabilities) => {
  * @param  {number} zoom                      the zoom level
  * @param  {array} scales                    the allowed scales
  * @param  {array} [mapScales=defaultScales] the map scales
- * @return {number}                          the index that best approximates the current map scale
+ * @returns {number}                          the index that best approximates the current map scale
+ * @memberof utils.PrintUtils
  */
 export const getNearestZoom = (zoom, scales, mapScales = defaultScales) => {
     const mapScale = mapScales[Math.round(zoom)];
@@ -178,11 +184,13 @@ export const getNearestZoom = (zoom, scales, mapScales = defaultScales) => {
     }, 0);
 };
 /**
+ * @memberof utils
  * Guess the map zoom level from print scale
  * @param  {number} zoom                      the zoom level
  * @param  {array} scales                    the allowed scales
  * @param  {array} [mapScales=defaultScales] the map scales
- * @return {number}                          the index that best approximates the current map scale
+ * @returns {number}                          the index that best approximates the current map scale
+ * @memberof utils.PrintUtils
  */
 export const getMapZoom = (scaleZoom, scales, mapScales = defaultScales) => {
     const scale = scales[Math.round(scaleZoom)];
@@ -194,7 +202,8 @@ export const getMapZoom = (scaleZoom, scales, mapScales = defaultScales) => {
  * Get the mapSize for print preview, parsing the layout and limiting the width.
  * @param  {object} layout   the layout object
  * @param  {number} maxWidth the max width for the mapSize
- * @return {object}          width and height of a map limited by the maxWidth and with the same ratio of the layout
+ * @returns {object}          width and height of a map limited by the maxWidth and with the same ratio of the layout
+ * @memberof utils.PrintUtils
  */
 export const getMapSize = (layout, maxWidth) => {
     if (layout) {
@@ -214,7 +223,8 @@ export const getMapSize = (layout, maxWidth) => {
 /**
  * Creates the mapfish print specification from the current configuration
  * @param  {object} spec the current configuration
- * @return {object}      the mapfish print configuration to send to the server
+ * @returns {object}      the mapfish print configuration to send to the server
+ * @memberof utils.PrintUtils
  */
 export const getMapfishPrintSpecification = (spec) => {
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
@@ -284,6 +294,7 @@ export function getTransformerChain() {
 
 /**
  * Resets the list of user spec transformers.
+ * @memberof utils.PrintUtils
  */
 export function resetTransformers() {
     userTransformerChain = [];
@@ -296,6 +307,7 @@ export function resetTransformers() {
  *      default transformers are: `localization`, `wfspreloader`, `mapfishSpecCreator`.
  * @param {function} transformer (state, spec) => Promise<spec>
  * @param {int} position position in the chain (0-indexed), allows inserting a transformer between existing ones
+ * @memberof utils.PrintUtils
  */
 export function addTransformer(name, transformer, position) {
     userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer, position}]);
@@ -311,16 +323,18 @@ export function addTransformer(name, transformer, position) {
  * summing up the defaultPrintingServiceTransformerChain list, to eventual custom transformers,
  * added with addTransformer.
  *
- * Each transformer is a function receiving two parameters, the redux global state and the print
+ * Each transformer is a function reiceiving two parameters, the redux global state and the print
  * specification object returned by the previous chain step, and returning a Promise of the transformed
  * specification:
  *
- * ```
+ * ```js
  * (state, spec) => Promise.resolve(<transformed spec>)
  * ```
  *
  * Project specific transformers can be added to the end of the chain using the addTransformer function.
- * @return {object} the default print service.
+ *
+ * @returns {object} the default printint service.
+ * @memberof utils.PrintUtils
  */
 export const getDefaultPrintingService = () => {
     return {
@@ -338,7 +352,8 @@ export const getDefaultPrintingService = () => {
  * @param  {array} layers  the layers configurations
  * @param  {spec} spec    the print configurations
  * @param  {string} purpose allowed values: `map|legend`. Tells which spec to generate.
- * @return {array}         the configuration array for layers (or legend) to send to the print service.
+ * @returns {array}         the configuration array for layers (or legend) to send to the print service.
+ * @memberof utils.PrintUtils
  */
 export const getMapfishLayersSpecification = (layers, spec, purpose) => {
     return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
@@ -678,6 +693,7 @@ export const rgbaTorgb = (rgba = "") => {
 /**
  * Useful for print (Or generic Openlayers 2 conversion style)
  * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
+ * @memberof utils.PrintUtils
  */
 export const toOpenLayers2Style = function(layer, style, styleType) {
     if (!style || layer.styleName === "marker") {
@@ -715,6 +731,7 @@ export const toOpenLayers2Style = function(layer, style, styleType) {
 /**
  * Provides the default style for
  * each vector type.
+ * @memberof utils.PrintUtils
  */
 export const getOlDefaultStyle = (layer, styleType) => {
     switch (styleType || getGeomType(layer) || "") {

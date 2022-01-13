@@ -107,14 +107,15 @@ describe("Test the ThemaClassesEditor component", () => {
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
-        const colorPicker = domNode.querySelector('.ms-color-picker-swatch');
+        const colorPicker = domNode.querySelector('.ms-color-picker');
         expect(colorPicker).toExist();
+        // open the popover
         TestUtils.Simulate.click(colorPicker);
         // query in the document because now the overlay picker container is related to container node (portal)
         const sampleColor = document.querySelector('div[title="#D0021B"]');
         TestUtils.Simulate.click(sampleColor);
-        // query in the document because now the overlay picker container is related to container node (portal)
-        TestUtils.Simulate.click(document.querySelector('.ms-color-picker-cover'));
+        // close the popover
+        TestUtils.Simulate.click(colorPicker);
         expect(spyUpdate).toHaveBeenCalled();
         expect(spyUpdate.calls.length).toBe(1);
         expect(spyUpdate.calls[0].arguments[0].length).toBe(2);
@@ -133,11 +134,12 @@ describe("Test the ThemaClassesEditor component", () => {
                 onUpdateClasses={actions.onUpdateClasses}
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
-        const colorPicker = domNode.querySelector('.ms-color-picker-swatch');
+        const colorPicker = domNode.querySelector('.ms-color-picker');
         expect(colorPicker).toExist();
+        // open the popover
         TestUtils.Simulate.click(colorPicker);
-        // query in the document because now the overlay picker container is related to container node (portal)
-        TestUtils.Simulate.click(document.querySelector('.ms-color-picker-cover'));
+        // close the popover
+        TestUtils.Simulate.click(colorPicker);
         expect(spyUpdate).toNotHaveBeenCalled();
     });
     it('on update value classification with unique field of type number', () => {

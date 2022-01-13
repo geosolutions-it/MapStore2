@@ -434,6 +434,11 @@
                 "createANewOne": "Erstelle eine neue",
                 "deleteError": "Beim Löschen der GeoStory ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden von GeoStories ist ein Fehler aufgetreten"
+            },
+            "contexts": {
+              "title": "Kontexte ({count})",
+              "titleNoCount": "Kontexte",
+              "noContextAvailable": "Kein Kontext verfügbar"
             }
         },
         "map": {
@@ -1212,7 +1217,7 @@
             "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
-            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen. Gültige Werte für Kennwörter sind Ziffern, Klein- oder Großbuchstaben und die folgenden Sonderzeichen: !,@,#,$,%,&,*,_",
+            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen.",
             "passwordInvalidChar": "Das Passwort darf diese Zeichen nicht enthalten: {data}",
             "passwordChanged": "Passwort geändert",
             "passwordError": "Fehler beim Ändern des Passworts",

@@ -396,6 +396,11 @@
                 "createANewOne": "Crea una nuova GeoStory",
                 "deleteError": "Si è verificato un errore durante l'eliminazione della GeoStory",
                 "errorLoadingGeostories": "Si è verificato un errore durante il caricamento di GeoStories"
+            },
+            "contexts": {
+              "title": "Contesti ({count})",
+              "titleNoCount": "Contesti",
+              "noContextAvailable": "Nessun contesto disponibile"
             }
         },
         "map": {
@@ -1173,7 +1178,7 @@
             "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
-            "passwordMessage": "La password deve contenere almeno 6 caratteri. I valori validi per le password includono numeri, lettere minuscole o maiuscole e i seguenti caratteri speciali: !,@,#,$,%,&,*,_",
+            "passwordMessage": "La password deve contenere almeno 6 caratteri.",
             "passwordInvalidChar": "La password non deve contenere questi caratteri: {data}",
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",

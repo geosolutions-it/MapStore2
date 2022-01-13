@@ -13,7 +13,7 @@ import { goToPage } from '../actions/router';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import Message from './locale/Message';
 import { Glyphicon } from 'react-bootstrap';
-import Home from '../components/home/Home';
+import Home, {getPath} from '../components/home/Home';
 import { connect } from 'react-redux';
 import { checkPendingChanges } from '../actions/pendingChanges';
 import { setControlProperty } from '../actions/controls';
@@ -42,8 +42,8 @@ const HomeConnected = connect((state) => ({
 /**
  * Renders a button that redirects to the home page.
  * It can be rendered in {@link #plugins.OmniBar|OmniBar}.
- * Supports as containers, lower priority, also {@link #plugins.BurgerMenu|BurgerMenu}
- * or {@link #plugins.Toolbar|Toolbar}.
+ * Supports as containers at lower priority {@link #plugins.Toolbar|Toolbar}.
+ * You can configure the home target path globally by setting `miscSettings.homePath` in `localConfig.json`. By default it redirects to `"#/"`;
  * @name Home
  * @class
  * @memberof plugins
@@ -56,7 +56,7 @@ export default {
             tooltip: "gohome",
             icon: <Glyphicon glyph="home"/>,
             help: <Message msgId="helptexts.gohome"/>,
-            action: (context) => goToPage('/', context.router),
+            action: (context) => goToPage(getPath(), context.router),
             priority: 1
         },
         BurgerMenu: {
@@ -64,14 +64,13 @@ export default {
             position: 1,
             text: <Message msgId="gohome"/>,
             icon: <Glyphicon glyph="home"/>,
-            action: (context) => goToPage('/', context.router),
+            action: (context) => goToPage(getPath(), context.router),
             priority: 2
         },
         OmniBar: {
             name: 'home',
             position: 4,
             tool: true,
-            action: (context) => goToPage('/', context.router),
             priority: 3
         }
     }),
