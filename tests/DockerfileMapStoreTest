@@ -1,6 +1,6 @@
 FROM tomcat:9-jdk11-openjdk AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geosolutionsgroup.com>"
-ARG MAPSTORE_WEBAPP_SRC="/host/drop/path/mapstore.war"
+ARG MAPSTORE_WEBAPP_SRC="https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war"
 ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
 
 COPY ./docker/* /mapstore/docker/
@@ -34,6 +34,8 @@ RUN mkdir -p ${DATA_DIR}/configs
 COPY ./plugin.json ${DATA_DIR}/configs/localConfig.json.patch
 ########
 
+### Database Externalization
+COPY ./geostore-datasource-ovr.properties ${DATA_DIR}/geostore-datasource-ovr.properties
 
 RUN cp ${CATALINA_BASE}/docker/wait-for-postgres.sh /usr/bin/wait-for-postgres
 
