@@ -124,7 +124,7 @@ export function ControlledPopover({
                         filter: () => isInsideHeight
                             && (overlayLeft + overlayWidth) - (swatchLeft + swatchWidth) > popoverWidth + margin,
                         styles: () => {
-                            const top = swatchTop - popoverHeight / 2 - overlayTop;
+                            const top = swatchTop - popoverHeight / 2 - overlayTop + swatchHeight / 2;
                             const left = swatchLeft + swatchWidth + margin - overlayLeft;
                             return {
                                 picker: {
@@ -166,7 +166,7 @@ export function ControlledPopover({
                         filter: () => isInsideHeight
                             && swatchLeft - overlayLeft > popoverWidth + margin,
                         styles: () => {
-                            const top = swatchTop - popoverHeight / 2 - overlayTop;
+                            const top = swatchTop - popoverHeight / 2 - overlayTop + swatchHeight / 2;
                             const left = swatchLeft - popoverWidth - margin - overlayLeft;
                             return {
                                 picker: {
@@ -310,9 +310,9 @@ export function ControlledPopover({
                             className="ms-popover-arrow"
                             style={{
                                 position: 'absolute',
-                                borderTop: `${margin - 1}px solid transparent`,
-                                borderBottom: `${margin - 1}px solid transparent`,
-                                borderRight: `${margin - 1}px solid #ffffff`,
+                                borderTop: `${margin + 2}px solid transparent`,
+                                borderBottom: `${margin + 2}px solid transparent`,
+                                borderRight: `${margin + 2}px solid #ffffff`,
                                 filter: 'drop-shadow(-4px 2px 4px rgba(0, 0, 0, 0.2))',
                                 ...styles?.arrow
                             }}/>
