@@ -498,6 +498,16 @@ export const updateTemporaryStyleEpic = (action$, store) =>
             || temporaryId && updateTmpCode(styleName)
             || createTmpCode(styleName);
         });
+
+// import the md5 dynamically
+// we need it only for the style body code
+function getMD5Metadata(code) {
+    return import('md5').then((mod) => {
+        const md5 = mod.default;
+        return md5(code);
+    });
+}
+
 /**
  * Gets every `CREATE_STYLE` event.
  * Create a new style.
@@ -530,15 +540,22 @@ export const createStyleEpic = (action$, store) =>
             };
 
             const status = '';
-
+            const newCode = template(code)({ styleTitle: title, styleAbstract: _abstract });
             return Rx.Observable.defer(() =>
-                StylesAPI.createStyle({
-                    baseUrl,
-                    code: template(code)({ styleTitle: title, styleAbstract: _abstract }),
-                    format,
-                    styleName,
-                    metadata
-                }))
+                getMD5Metadata(newCode)
+                    .then((msMD5Hash) =>
+                        StylesAPI.createStyle({
+                            baseUrl,
+                            code: newCode,
+                            format,
+                            styleName,
+                            metadata: {
+                                ...metadata,
+                                msMD5Hash
+                            }
+                        })
+                    )
+            )
                 .switchMap(() => Rx.Observable.of(
                     updateOptionsByOwner(STYLE_OWNER_NAME, [{}]),
                     updateSettingsParams({style: styleName || ''}, true),
@@ -596,15 +613,21 @@ export const updateStyleCodeEpic = (action$, store) =>
                 });
 
             return Rx.Observable.defer(() =>
-                StylesAPI.updateStyle({
-                    baseUrl,
-                    code,
-                    format,
-                    styleName,
-                    languageVersion,
-                    options: { params: { raw: true } },
-                    metadata
-                })
+                getMD5Metadata(code)
+                    .then((msMD5Hash) =>
+                        StylesAPI.updateStyle({
+                            baseUrl,
+                            code,
+                            format,
+                            styleName,
+                            languageVersion,
+                            options: { params: { raw: true } },
+                            metadata: {
+                                ...metadata,
+                                msMD5Hash
+                            }
+                        })
+                    )
             )
                 .switchMap(() => Rx.Observable.of(
                     loadedStyle(),

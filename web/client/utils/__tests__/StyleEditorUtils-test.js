@@ -1045,5 +1045,43 @@ describe('StyleEditorUtils test', () => {
                     done();
                 });
         });
+
+        it('should detect changes if the msMD5Hash has different hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #ff0000;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msMD5Hash: 'fb84f642f11d431c0bc7801c4fd3b77c'
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+
+        it('should not detect changes if the msMD5Hash is equal to the hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #0000ff;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msMD5Hash: 'fb84f642f11d431c0bc7801c4fd3b77c'
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
     });
 });
