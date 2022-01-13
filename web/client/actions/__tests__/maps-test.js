@@ -75,8 +75,9 @@ describe('Test correctness of the maps actions', () => {
         const resourceId = 1;
         const type = "STRING";
 
-        mockAxios.onPut().reply(({url, data }) => {
-            expect(url).toBe(`${BASE_URL}resources/resource/${resourceId}/attributes/`);
+        mockAxios.onPut().reply(({url, baseURL, data }) => {
+            expect(url).toBe(`resources/resource/${resourceId}/attributes/`);
+            expect(baseURL).toEqual(BASE_URL);
             expect(JSON.parse(data)).toEqual({
                 "restAttribute": {
                     name,

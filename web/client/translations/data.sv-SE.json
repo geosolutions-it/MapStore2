@@ -1169,7 +1169,7 @@
             "passwordInvalid": "Ogiltigt lösenord",
             "username": "Användarnamn",
             "password": "Lösenord",
-            "passwordMessage": "Lösenordet måste innehålla minst 6 tecken. Giltiga värden för lösenord är siffror, små eller stora bokstäver och följande specialtecken:! @ # $ % & * _.",
+            "passwordMessage": "Lösenordet måste innehålla minst 6 tecken.",
             "passwordInvalidChar": "Lösenordet får inte innehålla dessa tecken: {data}",
             "passwordChanged": "Lösenord ändrat",
             "passwordError": "Fel vid ändring av lösenord",
