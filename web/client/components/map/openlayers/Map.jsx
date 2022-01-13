@@ -12,7 +12,7 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { get as getProjection, toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
-import Units from 'ol/proj/Units';
+import Units, { METERS_PER_UNIT } from 'ol/proj/Units';
 
 import { getWidth, getHeight } from 'ol/extent';
 
@@ -22,14 +22,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import assign from 'object-assign';
 
-import {reproject, reprojectBbox, normalizeLng, normalizeSRS} from '../../../utils/CoordinatesUtils';
+import {reproject, reprojectBbox, normalizeLng, normalizeSRS, getExtentForProjection} from '../../../utils/CoordinatesUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import mapUtils from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
 import {isEqual, find, throttle, isArray, isNil} from 'lodash';
-
 
 import 'ol/ol.css';
 
@@ -94,7 +93,16 @@ class OpenlayersMap extends React.Component {
     };
 
     componentDidMount() {
-        this.props.projectionDefs.forEach(p => {
+        // adding EPSG:4269, by default included in proj4 definitions,
+        // so that we have extents needed by ol
+        const defs = [{
+            "code": "EPSG:4269",
+            "def": "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
+            "axisOrientation": "neu",
+            "extent": [-172.54, 23.81, -47.74, 86.46],
+            "worldExtent": [-172.54, 23.81, -47.74, 86.46]
+        }, ...this.props.projectionDefs];
+        defs.forEach(p => {
             const projDef = proj4.defs(p.code);
             projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || projDef.axis || 'enu', projDef.units || 'm');
         });
@@ -174,7 +182,7 @@ class OpenlayersMap extends React.Component {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
                 let view = this.map.getView();
                 let pos = event.coordinate.slice();
-                let projectionExtent = view.getProjection().getExtent();
+                let projectionExtent = view.getProjection().getExtent() || getExtentForProjection(this.props.projection);
                 if (this.props.projection === 'EPSG:4326') {
                     pos[0] = normalizeLng(pos[0]);
                 }
@@ -368,11 +376,11 @@ class OpenlayersMap extends React.Component {
 
         const extent = projection.getExtent();
 
-        const extentWidth = !extent ? 360 * Units.METERS_PER_UNIT[Units.DEGREES] /
-            Units.METERS_PER_UNIT[projection.getUnits()] :
+        const extentWidth = !extent ? 360 * METERS_PER_UNIT[Units.DEGREES] /
+            METERS_PER_UNIT[projection.getUnits()] :
             getWidth(extent);
-        const extentHeight = !extent ? 360 * Units.METERS_PER_UNIT[Units.DEGREES] /
-            Units.METERS_PER_UNIT[projection.getUnits()] :
+        const extentHeight = !extent ? 360 * METERS_PER_UNIT[Units.DEGREES] /
+            METERS_PER_UNIT[projection.getUnits()] :
             getHeight(extent);
 
         let resX = extentWidth / tileWidth;
@@ -502,7 +510,7 @@ class OpenlayersMap extends React.Component {
     updateMapInfoState = () => {
         let view = this.map.getView();
         let tempCenter = view.getCenter();
-        let projectionExtent = view.getProjection().getExtent();
+        let projectionExtent = view.getProjection().getExtent() || getExtentForProjection(this.props.projection);
         const crs = view.getProjection().getCode();
         // some projections are repeated on the x axis
         // and they need to be updated also if the center is outside of the projection extent
