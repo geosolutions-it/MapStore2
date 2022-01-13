@@ -13,6 +13,17 @@ export const CLASSIFICATION = [
     }
 ];
 
+export const UNCLASSIFIED_VALUE_CLASSIFICATION = [
+    ...CLASSIFICATION,
+    {
+        title: '',
+        color: '#00FF00',
+        value: '',
+        unique: ''
+    }
+];
+
+export const TEST_LAYER = 'test_workspace:test_layer';
 export const CLASSIFICATION_ATTRIBUTE = 'classValue';
 
 export const DATASET_1 = {

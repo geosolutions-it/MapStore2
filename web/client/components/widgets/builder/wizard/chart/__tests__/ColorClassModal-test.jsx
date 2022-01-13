@@ -13,7 +13,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import ColorClassModal from '../ColorClassModal';
 import { hexToRgb } from '../../../../../../utils/ColorUtils';
-import { CLASSIFICATION, CLASSIFICATION_ATTRIBUTE, DEFAULT_CUSTOM_COLOR, DEFAULT_CUSTOM_LABEL, OPTIONS } from './sample_data';
+import { CLASSIFICATION, CLASSIFICATION_ATTRIBUTE, DEFAULT_CUSTOM_COLOR, DEFAULT_CUSTOM_LABEL, OPTIONS, TEST_LAYER } from './sample_data';
 
 const testHandlers = {
     onClose: () => {},
@@ -45,6 +45,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal');
         expect(colorClassMd.length).toBe(1);
@@ -82,8 +83,8 @@ describe('Custom Colors Classification modal', () => {
         expect(menuOptions).toEqual(OPTIONS);
         // classification attributes labels and color picker
         const themaClassEditor = colorClassMd[0].getElementsByClassName('thema-classes-editor')[0];
-        const customValueTextBox = themaClassEditor.getElementsByClassName('form-control')[0];
-        const customLabelTextBox = themaClassEditor.getElementsByClassName('form-control')[1];
+        const customValueAutocomplete = themaClassEditor.getElementsByClassName('autocompleteField')[0].getElementsByTagName('input')[0];
+        const customLabelTextBox = themaClassEditor.getElementsByClassName('form-control')[0];
         const customColorPicker = themaClassEditor.getElementsByClassName('ms-color-picker')[0];
         const customColorPickerSwatch = customColorPicker.getElementsByClassName('ms-color-picker-swatch')[0];
         const customRgbColor = hexToRgb(CLASSIFICATION[0].color);
@@ -91,7 +92,7 @@ describe('Custom Colors Classification modal', () => {
             .substring(4, customColorPickerSwatch.style.backgroundColor.length - 1)
             .split(',')
             .map(item => parseInt(item, 10));
-        expect(customValueTextBox.value).toBe(CLASSIFICATION[0].value);
+        expect(customValueAutocomplete.value).toBe(CLASSIFICATION[0].value);
         expect(customLabelTextBox.value).toBe(CLASSIFICATION[0].title);
         expect(customRgbBgColor[0]).toBe(customRgbColor[0]);
         expect(customRgbBgColor[1]).toBe(customRgbColor[1]);
@@ -108,6 +109,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const classSelectControl = colorClassMd.getElementsByClassName('Select-control')[0];
@@ -131,6 +133,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const defaultColorClassSwatch = colorClassMd.getElementsByClassName('ms-color-picker-swatch')[0];
@@ -167,6 +170,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const defaultLabelInput = colorClassMd.getElementsByTagName('input')[1];
@@ -185,6 +189,7 @@ describe('Custom Colors Classification modal', () => {
                 onUpdateClasses={testHandlers.onUpdateClasses}
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const classColorClassSwatch = colorClassMd.getElementsByClassName('ms-color-picker-swatch')[1];
@@ -221,6 +226,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const classValueInput = colorClassMd.getElementsByTagName('input')[2];
@@ -240,6 +246,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const classValueInput = colorClassMd.getElementsByTagName('input')[3];
@@ -259,6 +266,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
+                layer={TEST_LAYER}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const colorClassMdSaveButton = colorClassMd.getElementsByClassName('btn-save')[0];

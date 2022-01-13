@@ -194,17 +194,24 @@ export const colorToRgbaStr = (color, alpha, defaultColor) => {
 * @return {string} HEX stringified value for a color
 */
 export const generateRandomHexColor = (currentColors) => {
-    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    randomColor = `#${randomColor.toUpperCase()}`;
+    const roundValue = Math.round;
+    const randomValue = Math.random;
+    var maxValue = 255;
+    const rgbRandomColor = [
+        roundValue(randomValue() * maxValue),
+        roundValue(randomValue() * maxValue),
+        roundValue(randomValue() * maxValue)
+    ];
+    const hexRandomColor = ColorUtils.rgbToHex(rgbRandomColor);
     if (currentColors) {
         /** exclude color if already in the palette or black or white  */
-        while (includes(currentColors, randomColor) ||
-            randomColor === '#000000' ||
-            randomColor === '#FFFFFF') {
+        while (includes(currentColors, hexRandomColor) ||
+        hexRandomColor === '#000000' ||
+        hexRandomColor === '#FFFFFF') {
             generateRandomHexColor(currentColors);
         }
     }
-    return randomColor;
+    return hexRandomColor;
 };
 
 ColorUtils = {

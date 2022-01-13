@@ -142,7 +142,8 @@ function getData({
                 ...(yDataKey && { legendgroup: yDataKey }),
                 ...pieChartTrace,
                 labels: x,
-                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
+                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {}),
+                pull: 0.005
             };
         }
         return pieChartTrace;
