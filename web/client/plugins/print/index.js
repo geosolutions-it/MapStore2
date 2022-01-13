@@ -107,6 +107,7 @@ export const PrintSubmit = connect((state) => ({
 
 export const PrintPreview = connect((state) => ({
     url: state.print && ConfigUtils.getProxiedUrl(state.print.pdfUrl),
+    downloadUrl: state.print && state.print.pdfUrl,
     scale: state.controls && state.controls.print && state.controls.print.viewScale || 0.5,
     currentPage: state.controls && state.controls.print && state.controls.print.currentPage || 0,
     pages: state.controls && state.controls.print && state.controls.print.pages || 1,

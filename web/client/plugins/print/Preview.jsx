@@ -19,7 +19,7 @@ const defaultSupportedFormats = ["png", "jpg", "bmp", "gif", "jpeg"];
  * @param {function} cfg.back handler for the back / hide button
  * @param {string[]} cfg.supportedFormats list of formats that can be previewed (for other formats a warning message is shown), defaults to "png", "jpg", "bmp", "gif", "jpeg"
  */
-export const ImagePreview = ({url, format, buttonStyle, back, maxPreviewZoom = 5, supportedFormats = defaultSupportedFormats}) => {
+export const ImagePreview = ({downloadUrl, format, buttonStyle, back, maxPreviewZoom = 5, supportedFormats = defaultSupportedFormats}) => {
     const [zoom, setZoom] = useState(1);
     const zoomIn = () => {
         setZoom((z) => z + 1);
@@ -31,14 +31,14 @@ export const ImagePreview = ({url, format, buttonStyle, back, maxPreviewZoom = 5
     return (
         <div id="mapstore-image-print-preview-panel">
             {isSupported ? <div className="mapstore-print-preview-img-wrapper">
-                <img src={url} style={{transform: `scale(${zoom})`, transformOrigin: "top left"}}/>
+                <img src={downloadUrl} style={{transform: `scale(${zoom})`, transformOrigin: "top left"}}/>
             </div> : <Message msgId="print.previewFormatUnsupported"/>}
             <div style={{marginTop: "10px"}}>
                 <Button bsStyle={buttonStyle} style={{marginRight: "10px"}} onClick={back}><Glyphicon glyph="arrow-left"/></Button>
                 <Button bsStyle={buttonStyle} disabled={!isSupported || zoom >= maxPreviewZoom} onClick={zoomIn}><Glyphicon glyph="zoom-in"/></Button>
                 <Button bsStyle={buttonStyle} disabled={!isSupported || zoom <= 1} onClick={zoomOut}><Glyphicon glyph="zoom-out"/></Button>
                 <label style={{marginLeft: "10px", marginRight: "10px"}}>{zoom}x</label>
-                <div className={"print-download btn btn-" + buttonStyle}><a href={url} target="_blank"><Glyphicon glyph="save"/></a></div>
+                <div className={"print-download btn btn-" + buttonStyle}><a href={downloadUrl} target="_blank"><Glyphicon glyph="save"/></a></div>
             </div>
         </div>
     );
