@@ -50,15 +50,15 @@ describe('CustomThemePicker component', () => {
         const container = document.getElementById('container');
         const el = container.querySelectorAll('.ms-custom-theme-picker-field');
         const fieldNode = el[0];
-        const swatchNode = fieldNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = fieldNode.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         ReactTestUtils.Simulate.click(swatchNode);
         const sketchPickerNode = document.querySelector('.sketch-picker');
         expect(sketchPickerNode).toBeTruthy();
         const [sketchPickerHexInputNode] = sketchPickerNode.querySelectorAll('input');
         ReactTestUtils.Simulate.change(sketchPickerHexInputNode, { target: { value: BACKGROUND_COLOR } });
-        const coverNode = document.querySelector('.ms-color-picker-cover');
-        ReactTestUtils.Simulate.click(coverNode);
+        // close picker
+        ReactTestUtils.Simulate.click(swatchNode);
     });
     it('should change text color', (done) => {
         const COLOR = '#000000';
@@ -74,15 +74,15 @@ describe('CustomThemePicker component', () => {
         const container = document.getElementById('container');
         const el = container.querySelectorAll('.ms-custom-theme-picker-field');
         const fieldNode = el[1];
-        const swatchNode = fieldNode.querySelector('.ms-color-picker-swatch');
+        const swatchNode = fieldNode.querySelector('.ms-color-picker');
         expect(swatchNode).toBeTruthy();
         ReactTestUtils.Simulate.click(swatchNode);
         const sketchPickerNode = document.querySelector('.sketch-picker');
         expect(sketchPickerNode).toBeTruthy();
         const [sketchPickerHexInputNode] = sketchPickerNode.querySelectorAll('input');
         ReactTestUtils.Simulate.change(sketchPickerHexInputNode, { target: { value: COLOR } });
-        const coverNode = document.querySelector('.ms-color-picker-cover');
-        ReactTestUtils.Simulate.click(coverNode);
+        // close picker
+        ReactTestUtils.Simulate.click(swatchNode);
     });
     it('should change shadow', (done) => {
         ReactDOM.render(

@@ -150,6 +150,7 @@ export function StyleEditor({
     onUpdateMetadata,
     onChange,
     loading,
+    header,
     ...props
 }) {
 
@@ -198,7 +199,10 @@ export function StyleEditor({
         <BorderLayout
             style={{ position: 'relative' }}
             header={
-                <div className="ms-style-editor-switch">
+                <div className="ms-style-editor-toolbar">
+                    <div className="ms-style-editor-toolbar-left">
+                        {header}
+                    </div>
                     <Toolbar
                         buttons={[
                             {
