@@ -280,6 +280,16 @@ ALTER TABLE geostore.hibernate_sequence OWNER TO geostore;
 --
 
 COPY geostore.gs_attribute (id, attribute_date, name, attribute_number, attribute_text, attribute_type, resource_id) FROM stdin;
+15	\N	attributes	\N	null	STRING	14
+18	\N	detailsSettings	\N	{}	STRING	14
+20	\N	attributes	\N	null	STRING	19
+24	\N	detailsSettings	\N	{}	STRING	19
+25	\N	featured	\N	true	STRING	19
+27	\N	attributes	\N	null	STRING	26
+31	\N	detailsSettings	\N	{}	STRING	26
+32	\N	featured	\N	true	STRING	26
+42	\N	featured	\N	true	STRING	33
+43	\N	featured	\N	true	STRING	36
 \.
 
 
@@ -288,6 +298,14 @@ COPY geostore.gs_attribute (id, attribute_date, name, attribute_number, attribut
 --
 
 COPY geostore.gs_category (id, name) FROM stdin;
+1	MAP
+2	THUMBNAIL
+3	DETAILS
+4	DASHBOARD
+5	GEOSTORY
+6	CONTEXT
+7	TEMPLATE
+8	USERSESSION
 \.
 
 
@@ -296,6 +314,11 @@ COPY geostore.gs_category (id, name) FROM stdin;
 --
 
 COPY geostore.gs_resource (id, creation, description, lastupdate, metadata, name, category_id) FROM stdin;
+14	2022-01-14 19:16:43.93		\N		Private Test Map	1
+19	2022-01-14 19:17:06.32		\N		Public Test Map	1
+26	2022-01-14 19:26:39.414		\N		Public Test Map 2	1
+36	2022-01-14 19:30:54.579		\N		Geostory Public Test	5
+33	2022-01-14 19:30:19.591		2022-01-14 19:31:18.642		Dashboard Public Test	4
 \.
 
 
@@ -304,6 +327,15 @@ COPY geostore.gs_resource (id, creation, description, lastupdate, metadata, name
 --
 
 COPY geostore.gs_security (id, canread, canwrite, group_id, resource_id, user_id, username, groupname) FROM stdin;
+17	t	t	\N	14	12	\N	\N
+22	t	t	\N	19	12	\N	\N
+23	t	f	9	19	\N	\N	\N
+29	t	t	\N	26	12	\N	\N
+30	t	f	9	26	\N	\N	\N
+38	t	t	\N	36	12	\N	\N
+39	t	f	9	36	\N	\N	\N
+40	t	t	\N	33	12	\N	\N
+41	t	f	9	33	\N	\N	\N
 \.
 
 
@@ -312,6 +344,11 @@ COPY geostore.gs_security (id, canread, canwrite, group_id, resource_id, user_id
 --
 
 COPY geostore.gs_stored_data (id, stored_data, resource_id) FROM stdin;
+14	{"version":2,"map":{"center":{"x":11.22894105149402,"y":43.380053862794,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":5,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false}],"groups":[],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_csw"},"widgetsConfig":{},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}	14
+19	{"version":2,"map":{"center":{"x":11.22894105149402,"y":43.380053862794,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":5,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false}],"groups":[],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_csw"},"widgetsConfig":{"layouts":{"xxs":[],"md":[]}},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}	19
+26	{"version":2,"map":{"center":{"x":11.22894105149402,"y":43.380053862794,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":5,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false}],"groups":[],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_csw"},"widgetsConfig":{},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}	26
+33	{"widgets":[{"id":"602c84c0-7570-11ec-b738-9d9ecffb0439","layer":false,"url":false,"legend":false,"mapSync":false,"cartesian":true,"yAxis":true,"widgetType":"text","title":"Dashboard Test","dataGrid":{"y":0,"x":0,"w":1,"h":1}}],"layouts":{"md":[{"w":1,"h":1,"x":0,"y":0,"i":"602c84c0-7570-11ec-b738-9d9ecffb0439","moved":false,"static":false}]}}	33
+36	{"type":"cascade","resources":[],"settings":{"theme":{"general":{"color":"#333333","backgroundColor":"#ffffff","borderColor":"#e6e6e6"},"overlay":{"backgroundColor":"rgba(255, 255, 255, 0.75)","borderColor":"#dddddd","boxShadow":"0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)","color":"#333333"}}},"sections":[{"type":"title","id":"6ebba160-7570-11ec-b738-9d9ecffb0439","title":"Abstract","cover":true,"contents":[{"id":"title_content_id1","type":"text","size":"large","align":"center","theme":"","html":"<h1>GeoStory Test</h1>\\n","background":{"fit":"cover","size":"full","align":"center"}}]}]}	36
 \.
 
 
@@ -320,6 +357,9 @@ COPY geostore.gs_stored_data (id, stored_data, resource_id) FROM stdin;
 --
 
 COPY geostore.gs_user (id, name, user_password, user_role, group_id, enabled) FROM stdin;
+11	guest	\N	GUEST	\N	Y
+12	admin	digest1:OQVijuljEAO0pjAyWpSzoZ9G2ROVJk4PBWpxH/8Td8Y4fegr2PKuNw15zHciPbZE	ADMIN	\N	Y
+13	user	digest1:4Dp+1Em4Ruxo+dDMjA6rWiVjXtF22vh31Vv36O6ITaA1iHVObRgdeesK5pCL9wWV	USER	\N	Y
 \.
 
 
@@ -336,6 +376,8 @@ COPY geostore.gs_user_attribute (id, name, string, user_id) FROM stdin;
 --
 
 COPY geostore.gs_usergroup (id, groupname, description, enabled) FROM stdin;
+9	everyone	\N	Y
+10	testGroup1	description	Y
 \.
 
 
@@ -344,6 +386,9 @@ COPY geostore.gs_usergroup (id, groupname, description, enabled) FROM stdin;
 --
 
 COPY geostore.gs_usergroup_members (user_id, group_id) FROM stdin;
+11	9
+12	9
+13	9
 \.
 
 
@@ -407,7 +452,7 @@ COPY topology.layer (topology_id, layer_id, schema_name, table_name, feature_col
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: geostore; Owner: geostore
 --
 
-SELECT pg_catalog.setval('geostore.hibernate_sequence', 1, false);
+SELECT pg_catalog.setval('geostore.hibernate_sequence', 43, true);
 
 
 --

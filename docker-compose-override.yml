@@ -6,17 +6,18 @@ services:
     build:
       context: ./tests/
       dockerfile: DockerfilePostgresTest
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+
 
   mapstore:
     build:
-      context: ./tests/
-      dockerfile: DockerfileMapStoreTest
+      dockerfile: ./tests/DockerfileMapStoreTest
       args:
         MAPSTORE_WEBAPP_SRC: ${MS_DEVSRC}
+    environment:
+      JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
+    volumes:
+      - ./tests/geostore-datasource-ovr.properties:/mapstore/datadir/geostore-datasource-ovr.properties:rw
+
 
   sut:
     build:

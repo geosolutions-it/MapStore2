@@ -29,13 +29,12 @@ RUN mkdir -p ${DATA_DIR}
 
 ### Testing Datadir Externalization With json patch file
 RUN mkdir -p ${DATA_DIR}/configs
-#add all files you want to copy to the external dir
-#COPY ./tests/plugin.json ${DATA_DIR}/configs/localConfig.json.patch
-COPY ./plugin.json ${DATA_DIR}/configs/localConfig.json.patch
+COPY ./tests/plugin.json ${DATA_DIR}/configs/localConfig.json.patch
 ########
 
 ### Database Externalization
-COPY ./geostore-datasource-ovr.properties ${DATA_DIR}/geostore-datasource-ovr.properties
+COPY ./tests/geostore-datasource-ovr.properties ${DATA_DIR}/geostore-datasource-ovr.properties
+########
 
 RUN cp ${CATALINA_BASE}/docker/wait-for-postgres.sh /usr/bin/wait-for-postgres
 
