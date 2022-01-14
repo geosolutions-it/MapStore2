@@ -42,6 +42,16 @@ const AXIS_TYPES = [{
     label: 'widgets.advanced.axisTypes.date'
 }];
 
+const BAR_CHART_TYPES = [{
+    id: 'stacked',
+    value: 'stack',
+    label: 'widgets.advanced.stackedBarChart'
+}, {
+    id: 'grouped',
+    value: 'group',
+    label: 'widgets.advanced.groupedBarChart'
+}];
+
 const MAX_X_AXIS_LABELS = 200;
 
 function Header({}) {
@@ -78,34 +88,23 @@ export default function ChartAdvancedOptions({
                     <Col componentClass={ControlLabel} sm={6}>
                         <Message msgId="widgets.advanced.barChartType" />
                     </Col>
-                    <Col xs={3} className="radio-btn">
-                        <input
-                            type="radio"
-                            id="stacked"
-                            value="stack"
-                            name="barChartType"
-                            checked={barChartType === 'stack'}
-                            onChange={(e) => {
-                                const { value } = e.target;
-                                setBarChartType(value);
-                                onChange("barChartType", value);
-                            }} />
-                        <Message  msgId="Stacked" />
-                    </Col>
-                    <Col xs={3} className="radio-btn">
-                        <input
-                            type="radio"
-                            id="grouped"
-                            value="group"
-                            name="barChartType"
-                            checked={barChartType === 'group'}
-                            onChange={(e) => {
-                                const { value } = e.target;
-                                setBarChartType(value);
-                                onChange("barChartType", value);
-                            }} />
-                        <Message  msgId="Grouped" />
-                    </Col>
+                    {BAR_CHART_TYPES.map(chartType => (
+                        <Col xs={3} className="radio-btn" key={chartType.value}>
+                            <input
+                                type="radio"
+                                id={chartType.id}
+                                value={chartType.value}
+                                name="barChartType"
+                                checked={barChartType === chartType.value}
+                                onChange={ e => {
+                                    const { value } = e.target;
+                                    setBarChartType(value);
+                                    onChange("barChartType", value);
+                                }}
+                            />
+                            <Message msgId={chartType.label}/>
+                        </Col>
+                    ))}
                 </div>
             )}
             {/* Y AXIS */}

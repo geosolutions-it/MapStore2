@@ -1977,6 +1977,8 @@
                 "title": "Erweiterte Optionen",
                 "legend": "Legende",
                 "barChartType": "Balkendiagrammtyp",
+                "groupedBarChart": "Raggruppato",
+                "stackedBarChart": "Impilato",
                 "axisTypes": {
                   "auto": "Auto",
                   "linear": "linear",

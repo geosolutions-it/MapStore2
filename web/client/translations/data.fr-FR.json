@@ -1940,6 +1940,8 @@
               "title": "Options avancées",
               "legend": "Legend",
               "barChartType": "Type de Graphique à Barres",
+              "groupedBarChart": "Groupé",
+              "stackedBarChart": "Empilé",
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Linear",
