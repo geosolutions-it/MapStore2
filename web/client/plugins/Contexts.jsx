@@ -31,9 +31,6 @@ import ContextGrid from './contexts/ContextsGrid';
 import { mapTypeSelector } from '../selectors/maptype';
 import { isFeaturedMapsEnabled } from '../selectors/featuredmaps';
 import emptyState from '../components/misc/enhancers/emptyState';
-
-import EmptyMaps from '../plugins/maps/EmptyMaps';
-
 import { loadMaps } from '../actions/maps';
 import { setContextsAvailable } from '../actions/contexts';
 
@@ -165,10 +162,9 @@ const ContextsPlugin = compose(
     }),
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
-        ({showCreateButton = false}) => ({
+        () => ({
             glyph: "wrench",
-            title: <Message msgId="resources.contexts.noContextAvailable" />,
-            content: <EmptyMaps showCreateButton={showCreateButton} />
+            title: <Message msgId="resources.contexts.noContextAvailable" />
         })
     )
 )(Contexts);
@@ -179,7 +175,6 @@ const ContextsPlugin = compose(
  * @name Contexts
  * @memberof plugins
  * @class
- * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
  */
 
 export default createPlugin('Contexts', {
