@@ -13,6 +13,7 @@ import { createStructuredSelector } from 'reselect';
 
 import { CONTROL_NAME } from '../constants';
 import SimpleChart from '@mapstore/components/charts/SimpleChart';
+import { SelectionTable } from '../components/SelectionTable';
 import Dialog from "../../../components/misc/Dialog";
 import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
@@ -76,7 +77,7 @@ const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
             </span>
             <div
                 role="body"
-                style={ { height: size.height }}
+                style={ { height: size.height,  display: "flex" }}
             >
                 <Resizable
                     width={size.width}
@@ -87,17 +88,31 @@ const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
                     }}
                 >
                     <div style={{
-                        display: "flex",
+                       
                         flexDirection: "column",
                         width: size.width,
                         height: size.height
                     }}>
                         <MainToolbar enabled={enabled} />
-                        <SimpleChart
+                        <SelectionTable />
+                        <div className='ms2-border-layout-body' style={ { display: "flex", flex: "1 1 0%", overflowY: "auto"}}>
+                            <main className='ms2-border-layout-content' style={{ flex: "1 1 0%" }}>
+                                <div className='mapstore-widget-chart' style={{ position: 'relative' }}>
+                                    <SimpleChart
+                                    {...timeSeriesChartProps}
+                                    data={timePlotsData.map(item => item.chartData)[0] || []} />
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                    {/* <div style={ { flex: "1 1 0%" }}>
+                    <SimpleChart
                             {...timeSeriesChartProps}
                             data={timePlotsData.map(item => item.chartData)[0] || []} />
-                    </div>
+                    </div> */}
+
                 </Resizable>
+
             </div>
         </Dialog>
     );

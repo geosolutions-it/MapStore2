@@ -3394,7 +3394,8 @@
             "selectionTable": {
                 "columns": {
                     "selectionId": "Selection Id",
-                    "selection Type": "Selection Type"
+                    "selectionType": "Selection Type",
+                    "removeSelectionAction": "Remove Selection"
                 }
             }
           }

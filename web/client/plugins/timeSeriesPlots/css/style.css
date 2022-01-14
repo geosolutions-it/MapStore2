@@ -20,3 +20,16 @@ position: relative;
 .time-series-plots-window-body .empty-state-container .empty-state-main-view .empty-state-description {
 text-align: center;
 }
+
+.react-grid-HeaderCell
+.react-grid-Cell {
+    border: none;
+}
+
+.user-select-none.svg-container {
+    height: 350px !important;
+}
+
+.react-grid-Grid {
+    min-height: 155px !important;
+}
