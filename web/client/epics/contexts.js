@@ -18,14 +18,13 @@ import {
     RELOAD_CONTEXTS,
     SET_CONTEXTS_AVAILABLE,
     searchContexts, contextsListLoaded, contextsLoading } from "../actions/contexts";
-import {searchParamsSelector, searchOptionsSelector, searchTextSelector, totalCountSelector} from "../selectors/contexts";
+import {searchParamsSelector, searchTextSelector, totalCountSelector} from "../selectors/contexts";
 
 import {CONTEXT_SAVED} from "../actions/contextcreator";
 
 const calculateNewParams = state => {
     const totalCount = totalCountSelector(state);
-    const searchOptions = searchOptionsSelector(state) || {};
-    const {start, limit, ...otherParams} = searchOptions.params;
+    const {start, limit, ...params} = searchParamsSelector(state) || {};
     if (start === totalCount - 1) {
         return {
             start: Math.max(0, start - limit),
@@ -33,12 +32,7 @@ const calculateNewParams = state => {
         };
     }
     return {
-        ...searchOptions,
-        params: {
-            ...otherParams,
-            start,
-            limit
-        }
+        start, limit, ...params
     };
 };
 
@@ -46,7 +40,7 @@ export const searchContextsOnMapSearch = (action$, store) =>
     action$.ofType(MAPS_LIST_LOADING, SET_CONTEXTS_AVAILABLE)
         .switchMap(({ searchText }) => {
             const state = store.getState();
-            if (state.contexts.available) {
+            if (state.contexts?.available) {
                 return Rx.Observable.of(searchContexts(searchText));
             }
             return Rx.Observable.empty();
@@ -64,7 +58,7 @@ export const searchContextsEpic = (action$, { getState = () => { } }) => action$
     .switchMap(
         ({ searchText, options }) =>
             Rx.Observable.defer(() => GeoStoreApi.getResourcesByCategory("CONTEXT", searchText, options))
-                .map(results => contextsListLoaded(results, searchText, options))
+                .map(results => contextsListLoaded(results, {searchText, options}))
                 .let(wrapStartStop(
                     contextsLoading(true, "loading"),
                     contextsLoading(false, "loading"),

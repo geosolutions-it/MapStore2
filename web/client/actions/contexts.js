@@ -26,7 +26,7 @@ export const contextsLoading = (value, name = "loading") => ({
     name,
     value
 });
-export const contextsListLoaded = ({results, success, totalCount}, searchText, options) => ({ type: CONTEXTS_LIST_LOADED, results, success, totalCount, searchText, options });
+export const contextsListLoaded = ({results, success, totalCount}, {searchText, options}) => ({ type: CONTEXTS_LIST_LOADED, results, success, totalCount, searchText, options });
 export const deleteContext = id => ({type: DELETE_CONTEXT, id});
 export const reloadContexts = () => ({ type: RELOAD_CONTEXTS});
 export const contextDeleted = id => ({type: CONTEXT_DELETED, id});
