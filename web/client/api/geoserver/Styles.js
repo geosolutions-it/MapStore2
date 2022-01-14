@@ -257,7 +257,12 @@ export const getStyleCodeByName = ({baseUrl: geoserverBaseUrl, styleName, option
     return axios.get(url, options)
         .then(response => {
             return response.data && response.data.style && response.data.style.name ?
-                axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) })).then(({data: code}) => ({...response.data.style, code}))
+                axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) }))
+                    .then(({data: code}) => ({
+                        ...response.data.style,
+                        ...(response?.data?.style?.metadata && { metadata: parseStyleMetadata(response.data.style.metadata) }),
+                        code
+                    }))
                 : null;
         });
 };

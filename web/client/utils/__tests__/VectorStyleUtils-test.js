@@ -409,12 +409,31 @@ describe("VectorStyleUtils ", () => {
             expect(results[1].fillColor).toBe("#FF00FF");
         });
     });
-    it('getStyleParser returns parsers for supported style formats', () => {
-        expect(getStyleParser('sld')).toBeTruthy();
-        expect(getStyleParser('sld').readStyle).toBeTruthy();
-        expect(getStyleParser('sld').writeStyle).toBeTruthy();
-        expect(getStyleParser('css')).toBeTruthy();
-        expect(getStyleParser('css').readStyle).toBeTruthy();
-        expect(getStyleParser('css').writeStyle).toBeTruthy();
+    it('getStyleParser returns parsers for sld format', (done) => {
+        getStyleParser('sld')
+            .then((parser) => {
+                expect(parser).toBeTruthy();
+                expect(parser.readStyle).toBeTruthy();
+                expect(parser.writeStyle).toBeTruthy();
+                done();
+            });
+    });
+
+    it('getStyleParser returns parsers for css format', (done) => {
+        getStyleParser('css')
+            .then((parser) => {
+                expect(parser).toBeTruthy();
+                expect(parser.readStyle).toBeTruthy();
+                expect(parser.writeStyle).toBeTruthy();
+                done();
+            });
+    });
+
+    it('should not return a parser with unsupported format', (done) => {
+        getStyleParser('unknown')
+            .then((parser) => {
+                expect(parser).toBeFalsy();
+                done();
+            });
     });
 });
