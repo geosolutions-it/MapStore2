@@ -278,7 +278,8 @@ const converters = {
                     thumbnail: thumbURL,
                     title: dc && isString(dc.title) && dc.title || '',
                     tags: dc && dc.tags || '',
-                    metadata
+                    metadata,
+                    capabilities: record.capabilities
                 };
             });
         }

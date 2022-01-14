@@ -8,12 +8,13 @@
 
 import urlUtil from 'url';
 
-import { head, last, template } from 'lodash';
+import { get, head, last, template, isNil } from 'lodash';
 import assign from 'object-assign';
 
 import axios from '../libs/ajax';
-import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
+import {cleanDuplicatedQuestionMarks, getConfigProp} from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG } from '../utils/CoordinatesUtils';
+import WMS from "../api/WMS";
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -81,6 +82,47 @@ export const constructXMLBody = (startPosition, maxRecords, searchText, {filter}
     return template(cswGetRecordsXml)({filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords});
 };
 
+let capabilitiesCache = {};
+
+/**
+ * Add capabilities data to CSW records
+ * Currently limited to only scale denominators (visibility limits)
+ * @param {string} url wms url
+ * @param {object} result csw results object
+ */
+const addCapabilitiesToRecords = (url, result) => {
+    const cached = capabilitiesCache[url];
+    const isCached = cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000;
+    return Promise.resolve(
+        isCached
+            ? cached.data
+            : WMS.getCapabilities(url + '?version=')
+                .then((caps)=> get(caps, 'capability.layer.layer', []))
+                .catch(()=> []))
+        .then((layers) => {
+            if (!isCached) {
+                capabilitiesCache[url] = {
+                    timestamp: new Date().getTime(),
+                    data: layers
+                };
+            }
+            // Add visibility limits scale data of the layer to the record
+            return {
+                ...result,
+                records: result?.records?.map(record=> {
+                    const {
+                        minScaleDenominator: MinScaleDenominator,
+                        maxScaleDenominator: MaxScaleDenominator
+                    } = layers.find(l=> l.name === record?.dc?.identifier) || {};
+                    return {
+                        ...record,
+                        ...((!isNil(MinScaleDenominator) || !isNil(MaxScaleDenominator))
+                        && {capabilities: {MaxScaleDenominator, MinScaleDenominator}})
+                    };
+                })
+            };
+        });
+};
 /**
  * API for local config
  */
@@ -166,6 +208,7 @@ var Api = {
                                     // searchStatus: rawResult.searchStatus
                                 };
                                 let records = [];
+                                let _dcRef;
                                 if (rawRecords) {
                                     for (let i = 0; i < rawRecords.length; i++) {
                                         let rawRec = rawRecords[i].value;
@@ -243,13 +286,18 @@ var Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
+                                            if (!_dcRef) {
+                                                _dcRef = dc.references;
+                                            }
                                             obj.dc = dc;
                                         }
                                         records.push(obj);
                                     }
                                 }
                                 result.records = records;
-                                return result;
+                                const {value: _url} = _dcRef?.find(t=> t.scheme === 'OGC:WMS') || {}; // Get WMS URL from references
+                                const [parsedUrl] = _url && _url.split('?') || [];
+                                return addCapabilitiesToRecords(parsedUrl, result);
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
                                 return {
                                     error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'

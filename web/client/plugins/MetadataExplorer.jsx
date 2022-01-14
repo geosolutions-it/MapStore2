@@ -285,6 +285,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
+ * @prop {number} cfg.autoSetVisibilityLimits if true, allows fetching and setting visibility limits of the layer from capabilities on layer add (Note: The default configuration value is applied only on new catalog service (WMS/CSW))
  * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
  */
 export default {

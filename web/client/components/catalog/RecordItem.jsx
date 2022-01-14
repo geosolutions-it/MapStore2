@@ -358,7 +358,6 @@ class RecordItem extends React.Component {
 
         const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
         const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits;
-
         return recordToLayer(
             this.props.record,
             type,
