@@ -60,7 +60,7 @@ import { getMessageById } from '../utils/LocaleUtils';
 import Message from '../components/I18N/Message';
 import assign from 'object-assign';
 import layersIcon from './toolbar/assets/img/layers.png';
-import { isObject, head, find } from 'lodash';
+import { isObject, head, find, round } from 'lodash';
 import { setControlProperties, setControlProperty } from '../actions/controls';
 import { createWidget } from '../actions/widgets';
 import { getMetadataRecordById } from '../actions/catalog';
@@ -368,7 +368,7 @@ class LayerTree extends React.Component {
     getDefaultLayer = () => {
         const LayerNode = this.props.layerNodeComponent || DefaultLayer;
         const resolutions = this.props.resolutions || getResolutions();
-        const resolution = resolutions[this.props.currentZoomLvl];
+        const resolution = resolutions[round(this.props.currentZoomLvl)];
         return (
             <LayerNode
                 {...this.props.layerOptions}
