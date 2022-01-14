@@ -54,7 +54,7 @@ const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
 
     return (
         <Dialog
-            bodyClassName={"time-series-plots-window-body"}
+            bodyClassName="time-series-plots-window-body"
             draggable
             style={{
                 zIndex: 10000,

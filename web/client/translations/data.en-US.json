@@ -3390,7 +3390,13 @@
         "timeSeriesPlots": {
             "title": "Time Series Plots",
             "description": "Plots time bound data for the selected layer",
-            "tooltip": "Time Series Plots tool"
+            "tooltip": "Time Series Plots tool",
+            "selectionTable": {
+                "columns": {
+                    "selectionId": "Selection Id",
+                    "selection Type": "Selection Type"
+                }
+            }
           }
     }
 }
