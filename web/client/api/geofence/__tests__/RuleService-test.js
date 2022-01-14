@@ -40,7 +40,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
     it('getRulesCount', (done) => {
         const PARAMS = { roleName: "ADMIN" };
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rules/count`);
+            expect(config.url).toBe(`/rules/count`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             expect(config.params).toEqual(PARAMS);
             return [200, '2'];
@@ -55,7 +55,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
     it('loadRules', (done) => {
         const PARAMS = { roleName: "ADMIN" };
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rules`);
+            expect(config.url).toBe(`/rules`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             expect(config.params).toEqual({...PARAMS, page: 1, entries: 10});
             return [200, RULES];
@@ -71,7 +71,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
     });
     it('moveRules', (done) => {
         mockAxios.onGet().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rules/move`);
+            expect(config.url).toBe(`/rules/move`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             expect(config.params).toEqual({ targetPriority: 1, rulesIds: '1,2' });
             return [200, RULES];
@@ -82,7 +82,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
     });
     it('addRule', (done) => {
         mockAxios.onPost().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rules`);
+            expect(config.url).toBe(`/rules`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             expect(config.method).toBe('post');
             const rule = JSON.parse(config.data);
@@ -97,7 +97,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
     });
     it('deleteRule', (done) => {
         mockAxios.onDelete().reply(config => {
-            expect(config.url).toBe(`${BASE_URL}/rules/id/1`);
+            expect(config.url).toBe(`/rules/id/1`);
             expect(config.baseURL).toBe(`${BASE_URL}`);
             expect(config.method).toBe('delete');
             return [200];
