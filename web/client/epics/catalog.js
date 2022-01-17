@@ -32,9 +32,9 @@ import {
     textSearch,
     changeSelectedService,
     formatsLoading,
-    setSupportedFormats
+    setSupportedFormats, ADD_LAYER_AND_DESCRIBE, describeError, addLayer
 } from '../actions/catalog';
-import { showLayerMetadata, addLayer, SELECT_NODE } from '../actions/layers';
+import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
 import { error, success } from '../actions/notifications';
 import { SET_CONTROL_PROPERTY, setControlProperties, setControlProperty } from '../actions/controls';
 import { closeFeatureGrid } from '../actions/featuregrid';
@@ -55,7 +55,7 @@ import {
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
-import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
+import { getSelectedLayer, selectedNodesSelector, layersSelector } from '../selectors/layers';
 
 import {
     buildSRSMap,
@@ -68,8 +68,10 @@ import {
     getSupportedFormat
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import {getCapabilitiesUrl} from '../utils/LayersUtils';
+import ConfigUtils from '../utils/ConfigUtils';
+import {getCapabilitiesUrl, getLayerId, getLayerUrl} from '../utils/LayersUtils';
 import { wrapStartStop } from '../observables/epics';
+import {zoomToExtent} from "../actions/map";
 
 /**
     * Epics for CATALOG
@@ -200,6 +202,43 @@ export default (API) => ({
                     return Rx.Observable.from(actions);
                 }
                 return Rx.Observable.empty();
+            })
+            .catch(() => {
+                return Rx.Observable.empty();
+            }),
+    addLayerAndDescribeEpic: (action$, store) =>
+        action$.ofType(ADD_LAYER_AND_DESCRIBE)
+            .mergeMap((value) => {
+                const { layer, zoomToLayer } = value;
+                const actions = [];
+                const state = store.getState();
+                const layers = layersSelector(state);
+                const id = getLayerId(layer, layers || []);
+                actions.push(addNewLayer({...layer, id}));
+                if (zoomToLayer && layer.bbox) {
+                    actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
+                }
+                if (layer.type === 'wms') {
+                    return Rx.Observable.defer(() => API.wms.describeLayers(getLayerUrl(layer), layer.name))
+                        .switchMap(results => {
+                            if (results) {
+                                let description = find(results, (desc) => desc.name === layer.name );
+                                if (description && description.owsType === 'WFS') {
+                                    const filteredUrl = ConfigUtils.filterUrlParams(ConfigUtils.cleanDuplicatedQuestionMarks(description.owsURL), authkeyParamNameSelector(state));
+                                    return Rx.Observable.of(changeLayerProperties(id, {
+                                        search: {
+                                            url: filteredUrl,
+                                            type: 'wfs'
+                                        }
+                                    }));
+                                }
+                            }
+                            return Rx.Observable.empty();
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                return Rx.Observable.from(actions);
             })
             .catch(() => {
                 return Rx.Observable.empty();
