@@ -307,6 +307,7 @@
             "confirm": "I Agree"
         },
         "manager": {
+            "managerMenu": "Manager menu",
             "openInANewTab":"Open map",
             "deleteMap":"Delete Map",
             "deleteMapMessage": "Do you really want to delete this map?",
@@ -651,7 +652,7 @@
             "scale": "Scale",
             "includeScale": "Include in print"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Select Background"
         },
         "info":{
@@ -1193,7 +1194,10 @@
             "detailsGroups": "Groups",
             "detailsEmail": "E-mail",
             "detailsCompany": "Company",
-            "detailsNotes": "Notes"
+            "detailsNotes": "Notes",
+            "userMenu": "User menu",
+            "generalInformation": "General",
+            "attributes": "Attributes"
         },
         "users": {
             "title": "Manage Accounts",
@@ -1244,7 +1248,9 @@
           "noUsers": "No users for this group",
           "errorSaving": "There was an error saving this group",
           "errorDelete": "There was an error deleting this group",
-          "confirmDeleteGroup": "Are you sure you want to delete this group?"
+          "confirmDeleteGroup": "Are you sure you want to delete this group?",
+          "generalInformation": "General",
+          "members": "Members"
         },
         "share":{
             "title": "Share",
@@ -2721,6 +2727,8 @@
         "defaultMapBackgroundsServiceTitle": "Default Backgrounds",
         "backgroundSelector": {
             "addTooltip": "Add new background",
+            "editTooltip": "Edit background",
+            "deleteTooltip": "Delete background",
             "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
         },
         "stepper": {

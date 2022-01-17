@@ -666,7 +666,7 @@
             },
             "layoutWarning": "Lay-out niet toegelaten"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Selectie van de achtergrond kaart"
         },
         "info":{

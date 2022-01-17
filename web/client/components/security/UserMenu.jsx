@@ -13,7 +13,10 @@ import React from 'react';
 import { DropdownButton, MenuItem, NavDropdown, Glyphicon } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import ConfirmModal from '../../components/misc/ResizableModal';
+import tooltip from "../misc/enhancers/tooltip";
 
+const TNavDropdown = tooltip(NavDropdown);
+const TDropdownButton = tooltip(DropdownButton);
 
 /**
  * A DropDown menu for user details:
@@ -99,14 +102,23 @@ class UserMenu extends React.Component {
     }
 
     renderGuestTools = () => {
-        let DropDown = this.props.nav ? NavDropdown : DropdownButton;
-        return (<DropDown className={this.props.className} pullRight bsStyle={this.props.bsStyle} title={this.renderButtonText()} id="dropdown-basic-primary" {...this.props.menuProps}>
-            <MenuItem onClick={this.props.onShowLogin}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
-        </DropDown>);
+        let DropDown = this.props.nav ? TNavDropdown : TDropdownButton;
+        return (
+            <DropDown
+                className={this.props.className}
+                pullRight
+                bsStyle={this.props.bsStyle}
+                title={this.renderButtonText()}
+                id="dropdown-basic-primary"
+                tooltipId="user.login"
+                tooltipPosition="bottom"
+                {...this.props.menuProps}>
+                <MenuItem onClick={this.props.onShowLogin}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
+            </DropDown>);
     };
 
     renderLoggedTools = () => {
-        let DropDown = this.props.nav ? NavDropdown : DropdownButton;
+        let DropDown = this.props.nav ? TNavDropdown : TDropdownButton;
         let itemArray = [];
         if (this.props.showAccountInfo) {
             itemArray.push(<MenuItem key="accountInfo" onClick={this.props.onShowAccountInfo}> <Glyphicon glyph="user" /><Message msgId="user.info"/></MenuItem>);
@@ -122,7 +134,16 @@ class UserMenu extends React.Component {
         }
         return (
             <React.Fragment>
-                <DropDown id="loginButton" className={this.props.className} pullRight bsStyle="success" title={this.renderButtonText()} {...this.props.menuProps} >
+                <DropDown
+                    id="loginButton"
+                    className={this.props.className}
+                    pullRight
+                    bsStyle="success"
+                    title={this.renderButtonText()}
+                    tooltipId="user.userMenu"
+                    tooltipPosition="bottom"
+                    {...this.props.menuProps}
+                >
                     <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
                     {itemArray}
                 </DropDown>

@@ -307,6 +307,7 @@
             "confirm": "Acconsento"
         },
         "manager": {
+            "managerMenu": "Menu manager",
             "openInANewTab":"Apri mappa",
             "deleteMap":"Elimina Mappa",
             "deleteMapMessage": "Vuoi eliminare questa mappa?",
@@ -651,7 +652,7 @@
             "scale": "Scala",
             "includeScale": "Includi nella stampa"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Scegli lo sfondo"
         },
         "info":{
@@ -1193,7 +1194,10 @@
             "detailsGroups": "Gruppi",
             "detailsEmail": "E-mail",
             "detailsCompany": "Company",
-            "detailsNotes": "Note"
+            "detailsNotes": "Note",
+            "userMenu": "Menu utente",
+            "generalInformation": "Generale",
+            "attributes": "Attributi"
         },
         "users": {
             "title": "Gestione Account",
@@ -1244,7 +1248,9 @@
           "noUsers": "Nessun utente membro di questo gruppo",
           "errorSaving": "Si è verificato un errore salvando questo gruppo:",
           "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
-          "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?"
+          "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?",
+          "generalInformation": "Generale",
+          "members": "Membri"
         },
         "share": {
             "title": "Condividi",
@@ -2709,6 +2715,8 @@
         "defaultMapBackgroundsServiceTitle": "Sfondi predefiniti",
         "backgroundSelector": {
             "addTooltip": "Aggiungi nuovo sfondo",
+            "editTooltip": "Modifica sfondo",
+            "deleteTooltip": "Elimina lo sfondo",
             "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?"
         },
         "stepper": {

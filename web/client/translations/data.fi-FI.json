@@ -544,7 +544,7 @@
       },
       "layoutWarning": "Asettelu ei sallittu"
     },
-    "backgroundSwither": {
+    "backgroundSwitcher": {
       "tooltip": "Valitse tausta"
     },
     "info": {

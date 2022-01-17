@@ -11,18 +11,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
+import tooltip from "../components/misc/enhancers/tooltip";
 
+const TDropdownButton = tooltip(DropdownButton);
 const Container = ({children, ...props}) => (
-    <DropdownButton
+    <TDropdownButton
         noCaret
         pullRight
         bsStyle="primary"
         title={<Glyphicon glyph="menu-hamburger"/>}
+        tooltipId="options"
+        tooltipPosition="bottom"
         {...props}
     >
         {children}
-    </DropdownButton>
+    </TDropdownButton>
 );
+
 const InnerContainer = ({children, ...props}) => (
     <div {...props}>
         {children}

@@ -307,6 +307,7 @@
             "confirm": "Je suis d'accord"
         },
         "manager": {
+            "managerMenu": "Menu du gestionnaire",
             "openInANewTab": "Ouvrir la carte",
             "deleteMap": "Supprimer la carte",
             "deleteMapMessage": "Voulez-vous supprimer cette carte ?",
@@ -651,7 +652,7 @@
             "scale": "échelle",
             "includeScale": "inclure dans l'impression"
         },
-        "backgroundSwither": {
+        "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"
         },
         "info": {
@@ -1193,7 +1194,10 @@
             "detailsGroups": "Groupes",
             "detailsEmail": "E-mail",
             "detailsCompany": "Compagnie",
-            "detailsNotes": "Remarques"
+            "detailsNotes": "Remarques",
+            "userMenu": "Menu utilisateur",
+            "generalInformation": "Général",
+            "attributes": "Les attributs"
         },
         "users": {
             "title": "Gérer les comptes",
@@ -1244,7 +1248,9 @@
             "noUsers": "Aucun utilisateur pour ce groupe",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
             "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
-            "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?"
+            "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?",
+            "generalInformation": "Général",
+            "members": "Membres"
         },
         "share": {
             "title": "Partager",
@@ -2711,6 +2717,8 @@
         "defaultMapBackgroundsServiceTitle": "Fonds de plans par défaut",
         "backgroundSelector": {
             "addTooltip": "Ajouter un nouveau fond",
+            "editTooltip": "Modifier le fond",
+            "deleteTooltip": "Supprimer le fond",
             "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
         },
         "stepper": {

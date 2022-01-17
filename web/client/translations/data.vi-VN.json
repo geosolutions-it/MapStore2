@@ -103,7 +103,7 @@
         },
         "back": "Quay lại Trình nhập",
         "background": "Nền",
-        "backgroundSwither": {
+        "backgroundSwitcher": {
             "tooltip": "Chọn nền"
         },
         "bandselector": {
