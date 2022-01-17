@@ -152,6 +152,19 @@ describe('Test correctness of the GeoStore APIs', () => {
             done();
         });
     });
+
+    it("test login with UTF-8 credentials", done => {
+        mockAxios.onPost().reply(200, { access_token: "token" });
+        mockAxios.onGet().reply(200);
+        API.login("アキラ", "金田").then(() => {
+            expect(mockAxios.history.post[0].auth).toExist();
+            expect(mockAxios.history.post[0].auth.username).toBe('ã¢ã­ã©'); // encoded utf-8 for `btoa` conversion
+            // mock-axios do not return effective request. Can not test this https://github.com/1pm/axios/blob/ef94711090b17b75143ee97cab8c6bc1fcaddb05/lib/adapters/xhr.js#L26
+            // expect(mockAxios.history.post[0].auth.password).toBe("金田"); // <-- this should be encoded too.
+            done();
+        });
+    });
+
     it("test refresh session", (done) => {
         mockAxios.onPost().reply(200, { sessionToken: {access_token: "token"} });
         API.refreshToken("access", "refresh", {}).then(response => {
@@ -224,7 +237,7 @@ describe('Test correctness of the GeoStore APIs', () => {
             const everyoneGroup = data.find(g => g.id === 1);
             expect(everyoneGroup).toEqual({id: 1, groupName: "everyone"});
             const testGroup = data.find(g => g.id === 5);
-            expect(testGroup).toEqual({id: 5, groupName: "test"});
+            expect(testGroup).toEqual({id: 5, "description": "test", groupName: "test"});
         });
     });
     it("test getAvailableGroups for ADMIN single group", () => {
