@@ -105,7 +105,8 @@ function getData({
     yAxisLabel,
     autoColorOptions,
     customColorEnabled,
-    isClassifiedChart }) {
+    isClassifiedChart,
+    presetLabelNames }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
@@ -189,6 +190,31 @@ function getData({
         };
         return barChartTrace;
 
+    case 'line' : {
+        if(data[0] && Array.isArray(data[0])) {
+            const lineChartTraces = data.map((item, index) => {
+                const lineX = item.map(d => d[xDataKey]); 
+                const lineY = item.map(d => d[yDataKey]);
+                const trace = {
+                    type,
+                    x: lineX,
+                    y: lineY,
+                    name: presetLabelNames[index] || `${yDataKey} ${index}`
+                };
+                return trace
+            });
+            return lineChartTraces;
+        };
+        if (formula) {
+            y = preProcessValues(formula, y);
+        };
+        return {
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'd'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
+            x,
+            y,
+            name: yAxisLabel || yDataKey
+        };
+    }
     default:
         if (formula) {
             y = preProcessValues(formula, y);
@@ -272,13 +298,15 @@ export const toPlotly = (props) => {
         width,
         legend,
         classifications,
-        autoColorOptions = COLOR_DEFAULTS
+        autoColorOptions = COLOR_DEFAULTS,
+        names = []
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
+    const presetLabelNames = names.map(name => name.dataKey);
     return {
         layout: {
             showlegend: legend,
@@ -294,7 +322,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, presetLabelNames });
             return  allData;
         }),
         config: {

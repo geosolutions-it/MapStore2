@@ -19,10 +19,12 @@ import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
 import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
+import { removeTableSelectionRow } from '../actions/timeSeriesPlots';
 
 import {
     enabledSelector,
-    timePlotsDataSelector
+    timePlotsDataSelector,
+    timeSeriesFeaturesSelectionsSelector
 } from '../selectors/timeSeriesPlots';
 
 /**
@@ -31,7 +33,13 @@ import {
  * @returns
  */
 
-const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
+const Panel = ({ 
+    enabled,
+    onClose = () => {},
+    timePlotsData,
+    timeSeriesFeaturesSelections = [],
+    onRemoveTableSelectionRow = () => {} 
+}) => {
     const margin = 10;
     const initialSize = {width: 400, height: 300};
     const [size, setSize] = useState(initialSize);
@@ -39,19 +47,31 @@ const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
         return null;
     }
 
-    const timeSeriesChartProps = {
-        cartesian: true,
-        legend: true,
-        options : {
-            aggregateFunction: 'Average',
-            aggregationAttribute: 'VALUE',
-            groupByAttributes: 'DATE',
-        },
-        series: [{dataKey: 'Average(VALUE)'}],
-        type: 'line',
-        xAxis: {dataKey: 'DATE'},
-        yAxis: true
-    }
+    const getTimeSeriesChartProps = (data, selections) => {
+        const aggregateFunction = 'Average';
+        const aggregationAttribute = 'VALUE'
+        const operationName = `${aggregateFunction}(${aggregationAttribute})`;
+        return ({
+            cartesian: true,
+            legend: true,
+            options : {
+                aggregateFunction,
+                aggregationAttribute,
+                groupByAttributes: 'DATE',
+            },
+            names: data.reduce((acc, cur) => {
+                const seriesName = selections.filter(item => cur.selectionId === item.selectionId)[0]?.selectionName || '';
+                return [
+                    ...acc,
+                    { dataKey: seriesName }
+                ]
+            }, []),
+            series: [{ dataKey: operationName }],
+            type: 'line',
+            xAxis: {dataKey: 'DATE'},
+            yAxis: true
+        });
+    };
 
     return (
         <Dialog
@@ -94,23 +114,19 @@ const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
                         height: size.height
                     }}>
                         <MainToolbar enabled={enabled} />
-                        <SelectionTable />
+                        <SelectionTable 
+                            timeSeriesFeaturesSelections={timeSeriesFeaturesSelections}
+                            onRemoveTableSelectionRow={onRemoveTableSelectionRow}/>
                         <div className='ms2-border-layout-body' style={ { display: "flex", flex: "1 1 0%", overflowY: "auto"}}>
                             <main className='ms2-border-layout-content' style={{ flex: "1 1 0%" }}>
                                 <div className='mapstore-widget-chart' style={{ position: 'relative' }}>
                                     <ChartView
-                                    {...timeSeriesChartProps}
-                                    data={timePlotsData.map(item => item.chartData)[0] || []} />
+                                    {...getTimeSeriesChartProps(timePlotsData, timeSeriesFeaturesSelections)}
+                                    data={timePlotsData.map(item => item.chartData) || []} />
                                 </div>
                             </main>
                         </div>
                     </div>
-                    {/* <div style={ { flex: "1 1 0%" }}>
-                    <SimpleChart
-                            {...timeSeriesChartProps}
-                            data={timePlotsData.map(item => item.chartData)[0] || []} />
-                    </div> */}
-
                 </Resizable>
 
             </div>
@@ -120,9 +136,11 @@ const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
 
 const TSPPanel = connect(createStructuredSelector({
     enabled: enabledSelector,
-    timePlotsData: timePlotsDataSelector
+    timePlotsData: timePlotsDataSelector,
+    timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector
 }), {
-    onClose: () => toggleControl(CONTROL_NAME)
+    onClose: () => toggleControl(CONTROL_NAME),
+    onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId)
 })(Panel);
 
 export default TSPPanel;

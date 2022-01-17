@@ -1,7 +1,14 @@
-import { startEditingFeature } from '@mapstore/actions/featuregrid';
 import { set } from '@mapstore/utils/ImmutableUtils';
 import { TIME_SERIES_PLOTS, SELECT_NODE } from '../../../actions/layers';
-import { STORE_TIME_SERIES_CHART_DATA, STORE_TIME_SERIES_FEATURES_IDS, TEAR_DOWN, TOGGLE_SELECTION, SETUP, SET_CURRENT_SELECTION } from '../actions/timeSeriesPlots';
+import { 
+    STORE_TIME_SERIES_CHART_DATA,
+    STORE_TIME_SERIES_FEATURES_IDS,
+    TEAR_DOWN,
+    TOGGLE_SELECTION,
+    SETUP,
+    SET_CURRENT_SELECTION,
+    REMOVE_TABLE_SELECTION_ROW
+} from '../actions/timeSeriesPlots';
 
 const INITIAL_STATE = {
     selections: [],
@@ -49,6 +56,19 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
         case TOGGLE_SELECTION: {
             const { selectionType } = action;
             return set("selectionType", selectionType, state);
+        }
+        case REMOVE_TABLE_SELECTION_ROW: {
+            const { selectionId } = action;
+            return {
+                ...state,
+                selections: state.selections
+                .filter(selection => selection.selectionId !== selectionId)
+                .map((item, index) => ({
+                    ...item,
+                    selectionName: `${(item.selectionType === 'POLYGON' || item.selectionType === 'CIRCLE' ? 'AOI' : 'Point')} ${index + 1}`
+                })),
+                timePlotsData: state.timePlotsData.filter(timePlotData => timePlotData.selectionId !== selectionId)
+            }
         }
         default:
             return state;

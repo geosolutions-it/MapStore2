@@ -11,8 +11,6 @@ import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
 import ReactDataGrid from 'react-data-grid';
-import { connect } from 'react-redux';
-import { timeSeriesFeaturesSelectionsSelector } from '../selectors/timeSeriesPlots';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import localizedProps from '@mapstore/components/misc/enhancers/localizedProps';
@@ -22,7 +20,6 @@ class BaseTable extends React.Component {
 
     constructor(props) {
         super(props);
-        this.getCellActions.bind(this);
     }
 
     COLUMNS = [{
@@ -47,8 +44,7 @@ class BaseTable extends React.Component {
         const cellActions = [{
             icon:  <Glyphicon glyph="remove"/>,
             callback: () => {
-                const rows = [...this.rows]
-                rows.splice(row.index, 1);
+                this.props.onRemoveTableSelectionRow(row.selectionId)
             }
         }];
         return column.key === 'action' ? cellActions : null;
@@ -63,13 +59,11 @@ class BaseTable extends React.Component {
                     columns={this.COLUMNS}
                     rowGetter={(i) => (this.props?.timeSeriesFeaturesSelections[i] || '')}
                     rowsCount={this.props?.timeSeriesFeaturesSelections.length || 0}
-                    getCellActions={this.getCellActions}
+                    getCellActions={this.getCellActions.bind(this)}
                 />
             </div>
         );
     }
 }
 
-export const SelectionTable = connect(createStructuredSelector({
-    timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector
-}), () => {})(localizedProps('columns', 'name')(BaseTable));
+export const SelectionTable = localizedProps('columns', 'name')(BaseTable);

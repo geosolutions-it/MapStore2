@@ -14,6 +14,7 @@ export const SET_CURRENT_SELECTION = "TIME_SERIES_PLOTS:SET_CURRENT_SELECTION";
 export const STORE_TIME_SERIES_FEATURES_IDS = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_FEATURES_IDS";
 export const STORE_TIME_SERIES_CHART_DATA = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_CHART_DATA";
 export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
+export const REMOVE_TABLE_SELECTION_ROW = "TIME_SERIES_PLOTS:REMOVE_TABLE_SELECTION_ROW";
 
 
 export const tearDown = () => {
@@ -62,4 +63,9 @@ export const storeTimeSeriesChartData = (selectionId, chartData) => ({
 export const setCurrentFeaturesSelectionIndex = (index) => ({
     type: SET_CURRENT_SELECTION,
     index
+});
+
+export const removeTableSelectionRow = (selectionId) => ({
+    type: REMOVE_TABLE_SELECTION_ROW,
+    selectionId
 });
