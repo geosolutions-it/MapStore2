@@ -85,12 +85,14 @@ describe('Test correctness of the catalog actions', () => {
     it('addLayersMapViewerUrl', () => {
         const layers = ["layer name"];
         const sources = ["catalog name"];
-        const retval = addLayersMapViewerUrl(layers, sources);
+        const options = [{"params": {"CQL_FILTER": "NAME='A'"}}];
+        const retval = addLayersMapViewerUrl(layers, sources, options);
 
         expect(retval).toExist();
         expect(retval.type).toBe(ADD_LAYERS_FROM_CATALOGS);
         expect(retval.layers).toEqual(layers);
         expect(retval.sources).toEqual(sources);
+        expect(retval.options).toEqual(options);
     });
     it('textSearch', () => {
         const format = "csw";
