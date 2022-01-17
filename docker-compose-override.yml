@@ -17,7 +17,7 @@ services:
       JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
     volumes:
       - ./tests/geostore-datasource-ovr.properties:/mapstore/datadir/geostore-datasource-ovr.properties:rw
-
+      - ./tests/plugin.json:/mapstore/datadir/configs/localConfig.json.patch:rw
 
   sut:
     build:
@@ -25,18 +25,8 @@ services:
       dockerfile: Dockerfile
     command: dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 20s && python3 tests.py
     container_name: sutms
-    environment:
-      - ENV_URL=${ENV_URL}
-      - ANN_MAP_ID=${ANN_MAP_ID}
-      - ANN_DASHBOARD_ID=${ANN_DASHBOARD_ID}
-      - ANN_GEOSTORY_ID=${ANN_GEOSTORY_ID} 
-      - ANN_THUMBNAIL_ID=${ANN_THUMBNAIL_ID}
-      - ANN_DATAURI=${ANN_DATAURI}
-      - AT_USR=${AT_USR}
-      - AT_PWD=${AT_PWD}
-      - PRV_MAP_ID=${PRV_MAP_ID}
-      - PRV_DASHBOARD_ID=${PRV_DASHBOARD_ID}
-      - PRV_GEOSTORY_ID=${PRV_GEOSTORY_ID}
+    env_file:
+      - ./test-variables.env
     depends_on:
       - postgres
       - mapstore

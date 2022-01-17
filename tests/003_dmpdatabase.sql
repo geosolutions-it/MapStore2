@@ -97,20 +97,6 @@ COMMENT ON EXTENSION postgis IS 'PostGIS geometry and geography spatial types an
 
 
 --
--- Name: postgis_tiger_geocoder; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder WITH SCHEMA tiger;
-
-
---
--- Name: EXTENSION postgis_tiger_geocoder; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION postgis_tiger_geocoder IS 'PostGIS tiger geocoder and reverse geocoder';
-
-
---
 -- Name: postgis_topology; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -290,6 +276,7 @@ COPY geostore.gs_attribute (id, attribute_date, name, attribute_number, attribut
 32	\N	featured	\N	true	STRING	26
 42	\N	featured	\N	true	STRING	33
 43	\N	featured	\N	true	STRING	36
+60	\N	thumbnail	\N	rest/geostore/data/56/raw?decode=datauri&v=94f11950-77b4-11ec-bacc-6bfb38edc96a	STRING	33
 \.
 
 
@@ -318,7 +305,10 @@ COPY geostore.gs_resource (id, creation, description, lastupdate, metadata, name
 19	2022-01-14 19:17:06.32		\N		Public Test Map	1
 26	2022-01-14 19:26:39.414		\N		Public Test Map 2	1
 36	2022-01-14 19:30:54.579		\N		Geostory Public Test	5
-33	2022-01-14 19:30:19.591		2022-01-14 19:31:18.642		Dashboard Public Test	4
+44	2022-01-17 15:58:16.617		\N		Dashboard Private Test	4
+47	2022-01-17 15:58:44.993		\N		Geostory Private Test	5
+33	2022-01-14 19:30:19.591		2022-01-17 16:43:24.624		Dashboard Public Test	4
+56	2022-01-17 16:43:24.734		\N		33-thumbnail-96678cb0-77b4-11ec-bacc-6bfb38edc96a	2
 \.
 
 
@@ -334,8 +324,12 @@ COPY geostore.gs_security (id, canread, canwrite, group_id, resource_id, user_id
 30	t	f	9	26	\N	\N	\N
 38	t	t	\N	36	12	\N	\N
 39	t	f	9	36	\N	\N	\N
-40	t	t	\N	33	12	\N	\N
-41	t	f	9	33	\N	\N	\N
+46	t	t	\N	44	12	\N	\N
+49	t	t	\N	47	12	\N	\N
+54	t	t	\N	33	12	\N	\N
+55	t	f	9	33	\N	\N	\N
+58	t	t	\N	56	12	\N	\N
+59	t	f	9	56	\N	\N	\N
 \.
 
 
@@ -347,8 +341,11 @@ COPY geostore.gs_stored_data (id, stored_data, resource_id) FROM stdin;
 14	{"version":2,"map":{"center":{"x":11.22894105149402,"y":43.380053862794,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":5,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false}],"groups":[],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_csw"},"widgetsConfig":{},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}	14
 19	{"version":2,"map":{"center":{"x":11.22894105149402,"y":43.380053862794,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":5,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false}],"groups":[],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_csw"},"widgetsConfig":{"layouts":{"xxs":[],"md":[]}},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}	19
 26	{"version":2,"map":{"center":{"x":11.22894105149402,"y":43.380053862794,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":5,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false}],"groups":[],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_csw"},"widgetsConfig":{},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}	26
-33	{"widgets":[{"id":"602c84c0-7570-11ec-b738-9d9ecffb0439","layer":false,"url":false,"legend":false,"mapSync":false,"cartesian":true,"yAxis":true,"widgetType":"text","title":"Dashboard Test","dataGrid":{"y":0,"x":0,"w":1,"h":1}}],"layouts":{"md":[{"w":1,"h":1,"x":0,"y":0,"i":"602c84c0-7570-11ec-b738-9d9ecffb0439","moved":false,"static":false}]}}	33
 36	{"type":"cascade","resources":[],"settings":{"theme":{"general":{"color":"#333333","backgroundColor":"#ffffff","borderColor":"#e6e6e6"},"overlay":{"backgroundColor":"rgba(255, 255, 255, 0.75)","borderColor":"#dddddd","boxShadow":"0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)","color":"#333333"}}},"sections":[{"type":"title","id":"6ebba160-7570-11ec-b738-9d9ecffb0439","title":"Abstract","cover":true,"contents":[{"id":"title_content_id1","type":"text","size":"large","align":"center","theme":"","html":"<h1>GeoStory Test</h1>\\n","background":{"fit":"cover","size":"full","align":"center"}}]}]}	36
+44	{"widgets":[{"id":"43292eb0-77ae-11ec-a2ae-25409fa71132","layer":false,"url":false,"legend":false,"mapSync":false,"cartesian":true,"yAxis":true,"widgetType":"text","title":"Dashboard Private Test","dataGrid":{"y":0,"x":0,"w":1,"h":1}}],"layouts":{"md":[{"w":1,"h":1,"x":0,"y":0,"i":"43292eb0-77ae-11ec-a2ae-25409fa71132","moved":false,"static":false}]}}	44
+47	{"type":"cascade","resources":[],"settings":{"theme":{"general":{"color":"#333333","backgroundColor":"#ffffff","borderColor":"#e6e6e6"},"overlay":{"backgroundColor":"rgba(255, 255, 255, 0.75)","borderColor":"#dddddd","boxShadow":"0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)","color":"#333333"}}},"sections":[{"type":"title","id":"50a97360-77ae-11ec-a2ae-25409fa71132","title":"Abstract","cover":true,"contents":[{"id":"title_content_id1","type":"text","size":"large","align":"center","theme":"","html":"<h1>Geostory Private Test</h1>\\n","background":{"fit":"cover","size":"full","align":"center"}}]}]}	47
+33	{"widgets":[{"id":"602c84c0-7570-11ec-b738-9d9ecffb0439","layer":false,"url":false,"legend":false,"mapSync":false,"cartesian":true,"yAxis":true,"widgetType":"text","title":"Dashboard Test","dataGrid":{"y":0,"x":0,"w":1,"h":1}},{"id":"0ec51b60-77b4-11ec-8921-651ba1f75248","layer":false,"url":false,"legend":false,"mapSync":false,"cartesian":true,"yAxis":true,"widgetType":"map","map":{"center":{"x":11.22894105149402,"y":43.380053862794,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":5,"mapOptions":{},"backgrounds":[],"bookmark_search_config":{},"groups":[],"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"type":"wms","url":"https://gs-stable.geo-solutions.it/geoserver/wms","visibility":true,"dimensions":[],"name":"test:dati","title":"dati","description":"","bbox":{"crs":"EPSG:4326","bounds":{"minx":-90,"miny":-180,"maxx":90,"maxy":180}},"links":[],"params":{},"allowedSRS":{},"search":{"type":"wfs","url":"https://gs-stable.geo-solutions.it/geoserver/wfs"},"id":"test:dati__95ipwvhl00t"}],"mapInfoControl":true,"bbox":{"bounds":{"minx":565124.226564821,"miny":5118063.5547720585,"maxx":1934875.7734351796,"maxy":5621936.44522794},"crs":"EPSG:3857","rotation":0},"size":{"width":280,"height":103},"mapStateSource":"0ec51b60-77b4-11ec-8921-651ba1f75248","resolution":4891.96981025128},"mapStateSource":"__base_map__","title":"Test","dataGrid":{"y":0,"x":0,"w":1,"h":1,"isDraggable":true,"isResizable":true}},{"id":"44bba6d0-77b4-11ec-bacc-6bfb38edc96a","layer":{"type":"wms","url":"https://gs-stable.geo-solutions.it/geoserver/wms","visibility":true,"dimensions":[],"name":"test:thematism_comuni","title":"thematism_comuni","description":"","bbox":{"crs":"EPSG:4326","bounds":{"minx":6.53887860239646,"miny":35.218368229701326,"maxx":19.613738116097192,"maxy":47.1358216210509}},"links":[],"params":{},"allowedSRS":{},"search":{"type":"wfs","url":"https://gs-stable.geo-solutions.it/geoserver/wfs"}},"url":"https://gs-stable.geo-solutions.it/geoserver/wms","legend":false,"mapSync":false,"cartesian":true,"yAxis":true,"type":"bar","widgetType":"chart","geomProp":"geom","options":{"groupByAttributes":"pro_com","aggregationAttribute":"thema","aggregateFunction":"Count"},"autoColorOptions":{"base":10,"range":4,"name":"global.colors.red"},"title":"Test","dataGrid":{"y":0,"x":0,"w":1,"h":1,"isDraggable":false,"isResizable":false}}],"layouts":{"xxs":[{"w":1,"h":1,"x":0,"y":0,"i":"44bba6d0-77b4-11ec-bacc-6bfb38edc96a","moved":false,"isDraggable":false,"isResizable":false}],"md":[{"w":1,"h":1,"x":0,"y":0,"i":"602c84c0-7570-11ec-b738-9d9ecffb0439","moved":false,"static":false},{"w":1,"h":1,"x":0,"y":1,"i":"0ec51b60-77b4-11ec-8921-651ba1f75248","moved":false,"static":false,"isDraggable":true,"isResizable":true},{"w":1,"h":1,"x":0,"y":2,"i":"44bba6d0-77b4-11ec-bacc-6bfb38edc96a","moved":false,"static":false,"isDraggable":false,"isResizable":false}]}}	33
+56	data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAC0CAIAAAChXYa4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPaSURBVHhe7dlBTmJBFIbRXojDXo0j1sKAtZi4FONSdAcOCANjYmI/pEAkhk469vuv3HNSA1KAxlv58sD36w2IEiGEiRDCRAhhIoQwEUKYCCFMhBAmQggTIYSJEMJECGEihDARQpgIIUyEECZCCBMhhIkQwkQIYSKEMBFCmAghTIQQJkIIEyGEiRDCRAhhIoQwEUKYCCFMhBAmQggTIYSJEMJECGH5CJ+ufluRNQ6ANBH2XeMASBNh3zUOgDQR9l3jAEgTYd81DoC0chGOXf4Do65JhI0YdU0ibMSoaxJhI0ZdkwgbMeqaRNiIUdckwkaMuiYRNmLUNYmwEaOuSYSNGHVNImzEqGsSYSNGXZMIGzHqmkTYiFHXJMJGjLqmHx7h3erk7Z/W8n687B/db65vX8fjS3Ayn7FL2iVdCR+fr1cv4/G3ECFzEOEZImQOIjxDhMyhSYSPz8vF7uevlyddPb7sn3q6WmxuHne7rzeHze3+88Nu+2c7+ou2a+yS1iHCaX+xudvXdbdaH13fpgKf909tg7z56NCVkHlcfoSvN6vN3Xi8M13lDjsvyzOfYEXIHC4+wq82H27Xh7sX7xfGl68/bYqQOXSI8NPPH+v4FuLD9Cl0tVku1tero4+mExEyhwYRnv4n5pzpG6PvhMys5cfRc46jFSFz6PCPmcX64+L2bvoeOHamt5xkJkLmdvkRvu8f36K4nb77HV62TXR5vy9te8/wqNjtGy/jDuHO942a79QhwsnHzfqn6TWfu9reORy/fSrwEOS7/VOn19KfaUxgv8YuaZcUIX9h1DWJsBGjrkmEjRh1TSJsxKhrEmEjRl2TCBsx6ppE2IhR1yTCRoy6JhE2YtQ1ibARo65JhI0YdU0ibMSoaxJhI0ZdkwgbMeqaRNiIUdckwkaMuiYRNmLUNYmwEaOuqVyE1mxrHABpIuy7xgGQJsK+axwAaSLsu8YBkCbCvmscAGn5CKE5EUKYCCFMhBAmQggTIYSJEMJECGEihDARQpgIIUyEECZCCBMhhIkQwkQIYSKEMBFCmAghTIQQJkIIEyGEiRDCRAhhIoQwEUKYCCFMhBAmQggTIYSJEMJECGEihDARQpgIIUyEECZCCBMhhIkQwkQIYSKEMBFCmAghTIQQJkIIEyGEiRDCRAhhIoQwEUKYCCFMhBAmQggTIYSJEMJECGEihDARQpgIIUyEECZCCBMhhIkQwkQIYSKEMBFCmAghTIQQJkIIEyGEiRDCRAhhIoQwEUKYCCFMhBAmQggTIYSJEMJECGEihDARQpgIIUyEECZCCBMhhIkQot7e/gBAI6m79S3QcwAAAABJRU5ErkJggg==	56
 \.
 
 
@@ -401,38 +398,6 @@ COPY public.spatial_ref_sys (srid, auth_name, auth_srid, srtext, proj4text) FROM
 
 
 --
--- Data for Name: geocode_settings; Type: TABLE DATA; Schema: tiger; Owner: postgres
---
-
-COPY tiger.geocode_settings (name, setting, unit, category, short_desc) FROM stdin;
-\.
-
-
---
--- Data for Name: pagc_gaz; Type: TABLE DATA; Schema: tiger; Owner: postgres
---
-
-COPY tiger.pagc_gaz (id, seq, word, stdword, token, is_custom) FROM stdin;
-\.
-
-
---
--- Data for Name: pagc_lex; Type: TABLE DATA; Schema: tiger; Owner: postgres
---
-
-COPY tiger.pagc_lex (id, seq, word, stdword, token, is_custom) FROM stdin;
-\.
-
-
---
--- Data for Name: pagc_rules; Type: TABLE DATA; Schema: tiger; Owner: postgres
---
-
-COPY tiger.pagc_rules (id, rule, is_custom) FROM stdin;
-\.
-
-
---
 -- Data for Name: topology; Type: TABLE DATA; Schema: topology; Owner: postgres
 --
 
@@ -452,7 +417,7 @@ COPY topology.layer (topology_id, layer_id, schema_name, table_name, feature_col
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: geostore; Owner: geostore
 --
 
-SELECT pg_catalog.setval('geostore.hibernate_sequence', 43, true);
+SELECT pg_catalog.setval('geostore.hibernate_sequence', 60, true);
 
 
 --
