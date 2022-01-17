@@ -9,7 +9,7 @@ import {setStore} from "../../utils/StateUtils";
 
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
-import {addTransformer, resetTransformers} from "../../utils/PrintUtils";
+import {addTransformer, resetDefaultPrintingService} from "../../utils/PrintUtils";
 
 const initialState = {
     controls: {
@@ -80,6 +80,10 @@ function getPrintPlugin({items = [], layers = [], preview = false} = {}) {
             }
         },
         items
+    }).then((plugin) => {
+        const {store} = plugin;
+        setStore(store);
+        return plugin;
     });
 }
 
@@ -95,7 +99,7 @@ describe('Print Plugin', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         mockAxios.restore();
-        resetTransformers();
+        resetDefaultPrintingService();
         setTimeout(done);
     });
 
@@ -203,10 +207,8 @@ describe('Print Plugin', () => {
     });
 
     it("print using default printing service", (done) => {
-        getPrintPlugin().then(({ Plugin, store }) => {
+        getPrintPlugin().then(({ Plugin }) => {
             try {
-                setStore(store);
-
                 mockAxios.onPost().reply(({url, data }) => {
                     try {
                         expect(url).toContain("fakeservice");
@@ -229,9 +231,8 @@ describe('Print Plugin', () => {
     });
 
     it("print with custom transformer", (done) => {
-        getPrintPlugin().then(({ Plugin, store }) => {
+        getPrintPlugin().then(({ Plugin }) => {
             try {
-                setStore(store);
                 addTransformer("custom", (state, spec) => Promise.resolve({
                     ...spec,
                     custom: "mycustomvalue"
@@ -258,7 +259,9 @@ describe('Print Plugin', () => {
 
     it("print using custom printing service", (done) => {
         const printingService = {
-            print() {}
+            print() {},
+            getMapConfiguration(map) {return map;},
+            validate() { return {};}
         };
         let spy = expect.spyOn(printingService, "print");
         getPrintPlugin().then(({ Plugin }) => {

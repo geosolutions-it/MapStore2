@@ -19,14 +19,19 @@ import {
     rgbaTorgb,
     specCreators,
     addTransformer,
-    getTransformerChain,
-    resetTransformers
+    addMapTransformer,
+    addValidator,
+    getMapTransformerChain,
+    getSpecTransformerChain,
+    getValidatorsChain,
+    resetDefaultPrintingService,
+    getDefaultPrintingService
 } from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
 import { poi as TMS110_1 } from '../../test-resources/layers/tms';
 import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
-
+import { setStore } from '../StateUtils';
 
 const layer = {
     url: "http://mygeoserver",
@@ -287,6 +292,19 @@ const testSpec = {
     }
 };
 let rules;
+
+const sampleStore = {
+    getState: () => ({
+        print: {
+            map: {
+                zoom: 1
+            },
+            customprop: "myvalue",
+            spec: testSpec
+        }
+    })
+};
+
 describe('PrintUtils', () => {
     beforeEach(() => {
         rules = ConfigUtils.getConfigProp('authenticationRules');
@@ -625,27 +643,149 @@ describe('PrintUtils', () => {
         });
         describe('transformers', () => {
             beforeEach(() => {
-                resetTransformers();
+                resetDefaultPrintingService();
             });
             it("addTransformer at the end", () => {
                 addTransformer("custom", () => ({}));
-                const chain = getTransformerChain();
+                const chain = getSpecTransformerChain();
                 expect(chain.length).toBe(4);
                 expect(chain[3].name).toBe("custom");
             });
             it("addTransformer at desired position", () => {
                 addTransformer("custom", () => ({}), 1.5);
-                const chain = getTransformerChain();
+                const chain = getSpecTransformerChain();
                 expect(chain.length).toBe(4);
                 expect(chain[2].name).toBe("custom");
             });
             it("replace default transformer", () => {
                 addTransformer("mapfishSpecCreator", () => "mycustom_transformer");
-                const chain = getTransformerChain();
+                const chain = getSpecTransformerChain();
                 expect(chain.length).toBe(3);
                 const transfomer = chain[2];
                 expect(transfomer.name).toBe("mapfishSpecCreator");
                 expect(transfomer.transformer()).toBe("mycustom_transformer");
+            });
+            it("replace custom transformer", () => {
+                addTransformer("custom", () => "mycustom_transformer");
+                addTransformer("custom", () => "mycustom_transformer2");
+                const chain = getSpecTransformerChain();
+                expect(chain.length).toBe(4);
+                const transfomer = chain[3];
+                expect(transfomer.name).toBe("custom");
+                expect(transfomer.transformer()).toBe("mycustom_transformer2");
+            });
+        });
+        describe('map transformers', () => {
+            beforeEach(() => {
+                resetDefaultPrintingService();
+            });
+            it("addMapTransformer at the end", () => {
+                addMapTransformer("custom", () => ({zoom: 1}));
+                const chain = getMapTransformerChain();
+                expect(chain.length).toBe(1);
+                const transformer = chain[0];
+                expect(transformer.name).toBe("custom");
+                expect(transformer.transformer()).toEqual({zoom: 1});
+            });
+            it("replace custom transformer", () => {
+                addMapTransformer("custom", () => ({zoom: 1}));
+                addMapTransformer("custom", () => ({zoom: 2}));
+                const chain = getMapTransformerChain();
+                expect(chain.length).toBe(1);
+                const transformer = chain[0];
+                expect(transformer.name).toBe("custom");
+                expect(transformer.transformer()).toEqual({zoom: 2});
+            });
+        });
+        describe('validators', () => {
+            beforeEach(() => {
+                resetDefaultPrintingService();
+            });
+            it("addValidator at the end", () => {
+                addValidator("custom", "map-preview", () => ({valid: true}));
+                const chain = getValidatorsChain();
+                expect(chain.length).toBe(1);
+                const validator = chain[0];
+                expect(validator.id).toBe("custom");
+                expect(validator.name).toBe("map-preview");
+                expect(validator.validator()).toEqual({valid: true});
+            });
+            it("replace custom validator", () => {
+                addValidator("custom", "map-preview", () => ({valid: true}));
+                addValidator("custom", "map-preview", () => ({valid: false}));
+                const chain = getValidatorsChain();
+                expect(chain.length).toBe(1);
+                const validator = chain[0];
+                expect(validator.id).toBe("custom");
+                expect(validator.name).toBe("map-preview");
+                expect(validator.validator()).toEqual({valid: false});
+            });
+        });
+        describe('default printing service', () => {
+            beforeEach(() => {
+                resetDefaultPrintingService();
+            });
+            it('default configuration', (done) => {
+                setStore(sampleStore);
+                const service = getDefaultPrintingService();
+                service.print().then(spec => {
+                    expect(spec).toExist();
+                    expect(spec.layout).toBe("A2_2_pages_legend");
+                    done();
+                }).catch(ex => done(ex));
+            });
+            it('custom transformer', (done) => {
+                setStore(sampleStore);
+                addTransformer("custom", (state, spec) => ({...spec, "myprop": state.print.customprop}));
+                const service = getDefaultPrintingService();
+                service.print().then(spec => {
+                    expect(spec).toExist();
+                    expect(spec.myprop).toBe("myvalue");
+                    expect(spec.layout).toBe("A2_2_pages_legend");
+                    done();
+                }).catch(ex => done(ex));
+            });
+            it('default transformer replaced', (done) => {
+                setStore(sampleStore);
+                addTransformer("mapfishSpecCreator", (state, spec) => ({...spec, "myprop": state.print.customprop}));
+                const service = getDefaultPrintingService();
+                service.print().then(spec => {
+                    expect(spec).toExist();
+                    expect(spec.myprop).toBe("myvalue");
+                    expect(spec.sheet).toBe("A2");
+                    expect(spec.layout).toNotExist();
+                    done();
+                }).catch(ex => done(ex));
+            });
+            it('custom map transformer', () => {
+                setStore(sampleStore);
+                addMapTransformer("custom", (state, map) => ({...map, zoom: map.zoom + 1}));
+                const service = getDefaultPrintingService();
+                const map = service.getMapConfiguration();
+                expect(map).toExist();
+                expect(map.zoom).toBe(2);
+            });
+            it('custom validator', () => {
+                setStore(sampleStore);
+                addValidator("custom", "map-preview", () => ({valid: true}));
+                const service = getDefaultPrintingService();
+                const validation = service.validate();
+                expect(validation).toExist();
+                expect(validation["map-preview"]).toExist();
+                expect(validation["map-preview"].valid).toBe(true);
+                expect(validation["map-preview"].errors.length).toBe(0);
+            });
+
+            it('multiple validators', () => {
+                setStore(sampleStore);
+                addValidator("custom1", "map-preview", () => ({valid: false, errors: ["error1"]}));
+                addValidator("custom2", "map-preview", () => ({valid: false, errors: ["error2"]}));
+                const service = getDefaultPrintingService();
+                const validation = service.validate();
+                expect(validation).toExist();
+                expect(validation["map-preview"]).toExist();
+                expect(validation["map-preview"].valid).toBe(false);
+                expect(validation["map-preview"].errors).toEqual(["error1", "error2"]);
             });
         });
     });

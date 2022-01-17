@@ -650,7 +650,12 @@
             },
             "layoutWarning": "Not allowed layout",
             "scale": "Scale",
-            "includeScale": "Include in print"
+            "includeScale": "Include in print",
+            "disabledpreview": "The preview is not available with these print parameters",
+            "outputFormat": "Format",
+            "previewFormatUnsupported": "Unsupported format for preview",
+            "projection": "Coordinates System",
+            "projectionmismatch": "Coordinate system mismatch among printed and screen map"
         },
         "backgroundSwitcher":{
             "tooltip": "Select Background"

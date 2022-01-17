@@ -195,16 +195,16 @@ export function getGoogleMercatorResolutions(minZoom, maxZoom, dpi) {
     return getResolutionsForScales(getGoogleMercatorScales(minZoom, maxZoom, dpi), "EPSG:3857", dpi);
 }
 
-export function getResolutions() {
+export function getResolutions(projection) {
     if (getHook('RESOLUTIONS_HOOK')) {
-        return getHook('RESOLUTIONS_HOOK')();
+        return getHook('RESOLUTIONS_HOOK')(projection);
     }
     return getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
 }
 
 export function getScales(projection, dpi) {
     const dpu = dpi2dpu(dpi, projection);
-    return getResolutions().map((resolution) => resolution * dpu);
+    return getResolutions(projection).map((resolution) => resolution * dpu);
 }
 /**
  * Convert a resolution to the nearest zoom
@@ -254,7 +254,7 @@ export function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
         return getHook("EXTENT_TO_ZOOM_HOOK")(extent, mapSize, minZoom, maxZoom, dpi);
     }
     const resolutions = getHook("RESOLUTIONS_HOOK") ?
-        getHook("RESOLUTIONS_HOOK")(extent, mapSize, minZoom, maxZoom, dpi, dpi2dpm(dpi || DEFAULT_SCREEN_DPI)) : null;
+        getHook("RESOLUTIONS_HOOK")() : null;
     return defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, resolutions);
 }
 

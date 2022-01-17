@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import expect from "expect";
 import { getPluginForTest, getByXPath } from '../pluginsTestUtils';
-import { getTransformerChain, resetTransformers } from "../../../utils/PrintUtils";
+import { getSpecTransformerChain, resetDefaultPrintingService } from "../../../utils/PrintUtils";
 import ReactTestUtils from "react-dom/test-utils";
 
 import PrintScale from "../../print/Scale";
@@ -41,7 +41,10 @@ const initialState = {
 
 const baseSpec = {
     layers: [],
-    center: {x: 0, y: 0, projection: "EPSG:4326"},
+    pages: [{
+        center: {x: 0, y: 0, projection: "EPSG:4326"},
+        scale: 1784
+    }],
     projection: "EPSG:4326"
 };
 
@@ -53,7 +56,7 @@ function getPrintScalePlugin() {
 
 function callTransformer(state, callback) {
     setTimeout(() => {
-        last(getTransformerChain()).transformer(state, {
+        last(getSpecTransformerChain()).transformer(state, {
             ...baseSpec,
             includeScale: state.print.spec?.params?.includeScale ?? false
         }).then(callback);
@@ -63,7 +66,7 @@ function callTransformer(state, callback) {
 describe('PrintScale Plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
-        resetTransformers();
+        resetDefaultPrintingService();
         setTimeout(done);
     });
 

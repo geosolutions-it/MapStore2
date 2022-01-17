@@ -650,7 +650,12 @@
             },
             "layoutWarning": "Lienzo no permitido",
             "scale": "escala",
-            "includeScale": "incluir en la impresión"
+            "includeScale": "incluir en la impresión",
+            "disabledpreview": "La vista previa no está disponible con estos parámetros de impresión",
+            "outputFormat": "Formato",
+            "previewFormatUnsupported": "Formato no compatible para la vista previa",
+            "projection": "Sistema de coordenadas",
+            "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla"
         },
         "backgroundSwitcher":{
             "tooltip": "Selección del fondo"
