@@ -32,7 +32,7 @@
 // **************
 .share-win {
     border: none;
-    @media (min-width: 768px) {
+    @media (min-width: @screen-sm-min) {
         & {
             width: 550px;
         }
@@ -91,6 +91,28 @@
     }
     .mapstore-switch-panel::-webkit-scrollbar { width: 8px; }
 }
+
+.ms-resizable-modal > .modal-content.share-win {
+    @media (max-width: 505px) {
+        width: 90%;
+        left: 5%;
+    }
+    height: auto;
+    max-height: 70%;
+    &.modal-dialog-draggable {
+        top: -10%;
+    }
+    .modal-body > .share-panel-modal-body {
+        overflow-x: hidden;
+        padding: 8px;
+        .share-panels {
+            padding-top: 8px;
+        }
+    }
+    .modal-footer {
+        display: none;
+    }
+} 
 
 #share-container {
     .coordinateRow > div:first-child{

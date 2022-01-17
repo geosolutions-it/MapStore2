@@ -544,7 +544,7 @@
       },
       "layoutWarning": "Asettelu ei sallittu"
     },
-    "backgroundSwither": {
+    "backgroundSwitcher": {
       "tooltip": "Valitse tausta"
     },
     "info": {
@@ -1367,6 +1367,7 @@
       "featureClose": "Oletko varma, että suljet ominaisuusruudun?",
       "delete": "Vahvistatko kohteiden poistamisen ({count} kpl)?",
       "missingGeometry": "Geometria puuttuu",
+      "zoomObject": "Zoomaa kohteeseen",
       "filter": {
         "placeholders": {
           "default": "Haku...",

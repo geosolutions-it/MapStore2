@@ -36,6 +36,7 @@ import AddTileProvider from './buttons/AddTileProvider';
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
 import unknown from "../../plugins/background/assets/img/dafault.jpg";
+import { getResolutions } from "../../utils/MapUtils";
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -356,7 +357,7 @@ class RecordItem extends React.Component {
         }
 
         const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
-
+        const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits;
         return recordToLayer(
             this.props.record,
             type,
@@ -377,7 +378,13 @@ class RecordItem extends React.Component {
                         formats: {
                             imageFormats: this.props.formatOptions,
                             infoFormats: this.props.infoFormatOptions
-                        }
+                        },
+                        ...(autoSetVisibilityLimits && {
+                            map: {
+                                projection: this.props.crs,
+                                resolutions: getResolutions()
+                            }
+                        })
                     }
                     : {
                         format: this.getLayerFormat(

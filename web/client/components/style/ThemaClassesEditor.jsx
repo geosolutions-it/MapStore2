@@ -23,13 +23,17 @@ class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
         onUpdateClasses: PropTypes.func,
-        className: PropTypes.string
+        className: PropTypes.string,
+        allowEmpty: PropTypes.bool,
+        customLabels: PropTypes.bool
     };
 
     static defaultProps = {
         classification: [],
         onUpdateClasses: () => {},
-        className: ""
+        className: "",
+        allowEmpty: true,
+        customLabels: false
     };
 
     renderFieldByClassification = (classItem, index) => {
@@ -87,6 +91,13 @@ class ThemaClassesEditor extends React.Component {
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
                 { this.renderFieldByClassification(classItem, index) }
+                { this.props.customLabels &&
+                    <FormControl
+                        value={classItem.title}
+                        type="text"
+                        onChange={e => this.updateCustomLabel(index, e.target.value)}
+                    />
+                }
                 <DropdownButton
                     style={{flex: 0}}
                     className="square-button-md no-border add-rule"
@@ -96,7 +107,7 @@ class ThemaClassesEditor extends React.Component {
                     {[
                         {labelId: 'styleeditor.addRuleBefore', glyph: 'add-row-before', value: "before"},
                         {labelId: 'styleeditor.addRuleAfter', glyph: 'add-row-after', value: "after"},
-                        {labelId: 'styleeditor.remove', glyph: 'trash', value: "remove"}
+                        ...(!this.props.allowEmpty && !index ? [] : [{labelId: 'styleeditor.remove', glyph: 'trash', value: "remove"}])
                     ]
                         .map((option) => {
                             return  (
@@ -226,6 +237,17 @@ class ThemaClassesEditor extends React.Component {
         }
         newClassification.splice(...args);
         this.props.onUpdateClasses(newClassification, 'interval');
+    }
+
+    updateCustomLabel = (classIndex, value) => {
+        if (value !== undefined) {
+            const newClassification = this.props.classification.map((classItem, index) => {
+                return index === classIndex ? assign({}, classItem, {
+                    title: value
+                }) : classItem;
+            });
+            this.props.onUpdateClasses(newClassification, 'title');
+        }
     }
 }
 

@@ -23,9 +23,16 @@ import { getFeature } from '../api/WFS';
 import { generateEnvString } from './LayerLocalizationUtils';
 import url from 'url';
 
+import { getStore } from "./StateUtils";
+import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
+import { currentLocaleLanguageSelector } from '../selectors/locale';
+import { printSpecificationSelector } from "../selectors/print";
+import assign from 'object-assign';
+import sortBy from "lodash/sortBy";
+
 const defaultScales = getGoogleMercatorScales(0, 21);
 let PrintUtils;
-import assign from 'object-assign';
+
 
 // Try to guess geomType, getting the first type available.
 export const getGeomType = function(layer) {
@@ -38,6 +45,13 @@ export const isAnnotationLayer = (layer) => {
 };
 
 /**
+ * Utility functions for thumbnails
+ * @memberof utils
+ * @static
+ * @name PrintUtils
+ */
+
+/**
  * Extracts the correct opacity from layer. if Undefined, the opacity is `1`.
  * @ignore
  * @param {object} layer the MapStore layer
@@ -45,12 +59,8 @@ export const isAnnotationLayer = (layer) => {
 export const getOpacity = layer => layer.opacity || (layer.opacity === 0 ? 0 : 1.0);
 
 /**
- * Utilities for Print
- * @memberof utils
- */
-/**
  * Preload data (e.g. WFS) before to sent it to the print tool.
- *
+ * @memberof utils.PrintUtils
  */
 export const preloadData = (spec) => {
     // check if remote data
@@ -87,15 +97,14 @@ export const preloadData = (spec) => {
             };
         });
     }
-    return new Promise((resolve) => {
-        resolve(spec);
-    });
+    return Promise.resolve(spec);
 };
 /**
  * Given a static resource, returns the resource's absolute
  * URL. Supports file paths with or without origin/protocol.
  * @param {string} uri the uri to transform
  * @param {string} [origin=window.location.origin] the origin to use
+ * @memberof utils.PrintUtils
  */
 export const toAbsoluteURL = (uri, origin) => {
     // Handle absolute URLs (with protocol-relative prefix)
@@ -121,7 +130,8 @@ export const toAbsoluteURL = (uri, origin) => {
  * Tranform the original URL configuration of the layer into a URL
  * usable for the print service.
  * @param  {string|array} input Original URL
- * @return {string}       the URL modified as GeoServer requires
+ * @returns {string}       the URL modified as GeoServer requires
+ * @memberof utils.PrintUtils
  */
 export const normalizeUrl = (input) => {
     let result = isArray(input) ? input[0] : input;
@@ -134,7 +144,7 @@ export const normalizeUrl = (input) => {
  * Find the layout name for the given options.
  * The convention is: `PAGE_FORMAT + ("_2_pages_legend"|"_2_pages_legend"|"") + ("_landscape"|"")``
  * @param  {object} spec the spec with the options
- * @return {string}      the layout name.
+ * @returns {string}      the layout name.
  */
 export const getLayoutName = (spec) => {
     let layoutName = [spec.sheet];
@@ -153,7 +163,8 @@ export const getLayoutName = (spec) => {
 /**
  * Gets the print scales allowed from the capabilities of the print service.
  * @param  {capabilities} capabilities the capabilities of the print service
- * @return {array}              the scales array
+ * @returns {array}              the scales array
+ * @memberof utils.PrintUtils
  */
 export const getPrintScales = (capabilities) => {
     return capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || [];
@@ -163,7 +174,8 @@ export const getPrintScales = (capabilities) => {
  * @param  {number} zoom                      the zoom level
  * @param  {array} scales                    the allowed scales
  * @param  {array} [mapScales=defaultScales] the map scales
- * @return {number}                          the index that best approximates the current map scale
+ * @returns {number}                          the index that best approximates the current map scale
+ * @memberof utils.PrintUtils
  */
 export const getNearestZoom = (zoom, scales, mapScales = defaultScales) => {
     const mapScale = mapScales[Math.round(zoom)];
@@ -172,11 +184,13 @@ export const getNearestZoom = (zoom, scales, mapScales = defaultScales) => {
     }, 0);
 };
 /**
+ * @memberof utils
  * Guess the map zoom level from print scale
  * @param  {number} zoom                      the zoom level
  * @param  {array} scales                    the allowed scales
  * @param  {array} [mapScales=defaultScales] the map scales
- * @return {number}                          the index that best approximates the current map scale
+ * @returns {number}                          the index that best approximates the current map scale
+ * @memberof utils.PrintUtils
  */
 export const getMapZoom = (scaleZoom, scales, mapScales = defaultScales) => {
     const scale = scales[Math.round(scaleZoom)];
@@ -188,7 +202,8 @@ export const getMapZoom = (scaleZoom, scales, mapScales = defaultScales) => {
  * Get the mapSize for print preview, parsing the layout and limiting the width.
  * @param  {object} layout   the layout object
  * @param  {number} maxWidth the max width for the mapSize
- * @return {object}          width and height of a map limited by the maxWidth and with the same ratio of the layout
+ * @returns {object}          width and height of a map limited by the maxWidth and with the same ratio of the layout
+ * @memberof utils.PrintUtils
  */
 export const getMapSize = (layout, maxWidth) => {
     if (layout) {
@@ -204,10 +219,12 @@ export const getMapSize = (layout, maxWidth) => {
         height: 100
     };
 };
+
 /**
  * Creates the mapfish print specification from the current configuration
  * @param  {object} spec the current configuration
- * @return {object}      the mapfish print configuration to send to the server
+ * @returns {object}      the mapfish print configuration to send to the server
+ * @memberof utils.PrintUtils
  */
 export const getMapfishPrintSpecification = (spec) => {
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
@@ -231,15 +248,220 @@ export const getMapfishPrintSpecification = (spec) => {
                 "rotation": 0
             }
         ],
-        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend')
+        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend'),
+        ...spec.params
     };
 };
+
+export const localizationFilter = (state, spec) => {
+    const localizationEnabled = isLocalizedLayerStylesEnabledSelector(state);
+    const localizationEnv = localizedLayerStylesEnvSelector(state);
+    const localizedSpec = localizationEnabled ? {
+        ...spec,
+        env: localizationEnv,
+        currentLanguage: currentLocaleLanguageSelector(state)
+    } : spec;
+
+    return Promise.resolve(localizedSpec);
+};
+export const wfsPreloaderFilter = (state, spec) => preloadData(spec);
+export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec));
+
+const defaultPrintingServiceTransformerChain = [
+    {name: "localization", transformer: localizationFilter},
+    {name: "wfspreloader", transformer: wfsPreloaderFilter},
+    {name: "mapfishSpecCreator", transformer: toMapfish}
+];
+
+let userTransformerChain = [];
+let mapTransformerChain = [];
+let validatorsChain = [];
+
+function addOrReplaceTransformers(chain, transformers) {
+    return transformers.reduce((res, transformer) => {
+        if (res.findIndex(t => t.name === transformer.name) === -1) {
+            return [...res, transformer];
+        }
+        return res.map(t => t.name === transformer.name ? transformer : t);
+    }, chain);
+}
+
+export function getSpecTransformerChain() {
+    const userOffset = defaultPrintingServiceTransformerChain.length;
+    return sortBy(addOrReplaceTransformers(
+        defaultPrintingServiceTransformerChain.map((t, index) => ({...t, position: index})),
+        userTransformerChain.map((t, index) => ({...t, position: t.position ?? index + userOffset}))
+    ), ["position"]);
+}
+
+export function getMapTransformerChain() {
+    return mapTransformerChain;
+}
+
+export function getValidatorsChain() {
+    return validatorsChain;
+}
+
+/**
+ * Resets the list of transformers and validators.
+ * @memberof utils.PrintUtils
+ */
+export function resetDefaultPrintingService() {
+    userTransformerChain = [];
+    mapTransformerChain = [];
+    validatorsChain = [];
+}
+
+/**
+ * Adds/Updates a user custom transformer for the default printing service spec transformer chain.
+ *
+ * Transformers are called by the default printing service to enrich / change the spec payload for mapfish-print
+ * before calling the remote service.
+ *
+ * Adding a new transformer allows adding new variables for a custom config.yaml, or process the default
+ * ones to implement custom behaviour.
+ *
+ * @param {string} name name of the transformer (allows replacing one of the default ones, by specifying its name).
+ *      default transformers are: `localization`, `wfspreloader`, `mapfishSpecCreator`.
+ * @param {function} transformer (state, spec) => Promise<spec>
+ * @param {int} position position in the chain (0-indexed), allows inserting a transformer between existing ones
+ * @memberof utils.PrintUtils
+ *
+ * @example
+ * // add a transformer to append a new property to the spec
+ * addTransformer("mytransform", (state, spec) => ({...spec, newprop: state.print.myprop}))
+ */
+export function addTransformer(name, transformer, position) {
+    userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer, position}]);
+}
+
+/**
+ * Adds/Updates a map custom transformer for the default printing service map object transformer chain.
+ *
+ * Map transformers can be used to implement custom behaviour that changes map related properties and
+ * should be reflected on the printing plugin dialog (e.g. the map-preview).
+ *
+ * These are applied to the print state map fragment before being passed as a map property to the Print
+ * plugin items.
+ *
+ * @param {string} name name of the transformer (allows replacing and existing one).
+ * @param {function} transformer (state, map) => map
+ * @example
+ * // add a map transformer to increase the map zoom by 1
+ * addMapTransformer("mymaptransform", (state, map) => ({...map, zoom: map.zoom + 1}))
+ */
+export function addMapTransformer(name, transformer) {
+    mapTransformerChain = addOrReplaceTransformers(mapTransformerChain, [{name, transformer}]);
+}
+
+function addOrReplaceValidators(chain, list) {
+    return list.reduce((res, validator) => {
+        if (res.findIndex(v => v.id === validator.id) === -1) {
+            return [...res, validator];
+        }
+        return res.map(v => v.id === validator.id ? validator : v);
+    }, chain);
+}
+
+/**
+ * Adds a new validation function.
+ * @param {string} id unique id of the validator (a validator with the same id will be replaced).
+ * @param {string} name binding name of the validator (bind the validator result to a specific item / plugin, by item id).
+ * @param {function} validator (state, current_validation) => { valid: true/false, errors: ["message", ...] }
+ *
+ * @example
+ * // add a validator for the myplugin plugin, bound to the map-preview component
+ * addValidator("myplugin", "map-preview", (state, current) => state.print.myprop ? {valid: true} : {valid: false, errors: ["myprop missing"]})
+ */
+export function addValidator(id, name, validator) {
+    validatorsChain = addOrReplaceValidators(validatorsChain, [{id, name, validator}]);
+}
+
+/**
+ * Returns the default printing service.
+ *
+ * A printing service implements all the basic functionalities of a printing engine.
+ *
+ *  - The print function, whose goal is to transform the Print plugin
+ *    specification object into a specification for the chosen printing engine.
+ *
+ *    This service is compatible with the mapfish-2 printing engine and works by applying a chain of transformers,
+ *    summing up the defaultPrintingServiceTransformerChain list, to eventual custom transformers,
+ *    added with addTransformer.
+ *
+ *    Each transformer is a function reiceiving two parameters, the redux global state and the print
+ *    specification object returned by the previous chain step, and returning a Promise of the transformed
+ *    specification:
+ *
+ *     (state, spec) => Promise.resolve(<transformed spec>)
+ *
+ *    Project specific transformers can be added to the end of the chain using the addTransformer function.
+ *
+ *  - The validate function, that validates current user input in the printing dialog and outputs
+ *    eventual validation error to be used by the UI items (to show errors, etc.).
+ *
+ *    It works by applying a chain of validators, that enrich the validation result object.
+ *
+ *    Each validator has a name, and a function reiceiving two parameters, the redux global state and the
+ *    actual validation object for the name:
+ *
+ *     (state, validation) => {valid: true/false, errors: ["message", ...]}
+ *
+ *    Project specific validators can be added to the end of the chain using the addValidator function.
+ *
+ *  - The getMapConfiguration function, that returns a map configuration object for the UI items.
+ *
+ *    It works by applying a chain of map transformers, that transform the map configuration object.
+ *
+ *    Each transformer is a function reiceiving two parameters, the redux global state and the
+ *    actual map configuration object:
+ *
+ *     (state, map) => <transformed map>
+ *
+ *    Project specific transformers can be added to the end of the chain using the addMapTransformer function.
+ *
+ * @returns {object} the default printint service.
+ * @memberof utils.PrintUtils
+ */
+export const getDefaultPrintingService = () => {
+    return {
+        print: () => {
+            const state = getStore().getState();
+            const intialSpec = printSpecificationSelector(state);
+            return getSpecTransformerChain().map(t => t.transformer).reduce((previous, f) => {
+                return previous.then(spec=> f(state, spec));
+            }, Promise.resolve(intialSpec));
+        },
+        validate: () => {
+            const state = getStore().getState();
+            return getValidatorsChain().reduce((acc, current) => {
+                const previousValidation = acc[current.name] ?? {valid: true, errors: []};
+                const validation = current.validator(state, previousValidation);
+                return {
+                    ...acc,
+                    [current.name]: {
+                        valid: previousValidation.valid && validation.valid,
+                        errors: [...previousValidation.errors, ...(validation.errors || [])]
+                    }
+                };
+            }, {});
+        },
+        getMapConfiguration: () => {
+            const state = getStore().getState();
+            return getMapTransformerChain().map(t => t.transformer).reduce((acc, t) => {
+                return t(state, acc);
+            }, state?.print?.map || {});
+        }
+    };
+};
+
 /**
  * Generate the layers (or legend) specification for print.
  * @param  {array} layers  the layers configurations
  * @param  {spec} spec    the print configurations
  * @param  {string} purpose allowed values: `map|legend`. Tells which spec to generate.
- * @return {array}         the configuration array for layers (or legend) to send to the print service.
+ * @returns {array}         the configuration array for layers (or legend) to send to the print service.
+ * @memberof utils.PrintUtils
  */
 export const getMapfishLayersSpecification = (layers, spec, purpose) => {
     return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
@@ -579,6 +801,7 @@ export const rgbaTorgb = (rgba = "") => {
 /**
  * Useful for print (Or generic Openlayers 2 conversion style)
  * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
+ * @memberof utils.PrintUtils
  */
 export const toOpenLayers2Style = function(layer, style, styleType) {
     if (!style || layer.styleName === "marker") {
@@ -616,6 +839,7 @@ export const toOpenLayers2Style = function(layer, style, styleType) {
 /**
  * Provides the default style for
  * each vector type.
+ * @memberof utils.PrintUtils
  */
 export const getOlDefaultStyle = (layer, styleType) => {
     switch (styleType || getGeomType(layer) || "") {

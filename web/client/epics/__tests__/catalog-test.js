@@ -22,12 +22,13 @@ const {
     autoSearchEpic,
     openCatalogEpic,
     recordSearchEpic,
-    getSupportedFormatsEpic
+    getSupportedFormatsEpic,
+    updateGroupSelectedMetadataExplorerEpic
 } = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
-import {setControlProperty} from '../../actions/controls';
-import {ADD_LAYER} from '../../actions/layers';
+import {setControlProperty, SET_CONTROL_PROPERTY} from '../../actions/controls';
+import {ADD_LAYER, selectNode} from '../../actions/layers';
 import {PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER} from '../../actions/mapInfo';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
 import {
@@ -381,5 +382,44 @@ describe('catalog Epics', () => {
         }, {
             catalog: {}
         });
+    });
+
+    it('updateGroupSelectedMetadataExplorerEpic allows clicking on group to set destination to current group', done => {
+        const state = {
+            layers: {
+                settings: {
+                    expanded: true,
+                    node: 'layerId',
+                    nodeType: 'group'
+                },
+                groups: [{
+                    id: 'layerId',
+                    name: 'layerName'
+                }],
+                selected: ['layerId']
+            },
+            controls: {
+                toolbar: {
+                    active: 'metadataexplorer'
+                },
+                metadataexplorer: {
+                    enabled: true,
+                    group: 'layerId'
+                }
+            }
+        };
+        const id = state.layers.groups[0].id;
+        const nodeType = state.layers.settings.nodeType;
+
+        testEpic(updateGroupSelectedMetadataExplorerEpic, 1, selectNode(id, nodeType), actions => {
+            try {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+                expect(actions[0].control).toBe('metadataexplorer');
+                expect(actions[0].property).toEqual('group');
+            } catch (error) {
+                done(error);
+            }
+        }, state, done);
     });
 });

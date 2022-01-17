@@ -71,12 +71,16 @@ describe('layerdownload Epics', () => {
                 queryPanel: { enabled: false },
                 layerdownload: { enabled: true }
             },
-            featuregrid: {}
+            featuregrid: {},
+            layers: {
+                flat: [{ id: 'test layer', layerFilter: { featureTypeName: 'test' } }],
+                selected: ['test layer']
+            }
         };
         testEpic(
             startFeatureExportDownload,
             1,
-            downloadFeatures('/wrong/path?', 'request body', { selectedFormat: "test-format"}),
+            downloadFeatures('/wrong/path?', { featureTypeName: 'test' }, { selectedFormat: "test-format"}),
             epicResult,
             state
         );

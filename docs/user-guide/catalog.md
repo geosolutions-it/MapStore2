@@ -145,6 +145,44 @@ Inserting this text and saving, the result should be that each layer will show i
 !!! note
     If some metadata are missing, the server response will be `source Not Available`
 
+#### Static Filter and Dynamic Filter
+
+From the *Advanced Settings* of the *CSW catalog* the user has the possibility to configure a *Static Filter* and a *Dynamic Filter* to customize the search request.
+
+In order to better understand this function, let's make an example supposing to edit the `GeoSolutions GeoServer CSW` service:
+
+* From the *Static Filter* text area it is possible to insert the custom filter for that service.
+
+<img src="../img/catalog/csw_static_filters.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+In order to present desired *Static Filter* configuration, it is possible to add a text like the following:
+
+    <ogc:Or>
+        <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>dc:type</ogc:PropertyName>
+            <ogc:Literal>dataset</ogc:Literal>
+        </ogc:PropertyIsEqualTo>
+        <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>dc:type</ogc:PropertyName>
+            <ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal>
+        </ogc:PropertyIsEqualTo>
+    </ogc:Or>
+
+Inserting this text and saving. The filter is applied, even in empty search.
+
+* From the *Dynamic Filter* text area it is possible to insert the custom filter to applied in AND with *Static Filter*. The template is used with ${searchText} placeholder to append search string
+
+<img src="../img/catalog/csw_dynamic_filters.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+In this case it is possible to add a text like the following:
+
+    <ogc:PropertyIsLike wildCard='*' singleChar='_' escapeChar='\\'>
+      <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+      <ogc:Literal>${searchText}*</ogc:Literal>
+    </ogc:PropertyIsLike>
+
+Inserting this text and saving, the filter is applied when text is typed into the service search tool.
+
 ### WMS/WMTS Catalog
 
 WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protocol for publishing maps (and tile maps) on the Internet. The user can add these kind of services as catalogs to browse and add to the map the layers published using these protocols.

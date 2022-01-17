@@ -580,6 +580,12 @@
       "title": "plugins.UserSession.title",
       "description": "plugins.UserSession.description",
       "dependencies": ["BurgerMenu"]
+    }, {
+      "name": "StreetView",
+      "glyph": "road",
+      "title": "plugins.StreetView.title",
+      "description": "plugins.StreetView.description",
+      "dependencies": ["Toolbar"]
     }
   ]
 }

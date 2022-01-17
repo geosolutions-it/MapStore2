@@ -13,7 +13,7 @@ import wmts from '../WMTS';
 import * as tms from './TMS';
 import * as wfs from './WFS';
 import backgrounds from '../mapBackground';
-import { validate, testService } from './common';
+import { validate, testService, preprocess } from './common';
 
 
 /**
@@ -41,27 +41,32 @@ export default {
     // TODO: validate could be converted in a simple function
     // TODO: testService could be converted in a simple Promise
     csw: {
+        preprocess,
         validate,
         testService: testService(csw),
         ...csw
     },
     wfs: {
+        preprocess,
         validate,
         testService: testService(wfs),
         ...wfs
     },
     wms: {
+        preprocess,
         validate,
         testService: testService(wms),
         ...wms
     },
     tms, // has it's own validation
     wmts: {
+        preprocess,
         validate,
         testService: testService(wmts),
         ...wmts
     },
     backgrounds: {
+        preprocess,
         validate,
         testService: testService(backgrounds),
         ...backgrounds

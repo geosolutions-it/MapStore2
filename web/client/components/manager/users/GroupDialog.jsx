@@ -20,8 +20,10 @@ import Message from '../../../components/I18N/Message';
 import PagedCombobox from '../../misc/combobox/PagedCombobox';
 import CloseConfirmButton from './CloseConfirmButton';
 import './style/userdialog.css';
+import tooltip from "../../misc/enhancers/tooltip";
 
 const PAGINATION_LIMIT = 5;
+const GlyphiconTooltip = tooltip(Glyphicon);
 
 /**
  * A Modal window to show password reset form
@@ -231,12 +233,12 @@ class GroupDialog extends React.Component {
             </span>
             <div role="body">
                 <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
-                    <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
+                    <Tab eventKey={1} title={<GlyphiconTooltip tooltipId="usergroups.generalInformation" glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
                         {this.renderGeneral()}
                         {this.checkNameLenght()}
                         {this.checkDescLenght()}
                     </Tab>
-                    <Tab eventKey={2} title={<Glyphicon glyph="1-group-add" style={{ display: 'block', padding: 8 }} />} >
+                    <Tab eventKey={2} title={<GlyphiconTooltip tooltipId="usergroups.members" glyph="1-group-add" style={{ display: 'block', padding: 8 }} />} >
                         {this.renderMembersTab()}
                     </Tab>
                 </Tabs>

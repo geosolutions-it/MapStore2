@@ -53,7 +53,7 @@ class Background extends Component {
         contentToolbar: PropTypes.func,
         inView: PropTypes.bool,
         sections: PropTypes.array,
-        innerRef: PropTypes.func,
+        innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
         contentToolbarChildren: PropTypes.node
     };
 

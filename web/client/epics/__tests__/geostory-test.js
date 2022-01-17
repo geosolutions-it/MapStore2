@@ -1778,7 +1778,7 @@ describe('Geostory Epics', () => {
     describe('loadStoryOnHistoryPop', () => {
         it('loadStoryOnHistoryPop without shared', (done) => {
             const NUM_ACTIONS = 1;
-            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/12073/'} }}],
+            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/12073/'}, isFirstRendering: false }}],
                 (actions) => {
                     expect(actions[0].type).toBe(LOAD_GEOSTORY);
                     expect(actions[0].id).toBe('12073');
@@ -1788,10 +1788,18 @@ describe('Geostory Epics', () => {
 
         it('loadStoryOnHistoryPop with shared', (done) => {
             const NUM_ACTIONS = 1;
-            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/shared/344/'} }}],
+            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/shared/344/'}, isFirstRendering: false }}],
                 (actions) => {
                     expect(actions[0].type).toBe(LOAD_GEOSTORY);
                     expect(actions[0].id).toBe('344');
+                    done();
+                });
+        });
+
+        it('loadStoryOnHistoryPop is not triggered on first rendering', (done) => {
+            testEpic(addTimeoutEpic(loadStoryOnHistoryPop, 600), 1, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/shared/344/'}, isFirstRendering: true }}],
+                (actions) => {
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
                     done();
                 });
         });

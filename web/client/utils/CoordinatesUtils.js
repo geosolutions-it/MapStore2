@@ -453,8 +453,12 @@ export const getEPSGCode = (code) => {
     }
     return code;
 };
+
+const MERCATOR_NAMES = ['EPSG:900913', 'EPSG:3857', 'EPSG:3785', 'EPSG:102113', 'GOOGLE'];
+const WGS84_NAMES = ['EPSG:4326', 'WGS84'];
+
 export const normalizeSRS = function(srs, allowedSRS) {
-    const result = srs === 'EPSG:900913' ? 'EPSG:3857' : srs;
+    const result = MERCATOR_NAMES.indexOf(srs) !== -1 ? 'EPSG:3857' : (WGS84_NAMES.indexOf(srs) !== -1 ? 'EPSG:4326' : srs);
     if (allowedSRS && !allowedSRS[result]) {
         return CoordinatesUtils.getCompatibleSRS(result, allowedSRS);
     }
@@ -1140,6 +1144,7 @@ CoordinatesUtils = {
     makeBboxFromOWS,
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
-    getLonLatFromPoint
+    getLonLatFromPoint,
+    getExtentForProjection
 };
 export default CoordinatesUtils;

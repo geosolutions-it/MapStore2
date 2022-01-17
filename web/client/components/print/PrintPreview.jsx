@@ -18,6 +18,7 @@ import Button from '../misc/Button';
 class PrintPreview extends React.Component {
     static propTypes = {
         url: PropTypes.string,
+        downloadUrl: PropTypes.string,
         scale: PropTypes.number,
         currentPage: PropTypes.number,
         pages: PropTypes.number,
@@ -34,6 +35,7 @@ class PrintPreview extends React.Component {
 
     static defaultProps = {
         url: null,
+        downloadUrl: null,
         scale: 1.0,
         minScale: 0.25,
         maxScale: 8.0,
@@ -54,7 +56,7 @@ class PrintPreview extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="mapstore-print-preview-panel">
                 <div style={this.props.style}>
                     <Document file={this.props.url}
                         onLoadSuccess={this.onDocumentComplete}>
@@ -66,7 +68,7 @@ class PrintPreview extends React.Component {
                     <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale >= this.props.maxScale} onClick={this.zoomIn}><Glyphicon glyph="zoom-in"/></Button>
                     <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
                     <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.scale}x</label>
-                    <div className={"print-download btn btn-" + this.props.buttonStyle}><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></div>
+                    <div className={"print-download btn btn-" + this.props.buttonStyle}><a href={this.props.downloadUrl} target="_blank"><Glyphicon glyph="save"/></a></div>
                     <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 0} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
                     <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 0} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
                     <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.currentPage + 1} / {this.props.pages}</label>

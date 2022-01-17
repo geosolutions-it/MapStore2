@@ -32,7 +32,7 @@ function LocalDrawSupport({
     ...props
 }) {
 
-    const [status, setStatus] = useState([]);
+    const [status, setStatus] = useState(null);
     useEffect(() => {
         setStatus(active ? 'drawOrEdit' : 'clean');
     }, [active]);
@@ -67,7 +67,7 @@ function LocalDrawSupport({
 }
 
 LocalDrawSupport.propTypes = {
-    active: PropTypes.boolean,
+    active: PropTypes.bool,
     method: PropTypes.string,
     features: PropTypes.array,
     onChange: PropTypes.func,

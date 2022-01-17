@@ -307,6 +307,7 @@
             "confirm": "Estoy de acuerdo"
         },
         "manager": {
+            "managerMenu": "Menú del administrador",
             "openInANewTab":"Abrir el mapa",
             "deleteMap":"Borrar el mapa",
             "deleteMapMessage": "¿Realmente quiere borrar este mapa?",
@@ -396,6 +397,11 @@
                 "createANewOne": "Crea una nueva GeoStory",
                 "deleteError": "Hubo un error al eliminar GeoStory",
                 "errorLoadingGeostories": "Hubo un error al cargar GeoStories"
+            },
+            "contexts": {
+              "title": "Contextos ({count})",
+              "titleNoCount": "Contextos",
+              "noContextAvailable": "Sin contexto disponible"
             }
         },
         "map": {
@@ -461,7 +467,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Error al cargar el mapa",
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
                     "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li> <li>La proyección del mapa no está configurada </li></ul> <p>",
@@ -643,9 +648,16 @@
                 "iconsSize": "Tamaño de los iconos:",
                 "dpi": "ppp:"
             },
-            "layoutWarning": "Lienzo no permitido"
+            "layoutWarning": "Lienzo no permitido",
+            "scale": "escala",
+            "includeScale": "incluir en la impresión",
+            "disabledpreview": "La vista previa no está disponible con estos parámetros de impresión",
+            "outputFormat": "Formato",
+            "previewFormatUnsupported": "Formato no compatible para la vista previa",
+            "projection": "Sistema de coordenadas",
+            "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Selección del fondo"
         },
         "info":{
@@ -1187,7 +1199,10 @@
             "detailsGroups": "Grupos",
             "detailsEmail": "E-mail",
             "detailsCompany": "Empresa",
-            "detailsNotes": "Notas"
+            "detailsNotes": "Notas",
+            "userMenu": "Menú del usuario",
+            "generalInformation": "General",
+            "attributes": "Atributos"
         },
         "users": {
             "title": "Administrador de cuentas de usuario",
@@ -1238,7 +1253,9 @@
           "noUsers": "El grupo no tiene usuarios",
           "errorSaving": "Ha ocurrido un error al guardar el grupo",
           "errorDelete": "Ha ocurrido un error al borrar el grupo",
-          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?"
+          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+          "generalInformation": "General",
+          "members": "Miembros"
         },
         "share":{
             "title": "Compartir",
@@ -1436,7 +1453,17 @@
                     "helpText": "Utilice la plantilla con el marcador de posición $ {searchText} para capturar la cadena de búsqueda"
                 },
                 "error": "Sintaxis XML no válida"
-            }
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Establecer límite de visibilidad",
+                "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
+            },
+          "domainAliases": {
+            "title": "Alias de dominio",
+            "helpTooltip": "Esta opción se utiliza para dividir el contenido en varios subdominios",
+            "addAliasTooltip": "Agregar alias",
+            "removeAliasTooltip": "Eliminar alias"
+          }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -1599,6 +1626,7 @@
             "featureClose": "¿Realmente desea cerrar la tabla?",
             "delete": "¿Confirma la eliminación de {count} características?",
             "missingGeometry": "Geometría no encontrada",
+            "zoomObject": "Acercamiento a objeto espacial",
             "filter": {
                 "placeholders": {
                     "default": "Buscar...",
@@ -1770,7 +1798,22 @@
                     "connectToAMap": "Conectarse a otro widget",
                     "connectToTheMap": "Conéctese al otro widget",
                     "selectMapToConnect": "Seleccione el widget para conectarse",
-                    "clearConnection": "Borrar conexión"
+                    "clearConnection": "Borrar conexión",
+                    "classAttributes": {
+                        "classColor": "Color de la Clase",
+                        "classLabel": "Etiqueta de la Clase",
+                        "classValue": "Valor de la Clase",
+                        "color": "Color",
+                        "classificationAttribute": "Atributo de clasificación",
+                        "customLabels": "Etiquetas personalizadas",
+                        "customLabelsExample": "<div><p><code>${legendValue}</code> se puede utilizar como marcador de posición para reemplazar el valor de la etiqueta original.</p><p>Los elementos de leyenda con el mismo contenido de texto se agrupan en el diagrama.</p><h5>Ejemplo</h5><dl><dt><b>Atributo:</b></dt><dd>POPULATION</dd><dt><b>Etiqueta de la Clase:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "defaultClassLabel": "Etiqueta de Clase Predeterminada",
+                        "defaultColorRamp": "Rampa de Color Predeterminada",
+                        "defaultColor": "Color Predeterminado",
+                        "defaultCustomLabel": "Etiqueta predeterminada",
+                        "editCustomColors": "Editar Colores Personalizados",
+                        "title": "Configuración de Colores Personalizados"
+                    }
                 },
                 "errors": {
                     "noAttributesTitle": "No hay atributos para mostrar",
@@ -2677,6 +2720,8 @@
         "defaultMapBackgroundsServiceTitle": "Fondos predeterminados",
         "backgroundSelector": {
             "addTooltip": "Agregar nuevo fondo",
+            "editTooltip": "Editar fondo",
+            "deleteTooltip": "Eliminar fondo",
             "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
         },
         "stepper": {
@@ -2808,6 +2853,10 @@
           "Share": {
             "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
             "title": "Compartir herramienta"
+          },
+          "StreetView": {
+            "title": "Street View",
+          "description": "Herramienta para buscar imágenes de Google Street View desde el mapa"
           },
           "StyleEditor": {
             "description": "Editor de estilo de capa",
@@ -3367,6 +3416,17 @@
           "successRemoved": "Sesión de usuario eliminada",
           "remove": "Restablecer sesión de usuario",
           "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?"
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Herramienta para buscar imágenes de Google Street View desde el mapa",
+          "tooltip": "Abrir la herramienta Street View",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Haga clic en el mapa para comenzar a navegar por las imágenes de Street View",
+          "messages": {
+            "noDataForPosition": "no hay datos de Street View para esta",
+            "unknownError": "error desconocido, ver consola"
+          }
         }
     }
 }

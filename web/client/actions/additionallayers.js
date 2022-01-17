@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export const UPDATE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:UPDATE_ADDITIONAL_LAYER';
-export const UPDATE_OPTIONS_BY_OWNER = 'ADDITIONALLAYER:UPDATE_OPTIONS_BY_OWNER';
+export const ADD_ADDITIONAL_LAYERS = 'ADDITIONALLAYER:ADD_ADDITIONAL_LAYERS';
 export const REMOVE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:REMOVE_ADDITIONAL_LAYER';
 export const REMOVE_ALL_ADDITIONAL_LAYERS = 'ADDITIONALLAYER:REMOVE_ALL_ADDITIONAL_LAYERS';
+export const UPDATE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:UPDATE_ADDITIONAL_LAYER';
+export const UPDATE_OPTIONS_BY_OWNER = 'ADDITIONALLAYER:UPDATE_OPTIONS_BY_OWNER';
+
+/**
+ * Actions for additionallayers.
+ * Additional layers will be used to perform override action on the layers without apply new proprties to the original layer object.
+ * It can be used to preview changes of the layers.
+ * @name actions.additionallayers
+ */
+
 
 /**
  * Add/updated an additional layer to the list.
@@ -66,15 +74,21 @@ export const removeAdditionalLayer = ({id, owner} = {}) => {
 /**
  * Remove all additional layers.
  * @memberof actions.additionallayers
+ * @param {string} owner if passed all layer of this owner will be removed
  * @return {object} of type `REMOVE_ALL_ADDITIONAL_LAYERS`
  */
-export const removeAllAdditionalLayers = () => ({
-    type: REMOVE_ALL_ADDITIONAL_LAYERS
+export const removeAllAdditionalLayers = (owner) => ({
+    type: REMOVE_ALL_ADDITIONAL_LAYERS,
+    owner
 });
 
 /**
- * Actions for additionallayers.
- * Additional layers will be used to perform override action on the layers without apply new proprties to the original layer object.
- * It can be used to preview changes of the layers.
- * @name actions.additionallayers
+ * add additional layers.
+ * @memberof actions.additionallayers
+ * @param {object[]} [layers=[]] to be added
+ * @return {object} of type `ADD_ADDITIONAL_LAYERS`
  */
+export const addAdditionalLayers = (layers = []) => ({
+    type: ADD_ADDITIONAL_LAYERS,
+    layers
+});

@@ -14,6 +14,7 @@ import {
     EXTENT_TO_ZOOM_HOOK,
     COMPUTE_BBOX_HOOK,
     RESOLUTION_HOOK,
+    DEFAULT_SCREEN_DPI,
     registerHook,
     dpi2dpm,
     getSphericalMercatorScales,
@@ -38,7 +39,8 @@ import {
     mergeMapConfigs,
     addRootParentGroup,
     mapUpdated,
-    getZoomFromResolution
+    getZoomFromResolution,
+    getResolutionObject
 } from '../MapUtils';
 
 const POINT = "Point";
@@ -72,6 +74,13 @@ describe('Test the MapUtils', () => {
     });
     it('getResolutions', () => {
         expect(getResolutions().length > 0).toBe(true);
+    });
+    it('getResolutions with projection', () => {
+        registerHook(RESOLUTIONS_HOOK, (projection) => {
+            if (projection === "EPSG:4326") return [1, 2, 3, 4];
+            return  getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
+        });
+        expect(getResolutions("EPSG:4326").length !== getResolutions("EPSG:3857").length).toBe(true);
     });
     it('getResolutionsForScales', () => {
         // generate test scales for resolutions
@@ -3115,5 +3124,16 @@ describe('Test the MapUtils', () => {
     it('addRootParentGroup', () => {
         const resolution = 1000; // ~zoom 7 in Web Mercator
         expect(getZoomFromResolution(resolution)).toBe(7);
+    });
+    describe("getResolutionObject tests", () => {
+        const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
+        it('getResolutionObject for visibility limit type scale', ()=> {
+            expect(getResolutionObject(9028, 'scale', {projection: "EPSG:900913", resolutions}))
+                .toEqual({ resolution: 2.3886583333333333, scale: 9028, zoom: 7 });
+        });
+        it('getResolutionObject for visibility limit type other than scale', ()=> {
+            expect(getResolutionObject(9028, 'scale1', {projection: "EPSG:900913", resolutions}))
+                .toEqual({ resolution: 9028, scale: 34121574.80314961, zoom: 4 });
+        });
     });
 });

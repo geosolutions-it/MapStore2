@@ -11,17 +11,31 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
+import tooltip from "../components/misc/enhancers/tooltip";
 
-const Container = connect(() => ({
-    noCaret: true,
-    pullRight: true,
-    bsStyle: "primary",
-    title: <Glyphicon glyph="menu-hamburger"/>
-}))(DropdownButton);
+const TDropdownButton = tooltip(DropdownButton);
+const Container = ({children, ...props}) => (
+    <TDropdownButton
+        noCaret
+        pullRight
+        bsStyle="primary"
+        title={<Glyphicon glyph="menu-hamburger"/>}
+        tooltipId="options"
+        tooltipPosition="bottom"
+        {...props}
+    >
+        {children}
+    </TDropdownButton>
+);
+
 const InnerContainer = ({children, ...props}) => (
     <div {...props}>
         {children}
     </div>
+);
+
+const AnchorElement = ({children, href, onClick}) => (
+    <a href={href} onClick={onClick}>{children}</a>
 );
 
 import ToolsContainer from './containers/ToolsContainer';
@@ -94,6 +108,7 @@ class BurgerMenu extends React.Component {
                 stateSelector: 'burgermenu',
                 eventSelector: 'onSelect',
                 tool: MenuItem,
+                // tool: ({ children: c, ...props }) => <MenuItem componentClass={AnchorElement} {...props} >{c}</MenuItem>,
                 panelStyle: this.props.panelStyle,
                 panelClassName: this.props.panelClassName
             };
@@ -129,7 +144,7 @@ class BurgerMenu extends React.Component {
                 activeStyle="default"
                 stateSelector="burgermenu"
                 eventSelector="onSelect"
-                tool={MenuItem}
+                tool={({ children: c, ...props }) => <MenuItem componentClass={AnchorElement} {...props} >{c}</MenuItem>}
                 tools={this.getTools()}
                 panels={this.getPanels(this.props.items)}
                 panelStyle={this.props.panelStyle}

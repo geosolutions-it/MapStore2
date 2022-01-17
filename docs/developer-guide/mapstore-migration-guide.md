@@ -87,6 +87,91 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 ### Upgrading CesiumJS
 CesiumJS has been upgraded to version 1.42 (from 1.17), with no breaking changes, so you should replace all the instances of  `https://cesium.com/downloads/cesiumjs/releases/1.17` in your projects HTML files with `https://cesium.com/downloads/cesiumjs/releases/1.42`. The new release is needed to implement Bearer based authentication to WMS services.
 
+### Style parsers dynamic import
+
+The style parser libraries introduced a dynamic import to reduce the initial bundle size. This change reflects to the `getStyleParser` function provided by the VectorStyleUtils module. If a downstream project of MapStore is using `getStyleParser` it should update it to this new version:
+
+```diff
+// example
+
+- // old use of parser
+- const parser = getStyleParser('sld');
+
++ // new use of parser
++ getStyleParser('sld')
++     .then((parser) => {
++         // use parser
++     });
+```
+
+## Migration from 2021.02.00 to 2021.02.01
+
+This update contains a fix for a minor vulnerability found in `log4j` library.
+For this reason you may need to update the dependencies of your project
+
+!!! note
+    This vulnerability **is not** [CVE-2021-44228](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228)
+    but only a couple of smaller ones, that involve `Log4J` ( [CVE-2021-44228](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228) is for `Log4J2` ).
+    Anyway MapStore is not prone to these vulnerabilities with the default configuration.
+    For more information, see the dedicated [blog post](https://www.geosolutionsgroup.com/blog/geosolutions-lo4shell/)
+
+here the instructions:
+
+### Align `pom.xml` files
+
+Here the changes in `pom.xml` and `web/pom.xml` to update:
+
+- Change `mapstore-backend` into `mapstore-services` and set the version to `1.2.2`
+
+```diff
+<!-- MapStore backend -->
+    <dependency>
+    <groupId>it.geosolutions.mapstore</groupId>
+-      <artifactId>mapstore-backend</artifactId>
+-      <version>1.2.1</version>
++      <artifactId>mapstore-services</artifactId>
++      <version>1.2.2</version>
+    </dependency>
+```
+
+- Set `geostore-webapp` version to `1.7.1`
+
+```diff
+    <dependency>
+    <groupId>it.geosolutions.geostore</groupId>
+    <artifactId>geostore-webapp</artifactId>
+-      <version>1.7.0</version>
++      <version>1.7.1</version>
+    <type>war</type>
+    <scope>runtime</scope>
+    </dependency>
+```
+
+- Set `http_proxy` version to `1.1.1` (should already be there)
+
+```diff
+    <dependency>
+    <!-- ... -->
+    <groupId>proxy</groupId>
+    <artifactId>http_proxy</artifactId>
+-      <version>1.1.0</version>
++      <version>1.1.1</version>
+    <type>war</type>
+    <scope>runtime</scope>
+    </dependency>
+```
+
+- Set `print-lib` version `geosolutions-2.0` to version `geosolutions-2.0.1`
+
+```diff
+    <dependency>
+        <groupId>org.mapfish.print</groupId>
+        <artifactId>print-lib</artifactId>
+-        <version>geosolutions-2.0</version>
++        <version>geosolutions-2.0.1</version>
+    </dependency>
+```
+
 ## Migration from 2021.01.04 to 2021.02.00
 
 ### Theme updates and CSS variables

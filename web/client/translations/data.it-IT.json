@@ -307,6 +307,7 @@
             "confirm": "Acconsento"
         },
         "manager": {
+            "managerMenu": "Menu manager",
             "openInANewTab":"Apri mappa",
             "deleteMap":"Elimina Mappa",
             "deleteMapMessage": "Vuoi eliminare questa mappa?",
@@ -396,6 +397,11 @@
                 "createANewOne": "Crea una nuova GeoStory",
                 "deleteError": "Si è verificato un errore durante l'eliminazione della GeoStory",
                 "errorLoadingGeostories": "Si è verificato un errore durante il caricamento di GeoStories"
+            },
+            "contexts": {
+              "title": "Contesti ({count})",
+              "titleNoCount": "Contesti",
+              "noContextAvailable": "Nessun contesto disponibile"
             }
         },
         "map": {
@@ -461,7 +467,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Errore di caricamento della mappa",
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
                     "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
@@ -643,9 +648,16 @@
                 "iconsSize": "Dimensione icone:",
                 "dpi": "Dpi:"
             },
-            "layoutWarning": "Layout non consentito"
+            "layoutWarning": "Layout non consentito",
+            "scale": "Scala",
+            "includeScale": "Includi nella stampa",
+            "disabledpreview": "La preview non è disponibile con questi parametri di stampa",
+            "outputFormat": "Formato",
+            "previewFormatUnsupported": "Formato non supportato per la preview",
+            "projection": "Sistema di coordinate",
+            "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Scegli lo sfondo"
         },
         "info":{
@@ -1187,7 +1199,10 @@
             "detailsGroups": "Gruppi",
             "detailsEmail": "E-mail",
             "detailsCompany": "Company",
-            "detailsNotes": "Note"
+            "detailsNotes": "Note",
+            "userMenu": "Menu utente",
+            "generalInformation": "Generale",
+            "attributes": "Attributi"
         },
         "users": {
             "title": "Gestione Account",
@@ -1238,7 +1253,9 @@
           "noUsers": "Nessun utente membro di questo gruppo",
           "errorSaving": "Si è verificato un errore salvando questo gruppo:",
           "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
-          "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?"
+          "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?",
+          "generalInformation": "Generale",
+          "members": "Membri"
         },
         "share": {
             "title": "Condividi",
@@ -1356,7 +1373,6 @@
             "end": "Data di fine ",
             "notAvailable": "Non disponibile",
             "title": "Catalogo",
-            "tooltip": "Aggiungi livelli alla mappa",
             "autoload": "Ricerca alla selezione del servizio",
             "clearValueText": "Cancella selezione",
             "noResultsText": "Nessun risultato trovato",
@@ -1437,6 +1453,16 @@
                     "helpText": "Usa il segnaposto ${searchText} nel modello per inserire la stringa di ricerca"
                 },
                 "error": "Sintassi xml non valida"
+            },
+            "autoSetVisibilityLimits": {
+                "label": "Imposta limite di visibilità",
+                "tooltip": "Applica automaticamente i limiti di visibilità suggeriti dal server"
+            },
+            "domainAliases": {
+              "title": "Alias di dominio",
+              "helpTooltip": "Questa opzione viene utilizzata per suddividere il contenuto in più sottodomini",
+              "addAliasTooltip": "Aggiungi alias",
+              "removeAliasTooltip": "Rimuovi alias"
             }
         },
         "uploader": {
@@ -1600,6 +1626,7 @@
             "featureClose": "Sicuro di voler chiudere la griglia?",
             "delete": "Confermi di cancellare {count} feature?",
             "missingGeometry": "Geometria mancante",
+            "zoomObject": "Zoom alla feature",
             "filter": {
                 "placeholders": {
                     "default": "Cerca...",
@@ -1771,7 +1798,22 @@
                     "connectToAMap": "Connetti ad un altro widget",
                     "connectToTheMap": "Connetti all'altro widget",
                     "selectMapToConnect": "Seleziona il widget da connettere",
-                    "clearConnection": "Disconnetti"
+                    "clearConnection": "Disconnetti",
+                    "classAttributes": {
+                        "classColor": "Colore della Classe",
+                        "classLabel": "Etichetta della Classe",
+                        "classValue": "Valore della Classe",
+                        "color": "Colore",
+                        "classificationAttribute": "Attributo di Classificazione",
+                        "customLabels": "Etichette personalizzate",
+                        "customLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore originale della legenda.</p><p>Gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo:</b></dt><dd>POPULATION</dd><dt><b>Etichetta della Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "defaultClassLabel": "Etichetta della Classe di Default",
+                        "defaultColorRamp": "Rampa di Colori di Default",
+                        "defaultColor": "Colore di Default",
+                        "defaultCustomLabel": "Etichetta di Default",
+                        "editCustomColors": "Modifica Colori Personalizzati",
+                        "title": "Impostazioni dei Colori Personalizzati"
+                    }
                 },
                 "errors": {
                     "noAttributesTitle": "Nessun attributo disponibile",
@@ -2678,6 +2720,8 @@
         "defaultMapBackgroundsServiceTitle": "Sfondi predefiniti",
         "backgroundSelector": {
             "addTooltip": "Aggiungi nuovo sfondo",
+            "editTooltip": "Modifica sfondo",
+            "deleteTooltip": "Elimina lo sfondo",
             "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?"
         },
         "stepper": {
@@ -2809,6 +2853,10 @@
           "Share": {
             "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
             "title": "Strumento di condivisione"
+          },
+          "StreetView": {
+            "title": "Street View",
+            "description": "Strumento Street view, per visualizzare le immagini di Google Street View dalla mappa"
           },
           "StyleEditor": {
             "description": "Editor degli stili dei layer",
@@ -3367,6 +3415,17 @@
           "successRemoved": "Sessione utente cancellata",
           "remove": "Reset Sessione Utente",
           "confirmRemove": "Sei sicuro di voler ripristinare la configurazione di default?"
-        }
+        },
+        "streetView": {
+          "title": "Street View",
+          "description": "Strumento Street view, per visualizzare le immagini di Google Street View dalla mappa",
+          "tooltip": "Apri Street View",
+          "emptyTitle": "Street View",
+          "emptyDescription": "Clicca sulla mappa per cominciare a visualizzare le immagini di Street View",
+          "messages": {
+            "noDataForPosition": "Non ci sono dati Street View per questa posizione",
+            "unknownError": "Errore sconosciuto"
+          }
+      }
     }
 }

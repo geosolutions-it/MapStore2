@@ -207,16 +207,31 @@ export const navigableItemsSelectorCreator = ({withImmersiveSection = false, inc
 };
 
 /**
+ * Finds index of currentPage position or returns -1 if id does not match page
+ * In special cases like GeoCarousel, id would be an inner column and would return a -1
+ * We can quickly make a check with id set to currentPageSelector(state).sectionId in that case
+ * @param {Object} state
+ * @returns {number} index of currentPage position or -1
+ */
+export const getPageIndex = (state) => {
+    const currentPage = currentPageSelector(state);
+    return findIndex(navigableItemsSelectorCreator({ includeAlways: true })(state), {
+        id: currentPage.columns &&
+            currentPage.columns[currentPage.sectionId]
+            ? currentPage.columns[currentPage.sectionId]
+            : currentPage.sectionId || ""
+    });
+};
+/**
  * gets the current position of currentPage
  * @returns {function} function that returns a selector
  */
 export const totalItemsSelector = state => navigableItemsSelectorCreator({includeAlways: true})(state).length;
-export const currentPositionSelector = state => findIndex(navigableItemsSelectorCreator({includeAlways: true})(state), {
-    id: currentPageSelector(state).columns &&
-        currentPageSelector(state).columns[currentPageSelector(state).sectionId]
-        ? currentPageSelector(state).columns[currentPageSelector(state).sectionId]
-        : currentPageSelector(state).sectionId || ""
-});
+export const currentPositionSelector = state => {
+    const pageIndex = getPageIndex(state);
+    return pageIndex !== -1 ? pageIndex : findIndex(navigableItemsSelectorCreator({ includeAlways: true })(state), { id: currentPageSelector(state).sectionId });
+};
+
 
 /**
  * return if at least one content has its exclusive focus active
