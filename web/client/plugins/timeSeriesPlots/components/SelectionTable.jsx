@@ -8,7 +8,11 @@
 
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
+import { createStructuredSelector } from 'reselect';
+
 import ReactDataGrid from 'react-data-grid';
+import { connect } from 'react-redux';
+import { timeSeriesFeaturesSelectionsSelector } from '../selectors/timeSeriesPlots';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import localizedProps from '@mapstore/components/misc/enhancers/localizedProps';
@@ -22,10 +26,10 @@ class BaseTable extends React.Component {
     }
 
     COLUMNS = [{
-        key: 'selectionId',
+        key: 'selectionName',
         sortable: true,
         width: 80,
-        name: 'Selection ID',
+        name: 'Selection Name',
         resizable: true
     }, {
         key: 'selectionType',
@@ -39,23 +43,6 @@ class BaseTable extends React.Component {
         resizable: true
     }];
 
-    // COLUMNS = [
-    //     { key: "id", name: "ID", editable: true },
-    //     { key: "title", name: "Title", editable: true },
-    //     { key: "complete", name: "Complete", editable: true },
-    //     { key: "action", name: "Action" }
-    // ];
-
-    rows = [
-        { selectionId: "AOI 1", selectionType: "Area"},
-        { selectionId: "AOI 2", selectionType: "Area"},
-        { selectionId: "Point 1234", selectionType: "Point"}
-      ]
-    //   rows = [
-    //     { index: 0, id: 0, title: "Task 1", complete: 20 },
-    //     { index: 1, id: 1, title: "Task 2", complete: 40 },
-    //     { index: 2, id: 2, title: "Task 3", complete: 60 }
-    //   ]
     getCellActions (column, row) {
         const cellActions = [{
             icon:  <Glyphicon glyph="remove"/>,
@@ -71,11 +58,11 @@ class BaseTable extends React.Component {
         return(
             <div>
                 <ReactDataGrid 
-                    // rowKey="selectionId"
+                    rowKey="selectionId"
                     // headerRowHeight={100} 
                     columns={this.COLUMNS}
-                    rowGetter={(i) => this.rows[i]}
-                    rowsCount={this.rows.length}
+                    rowGetter={(i) => (this.props?.timeSeriesFeaturesSelections[i] || '')}
+                    rowsCount={this.props?.timeSeriesFeaturesSelections.length || 0}
                     getCellActions={this.getCellActions}
                 />
             </div>
@@ -83,4 +70,6 @@ class BaseTable extends React.Component {
     }
 }
 
-export const SelectionTable = localizedProps('columns', 'name')(BaseTable);
+export const SelectionTable = connect(createStructuredSelector({
+    timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector
+}), () => {})(localizedProps('columns', 'name')(BaseTable));

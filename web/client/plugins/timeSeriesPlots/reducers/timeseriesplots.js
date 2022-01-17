@@ -25,10 +25,12 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             const { cfg } = action;
             return set('pluginCfg', cfg, state);
         case STORE_TIME_SERIES_FEATURES_IDS: {
-            const { selectionType, layerName, featuresIds } = action;
+            const { selectionId, selectionType, layerName, featuresIds } = action;
+            let { selectionName } = action;
+            selectionName = `${selectionName} ${state.selections.length + 1}`;
             return {
                 ...state,
-                selections: [...state.selections, {selectionType, layerName, featuresIds, isCurrent: true}]
+                selections: [...state.selections, {selectionId, selectionName, selectionType, layerName, featuresIds, isCurrent: true}]
             }
         }
         case STORE_TIME_SERIES_CHART_DATA: {

@@ -21,7 +21,7 @@ import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
 import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
 import wpsAggregate from '@mapstore/observables/wps/aggregate';
 import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
-import { featuresSelectionsSelector, timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName } from '../selectors/timeSeriesPlots';
+import { timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName } from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
 import { MOUSE_MOVE, MOUSE_OUT, registerEventListener, unRegisterEventListener } from '@mapstore/actions/map';
 import { TOGGLE_CONTROL, toggleControl } from '@mapstore/actions/controls';
@@ -98,8 +98,10 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                 ).switchMap(data => {
                     const features = data.map(item => item.features);
                     const selectionId = uuid.v1();
+                    const selectionName = selectionType === 'POLYGON' || selectionType === 'CIRCLE' ? 'AOI' : 'Point';
                     return Rx.Observable.from(timeSeriesLayers.map((item, index) => storeTimeSeriesFeaturesIds(
                         selectionId,
+                        selectionName,
                         selectionType, 
                         item.layerName, 
                         features[index]
@@ -119,7 +121,7 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
         return Rx.Observable.empty();
     });
 
-export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) => 
+export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) =>
     action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({ selectionId, featuresIds, layerName }) => {
         const wpsUrl = selectedCatalogSelector(getState()).url;
         const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);

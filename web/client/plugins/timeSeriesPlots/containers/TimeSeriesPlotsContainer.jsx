@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
 import { CONTROL_NAME } from '../constants';
-import SimpleChart from '@mapstore/components/charts/SimpleChart';
+import ChartView from '@mapstore/components/widgets/widget/ChartView';
 import { SelectionTable } from '../components/SelectionTable';
 import Dialog from "../../../components/misc/Dialog";
 import MainToolbar from '../components/MainToolbar';
@@ -98,7 +98,7 @@ const Panel = ({ enabled, onClose = () => {}, timePlotsData }) => {
                         <div className='ms2-border-layout-body' style={ { display: "flex", flex: "1 1 0%", overflowY: "auto"}}>
                             <main className='ms2-border-layout-content' style={{ flex: "1 1 0%" }}>
                                 <div className='mapstore-widget-chart' style={{ position: 'relative' }}>
-                                    <SimpleChart
+                                    <ChartView
                                     {...timeSeriesChartProps}
                                     data={timePlotsData.map(item => item.chartData)[0] || []} />
                                 </div>

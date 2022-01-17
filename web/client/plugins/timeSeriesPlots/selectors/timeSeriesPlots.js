@@ -59,10 +59,7 @@ export function timeSeriesCatalogServiceTitleSelector(state) { return state?.tim
  * @param {object} state
  * @returns {int} the index of the current selection
  */
-export function featuresSelectionsSelector(state) {
-    const selectionsLength = state.timeSeriesPlots.selections.length;
-    return !selectionsLength ? selectionsLength : selectionsLength -1 
-}
+export function timeSeriesFeaturesSelectionsSelector(state) { return state?.timeSeriesPlots?.selections ?? []}
 
 // **********************************************
 // CHART_DATA
