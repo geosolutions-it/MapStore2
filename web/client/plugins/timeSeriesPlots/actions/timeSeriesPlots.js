@@ -44,9 +44,10 @@ export const showTimeSeriesPlotsPlugin = () => {
     selectionType
 });
 
-export const storeTimeSeriesFeaturesIds = (selectionId, selectionType, layerName, featuresIds) => ({
+export const storeTimeSeriesFeaturesIds = (selectionId, selectionName, selectionType, layerName, featuresIds) => ({
     type: STORE_TIME_SERIES_FEATURES_IDS,
     selectionId,
+    selectionName,
     selectionType,
     layerName,
     featuresIds,
