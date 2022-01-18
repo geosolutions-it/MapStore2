@@ -11,7 +11,7 @@ services:
     build:
       context: ./tests/
       dockerfile: DockerfilePostgresTest
-    #container_name: eptpostgres
+    container_name: eptpostgres
     networks:
       - eptmapstore-network
 
@@ -20,7 +20,7 @@ services:
       dockerfile: ./tests/DockerfileMapStoreTest
       args:
         MAPSTORE_WEBAPP_SRC: ./mapstore.war
-    #container_name: eptmapstore
+    container_name: eptmapstore
     environment:
       JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
     volumes:
@@ -33,22 +33,22 @@ services:
     build:
       context: ./tests/
       dockerfile: Dockerfile
-    #command: dockerize -wait tcp://eptpostgres:5432 -wait tcp://eptmapstore:8080 -timeout 20s && python3 tests.py
-    command: dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 20s && python3 tests.py
-    #container_name: eptsut
+    command: dockerize -wait tcp://eptpostgres:5432 -wait tcp://eptmapstore:8080 -timeout 20s && python3 tests.py
+    #command: dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 20s && python3 tests.py
+    container_name: eptsut
     env_file:
       - ./tests/test-variables.env
     depends_on:
-      #- eptpostgres
-      #- eptmapstore
-      #- eptproxy
-      - postgres
-      - mapstore
-      - proxy
+      - eptpostgres
+      - eptmapstore
+      - eptproxy
+      #- postgres
+      #- mapstore
+      #- proxy
     networks:
       - eptmapstore-network
   
   proxy:
-  #  container_name: eptproxy
+    container_name: eptproxy
     networks:
       - eptmapstore-network
