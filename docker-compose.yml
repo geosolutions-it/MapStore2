@@ -1,4 +1,6 @@
-version: "3.8"
+#version: "3.8"
+version: "3.3"
+
 networks:
   mapstore-network:
     driver: bridge
