@@ -170,7 +170,7 @@ const ContextsPlugin = compose(
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
         () => ({
-            glyph: "wrench",
+            glyph: "map-context",
             title: <Message msgId="resources.contexts.noContextAvailable" />
         })
     )
