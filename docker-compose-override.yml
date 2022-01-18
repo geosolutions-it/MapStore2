@@ -12,7 +12,7 @@ services:
     build:
       dockerfile: ./tests/DockerfileMapStoreTest
       args:
-        MAPSTORE_WEBAPP_SRC: mapstore.war
+        MAPSTORE_WEBAPP_SRC: ./mapstore.war
     environment:
       JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
     volumes:
