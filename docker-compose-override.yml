@@ -46,5 +46,7 @@ services:
   
   proxy:
     container_name: eptproxy
+    ports:
+      - 80
     networks:
       - eptmapstore-network
