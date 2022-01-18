@@ -39,12 +39,12 @@ services:
     env_file:
       - ./tests/test-variables.env
     depends_on:
-      - eptpostgres
-      - eptmapstore
-      - eptproxy
-      #- postgres
-      #- mapstore
-      #- proxy
+      #- eptpostgres
+      #- eptmapstore
+      #- eptproxy
+      - postgres
+      - mapstore
+      - proxy
     networks:
       - eptmapstore-network
   
