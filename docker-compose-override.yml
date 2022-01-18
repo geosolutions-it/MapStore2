@@ -27,7 +27,7 @@ services:
     command: dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 20s && python3 tests.py
     container_name: sutms
     env_file:
-      - ./test-variables.env
+      - test-variables.env
     depends_on:
       - postgres
       - mapstore
