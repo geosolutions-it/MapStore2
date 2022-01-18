@@ -10,7 +10,7 @@ import Choice from "../../components/print/Choice";
 import { getMessageById } from '../../utils/LocaleUtils';
 import {getScales, getResolutions, METERS_PER_UNIT} from "../../utils/MapUtils";
 
-import { getAvailableCRS, normalizeSRS, reproject, getUnits } from '../../utils/CoordinatesUtils';
+import { getAvailableCRS, normalizeSRS, reproject, getUnits, reprojectGeoJson } from '../../utils/CoordinatesUtils';
 
 function reprojectPoint(point, source, dest) {
     const p = reproject(point, source, dest);
@@ -31,6 +31,16 @@ function reprojectZoom(zoom, mapProjection, printProjection) {
 const projectionSelector = (state) => state?.print?.spec?.params?.projection ?? state?.print?.map?.projection ?? "EPSG:3857";
 const mapProjectionSelector = (state) => state?.print?.map?.projection ?? "EPSG:3857";
 
+function reprojectLayer(layer, from, to)  {
+    if (from !== to) {
+        return {
+            ...layer,
+            geoJson: reprojectGeoJson(layer.geoJson, from, to)
+        };
+    }
+    return layer;
+}
+
 function transformer(state, spec) {
     const projection = state?.print?.spec?.params?.projection;
     if (projection) {
@@ -39,6 +49,7 @@ function transformer(state, spec) {
         const zoom = reprojectZoom(state.print.map.scaleZoom, spec.srs, srs);
         return Promise.resolve({
             ...spec,
+            layers: spec.layers.map(l => l.type === "Vector" ? reprojectLayer(l, spec.srs, srs) : l),
             srs,
             units: getUnits(srs),
             pages: spec.pages.map(p => ({
