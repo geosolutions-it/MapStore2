@@ -346,10 +346,11 @@ export default {
                         }
                         return null;
                     };
-                    renderItem = (item, options) => {
+                    renderItem = (item, opts) => {
+                        const {validations, ...options } = opts;
                         const Comp = item.component ?? item.plugin;
                         const {style, ...other} = this.props;
-                        return <Comp role="body" {...other} {...item.cfg} {...options}/>;
+                        return <Comp role="body" {...other} {...item.cfg} {...options} validation={validations?.[item.id ?? item.name]}/>;
                     };
                     renderItems = (target, options) => {
                         return this.getItems(target)
@@ -371,14 +372,17 @@ export default {
                     };
                     renderPrintPanel = () => {
                         const layout = this.getLayout();
+                        const map = this.props.printingService.getMapConfiguration();
                         const options = {
                             layout,
+                            map,
                             layoutName: this.props.getLayoutName(this.props.printSpec),
                             mapSize: this.getMapSize(layout),
-                            resolutions: getResolutions(),
+                            resolutions: getResolutions(map?.projection),
                             onRefresh: () => this.configurePrintMap(),
                             notAllowedLayers: this.isBackgroundIgnored(),
                             actionConfig: this.props.submitConfig,
+                            validations: this.props.printingService.validate(),
                             actions: {
                                 print: this.print,
                                 addParameter: this.addParameter

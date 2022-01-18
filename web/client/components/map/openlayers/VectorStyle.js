@@ -30,10 +30,6 @@ import {Point, LineString} from 'ol/geom';
 import {Promise} from 'es6-promise';
 import axios from '../../../libs/ajax';
 
-import OlStyleParser from 'geostyler-openlayers-parser';
-
-const olStyleParser = new OlStyleParser();
-
 import {
     getStyle as getStyleLegacy, getMarkerStyle as getMarkerStyleLegacyFun,
     startEndPolylineStyle as startEndPolylineStyleLegacy, defaultStyles as defaultStylesLegacy} from './LegacyVectorStyle';
@@ -315,12 +311,21 @@ export const parseStyles = (feature = {properties: {}}) => {
 export const getStyle = (options, isDrawing = false, textValues = []) => {
     if (options.style && options.style.url) {
         return axios.get(options.style.url).then(response => {
-            return getStyleParser(options.style.format).readStyle(response.data)
-                .then(style => olStyleParser.writeStyle(style));
+            return Promise.all([
+                getStyleParser(options.style.format),
+                getStyleParser('openlayers')
+            ])
+                .then(([parser, olStyleParser]) =>
+                    parser
+                        .readStyle(response.data)
+                        .then(style =>
+                            olStyleParser.writeStyle(style))
+                );
         });
     }
     if (options.style && options.style.format === 'geostyler') {
-        return olStyleParser.writeStyle(options.style.styleObj);
+        return getStyleParser('openlayers')
+            .then((olStyleParser) => olStyleParser.writeStyle(options.style.styleObj));
     }
     const style = getStyleLegacy(options, isDrawing, textValues);
     if (options.asPromise) {

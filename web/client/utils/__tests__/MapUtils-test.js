@@ -14,6 +14,7 @@ import {
     EXTENT_TO_ZOOM_HOOK,
     COMPUTE_BBOX_HOOK,
     RESOLUTION_HOOK,
+    DEFAULT_SCREEN_DPI,
     registerHook,
     dpi2dpm,
     getSphericalMercatorScales,
@@ -73,6 +74,13 @@ describe('Test the MapUtils', () => {
     });
     it('getResolutions', () => {
         expect(getResolutions().length > 0).toBe(true);
+    });
+    it('getResolutions with projection', () => {
+        registerHook(RESOLUTIONS_HOOK, (projection) => {
+            if (projection === "EPSG:4326") return [1, 2, 3, 4];
+            return  getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
+        });
+        expect(getResolutions("EPSG:4326").length !== getResolutions("EPSG:3857").length).toBe(true);
     });
     it('getResolutionsForScales', () => {
         // generate test scales for resolutions

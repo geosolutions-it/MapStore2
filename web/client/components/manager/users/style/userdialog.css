@@ -32,4 +32,5 @@
     max-height: 300px;
     overflow: auto;
     min-height: 36px;
+    min-width: 100%;
 }

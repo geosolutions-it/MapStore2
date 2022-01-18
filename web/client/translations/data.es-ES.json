@@ -307,6 +307,7 @@
             "confirm": "Estoy de acuerdo"
         },
         "manager": {
+            "managerMenu": "Menú del administrador",
             "openInANewTab":"Abrir el mapa",
             "deleteMap":"Borrar el mapa",
             "deleteMapMessage": "¿Realmente quiere borrar este mapa?",
@@ -649,9 +650,14 @@
             },
             "layoutWarning": "Lienzo no permitido",
             "scale": "escala",
-            "includeScale": "incluir en la impresión"
+            "includeScale": "incluir en la impresión",
+            "disabledpreview": "La vista previa no está disponible con estos parámetros de impresión",
+            "outputFormat": "Formato",
+            "previewFormatUnsupported": "Formato no compatible para la vista previa",
+            "projection": "Sistema de coordenadas",
+            "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Selección del fondo"
         },
         "info":{
@@ -1178,7 +1184,7 @@
             "passwordInvalid": "Clave incorrecta",
             "username": "Nombre de usuario",
             "password": "Clave",
-            "passwordMessage": "La contraseña debe contener al menos 6 caracteres.",
+            "passwordMessage": "La contraseña debe contener al menos 6 caracteres. Los valores válidos para las contraseñas incluyen números, letras mayúsculas o minúsculas y los siguientes caracteres especiales: !,@,#,$,%,&,*,_",
             "passwordInvalidChar": "La contraseña no debe contener estos caracteres: {data}",
             "passwordChanged": "Clave actualizada",
             "passwordError": "Error en el cambio de clave",
@@ -1193,7 +1199,10 @@
             "detailsGroups": "Grupos",
             "detailsEmail": "E-mail",
             "detailsCompany": "Empresa",
-            "detailsNotes": "Notas"
+            "detailsNotes": "Notas",
+            "userMenu": "Menú del usuario",
+            "generalInformation": "General",
+            "attributes": "Atributos"
         },
         "users": {
             "title": "Administrador de cuentas de usuario",
@@ -1244,7 +1253,9 @@
           "noUsers": "El grupo no tiene usuarios",
           "errorSaving": "Ha ocurrido un error al guardar el grupo",
           "errorDelete": "Ha ocurrido un error al borrar el grupo",
-          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?"
+          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+          "generalInformation": "General",
+          "members": "Miembros"
         },
         "share":{
             "title": "Compartir",
@@ -2713,6 +2724,8 @@
         "defaultMapBackgroundsServiceTitle": "Fondos predeterminados",
         "backgroundSelector": {
             "addTooltip": "Agregar nuevo fondo",
+            "editTooltip": "Editar fondo",
+            "deleteTooltip": "Eliminar fondo",
             "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
         },
         "stepper": {

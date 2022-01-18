@@ -666,7 +666,7 @@
             },
             "layoutWarning": "Lay-out niet toegelaten"
         },
-        "backgroundSwither":{
+        "backgroundSwitcher":{
             "tooltip": "Selectie van de achtergrond kaart"
         },
         "info":{
@@ -1188,7 +1188,7 @@
             "passwordInvalid": "Ongeldig wachtwoord",
             "username": "Gebruikersnaam",
             "password": "Wachtwoord",
-            "passwordMessage": "Wachtwoord moet minstens 6 karakters bevatten.",
+            "passwordMessage": "Wachtwoord moet minstens 6 karakters bevatten. Geldige waarden voor wachtwoorden zijn cijfers, kleine letters of hoofdletters en de volgende speciale tekens:! @ # $% & * _.",
             "passwordInvalidChar": "Het wachtwoord mag deze tekens niet bevatten: {data}",
             "passwordChanged": "Wachtwoord gewijzigd",
             "passwordError": "Fout bij wijzigen van wachtwoord",

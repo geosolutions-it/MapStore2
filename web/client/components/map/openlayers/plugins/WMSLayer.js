@@ -216,7 +216,8 @@ const createLayer = (options, map) => {
         });
     }
     const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-    const extent = get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
+    const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
+    const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
     const sourceOptions = addTileLoadFunction({
         attributions: toOLAttributions(options.credits),
         urls: urls,
@@ -305,7 +306,8 @@ Layers.registerType('wms', {
         const vectorSource = newIsVector ? layer.getSource() : null;
 
         if (oldOptions.srs !== newOptions.srs) {
-            const extent = get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
+            const normalizedSrs = CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS);
+            const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
             if (newOptions.singleTile && !newIsVector) {
                 layer.setExtent(extent);
             } else {

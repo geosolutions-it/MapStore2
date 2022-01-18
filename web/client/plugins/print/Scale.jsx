@@ -28,7 +28,8 @@ const printScaleSelector = (state) => ({
 });
 
 const scaleTransformer = (format) => (state, spec) => {
-    const {scale, locale} = printScaleSelector(state);
+    const scale = spec?.pages?.[0]?.scale;
+    const {locale} = printScaleSelector(state);
     return Promise.resolve({
         ...spec,
         mapScale: spec?.includeScale ? `${format(scale, locale, true)}` : ""
@@ -36,13 +37,13 @@ const scaleTransformer = (format) => (state, spec) => {
 };
 
 export const Scale = (props) => {
-    const {scale, locale, label = "print.scale", optionLabel = "print.includeScale", actions, onAddParameter, ...rest} = props;
+    const {map, scale, locale, label = "print.scale", optionLabel = "print.includeScale", actions, onAddParameter, ...rest} = props;
     const formatScale = props.format || defaultFormat;
     useEffect(() => {
-        addTransformer("scale", scaleTransformer(formatScale));
+        addTransformer("scale", scaleTransformer(formatScale), 4);
     }, []);
     return (<div id="print-scale">
-        <div style={{"float": "left", "marginRight": 5}}><Message msgId={label}/> {formatScale(scale, locale)}</div>
+        <div style={{"float": "left", "marginRight": 5}}><Message msgId={label}/> {formatScale(map?.scale ?? scale, locale)}</div>
         <Option {...rest} actions={{addParameter: onAddParameter}} property="includeScale" label={optionLabel}/>
     </div>);
 };

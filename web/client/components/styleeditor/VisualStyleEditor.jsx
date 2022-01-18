@@ -183,39 +183,41 @@ function VisualStyleEditor({
     const init = useRef(false);
 
     const handleReadStyle = () => {
-        const parser = getStyleParser(format);
-        if (parser && code && defaultStyleJSON === null) {
-            return parser.readStyle(code)
-                .then((newStyle) => {
-                    dispatch({
-                        type: UPDATE_STYLE,
-                        payload: formatJSONStyle(newStyle)
-                    });
+        return getStyleParser(format)
+            .then(parser => {
+                if (parser && code && defaultStyleJSON === null) {
+                    return parser.readStyle(code)
+                        .then((newStyle) => {
+                            dispatch({
+                                type: UPDATE_STYLE,
+                                payload: formatJSONStyle(newStyle)
+                            });
+                            init.current = true;
+                        })
+                        .catch((err) => onError({
+                            ...err,
+                            status: 400
+                        }));
+                }
+                if (parser && code && defaultStyleJSON) {
                     init.current = true;
-                })
-                .catch((err) => onError({
-                    ...err,
-                    status: 400
-                }));
-        }
-        if (parser && code && defaultStyleJSON) {
-            init.current = true;
-            return dispatch({
-                type: UPDATE_STYLE,
-                payload: defaultStyleJSON
+                    return dispatch({
+                        type: UPDATE_STYLE,
+                        payload: defaultStyleJSON
+                    });
+                }
+                if (code && !parser) {
+                    return onError({
+                        messageId: 'styleeditor.formatNotSupported',
+                        status: 400
+                    });
+                }
+                return null;
             });
-        }
-        if (code && !parser) {
-            return onError({
-                messageId: 'styleeditor.formatNotSupported',
-                status: 400
-            });
-        }
-        return null;
     };
 
     useEffect(() => {
-        if (!init.current) {
+        if (!init.current || defaultStyleJSON === null) {
             handleReadStyle();
         }
     }, [code, format, defaultStyleJSON]);
@@ -244,24 +246,23 @@ function VisualStyleEditor({
             if (styleError) {
                 return onError(styleError);
             }
-            const parser = getStyleParser(options.format);
-            if (parser) {
-                return parser.writeStyle(parseJSONStyle(options.style))
-                    .then((newCode) => {
-                        // This is a workaround for geostyler-sld-parser not able to identify and parse
-                        // the format of ExternalGraphic (IconSymbolizer) when image url doesn't mentions the format/extension explicitly.
-                        // An issue has been opened in library for native support of a similar feature. (Ref: https://github.com/geostyler/geostyler/issues/1453)
-                        const { parsedCode, errorObj } = updateExternalGraphicNode(options, newCode);
-                        errorObj ?  onError(errorObj) : onChange(parsedCode, options.style);
-                    })
-                    .catch((err) => {
-                        onError({
-                            ...err,
-                            status: 400
+            return getStyleParser(options.format)
+                .then(parser => {
+                    return parser.writeStyle(parseJSONStyle(options.style))
+                        .then((newCode) => {
+                            // This is a workaround for geostyler-sld-parser not able to identify and parse
+                            // the format of ExternalGraphic (IconSymbolizer) when image url doesn't mentions the format/extension explicitly.
+                            // An issue has been opened in library for native support of a similar feature. (Ref: https://github.com/geostyler/geostyler/issues/1453)
+                            const { parsedCode, errorObj } = updateExternalGraphicNode(options, newCode);
+                            errorObj ?  onError(errorObj) : onChange(parsedCode, options.style);
+                        })
+                        .catch((err) => {
+                            onError({
+                                ...err,
+                                status: 400
+                            });
                         });
-                    });
-            }
-            return null;
+                });
         }, debounceTime);
         return () => {
             update.current.cancel();

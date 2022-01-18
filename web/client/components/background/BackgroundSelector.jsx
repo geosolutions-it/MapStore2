@@ -121,6 +121,7 @@ class BackgroundSelector extends React.Component {
                                 onClick={() => {
                                     this.props.onRemoveBackground(true, layer.title || layer.name || '', layer.id);
                                 }}
+                                tooltipId="backgroundSelector.deleteTooltip"
                             />}
                             {this.props.mapIsEditable && !this.props.enabledCatalog && !!(layer.type === 'wms' || layer.type === 'wmts' || layer.type === 'tms' || layer.type === 'tileprovider') &&
                                 <ToolbarButton
@@ -132,7 +133,9 @@ class BackgroundSelector extends React.Component {
                                             layer,
                                             editing: true
                                         });
-                                    }}/>
+                                    }}
+                                    tooltipId="backgroundSelector.editTooltip"
+                                />
                             }
                         </div>}
                     <PreviewIcon

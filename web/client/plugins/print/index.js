@@ -16,7 +16,6 @@ import {
     changePrintZoomLevel
 } from '../../actions/print';
 
-import PrintPreviewComp from '../../components/print/PrintPreview';
 import ConfigUtils from '../../utils/ConfigUtils';
 
 import {TextInput} from "./TextInput";
@@ -27,6 +26,8 @@ import {Layout as LayoutComp} from "./Layout";
 import {LegendOptions as LegendOptionsComp} from "./LegendOptions";
 import {Resolution as ResolutionComp} from "./Resolution";
 import {MapPreview as MapPreviewComp} from "./MapPreview";
+
+import Preview from "./Preview";
 
 export const Name = connect((state) => ({
     spec: state.print?.spec || {},
@@ -77,7 +78,6 @@ export const Resolution = connect((state) => ({
 
 export const MapPreview = connect(
     (state) => ({
-        map: state.print?.map,
         capabilities: state.print?.capabilities ?? {}
     }), {
         onChangeZoomLevel: changePrintZoomLevel,
@@ -107,15 +107,17 @@ export const PrintSubmit = connect((state) => ({
 
 export const PrintPreview = connect((state) => ({
     url: state.print && ConfigUtils.getProxiedUrl(state.print.pdfUrl),
+    downloadUrl: state.print && state.print.pdfUrl,
     scale: state.controls && state.controls.print && state.controls.print.viewScale || 0.5,
     currentPage: state.controls && state.controls.print && state.controls.print.currentPage || 0,
-    pages: state.controls && state.controls.print && state.controls.print.pages || 1
+    pages: state.controls && state.controls.print && state.controls.print.pages || 1,
+    outputFormat: state.print?.spec?.outputFormat || "pdf"
 }), {
     back: printCancel,
     setPage: setControlProperty.bind(null, 'print', 'currentPage'),
     setPages: setControlProperty.bind(null, 'print', 'pages'),
     setScale: setControlProperty.bind(null, 'print', 'viewScale')
-})(PrintPreviewComp);
+})(Preview);
 
 export const standardItems = {
     "left-panel": [{
@@ -175,6 +177,5 @@ export const standardItems = {
 };
 
 export default {
-    standardItems,
-    PrintPreview
+    standardItems
 };

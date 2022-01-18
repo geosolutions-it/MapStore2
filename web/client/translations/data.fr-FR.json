@@ -307,6 +307,7 @@
             "confirm": "Je suis d'accord"
         },
         "manager": {
+            "managerMenu": "Menu du gestionnaire",
             "openInANewTab": "Ouvrir la carte",
             "deleteMap": "Supprimer la carte",
             "deleteMapMessage": "Voulez-vous supprimer cette carte ?",
@@ -649,9 +650,14 @@
             },
             "layoutWarning": "Mise en page non permise",
             "scale": "échelle",
-            "includeScale": "inclure dans l'impression"
+            "includeScale": "inclure dans l'impression",
+            "disabledpreview": "L'aperçu n'est pas disponible avec ces paramètres d'impression",
+            "outputFormat": "Format",
+            "previewFormatUnsupported": "Format non pris en charge pour l'aperçu",
+            "projection": "Système de coordonnées",
+            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran"
         },
-        "backgroundSwither": {
+        "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"
         },
         "info": {
@@ -1178,7 +1184,7 @@
             "passwordInvalid": "Mot de passe erroné",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
-            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères.",
+            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères. Les valeurs valides pour les mots de passe incluent des chiffres, des lettres minuscules ou majuscules et les caractères spéciaux suivants: !,@,#,$,%,&,*,_",
             "passwordInvalidChar": "Le mot de passe ne doit pas contenir ces caractères: {data}",
             "passwordChanged": "Mot de passe changé",
             "passwordError": "Erreur lors du changement de mot de passe",
@@ -1193,7 +1199,10 @@
             "detailsGroups": "Groupes",
             "detailsEmail": "E-mail",
             "detailsCompany": "Compagnie",
-            "detailsNotes": "Remarques"
+            "detailsNotes": "Remarques",
+            "userMenu": "Menu utilisateur",
+            "generalInformation": "Général",
+            "attributes": "Les attributs"
         },
         "users": {
             "title": "Gérer les comptes",
@@ -1244,7 +1253,9 @@
             "noUsers": "Aucun utilisateur pour ce groupe",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
             "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
-            "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?"
+            "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?",
+            "generalInformation": "Général",
+            "members": "Membres"
         },
         "share": {
             "title": "Partager",
@@ -2715,6 +2726,8 @@
         "defaultMapBackgroundsServiceTitle": "Fonds de plans par défaut",
         "backgroundSelector": {
             "addTooltip": "Ajouter un nouveau fond",
+            "editTooltip": "Modifier le fond",
+            "deleteTooltip": "Supprimer le fond",
             "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
         },
         "stepper": {
