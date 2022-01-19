@@ -1188,7 +1188,7 @@
             "passwordInvalid": "Ongeldig wachtwoord",
             "username": "Gebruikersnaam",
             "password": "Wachtwoord",
-            "passwordMessage": "Wachtwoord moet minstens 6 karakters bevatten. Geldige waarden voor wachtwoorden zijn cijfers, kleine letters of hoofdletters en de volgende speciale tekens:! @ # $% & * _.",
+            "passwordMessage": "Wachtwoord moet minstens 6 karakters bevatten.",
             "passwordInvalidChar": "Het wachtwoord mag deze tekens niet bevatten: {data}",
             "passwordChanged": "Wachtwoord gewijzigd",
             "passwordError": "Fout bij wijzigen van wachtwoord",

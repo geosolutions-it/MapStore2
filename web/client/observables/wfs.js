@@ -195,7 +195,7 @@ export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
             timeout: 60000,
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+            headers: { 'Accept': 'application/json', 'Content-Type': `application/xml` }
         }))
         .let(interceptOGCError)
         .map((response) => workaroundGEOS7233(response.data, getPagination(filterObj, options), options.totalFeatures));

@@ -1184,7 +1184,7 @@
             "passwordInvalid": "Mot de passe erroné",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
-            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères. Les valeurs valides pour les mots de passe incluent des chiffres, des lettres minuscules ou majuscules et les caractères spéciaux suivants: !,@,#,$,%,&,*,_",
+            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères.",
             "passwordInvalidChar": "Le mot de passe ne doit pas contenir ces caractères: {data}",
             "passwordChanged": "Mot de passe changé",
             "passwordError": "Erreur lors du changement de mot de passe",

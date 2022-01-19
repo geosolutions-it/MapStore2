@@ -1184,7 +1184,7 @@
             "passwordInvalid": "Invalid password",
             "username": "Username",
             "password": "Password",
-            "passwordMessage": "Password must contain at least 6 characters. Valid values for passwords include numerals, lower or upper-case letters and the following special characters: ! @ # $ % & * _.",
+            "passwordMessage": "Password must contain at least 6 characters",
             "passwordInvalidChar": "The password must not contain these characters: {data}",
             "passwordChanged": "Password changed",
             "passwordError": "Error changing password",
