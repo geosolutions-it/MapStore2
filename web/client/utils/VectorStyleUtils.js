@@ -11,8 +11,8 @@ import { isNil } from 'lodash';
 import { set } from './ImmutableUtils';
 import { colorToRgbaStr } from './ColorUtils';
 import axios from 'axios';
-import SLDParser from 'geostyler-sld-parser';
-import GeoCSSParser from 'geostyler-geocss-parser';
+import SLDParser from '@geosolutions/geostyler-sld-parser';
+import GeoCSSParser from '@geosolutions/geostyler-geocss-parser';
 const StyleParsers = {
     sld: new SLDParser(),
     css: new GeoCSSParser()
