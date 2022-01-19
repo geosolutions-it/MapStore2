@@ -1,6 +1,6 @@
 /**
  * Convert an UTF-8 into a byte representation. It usefult to avoid the `btoa` Unicode problem
- * A more detailed explaination about this can be found here:
+ * A more detailed explaination about this can be found here: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
  *
  * @param {string} string string to convert
  * @returns the UTF8 string converted in bytes
