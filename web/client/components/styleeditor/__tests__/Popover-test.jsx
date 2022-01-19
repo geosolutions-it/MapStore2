@@ -100,7 +100,7 @@ describe("Popover style component", () => {
                     <div
                         style={{
                             position: 'absolute',
-                            top: '50%',
+                            top: 0,
                             left: 0
                         }}>
                         <Popover
@@ -137,7 +137,7 @@ describe("Popover style component", () => {
                     <div
                         style={{
                             position: 'absolute',
-                            left: '50%',
+                            left: '100%',
                             top: 0
                         }}>
                         <Popover
@@ -159,80 +159,6 @@ describe("Popover style component", () => {
         expect(popoverArrow).toBeTruthy();
         expect(popoverArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
     });
-    it('should be placed on left', () => {
-        const ARROW_ROTATION = 180;
-        act(() => {
-            ReactDOM.render(
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: 1920,
-                        height: 1080
-                    }}>
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            right: 0
-                        }}>
-                        <Popover
-                            containerNode={document.getElementById("test-overlay-target")}
-                            content={<div className="test-content">Content</div>}
-                        >
-                            <button className="test-button">Button</button>
-                        </Popover>
-                    </div>
-                </div>
-                , document.getElementById("container"));
-        });
-        const buttonNode = document.querySelector('.test-button');
-        expect(buttonNode).toBeTruthy();
-        act(() => {
-            Simulate.click(buttonNode);
-        });
-        const popoverArrow = document.querySelector('.ms-popover-arrow');
-        expect(popoverArrow).toBeTruthy();
-        expect(popoverArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
-    });
-    it('should be placed on center (not found available position)', () => {
-        act(() => {
-            ReactDOM.render(
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: 1920,
-                        height: 1080
-                    }}>
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0
-                        }}>
-                        <Popover
-                            containerNode={document.getElementById("test-overlay-target")}
-                            content={<div className="test-content">Content</div>}
-                        >
-                            <button className="test-button">Button</button>
-                        </Popover>
-                    </div>
-                </div>
-                , document.getElementById("container"));
-        });
-        const buttonNode = document.querySelector('.test-button');
-        expect(buttonNode).toBeTruthy();
-        act(() => {
-            Simulate.click(buttonNode);
-        });
-        const popoverArrow = document.querySelector('.ms-popover-arrow');
-        expect(popoverArrow).toBeTruthy();
-        expect(popoverArrow.style.opacity).toBe('0');
-    });
-
     it('should use declared placement', () => {
         const ARROW_ROTATION = 180;
         act(() => {
