@@ -40,13 +40,13 @@ services:
     depends_on:
       - postgres
       - mapstore
-      - proxy
+      #- proxy
     networks:
       - eptmapstore-network
   
-  proxy:
-    container_name: eptproxy
-    ports:
-      - 80:8080
-    networks:
-      - eptmapstore-network
+  #proxy:
+  #  container_name: eptproxy
+  #  ports:
+  #    - 80
+  #  networks:
+  #    - eptmapstore-network
