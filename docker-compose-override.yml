@@ -33,9 +33,9 @@ services:
     build:
       context: ./tests/
       dockerfile: Dockerfile
-    command: 
-      - dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 300s
-      - python3 tests.py
+    command: >
+      bash -c "dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 300s
+      && python3 tests.py"
     container_name: eptsut
     env_file:
       - ./tests/test-variables.env
