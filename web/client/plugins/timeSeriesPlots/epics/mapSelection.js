@@ -8,6 +8,7 @@
 
 import Rx from 'rxjs';
 import uuid from 'uuid';
+import moment from 'moment';
 
 import {
     END_DRAWING,
@@ -144,7 +145,20 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
             timeout: 15000
         })
         .map(aggregationResults => wpsAggregateToChartData(aggregationResults, [groupByAttributes], [aggregationAttribute], [aggregateFunction]))
-        .map(chartDataResults => storeTimeSeriesChartData(selectionId, chartDataResults));
+        .map(chartDataResults => {
+            const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
+            const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
+            return [
+                    ...acc, {
+                        ...cur,
+                        PARSED_DATE: parsedDate,
+                        DATE: moment(parsedDate).format('DD/MM/YYYY')
+                    }
+                ]
+            }, []);
+            parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
+            return storeTimeSeriesChartData(selectionId, parsedChartDataResults);
+        });
     });
     
 // export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) => 

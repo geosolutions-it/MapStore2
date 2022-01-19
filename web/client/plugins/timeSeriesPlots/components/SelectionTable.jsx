@@ -25,18 +25,18 @@ class BaseTable extends React.Component {
     COLUMNS = [{
         key: 'selectionName',
         sortable: true,
-        width: 80,
+        width: 140,
         name: 'Selection Name',
         resizable: true
     }, {
         key: 'selectionType',
         sortable: true,
-        width: 80,
+        width: 140,
         name: 'Selection Type',
         resizable: true
     },{
         key: 'action',
-        width: 80,
+        width: 50,
         resizable: true
     }];
 
