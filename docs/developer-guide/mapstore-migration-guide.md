@@ -20,6 +20,23 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2021.02.01 to 2021.02.02
+### Style parsers dynamic import
+
+The style parser libraries introduced a dynamic import to reduce the initial bundle size. This change reflects to the `getStyleParser` function provided by the VectorStyleUtils module. If a downstream project of MapStore is using `getStyleParser` it should update it to this new version:
+
+```diff
+// example
+
+- // old use of parser
+- const parser = getStyleParser('sld');
+
++ // new use of parser
++ getStyleParser('sld')
++     .then((parser) => {
++         // use parser
++     });
+```
 ## Migration from 2021.02.00 to 2021.02.01
 
 This update contains a fix for a minor vulnerability found in `log4j` library.
