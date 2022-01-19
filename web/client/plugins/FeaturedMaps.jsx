@@ -30,7 +30,11 @@ import {scrollIntoViewId} from '../utils/DOMUtil';
 
 import featuredmaps from '../reducers/featuredmaps';
 import maptype from '../reducers/maptype';
-import {DASHBOARD_DEFAULT_SHARE_OPTIONS, GEOSTORY_DEFAULT_SHARE_OPTIONS} from '../utils/ShareUtils';
+import {
+    CONTEXT_DEFAULT_SHARE_OPTIONS,
+    DASHBOARD_DEFAULT_SHARE_OPTIONS,
+    GEOSTORY_DEFAULT_SHARE_OPTIONS
+} from '../utils/ShareUtils';
 import { editContext } from "../actions/contextmanager";
 
 const ToolTipedNavItem = tooltip(NavItem);
@@ -85,6 +89,10 @@ class FeaturedMaps extends React.Component {
 
         if (categoryName === 'DASHBOARD') {
             return shareOptions || DASHBOARD_DEFAULT_SHARE_OPTIONS;
+        }
+
+        if (categoryName === 'CONTEXT') {
+            return shareOptions || CONTEXT_DEFAULT_SHARE_OPTIONS;
         }
 
         return {
