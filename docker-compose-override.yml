@@ -36,7 +36,7 @@ services:
       context: ./tests/
       dockerfile: Dockerfile
     command: >
-      sh -c "dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 300s
+      sh -c "dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8081 -timeout 300s
       && sleep 25
       && python3 tests.py"
     container_name: eptsut
