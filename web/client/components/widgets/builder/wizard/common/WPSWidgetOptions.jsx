@@ -116,7 +116,7 @@ export default ({
     const { defaultClassLabel = '' } = data?.autoColorOptions || {};
     const defaultCustomColor = data?.autoColorOptions?.defaultCustomColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1';
     const discardEmptyClasses = (classifications) => {
-        return classifications.filter(item => item.unique && item.value);
+        return [classifications.filter(item => !item.unique && !item.value), classifications.filter(item => item.unique && item.value)];
     };
 
     /** line charts do not support custom colors ATM and blue is preselected */
@@ -238,7 +238,7 @@ export default ({
                         show={showModal}
                         onClose={() => {
                             const unfinishedClasses = classification.filter(item => !item.unique || !item.value);
-                            if (unfinishedClasses.length > 0) {
+                            if (unfinishedClasses.length > 0 && classificationAttribute) {
                                 setShowConfirmModal(true);
                             } else {
                                 setShowModal(false);
@@ -271,13 +271,19 @@ export default ({
                         defaultClassLabel={defaultClassLabel}
                         onChangeDefaultClassLabel={(value) => onChange("autoColorOptions.defaultClassLabel", value)}
                         layer={layer}
+                        chartType={data.type}
                     />
                     {getConfirmModal(
                         showConfirmModal,
                         () => {setShowConfirmModal(false);},
                         () => {
-                            const nonEmptyClasses = discardEmptyClasses(classification);
-                            onChange("autoColorOptions.classification", nonEmptyClasses || []);
+                            const [emptyClasses, nonEmptyClasses] = discardEmptyClasses(classification);
+                            if (emptyClasses.length === classification.length) {
+                                onChange("options.classificationAttribute", undefined);
+                                onChange("autoColorOptions.classification", CLASSIFIED_COLORS);
+                            } else {
+                                onChange("autoColorOptions.classification", nonEmptyClasses || []);
+                            }
                             setShowConfirmModal(false);
                             setShowModal(false);
                         })}

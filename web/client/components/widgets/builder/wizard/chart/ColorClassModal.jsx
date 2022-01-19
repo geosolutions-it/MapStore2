@@ -23,12 +23,12 @@ import HTML from '../../../../I18N/HTML';
 
 import { generateRandomHexColor } from '../../../../../utils/ColorUtils';
 
-const getLabelPopover = (placement) => (
+const getLabelPopover = (placement, chartType) => (
     <DisposablePopover
         popoverClassName="chart-color-class-popover"
         placement={placement}
         title={<Message msgId="widgets.builder.wizard.classAttributes.customLabels" />}
-        text={<HTML msgId="widgets.builder.wizard.classAttributes.customLabelsExample" />}
+        text={<HTML msgId={`widgets.builder.wizard.classAttributes.${chartType}ChartCustomLabelsExample`} />}
     />
 );
 
@@ -47,7 +47,8 @@ const ColorClassModal = ({
     defaultClassLabel,
     onChangeColor,
     onChangeDefaultClassLabel,
-    layer
+    layer,
+    chartType
 }) => {
     const [selectMenuOpen, setSelectMenuOpen] = useState(false);
     return (
@@ -115,7 +116,7 @@ const ColorClassModal = ({
                     <Row xs={12}>
                         <Col componentClass={ControlLabel} xs={6}>
                             <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
-                            {getLabelPopover('top')}
+                            {getLabelPopover('top', chartType)}
                         </Col>
                         <Col xs={6}>
                             <FormControl
@@ -134,7 +135,7 @@ const ColorClassModal = ({
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
-                                    {getLabelPopover('right')}
+                                    {getLabelPopover('right', chartType)}
                                 </Col>
                             </Row>
                             <ThemaClassesEditor

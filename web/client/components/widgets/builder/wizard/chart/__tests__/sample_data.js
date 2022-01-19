@@ -13,14 +13,18 @@ export const CLASSIFICATION = [
     }
 ];
 
-export const UNCLASSIFIED_VALUE_CLASSIFICATION = [
-    ...CLASSIFICATION,
+export const EMPTY_VALUE_CLASSIFICATION = [
     {
         title: '',
         color: '#00FF00',
         value: '',
         unique: ''
     }
+];
+
+export const UNCLASSIFIED_VALUE_CLASSIFICATION = [
+    ...CLASSIFICATION,
+    ...EMPTY_VALUE_CLASSIFICATION
 ];
 
 export const TEST_LAYER = 'test_workspace:test_layer';

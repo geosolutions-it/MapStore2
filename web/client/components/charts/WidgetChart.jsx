@@ -125,12 +125,12 @@ function getData({
         };
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
-                const legendValue = x[index];
+                const groupByValue = x[index];
                 const customLabel = getLegendLabel(item, colorCategories, defaultClassLabel, type);
                 if (!customLabel) {
-                    return legendValue;
+                    return groupByValue;
                 }
-                return customLabel.replace('${legendValue}', legendValue);
+                return customLabel.replace('${groupByValue}', groupByValue);
             });
             pieChartTrace = {
                 ...pieChartTrace,
@@ -152,10 +152,8 @@ function getData({
         if (formula) {
             y = preProcessValues(formula, y);
         }
-        let barChartTrace = {
-            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`,
-            type
-        };
+        // common bar chart properties
+        let barChartTrace = { type };
         /** Bar chart is classified coloured */
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type));
@@ -173,7 +171,8 @@ function getData({
                     x: groupedXValues[index],
                     y: groupedYValues[index],
                     name: item,
-                    marker: { color: groupedColors[index] }
+                    marker: { color: groupedColors[index] },
+                    hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra>${item}</extra>`
                 };
                 return trace;
             });
@@ -186,6 +185,7 @@ function getData({
             x: x,
             y: y,
             name: yAxisLabel || yDataKey,
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`,
             ...(classificationColors && classificationColors.length && customColorEnabled ? {marker: {color: classificationColors}} : {})
         };
         return barChartTrace;

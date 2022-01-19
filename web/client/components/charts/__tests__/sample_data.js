@@ -93,6 +93,20 @@ export const TEMPLATE_LABELS_CLASSIFICATION = [
     }
 ];
 
+export const PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION = [
+    {
+        title: '${groupByValue} - Class 1',
+        color: '#ff0000',
+        value: 'class1',
+        unique: 'class1'
+    },
+    {
+        title: '${groupByValue} - Class 2',
+        color: '#0000ff',
+        value: 'class2',
+        unique: 'class2'
+    }
+];
 
 export const UNLABELLED_CLASSIFICATION = [
     {
