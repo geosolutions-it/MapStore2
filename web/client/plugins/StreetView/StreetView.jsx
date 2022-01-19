@@ -39,7 +39,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * @name StreetView
  * @memberof plugins
  * @property {string} cfg.apiKey The API key to use.
- * Mandatory in production. In order to allow fine billing strategies (with different API keys), the API key can be defined and customized here in this configuration option or in `localConfig.json` at, in order of priority one of:
+ * Mandatory in production. In order to allow fine billing strategies (with different API keys), the API key can be defined and customized here in this configuration option or in `localConfig.json` with the following order of priority:
  * - `apiKeys.googleStreetViewAPIKey` - Use this if you have only one API key for enable for street view JS API for the whole application,
  * - `apiKeys.googleAPIKey` - Use this if you have a general API key enabled for all Google APIs in MapStore.
  * - `googleAPIKey` (for retro-compatibility only)
