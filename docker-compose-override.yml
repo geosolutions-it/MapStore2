@@ -21,6 +21,8 @@ services:
       args:
         MAPSTORE_WEBAPP_SRC: ./mapstore.war
     container_name: eptmapstore
+    ports:
+      - 8081
     environment:
       JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
     volumes:
@@ -35,7 +37,7 @@ services:
       dockerfile: Dockerfile
     command: >
       sh -c "dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 300s
-      && sleep 1m
+      && sleep 25
       && python3 tests.py"
     container_name: eptsut
     env_file:
