@@ -385,7 +385,7 @@ export const getLayersByGroup = (configLayers, configGroups) => {
                 group.nodes = getLayersId(groupId, mapLayers).concat(group.nodes)
                     .reduce((arr, cur) => {
                         isObject(cur)
-                            ? arr.push({node: cur, order: mapLayers.find((el) => el.group === cur.id).storeIndex})
+                            ? arr.push({node: cur, order: mapLayers.find((el) => el.group === cur.id)?.storeIndex})
                             : arr.push({node: cur, order: mapLayers.find((el) => el.id === cur).storeIndex});
                         return arr;
                     }, []).sort((a, b) => b.order - a.order).map(e => e.node);
