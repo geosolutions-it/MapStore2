@@ -23,9 +23,16 @@ import { getFeature } from '../api/WFS';
 import { generateEnvString } from './LayerLocalizationUtils';
 import url from 'url';
 
+import { getStore } from "./StateUtils";
+import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
+import { currentLocaleLanguageSelector } from '../selectors/locale';
+import { printSpecificationSelector } from "../selectors/print";
+import assign from 'object-assign';
+import sortBy from "lodash/sortBy";
+
 const defaultScales = getGoogleMercatorScales(0, 21);
 let PrintUtils;
-import assign from 'object-assign';
+
 
 // Try to guess geomType, getting the first type available.
 export const getGeomType = function(layer) {
@@ -38,16 +45,17 @@ export const isAnnotationLayer = (layer) => {
 };
 
 /**
+ * Utilities for Print
+ * @module utils/PrintUtils
+ * */
+
+/**
  * Extracts the correct opacity from layer. if Undefined, the opacity is `1`.
  * @ignore
  * @param {object} layer the MapStore layer
  */
 export const getOpacity = layer => layer.opacity || (layer.opacity === 0 ? 0 : 1.0);
 
-/**
- * Utilities for Print
- * @memberof utils
- */
 /**
  * Preload data (e.g. WFS) before to sent it to the print tool.
  *
@@ -87,9 +95,7 @@ export const preloadData = (spec) => {
             };
         });
     }
-    return new Promise((resolve) => {
-        resolve(spec);
-    });
+    return Promise.resolve(spec);
 };
 /**
  * Given a static resource, returns the resource's absolute
@@ -204,6 +210,7 @@ export const getMapSize = (layout, maxWidth) => {
         height: 100
     };
 };
+
 /**
  * Creates the mapfish print specification from the current configuration
  * @param  {object} spec the current configuration
@@ -231,7 +238,99 @@ export const getMapfishPrintSpecification = (spec) => {
                 "rotation": 0
             }
         ],
-        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend')
+        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend'),
+        ...spec.params
+    };
+};
+
+export const localizationFilter = (state, spec) => {
+    const localizationEnabled = isLocalizedLayerStylesEnabledSelector(state);
+    const localizationEnv = localizedLayerStylesEnvSelector(state);
+    const localizedSpec = localizationEnabled ? {
+        ...spec,
+        env: localizationEnv,
+        currentLanguage: currentLocaleLanguageSelector(state)
+    } : spec;
+
+    return Promise.resolve(localizedSpec);
+};
+export const wfsPreloaderFilter = (state, spec) => preloadData(spec);
+export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec));
+
+const defaultPrintingServiceTransformerChain = [
+    {name: "localization", transformer: localizationFilter},
+    {name: "wfspreloader", transformer: wfsPreloaderFilter},
+    {name: "mapfishSpecCreator", transformer: toMapfish}
+];
+
+let userTransformerChain = [];
+
+function addOrReplaceTransformers(chain, transformers) {
+    return transformers.reduce((res, transformer) => {
+        if (res.findIndex(t => t.name === transformer.name) === -1) {
+            return [...res, transformer];
+        }
+        return res.map(t => t.name === transformer.name ? transformer : t);
+    }, chain);
+}
+
+export function getTransformerChain() {
+    const userOffset = defaultPrintingServiceTransformerChain.length;
+    return sortBy(addOrReplaceTransformers(
+        defaultPrintingServiceTransformerChain.map((t, index) => ({...t, position: index})),
+        userTransformerChain.map((t, index) => ({...t, position: t.position ?? index + userOffset}))
+    ), ["position"]);
+}
+
+/**
+ * Resets the list of user spec transformers.
+ */
+export function resetTransformers() {
+    userTransformerChain = [];
+}
+
+/**
+ * Adds/Updates a user custom transformer for the default printing service spec transformer chain.
+ *
+ * @param {string} name name of the transformer (allows replacing one of the default ones, by specifying its name).
+ *      default transformers are: `localization`, `wfspreloader`, `mapfishSpecCreator`.
+ * @param {function} transformer (state, spec) => Promise<spec>
+ * @param {int} position position in the chain (0-indexed), allows inserting a transformer between existing ones
+ */
+export function addTransformer(name, transformer, position) {
+    userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer, position}]);
+}
+
+/**
+ * Returns the default printing service.
+ *
+ * A printing service implements the print function, whose goal is to transform the Print plugin
+ * specification object into a specification for the chosen printing engine.
+ *
+ * This service is compatible with the mapfish-2 printing engine and works by applying a chain of transformers,
+ * summing up the defaultPrintingServiceTransformerChain list, to eventual custom transformers,
+ * added with addTransformer.
+ *
+ * Each transformer is a function receiving two parameters, the redux global state and the print
+ * specification object returned by the previous chain step, and returning a Promise of the transformed
+ * specification:
+ *
+ * ```
+ * (state, spec) => Promise.resolve(<transformed spec>)
+ * ```
+ *
+ * Project specific transformers can be added to the end of the chain using the addTransformer function.
+ * @return {object} the default print service.
+ */
+export const getDefaultPrintingService = () => {
+    return {
+        print: () => {
+            const state = getStore().getState();
+            const initialSpec = printSpecificationSelector(state);
+            return getTransformerChain().map(t => t.transformer).reduce((previous, f) => {
+                return previous.then(spec=> f(state, spec));
+            }, Promise.resolve(initialSpec));
+        }
     };
 };
 /**
