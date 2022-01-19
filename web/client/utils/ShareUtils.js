@@ -40,8 +40,6 @@ export const CONTEXT_DEFAULT_SHARE_OPTIONS = {
     embedPanel: true,
     showAPI: false,
     embedOptions: { showTOCToggle: false, allowFullScreen: false },
-    shareUrlRegex: "(h[^#]*)#\\/context\\/([^\\/]*)\\/([A-Za-z0-9]*)",
-    shareUrlReplaceString: "$1context-embedded.html#/$3",
     advancedSettings: {
         hideInTab: "embed",
         homeButton: true
