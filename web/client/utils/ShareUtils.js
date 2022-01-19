@@ -39,7 +39,6 @@ export const GEOSTORY_DEFAULT_SHARE_OPTIONS = {
 export const CONTEXT_DEFAULT_SHARE_OPTIONS = {
     embedPanel: true,
     showAPI: false,
-    embedOptions: { showTOCToggle: false, allowFullScreen: false },
     advancedSettings: {
         hideInTab: "embed",
         homeButton: true
