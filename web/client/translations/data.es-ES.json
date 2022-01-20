@@ -633,7 +633,7 @@
             "description": "Descripción",
             "descriptionplaceholder": "Introduzca una descripción...",
             "resolution": "Resolución:",
-            "defaultBackground": "Utilizar OSM como fondo",
+            "defaultBackground": "Usar el fondo predeterminado",
             "printtooltip": "Impresión",
             "alternatives": {
                 "legend": "Incluir la leyenda",

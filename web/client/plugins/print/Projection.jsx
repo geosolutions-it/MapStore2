@@ -106,7 +106,8 @@ export const Projection = ({
     items,
     onChangeParameter,
     allowPreview = false,
-    projections
+    projections,
+    onRefresh = () => {}
 }, context) => {
     useEffect(() => {
         addTransformer("projection", transformer, 3);
@@ -119,6 +120,7 @@ export const Projection = ({
     }, []);
     function changeProjection(crs) {
         onChangeParameter("params.projection", crs);
+        onRefresh();
     }
     return (
         <>

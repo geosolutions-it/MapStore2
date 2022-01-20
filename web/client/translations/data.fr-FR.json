@@ -633,7 +633,7 @@
             "description": "Description",
             "descriptionplaceholder": "Entrer une description...",
             "resolution": "Résolution :",
-            "defaultBackground": "Utiliser OSM comme fond de plan",
+            "defaultBackground": "Utiliser l'arrière-plan par défaut",
             "printtooltip": "Impression",
             "alternatives": {
                 "legend": "Inclure la légende",

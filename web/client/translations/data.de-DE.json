@@ -672,7 +672,7 @@
             "description": "Beschreibung",
             "descriptionplaceholder": "Gib eine Beschreibung ein...",
             "resolution": "Auflösung:",
-            "defaultBackground": "Nutze OSM als Hintergrund",
+            "defaultBackground": "Verwenden Sie den Standardhintergrund",
             "printtooltip": "Drucken",
             "alternatives": {
                 "legend": "Legende einschließen",

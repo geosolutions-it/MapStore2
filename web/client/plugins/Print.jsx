@@ -8,12 +8,13 @@
 
 import './print/print.css';
 
-import { head } from 'lodash';
+import head from 'lodash/head';
+import castArray from "lodash/castArray";
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { PanelGroup, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { connect } from '../utils/PluginsUtils';
 import { createSelector } from 'reselect';
 
 import { setControlProperty, toggleControl } from '../actions/controls';
@@ -26,10 +27,11 @@ import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapSelector, scalesSelector } from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
-import { reprojectBbox } from '../utils/CoordinatesUtils';
+import { normalizeSRS, reprojectBbox } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
+import { has, includes } from 'lodash';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -227,7 +229,7 @@ export default {
                         useFixedScales: PropTypes.bool,
                         scales: PropTypes.array,
                         ignoreLayers: PropTypes.array,
-                        defaultBackground: PropTypes.string,
+                        defaultBackground: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
                         closeGlyph: PropTypes.string,
                         submitConfig: PropTypes.object,
                         previewOptions: PropTypes.object,
@@ -270,7 +272,7 @@ export default {
                         useFixedScales: false,
                         scales: [],
                         ignoreLayers: ["google", "bing"],
-                        defaultBackground: "osm",
+                        defaultBackground: ["osm", "wms", "empty"],
                         closeGlyph: "1-close",
                         submitConfig: {
                             buttonConfig: {
@@ -305,6 +307,17 @@ export default {
                             this.configurePrintMap(nextProps);
                         }
                     }
+
+                    getAlternativeBackground = (layers, defaultBackground, projection) => {
+                        const allowedBackground = head(castArray(defaultBackground).map(type => ({
+                            type
+                        })).filter(l => this.isAllowed(l, projection)));
+                        if (allowedBackground) {
+                            return head(layers.filter(l => l.type === allowedBackground.type));
+                        }
+                        return null;
+                    };
+
                     getItems = (target) => {
                         const filtered = this.props.items.filter(i => !target || i.target === target);
                         const merged = mergeItems(standardItems[target], this.props.items)
@@ -315,6 +328,13 @@ export default {
                         return [...merged, ...filtered]
                             .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
                     };
+                    getMapConfiguration = () => {
+                        const map = this.props.printingService.getMapConfiguration();
+                        return {
+                            ...map,
+                            layers: this.filterLayers(map.layers, map.zoom, map.projection)
+                        };
+                    };
                     getMapSize = (layout) => {
                         const currentLayout = layout || this.getLayout();
                         return {
@@ -322,22 +342,22 @@ export default {
                             height: currentLayout && currentLayout.map.height / currentLayout.map.width * this.props.mapWidth || 270
                         };
                     };
-
+                    getPreviewZoom = (mapZoom) => {
+                        if (this.props.useFixedScales) {
+                            const scales = getPrintScales(this.props.capabilities);
+                            return getNearestZoom(mapZoom, scales);
+                        }
+                        return mapZoom;
+                    };
+                    getPreviewResolution = (zoom, projection) => {
+                        const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
+                        const scale = this.props.scales[this.getPreviewZoom(zoom)];
+                        return scale / dpu;
+                    };
                     getLayout = (props) => {
                         const { getLayoutName: getLayoutNameProp, printSpec, capabilities } = props || this.props;
                         const layoutName = getLayoutNameProp(printSpec);
                         return head(capabilities.layouts.filter((l) => l.name === layoutName));
-                    };
-
-                    renderPreviewPanel = () => {
-                        return this.renderItems("preview-panel", this.props.previewOptions);
-                    };
-
-                    renderError = () => {
-                        if (this.props.error) {
-                            return <Row><Col xs={12}><div className="print-error"><span>{this.props.error}</span></div></Col></Row>;
-                        }
-                        return null;
                     };
 
                     renderWarning = (layout) => {
@@ -372,7 +392,7 @@ export default {
                     };
                     renderPrintPanel = () => {
                         const layout = this.getLayout();
-                        const map = this.props.printingService.getMapConfiguration();
+                        const map = this.getMapConfiguration();
                         const options = {
                             layout,
                             map,
@@ -380,7 +400,7 @@ export default {
                             mapSize: this.getMapSize(layout),
                             resolutions: getResolutions(map?.projection),
                             onRefresh: () => this.configurePrintMap(),
-                            notAllowedLayers: this.isBackgroundIgnored(),
+                            notAllowedLayers: this.isBackgroundIgnored(this.props.layers, map?.projection),
                             actionConfig: this.props.submitConfig,
                             validations: this.props.printingService.validate(),
                             actions: {
@@ -414,6 +434,17 @@ export default {
                         return null;
                     };
 
+                    renderError = () => {
+                        if (this.props.error) {
+                            return <Row><Col xs={12}><div className="print-error"><span>{this.props.error}</span></div></Col></Row>;
+                        }
+                        return null;
+                    };
+
+                    renderPreviewPanel = () => {
+                        return this.renderItems("preview-panel", this.props.previewOptions);
+                    };
+
                     renderBody = () => {
                         if (this.props.pdfUrl && this.props.usePreview) {
                             return this.renderPreviewPanel();
@@ -441,24 +472,41 @@ export default {
                     addParameter = (name, value) => {
                         this.props.addPrintParameter("params." + name, value);
                     };
-                    isAllowed = (layer) => {
-                        return this.props.ignoreLayers.indexOf(layer.type) === -1;
+                    isCompatibleWithSRS = (projection, layer) => {
+                        return projection === "EPSG:3857" || includes([
+                            "wms",
+                            "wfs",
+                            "vector",
+                            "empty"
+                        ], layer.type) || layer.type === "wmts" && has(layer.allowedSRS, projection);
+                    };
+                    isAllowed = (layer, projection) => {
+                        return this.props.ignoreLayers.indexOf(layer.type) === -1 &&
+                            this.isCompatibleWithSRS(normalizeSRS(projection), layer);
                     };
 
-                    isBackgroundIgnored = (layers) => {
-                        return (layers || this.props.layers).filter((layer) => layer.visibility && !this.isAllowed(layer)).length > 0;
+                    isBackgroundIgnored = (layers, projection) => {
+                        const background = head((layers || this.props.layers)
+                            .filter(layer => layer.group === "background" && layer.visibility && this.isAllowed(layer, projection)));
+                        return !background;
                     };
+                    filterLayers = (layers, zoom, projection) => {
+                        const resolution = this.getPreviewResolution(zoom, projection);
 
-                    filterLayers = (props, resolution) => {
-                        const {
-                            printSpec,
-                            layers,
-                            defaultBackground: defaultBackgroundProp
-                        } = props || this.props;
-                        const filtered = layers.filter((layer) => layer.visibility && isInsideResolutionsLimits(layer, resolution) && this.isAllowed(layer));
-                        if (this.isBackgroundIgnored(layers) && defaultBackgroundProp && printSpec.defaultBackground) {
-                            const defaultBackground = layers.filter((layer) => layer.type === defaultBackgroundProp)[0];
-                            return [assign({}, defaultBackground, {visibility: true}), ...filtered];
+                        const filtered = layers.filter((layer) =>
+                            layer.visibility &&
+                            isInsideResolutionsLimits(layer, resolution) &&
+                            this.isAllowed(layer, projection)
+                        );
+                        if (this.isBackgroundIgnored(layers, projection) && this.props.defaultBackground && this.props.printSpec.defaultBackground) {
+                            const defaultBackground = this.getAlternativeBackground(layers, this.props.defaultBackground);
+                            if (defaultBackground) {
+                                return [{
+                                    ...defaultBackground,
+                                    visibility: true
+                                }, ...filtered];
+                            }
+                            return filtered;
                         }
                         return filtered;
                     };
@@ -473,10 +521,10 @@ export default {
                             getZoomForExtent,
                             maxZoom,
                             currentLocale,
-                            scales: scalesProp
+                            scales: scalesProp,
+                            layers
                         } = props || this.props;
                         if (newMap && newMap.bbox && capabilities) {
-                            const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, newMap.projection);
                             const bbox = reprojectBbox([
                                 newMap.bbox.bounds.minx,
                                 newMap.bbox.bounds.miny,
@@ -489,14 +537,12 @@ export default {
                                 const scales = getPrintScales(capabilities);
                                 const scaleZoom = getNearestZoom(newMap.zoom, scales);
                                 const scale = scales[scaleZoom];
-                                const previewResolution = scale / dpu;
                                 configurePrintMapProp(newMap.center, mapZoom, scaleZoom, scale,
-                                    this.filterLayers(props, previewResolution), newMap.projection, currentLocale);
+                                    layers, newMap.projection, currentLocale);
                             } else {
                                 const scale = scalesProp[newMap.zoom];
-                                const previewResolution = scale / dpu;
                                 configurePrintMapProp(newMap.center, newMap.zoom, newMap.zoom, scale,
-                                    this.filterLayers(props, previewResolution), newMap.projection, currentLocale);
+                                    layers, newMap.projection, currentLocale);
                             }
                         }
                     };
@@ -504,7 +550,7 @@ export default {
                     print = () => {
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.printingService.print()
+                        this.props.printingService.print(this.getMapConfiguration()?.layers)
                             .then((spec) =>
                                 this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions })
                             )
