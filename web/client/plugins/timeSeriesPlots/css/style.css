@@ -26,10 +26,19 @@ text-align: center;
     border: none;
 }
 
-.user-select-none.svg-container {
-    height: 350px !important;
-}
-
 .react-grid-Grid {
     min-height: 155px !important;
+}
+
+.react-grid-Canvas {
+    overflow-y: auto !important;
+}
+
+.time-series-plots-window-body .mapstore-widget-chart,
+.time-series-plots-window-body .mapstore-widget-chart .loader-container {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

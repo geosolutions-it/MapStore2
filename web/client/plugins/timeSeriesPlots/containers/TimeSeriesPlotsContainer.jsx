@@ -41,7 +41,7 @@ const Panel = ({
     onRemoveTableSelectionRow = () => {} 
 }) => {
     const margin = 10;
-    const initialSize = {width: 400, height: 300};
+    const initialSize = {width: 400, height: 400};
     const [size, setSize] = useState(initialSize);
     if (!enabled) {
         return null;
@@ -102,13 +102,13 @@ const Panel = ({
                 <Resizable
                     width={size.width}
                     height={size.height}
-                    minConstraints={[190, 50]}
+                    minConstraints={[190, 400]}
                     onResize={(event, {size: newSize}) => {
                         setSize(newSize);
                     }}
                 >
                     <div style={{
-                       
+                        display: 'flex',
                         flexDirection: "column",
                         width: size.width,
                         height: size.height
@@ -117,14 +117,16 @@ const Panel = ({
                         <SelectionTable 
                             timeSeriesFeaturesSelections={timeSeriesFeaturesSelections}
                             onRemoveTableSelectionRow={onRemoveTableSelectionRow}/>
-                        <div className='ms2-border-layout-body' style={ { display: "flex", flex: "1 1 0%", overflowY: "auto"}}>
-                            <main className='ms2-border-layout-content' style={{ flex: "1 1 0%" }}>
-                                <div className='mapstore-widget-chart' style={{ position: 'relative' }}>
-                                    <ChartView
-                                    {...getTimeSeriesChartProps(timePlotsData, timeSeriesFeaturesSelections)}
-                                    data={timePlotsData.map(item => item.chartData) || []} />
-                                </div>
-                            </main>
+                        <div style={{
+                            flex: 1,
+                            width: '100%',
+                            position: 'relative'
+                        }}>
+
+                        <ChartView
+                            {...getTimeSeriesChartProps(timePlotsData, timeSeriesFeaturesSelections)}
+                            data={timePlotsData.map(item => item.chartData) || []} />
+
                         </div>
                     </div>
                 </Resizable>

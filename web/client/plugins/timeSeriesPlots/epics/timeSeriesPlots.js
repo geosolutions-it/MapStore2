@@ -8,4 +8,4 @@
 
 export * from './setup';
 
-export { openTimeSeriesPlotsPlugin, timeSeriesPlotsSelection, timeSeriesFetauresCurrentSelection } from './mapSelection';
+export { openTimeSeriesPlotsPlugin, timeSeriesPlotsSelection, timeSeriesPlotsPointSelectionPoint, timeSeriesFetauresCurrentSelection } from './mapSelection';

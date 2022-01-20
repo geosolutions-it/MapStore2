@@ -55,7 +55,6 @@ class BaseTable extends React.Component {
             <div>
                 <ReactDataGrid 
                     rowKey="selectionId"
-                    // headerRowHeight={100} 
                     columns={this.COLUMNS}
                     rowGetter={(i) => (this.props?.timeSeriesFeaturesSelections[i] || '')}
                     rowsCount={this.props?.timeSeriesFeaturesSelections.length || 0}
