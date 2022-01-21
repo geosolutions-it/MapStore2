@@ -34,3 +34,21 @@ These tools needs to be installed (other than **Java** in versions above above):
         - NPM 6.14.15 causes [this issue](https://github.com/geosolutions-it/mapstore-project/issues/18) on MapStore project system. No other know issues.
         - *If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the `compile` script*
     - ³ Python is only needed for building documentation.
+    
+ 
+## Running in Production 
+ 
+### System requirements
+
+| Resource  | Minimum | Recommended |
+|-----------|---------|-------------|
+| Processor | 2 Core  | 2 Core      |
+| Memory    | 2 GB    | 4 GB        |
+
+### Database
+
+In production a PostgreSQL database is recommended: 
+
+| Tool     | Link                                               | Minimum | Recommended | Maximum    |
+|----------|----------------------------------------------------|---------|-------------|------------|
+| Postgres | [link](https://www.postgresql.org/)                | 9.6     | 11          | 11         |
