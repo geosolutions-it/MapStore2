@@ -11,7 +11,10 @@ import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
-import { CONTROL_NAME } from '../constants';
+import Dock from 'react-dock';
+
+import {compose, withProps} from 'recompose';
+import { CONTROL_NAME, AGGREGATE_OPERATIONS } from '../constants';
 import ChartView from '@mapstore/components/widgets/widget/ChartView';
 import { SelectionTable } from '../components/SelectionTable';
 import Dialog from "../../../components/misc/Dialog";
@@ -26,6 +29,7 @@ import {
     timePlotsDataSelector,
     timeSeriesFeaturesSelectionsSelector
 } from '../selectors/timeSeriesPlots';
+import localizedProps from '../../../components/misc/enhancers/localizedProps';
 
 /**
  * Main Panel of TimeSeriesPlotsContainer
@@ -38,7 +42,8 @@ const Panel = ({
     onChangeTraceColor = () => {},
     onClose = () => {},
     timePlotsData,
-    onRemoveTableSelectionRow = () => {}
+    onRemoveTableSelectionRow = () => {},
+    aggregationOptions
 }) => {
     const margin = 10;
     const initialSize = {width: 400, height: 400};
@@ -103,7 +108,7 @@ const Panel = ({
                 <Resizable
                     width={size.width}
                     height={size.height}
-                    minConstraints={[190, 400]}
+                    minConstraints={[350, 400]}
                     onResize={(event, {size: newSize}) => {
                         setSize(newSize);
                     }}
@@ -114,7 +119,7 @@ const Panel = ({
                         width: size.width,
                         height: size.height
                     }}>
-                        <MainToolbar enabled={enabled} />
+                        <MainToolbar enabled={enabled} aggregationOptions={aggregationOptions}/>
                         <SelectionTable
                             timeSeriesFeaturesSelections={timePlotsData}
                             onRemoveTableSelectionRow={onRemoveTableSelectionRow}
@@ -124,11 +129,14 @@ const Panel = ({
                             width: '100%',
                             position: 'relative'
                         }}>
-
-                        <ChartView
-                            {...getTimeSeriesChartProps(timePlotsData)}
-                            data={timePlotsData.map(item => item.chartData) || []} />
-
+                        <Dock position="bottom" dimMode="none" fluid isVisible zIndex={0} dockStyle={{
+                            maxHeight: '90%',
+                            minHeight: '3%'
+                        }}>
+                            <ChartView
+                                {...getTimeSeriesChartProps(timePlotsData)}
+                                data={timePlotsData.map(item => item.chartData) || []} />
+                        </Dock>
                         </div>
                     </div>
                 </Resizable>
@@ -148,4 +156,9 @@ const TSPPanel = connect(createStructuredSelector({
     onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color)
 })(Panel);
 
-export default TSPPanel;
+export default compose(
+    withProps(() => ({
+        aggregationOptions: AGGREGATE_OPERATIONS
+    })),
+    localizedProps("aggregationOptions")
+)(TSPPanel);

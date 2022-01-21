@@ -42,3 +42,25 @@ text-align: center;
     width: 100%;
     height: 100%;
 }
+
+.time-series-plots-toolbar {
+    padding: 10px 0;
+}
+
+.time-series-plots-toolbar .selection-btn:first-child {
+    margin-left: 10px;
+}
+
+.time-series-plots-toolbar .selection-btn {
+    margin-right: 10px;
+}
+.time-series-plots-toolbar {
+    display: flex;
+    align-items: flex-end;
+}
+.time-series-plots-toolbar div:first-child {
+    flex: 0 0 130px;
+}
+.time-series-plots-toolbar div:last-child {
+    flex: 0 0 200px;
+}

@@ -32,7 +32,8 @@ function SelectionTools({ currentTool , onClick = () => {} }) {
             .map(toolName => {
                 const isActive = toolName === currentTool;
                 return (
-                    <TButton 
+                    <TButton
+                        className="selection-btn"
                         bsStyle={isActive && "success"}
                         {...BUTTONS_SETTINGS[toolName]}
                         // if the current selection button is clicked, it turns off selection

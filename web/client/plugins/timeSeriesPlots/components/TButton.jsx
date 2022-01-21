@@ -18,7 +18,7 @@ export default ({
         <Button
             {...props}
             bsStyle={bsStyle || "primary"}
-            className="square-button">
+            className="square-button-md selection-btn">
             <Glyphicon glyph={glyph} />
         </Button>
     </OverlayTrigger>);
