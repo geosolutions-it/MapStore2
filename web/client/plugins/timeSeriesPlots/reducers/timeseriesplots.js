@@ -1,8 +1,8 @@
 import { set } from '@mapstore/utils/ImmutableUtils';
 import { TIME_SERIES_PLOTS, SELECT_NODE } from '../../../actions/layers';
 import { 
+    CHANGE_TRACE_COLOR,
     STORE_TIME_SERIES_CHART_DATA,
-    STORE_TIME_SERIES_FEATURES_IDS,
     TEAR_DOWN,
     TOGGLE_SELECTION,
     SETUP,
@@ -11,7 +11,6 @@ import {
 } from '../actions/timeSeriesPlots';
 
 const INITIAL_STATE = {
-    selections: [],
     timePlotsData: []
 };
 
@@ -31,20 +30,28 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
         case SETUP:
             const { cfg } = action;
             return set('pluginCfg', cfg, state);
-        case STORE_TIME_SERIES_FEATURES_IDS: {
-            const { selectionId, selectionType, layerName, featuresIds } = action;
-            let { selectionName } = action;
-            selectionName = `${selectionName} ${state.selections.length + 1}`;
+        case CHANGE_TRACE_COLOR: {
+            const { selectionId, color } = action;
+            const timePlotsData = state.timePlotsData.reduce((acc, cur) => (
+                [ ...acc, 
+                    { 
+                        ...cur, 
+                        traceColor: cur.selectionId === selectionId ? color : cur.traceColor
+                    }
+                ]
+            ), []);
             return {
                 ...state,
-                selections: [...state.selections, {selectionId, selectionName, selectionType, layerName, featuresIds, isCurrent: true}]
+                timePlotsData
             }
         }
         case STORE_TIME_SERIES_CHART_DATA: {
-            const { selectionId, chartData } = action;
+            const { selectionId, selectionType, layerName, chartData, traceColor } = action;
+            let { selectionName } = action;
+            selectionName = `${selectionName} ${state.timePlotsData.length + 1}`;
             return {
                 ...state,
-                timePlotsData: [...state.timePlotsData, {selectionId, chartData}]
+                timePlotsData: [...state.timePlotsData, {selectionId, selectionName, selectionType, layerName, chartData, traceColor}]
             }
         }
         case SET_CURRENT_SELECTION:
@@ -61,13 +68,12 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             const { selectionId } = action;
             return {
                 ...state,
-                selections: state.selections
-                .filter(selection => selection.selectionId !== selectionId)
+                timePlotsData: state.timePlotsData
+                .filter(timePlotData => timePlotData.selectionId !== selectionId)
                 .map((item, index) => ({
                     ...item,
                     selectionName: `${(item.selectionType === 'POLYGON' || item.selectionType === 'CIRCLE' ? 'AOI' : 'Point')} ${index + 1}`
-                })),
-                timePlotsData: state.timePlotsData.filter(timePlotData => timePlotData.selectionId !== selectionId)
+                }))
             }
         }
         default:

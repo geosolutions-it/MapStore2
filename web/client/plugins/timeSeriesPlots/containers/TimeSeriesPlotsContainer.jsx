@@ -19,7 +19,7 @@ import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
 import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
-import { removeTableSelectionRow } from '../actions/timeSeriesPlots';
+import { changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
 
 import {
     enabledSelector,
@@ -35,10 +35,10 @@ import {
 
 const Panel = ({ 
     enabled,
+    onChangeTraceColor = () => {},
     onClose = () => {},
     timePlotsData,
-    timeSeriesFeaturesSelections = [],
-    onRemoveTableSelectionRow = () => {} 
+    onRemoveTableSelectionRow = () => {}
 }) => {
     const margin = 10;
     const initialSize = {width: 400, height: 400};
@@ -47,9 +47,9 @@ const Panel = ({
         return null;
     }
 
-    const getTimeSeriesChartProps = (data, selections) => {
+    const getTimeSeriesChartProps = (data) => {
         const aggregateFunction = 'Average';
-        const aggregationAttribute = 'VALUE'
+        const aggregationAttribute = 'VALUE';
         const operationName = `${aggregateFunction}(${aggregationAttribute})`;
         return ({
             cartesian: true,
@@ -60,7 +60,7 @@ const Panel = ({
                 groupByAttributes: 'DATE',
             },
             names: data.reduce((acc, cur) => {
-                const seriesName = selections.filter(item => cur.selectionId === item.selectionId)[0]?.selectionName || '';
+                const seriesName = data.filter(item => cur.selectionId === item.selectionId)[0]?.selectionName || '';
                 return [
                     ...acc,
                     { dataKey: seriesName }
@@ -68,6 +68,7 @@ const Panel = ({
             }, []),
             series: [{ dataKey: operationName }],
             type: 'line',
+            tracesColors: data.map(item => item.traceColor),
             xAxis: {dataKey: 'DATE'},
             yAxis: true
         });
@@ -114,9 +115,10 @@ const Panel = ({
                         height: size.height
                     }}>
                         <MainToolbar enabled={enabled} />
-                        <SelectionTable 
-                            timeSeriesFeaturesSelections={timeSeriesFeaturesSelections}
-                            onRemoveTableSelectionRow={onRemoveTableSelectionRow}/>
+                        <SelectionTable
+                            timeSeriesFeaturesSelections={timePlotsData}
+                            onRemoveTableSelectionRow={onRemoveTableSelectionRow}
+                            onChangeTraceColor={onChangeTraceColor}/>
                         <div style={{
                             flex: 1,
                             width: '100%',
@@ -124,7 +126,7 @@ const Panel = ({
                         }}>
 
                         <ChartView
-                            {...getTimeSeriesChartProps(timePlotsData, timeSeriesFeaturesSelections)}
+                            {...getTimeSeriesChartProps(timePlotsData)}
                             data={timePlotsData.map(item => item.chartData) || []} />
 
                         </div>
@@ -142,7 +144,8 @@ const TSPPanel = connect(createStructuredSelector({
     timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector
 }), {
     onClose: () => toggleControl(CONTROL_NAME),
-    onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId)
+    onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId),
+    onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color)
 })(Panel);
 
 export default TSPPanel;

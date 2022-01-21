@@ -20,10 +20,11 @@ import { projectionSelector } from '@mapstore/selectors/map';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
 import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES } from '../constants';
 import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
+import { generateRandomHexColor } from '@mapstore/utils/ColorUtils';
 import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
 import wpsAggregate from '@mapstore/observables/wps/aggregate';
 import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
-import { timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName } from '../selectors/timeSeriesPlots';
+import { timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName, currentSelectionToolSelector, currentTraceColorsSelector } from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
 import { CLICK_ON_MAP, MOUSE_MOVE, MOUSE_OUT, registerEventListener, unRegisterEventListener } from '@mapstore/actions/map';
 import { featureInfoClick, purgeMapInfoResults, FEATURE_INFO_CLICK, LOAD_FEATURE_INFO, loadFeatureInfo, newMapInfoRequest, exceptionsFeatureInfo, errorFeatureInfo } from '@mapstore/actions/mapInfo';
@@ -266,6 +267,10 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
                 ]
             }, []);
             parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
-            return storeTimeSeriesChartData(selectionId, parsedChartDataResults);
+            const selectionType = currentSelectionToolSelector(getState());
+            const currentTraceColors = currentTraceColorsSelector(getState());
+            const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
+            const traceColor = generateRandomHexColor(currentTraceColors);
+            return storeTimeSeriesChartData(selectionId, selectionName, selectionType, layerName, featuresIds, parsedChartDataResults, traceColor);
         });
     });

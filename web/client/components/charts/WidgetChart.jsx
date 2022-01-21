@@ -106,7 +106,9 @@ function getData({
     autoColorOptions,
     customColorEnabled,
     isClassifiedChart,
-    presetLabelNames }) {
+    presetLabelNames,
+    presetTracesColors
+}) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
@@ -199,7 +201,10 @@ function getData({
                     type,
                     x: lineX,
                     y: lineY,
-                    name: presetLabelNames[index] || `${yDataKey} ${index}`
+                    name: presetLabelNames[index] || `${yDataKey} ${index}`,
+                    line: {
+                        color: presetTracesColors[index]
+                    }
                 };
                 return trace
             });
@@ -299,7 +304,8 @@ export const toPlotly = (props) => {
         legend,
         classifications,
         autoColorOptions = COLOR_DEFAULTS,
-        names = []
+        names = [],
+        tracesColors: presetTracesColors,
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
@@ -322,7 +328,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, presetLabelNames });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, presetLabelNames, presetTracesColors});
             return  allData;
         }),
         config: {

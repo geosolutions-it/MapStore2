@@ -8,6 +8,7 @@
 
 import { timeSeriesPlots } from "../../../actions/layers";
 
+export const CHANGE_TRACE_COLOR = "TIME_SERIES_PLOTS:CHANGE_TRACE_COLOR";
 export const TEAR_DOWN = "TIME_SERIES_PLOTS:TEAR_DOWN";
 export const SETUP = "TIME_SERIES_PLOTS:SETUP";
 export const SET_CURRENT_SELECTION = "TIME_SERIES_PLOTS:SET_CURRENT_SELECTION";
@@ -16,6 +17,13 @@ export const STORE_TIME_SERIES_CHART_DATA = "TIME_SERIES_PLOTS:STORE_TIME_SERIES
 export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
 export const REMOVE_TABLE_SELECTION_ROW = "TIME_SERIES_PLOTS:REMOVE_TABLE_SELECTION_ROW";
 
+export const changeTraceColor = (selectionId, color) => {
+    return {
+        type: CHANGE_TRACE_COLOR,
+        selectionId,
+        color
+    }
+}
 
 export const tearDown = () => {
     return {
@@ -54,10 +62,15 @@ export const storeTimeSeriesFeaturesIds = (selectionId, selectionName, selection
     featuresIds,
 });
 
-export const storeTimeSeriesChartData = (selectionId, chartData) => ({
+export const storeTimeSeriesChartData = (selectionId, selectionName, selectionType, layerName, featuresIds, chartData, traceColor) => ({
     type: STORE_TIME_SERIES_CHART_DATA,
     selectionId,
-    chartData
+    selectionName,
+    selectionType,
+    layerName,
+    featuresIds,
+    chartData,
+    traceColor
 });
 
 export const setCurrentFeaturesSelectionIndex = (index) => ({

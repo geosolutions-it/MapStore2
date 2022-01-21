@@ -9,7 +9,7 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
-
+import ColorSelector from '@mapstore/components/style/ColorSelector';
 import ReactDataGrid from 'react-data-grid';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
@@ -17,10 +17,6 @@ import localizedProps from '@mapstore/components/misc/enhancers/localizedProps';
 
 
 class BaseTable extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     COLUMNS = [{
         key: 'selectionName',
@@ -34,7 +30,27 @@ class BaseTable extends React.Component {
         width: 140,
         name: 'Selection Type',
         resizable: true
-    },{
+    },
+    {
+        key: 'color',
+        name: 'Chart Trace Color',
+        width: 140,
+        formatter: (props) => {
+            const { traceColor, selectionId, onChangeTraceColor } = props.row;
+            return(
+                <ColorSelector
+                    key={traceColor}
+                    color={traceColor}
+                    disableAlpha
+                    format="hex"
+                    onChangeColor={(color) => {
+                        onChangeTraceColor(selectionId, color)
+                    }}
+                />
+            );
+        }
+    },
+    {
         key: 'action',
         width: 50,
         resizable: true
@@ -53,10 +69,10 @@ class BaseTable extends React.Component {
     render() {
         return(
             <div>
-                <ReactDataGrid 
+                <ReactDataGrid
                     rowKey="selectionId"
                     columns={this.COLUMNS}
-                    rowGetter={(i) => (this.props?.timeSeriesFeaturesSelections[i] || '')}
+                    rowGetter={(i) => ({ ...(this.props?.timeSeriesFeaturesSelections[i] || {}), onChangeTraceColor: this.props?.onChangeTraceColor } || {})}
                     rowsCount={this.props?.timeSeriesFeaturesSelections.length || 0}
                     getCellActions={this.getCellActions.bind(this)}
                 />

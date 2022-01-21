@@ -21,10 +21,10 @@ position: relative;
 text-align: center;
 }
 
-.react-grid-HeaderCell
+/* .react-grid-HeaderCell,
 .react-grid-Cell {
-    border: none;
-}
+    border-style: none;
+} */
 
 .react-grid-Grid {
     min-height: 155px !important;

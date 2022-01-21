@@ -70,3 +70,4 @@ export function timeSeriesFeaturesSelectionsSelector(state) { return state?.time
  * the time-bound data charts
  */
 export function timePlotsDataSelector(state) { return state.timeSeriesPlots?.timePlotsData ?? [] }
+export function currentTraceColorsSelector(state) { return state.timePlotsData && state.timePlotsData.map(item => item.traceColor) || [] }
