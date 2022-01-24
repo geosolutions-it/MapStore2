@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
 import { DOMParser } from 'xmldom';
-import { head, get, find, isArray, isString, isObject, keys, toPairs } from 'lodash';
+import {head, get, find, isArray, isString, isObject, keys, toPairs, merge} from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -32,9 +32,9 @@ import {
     textSearch,
     changeSelectedService,
     formatsLoading,
-    setSupportedFormats
+    setSupportedFormats, ADD_LAYER_AND_DESCRIBE, describeError, addLayer
 } from '../actions/catalog';
-import { showLayerMetadata, addLayer, SELECT_NODE } from '../actions/layers';
+import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
 import { error, success } from '../actions/notifications';
 import { SET_CONTROL_PROPERTY, setControlProperties, setControlProperty } from '../actions/controls';
 import { closeFeatureGrid } from '../actions/featuregrid';
@@ -55,7 +55,7 @@ import {
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
-import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
+import { getSelectedLayer, selectedNodesSelector, layersSelector } from '../selectors/layers';
 
 import {
     buildSRSMap,
@@ -68,8 +68,10 @@ import {
     getSupportedFormat
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import {getCapabilitiesUrl} from '../utils/LayersUtils';
+import ConfigUtils from '../utils/ConfigUtils';
+import {getCapabilitiesUrl, getLayerId, getLayerUrl} from '../utils/LayersUtils';
 import { wrapStartStop } from '../observables/epics';
+import {zoomToExtent} from "../actions/map";
 
 /**
     * Epics for CATALOG
@@ -119,27 +121,27 @@ export default (API) => ({
             // the results. In that case a more detailed search with full record name can be helpful
             .switchMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
-                const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
                     .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
+                        const layerOptions = get(options, i, searchOptionsSelector(state));
                         const source = sources[i];
                         const service = typeof source === 'object' ? source : services[source];
                         const format = service.type.toLowerCase();
                         const url = service.url;
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, {...addLayerOptions, ...service}).catch(() => ({ results: [] }))
-                        ).map(r => ({ ...r, format, url, text }));
+                            API[format].textSearch(url, startPosition, maxRecords, text, {...layerOptions, ...service}).catch(() => ({ results: [] }))
+                        ).map(r => ({ ...r, format, url, text, layerOptions }));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
                             return Rx.Observable.of(results.map(r => {
-                                const { format, url, text, ...result } = r;
+                                const { format, url, text, layerOptions, ...result } = r;
                                 const locales = currentMessagesSelector(state);
-                                const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
+                                const records = getCatalogRecords(format, result, layerOptions, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
                                 const { wms, wmts, wfs } = extractOGCServicesReferences(record);
                                 let layer = {};
@@ -174,9 +176,9 @@ export default (API) => ({
                                     }
                                 }
                                 if (!record) {
-                                    return text;
+                                    return [text];
                                 }
-                                return layer;
+                                return [layer, layerOptions];
                             }));
                         }
                         return Rx.Observable.empty();
@@ -184,17 +186,59 @@ export default (API) => ({
             })
             .mergeMap(results => {
                 if (results) {
-                    const allRecordsNotFound = results.filter(r => isString(r)).join(" ");
+                    const allRecordsNotFound = results.filter(r => isString(r[0])).join(" ");
                     let actions = [];
                     if (allRecordsNotFound) {
                         // return one notification for all records that have not been found
                         actions = [recordsNotFound(allRecordsNotFound)];
                     }
                     // add all layers found to the map
-                    actions = [...actions, ...results.filter(r => isObject(r)).map(r => addLayer(r))];
+                    actions = [
+                        ...actions,
+                        ...results.filter(r => isObject(r[0])).map(r => {
+                            return addLayer(merge({}, r[0], r[1]));
+                        })
+                    ];
                     return Rx.Observable.from(actions);
                 }
                 return Rx.Observable.empty();
+            })
+            .catch(() => {
+                return Rx.Observable.empty();
+            }),
+    addLayerAndDescribeEpic: (action$, store) =>
+        action$.ofType(ADD_LAYER_AND_DESCRIBE)
+            .mergeMap((value) => {
+                const { layer, zoomToLayer } = value;
+                const actions = [];
+                const state = store.getState();
+                const layers = layersSelector(state);
+                const id = getLayerId(layer, layers || []);
+                actions.push(addNewLayer({...layer, id}));
+                if (zoomToLayer && layer.bbox) {
+                    actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
+                }
+                if (layer.type === 'wms') {
+                    return Rx.Observable.defer(() => API.wms.describeLayers(getLayerUrl(layer), layer.name))
+                        .switchMap(results => {
+                            if (results) {
+                                let description = find(results, (desc) => desc.name === layer.name );
+                                if (description && description.owsType === 'WFS') {
+                                    const filteredUrl = ConfigUtils.filterUrlParams(ConfigUtils.cleanDuplicatedQuestionMarks(description.owsURL), authkeyParamNameSelector(state));
+                                    return Rx.Observable.of(changeLayerProperties(id, {
+                                        search: {
+                                            url: filteredUrl,
+                                            type: 'wfs'
+                                        }
+                                    }));
+                                }
+                            }
+                            return Rx.Observable.empty();
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                return Rx.Observable.from(actions);
             })
             .catch(() => {
                 return Rx.Observable.empty();
