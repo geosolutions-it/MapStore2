@@ -15,17 +15,10 @@ set "EXECUTABLE=%CATALINA_HOME%\bin\catalina.bat"
 set CMD_LINE_ARGS=
 set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
 
-rem JAVA_HOME not defined
-if "%JAVA_HOME%" == "" goto nativeJava
-
-echo JAVA_HOME: %JAVA_HOME%
-echo.
-
-rem No errors
-goto run
-
 :nativeJava
   set "JAVA_HOME=%CURRENT_DIR%\jre\win"
+
+rem if you want to customize java version used, override JAVA_HOME variable here
 
 rem JAVA_HOME defined incorrectly
 :checkJava
@@ -37,7 +30,7 @@ goto run
 goto JavaFail
 
 :JavaFail
-  echo Java 7 is needed to run MapStore2.
+  echo Java is needed to run MapStore2.
   echo.
   echo Install it from:
   echo    http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html
