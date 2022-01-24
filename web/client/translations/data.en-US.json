@@ -1004,7 +1004,8 @@
                 "combo_placeholder": "Attribute",
                 "text_placeholder": "Type text to search",
                 "attribute_filter_header": "Attribute filter",
-                "tooltipTextField": "use <b>*</b> for any number of any char</br>use <b>.</b> for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
+                "tooltipTextField": "use <b>*</b> for any number of any char</br>use . for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
+                "tooltipTextFieldCSS": "use <b>%</b> for any number of any char</br>use <b>_</b> for a single char</br>use <b>\\</b> to escape the above two (% and _)</br>",
                 "groupField": {
                     "any": "any",
                     "all": "all",

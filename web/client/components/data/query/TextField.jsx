@@ -23,6 +23,7 @@ class TextField extends React.Component {
         attType: PropTypes.string,
         fieldValue: PropTypes.string,
         label: PropTypes.string,
+        tooltipMessage: PropTypes.string,
         fieldException: PropTypes.oneOfType([
             PropTypes.object,
             PropTypes.string
@@ -60,7 +61,7 @@ class TextField extends React.Component {
     }
     renderField = () => {
         let placeholder = getMessageById(this.context.messages, "queryform.attributefilter.text_placeholder");
-        let tooltip = <Tooltip id={"textField-tooltip" + this.props.fieldRowId}><HTML msgId="queryform.attributefilter.tooltipTextField"/></Tooltip>;
+        let tooltip = <Tooltip id={"textField-tooltip" + this.props.fieldRowId}><HTML msgId={this.props.tooltipMessage ?? "queryform.attributefilter.tooltipTextField"}/></Tooltip>;
         let field = (<FormControl
             disabled={this.props.operator === "isNull"}
             placeholder={placeholder}
