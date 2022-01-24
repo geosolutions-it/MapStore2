@@ -20,13 +20,13 @@ import streetView from './reducers/streetview';
 import * as epics from './epics/streetView';
 import './css/style.css';
 
-const StreetViewPluginComponent = ({onMount, onUnmount, ...props}) => {
+const StreetViewPluginComponent = ({onMount, onUnmount, apiKey, useDataLayer, dataLayerConfig}) => {
     useEffect(() => {
-        onMount(props);
+        onMount({apiKey, useDataLayer, dataLayerConfig});
         return () => {
             onUnmount();
         };
-    }, []);
+    }, [apiKey, useDataLayer, dataLayerConfig]);
     return <StreetViewContainer />;
 };
 
@@ -39,10 +39,13 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * @name StreetView
  * @memberof plugins
  * @property {string} cfg.apiKey The API key to use.
- * Mandatory in production. In order to allow fine billing strategies (with different API keys), the API key can be defined and customized here in this configuration option or in `localConfig.json` at, in order of priority one of:
- * - `apiKeys.googleStreetViewAPIKey`,
- * - `apiKeys.googleAPIKey`,
- * - `googleAPIKey`.
+ * Mandatory in production. In order to allow fine billing strategies (with different API keys), the API key can be defined and customized here in this configuration option or in `localConfig.json` with the following order of priority:
+ * - `apiKeys.googleStreetViewAPIKey` - Use this if you have only one API key for enable for street view JS API for the whole application,
+ * - `apiKeys.googleAPIKey` - Use this if you have a general API key enabled for all Google APIs in MapStore.
+ * - `googleAPIKey` (for retro-compatibility only)
+ *
+ * Generally speaking, you should prefer general settings in `localConfig.json` over the plugin configuration, in order to reuse the same configuration for default viewer and all the contexts, automatically. This way you will not need to configure the `apiKey` in every context.
+ * <br>**Important**: You can use only **one** API-key for a MapStore instance. The api-key can be configured replicated in every plugin configuration or using one of the unique global settings (suggested) in `localConfig.json`). @see {@link https://github.com/googlemaps/js-api-loader/issues/5|here} and @see {@link https://github.com/googlemaps/js-api-loader/issues/100|here}
  * @property {boolean} [cfg.useDataLayer=true] If true, adds to the map a layer for street view data availability when the plugin is turned on.
  * @property {object} [cfg.dataLayerConfig] configuration for the data layer. By default `{provider: 'custom', type: "tileprovider", url: "https://mts1.googleapis.com/vt?hl=en-US&lyrs=svv|cb_client:apiv3&style=40,18&x={x}&y={y}&z={z}"}`
  * @class

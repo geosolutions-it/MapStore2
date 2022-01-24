@@ -180,13 +180,14 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
             }]
         };
     };
-    return action$.ofType(SET_LOCATION, SET_POV).map(() => {
+    return action$.ofType(SET_LOCATION, SET_POV).switchMap(() => {
         const state = getState();
         const location = locationSelector(state);
         const pov = povSelector(state);
-        return locationToFeature(location, pov);
-    })
-        .map((feature) => {
+        if (!location) {
+            return Rx.Observable.empty();
+        }
+        return Rx.Observable.of(locationToFeature(location, pov)).map((feature) => {
             const options = getStreetViewMarkerLayer(getState());
             return updateAdditionalLayer(
                 MARKER_LAYER_ID,
@@ -194,4 +195,5 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
                 "overlay", {...options, features: [feature]}
             );
         });
+    });
 };
