@@ -21,12 +21,14 @@ import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
 import HTML from '../../../../I18N/HTML';
 
-const getLabelPopover = (placement) => (
+import { generateRandomHexColor } from '../../../../../utils/ColorUtils';
+
+const getLabelPopover = (placement, chartType) => (
     <DisposablePopover
         popoverClassName="chart-color-class-popover"
         placement={placement}
         title={<Message msgId="widgets.builder.wizard.classAttributes.customLabels" />}
-        text={<HTML msgId="widgets.builder.wizard.classAttributes.customLabelsExample" />}
+        text={<HTML msgId={`widgets.builder.wizard.classAttributes.${chartType}ChartCustomLabelsExample`} />}
     />
 );
 
@@ -44,7 +46,9 @@ const ColorClassModal = ({
     defaultCustomColor,
     defaultClassLabel,
     onChangeColor,
-    onChangeDefaultClassLabel
+    onChangeDefaultClassLabel,
+    layer,
+    chartType
 }) => {
     const [selectMenuOpen, setSelectMenuOpen] = useState(false);
     return (
@@ -57,6 +61,12 @@ const ColorClassModal = ({
                 showClose={false}
                 onClose={() => onClose()}
                 buttons={[
+                    {
+                        className: "btn-cancel",
+                        text: <Message msgId="close" />,
+                        bsSize: 'sm',
+                        onClick: () => onClose()
+                    },
                     {
                         className: "btn-save",
                         text: <Message msgId="save" />,
@@ -106,7 +116,7 @@ const ColorClassModal = ({
                     <Row xs={12}>
                         <Col componentClass={ControlLabel} xs={6}>
                             <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
-                            {getLabelPopover('top')}
+                            {getLabelPopover('top', chartType)}
                         </Col>
                         <Col xs={6}>
                             <FormControl
@@ -125,7 +135,7 @@ const ColorClassModal = ({
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
                                 <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
-                                    {getLabelPopover('right')}
+                                    {getLabelPopover('right', chartType)}
                                 </Col>
                             </Row>
                             <ThemaClassesEditor
@@ -134,6 +144,14 @@ const ColorClassModal = ({
                                 onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
                                 allowEmpty={false}
                                 customLabels
+                                uniqueValuesClasses
+                                autoCompleteOptions={{
+                                    classificationAttribute,
+                                    dropUpAutoComplete: true,
+                                    layer
+                                }}
+                                dropUpMenu
+                                usePreSetColors
                             />
                         </>
                         }
@@ -170,7 +188,7 @@ ColorClassModal.defaultProps = {
     classificationAttribute: '',
     onUpdateClasses: () => {},
     options: [],
-    classification: [{title: '', color: '#ffffff', type: 'Polygon', unique: ''}],
+    classification: [{title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}],
     defaultCustomColor: '#0888A1',
     defaultClassLabel: '',
     onChangeColor: () => {},

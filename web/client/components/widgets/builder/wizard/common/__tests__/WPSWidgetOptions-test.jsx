@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {get} from 'lodash';
 import describeStates from '../../../../../../test-resources/wfs/describe-states.json';
-import { CLASSIFICATION, DEFAULT_CUSTOM_COLOR, DEFAULT_CUSTOM_LABEL } from '../../chart/__tests__/sample_data';
+import { CLASSIFICATION, DEFAULT_CUSTOM_COLOR, DEFAULT_CUSTOM_LABEL, TEST_LAYER, UNCLASSIFIED_VALUE_CLASSIFICATION, EMPTY_VALUE_CLASSIFICATION } from '../../chart/__tests__/sample_data';
 import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import wfsChartOptions from '../wfsChartOptions';
@@ -103,7 +103,8 @@ describe('WPSWidgetOptions component', () => {
                 }
             }}
             onChange={actions.onChange}
-            dependencies={{ viewport: {} }} />,
+            dependencies={{ viewport: {} }}
+            layer={TEST_LAYER}/>,
         document.getElementById("container"));
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(5); // operation is visible
@@ -134,6 +135,157 @@ describe('WPSWidgetOptions component', () => {
         });
         const colorClassMdBody = document.getElementsByClassName('ms-modal-body')[0];
         expect(colorClassMdBody).toNotExist();
+    });
+    it('Test WPSWidgetOptions onChange for color classifications on discard empty values', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<WPSWidgetOptions
+            hasAggregateProcess
+            featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
+            data={{
+                type: 'bar',
+                autoColorOptions: {
+                    classification: UNCLASSIFIED_VALUE_CLASSIFICATION,
+                    name: 'global.colors.custom'
+                },
+                options: {
+                    classificationAttribute: 'class2'
+                }
+            }}
+            onChange={actions.onChange}
+            dependencies={{ viewport: {} }}
+            layer={TEST_LAYER}/>,
+        document.getElementById("container"));
+        const inputs = document.querySelectorAll('input');
+        expect(inputs.length).toBe(5); // operation is visible
+
+        ReactTestUtils.Simulate.change(inputs[3], { target: { value: 'Custom' } });
+        ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
+        expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
+        expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
+        const customColorsSettingsButton = document.getElementsByClassName('custom-color-btn')[0];
+        expect(customColorsSettingsButton).toExist();
+        ReactTestUtils.Simulate.click(customColorsSettingsButton);
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        expect(colorClassMd).toExist();
+        const colorClassMdCloseButton = colorClassMd.getElementsByClassName('btn-cancel')[0];
+        ReactTestUtils.Simulate.click(colorClassMdCloseButton);
+        const colorClassConfirmMd = document.getElementsByClassName('modal-dialog')[1];
+        expect(colorClassConfirmMd).toExist();
+        expect(colorClassConfirmMd.getElementsByClassName('modal-body')[0]
+            .getElementsByTagName('span')[0].textContent)
+            .toBe('widgets.builder.wizard.classAttributes.confirmModalMessage');
+        const confirmBtn = document.getElementsByClassName('modal-footer')[1].getElementsByClassName('btn-primary')[0];
+        const cancelBtn = document.getElementsByClassName('modal-footer')[1].getElementsByClassName('btn-default')[0];
+        expect(confirmBtn).toExist();
+        expect(cancelBtn).toExist();
+        ReactTestUtils.Simulate.click(confirmBtn);
+        expect(spyonChange).toHaveBeenCalled();
+        expect(spyonChange.calls[1].arguments[1]).toEqual(CLASSIFICATION);
+    });
+
+    it('Test WPSWidgetOptions onChange for color classifications on discard all empty values', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<WPSWidgetOptions
+            hasAggregateProcess
+            featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
+            data={{
+                type: 'bar',
+                autoColorOptions: {
+                    classification: EMPTY_VALUE_CLASSIFICATION,
+                    name: 'global.colors.custom'
+                },
+                options: {
+                    classificationAttribute: 'class2'
+                }
+            }}
+            onChange={actions.onChange}
+            dependencies={{ viewport: {} }}
+            layer={TEST_LAYER}/>,
+        document.getElementById("container"));
+        const inputs = document.querySelectorAll('input');
+        expect(inputs.length).toBe(5); // operation is visible
+
+        ReactTestUtils.Simulate.change(inputs[3], { target: { value: 'Custom' } });
+        ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
+        expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
+        expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
+        const customColorsSettingsButton = document.getElementsByClassName('custom-color-btn')[0];
+        expect(customColorsSettingsButton).toExist();
+        ReactTestUtils.Simulate.click(customColorsSettingsButton);
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        expect(colorClassMd).toExist();
+        const colorClassMdCloseButton = colorClassMd.getElementsByClassName('btn-cancel')[0];
+        ReactTestUtils.Simulate.click(colorClassMdCloseButton);
+        const colorClassConfirmMd = document.getElementsByClassName('modal-dialog')[1];
+        expect(colorClassConfirmMd).toExist();
+        expect(colorClassConfirmMd.getElementsByClassName('modal-body')[0]
+            .getElementsByTagName('span')[0].textContent)
+            .toBe('widgets.builder.wizard.classAttributes.confirmModalMessage');
+        const confirmBtn = document.getElementsByClassName('modal-footer')[1].getElementsByClassName('btn-primary')[0];
+        const cancelBtn = document.getElementsByClassName('modal-footer')[1].getElementsByClassName('btn-default')[0];
+        expect(confirmBtn).toExist();
+        expect(cancelBtn).toExist();
+        ReactTestUtils.Simulate.click(confirmBtn);
+        expect(spyonChange).toHaveBeenCalled();
+        expect(spyonChange.calls[1].arguments[1]).toBe(undefined);
+        expect(spyonChange.calls[2].arguments[1]).toExist();
+        expect(spyonChange.calls[2].arguments[1].length).toBe(1);
+    });
+
+    it('Test WPSWidgetOptions onChange for color classifications on accept empty values', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<WPSWidgetOptions
+            hasAggregateProcess
+            featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
+            data={{
+                type: 'bar',
+                autoColorOptions: {
+                    classification: UNCLASSIFIED_VALUE_CLASSIFICATION,
+                    name: 'global.colors.custom'
+                },
+                options: {
+                    classificationAttribute: 'class2'
+                }
+            }}
+            onChange={actions.onChange}
+            dependencies={{ viewport: {} }}
+            layer={TEST_LAYER}/>,
+        document.getElementById("container"));
+        const inputs = document.querySelectorAll('input');
+        expect(inputs.length).toBe(5); // operation is visible
+
+        ReactTestUtils.Simulate.change(inputs[3], { target: { value: 'Custom' } });
+        ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 9, key: 'Tab' });
+        expect(spyonChange.calls[0].arguments[0]).toBe("autoColorOptions");
+        expect(spyonChange.calls[0].arguments[1].name).toBe("global.colors.custom");
+        const customColorsSettingsButton = document.getElementsByClassName('custom-color-btn')[0];
+        expect(customColorsSettingsButton).toExist();
+        ReactTestUtils.Simulate.click(customColorsSettingsButton);
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        expect(colorClassMd).toExist();
+        const colorClassMdCloseButton = colorClassMd.getElementsByClassName('btn-cancel')[0];
+        ReactTestUtils.Simulate.click(colorClassMdCloseButton);
+        const colorClassConfirmMd = document.getElementsByClassName('modal-dialog')[1];
+        expect(colorClassConfirmMd).toExist();
+        expect(colorClassConfirmMd.getElementsByClassName('modal-body')[0]
+            .getElementsByTagName('span')[0].textContent)
+            .toBe('widgets.builder.wizard.classAttributes.confirmModalMessage');
+        const confirmBtn = document.getElementsByClassName('modal-footer')[1].getElementsByClassName('btn-primary')[0];
+        const cancelBtn = document.getElementsByClassName('modal-footer')[1].getElementsByClassName('btn-default')[0];
+        expect(confirmBtn).toExist();
+        expect(cancelBtn).toExist();
+        ReactTestUtils.Simulate.click(cancelBtn);
+        expect(spyonChange.calls[1]).toNotExist();
+        expect(colorClassConfirmMd).toExist();
     });
     it('Test WPSWidgetOptions onChange for counter context', () => {
         const actions = {

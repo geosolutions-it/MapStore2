@@ -25,7 +25,6 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.classificationAttribute === o2.classificationAttribute
     && o1.viewParams === o2.viewParams;
 
-
 const dataStreamFactory = ($props) =>
     $props
         .filter(({layer = {}, options}) => layer.name && getSearchUrl(layer)
