@@ -14,9 +14,6 @@ const service = {
     type
 };
 import expect from 'expect';
-import {
-    getLayerId
-} from '../../utils/LayersUtils';
 
 import {
     addLayersMapViewerUrl,
@@ -25,7 +22,6 @@ import {
     TEXT_SEARCH,
     getRecords,
     addLayerError,
-    addLayer,
     ADD_LAYER_ERROR,
     changeCatalogFormat,
     CHANGE_CATALOG_FORMAT,
@@ -55,7 +51,6 @@ import {
     DELETE_SERVICE,
     savingService,
     SAVING_SERVICE,
-    DESCRIBE_ERROR,
     initCatalog,
     CATALOG_INITED,
     changeText,
@@ -75,22 +70,60 @@ import {
     FORMAT_OPTIONS_LOADING,
     formatsLoading,
     SET_FORMAT_OPTIONS,
-    setSupportedFormats
+    setSupportedFormats, addLayerAndDescribe, ADD_LAYER_AND_DESCRIBE
 } from '../catalog';
 
-import { CHANGE_LAYER_PROPERTIES, ADD_LAYER } from '../layers';
 import { SHOW_NOTIFICATION } from '../notifications';
 describe('Test correctness of the catalog actions', () => {
 
     it('addLayersMapViewerUrl', () => {
         const layers = ["layer name"];
         const sources = ["catalog name"];
-        const retval = addLayersMapViewerUrl(layers, sources);
+        const options = [{"params": {"CQL_FILTER": "NAME='A'"}}];
+        const retval = addLayersMapViewerUrl(layers, sources, options);
 
         expect(retval).toExist();
         expect(retval.type).toBe(ADD_LAYERS_FROM_CATALOGS);
         expect(retval.layers).toEqual(layers);
         expect(retval.sources).toEqual(sources);
+        expect(retval.options).toEqual(options);
+    });
+    it('addLayerAndDescribe', () => {
+        const layer = {
+            type: 'wms',
+            url: 'http://localhost/geoserver/wms',
+            visibility: true,
+            dimensions: [],
+            name: 'tiger:tiger_roads',
+            title: 'Manhattan (NY) roads',
+            description: 'Highly simplified road layout of Manhattan in New York..',
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: '-74.02722',
+                    miny: '40.684221',
+                    maxx: '-73.907005',
+                    maxy: '40.878178'
+                }
+            },
+            links: [],
+            params: {
+                CQL_FILTER: 'NAME=\'Test\''
+            },
+            allowedSRS: {
+                'EPSG:3785': true,
+                'EPSG:3857': true,
+                'EPSG:4269': true,
+                'EPSG:4326': true,
+                'EPSG:900913': true
+            },
+            catalogURL: 'http://localhost/geoserver/wms'
+        };
+        const retval = addLayerAndDescribe(layer);
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_LAYER_AND_DESCRIBE);
+        expect(retval.layer).toEqual(layer);
+        expect(retval.zoomToLayer).toEqual(false);
     });
     it('textSearch', () => {
         const format = "csw";
@@ -286,72 +319,6 @@ describe('Test correctness of the catalog actions', () => {
                 done(ex);
             }
         }, () => { });
-    });
-    it('add layer and describe it', (done) => {
-        const verify = (action) => {
-            if (action.type === ADD_LAYER) {
-                expect(action.layer).toExist();
-                const layer = action.layer;
-                expect(layer.id).toExist();
-                expect(layer.id).toBe(getLayerId(action.layer, []));
-            } else if (action.type === CHANGE_LAYER_PROPERTIES) {
-                expect(action.layer).toExist();
-                expect(action.newProperties).toExist();
-                expect(action.newProperties.search).toExist();
-                expect(action.newProperties.search.type).toBe('wfs');
-                expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
-                done();
-            }
-        };
-        const callback = addLayer({
-            url: 'base/web/client/test-resources/wms/DescribeLayers.xml',
-            type: 'wms',
-            name: 'workspace:vector_layer'
-        });
-        callback(verify, () => ({ layers: [] }));
-    });
-    it('add layer with multiple urls', (done) => {
-        const verify = (action) => {
-            if (action.type === ADD_LAYER) {
-                expect(action.layer).toExist();
-                const layer = action.layer;
-                expect(layer.id).toExist();
-                expect(layer.id).toBe(getLayerId(action.layer, []));
-            } else if (action.type === CHANGE_LAYER_PROPERTIES) {
-                expect(action.layer).toExist();
-                expect(action.newProperties).toExist();
-                expect(action.newProperties.search).toExist();
-                expect(action.newProperties.search.type).toBe('wfs');
-                expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
-                done();
-            }
-        };
-        const callback = addLayer({
-            url: ['base/web/client/test-resources/wms/DescribeLayers.xml', 'base/web/client/test-resources/wms/DescribeLayers.xml'],
-            type: 'wms',
-            name: 'workspace:vector_layer'
-        });
-        callback(verify, () => ({ layers: []}));
-    });
-    it('add layer with no describe layer', (done) => {
-        const verify = (action) => {
-            if (action.type === ADD_LAYER) {
-                expect(action.layer).toExist();
-                const layer = action.layer;
-                expect(layer.id).toExist();
-                expect(layer.id).toBe(getLayerId(action.layer, []));
-            } else if (action.type === DESCRIBE_ERROR) {
-                expect(action.layer).toExist();
-                expect(action.error).toExist();
-                done();
-            }
-        };
-        const callback = addLayer({
-            url: 'base/web/client/test-resources/wms/Missing.xml',
-            type: 'wms',
-            name: 'workspace:vector_layer'
-        });
-        callback(verify, () => ({ layers: [] }));
     });
     it('sets an error on addLayerError action', () => {
         const action = addLayerError('myerror');
