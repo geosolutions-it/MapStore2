@@ -22,6 +22,7 @@ import { createPagedUniqueAutompleteStream } from '../../observables/autocomplet
 import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { generateRandomHexColor } from '../../utils/ColorUtils';
+import uuid from 'uuid';
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
@@ -108,7 +109,7 @@ class ThemaClassesEditor extends React.Component {
     renderClasses = () => {
         return this.props.classification.map((classItem, index, classification) => (
             <FormGroup
-                key={index}>
+                key={uuid.v1()}>
                 <ColorSelector
                     key={classItem.color}
                     color={classItem.color}

@@ -54,6 +54,7 @@ const ColorClassModal = ({
     return (
         <Portal>
             <ResizableModal
+                bodyClassName={`${modalClassName}-body`}
                 modalClassName={classnames(modalClassName, { 'menu-open': selectMenuOpen || classificationAttribute })}
                 title={<Message msgId="widgets.builder.wizard.classAttributes.title" />}
                 show={show}

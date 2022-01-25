@@ -121,7 +121,8 @@ function getData({
             hovertemplate: `%{label}<br>${yDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
             type,
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
-            values: y
+            values: y,
+            pull: 0.005
         };
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
@@ -142,8 +143,7 @@ function getData({
                 ...(yDataKey && { legendgroup: yDataKey }),
                 ...pieChartTrace,
                 labels: x,
-                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {}),
-                pull: 0.005
+                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
             };
         }
         return pieChartTrace;
