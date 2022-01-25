@@ -26,7 +26,7 @@ const StreetViewPluginComponent = ({onMount, onUnmount, apiKey, useDataLayer, da
         return () => {
             onUnmount();
         };
-    }, [apiKey, useDataLayer, dataLayerConfig]);
+    }, [apiKey, useDataLayer, dataLayerConfig, JSON.stringify(panoramaOptions ?? {})]);
     return <StreetViewContainer />;
 };
 
