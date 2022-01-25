@@ -40,10 +40,18 @@ export function googleAPIKeySelector(state) {
         ?? localConfigSelector(state)?.googleAPIKey;
 }
 /**
- * Use
- * @returns {boolean}
+ * gets the useDataLayer flag actually loaded
+ * @returns {boolean} the flag value
  */
 export function useStreetViewDataLayerSelector(state) {
     return streetViewConfigurationSelector(state)?.useDataLayer ?? true;
 }
 
+/**
+ * gets from the state the panorama options currently loaded
+ * @param {object} state
+ * @returns the panorama options configured
+ */
+export function panoramaOptionsSelector(state) {
+    return streetViewConfigurationSelector(state)?.panoramaOptions;
+}
