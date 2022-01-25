@@ -21,8 +21,6 @@ services:
       args:
         MAPSTORE_WEBAPP_SRC: ./mapstore.war
     container_name: eptmapstore
-    ports:
-      - 8081
     environment:
       JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
     volumes:
