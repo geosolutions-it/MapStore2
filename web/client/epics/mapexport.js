@@ -59,7 +59,6 @@ const PersistMap = {
         }
 
         return Rx.Observable.forkJoin(...layers.map(layer => getLayerCapabilities(layer).catch(() => Rx.Observable.of(null))))
-            .switchMap(capArr => capArr.map(({ style, ...cap}) => cap))
             .switchMap(capArr => Rx.Observable.of([
                 toWMC(set('map.layers', zip(layers, capArr).map(([l, capabilities]) => ({...l, capabilities})), config), {}),
                 'context.wmc',
