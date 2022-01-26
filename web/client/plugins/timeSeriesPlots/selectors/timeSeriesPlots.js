@@ -22,6 +22,11 @@ export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
  */
 export function currentSelectionToolSelector(state) { return state?.timeSeriesPlots?.selectionType; }
 
+/** gets the current aggregation function
+ * @param {object} state
+ * @returns {string} the current aggregation operation on for the WPS processing
+ */
+export function aggregateFunctionSelector(state) { return state?.timeSeriesPlots?.pluginCfg?.aggregateFunction; }
 
 // **********************************************
 // LAYERS
@@ -70,4 +75,6 @@ export function timeSeriesFeaturesSelectionsSelector(state) { return state?.time
  * the time-bound data charts
  */
 export function timePlotsDataSelector(state) { return state.timeSeriesPlots?.timePlotsData ?? [] }
-export function currentTraceColorsSelector(state) { return state.timePlotsData && state.timePlotsData.map(item => item.traceColor) || [] }
+export function currentTraceColorsSelector(state) { return state.timeSeriesPlots.timePlotsData && state.timeSeriesPlots.timePlotsData.map(item => item.traceColor) || [] }
+export function timePlotDataSelector(state, selectionId) { return state.timeSeriesPlots.timePlotsData && state.timeSeriesPlots.timePlotsData.filter(timePlotData => timePlotData.selectionId === selectionId) || [] 
+}

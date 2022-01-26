@@ -107,7 +107,8 @@ function getData({
     customColorEnabled,
     isClassifiedChart,
     presetLabelNames,
-    presetTracesColors
+    presetTracesColors,
+    aggregateFunctions
 }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
@@ -195,13 +196,16 @@ function getData({
     case 'line' : {
         if(data[0] && Array.isArray(data[0])) {
             const lineChartTraces = data.map((item, index) => {
+                const aggregateFunction = aggregateFunctions && aggregateFunctions[index] || 'Average';
+                const operationYDataKey = `${aggregateFunction}${yDataKey}`;
                 const lineX = item.map(d => d[xDataKey]); 
-                const lineY = item.map(d => d[yDataKey]);
+                const lineY = item.map(d => d[operationYDataKey]);
+                const traceName = includes(presetLabelNames[index], 'Point') ?  presetLabelNames[index] : `${presetLabelNames[index]} - ${aggregateFunction}`;
                 const trace = {
                     type,
                     x: lineX,
                     y: lineY,
-                    name: presetLabelNames[index] || `${yDataKey} ${index}`,
+                    name: traceName || `${operationYDataKey} ${index}`,
                     line: {
                         color: presetTracesColors[index]
                     }
@@ -306,6 +310,7 @@ export const toPlotly = (props) => {
         autoColorOptions = COLOR_DEFAULTS,
         names = [],
         tracesColors: presetTracesColors,
+        options
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
@@ -313,6 +318,7 @@ export const toPlotly = (props) => {
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
     const presetLabelNames = names.map(name => name.dataKey);
+    const { aggregateFunctions } = options || {};
     return {
         layout: {
             showlegend: legend,
@@ -328,7 +334,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, presetLabelNames, presetTracesColors});
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, presetLabelNames, presetTracesColors, aggregateFunctions});
             return  allData;
         }),
         config: {

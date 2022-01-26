@@ -1,13 +1,15 @@
 import { set } from '@mapstore/utils/ImmutableUtils';
 import { TIME_SERIES_PLOTS, SELECT_NODE } from '../../../actions/layers';
-import { 
+import {
+    CHANGE_AGGREGATE_FUNCTION,
     CHANGE_TRACE_COLOR,
     STORE_TIME_SERIES_CHART_DATA,
     TEAR_DOWN,
     TOGGLE_SELECTION,
     SETUP,
     SET_CURRENT_SELECTION,
-    REMOVE_TABLE_SELECTION_ROW
+    REMOVE_TABLE_SELECTION_ROW,
+    UPDATE_TIME_SERIES_CHART_DATA
 } from '../actions/timeSeriesPlots';
 
 const INITIAL_STATE = {
@@ -30,6 +32,23 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
         case SETUP:
             const { cfg } = action;
             return set('pluginCfg', cfg, state);
+        case CHANGE_AGGREGATE_FUNCTION: {
+            const { selectionId, aggregateFunction } = action;
+            const { label } = aggregateFunction;
+            const timePlotsData = state.timePlotsData.reduce((acc, cur) => (
+                [ ...acc, 
+                    {
+                        ...cur, 
+                        aggregateFunctionOption: cur.selectionId === selectionId ? aggregateFunction : cur.aggregateFunctionOption,
+                        aggregateFunctionLabel: cur.selectionId === selectionId ? label : cur.aggregateFunctionLabel
+                    }
+                ]
+            ), []);
+            return {
+                ...state,
+                timePlotsData
+            }
+        }
         case CHANGE_TRACE_COLOR: {
             const { selectionId, color } = action;
             const timePlotsData = state.timePlotsData.reduce((acc, cur) => (
@@ -46,12 +65,27 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             }
         }
         case STORE_TIME_SERIES_CHART_DATA: {
-            const { selectionId, selectionType, layerName, chartData, traceColor } = action;
+            const { selectionId, selectionType, featuresIds, aggregateFunctionLabel ,aggregateFunctionOption, layerName, chartData, traceColor } = action;
             let { selectionName } = action;
             selectionName = `${selectionName} ${state.timePlotsData.length + 1}`;
             return {
                 ...state,
-                timePlotsData: [...state.timePlotsData, {selectionId, selectionName, selectionType, layerName, chartData, traceColor}]
+                timePlotsData: [...state.timePlotsData, {selectionId, selectionName, selectionType, featuresIds, aggregateFunctionLabel, aggregateFunctionOption, layerName, chartData, traceColor}]
+            }
+        }
+        case UPDATE_TIME_SERIES_CHART_DATA: {
+            const { selectionId, chartData } = action;
+            const timePlotsData = state.timePlotsData.reduce((acc, cur) => (
+                [ ...acc, 
+                    { 
+                        ...cur, 
+                        chartData: cur.selectionId === selectionId ? chartData : cur.chartData
+                    }
+                ]
+            ), []);
+            return {
+                ...state,
+                timePlotsData
             }
         }
         case SET_CURRENT_SELECTION:

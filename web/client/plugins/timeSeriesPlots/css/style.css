@@ -64,3 +64,7 @@ text-align: center;
 .time-series-plots-toolbar div:last-child {
     flex: 0 0 200px;
 }
+.time-series-plots-select {
+    height: 100%;
+    width: 100%;
+}

@@ -8,36 +8,55 @@
 
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
-import { createStructuredSelector } from 'reselect';
 import ColorSelector from '@mapstore/components/style/ColorSelector';
+import { SELECTION_TYPES } from '../constants';
 import ReactDataGrid from 'react-data-grid';
+import { Editors } from "react-data-grid-addons";
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
 import localizedProps from '@mapstore/components/misc/enhancers/localizedProps';
 
-
+const { DropDownEditor } = Editors;
+const operationTypes = [
+    { id: "Count", value: "COUNT"},
+    { id: "Sum", value: "SUM"},
+    { id: "Average", value: "AVG"},
+    { id: "StdDev", value: "STDDEV"},
+    { id: "Min", value: "MIN"},
+    { id: "Max", value: "MAX"}
+];
+const OperationsTypeEditor = <DropDownEditor options={operationTypes} />;
 class BaseTable extends React.Component {
 
     COLUMNS = [{
         key: 'selectionName',
-        sortable: true,
+        sortable: false,
         width: 140,
         name: 'Selection Name',
         resizable: true
     }, {
         key: 'selectionType',
-        sortable: true,
+        sortable: false,
         width: 140,
         name: 'Selection Type',
         resizable: true
     },
     {
+        key: 'aggregateFunctionLabel',
+        name: 'Operation Type',
+        sortable: false,
+        width: 140,
+        editable: ({selectionType}) => selectionType !== SELECTION_TYPES.POINT,  
+        editor:  OperationsTypeEditor,
+        formatter: ({row}) => row.selectionType === SELECTION_TYPES.POINT ? <div>No Operation</div> : <div>{row.aggregateFunctionLabel}</div>
+    },
+    {
         key: 'color',
         name: 'Chart Trace Color',
+        sortable: false,
         width: 140,
         formatter: (props) => {
             const { traceColor, selectionId, onChangeTraceColor } = props.row;
-            return(
+            return (
                 <ColorSelector
                     key={traceColor}
                     color={traceColor}
@@ -66,15 +85,30 @@ class BaseTable extends React.Component {
         return column.key === 'action' ? cellActions : null;
     }
 
+    onGridRowsUpdated ({cellKey, rowIds, updated}) {
+        if (cellKey === 'aggregateFunctionLabel') {
+            rowIds.forEach(rowId => {
+                const label = updated[cellKey];
+                const value = operationTypes.filter(item => item.value === label)[0].id;
+                this.props.onChangeAggregateFunction(rowId, { value, label } );
+            });
+        }
+    }
+
     render() {
         return(
             <div>
                 <ReactDataGrid
                     rowKey="selectionId"
                     columns={this.COLUMNS}
-                    rowGetter={(i) => ({ ...(this.props?.timeSeriesFeaturesSelections[i] || {}), onChangeTraceColor: this.props?.onChangeTraceColor } || {})}
+                    enableCellSelect={true}
+                    rowGetter={(i) => ({
+                        ...(this.props?.timeSeriesFeaturesSelections[i] || {}),
+                        onChangeTraceColor: this.props?.onChangeTraceColor
+                    } || {})}
                     rowsCount={this.props?.timeSeriesFeaturesSelections.length || 0}
                     getCellActions={this.getCellActions.bind(this)}
+                    onGridRowsUpdated={this.onGridRowsUpdated.bind(this)}
                 />
             </div>
         );

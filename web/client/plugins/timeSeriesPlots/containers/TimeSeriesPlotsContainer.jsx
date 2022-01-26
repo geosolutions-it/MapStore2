@@ -14,7 +14,7 @@ import { createStructuredSelector } from 'reselect';
 import Dock from 'react-dock';
 
 import {compose, withProps} from 'recompose';
-import { CONTROL_NAME, AGGREGATE_OPERATIONS } from '../constants';
+import { CONTROL_NAME } from '../constants';
 import ChartView from '@mapstore/components/widgets/widget/ChartView';
 import { SelectionTable } from '../components/SelectionTable';
 import Dialog from "../../../components/misc/Dialog";
@@ -22,12 +22,14 @@ import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
 import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
-import { changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
+import { changeAggregateFunction, changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
+import { getDefaultAggregationOperations } from '@mapstore/utils/WidgetsUtils';
 
 import {
     enabledSelector,
     timePlotsDataSelector,
-    timeSeriesFeaturesSelectionsSelector
+    timeSeriesFeaturesSelectionsSelector,
+    aggregateFunctionSelector
 } from '../selectors/timeSeriesPlots';
 import localizedProps from '../../../components/misc/enhancers/localizedProps';
 
@@ -39,11 +41,13 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 
 const Panel = ({ 
     enabled,
+    onChangeAggregateFunction = () => {},
     onChangeTraceColor = () => {},
     onClose = () => {},
     timePlotsData,
     onRemoveTableSelectionRow = () => {},
-    aggregationOptions
+    aggregationOptions,
+    aggregateFunction
 }) => {
     const margin = 10;
     const initialSize = {width: 400, height: 400};
@@ -53,14 +57,13 @@ const Panel = ({
     }
 
     const getTimeSeriesChartProps = (data) => {
-        const aggregateFunction = 'Average';
-        const aggregationAttribute = 'VALUE';
-        const operationName = `${aggregateFunction}(${aggregationAttribute})`;
+        const aggregateFunctions = data.map(item => item.aggregateFunctionOption.value);
+        const aggregationAttribute = '(VALUE)';
         return ({
             cartesian: true,
             legend: true,
             options : {
-                aggregateFunction,
+                aggregateFunctions,
                 aggregationAttribute,
                 groupByAttributes: 'DATE',
             },
@@ -71,7 +74,7 @@ const Panel = ({
                     { dataKey: seriesName }
                 ]
             }, []),
-            series: [{ dataKey: operationName }],
+            series: [{ dataKey: aggregationAttribute }],
             type: 'line',
             tracesColors: data.map(item => item.traceColor),
             xAxis: {dataKey: 'DATE'},
@@ -119,10 +122,12 @@ const Panel = ({
                         width: size.width,
                         height: size.height
                     }}>
-                        <MainToolbar enabled={enabled} aggregationOptions={aggregationOptions}/>
+                        <MainToolbar />
                         <SelectionTable
+                            aggregationOptions={aggregationOptions}
                             timeSeriesFeaturesSelections={timePlotsData}
                             onRemoveTableSelectionRow={onRemoveTableSelectionRow}
+                            onChangeAggregateFunction={onChangeAggregateFunction}
                             onChangeTraceColor={onChangeTraceColor}/>
                         <div style={{
                             flex: 1,
@@ -149,16 +154,19 @@ const Panel = ({
 const TSPPanel = connect(createStructuredSelector({
     enabled: enabledSelector,
     timePlotsData: timePlotsDataSelector,
-    timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector
+    timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector,
+    aggregateFunction: aggregateFunctionSelector
 }), {
     onClose: () => toggleControl(CONTROL_NAME),
     onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId),
-    onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color)
+    onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color),
+    onChangeAggregateFunction: (selectionId, aggregateFunction) => changeAggregateFunction(selectionId, aggregateFunction)
 })(Panel);
 
 export default compose(
-    withProps(() => ({
-        aggregationOptions: AGGREGATE_OPERATIONS
+    withProps(props => ({
+        aggregationOptions: getDefaultAggregationOperations(),
+        aggregateFunction: props.aggregateFunction
     })),
-    localizedProps("aggregationOptions")
+    localizedProps(["aggregationOptions", "aggregateFunction"])
 )(TSPPanel);

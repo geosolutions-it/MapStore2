@@ -98,3 +98,19 @@ export const getWidgetsGroups =  (widgets = []) => {
         widgets: members
     }));
 };
+
+/**
+ * returns default aggregation operations for
+ * charts that can be used in widgtes and for 
+ * other features
+ */
+export const getDefaultAggregationOperations = () => {
+    return [
+        { value: "Count", label: "widgets.operations.COUNT"},
+        { value: "Sum", label: "widgets.operations.SUM"},
+        { value: "Average", label: "widgets.operations.AVG"},
+        { value: "StdDev", label: "widgets.operations.STDDEV"},
+        { value: "Min", label: "widgets.operations.MIN"},
+        { value: "Max", label: "widgets.operations.MAX"}
+    ]
+}

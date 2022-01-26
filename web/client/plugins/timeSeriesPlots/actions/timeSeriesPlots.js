@@ -9,13 +9,23 @@
 import { timeSeriesPlots } from "../../../actions/layers";
 
 export const CHANGE_TRACE_COLOR = "TIME_SERIES_PLOTS:CHANGE_TRACE_COLOR";
+export const CHANGE_AGGREGATE_FUNCTION = "TIME_SERIES_PLOTS:CHANGE_AGGREGATE_FUNCTION";
 export const TEAR_DOWN = "TIME_SERIES_PLOTS:TEAR_DOWN";
 export const SETUP = "TIME_SERIES_PLOTS:SETUP";
 export const SET_CURRENT_SELECTION = "TIME_SERIES_PLOTS:SET_CURRENT_SELECTION";
 export const STORE_TIME_SERIES_FEATURES_IDS = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_FEATURES_IDS";
 export const STORE_TIME_SERIES_CHART_DATA = "TIME_SERIES_PLOTS:STORE_TIME_SERIES_CHART_DATA";
+export const UPDATE_TIME_SERIES_CHART_DATA = "TIME_SERIES_PLOTS:UPDATE_TIME_SERIES_CHART_DATA";
 export const TOGGLE_SELECTION = "TIME_SERIES_PLOTS:TOGGLE_SELECTION";
 export const REMOVE_TABLE_SELECTION_ROW = "TIME_SERIES_PLOTS:REMOVE_TABLE_SELECTION_ROW";
+
+export const changeAggregateFunction = (selectionId, aggregateFunction) => {
+    return {
+        type: CHANGE_AGGREGATE_FUNCTION,
+        selectionId,
+        aggregateFunction
+    }
+}
 
 export const changeTraceColor = (selectionId, color) => {
     return {
@@ -62,15 +72,23 @@ export const storeTimeSeriesFeaturesIds = (selectionId, selectionName, selection
     featuresIds,
 });
 
-export const storeTimeSeriesChartData = (selectionId, selectionName, selectionType, layerName, featuresIds, chartData, traceColor) => ({
+export const storeTimeSeriesChartData = (selectionId, selectionName, selectionType, aggregateFunctionLabel, aggregateFunctionOption, layerName, featuresIds, chartData, traceColor) => ({
     type: STORE_TIME_SERIES_CHART_DATA,
     selectionId,
     selectionName,
     selectionType,
+    aggregateFunctionLabel,
+    aggregateFunctionOption,
     layerName,
     featuresIds,
     chartData,
     traceColor
+});
+
+export const updateTimeSeriesChartData = (selectionId, chartData) => ({
+    type: UPDATE_TIME_SERIES_CHART_DATA,
+    selectionId,
+    chartData
 });
 
 export const setCurrentFeaturesSelectionIndex = (index) => ({

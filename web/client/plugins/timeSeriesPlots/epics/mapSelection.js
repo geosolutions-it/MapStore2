@@ -24,7 +24,13 @@ import { generateRandomHexColor } from '@mapstore/utils/ColorUtils';
 import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
 import wpsAggregate from '@mapstore/observables/wps/aggregate';
 import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
-import { timeSeriesCatalogServiceSelector, timeSeriesLayersSelector, getTimeSeriesLayerByName, currentSelectionToolSelector, currentTraceColorsSelector } from '../selectors/timeSeriesPlots';
+import {
+    timePlotDataSelector,
+    timeSeriesLayersSelector,
+    getTimeSeriesLayerByName,
+    currentSelectionToolSelector,
+    currentTraceColorsSelector
+} from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
 import { CLICK_ON_MAP, MOUSE_MOVE, MOUSE_OUT, registerEventListener, unRegisterEventListener } from '@mapstore/actions/map';
 import { featureInfoClick, purgeMapInfoResults, FEATURE_INFO_CLICK, LOAD_FEATURE_INFO, loadFeatureInfo, newMapInfoRequest, exceptionsFeatureInfo, errorFeatureInfo } from '@mapstore/actions/mapInfo';
@@ -33,8 +39,10 @@ import { cancelSelectedItem } from '@mapstore/actions/search';
 import { TOGGLE_CONTROL, toggleControl } from '@mapstore/actions/controls';
 import { 
     setCurrentFeaturesSelectionIndex,
+    CHANGE_AGGREGATE_FUNCTION,
     storeTimeSeriesFeaturesIds,
     storeTimeSeriesChartData,
+    updateTimeSeriesChartData,
     STORE_TIME_SERIES_FEATURES_IDS,
     TEAR_DOWN, TOGGLE_SELECTION
 } from '../actions/timeSeriesPlots';
@@ -45,6 +53,7 @@ import { IDENTIFY_POPUP } from '@mapstore/components/map/popups';
 import { localizedLayerStylesEnvSelector } from '@mapstore/selectors/localizedLayerStyles';
 import { buildIdentifyRequest, filterRequestParams } from '@mapstore/utils/MapInfoUtils';
 import { getFeatureInfo } from '@mapstore/api/identify';
+import {getMessageById} from '@mapstore/utils/LocaleUtils';
 
 const CLEAN_ACTION = changeDrawingStatus("clean");
 const DEACTIVATE_ACTIONS = [
@@ -236,8 +245,11 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
     action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({ selectionId, featuresIds, layerName }) => {
         const wpsUrl = selectedCatalogSelector(getState()).url;
         const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);
+        /** review this string, how to make it transaltable*/
+        const aggregateFunctionOption = { value: "Average", label: 'AVG'};
+        const aggregateFunction = aggregateFunctionOption.value;
+        const aggregateFunctionLabel = aggregateFunctionOption.label;
         const {
-            queryAggregateFunction : aggregateFunction,
             queryAggregationAttribute: aggregationAttribute,
             queryByAttributes: groupByAttributes,
             queryLayerName,
@@ -271,6 +283,51 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
             const currentTraceColors = currentTraceColorsSelector(getState());
             const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
             const traceColor = generateRandomHexColor(currentTraceColors);
-            return storeTimeSeriesChartData(selectionId, selectionName, selectionType, layerName, featuresIds, parsedChartDataResults, traceColor);
+            return storeTimeSeriesChartData(selectionId, selectionName, selectionType, aggregateFunctionLabel, aggregateFunctionOption, layerName, featuresIds, parsedChartDataResults, traceColor);
         });
     });
+
+    export const changeAggregateFunction = (action$, {getState = () => {}}) =>
+        action$.ofType(CHANGE_AGGREGATE_FUNCTION).switchMap(({ selectionId }) => {
+            const timePlotData = timePlotDataSelector(getState(), selectionId);
+            if (timePlotData.length > 0) {
+                const wpsUrl = selectedCatalogSelector(getState()).url;
+                const { layerName } = timePlotData[0];
+                const aggregateFunction = timePlotData[0].aggregateFunctionOption.value || 'Average';
+                const featuresIds = timePlotData[0].featuresIds;
+                const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);
+                const {
+                    queryAggregationAttribute: aggregationAttribute,
+                    queryByAttributes: groupByAttributes,
+                    queryLayerName,
+                    queryAttribute
+                } = timeSeriesLayer;
+                const options = {
+                    aggregateFunction,
+                    aggregationAttribute,
+                    groupByAttributes
+                };
+                const fb = FilterBuilder({});
+                const {property, or, filter} = fb;
+                const ogcFilter = filter(or(featuresIds.map( id => property(queryAttribute).equalTo(id))));
+                return wpsAggregate(wpsUrl, {featureType: queryLayerName, ...options, filter: ogcFilter}, {
+                    timeout: 15000
+                })
+                .map(aggregationResults => wpsAggregateToChartData(aggregationResults, [groupByAttributes], [aggregationAttribute], [aggregateFunction]))
+                .map(chartDataResults => {
+                    const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
+                    const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
+                    return [
+                            ...acc, {
+                                ...cur,
+                                PARSED_DATE: parsedDate,
+                                DATE: moment(parsedDate).format('DD/MM/YYYY')
+                            }
+                        ]
+                    }, []);
+                    parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
+                    return updateTimeSeriesChartData(selectionId, parsedChartDataResults);
+                })
+            };
+            return Rx.Observable.empty();
+        });
