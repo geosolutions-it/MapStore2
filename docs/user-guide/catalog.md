@@ -85,11 +85,15 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 #### Advanced Settings
 
+<img src="../img/catalog/advanced_settings_csw.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
 * *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-* *Show metadata template*: This can be enabled when the user wants to insert in the layer description a text with metadata information
+* *Set Visibility Limit*: this can be enabled when the user wants to automatically applies of the visibility limits suggested by the server.
+
+* *Show metadata template*: this can be enabled when the user wants to insert in the layer description a text with metadata information
 
 !!! warning
     The *Metadata Template* function is available for **CSW Services** only.
@@ -191,6 +195,8 @@ In **General Settings** the user can set the title he wants to assign to this se
 
 In addition to the standard options, only for WMS catalog sources, through the **Advanced Settings** the user can configure also the following options:
 
+<img src="../img/catalog/advanced_settings_wms.jpg" class="ms-docimage"  style="max-width:500px;" />
+
 * *Localized styles* (only for the WMS service) if enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server so that the WMS server, if properly configured, can use that locale to:
 
     - Use localized lables for Tiles in case of vector layers (the layer's style must be properly configured for this using the [ENV variable support](https://docs.geoserver.org/stable/en/user/styling/sld/extensions/substitution.html))
@@ -198,6 +204,8 @@ In addition to the standard options, only for WMS catalog sources, through the *
     - Produce a localized layer legend in case of vector layers (the layer's style must be properly configured to use the [Localized tag for rule titles](https://docs.geoserver.org/stable/en/user/styling/sld/language.html))
 
     - Produce a localized output for GetFeatureInfo requests (the freemarker template need to be properly configured to retrieve [the locale from the request](https://docs.geoserver.org/stable/en/user/tutorials/freemarker.html))
+
+* *Set Visibility Limit*: this can be enabled when the user wants to automatically applies of the visibility limits suggested by the server.
 
 Enabling that option, all layers added to the map from this catalog source will be localized as described above (it is possible to tune again that setting for each single layer by opening the [Layer Settings](layer-settings.md#display) in TOC).
 
@@ -207,6 +215,8 @@ Enabling that option, all layers added to the map from this catalog source will 
     In case of WMS services, the list of available formats is retrieved from the WMS server 
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Domain aliases*: this option is used to divide the content into multiple subdomains. The user can share the domain by adding another URL service in the box and can add another box through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button.
 
 ### TMS Catalog
 
