@@ -655,7 +655,8 @@
             "outputFormat": "Format",
             "previewFormatUnsupported": "Unsupported format for preview",
             "projection": "Coordinates System",
-            "projectionmismatch": "Coordinate system mismatch among printed and screen map"
+            "projectionmismatch": "Coordinate system mismatch among printed and screen map",
+            "graticule": "add grid with labels"
         },
         "backgroundSwitcher":{
             "tooltip": "Select Background"

@@ -94,6 +94,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 scaleZoom: action.scaleZoom,
                 scale: action.scale,
                 layers,
+                size: action.size ?? state.map?.size,
                 projection: action.projection
             },
             error: null

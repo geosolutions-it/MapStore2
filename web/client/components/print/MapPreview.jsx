@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
-import { getMapZoom } from '../../utils/PrintUtils';
+import { getMapZoom, getResolutionMultiplier } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
 import Button from '../misc/Button';
 import isNil from 'lodash/isNil';
@@ -54,7 +54,6 @@ class MapPreview extends React.Component {
         height: 270,
         enableRefresh: true,
         enableScalebox: true,
-        printRatio: 96.0 / 72.0,
         useFixedScales: false
     };
 
@@ -68,7 +67,7 @@ class MapPreview extends React.Component {
 
     getRatio = () => {
         if (this.props.width && this.props.layoutSize && this.props.resolutions) {
-            return this.props.layoutSize.width / this.props.width * this.props.printRatio;
+            return getResolutionMultiplier(this.props.layoutSize.width, this.props.width, this.props.printRatio);
         }
         return 1;
     };
@@ -139,7 +138,7 @@ class MapPreview extends React.Component {
                 mapOptions={mapOptions}
             >
                 {this.props.layers.map((layer, index) =>
-                    (<Layer key={layer.id || layer.name} position={index} type={layer.type}
+                    (<Layer key={layer.id || layer.name} position={index} type={layer.type} srs={projection}
                         options={assign({}, this.adjustResolution(layer), {srs: projection})}
                         env={this.props.env}
                     >

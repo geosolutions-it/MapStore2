@@ -655,7 +655,8 @@
             "outputFormat": "Format",
             "previewFormatUnsupported": "Format non pris en charge pour l'aperçu",
             "projection": "Système de coordonnées",
-            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran"
+            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
+            "graticule": "ajouter une grille avec des étiquettes"
         },
         "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"

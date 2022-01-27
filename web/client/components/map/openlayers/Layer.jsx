@@ -214,9 +214,13 @@ export default class OpenlayersLayer extends React.Component {
             this.props.map,
             this.props.mapId);
         if (newLayer) {
-            this.props.map.removeLayer(this.layer);
-            this.layer = newLayer;
-            this.addLayer(newProps.options);
+            if (!newLayer.detached) {
+                this.props.map.removeLayer(this.layer);
+                this.layer = newLayer;
+                this.addLayer(newProps.options);
+            } else {
+                this.layer = newLayer;
+            }
         }
     };
 

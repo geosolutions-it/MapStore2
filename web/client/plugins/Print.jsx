@@ -477,6 +477,7 @@ export default {
                             "wms",
                             "wfs",
                             "vector",
+                            "graticule",
                             "empty"
                         ], layer.type) || layer.type === "wmts" && has(layer.allowedSRS, projection);
                     };
