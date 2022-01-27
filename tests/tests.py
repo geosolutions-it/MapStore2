@@ -46,7 +46,7 @@ def getaccesstoken(url,user,pwd):
     
     accesstokenresponse = requests.request("POST", loginurl, headers=headers, data={})
     accesstoken = accesstokenresponse.json()
-    print(accesstoken)
+    print(accesstoken['access_token'])
     return accesstoken['access_token']
   except:
     print("ERROR: Can't get access token")
