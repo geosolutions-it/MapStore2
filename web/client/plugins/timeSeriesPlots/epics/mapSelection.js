@@ -22,6 +22,7 @@ import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES } from '../constants';
 import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
 import { generateRandomHexColor } from '@mapstore/utils/ColorUtils';
 import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
+import { wfsToChartData } from '@mapstore/components/widgets/enhancers/wfsChart';
 import wpsAggregate from '@mapstore/observables/wps/aggregate';
 import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
 import {
@@ -107,6 +108,103 @@ const getTimeSeriesFeatures = (geometry, getState, timeSeriesLayerName) => {
     });
 };
 
+const getWFSChartData = (layer, filter, options, aggregationAttribute, selectionId, getState, layerName, featuresIds) => {
+    return getLayerJSONFeature(layer, filter)
+    .filter(wfsQueryResults => wfsQueryResults.features.length)
+    .map(wfsQueryResults => wfsToChartData(wfsQueryResults, options))
+    .map(chartDataResults => {
+        const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
+        const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
+        return [
+                ...acc, {
+                    ...cur,
+                    PARSED_DATE: parsedDate,
+                    DATE: moment(parsedDate).format('DD/MM/YYYY')
+                }
+            ]
+        }, []);
+        parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
+        const selectionType = currentSelectionToolSelector(getState());
+        const currentTraceColors = currentTraceColorsSelector(getState());
+        const selectionName = 'Point';
+        const aggregateFunctionLabel = 'No Operation';
+        const aggregateFunctionOption = { value: '', label: '' };
+        const traceColor = generateRandomHexColor(currentTraceColors);
+        const { groupByAttributes } = options;
+        return storeTimeSeriesChartData(
+            selectionId,
+            selectionName,
+            selectionType,
+            aggregateFunctionLabel,
+            aggregateFunctionOption,
+            aggregationAttribute,
+            groupByAttributes,
+            layerName,
+            featuresIds,
+            parsedChartDataResults,
+            traceColor
+        );
+    })
+}
+
+const getWPSChartData = (
+    actionType,
+    wpsUrl,
+    options,
+    selectionId,
+    layerName,
+    getState,
+    featuresIds, 
+    aggregateFunctionLabel = 'AVG',
+    aggregateFunctionOption = { value: "Average", label: 'AVG'}
+) => {
+    return wpsAggregate(wpsUrl, options, {
+        timeout: 15000
+    })
+    .map(aggregationResults => {
+        const { aggregateFunction, aggregationAttribute, groupByAttributes} = options;
+        return wpsAggregateToChartData(aggregationResults, [groupByAttributes], [aggregationAttribute], [aggregateFunction]);
+    })
+    .map(chartDataResults => {
+        const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
+        const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
+        return [
+                ...acc, {
+                    ...cur,
+                    PARSED_DATE: parsedDate,
+                    DATE: moment(parsedDate).format('DD/MM/YYYY')
+                }
+            ]
+        }, []);
+        parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
+        const selectionType = currentSelectionToolSelector(getState());
+        const currentTraceColors = currentTraceColorsSelector(getState());
+        const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
+        const traceColor = generateRandomHexColor(currentTraceColors);
+        if (actionType === STORE_TIME_SERIES_FEATURES_IDS) {
+            const { groupByAttributes } = options;
+            let { aggregationAttribute } = options;
+            aggregationAttribute = `(${aggregationAttribute})`;
+            return storeTimeSeriesChartData(
+                selectionId,
+                selectionName,
+                selectionType,
+                aggregateFunctionLabel,
+                aggregateFunctionOption,
+                aggregationAttribute,
+                groupByAttributes,
+                layerName,
+                featuresIds,
+                parsedChartDataResults,
+                traceColor
+            );
+        }
+        else if (actionType === CHANGE_AGGREGATE_FUNCTION) {
+            return updateTimeSeriesChartData(selectionId, parsedChartDataResults);
+        }
+    });
+};
+
 export const openTimeSeriesPlotsPlugin = (action$) =>
     action$.ofType(TIME_SERIES_PLOTS)
         .switchMap(() => {
@@ -123,8 +221,6 @@ action$.ofType(TOGGLE_SELECTION)
             purgeMapInfoResults();
             return action$.ofType(CLICK_ON_MAP).switchMap(({ point }) => {
                 const timeSeriesLayers = timeSeriesLayersSelector(getState());
-                const projection = projectionSelector(getState());
-                const $out = Rx.Observable.from(timeSeriesLayers.filter(l => l.layerName))
                 if(!timeSeriesLayers.length) {
                     return Rx.Observable.empty();
                 }
@@ -214,7 +310,9 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                     timeSeriesLayers.map( timeSeriesLayer => 
                         getTimeSeriesFeatures(geometry, getState, timeSeriesLayer.layerName)
                     )
-                ).switchMap(data => {
+                )
+                .filter(data => data.map(item => item.features.length )[0])
+                .switchMap(data => {
                     const features = data.map(item => item.features);
                     const selectionId = uuid.v1();
                     const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
@@ -242,53 +340,44 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
     });
 
 export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) =>
-    action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({ selectionId, featuresIds, layerName }) => {
-        const wpsUrl = selectedCatalogSelector(getState()).url;
+    action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({ selectionId, selectionType, featuresIds, layerName, type: actionType }) => {
+        const url = selectedCatalogSelector(getState()).url;
         const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);
         /** review this string, how to make it transaltable*/
-        const aggregateFunctionOption = { value: "Average", label: 'AVG'};
-        const aggregateFunction = aggregateFunctionOption.value;
-        const aggregateFunctionLabel = aggregateFunctionOption.label;
         const {
             queryAggregationAttribute: aggregationAttribute,
             queryByAttributes: groupByAttributes,
             queryLayerName,
             queryAttribute
         } = timeSeriesLayer;
-        const options = {
-            aggregateFunction,
-            aggregationAttribute,
-            groupByAttributes
-        };
         const fb = FilterBuilder({});
         const {property, or, filter} = fb;
         const ogcFilter = filter(or(featuresIds.map( id => property(queryAttribute).equalTo(id))));
-        return wpsAggregate(wpsUrl, {featureType: queryLayerName, ...options, filter: ogcFilter}, {
-            timeout: 15000
-        })
-        .map(aggregationResults => wpsAggregateToChartData(aggregationResults, [groupByAttributes], [aggregationAttribute], [aggregateFunction]))
-        .map(chartDataResults => {
-            const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
-            const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
-            return [
-                    ...acc, {
-                        ...cur,
-                        PARSED_DATE: parsedDate,
-                        DATE: moment(parsedDate).format('DD/MM/YYYY')
-                    }
-                ]
-            }, []);
-            parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
-            const selectionType = currentSelectionToolSelector(getState());
-            const currentTraceColors = currentTraceColorsSelector(getState());
-            const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
-            const traceColor = generateRandomHexColor(currentTraceColors);
-            return storeTimeSeriesChartData(selectionId, selectionName, selectionType, aggregateFunctionLabel, aggregateFunctionOption, layerName, featuresIds, parsedChartDataResults, traceColor);
-        });
+        if (selectionType === SELECTION_TYPES.POLYGON) {
+            const aggregateFunction = 'Average';
+            const options = {
+                aggregateFunction,
+                aggregationAttribute,
+                groupByAttributes
+            };
+            return getWPSChartData(
+                actionType,
+                url, 
+                {featureType: queryLayerName, filter: ogcFilter, ...options},
+                selectionId,
+                layerName,
+                getState,
+                featuresIds
+            );
+        } else if (selectionType === SELECTION_TYPES.POINT) {
+            return getWFSChartData({url, name: queryLayerName}, ogcFilter, { groupByAttributes }, aggregationAttribute, selectionId, getState, layerName, featuresIds)
+        } else {
+            return Rx.Observable.empty()
+        }
     });
 
     export const changeAggregateFunction = (action$, {getState = () => {}}) =>
-        action$.ofType(CHANGE_AGGREGATE_FUNCTION).switchMap(({ selectionId }) => {
+        action$.ofType(CHANGE_AGGREGATE_FUNCTION).switchMap(({ selectionId, type: actionType }) => {
             const timePlotData = timePlotDataSelector(getState(), selectionId);
             if (timePlotData.length > 0) {
                 const wpsUrl = selectedCatalogSelector(getState()).url;
@@ -310,24 +399,15 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
                 const fb = FilterBuilder({});
                 const {property, or, filter} = fb;
                 const ogcFilter = filter(or(featuresIds.map( id => property(queryAttribute).equalTo(id))));
-                return wpsAggregate(wpsUrl, {featureType: queryLayerName, ...options, filter: ogcFilter}, {
-                    timeout: 15000
-                })
-                .map(aggregationResults => wpsAggregateToChartData(aggregationResults, [groupByAttributes], [aggregationAttribute], [aggregateFunction]))
-                .map(chartDataResults => {
-                    const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
-                    const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
-                    return [
-                            ...acc, {
-                                ...cur,
-                                PARSED_DATE: parsedDate,
-                                DATE: moment(parsedDate).format('DD/MM/YYYY')
-                            }
-                        ]
-                    }, []);
-                    parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
-                    return updateTimeSeriesChartData(selectionId, parsedChartDataResults);
-                })
+                return getWPSChartData(
+                    actionType,
+                    wpsUrl, 
+                    {featureType: queryLayerName, filter: ogcFilter, ...options},
+                    selectionId,
+                    layerName,
+                    getState,
+                    featuresIds
+                );
             };
             return Rx.Observable.empty();
         });

@@ -46,8 +46,7 @@ const Panel = ({
     onClose = () => {},
     timePlotsData,
     onRemoveTableSelectionRow = () => {},
-    aggregationOptions,
-    aggregateFunction
+    aggregationOptions
 }) => {
     const margin = 10;
     const initialSize = {width: 400, height: 400};
@@ -65,18 +64,27 @@ const Panel = ({
             options : {
                 aggregateFunctions,
                 aggregationAttribute,
-                groupByAttributes: 'DATE',
+                groupByAttributes: data.map(item => item.groupByAttributes || 'DATE'),
+                multipleSeries: data.reduce((acc, cur) => (
+                    [
+                        ...acc,
+                        { dataKey: cur.aggregateFunctionLabel !== 'No Operation' ? 
+                            `${cur.aggregateFunctionOption.value}${cur.aggregationAttribute}`: 
+                            cur.aggregationAttribute 
+                        }
+                    ]
+                ), []),
+                presetLabelNames: data.reduce((acc, cur) => {
+                    const seriesName = data.filter(item => cur.selectionId === item.selectionId)[0]?.selectionName || '';
+                    return [
+                        ...acc,
+                        { dataKey: seriesName }
+                    ]
+                }, []),
+                tracesColors: data.map(item => item.traceColor)
             },
-            names: data.reduce((acc, cur) => {
-                const seriesName = data.filter(item => cur.selectionId === item.selectionId)[0]?.selectionName || '';
-                return [
-                    ...acc,
-                    { dataKey: seriesName }
-                ]
-            }, []),
             series: [{ dataKey: aggregationAttribute }],
             type: 'line',
-            tracesColors: data.map(item => item.traceColor),
             xAxis: {dataKey: 'DATE'},
             yAxis: true
         });
@@ -145,7 +153,6 @@ const Panel = ({
                         </div>
                     </div>
                 </Resizable>
-
             </div>
         </Dialog>
     );

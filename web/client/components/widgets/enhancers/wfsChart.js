@@ -13,7 +13,7 @@ import propsStreamFactory from '../../misc/enhancers/propsStreamFactory';
 import Rx from 'rxjs';
 import {getSearchUrl} from '../../../utils/LayersUtils';
 
-const wfsToChartData = ({ features } = {}, { groupByAttributes}) => {
+export const wfsToChartData = ({ features } = {}, { groupByAttributes }) => {
 
     return sortBy(features.map(({properties}) => properties), groupByAttributes); // TODO: sort
 };

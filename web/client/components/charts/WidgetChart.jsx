@@ -106,9 +106,7 @@ function getData({
     autoColorOptions,
     customColorEnabled,
     isClassifiedChart,
-    presetLabelNames,
-    presetTracesColors,
-    aggregateFunctions
+    options
 }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
@@ -116,6 +114,7 @@ function getData({
     const colorCategories = autoColorOptions?.classification || [];
     const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
     const { defaultClassLabel = ''} = autoColorOptions;
+    const { aggregateFunctions, multipleSeries, groupByAttributes, presetLabelNames, tracesColors } = options || {};
 
     switch (type) {
 
@@ -194,20 +193,25 @@ function getData({
         return barChartTrace;
 
     case 'line' : {
-        if(data[0] && Array.isArray(data[0])) {
+        /** time series plots case - with multiple series*/
+        if(data[0] && Array.isArray(data[0]) && multipleSeries) {
             const lineChartTraces = data.map((item, index) => {
-                const aggregateFunction = aggregateFunctions && aggregateFunctions[index] || 'Average';
+                const presetLabelName = presetLabelNames[index].dataKey;
+                xDataKey = groupByAttributes[index];
+                yDataKey = multipleSeries[index].dataKey;
+                const aggregateFunction = aggregateFunctions && aggregateFunctions[index] || '';
                 const operationYDataKey = `${aggregateFunction}${yDataKey}`;
                 const lineX = item.map(d => d[xDataKey]); 
-                const lineY = item.map(d => d[operationYDataKey]);
-                const traceName = includes(presetLabelNames[index], 'Point') ?  presetLabelNames[index] : `${presetLabelNames[index]} - ${aggregateFunction}`;
+                const lineY = item.map(d => d[yDataKey]);
+                const traceName = !aggregateFunction ? presetLabelName : `${presetLabelName} - ${aggregateFunction}`;
+                const traceColor = tracesColors[index];
                 const trace = {
                     type,
                     x: lineX,
                     y: lineY,
                     name: traceName || `${operationYDataKey} ${index}`,
                     line: {
-                        color: presetTracesColors[index]
+                        color: traceColor
                     }
                 };
                 return trace
@@ -307,18 +311,13 @@ export const toPlotly = (props) => {
         width,
         legend,
         classifications,
-        autoColorOptions = COLOR_DEFAULTS,
-        names = [],
-        tracesColors: presetTracesColors,
-        options
+        autoColorOptions = COLOR_DEFAULTS
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
-    const presetLabelNames = names.map(name => name.dataKey);
-    const { aggregateFunctions } = options || {};
     return {
         layout: {
             showlegend: legend,
@@ -334,7 +333,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, presetLabelNames, presetTracesColors, aggregateFunctions});
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
             return  allData;
         }),
         config: {

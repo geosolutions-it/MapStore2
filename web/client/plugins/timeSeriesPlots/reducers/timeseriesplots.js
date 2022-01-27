@@ -65,12 +65,27 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             }
         }
         case STORE_TIME_SERIES_CHART_DATA: {
-            const { selectionId, selectionType, featuresIds, aggregateFunctionLabel ,aggregateFunctionOption, layerName, chartData, traceColor } = action;
+            const { selectionId, selectionType, featuresIds, aggregateFunctionLabel, aggregateFunctionOption, aggregationAttribute, groupByAttributes, layerName, chartData, traceColor } = action;
             let { selectionName } = action;
             selectionName = `${selectionName} ${state.timePlotsData.length + 1}`;
             return {
                 ...state,
-                timePlotsData: [...state.timePlotsData, {selectionId, selectionName, selectionType, featuresIds, aggregateFunctionLabel, aggregateFunctionOption, layerName, chartData, traceColor}]
+                timePlotsData: [
+                    ...state.timePlotsData, 
+                    {
+                        selectionId,
+                        selectionName,
+                        selectionType,
+                        featuresIds,
+                        aggregateFunctionLabel,
+                        aggregateFunctionOption,
+                        aggregationAttribute,
+                        groupByAttributes,
+                        layerName,
+                        chartData,
+                        traceColor
+                    }
+                ]
             }
         }
         case UPDATE_TIME_SERIES_CHART_DATA: {

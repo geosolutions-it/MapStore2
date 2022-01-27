@@ -72,13 +72,27 @@ export const storeTimeSeriesFeaturesIds = (selectionId, selectionName, selection
     featuresIds,
 });
 
-export const storeTimeSeriesChartData = (selectionId, selectionName, selectionType, aggregateFunctionLabel, aggregateFunctionOption, layerName, featuresIds, chartData, traceColor) => ({
+export const storeTimeSeriesChartData = (
+    selectionId,
+    selectionName,
+    selectionType,
+    aggregateFunctionLabel,
+    aggregateFunctionOption,
+    aggregationAttribute,
+    groupByAttributes,
+    layerName,
+    featuresIds,
+    chartData, 
+    traceColor
+) => ({
     type: STORE_TIME_SERIES_CHART_DATA,
     selectionId,
     selectionName,
     selectionType,
     aggregateFunctionLabel,
     aggregateFunctionOption,
+    aggregationAttribute,
+    groupByAttributes,
     layerName,
     featuresIds,
     chartData,
