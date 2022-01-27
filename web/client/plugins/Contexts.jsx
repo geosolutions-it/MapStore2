@@ -69,7 +69,8 @@ class Contexts extends React.Component {
         title: PropTypes.string,
         shareOptions: PropTypes.object,
         shareToolEnabled: PropTypes.bool,
-        editDataEnabled: PropTypes.bool
+        editDataEnabled: PropTypes.bool,
+        emptyView: PropTypes.object
     };
 
     static contextTypes = {
@@ -104,6 +105,7 @@ class Contexts extends React.Component {
         editDataEnabled: true,
         shareOptions: CONTEXT_DEFAULT_SHARE_OPTIONS,
         shareToolEnabled: true,
+        emptyView: {},
         onEditData: () => {}
     };
 
@@ -169,12 +171,12 @@ const ContextsPlugin = compose(
     }),
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
-        () => ({
+        (emptyView) => ({
             glyph: "map-context",
             title: <Message msgId="resources.contexts.noContextAvailable" />,
             iconFit: true,
             imageStyle: {
-                height: '200px'
+                height: emptyView?.iconHeight ?? '200px'
             }
         })
     )
@@ -188,6 +190,7 @@ const ContextsPlugin = compose(
  * @class
  * @prop {object} cfg.shareOptions configuration applied to share panel
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
  */
 
 export default createPlugin('Contexts', {

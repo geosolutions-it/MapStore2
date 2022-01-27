@@ -80,7 +80,8 @@ class Maps extends React.Component {
         version: PropTypes.string,
         fluid: PropTypes.bool,
         showAPIShare: PropTypes.bool,
-        shareToolEnabled: PropTypes.bool
+        shareToolEnabled: PropTypes.bool,
+        emptyView: PropTypes.object
     };
 
     static contextTypes = {
@@ -103,7 +104,8 @@ class Maps extends React.Component {
         },
         maps: [],
         showAPIShare: true,
-        shareToolEnabled: true
+        shareToolEnabled: true,
+        emptyView: {}
     };
 
     render() {
@@ -150,13 +152,13 @@ const MapsPlugin = compose(
     }),
     emptyState(
         ({maps = [], loading}) => !loading && maps.length === 0,
-        ({showCreateButton = true}) => ({
+        ({showCreateButton = true, emptyView}) => ({
             glyph: "1-map",
             title: <Message msgId="resources.maps.noMapAvailable" />,
             content: <EmptyMaps showCreateButton={showCreateButton} />,
             iconFit: true,
             imageStyle: {
-                height: '200px'
+                height: emptyView?.iconHeight ?? '200px'
             }
         })
     )
@@ -171,6 +173,7 @@ const MapsPlugin = compose(
  * @class
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
  */
 export default {
     MapsPlugin: assign(MapsPlugin, {
