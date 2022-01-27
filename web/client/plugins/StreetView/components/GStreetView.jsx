@@ -32,7 +32,8 @@ const GStreetViewPanel = (props) => {
         location,
         pov,
         className = "google-street-view",
-        style = {}
+        style = {},
+        panoramaOptions = {}
     } = props;
     const divRef = useRef();
     const [panorama, setPanorama] = useState();
@@ -45,7 +46,8 @@ const GStreetViewPanel = (props) => {
                 {
                     position,
                     pov,
-                    zoom: 1
+                    zoom: 1,
+                    ...panoramaOptions
                 }
             );
             // first panorama initialization.
@@ -54,7 +56,7 @@ const GStreetViewPanel = (props) => {
             }
             setPanorama(streetViewPanorama);
         }
-    }, [google, location, panorama]);
+    }, [google, location, panorama, panoramaOptions]);
 
     // register and unregister events
     const [handles, setHandles] = useState();

@@ -5,12 +5,13 @@ import { createStructuredSelector } from 'reselect';
 import { setLocation, setPov } from '../actions/streetView';
 
 import GStreetView from '../components/GStreetView';
-import { apiLoadedSelector, locationSelector } from '../selectors/streetView';
+import { apiLoadedSelector, locationSelector, panoramaOptionsSelector } from '../selectors/streetView';
 import { getAPI } from '../api/gMaps';
 
 const GStreetViewPanel = connect(createStructuredSelector({
     apiLoaded: apiLoadedSelector,
-    location: locationSelector
+    location: locationSelector,
+    panoramaOptions: panoramaOptionsSelector
 }), {
     setLocation,
     setPov
