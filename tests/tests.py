@@ -49,7 +49,9 @@ def getaccesstoken(url,user,pwd):
     return accesstoken['access_token']
   except:
     print("ERROR: Can't get access token")
-    print(str(Exception))
+    err = Exception
+    print("Exception: {}".format(type(err).__name__))
+    print("Exception message: {}".format(err))
     exit(1)
 
 
