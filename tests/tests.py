@@ -44,15 +44,12 @@ def getaccesstoken(url,user,pwd):
       'Referer': referer
     }
     
-    try:
-      accesstokenresponse = requests.request("POST", loginurl, headers=headers, data={})
-    except:
-      print ("ERROR: POST Failed")
-    
+    accesstokenresponse = requests.request("POST", loginurl, headers=headers, data={})
     accesstoken = accesstokenresponse.json()
     return accesstoken['access_token']
   except:
     print("ERROR: Can't get access token")
+    print(str(Exception))
     exit(1)
 
 
