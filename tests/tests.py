@@ -46,12 +46,10 @@ def getaccesstoken(url,user,pwd):
     
     accesstokenresponse = requests.request("POST", loginurl, headers=headers, data={})
     accesstoken = accesstokenresponse.json()
+    print(accesstoken)
     return accesstoken['access_token']
   except:
     print("ERROR: Can't get access token")
-    err = Exception
-    print("Exception: {}".format(type(err).__name__))
-    print("Exception message: {}".format(err))
     exit(1)
 
 
