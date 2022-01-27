@@ -120,7 +120,11 @@ const GeoStoriesPlugin = compose(
         ({showCreateButton = true}) => ({
             glyph: "geostory",
             title: <Message msgId="resources.geostories.noGeostoryAvailable" />,
-            description: <EmptyGeostoriesView showCreateButton={showCreateButton}/>
+            description: <EmptyGeostoriesView showCreateButton={showCreateButton}/>,
+            iconFit: true,
+            imageStyle: {
+                height: '200px'
+            }
         })
 
     )

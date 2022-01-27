@@ -153,7 +153,11 @@ const MapsPlugin = compose(
         ({showCreateButton = true}) => ({
             glyph: "1-map",
             title: <Message msgId="resources.maps.noMapAvailable" />,
-            content: <EmptyMaps showCreateButton={showCreateButton} />
+            content: <EmptyMaps showCreateButton={showCreateButton} />,
+            iconFit: true,
+            imageStyle: {
+                height: '200px'
+            }
         })
     )
 )(Maps);

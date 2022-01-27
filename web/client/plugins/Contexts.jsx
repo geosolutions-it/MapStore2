@@ -171,7 +171,11 @@ const ContextsPlugin = compose(
         ({resources = [], loading}) => !loading && resources.length === 0,
         () => ({
             glyph: "map-context",
-            title: <Message msgId="resources.contexts.noContextAvailable" />
+            title: <Message msgId="resources.contexts.noContextAvailable" />,
+            iconFit: true,
+            imageStyle: {
+                height: '200px'
+            }
         })
     )
 )(Contexts);
