@@ -13,7 +13,7 @@ def endpointrequest(url,headers,payload):
     endpointresponse = requests.request("GET", url, headers=headers, data=payload)
     return endpointresponse
   except:
-    print("Can't access MapStore (website unavailable)")
+    print("ENDPOINT ERROR: Can't access: " + url)
     exit(1)
   
 
@@ -48,7 +48,7 @@ def getaccesstoken(url,user,pwd):
     accesstoken = accesstokenresponse.json()
     return accesstoken['access_token']
   except:
-    print("Can't access MapStore (website unavailable)")
+    print("ERROR: Can't get access token")
     exit(1)
 
 
