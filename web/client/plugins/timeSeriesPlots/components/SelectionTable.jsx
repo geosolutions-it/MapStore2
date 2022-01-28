@@ -30,13 +30,11 @@ class BaseTable extends React.Component {
     COLUMNS = [{
         key: 'selectionName',
         sortable: false,
-        width: 140,
         name: 'Selection Name',
         resizable: true
     }, {
         key: 'selectionType',
         sortable: false,
-        width: 140,
         name: 'Selection Type',
         resizable: true
     },
@@ -44,7 +42,6 @@ class BaseTable extends React.Component {
         key: 'aggregateFunctionLabel',
         name: 'Operation Type',
         sortable: false,
-        width: 140,
         editable: ({selectionType}) => selectionType !== SELECTION_TYPES.POINT,  
         editor:  OperationsTypeEditor,
         formatter: ({row}) => row.selectionType === SELECTION_TYPES.POINT ? <div>No Operation</div> : <div>{row.aggregateFunctionLabel}</div>
@@ -53,7 +50,6 @@ class BaseTable extends React.Component {
         key: 'color',
         name: 'Chart Trace Color',
         sortable: false,
-        width: 140,
         formatter: (props) => {
             const { traceColor, selectionId, onChangeTraceColor } = props.row;
             return (
@@ -71,7 +67,6 @@ class BaseTable extends React.Component {
     },
     {
         key: 'action',
-        width: 50,
         resizable: true
     }];
 

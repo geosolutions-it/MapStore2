@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
@@ -33,6 +33,45 @@ import {
 } from '../selectors/timeSeriesPlots';
 import localizedProps from '../../../components/misc/enhancers/localizedProps';
 
+
+const getTimeSeriesChartProps = (data) => {
+    const aggregateFunctions = data.map(item => item.aggregateFunctionOption.value);
+    const aggregationAttribute = '(VALUE)';
+    return ({
+        cartesian: true,
+        legend: true,
+        options : {
+            aggregateFunctions,
+            aggregationAttribute,
+            groupByAttributes: data.map(item => item.groupByAttributes || 'DATE'),
+            multipleSeries: data.reduce((acc, cur) => (
+                [
+                    ...acc,
+                    { dataKey: cur.aggregateFunctionLabel !== 'No Operation' ? 
+                        `${cur.aggregateFunctionOption.value}${cur.aggregationAttribute}`: 
+                        cur.aggregationAttribute 
+                    }
+                ]
+            ), []),
+            presetLabelNames: data.reduce((acc, cur) => {
+                const seriesName = data.filter(item => cur.selectionId === item.selectionId)[0]?.selectionName || '';
+                return [
+                    ...acc,
+                    { dataKey: seriesName }
+                ]
+            }, []),
+            tracesColors: data.map(item => item.traceColor)
+        },
+        series: [{ dataKey: aggregationAttribute }],
+        type: 'line',
+        xAxis: {dataKey: 'DATE'},
+        yAxis: true
+    });
+};
+
+
+const getTimeSeriesPlotsData = (data) => (data.map(item => item.chartData) || []);
+
 /**
  * Main Panel of TimeSeriesPlotsContainer
  * @param {*} param0
@@ -51,44 +90,12 @@ const Panel = ({
     const margin = 10;
     const initialSize = {width: 400, height: 400};
     const [size, setSize] = useState(initialSize);
+    const timeSeriesChartsProps = useMemo(() => getTimeSeriesChartProps(timePlotsData), [timePlotsData]);
+    const timeSeriesPlotsData = useMemo(() => getTimeSeriesPlotsData(timePlotsData), [timePlotsData]);
+
     if (!enabled) {
         return null;
     }
-
-    const getTimeSeriesChartProps = (data) => {
-        const aggregateFunctions = data.map(item => item.aggregateFunctionOption.value);
-        const aggregationAttribute = '(VALUE)';
-        return ({
-            cartesian: true,
-            legend: true,
-            options : {
-                aggregateFunctions,
-                aggregationAttribute,
-                groupByAttributes: data.map(item => item.groupByAttributes || 'DATE'),
-                multipleSeries: data.reduce((acc, cur) => (
-                    [
-                        ...acc,
-                        { dataKey: cur.aggregateFunctionLabel !== 'No Operation' ? 
-                            `${cur.aggregateFunctionOption.value}${cur.aggregationAttribute}`: 
-                            cur.aggregationAttribute 
-                        }
-                    ]
-                ), []),
-                presetLabelNames: data.reduce((acc, cur) => {
-                    const seriesName = data.filter(item => cur.selectionId === item.selectionId)[0]?.selectionName || '';
-                    return [
-                        ...acc,
-                        { dataKey: seriesName }
-                    ]
-                }, []),
-                tracesColors: data.map(item => item.traceColor)
-            },
-            series: [{ dataKey: aggregationAttribute }],
-            type: 'line',
-            xAxis: {dataKey: 'DATE'},
-            yAxis: true
-        });
-    };
 
     return (
         <Dialog
@@ -121,6 +128,7 @@ const Panel = ({
                     height={size.height}
                     minConstraints={[350, 400]}
                     onResize={(event, {size: newSize}) => {
+                        window.dispatchEvent(new Event('resize'));
                         setSize(newSize);
                     }}
                 >
@@ -147,8 +155,8 @@ const Panel = ({
                             minHeight: '3%'
                         }}>
                             <ChartView
-                                {...getTimeSeriesChartProps(timePlotsData)}
-                                data={timePlotsData.map(item => item.chartData) || []} />
+                                {...timeSeriesChartsProps}
+                                data={timeSeriesPlotsData} />
                         </Dock>
                         </div>
                     </div>
