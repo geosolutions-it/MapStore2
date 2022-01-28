@@ -19,7 +19,7 @@ services:
   
   proxy:
     ports:
-      - 80
+      - 8019
 
   sut:
     build:
