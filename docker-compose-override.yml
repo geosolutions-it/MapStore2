@@ -41,6 +41,5 @@ services:
     depends_on:
       - postgres
       - mapstore
-      - proxy
     networks:
       - mapstore-network
