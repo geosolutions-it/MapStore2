@@ -91,7 +91,7 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-* *Set Visibility Limit*: this can be enabled when the user wants to automatically applies of the visibility limits suggested by the server.
+* *Set Visibility Limit*: if checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source.
 
 * *Show metadata template*: this can be enabled when the user wants to insert in the layer description a text with metadata information
 
@@ -205,7 +205,7 @@ In addition to the standard options, only for WMS catalog sources, through the *
 
     - Produce a localized output for GetFeatureInfo requests (the freemarker template need to be properly configured to retrieve [the locale from the request](https://docs.geoserver.org/stable/en/user/tutorials/freemarker.html))
 
-* *Set Visibility Limit*: this can be enabled when the user wants to automatically applies of the visibility limits suggested by the server.
+* *Set Visibility Limit*: available only for WMS layers coming from CSW or WMS catalog sources type. If checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source
 
 Enabling that option, all layers added to the map from this catalog source will be localized as described above (it is possible to tune again that setting for each single layer by opening the [Layer Settings](layer-settings.md#display) in TOC).
 
@@ -216,7 +216,7 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-* *Domain aliases*: this option is used to divide the content into multiple subdomains. The user can share the domain by adding another URL service in the box and can add another box through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button.
+* *Domain aliases*: available only for WMS catalogs type. This option is used to improve the performances of the application for tiled layer requests when multiple domains can be defined server side for the configured catalog source in MapStore (domain sharding). The user can configure multiple URLs referring the same WMS service through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button. Useful information about other kind of performance improvements can be found in the [MapStore online training documentation](https://training.mapstore.geosolutionsgroup.com/administration/best.html#performances).
 
 ### TMS Catalog
 
