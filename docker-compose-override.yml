@@ -11,8 +11,6 @@ services:
     build:
       args:
         MAPSTORE_WEBAPP_SRC: mapstore.war
-    ports:
-      - 8080:8080
     environment:
       JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
     volumes:
