@@ -38,8 +38,5 @@ services:
       - ./tests/test-variables.env
     profiles:
       - test
-    depends_on:
-      - postgres
-      - mapstore
     networks:
       - mapstore-network
