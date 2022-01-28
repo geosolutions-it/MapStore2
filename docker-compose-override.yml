@@ -1,32 +1,27 @@
 version: "3.8"
 
-networks:
-  eptmapstore-network:
-    driver: bridge
-
 services:
 
   postgres:
-    build:
-      context: ./tests/
-      dockerfile: DockerfilePostgresTest
-    container_name: eptpostgres
-    networks:
-      - eptmapstore-network
+    volumes:
+      - ./tests/01-init-testenv.sh:/docker-entrypoint-initdb.d/01-init-user.sh:rw
+      - ./tests/003_dmpdatabase.sql:/code/003_dmpdatabase.sql:rw
 
   mapstore:
     build:
-      dockerfile: ./tests/DockerfileMapStoreTest
       args:
-        MAPSTORE_WEBAPP_SRC: ./mapstore.war
-    container_name: eptmapstore
+        MAPSTORE_WEBAPP_SRC: mapstore.war
+    ports:
+      - 8080:8080
     environment:
       JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
     volumes:
       - ./tests/geostore-datasource-ovr.properties:/mapstore/datadir/geostore-datasource-ovr.properties:rw
       - ./tests/plugin.json:/mapstore/datadir/configs/localConfig.json.patch:rw
-    networks:
-      - eptmapstore-network
+  
+  proxy:
+    ports:
+      - 80
 
   sut:
     build:
@@ -34,7 +29,7 @@ services:
       dockerfile: Dockerfile
     command: >
       sh -c "dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 300s
-      && sleep 25
+      && sleep 20
       && python3 tests.py"
     container_name: eptsut
     env_file:
@@ -42,13 +37,6 @@ services:
     depends_on:
       - postgres
       - mapstore
-      #- proxy
+      - proxy
     networks:
-      - eptmapstore-network
-  
-  #proxy:
-  #  container_name: eptproxy
-  #  ports:
-  #    - 80
-  #  networks:
-  #    - eptmapstore-network
+      - mapstore-network

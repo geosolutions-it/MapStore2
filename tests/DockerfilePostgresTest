@@ -1,7 +1,0 @@
-FROM postgis/postgis:12-3.1
-WORKDIR /code
-COPY ./01-init-testenv.sh /docker-entrypoint-initdb.d/
-COPY ./003_dmpdatabase.sql /code/
-RUN apt-get update \
-    && apt-get install wget -y \
-    && rm -rf /var/cache/apt/*
