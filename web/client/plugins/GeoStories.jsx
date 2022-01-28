@@ -39,7 +39,9 @@ const geostoriesCountSelector = createSelector(
  * @class
  * @memberof plugins
  * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
- * @prop {boolean} cfg.shareOptions configuration applied to share panel
+ * @prop {object} cfg.shareOptions configuration applied to share panel
+ * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
  */
 class Geostories extends React.Component {
     static propTypes = {
@@ -52,7 +54,9 @@ class Geostories extends React.Component {
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
         fluid: PropTypes.bool,
-        shareOptions: PropTypes.object
+        shareOptions: PropTypes.object,
+        shareToolEnabled: PropTypes.bool,
+        emptyView: PropTypes.object
     };
 
     static contextTypes = {
@@ -74,7 +78,9 @@ class Geostories extends React.Component {
             className: 'ms-map-card-col'
         },
         maps: [],
-        shareOptions: GEOSTORY_DEFAULT_SHARE_OPTIONS
+        shareOptions: GEOSTORY_DEFAULT_SHARE_OPTIONS,
+        shareToolEnabled: true,
+        emptyView: {}
     };
 
     componentDidMount() {
@@ -90,6 +96,7 @@ class Geostories extends React.Component {
             viewerUrl={(geostory) => {this.context.router.history.push(`geostory/${geostory.id}`); }}
             getShareUrl={(geostory) => `geostory/${geostory.id}`}
             shareOptions={this.props.shareOptions}
+            shareToolEnabled={this.props.shareToolEnabled}
             bottom={<PaginationToolbar />}
         />);
     }
@@ -113,10 +120,14 @@ const GeoStoriesPlugin = compose(
     }),
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
-        ({showCreateButton = true}) => ({
+        ({showCreateButton = true, emptyView}) => ({
             glyph: "geostory",
             title: <Message msgId="resources.geostories.noGeostoryAvailable" />,
-            description: <EmptyGeostoriesView showCreateButton={showCreateButton}/>
+            description: <EmptyGeostoriesView showCreateButton={showCreateButton}/>,
+            iconFit: true,
+            imageStyle: {
+                height: emptyView?.iconHeight ?? '200px'
+            }
         })
 
     )
