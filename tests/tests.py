@@ -1,6 +1,7 @@
 import requests
 import base64
 import os
+import ast
 
 from requests.api import request
 
@@ -46,11 +47,15 @@ def getaccesstoken(url,user,pwd):
     
     accesstokenresponse = requests.request("POST", loginurl, headers=headers, data={})
     
-    accesstoken = accesstokenresponse.text
-    print (accesstoken['sessionToken'])
+    # Try block in case that the response can't be converted directly to json
+    try:
+      accesstoken = accesstokenresponse.json()
+      return accesstoken['access_token']  
+    except:
+      accesstoken = ast.literal_eval(accesstokenresponse.text) 
+      token = accesstoken['sessionToken']['access_token']
+      return token
 
-    #accesstoken = accesstokenresponse.json()
-    return accesstoken['access_token']
   except:
     print("ERROR: Can't get access token")
     exit(1)
