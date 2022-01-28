@@ -297,7 +297,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -349,7 +348,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -401,7 +399,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -453,7 +450,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -678,7 +674,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -730,7 +725,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -782,7 +776,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -834,7 +827,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -886,7 +878,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -938,7 +929,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1130,7 +1120,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1182,7 +1171,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1234,7 +1222,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1441,7 +1428,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1492,7 +1478,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1543,7 +1528,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1744,7 +1728,6 @@ describe('Test the MapUtils', () => {
                         styles: undefined,
                         style: undefined,
                         styleName: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         title: 'annotations',
                         transparent: undefined,
@@ -1889,7 +1872,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2050,7 +2032,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2251,7 +2232,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2303,7 +2283,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2355,7 +2334,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2407,7 +2385,6 @@ describe('Test the MapUtils', () => {
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
