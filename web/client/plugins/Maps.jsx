@@ -79,7 +79,9 @@ class Maps extends React.Component {
         colProps: PropTypes.object,
         version: PropTypes.string,
         fluid: PropTypes.bool,
-        showAPIShare: PropTypes.bool
+        showAPIShare: PropTypes.bool,
+        shareToolEnabled: PropTypes.bool,
+        emptyView: PropTypes.object
     };
 
     static contextTypes = {
@@ -101,7 +103,9 @@ class Maps extends React.Component {
             className: 'ms-map-card-col'
         },
         maps: [],
-        showAPIShare: true
+        showAPIShare: true,
+        shareToolEnabled: true,
+        emptyView: {}
     };
 
     render() {
@@ -120,6 +124,7 @@ class Maps extends React.Component {
             getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${this.props.mapType}/${map.id}`}
             shareApi={this.props.showAPIShare}
             version={this.props.version}
+            shareToolEnabled={this.props.shareToolEnabled}
             bottom={<PaginationToolbar />}
         />);
     }
@@ -147,10 +152,14 @@ const MapsPlugin = compose(
     }),
     emptyState(
         ({maps = [], loading}) => !loading && maps.length === 0,
-        ({showCreateButton = true}) => ({
+        ({showCreateButton = true, emptyView}) => ({
             glyph: "1-map",
             title: <Message msgId="resources.maps.noMapAvailable" />,
-            content: <EmptyMaps showCreateButton={showCreateButton} />
+            content: <EmptyMaps showCreateButton={showCreateButton} />,
+            iconFit: true,
+            imageStyle: {
+                height: emptyView?.iconHeight ?? '200px'
+            }
         })
     )
 )(Maps);
@@ -163,6 +172,8 @@ const MapsPlugin = compose(
  * @memberof plugins
  * @class
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
+ * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
  */
 export default {
     MapsPlugin: assign(MapsPlugin, {

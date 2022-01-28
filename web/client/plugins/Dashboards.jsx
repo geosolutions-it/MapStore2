@@ -40,7 +40,9 @@ const dashboardsCountSelector = createSelector(
  * @memberof plugins
  * @class
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
- * @prop {boolean} cfg.shareOptions configuration applied to share panel
+ * @prop {object} cfg.shareOptions configuration applied to share panel
+ * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
  */
 class Dashboards extends React.Component {
     static propTypes = {
@@ -53,7 +55,9 @@ class Dashboards extends React.Component {
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
         fluid: PropTypes.bool,
-        shareOptions: PropTypes.object
+        shareOptions: PropTypes.object,
+        shareToolEnabled: PropTypes.bool,
+        emptyView: PropTypes.object
     };
 
     static contextTypes = {
@@ -75,7 +79,9 @@ class Dashboards extends React.Component {
             className: 'ms-map-card-col'
         },
         maps: [],
-        shareOptions: DASHBOARD_DEFAULT_SHARE_OPTIONS
+        shareOptions: DASHBOARD_DEFAULT_SHARE_OPTIONS,
+        shareToolEnabled: true,
+        emptyView: {}
     };
 
     componentDidMount() {
@@ -91,6 +97,7 @@ class Dashboards extends React.Component {
             viewerUrl={(dashboard) => {this.context.router.history.push(`dashboard/${dashboard.id}`); }}
             getShareUrl={dashboard => `dashboard/${dashboard.id}`}
             shareOptions={this.props.shareOptions}
+            shareToolEnabled={this.props.shareToolEnabled}
             bottom={<PaginationToolbar />}
         />);
     }
@@ -114,10 +121,14 @@ const DashboardsPlugin = compose(
     }),
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
-        ({showCreateButton = true}) => ({
+        ({showCreateButton = true, emptyView}) => ({
             glyph: "dashboard",
             title: <Message msgId="resources.dashboards.noDashboardAvailable" />,
-            description: <EmptyDashboardsView showCreateButton={showCreateButton}/>
+            description: <EmptyDashboardsView showCreateButton={showCreateButton}/>,
+            iconFit: true,
+            imageStyle: {
+                height: emptyView?.iconHeight ?? '200px'
+            }
         })
 
     )
