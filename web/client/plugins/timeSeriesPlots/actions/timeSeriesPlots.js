@@ -10,6 +10,7 @@ import { timeSeriesPlots } from "../../../actions/layers";
 
 export const CHANGE_TRACE_COLOR = "TIME_SERIES_PLOTS:CHANGE_TRACE_COLOR";
 export const CHANGE_AGGREGATE_FUNCTION = "TIME_SERIES_PLOTS:CHANGE_AGGREGATE_FUNCTION";
+export const CLEAR_ALL_SELECTIONS = "TIME_SERIES_PLOTS:CLEAR_ALL_SELECTIONS";
 export const TEAR_DOWN = "TIME_SERIES_PLOTS:TEAR_DOWN";
 export const SETUP = "TIME_SERIES_PLOTS:SETUP";
 export const SET_CURRENT_SELECTION = "TIME_SERIES_PLOTS:SET_CURRENT_SELECTION";
@@ -24,6 +25,12 @@ export const changeAggregateFunction = (selectionId, aggregateFunction) => {
         type: CHANGE_AGGREGATE_FUNCTION,
         selectionId,
         aggregateFunction
+    }
+}
+
+export const clearAllSelections = () => {
+    return {
+        type: CLEAR_ALL_SELECTIONS
     }
 }
 

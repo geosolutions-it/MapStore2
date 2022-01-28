@@ -54,6 +54,9 @@ text-align: center;
 .time-series-plots-toolbar .selection-btn {
     margin-right: 10px;
 }
+.time-series-plots-toolbar .clear-all-btn {
+    margin-left: 30px;
+}
 .time-series-plots-toolbar {
     display: flex;
     align-items: flex-end;

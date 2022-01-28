@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import React from 'react';
 import {
     Button,
@@ -12,13 +13,14 @@ export default ({
     glyph,
     bsStyle,
     tooltip = <span></span>,
+    tButtonClass,
     ...props
 }) => {
     return (<OverlayTrigger placement="left" overlay={tooltip}>
         <Button
             {...props}
             bsStyle={bsStyle || "primary"}
-            className="square-button-md selection-btn">
+            className={classnames('square-button-md', tButtonClass)}>
             <Glyphicon glyph={glyph} />
         </Button>
     </OverlayTrigger>);

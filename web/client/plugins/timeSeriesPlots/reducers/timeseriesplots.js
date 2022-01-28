@@ -9,7 +9,8 @@ import {
     SETUP,
     SET_CURRENT_SELECTION,
     REMOVE_TABLE_SELECTION_ROW,
-    UPDATE_TIME_SERIES_CHART_DATA
+    UPDATE_TIME_SERIES_CHART_DATA,
+    CLEAR_ALL_SELECTIONS
 } from '../actions/timeSeriesPlots';
 
 import { MAP_CONFIG_LOADED } from '../../../actions/config';
@@ -64,6 +65,12 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 timePlotsData
+            }
+        }
+        case CLEAR_ALL_SELECTIONS: {
+            return {
+                ...state,
+                timePlotsData: []
             }
         }
         case MAP_CONFIG_LOADED: {
