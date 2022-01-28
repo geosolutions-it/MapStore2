@@ -540,7 +540,6 @@ export const saveLayer = (layer) => {
         styles: layer.styles,
         style: layer.style,
         styleName: layer.styleName,
-        availableStyles: layer.availableStyles,
         layerFilter: layer.layerFilter,
         title: layer.title,
         transparent: layer.transparent,
