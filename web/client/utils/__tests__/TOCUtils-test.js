@@ -231,7 +231,7 @@ describe('TOCUtils', () => {
     it('test localized title getTitle from object', () => {
         const title = {
             'default': 'Layer',
-            'it-IT': 'Livello'
+            'no-EX': 'Livello'
         };
         expect(getTitle(title)).toBe("Layer");
     });
