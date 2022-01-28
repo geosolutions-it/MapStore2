@@ -12,6 +12,8 @@ import {
     UPDATE_TIME_SERIES_CHART_DATA
 } from '../actions/timeSeriesPlots';
 
+import { MAP_CONFIG_LOADED } from '../../../actions/config';
+
 const INITIAL_STATE = {
     timePlotsData: []
 };
@@ -20,7 +22,7 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
     const type = action?.type;
     switch(type) {
         case TEAR_DOWN: {
-            return INITIAL_STATE;
+            return state;
         }
         // this is temporary just to wire-up layer selection
         // we will setup a dropdown to select a single
@@ -63,6 +65,13 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
                 ...state,
                 timePlotsData
             }
+        }
+        case MAP_CONFIG_LOADED: {
+            const { timePlotsData = [] } = (action?.config?.timeSeriesPlots || {});
+            return {
+                ...state,
+                timePlotsData
+            };
         }
         case STORE_TIME_SERIES_CHART_DATA: {
             const { selectionId, selectionType, featuresIds, aggregateFunctionLabel, aggregateFunctionOption, aggregationAttribute, groupByAttributes, layerName, chartData, traceColor } = action;
