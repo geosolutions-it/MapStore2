@@ -6,6 +6,8 @@ services:
     volumes:
       - ./tests/01-init-testenv.sh:/docker-entrypoint-initdb.d/01-init-user.sh:rw
       - ./tests/003_dmpdatabase.sql:/code/003_dmpdatabase.sql:rw
+    profiles:
+      - test
 
   mapstore:
     build:
@@ -16,13 +18,12 @@ services:
     volumes:
       - ./tests/geostore-datasource-ovr.properties:/mapstore/datadir/geostore-datasource-ovr.properties:rw
       - ./tests/plugin.json:/mapstore/datadir/configs/localConfig.json.patch:rw
-  
+    profiles:
+      - test
+
   proxy:
-    volumes:
-      - ./tests/mapstoretst.conf:/tmp/nginx.conf:rw
-    command: /bin/bash -c "envsubst < /tmp/nginx.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"  
-    ports:
-      - 8019:8019
+    profiles:
+      - donotstart
 
   sut:
     build:
@@ -35,6 +36,8 @@ services:
     container_name: eptsut
     env_file:
       - ./tests/test-variables.env
+    profiles:
+      - test
     depends_on:
       - postgres
       - mapstore
