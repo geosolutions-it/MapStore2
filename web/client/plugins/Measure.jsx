@@ -66,7 +66,7 @@ const selector = (state) => {
 const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
 /**
  * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.<br>
- * See [Application Configuration](https://mapstore.readthedocs.io/en/latest/developer-guide/local-config/) to understand how to configure lengthFormula, showLabel and uom
+ * See [Application Configuration](local-config) to understand how to configure lengthFormula, showLabel and uom
  * @class
  * @name Measure
  * @memberof plugins
