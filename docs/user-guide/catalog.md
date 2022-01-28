@@ -216,7 +216,7 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-* *Domain aliases*: available only for WMS catalogs type. This option is used to improve the performances of the application for tiled layer requests when multiple domains can be defined server side for the configured catalog source in MapStore (domain sharding). The user can configure multiple URLs referring the same WMS service through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button. Useful information about other kind of performance improvements can be found in the [MapStore online training documentation](https://training.mapstore.geosolutionsgroup.com/administration/best.html#performances).
+* *Domain aliases*: available only for WMS catalogs type. This option is used to improve the performances of the application for tiled layer requests when multiple domains can be defined server side for the configured catalog source in MapStore (domain sharding). The user can configure multiple URLs referring to the same WMS service through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button. Useful information about other kind of performance improvements can be found in the [MapStore online training documentation](https://training.mapstore.geosolutionsgroup.com/administration/best.html#performances).
 
 ### TMS Catalog
 
