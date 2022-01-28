@@ -52,6 +52,7 @@ def getaccesstoken(url,user,pwd):
       accesstoken = accesstokenresponse.json()
       return accesstoken['access_token']  
     except:
+      print("WARNING: ACCESS TOKEN directly response conversion don't work")
       accesstoken = ast.literal_eval(accesstokenresponse.text) 
       token = accesstoken['sessionToken']['access_token']
       return token
