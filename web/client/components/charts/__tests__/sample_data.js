@@ -134,3 +134,23 @@ export const DATASET_MULTI_SERIES_1 = {
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "pv" }, { dataKey: "uv" }]
 };
+
+export const DATASET_WITH_DATES = {
+    data: [
+        {
+            "x": "1990-10-21T00:00:00.000Z",
+            "y": 30
+        },
+        {
+            "x": "1990-10-19T06:00:00.000Z",
+            "y": 70
+        },
+        {
+            "x": "1990-07-27T06:00:00.000Z",
+            "y": 4
+        }
+    ],
+    xAxis: { dataKey: "x" },
+    series: [{ dataKey: "y" }],
+    type: "line"
+};

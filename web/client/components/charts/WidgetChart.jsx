@@ -302,6 +302,18 @@ export const toPlotly = (props) => {
         },
         data: series.map(({ dataKey: yDataKey }) => {
             let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
+            const chartData = allData ? allData?.x?.map((obj, index)=>{
+                return { epoch: new Date(obj).getTime() / 1000, date: obj, match: allData.y[index]};
+            }) : {};
+            const sortedDataByDataAsc = chartData?.sort((a, b)=> {
+                return parseInt(a.epoch, 10) - parseInt(b.epoch, 10);
+            });
+            allData.x = sortedDataByDataAsc?.map(item=>{
+                return item.date;
+            });
+            allData.y = sortedDataByDataAsc?.map(item=>{
+                return item.match;
+            });
             return  allData;
         }),
         config: {

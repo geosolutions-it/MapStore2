@@ -14,7 +14,8 @@ import {
     PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION,
     SPLIT_DATASET_2,
     SPLIT_DATASET_3,
-    TEMPLATE_LABELS_CLASSIFICATION
+    TEMPLATE_LABELS_CLASSIFICATION,
+    DATASET_WITH_DATES
 } from './sample_data';
 
 describe('WidgetChart', () => {
@@ -492,5 +493,13 @@ describe('Widget Chart: data conversions ', () => {
         const traces = data[0];
         expect(traces.length).toBe(2);
         expect(layout.barmode).toBe('group');
+    });
+    it('expect data to be sorted in ascending order', () => {
+        const { data } = toPlotly({
+            xAxis: 'xAxis',
+            ...DATASET_WITH_DATES
+        });
+        expect(DATASET_WITH_DATES.type).toBe('line');
+        expect(data[0].x[0] <= data[0].x[1]).toBeTruthy();
     });
 });
