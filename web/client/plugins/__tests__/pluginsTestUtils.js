@@ -23,6 +23,7 @@ import controls from '../../reducers/controls';
 import annotations from '../../reducers/annotations';
 import context from '../../reducers/context';
 import security from '../../reducers/security';
+import localConfig from "../../reducers/localConfig";
 
 import { getPlugins } from "../../utils/PluginsUtils";
 
@@ -34,7 +35,8 @@ const rootReducers = {
     maptype,
     annotations,
     context,
-    security
+    security,
+    localConfig
 };
 
 const createRegisterActionsMiddleware = (actions) => {

@@ -10,6 +10,7 @@ export const MapPreview = ({mapSize, layout, layoutName, resolutions, useFixedSc
     const scales = capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || [];
     return validation.valid ? (
         <MapPreviewComp
+            {...rest}
             map={map}
             layers={map?.layers ?? []}
             scales={scales}
@@ -20,7 +21,6 @@ export const MapPreview = ({mapSize, layout, layoutName, resolutions, useFixedSc
             resolutions={resolutions}
             useFixedScales={useFixedScales}
             env={localizedLayerStylesEnv}
-            {...rest}
             {...mapPreviewOptions}
         />
     ) : <div id="map-preview-disabled-message"><Message msgId="print.disabledpreview"/></div>;

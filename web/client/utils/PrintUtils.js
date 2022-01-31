@@ -425,9 +425,13 @@ export function addValidator(id, name, validator) {
  */
 export const getDefaultPrintingService = () => {
     return {
-        print: () => {
+        print: (layers) => {
             const state = getStore().getState();
-            const intialSpec = printSpecificationSelector(state);
+            const printSpec = printSpecificationSelector(state);
+            const intialSpec = layers ? {
+                ...printSpec,
+                layers
+            } : printSpec;
             return getSpecTransformerChain().map(t => t.transformer).reduce((previous, f) => {
                 return previous.then(spec=> f(state, spec));
             }, Promise.resolve(intialSpec));

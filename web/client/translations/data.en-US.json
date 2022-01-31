@@ -633,7 +633,7 @@
             "description": "Description",
             "descriptionplaceholder": "Enter a description...",
             "resolution": "Resolution:",
-            "defaultBackground": "Use OSM as background",
+            "defaultBackground": "Use the default background",
             "printtooltip": "Print",
             "alternatives": {
                 "legend": "Include legend",
