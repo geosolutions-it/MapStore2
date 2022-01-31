@@ -70,9 +70,10 @@ export const showTimeSeriesPlotsPlugin = () => {
     selectionType
 });
 
-export const storeTimeSeriesFeaturesIds = (selectionId, selectionName, selectionType, layerName, featuresIds) => ({
+export const storeTimeSeriesFeaturesIds = (selectionId, selectionGeometry = {}, selectionName, selectionType, layerName, featuresIds) => ({
     type: STORE_TIME_SERIES_FEATURES_IDS,
     selectionId,
+    selectionGeometry,
     selectionName,
     selectionType,
     layerName,
@@ -81,6 +82,7 @@ export const storeTimeSeriesFeaturesIds = (selectionId, selectionName, selection
 
 export const storeTimeSeriesChartData = (
     selectionId,
+    selectionGeometry,
     selectionName,
     selectionType,
     aggregateFunctionLabel,
@@ -94,6 +96,7 @@ export const storeTimeSeriesChartData = (
 ) => ({
     type: STORE_TIME_SERIES_CHART_DATA,
     selectionId,
+    selectionGeometry,
     selectionName,
     selectionType,
     aggregateFunctionLabel,

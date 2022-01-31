@@ -18,7 +18,7 @@ import {
 import { getLayerFromName } from '@mapstore/selectors/layers';
 import { projectionSelector } from '@mapstore/selectors/map';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
-import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES } from '../constants';
+import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES, TIME_SERIES_POLYGON_SELECTIONS_LAYER, getDefaultPolygonStyle} from '../constants';
 import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
 import { generateRandomHexColor } from '@mapstore/utils/ColorUtils';
 import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
@@ -55,6 +55,7 @@ import { localizedLayerStylesEnvSelector } from '@mapstore/selectors/localizedLa
 import { buildIdentifyRequest, filterRequestParams } from '@mapstore/utils/MapInfoUtils';
 import { getFeatureInfo } from '@mapstore/api/identify';
 import {getMessageById} from '@mapstore/utils/LocaleUtils';
+import { updateAdditionalLayer } from '@mapstore/actions/additionallayers';
 
 const CLEAN_ACTION = changeDrawingStatus("clean");
 const DEACTIVATE_ACTIONS = [
@@ -108,7 +109,7 @@ const getTimeSeriesFeatures = (geometry, getState, timeSeriesLayerName) => {
     });
 };
 
-const getWFSChartData = (layer, filter, options, aggregationAttribute, selectionId, getState, layerName, featuresIds) => {
+const getWFSChartData = (layer, filter, options, aggregationAttribute, selectionId, selectionGeometry, getState, layerName, featuresIds) => {
     return getLayerJSONFeature(layer, filter)
     .filter(wfsQueryResults => wfsQueryResults.features.length)
     .map(wfsQueryResults => wfsToChartData(wfsQueryResults, options))
@@ -133,6 +134,7 @@ const getWFSChartData = (layer, filter, options, aggregationAttribute, selection
         const { groupByAttributes } = options;
         return storeTimeSeriesChartData(
             selectionId,
+            selectionGeometry,
             selectionName,
             selectionType,
             aggregateFunctionLabel,
@@ -145,17 +147,19 @@ const getWFSChartData = (layer, filter, options, aggregationAttribute, selection
             traceColor
         );
     })
-}
+};
 
 const getWPSChartData = (
     actionType,
     wpsUrl,
     options,
     selectionId,
+    selectionGeometry,
     layerName,
     getState,
     featuresIds, 
     aggregateFunctionLabel = 'AVG',
+    /** review this string, how to make it transaltable*/
     aggregateFunctionOption = { value: "Average", label: 'AVG'}
 ) => {
     return wpsAggregate(wpsUrl, options, {
@@ -187,6 +191,7 @@ const getWPSChartData = (
             aggregationAttribute = `(${aggregationAttribute})`;
             return storeTimeSeriesChartData(
                 selectionId,
+                selectionGeometry,
                 selectionName,
                 selectionType,
                 aggregateFunctionLabel,
@@ -263,6 +268,7 @@ action$.ofType(TOGGLE_SELECTION)
                         return Rx.Observable.from(timeSeriesLayers.map((item, index) => {
                             return storeTimeSeriesFeaturesIds(
                                 selectionId,
+                                {},
                                 selectionName,
                                 selectionType, 
                                 item.layerName, 
@@ -302,10 +308,10 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
     .filter(({selectionType}) => selectionType === SELECTION_TYPES.CIRCLE ||  selectionType === SELECTION_TYPES.POLYGON)
     .switchMap(({ selectionType }) => {
         if (selectionType) {
-            const startDrawingAction = changeDrawingStatus('start', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: true });
+            const startDrawingAction = changeDrawingStatus('start', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: false });
             return action$.ofType(END_DRAWING).flatMap(({ geometry }) => {
                 const timeSeriesLayers = timeSeriesLayersSelector(getState());
-                return timeSeriesLayers.length === 0 ? Rx.Observable.empty() :
+                return (timeSeriesLayers.length === 0 ? Rx.Observable.empty() :
                 Rx.Observable.forkJoin(
                     timeSeriesLayers.map( timeSeriesLayer => 
                         getTimeSeriesFeatures(geometry, getState, timeSeriesLayer.layerName)
@@ -318,6 +324,7 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                     const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
                     return Rx.Observable.from(timeSeriesLayers.map((item, index) => storeTimeSeriesFeaturesIds(
                         selectionId,
+                        geometry,
                         selectionName,
                         selectionType, 
                         item.layerName, 
@@ -329,7 +336,14 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                     console.log("Error in map selection"); // eslint-disable-line no-console
                     console.log(e); // eslint-disable-line no-console
                     return Rx.Observable.empty();                
-                })
+                }))
+                .merge(Rx.Observable.of(changeDrawingStatus('cleanAndContinueDrawing', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: false })))
+                // .merge(Rx.Observable.of(updateAdditionalLayer(
+                //     TIME_SERIES_POLYGON_SELECTIONS_LAYER,
+                //     CONTROL_NAME,
+                //     'overlay',
+                //     { type: 'vector', name:`${CONTROL_NAME}Polygons`, id:`${CONTROL_NAME}Polygons`, visibility: true, style: getDefaultPolygonStyle()})
+                // ))
             })
             .merge(Rx.Observable.of(unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME))) // Reset map's mouse event trigger type
             .startWith(startDrawingAction)
@@ -340,10 +354,9 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
     });
 
 export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}}) =>
-    action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({ selectionId, selectionType, featuresIds, layerName, type: actionType }) => {
+    action$.ofType(STORE_TIME_SERIES_FEATURES_IDS).switchMap(({ selectionId, selectionGeometry, selectionType, featuresIds, layerName, type: actionType }) => {
         const url = selectedCatalogSelector(getState()).url;
         const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);
-        /** review this string, how to make it transaltable*/
         const {
             queryAggregationAttribute: aggregationAttribute,
             queryByAttributes: groupByAttributes,
@@ -365,12 +378,13 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
                 url, 
                 {featureType: queryLayerName, filter: ogcFilter, ...options},
                 selectionId,
+                selectionGeometry,
                 layerName,
                 getState,
                 featuresIds
             );
         } else if (selectionType === SELECTION_TYPES.POINT) {
-            return getWFSChartData({url, name: queryLayerName}, ogcFilter, { groupByAttributes }, aggregationAttribute, selectionId, getState, layerName, featuresIds)
+            return getWFSChartData({url, name: queryLayerName}, ogcFilter, { groupByAttributes }, aggregationAttribute, selectionId, selectionGeometry, getState, layerName, featuresIds)
         } else {
             return Rx.Observable.empty()
         }
@@ -384,6 +398,7 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
                 const { layerName } = timePlotData[0];
                 const aggregateFunction = timePlotData[0].aggregateFunctionOption.value || 'Average';
                 const featuresIds = timePlotData[0].featuresIds;
+                const selectionGeometry = timePlotData[0].selectionGeometry;
                 const timeSeriesLayer = getTimeSeriesLayerByName(getState(), layerName);
                 const {
                     queryAggregationAttribute: aggregationAttribute,
@@ -404,6 +419,7 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
                     wpsUrl, 
                     {featureType: queryLayerName, filter: ogcFilter, ...options},
                     selectionId,
+                    selectionGeometry,
                     layerName,
                     getState,
                     featuresIds

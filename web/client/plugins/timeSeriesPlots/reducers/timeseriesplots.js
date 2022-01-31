@@ -81,7 +81,7 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
             };
         }
         case STORE_TIME_SERIES_CHART_DATA: {
-            const { selectionId, selectionType, featuresIds, aggregateFunctionLabel, aggregateFunctionOption, aggregationAttribute, groupByAttributes, layerName, chartData, traceColor } = action;
+            const { selectionId, selectionType, selectionGeometry, featuresIds, aggregateFunctionLabel, aggregateFunctionOption, aggregationAttribute, groupByAttributes, layerName, chartData, traceColor } = action;
             let { selectionName } = action;
             selectionName = `${selectionName} ${state.timePlotsData.length + 1}`;
             return {
@@ -92,6 +92,7 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
                         selectionId,
                         selectionName,
                         selectionType,
+                        selectionGeometry,
                         featuresIds,
                         aggregateFunctionLabel,
                         aggregateFunctionOption,
