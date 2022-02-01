@@ -487,7 +487,6 @@ export const specCreators = {
             ],
             "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
                 "TRANSPARENT": true,
-                "TILED": true,
                 "EXCEPTIONS": "application/vnd.ogc.se_inimage",
                 "scaleMethod": "accurate",
                 "ENV": generateEnvString(spec.env)
