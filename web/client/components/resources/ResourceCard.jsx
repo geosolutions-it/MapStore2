@@ -23,7 +23,7 @@ class ResourceCard extends React.Component {
         backgroundOpacityStart: PropTypes.number,
         backgroundOpacityEnd: PropTypes.number,
         resource: PropTypes.object,
-        editDataEnabled: PropTypes.oneOfType(PropTypes.bool, PropTypes.func),
+        editDataEnabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
         shareToolEnabled: PropTypes.bool,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),

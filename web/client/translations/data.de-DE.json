@@ -1043,7 +1043,8 @@
                 "combo_placeholder": "Attribut",
                 "text_placeholder": "Gib den zu filternden Text ein",
                 "attribute_filter_header": "Attributfilter",
-                "tooltipTextField": "Verwenden <b>*</b> für ein beliebiges Zeichen</br>Verwenden <b>.</b> für ein einzelnes Zeichen</br>Verwenden <b>!</b> für Sonderzeichen (* und .)</br>",
+                "tooltipTextField": "Verwenden <b>*</b> für ein beliebiges Zeichen</br>Verwenden . für ein einzelnes Zeichen</br>Verwenden <b>!</b> für Sonderzeichen (* und .)</br>",
+                "tooltipTextFieldCSS": "Verwenden <b>%</b> für ein beliebiges Zeichen</br>Verwenden <b>_</b> für ein einzelnes Zeichen</br>Verwenden <b>\\</b> für Sonderzeichen (% und _)</br>",
                 "groupField": {
                     "any": "einer",
                     "all": "aller",

@@ -46,7 +46,8 @@ class GroupField extends React.Component {
         stringOperators: PropTypes.array,
         booleanOperators: PropTypes.array,
         defaultOperators: PropTypes.array,
-        comboOptions: PropTypes.object
+        comboOptions: PropTypes.object,
+        format: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
     };
 
     static contextTypes = {
@@ -86,7 +87,8 @@ class GroupField extends React.Component {
         stringOperators: ["=", "<>", "like", "ilike", "isNull"],
         arrayOperators: ["contains"],
         booleanOperators: ["="],
-        defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "><"]
+        defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "><"],
+        format: false
     };
 
     getComboValues = (selected, attributes) => {
@@ -196,6 +198,7 @@ class GroupField extends React.Component {
                             filterField={filterField}
                             attType="string"/>) :
                         (<TextField
+                            tooltipMessage={this.props.format === 'css' ? "queryform.attributefilter.tooltipTextFieldCSS" : "queryform.attributefilter.tooltipTextField"}
                             operator={filterField.operator}
                             attType="string"/>)
                 }
