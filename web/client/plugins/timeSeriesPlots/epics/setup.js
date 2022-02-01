@@ -20,7 +20,6 @@ import {
     TIME_SERIES_POINT_SELECTIONS_LAYER,
     TIME_SERIES_SELECTIONS_LAYER,
     DEFAULT_ICON_STYLE,
-    getTSSelectionsStyle,
     DEFAULT_POLYGON_STYLE
 } from '../constants';
 import { hideMapinfoMarker, toggleMapInfoState } from '@mapstore/actions/mapInfo';

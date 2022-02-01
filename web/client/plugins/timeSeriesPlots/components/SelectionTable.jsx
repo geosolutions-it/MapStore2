@@ -93,9 +93,15 @@ class BaseTable extends React.Component {
                             <Glyphicon glyph="exclamation-mark" />
                         </OverlayTrigger>,
                     callback: () => {
-                        const { extent = {} } = row?.selectionGeometry;
-                        if (extent) {
-                            this.props.onZoomToSelectionExtent(extent, "EPSG:3857");
+                        const { extent = {}, coordinates = [], type = '', projection = 'EPSG:4326'} = row?.selectionGeometry;
+                        if (type && type === 'Polygon') {
+                            if (extent.length) {
+                                this.props.onZoomToSelectionExtent(extent, projection);
+                            }
+                        } else if (type && type === 'Point') {
+                            if (coordinates.length > 1) {
+                                this.props.onZoomToSelectionPoint(coordinates, 21, projection);
+                            }
                         }
                     }
                 }

@@ -33,6 +33,7 @@ import {
     aggregateFunctionSelector
 } from '../selectors/timeSeriesPlots';
 import localizedProps from '../../../components/misc/enhancers/localizedProps';
+import { zoomToPoint } from '../../../actions/map';
 
 
 const getTimeSeriesChartProps = (data) => {
@@ -87,10 +88,11 @@ const Panel = ({
     timePlotsData,
     onRemoveTableSelectionRow = () => {},
     onZoomToSelectionExtent = () => {},
+    onZoomToSelectionPoint = () => {},
     aggregationOptions
 }) => {
     const margin = 10;
-    const initialSize = {width: 615, height: 625};
+    const initialSize = {width: 630, height: 530};
     const [size, setSize] = useState(initialSize);
     const timeSeriesChartsProps = useMemo(() => getTimeSeriesChartProps(timePlotsData), [timePlotsData]);
     const timeSeriesPlotsData = useMemo(() => getTimeSeriesPlotsData(timePlotsData), [timePlotsData]);
@@ -106,8 +108,8 @@ const Panel = ({
             style={{
                 zIndex: 10000,
                 position: "absolute",
-                left: "17%",
-                top: "50px",
+                left: "20%",
+                top: "-145px",
                 margin: 0,
                 width: size.width}}>
             <span
@@ -143,6 +145,7 @@ const Panel = ({
                         <MainToolbar />
                         <SelectionTable
                             onZoomToSelectionExtent={onZoomToSelectionExtent}
+                            onZoomToSelectionPoint={onZoomToSelectionPoint}
                             aggregationOptions={aggregationOptions}
                             timeSeriesFeaturesSelections={timePlotsData}
                             onRemoveTableSelectionRow={onRemoveTableSelectionRow}
@@ -154,8 +157,8 @@ const Panel = ({
                             position: 'relative'
                         }}>
                         <ChartView
-                                {...timeSeriesChartsProps}
-                                data={timeSeriesPlotsData} />
+                            {...timeSeriesChartsProps}
+                            data={timeSeriesPlotsData} />
                         </div>
                     </div>
                 </Resizable>
@@ -174,7 +177,8 @@ const TSPPanel = connect(createStructuredSelector({
     onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId),
     onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color),
     onChangeAggregateFunction: (selectionId, aggregateFunction) => changeAggregateFunction(selectionId, aggregateFunction),
-    onZoomToSelectionExtent: (extent, crs) => zoomToExtent(extent, crs)
+    onZoomToSelectionExtent: (extent, crs) => zoomToExtent(extent, crs),
+    onZoomToSelectionPoint: (pos, zoom, crs) => zoomToPoint(pos, zoom, crs)
 })(Panel);
 
 export default compose(

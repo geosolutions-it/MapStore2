@@ -32,12 +32,6 @@ export const DEFAULT_SELECTIONS_STYLE = {
     weight: 2
 };
 
-export const getTSSelectionsStyle = (color) => color ? {
-    ...DEFAULT_SELECTIONS_STYLE,
-    fillColor: color,
-    color
-} : DEFAULT_SELECTIONS_STYLE;
-
 export const SELECTION_TYPES = {
     /** disabling circle selection util I know how to do it*/
     //CIRCLE: "CIRCLE",

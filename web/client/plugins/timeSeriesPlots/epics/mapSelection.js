@@ -18,7 +18,7 @@ import {
 import { getLayerFromName } from '@mapstore/selectors/layers';
 import { projectionSelector } from '@mapstore/selectors/map';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
-import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES, TIME_SERIES_SELECTIONS_LAYER, getTSSelectionsStyle} from '../constants';
+import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES, TIME_SERIES_SELECTIONS_LAYER} from '../constants';
 import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
 import { generateRandomHexColor } from '@mapstore/utils/ColorUtils';
 import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
@@ -46,9 +46,11 @@ import {
     storeTimeSeriesChartData,
     updateTimeSeriesChartData,
     STORE_TIME_SERIES_FEATURES_IDS,
-    TEAR_DOWN, TOGGLE_SELECTION, STORE_TIME_SERIES_CHART_DATA
+    TEAR_DOWN, TOGGLE_SELECTION,
+    STORE_TIME_SERIES_CHART_DATA,
+    REMOVE_TABLE_SELECTION_ROW,
+    CHANGE_TRACE_COLOR, CLEAR_ALL_SELECTIONS
 } from '../actions/timeSeriesPlots';
-import { point } from 'leaflet';
 import { isMapPopup, isHighlightEnabledSelector, itemIdSelector, overrideParamsSelector, identifyOptionsSelector } from '@mapstore/selectors/mapInfo';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '@mapstore/actions/mapPopups';
 import { IDENTIFY_POPUP } from '@mapstore/components/map/popups';
@@ -58,6 +60,7 @@ import { getFeatureInfo } from '@mapstore/api/identify';
 import {getMessageById} from '@mapstore/utils/LocaleUtils';
 import { updateAdditionalLayer } from '@mapstore/actions/additionallayers';
 import { reprojectGeoJson } from '@mapstore/utils/CoordinatesUtils';
+import { pointToFeature } from '../utils';
 
 const CLEAN_ACTION = changeDrawingStatus("clean");
 const DEACTIVATE_ACTIONS = [
@@ -271,7 +274,7 @@ action$.ofType(TOGGLE_SELECTION)
                         return Rx.Observable.from(timeSeriesLayers.map((item, index) => {
                             return storeTimeSeriesFeaturesIds(
                                 selectionId,
-                                {},
+                                pointToFeature(point),
                                 selectionName,
                                 selectionType, 
                                 item.layerName, 
@@ -426,14 +429,19 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
         });
 
     export const syncSelectionsLayers = (action$,  {getState = () => {}}) =>
-        action$.ofType(STORE_TIME_SERIES_CHART_DATA).switchMap(({ selectionId, selectionGeometry }) => {
+        action$.ofType(
+            STORE_TIME_SERIES_CHART_DATA,
+            REMOVE_TABLE_SELECTION_ROW,
+            CHANGE_TRACE_COLOR,
+            CLEAR_ALL_SELECTIONS
+            ).switchMap(() => {
             return Rx.Observable.of(updateAdditionalLayer(
                 TIME_SERIES_SELECTIONS_LAYER,
                 CONTROL_NAME,
                 'overlay', 
                 {
                     type: 'vector',
-                    features: timeSeriesFeaturesSelectionsSelector(getState()).map(feature => reprojectGeoJson(feature, 'EPSG:3857', 'EPSG:4326')),
+                    features: timeSeriesFeaturesSelectionsSelector(getState()).map(feature => reprojectGeoJson(feature, feature.properties.projection, 'EPSG:4326')),
                     name:`${CONTROL_NAME}`,
                     id:`${CONTROL_NAME}`,
                     visibility: true

@@ -1,5 +1,6 @@
 import { CONTROL_NAME, getTSSelectionsStyle } from '../constants';
 import { createControlEnabledSelector } from '../../../selectors/controls';
+import { makeFeatureFromGeometry } from '../utils';
 import { pickBy } from 'lodash';
 
 
@@ -64,21 +65,7 @@ export function timeSeriesCatalogServiceTitleSelector(state) { return state?.tim
  * @param {object} state
  * @returns {int} the index of the current selection
  */
-export function timeSeriesFeaturesSelectionsSelector(state) { return state?.timeSeriesPlots?.timePlotsData?.map(item => {
-  const { type, coordinates, id } = item.selectionGeometry;
-  const { traceColor: selectionColor } = item;
-  return ({
-    type: "Feature",
-    geometry: {
-      type,
-      coordinates
-    },
-    properties: {
-      id
-    },
-    style: getTSSelectionsStyle(selectionColor)
-  })
-}) ?? []}
+export function timeSeriesFeaturesSelectionsSelector(state) { return state?.timeSeriesPlots?.timePlotsData?.map(({selectionGeometry, traceColor}) => makeFeatureFromGeometry(selectionGeometry, traceColor)) ?? []}
 
 // **********************************************
 // CHART_DATA
