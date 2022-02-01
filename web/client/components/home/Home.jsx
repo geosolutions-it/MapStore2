@@ -54,7 +54,7 @@ class Home extends React.Component {
                         bsStyle="primary"
                         onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
-                        {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children'])}
+                        {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children', 'icon', 'bsStyle', 'className'])}
                     >{this.props.icon}</Button>
                 </OverlayTrigger>
                 <ConfirmModal
