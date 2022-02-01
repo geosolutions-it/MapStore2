@@ -24,6 +24,7 @@ import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
 import { changeAggregateFunction, changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
 import { getDefaultAggregationOperations } from '@mapstore/utils/WidgetsUtils';
+import { zoomToExtent } from '@mapstore/actions/map';
 
 import {
     enabledSelector,
@@ -85,10 +86,11 @@ const Panel = ({
     onClose = () => {},
     timePlotsData,
     onRemoveTableSelectionRow = () => {},
+    onZoomToSelectionExtent = () => {},
     aggregationOptions
 }) => {
     const margin = 10;
-    const initialSize = {width: 400, height: 400};
+    const initialSize = {width: 615, height: 625};
     const [size, setSize] = useState(initialSize);
     const timeSeriesChartsProps = useMemo(() => getTimeSeriesChartProps(timePlotsData), [timePlotsData]);
     const timeSeriesPlotsData = useMemo(() => getTimeSeriesPlotsData(timePlotsData), [timePlotsData]);
@@ -140,6 +142,7 @@ const Panel = ({
                     }}>
                         <MainToolbar />
                         <SelectionTable
+                            onZoomToSelectionExtent={onZoomToSelectionExtent}
                             aggregationOptions={aggregationOptions}
                             timeSeriesFeaturesSelections={timePlotsData}
                             onRemoveTableSelectionRow={onRemoveTableSelectionRow}
@@ -150,14 +153,9 @@ const Panel = ({
                             width: '100%',
                             position: 'relative'
                         }}>
-                        <Dock position="bottom" dimMode="none" fluid isVisible zIndex={0} dockStyle={{
-                            maxHeight: '90%',
-                            minHeight: '3%'
-                        }}>
-                            <ChartView
+                        <ChartView
                                 {...timeSeriesChartsProps}
                                 data={timeSeriesPlotsData} />
-                        </Dock>
                         </div>
                     </div>
                 </Resizable>
@@ -175,7 +173,8 @@ const TSPPanel = connect(createStructuredSelector({
     onClose: () => toggleControl(CONTROL_NAME),
     onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId),
     onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color),
-    onChangeAggregateFunction: (selectionId, aggregateFunction) => changeAggregateFunction(selectionId, aggregateFunction)
+    onChangeAggregateFunction: (selectionId, aggregateFunction) => changeAggregateFunction(selectionId, aggregateFunction),
+    onZoomToSelectionExtent: (extent, crs) => zoomToExtent(extent, crs)
 })(Panel);
 
 export default compose(

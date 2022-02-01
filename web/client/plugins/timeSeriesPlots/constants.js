@@ -14,27 +14,29 @@ export const TIME_SERIES_VECTOR_LAYER_NAMES = ["ale:in_sar_dataset"];
 import iconUrl from '../../product/assets/img/marker-icon-red.png';
 import shadowUrl from '../../product/assets/img/marker-shadow.png';
 
-export const DEFAULT_ICON_STYLE = {
+export const DEFAULT_ICON_STYLE = [{
     iconUrl,
     shadowUrl,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
+}];
+
+
+export const DEFAULT_SELECTIONS_STYLE = {
+    fillColor: "#00FF18",
+    opacity: 0.6,
+    fillOpacity: 0.6,
+    color: "#0112FF", // stroke color
+    weight: 2
 };
 
-
-export const DEFAULT_POLYGON_STYLE = {
-    stroke: new Stroke({
-        color: 'blue',
-        width: 1
-    }),
-    fill: new Fill({
-        color: 'blue'
-    })        
-};
-
-export const getDefaultPolygonStyle = () => new Style(DEFAULT_POLYGON_STYLE);
+export const getTSSelectionsStyle = (color) => color ? {
+    ...DEFAULT_SELECTIONS_STYLE,
+    fillColor: color,
+    color
+} : DEFAULT_SELECTIONS_STYLE;
 
 export const SELECTION_TYPES = {
     /** disabling circle selection util I know how to do it*/

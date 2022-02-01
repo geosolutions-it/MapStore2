@@ -7,13 +7,16 @@
  */
 
 import React from 'react';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 import ColorSelector from '@mapstore/components/style/ColorSelector';
 import { SELECTION_TYPES } from '../constants';
 import ReactDataGrid from 'react-data-grid';
 import { Editors } from "react-data-grid-addons";
 import PropTypes from 'prop-types';
 import localizedProps from '@mapstore/components/misc/enhancers/localizedProps';
+import bbox from '@turf/bbox';
+import Message from '@mapstore/components/I18N/Message';
+import OverlayTrigger from '@mapstore/components/misc/OverlayTrigger';
 
 const { DropDownEditor } = Editors;
 const operationTypes = [
@@ -28,6 +31,12 @@ const OperationsTypeEditor = <DropDownEditor options={operationTypes} />;
 class BaseTable extends React.Component {
 
     COLUMNS = [{
+        name: '',
+        key: "zoomTo",
+        width: 35,
+        frozen: true
+    },
+    {
         key: 'selectionName',
         sortable: false,
         name: 'Selection Name',
@@ -66,18 +75,33 @@ class BaseTable extends React.Component {
         }
     },
     {
-        key: 'action',
-        resizable: true
+        key: 'remove',
+        width: 35,
     }];
 
     getCellActions (column, row) {
-        const cellActions = [{
-            icon:  <Glyphicon glyph="remove"/>,
-            callback: () => {
-                this.props.onRemoveTableSelectionRow(row.selectionId)
-            }
-        }];
-        return column.key === 'action' ? cellActions : null;
+
+        const cellActions = {
+            'remove': [{icon: <Glyphicon glyph="remove" />, callback: () => { this.props.onRemoveTableSelectionRow(row.selectionId) }}],
+            'zoomTo': [
+                {
+                    icon: row.selectionGeometry ? 
+                        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-zoom-object"><Message msgId="featuregrid.zoomObject"/></Tooltip>}>
+                            <Glyphicon glyph="zoom-to" />
+                        </OverlayTrigger> :
+                        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-save-features"><Message msgId="featuregrid.missingGeometry"/></Tooltip>}>
+                            <Glyphicon glyph="exclamation-mark" />
+                        </OverlayTrigger>,
+                    callback: () => {
+                        const { extent = {} } = row?.selectionGeometry;
+                        if (extent) {
+                            this.props.onZoomToSelectionExtent(extent, "EPSG:3857");
+                        }
+                    }
+                }
+            ]
+        }
+        return cellActions[column.key] ?? null;
     }
 
     onGridRowsUpdated ({cellKey, rowIds, updated}) {

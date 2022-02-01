@@ -18,7 +18,7 @@ import {
 import { getLayerFromName } from '@mapstore/selectors/layers';
 import { projectionSelector } from '@mapstore/selectors/map';
 import { getLayerJSONFeature } from '@mapstore/observables/wfs';
-import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES, TIME_SERIES_POLYGON_SELECTIONS_LAYER, getDefaultPolygonStyle} from '../constants';
+import { CONTROL_NAME, MOUSEMOVE_EVENT, SELECTION_TYPES, TIME_SERIES_SELECTIONS_LAYER, getTSSelectionsStyle} from '../constants';
 import FilterBuilder from '@mapstore/utils/ogc/Filter/FilterBuilder';
 import { generateRandomHexColor } from '@mapstore/utils/ColorUtils';
 import { wpsAggregateToChartData } from '@mapstore/components/widgets/enhancers/wpsChart';
@@ -28,6 +28,7 @@ import { selectedCatalogSelector } from '@mapstore/selectors/catalog';
 import {
     timePlotDataSelector,
     timeSeriesLayersSelector,
+    timeSeriesFeaturesSelectionsSelector,
     getTimeSeriesLayerByName,
     currentSelectionToolSelector,
     currentTraceColorsSelector
@@ -45,7 +46,7 @@ import {
     storeTimeSeriesChartData,
     updateTimeSeriesChartData,
     STORE_TIME_SERIES_FEATURES_IDS,
-    TEAR_DOWN, TOGGLE_SELECTION
+    TEAR_DOWN, TOGGLE_SELECTION, STORE_TIME_SERIES_CHART_DATA
 } from '../actions/timeSeriesPlots';
 import { point } from 'leaflet';
 import { isMapPopup, isHighlightEnabledSelector, itemIdSelector, overrideParamsSelector, identifyOptionsSelector } from '@mapstore/selectors/mapInfo';
@@ -56,6 +57,7 @@ import { buildIdentifyRequest, filterRequestParams } from '@mapstore/utils/MapIn
 import { getFeatureInfo } from '@mapstore/api/identify';
 import {getMessageById} from '@mapstore/utils/LocaleUtils';
 import { updateAdditionalLayer } from '@mapstore/actions/additionallayers';
+import { reprojectGeoJson } from '@mapstore/utils/CoordinatesUtils';
 
 const CLEAN_ACTION = changeDrawingStatus("clean");
 const DEACTIVATE_ACTIONS = [
@@ -163,7 +165,8 @@ const getWPSChartData = (
     aggregateFunctionOption = { value: "Average", label: 'AVG'}
 ) => {
     return wpsAggregate(wpsUrl, options, {
-        timeout: 15000
+        timeout: 15000, 
+        headers: {'Content-Type': 'application/json'},
     })
     .map(aggregationResults => {
         const { aggregateFunction, aggregationAttribute, groupByAttributes} = options;
@@ -338,12 +341,6 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                     return Rx.Observable.empty();                
                 }))
                 .merge(Rx.Observable.of(changeDrawingStatus('cleanAndContinueDrawing', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: false })))
-                // .merge(Rx.Observable.of(updateAdditionalLayer(
-                //     TIME_SERIES_POLYGON_SELECTIONS_LAYER,
-                //     CONTROL_NAME,
-                //     'overlay',
-                //     { type: 'vector', name:`${CONTROL_NAME}Polygons`, id:`${CONTROL_NAME}Polygons`, visibility: true, style: getDefaultPolygonStyle()})
-                // ))
             })
             .merge(Rx.Observable.of(unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME))) // Reset map's mouse event trigger type
             .startWith(startDrawingAction)
@@ -426,4 +423,20 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
                 );
             };
             return Rx.Observable.empty();
+        });
+
+    export const syncSelectionsLayers = (action$,  {getState = () => {}}) =>
+        action$.ofType(STORE_TIME_SERIES_CHART_DATA).switchMap(({ selectionId, selectionGeometry }) => {
+            return Rx.Observable.of(updateAdditionalLayer(
+                TIME_SERIES_SELECTIONS_LAYER,
+                CONTROL_NAME,
+                'overlay', 
+                {
+                    type: 'vector',
+                    features: timeSeriesFeaturesSelectionsSelector(getState()).map(feature => reprojectGeoJson(feature, 'EPSG:3857', 'EPSG:4326')),
+                    name:`${CONTROL_NAME}`,
+                    id:`${CONTROL_NAME}`,
+                    visibility: true
+                })
+            )
         });
