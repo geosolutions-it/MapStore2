@@ -130,13 +130,17 @@ const converters = {
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) ) || head([].filter.call(URI, (uri) => !uri.name && uri.protocol?.indexOf('image/') > -1));
                     thumbURL = thumb ? thumb.value : null;
                     wms = head(URI.map( uri => {
-                        return uri.protocol && (
-                            /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
-                            uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) ||
-                            uri.protocol.match(/^OGC:WMS/g) ||
-                            /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
-                            uri.protocol.match(/serviceType\/ogc\/wms/g) && extractWMSParamsFromURL(uri)
-                        );
+                        if (uri.protocol) {
+                            if (uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) || uri.protocol.match(/^OGC:WMS/g) ) {
+                                /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
+                                return uri;
+                            }
+                            if (uri.protocol.match(/serviceType\/ogc\/wms/g)) {
+                                /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                                return extractWMSParamsFromURL(uri);
+                            }
+                        }
+                        return false;
                     }).filter(item => item));
                 }
                 // look in references objects
