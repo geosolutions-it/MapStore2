@@ -150,7 +150,7 @@
     "b64-to-blob": "1.2.19",
     "babel-polyfill": "6.8.0",
     "babel-standalone": "6.7.7",
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "buffer": "6.0.3",
     "canvas-to-blob": "0.0.0",
     "canvg-browser": "1.0.0",
