@@ -14,12 +14,12 @@ const Preview = ({
     selectedItem
 }) => {
     const src = selectedItem && selectedItem.data && selectedItem.data.src;
-    return src && <img src={src }
+    return src ? <img src={src }
         style={{
             objectFit: "contain",
             width: "100%",
             height: "100%"
-        }}/>;
+        }}/> : null;
 };
 
 
