@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FormGroup, Col, ControlLabel, Checkbox} from "react-bootstrap";
 import RS from 'react-select';
 import { DEFAULT_FORMAT_WMS } from '../../../../utils/CatalogUtils';
@@ -19,6 +19,7 @@ import ReactQuill from "react-quill";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
+import WMSDomainAliases from "./WMSDomainAliases";
 
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
@@ -65,6 +66,11 @@ export default ({
     onToggleTemplate = () => { },
     ...props
 }) => {
+    useEffect(() => {
+        // Apply default configuration on new service
+        service.isNew && onChangeServiceProperty("autoSetVisibilityLimits", props.autoSetVisibilityLimits);
+    }, [props.autoSetVisibilityLimits]);
+
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
         {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
@@ -76,7 +82,7 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>)}
-        {(!isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="autoSetVisibilityLimits" key="autoSetVisibilityLimits">
+        <FormGroup controlId="autoSetVisibilityLimits" key="autoSetVisibilityLimits">
             <Col xs={12}>
                 <Checkbox
                     onChange={(e) => onChangeServiceProperty("autoSetVisibilityLimits", e.target.checked)}
@@ -84,7 +90,7 @@ export default ({
                     <Message msgId="catalog.autoSetVisibilityLimits.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.autoSetVisibilityLimits.tooltip" />} />
                 </Checkbox>
             </Col>
-        </FormGroup>)}
+        </FormGroup>
         {(!isNil(service.type) ? (service.type === "csw" && !service.excludeShowTemplate) : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Col xs={12}>
                 <Checkbox
@@ -158,5 +164,6 @@ export default ({
         {!isNil(service.type) && service.type === "csw" &&
         <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
         }
+        {!isNil(service.type) && service.type === "wms" && (<WMSDomainAliases service={service} onChangeServiceProperty={onChangeServiceProperty} />)}
     </CommonAdvancedSettings>);
 };

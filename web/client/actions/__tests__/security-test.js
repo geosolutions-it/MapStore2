@@ -9,6 +9,8 @@
 import expect from 'expect';
 
 import * as security from '../security';
+import { base64ToUtf8 } from '../../utils/EncodeUtils';
+
 
 describe('Test correctness of the close actions', () => {
     it('resetError', () => {
@@ -25,6 +27,16 @@ describe('Test correctness of the close actions', () => {
             .toIncludeKey('password')
             .toIncludeKey('authProvider');
         expect(retval.type).toBe(security.LOGIN_SUCCESS);
+    });
+    it('loginSuccess encoding of UTF-8', () => {
+        const TESTS = [
+            ["✓", "✓"],
+            ["àèìòù€", "àèìòù€"]
+        ];
+        TESTS.forEach(([username, password], index) => {
+            const action = security.loginSuccess({}, username, password);
+            expect(base64ToUtf8(action.authHeader.split(" ")[1])).toEqual(`${TESTS[index][0]}:${TESTS[index][1]}`);
+        });
     });
     it('loginFail', () => {
         const retval = security.loginFail();

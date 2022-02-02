@@ -2,13 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import MapPreviewComp from "../../components/print/MapPreview";
+import Message from "../../components/I18N/Message";
 
 export const MapPreview = ({mapSize, layout, layoutName, resolutions, useFixedScales,
     localizedLayerStylesEnv, mapPreviewOptions, mapType,
-    map, capabilities, onRefresh, ...rest}) => {
+    map, capabilities, onRefresh, validation = {valid: true}, ...rest}) => {
     const scales = capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || [];
-    return (
+    return validation.valid ? (
         <MapPreviewComp
+            {...rest}
             map={map}
             layers={map?.layers ?? []}
             scales={scales}
@@ -19,10 +21,9 @@ export const MapPreview = ({mapSize, layout, layoutName, resolutions, useFixedSc
             resolutions={resolutions}
             useFixedScales={useFixedScales}
             env={localizedLayerStylesEnv}
-            {...rest}
             {...mapPreviewOptions}
         />
-    );
+    ) : <div id="map-preview-disabled-message"><Message msgId="print.disabledpreview"/></div>;
 };
 
 MapPreview.contextTypes = {

@@ -8,13 +8,14 @@
 
 import urlUtil from 'url';
 
-import {isArray, castArray, get} from 'lodash';
+import {isArray, castArray, get, filter} from 'lodash';
 import assign from 'object-assign';
 import xml2js from 'xml2js';
 
 import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
+import Rx from "rxjs";
 
 const capabilitiesCache = {};
 
@@ -268,6 +269,12 @@ export const reset = () => {
     });
 };
 
+export const preprocess = (service) => {
+    let { domainAliases } = service;
+    service.domainAliases = filter(domainAliases);
+    return Rx.Observable.of(service);
+};
+
 
 const Api = {
     flatLayers,
@@ -280,7 +287,8 @@ const Api = {
     textSearch,
     parseLayerCapabilities,
     getBBox,
-    reset
+    reset,
+    preprocess
 };
 
 export default Api;

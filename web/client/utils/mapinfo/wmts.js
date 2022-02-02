@@ -67,7 +67,7 @@ export default {
                 ...assign({}, params),
                 tilecol: tileCol,
                 tilerow: tileRow,
-                tilematrix: matrixIds[Math.round(props.map.zoom)],
+                tilematrix: matrixIds[Math.round(props.map.zoom)].identifier,
                 tilematrixset: tileMatrixSet,
                 i: tileI,
                 j: tileJ

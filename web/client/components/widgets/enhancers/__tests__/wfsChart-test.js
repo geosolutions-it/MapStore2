@@ -42,7 +42,8 @@ describe('wfsChart enhancer', () => {
                 search: { url: 'base/web/client/test-resources/wfs/Arizona_18_results.json'}},
             options: {
                 aggregationAttribute: "LAND_KM",
-                groupByAttributes: "STATE_NAME"
+                groupByAttributes: "STATE_NAME",
+                classificationAttribute: "SUB_REGION"
             }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
@@ -63,7 +64,8 @@ describe('wfsChart enhancer', () => {
             options: {
                 aggregateFunction: "Count",
                 aggregationAttribute: "test",
-                groupByAttributes: "test"
+                groupByAttributes: "test",
+                classificationAttribute: "test"
             }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));

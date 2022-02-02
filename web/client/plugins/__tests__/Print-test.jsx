@@ -3,23 +3,43 @@ import ReactDOM from "react-dom";
 import expect from "expect";
 
 import Print from "../Print";
-import { getLazyPluginForTest } from './pluginsTestUtils';
+import { getLazyPluginForTest, getByXPath } from './pluginsTestUtils';
 
 import {setStore} from "../../utils/StateUtils";
 
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
-import {addTransformer, resetTransformers} from "../../utils/PrintUtils";
-
-function getByXPath(xpath) {
-    return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-}
+import {addTransformer, resetDefaultPrintingService} from "../../utils/PrintUtils";
+import ReactTestUtils from 'react-dom/test-utils';
 
 const initialState = {
     controls: {
         print: {
             enabled: true
         }
+    },
+    maptype: {
+        mapType: "openlayers"
+    },
+    map: {
+        center: {
+            x: 0,
+            y: 0,
+            crs: "EPSG:4326"
+
+        },
+        zoom: 5,
+        bbox: {
+            bounds: {
+                minx: 0,
+                miny: 0,
+                maxx: 100,
+                maxy: 100
+            },
+            crs: "EPSG:3857"
+        },
+        projection: "EPSG:3857",
+        resolutions: [0.5, 1, 2, 4, 8, 16, 32]
     },
     print: {
         spec: {
@@ -66,24 +86,32 @@ function expectDefaultItems() {
     expect(document.getElementById("mapstore-print-preview-panel")).toNotExist();
 }
 
-function getPrintPlugin({items = [], layers = [], preview = false} = {}) {
+function getPrintPlugin({items = [], layers = [], preview = false, projection = "EPSG:3857"} = {}) {
     return getLazyPluginForTest({
         plugin: Print,
         storeState: {
             ...initialState,
             browser: "good",
             layers,
+            map: {
+                ...initialState.map,
+                projection
+            },
             print: {
                 pdfUrl: preview ? "http://fakepreview" : undefined,
                 ...initialState.print,
                 map: {
-                    projection: "EPSG:3857",
+                    projection,
                     center: {x: 0, y: 0},
                     layers
                 }
             }
         },
         items
+    }).then((plugin) => {
+        const {store} = plugin;
+        setStore(store);
+        return plugin;
     });
 }
 
@@ -99,7 +127,7 @@ describe('Print Plugin', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         mockAxios.restore();
-        resetTransformers();
+        resetDefaultPrintingService();
         setTimeout(done);
     });
 
@@ -207,10 +235,8 @@ describe('Print Plugin', () => {
     });
 
     it("print using default printing service", (done) => {
-        getPrintPlugin().then(({ Plugin, store }) => {
+        getPrintPlugin().then(({ Plugin }) => {
             try {
-                setStore(store);
-
                 mockAxios.onPost().reply(({url, data }) => {
                     try {
                         expect(url).toContain("fakeservice");
@@ -233,9 +259,8 @@ describe('Print Plugin', () => {
     });
 
     it("print with custom transformer", (done) => {
-        getPrintPlugin().then(({ Plugin, store }) => {
+        getPrintPlugin().then(({ Plugin }) => {
             try {
-                setStore(store);
                 addTransformer("custom", (state, spec) => Promise.resolve({
                     ...spec,
                     custom: "mycustomvalue"
@@ -262,7 +287,13 @@ describe('Print Plugin', () => {
 
     it("print using custom printing service", (done) => {
         const printingService = {
-            print() {}
+            print() {},
+            getMapConfiguration() {
+                return {
+                    layers: []
+                };
+            },
+            validate() { return {};}
         };
         let spy = expect.spyOn(printingService, "print");
         getPrintPlugin().then(({ Plugin }) => {
@@ -273,6 +304,44 @@ describe('Print Plugin', () => {
                 submit.click();
                 setTimeout(() => {
                     expect(spy.calls.length).toBe(1);
+                    done();
+                }, 0);
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it("print using alternative background", (done) => {
+        const actions = {
+            onPrint: () => {}
+        };
+        let spy = expect.spyOn(actions, "onPrint");
+        getPrintPlugin({
+            layers: [{visibility: true, type: "osm"}],
+            projection: "EPSG:4326"
+        }).then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    pluginCfg={{
+                        onPrint: actions.onPrint
+                    }}
+                    defaultBackground={["osm", "empty"]}
+                />, document.getElementById("container"));
+                const input = getByXPath("//*[text()='print.defaultBackground']");
+                expect(input).toExist();
+                ReactTestUtils.Simulate.change(input, {
+                    target: {
+                        checked: true
+                    }
+                });
+                input.click();
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                ReactTestUtils.Simulate.click(submit);
+                setTimeout(() => {
+                    expect(spy.calls.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers.length).toBe(0);
                     done();
                 }, 0);
             } catch (ex) {

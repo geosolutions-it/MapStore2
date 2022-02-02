@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { isNil } from 'lodash';
 import Select from 'react-select';
 import { Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
@@ -42,6 +42,16 @@ const AXIS_TYPES = [{
     label: 'widgets.advanced.axisTypes.date'
 }];
 
+const BAR_CHART_TYPES = [{
+    id: 'stacked',
+    value: 'stack',
+    label: 'widgets.advanced.stackedBarChart'
+}, {
+    id: 'grouped',
+    value: 'group',
+    label: 'widgets.advanced.groupedBarChart'
+}];
+
 const MAX_X_AXIS_LABELS = 200;
 
 function Header({}) {
@@ -51,9 +61,11 @@ function Header({}) {
 }
 
 export default function ChartAdvancedOptions({
+    classificationAttribute,
     data,
     onChange = () => {}
 }) {
+    const [barChartType, setBarChartType] = useState(data.barChartType || 'stack');
     return (<SwitchPanel id="displayCartesian"
         header={<Header data={data}/>}
         collapsible
@@ -70,6 +82,31 @@ export default function ChartAdvancedOptions({
                     onChange={(val) => { onChange("cartesian", !val); }}
                 />
             </Col>
+            { data.type === 'bar' &&
+                classificationAttribute && (
+                <div className="bar-chart-type">
+                    <Col componentClass={ControlLabel} sm={6}>
+                        <Message msgId="widgets.advanced.barChartType" />
+                    </Col>
+                    {BAR_CHART_TYPES.map(chartType => (
+                        <Col xs={3} className="radio-btn" key={chartType.value}>
+                            <input
+                                type="radio"
+                                id={chartType.id}
+                                value={chartType.value}
+                                name="barChartType"
+                                checked={barChartType === chartType.value}
+                                onChange={ e => {
+                                    const { value } = e.target;
+                                    setBarChartType(value);
+                                    onChange("barChartType", value);
+                                }}
+                            />
+                            <Message msgId={chartType.label}/>
+                        </Col>
+                    ))}
+                </div>
+            )}
             {/* Y AXIS */}
             <Col componentClass={"label"} sm={12}>
                 <Message msgId="widgets.advanced.yAxis" />

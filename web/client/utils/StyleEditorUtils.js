@@ -26,6 +26,7 @@ import uuidv1 from 'uuid/v1';
 import url from 'url';
 
 import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
+import { getStyleParser } from './VectorStyleUtils';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
 
@@ -541,6 +542,53 @@ export const updateExternalGraphicNode = (options, parsedSLD) => {
     return { parsedCode, errorObj };
 };
 
+/**
+ * This function detects if the style code has been changed by external style editor
+ * by comparing the parsed JSON style with the style body code via md5 hash
+ * @param  {object} style a style returned from the style api including the code
+ * @param  {string} style.code the style body
+ * @param  {string} style.format format encoding of the style: css or sld
+ * @param  {object} style.metadata the parsed metadata of the style
+ * @param  {object} style.metadata.msMD5Hash latest stored hash of the style body code
+ * @param  {object} style.metadata.msStyleJSON the json representation of the style used by the visual style editor
+ * @return {promise} returns a true if the metadata needs a reset
+ */
+export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
+
+    return import('md5')
+        .then((mod) => {
+            const md5 = mod.default;
+            const { msStyleJSON, msMD5Hash } = metadata;
+
+            if (msMD5Hash && code) {
+                const hash = md5(code);
+                return hash !== msMD5Hash;
+            }
+
+            if (!msStyleJSON) {
+                return Promise.resolve(false);
+            }
+
+            let styleJSON;
+            try {
+                styleJSON = parseJSONStyle(JSON.parse(msStyleJSON));
+            } catch (e) {
+                return Promise.resolve(true);
+            }
+
+            return getStyleParser(format)
+                .then(parser =>
+                    parser
+                        .writeStyle(styleJSON)
+                        .then(parsedCode => {
+                            const hash = md5(code);
+                            const parsedHash = md5(parsedCode);
+                            return hash !== parsedHash;
+                        })
+                );
+        });
+}
+
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
@@ -557,5 +605,6 @@ export default {
     parseJSONStyle,
     formatJSONStyle,
     validateImageSrc,
-    updateExternalGraphicNode
+    updateExternalGraphicNode,
+    detectStyleCodeChanges
 };

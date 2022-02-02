@@ -11,7 +11,7 @@ import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Dropdown, Glyphicon, ListGroupItem } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { connect } from '../utils/PluginsUtils';
 import { createSelector } from 'reselect';
 
 import { setInputValue } from '../actions/crsselector';
@@ -78,8 +78,9 @@ class Selector extends React.Component {
         }
         const currentCRS = normalizeSRS(this.props.selected, this.props.filterAllowedCRS);
         const compatibleCrs = ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'];
+        const allowedLayerTypes = ["wms", "osm", "tileprovider", "empty"];
         const changeCrs = (crs) => {
-            if ( indexOf(compatibleCrs, crs) > -1 || this.props.currentBackground.type === "wms" || this.props.currentBackground.type === "empty" ||
+            if ( indexOf(compatibleCrs, crs) > -1 || indexOf(allowedLayerTypes, this.props.currentBackground.type) > -1 ||
             (this.props.currentBackground.allowedSRS && has(this.props.currentBackground.allowedSRS, crs))) {
                 this.props.setCrs(crs);
             } else {

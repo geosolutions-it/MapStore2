@@ -307,6 +307,7 @@
             "confirm": "Je suis d'accord"
         },
         "manager": {
+            "managerMenu": "Menu du gestionnaire",
             "openInANewTab": "Ouvrir la carte",
             "deleteMap": "Supprimer la carte",
             "deleteMapMessage": "Voulez-vous supprimer cette carte ?",
@@ -396,6 +397,11 @@
                 "createANewOne": "Créer une nouvelle GeoStory",
                 "deleteError": "Une erreur s'est produite lors de la suppression du GeoStory",
                 "errorLoadingGeostories": "Une erreur s'est produite lors du chargement de GeoStories"
+            },
+            "contexts": {
+              "title": "Contextes ({count})",
+              "titleNoCount": "Contextes",
+              "noContextAvailable": "Aucun contexte disponible"
             }
         },
         "map": {
@@ -627,7 +633,7 @@
             "description": "Description",
             "descriptionplaceholder": "Entrer une description...",
             "resolution": "Résolution :",
-            "defaultBackground": "Utiliser OSM comme fond de plan",
+            "defaultBackground": "Utiliser l'arrière-plan par défaut",
             "printtooltip": "Impression",
             "alternatives": {
                 "legend": "Inclure la légende",
@@ -642,9 +648,16 @@
                 "iconsSize": "Taille d'icône :",
                 "dpi": "Ppp :"
             },
-            "layoutWarning": "Mise en page non permise"
+            "layoutWarning": "Mise en page non permise",
+            "scale": "échelle",
+            "includeScale": "inclure dans l'impression",
+            "disabledpreview": "L'aperçu n'est pas disponible avec ces paramètres d'impression",
+            "outputFormat": "Format",
+            "previewFormatUnsupported": "Format non pris en charge pour l'aperçu",
+            "projection": "Système de coordonnées",
+            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran"
         },
-        "backgroundSwither": {
+        "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"
         },
         "info": {
@@ -991,7 +1004,8 @@
                 "combo_placeholder": "Attribut",
                 "text_placeholder": "Entrer le texte à rechercher",
                 "attribute_filter_header": "Attribut filtre",
-                "tooltipTextField": "utilise <b>*</b> pour tout caractère</br>utilise <b>.</b> pour un seul caractère</br>utilise <b>!</b> pour les caractères spéciaux (* et .)</br>",
+                "tooltipTextField": "utilise <b>*</b> pour tout caractère</br>utilise . pour un seul caractère</br>utilise <b>!</b> pour les caractères spéciaux (* et .)</br>",
+                "tooltipTextFieldCSS": "utilise <b>%</b> pour tout caractère</br>utilise <b>_</b> pour un seul caractère</br>utilise <b>\\</b> pour les caractères spéciaux (% et _)</br>",
                 "groupField": {
                     "any": "certain",
                     "all": "tous",
@@ -1171,7 +1185,7 @@
             "passwordInvalid": "Mot de passe erroné",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
-            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères. Les valeurs valides pour les mots de passe incluent des chiffres, des lettres minuscules ou majuscules et les caractères spéciaux suivants: !,@,#,$,%,&,*,_",
+            "passwordMessage": "Le mot de passe doit contenir au moins 6 caractères.",
             "passwordInvalidChar": "Le mot de passe ne doit pas contenir ces caractères: {data}",
             "passwordChanged": "Mot de passe changé",
             "passwordError": "Erreur lors du changement de mot de passe",
@@ -1186,7 +1200,10 @@
             "detailsGroups": "Groupes",
             "detailsEmail": "E-mail",
             "detailsCompany": "Compagnie",
-            "detailsNotes": "Remarques"
+            "detailsNotes": "Remarques",
+            "userMenu": "Menu utilisateur",
+            "generalInformation": "Général",
+            "attributes": "Les attributs"
         },
         "users": {
             "title": "Gérer les comptes",
@@ -1237,7 +1254,9 @@
             "noUsers": "Aucun utilisateur pour ce groupe",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
             "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
-            "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?"
+            "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?",
+            "generalInformation": "Général",
+            "members": "Membres"
         },
         "share": {
             "title": "Partager",
@@ -1440,7 +1459,13 @@
             "autoSetVisibilityLimits": {
                 "label": "Définir la limite de visibilité",
                 "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
-            }
+            },
+          "domainAliases": {
+            "title": "Alias de domaine",
+            "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
+            "addAliasTooltip": "Ajouter un alias",
+            "removeAliasTooltip": "Supprimer l'alias"
+          }
         },
         "uploader": {
             "filename": "Nom du fichier",
@@ -1603,6 +1628,7 @@
             "featureClose": "Voulez vous vraiment fermer la grille ?",
             "delete": "Valider pour supprimer les éléments ?",
             "missingGeometry": "Géométrie manquante",
+            "zoomObject": "Zoom sur l'entité",
             "filter": {
                 "placeholders": {
                     "default": "Recherche...",
@@ -1774,7 +1800,24 @@
                     "connectToAMap": "Se connecter à un autre widget",
                     "connectToTheMap": "Connectez-vous à l'autre widget",
                     "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
-                    "clearConnection": "Effacer la connexion"
+                    "clearConnection": "Effacer la connexion",
+                    "classAttributes": {
+                        "classColor": "Couleur de la Classe",
+                        "classLabel": "Étiquette de la Classe",
+                        "classValue": "Valeur de la Classe",
+                        "color": "Couleur",
+                        "confirmModalMessage": "Fermer et supprimer les valeurs non classées?",
+                        "classificationAttribute": "Attribut de Classification",
+                        "customLabels": "Étiquettes personnalisées",
+                        "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p></p><h5>Exemple</h5><dl><dt><b>Attribut Y:</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>Attribut 'Grouper par':</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "defaultClassLabel": "Étiquette de Classe par Défaut",
+                        "defaultColorRamp": "Rampe de Couleur par Défaut",
+                        "defaultColor": "Couleur par Défaut",
+                        "defaultCustomLabel": "Étiquette par défaut",
+                        "editCustomColors": "Modifie Couleurs Personnalisées",
+                        "title": "Paramètres de Couleurs Personnalisées"
+                    }
                 },
                 "errors": {
                     "noAttributesTitle": "Aucun attribut à afficher",
@@ -1909,6 +1952,9 @@
               "yAxisLabel": "Légende Libellé",
               "title": "Options avancées",
               "legend": "Legend",
+              "barChartType": "Type de Graphique à Barres",
+              "groupedBarChart": "Groupé",
+              "stackedBarChart": "Empilé",
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Linear",
@@ -2682,6 +2728,8 @@
         "defaultMapBackgroundsServiceTitle": "Fonds de plans par défaut",
         "backgroundSelector": {
             "addTooltip": "Ajouter un nouveau fond",
+            "editTooltip": "Modifier le fond",
+            "deleteTooltip": "Supprimer le fond",
             "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
         },
         "stepper": {

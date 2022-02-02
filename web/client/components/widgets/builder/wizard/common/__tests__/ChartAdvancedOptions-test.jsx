@@ -196,5 +196,22 @@ describe('chart advanced options', () => {
         expect(getInputs().xAxisOpts.nTicks.disabled).toBeTruthy();
         expect(getInputs().xAxisAngle.disabled).toBeTruthy();
     });
+    it('barChartType advanced options visible when chart is bar and custom classified', () => {
+        ReactDOM.render(<ChartAdvancedOptions data={{ type: 'bar'}} classificationAttribute="class1"/>, document.getElementById("container"));
+        const stackedRadioButton = document.querySelectorAll('input')[2];
+        const groupedRadioButton = document.querySelectorAll('input')[3];
+        expect(stackedRadioButton.checked).toBe(true);
+        expect(groupedRadioButton.checked).toBe(false);
+        ReactTestUtils.Simulate.change(groupedRadioButton);
+        expect(stackedRadioButton.checked).toBe(false);
+        expect(groupedRadioButton.checked).toBe(true);
+    });
+    it('barChartType advanced options not visible when chart is bar and not custom classified', () => {
+        ReactDOM.render(<ChartAdvancedOptions data={{ type: 'bar'}} />, document.getElementById("container"));
+        const stackedRadioButton = document.getElementById('stacked');
+        const groupedRadioButton = document.getElementById('grouped');
+        expect(stackedRadioButton).toNotExist();
+        expect(groupedRadioButton).toNotExist();
+    });
 });
 

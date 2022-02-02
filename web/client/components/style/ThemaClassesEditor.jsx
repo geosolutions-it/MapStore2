@@ -18,21 +18,34 @@ numberLocalizer();
 import { NumberPicker } from 'react-widgets';
 import assign from 'object-assign';
 import Message from "../../components/I18N/Message";
-
+import { createPagedUniqueAutompleteStream } from '../../observables/autocomplete';
+import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox';
+import ConfigUtils from '../../utils/ConfigUtils';
+import { generateRandomHexColor } from '../../utils/ColorUtils';
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
         onUpdateClasses: PropTypes.func,
-        className: PropTypes.string
+        className: PropTypes.string,
+        allowEmpty: PropTypes.bool,
+        customLabels: PropTypes.bool,
+        uniqueValuesClasses: PropTypes.bool,
+        autoCompleteOptions: PropTypes.object,
+        dropUpMenu: PropTypes.bool,
+        usePreSetColors: PropTypes.bool
     };
 
     static defaultProps = {
         classification: [],
         onUpdateClasses: () => {},
-        className: ""
+        className: "",
+        allowEmpty: true,
+        customLabels: false,
+        uniqueValuesClasses: false,
+        dropUpMenu: false
     };
 
-    renderFieldByClassification = (classItem, index) => {
+    renderFieldByClassification = (classItem, index, uniqueValuesClasses, autoCompleteOptions) => {
         let fieldRender;
         if (!isNil(classItem.unique)) {
             if (isNumber(classItem.unique)) {
@@ -41,6 +54,23 @@ class ThemaClassesEditor extends React.Component {
                     value={classItem.unique}
                     onChange={(value) => this.updateUnique(index, value, 'number')}
                 />);
+            /** field classes with preset values - drop down autocomplete input */
+            } else if (uniqueValuesClasses && autoCompleteOptions) {
+                const { dropUpAutoComplete, classificationAttribute, layer } = autoCompleteOptions;
+                fieldRender = (
+                    <AutocompleteCombobox
+                        dropUp={dropUpAutoComplete}
+                        openOnFocus={false}
+                        autocompleteEnabled
+                        column={{key: classificationAttribute}}
+                        onChange={value => this.updateUnique(index, value)}
+                        dataType="string"
+                        typeName={layer.name}
+                        url={ConfigUtils.getParsedUrl(layer.url, {"outputFormat": "json"})}
+                        value={classItem.unique}
+                        filter="contains"
+                        autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>);
+            /** field classes without preset values - text input  */
             } else {
                 fieldRender = (<FormControl
                     value={classItem.unique}
@@ -76,7 +106,7 @@ class ThemaClassesEditor extends React.Component {
     }
 
     renderClasses = () => {
-        return this.props.classification.map((classItem, index) => (
+        return this.props.classification.map((classItem, index, classification) => (
             <FormGroup
                 key={index}>
                 <ColorSelector
@@ -86,23 +116,31 @@ class ThemaClassesEditor extends React.Component {
                     format="hex"
                     onChangeColor={(color) => this.updateColor(index, color)}
                 />
-                { this.renderFieldByClassification(classItem, index) }
+                { this.renderFieldByClassification(classItem, index, this.props.uniqueValuesClasses, this.props.autoCompleteOptions) }
+                { this.props.customLabels &&
+                    <FormControl
+                        value={classItem.title}
+                        type="text"
+                        onChange={e => this.updateCustomLabel(index, e.target.value)}
+                    />
+                }
                 <DropdownButton
                     style={{flex: 0}}
                     className="square-button-md no-border add-rule"
                     noCaret
                     pullRight
-                    title={<Glyphicon glyph="option-vertical"/>}>
+                    title={<Glyphicon glyph="option-vertical"/>}
+                    dropup={this.props.dropUpMenu}>
                     {[
                         {labelId: 'styleeditor.addRuleBefore', glyph: 'add-row-before', value: "before"},
                         {labelId: 'styleeditor.addRuleAfter', glyph: 'add-row-after', value: "after"},
-                        {labelId: 'styleeditor.remove', glyph: 'trash', value: "remove"}
+                        ...(!this.props.allowEmpty && !index ? [] : [{labelId: 'styleeditor.remove', glyph: 'trash', value: "remove"}])
                     ]
                         .map((option) => {
                             return  (
                                 <MenuItem
                                     key={option.value}
-                                    onClick={() => this.updateClassification(index, option.value)}>
+                                    onClick={() => this.updateClassification(index, option.value, classification)}>
                                     <><Glyphicon glyph={option.glyph}/>
                                         <Message msgId={option.labelId} />
                                     </>
@@ -189,12 +227,13 @@ class ThemaClassesEditor extends React.Component {
         }
     };
 
-    updateClassification = (classIndex, type) => {
+    updateClassification = (classIndex, type, classification) => {
         let updateIndex;
         let updateMinMax;
         let deleteCount = 0;
         let newClassification = [...this.props.classification];
         const currentRule = newClassification[classIndex];
+        const currentColors = classification.map(item => item.color);
 
         if (type === 'before') {
             const isFirstIndex = classIndex === 0;
@@ -210,7 +249,7 @@ class ThemaClassesEditor extends React.Component {
         }
         let args = [updateIndex, deleteCount];
         if (type !== 'remove') {
-            const color = '#ffffff';
+            const color = this.props.usePreSetColors ?  generateRandomHexColor(currentColors) : '#ffffff';
             let classifyObj;
             if (!isNil(currentRule.unique)) {
                 const uniqueValue = isNumber(currentRule.unique) ? 0 : '';
@@ -226,6 +265,17 @@ class ThemaClassesEditor extends React.Component {
         }
         newClassification.splice(...args);
         this.props.onUpdateClasses(newClassification, 'interval');
+    }
+
+    updateCustomLabel = (classIndex, value) => {
+        if (value !== undefined) {
+            const newClassification = this.props.classification.map((classItem, index) => {
+                return index === classIndex ? assign({}, classItem, {
+                    title: value
+                }) : classItem;
+            });
+            this.props.onUpdateClasses(newClassification, 'title');
+        }
     }
 }
 

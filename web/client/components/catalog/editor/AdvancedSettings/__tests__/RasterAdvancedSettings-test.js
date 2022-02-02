@@ -32,7 +32,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(6);
+        expect(fields.length).toBe(8);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -40,7 +40,7 @@ describe('Test Raster advanced settings', () => {
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
         const cswFilters = document.getElementsByClassName("catalog-csw-filters");
-        expect(fields.length).toBe(7);
+        expect(fields.length).toBe(8);
         expect(cswFilters).toBeTruthy();
     });
     it('test component onChangeServiceProperty autoload', () => {
@@ -85,6 +85,25 @@ describe('Test Raster advanced settings', () => {
         TestUtils.Simulate.change(localizedLayerStyles, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();
     });
+    it('test component apply default config autoSetVisibilityLimits on new service', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+        ReactDOM.render(<RasterAdvancedSettings
+            onChangeServiceProperty={action.onChangeServiceProperty}
+            autoSetVisibilityLimits
+            service={{isNew: true, type: "wms", autoSetVisibilityLimits: false}}
+        />, document.getElementById("container"));
+        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingsPanel).toBeTruthy();
+        const autoSetVisibilityLimits = document.querySelectorAll('input[type="checkbox"]')[1];
+        const formGroup = document.querySelectorAll('.form-group')[2];
+        expect(formGroup.textContent.trim()).toBe('catalog.autoSetVisibilityLimits.label');
+        expect(autoSetVisibilityLimits).toExist();
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'autoSetVisibilityLimits', true ]);
+    });
     it('test component onChangeServiceProperty autoSetVisibilityLimits', () => {
         const action = {
             onChangeServiceProperty: () => {}
@@ -122,7 +141,7 @@ describe('Test Raster advanced settings', () => {
             service={{type: "csw", showTemplate: false}}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const showTemplate = document.querySelectorAll('input[type="checkbox"]')[1];
+        const showTemplate = document.querySelectorAll('input[type="checkbox"]')[2];
         expect(showTemplate).toExist();
         TestUtils.Simulate.change(showTemplate, { "target": { "checked": true }});
         expect(spyOnToggleTemplate).toHaveBeenCalled();

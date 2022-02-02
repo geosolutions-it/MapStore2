@@ -300,6 +300,7 @@ const RulesEditor = forwardRef(({
                                         hide={hideFilter}
                                         value={filter}
                                         attributes={attributes}
+                                        format={format}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />
                                     <ScaleDenominatorPopover

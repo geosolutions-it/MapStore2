@@ -18,11 +18,37 @@
 .ms-wizard {
     position: absolute;
     width: 100%;
-    .form-horizontal .control-label {
-        text-align: left;
-        font-weight: normal;
-        > span:after {
-            content: ":"
+    .form-horizontal {
+        .form-group {
+            .custom-color-btn {
+                margin-left: -8px;
+                margin-top: 2px;
+                &.line {
+                    display: none;
+                }
+            } 
+            .custom-color {
+                padding-left: 10px;
+            }
+        }
+        .control-label {
+            text-align: left;
+            font-weight: normal;
+            > span:after {
+                content: ":"
+            }
+        }
+        .bar-chart-type {
+            padding-top: 43px;
+            padding-bottom: 43px;
+            .control-label {
+                span {
+                    margin: 0;
+                }
+            }
+            span {
+                margin-left: 5px;
+            }
         }
     }
 }
@@ -51,3 +77,36 @@
         margin: 0 auto;
     }
 }
+
+.chart-color-class-modal {
+    #ms-resizable-modal {
+        @media (max-width: 1500px) {
+            height: 40%;
+        }
+        height: 30%;
+        .row {
+            margin: 5% 0 auto;
+            .text-info {
+                padding-left: 5px;
+            }
+        }
+    }
+    &.menu-open {
+        #ms-resizable-modal {
+            @media (max-width: 1500px) {
+                height: 60%;
+                width: 510px;
+            }
+            height: 50%;
+        }
+    }
+    #chart-color-class-form {
+        .chart-color-class-form-group.form-group {
+            margin: 0;
+            .control-label {
+                text-align: left;
+            }
+        }
+    }
+}
+

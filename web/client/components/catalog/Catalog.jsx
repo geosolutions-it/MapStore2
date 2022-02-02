@@ -30,7 +30,7 @@ import { getMessageById } from '../../utils/LocaleUtils';
 import Message from '../I18N/Message';
 import RecordGrid from './RecordGrid';
 import Loader from '../misc/Loader';
-import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from "../../utils/CatalogUtils";
+import { buildServiceUrl, DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from "../../utils/CatalogUtils";
 
 class Catalog extends React.Component {
     static propTypes = {
@@ -361,7 +361,7 @@ class Catalog extends React.Component {
 
     };
     search = ({ services, selectedService, start = 1, searchText = "" } = {}) => {
-        const url = services[selectedService].url;
+        const url = buildServiceUrl(services[selectedService]);
         const type = services[selectedService].type;
         this.props.onSearch({ format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || "", options: { service: this.props.services[selectedService] } });
     };

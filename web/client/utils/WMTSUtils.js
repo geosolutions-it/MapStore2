@@ -101,6 +101,14 @@ export const getCapabilitiesURL = (record = {}) => {
 
 export const getDefaultStyleIdentifier = layer =>{
     if (layer?.Style) {
+
+        // if there's only one style, assume it's the default
+        if (castArray(layer.Style).length === 1) {
+            return head(
+                castArray(layer.Style)
+                    // the identifier content value is needed
+                    .map(l => l["ows:Identifier"]));
+        }
         return head(
             castArray(layer.Style)
                 // default is identified by XML attribute isDefault

@@ -4,7 +4,18 @@ import ReactDOM from 'react-dom';
 import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
 
 import expect from 'expect';
-import { DATASET_1 } from './sample_data';
+import {
+    CLASSIFICATIONS,
+    DATASET_1,
+    DATASET_2,
+    DATASET_3,
+    LABELLED_CLASSIFICATION,
+    UNLABELLED_CLASSIFICATION,
+    PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION,
+    SPLIT_DATASET_2,
+    SPLIT_DATASET_3,
+    TEMPLATE_LABELS_CLASSIFICATION
+} from './sample_data';
 
 describe('WidgetChart', () => {
     beforeEach((done) => {
@@ -169,8 +180,109 @@ describe('Widget Chart: data conversions ', () => {
             });
             expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, autoColorOptions));
         });
+        it('custom classified colors - using custom labels and colors only', () => {
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+            const { data, layout } = toPlotly({
+                type: 'pie',
+                autoColorOptions,
+                classifications: CLASSIFICATIONS,
+                ...DATASET_2
+            });
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            // data values mapped
+            data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
+            // data labels mapped
+            data[0].labels.map((v, i) => {
+                const classLabel = LABELLED_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].title;
+                expect(v).toBe(classLabel);
+            });
+            // colors are those defined by the user
+            data[0].marker.colors.map((v, i) => {
+                const classColor = LABELLED_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].color;
+                expect(v).toBe(classColor);
+            });
+            // LAYOUT
+            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+        });
+        it('custom classified colors - using default labels and colors', () => {
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", classification: UNLABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+            const { data, layout } = toPlotly({
+                type: 'pie',
+                autoColorOptions,
+                classifications: CLASSIFICATIONS,
+                ...DATASET_3
+            });
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            // data values mapped
+            data[0].values.map((v, i) => expect(v).toBe(DATASET_3.data[i][DATASET_3.series[0].dataKey]));
+            // data labels mapped
+            data[0].labels.map((v, i) => {
+                expect(v).toBe(DATASET_3.data[i][DATASET_3.xAxis.dataKey]);
+            });
+            // colors are those defined by the user
+            data[0].marker.colors.map((v, i) => {
+                const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === DATASET_3.data[i][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
+                expect(v).toBe(classColor);
+            });
+            // LAYOUT
+            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+        });
+        it('custom classified colors - using templatized labels and custom colors only - pie charts', () => {
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", classification: PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
+            const { data, layout } = toPlotly({
+                type: 'pie',
+                autoColorOptions,
+                classifications: CLASSIFICATIONS,
+                ...DATASET_2
+            });
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            // data values mapped
+            data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
+            // data labels mapped
+            data[0].labels.map((v, i) => {
+                const classLabel = PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION
+                    .filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].title
+                    .replace('${groupByValue}', DATASET_2.data[i].name);
+                expect(v).toBe(classLabel);
+            });
+            // colors are those defined by the user
+            data[0].marker.colors.map((v, i) => {
+                const classColor = PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].color;
+                expect(v).toBe(classColor);
+            });
+            // LAYOUT
+            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+        });
+        it('custom color ramp', () => {
+            const autoColorOptions = {
+                defaultCustomColor: "#00FF00",
+                defaultClassLabel: "Default",
+                name: 'global.colors.custom',
+                base: 190,
+                range: 0,
+                s: 0.95,
+                v: 0.63
+            };
+            const { data } = toPlotly({
+                type: 'pie',
+                autoColorOptions,
+                ...DATASET_2
+            });
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            data[0].marker.colors.map((v) => {
+                expect(v).toBe(autoColorOptions.defaultCustomColor);
+            });
+        });
     });
-    describe('Line/Bar chart', () => {
+    describe('Line/Bar chart common features', () => {
         function testAllTypes(props, handler) {
             ['line', 'bar'].map(type => toPlotly({
                 type,
@@ -180,7 +292,6 @@ describe('Widget Chart: data conversions ', () => {
         it('basic line/bar options', () => {
             testAllTypes(DATASET_1, ({data, layout}) => {
                 // DATA
-
                 expect(data.length).toBe(1);
                 // expect(data[0].type).toBe('line');
 
@@ -256,5 +367,130 @@ describe('Widget Chart: data conversions ', () => {
                 data[0].y.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey] * 2));
             });
         });
+    });
+    describe('color coded/custom classified Bar chart', () => {
+        it('custom classified colors - using custom labels and colors only', () => {
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+            const { data, layout } = toPlotly({
+                type: 'bar',
+                autoColorOptions,
+                classifications: CLASSIFICATIONS,
+                ...DATASET_2
+            });
+            expect(data.length).toBe(1);
+            const traces = data[0];
+            expect(traces.length).toBe(2);
+            traces.forEach((trace, i) => {
+                expect(trace.type).toBe('bar');
+                // data values mapped
+                trace.y.map((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.series[0].dataKey]));
+                trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.xAxis.dataKey]));
+                // data labels mapped
+                const classLabel = LABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0]?.title;
+                expect(trace.name).toBe(classLabel);
+                // colors are those defined by the user
+                const classColor = LABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
+                trace.marker.color.forEach(item => expect(item).toBe(classColor));
+                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+            });
+        });
+    });
+    it('custom classified colors - using default labels and colors', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: UNLABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_3
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(3);
+        traces.forEach((trace, i) => {
+            expect(trace.type).toBe('bar');
+            // data values mapped
+            trace.y.map((v, j) => expect(v).toBe(SPLIT_DATASET_3.data[i][j][SPLIT_DATASET_3.series[0].dataKey]));
+            trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_3.data[i][j][SPLIT_DATASET_3.xAxis.dataKey]));
+            // data labels mapped
+            const classLabel = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.value ?? autoColorOptions.defaultClassLabel;
+            expect(trace.name).toBe(classLabel);
+            // colors are those defined by the user
+            const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
+            trace.marker.color.forEach(item => expect(item).toBe(classColor));
+            expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+        });
+    });
+    it('custom classified colors - using templatized labels and custom colors only - bar charts', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        traces.forEach((trace, i) => {
+            expect(trace.type).toBe('bar');
+            // data values mapped
+            trace.y.map((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.series[0].dataKey]));
+            trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.xAxis.dataKey]));
+            // data labels mapped
+            const classLabel = TEMPLATE_LABELS_CLASSIFICATION
+                .filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0]?.title
+                .replace('${legendValue}', SPLIT_DATASET_2.series[0].dataKey);
+            expect(trace.name).toBe(classLabel);
+            // colors are those defined by the user
+            const classColor = TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
+            trace.marker.color.forEach(item => expect(item).toBe(classColor));
+            expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+        });
+    });
+    it('custom bar color', () => {
+        const autoColorOptions = {
+            defaultCustomColor: "#0888A1",
+            defaultClassLabel: "Default",
+            name: 'global.colors.custom',
+            base: 190,
+            range: 0,
+            s: 0.95,
+            v: 0.63
+        };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            ...DATASET_2
+        });
+        expect(data.length).toBe(1);
+        expect(data[0].type).toBe('bar');
+        expect(layout.colorway).toEqual([autoColorOptions.defaultCustomColor]);
+    });
+    it('default classfied bar chart type is stacked', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        expect(layout.barmode).toBe('stack');
+    });
+    it('change classfied bar chart type to grouped', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2,
+            barChartType: 'group'
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        expect(layout.barmode).toBe('group');
     });
 });

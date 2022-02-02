@@ -259,13 +259,13 @@ class UserDialog extends React.Component {
             </span>
             <div role="body">
                 <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel" id="userDetails-tabs">
-                    <Tab eventKey={1} title={<Glyphicon glyph="user" style={{ display: 'block', padding: 8 }}/>} >
+                    <Tab eventKey={1} title={<GlyphiconTooltip tooltipId="user.generalInformation" glyph="user" style={{ display: 'block', padding: 8 }}/>} >
                         {this.renderGeneral()}
                     </Tab>
-                    <Tab eventKey={2} title={<Glyphicon glyph="info-sign" style={{ display: 'block', padding: 8 }}/>} >
+                    <Tab eventKey={2} title={<GlyphiconTooltip tooltipId="user.attributes" glyph="info-sign" style={{ display: 'block', padding: 8 }}/>} >
                         {this.renderAttributes()}
                     </Tab>
-                    <Tab eventKey={3} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }}/>} >
+                    <Tab eventKey={3} title={<GlyphiconTooltip tooltipId="groups" glyph="1-group" style={{ display: 'block', padding: 8 }}/>} >
                         {this.renderGroups()}
                     </Tab>
                 </Tabs>
@@ -301,14 +301,6 @@ class UserDialog extends React.Component {
                 valid: false,
                 message: "user.passwordMinlenght",
                 args: this.props.minPasswordSize
-            };
-        }
-
-        if (/[^a-zA-Z0-9\!\@\#\$\%\&\*\_]/.test(p)) {
-            return {
-                valid: false,
-                message: "user.passwordInvalidChar",
-                args: p.match(/[^a-zA-Z0-9\!\@\#\$\%\&\*\_]/).toString()
             };
         }
 
