@@ -22,7 +22,7 @@ import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
 import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
-import { changeAggregateFunction, changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
+import { clearAllSelections, changeAggregateFunction, changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
 import { getDefaultAggregationOperations } from '@mapstore/utils/WidgetsUtils';
 import { zoomToExtent } from '@mapstore/actions/map';
 
@@ -84,6 +84,7 @@ const Panel = ({
     enabled,
     onChangeAggregateFunction = () => {},
     onChangeTraceColor = () => {},
+    onClearAllSelections = () => {},
     onClose = () => {},
     timePlotsData,
     onRemoveTableSelectionRow = () => {},
@@ -150,7 +151,8 @@ const Panel = ({
                             timeSeriesFeaturesSelections={timePlotsData}
                             onRemoveTableSelectionRow={onRemoveTableSelectionRow}
                             onChangeAggregateFunction={onChangeAggregateFunction}
-                            onChangeTraceColor={onChangeTraceColor}/>
+                            onChangeTraceColor={onChangeTraceColor}
+                            onClearAllSelections={onClearAllSelections}/>
                         <div style={{
                             flex: 1,
                             width: '100%',
@@ -173,6 +175,7 @@ const TSPPanel = connect(createStructuredSelector({
     timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector,
     aggregateFunction: aggregateFunctionSelector
 }), {
+    onClearAllSelections: () => clearAllSelections(),
     onClose: () => toggleControl(CONTROL_NAME),
     onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId),
     onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color),

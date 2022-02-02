@@ -14,13 +14,14 @@ export default ({
     bsStyle,
     tooltip = <span></span>,
     tButtonClass,
+    buttonSize,
     ...props
 }) => {
     return (<OverlayTrigger placement="left" overlay={tooltip}>
         <Button
             {...props}
             bsStyle={bsStyle || "primary"}
-            className={classnames('square-button-md', tButtonClass)}>
+            className={classnames(`square-button-${buttonSize}`, tButtonClass)}>
             <Glyphicon glyph={glyph} />
         </Button>
     </OverlayTrigger>);

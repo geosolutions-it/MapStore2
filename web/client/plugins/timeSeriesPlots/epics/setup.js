@@ -44,19 +44,6 @@ export const setUpTimeSeriesLayersService = (action$, store) =>
         return Rx.Observable.from([
             addCatalogService(timeSeriesCatalogService)
         ]).concat([...(mapInfoEnabled ? [toggleMapInfoState(), hideMapinfoMarker()] : [])])
-        .concat([
-            updateAdditionalLayer(
-                TIME_SERIES_SELECTIONS_LAYER,
-                CONTROL_NAME,
-                'overlay',
-                {
-                    type: 'vector',
-                    features: timeSeriesFeaturesSelectionsSelector(store.getState()),
-                    name:`${CONTROL_NAME}`,
-                    id:`${CONTROL_NAME}`,
-                    visibility: true
-                })
-        ]);
     });
 
 export const timeSeriesPlotsTearDown = (action$, { getState = () => {} }) => 
@@ -64,7 +51,8 @@ export const timeSeriesPlotsTearDown = (action$, { getState = () => {} }) =>
         Rx.Observable.from([
             toggleSelectionTool(),
             cleanPopups(),
-            unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME) // Reset map's mouse event trigger
+            unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME), // Reset map's mouse event trigger
+            removeAdditionalLayer({ id: TIME_SERIES_SELECTIONS_LAYER, owner: CONTROL_NAME}) 
         ])
         .concat([...(!get(getState(), "mapInfo.enabled") ? [toggleMapInfoState()] : [])])
     );

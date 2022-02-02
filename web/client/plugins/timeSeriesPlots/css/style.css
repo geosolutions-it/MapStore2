@@ -54,8 +54,13 @@ text-align: center;
 .time-series-plots-toolbar .selection-btn {
     margin-right: 10px;
 }
-.time-series-plots-toolbar .clear-all-btn {
-    margin-left: 30px;
+.clear-all-btn {
+   position: absolute;
+   top: 6px;
+   left: 9px;
+}
+.time-series-plots-window-body .rdg-selected .drag-handle {
+    display: none;
 }
 .time-series-plots-toolbar {
     display: flex;

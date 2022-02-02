@@ -49,7 +49,9 @@ import {
     TEAR_DOWN, TOGGLE_SELECTION,
     STORE_TIME_SERIES_CHART_DATA,
     REMOVE_TABLE_SELECTION_ROW,
-    CHANGE_TRACE_COLOR, CLEAR_ALL_SELECTIONS
+    CHANGE_TRACE_COLOR, 
+    CLEAR_ALL_SELECTIONS,
+    SETUP
 } from '../actions/timeSeriesPlots';
 import { isMapPopup, isHighlightEnabledSelector, itemIdSelector, overrideParamsSelector, identifyOptionsSelector } from '@mapstore/selectors/mapInfo';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '@mapstore/actions/mapPopups';
@@ -125,7 +127,7 @@ const getWFSChartData = (layer, filter, options, aggregationAttribute, selection
                 ...acc, {
                     ...cur,
                     PARSED_DATE: parsedDate,
-                    DATE: moment(parsedDate).format('DD/MM/YYYY')
+                    DATE: moment(parsedDate).format('YYYY-MM-DD')
                 }
             ]
         }, []);
@@ -182,7 +184,7 @@ const getWPSChartData = (
                 ...acc, {
                     ...cur,
                     PARSED_DATE: parsedDate,
-                    DATE: moment(parsedDate).format('DD/MM/YYYY')
+                    DATE: moment(parsedDate).format('YYYY-MM-DD')
                 }
             ]
         }, []);
@@ -229,6 +231,7 @@ action$.ofType(TOGGLE_SELECTION)
     .filter(({selectionType}) => selectionType === SELECTION_TYPES.POINT)
     .switchMap(({selectionType}) => {
         if (selectionType) {
+            const stopDrawingAction = changeDrawingStatus('stop', drawMethod(selectionType), CONTROL_NAME, []);
             purgeMapInfoResults();
             return action$.ofType(CLICK_ON_MAP).switchMap(({ point }) => {
                 const timeSeriesLayers = timeSeriesLayersSelector(getState());
@@ -280,7 +283,7 @@ action$.ofType(TOGGLE_SELECTION)
                                 item.layerName, 
                                 features[index]
                                 .filter(feature => feature?.properties[item.queryAttribute])
-                                .map(feature => feature.properties[item.queryAttribute] ))
+                                .map(feature => feature.properties[item.queryAttribute]))
                         }))
                     }).catch((e) => Rx.Observable.of(errorFeatureInfo(uuid.v1(), e.data || e.statusText || e.status, {}, {})))
                     // timeSeriesLayers.map(
@@ -299,11 +302,16 @@ action$.ofType(TOGGLE_SELECTION)
                 //     const bufferedPoint = reprojectGeoJson(buffer(point, 200, {units: 'meters'}), 'EPSG:4326', 'EPSG:3857');
                 //     geometry = bufferedPoint.geometry;
                 //     geometry.projection = 'EPSG:3857';
-                // };  
+                // };
             })
-            // .merge(Rx.Observable.of(unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME)))
-            //.startWith(startDrawingAction)
-            .takeUntil(action$.ofType(TEAR_DOWN))
+            .merge(Rx.Observable.of(unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME)))
+            .startWith(stopDrawingAction)
+            .takeUntil(
+                Rx.Observable.merge(
+                    action$.ofType(TEAR_DOWN),
+                    // this stops once selection type changes
+                    action$.ofType(TOGGLE_SELECTION)
+                ))
             // .concat(deactivate());
         }
         return deactivate();
@@ -433,12 +441,13 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
             STORE_TIME_SERIES_CHART_DATA,
             REMOVE_TABLE_SELECTION_ROW,
             CHANGE_TRACE_COLOR,
-            CLEAR_ALL_SELECTIONS
+            CLEAR_ALL_SELECTIONS,
+            SETUP
             ).switchMap(() => {
             return Rx.Observable.of(updateAdditionalLayer(
                 TIME_SERIES_SELECTIONS_LAYER,
                 CONTROL_NAME,
-                'overlay', 
+                'overlay',
                 {
                     type: 'vector',
                     features: timeSeriesFeaturesSelectionsSelector(getState()).map(feature => reprojectGeoJson(feature, feature.properties.projection, 'EPSG:4326')),

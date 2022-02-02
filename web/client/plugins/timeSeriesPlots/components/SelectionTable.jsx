@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Glyphicon, Tooltip } from 'react-bootstrap';
+import { Glyphicon, Tooltip} from 'react-bootstrap';
 import ColorSelector from '@mapstore/components/style/ColorSelector';
 import { SELECTION_TYPES } from '../constants';
 import ReactDataGrid from 'react-data-grid';
@@ -17,6 +17,7 @@ import localizedProps from '@mapstore/components/misc/enhancers/localizedProps';
 import bbox from '@turf/bbox';
 import Message from '@mapstore/components/I18N/Message';
 import OverlayTrigger from '@mapstore/components/misc/OverlayTrigger';
+import TButton from './TButton';
 
 const { DropDownEditor } = Editors;
 const operationTypes = [
@@ -28,59 +29,81 @@ const operationTypes = [
     { id: "Max", value: "MAX"}
 ];
 const OperationsTypeEditor = <DropDownEditor options={operationTypes} />;
+
+
 class BaseTable extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.outerScopeProps = this.props;
+    }
+
     COLUMNS = [{
-        name: '',
-        key: "zoomTo",
-        width: 35,
-        frozen: true
-    },
-    {
-        key: 'selectionName',
-        sortable: false,
-        name: 'Selection Name',
-        resizable: true
-    }, {
-        key: 'selectionType',
-        sortable: false,
-        name: 'Selection Type',
-        resizable: true
-    },
-    {
-        key: 'aggregateFunctionLabel',
-        name: 'Operation Type',
-        sortable: false,
-        editable: ({selectionType}) => selectionType !== SELECTION_TYPES.POINT,  
-        editor:  OperationsTypeEditor,
-        formatter: ({row}) => row.selectionType === SELECTION_TYPES.POINT ? <div>No Operation</div> : <div>{row.aggregateFunctionLabel}</div>
-    },
-    {
-        key: 'color',
-        name: 'Chart Trace Color',
-        sortable: false,
-        formatter: (props) => {
-            const { traceColor, selectionId, onChangeTraceColor } = props.row;
-            return (
-                <ColorSelector
-                    key={traceColor}
-                    color={traceColor}
-                    disableAlpha
-                    format="hex"
-                    onChangeColor={(color) => {
-                        onChangeTraceColor(selectionId, color)
-                    }}
-                />
-            );
+            name: '',
+            key: "zoomTo",
+            width: 35,
+            frozen: true
+        },
+        {
+            key: 'selectionName',
+            sortable: false,
+            name: 'Selection Name',
+            resizable: true
+        }, {
+            key: 'selectionType',
+            sortable: false,
+            name: 'Selection Type',
+            resizable: true
+        },
+        {
+            key: 'aggregateFunctionLabel',
+            name: 'Operation Type',
+            sortable: false,
+            editable: ({selectionType}) => selectionType !== SELECTION_TYPES.POINT,  
+            editor:  OperationsTypeEditor,
+            formatter: ({row}) => row.selectionType === SELECTION_TYPES.POINT ? <div>No Operation</div> : <div>{row.aggregateFunctionLabel}</div>
+        },
+        {
+            key: 'color',
+            name: 'Chart Trace Color',
+            sortable: false,
+            formatter: (props) => {
+                const { traceColor, selectionId, onChangeTraceColor } = props.row;
+                return (
+                    <ColorSelector
+                        key={traceColor}
+                        color={traceColor}
+                        disableAlpha
+                        format="hex"
+                        onChangeColor={(color) => {
+                            onChangeTraceColor(selectionId, color)
+                        }}
+                    />
+                );
+            }
+        },
+        {
+            key: 'remove',
+            width: 40,
+            headerRenderer: () => {
+                const getProps = () => this.outerScopeProps;
+                return (
+                    <TButton
+                        tButtonClass="clear-all-btn"
+                        buttonSize="sm"
+                        bsStyle="danger"
+                        glyph="remove"
+                        onClick={() => {
+                            const { onClearAllSelections } = getProps(); 
+                            onClearAllSelections();
+                        }}
+            />)
+            }
         }
-    },
-    {
-        key: 'remove',
-        width: 35,
-    }];
+    ];
+
 
     getCellActions (column, row) {
-
         const cellActions = {
             'remove': [{icon: <Glyphicon glyph="remove" />, callback: () => { this.props.onRemoveTableSelectionRow(row.selectionId) }}],
             'zoomTo': [

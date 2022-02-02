@@ -262,7 +262,7 @@ function getMargins({ type, isModeBarVisible}) {
     }
 }
 
-function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled } ) {
+function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled, isTimeSeriesChart = false, xDataKey } ) {
     switch (type) {
     case 'pie':
         return {
@@ -286,6 +286,11 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
                 showgrid: cartesian,
                 type: xAxisOpts?.type,
                 showticklabels: !xAxisOpts?.hide,
+                ...(isTimeSeriesChart && {
+                    tickformat: "%d/%m/%Y",
+                    tickmode: 'array',
+                    tickvals: data[0].filter(item => item.DATE).map(item => item[xDataKey]),
+                }),
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
@@ -311,20 +316,23 @@ export const toPlotly = (props) => {
         width,
         legend,
         classifications,
-        autoColorOptions = COLOR_DEFAULTS
+        autoColorOptions = COLOR_DEFAULTS,
+        data,
+        options
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
+    const isTimeSeriesChart = every([data[0], Array.isArray(data[0]), options?.multipleSeries?.length], Boolean);
     return {
         layout: {
             showlegend: legend,
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
-            ...getLayoutOptions({ ...props, customColorEnabled, classificationAttr }),
+            ...getLayoutOptions({ ...props, customColorEnabled, classificationAttr, isTimeSeriesChart, xDataKey }),
             margin: getMargins({ ...props, isModeBarVisible}),
             autosize: false,
             height,
@@ -333,7 +341,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, isTimeSeriesChart});
             return  allData;
         }),
         config: {
