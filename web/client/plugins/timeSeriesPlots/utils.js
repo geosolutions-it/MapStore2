@@ -1,5 +1,12 @@
+import React from 'react';
+import { Tooltip } from 'react-bootstrap';
+
+import Message from '@mapstore/components/I18N/Message';
 import { DEFAULT_SELECTIONS_STYLE } from './constants';
 import uuid from 'uuid';
+
+
+export const getTooltip = (id, msgId) => <Tooltip id={id}><Message msgId={msgId}/></Tooltip>;
 
 export const getTSSelectionsStyle = (color, type) => color ? {
     ...DEFAULT_SELECTIONS_STYLE,

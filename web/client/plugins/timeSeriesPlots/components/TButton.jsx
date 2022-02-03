@@ -7,7 +7,7 @@ import {
 } from 'react-bootstrap';
 
 /**
- * Base button for the side toolbar of Cadastrapp plugin
+ * Base button for the tools toolbar
  */
 export default ({
     glyph,

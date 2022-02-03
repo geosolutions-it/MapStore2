@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Glyphicon, Tooltip} from 'react-bootstrap';
+import { Glyphicon, Tooltip } from 'react-bootstrap';
 import ColorSelector from '@mapstore/components/style/ColorSelector';
 import { SELECTION_TYPES } from '../constants';
 import ReactDataGrid from 'react-data-grid';
@@ -18,20 +18,22 @@ import bbox from '@turf/bbox';
 import Message from '@mapstore/components/I18N/Message';
 import OverlayTrigger from '@mapstore/components/misc/OverlayTrigger';
 import TButton from './TButton';
+import { getDefaultAggregationOperations } from '../../../utils/WidgetsUtils';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import { getTooltip } from '../utils';
 
 const { DropDownEditor } = Editors;
-const operationTypes = [
-    { id: "Count", value: "COUNT"},
-    { id: "Sum", value: "SUM"},
-    { id: "Average", value: "AVG"},
-    { id: "StdDev", value: "STDDEV"},
-    { id: "Min", value: "MIN"},
-    { id: "Max", value: "MAX"}
-];
-const OperationsTypeEditor = <DropDownEditor options={operationTypes} />;
-
-
 class BaseTable extends React.Component {
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    operationTypes = getDefaultAggregationOperations().map(({value, label}) => ({
+        id: value, value: getMessageById(this.context.messages, label)
+    }));
+    
+    OperationsTypeEditor = <DropDownEditor options={this.operationTypes} />;
 
     getColumns = () => [
         {
@@ -44,21 +46,24 @@ class BaseTable extends React.Component {
             key: 'selectionName',
             editable: true,
             sortable: false,
-            name: 'Selection Name',
+            name: getMessageById(this.context.messages, 'timeSeriesPlots.selectionNameTHeader'),
             resizable: true
-        }, {
+        }, 
+        {
             key: 'selectionType',
             sortable: false,
-            name: 'Selection Type',
+            name: getMessageById(this.context.messages, 'timeSeriesPlots.selectionTypeTHeader'),
             resizable: true
         },
         {
             key: 'aggregateFunctionLabel',
-            name: 'Operation Type',
+            name: getMessageById(this.context.messages, 'timeSeriesPlots.operationTypeTHeader'),
             sortable: false,
             editable: ({selectionType}) => selectionType !== SELECTION_TYPES.POINT,  
-            editor:  OperationsTypeEditor,
-            formatter: ({row}) => row.selectionType === SELECTION_TYPES.POINT ? <div>No Operation</div> : <div>{row.aggregateFunctionLabel}</div>
+            editor:  this.OperationsTypeEditor,
+            formatter: ({row}) => row.selectionType === SELECTION_TYPES.POINT ? 
+                <div><Message msgId="timeSeriesPlots.noOperationTCell"/></div> :
+                <div>{row.aggregateFunctionLabel}</div>
         },
         {
             key: 'color',
@@ -85,26 +90,31 @@ class BaseTable extends React.Component {
             ...(this.props?.timeSeriesFeaturesSelections && this.props.timeSeriesFeaturesSelections.length ? 
             {
                 headerRenderer : 
-                <TButton 
-                    tButtonClass="clear-all-btn"
-                    buttonSize="sm"
-                    bsStyle="danger"
-                    glyph="remove"
-                    onClick={() => { this.props.onClearAllSelections() }} />
+                <OverlayTrigger placement="top" overlay={getTooltip("tsp-clear-all", "timeSeriesPlots.clearAllSelections")}>
+                    <TButton
+                        tButtonClass="clear-all-btn"
+                        buttonSize="sm"
+                        bsStyle="danger"
+                        glyph="remove"
+                        onClick={() => { this.props.onClearAllSelections() }} />
+                </OverlayTrigger>
             }: {})
         }
     ];
 
     getCellActions (column, row) {
         const cellActions = {
-            'remove': [{icon: <Glyphicon glyph="remove" />, callback: () => { this.props.onRemoveTableSelectionRow(row.selectionId) }}],
+            'remove': [{icon: 
+            <OverlayTrigger placement="right" overlay={getTooltip("tsp-clear-selection", "timeSeriesPlots.clearSelection")}>
+                <Glyphicon glyph="remove" />
+            </OverlayTrigger> , callback: () => { this.props.onRemoveTableSelectionRow(row.selectionId) }}],
             'zoomTo': [
                 {
                     icon: row.selectionGeometry ? 
-                        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-zoom-object"><Message msgId="featuregrid.zoomObject"/></Tooltip>}>
+                        <OverlayTrigger placement="top" overlay={getTooltip("tsp-zoom-object", "featuregrid.zoomObject")}>
                             <Glyphicon glyph="zoom-to" />
                         </OverlayTrigger> :
-                        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-save-features"><Message msgId="featuregrid.missingGeometry"/></Tooltip>}>
+                        <OverlayTrigger placement="top" overlay={ getTooltip("tsp-save-features", "featuregrid.missingGeometry")}>
                             <Glyphicon glyph="exclamation-mark" />
                         </OverlayTrigger>,
                     callback: () => {
@@ -130,7 +140,7 @@ class BaseTable extends React.Component {
             case 'aggregateFunctionLabel':
                 rowIds.forEach(rowId => {
                     const label = updated[cellKey];
-                    const value = operationTypes.filter(item => item.value === label)[0].id;
+                    const value = this.operationTypes.filter(item => item.value === label)[0].id;
                     this.props.onChangeAggregateFunction(rowId, { value, label } );
                 });
                 break;

@@ -5,22 +5,23 @@ import { currentSelectionToolSelector } from '../selectors/timeSeriesPlots';
 import { SELECTION_TYPES } from '../constants';
 import TButton from './TButton';
 import { toggleSelectionTool, clearAllSelections } from '../actions/timeSeriesPlots';
+import { getTooltip } from '../utils';
 
 const BUTTONS_SETTINGS = {
     [SELECTION_TYPES.CIRCLE]: {
         key: SELECTION_TYPES.CIRCLE,
         glyph: "polyline",
-        // tooltip: tooltip("line", "cadastrapp.create_line")
+        // tooltip: getTooltip("line", "cadastrapp.create_line")
     },
     [SELECTION_TYPES.POINT]: {
         key: SELECTION_TYPES.POINT,
         glyph: "map-marker",
-        // tooltip: tooltip("point", "cadastrapp.create_point")
+        tooltip: getTooltip("point", "timeSeriesPlots.pointSelection")
     },
     [SELECTION_TYPES.POLYGON]: {
         key: SELECTION_TYPES.POLYGON,
         glyph: "polygon",
-        // tooltip: tooltip("polygon", "cadastrapp.create_polygon")
+        tooltip: getTooltip("polygon", "timeSeriesPlots.polygonSelection")
     }
 };
 
