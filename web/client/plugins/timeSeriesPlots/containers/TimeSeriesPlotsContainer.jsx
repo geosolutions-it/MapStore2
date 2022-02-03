@@ -22,7 +22,7 @@ import MainToolbar from '../components/MainToolbar';
 import Message from '../../../components/I18N/Message';
 import { Resizable } from 'react-resizable';
 import { toggleControl } from '../../../actions/controls';
-import { clearAllSelections, changeAggregateFunction, changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
+import { clearAllSelections, changeAggregateFunction, changeSelectionName, changeTraceColor, removeTableSelectionRow } from '../actions/timeSeriesPlots';
 import { getDefaultAggregationOperations } from '@mapstore/utils/WidgetsUtils';
 import { zoomToExtent } from '@mapstore/actions/map';
 
@@ -83,6 +83,7 @@ const getTimeSeriesPlotsData = (data) => (data.map(item => item.chartData) || []
 const Panel = ({ 
     enabled,
     onChangeAggregateFunction = () => {},
+    onChangeSelectionName = () => {},
     onChangeTraceColor = () => {},
     onClearAllSelections = () => {},
     onClose = () => {},
@@ -151,6 +152,7 @@ const Panel = ({
                             timeSeriesFeaturesSelections={timePlotsData}
                             onRemoveTableSelectionRow={onRemoveTableSelectionRow}
                             onChangeAggregateFunction={onChangeAggregateFunction}
+                            onChangeSelectionName={onChangeSelectionName}
                             onChangeTraceColor={onChangeTraceColor}
                             onClearAllSelections={onClearAllSelections}/>
                         <div style={{
@@ -178,8 +180,9 @@ const TSPPanel = connect(createStructuredSelector({
     onClearAllSelections: () => clearAllSelections(),
     onClose: () => toggleControl(CONTROL_NAME),
     onRemoveTableSelectionRow: (selectionId) => removeTableSelectionRow(selectionId),
-    onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color),
     onChangeAggregateFunction: (selectionId, aggregateFunction) => changeAggregateFunction(selectionId, aggregateFunction),
+    onChangeSelectionName: (selectionId, selectionName) => changeSelectionName(selectionId, selectionName),
+    onChangeTraceColor: (selectionId, color) => changeTraceColor(selectionId, color),
     onZoomToSelectionExtent: (extent, crs) => zoomToExtent(extent, crs),
     onZoomToSelectionPoint: (pos, zoom, crs) => zoomToPoint(pos, zoom, crs)
 })(Panel);

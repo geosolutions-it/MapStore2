@@ -33,12 +33,8 @@ const OperationsTypeEditor = <DropDownEditor options={operationTypes} />;
 
 class BaseTable extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.outerScopeProps = this.props;
-    }
-
-    COLUMNS = [{
+    getColumns = () => [
+        {
             name: '',
             key: "zoomTo",
             width: 35,
@@ -46,6 +42,7 @@ class BaseTable extends React.Component {
         },
         {
             key: 'selectionName',
+            editable: true,
             sortable: false,
             name: 'Selection Name',
             resizable: true
@@ -85,23 +82,18 @@ class BaseTable extends React.Component {
         {
             key: 'remove',
             width: 40,
-            headerRenderer: () => {
-                const getProps = () => this.outerScopeProps;
-                return (
-                    <TButton
-                        tButtonClass="clear-all-btn"
-                        buttonSize="sm"
-                        bsStyle="danger"
-                        glyph="remove"
-                        onClick={() => {
-                            const { onClearAllSelections } = getProps(); 
-                            onClearAllSelections();
-                        }}
-            />)
-            }
+            ...(this.props?.timeSeriesFeaturesSelections && this.props.timeSeriesFeaturesSelections.length ? 
+            {
+                headerRenderer : 
+                <TButton 
+                    tButtonClass="clear-all-btn"
+                    buttonSize="sm"
+                    bsStyle="danger"
+                    glyph="remove"
+                    onClick={() => { this.props.onClearAllSelections() }} />
+            }: {})
         }
     ];
-
 
     getCellActions (column, row) {
         const cellActions = {
@@ -134,12 +126,22 @@ class BaseTable extends React.Component {
     }
 
     onGridRowsUpdated ({cellKey, rowIds, updated}) {
-        if (cellKey === 'aggregateFunctionLabel') {
-            rowIds.forEach(rowId => {
-                const label = updated[cellKey];
-                const value = operationTypes.filter(item => item.value === label)[0].id;
-                this.props.onChangeAggregateFunction(rowId, { value, label } );
-            });
+        switch(cellKey) {
+            case 'aggregateFunctionLabel':
+                rowIds.forEach(rowId => {
+                    const label = updated[cellKey];
+                    const value = operationTypes.filter(item => item.value === label)[0].id;
+                    this.props.onChangeAggregateFunction(rowId, { value, label } );
+                });
+                break;
+            case 'selectionName':
+                rowIds.forEach(rowId => {
+                    const selectionName = updated[cellKey];
+                    this.props.onChangeSelectionName(rowId, selectionName );
+                });
+                break;
+            default:
+                break;
         }
     }
 
@@ -148,7 +150,7 @@ class BaseTable extends React.Component {
             <div>
                 <ReactDataGrid
                     rowKey="selectionId"
-                    columns={this.COLUMNS}
+                    columns={this.getColumns()}
                     enableCellSelect={true}
                     rowGetter={(i) => ({
                         ...(this.props?.timeSeriesFeaturesSelections[i] || {}),

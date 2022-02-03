@@ -34,7 +34,7 @@ import {
     currentTraceColorsSelector
 } from '../selectors/timeSeriesPlots';
 import { TIME_SERIES_PLOTS } from '@mapstore/actions/layers';
-import { CLICK_ON_MAP, MOUSE_MOVE, MOUSE_OUT, registerEventListener, unRegisterEventListener } from '@mapstore/actions/map';
+import { CLICK_ON_MAP, MOUSE_MOVE, MOUSE_OUT, changeMousePointer, registerEventListener, unRegisterEventListener } from '@mapstore/actions/map';
 import { featureInfoClick, purgeMapInfoResults, FEATURE_INFO_CLICK, LOAD_FEATURE_INFO, loadFeatureInfo, newMapInfoRequest, exceptionsFeatureInfo, errorFeatureInfo } from '@mapstore/actions/mapInfo';
 import { updatePointWithGeometricFilter } from '@mapstore/epics/identify';
 import { cancelSelectedItem } from '@mapstore/actions/search';
@@ -69,7 +69,7 @@ const DEACTIVATE_ACTIONS = [
     CLEAN_ACTION,
     changeDrawingStatus("stop"),
     registerEventListener(MOUSEMOVE_EVENT, CONTROL_NAME),
-    // loading(0, "plotSelection") // reset loading if stopped due to close
+    changeMousePointer('auto')
 ];
 const deactivate = () => Rx.Observable.from(DEACTIVATE_ACTIONS);
 
@@ -232,7 +232,8 @@ action$.ofType(TOGGLE_SELECTION)
     .switchMap(({selectionType}) => {
         if (selectionType) {
             const stopDrawingAction = changeDrawingStatus('stop', drawMethod(selectionType), CONTROL_NAME, []);
-            purgeMapInfoResults();
+            const purgeMapInfoResultsAction = purgeMapInfoResults();
+            const changeMousePointerAction = changeMousePointer('pointer');
             return action$.ofType(CLICK_ON_MAP).switchMap(({ point }) => {
                 const timeSeriesLayers = timeSeriesLayersSelector(getState());
                 if(!timeSeriesLayers.length) {
@@ -275,44 +276,32 @@ action$.ofType(TOGGLE_SELECTION)
                         const selectionId = uuid.v1();
                         const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
                         return Rx.Observable.from(timeSeriesLayers.map((item, index) => {
+                            /** in case of multiple features found use the 1st one, in the future we can use a more refined method */
+                            const targetFeature = features[index].length > 0 ? [features[index][0]] : [features[index]];
                             return storeTimeSeriesFeaturesIds(
                                 selectionId,
                                 pointToFeature(point),
                                 selectionName,
                                 selectionType, 
                                 item.layerName, 
-                                features[index]
+                                targetFeature
                                 .filter(feature => feature?.properties[item.queryAttribute])
                                 .map(feature => feature.properties[item.queryAttribute]))
                         }))
                     }).catch((e) => Rx.Observable.of(errorFeatureInfo(uuid.v1(), e.data || e.statusText || e.status, {}, {})))
-                    // timeSeriesLayers.map(
-                        // timeSeriesLayer => 
-                        // Rx.Observable.of(
-                        // featureInfoClick(updatePointWithGeometricFilter(point, projection), timeSeriesLayers[0]),  cancelSelectedItem())
-                        // .merge(
-                        //     Rx.Observable.of(
-                        //         addPopup(uuid.v1(), {component: IDENTIFY_POPUP, maxWidth: 600, position: {coordinates: point ? point.rawPos : []}})
-                        //     )
-                        // )// .filter(() => isMapPopup())
-                    // )
-                // );
-                // if (selectionType === SELECTION_TYPES.POINT) {
-                //     const point = toPoint(geometry?.coordinates && [geometry.coordinates[1], geometry.coordinates[0]] || []);
-                //     const bufferedPoint = reprojectGeoJson(buffer(point, 200, {units: 'meters'}), 'EPSG:4326', 'EPSG:3857');
-                //     geometry = bufferedPoint.geometry;
-                //     geometry.projection = 'EPSG:3857';
-                // };
             })
             .merge(Rx.Observable.of(unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME)))
-            .startWith(stopDrawingAction)
+            .startWith(
+                stopDrawingAction,
+                purgeMapInfoResultsAction,
+                changeMousePointerAction
+            )
             .takeUntil(
                 Rx.Observable.merge(
                     action$.ofType(TEAR_DOWN),
                     // this stops once selection type changes
                     action$.ofType(TOGGLE_SELECTION)
                 ))
-            // .concat(deactivate());
         }
         return deactivate();
 });
@@ -323,6 +312,7 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
     .switchMap(({ selectionType }) => {
         if (selectionType) {
             const startDrawingAction = changeDrawingStatus('start', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: false });
+            const changeMousePointerAction = changeMousePointer('auto');
             return action$.ofType(END_DRAWING).flatMap(({ geometry }) => {
                 const timeSeriesLayers = timeSeriesLayersSelector(getState());
                 return (timeSeriesLayers.length === 0 ? Rx.Observable.empty() :
@@ -354,7 +344,7 @@ export const timeSeriesPlotsSelection = (action$, {getState = () => {}}) =>
                 .merge(Rx.Observable.of(changeDrawingStatus('cleanAndContinueDrawing', drawMethod(selectionType), CONTROL_NAME, [], { stopAfterDrawing: false })))
             })
             .merge(Rx.Observable.of(unRegisterEventListener(MOUSEMOVE_EVENT, CONTROL_NAME))) // Reset map's mouse event trigger type
-            .startWith(startDrawingAction)
+            .startWith(startDrawingAction, changeMousePointerAction)
             .takeUntil(action$.ofType(TEAR_DOWN))
             .concat(deactivate());
         }

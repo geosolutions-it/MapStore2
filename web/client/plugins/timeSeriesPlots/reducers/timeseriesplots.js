@@ -2,6 +2,7 @@ import { set } from '@mapstore/utils/ImmutableUtils';
 import { TIME_SERIES_PLOTS, SELECT_NODE } from '../../../actions/layers';
 import {
     CHANGE_AGGREGATE_FUNCTION,
+    CHANGE_SELECTION_NAME,
     CHANGE_TRACE_COLOR,
     STORE_TIME_SERIES_CHART_DATA,
     TEAR_DOWN,
@@ -44,6 +45,21 @@ export default function timeSeriesPlots(state = INITIAL_STATE, action) {
                         ...cur, 
                         aggregateFunctionOption: cur.selectionId === selectionId ? aggregateFunction : cur.aggregateFunctionOption,
                         aggregateFunctionLabel: cur.selectionId === selectionId ? label : cur.aggregateFunctionLabel
+                    }
+                ]
+            ), []);
+            return {
+                ...state,
+                timePlotsData
+            }
+        }
+        case CHANGE_SELECTION_NAME: {
+            const { selectionId, selectionName } = action;
+            const timePlotsData = state.timePlotsData.reduce((acc, cur) => (
+                [ ...acc, 
+                    { 
+                        ...cur, 
+                        selectionName: cur.selectionId === selectionId ? selectionName : cur.selectionName
                     }
                 ]
             ), []);

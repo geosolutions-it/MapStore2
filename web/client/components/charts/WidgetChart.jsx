@@ -286,11 +286,12 @@ function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAx
                 showgrid: cartesian,
                 type: xAxisOpts?.type,
                 showticklabels: !xAxisOpts?.hide,
-                ...(isTimeSeriesChart && {
-                    tickformat: "%d/%m/%Y",
-                    tickmode: 'array',
-                    tickvals: data[0].filter(item => item.DATE).map(item => item[xDataKey]),
-                }),
+                /** commented temporarily before we ask client how they want date to be displayed */
+                // ...(isTimeSeriesChart && {
+                //     tickformat: "%d/%m/%Y",
+                //     tickmode: 'array',
+                //     tickvals: data[0].filter(item => item.DATE).map(item => item[xDataKey]),
+                // }),
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
