@@ -123,7 +123,7 @@ function mapConfig(state = {eventListeners: {}}, action) {
         return assign({}, state, {version: action.version});
     }
     case REGISTER_EVENT_LISTENER: {
-        return assign({}, state || { eventListeners: {} },
+        return assign({}, state,
             {eventListeners: assign({}, state.eventListeners || {},
                 {[action.eventName]: [...(state.eventListeners && state.eventListeners[action.eventName] || []), action.toolName]})});
     }

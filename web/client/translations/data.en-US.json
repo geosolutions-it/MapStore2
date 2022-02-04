@@ -2892,10 +2892,6 @@
             "description": "Allows time travel for data with time dimension",
             "title": "Timeline"
           },
-          "TimeSeriesPlots": {
-            "description": "Plots time series chart over time bound data",
-            "title": "Time Series Plots"
-          },
           "Tutorial": {
             "description": "Adds a tutorial to explain the various functionalities",
             "title": "Tutorial"
@@ -3439,18 +3435,6 @@
           "remove": "Reset User Session",
           "confirmRemove": "Are you sure you want to restore the default configuration?"
         },
-        "timeSeriesPlots": {
-            "title": "Time Series Plots",
-            "description": "Plots time bound data for the selected layer",
-            "tooltip": "Time Series Plots tool",
-            "selectionTable": {
-                "columns": {
-                    "selectionId": "Selection Id",
-                    "selectionType": "Selection Type",
-                    "removeSelectionAction": "Remove Selection"
-                }
-            }
-          },
         "streetView": {
           "title": "Street View",
           "description": "Street view tool for browsing Google street view images from the map",
