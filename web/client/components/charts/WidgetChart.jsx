@@ -316,7 +316,7 @@ export const toPlotly = (props) => {
     const classificationAttr = classifications?.dataKey;
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
-    const multipleTracesLineChart = every([data[0], Array.isArray(data[0]), options?.multipleSeries?.length], Boolean);
+    const multipleTracesLineChart = every([data, data[0], Array.isArray(data[0]), options?.multipleSeries?.length], Boolean);
     return {
         layout: {
             showlegend: legend,
