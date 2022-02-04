@@ -106,7 +106,8 @@ function getData({
     autoColorOptions,
     customColorEnabled,
     isClassifiedChart,
-    options
+    options,
+    isTimeSeriesChart
 }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
@@ -195,7 +196,7 @@ function getData({
 
     case 'line' : {
         /** time series plots case - with multiple series*/
-        if (data[0] && Array.isArray(data[0]) && multipleSeries.length) {
+        if (isTimeSeriesChart) {
             const lineChartTraces = data.map((item, index) => {
                 const presetLabelName = presetLabelNames[index].dataKey;
                 const timeSeriesXDataKey = groupByAttributes[index];

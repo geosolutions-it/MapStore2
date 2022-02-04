@@ -101,7 +101,7 @@ export const getWidgetsGroups =  (widgets = []) => {
 
 /**
  * returns default aggregation operations for
- * charts that can be used in widgtes and for 
+ * charts that can be used in widgtes and for
  * other features
  */
 export const getDefaultAggregationOperations = () => {
@@ -112,5 +112,5 @@ export const getDefaultAggregationOperations = () => {
         { value: "StdDev", label: "widgets.operations.STDDEV"},
         { value: "Min", label: "widgets.operations.MIN"},
         { value: "Max", label: "widgets.operations.MAX"}
-    ]
-}
+    ];
+};
