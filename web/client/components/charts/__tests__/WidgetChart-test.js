@@ -11,6 +11,7 @@ import {
     DATASET_3,
     LABELLED_CLASSIFICATION,
     UNLABELLED_CLASSIFICATION,
+    PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION,
     SPLIT_DATASET_2,
     SPLIT_DATASET_3,
     TEMPLATE_LABELS_CLASSIFICATION
@@ -230,8 +231,8 @@ describe('Widget Chart: data conversions ', () => {
             // LAYOUT
             expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
         });
-        it('custom classified colors - using templatized labels and custom colors only', () => {
-            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", classification: TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
+        it('custom classified colors - using templatized labels and custom colors only - pie charts', () => {
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", classification: PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
             const { data, layout } = toPlotly({
                 type: 'pie',
                 autoColorOptions,
@@ -245,14 +246,14 @@ describe('Widget Chart: data conversions ', () => {
             data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
             // data labels mapped
             data[0].labels.map((v, i) => {
-                const classLabel = TEMPLATE_LABELS_CLASSIFICATION
+                const classLabel = PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION
                     .filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].title
-                    .replace('${legendValue}', DATASET_2.data[i].name);
+                    .replace('${groupByValue}', DATASET_2.data[i].name);
                 expect(v).toBe(classLabel);
             });
             // colors are those defined by the user
             data[0].marker.colors.map((v, i) => {
-                const classColor = TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].color;
+                const classColor = PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].color;
                 expect(v).toBe(classColor);
             });
             // LAYOUT
@@ -419,7 +420,7 @@ describe('Widget Chart: data conversions ', () => {
             expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
         });
     });
-    it('custom classified colors - using templatized labels and custom colors only', () => {
+    it('custom classified colors - using templatized labels and custom colors only - bar charts', () => {
         const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
         const { data, layout } = toPlotly({
             type: 'bar',
@@ -464,5 +465,32 @@ describe('Widget Chart: data conversions ', () => {
         expect(data.length).toBe(1);
         expect(data[0].type).toBe('bar');
         expect(layout.colorway).toEqual([autoColorOptions.defaultCustomColor]);
+    });
+    it('default classfied bar chart type is stacked', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        expect(layout.barmode).toBe('stack');
+    });
+    it('change classfied bar chart type to grouped', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'bar',
+            autoColorOptions,
+            classifications: CLASSIFICATIONS,
+            ...DATASET_2,
+            barChartType: 'group'
+        });
+        expect(data.length).toBe(1);
+        const traces = data[0];
+        expect(traces.length).toBe(2);
+        expect(layout.barmode).toBe('group');
     });
 });

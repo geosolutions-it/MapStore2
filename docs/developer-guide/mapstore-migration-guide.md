@@ -87,6 +87,7 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 ### Upgrading CesiumJS
 CesiumJS has been upgraded to version 1.42 (from 1.17), with no breaking changes, so you should replace all the instances of  `https://cesium.com/downloads/cesiumjs/releases/1.17` in your projects HTML files with `https://cesium.com/downloads/cesiumjs/releases/1.42`. The new release is needed to implement Bearer based authentication to WMS services.
 
+## Migration from 2021.02.01 to 2021.02.02
 ### Style parsers dynamic import
 
 The style parser libraries introduced a dynamic import to reduce the initial bundle size. This change reflects to the `getStyleParser` function provided by the VectorStyleUtils module. If a downstream project of MapStore is using `getStyleParser` it should update it to this new version:

@@ -18,6 +18,7 @@ const API = {
 import catalog from '../catalog';
 const {
     addLayersFromCatalogsEpic,
+    addLayerAndDescribeEpic,
     getMetadataRecordById,
     autoSearchEpic,
     openCatalogEpic,
@@ -28,7 +29,7 @@ const {
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
 import {setControlProperty, SET_CONTROL_PROPERTY} from '../../actions/controls';
-import {ADD_LAYER, selectNode} from '../../actions/layers';
+import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode} from '../../actions/layers';
 import {PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER} from '../../actions/mapInfo';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
 import {
@@ -41,7 +42,7 @@ import {
     SET_LOADING,
     formatOptionsFetch,
     FORMAT_OPTIONS_LOADING,
-    SET_FORMAT_OPTIONS
+    SET_FORMAT_OPTIONS, ADD_LAYER_AND_DESCRIBE, addLayerAndDescribe, DESCRIBE_ERROR
 } from '../../actions/catalog';
 
 
@@ -181,7 +182,7 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                case ADD_LAYER:
+                case ADD_LAYER_AND_DESCRIBE:
                     expect(action.layer.name).toBe("gs:us_states");
                     expect(action.layer.title).toBe("States of US");
                     expect(action.layer.type).toBe("wms");
@@ -214,7 +215,7 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                case ADD_LAYER:
+                case ADD_LAYER_AND_DESCRIBE:
                     if (action.layer.name === "gs:us_states") {
                         expect(action.layer.title).toBe("States of US");
                         expect(action.layer.type).toBe("wms");
@@ -257,7 +258,7 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                case ADD_LAYER:
+                case ADD_LAYER_AND_DESCRIBE:
                     expect(action.layer.name).toBe("gs:us_states");
                     expect(action.layer.title).toBe("States of US");
                     expect(action.layer.type).toBe("wms");
@@ -298,7 +299,7 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                case ADD_LAYER:
+                case ADD_LAYER_AND_DESCRIBE:
                     expect(action.layer.name).toBe("topp:tasmania_cities_hidden");
                     expect(action.layer.title).toBe("tasmania_cities");
                     expect(action.layer.type).toBe("wmts");
@@ -331,7 +332,7 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
-                case ADD_LAYER:
+                case ADD_LAYER_AND_DESCRIBE:
                     expect(action.layer.name).toBe("topp:tasmania_cities_hidden");
                     expect(action.layer.title).toBe("tasmania_cities");
                     expect(action.layer.type).toBe("wmts");
@@ -357,6 +358,214 @@ describe('catalog Epics', () => {
                 pageSize: 2
             }
         });
+    });
+    it('addLayersFromCatalogsEpic wms with CQL_FILTER passed via "options"', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(addLayersFromCatalogsEpic, 0), NUM_ACTIONS,
+            addLayersMapViewerUrl(["spearfish"], ["wmsCatalog"], [{"params": {"CQL_FILTER": "NAME='test'"}}]),
+            (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ADD_LAYER_AND_DESCRIBE:
+                        expect(action.layer.name).toBe("spearfish");
+                        expect(action.layer.title).toBe("spearfish");
+                        expect(action.layer.type).toBe("wms");
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {
+                catalog: {
+                    delayAutoSearch: 50,
+                    selectedService: "wmsCatalog",
+                    services: {
+                        "wmsCatalog": {
+                            type: "wms",
+                            url: "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml"
+                        }
+                    },
+                    pageSize: 2
+                }
+            });
+    });
+    it('addLayerAndDescribeEpic', (done) => {
+        const layer = {
+            type: 'wms',
+            url: 'base/web/client/test-resources/wms/DescribeLayers.xml',
+            visibility: true,
+            dimensions: [],
+            name: 'workspace:vector_layer',
+            title: 'workspace:vector_layer',
+            bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}},
+            links: [],
+            params: {
+                CQL_FILTER: 'NAME=\'Test\''
+            },
+            allowedSRS: {
+                'EPSG:3857': true,
+                'EPSG:4326': true
+            }
+        };
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+            addLayerAndDescribe(layer),
+            (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ADD_LAYER:
+                        expect(action.layer.name).toBe("workspace:vector_layer");
+                        expect(action.layer.title).toBe("workspace:vector_layer");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.params).toEqual(layer.params);
+                        break;
+                    case CHANGE_LAYER_PROPERTIES:
+                        expect(action.newProperties).toExist();
+                        expect(action.newProperties.search).toExist();
+                        expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
+                        expect(action.newProperties.search.type).toBe("wfs");
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {
+                catalog: {
+                    delayAutoSearch: 50,
+                    selectedService: "wmsCatalog",
+                    services: {
+                        "wmsCatalog": {
+                            type: "wms",
+                            url: "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml"
+                        }
+                    },
+                    pageSize: 2
+                }
+            });
+    });
+    it('addLayerAndDescribeEpic multiple urls', (done) => {
+        const layer = {
+            type: 'wms',
+            url: ['base/web/client/test-resources/wms/DescribeLayers.xml', 'base/web/client/test-resources/wms/DescribeLayers.xml'],
+            visibility: true,
+            dimensions: [],
+            name: 'workspace:vector_layer',
+            title: 'workspace:vector_layer',
+            bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}},
+            links: [],
+            params: {
+                CQL_FILTER: 'NAME=\'Test\''
+            },
+            allowedSRS: {
+                'EPSG:3857': true,
+                'EPSG:4326': true
+            }
+        };
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+            addLayerAndDescribe(layer),
+            (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ADD_LAYER:
+                        expect(action.layer.name).toBe("workspace:vector_layer");
+                        expect(action.layer.title).toBe("workspace:vector_layer");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.params).toEqual(layer.params);
+                        expect(action.layer.url).toEqual(layer.url);
+                        break;
+                    case CHANGE_LAYER_PROPERTIES:
+                        expect(action.newProperties).toExist();
+                        expect(action.newProperties.search).toExist();
+                        expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
+                        expect(action.newProperties.search.type).toBe("wfs");
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {
+                catalog: {
+                    delayAutoSearch: 50,
+                    selectedService: "wmsCatalog",
+                    services: {
+                        "wmsCatalog": {
+                            type: "wms",
+                            url: "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml"
+                        }
+                    },
+                    pageSize: 2
+                }
+            });
+    });
+    it('addLayerAndDescribeEpic with no describe layer', (done) => {
+        const layer = {
+            type: 'wms',
+            url: 'base/web/client/test-resources/wms/DescribeMissing.xml',
+            visibility: true,
+            dimensions: [],
+            name: 'workspace:vector_layer',
+            title: 'workspace:vector_layer',
+            bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}},
+            links: [],
+            params: {
+                CQL_FILTER: 'NAME=\'Test\''
+            },
+            allowedSRS: {
+                'EPSG:3857': true,
+                'EPSG:4326': true
+            }
+        };
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+            addLayerAndDescribe(layer),
+            (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ADD_LAYER:
+                        expect(action.layer.name).toBe("workspace:vector_layer");
+                        expect(action.layer.title).toBe("workspace:vector_layer");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.params).toEqual(layer.params);
+                        expect(action.layer.url).toEqual(layer.url);
+                        break;
+                    case DESCRIBE_ERROR:
+                        expect(action.layer).toExist();
+                        expect(action.error).toExist();
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {
+                catalog: {
+                    delayAutoSearch: 50,
+                    selectedService: "wmsCatalog",
+                    services: {
+                        "wmsCatalog": {
+                            type: "wms",
+                            url: "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml"
+                        }
+                    },
+                    pageSize: 2
+                }
+            });
     });
     it('getSupportedFormatsEpic wms', (done) => {
         const NUM_ACTIONS = 3;

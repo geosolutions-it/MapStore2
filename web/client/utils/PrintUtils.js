@@ -425,9 +425,13 @@ export function addValidator(id, name, validator) {
  */
 export const getDefaultPrintingService = () => {
     return {
-        print: () => {
+        print: (layers) => {
             const state = getStore().getState();
-            const intialSpec = printSpecificationSelector(state);
+            const printSpec = printSpecificationSelector(state);
+            const intialSpec = layers ? {
+                ...printSpec,
+                layers
+            } : printSpec;
             return getSpecTransformerChain().map(t => t.transformer).reduce((previous, f) => {
                 return previous.then(spec=> f(state, spec));
             }, Promise.resolve(intialSpec));
@@ -684,7 +688,7 @@ export const specCreators = {
                 "matrixSet": tileMatrixSetName,
                 "style": layer.style,
                 "name": layer.name,
-                "requestEncoding": layer.requestEncoding === "RESTful" ? "REST" : layer.requestEncoding,
+                "requestEncoding": layer.requestEncoding === "RESTful" ? "REST" : layer.requestEncoding || "KVP",
                 "opacity": getOpacity(layer),
                 "version": layer.version || "1.0.0"
             };

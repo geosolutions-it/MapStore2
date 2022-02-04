@@ -42,6 +42,7 @@ class PagedCombobox extends React.Component {
         onFocus: PropTypes.func,
         onSelect: PropTypes.func,
         onToggle: PropTypes.func,
+        onChangeAttribute: PropTypes.func,
         open: PropTypes.bool,
         pagination: PropTypes.object,
         nextPageIcon: PropTypes.string,
@@ -53,7 +54,8 @@ class PagedCombobox extends React.Component {
         placeholder: PropTypes.string,
         stopPropagation: PropTypes.bool,
         clearable: PropTypes.bool,
-        onReset: PropTypes.func
+        onReset: PropTypes.func,
+        attribute: PropTypes.string
     };
 
     static contextTypes = {
@@ -81,6 +83,7 @@ class PagedCombobox extends React.Component {
         onChange: () => {},
         onSelect: () => {},
         onReset: () => {},
+        onChangeAttribute: () => {},
         textField: "label",
         tooltip: {
             customizedTooltip: undefined,
@@ -93,6 +96,13 @@ class PagedCombobox extends React.Component {
         valueField: "value",
         clearable: false
     };
+
+    componentDidUpdate(prevProps) {
+        const { attribute } = this.props;
+        if (attribute !== prevProps.attribute) {
+            this.props.onChangeAttribute(attribute);
+        }
+    }
 
     renderWithTooltip = (field) => {
         if (this.props.tooltip.customizedTooltip) {
@@ -107,6 +117,7 @@ class PagedCombobox extends React.Component {
             { field }
         </OverlayTrigger>);
     };
+
 
     renderPagination = () => {
         const firstPage = this.props.pagination.firstPage;

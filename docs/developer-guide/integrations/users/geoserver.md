@@ -3,7 +3,7 @@
 This guide explains how to share users, groups and roles between MapStore and GeoServer.
 Applying this configurations will allow users logged in MapStore to be recognized by GeoServer. So security rules about restrictions on services, layers and so on can be correctly applied to MapStore users (also using GeoFence).
 
-![diagram](https://docs.google.com/drawings/d/e/2PACX-1vTP4-rnOr9wHQCk58I4LcJYpUtFwg7fp9jYIRuPu18eDZDYnL4rhJAcmRYfbZ5bNfgYZX0BXihtbsRE/pub?w=651&h=429)
+![diagram](https://docs.google.com/drawings/d/e/2PACX-1vR2FEp6iXMPotq5OY1DcCcMvMjq3jQG-aJh5lhp7yCW-tsBINugLE7Cff8O-eXprgOQoiqGKcF4Gq98/pub?w=651&amp;h=429)
 
 With the suggested implementation the MapStore database will be also a UserGroupService and a RoleService for GeoServer.
 This means that every user of MapStore will be also a user in GeoServer, with the same attributes, the same roles (ADMIN, USER) and the same user groups.

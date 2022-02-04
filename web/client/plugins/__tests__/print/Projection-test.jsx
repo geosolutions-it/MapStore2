@@ -42,11 +42,24 @@ const initialState = {
 };
 
 const baseSpec = {
-    layers: [],
-    center: {x: 0, y: 0, projection: "EPSG:4326"},
+    layers: [{
+        type: "Vector",
+        geoJson: {
+            type: "FeatureCollection",
+            features: [{
+                type: "Point",
+                coordinates: [100000, 200000]
+            }]
+        }
+    }, {
+        type: "unknown"
+    }],
     projection: "EPSG:3857",
     srs: "EPSG:3857",
-    pages: []
+    pages: [{
+        center: [100000, 200000],
+        scale: 10000
+    }]
 };
 
 function getPrintProjectionPlugin() {
@@ -123,6 +136,9 @@ describe('PrintProjection Plugin', () => {
             try {
                 ReactDOM.render(<Plugin projections={[{"name": "Mercator", "value": "EPSG:3857"}, {"name": "WGS84", "value": "EPSG:4326"}]}/>, document.getElementById("container"));
                 callTransformer(store.getState(), (spec) => {
+                    expect(spec.pages[0].center[0].toFixed(2)).toEqual(100000);
+                    expect(spec.pages[0].center[1].toFixed(2)).toEqual(200000);
+                    expect(spec.pages[0].scale.toFixed(0)).toEqual(10000);
                     expect(spec.srs).toBe('EPSG:3857');
                     done();
                 });
@@ -143,7 +159,15 @@ describe('PrintProjection Plugin', () => {
                     }
                 });
                 callTransformer(store.getState(), (spec) => {
+                    expect(spec.pages[0].center[0].toFixed(2)).toEqual(0.9);
+                    expect(spec.pages[0].center[1].toFixed(2)).toEqual(1.80);
+                    expect(spec.pages[0].scale.toFixed(0)).toEqual(125483353);
                     expect(spec.srs).toBe('EPSG:4326');
+                    expect(spec.layers.length).toBe(2);
+                    expect(spec.layers[0].type).toBe("Vector");
+                    expect(spec.layers[0].geoJson.features.length).toBe(1);
+                    expect(spec.layers[0].geoJson.features[0].coordinates[0].toFixed(2)).toEqual(0.90);
+                    expect(spec.layers[0].geoJson.features[0].coordinates[1].toFixed(2)).toEqual(1.80);
                     done();
                 });
             } catch (ex) {

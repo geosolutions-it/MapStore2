@@ -36,6 +36,15 @@ export const GEOSTORY_DEFAULT_SHARE_OPTIONS = {
     }
 };
 
+export const CONTEXT_DEFAULT_SHARE_OPTIONS = {
+    embedPanel: true,
+    showAPI: false,
+    advancedSettings: {
+        hideInTab: "embed",
+        homeButton: true
+    }
+};
+
 export const SHARE_TABS = {
     link: 1,
     social: 2,

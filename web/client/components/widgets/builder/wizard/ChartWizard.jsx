@@ -73,6 +73,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         type={data.type}
         xAxisOpts={data.xAxisOpts}
         yAxisOpts={data.yAxisOpts}
+        barChartType={data.barChartType}
         formula={data.formula}
         legend={data.legend}
         cartesian={data.cartesian}
@@ -95,6 +96,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         autoColorOptions={data.autoColorOptions}
         legend={data.legend}
         cartesian={data.cartesian}
+        layer={data.layer || layer}
         yAxis={data.yAxis}
     />);
 

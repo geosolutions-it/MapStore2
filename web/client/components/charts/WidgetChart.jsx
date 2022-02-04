@@ -128,12 +128,12 @@ function getData({
         };
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
-                const legendValue = x[index];
+                const groupByValue = x[index];
                 const customLabel = getLegendLabel(item, colorCategories, defaultClassLabel, type);
                 if (!customLabel) {
-                    return legendValue;
+                    return groupByValue;
                 }
-                return customLabel.replace('${legendValue}', legendValue);
+                return customLabel.replace('${groupByValue}', groupByValue);
             });
             pieChartTrace = {
                 ...pieChartTrace,
@@ -145,7 +145,8 @@ function getData({
                 ...(yDataKey && { legendgroup: yDataKey }),
                 ...pieChartTrace,
                 labels: x,
-                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
+                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {}),
+                pull: 0.005
             };
         }
         return pieChartTrace;
@@ -154,10 +155,8 @@ function getData({
         if (formula) {
             y = preProcessValues(formula, y);
         }
-        let barChartTrace = {
-            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`,
-            type
-        };
+        // common bar chart properties
+        let barChartTrace = { type };
         /** Bar chart is classified coloured */
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type));
@@ -175,7 +174,8 @@ function getData({
                     x: groupedXValues[index],
                     y: groupedYValues[index],
                     name: item,
-                    marker: { color: groupedColors[index] }
+                    marker: { color: groupedColors[index] },
+                    hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra>${item}</extra>`
                 };
                 return trace;
             });
@@ -188,6 +188,7 @@ function getData({
             x: x,
             y: y,
             name: yAxisLabel || yDataKey,
+            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`,
             ...(classificationColors && classificationColors.length && customColorEnabled ? {marker: {color: classificationColors}} : {})
         };
         return barChartTrace;
@@ -262,38 +263,44 @@ function getMargins({ type, isModeBarVisible}) {
     }
 }
 
-function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled } ) {
+function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled, barChartType = 'stack' } ) {
+    const chartsLayoutOptions = {
+        colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
+        yaxis: {
+            type: yAxisOpts?.type,
+            automargin: true,
+            tickformat: yAxisOpts?.format,
+            tickprefix: yAxisOpts?.tickPrefix,
+            ticksuffix: yAxisOpts?.tickSuffix,
+            showticklabels: yAxis === true,
+            // showticklabels,showline for yAxis false
+            showgrid: cartesian
+        },
+        xaxis: {
+            showgrid: cartesian,
+            type: xAxisOpts?.type,
+            showticklabels: !xAxisOpts?.hide,
+            // dtick used to force show all x axis labels.
+            // TODO: enable only when "category" with time dimension
+            // dtick: xAxisAngle ? 0.25 : undefined,
+            nticks: xAxisOpts.nTicks, // max number of ticks, to avoid performance issues
+            automargin: true,
+            tickangle: xAxisAngle ?? 'auto'
+        }
+    };
     switch (type) {
     case 'pie':
         return {
             ...(!customColorEnabled && {colorway: defaultColorGenerator(data.length, autoColorOptions)})
         };
-    // line / bar
-    default :
+    case 'bar':
         return {
-            colorway: customColorEnabled ? [autoColorOptions?.defaultCustomColor] || ['#0888A1'] : defaultColorGenerator(series.length, autoColorOptions),
-            yaxis: {
-                type: yAxisOpts?.type,
-                automargin: true,
-                tickformat: yAxisOpts?.format,
-                tickprefix: yAxisOpts?.tickPrefix,
-                ticksuffix: yAxisOpts?.tickSuffix,
-                showticklabels: yAxis === true,
-                // showticklabels,showline for yAxis false
-                showgrid: cartesian
-            },
-            xaxis: {
-                showgrid: cartesian,
-                type: xAxisOpts?.type,
-                showticklabels: !xAxisOpts?.hide,
-                // dtick used to force show all x axis labels.
-                // TODO: enable only when "category" with time dimension
-                // dtick: xAxisAngle ? 0.25 : undefined,
-                nticks: xAxisOpts.nTicks, // max number of ticks, to avoid performance issues
-                automargin: true,
-                tickangle: xAxisAngle ?? 'auto'
-            }
+            barmode: barChartType,
+            ...chartsLayoutOptions
         };
+    // line / bar
+    default:
+        return chartsLayoutOptions;
     }
 }
 /**

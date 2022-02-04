@@ -15,6 +15,8 @@ const xmlBuilder = new xml2js.Builder();
 import axios from '../libs/ajax';
 import ConfigUtils from '../utils/ConfigUtils';
 import { registerErrorParser } from '../utils/LocaleUtils';
+import { encodeUTF8 } from '../utils/EncodeUtils';
+
 
 const generateMetadata = (name = "", description = "") =>
     "<description><![CDATA[" + description + "]]></description>"
@@ -154,8 +156,8 @@ const Api = {
         let authData;
         return axios.post(url, null, this.addBaseUrl(merge((username && password) ? {
             auth: {
-                username: username,
-                password: password
+                username: encodeUTF8(username),
+                password: password // password is already encoded by axios
             }
         } : {}, options))).then((response) => {
             authData = response.data?.sessionToken ?? response.data;

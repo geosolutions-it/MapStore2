@@ -46,6 +46,7 @@ const FilterBuilder = ({
         groupFields: [{ id: 1, logic: 'OR', index: 0 }]
     },
     attributes = [],
+    format,
     groupLevels = 0,
     onChange = () => {}
 }) => {
@@ -53,6 +54,7 @@ const FilterBuilder = ({
     return (
         <div className="ms-style-rule-filter">
             <GroupField
+                format={format}
                 attributes={attributes}
                 filterFields={filterFields}
                 groupFields={groupFields}
@@ -158,6 +160,7 @@ export function FilterBuilderPopover({
     value,
     hide,
     attributes,
+    format,
     onChange,
     placement = 'right'
 }) {
@@ -171,6 +174,7 @@ export function FilterBuilderPopover({
                 <FilterBuilder
                     filterObj={value}
                     attributes={attributes}
+                    format={format}
                     onChange={(filter) => onChange({ filter })}
                 />
             }>

@@ -304,14 +304,6 @@ class UserDialog extends React.Component {
             };
         }
 
-        if (/[^a-zA-Z0-9\!\@\#\$\%\&\*\_]/.test(p)) {
-            return {
-                valid: false,
-                message: "user.passwordInvalidChar",
-                args: p.match(/[^a-zA-Z0-9\!\@\#\$\%\&\*\_]/).toString()
-            };
-        }
-
         return validation;
     };
 

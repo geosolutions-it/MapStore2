@@ -87,7 +87,7 @@ describe('Test the mediaEditor reducer', () => {
         let state = mediaEditor({}, setMediaService({value}));
         expect(state.settings.sourceId).toEqual(value);
     });
-    it('SET_MEDIA_TYPE', () => {
+    it('SET_MEDIA_TYPE BY DEFAULT', () => {
         const mediaType = "mediaType";
         let state = mediaEditor({}, setMediaType(mediaType));
         expect(state.settings.mediaType).toEqual(mediaType);
@@ -104,6 +104,13 @@ describe('Test the mediaEditor reducer', () => {
         }, setMediaType(mediaType));
         expect(state.settings.mediaType).toEqual(mediaType);
         expect(state.settings.sourceId).toEqual("default");
+    });
+    it('SET_MEDIA_TYPE WITH A SELECTED SERVICE', () => {
+        const mediaType = "mediaType";
+        const selectedService = "geonode";
+        let state = mediaEditor({}, setMediaType(mediaType, selectedService));
+        expect(state.settings.mediaType).toEqual(mediaType);
+        expect(state.settings.sourceId).toEqual(selectedService);
     });
     it('SHOW', () => {
         const owner = "owner";
