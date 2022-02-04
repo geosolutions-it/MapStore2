@@ -107,7 +107,7 @@ function getData({
     customColorEnabled,
     isClassifiedChart,
     options,
-    isTimeSeriesChart
+    multipleTracesLineChart
 }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
@@ -193,18 +193,17 @@ function getData({
             ...(classificationColors && classificationColors.length && customColorEnabled ? {marker: {color: classificationColors}} : {})
         };
         return barChartTrace;
-
-    case 'line' : {
-        /** time series plots case - with multiple series*/
-        if (isTimeSeriesChart) {
+    default:
+        /** multiple traces **/
+        if (multipleTracesLineChart) {
             const lineChartTraces = data.map((item, index) => {
                 const presetLabelName = presetLabelNames[index].dataKey;
-                const timeSeriesXDataKey = groupByAttributes[index];
-                const timeSeriesYDataKey = multipleSeries[index].dataKey;
+                const tracesXDataKey = groupByAttributes[index];
+                const tracesYDataKey = multipleSeries[index].dataKey;
                 const aggregateFunction = aggregateFunctions && aggregateFunctions[index] || '';
-                const operationYDataKey = `${aggregateFunction}${timeSeriesYDataKey}`;
-                const lineX = item.map(d => d[timeSeriesXDataKey]);
-                const lineY = item.map(d => d[timeSeriesYDataKey]);
+                const operationYDataKey = `${aggregateFunction}${tracesYDataKey}`;
+                const lineX = item.map(d => d[tracesXDataKey]);
+                const lineY = item.map(d => d[tracesYDataKey]);
                 const traceName = !aggregateFunction ? presetLabelName : `${presetLabelName} - ${aggregateFunction}`;
                 const traceColor = tracesColors[index];
                 const trace = {
@@ -220,17 +219,6 @@ function getData({
             });
             return lineChartTraces;
         }
-        if (formula) {
-            y = preProcessValues(formula, y);
-        }
-        return {
-            hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'd'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
-            x,
-            y,
-            name: yAxisLabel || yDataKey
-        };
-    }
-    default:
         if (formula) {
             y = preProcessValues(formula, y);
         }
@@ -328,14 +316,14 @@ export const toPlotly = (props) => {
     const classificationAttr = classifications?.dataKey;
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
-    const isTimeSeriesChart = every([data[0], Array.isArray(data[0]), options?.multipleSeries?.length], Boolean);
+    const multipleTracesLineChart = every([data[0], Array.isArray(data[0]), options?.multipleSeries?.length], Boolean);
     return {
         layout: {
             showlegend: legend,
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
-            ...getLayoutOptions({ ...props, customColorEnabled, classificationAttr, isTimeSeriesChart, xDataKey }),
+            ...getLayoutOptions({ ...props, customColorEnabled, classificationAttr, multipleTracesLineChart, xDataKey }),
             margin: getMargins({ ...props, isModeBarVisible}),
             autosize: false,
             height,
@@ -344,7 +332,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, isTimeSeriesChart});
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, multipleTracesLineChart});
             return  allData;
         }),
         config: {
