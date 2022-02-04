@@ -28,6 +28,7 @@ import { zoomToExtent } from '@mapstore/actions/map';
 
 import {
     enabledSelector,
+    timeSeriesLayersSelector,
     timePlotsDataSelector,
     timeSeriesFeaturesSelectionsSelector,
     aggregateFunctionSelector
@@ -36,16 +37,17 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import { zoomToPoint } from '../../../actions/map';
 
 
-const getTimeSeriesChartProps = (data) => {
+const getTimeSeriesChartProps = (data, layerConfig = {}) => {
+    const { queryByAttributes = 'date', queryAggregationAttribute = 'value' } = layerConfig;
     const aggregateFunctions = data.map(item => item.aggregateFunctionOption.value);
-    const aggregationAttribute = '(VALUE)';
+    const aggregationAttribute = `(${queryAggregationAttribute})`;
     return ({
         cartesian: true,
         legend: true,
         options : {
             aggregateFunctions,
             aggregationAttribute,
-            groupByAttributes: data.map(item => item.groupByAttributes || 'DATE'),
+            groupByAttributes: data.map(item => item.groupByAttributes || 'date'),
             multipleSeries: data.reduce((acc, cur) => (
                 [
                     ...acc,
@@ -66,7 +68,7 @@ const getTimeSeriesChartProps = (data) => {
         },
         series: [{ dataKey: aggregationAttribute }],
         type: 'line',
-        xAxis: {dataKey: 'DATE'},
+        xAxis: {dataKey: queryByAttributes},
         yAxis: true
     });
 };
@@ -82,6 +84,7 @@ const getTimeSeriesPlotsData = (data) => (data.map(item => item.chartData) || []
 
 const Panel = ({ 
     enabled,
+    currentTimeSeriesLayerConfig,
     onChangeAggregateFunction = () => {},
     onChangeSelectionName = () => {},
     onChangeTraceColor = () => {},
@@ -93,10 +96,9 @@ const Panel = ({
     onZoomToSelectionPoint = () => {},
     aggregationOptions
 }) => {
-    const margin = 10;
     const initialSize = {width: 630, height: 530};
     const [size, setSize] = useState(initialSize);
-    const timeSeriesChartsProps = useMemo(() => getTimeSeriesChartProps(timePlotsData), [timePlotsData]);
+    const timeSeriesChartsProps = useMemo(() => getTimeSeriesChartProps(timePlotsData, currentTimeSeriesLayerConfig), [timePlotsData, currentTimeSeriesLayerConfig]);
     const timeSeriesPlotsData = useMemo(() => getTimeSeriesPlotsData(timePlotsData), [timePlotsData]);
 
     if (!enabled) {
@@ -175,7 +177,9 @@ const TSPPanel = connect(createStructuredSelector({
     enabled: enabledSelector,
     timePlotsData: timePlotsDataSelector,
     timeSeriesFeaturesSelections: timeSeriesFeaturesSelectionsSelector,
-    aggregateFunction: aggregateFunctionSelector
+    aggregateFunction: aggregateFunctionSelector,
+    /** currently the first one in the list (preselected) - users will be able to select with dd */
+    currentTimeSeriesLayerConfig: (state) => timeSeriesLayersSelector(state)[0]
 }), {
     onClearAllSelections: () => clearAllSelections(),
     onClose: () => toggleControl(CONTROL_NAME),

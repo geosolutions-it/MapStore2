@@ -74,6 +74,32 @@ const DEACTIVATE_ACTIONS = [
 const deactivate = () => Rx.Observable.from(DEACTIVATE_ACTIONS);
 
 /**
+ * Parse the date fields incoming from the request
+ * so that the types are correctly interpreted as 
+ * date fields and sorted by Plotly
+ * @param {[object]} chartDataResults the results from time series analysis 
+ * @param {object} options parameters to be used to extract dates from data
+ */
+
+const parseDateFields = (chartDataResults, options) => {
+    const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
+        const { groupByAttributes, aggregateFunction, aggregationAttribute } = options;
+        const parsedDate = moment(cur[groupByAttributes].split('T')[0]).toDate();
+        return [
+                ...acc, {
+                    ...(aggregateFunction ? 
+                        {[`${aggregateFunction}(${aggregationAttribute})`] : cur[`${aggregateFunction}(${aggregationAttribute})`]} :
+                        {[aggregationAttribute]: cur[aggregationAttribute]}),
+                    parsedDate,
+                    [groupByAttributes]: moment(parsedDate).format('YYYY-MM-DD')
+                }
+            ]
+        }, []);
+    parsedChartDataResults.sort((a,b) => a.parsedDate - b.parsedDate);
+    return parsedChartDataResults;
+};
+
+/**
  * Extract the drawMethod for DrawSupport from the method
  * @param {string} selection the current tool selected
  */
@@ -88,7 +114,7 @@ const deactivate = () => Rx.Observable.from(DEACTIVATE_ACTIONS);
     default:
         return null;
     }
-}
+};
 
 const createRequest = (geometry, layer) =>  {
     const request = getLayerJSONFeature(layer, {
@@ -103,7 +129,7 @@ const createRequest = (geometry, layer) =>  {
         }
     });
     return request;
-}
+};
 
 const getTimeSeriesFeatures = (geometry, getState, timeSeriesLayerName) => {
     const timeSeriesLayer = getLayerFromName(getState(), timeSeriesLayerName);
@@ -121,17 +147,7 @@ const getWFSChartData = (layer, filter, options, aggregationAttribute, selection
     .filter(wfsQueryResults => wfsQueryResults.features.length)
     .map(wfsQueryResults => wfsToChartData(wfsQueryResults, options))
     .map(chartDataResults => {
-        const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
-        const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
-        return [
-                ...acc, {
-                    ...cur,
-                    PARSED_DATE: parsedDate,
-                    DATE: moment(parsedDate).format('YYYY-MM-DD')
-                }
-            ]
-        }, []);
-        parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
+        const parsedChartDataResults = parseDateFields(chartDataResults, options);
         const selectionType = currentSelectionToolSelector(getState());
         const currentTraceColors = currentTraceColorsSelector(getState());
         const selectionName = 'Point';
@@ -174,21 +190,11 @@ const getWPSChartData = (
         headers: {'Content-Type': 'application/json'},
     })
     .map(aggregationResults => {
-        const { aggregateFunction, aggregationAttribute, groupByAttributes} = options;
+        const { aggregateFunction, aggregationAttribute, groupByAttributes } = options;
         return wpsAggregateToChartData(aggregationResults, [groupByAttributes], [aggregationAttribute], [aggregateFunction]);
     })
     .map(chartDataResults => {
-        const parsedChartDataResults = chartDataResults.reduce((acc, cur) => {
-        const parsedDate = moment(cur.DATE.replace('F', ''), "YYYYMMDD").toDate();
-        return [
-                ...acc, {
-                    ...cur,
-                    PARSED_DATE: parsedDate,
-                    DATE: moment(parsedDate).format('YYYY-MM-DD')
-                }
-            ]
-        }, []);
-        parsedChartDataResults.sort((a,b) => a.PARSED_DATE - b.PARSED_DATE);
+        const parsedChartDataResults = parseDateFields(chartDataResults, options);
         const selectionType = currentSelectionToolSelector(getState());
         const currentTraceColors = currentTraceColorsSelector(getState());
         const selectionName = selectionType === SELECTION_TYPES.POLYGON || selectionType === SELECTION_TYPES.CIRCLE ? 'AOI' : 'Point';
@@ -364,16 +370,17 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
         const fb = FilterBuilder({});
         const {property, or, filter} = fb;
         const ogcFilter = filter(or(featuresIds.map( id => property(queryAttribute).equalTo(id))));
+        let options = {
+            aggregationAttribute,
+            groupByAttributes
+        };
         if (selectionType === SELECTION_TYPES.POLYGON) {
-            const aggregateFunction = 'Average';
-            const options = {
-                aggregateFunction,
-                aggregationAttribute,
-                groupByAttributes
-            };
+            // default aggregation operation is AVG
+            options = { ...options, aggregateFunction: 'Average' }
             return getWPSChartData(
+                // can be get or update data
                 actionType,
-                url, 
+                url,
                 {featureType: queryLayerName, filter: ogcFilter, ...options},
                 selectionId,
                 selectionGeometry,
@@ -382,7 +389,19 @@ export const timeSeriesFetauresCurrentSelection = (action$, {getState = () => {}
                 featuresIds
             );
         } else if (selectionType === SELECTION_TYPES.POINT) {
-            return getWFSChartData({url, name: queryLayerName}, ogcFilter, { groupByAttributes }, aggregationAttribute, selectionId, selectionGeometry, getState, layerName, featuresIds)
+            // if point selection no aggregation
+            options = { ...options, aggregateFunction: '' }
+            return getWFSChartData(
+                { url, name: queryLayerName }, 
+                ogcFilter,
+                options,
+                aggregationAttribute,
+                selectionId,
+                selectionGeometry,
+                getState,
+                layerName,
+                featuresIds
+            );
         } else {
             return Rx.Observable.empty()
         }
