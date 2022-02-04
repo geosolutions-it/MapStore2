@@ -306,5 +306,5 @@ export function updateSettingsParams(newParams, update) {
 export function timeSeriesPlots() {
     return {
         type: TIME_SERIES_PLOTS
-    }
+    };
 }

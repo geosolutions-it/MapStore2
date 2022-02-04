@@ -194,15 +194,15 @@ function getData({
 
     case 'line' : {
         /** time series plots case - with multiple series*/
-        if(data[0] && Array.isArray(data[0]) && multipleSeries.length) {
+        if (data[0] && Array.isArray(data[0]) && multipleSeries.length) {
             const lineChartTraces = data.map((item, index) => {
                 const presetLabelName = presetLabelNames[index].dataKey;
-                xDataKey = groupByAttributes[index];
-                yDataKey = multipleSeries[index].dataKey;
+                const timeSeriesXDataKey = groupByAttributes[index];
+                const timeSeriesYDataKey = multipleSeries[index].dataKey;
                 const aggregateFunction = aggregateFunctions && aggregateFunctions[index] || '';
-                const operationYDataKey = `${aggregateFunction}${yDataKey}`;
-                const lineX = item.map(d => d[xDataKey]); 
-                const lineY = item.map(d => d[yDataKey]);
+                const operationYDataKey = `${aggregateFunction}${timeSeriesYDataKey}`;
+                const lineX = item.map(d => d[timeSeriesXDataKey]);
+                const lineY = item.map(d => d[timeSeriesYDataKey]);
                 const traceName = !aggregateFunction ? presetLabelName : `${presetLabelName} - ${aggregateFunction}`;
                 const traceColor = tracesColors[index];
                 const trace = {
@@ -214,13 +214,13 @@ function getData({
                         color: traceColor
                     }
                 };
-                return trace
+                return trace;
             });
             return lineChartTraces;
-        };
+        }
         if (formula) {
             y = preProcessValues(formula, y);
-        };
+        }
         return {
             hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'd'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
             x,
@@ -262,7 +262,7 @@ function getMargins({ type, isModeBarVisible}) {
     }
 }
 
-function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled, isTimeSeriesChart = false, xDataKey } ) {
+function getLayoutOptions({ series = [], cartesian, type, yAxis, xAxisAngle, xAxisOpts = {}, yAxisOpts = {}, data = [], autoColorOptions = COLOR_DEFAULTS, customColorEnabled } ) {
     switch (type) {
     case 'pie':
         return {
