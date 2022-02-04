@@ -10,7 +10,8 @@
           "https://gs-stable.geo-solutions.it/geoserver",
           "https://gs-stable.geo-solutions.it:443/geoserver",
           "http://gs-stable.geo-solutions.it/geoserver",
-          "http://gs-stable.geo-solutions.it:443/geoserver"
+          "http://gs-stable.geo-solutions.it:443/geoserver",
+          "https://georchestra.geo-solutions.it/geoserver"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
