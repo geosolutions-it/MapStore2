@@ -134,3 +134,28 @@ export const DATASET_MULTI_SERIES_1 = {
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "pv" }, { dataKey: "uv" }]
 };
+
+export const DATASET_MULTI_DATA_MULTI_SERIES_1 = {
+    data: [
+        [
+            { name: 'Page A', value: 18, classValue: 'class1'},
+            { name: 'Page B', value: 12, classValue: 'class2'},
+            { name: 'Page C', value: 15, classValue: 'class2'}
+        ],
+        [
+            { name: 'Page D', 'Average(value)': 9, classValue: 'class2'},
+            { name: 'Page E', 'Average(value)': 6, classValue: 'class1'},
+            { name: 'Page F', 'Average(value)': 7.5, classValue: 'class1'}
+        ]
+    ],
+    options: {
+        aggregateFunctions: ['', 'Average'],
+        aggregationAttribute: "(value)",
+        groupByAttributes: ['name', 'name'],
+        multipleSeries: [{dataKey: 'value'}, {dataKey: 'Average(value)'}],
+        presetLabelNames: [{dataKey: 'Class 1'}, {dataKey: 'Class 2'}],
+        tracesColors: ['#9013fe', '#1e803c']
+    },
+    xAxis: {dataKey: "name"},
+    series: [{ dataKey: "value" }]
+};
