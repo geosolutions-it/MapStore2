@@ -21,7 +21,8 @@ import {
     CHANGE_MAP_LIMITS,
     SET_MAP_RESOLUTIONS,
     REGISTER_EVENT_LISTENER,
-    UNREGISTER_EVENT_LISTENER
+    UNREGISTER_EVENT_LISTENER,
+    ORIENTATION
 } from '../actions/map';
 
 import assign from 'object-assign';
@@ -136,6 +137,19 @@ function mapConfig(state = {eventListeners: {}}, action) {
                     {[action.eventName]: filteredEventNameTools})});
         }
         return data;
+    }
+    case ORIENTATION: {
+        if (action && action.orientation && action.orientation.center) {
+            const center = action.orientation.center.split(',');
+            const x = center[0];
+            const y = center[1];
+            const z = action.orientation.zoom;
+            const heading = action.orientation.heading;
+            const pitch = action.orientation.pitch;
+            const roll = action.orientation.roll;
+            return assign({}, state, {orientate: {x, y, z, heading, pitch, roll}});
+        }
+        return null;
     }
     default:
         return state;

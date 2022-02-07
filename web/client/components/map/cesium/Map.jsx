@@ -43,7 +43,8 @@ class CesiumMap extends React.Component {
         zoomToHeight: PropTypes.number,
         registerHooks: PropTypes.bool,
         hookRegister: PropTypes.object,
-        viewerOptions: PropTypes.object
+        viewerOptions: PropTypes.object,
+        orientate: PropTypes.object
     };
 
     static defaultProps = {
@@ -110,8 +111,8 @@ class CesiumMap extends React.Component {
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
         this.subscribeClickEvent(map);
-        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
+        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
                 this.props.center.x,
@@ -140,6 +141,24 @@ class CesiumMap extends React.Component {
             this._updateMapPositionFromNewProps(newProps);
         }
         return false;
+    }
+
+    componentDidUpdate() {
+        if (this.props && this.props.orientate) {
+            const position = {
+                destination: Cesium.Cartesian3.fromDegrees(
+                    parseFloat(this.props.orientate.x),
+                    parseFloat(this.props.orientate.y),
+                    this.getHeightFromZoom(parseFloat(this.props.orientate.z))
+                ),
+                orientation: {
+                    heading: parseFloat(this.props.orientate.heading),
+                    pitch: parseFloat(this.props.orientate.pitch),
+                    roll: parseFloat(this.props.orientate.roll)
+                }
+            };
+            this.setView(position);
+        }
     }
 
     componentWillUnmount() {

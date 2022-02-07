@@ -68,13 +68,15 @@ const Share = connect(createSelector([
     state => get(state, 'controls.share.settings', {}),
     (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     state => state.search && state.search.markerPosition || {},
-    updateUrlOnScrollSelector
-], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
+    updateUrlOnScrollSelector,
+    state => get(state, 'map.present.viewerOptions')
+], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition, viewerOptions) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: getApiUrl(location.href),
     shareConfigUrl: getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
+    viewerOptions,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
     center: map && map.center && ConfigUtils.getCenter(map.center),
     zoom: map && map.zoom,

@@ -1292,6 +1292,9 @@
             "showHomeButton": "Link to MapStore home",
             "showSectionId": "Include scroll position",
             "showConnections": "Show connections",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch",
             "sizeOptions": {
                 "width": "width",
                 "height": "height"

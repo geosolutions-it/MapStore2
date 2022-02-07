@@ -93,7 +93,9 @@ class SharePanel extends React.Component {
         point: PropTypes.object,
         isScrollPosition: PropTypes.bool,
         hideMarker: PropTypes.func,
-        addMarker: PropTypes.func
+        addMarker: PropTypes.func,
+        viewerOptions: PropTypes.object,
+        mapType: PropTypes.string
     };
 
     static defaultProps = {
@@ -132,7 +134,10 @@ class SharePanel extends React.Component {
             bbox,
             eventKey: SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
-            coordinate
+            coordinate,
+            heading: this.props.viewerOptions?.orientation?.heading,
+            pitch: this.props.viewerOptions?.orientation?.pitch,
+            roll: this.props.viewerOptions?.orientation?.roll
         });
     }
 
@@ -157,7 +162,7 @@ class SharePanel extends React.Component {
 
     initializeDefaults = (props) => {
         const coordinate = this.getCoordinates(props);
-        const {settings = {}, advancedSettings = {}, zoom, isVisible, onUpdateSettings, bbox: newBbox = []} = props || {};
+        const {settings = {}, advancedSettings = {}, zoom, isVisible, onUpdateSettings, bbox: newBbox = [], viewerOptions} = props || {};
         const isCenterAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === CENTERANDZOOM || false;
         const isMarkerAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === MARKERANDZOOM || false;
         const enableDefaultBBox = advancedSettings.bbox && advancedSettings.defaultEnabled === BBOX || false;
@@ -177,19 +182,26 @@ class SharePanel extends React.Component {
             coordinate,
             defaultLoaded: isVisible,
             isCenterAndZoomDefault,
-            isMarkerAndZoomDefault
+            isMarkerAndZoomDefault,
+            heading: viewerOptions?.orientation?.heading,
+            pitch: viewerOptions?.orientation?.pitch,
+            roll: viewerOptions?.orientation?.roll
         });
     }
 
     getShareUrl = () => {
-        const { settings, advancedSettings } = this.props;
+        const { settings, advancedSettings, mapType, viewerOptions } = this.props;
         const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
         let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
+            if (mapType === 'cesium' && viewerOptions && viewerOptions.orientation) {
+                shareUrl = `${shareUrl}&heading=${this.state.heading}&pitch=${this.state.pitch}&roll=${this.state.roll}`;
+            }
         }
+
         return shareUrl;
     };
 
@@ -350,6 +362,54 @@ class SharePanel extends React.Component {
                                 this.setState({...this.state, zoom});
                             }}/>
                     </FormGroup>
+                    {
+                        this.props.mapType && this.props.mapType === 'cesium' && (
+                            <React.Fragment>
+                                <FormGroup>
+                                    <ControlLabel><Message msgId="share.heading" /></ControlLabel>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-zoom"><Message msgId="share.zoomToolTip"/></Tooltip>}>
+                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                                    </OverlayTrigger>
+                                    <FormControl
+                                        type="number"
+                                        name={"heading"}
+                                        value={this.state.heading || this.props.viewerOptions.orientation.heading}
+                                        onChange={({target})=>{
+                                            const heading = target.value;
+                                            this.setState({...this.state, heading});
+                                        }}/>
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel><Message msgId="share.roll" /></ControlLabel>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-zoom"><Message msgId="share.zoomToolTip"/></Tooltip>}>
+                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                                    </OverlayTrigger>
+                                    <FormControl
+                                        type="number"
+                                        name={"roll"}
+                                        value={this.state.roll || this.props.viewerOptions.orientation.roll}
+                                        onChange={({target})=>{
+                                            const roll = target.value;
+                                            this.setState({...this.state, roll});
+                                        }}/>
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel><Message msgId="share.pitch" /></ControlLabel>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-zoom"><Message msgId="share.zoomToolTip"/></Tooltip>}>
+                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                                    </OverlayTrigger>
+                                    <FormControl
+                                        type="number"
+                                        name={"pitch"}
+                                        value={this.state.pitch || this.props.viewerOptions.orientation.pitch}
+                                        onChange={({target})=>{
+                                            const pitch = target.value;
+                                            this.setState({...this.state, pitch});
+                                        }}/>
+                                </FormGroup>
+                            </React.Fragment>)
+                    }
+
                     <Checkbox
                         checked={this.props.settings && this.props.settings.markerEnabled}
                         onChange={() => {
