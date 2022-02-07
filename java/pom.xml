@@ -4,7 +4,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-java</artifactId>
   <packaging>pom</packaging>
-  <version>1.2.2</version>
+  <version>1.2-SNAPSHOT</version>
   <name>MapStore 2</name>
   <url>http://www.geo-solutions.it</url>
 
