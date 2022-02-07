@@ -513,7 +513,7 @@
             "grabLayerIcon": "Attraper et déplacer la couche",
             "grabGroupIcon": "Attraper et déplacer le groupe",
             "toggleLayerVisibilityWarning": "Inverser la visibilité de la couche. Attention : la couche ne s'est pas chargée correctement",
-            "createWidget": "Créer un widget pour le couche sélectionné",
+            "createWidget": "Créer un widget pour la couche sélectionnée",
             "editLayerProperties": "Modifier les propriétés de la couche",
             "browseData": "Ouvrir la table d'attribut",
             "removeLayer": "Supprimer la couche",
