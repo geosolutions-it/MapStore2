@@ -47,7 +47,7 @@ Replacing:
     * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
 - [ ] Test [Binary](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/ws/release/target/) (take the mapstore2-QA-<RELEASE_BRANCH>-bin.zip)
-- [ ] Lunch the [stable deploy](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Stable/) to install the latest stable version on official demo
+- [ ] Lunch the [stable deploy](http://build.geosolutionsgroup.com/job/MapStore/job/MapStore2-Stable/) to install the latest stable version on official demo
 - [ ] Manually edit the localConfig.json on mapstore.geosolutionsgroup.com to fit the authkey for production (`authkey-prod`)
 - [ ] Commit the changelog to the release branch
 - [ ] Create a [github draft release](https://github.com/geosolutions-it/MapStore2/releases) pointing to the branch **YYYY.XX.mm**.
