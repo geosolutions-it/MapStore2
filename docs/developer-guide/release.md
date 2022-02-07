@@ -67,7 +67,7 @@ Replacing:
 - [ ] Reset versions of java modules to `-SNAPSHOT`. the command is  `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false` where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT).
 - [ ] Create a release for https://github.com/geosolutions-it/MapStoreExtension with the same name and attach the zip to the release
   - [ ] for this you need to update revision of mapstore by pointing it to the release tag **vYYYY.XX.mm**
-  - [ ] run the `./build.sh` locally and include in the release the zip of the `SampleExtension.zip`
+  - [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and include in the release the zip of the `SampleExtension.zip` from/dist folder
 - [ ] Create a blog post
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Update the release procedure if needed.
