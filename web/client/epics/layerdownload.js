@@ -56,6 +56,7 @@ import { queryPanelSelector, wfsDownloadSelector } from '../selectors/controls';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapBboxSelector } from '../selectors/map';
+import { layerDescribeSelector } from "../selectors/query";
 import {
     isLoggedIn,
     userSelector
@@ -72,6 +73,7 @@ import { getLayerTitle } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
+import {extractGeometryAttributeName} from "../utils/WFSLayerUtils";
 
 const DOWNLOAD_FORMATS_LOOKUP = {
     "gml3": "GML3.1",
@@ -248,7 +250,8 @@ export const startFeatureExportDownload = (action$, store) =>
             layerFilter,
             options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
-                pn: action.downloadOptions.propertyName
+                pn: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
+                    extractGeometryAttributeName(layerDescribeSelector(state, layer.name))] : null
             }
         })
             .do(({ data, headers }) => {
@@ -268,7 +271,8 @@ export const startFeatureExportDownload = (action$, store) =>
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
-                        pn: action.downloadOptions.propertyName
+                        pn: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
+                            extractGeometryAttributeName(layerDescribeSelector(state, layer.name))] : null
                     }
                 }).do(({ data, headers }) => {
                     if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf

@@ -325,6 +325,9 @@ export const getAttributesList = (attributes, customAttributesSettings) => {
             const hide = customAttributesSettings[element.attribute]?.hide ?? false;
             return !hide;
         }).map((element) => element.attribute);
+        if (result.length === attributes.length) {
+            result = undefined;
+        }
     }
     return result;
 };
