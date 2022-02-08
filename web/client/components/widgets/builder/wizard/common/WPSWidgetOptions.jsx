@@ -227,6 +227,9 @@ export default ({
                                                     ...(classification ? { classification: formatAutoColorOptions(classification) } : {} ),
                                                     defaultCustomColor: defaultCustomColor ?? '#0888A1'
                                                 });
+                                                if (!v.custom) {
+                                                    onChange("options.classificationAttribute", undefined);
+                                                }
                                             }}/>
                                     </Col>
                                 </FormGroup>
