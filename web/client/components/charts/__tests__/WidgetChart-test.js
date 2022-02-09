@@ -9,7 +9,6 @@ import {
     DATASET_1,
     DATASET_2,
     DATASET_3,
-    DATASET_MULTI_DATA_MULTI_SERIES_1,
     LABELLED_CLASSIFICATION,
     UNLABELLED_CLASSIFICATION,
     PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION,
@@ -492,25 +491,6 @@ describe('Widget Chart: data conversions ', () => {
             const traces = data[0];
             expect(traces.length).toBe(2);
             expect(layout.barmode).toBe('group');
-        });
-    });
-    describe('multiple data items and multiple series charts', () => {
-        it('multiple data items and multiple series line chart', () => {
-            const { data, layout } = toPlotly({
-                type: 'line',
-                ...DATASET_MULTI_DATA_MULTI_SERIES_1
-            });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(data[0].length).toBe(2);
-            expect(traces[0].name).toBe(DATASET_MULTI_DATA_MULTI_SERIES_1.options.presetLabelNames[0].dataKey);
-            expect(traces[1].name).toBe(`${DATASET_MULTI_DATA_MULTI_SERIES_1.options.presetLabelNames[1].dataKey} - ${DATASET_MULTI_DATA_MULTI_SERIES_1.options.aggregateFunctions[1]}`);
-            traces.forEach((trace, index) => {
-                expect(trace.type).toBe('line');
-                trace.y.map((v, j) => expect(v).toBe(DATASET_MULTI_DATA_MULTI_SERIES_1.data[index][j][DATASET_MULTI_DATA_MULTI_SERIES_1.options.multipleSeries[index].dataKey]));
-                trace.x.map((v, j) => expect(v).toBe(DATASET_MULTI_DATA_MULTI_SERIES_1.data[index][j][DATASET_MULTI_DATA_MULTI_SERIES_1.xAxis.dataKey]));
-            });
-            expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
         });
     });
 });

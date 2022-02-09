@@ -301,4 +301,3 @@ export function updateSettingsParams(newParams, update) {
         update
     };
 }
-

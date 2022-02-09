@@ -105,17 +105,13 @@ function getData({
     yAxisLabel,
     autoColorOptions,
     customColorEnabled,
-    isClassifiedChart,
-    options,
-    multipleTracesLineChart
-}) {
+    isClassifiedChart }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     const colorCategories = autoColorOptions?.classification || [];
     const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
     const { defaultClassLabel = ''} = autoColorOptions;
-    const { aggregateFunctions, multipleSeries, groupByAttributes, presetLabelNames, tracesColors } = options || {};
 
     switch (type) {
 
@@ -193,32 +189,8 @@ function getData({
             ...(classificationColors && classificationColors.length && customColorEnabled ? {marker: {color: classificationColors}} : {})
         };
         return barChartTrace;
+
     default:
-        /** multiple traces **/
-        if (multipleTracesLineChart) {
-            const lineChartTraces = data.map((item, index) => {
-                const presetLabelName = presetLabelNames[index].dataKey;
-                const tracesXDataKey = groupByAttributes[index];
-                const tracesYDataKey = multipleSeries[index].dataKey;
-                const aggregateFunction = aggregateFunctions && aggregateFunctions[index] || '';
-                const operationYDataKey = `${aggregateFunction}${tracesYDataKey}`;
-                const lineX = item.map(d => d[tracesXDataKey]);
-                const lineY = item.map(d => d[tracesYDataKey]);
-                const traceName = !aggregateFunction ? presetLabelName : `${presetLabelName} - ${aggregateFunction}`;
-                const traceColor = tracesColors[index];
-                const trace = {
-                    type,
-                    x: lineX,
-                    y: lineY,
-                    name: traceName || `${operationYDataKey} ${index}`,
-                    line: {
-                        color: traceColor
-                    }
-                };
-                return trace;
-            });
-            return lineChartTraces;
-        }
         if (formula) {
             y = preProcessValues(formula, y);
         }
@@ -307,23 +279,20 @@ export const toPlotly = (props) => {
         width,
         legend,
         classifications,
-        autoColorOptions = COLOR_DEFAULTS,
-        data,
-        options
+        autoColorOptions = COLOR_DEFAULTS
     } = props;
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
-    const multipleTracesLineChart = data && every([data[0], Array.isArray(data[0]), options?.multipleSeries?.length, type === 'line'], Boolean);
     return {
         layout: {
             showlegend: legend,
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
-            ...getLayoutOptions({ ...props, customColorEnabled, classificationAttr, multipleTracesLineChart, xDataKey }),
+            ...getLayoutOptions({ ...props, customColorEnabled, classificationAttr }),
             margin: getMargins({ ...props, isModeBarVisible}),
             autosize: false,
             height,
@@ -332,7 +301,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, multipleTracesLineChart});
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
             return  allData;
         }),
         config: {
