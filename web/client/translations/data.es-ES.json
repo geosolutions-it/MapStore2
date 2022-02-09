@@ -1292,6 +1292,9 @@
             "zoomToolTip": "Min: 1 y Max: 35",
             "showSectionId": "Incluir posición de desplazamiento",
             "showConnections": "Mostrar conexiones",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch",
             "sizeOptions": {
                 "width": "ancho",
                 "height": "altura"

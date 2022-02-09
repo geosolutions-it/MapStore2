@@ -1298,7 +1298,10 @@
             "wrongBboxParamMessage": "Parametre pre bounding box musia byť v súradnicovom systéme EPSG:4326 a vo formáte bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Odkaz na domovskú stránku MapStore",
             "showSectionId": "Include scroll position",
-            "showConnections": "Zobraziť pripojenia"
+            "showConnections": "Zobraziť pripojenia",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch"
         },
         "snapshot": {
             "title": "Ukážka snímky",

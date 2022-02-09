@@ -1021,7 +1021,10 @@
             "addBboxParam": "Add bbox param to sharing link",
             "wrongBboxParamTitle": "Invalid bbox param",
             "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
-            "showSectionId": "Include scroll position"
+            "showSectionId": "Include scroll position",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch"
         },
         "snapshot": {
             "title": "Snapshot Preview",

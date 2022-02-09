@@ -1271,6 +1271,9 @@
             "showHomeButton": "Länk till MapStores hem",
             "showSectionId": "Inkludera rullningsposition",
             "showConnections": "Visa anslutningar",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch",
             "sizeOptions": {
                 "width": "width",
                 "height": "höjd"

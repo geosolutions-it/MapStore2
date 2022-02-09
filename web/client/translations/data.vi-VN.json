@@ -1313,7 +1313,10 @@
             "title": "Chia sẻ",
             "titlePanel": "Chia sẻ bản đồ",
             "wrongBboxParamMessage": "thông số bbox phải ở trong EPSG: 4326 và được viết dưới dạng bbox = minx, miny, maxx, maxy",
-            "wrongBboxParamTitle": "Thông số bbox không hợp lệ"
+            "wrongBboxParamTitle": "Thông số bbox không hợp lệ",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch"
         },
         "showEmptyMessageGFI": "Hiển thị thông báo kết quả trống trong bảng GetFeatureInfo",
         "showMore": "Hiển thị nhiều hơn...",

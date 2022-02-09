@@ -1272,7 +1272,7 @@
             "msgToCopyUrl": "Klik om te kopiëren",
             "sharedTitle": "Bekijk mijn nieuwe kaart: ",
             "addCenterAndZoomParam": "Voeg centrum en zoom toe aan link voor delen",
-	    "addMarkerAndZoomParam": "Voeg plaatsmarkering toe en zoom in op link voor delen",
+	          "addMarkerAndZoomParam": "Voeg plaatsmarkering toe en zoom in op link voor delen",
             "zoom": "Zoom",
             "marker": "Voeg marker toe op geladen kaart",
             "coordinate": "Coordinaat",
@@ -1288,7 +1288,10 @@
             "wrongBboxParamMessage": "Bounding box params moeten in EPSG: 4326 staan en geschreven zijn als bbox = minx, miny, maxx, maxy",
             "showHomeButton": "Link naar MapStore-startpagina",
             "showSectionId": "Inclusief scroll-positie",
-	    "showConnections": "Show connections"
+	          "showConnections": "Show connections",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch"
         },
         "snapshot": {
             "title": "momentopname-voorbeeld",

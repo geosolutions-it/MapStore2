@@ -1331,6 +1331,9 @@
             "zoomToolTip": "Min: 1 und Max: 35",
             "showSectionId": "Bildlaufposition einschließen",
             "showConnections": "Verbindungen anzeigen",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch",
             "sizeOptions": {
                 "width": "Breite",
                 "height": "Höhe"
