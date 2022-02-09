@@ -1835,7 +1835,7 @@
                     "addLayer": "Fügt der Karte eine Ebene hinzu",
                     "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
                     "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
-                    "connectToTheMap": "Stellen Sie eine Verbindung mit dem anderen Widget her",
+                    "connectToTheMap": "Verbinden Sie sich mit der Karte",
                     "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
                     "clearConnection": "Verbindung löschen",
                     "classAttributes": {
