@@ -201,7 +201,6 @@ class SharePanel extends React.Component {
                 shareUrl = `${shareUrl}&heading=${this.state.heading}&pitch=${this.state.pitch}&roll=${this.state.roll}`;
             }
         }
-
         return shareUrl;
     };
 

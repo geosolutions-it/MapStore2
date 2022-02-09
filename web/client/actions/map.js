@@ -239,7 +239,7 @@ export const mouseOut = () => ({
 });
 
 /**
- * Dispatch orientation co-ordinates
+ * Dispatch orientation co-ordinates (head, pitch and roll)
  * @param orientation
  * @returns {{orientation, type: string}}
  */
