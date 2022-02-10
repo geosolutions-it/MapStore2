@@ -1797,7 +1797,7 @@
                     "addLayer": "Agregar una capa al mapa",
                     "useTheSelectedLayer": "Usar la capa seleccionada",
                     "connectToAMap": "Conectarse a otro widget",
-                    "connectToTheMap": "Conéctese al otro widget",
+                    "connectToTheMap": "Conectar al mapa",
                     "selectMapToConnect": "Seleccione el widget para conectarse",
                     "clearConnection": "Borrar conexión",
                     "classAttributes": {
