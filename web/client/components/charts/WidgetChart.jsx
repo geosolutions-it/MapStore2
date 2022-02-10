@@ -10,7 +10,7 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-import { every, includes, isNumber, isString, union } from 'lodash';
+import { every, includes, isNumber, isString, union, orderBy } from 'lodash';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -302,6 +302,16 @@ export const toPlotly = (props) => {
         },
         data: series.map(({ dataKey: yDataKey }) => {
             let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
+            const chartData = allData ? allData?.x?.map((axis, index)=>{
+                return { xAxis: axis, yAxis: allData.y[index]};
+            }) : {};
+            const sortedDataByDataAsc = orderBy(chartData, ['xAxis'], ['asc']);
+            allData.x = sortedDataByDataAsc?.map(item=>{
+                return item.xAxis;
+            });
+            allData.y = sortedDataByDataAsc?.map(item=>{
+                return item.yAxis;
+            });
             return  allData;
         }),
         config: {
