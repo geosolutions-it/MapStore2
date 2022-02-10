@@ -48,8 +48,8 @@ Replacing:
     * Test **everything**, not only the new features
 - [ ] Test [Binary](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/ws/release/target/) (take the mapstore2-QA-<RELEASE_BRANCH>-bin.zip)
 - [ ] Lunch the [stable deploy](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Stable/) to install the latest stable version on official demo
-- [ ] Manually edit the localConfig.json on mapstore.geosolutionsgroup.com to fit the authkey for production (change from `authkey-qa` to `authkey-prod`)
-  - [ ] test as logged user the layers added can be seen, test also on a saved map
+- [ ] Manually edit the `localConfig.json` on mapstore.geosolutionsgroup.com to fit the authkey for production (change from `authkey-qa` to `authkey-prod`)
+  - [ ] to test the change has been applied, login on mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key). 
 - [ ] Commit the changelog to the stable branch
 - [ ] Create a [github draft release](https://github.com/geosolutions-it/MapStore2/releases) pointing to the branch **YYYY.XX.mm**.
   > The Release name should follow be named YYYY.XX.mm where YYYY is the year, XX is the incremental number of the release for the current year (starting from 01) and the second number mm is an incremental value (starting from 00) to increment for minor releases. Insert the tag vYYYY.XX.mm (**notice the initial 'v' for the tag**) and set the target branch as YYYY.XX.xx to create the tag when the release is published. In the release description describe the major changes and link the Changelog paragraph.
@@ -69,8 +69,10 @@ Replacing:
   - [ ] target of the release is master branch
   - [ ] tag is **vYYYY.XX.mm**
   - [ ] Update revision of mapstore to the release tag **vYYYY.XX.mm**
-  - [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and include in the release the zip of the `SampleExtension.zip` from /dist folder
+  - [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and attach to the release the file `SampleExtension.zip` from the `/dist` folder
   - [ ] create a PR for the changes of the revision to the MapstoreExtension repo
+  - [ ] Merge the PR
+  - [ ] Publish the release
 - [ ] Create a blog post
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Update the release procedure if needed.
