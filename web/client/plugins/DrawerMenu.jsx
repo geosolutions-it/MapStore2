@@ -109,7 +109,8 @@ class DrawerMenu extends React.Component {
         singleSection: PropTypes.bool,
         buttonClassName: PropTypes.string,
         menuButtonStyle: PropTypes.object,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        isMobile: PropTypes.bool
     };
 
     static contextTypes = {
@@ -126,7 +127,8 @@ class DrawerMenu extends React.Component {
         menuOptions: {},
         singleSection: true,
         buttonClassName: "square-button ms-drawer-menu-button",
-        disabled: false
+        disabled: false,
+        isMobile: false
     };
 
     getTools = () => {
@@ -161,7 +163,7 @@ class DrawerMenu extends React.Component {
 
     render() {
         return this.getTools().length > 0 ? (
-            <div id={this.props.id}>
+            <div id={this.props.id} className={this.props.isMobile && 'mapstore-mobile-nav'}>
                 <DrawerButton {...this.props} id="drawer-menu-button"/>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
@@ -173,7 +175,8 @@ class DrawerMenu extends React.Component {
 
 const DrawerMenuPlugin = connect((state) => ({
     active: state.controls && state.controls.drawer && state.controls.drawer.active,
-    disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
+    disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled,
+    isMobile: state.browser.mobile
 }), {
     toggleMenu: toggleControl.bind(null, 'drawer', null)
 })(DrawerMenu);

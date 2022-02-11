@@ -208,6 +208,7 @@
                 "cfg": {
                     "showFullscreen": true,
                     "position": "bottom",
+                    "showNotifications": false,
                     "size": 0.5,
                     "fluid": true,
                     "viewerOptions": {

@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './omnibar/omnibar.css';
 import assign from 'object-assign';
+import { connect } from 'react-redux';
 import ToolsContainer from './containers/ToolsContainer';
 
 class OmniBar extends React.Component {
@@ -18,15 +19,17 @@ class OmniBar extends React.Component {
         style: PropTypes.object,
         items: PropTypes.array,
         id: PropTypes.string,
-        mapType: PropTypes.string
+        mapType: PropTypes.string,
+        isMobile: PropTypes.bool
     };
 
     static defaultProps = {
         items: [],
-        className: "navbar-dx shadow",
+        className: "navbar-dx",
         style: {},
         id: "mapstore-navbar",
-        mapType: "leaflet"
+        mapType: "leaflet",
+        isMobile: false
     };
 
     getPanels = () => {
@@ -49,7 +52,7 @@ class OmniBar extends React.Component {
     render() {
         return (<ToolsContainer id={this.props.id}
             style={this.props.style}
-            className={this.props.className}
+            className={`${this.props.className} ${this.props.isMobile ? 'mapstore-mobile-navbar-container' : 'shadow'}`}
             mapType={this.props.mapType}
             container={(props) => <div {...props}>{props.children}</div>}
             toolStyle="primary"
@@ -71,11 +74,10 @@ class OmniBar extends React.Component {
  * @memberof plugins
  */
 export default {
-    OmniBarPlugin: assign(
-        OmniBar,
-        {
-            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
-        }
-    ),
+    OmniBarPlugin: assign(connect((state) => (
+        { isMobile: state.browser.mobile }
+    ))(OmniBar), {
+        disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
+    }),
     reducers: {}
 };

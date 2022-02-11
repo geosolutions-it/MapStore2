@@ -15,7 +15,7 @@ import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
 import ViewerPage from './viewers/ViewerPage';
 import { isEmpty, reverse, startsWith } from 'lodash';
-import { getFormatForResponse } from '../../../utils/IdentifyUtils';
+import { displayByLocalConfig, getFormatForResponse } from '../../../utils/IdentifyUtils';
 
 class DefaultViewer extends React.Component {
     static propTypes = {
@@ -39,7 +39,8 @@ class DefaultViewer extends React.Component {
         showEmptyMessageGFI: PropTypes.bool,
         renderValidOnly: PropTypes.bool,
         loaded: PropTypes.bool,
-        isMobile: PropTypes.bool
+        isMobile: PropTypes.bool,
+        localConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -109,7 +110,7 @@ class DefaultViewer extends React.Component {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
             });
-            return this.props.showEmptyMessageGFI ? (
+            return this.props.showEmptyMessageGFI && displayByLocalConfig(this.props.localConfig) ? (
                 <Alert bsStyle={"info"}>
                     <Message msgId={"noInfoForLayers"} />
                     <b>{titles.join(', ')}</b>

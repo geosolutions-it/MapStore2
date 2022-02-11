@@ -20,3 +20,19 @@ export const getFormatForResponse = (res, props) => {
 };
 
 export const responseValidForEdit = (res) => !!get(res, 'layer.search.url');
+
+/**
+ * Returns true or false based on a local config
+ * @param {object} localConfig the localConfig object stored in state
+ * @param {string} platform either 'mobile' or 'desktop'
+ * @param {string} pluginName name of plugin
+ * @param {string} cfg name of config to target
+ * @returns {boolean}
+ */
+export const displayByLocalConfig = (
+    localConfig,
+    platform = 'mobile',
+    pluginName = 'Identify',
+    cfg = 'showNotifications') => {
+    return (localConfig.plugins[platform].find(item => item.name === pluginName))?.cfg[cfg];
+};
