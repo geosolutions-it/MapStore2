@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import CesiumLayer from '../Layer';
 import expect from 'expect';
-import Cesium from '../../../../libs/cesium';
+import * as Cesium from 'cesium';
 
 import assign from 'object-assign';
 
@@ -25,8 +25,6 @@ import '../plugins/MarkerLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
-
-window.CESIUM_BASE_URL = "node_modules/cesium/Build/Cesium";
 
 describe('Cesium layer', () => {
     let map;
@@ -418,7 +416,8 @@ describe('Cesium layer', () => {
             "type": "bing",
             "title": "Bing Aerial",
             "name": "Aerial",
-            "group": "background"
+            "group": "background",
+            "apiKey": "required"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -582,7 +581,7 @@ describe('Cesium layer', () => {
             <CesiumLayer type="overlay"
                 options={options} map={map}/>, document.getElementById('ovcontainer'));
         expect(layer).toExist();
-        const content = map.scene.primitives.get(1)._content;
+        const content = map.scene.primitives.get(0)._content;
         expect(content).toExist();
         const close = content.getElementsByClassName('close')[0];
         close.click();
@@ -610,7 +609,7 @@ describe('Cesium layer', () => {
                 options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
-        const content = map.scene.primitives.get(1)._content;
+        const content = map.scene.primitives.get(0)._content;
         expect(content).toExist();
         const close = content.getElementsByClassName('close')[0];
         expect(close.getAttribute('data-reactid')).toNotExist();

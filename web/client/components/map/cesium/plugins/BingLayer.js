@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
-
+import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from 'cesium';
 
 Layers.registerType('bing', (options) => {
-    var key = options.apiKey;
+    const key = options.apiKey;
     return new Cesium.BingMapsImageryProvider({
         url: '//dev.virtualearth.net',
         key,

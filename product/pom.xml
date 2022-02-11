@@ -167,7 +167,6 @@
                                 <excludes>
                                     <exclude>node_modules/*</exclude>
                                     <exclude>node_modules/**/*</exclude>
-                                    <exclude>**/libs/Cesium/**/*</exclude>
                                     <exclude>**/test-resources/*</exclude>
                                 </excludes>
                             </resource>
@@ -221,22 +220,6 @@
                         <resources>
                             <resource>
                                 <directory>${basedir}/../web/docs</directory>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>CesiumJS-navigation</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
                             </resource>
                         </resources>
                     </configuration>

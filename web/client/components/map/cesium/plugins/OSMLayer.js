@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
+import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from 'cesium';
 
 Layers.registerType('osm', () => {
-    return Cesium.createOpenStreetMapImageryProvider({
+    return new Cesium.OpenStreetMapImageryProvider({
         url: '//a.tile.openstreetmap.org/'
     });
 });

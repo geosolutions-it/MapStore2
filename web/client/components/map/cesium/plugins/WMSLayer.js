@@ -7,7 +7,7 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import Cesium from '../../../../libs/cesium';
+import * as Cesium from 'cesium';
 import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
 const BILTerrainProvider = createBILTerrainProvider(Cesium);
 import ConfigUtils from '../../../../utils/ConfigUtils';

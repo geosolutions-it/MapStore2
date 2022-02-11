@@ -7,25 +7,26 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import Cesium from '../../../../libs/cesium';
+import * as Cesium from 'cesium';
 
-import {isEqual} from 'lodash';
-import assign from 'object-assign';
+import { isEqual } from 'lodash';
 
 Layers.registerType('marker', {
     create: (options, map) => {
-        const style = assign({}, {
+        const style = {
             point: {
                 pixelSize: 5,
                 color: Cesium.Color.RED,
                 outlineColor: Cesium.Color.WHITE,
                 outlineWidth: 2
-            }
-        }, options.style);
+            },
+            ...options.style
+        };
 
-        const point = map.entities.add(assign({
-            position: Cesium.Cartesian3.fromDegrees(options.point.lng, options.point.lat)
-        }, style));
+        const point = map.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(options.point[0], options.point[1]),
+            ...style
+        });
         return {
             detached: true,
             point: point,

@@ -5,17 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var Cesium = require('../../libs/cesium');
-const getCartesian = function(viewer, event) {
+
+import * as Cesium from 'cesium';
+
+export const getCartesian = function(viewer, event) {
     if (event.position !== null) {
         const scene = viewer.scene;
         const ellipsoid = scene._globe.ellipsoid;
-        const cartesian = scene._camera.pickEllipsoid(event.position || event.endPosition, ellipsoid);
+        const cartesian = scene.camera.pickEllipsoid(event.position || event.endPosition, ellipsoid);
         return cartesian;
     }
     return null;
 };
-const getMouseXYZ = (viewer, event) => {
+export const getMouseXYZ = (viewer, event) => {
     var scene = viewer.scene;
     const mousePosition = event.position || event.endPosition;
     if (!mousePosition) {
@@ -38,7 +40,7 @@ const getMouseXYZ = (viewer, event) => {
     return null;
 };
 
-const getMouseTile = (viewer, event) => {
+export const getMouseTile = (viewer, event) => {
     const scene = viewer.scene;
     if (!event.position) {
         return null;
@@ -47,7 +49,7 @@ const getMouseTile = (viewer, event) => {
     return viewer.scene.globe.pickTile(ray, scene);
 };
 
-module.exports = {
+export default {
     getMouseXYZ,
     getMouseTile
 };
