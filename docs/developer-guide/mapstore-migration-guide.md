@@ -114,38 +114,38 @@ Downstream project should update following configurations:
                 <excludes>
                     <exclude>node_modules/*</exclude>
                     <exclude>node_modules/**/*</exclude>
---                    <exclude>**/libs/Cesium/**/*</exclude>
+-                    <exclude>**/libs/Cesium/**/*</exclude>
                     <exclude>**/test-resources/*</exclude>
                 </excludes>
             </resource>
         </resources>
     </configuration>
 </execution>
---<execution>
---    <id>CesiumJS-navigation</id>
---    <phase>process-classes</phase>
---    <goals>
---        <goal>copy-resources</goal>
---    </goals>
---    <configuration>
---        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
---        <encoding>UTF-8</encoding>
---        <resources>
---            <resource>
---                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
---            </resource>
---        </resources>
---    </configuration>
---</execution> 
+-<execution>
+-    <id>CesiumJS-navigation</id>
+-    <phase>process-classes</phase>
+-    <goals>
+-        <goal>copy-resources</goal>
+-    </goals>
+-    <configuration>
+-        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
+-        <encoding>UTF-8</encoding>
+-        <resources>
+-            <resource>
+-                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
+-            </resource>
+-        </resources>
+-    </configuration>
+-</execution> 
 ```
 
 - remove all the external script and css related to cesium and cesium-navigation now included as packages
 
 ```diff
---<script src="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Cesium.js"></script>
---<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Widgets/widgets.css" />
---<script src="libs/cesium-navigation/cesium-navigation.js"></script>
---<link rel="stylesheet" href="libs/cesium-navigation/cesium-navigation.css" />
+-<script src="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Cesium.js"></script>
+-<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Widgets/widgets.css" />
+-<script src="libs/cesium-navigation/cesium-navigation.js"></script>
+-<link rel="stylesheet" href="libs/cesium-navigation/cesium-navigation.css" />
 ```
 
 - update the `cesiumBaseUrl` parameter in the webpack dev/prod config to point to the correct location of the compiled cesium folder. All the cesium assets are located in the dist target folder under (default `dist/cesium`). This is needed only for project with specific `publicPath` that are not using the default one.
