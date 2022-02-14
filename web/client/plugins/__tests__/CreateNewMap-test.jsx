@@ -13,7 +13,7 @@ import CreateNewMapPlugin from '../CreateNewMap';
 import { getPluginForTest } from './pluginsTestUtils';
 import security from "../../reducers/security";
 
-describe('Contexts Plugin', () => {
+describe('CreateNewMap Plugin', () => {
 
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
