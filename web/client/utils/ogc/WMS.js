@@ -11,6 +11,12 @@
 const {
         OWS_1_0_0,
         WMS_1_0_0,
+        SLD_1_1_0,
+        SE_1_1_0,
+        Filter_1_1_0,
+        GML_3_1_1,
+        SMIL_2_0,
+        SMIL_2_0_Language,
         WMS_1_1_0,
         WMS_1_1_1,
         WMS_1_3_0
@@ -21,6 +27,12 @@ const {Jsonix} = require('jsonix');
 const context = new Jsonix.Context([
     OWS_1_0_0,
     XLink_1_0,
+    SLD_1_1_0,
+    SE_1_1_0,
+    Filter_1_1_0,
+    GML_3_1_1,
+    SMIL_2_0,
+    SMIL_2_0_Language,
     WMS_1_0_0,
     WMS_1_1_0,
     WMS_1_1_1,
