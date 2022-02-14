@@ -342,10 +342,10 @@ export default (API) => ({
                         const layersXml = get(caps, 'capability.layer.layer', [get(caps, 'capability.layer')]);
                         const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === removeWorkspace(layer.name)).metadataURL;
                         const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
-                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            (mUrl.type.toLowerCase() === 'iso19115:2003' || mUrl.type.toLowerCase() === 'tc211') &&
                             (mUrl.format === 'application/xml' || mUrl.format === 'text/xml')), 'onlineResource.href');
                         const metadataUrlHTML = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
-                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            (mUrl.type.toLowerCase() === 'iso19115:2003' || mUrl.type.toLowerCase() === 'tc211') &&
                             mUrl.format === 'text/html'), 'onlineResource.href');
                         const extractor = find(get(metadataOptions, 'extractors', []),
                             ({properties, layersRegex}) => {
