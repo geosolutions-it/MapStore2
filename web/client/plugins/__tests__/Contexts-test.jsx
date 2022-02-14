@@ -29,7 +29,6 @@ describe('Contexts Plugin', () => {
         const { Plugin } = getPluginForTest(ContextsPlugin, {});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         // eslint-disable-next-line no-console
-        console.log(document.getElementById("container").innerHTML);
         const emptyStateImage = document.getElementsByClassName('empty-state-image');
         const emptyStateMainView = document.getElementsByClassName('empty-state-main-view');
         expect(emptyStateImage.length).toBe(1);

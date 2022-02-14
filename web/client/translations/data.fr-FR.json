@@ -399,6 +399,7 @@
                 "errorLoadingGeostories": "Une erreur s'est produite lors du chargement de GeoStories"
             },
             "contexts": {
+              "newContext": "Nouveau contexte",
               "title": "Contextes ({count})",
               "titleNoCount": "Contextes",
               "noContextAvailable": "Aucun contexte disponible"
