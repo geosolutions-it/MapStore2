@@ -546,7 +546,7 @@ describe('Cesium layer', () => {
 
         let options = {
             id: 'overlay-1',
-            position: [13, 43]
+            position: { x: 13, y: 43 }
         };
         // create layers
         let layer = ReactDOM.render(
@@ -571,7 +571,7 @@ describe('Cesium layer', () => {
         let closed = false;
         let options = {
             id: 'overlay-1',
-            position: [13, 43],
+            position: { x: 13, y: 43 },
             onClose: () => {
                 closed = true;
             }
@@ -601,7 +601,7 @@ describe('Cesium layer', () => {
         document.body.appendChild(element);
         let options = {
             id: 'overlay-1',
-            position: [13, 43]
+            position: { x: 13, y: 43 }
         };
         // create layers
         let layer = ReactDOM.render(
@@ -617,7 +617,7 @@ describe('Cesium layer', () => {
 
     it('creates a marker layer for cesium map', () => {
         let options = {
-            point: [13, 43]
+            point: { lng: 13, lat: 43 }
         };
         // create layers
         let layer = ReactDOM.render(
