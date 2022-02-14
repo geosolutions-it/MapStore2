@@ -10,6 +10,7 @@ import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 
 import eventListener from 'eventlistener';
+import isEqual from 'lodash/isEqual';
 /**
  * Created by thomas on 27/01/14.
  */
@@ -28,10 +29,13 @@ const InfoWindow = (function() {
         let content = document.createElement('div');
         content.className = 'content';
         frame.appendChild(content);
-
         cesiumWidget.container.appendChild(div);
         this._content = content;
         this.setVisible(true);
+
+        // set the position to absolute to correctly positioning the info window
+        // based on left and top properties
+        this._div.style.position = 'absolute';
     }
 
     _.prototype.setVisible = function(visible) {
@@ -166,7 +170,7 @@ Layers.registerType('overlay', {
         const cloned = cloneOriginalOverlay(original, options);
 
         let infoWindow = new InfoWindow(map);
-        infoWindow.showAt(options.position[1], options.position[0], cloned);
+        infoWindow.showAt(options.position.y, options.position.x, cloned);
         infoWindow.setVisible(true);
         let info = map.scene.primitives.add(infoWindow);
 
@@ -177,5 +181,15 @@ Layers.registerType('overlay', {
                 map.scene.primitives.remove(info);
             }
         };
+    },
+    update: function(layer, newOptions, oldOptions, map) {
+        if (!isEqual(newOptions.position, oldOptions.position)
+        || newOptions.visibility !== oldOptions.visibility) {
+            layer.remove();
+            return newOptions.visibility
+                ? this.create(newOptions, map)
+                : null;
+        }
+        return null;
     }
 });

@@ -11,6 +11,9 @@ import * as Cesium from 'cesium';
 
 import { isEqual } from 'lodash';
 
+/**
+ * @deprecated
+ */
 Layers.registerType('marker', {
     create: (options, map) => {
         const style = {
@@ -22,9 +25,8 @@ Layers.registerType('marker', {
             },
             ...options.style
         };
-
         const point = map.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(options.point[0], options.point[1]),
+            position: Cesium.Cartesian3.fromDegrees(options.point.lng, options.point.lat),
             ...style
         });
         return {
@@ -36,9 +38,12 @@ Layers.registerType('marker', {
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
-        if (!isEqual(newOptions.point, oldOptions.point)) {
+        if (!isEqual(newOptions.point, oldOptions.point)
+        || newOptions.visibility !== oldOptions.visibility) {
             layer.remove();
-            return this.create(newOptions, map);
+            return newOptions.visibility
+                ? this.create(newOptions, map)
+                : null;
         }
         return null;
     }

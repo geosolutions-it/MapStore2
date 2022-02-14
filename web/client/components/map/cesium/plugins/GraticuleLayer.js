@@ -328,20 +328,31 @@ const Graticule = (function() {
 
 })();
 
+const createLayer = (options, map) => {
+    const scene = map.scene;
+
+    const grid = new Graticule({
+        tileWidth: 512,
+        tileHeight: 512,
+        numLines: 10,
+        ...options
+    }, scene);
+
+    if (options.visibility) {
+        grid.setVisible(true);
+    }
+    return grid;
+};
+
 Layers.registerType('graticule', {
-    create: (options, map) => {
-        const scene = map.scene;
-
-        const grid = new Graticule({
-            tileWidth: 512,
-            tileHeight: 512,
-            numLines: 10,
-            ...options
-        }, scene);
-
-        if (options.visibility) {
-            grid.setVisible(true);
+    create: createLayer,
+    update: (layer, newOptions, oldOptions, map) => {
+        if (newOptions.visibility !== oldOptions.visibility) {
+            layer.setVisible(false); // clear all previous labels and primitive
+            if (newOptions.visibility) {
+                return createLayer(newOptions, map);
+            }
         }
-        return grid;
+        return null;
     }
 });
