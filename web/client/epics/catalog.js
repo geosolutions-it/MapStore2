@@ -338,7 +338,7 @@ export default (API) => ({
 
                 return Rx.Observable.defer(() => getCapabilities(getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
-                        const layersXml = get(caps, 'capability.layer.layer', []);
+                        const layersXml = get(caps, 'capability.layer.layer', [get(caps, 'capability.layer')]);
                         const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === layer.name.split(':')[1]);
                         const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
                             mUrl.type.toLowerCase() === 'iso19115:2003' &&
