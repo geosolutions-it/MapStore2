@@ -110,7 +110,7 @@ class DefaultViewer extends React.Component {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
             });
-            return this.props.showEmptyMessageGFI && displayByLocalConfig(this.props.localConfig) ? (
+            return this.props.showEmptyMessageGFI && displayByLocalConfig(this.props.localConfig, 'mobile', 'Identify', 'showNotifications') ? (
                 <Alert bsStyle={"info"}>
                     <Message msgId={"noInfoForLayers"} />
                     <b>{titles.join(', ')}</b>

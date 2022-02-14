@@ -145,7 +145,7 @@ export default props => {
                             />
                         </div>
                     </Row>,
-                    displayByLocalConfig(localConfig) &&
+                    displayByLocalConfig(localConfig, 'mobile', 'Identify', 'showNotifications') &&
                     (<Row className="coordinates-edit-row">
                         <span className="identify-icon glyphicon glyphicon-point"/>
                         <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>

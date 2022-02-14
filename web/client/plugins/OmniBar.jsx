@@ -75,7 +75,7 @@ class OmniBar extends React.Component {
  */
 export default {
     OmniBarPlugin: assign(connect((state) => (
-        { isMobile: state.browser.mobile }
+        { isMobile: state?.browser?.mobile }
     ))(OmniBar), {
         disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
     }),

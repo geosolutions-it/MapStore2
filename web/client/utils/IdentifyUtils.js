@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { get } from 'lodash';
+import { get, isArray, has } from 'lodash';
 
 import {INFO_FORMATS} from './FeatureInfoUtils';
 
@@ -31,8 +31,13 @@ export const responseValidForEdit = (res) => !!get(res, 'layer.search.url');
  */
 export const displayByLocalConfig = (
     localConfig,
-    platform = 'mobile',
-    pluginName = 'Identify',
-    cfg = 'showNotifications') => {
-    return (localConfig.plugins[platform].find(item => item.name === pluginName))?.cfg[cfg];
+    platform,
+    pluginName,
+    cfg) => {
+    const devicePlatform = localConfig?.plugins && localConfig.plugins[platform];
+    const plugin = isArray(devicePlatform) && devicePlatform.find(item => item.hasOwnProperty('name') && item.name === pluginName);
+    if (has(plugin, `cfg.${cfg}`)) {
+        return plugin.cfg[cfg];
+    }
+    return true;
 };

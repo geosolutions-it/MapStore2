@@ -176,7 +176,7 @@ class DrawerMenu extends React.Component {
 const DrawerMenuPlugin = connect((state) => ({
     active: state.controls && state.controls.drawer && state.controls.drawer.active,
     disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled,
-    isMobile: state.browser.mobile
+    isMobile: state.browser?.mobile
 }), {
     toggleMenu: toggleControl.bind(null, 'drawer', null)
 })(DrawerMenu);
