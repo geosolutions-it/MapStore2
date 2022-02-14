@@ -23,6 +23,7 @@ const {
 } = require('ogc-schemas');
 
 const XLink_1_0 = require('w3c-schemas').XLink_1_0;
+const MS = require('./MS').MS;
 const {Jsonix} = require('jsonix');
 const context = new Jsonix.Context([
     OWS_1_0_0,
@@ -33,6 +34,7 @@ const context = new Jsonix.Context([
     GML_3_1_1,
     SMIL_2_0,
     SMIL_2_0_Language,
+    MS,
     WMS_1_0_0,
     WMS_1_1_0,
     WMS_1_1_1,
