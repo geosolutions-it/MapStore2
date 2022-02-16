@@ -139,10 +139,10 @@ function mapConfig(state = {eventListeners: {}}, action) {
         return data;
     }
     case ORIENTATION: {
-        if (action && action.orientation && action.orientation.center) {
-            const center = action.orientation.center.split(',');
-            const x = center[0];
-            const y = center[1];
+        if (action && action.orientation && (action.orientation.center || action.orientation.marker)) {
+            const center = action?.orientation?.center?.split(',') || action?.orientation?.marker?.split(',');
+            const x = center && center[0];
+            const y = center && center[1];
             const z = action.orientation.zoom;
             const heading = action.orientation.heading;
             const pitch = action.orientation.pitch;

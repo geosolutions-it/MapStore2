@@ -1043,9 +1043,14 @@
             "addBboxParam": "Add bbox param to sharing link",
             "wrongBboxParamTitle": "Invalid bbox param",
             "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
-            "heading": "Heading",
-            "roll": "Roll",
-            "pitch": "Pitch"
+            "zoom": "Ampliação",
+            "heading": "Ângulo de direção",
+            "roll": "Ângulo de rolamento",
+            "pitch": "Ângulo de inclinação",
+            "zoomToolTip": "Min: 0 e Max: 35",
+            "headingToolTip": "Min: 0 e Max: 360",
+            "rollToolTip": "Min: -90 e Max: 90",
+            "pitchToolTip": "Min: -90 e Max: 90"
         },
         "snapshot": {
             "title": "Snapshot Preview",

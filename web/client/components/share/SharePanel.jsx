@@ -279,7 +279,7 @@ class SharePanel extends React.Component {
                 title={<Message msgId="share.advancedOptions"/>}
                 expanded={this.state.showAdvanced}
                 onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
-                {this.props.advancedSettings.bbox && <Checkbox
+                {this.props.advancedSettings.bbox && this.props.mapType !== 'cesium' && <Checkbox
                     checked={this.props.settings.bboxEnabled}
                     onChange={() =>
                         this.props.onUpdateSettings({
@@ -366,13 +366,15 @@ class SharePanel extends React.Component {
                             <React.Fragment>
                                 <FormGroup>
                                     <ControlLabel><Message msgId="share.heading" /></ControlLabel>
-                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-zoom"><Message msgId="share.zoomToolTip"/></Tooltip>}>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-heading"><Message msgId="share.headingToolTip"/></Tooltip>}>
                                         <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
                                     </OverlayTrigger>
                                     <FormControl
                                         type="number"
                                         name={"heading"}
-                                        value={this.state.heading || this.props.viewerOptions.orientation.heading}
+                                        min={0}
+                                        max={360}
+                                        value={this.state?.heading || this.props?.viewerOptions?.orientation?.heading}
                                         onChange={({target})=>{
                                             const heading = target.value;
                                             this.setState({...this.state, heading});
@@ -380,13 +382,15 @@ class SharePanel extends React.Component {
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel><Message msgId="share.roll" /></ControlLabel>
-                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-zoom"><Message msgId="share.zoomToolTip"/></Tooltip>}>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-roll"><Message msgId="share.rollToolTip"/></Tooltip>}>
                                         <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
                                     </OverlayTrigger>
                                     <FormControl
                                         type="number"
                                         name={"roll"}
-                                        value={this.state.roll || this.props.viewerOptions.orientation.roll}
+                                        min={-90}
+                                        max={90}
+                                        value={this.state.roll || this.props?.viewerOptions?.orientation?.roll}
                                         onChange={({target})=>{
                                             const roll = target.value;
                                             this.setState({...this.state, roll});
@@ -394,13 +398,15 @@ class SharePanel extends React.Component {
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel><Message msgId="share.pitch" /></ControlLabel>
-                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-zoom"><Message msgId="share.zoomToolTip"/></Tooltip>}>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-pitch"><Message msgId="share.pitchToolTip"/></Tooltip>}>
                                         <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
                                     </OverlayTrigger>
                                     <FormControl
                                         type="number"
+                                        min={-90}
+                                        max={90}
                                         name={"pitch"}
-                                        value={this.state.pitch || this.props.viewerOptions.orientation.pitch}
+                                        value={this.state?.pitch || this.props?.viewerOptions?.orientation?.pitch}
                                         onChange={({target})=>{
                                             const pitch = target.value;
                                             this.setState({...this.state, pitch});
@@ -408,18 +414,19 @@ class SharePanel extends React.Component {
                                 </FormGroup>
                             </React.Fragment>)
                     }
-
-                    <Checkbox
-                        checked={this.props.settings && this.props.settings.markerEnabled}
-                        onChange={() => {
-                            this.props.onUpdateSettings({
-                                ...this.props.settings,
-                                markerEnabled: !this.props.settings.markerEnabled
-                            });
-                        }
-                        }>
-                        <Message msgId="share.marker" />
-                    </Checkbox>
+                    {
+                        this.props.mapType !== 'cesium' && ( <Checkbox
+                            checked={this.props.settings && this.props.settings.markerEnabled}
+                            onChange={() => {
+                                this.props.onUpdateSettings({
+                                    ...this.props.settings,
+                                    markerEnabled: !this.props.settings.markerEnabled
+                                });
+                            }
+                            }>
+                            <Message msgId="share.marker" />
+                        </Checkbox>)
+                    }
                 </div>
                 }
             </SwitchPanel>

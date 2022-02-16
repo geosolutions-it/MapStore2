@@ -1022,9 +1022,14 @@
             "wrongBboxParamTitle": "Invalid bbox param",
             "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
             "showSectionId": "Include scroll position",
-            "heading": "Heading",
-            "roll": "Roll",
-            "pitch": "Pitch"
+            "zoom": "飞涨",
+            "heading": "航向角",
+            "roll": "侧倾角",
+            "pitch": "俯仰角",
+            "zoomToolTip": "Zuìxiǎo zhí:1 Hé zuìdà zhí:35",
+            "headingToolTip": "Zuìxiǎo zhí:0 Hé zuìdà zhí:360",
+            "rollToolTip": "Zuìxiǎo zhí:-90 Hé zuìdà zhí:90",
+            "pitchToolTip": "Zuìxiǎo zhí:-90 Hé zuìdà zhí:90"
         },
         "snapshot": {
             "title": "Snapshot Preview",

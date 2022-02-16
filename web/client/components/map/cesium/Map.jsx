@@ -22,7 +22,7 @@ import {
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import assign from 'object-assign';
-import { throttle } from 'lodash';
+import { throttle, isEqual } from 'lodash';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -143,8 +143,8 @@ class CesiumMap extends React.Component {
         return false;
     }
 
-    componentDidUpdate() {
-        if (this.props && this.props.orientate) {
+    componentDidUpdate(prevProps) {
+        if (this.props?.orientate && prevProps && (!isEqual(this.props.orientate, prevProps?.orientate))) {
             const position = {
                 destination: Cesium.Cartesian3.fromDegrees(
                     parseFloat(this.props.orientate.x),

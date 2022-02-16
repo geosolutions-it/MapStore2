@@ -1278,6 +1278,9 @@
             "coordinate": "Coordinaat",
             "coordTooltip": "Klik op de kaart om de coördinaten te pakken",
             "zoomToolTip": "Min: 1 en Max: 35",
+            "headingToolTip": "Min: 0 en Max: 360",
+            "rollToolTip": "Min: -90 en Max: 90",
+            "pitchToolTip": "Min: -90 en Max: 90",
             "wrongCenterAndZoomParamTitle": "Ongeldige centrum- en zoomparameter",
             "wrongCenterAndZoomParamMessage": "Centrum en zoomparameters moeten centrum = lon, lat & zoom = waarde en (+ | - 90 ° lat, + | -180 ° lon, <= + 35 zoom) zijn",
             "wrongMarkerAndZoomParamTitle": "Ongeldige marker en zoomparameter",
@@ -1289,9 +1292,9 @@
             "showHomeButton": "Link naar MapStore-startpagina",
             "showSectionId": "Inclusief scroll-positie",
 	          "showConnections": "Show connections",
-            "heading": "Heading",
-            "roll": "Roll",
-            "pitch": "Pitch"
+            "heading": "Koershoek",
+            "roll": "Rolhoek",
+            "pitch": "Hellingshoek"
         },
         "snapshot": {
             "title": "momentopname-voorbeeld",

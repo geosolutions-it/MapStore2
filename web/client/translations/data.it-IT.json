@@ -1290,11 +1290,14 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
             "zoomToolTip": "Min: 1 e Max: 35",
+            "headingToolTip": "Min: 0 e Max: 360",
+            "rollToolTip": "Min: -90 e Max: 90",
+            "pitchToolTip": "Min: -90 e Max: 90",
             "showSectionId": "Includi posizione di scorrimento",
             "showConnections": "Mostra connessioni",
-            "heading": "Heading",
-            "roll": "Roll",
-            "pitch": "Pitch",
+            "heading": "Angolo di rotta",
+            "roll": "Angolo di rollio",
+            "pitch": "Angolo di inclinazione",
             "sizeOptions": {
                 "width": "larghezza",
                 "height": "altezza"
