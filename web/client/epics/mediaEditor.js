@@ -29,24 +29,40 @@ import {
     SET_MEDIA_SERVICE,
     SELECT_ITEM,
     loadingSelectedMedia,
-    loadingMediaList, MEDIA_TYPE_DISABLE, setMediaType
+    loadingMediaList, MEDIA_TYPE_DISABLE, setMediaType, setActiveMediaService
 } from '../actions/mediaEditor';
 
 import { HIDE, SAVE, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
 
-import { editingSelector, selectedIdSelector, sourceIdSelector, currentMediaTypeSelector, currentResourcesSelector, selectedItemSelector, sourcesSelector, selectedSourceSelector} from '../selectors/mediaEditor';
+import {
+    editingSelector,
+    selectedIdSelector,
+    currentMediaTypeSelector,
+    currentResourcesSelector,
+    selectedItemSelector,
+    sourcesSelector,
+    selectedSourceSelector
+} from '../selectors/mediaEditor';
 import {MediaTypes } from '../utils/GeoStoryUtils';
 import {SourceTypes} from '../utils/MediaEditorUtils';
 
 import mediaAPI from '../api/media';
-import {find, includes, isEmpty} from "lodash";
+import {find, includes, isEmpty, isArray} from "lodash";
+
+const getSourceId = (state, mediaType) => {
+    const mediaTypes = (state.mediaEditor?.settings?.mediaTypes && state.mediaEditor.settings.mediaTypes[mediaType] && state.mediaEditor.settings.mediaTypes[mediaType].sources) &&  state.mediaEditor?.settings?.mediaTypes[mediaType].sources;
+    const source = (state.mediaEditor?.settings?.activeMediaService && state.mediaEditor.settings.activeMediaService[mediaType])
+        ? state.mediaEditor.settings.activeMediaService[mediaType] : (state.mediaEditor.settings.sourceId);
+    const sourceId = isArray(mediaTypes) && mediaTypes.find(item => item === source);
+    return sourceId ? sourceId : ((isArray(mediaTypes) && mediaTypes.length > 0) ? mediaTypes[0] : 'geostory');
+};
 
 export const loadMediaEditorDataEpic = (action$, store) =>
     action$.ofType(SHOW, LOAD_MEDIA, SET_MEDIA_TYPE, SET_MEDIA_SERVICE)
         .switchMap((action) => {
             const state = store.getState();
-            const sourceId = action.sourceId || sourceIdSelector(state);
-            const mediaType = action.mediaType || currentMediaTypeSelector(state);
+            const mediaType = action?.mediaType || currentMediaTypeSelector(state);
+            const sourceId =  action?.sourceId ||  getSourceId(state, mediaType);
             const resources = currentResourcesSelector(store.getState()) || [];
             const selectedId = selectedIdSelector(state);
             const pageSize = 10;
@@ -308,4 +324,18 @@ export const setMediaTypeOnDisable = (action$) =>
         .switchMap(({mediaTypes})=> {
             const mediaType = find(Object.values(MediaTypes), val => !includes(mediaTypes, val));
             return mediaType ? Observable.of(setMediaType(mediaType)) : Observable.empty();
+        });
+
+/**
+ * Pairs media types with the last selected media service
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ */
+export const setMediaTypeSource = (action$) =>
+    action$.ofType(SET_MEDIA_TYPE)
+        .switchMap((action)=> {
+            const service = action.selectedService;
+            const mediaType = action.mediaType;
+            const activeMediaService = { service, mediaType};
+            return service ? Observable.of(setActiveMediaService(activeMediaService)) : Observable.empty();
         });

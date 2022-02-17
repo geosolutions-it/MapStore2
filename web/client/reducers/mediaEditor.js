@@ -21,7 +21,7 @@ import {
     SHOW,
     LOADING_SELECTED_MEDIA,
     LOADING_MEDIA_LIST,
-    MEDIA_TYPE_DISABLE
+    MEDIA_TYPE_DISABLE, SET_ACTIVE_MEDIA_SERVICE
 } from '../actions/mediaEditor';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set, unset} from '../utils/ImmutableUtils';
@@ -181,6 +181,13 @@ export default (state = DEFAULT_STATE, action) => {
         return set('loadingList', true, state);
     case MEDIA_TYPE_DISABLE:
         return set('disabledMediaType', action.mediaTypes || [], state);
+    case SET_ACTIVE_MEDIA_SERVICE:
+        const source = state?.activeMediaService ? state.activeMediaService : {};
+        let activeMediaService = {...source};
+        activeMediaService[action.activeMediaService.mediaType] = action.activeMediaService.service;
+        return compose(
+            set('activeMediaService', activeMediaService)
+        )(state);
     default:
         return state;
     }

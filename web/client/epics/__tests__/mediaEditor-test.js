@@ -127,6 +127,9 @@ describe('MediaEditor Epics', () => {
                         [sourceId]: {
                             type: 'geostory'
                         }
+                    },
+                    activeMediaService: {
+                        map: sourceId, image: sourceId
                     }
                 }
             }
