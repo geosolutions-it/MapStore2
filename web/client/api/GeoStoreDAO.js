@@ -385,9 +385,14 @@ const Api = {
     getGroup: function(id, options = {}) {
         const url = "usergroups/group/" + id;
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {
-            let groupLoaded = response.data.UserGroup;
-            let users = groupLoaded && groupLoaded.restUsers && groupLoaded.restUsers.User;
-            return {...groupLoaded, users: users && (Array.isArray(users) ? users : [users]) || []};
+            const groupLoaded = response.data.UserGroup;
+            const users = groupLoaded?.restUsers?.User;
+            const attributes = groupLoaded?.attributes;
+            return {
+                ...groupLoaded,
+                users: users ? castArray(users) : undefined,
+                attributes: attributes ? castArray(attributes) : undefined
+            };
         });
     },
     createGroup: function(group, options) {
@@ -398,6 +403,15 @@ const Api = {
                 groupId = response.data;
                 return Api.updateGroupMembers({...group, id: groupId}, options);
             }).then(() => groupId);
+    },
+    updateGroup: function(group, options) {
+        const id = group?.id;
+        const url = `usergroups/group/${id}`;
+        return axios.put(url, {UserGroup: {...group}}, this.addBaseUrl(parseOptions(options)))
+            .then(function() {
+                return this.updateGroupMembers({group}, options);
+            })
+            .then(() => id);
     },
     updateGroupMembers: function(group, options) {
         // No GeoStore API to update group name and description. only update new users

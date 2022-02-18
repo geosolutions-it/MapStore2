@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// replacement of MapStore2/web/client/components/manager/users/GroupDialog.jsx
+
 import React from 'react';
 import { Alert, Tabs, Tab, Glyphicon, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import assign from 'object-assign';
 import Spinner from 'react-spinkit';
-import { findIndex } from 'lodash';
+import { findIndex, castArray } from 'lodash';
 
 import Button from '../../../components/misc/Button';
 import UsersTable from './UsersTable';
@@ -20,10 +22,11 @@ import Message from '../../../components/I18N/Message';
 import PagedCombobox from '../../misc/combobox/PagedCombobox';
 import CloseConfirmButton from './CloseConfirmButton';
 import './style/userdialog.css';
-import tooltip from "../../misc/enhancers/tooltip";
+
+import controls from './AttributeControls';
+
 
 const PAGINATION_LIMIT = 5;
-const GlyphiconTooltip = tooltip(Glyphicon);
 
 /**
  * A Modal window to show password reset form
@@ -37,6 +40,9 @@ class GroupDialog extends React.Component {
         availableUsersCount: PropTypes.number,
         searchUsers: PropTypes.func,
         availableUsersLoading: PropTypes.bool,
+        showMembersTab: PropTypes.bool,
+        showAttributesTab: PropTypes.bool,
+        attributeFields: PropTypes.array,
         show: PropTypes.bool,
         onClose: PropTypes.func,
         onChange: PropTypes.func,
@@ -57,7 +63,10 @@ class GroupDialog extends React.Component {
     static defaultProps = {
         group: {},
         availableUsers: [],
+        attributeFields: [],
         searchUsers: () => {},
+        showMembersTab: true,
+        showAttributesTab: false,
         onClose: () => {},
         onChange: () => {},
         onSave: () => {},
@@ -215,6 +224,28 @@ class GroupDialog extends React.Component {
             </div>
         </div>);
     };
+    renderAttributes = () => {
+        const byName = attrName => ({name}) => attrName === name;
+        const group = this.props.group;
+        const attributes = group?.attributes ?? [];
+        return <>
+            {
+                this.props.attributeFields.map( ({name, title, controlType, ...rest}) => {
+                    const values = attributes.filter(byName(name)).map(({value}) => value);
+                    const value =  values.length === 1 ? values?.[0] : values;
+                    const Control = controls[controlType ?? "string"];
+                    return (<div style={{ marginTop: "10px" }}>
+                        <label key="member-label" className="control-label">{title ?? name}</label>
+                        <Control name={name} {...rest} value={value} onChange={(newValue) => {
+                            // newValue can be an array or a single value to support multiple attributes of the same name.
+                            const newAttributes = attributes.filter(v => !byName(name)(v)).concat(castArray(newValue).map(vv => ({name, value: vv})));
+                            this.props.onChange("attributes", newAttributes);
+                        }} />
+                    </div>);
+                })
+            }
+        </>;
+    };
 
     render() {
         return (<Dialog
@@ -233,13 +264,20 @@ class GroupDialog extends React.Component {
             </span>
             <div role="body">
                 <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
-                    <Tab eventKey={1} title={<GlyphiconTooltip tooltipId="usergroups.generalInformation" glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
+                    <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
                         {this.renderGeneral()}
                         {this.checkNameLenght()}
                         {this.checkDescLenght()}
                     </Tab>
-                    <Tab eventKey={2} title={<GlyphiconTooltip tooltipId="usergroups.members" glyph="1-group-add" style={{ display: 'block', padding: 8 }} />} >
-                        {this.renderMembersTab()}
+                    {this.props.showMembersTab ?
+                        <Tab eventKey={2} title={<Glyphicon glyph="1-group-add" style={{ display: 'block', padding: 8 }} />} >
+                            {this.renderMembersTab()}
+                        </Tab>
+                        : null
+                    }
+                    {/** new tab */}
+                    <Tab eventKey={3} title={<Glyphicon glyph="list-alt" style={{ display: 'block', padding: 8 }} />} >
+                        {this.renderAttributes()}
                     </Tab>
                 </Tabs>
             </div>
