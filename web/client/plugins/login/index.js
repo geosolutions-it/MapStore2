@@ -7,10 +7,12 @@
 */
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
+import { changePassword, login, loginFail, logout, resetError } from '../../actions/security';
+import {onShowLogin, onLogout, openIDLogin} from '../../actions/login';
+
 
 import { setControlProperty } from '../../actions/controls';
 import { checkPendingChanges } from '../../actions/pendingChanges';
-import { changePassword, login, loginFail, logout, logoutWithReload, resetError } from '../../actions/security';
 import LoginModalComp from '../../components/security/modals/LoginModal';
 import PasswordResetModalComp from '../../components/security/modals/PasswordResetModal';
 import UserDetailsModalComp from '../../components/security/modals/UserDetailsModal';
@@ -35,10 +37,10 @@ const checkUnsavedMapChanges = (action) => {
 export const UserMenu = connect((state) => ({
     user: state.security && state.security.user
 }), {
-    onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
+    onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
-    onLogout: logoutWithReload
+    onLogout
 })(UserMenuComp);
 
 export const UserDetails = connect((state) => ({
@@ -60,19 +62,23 @@ export const PasswordReset = connect((state) => ({
 })(PasswordResetModalComp);
 
 export const Login = connect((state) => ({
+    providers: ConfigUtils.getConfigProp("authenticationProviders"),
     show: state.controls.LoginForm && state.controls.LoginForm.enabled,
     user: state.security && state.security.user,
     loginError: state.security && state.security.loginError
 }), {
     onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
+    openIDLogin,
     onClose: closeLogin,
     onSubmit: login,
     onError: loginFail
 })(LoginModalComp);
 
 export const LoginNav = connect((state) => ({
+    currentProvider: state?.security?.authProvider,
     user: state.security && state.security.user,
     nav: false,
+    providers: ConfigUtils.getConfigProp("authenticationProviders"), // CUSTOMIZED property
     renderButtonText: false,
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
     bsStyle: "primary",
@@ -81,14 +87,26 @@ export const LoginNav = connect((state) => ({
     displayUnsavedDialog: unsavedMapSelector(state)
         && unsavedMapSourceSelector(state) === 'logout'
 }), {
-    onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
+    onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
-    onLogout: logoutWithReload,
+    onLogout,
     onCheckMapChanges: checkUnsavedMapChanges,
     onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
     onLogoutConfirm: logout.bind(null, undefined)
 
+}, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
+    const {currentProvider, providers = []} = stateProps;
+    const {type} = (providers ?? []).filter(({provider: provider}) => provider === currentProvider)?.[0] ?? {};
+    const isOpenID = type === "openID";
+    return {
+        ...ownProps,
+        ...stateProps,
+        ...dispatchProps,
+        showAccountInfo: !isOpenID && ownProps.showAccountInfo,
+        showPasswordChange: !isOpenID && ownProps.showPasswordChange
+
+    };
 })(UserMenuComp);
 
 export default {

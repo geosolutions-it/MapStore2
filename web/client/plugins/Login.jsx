@@ -15,11 +15,24 @@ import React from 'react';
 import epics from '../epics/login';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
-import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/index';
+import { PasswordReset, UserDetails, LoginNav, UserMenu, Login } from './login/index';
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
   * It renders a menu in {@link #plugins.OmniBar|OmniBar} plugin.
+  * If `localConfig.json` `authenticationProviders` property in the root contains only one value, the login will use that provider by default.
+  * `authenticationProviders` members are object with
+  * - `type` (`<openID|basic>`): indicates the type of authentication to use.
+  * - `provider` (`<geostore|google|...>`). In case of `type=openID`, the provider indicates the path to query in GeoStore.
+  * - `url` optional URL to redirect in case of `openID`. By default it will use the standard convention to `rest/geostore/{provider}/login`.
+  * Example of configuration.
+  * ```json
+  * {
+  *  "authenticationProviders": [{"type": "openID", "provider": "google"}, {"type": "basic", "provider": "geostore"}]
+  * }
+  * ```
+  * By default, if not set, it will use classic `{"type": "basic", "provider": "geostore"}` setup for GeoStore.
+  * Multiple providers are not supported yet
   * @class Login
   * @memberof plugins
   * @static
