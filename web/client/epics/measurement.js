@@ -86,7 +86,7 @@ export const setMeasureStateFromAnnotationEpic = (action$, store) =>
 export const addCoordinatesEpic = (action$, {getState = () => {}}) =>
     action$.ofType(CLICK_ON_MAP)
         .filter(() => {
-            const {showCoordinateEditor, enabled} = getState().controls.measure;
+            const { showCoordinateEditor, enabled } = getState()?.controls?.measure || {};
             return showCoordinateEditor && enabled;
         } )
         .switchMap(({point}) => {
