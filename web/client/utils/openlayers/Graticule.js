@@ -155,11 +155,9 @@ const DEFAULT_Y_LABEL_STYLE = new Text({
 class Graticule {
 
     /**
-     * @param {Options=} opt_options Options.
+     * @param {Options=} options Options.
      */
-    constructor(opt_options) {
-        const options = opt_options || {};
-
+    constructor(options = {}) {
         /**
          * @type {import("ol/PluggableMap.js").default}
          * @private
@@ -384,7 +382,7 @@ class Graticule {
             center,
             squaredTolerance,
             this.maxLines_,
-            !!this.meridiansLabels_,
+            !!this.xLabelFormatter_,
             this.xLabelFormatter_,
             this.yLabelFormatter_,
             this.xLabelPosition_,

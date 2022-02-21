@@ -86,6 +86,8 @@ export default class OpenlayersLayer extends React.Component {
                 this.imageLoadEndStream$.complete();
                 this.imageStopStream$.complete();
             }
+            // detached layers are layers that do not attach directly to the map
+            // they have their own lifecycle methods instead (e.g. remove)
             if (this.layer.detached) {
                 this.layer.remove();
             } else {
@@ -161,6 +163,8 @@ export default class OpenlayersLayer extends React.Component {
             const layerOptions = this.generateOpts(options, position, normalizeSRS(this.props.srs), securityToken, env, resolutions);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             const compatible = Layers.isCompatible(type, layerOptions);
+            // detached layers are layers that do not attach directly to the map
+            // for this reason addLayer is not called on them
             if (this.layer && !this.layer.detached) {
                 const parentMap = this.props.map;
                 const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
@@ -214,6 +218,8 @@ export default class OpenlayersLayer extends React.Component {
             this.props.map,
             this.props.mapId);
         if (newLayer) {
+            // detached layers are layers that do not attach directly to the map
+            // for this reason addLayer /removeLayer should not be called on them
             if (!newLayer.detached) {
                 this.props.map.removeLayer(this.layer);
                 this.layer = newLayer;

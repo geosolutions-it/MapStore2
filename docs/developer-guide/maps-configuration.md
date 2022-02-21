@@ -184,6 +184,7 @@ title: {
 - `bing`: Bing Maps layers
 - `google`: Google Maps layers
 - `mapquest`: MapQuest layers
+- `graticule`: Vector layer that shows a coordinates grid over the map, with optional labels
 - `empty`: special type for empty background
 
 #### WMS
@@ -928,6 +929,49 @@ This layer differs from the "vector" because all the loading/filtering/querying 
     "name":"workspace:layer",
     "styleName":"marker",
     "url":"https://myserver.org/geoserver/wfs"
+}
+```
+
+#### Graticule
+
+i.e.
+
+```javascript
+{
+    "type": "graticule",
+    "labels": true,
+    "frame": true, // adds a frame to the map, to better highlight labels
+    "frameRatio": 0.07, // frame percentage size (7%)
+    "style": { // style for the grid lines
+        "color": "#000000",
+        "weight": 1,
+        "lineDash": [0.5, 4],
+        "opacity": 0.5
+    },
+    "frameStyle": { // style for the optional frame
+        "color": "#000000",
+        "weight": 1,
+        "fillColor": "#FFFFFF"
+    },
+    "labelXStyle": { // style for X coordinates labels
+        "color": "#000000",
+        "font": "sans-serif",
+        "fontWeight": "bold",
+        "fontSize": "20",
+        "labelOutlineColor": "#FFFFFF",
+        "labelOutlineWidth": 2
+    },
+    "labelYStyle": { // style for Y coordinates labels
+        "color": "#000000",
+        "font": "sans-serif",
+        "fontWeight": "bold",
+        "fontSize": "20",
+        "labelOutlineColor": "#FFFFFF",
+        "labelOutlineWidth": 2,
+        "rotation": 90,
+        "verticalAlign": "top",
+        "textAlign": "center"
+    }
 }
 ```
 
