@@ -21,6 +21,8 @@ import {showCoordinateEditorSelector, measureSelector} from '../selectors/contro
 import {geomTypeSelector} from '../selectors/measurement';
 import { CLICK_ON_MAP } from '../actions/map';
 import {newAnnotation, setEditingFeature, cleanHighlight, toggleVisibilityAnnotation} from '../actions/annotations';
+import {localConfigSelector} from "../selectors/localConfig";
+import {isBrowserMobile} from "../selectors/dashboard";
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -86,8 +88,16 @@ export const setMeasureStateFromAnnotationEpic = (action$, store) =>
 export const addCoordinatesEpic = (action$, {getState = () => {}}) =>
     action$.ofType(CLICK_ON_MAP)
         .filter(() => {
-            const {showCoordinateEditor, enabled} = getState().controls.measure;
-            return showCoordinateEditor && enabled;
+            const localConfig = localConfigSelector(getState());
+            const platform = isBrowserMobile(getState()) ? 'mobile' : 'desktop';
+            const plugins = localConfig && localConfig.plugins && localConfig.plugins[platform];
+            const pluginName = 'Measure';
+            const pluginConfig = plugins && plugins.find(plugin => (plugin?.name === pluginName || plugin === pluginName));
+            if (pluginConfig) {
+                const {showCoordinateEditor, enabled} = getState().controls.measure;
+                return showCoordinateEditor && enabled;
+            }
+            return false;
         } )
         .switchMap(({point}) => {
             const { currentFeature: index, features = [], geomType } = getState()?.measurement || {};
