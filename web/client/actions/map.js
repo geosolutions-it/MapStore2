@@ -30,6 +30,7 @@ export const MOUSE_MOVE = 'MOUSE_MOVE';
 export const MOUSE_OUT = 'MOUSE_OUT';
 export const MAP_PLUGIN_LOAD = 'MAP:MAP_PLUGIN_LOAD';
 export const ORIENTATION = 'MAP:ORIENTATION';
+export const UPDATE_MAP_VIEW = 'MAP:UPDATE_MAP_VIEW';
 
 
 /**
@@ -246,6 +247,11 @@ export const mouseOut = () => ({
 export const orientateMap = (orientation) => ({
     type: ORIENTATION,
     orientation
+});
+
+export const updateMapView = (data) => ({
+    type: UPDATE_MAP_VIEW,
+    data
 });
 
 /**

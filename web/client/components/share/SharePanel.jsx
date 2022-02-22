@@ -95,7 +95,8 @@ class SharePanel extends React.Component {
         hideMarker: PropTypes.func,
         addMarker: PropTypes.func,
         viewerOptions: PropTypes.object,
-        mapType: PropTypes.string
+        mapType: PropTypes.string,
+        updateMapView: PropTypes.func
     };
 
     static defaultProps = {
@@ -114,7 +115,8 @@ class SharePanel extends React.Component {
         formatCoords: "decimal",
         isScrollPosition: false,
         hideMarker: () => {},
-        addMarker: () => {}
+        addMarker: () => {},
+        updateMapView: () => {}
     };
 
     static contextTypes = {
@@ -196,10 +198,10 @@ class SharePanel extends React.Component {
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
-            shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
             if (mapType === 'cesium' && viewerOptions && viewerOptions.orientation) {
-                shareUrl = `${shareUrl}&heading=${this.state.heading}&pitch=${this.state.pitch}&roll=${this.state.roll}`;
+                return `${shareUrl}?center=${this.state.coordinate}&zoom=${this.state.zoom}&heading=${this.state.heading}&pitch=${this.state.pitch}&roll=${this.state.roll}`;
             }
+            shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
         }
         return shareUrl;
     };
@@ -271,6 +273,12 @@ class SharePanel extends React.Component {
             markerSetting = {markerEnabled: !this.props.settings.centerAndZoomEnabled};
         }
         return markerSetting;
+    }
+
+    updateMapView = (viewType, value) => {
+        let update = {...this.state};
+        update[viewType] = value;
+        this.props.updateMapView(update);
     }
 
     renderAdvancedSettings = () => {
@@ -359,6 +367,7 @@ class SharePanel extends React.Component {
                             onChange={({target})=>{
                                 const zoom = inRange(parseInt(target.value, 10), 1, 36) ? target.value : 1;
                                 this.setState({...this.state, zoom});
+                                this.updateMapView('zoom', zoom);
                             }}/>
                     </FormGroup>
                     {
@@ -378,6 +387,7 @@ class SharePanel extends React.Component {
                                         onChange={({target})=>{
                                             const heading = target.value;
                                             this.setState({...this.state, heading});
+                                            this.updateMapView('heading', heading);
                                         }}/>
                                 </FormGroup>
                                 <FormGroup>
@@ -394,6 +404,7 @@ class SharePanel extends React.Component {
                                         onChange={({target})=>{
                                             const roll = target.value;
                                             this.setState({...this.state, roll});
+                                            this.updateMapView('roll', roll);
                                         }}/>
                                 </FormGroup>
                                 <FormGroup>
@@ -410,6 +421,7 @@ class SharePanel extends React.Component {
                                         onChange={({target})=>{
                                             const pitch = target.value;
                                             this.setState({...this.state, pitch});
+                                            this.updateMapView('pitch', pitch);
                                         }}/>
                                 </FormGroup>
                             </React.Fragment>)

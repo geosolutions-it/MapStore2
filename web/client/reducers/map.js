@@ -22,7 +22,8 @@ import {
     SET_MAP_RESOLUTIONS,
     REGISTER_EVENT_LISTENER,
     UNREGISTER_EVENT_LISTENER,
-    ORIENTATION
+    ORIENTATION,
+    UPDATE_MAP_VIEW
 } from '../actions/map';
 
 import assign from 'object-assign';
@@ -151,6 +152,22 @@ function mapConfig(state = {eventListeners: {}}, action) {
         }
         return null;
     }
+    case UPDATE_MAP_VIEW:
+        const heading = parseFloat(action?.data?.heading);
+        const pitch = parseFloat(action?.data?.pitch);
+        const roll = parseFloat(action?.data?.roll);
+        const zoom = parseFloat(action?.data?.zoom);
+        const x = parseFloat(action?.data?.coordinate[0]);
+        const y = parseFloat(action?.data?.coordinate[1]);
+        return {
+            zoom,
+            center: {x, y},
+            viewerOptions: {
+                orientation: {
+                    heading, pitch, roll
+                }
+            }
+        };
     default:
         return state;
     }

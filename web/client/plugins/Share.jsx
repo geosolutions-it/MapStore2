@@ -25,6 +25,7 @@ import { get } from 'lodash';
 import controls from '../reducers/controls';
 import { changeFormat } from '../actions/mapInfo';
 import { addMarker, hideMarker } from '../actions/search';
+import { updateMapView } from '../actions/map';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
 import { shareSelector } from "../selectors/controls";
 /**
@@ -94,6 +95,7 @@ const Share = connect(createSelector([
     isScrollPosition})), {
     onClose: toggleControl.bind(null, 'share', null),
     hideMarker,
+    updateMapView,
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
     onChangeFormat: changeFormat,
     addMarker: addMarker
