@@ -416,6 +416,7 @@
             "saveTitle": "Guardar el mapa",
             "saveText": "¿Guardar el mapa actual",
             "thumbnail": "Miniatura",
+            "mapDelete": "Eliminar el mapa",
             "message": "Soltar o pinchar para importar un imagen",
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",

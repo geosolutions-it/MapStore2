@@ -416,6 +416,7 @@
             "saveTitle": "Salva mappa",
             "saveText": "Salvare la mappa corrente?",
             "thumbnail": "Thumbnail",
+            "mapDelete": "Cancella la mappa",
             "message": "Clicca o trascina un'immagine",
             "suggestion": "(best 300 px X 180 px, max 500 kb)",
             "errorFormat": "Formati supportati: png/jpg",

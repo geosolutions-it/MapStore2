@@ -454,6 +454,7 @@
             "saveTitle": "Karte speichern",
             "saveText": "Aktuelle Karte speichern?",
             "thumbnail": "Thumbnail",
+            "mapDelete": "Karte löschen",
             "message": "Ein Bild klicken oder hierherbewegen",
             "suggestion": "(möglichst 300px X 180px, max 500kb)",
             "errorFormat": "Unterstützte Formate: png/jpg",

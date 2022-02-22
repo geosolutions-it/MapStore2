@@ -416,6 +416,7 @@
             "saveTitle": "Save map",
             "saveText": "Save current map?",
             "thumbnail": "Thumbnail",
+            "mapDelete": "Delete Map",
             "message": "Drop or click to import an image",
             "suggestion": "(best 300 px X 180 px, max 500 kb)",
             "errorFormat": "Supported formats: png/jpg",
@@ -2779,6 +2780,10 @@
           "CRSSelector": {
             "description": "Allows to switch map projection",
             "title": "CRS Selector"
+          },
+          "DeleteMap": {
+              "description": "Allows to delete a map resource and all its associated resources",
+              "title": "Delete Map"
           },
           "Details": {
             "description": "Allow to show detail card for a map, if any",
