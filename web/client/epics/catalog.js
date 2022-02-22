@@ -358,7 +358,7 @@ export default (API) => ({
                                 return Rx.Observable.empty();
                             });
 
-                        const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl))
+                        const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl, {headers: {'Accept': 'application/xml'}}))
                             .pluck('data')
                             .map(metadataXml => new DOMParser().parseFromString(metadataXml))
                             .map(metadataDoc => {
