@@ -14,6 +14,9 @@ import {find} from 'lodash';
 const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
     .map( ({name} = {}) => ({label: name, value: name}));
 
+const propsToTypedOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
+    .map(({name, localType} = {}) => ({ label: name, value: name, type: localType }));
+
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});
     if (prop && (prop.localType === 'number' || prop.localType === 'int')) {
@@ -25,6 +28,7 @@ const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) 
 export default compose(
     withProps(({featureTypeProperties = [], data = {}} = {}) => ({
         options: propsToOptions(featureTypeProperties),
+        typedOptions: propsToTypedOptions(featureTypeProperties),
         aggregationOptions:
             (data?.widgetType !== "counter" ? [{ value: "None", label: "widgets.operations.NONE" }] : [])
                 .concat(getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties))

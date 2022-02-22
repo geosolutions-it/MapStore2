@@ -97,6 +97,7 @@ export default ({
     data = { options: {}, autoColorOptions: {} },
     onChange = () => { },
     options = [],
+    typedOptions = [],
     formOptions = {
         showGroupBy: true,
         showUom: false,
@@ -112,6 +113,7 @@ export default ({
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const customColor = data.autoColorOptions?.name === 'global.colors.custom';
     const { classificationAttribute = undefined } = data?.options || {};
+    const { classificationAttributeType = undefined } = data?.options || {};
     const { classification = CLASSIFIED_COLORS } = data?.autoColorOptions || {};
     const { defaultClassLabel = '' } = data?.autoColorOptions || {};
     const defaultCustomColor = data?.autoColorOptions?.defaultCustomColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1';
@@ -259,14 +261,16 @@ export default ({
                                 });
                             }
                         }}
-                        onChangeClassAttribute={(value) => {
+                        onChangeClassAttribute={(value, type) => {
                             onChange("options.classificationAttribute", value);
+                            onChange("options.classificationAttributeType", type);
                         }}
                         classificationAttribute={classificationAttribute}
+                        classificationAttributeType={classificationAttributeType}
                         onUpdateClasses={(newClassification) => {
                             onChange("autoColorOptions.classification", formatAutoColorOptions(newClassification) || []);
                         }}
-                        options={options}
+                        options={typedOptions}
                         placeHolder={placeHolder}
                         classification={classification}
                         defaultCustomColor={defaultCustomColor}

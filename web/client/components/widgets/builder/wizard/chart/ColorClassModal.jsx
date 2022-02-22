@@ -16,6 +16,7 @@ import ColorSelector from '../../../../style/ColorSelector';
 import Message from '../../../../../components/I18N/Message';
 import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
+import TextAttributeClassForm from './TextAttributeClassForm';
 import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
@@ -39,6 +40,7 @@ const ColorClassModal = ({
     onSaveClassification,
     onChangeClassAttribute,
     classificationAttribute,
+    classificationAttributeType,
     onUpdateClasses,
     options,
     placeHolder,
@@ -103,7 +105,8 @@ const ColorClassModal = ({
                                     placeholder={placeHolder}
                                     onChange={ val => {
                                         const value = val && val.value || undefined;
-                                        onChangeClassAttribute(value);
+                                        const type = val && val.type || undefined;
+                                        onChangeClassAttribute(value, type);
                                     }}
                                     onOpen={() => setSelectMenuOpen(!selectMenuOpen)}
                                     onClose={() => setSelectMenuOpen(!selectMenuOpen)}
@@ -112,51 +115,19 @@ const ColorClassModal = ({
                         </FormGroup>
                     </Form>
                 </Row>
-                { classificationAttribute &&
-                    <Row xs={12}>
-                        <Col componentClass={ControlLabel} xs={6}>
-                            <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
-                            {getLabelPopover('top', chartType)}
-                        </Col>
-                        <Col xs={6}>
-                            <FormControl
-                                value={defaultClassLabel}
-                                type="text"
-                                onChange={e => onChangeDefaultClassLabel(e.target.value)}
-                            />
-                        </Col>
-                    </Row>
-                }
-                <Row xs={12}>
-                    <Col xs={12}>
-                        { classificationAttribute &&
-                        <>
-                            <Row xs={12}>
-                                <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></Col>
-                                <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></Col>
-                                <Col xs={4}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
-                                    {getLabelPopover('right', chartType)}
-                                </Col>
-                            </Row>
-                            <ThemaClassesEditor
-                                noEmptyIndex
-                                classification={classification}
-                                onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
-                                allowEmpty={false}
-                                customLabels
-                                uniqueValuesClasses
-                                autoCompleteOptions={{
-                                    classificationAttribute,
-                                    dropUpAutoComplete: true,
-                                    layer
-                                }}
-                                dropUpMenu
-                                usePreSetColors
-                            />
-                        </>
-                        }
-                    </Col>
-                </Row>
+                { classificationAttribute && classificationAttributeType === 'string' ? (
+                    <TextAttributeClassForm
+                        onUpdateClasses={onUpdateClasses}
+                        classification={classification}
+                        defaultClassLabel={defaultClassLabel}
+                        onChangeDefaultClassLabel={onChangeDefaultClassLabel}
+                        layer={layer}
+                        chartType={chartType}
+                        classificationAttribute={classificationAttribute}
+                    />
+                ) : classificationAttribute && classificationAttributeType === 'number' ? (
+                    <div>Here the range class form</div>
+                ) : null }
             </ResizableModal>
         </Portal>
     );
