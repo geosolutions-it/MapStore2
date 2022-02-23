@@ -39,7 +39,7 @@ import {
     setNewServiceStatus
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
-import { removeWorkspace } from '../epics/layers';
+import { removeWorkspace } from '../utils/LayersUtils';
 import { error, success } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
