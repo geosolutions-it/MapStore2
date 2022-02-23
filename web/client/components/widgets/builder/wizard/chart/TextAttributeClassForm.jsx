@@ -26,7 +26,8 @@ const TextAttributeClassForm = ({
     onChangeDefaultClassLabel,
     layer,
     chartType,
-    classificationAttribute
+    classificationAttribute,
+    classificationAttributeType
 }) => {
     return (
         <>
@@ -56,7 +57,7 @@ const TextAttributeClassForm = ({
                         <ThemaClassesEditor
                             noEmptyIndex
                             classification={classification}
-                            onUpdateClasses={(newClassification) => onUpdateClasses(newClassification)}
+                            onUpdateClasses={(newClassification) => onUpdateClasses(newClassification, classificationAttributeType)}
                             allowEmpty={false}
                             customLabels
                             uniqueValuesClasses
@@ -82,7 +83,8 @@ TextAttributeClassForm.PropTypes = {
     onChangeDefaultClassLabel: PropTypes.func,
     layer: PropTypes.object,
     chartType: PropTypes.string,
-    classificationAttribute: PropTypes.string
+    classificationAttribute: PropTypes.string,
+    classificationAttributeType: PropTypes.string
 };
 
 export default TextAttributeClassForm;

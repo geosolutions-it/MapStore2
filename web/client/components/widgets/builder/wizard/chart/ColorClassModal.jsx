@@ -9,7 +9,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import {Row, Col, Form, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Row, Col, Form, FormGroup, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
 
 import ColorSelector from '../../../../style/ColorSelector';
@@ -17,21 +17,11 @@ import Message from '../../../../../components/I18N/Message';
 import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
 import TextAttributeClassForm from './TextAttributeClassForm';
-import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
+import RangeAttributeClassForm from './RangeAttributeClassForm';
 
-import DisposablePopover from '../../../../misc/popover/DisposablePopover';
-import HTML from '../../../../I18N/HTML';
+import uuid from 'uuid';
 
 import { generateRandomHexColor } from '../../../../../utils/ColorUtils';
-
-const getLabelPopover = (placement, chartType) => (
-    <DisposablePopover
-        popoverClassName="chart-color-class-popover"
-        placement={placement}
-        title={<Message msgId="widgets.builder.wizard.classAttributes.customLabels" />}
-        text={<HTML msgId={`widgets.builder.wizard.classAttributes.${chartType}ChartCustomLabelsExample`} />}
-    />
-);
 
 const ColorClassModal = ({
     modalClassName,
@@ -45,6 +35,7 @@ const ColorClassModal = ({
     options,
     placeHolder,
     classification,
+    rangeClassification,
     defaultCustomColor,
     defaultClassLabel,
     onChangeColor,
@@ -56,7 +47,12 @@ const ColorClassModal = ({
     return (
         <Portal>
             <ResizableModal
-                modalClassName={classnames(modalClassName, { 'menu-open': selectMenuOpen || classificationAttribute })}
+                modalClassName={classnames(
+                    modalClassName,
+                    { 'menu-open': selectMenuOpen || classificationAttribute },
+                    { 'text-class': classificationAttributeType === 'string' },
+                    { 'range-class': classificationAttributeType === 'number' }
+                )}
                 title={<Message msgId="widgets.builder.wizard.classAttributes.title" />}
                 show={show}
                 clickOutEnabled={false}
@@ -124,9 +120,17 @@ const ColorClassModal = ({
                         layer={layer}
                         chartType={chartType}
                         classificationAttribute={classificationAttribute}
+                        classificationAttributeType={classificationAttributeType}
                     />
                 ) : classificationAttribute && classificationAttributeType === 'number' ? (
-                    <div>Here the range class form</div>
+                    <RangeAttributeClassForm
+                        onUpdateClasses={onUpdateClasses}
+                        chartType={chartType}
+                        onChangeDefaultClassLabel={onChangeDefaultClassLabel}
+                        defaultClassLabel={defaultClassLabel}
+                        rangeClassification={rangeClassification}
+                        classificationAttributeType={classificationAttributeType}
+                    />
                 ) : null }
             </ResizableModal>
         </Portal>
@@ -145,6 +149,7 @@ ColorClassModal.propTypes = {
     options: PropTypes.array,
     placeHolder: PropTypes.string,
     classification: PropTypes.array,
+    rangeClassification: PropTypes.array,
     defaultCustomColor: PropTypes.string,
     defaultClassLabel: PropTypes.string,
     onChangeColor: PropTypes.func,
@@ -159,7 +164,8 @@ ColorClassModal.defaultProps = {
     classificationAttribute: '',
     onUpdateClasses: () => {},
     options: [],
-    classification: [{title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}],
+    classification: [{uuid: uuid.v1(), title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}],
+    rangeClassification: [{uuid: uuid.v1(), title: '', color: generateRandomHexColor(), type: 'Polygon', min: 0, max: 0}],
     defaultCustomColor: '#0888A1',
     defaultClassLabel: '',
     onChangeColor: () => {},

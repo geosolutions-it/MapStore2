@@ -105,7 +105,9 @@ function getData({
     yAxisLabel,
     autoColorOptions,
     customColorEnabled,
-    isClassifiedChart }) {
+    isClassifiedChart,
+    isRangeClassChart
+}) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
@@ -154,7 +156,7 @@ function getData({
         }
         // common bar chart properties
         let barChartTrace = { type };
-        /** Bar chart is classified coloured */
+        /** Bar chart is absolute value classified coloured */
         if (isClassifiedChart && classificationColors.length) {
             const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type));
             const filteredLegendLabels = union(legendLabels);
@@ -177,6 +179,18 @@ function getData({
                 return trace;
             });
             return barChartTraces;
+        }
+        /** Bar chart is range values classified coloured*/
+        if (isRangeClassChart && classificationColors.length) {
+            barChartTrace = {
+                ...barChartTrace,
+                x: x,
+                y: y,
+                name: yAxisLabel || yDataKey,
+                hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`,
+                ...(classificationColors && classificationColors.length && customColorEnabled ? {marker: {color: classificationColors}} : {})
+            };
+            return barChartTrace;
         }
 
         /** Bar chart is evenly coloured */
@@ -284,8 +298,10 @@ export const toPlotly = (props) => {
     const xDataKey = xAxis?.dataKey;
     const isModeBarVisible = width > 350;
     const classificationAttr = classifications?.dataKey;
+    const { classificationAttributeType } = props.options || {};
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
-    const isClassifiedChart = every([classificationAttr, autoColorOptions?.classification, customColorEnabled], Boolean);
+    const isClassifiedChart = every([classificationAttr, classificationAttributeType === 'string', autoColorOptions?.classification, customColorEnabled], Boolean);
+    const isRangeClassChart = every([classificationAttr, classificationAttributeType === 'number', autoColorOptions?.classification, customColorEnabled], Boolean);
     return {
         layout: {
             showlegend: legend,
@@ -301,7 +317,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, isRangeClassChart });
             const chartData = allData ? allData?.x?.map((axis, index)=>{
                 return { xAxis: axis, yAxis: allData.y[index]};
             }) : {};
