@@ -694,7 +694,8 @@
             "outputFormat": "Format",
             "previewFormatUnsupported": "Nicht unterstütztes Format für die Vorschau",
             "projection": "Koordinatensystem",
-            "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte"
+            "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte",
+            "graticule": "Raster mit Etiketten hinzufügen"
         },
         "backgroundSwitcher":{
             "tooltip": "Wähle Hintergrund"
