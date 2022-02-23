@@ -32,7 +32,6 @@ import { PasswordReset, UserDetails, LoginNav, UserMenu, Login } from './login/i
   * }
   * ```
   * By default, if not set, it will use classic `{"type": "basic", "provider": "geostore"}` setup for GeoStore.
-  * Multiple providers are not supported yet
   * @class Login
   * @memberof plugins
   * @static
