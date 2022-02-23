@@ -7,11 +7,12 @@
 */
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
-import { changePassword, login, loginFail, logout, resetError } from '../../actions/security';
-import {onShowLogin, onLogout, openIDLogin} from '../../actions/login';
+import { changePassword, login, loginFail, logout } from '../../actions/security';
+import {onShowLogin, closeLogin, onLogout, openIDLogin} from '../../actions/login';
 
 
 import { setControlProperty } from '../../actions/controls';
+
 import { checkPendingChanges } from '../../actions/pendingChanges';
 import LoginModalComp from '../../components/security/modals/LoginModal';
 import PasswordResetModalComp from '../../components/security/modals/PasswordResetModal';
@@ -20,13 +21,8 @@ import UserMenuComp from '../../components/security/UserMenu';
 import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/controls';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
+import { userSelector, authProviderSelector } from '../../selectors/security';
 
-export const closeLogin = () => {
-    return (dispatch) => {
-        dispatch(setControlProperty('LoginForm', 'enabled', false));
-        dispatch(resetError());
-    };
-};
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {
@@ -35,7 +31,7 @@ const checkUnsavedMapChanges = (action) => {
 };
 
 export const UserMenu = connect((state) => ({
-    user: state.security && state.security.user
+    user: userSelector(state)
 }), {
     onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
@@ -44,14 +40,14 @@ export const UserMenu = connect((state) => ({
 })(UserMenuComp);
 
 export const UserDetails = connect((state) => ({
-    user: state.security && state.security.user,
+    user: userSelector(state),
     show: state.controls.AccountInfo && state.controls.AccountInfo.enabled}
 ), {
     onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false, false)
 })(UserDetailsModalComp);
 
 export const PasswordReset = connect((state) => ({
-    user: state.security && state.security.user,
+    user: userSelector(state),
     show: state.controls.ResetPassword && state.controls.ResetPassword.enabled,
     changed: state.security && state.security.passwordChanged && true || false,
     error: state.security && state.security.passwordError,
@@ -64,7 +60,7 @@ export const PasswordReset = connect((state) => ({
 export const Login = connect((state) => ({
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
     show: state.controls.LoginForm && state.controls.LoginForm.enabled,
-    user: state.security && state.security.user,
+    user: userSelector(state),
     loginError: state.security && state.security.loginError
 }), {
     onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
@@ -75,10 +71,10 @@ export const Login = connect((state) => ({
 })(LoginModalComp);
 
 export const LoginNav = connect((state) => ({
-    currentProvider: state?.security?.authProvider,
-    user: state.security && state.security.user,
+    currentProvider: authProviderSelector(state),
+    user: userSelector(state),
     nav: false,
-    providers: ConfigUtils.getConfigProp("authenticationProviders"), // CUSTOMIZED property
+    providers: ConfigUtils.getConfigProp("authenticationProviders"),
     renderButtonText: false,
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
     bsStyle: "primary",

@@ -107,6 +107,16 @@ describe('Test the security reducer', () => {
         expect(state.authHeader).toBe(undefined);
     });
 
+    it('login state when bearer is used', () => {
+        let state = security(undefined, {type: LOGIN_SUCCESS, userDetails: {...userWithSecurityToken, authProvider: "TEST"}});
+        expect(state).toExist()
+            .toIncludeKey("authHeader");
+        expect(state.user.name).toBe("secured");
+        expect(state.token).toBe("1234567890");
+        expect(state.authHeader).toBe(undefined);
+        expect(state.authProvider).toBe("TEST");
+    });
+
     it('login fail', () => {
         let state = security({}, {type: LOGIN_FAIL, error: testError});
         expect(state).toExist();
@@ -119,6 +129,11 @@ describe('Test the security reducer', () => {
         expect(state).toExist();
     });
     it('logout', () => {
+        let state = security({authProvider: "TEST"}, {type: LOGOUT});
+        expect(state).toExist();
+        expect(state.authProvider).toBeFalsy();
+    });
+    it('logout resets auth provider', () => {
         let state = security({}, {type: LOGOUT});
         expect(state).toExist();
         expect(!state.user).toBe(true);
