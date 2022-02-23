@@ -39,7 +39,6 @@ import {
     setNewServiceStatus
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
-import { removeWorkspace } from '../utils/LayersUtils';
 import { error, success } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
@@ -68,7 +67,7 @@ import {
 import { getSupportedFormat, getCapabilities, describeLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
-import {getCapabilitiesUrl, getLayerId, getLayerUrl} from '../utils/LayersUtils';
+import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace } from '../utils/LayersUtils';
 import { wrapStartStop } from '../observables/epics';
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
