@@ -32,7 +32,7 @@ class ThemaClassesEditor extends React.Component {
         uniqueValuesClasses: PropTypes.bool,
         autoCompleteOptions: PropTypes.object,
         dropUpMenu: PropTypes.bool,
-        usePreSetColors: PropTypes.bool
+        usePresetColors: PropTypes.bool
     };
 
     static defaultProps = {
@@ -249,7 +249,7 @@ class ThemaClassesEditor extends React.Component {
         }
         let args = [updateIndex, deleteCount];
         if (type !== 'remove') {
-            const color = this.props.usePreSetColors ?  generateRandomHexColor(currentColors) : '#ffffff';
+            const color = this.props.usePresetColors ?  generateRandomHexColor(currentColors) : '#ffffff';
             let classifyObj;
             if (!isNil(currentRule.unique)) {
                 const uniqueValue = isNumber(currentRule.unique) ? 0 : '';

@@ -67,7 +67,7 @@ const TextAttributeClassForm = ({
                                 layer
                             }}
                             dropUpMenu
-                            usePreSetColors
+                            usePresetColors
                         />
                     </>
                 </Col>
