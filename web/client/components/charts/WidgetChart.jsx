@@ -40,6 +40,22 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
     })
 );
 
+const getRangeClassificationColors = (rangeClassifications, colorCategories, customColorEnabled, autoColorOptions) => {
+    return rangeClassifications.map(item => {
+        // if for some reason (error) item is not a number fall back to default color
+        if (!isNumber(item)) {
+            return defaultColorGenerator(1, COLOR_DEFAULTS)[0];
+        }
+        // try to get value in defined ranges
+        const matchedColor = colorCategories.filter(colorCategory => {
+            return item >= colorCategory.min && item < colorCategory.max;
+        })[0];
+        return matchedColor ? matchedColor.color :
+            customColorEnabled && autoColorOptions.defaultCustomColor ? autoColorOptions.defaultCustomColor :
+                defaultColorGenerator(1, COLOR_DEFAULTS)[0];
+    });
+};
+
 const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
     let displayValue = defaultClassLabel;
     if (includes(colorCategories.map(colorCat => colorCat.value), value)) {
@@ -49,6 +65,18 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
         // line currently do not support custom labels
         displayValue = displayValue ? displayValue : type === 'pie' ? '' : value;
     }
+    return displayValue.trim();
+};
+
+const getRangeClassLabel = (value, colorCategories, defaultClassLabel, type) => {
+    let displayValue = colorCategories.filter(colorCategory => {
+        return value >= colorCategory.min && value < colorCategory.max;
+    })[0]?.title || defaultClassLabel;
+    // if charts are pie replace with groupBy attribute
+    // if charts are bar replace with the class value
+    // line currently do not support custom labels
+    displayValue = displayValue ? displayValue : type === 'pie' ? '' : value;
+    // }
     return displayValue.trim();
 };
 
@@ -111,8 +139,18 @@ function getData({
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
-    const colorCategories = autoColorOptions?.classification || [];
-    const classificationColors = getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [];
+    const colorCategories =
+        isClassifiedChart ? autoColorOptions?.classification || [] :
+            isRangeClassChart ? autoColorOptions?.rangeClassification || [] :
+                [];
+    const classificationColors =
+    // if chart is absolute-values/category classified
+    isClassifiedChart ? getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [] :
+        // if chart is range classified
+        isRangeClassChart ? getRangeClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [] :
+        // chart may not be classified or error
+            [];
+
     const { defaultClassLabel = ''} = autoColorOptions;
 
     switch (type) {
@@ -139,16 +177,30 @@ function getData({
                 labels: legendLabels,
                 marker: {colors: classificationColors}
             };
-        } else {
-            pieChartTrace = {
-                ...(yDataKey && { legendgroup: yDataKey }),
-                ...pieChartTrace,
-                labels: x,
-                ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {}),
-                pull: 0.005
-            };
+            return pieChartTrace;
         }
-        return pieChartTrace;
+        if (isRangeClassChart && classificationColors.length) {
+            const legendLabels = classifications.map((item, index) => {
+                const groupByValue = x[index];
+                const customLabel = getRangeClassLabel(item, colorCategories, defaultClassLabel, type);
+                if (!customLabel) {
+                    return groupByValue;
+                }
+                return customLabel.replace('${groupByValue}', groupByValue);
+            });
+            pieChartTrace = {
+                ...pieChartTrace,
+                labels: legendLabels,
+                marker: {colors: classificationColors}
+            };
+            return pieChartTrace;
+        } return {
+            ...(yDataKey && { legendgroup: yDataKey }),
+            ...pieChartTrace,
+            labels: x,
+            ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {}),
+            pull: 0.005
+        };
 
     case 'bar':
         if (formula) {
@@ -180,17 +232,30 @@ function getData({
             });
             return barChartTraces;
         }
+
         /** Bar chart is range values classified coloured*/
         if (isRangeClassChart && classificationColors.length) {
-            barChartTrace = {
-                ...barChartTrace,
-                x: x,
-                y: y,
-                name: yAxisLabel || yDataKey,
-                hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra></extra>`,
-                ...(classificationColors && classificationColors.length && customColorEnabled ? {marker: {color: classificationColors}} : {})
-            };
-            return barChartTrace;
+            const legendLabels = classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel, type));
+            const filteredLegendLabels = union(legendLabels);
+            const customLabels = filteredLegendLabels.reduce((acc, cur) => {
+                return [
+                    ...acc,
+                    ...[cur ? cur.replace('${legendValue}', yAxisLabel || yDataKey || '') : yAxisLabel || yDataKey]
+                ];
+            }, []);
+            const [groupedColors, groupedXValues, groupedYValues] = getGroupedTraceValues(legendLabels, filteredLegendLabels, [classificationColors, x, y]);
+            const barChartTraces = customLabels.map((item, index) => {
+                const trace = {
+                    ...barChartTrace,
+                    x: groupedXValues[index],
+                    y: groupedYValues[index],
+                    name: item,
+                    marker: { color: groupedColors[index] },
+                    hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra>${item}</extra>`
+                };
+                return trace;
+            });
+            return barChartTraces;
         }
 
         /** Bar chart is evenly coloured */
