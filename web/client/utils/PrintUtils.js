@@ -479,16 +479,17 @@ export const getDefaultPrintingService = () => {
 /**
  * Default screen DPI (96) to Print DPI (72). Used to calculate correct resolution for
  * screen preview and printed map.
+ * @memberof utils.PrintUtils
  */
 export const DEFAULT_PRINT_RATIO = 96.0 / 72.0;
 
 /**
  * Returns the correct multiplier to sync the screen resolution and the printed map resolution.
- *
  * @param {number} printSize printed map size (in print points (1/72"))
  * @param {number} screenSize screen preview size (in pixels)
  * @param {number} dpiRatio ratio screen_dpi / printed_dpi
- * @returns the resolution multiplier to apply to the screen preview
+ * @return {number} the resolution multiplier to apply to the screen preview
+ * @memberof utils.PrintUtils
  */
 export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAULT_PRINT_RATIO) {
     return printSize / screenSize * dpiRatio;
