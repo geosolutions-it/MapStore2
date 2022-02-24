@@ -1816,6 +1816,8 @@
                         "defaultColor": "Color Predeterminado",
                         "defaultCustomLabel": "Etiqueta predeterminada",
                         "editCustomColors": "Editar Colores Personalizados",
+                        "maxValue": "Valor máximo",
+                        "minValue": "Valor mínimo",
                         "title": "Configuración de Colores Personalizados"
                     }
                 },

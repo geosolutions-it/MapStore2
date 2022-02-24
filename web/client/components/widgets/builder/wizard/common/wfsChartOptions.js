@@ -14,8 +14,10 @@ import {find} from 'lodash';
 const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
     .map( ({name} = {}) => ({label: name, value: name}));
 
+/** custom color-coded charts currently support string and number types only */
 const propsToTypedOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
-    .map(({name, localType} = {}) => ({ label: name, value: name, type: localType }));
+    .map(({name, localType} = {}) => ({ label: name, value: name, type: localType }))
+    .filter(item => item.type === 'string' || item.type === 'number');
 
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});

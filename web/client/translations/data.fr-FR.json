@@ -1817,6 +1817,8 @@
                         "defaultColor": "Couleur par Défaut",
                         "defaultCustomLabel": "Étiquette par défaut",
                         "editCustomColors": "Modifie Couleurs Personnalisées",
+                        "maxValue": "Valeur maximum",
+                        "minValue": "Valeur minimum",
                         "title": "Paramètres de Couleurs Personnalisées"
                     }
                 },

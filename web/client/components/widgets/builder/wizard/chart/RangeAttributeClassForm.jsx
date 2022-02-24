@@ -64,4 +64,13 @@ const RangeAttributeClassForm = ({
     );
 };
 
+RangeAttributeClassForm.PropTypes = {
+    onUpdateClasses: PropTypes.func,
+    rangeClassification: PropTypes.array,
+    defaultClassLabel: PropTypes.string,
+    onChangeDefaultClassLabel: PropTypes.function,
+    chartType: PropTypes.string,
+    classificationAttributeType: PropTypes.string
+};
+
 export default RangeAttributeClassForm;

@@ -68,16 +68,15 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
     return displayValue.trim();
 };
 
-const getRangeClassLabel = (value, colorCategories, defaultClassLabel, type) => {
+const getRangeClassLabel = (value, colorCategories, defaultClassLabel) => {
     let displayValue = colorCategories.filter(colorCategory => {
         return value >= colorCategory.min && value < colorCategory.max;
     })[0]?.title || defaultClassLabel;
     // if charts are pie replace with groupBy attribute
     // if charts are bar replace with the class value
     // line currently do not support custom labels
-    displayValue = displayValue ? displayValue : type === 'pie' ? '' : value;
-    // }
-    return displayValue.trim();
+    return displayValue ? displayValue.trim() : '';
+    // };
 };
 
 /**
@@ -182,7 +181,7 @@ function getData({
         if (isRangeClassChart && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
                 const groupByValue = x[index];
-                const customLabel = getRangeClassLabel(item, colorCategories, defaultClassLabel, type);
+                const customLabel = getRangeClassLabel(item, colorCategories, defaultClassLabel);
                 if (!customLabel) {
                     return groupByValue;
                 }
@@ -235,7 +234,7 @@ function getData({
 
         /** Bar chart is range values classified coloured*/
         if (isRangeClassChart && classificationColors.length) {
-            const legendLabels = classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel, type));
+            const legendLabels = classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel));
             const filteredLegendLabels = union(legendLabels);
             const customLabels = filteredLegendLabels.reduce((acc, cur) => {
                 return [
@@ -366,7 +365,7 @@ export const toPlotly = (props) => {
     const { classificationAttributeType } = props.options || {};
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
     const isClassifiedChart = every([classificationAttr, classificationAttributeType === 'string', autoColorOptions?.classification, customColorEnabled], Boolean);
-    const isRangeClassChart = every([classificationAttr, classificationAttributeType === 'number', autoColorOptions?.classification, customColorEnabled], Boolean);
+    const isRangeClassChart = every([classificationAttr, classificationAttributeType === 'number', autoColorOptions?.rangeClassification, customColorEnabled], Boolean);
     return {
         layout: {
             showlegend: legend,

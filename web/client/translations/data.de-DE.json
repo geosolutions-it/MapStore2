@@ -1854,6 +1854,8 @@
                         "defaultColor": "Standardfarbe",
                         "defaultCustomLabel": "Standardlabel",
                         "editCustomColors": "Benutzerdefinierte Farben bearbeiten",
+                        "maxValue": "Höchster Wert",
+                        "minValue": "Mindestwert",
                         "title": "Benutzerdefinierte Farbeinstellungen"
                     }
                 },
