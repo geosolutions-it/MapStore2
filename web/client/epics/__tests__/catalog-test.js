@@ -66,6 +66,40 @@ describe('catalog Epics', () => {
         });
     });
 
+    it('getMetadataRecordById-mapserver-TC211', (done) => {
+        testEpic(getMetadataRecordById, 1, initAction(), (actions) => {
+            actions.filter( ({type}) => type === "LAYERS:SHOW_LAYER_METADATA").map(({metadataRecord}) => {
+                done();
+            });
+        }, {
+            layers: {
+                selected: ["opendata_raw"],
+                flat: [{
+                    id: "opendata_raw",
+                    type: "wms",
+                    url: "base/web/client/test-resources/wms/getCapabilities-mapserver.xml",
+                }]
+            }
+        });
+    });
+
+    it('getMetadataRecordById-mapproxy-single', (done) => {
+        testEpic(getMetadataRecordById, 1, initAction(), (actions) => {
+            actions.filter( ({type}) => type === "LAYERS:SHOW_LAYER_METADATA").map(({metadataRecord}) => {
+                done();
+            });
+        }, {
+            layers: {
+                selected: ["cadastre"],
+                flat: [{
+                    id: "cadastre",
+                    type: "wms",
+                    url: "base/web/client/test-resources/wms/getCapabilities-mapproxy-singlelayer.xml"
+                }]
+            }
+        });
+    });
+
     it('autoSearchEpic', (done) => {
         const NUM_ACTIONS = 1;
         testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {
