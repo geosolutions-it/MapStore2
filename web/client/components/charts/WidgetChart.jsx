@@ -68,15 +68,21 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
     return displayValue.trim();
 };
 
-const getRangeClassLabel = (value, colorCategories, defaultClassLabel) => {
-    let displayValue = colorCategories.filter(colorCategory => {
+const getRangeClassLabel = (value, colorCategories, defaultClassLabel, xValue, rangeClassAttribute) => {
+    const rangeClassItem = colorCategories.filter(colorCategory => {
         return value >= colorCategory.min && value < colorCategory.max;
-    })[0]?.title || defaultClassLabel;
-    // if charts are pie replace with groupBy attribute
-    // if charts are bar replace with the class value
-    // line currently do not support custom labels
+    })[0];
+    // if the value falls within a defined range but there is no label fall back to min/max rangeAtrrbute
+    if (rangeClassItem && !rangeClassItem.title) {
+        return `${rangeClassAttribute} ${rangeClassItem.min} - ${rangeClassItem.max}`;
+    }
+    // if the value won't fall within a defined range return default value if defined otherwise the x value
+    if (!rangeClassItem) {
+        return defaultClassLabel || xValue;
+    }
+    // if we get here then a label should be defined if not fall back to default
+    let displayValue = rangeClassItem?.title || defaultClassLabel;
     return displayValue ? displayValue.trim() : '';
-    // };
 };
 
 /**
@@ -181,7 +187,7 @@ function getData({
         if (isRangeClassChart && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
                 const groupByValue = x[index];
-                const customLabel = getRangeClassLabel(item, colorCategories, defaultClassLabel);
+                const customLabel = getRangeClassLabel(item, colorCategories, defaultClassLabel, groupByValue, classificationAttr);
                 if (!customLabel) {
                     return groupByValue;
                 }
@@ -234,7 +240,7 @@ function getData({
 
         /** Bar chart is range values classified coloured*/
         if (isRangeClassChart && classificationColors.length) {
-            const legendLabels = classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel));
+            const legendLabels = classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel, yAxisLabel || yDataKey, classificationAttr));
             const filteredLegendLabels = union(legendLabels);
             const customLabels = filteredLegendLabels.reduce((acc, cur) => {
                 return [
