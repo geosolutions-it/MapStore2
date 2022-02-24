@@ -69,6 +69,7 @@ describe('catalog Epics', () => {
     it('getMetadataRecordById-mapserver-TC211', (done) => {
         testEpic(getMetadataRecordById, 1, initAction(), (actions) => {
             actions.filter( ({type}) => type === "LAYERS:SHOW_LAYER_METADATA").map(({metadataRecord}) => {
+                expect(metadataRecord).toBe({});
                 done();
             });
         }, {
@@ -77,7 +78,7 @@ describe('catalog Epics', () => {
                 flat: [{
                     id: "opendata_raw",
                     type: "wms",
-                    url: "base/web/client/test-resources/wms/getCapabilities-mapserver.xml",
+                    url: "base/web/client/test-resources/wms/getCapabilities-mapserver.xml"
                 }]
             }
         });
@@ -86,6 +87,7 @@ describe('catalog Epics', () => {
     it('getMetadataRecordById-mapproxy-single', (done) => {
         testEpic(getMetadataRecordById, 1, initAction(), (actions) => {
             actions.filter( ({type}) => type === "LAYERS:SHOW_LAYER_METADATA").map(({metadataRecord}) => {
+                expect(metadataRecord).toBe({});
                 done();
             });
         }, {
