@@ -30,6 +30,15 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 import { get, isNil, isUndefined, isArray, find, findIndex, isString, flatten } from 'lodash';
 let FilterUtils;
 
+const wrapValueWithWildcard = (value, condition) => {
+    return condition(value) ? '*' + value + '*' : value;
+};
+
+const wrapIfNoWildcards = (value) => {
+    const wildcards = value.match(/(?<!!)[*.]/);
+    return !wildcards?.length;
+};
+
 export const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
 
 export const checkOperatorValidity = (value, operator) => {
@@ -163,7 +172,7 @@ export const  ogcStringField = (attribute, operator, value, nsplaceholder) => {
                     propertyTagReference[nsplaceholder].startTag +
                         attribute +
                     propertyTagReference[nsplaceholder].endTag +
-                    "<" + nsplaceholder + ":Literal>*" + value + "*</" + nsplaceholder + ":Literal>"
+                    "<" + nsplaceholder + ":Literal>" + wrapValueWithWildcard(value, wrapIfNoWildcards) + "</" + nsplaceholder + ":Literal>"
                 );
         }
     }
@@ -843,7 +852,7 @@ export const cqlArrayField = function(attribute, operator, value) {
  * @param operator
  * @returns {string}
  */
-export const processCqlWildcards = function(value, operator) {
+export const processCqlWildcardsold = function(value, operator) {
     const escapedQuotes = escapeCQLStrings(value);
     const startCharIsWildcard = value.startsWith('*');
     const endCharIsWildcard = value.endsWith('*');
@@ -860,6 +869,53 @@ export const processCqlWildcards = function(value, operator) {
             return "'" + val + "%'";
         }
         return "'%" + val + "%'";
+    default:
+        return "'" + escapedQuotes + "'";
+    }
+};
+
+
+/**
+ * Process CQL filter value, properly converts wildcards in the string and ignore escaped wildcards for
+ * "like" and "ilike" conditions.
+ * - % and _ characters of initial value are escaped with backslash: "\%" and "\_"
+ * - Initial value will be wrapped with %% if there are no wildcards in the string.
+ *  Wildcards escaped with ! are not counted as wildcards.
+ *  "te!*s!.t" value has no wildcards as both of them are escaped.
+ * - String with wildcards will be converted as is, without wrapping with %%.
+ * - All operators except "ilike" & "like" will receive value as-is, no wildcard processing is applied
+ * @param value
+ * @param operator
+ * @returns {string}
+ */
+export const processCqlWildcards = function(value, operator) {
+    // 1. Escape % and _ characters as they are wildcards in CQL filter.
+    // 2. Check if string has no * or . symbols. In such case it will be wrapped with %% on the last step
+    // 3. Convert all occurrences of * and . but ignore if they prepended with !
+    // 4. All values prepended with ! are replaced to themselves, ! is removed in this case.
+    let containWildcards = false;
+    const escapedQuotes = escapeCQLStrings(value);
+    const converted = escapedQuotes
+        .replaceAll(/[%_*.!]/g, (match, offset, string) => {
+            if (['%', '_'].includes(match)) {
+                return match === '%' ?  "\\%" : "\\_";
+            }
+            const prevChar = offset > 0 ? string.charAt(offset - 1) : '';
+            const nextChar = offset < (string.length - 1) ? string.charAt(offset + 1) : '';
+            if (['*', '.'].includes(match) && prevChar !== '!') {
+                containWildcards = true;
+                return match === '*' ? '%' : '_';
+            }
+            if (match === '!' && ['*', '.'].includes(nextChar)) {
+                return '';
+            }
+            return match;
+        });
+    switch (operator) {
+    case 'ilike':
+    case 'like':
+        const val = operator === 'ilike' ? converted.toLowerCase() : converted;
+        return containWildcards ? "'" + val + "'" : "'%" + val + "%'";
     default:
         return "'" + escapedQuotes + "'";
     }
