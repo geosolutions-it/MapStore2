@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
 import { DOMParser } from 'xmldom';
-import {head, get, find, flatten, filter, castArray, isArray, isString, isObject, keys, toPairs, merge} from 'lodash';
+import {head, get, find, flatten, filter as filterArray, castArray, isArray, isString, isObject, keys, toPairs, merge} from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -340,8 +340,8 @@ export default (API) => ({
                     .switchMap((caps) => {
                         const topLayer = castArray(get(caps, 'capability.layer', []));
                         const secondLevelLayers = castArray(get(caps, 'capability.layer.layer', []));
-                        const thirdLevelLayers = flatten(filter(secondLevelLayers, 'layer').map(o => o.layer));
-                        const fourthLevelLayers = flatten(filter(thirdLevelLayers, 'layer').map(o => o.layer));
+                        const thirdLevelLayers = flatten(filterArray(secondLevelLayers, 'layer').map(o => o.layer));
+                        const fourthLevelLayers = flatten(filterArray(thirdLevelLayers, 'layer').map(o => o.layer));
                         const layersXml = [...topLayer, ...secondLevelLayers, ...thirdLevelLayers, ...fourthLevelLayers];
                         const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === removeWorkspace(layer.name)).metadataURL;
                         const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
