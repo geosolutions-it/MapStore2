@@ -283,6 +283,7 @@
     "turf-point": "2.0.1",
     "turf-point-on-surface": "3.0.10",
     "turf-union": "3.0.10",
+    "@turf/boolean-intersects": "6.5.0",
     "url": "0.11.0",
     "util": "0.12.3",
     "uuid": "3.0.1",

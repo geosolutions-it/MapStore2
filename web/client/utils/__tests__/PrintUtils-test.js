@@ -167,6 +167,15 @@ const vectorLayer = {
     }
 };
 
+const graticuleLayer = {
+    "type": "graticule",
+    "visibility": true,
+    "group": "graticules",
+    "id": "graticule__0",
+    "name": "graticule",
+    "style": {}
+};
+
 const annotationsVectorLayer = {
     "type": "vector",
     "visibility": true,
@@ -316,32 +325,32 @@ describe('PrintUtils', () => {
 
     it('custom params are applied to wms layers', () => {
 
-        const specs = getMapfishLayersSpecification([layer], {}, 'map');
+        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.myparam).toExist();
         expect(specs[0].customParams.myparam).toBe("myvalue");
     });
     it('vector layer generation for print', () => {
-        const specs = getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
     it('vector layer from annotations are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('vector layer from measurements are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('wms layer generation for legend', () => {
-        const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, 'legend');
+        const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
     });
@@ -385,7 +394,7 @@ describe('PrintUtils', () => {
             }
         ]);
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        const specs = getMapfishLayersSpecification([layer], {}, 'map');
+        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.authkey).toExist();
@@ -396,7 +405,7 @@ describe('PrintUtils', () => {
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso,
             filterObj: filterObjSottoPasso
-        }], {}, 'map');
+        }], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.CQL_FILTER).toExist();
@@ -406,7 +415,7 @@ describe('PrintUtils', () => {
         const specs = getMapfishLayersSpecification([{
             ...layerSottoPasso,
             filterObj: filterObjSottoPasso
-        }], {}, 'map');
+        }], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.CQL_FILTER).toExist();
@@ -416,14 +425,14 @@ describe('PrintUtils', () => {
         const specs = getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso
-        }], {}, 'map');
+        }], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.CQL_FILTER).toExist();
         expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
     });
     it('wms layer generation for legend includes scale', () => {
-        const specs = getMapfishLayersSpecification([layer], testSpec, 'legend');
+        const specs = getMapfishLayersSpecification([layer], testSpec, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].classes.length).toBe(1);
@@ -498,6 +507,7 @@ describe('PrintUtils', () => {
                 wms: layer,
                 wmts: KVP1,
                 vector: vectorLayer,
+                graticule: graticuleLayer,
                 tms: TMS110_1,
                 tileprovider: BasemapAT,
                 osm: {

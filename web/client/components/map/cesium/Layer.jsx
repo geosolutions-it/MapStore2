@@ -68,7 +68,9 @@ class CesiumLayer extends React.Component {
 
     componentWillUnmount() {
         if (this.layer && this.props.map && !this.props.map.isDestroyed()) {
-            if (this.layer.detached) {
+            // detached layers are layers that do not work through a provider
+            // for this reason they cannot be added or removed from the map imageryProviders
+            if (this.layer.detached && this.layer?.remove) {
                 this.layer.remove();
             } else {
                 if (this.layer.destroy) {
@@ -200,6 +202,8 @@ class CesiumLayer extends React.Component {
     };
 
     addLayer = (newProps) => {
+        // detached layers are layers that do not work through a provider
+        // for this reason they cannot be added or removed from the map imageryProviders
         if (this.layer && !this.layer.detached) {
             this.addLayerInternal(newProps);
             if (this.props.options.refresh && this.layer.updateParams) {
@@ -219,6 +223,8 @@ class CesiumLayer extends React.Component {
         if (toRemove) {
             this.props.map.imageryLayers.remove(toRemove);
         }
+        // detached layers are layers that do not work through a provider
+        // for this reason they cannot be added or removed from the map imageryProviders
         if (this.layer.detached && this.layer?.remove) {
             this.layer.remove();
         }
