@@ -6,18 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
-var assign = require('object-assign');
+import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from 'cesium';
 
 /**
  * Created by thomas on 27/01/14.
  // [source 07APR2015: http://pad.geocento.com/AddOns/Graticule.js]
  */
 
-var Graticule = (function() {
+const Graticule = (function() {
 
-    var mins = [
+    let mins = [
         Cesium.Math.toRadians(0.05),
         Cesium.Math.toRadians(0.1),
         Cesium.Math.toRadians(0.2),
@@ -292,16 +291,16 @@ var Graticule = (function() {
     };
 
     _.prototype._decToSex = function(d) {
-        var degs = Math.floor(d);
+        let degs = Math.floor(d);
         let minimums = ((Math.abs(d) - degs) * 60.0).toFixed(2);
         if (minimums === "60.00") { degs += 1.0; mins = "0.00"; }
         return [degs, ":", minimums].join('');
     };
 
     _.prototype._getExtentView = function() {
-        var camera = this._scene.camera;
-        var canvas = this._scene.canvas;
-        var corners = [
+        const camera = this._scene.camera;
+        const canvas = this._scene.canvas;
+        const corners = [
             camera.pickEllipsoid(new Cesium.Cartesian2(0, 0), this._ellipsoid),
             camera.pickEllipsoid(new Cesium.Cartesian2(canvas.width, 0), this._ellipsoid),
             camera.pickEllipsoid(new Cesium.Cartesian2(0, canvas.height), this._ellipsoid),
@@ -329,19 +328,31 @@ var Graticule = (function() {
 
 })();
 
+const createLayer = (options, map) => {
+    const scene = map.scene;
+
+    const grid = new Graticule({
+        tileWidth: 512,
+        tileHeight: 512,
+        numLines: 10,
+        ...options
+    }, scene);
+
+    if (options.visibility) {
+        grid.setVisible(true);
+    }
+    return grid;
+};
+
 Layers.registerType('graticule', {
-    create: (options, map) => {
-        var scene = map.scene;
-
-        let grid = new Graticule(assign({
-            tileWidth: 512,
-            tileHeight: 512,
-            numLines: 10
-        }, options || {}), scene);
-
-        if (options.visibility) {
-            grid.setVisible(true);
+    create: createLayer,
+    update: (layer, newOptions, oldOptions, map) => {
+        if (newOptions.visibility !== oldOptions.visibility) {
+            layer.setVisible(false); // clear all previous labels and primitive
+            if (newOptions.visibility) {
+                return createLayer(newOptions, map);
+            }
         }
-        return grid;
+        return null;
     }
 });

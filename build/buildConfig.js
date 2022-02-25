@@ -47,6 +47,7 @@ const castArray = require('lodash/castArray');
  * @param {object} config.devServer webpack devserver configuration object, available only with object syntax
  * @param {object} config.resolveModules webpack resolve configuration object, available only with object syntax
  * @param {object} config.projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
+ * @param {string} config.cesiumBaseUrl (optional) url for cesium assets, workers and widgets. It is needed only for custom project where the structure of dist folder is not following the default one
  * @returns a webpack configuration object
  * @example
  * // It's possible to use a single object argument to pass the parameters.
@@ -90,6 +91,13 @@ function mapArgumentsToObject(args, func) {
     ] = args;
     return func({ bundles, themeEntries, paths, plugins, prod, publicPath, cssPrefix, prodPlugins, alias, proxy, devPlugins});
 }
+
+const getCesiumPath = ({ prod, paths }) => {
+    return prod
+        ? path.join(paths.base, 'node_modules', 'cesium', 'Build', 'Cesium')
+        : path.join(paths.base, 'node_modules', 'cesium', 'Source');
+};
+
 module.exports = (...args) => mapArgumentsToObject(args, ({
     bundles,
     themeEntries,
@@ -105,7 +113,8 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     // new optional only for single object argument
     projectConfig = {},
     devServer,
-    resolveModules
+    resolveModules,
+    cesiumBaseUrl
 }) => ({
     target: "web",
     entry: assign({}, bundles, themeEntries),
@@ -148,6 +157,15 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             }
         }),
         new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
+        new DefinePlugin({
+            // Define relative base path in cesium for loading assets
+            'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
+        }),
+        new CopyWebpackPlugin([
+            { from: path.join(getCesiumPath({ paths, prod }), 'Workers'), to: path.join(paths.dist, 'cesium', 'Workers') },
+            { from: path.join(getCesiumPath({ paths, prod }), 'Assets'), to: path.join(paths.dist, 'cesium', 'Assets') },
+            { from: path.join(getCesiumPath({ paths, prod }), 'Widgets'), to: path.join(paths.dist, 'cesium', 'Widgets') }
+        ]),
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),

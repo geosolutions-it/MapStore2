@@ -98,7 +98,6 @@
                                     <exclude>node_modules/**/*</exclude>
                                     <exclude>MapStore2/*</exclude>
                                     <exclude>MapStore2/**/*</exclude>
-                                    <exclude>**/libs/Cesium/**/*</exclude>
                                     <exclude>**/test-resources/*</exclude>
                                 </excludes>
                             </resource>
@@ -171,22 +170,6 @@
                                 <includes>
                                     <include>translations/*</include>
                                 </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>CesiumJS-navigation</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/__PROJECTNAME__/libs/cesium-navigation</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/../MapStore2/web/client/libs/cesium-navigation</directory>
                             </resource>
                         </resources>
                     </configuration>

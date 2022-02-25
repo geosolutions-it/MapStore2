@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
+import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from 'cesium';
 
-var eventListener = require('eventlistener');
+import eventListener from 'eventlistener';
+import isEqual from 'lodash/isEqual';
 /**
  * Created by thomas on 27/01/14.
  */
@@ -28,10 +29,13 @@ const InfoWindow = (function() {
         let content = document.createElement('div');
         content.className = 'content';
         frame.appendChild(content);
-
         cesiumWidget.container.appendChild(div);
         this._content = content;
         this.setVisible(true);
+
+        // set the position to absolute to correctly positioning the info window
+        // based on left and top properties
+        this._div.style.position = 'absolute';
     }
 
     _.prototype.setVisible = function(visible) {
@@ -66,34 +70,34 @@ const InfoWindow = (function() {
 
     _.prototype.computeVisible = function() {
         // Ellipsoid radii - WGS84 shown here
-        var rX = 6378137.0;
-        var rY = 6378137.0;
-        var rZ = 6356752.3142451793;
+        const rX = 6378137.0;
+        const rY = 6378137.0;
+        const rZ = 6356752.3142451793;
         // Vector CV
-        var cameraPosition = this._scene.camera.position;
-        var cvX = cameraPosition.x / rX;
-        var cvY = cameraPosition.y / rY;
-        var cvZ = cameraPosition.z / rZ;
+        const cameraPosition = this._scene.camera.position;
+        const cvX = cameraPosition.x / rX;
+        const cvY = cameraPosition.y / rY;
+        const cvZ = cameraPosition.z / rZ;
 
-        var vhMagnitudeSquared = cvX * cvX + cvY * cvY + cvZ * cvZ - 1.0;
+        const vhMagnitudeSquared = cvX * cvX + cvY * cvY + cvZ * cvZ - 1.0;
 
         // Target position, transformed to scaled space
 
-        var position = this._position;
-        var tX = position.x / rX;
-        var tY = position.y / rY;
-        var tZ = position.z / rZ;
+        const position = this._position;
+        const tX = position.x / rX;
+        const tY = position.y / rY;
+        const tZ = position.z / rZ;
 
         // Vector VT
-        var vtX = tX - cvX;
-        var vtY = tY - cvY;
-        var vtZ = tZ - cvZ;
-        var vtMagnitudeSquared = vtX * vtX + vtY * vtY + vtZ * vtZ;
+        const vtX = tX - cvX;
+        const vtY = tY - cvY;
+        const vtZ = tZ - cvZ;
+        const vtMagnitudeSquared = vtX * vtX + vtY * vtY + vtZ * vtZ;
 
         // VT dot VC is the inverse of VT dot CV
-        var vtDotVc = -(vtX * cvX + vtY * cvY + vtZ * cvZ);
+        const vtDotVc = -(vtX * cvX + vtY * cvY + vtZ * cvZ);
 
-        var isOccluded = vtDotVc > vhMagnitudeSquared &&
+        const isOccluded = vtDotVc > vhMagnitudeSquared &&
             vtDotVc * vtDotVc / vtMagnitudeSquared > vhMagnitudeSquared;
 
         if (isOccluded) {
@@ -177,5 +181,15 @@ Layers.registerType('overlay', {
                 map.scene.primitives.remove(info);
             }
         };
+    },
+    update: function(layer, newOptions, oldOptions, map) {
+        if (!isEqual(newOptions.position, oldOptions.position)
+        || newOptions.visibility !== oldOptions.visibility) {
+            layer.remove();
+            return newOptions.visibility
+                ? this.create(newOptions, map)
+                : null;
+        }
+        return null;
     }
 });

@@ -3,7 +3,6 @@ const path = require("path");
 module.exports = function karmaConfig(config) {
     config.set(require('./testConfig')({
         files: [
-            './node_modules/cesium/Build/Cesium/Cesium.js',
             'build/tests.webpack.js',
             { pattern: './web/client/test-resources/**/*', included: false },
             { pattern: './web/client/translations/**/*', included: false }

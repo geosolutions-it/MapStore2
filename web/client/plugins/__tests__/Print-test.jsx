@@ -134,9 +134,16 @@ describe('Print Plugin', () => {
     it('default configuration', (done) => {
         getPrintPlugin().then(({ Plugin }) => {
             try {
-                ReactDOM.render(<Plugin />, document.getElementById("container"));
-                expectDefaultItems();
-                done();
+                ReactDOM.render(<Plugin
+                    mapPreviewOptions={{
+                        onLoadingMapPlugins: (loading) => {
+                            if (!loading) {
+                                expectDefaultItems();
+                                done();
+                            }
+                        }
+                    }}
+                />, document.getElementById("container"));
             } catch (ex) {
                 done(ex);
             }
@@ -162,10 +169,17 @@ describe('Print Plugin', () => {
             layers: [{visibility: true, type: "bing"}]
         }).then(({ Plugin }) => {
             try {
-                ReactDOM.render(<Plugin />, document.getElementById("container"));
-                expectDefaultItems();
-                expect(getByXPath("//*[text()='print.defaultBackground']")).toExist();
-                done();
+                ReactDOM.render(<Plugin
+                    mapPreviewOptions={{
+                        onLoadingMapPlugins: (loading) => {
+                            if (!loading) {
+                                expectDefaultItems();
+                                expect(getByXPath("//*[text()='print.defaultBackground']")).toExist();
+                                done();
+                            }
+                        }
+                    }}
+                />, document.getElementById("container"));
             } catch (ex) {
                 done(ex);
             }
@@ -178,10 +192,17 @@ describe('Print Plugin', () => {
             target: "left-panel"
         }]}).then(({ Plugin }) => {
             try {
-                ReactDOM.render(<Plugin />, document.getElementById("container"));
-                expectDefaultItems();
-                expect(getByXPath("//*[text()='print.mycustomplugin']")).toExist();
-                done();
+                ReactDOM.render(<Plugin
+                    mapPreviewOptions={{
+                        onLoadingMapPlugins: (loading) => {
+                            if (!loading) {
+                                expectDefaultItems();
+                                expect(getByXPath("//*[text()='print.mycustomplugin']")).toExist();
+                                done();
+                            }
+                        }
+                    }}
+                />, document.getElementById("container"));
             } catch (ex) {
                 done(ex);
             }
