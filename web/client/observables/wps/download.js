@@ -103,18 +103,17 @@ export const downloadXML = ({layerName, dataFilter, outputFormat, targetCRS, roi
  * Construct gs:Query XML payload
  * @memberof observables.wps.download
  * @param {string} downloadOptions options object
- * @param {string} downloadOptions.features feature collection
- * @param {string} downloadOptions.inputFormat MIME type of the input
+ * @param {string} downloadOptions.input WPS process reference object
  * @param {string} downloadOptions.attribute comma-separated list of attributes to include in output
  * @param {object} [downloadOptions.filter] object to use as filter
  * @param {boolean} [downloadOptions.asynchronous] if true gs:Download will run asynchronously
- * @param {boolean} [downloadOptions.outputAsReference] instructs gs:Download process to return a link where output file can be downloaded instead of the file itself
- * @param {string} [downloadOptions.resultOutput] MIME type of the output (application/zip by default)
+ * @param {boolean} [downloadOptions.outputAsReference] instructs process to return a link where output file can be downloaded instead of the file itself
+ * @param {string} [downloadOptions.resultOutput] MIME type of the output
  */
-export const queryXML = ({features, inputFormat, attribute, filter, asynchronous, outputAsReference, resultOutput}) => executeProcessXML(
+export const queryXML = ({input, attribute, filter, asynchronous, outputAsReference, resultOutput}) => executeProcessXML(
     'vec:Query',
     [
-        processParameter('features', processData(complexData(cdata(features), inputFormat))),
+        processParameter('features', processReference(input.mimeType, input.href.replace(/&/g, "&amp;"), 'GET')),
         ...(attribute ? attribute.map(attr => processParameter('attribute', processData(literalData(attr)))) : []),
         ...(filter ? [processParameter('filter', roiOrFilterToXML(filter))] : [])
     ],
@@ -199,8 +198,8 @@ export const downloadWithAttributesFilter = (url, downloadOptions, executeOption
 
         const executeProcess$ = executeProcess(url, downloadXML({
             ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess', 'attribute', 'asynchronous', 'outputFormat'),
-            asynchronous: false,
-            outputAsReference: false,
+            asynchronous: true,
+            outputAsReference: true,
             resultOutput: 'application/wfs-collection-1.0',
             outputFormat: 'application/wfs-collection-1.0'
         }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/wfs-collection-1.0`}});
@@ -223,11 +222,10 @@ export const downloadWithAttributesFilter = (url, downloadOptions, executeOption
                 if (result === 'DownloadEstimatorSuccess') {
                     return Observable.of('DownloadEstimatorSuccess');
                 }
-                if (result) {
+                if (result && result?.length === 1) {
                     return executeProcess(url, queryXML({
                         ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess'),
-                        features: result,
-                        inputFormat: 'application/wfs-collection-1.0',
+                        input: result[0],
                         filter: null,
                         outputAsReference: downloadOptions.asynchronous ? downloadOptions.outputAsReference : false,
                         resultOutput
