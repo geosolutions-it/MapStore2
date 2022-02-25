@@ -47,7 +47,7 @@ const castArray = require('lodash/castArray');
  * @param {object} config.devServer webpack devserver configuration object, available only with object syntax
  * @param {object} config.resolveModules webpack resolve configuration object, available only with object syntax
  * @param {object} config.projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
- * @param {string} config.cesiumBaseUrl url for cesium assets, workers and widgets. It is needed only for custom project where the structure of dist folder is not following the default one
+ * @param {string} config.cesiumBaseUrl (optional) url for cesium assets, workers and widgets. It is needed only for custom project where the structure of dist folder is not following the default one
  * @returns a webpack configuration object
  * @example
  * // It's possible to use a single object argument to pass the parameters.

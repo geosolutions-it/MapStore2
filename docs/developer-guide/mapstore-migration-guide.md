@@ -148,7 +148,7 @@ Downstream project should update following configurations:
 -<link rel="stylesheet" href="libs/cesium-navigation/cesium-navigation.css" />
 ```
 
-- update the `cesiumBaseUrl` parameter in the webpack dev/prod config to point to the correct location of the compiled cesium folder. All the cesium assets are located in the dist target folder under (default `dist/cesium`). This is needed only for project with specific `publicPath` that are not using the default one.
+- This step is needed only for custom project with a specific `publicPath` different from the default one (default `dist/cesium`). Update the `cesiumBaseUrl` parameter in the webpack dev/prod config to point to the correct location of the cesium static assets, widgets and workers folder.
 
 ## Migration from 2021.02.01 to 2021.02.02
 ### Style parsers dynamic import
