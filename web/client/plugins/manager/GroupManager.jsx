@@ -17,9 +17,9 @@ import Button from '../../components/misc/Button';
 import { editGroup, getUserGroups, groupSearchTextChanged } from '../../actions/usergroups';
 import Message from '../../components/I18N/Message';
 import SearchBar from '../../components/search/SearchBar';
-import GroupDeleteConfirm from '../../plugins/manager/users/GroupDeleteConfirm';
-import GroupDialog from '../../plugins/manager/users/GroupDialog';
-import GroupsGrid from '../../plugins/manager/users/GroupGrid';
+import GroupDeleteConfirm from './users/GroupDeleteConfirm';
+import GroupDialog from './users/GroupDialog';
+import GroupsGrid from './users/GroupGrid';
 import usergroups from '../../reducers/usergroups';
 
 class GroupManager extends React.Component {
