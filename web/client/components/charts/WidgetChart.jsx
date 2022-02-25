@@ -388,17 +388,17 @@ export const toPlotly = (props) => {
         },
         data: series.map(({ dataKey: yDataKey }) => {
             let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, isRangeClassChart });
-            const chartData = allData ? allData?.x?.map((axis, index)=>{
+            const chartData = allData ? allData?.x?.map((axis, index) => {
                 return { xAxis: axis, yAxis: allData.y[index]};
             }) : {};
             const sortedDataByDataAsc = orderBy(chartData, ['xAxis'], ['asc']);
-            allData.x = sortedDataByDataAsc?.map(item=>{
+            allData.x = sortedDataByDataAsc?.map(item => {
                 return item.xAxis;
             });
-            allData.y = sortedDataByDataAsc?.map(item=>{
+            allData.y = sortedDataByDataAsc?.map(item => {
                 return item.yAxis;
             });
-            return  allData;
+            return allData;
         }),
         config: {
             displayModeBar: isModeBarVisible, // minimal to display 8 tools.

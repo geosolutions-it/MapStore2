@@ -69,6 +69,21 @@ export const DATASET_4 = {
     series: [{ dataKey: "value" }]
 };
 
+export const SPLIT_DATASET_4 = {
+    data: [
+        [
+            { name: 'Page A', value: 0, classValue: 'class1'}
+        ],
+        [
+            { name: 'Page B', value: 100, classValue: 'class2'},
+            { name: 'Page C', value: 500, classValue: 'class2'},
+            { name: 'Page D', value: 900, classValue: 'class1'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
 export const CLASSIFICATIONS = {
     dataKey: 'classValue'
 };
