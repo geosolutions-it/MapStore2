@@ -409,7 +409,7 @@ const Api = {
         const url = `usergroups/group/${id}`;
         return axios.put(url, {UserGroup: {...group}}, this.addBaseUrl(parseOptions(options)))
             .then(function() {
-                return this.updateGroupMembers({group}, options);
+                return Api.updateGroupMembers({group}, options);
             })
             .then(() => id);
     },
