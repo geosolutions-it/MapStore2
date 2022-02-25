@@ -14,7 +14,7 @@ import axios from '../../libs/ajax';
 import { MAP_CONFIG_LOAD_ERROR } from '../../actions/config';
 import { SET_CONTROL_PROPERTY, setControlProperty } from '../../actions/controls';
 import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED, LOGIN_SUCCESS } from '../../actions/security';
-import { getCookie, setCookie, eraseCookie } from '../../utils/CookieUtils';
+import { setCookie, eraseCookie } from '../../utils/CookieUtils';
 
 import MockAdapter from 'axios-mock-adapter';
 
