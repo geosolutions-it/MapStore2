@@ -201,9 +201,9 @@ export const downloadWithAttributesFilter = (url, downloadOptions, executeOption
             ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess', 'attribute', 'asynchronous', 'outputFormat'),
             asynchronous: false,
             outputAsReference: false,
-            resultOutput: 'application/json',
-            outputFormat: 'application/json'
-        }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}});
+            resultOutput: 'application/wfs-collection-1.0',
+            outputFormat: 'application/wfs-collection-1.0'
+        }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/wfs-collection-1.0`}});
 
         return downloadEstimator$
             .catch(() => {
@@ -223,11 +223,11 @@ export const downloadWithAttributesFilter = (url, downloadOptions, executeOption
                 if (result === 'DownloadEstimatorSuccess') {
                     return Observable.of('DownloadEstimatorSuccess');
                 }
-                if (result?.type === 'FeatureCollection') {
+                if (result) {
                     return executeProcess(url, queryXML({
                         ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess'),
-                        features: JSON.stringify(result),
-                        inputFormat: 'application/json',
+                        features: result,
+                        inputFormat: 'application/wfs-collection-1.0',
                         filter: null,
                         outputAsReference: downloadOptions.asynchronous ? downloadOptions.outputAsReference : false,
                         resultOutput
