@@ -28,7 +28,7 @@ const calculateRadius = (center, coordinates, mapCrs, coordinateCrs) => {
  * @returns {Feature} the transformed feature
  */
 export const transformPolygonToCircle = (feature, mapCrs, coordinateCrs = mapCrs) => {
-    if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
+    if (!feature.getGeometry() || feature.getGeometry().getType() !== "Circle" || feature.getProperties().center && feature.getProperties().center.length === 0) {
         return feature;
     }
     if (feature.getProperties() && feature.getProperties().isCircle && feature.getProperties().center && feature.getProperties().center[0] && feature.getProperties().center[1]) {
