@@ -139,13 +139,13 @@ export const TEMPLATE_LABELS_CLASSIFICATION = [
 
 export const TEMPLATE_LABELS_RANGE_CLASSIFICATION = [
     {
-        title: '${legendValue} - Between 0 and 100',
+        title: '${legendValue} - Between ${minValue} and ${maxValue}',
         color: '#ff0000',
         min: 0,
         max: 100
     },
     {
-        title: '${legendValue} - Between 100 and 1000',
+        title: '${legendValue} - Between ${minValue} and ${maxValue}',
         color: '#00ff00',
         min: 100,
         max: 1000
@@ -169,13 +169,13 @@ export const PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION = [
 
 export const PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION = [
     {
-        title: '${groupByValue} - Between 0 and 100',
+        title: '${groupByValue} - ${legendValue}: Between ${minValue} and ${maxValue}',
         color: '#ff0000',
         min: 0,
         max: 100
     },
     {
-        title: '${groupByValue} - Between 100 and 1000',
+        title: '${groupByValue} - ${legendValue}: Between ${minValue} and ${maxValue}',
         color: '#00ff00',
         min: 100,
         max: 1000

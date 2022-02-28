@@ -141,7 +141,7 @@ class ThemaClassesEditor extends React.Component {
                             return  (
                                 <MenuItem
                                     key={option.value}
-                                    onClick={() => this.updateClassification(index, option.value, classification)}>
+                                    onClick={() => this.updateClassification(index, option.value, classification, this.props.customLabels)}>
                                     <><Glyphicon glyph={option.glyph}/>
                                         <Message msgId={option.labelId} />
                                     </>
@@ -228,7 +228,7 @@ class ThemaClassesEditor extends React.Component {
         }
     };
 
-    updateClassification = (classIndex, type, classification) => {
+    updateClassification = (classIndex, type, classification, customLabels) => {
         let updateIndex;
         let updateMinMax;
         let deleteCount = 0;
@@ -259,7 +259,7 @@ class ThemaClassesEditor extends React.Component {
                 classifyObj = { ...currentRule, id: uuid.v1(), color, label: '0', quantity: 0 };
             } else {
                 classifyObj = { ...currentRule, id: uuid.v1(), ...updateMinMax, color,
-                    title: ` >= ${updateMinMax.min} AND <${updateMinMax.max}`
+                    title: !customLabels ? ` >= ${updateMinMax.min} AND <${updateMinMax.max}` : ""
                 };
             }
             args = args.concat(classifyObj);

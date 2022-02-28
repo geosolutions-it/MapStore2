@@ -9,12 +9,12 @@ import ThemaClassesEditor from '../../../../style/ThemaClassesEditor';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
 import HTML from '../../../../I18N/HTML';
 
-const getLabelPopover = (placement, chartType) => (
+const getLabelPopover = (placement, chartType, classificationType, labelType) => (
     <DisposablePopover
         popoverClassName="chart-color-class-popover"
         placement={placement}
         title={<Message msgId="widgets.builder.wizard.classAttributes.customLabels" />}
-        text={<HTML msgId={`widgets.builder.wizard.classAttributes.${chartType}ChartCustomLabelsExample`} />}
+        text={<HTML msgId={`widgets.builder.wizard.classAttributes.${chartType}${classificationType}${labelType}ChartCustomLabelsExample`} />}
     />
 );
 
@@ -31,7 +31,7 @@ const RangeAttributeClassForm = ({
             <Row xs={12}>
                 <Col componentClass={ControlLabel} xs={6}>
                     <Message msgId="widgets.builder.wizard.classAttributes.defaultClassLabel" />
-                    {getLabelPopover('top', chartType)}
+                    {getLabelPopover('top', chartType, 'Range', 'Default')}
                 </Col>
                 <Col xs={6}>
                     <FormControl
@@ -47,7 +47,7 @@ const RangeAttributeClassForm = ({
                     <Col xs={3}><Message msgId="widgets.builder.wizard.classAttributes.minValue"/></Col>
                     <Col xs={3}><Message msgId="widgets.builder.wizard.classAttributes.maxValue"/></Col>
                     <Col xs={3}><Message msgId="widgets.builder.wizard.classAttributes.classLabel"/>
-                        {getLabelPopover('right', chartType)}
+                        {getLabelPopover('right', chartType, 'Range', 'Class')}
                     </Col>
                 </Col>
             </Row>

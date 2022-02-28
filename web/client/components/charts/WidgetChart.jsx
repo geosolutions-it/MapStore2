@@ -154,7 +154,7 @@ const getRangeClassLabel = (value, colorCategories, defaultClassLabel, xValue, r
     })[0];
     // if the value falls within a defined range but there is no label fall back to min/max rangeAtrrbute
     if (rangeClassItem && !rangeClassItem.title) {
-        return `${rangeClassAttribute} ${rangeClassItem.min} - ${rangeClassItem.max}`;
+        return `${rangeClassItem.min} - ${rangeClassItem.max}`;
     }
     // if the value won't fall within a defined range return default value if defined otherwise the x value
     if (!rangeClassItem) {
@@ -162,7 +162,10 @@ const getRangeClassLabel = (value, colorCategories, defaultClassLabel, xValue, r
     }
     // if we get here then a label should be defined if not fall back to default
     let displayValue = rangeClassItem?.title || defaultClassLabel;
-    return displayValue ? displayValue.trim() : '';
+    return displayValue ? displayValue.trim()
+        .replace('${minValue}', rangeClassItem.min ?? '')
+        .replace('${maxValue}', rangeClassItem.max ?? '')
+        .replace('${legendValue}', rangeClassAttribute || '') : '';
 };
 
 /**

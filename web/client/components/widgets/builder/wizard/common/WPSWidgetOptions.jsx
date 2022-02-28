@@ -275,7 +275,9 @@ export default ({
                         onClose={() => {
                             const unfinishedClasses = classification.filter(item => !item.unique || !item.value);
                             const unfinishedRangeClasses = rangeClassification.filter(item => !item.title);
-                            if ((unfinishedClasses.length > 0 || unfinishedRangeClasses.length > 0) && classificationAttribute) {
+                            /** only shows confirm modal if current classification type is empty */
+                            if (((unfinishedClasses.length > 0 && classificationAttributeType === 'string') ||
+                                (unfinishedRangeClasses.length > 0 && classificationAttributeType === 'number')) && classificationAttribute) {
                                 setShowConfirmModal(true);
                             } else {
                                 setShowModal(false);

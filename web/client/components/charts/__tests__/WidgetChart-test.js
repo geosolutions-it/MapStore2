@@ -360,8 +360,7 @@ describe('Widget Chart: data conversions ', () => {
                 const labelMaxValue = UNLABELLED_RANGE_CLASSIFICATION.filter(
                     ({min, max}) => data[0].values[i] >= min && data[0].values[i] < max
                 )[0].max;
-                const classAttributeLabel = RANGE_CLASSIFICATIONS.dataKey;
-                const classLabel = `${classAttributeLabel} ${labelMinValue} - ${labelMaxValue}`;
+                const classLabel = `${labelMinValue} - ${labelMaxValue}`;
                 expect(v).toBe(classLabel);
             });
             // colors are those defined by the user
@@ -394,7 +393,12 @@ describe('Widget Chart: data conversions ', () => {
             data[0].labels.map((v, i) => {
                 const classLabel = PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION
                     .filter(({ min, max }) => data[0].values[i] >= min && data[0].values[i] < max )[0].title
-                    .replace('${groupByValue}', DATASET_4.data[i].name);
+                    .replace('${groupByValue}', DATASET_4.data[i].name)
+                    .replace('${legendValue}', DATASET_4.series[0].dataKey)
+                    .replace('${minValue}', PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION
+                        .filter(({ min, max }) => data[0].values[i] >= min && data[0].values[i] < max )[0].min)
+                    .replace('${maxValue}', PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION
+                        .filter(({ min, max }) => data[0].values[i] >= min && data[0].values[i] < max )[0].max);
                 expect(v).toBe(classLabel);
             });
             // colors are those defined by the user
@@ -660,8 +664,7 @@ describe('Widget Chart: data conversions ', () => {
                 expect(valuesInRange).toBe(true);
                 const labelMinValue = UNLABELLED_RANGE_CLASSIFICATION[i].min;
                 const labelMaxValue = UNLABELLED_RANGE_CLASSIFICATION[i].max;
-                const classAttributeLabel = RANGE_CLASSIFICATIONS.dataKey;
-                const classLabel = `${classAttributeLabel} ${labelMinValue} - ${labelMaxValue}`;
+                const classLabel = `${labelMinValue} - ${labelMaxValue}`;
                 expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = UNLABELLED_RANGE_CLASSIFICATION[i].color;
