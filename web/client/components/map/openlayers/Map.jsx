@@ -12,9 +12,6 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { get as getProjection, toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
-import Units, { METERS_PER_UNIT } from 'ol/proj/Units';
-
-import { getWidth, getHeight } from 'ol/extent';
 
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
@@ -24,7 +21,7 @@ import assign from 'object-assign';
 
 import {reproject, reprojectBbox, normalizeLng, normalizeSRS, getExtentForProjection} from '../../../utils/CoordinatesUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
-import mapUtils from '../../../utils/MapUtils';
+import mapUtils, { getResolutionsForProjection } from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
@@ -355,102 +352,19 @@ class OpenlayersMap extends React.Component {
      *
      */
     getResolutions = (srs) => {
-        const tileWidth = 256; // TODO: pass as parameters
-        const tileHeight = 256; // TODO: pass as parameters - allow different from tileWidth
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
             return this.props.mapOptions.view.resolutions;
         }
-        const defaultMaxZoom = 28;
-        const defaultZoomFactor = 2;
-
-        let minZoom = this.props.mapOptions.minZoom !== undefined ?
-            this.props.mapOptions.minZoom : 0;
-
-        let maxZoom = this.props.mapOptions.maxZoom !== undefined ?
-            this.props.mapOptions.maxZoom : defaultMaxZoom;
-
-        let zoomFactor = this.props.mapOptions.zoomFactor !== undefined ?
-            this.props.mapOptions.zoomFactor : defaultZoomFactor;
-
         const projection = srs ? getProjection(srs) : this.map.getView().getProjection();
-
         const extent = projection.getExtent();
-
-        const extentWidth = !extent ? 360 * METERS_PER_UNIT[Units.DEGREES] /
-            METERS_PER_UNIT[projection.getUnits()] :
-            getWidth(extent);
-        const extentHeight = !extent ? 360 * METERS_PER_UNIT[Units.DEGREES] /
-            METERS_PER_UNIT[projection.getUnits()] :
-            getHeight(extent);
-
-        let resX = extentWidth / tileWidth;
-        let resY = extentHeight / tileHeight;
-        let tilesWide;
-        let tilesHigh;
-        if (resX <= resY) {
-            // use one tile wide by N tiles high
-            tilesWide = 1;
-            tilesHigh = Math.round(resY / resX);
-            // previous resY was assuming 1 tile high, recompute with the actual number of tiles
-            // high
-            resY = resY / tilesHigh;
-        } else {
-            // use one tile high by N tiles wide
-            tilesHigh = 1;
-            tilesWide = Math.round(resX / resY);
-            // previous resX was assuming 1 tile wide, recompute with the actual number of tiles
-            // wide
-            resX = resX / tilesWide;
-        }
-        // the maximum of resX and resY is the one that adjusts better
-        const res = Math.max(resX, resY);
-
-        /*
-            // TODO: this is how GWC creates the bbox adjusted.
-            // We should calculate it to have the correct extent for a grid set
-            const adjustedExtentWidth = tilesWide * tileWidth * res;
-            const adjustedExtentHeight = tilesHigh * tileHeight * res;
-            BoundingBox adjExtent = new BoundingBox(extent);
-            adjExtent.setMaxX(adjExtent.getMinX() + adjustedExtentWidth);
-            // Do we keep the top or the bottom fixed?
-            if (alignTopLeft) {
-                adjExtent.setMinY(adjExtent.getMaxY() - adjustedExtentHeight);
-            } else {
-                adjExtent.setMaxY(adjExtent.getMinY() + adjustedExtentHeight);
-
-         */
-
-        const defaultMaxResolution = res;
-
-        const defaultMinResolution = defaultMaxResolution / Math.pow(
-            defaultZoomFactor, defaultMaxZoom - 0);
-
-        // user provided maxResolution takes precedence
-        let maxResolution = this.props.mapOptions.maxResolution;
-        if (maxResolution !== undefined) {
-            minZoom = 0;
-        } else {
-            maxResolution = defaultMaxResolution / Math.pow(zoomFactor, minZoom);
-        }
-
-        // user provided minResolution takes precedence
-        let minResolution = this.props.mapOptions.minResolution;
-        if (minResolution === undefined) {
-            if (this.props.mapOptions.maxZoom !== undefined) {
-                if (this.props.mapOptions.maxResolution !== undefined) {
-                    minResolution = maxResolution / Math.pow(zoomFactor, maxZoom);
-                } else {
-                    minResolution = defaultMaxResolution / Math.pow(zoomFactor, maxZoom);
-                }
-            } else {
-                minResolution = defaultMinResolution;
-            }
-        }
-
-        // given discrete zoom levels, minResolution may be different than provided
-        maxZoom = minZoom + Math.floor(
-            Math.log(maxResolution / minResolution) / Math.log(zoomFactor));
-        return Array.apply(0, Array(maxZoom - minZoom + 1)).map((x, y) => maxResolution / Math.pow(zoomFactor, y));
+        return getResolutionsForProjection(
+            srs ?? this.map.getView().getProjection().getCode(),
+            this.props.mapOptions.minResolution,
+            this.props.mapOptions.maxResolution,
+            this.props.mapOptions.minZoom,
+            this.props.mapOptions.maxZoom,
+            this.props.mapOptions.zoomFactor,
+            extent);
     };
 
     render() {

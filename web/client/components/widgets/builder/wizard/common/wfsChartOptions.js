@@ -8,6 +8,7 @@
 
 import {compose, withProps} from 'recompose';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
+import { getDefaultAggregationOperations } from '../../../../../utils/WidgetsUtils';
 import {find} from 'lodash';
 
 const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
@@ -16,14 +17,7 @@ const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});
     if (prop && (prop.localType === 'number' || prop.localType === 'int')) {
-        return [
-            {value: "Count", label: "widgets.operations.COUNT"},
-            { value: "Sum", label: "widgets.operations.SUM"},
-            { value: "Average", label: "widgets.operations.AVG"},
-            { value: "StdDev", label: "widgets.operations.STDDEV"},
-            { value: "Min", label: "widgets.operations.MIN"},
-            { value: "Max", label: "widgets.operations.MAX"}
-        ];
+        return getDefaultAggregationOperations();
     }
     return [{ value: "Count", label: "widgets.operations.COUNT"}];
 };

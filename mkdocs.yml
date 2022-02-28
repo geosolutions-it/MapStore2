@@ -9,7 +9,7 @@ theme:
     tabs: true
   logo: 'img/mapstore2-logo.png'
   company_url: 'http://www.geo-solutions.it'
-  company_contacts: 'GeoSolutions | info@geosolutionsgroup.com | US +1 (301) 337-7055 - Italy: +39 0584 962313'
+  company_contacts: 'GeoSolutions | sales@geosolutionsgroup.com '
   palette:
     primary: 'teal'
     accent: 'teal'

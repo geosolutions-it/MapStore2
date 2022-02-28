@@ -85,11 +85,11 @@ export const startEndPolylineStyle = (startPointOptions = {}, endPointOptions = 
 };
 
 const getTextStyle = (tempStyle, valueText, highlight = false) => {
-
     return new Style({
         text: new Text({
-            offsetY: -( 4 * Math.sqrt(tempStyle.fontSize)), // TODO improve this for high font values > 100px
+            offsetY: tempStyle.offsetY !== undefined ? tempStyle.offsetY : -( 4 * Math.sqrt(tempStyle.fontSize)), // TODO improve this for high font values > 100px
             textAlign: tempStyle.textAlign || "center",
+            textBaseline: tempStyle.verticalAlign || 'middle',
             text: valueText || "",
             font: tempStyle.font,
             fill: new Fill({
@@ -97,10 +97,16 @@ const getTextStyle = (tempStyle, valueText, highlight = false) => {
                 color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1)
             }),
             // halo
-            stroke: highlight ? new Stroke({
+            stroke: tempStyle.labelOutlineColor ? (
+                new Stroke({
+                    color: colorToRgbaStr(tempStyle.labelOutlineColor, tempStyle.labelOutlineOpacity || 1.0),
+                    width: tempStyle.labelOutlineWidth || 1
+                })
+            ) : (highlight ? new Stroke({
                 color: [255, 255, 255, 1],
                 width: 2
-            }) : null
+            }) : null),
+            rotation: tempStyle.rotation ? tempStyle.rotation * Math.PI / 180.0 : 0
         }),
         image: highlight ?
             new Circle({
@@ -446,7 +452,7 @@ export function getStyle(options, isDrawing = false, textValues = []) {
         style = {
             stroke: new Stroke( options.style.stroke ? options.style.stroke : {
                 color: colorToRgbaStr(options.style && options.style.color || "#0000FF", isNil(options.style.opacity) ? 1 : options.style.opacity),
-                lineDash: options.style.highlight ? [10] : [0],
+                lineDash: options.style.lineDash || (options.style.highlight ? [10] : [0]),
                 width: options.style.weight || 1
             }),
             fill: new Fill(options.style.fill ? options.style.fill : {

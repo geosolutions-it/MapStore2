@@ -291,7 +291,7 @@
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "ml": {
                 "title": "Restez au courant des derniers développements via les mailing lists",
                 "subscribe_users": "Souscrire à la liste de diffusion utilisateurs",
@@ -513,7 +513,7 @@
             "grabLayerIcon": "Attraper et déplacer la couche",
             "grabGroupIcon": "Attraper et déplacer le groupe",
             "toggleLayerVisibilityWarning": "Inverser la visibilité de la couche. Attention : la couche ne s'est pas chargée correctement",
-            "createWidget": "Créer un widget pour le couche sélectionné",
+            "createWidget": "Créer un widget pour la couche sélectionnée",
             "editLayerProperties": "Modifier les propriétés de la couche",
             "browseData": "Ouvrir la table d'attribut",
             "removeLayer": "Supprimer la couche",
@@ -655,7 +655,8 @@
             "outputFormat": "Format",
             "previewFormatUnsupported": "Format non pris en charge pour l'aperçu",
             "projection": "Système de coordonnées",
-            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran"
+            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
+            "graticule": "ajouter une grille avec des étiquettes"
         },
         "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"
@@ -1804,7 +1805,7 @@
                     "addLayer": "Ajouter une couche à la carte",
                     "useTheSelectedLayer": "Utiliser la couche sélectionnée",
                     "connectToAMap": "Se connecter à un autre widget",
-                    "connectToTheMap": "Connectez-vous à l'autre widget",
+                    "connectToTheMap": "Connectez-vous à la carte",
                     "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
                     "clearConnection": "Effacer la connexion",
                     "classAttributes": {

@@ -291,7 +291,7 @@
             "Examples": "Beispiele",
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
             "scrollTop": "An den Anfang der Seite scrollen",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "ml": {
                 "title": "Bleibe in Verbindung und auf dem Laufenden mit der Mailing Liste",
                 "subscribe_users": "Abonniere die Benutzer Mailing Liste",
@@ -694,7 +694,8 @@
             "outputFormat": "Format",
             "previewFormatUnsupported": "Nicht unterstütztes Format für die Vorschau",
             "projection": "Koordinatensystem",
-            "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte"
+            "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte",
+            "graticule": "Raster mit Etiketten hinzufügen"
         },
         "backgroundSwitcher":{
             "tooltip": "Wähle Hintergrund"
@@ -1841,7 +1842,7 @@
                     "addLayer": "Fügt der Karte eine Ebene hinzu",
                     "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
                     "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
-                    "connectToTheMap": "Stellen Sie eine Verbindung mit dem anderen Widget her",
+                    "connectToTheMap": "Verbinden Sie sich mit der Karte",
                     "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
                     "clearConnection": "Verbindung löschen",
                     "classAttributes": {

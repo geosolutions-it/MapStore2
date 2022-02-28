@@ -85,7 +85,70 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 ```
 
 ### Upgrading CesiumJS
-CesiumJS has been upgraded to version 1.42 (from 1.17), with no breaking changes, so you should replace all the instances of  `https://cesium.com/downloads/cesiumjs/releases/1.17` in your projects HTML files with `https://cesium.com/downloads/cesiumjs/releases/1.42`. The new release is needed to implement Bearer based authentication to WMS services.
+CesiumJS has been upgraded to version 1.90 (from 1.17) and included directly in the mapstore bundle as async import.
+
+Downstream project should update following configurations:
+
+- remove all executions related to the cesium library from the pom.xml
+
+```diff
+<execution>
+    <id>html, configuration files and images</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../web/client</directory>
+                <includes>
+                    <include>**/*.html</include>
+                    <include>**/*.json</include>
+                    <include>**/img/*</include>
+                    <include>product/assets/symbols/*</include>
+                    <include>**/*.less</include>
+                </includes>
+                <excludes>
+                    <exclude>node_modules/*</exclude>
+                    <exclude>node_modules/**/*</exclude>
+-                    <exclude>**/libs/Cesium/**/*</exclude>
+                    <exclude>**/test-resources/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+-<execution>
+-    <id>CesiumJS-navigation</id>
+-    <phase>process-classes</phase>
+-    <goals>
+-        <goal>copy-resources</goal>
+-    </goals>
+-    <configuration>
+-        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
+-        <encoding>UTF-8</encoding>
+-        <resources>
+-            <resource>
+-                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
+-            </resource>
+-        </resources>
+-    </configuration>
+-</execution> 
+```
+
+- remove all the external script and css related to cesium and cesium-navigation now included as packages
+
+```diff
+-<script src="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Cesium.js"></script>
+-<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Widgets/widgets.css" />
+-<script src="libs/cesium-navigation/cesium-navigation.js"></script>
+-<link rel="stylesheet" href="libs/cesium-navigation/cesium-navigation.css" />
+```
+
+- This step is needed only for custom project with a specific `publicPath` different from the default one. In this case you may need to specify what folder deliver the  cesium build ( by default `dist/cesium`). To do that, you can add the  `cesiumBaseUrl` parameter in the webpack dev and prod configs to the correct location of the cesium static assets, widgets and workers folder.
 
 ## Migration from 2021.02.01 to 2021.02.02
 ### Style parsers dynamic import

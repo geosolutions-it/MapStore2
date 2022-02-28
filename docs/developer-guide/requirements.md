@@ -51,4 +51,4 @@ In production a PostgreSQL database is recommended:
 
 | Tool     | Link                                               | Minimum | Recommended | Maximum    |
 |----------|----------------------------------------------------|---------|-------------|------------|
-| Postgres | [link](https://www.postgresql.org/)                | 9.6     | 11          | 11         |
+| Postgres | [link](https://www.postgresql.org/)                | 9.6     | 13          | 13         |

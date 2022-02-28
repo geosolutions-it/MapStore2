@@ -59,7 +59,7 @@ Once the *Edit mode* is enabled it is possible to create a new feature by clicki
 To edit attributes MapStore provides some input fields based on the attribute type, that forces the user to insert a valid value. If the attribute is of type `text`, MapStore will also show a dropdown menu with the list of the existing values for that attribute to allow a quick selection.
 
 !!! note
-    the dropdown menu is available only if the server provides the WPS process `gs:PageUnique`
+    the dropdown menu is available only if the server provides the WPS process `gs:PagedUnique`
 
 The *Missing geometry* exclamation point <img src="../img/button/missing-geometry-exclamation-point.jpg" class="ms-docbutton"/> in the second column of the *Attribute Table* means that the feature doesn't have a geometry yet. It's possible to add it later or draw it on the map before saving:
 
