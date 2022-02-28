@@ -25,8 +25,34 @@ export const defaultColorGenerator = (total, colorOptions) => {
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
 
-const getClassificationColors = (classifications, colorCategories, customColorEnabled, autoColorOptions) => (
-    classifications.map(item => {
+/**
+ * Currently charts classification can be of three types
+ * 'value' and 'range' for custom color coded charts
+ * 'default' for charts that are not custom classified
+ * if all values that determine the classification are there then
+ * the chart is custmo classified, the custom classification of the
+ * chart is classificationAttribute type dependent
+ * @param {string} classificationAttr the attribute to base the custom color coded classification
+ * @param {string} classificationAttributeType the type of the attribute to base the custom color coded classification
+ * @param {object} autoColorOptions object defining the default custom color HSV values
+ * @param {boolean} customColorEnabled if the user selected a custom default color
+ */
+const getChartClassificationType = (classificationAttr, classificationAttributeType, autoColorOptions, customColorEnabled) => {
+    if (every([classificationAttr, autoColorOptions?.classification || autoColorOptions?.rangeClassification, customColorEnabled], Boolean)) {
+        return classificationAttributeType === 'string' ? 'value' : 'range';
+    } return 'default';
+};
+
+/**
+ * @param {string[]} values the values of the chart to be color-coded ["California", "Ohio", ...]
+ * @param {object[]} colorCategories mapping classifiedValues => color [{value: "California", color: "#ff0000"}, ...]
+ * @param {boolean} customColorEnabled if the user selected a custom default color
+ * @param {*} autoColorOptions default values and colors as fall back if assigned custom color is not found
+ * @returns {string[]} Hex colors for every single value in the rangeClassifications array to be mapped to
+ * a chart trace color by plotly ["#ff0000", "#00ff00"]
+ */
+const getClassificationColors = (values, colorCategories, customColorEnabled, autoColorOptions) => (
+    values.map(item => {
         if (isString(item) || isNumber(item)) {
             const matchedColor = colorCategories.filter(colorCategory => colorCategory.value === item)[0];
             // color is exactly matched to a user defined class/color
@@ -40,8 +66,16 @@ const getClassificationColors = (classifications, colorCategories, customColorEn
     })
 );
 
-const getRangeClassificationColors = (rangeClassifications, colorCategories, customColorEnabled, autoColorOptions) => {
-    return rangeClassifications.map(item => {
+/**
+ * @param {number[]} values the values of the chart to be color-coded [123.56, 24.76, ...]
+ * @param {object[]} colorCategories mapping classifiedValues => color [{min: 123.56, max: 24.76, color: "#ff0000"}, ...]
+ * @param {boolean} customColorEnabled if the user selected a custom default color
+ * @param {*} autoColorOptions default values and colors as fall back if assigned custom color is not found
+ * @returns {string[]} Hex colors for every single value in the rangeClassifications array to be mapped to
+ * a chart trace color by plotly ["#ff0000", "#00ff00"]
+ */
+const getRangeClassificationColors = (values, colorCategories, customColorEnabled, autoColorOptions) => {
+    return values.map(item => {
         // if for some reason (error) item is not a number fall back to default color
         if (!isNumber(item)) {
             return defaultColorGenerator(1, COLOR_DEFAULTS)[0];
@@ -56,6 +90,40 @@ const getRangeClassificationColors = (rangeClassifications, colorCategories, cus
     });
 };
 
+/**
+ * @param {string} classificationType the type of the classification attribute
+ * @param {string[] | number[]} values the values of the chart to be color-coded
+ * ["California", "Ohio", ...] or [123.45, 14.45, ...]
+ * @param {object} autoColorOptions object defining the default custom color HSV values
+ * @param {boolean} customColorEnabled if the user selected a custom default color
+ */
+const getClassification = (classificationType, values, autoColorOptions, customColorEnabled) => {
+    // if chart is absolute-values/category classified
+    const colorCategories = classificationType === 'value' ? autoColorOptions?.classification :
+    // if chart is range classified
+        classificationType === 'range' ? autoColorOptions?.rangeClassification :
+        // chart may not be classified or error
+            [] || [];
+
+    // if chart is absolute-values/category classified
+    const classificationColors = classificationType === 'value' ? getClassificationColors(values, colorCategories, customColorEnabled, autoColorOptions) || [] :
+        // if chart is range classified
+        classificationType === 'range' ? getRangeClassificationColors(values, colorCategories, customColorEnabled, autoColorOptions) || [] :
+        // chart may not be classified or error
+            [];
+
+    return { colorCategories, classificationColors };
+};
+
+/**
+ * Maps string values of the color coded classification to its respective label
+ * the label, if specified, will be shown on the chart legend
+ * @param {string} value the classification value to be labelled
+ * @param {object[]} colorCategories mapping objects value => label [{..., value: "S Atl", title: "South Atlantic"}, ...]
+ * @param {string} defaultClassLabel the default label, if specified, to be shown in case there is no mapping for the value
+ * @param {string} type the type of the chart ("pie" or "bar")
+ * @returns {string} the assigned label to the classified value, or empty string
+ */
 const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
     let displayValue = defaultClassLabel;
     if (includes(colorCategories.map(colorCat => colorCat.value), value)) {
@@ -68,6 +136,18 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
     return displayValue.trim();
 };
 
+/**
+ * Maps numeric values of the color coded classification to its respective label
+ * labels are assigned if the value falls within any min/max user defined classification
+ * the label, if specified, will be shown on the chart legend
+ * @param {number} value the classification value to be labelled
+ * @param {object[]} colorCategories mapping objects value => label [{..., min: 100, max: 200, title: "Between 100 and 200"}, ...]
+ * @param {string} defaultClassLabel the default label, if specified, to be shown in case there is no mapping for the value
+ * @param {string} xValue the x value in the chart, to be shown as fall back in case value is not classfied nor defaultClassLabel exists
+ * @param {string} rangeClassAttribute the attributed name used to color code the chart, to be used if the value falls within a classification
+ * range but no label exists for such classification
+ * @returns {string} the assigned label to the classified value, or empty string
+ */
 const getRangeClassLabel = (value, colorCategories, defaultClassLabel, xValue, rangeClassAttribute) => {
     const rangeClassItem = colorCategories.filter(colorCategory => {
         return value >= colorCategory.min && value < colorCategory.max;
@@ -138,23 +218,12 @@ function getData({
     yAxisLabel,
     autoColorOptions,
     customColorEnabled,
-    isClassifiedChart,
-    isRangeClassChart
+    classficationType
 }) {
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
     const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
-    const colorCategories =
-        isClassifiedChart ? autoColorOptions?.classification || [] :
-            isRangeClassChart ? autoColorOptions?.rangeClassification || [] :
-                [];
-    const classificationColors =
-    // if chart is absolute-values/category classified
-    isClassifiedChart ? getClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [] :
-        // if chart is range classified
-        isRangeClassChart ? getRangeClassificationColors(classifications, colorCategories, customColorEnabled, autoColorOptions) || [] :
-        // chart may not be classified or error
-            [];
+    const { classificationColors, colorCategories } = getClassification(classficationType, classifications, autoColorOptions, customColorEnabled);
 
     const { defaultClassLabel = ''} = autoColorOptions;
 
@@ -168,10 +237,12 @@ function getData({
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y
         };
-        if (isClassifiedChart && classificationColors.length) {
+        /* pie chart is classified colored */
+        if (classficationType !== 'default' && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
                 const groupByValue = x[index];
-                const customLabel = getLegendLabel(item, colorCategories, defaultClassLabel, type);
+                const customLabel =  classficationType === 'value' ? getLegendLabel(item, colorCategories, defaultClassLabel, type) :
+                    getRangeClassLabel(item, colorCategories, defaultClassLabel, groupByValue, classificationAttr);
                 if (!customLabel) {
                     return groupByValue;
                 }
@@ -184,22 +255,8 @@ function getData({
             };
             return pieChartTrace;
         }
-        if (isRangeClassChart && classificationColors.length) {
-            const legendLabels = classifications.map((item, index) => {
-                const groupByValue = x[index];
-                const customLabel = getRangeClassLabel(item, colorCategories, defaultClassLabel, groupByValue, classificationAttr);
-                if (!customLabel) {
-                    return groupByValue;
-                }
-                return customLabel.replace('${groupByValue}', groupByValue);
-            });
-            pieChartTrace = {
-                ...pieChartTrace,
-                labels: legendLabels,
-                marker: {colors: classificationColors}
-            };
-            return pieChartTrace;
-        } return {
+        /** Pie chart is evenly colored */
+        return {
             ...(yDataKey && { legendgroup: yDataKey }),
             ...pieChartTrace,
             labels: x,
@@ -213,9 +270,11 @@ function getData({
         }
         // common bar chart properties
         let barChartTrace = { type };
-        /** Bar chart is absolute value classified coloured */
-        if (isClassifiedChart && classificationColors.length) {
-            const legendLabels = classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type));
+
+        /** Bar chart is classified colored*/
+        if (classficationType !== 'default' && classificationColors.length) {
+            const legendLabels = classficationType === 'value' ? classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type)) :
+                classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel, yAxisLabel || yDataKey, classificationAttr));
             const filteredLegendLabels = union(legendLabels);
             const customLabels = filteredLegendLabels.reduce((acc, cur) => {
                 return [
@@ -238,32 +297,7 @@ function getData({
             return barChartTraces;
         }
 
-        /** Bar chart is range values classified coloured*/
-        if (isRangeClassChart && classificationColors.length) {
-            const legendLabels = classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel, yAxisLabel || yDataKey, classificationAttr));
-            const filteredLegendLabels = union(legendLabels);
-            const customLabels = filteredLegendLabels.reduce((acc, cur) => {
-                return [
-                    ...acc,
-                    ...[cur ? cur.replace('${legendValue}', yAxisLabel || yDataKey || '') : yAxisLabel || yDataKey]
-                ];
-            }, []);
-            const [groupedColors, groupedXValues, groupedYValues] = getGroupedTraceValues(legendLabels, filteredLegendLabels, [classificationColors, x, y]);
-            const barChartTraces = customLabels.map((item, index) => {
-                const trace = {
-                    ...barChartTrace,
-                    x: groupedXValues[index],
-                    y: groupedYValues[index],
-                    name: item,
-                    marker: { color: groupedColors[index] },
-                    hovertemplate: `${yAxisOpts?.tickPrefix ?? ""}%{y:${yAxisOpts?.format ?? 'g'}}${yAxisOpts?.tickSuffix ?? ""}<extra>${item}</extra>`
-                };
-                return trace;
-            });
-            return barChartTraces;
-        }
-
-        /** Bar chart is evenly coloured */
+        /** Bar chart is evenly colored */
         barChartTrace = {
             ...barChartTrace,
             x: x,
@@ -370,8 +404,7 @@ export const toPlotly = (props) => {
     const classificationAttr = classifications?.dataKey;
     const { classificationAttributeType } = props.options || {};
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
-    const isClassifiedChart = every([classificationAttr, classificationAttributeType === 'string', autoColorOptions?.classification, customColorEnabled], Boolean);
-    const isRangeClassChart = every([classificationAttr, classificationAttributeType === 'number', autoColorOptions?.rangeClassification, customColorEnabled], Boolean);
+    const classficationType = getChartClassificationType(classificationAttr, classificationAttributeType, autoColorOptions, customColorEnabled);
     return {
         layout: {
             showlegend: legend,
@@ -387,7 +420,7 @@ export const toPlotly = (props) => {
             hovermode: 'x unified'
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, isClassifiedChart, isRangeClassChart });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, classficationType });
             const chartData = allData ? allData?.x?.map((axis, index) => {
                 return { xAxis: axis, yAxis: allData.y[index]};
             }) : {};

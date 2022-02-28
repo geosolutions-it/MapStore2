@@ -82,25 +82,23 @@ const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
 
 /** Backup to class value (unique) if label (title) is not provided */
 const formatAutoColorOptions = (classification, attributeType) => (
-    classification.reduce((acc, curr) => ([
-        ...acc,
+    classification.map( classItem => (
         {
-            id: uuid.v1(),
-            ...( {title: curr.title ?? curr.unique }),
-            color: curr.color,
+            id: classItem.id || uuid.v1(),
+            ...( {title: classItem.title ?? classItem.unique }),
+            color: classItem.color,
             // if attribute is a string set value and label
             ...(attributeType === 'string' && {
-                value: curr.unique,
-                unique: curr.unique
+                value: classItem.unique,
+                unique: classItem.unique
             }),
             // if attribute is a number set min/max in range
             ...(attributeType === 'number' && {
-                max: curr.max ?? 0,
-                min: curr.min ?? 0
+                max: classItem.max ?? 0,
+                min: classItem.min ?? 0
             })
         }
-    ]
-    ), [])
+    ))
 );
 
 export default ({
@@ -128,7 +126,7 @@ export default ({
     const { classification = CLASSIFIED_COLORS } = data?.autoColorOptions || {};
     const { rangeClassification = CLASSIFIED_RANGE_COLORS } = data?.autoColorOptions || {};
     /** we keep the two classification types separated in state but color ramp only gets the selected type one */
-    const currentTypeClassification = classificationAttributeType === 'number' ? rangeClassification : classification;
+    const currentClassificationType = classificationAttributeType === 'number' ? rangeClassification : classification;
     const { defaultClassLabel = '' } = data?.autoColorOptions || {};
     const defaultCustomColor = data?.autoColorOptions?.defaultCustomColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1';
     const discardEmptyClasses = (classifications) => {
@@ -250,8 +248,8 @@ export default ({
                                     )}
                                     <Col xs={customColor ? 10 : 12} className={classNames({ 'custom-color': customColor })}>
                                         <ColorRamp
-                                            items={getColorRangeItems(data.type, currentTypeClassification, classificationAttribute, defaultCustomColor)}
-                                            value={head(getColorRangeItems(data.type, currentTypeClassification, classificationAttribute, defaultCustomColor).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
+                                            items={getColorRangeItems(data.type, currentClassificationType, classificationAttribute, defaultCustomColor)}
+                                            value={head(getColorRangeItems(data.type, currentClassificationType, classificationAttribute, defaultCustomColor).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                             samples={data.type === "pie" ? 5 : 1}
                                             onChange={v => {
                                                 onChange("autoColorOptions", {
