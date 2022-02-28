@@ -160,6 +160,12 @@ class SharePanel extends React.Component {
             let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
             settings.markerEnabled ? addMarker(newPoint) : hideMarker();
         }
+        if (this.props.mapType === 'cesium' && this.props.settings.markerEnabled) {
+            this.props.onUpdateSettings({
+                ...this.props.settings,
+                markerEnabled: !this.props.settings.markerEnabled
+            });
+        }
     }
 
     initializeDefaults = (props) => {
@@ -281,6 +287,10 @@ class SharePanel extends React.Component {
         this.props.updateMapView(update);
     }
 
+    setValueBoundaries = (value, min, max) => {
+        return  value && ((value < min || value > max) ? min : value);
+    }
+
     renderAdvancedSettings = () => {
         return (
             <SwitchPanel
@@ -383,9 +393,12 @@ class SharePanel extends React.Component {
                                         name={"heading"}
                                         min={0}
                                         max={360}
-                                        value={convertRadianToDegrees(this.state?.heading) || convertRadianToDegrees(this.props?.viewerOptions?.orientation?.heading)}
+                                        value={
+                                            (this.state?.heading && this.setValueBoundaries(convertRadianToDegrees(this.state.heading), 0, 360)) ||
+                                            (this.props?.viewerOptions?.orientation?.heading && this.setValueBoundaries(convertRadianToDegrees(this.props.viewerOptions.orientation.heading), 0, 360))
+                                        }
                                         onChange={({target})=>{
-                                            const heading = convertDegreesToRadian(target.value);
+                                            let heading = convertDegreesToRadian(target.value);
                                             this.setState({...this.state, heading});
                                             this.updateMapView('heading', heading);
                                         }}/>
@@ -400,7 +413,10 @@ class SharePanel extends React.Component {
                                         name={"roll"}
                                         min={-90}
                                         max={90}
-                                        value={convertRadianToDegrees(this.state.roll) || convertRadianToDegrees(this.props?.viewerOptions?.orientation?.roll)}
+                                        value={
+                                            (this.state?.roll && this.setValueBoundaries(convertRadianToDegrees(this.state.roll), -90, 90)) ||
+                                            (this.props?.viewerOptions?.orientation?.roll && this.setValueBoundaries(convertRadianToDegrees(this.props.viewerOptions.orientation.roll), -90, 90))
+                                        }
                                         onChange={({target})=>{
                                             const roll = convertDegreesToRadian(target.value);
                                             this.setState({...this.state, roll});
@@ -417,7 +433,11 @@ class SharePanel extends React.Component {
                                         min={-90}
                                         max={90}
                                         name={"pitch"}
-                                        value={convertRadianToDegrees(this.state?.pitch) || convertRadianToDegrees(this.props?.viewerOptions?.orientation?.pitch)}
+                                        value={
+                                            (this.state?.pitch && this.setValueBoundaries(convertRadianToDegrees(this.state.pitch), -90, 90)) ||
+                                            (this.props?.viewerOptions?.orientation?.pitch &&
+                                                this.setValueBoundaries(convertRadianToDegrees(this.props?.viewerOptions?.orientation?.pitch), -90, 90))
+                                        }
                                         onChange={({target})=>{
                                             const pitch = convertDegreesToRadian(target.value);
                                             this.setState({...this.state, pitch});

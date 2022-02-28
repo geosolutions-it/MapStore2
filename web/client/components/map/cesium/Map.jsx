@@ -50,7 +50,7 @@ class CesiumMap extends React.Component {
         registerHooks: PropTypes.bool,
         hookRegister: PropTypes.object,
         viewerOptions: PropTypes.object,
-        orientate: PropTypes.object
+        orientate: PropTypes.object,
         zoomControl: PropTypes.bool
     };
 

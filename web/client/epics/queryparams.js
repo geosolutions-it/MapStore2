@@ -200,7 +200,10 @@ export const checkMapOrientation = (action$, store) =>
             const state = store.getState();
             const search = get(state, 'router.location.search') || '';
             const { query = {} } = url.parse(search, true) || {};
-            return !isEmpty(query) ? Rx.Observable.of(orientateMap(query)) : Rx.Observable.empty();
+            if (!search.includes('bbox')) {
+                return !isEmpty(query) ? Rx.Observable.of(orientateMap(query)) : Rx.Observable.empty();
+            }
+            return Rx.Observable.empty();
         });
 
 export default {
