@@ -1048,9 +1048,9 @@
             "roll": "Ângulo de rolamento",
             "pitch": "Ângulo de inclinação",
             "zoomToolTip": "Min: 0 e Max: 35",
-            "headingToolTip": "Min: 0 e Max: 360",
-            "rollToolTip": "Min: -90 e Max: 90",
-            "pitchToolTip": "Min: -90 e Max: 90"
+            "headingToolTip": "Min: 0° e Max: 360°",
+            "rollToolTip": "Min: -90° e Max: 90°",
+            "pitchToolTip": "Min: -90° e Max: 90°"
         },
         "snapshot": {
             "title": "Snapshot Preview",

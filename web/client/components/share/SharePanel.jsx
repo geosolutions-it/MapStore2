@@ -27,7 +27,7 @@ import {
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange, isEmpty } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
-import { getLonLatFromPoint } from '../../utils/CoordinatesUtils';
+import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
@@ -383,9 +383,9 @@ class SharePanel extends React.Component {
                                         name={"heading"}
                                         min={0}
                                         max={360}
-                                        value={this.state?.heading || this.props?.viewerOptions?.orientation?.heading}
+                                        value={convertRadianToDegrees(this.state?.heading) || convertRadianToDegrees(this.props?.viewerOptions?.orientation?.heading)}
                                         onChange={({target})=>{
-                                            const heading = target.value;
+                                            const heading = convertDegreesToRadian(target.value);
                                             this.setState({...this.state, heading});
                                             this.updateMapView('heading', heading);
                                         }}/>
@@ -400,9 +400,9 @@ class SharePanel extends React.Component {
                                         name={"roll"}
                                         min={-90}
                                         max={90}
-                                        value={this.state.roll || this.props?.viewerOptions?.orientation?.roll}
+                                        value={convertRadianToDegrees(this.state.roll) || convertRadianToDegrees(this.props?.viewerOptions?.orientation?.roll)}
                                         onChange={({target})=>{
-                                            const roll = target.value;
+                                            const roll = convertDegreesToRadian(target.value);
                                             this.setState({...this.state, roll});
                                             this.updateMapView('roll', roll);
                                         }}/>
@@ -417,9 +417,9 @@ class SharePanel extends React.Component {
                                         min={-90}
                                         max={90}
                                         name={"pitch"}
-                                        value={this.state?.pitch || this.props?.viewerOptions?.orientation?.pitch}
+                                        value={convertRadianToDegrees(this.state?.pitch) || convertRadianToDegrees(this.props?.viewerOptions?.orientation?.pitch)}
                                         onChange={({target})=>{
-                                            const pitch = target.value;
+                                            const pitch = convertDegreesToRadian(target.value);
                                             this.setState({...this.state, pitch});
                                             this.updateMapView('pitch', pitch);
                                         }}/>

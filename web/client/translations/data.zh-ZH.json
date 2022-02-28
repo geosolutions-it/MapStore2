@@ -1027,9 +1027,9 @@
             "roll": "Cè qīngjiǎo",
             "pitch": "Fǔyǎng jiǎo",
             "zoomToolTip": "Zuìxiǎo zhí:1 Hé zuìdà zhí:35",
-            "headingToolTip": "Zuìxiǎo zhí:0 Hé zuìdà zhí:360",
-            "rollToolTip": "Zuìxiǎo zhí:-90 Hé zuìdà zhí:90",
-            "pitchToolTip": "Zuìxiǎo zhí:-90 Hé zuìdà zhí:90"
+            "headingToolTip": "Zuìxiǎo zhí:0° Hé zuìdà zhí:360°",
+            "rollToolTip": "Zuìxiǎo zhí:-90° Hé zuìdà zhí:90°",
+            "pitchToolTip": "Zuìxiǎo zhí:-90° Hé zuìdà zhí:90°"
         },
         "snapshot": {
             "title": "Snapshot Preview",

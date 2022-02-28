@@ -1071,9 +1071,9 @@
             "roll": "Kut kotrljanja",
             "pitch": "Kut nagiba",
             "zoomToolTip": "Min: 0 i Max: 35",
-            "headingToolTip": "Min: 0 i Max: 360",
-            "rollToolTip": "Min: -90 i Max: 90",
-            "pitchToolTip": "Min: -90 i Max: 90"
+            "headingToolTip": "Min: 0° i Max: 360°",
+            "rollToolTip": "Min: -90° i Max: 90°",
+            "pitchToolTip": "Min: -90° i Max: 90°"
         },
         "snapshot": {
             "title": "Pregled snimke",
