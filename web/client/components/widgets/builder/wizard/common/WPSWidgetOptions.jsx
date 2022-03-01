@@ -64,7 +64,7 @@ const COLORS = [{
 }];
 
 const CLASSIFIED_COLORS = [{id: uuid.v1(), title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}];
-const CLASSIFIED_RANGE_COLORS = [{id: uuid.v1(), title: '>= 0 AND <0', color: generateRandomHexColor(), type: 'Polygon', min: 0, max: 0}];
+const CLASSIFIED_RANGE_COLORS = [{id: uuid.v1(), title: '', color: generateRandomHexColor(), type: 'Polygon', min: 0, max: 0}];
 
 const getConfirmModal = (show, onClose, onConfirm) => (
     <ConfirmModal show={show} onClose={onClose} onConfirm={onConfirm}>

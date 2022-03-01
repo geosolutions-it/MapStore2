@@ -238,7 +238,8 @@ function getData({
             hovertemplate: `%{label}<br>${yDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
             type,
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
-            values: y
+            values: y,
+            pull: 0.005
         };
         /* pie chart is classified colored */
         if (classficationType !== 'default' && classificationColors.length) {
@@ -263,8 +264,7 @@ function getData({
             ...(yDataKey && { legendgroup: yDataKey }),
             ...pieChartTrace,
             labels: x,
-            ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {}),
-            pull: 0.005
+            ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
         };
 
     case 'bar':

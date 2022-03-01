@@ -160,7 +160,8 @@ describe('WPSWidgetOptions component', () => {
                     name: 'global.colors.custom'
                 },
                 options: {
-                    classificationAttribute: 'class2'
+                    classificationAttribute: 'class2',
+                    classificationAttributeType: 'string'
                 }
             }}
             onChange={actions.onChange}
@@ -210,7 +211,8 @@ describe('WPSWidgetOptions component', () => {
                     name: 'global.colors.custom'
                 },
                 options: {
-                    classificationAttribute: 'class2'
+                    classificationAttribute: 'class2',
+                    classificationAttributeType: 'string'
                 }
             }}
             onChange={actions.onChange}
@@ -261,7 +263,8 @@ describe('WPSWidgetOptions component', () => {
                     name: 'global.colors.custom'
                 },
                 options: {
-                    classificationAttribute: 'class2'
+                    classificationAttribute: 'class2',
+                    classificationAttributeType: 'string'
                 }
             }}
             onChange={actions.onChange}
