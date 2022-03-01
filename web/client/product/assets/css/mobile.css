@@ -24,3 +24,7 @@
 .ol-attribution.ol-uncollapsible {
     background-color: transparent;
 }
+
+.ms-primary.ms-header {
+    box-shadow: none;
+}

@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import {getFormatForResponse} from '../IdentifyUtils';
+import { getFormatForResponse } from '../IdentifyUtils';
 import { INFO_FORMATS } from '../FeatureInfoUtils';
 
 describe('IdentifyUtils', () => {
@@ -18,4 +18,3 @@ describe('IdentifyUtils', () => {
         expect(getFormatForResponse({ queryParams: { outputFormat: INFO_FORMATS.JSON } })).toBe(INFO_FORMATS.JSON);
     });
 });
-

@@ -62,12 +62,3 @@
     margin-right: 10px;
     display: inline-block;
 }
-
-.mapstore-mobile-navbar-container button {
-    height: 40px;
-    width: 40px;
-}
-
-.mapstore-mobile-navbar-container button span.glyphicon {
-    font-size: 15.6px;
-}

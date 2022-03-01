@@ -40,8 +40,7 @@ class DefaultViewer extends React.Component {
         renderValidOnly: PropTypes.bool,
         loaded: PropTypes.bool,
         isMobile: PropTypes.bool,
-        disableInfoAlert: PropTypes.bool,
-        localConfig: PropTypes.object
+        disableInfoAlert: PropTypes.bool
     };
 
     static defaultProps = {
