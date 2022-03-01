@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
-import { getMapZoom } from '../../utils/PrintUtils';
+import { getMapZoom, getResolutionMultiplier } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
 import Button from '../misc/Button';
 import isNil from 'lodash/isNil';
@@ -39,7 +39,8 @@ class MapPreview extends React.Component {
         layout: PropTypes.string,
         layoutSize: PropTypes.object,
         useFixedScales: PropTypes.bool,
-        env: PropTypes.object
+        env: PropTypes.object,
+        onLoadingMapPlugins: PropTypes.func
     };
 
     static defaultProps = {
@@ -54,21 +55,39 @@ class MapPreview extends React.Component {
         height: 270,
         enableRefresh: true,
         enableScalebox: true,
-        printRatio: 96.0 / 72.0,
-        useFixedScales: false
+        useFixedScales: false,
+        onLoadingMapPlugins: () => {}
     };
 
+    state = {
+        mapTypeLoaded: false
+    }
+
     UNSAFE_componentWillMount() {
-        const mapComponents = require('../map/' + this.props.mapType + '/index').default;
-        PMap = mapComponents.LMap;
-        Layer = mapComponents.LLayer;
-        Feature = mapComponents.Feature;
-        require('../map/' + this.props.mapType + '/plugins/index').default;
+        this._isMounted = true;
+        this.props.onLoadingMapPlugins(true);
+        Promise.all([
+            import('../map/' + this.props.mapType + '/index'),
+            import('../map/' + this.props.mapType + '/plugins/index')
+        ]).then(([mod]) => {
+            if (this._isMounted) {
+                const mapComponents = mod.default;
+                PMap = mapComponents.LMap;
+                Layer = mapComponents.LLayer;
+                Feature = mapComponents.Feature;
+                this.setState({ mapTypeLoaded: true });
+                this.props.onLoadingMapPlugins(false, this.props.mapType);
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     getRatio = () => {
         if (this.props.width && this.props.layoutSize && this.props.resolutions) {
-            return this.props.layoutSize.width / this.props.width * this.props.printRatio;
+            return getResolutionMultiplier(this.props.layoutSize.width, this.props.width, this.props.printRatio);
         }
         return 1;
     };
@@ -80,18 +99,6 @@ class MapPreview extends React.Component {
         return this.props.resolutions;
     };
 
-    adjustResolution = (layer) => {
-        const ratio = this.getRatio();
-        const dpi = Math.round(96.0 / ratio);
-        return assign({}, layer, {
-            ...(!isNil(layer?.minResolution) && { minResolution: layer.minResolution * ratio }),
-            ...(!isNil(layer?.maxResolution) && { maxResolution: layer.maxResolution * ratio }),
-            params: assign({}, layer.params, {
-                "format_options": "dpi:" + dpi,
-                "MAP.RESOLUTION": dpi
-            })
-        });
-    };
     renderLayerContent = (layer, projection) => {
         if (layer.features && layer.type === "vector") {
             return layer.features.map( (feature) => {
@@ -115,6 +122,11 @@ class MapPreview extends React.Component {
     };
 
     render() {
+
+        if (!this.state.mapTypeLoaded) {
+            return null;
+        }
+
         const style = assign({}, this.props.style, {
             width: this.props.width + "px",
             height: this.props.height + "px"
@@ -139,7 +151,7 @@ class MapPreview extends React.Component {
                 mapOptions={mapOptions}
             >
                 {this.props.layers.map((layer, index) =>
-                    (<Layer key={layer.id || layer.name} position={index} type={layer.type}
+                    (<Layer key={layer.id || layer.name} position={index} type={layer.type} srs={projection}
                         options={assign({}, this.adjustResolution(layer), {srs: projection})}
                         env={this.props.env}
                     >
@@ -157,6 +169,19 @@ class MapPreview extends React.Component {
             </div>
             : null;
     }
+
+    adjustResolution = (layer) => {
+        const ratio = this.getRatio();
+        const dpi = Math.round(96.0 / ratio);
+        return assign({}, layer, {
+            ...(!isNil(layer?.minResolution) && { minResolution: layer.minResolution * ratio }),
+            ...(!isNil(layer?.maxResolution) && { maxResolution: layer.maxResolution * ratio }),
+            params: assign({}, layer.params, {
+                "format_options": "dpi:" + dpi,
+                "MAP.RESOLUTION": dpi
+            })
+        });
+    };
 }
 
 export default MapPreview;

@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import CesiumMap from '../Map';
 import CesiumLayer from '../Layer';
 import expect from 'expect';
-import Cesium from '../../../../libs/cesium';
+import * as Cesium from 'cesium';
 import {
     getHook,
     ZOOM_TO_EXTENT_HOOK,
@@ -21,8 +21,6 @@ import {
 
 import '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
-
-window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 
 describe('CesiumMap', () => {
 
@@ -142,21 +140,25 @@ describe('CesiumMap', () => {
 
         const cesiumMap = map.map;
         cesiumMap.camera.moveEnd.addEventListener(() => {
-            // check arguments
-            expect(spy.calls[0].arguments.length).toEqual(8);
-            expect(spy.calls.length).toBe(expectedCalls);
-            // check camera moved
-            expect(Math.round(spy.calls[0].arguments[0].y * precision) / precision).toBe(30);
-            expect(Math.round(spy.calls[0].arguments[0].x * precision) / precision).toBe(20);
-            expect(spy.calls[0].arguments[1]).toEqual(5);
+            try {
+                // check arguments
+                expect(spy.calls[0].arguments.length).toEqual(8);
+                expect(spy.calls.length).toBe(expectedCalls);
+                // check camera moved
+                expect(Math.round(spy.calls[0].arguments[0].y * precision) / precision).toBe(30);
+                expect(Math.round(spy.calls[0].arguments[0].x * precision) / precision).toBe(20);
+                expect(spy.calls[0].arguments[1]).toEqual(5);
 
-            expect(spy.calls[0].arguments[6].orientation.heading).toBe(1);
+                expect(spy.calls[0].arguments[6].orientation.heading).toBe(1);
 
-            for (let c = 0; c < spy.calls.length; c++) {
-                expect(spy.calls[c].arguments[2].bounds).toExist();
-                expect(spy.calls[c].arguments[2].crs).toExist();
-                expect(spy.calls[c].arguments[3].height).toExist();
-                expect(spy.calls[c].arguments[3].width).toExist();
+                for (let c = 0; c < spy.calls.length; c++) {
+                    expect(spy.calls[c].arguments[2].bounds).toExist();
+                    expect(spy.calls[c].arguments[2].crs).toExist();
+                    expect(spy.calls[c].arguments[3].height).toExist();
+                    expect(spy.calls[c].arguments[3].width).toExist();
+                }
+            } catch (e) {
+                done(e);
             }
             done();
 
