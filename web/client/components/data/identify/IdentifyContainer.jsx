@@ -17,7 +17,7 @@ import GeocodeViewer from './GeocodeViewer';
 import ResizableModal from '../../misc/ResizableModal';
 import Portal from '../../misc/Portal';
 import Coordinate from './coordinates/Coordinate';
-import { displayByLocalConfig, responseValidForEdit } from '../../../utils/IdentifyUtils';
+import { responseValidForEdit } from '../../../utils/IdentifyUtils';
 import LayerSelector from './LayerSelector';
 
 /**
@@ -70,7 +70,8 @@ export default props => {
         loaded,
         validator = () => null,
         toggleHighlightFeature = () => {},
-        localConfig
+        disableCoordinatesRow,
+        disableInfoAlert
     } = props;
     const latlng = point && point.latlng || null;
 
@@ -145,7 +146,7 @@ export default props => {
                             />
                         </div>
                     </Row>,
-                    displayByLocalConfig(localConfig, 'mobile', 'Identify', 'showNotifications') &&
+                    !disableCoordinatesRow &&
                     (<Row className="coordinates-edit-row">
                         <span className="identify-icon glyphicon glyphicon-point"/>
                         <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>
@@ -181,6 +182,7 @@ export default props => {
                     responses={responses}
                     requests={requests}
                     showEmptyMessageGFI={showEmptyMessageGFI}
+                    disableInfoAlert={disableInfoAlert}
                     {...viewerOptions}/>
             </DockablePanel>
             <Portal>

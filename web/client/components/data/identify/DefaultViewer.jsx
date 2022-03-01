@@ -15,7 +15,7 @@ import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
 import ViewerPage from './viewers/ViewerPage';
 import { isEmpty, reverse, startsWith } from 'lodash';
-import { displayByLocalConfig, getFormatForResponse } from '../../../utils/IdentifyUtils';
+import { getFormatForResponse } from '../../../utils/IdentifyUtils';
 
 class DefaultViewer extends React.Component {
     static propTypes = {
@@ -40,6 +40,7 @@ class DefaultViewer extends React.Component {
         renderValidOnly: PropTypes.bool,
         loaded: PropTypes.bool,
         isMobile: PropTypes.bool,
+        disableInfoAlert: PropTypes.bool,
         localConfig: PropTypes.object
     };
 
@@ -63,7 +64,8 @@ class DefaultViewer extends React.Component {
         onNext: () => {},
         onPrevious: () => {},
         setIndex: () => {},
-        isMobile: false
+        isMobile: false,
+        disableInfoAlert: false
     };
 
     shouldComponentUpdate(nextProps) {
@@ -110,7 +112,7 @@ class DefaultViewer extends React.Component {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
             });
-            return this.props.showEmptyMessageGFI && displayByLocalConfig(this.props.localConfig, 'mobile', 'Identify', 'showNotifications') ? (
+            return this.props.showEmptyMessageGFI && !this.props.disableInfoAlert ? (
                 <Alert bsStyle={"info"}>
                     <Message msgId={"noInfoForLayers"} />
                     <b>{titles.join(', ')}</b>
