@@ -287,7 +287,7 @@ var Api = {
                                                 }
                                             }
                                             if (!_dcRef) {
-                                                _dcRef = dc.references;
+                                                _dcRef = dc.references.length > 0 ? dc.references : dc.URI;
                                             }
                                             obj.dc = dc;
                                         }
@@ -295,7 +295,7 @@ var Api = {
                                     }
                                 }
                                 result.records = records;
-                                const {value: _url} = _dcRef?.find(t=> t.scheme === 'OGC:WMS') || {}; // Get WMS URL from references
+                                const { value: _url } = _dcRef?.find(t => t.scheme === 'OGC:WMS' || t.protocol === 'OGC:WMS') || {}; // Get WMS URL from references
                                 const [parsedUrl] = _url && _url.split('?') || [];
                                 return addCapabilitiesToRecords(parsedUrl, result);
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
