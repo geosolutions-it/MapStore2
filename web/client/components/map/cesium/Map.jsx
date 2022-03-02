@@ -28,7 +28,7 @@ import {
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import assign from 'object-assign';
-import { throttle } from 'lodash';
+import { throttle, isEqual } from 'lodash';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -50,6 +50,7 @@ class CesiumMap extends React.Component {
         registerHooks: PropTypes.bool,
         hookRegister: PropTypes.object,
         viewerOptions: PropTypes.object,
+        orientate: PropTypes.object,
         zoomControl: PropTypes.bool
     };
 
@@ -122,8 +123,8 @@ class CesiumMap extends React.Component {
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
         this.subscribeClickEvent(map);
-        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
+        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
                 this.props.center.x,
@@ -152,6 +153,24 @@ class CesiumMap extends React.Component {
             this._updateMapPositionFromNewProps(newProps);
         }
         return false;
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props?.orientate && prevProps && (!isEqual(this.props.orientate, prevProps?.orientate))) {
+            const position = {
+                destination: Cesium.Cartesian3.fromDegrees(
+                    parseFloat(this.props.orientate.x),
+                    parseFloat(this.props.orientate.y),
+                    this.getHeightFromZoom(parseFloat(this.props.orientate.z))
+                ),
+                orientation: {
+                    heading: parseFloat(this.props.orientate.heading),
+                    pitch: parseFloat(this.props.orientate.pitch),
+                    roll: parseFloat(this.props.orientate.roll)
+                }
+            };
+            this.setView(position);
+        }
     }
 
     componentWillUnmount() {

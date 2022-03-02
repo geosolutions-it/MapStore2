@@ -8,7 +8,12 @@
 
 import expect from 'expect';
 import { addTimeoutEpic, testEpic, TEST_TIMEOUT } from './epicTestUtils';
-import {disableGFIForShareEpic, onMapClickForShareEpic, readQueryParamsOnMapEpic} from '../queryparams';
+import {
+    checkMapOrientation,
+    disableGFIForShareEpic,
+    onMapClickForShareEpic,
+    readQueryParamsOnMapEpic
+} from '../queryparams';
 import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../../actions/map';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
@@ -328,6 +333,59 @@ describe('queryparam epics', () => {
                 try {
                     expect(actions[0].type).toBe(SHOW_NOTIFICATION);
                     expect(actions[0].level).toBe( 'warning');
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test actions dispatched on Change View', (done)=>{
+
+        const center = {
+            x: -74.2,
+            y: 40.7,
+            crs: "EPSG:4326"
+        };
+        const zoom = 16;
+        const bbox = {
+            bounds: {
+                minx: -180,
+                miny: -90,
+                maxx: 180,
+                maxy: 90
+            },
+            crs: "EPSG:4326",
+            rotation: 0
+        };
+        const size = {
+            height: 8717,
+            width: 8717
+        };
+
+        const mapStateSource = 'map';
+        const projection = "EPSG:900913";
+        const viewerOptions = {
+            orientation: {
+                heading: 0.1,
+                pitch: -0.7,
+                roll: 6.2
+            }
+        };
+        const state = {
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(checkMapOrientation, 1000),
+            1, [
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(1);
+                try {
+                    expect(actions[0].type).toBe("MAP:ORIENTATION");
                 } catch (e) {
                     done(e);
                 }

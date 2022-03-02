@@ -1282,6 +1282,9 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Click on map to grab the coordinates",
             "zoomToolTip": "Min: 1 and Max: 35",
+            "headingToolTip": "Min: 0° and Max: 360°",
+            "rollToolTip": "Min: -90° and Max: 90°",
+            "pitchToolTip": "Min: -90° and Max: 90°",
             "wrongCenterAndZoomParamTitle": "Invalid center and zoom param",
             "wrongCenterAndZoomParamMessage": "Center and Zoom param must be center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "wrongMarkerAndZoomParamTitle": "Invalid marker and zoom param",
@@ -1293,6 +1296,9 @@
             "showHomeButton": "Link to MapStore home",
             "showSectionId": "Include scroll position",
             "showConnections": "Show connections",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch",
             "sizeOptions": {
                 "width": "width",
                 "height": "height"

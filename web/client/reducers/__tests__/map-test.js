@@ -258,4 +258,20 @@ describe('Test the map reducer', () => {
         expect(state.zoom).toEqual(zoom);
         expect(state.mapStateSource).toEqual(null);
     });
+
+    it('3D Orientation reducers', () => {
+        const orientation =  { x: '1', y: '3', z: 1, heading: 1, pitch: 1, roll: 1 };
+        const action = {
+            type: 'MAP:ORIENTATION',
+            orientation: {
+                center: '1,3',
+                zoom: 1,
+                heading: 1,
+                pitch: 1,
+                roll: 1
+            }
+        };
+        const state = mapConfig({}, action);
+        expect(state.orientate).toEqual(orientation);
+    });
 });
