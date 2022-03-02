@@ -34,6 +34,7 @@ export const defaultColorGenerator = (total, colorOptions) => {
  * @param {string} classificationAttributeType the type of the attribute to base the custom color coded classification
  * @param {object} autoColorOptions object defining the default custom color HSV values
  * @param {boolean} customColorEnabled if the user selected a custom default color
+ * @returns {string} type of classification. One of `value`, `range` or `default`
  */
 const getChartClassificationType = (classificationAttr, classificationAttributeType, autoColorOptions, customColorEnabled) => {
     if (every([classificationAttr, autoColorOptions?.classification || autoColorOptions?.rangeClassification, customColorEnabled], Boolean)) {
