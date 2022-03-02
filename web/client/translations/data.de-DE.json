@@ -2808,6 +2808,10 @@
             "description": "Ermöglicht das Umschalten der Kartenprojektion",
             "title": "CRS-Auswahl"
           },
+          "DeleteMap": {
+            "description": "Ermöglicht das Löschen einer Kartenressource und aller zugehörigen Ressourcen",
+            "title": "Karte löschen"
+          },
           "Details": {
             "description": "Eventuell Detailkarte für eine Karte anzeigen lassen",
             "title": "Kartendetails"

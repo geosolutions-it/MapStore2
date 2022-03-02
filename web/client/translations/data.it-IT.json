@@ -2770,6 +2770,10 @@
             "description": "Permette di cambiare la proiezione della mappa",
             "title": "Selettore CRS"
           },
+          "DeleteMap": {
+            "description": "Consente di eliminare una risorsa mappa e tutte le risorse associate",
+            "title": "Elimina mappa"
+          },
           "Details": {
             "description": "Consentire di mostrare la scheda dettagli per una mappa, se presente",
             "title": "Dettagli mappa"

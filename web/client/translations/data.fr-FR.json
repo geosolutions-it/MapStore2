@@ -2772,6 +2772,10 @@
             "description": "Permet de changer de projection cartographique",
             "title": "Sélecteur CRS"
           },
+          "DeleteMap": {
+            "description": "Permet de supprimer une ressource cartographique et toutes ses ressources associées",
+            "title": "Supprimer la carte"
+          },
           "Details": {
             "description": "Permet d'afficher les détails d'une carte, le cas échéant",
             "title": "Détails de la carte"
