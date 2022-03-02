@@ -26,12 +26,10 @@ export const defaultColorGenerator = (total, colorOptions) => {
 };
 
 /**
- * Currently charts classification can be of three types
- * 'value' and 'range' for custom color coded charts
- * 'default' for charts that are not custom classified
- * if all values that determine the classification are there then
- * the chart is custmo classified, the custom classification of the
- * chart is classificationAttribute type dependent
+ * Checks the parameters and return the color classification type for the chart. Classification type can be:
+ * - 'value' for classifications based on exact value. Used if the type of `classificationAttr` is "string".
+ * - 'range' if the classification is based on range of values. Used for numeric values.
+ * - 'default' in case of incomplete or missing color classification. In this case the default colors will be used (depending on the chart type).
  * @param {string} classificationAttr the attribute to base the custom color coded classification
  * @param {string} classificationAttributeType the type of the attribute to base the custom color coded classification
  * @param {object} autoColorOptions object defining the default custom color HSV values
