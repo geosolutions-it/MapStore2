@@ -90,11 +90,12 @@ const getRangeClassificationColors = (values, colorCategories, customColorEnable
 };
 
 /**
+ * Parses data and options to return classification colors and categories to pass to the chart.
  * @param {string} classificationType the type of the classification attribute
- * @param {string[] | number[]} values the values of the chart to be color-coded
- * ["California", "Ohio", ...] or [123.45, 14.45, ...]
+ * @param {string[] | number[]} values the values of the chart to be color-coded. E.g. `["California", "Ohio", ...]` or `[123.45, 14.45, ...]`.
  * @param {object} autoColorOptions object defining the default custom color HSV values
  * @param {boolean} customColorEnabled if the user selected a custom default color
+ * @return {object[]} an object with attributes `colorCategories` (color classes used) and `classificationColors` (array of colors to use for each value), depending on the classification type. 
  */
 const getClassification = (classificationType, values, autoColorOptions, customColorEnabled) => {
     // if chart is absolute-values/category classified
