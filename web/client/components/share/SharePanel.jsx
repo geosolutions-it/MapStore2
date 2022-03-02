@@ -390,15 +390,16 @@ class SharePanel extends React.Component {
                                     </OverlayTrigger>
                                     <FormControl
                                         type="number"
-                                        name={"heading"}
+                                        name="heading"
                                         min={0}
                                         max={360}
                                         value={
-                                            (this.state?.heading && this.setValueBoundaries(convertRadianToDegrees(this.state.heading), 0, 360)) ||
-                                            (this.props?.viewerOptions?.orientation?.heading && this.setValueBoundaries(convertRadianToDegrees(this.props.viewerOptions.orientation.heading), 0, 360))
+                                            (this.state?.heading && convertRadianToDegrees(this.state.heading)) ||
+                                            (this.props?.viewerOptions?.orientation?.heading && convertRadianToDegrees(this.props.viewerOptions.orientation.heading))
                                         }
                                         onChange={({target})=>{
-                                            let heading = convertDegreesToRadian(target.value);
+                                            const angle = this.setValueBoundaries(target.value, 0, 360);
+                                            const heading = convertDegreesToRadian(angle);
                                             this.setState({...this.state, heading});
                                             this.updateMapView('heading', heading);
                                         }}/>
@@ -414,11 +415,12 @@ class SharePanel extends React.Component {
                                         min={-90}
                                         max={90}
                                         value={
-                                            (this.state?.roll && this.setValueBoundaries(convertRadianToDegrees(this.state.roll), -90, 90)) ||
-                                            (this.props?.viewerOptions?.orientation?.roll && this.setValueBoundaries(convertRadianToDegrees(this.props.viewerOptions.orientation.roll), -90, 90))
+                                            (this.state?.roll && convertRadianToDegrees(this.state.roll)) ||
+                                            (this.props?.viewerOptions?.orientation?.roll && convertRadianToDegrees(this.props.viewerOptions.orientation.roll))
                                         }
                                         onChange={({target})=>{
-                                            const roll = convertDegreesToRadian(target.value);
+                                            const angle = this.setValueBoundaries(target.value, -90, 90);
+                                            const roll = convertDegreesToRadian(angle);
                                             this.setState({...this.state, roll});
                                             this.updateMapView('roll', roll);
                                         }}/>
@@ -434,12 +436,13 @@ class SharePanel extends React.Component {
                                         max={90}
                                         name={"pitch"}
                                         value={
-                                            (this.state?.pitch && this.setValueBoundaries(convertRadianToDegrees(this.state.pitch), -90, 90)) ||
+                                            (this.state?.pitch && convertRadianToDegrees(this.state.pitch)) ||
                                             (this.props?.viewerOptions?.orientation?.pitch &&
-                                                this.setValueBoundaries(convertRadianToDegrees(this.props?.viewerOptions?.orientation?.pitch), -90, 90))
+                                                convertRadianToDegrees(this.props?.viewerOptions?.orientation?.pitch))
                                         }
                                         onChange={({target})=>{
-                                            const pitch = convertDegreesToRadian(target.value);
+                                            const angle = this.setValueBoundaries(target.value, -90, 90);
+                                            const pitch = convertDegreesToRadian(angle);
                                             this.setState({...this.state, pitch});
                                             this.updateMapView('pitch', pitch);
                                         }}/>
