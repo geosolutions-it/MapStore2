@@ -153,7 +153,7 @@ Downstream project should update following configurations:
 ### Upgrading the printing engine
 The mapfish-print based printing engine has been upgraded to align to the latest official 2.1.5 in term of functionalities.
 
-An update to the MapStore printing engine context file (applicationContext-print.xml) is needed for all projects built with the printing profile enabled. The following sections should be added to the file:
+An update to the MapStore printing engine context file (`applicationContext-print.xml`) is needed for all projects built with the printing profile enabled. The following sections should be added to the file:
 
 ```diff
 <bean id="configFactory" class="org.mapfish.print.config.ConfigFactory"></bean>
