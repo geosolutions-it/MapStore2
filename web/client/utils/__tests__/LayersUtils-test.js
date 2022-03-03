@@ -1081,6 +1081,17 @@ describe('LayersUtils', () => {
                     expect(l.tooltipOptions).toExist();
                     expect(l.tooltipPlacement).toExist();
                 }
+            ],
+            [
+                {
+                    options: {
+                        attribution: "right"
+                    }
+                },
+                l => {
+                    expect(l.options).toExist();
+                    expect(l.options.attribution).toExist();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
