@@ -21,7 +21,7 @@ import {
     SHOW,
     LOADING_SELECTED_MEDIA,
     LOADING_MEDIA_LIST,
-    MEDIA_TYPE_DISABLE, SET_ACTIVE_MEDIA_SERVICE
+    MEDIA_TYPE_DISABLE
 } from '../actions/mediaEditor';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set, unset} from '../utils/ImmutableUtils';
@@ -144,9 +144,15 @@ export default (state = DEFAULT_STATE, action) => {
     }
     case SET_MEDIA_TYPE: {
         const defaultSource = get(state, `settings.mediaTypes[${action.mediaType}].defaultSource`, "geostory");
+        const service = action.selectedService;
+        const mediaType = action.mediaType;
+        const source = state?.activeMediaService ? state.activeMediaService : {};
+        let activeMediaService = {...source};
+        activeMediaService[mediaType] = service;
         return compose(
             set('settings.sourceId', action.selectedService ? action.selectedService : defaultSource), // reset sourceId to default when media type changes and action.selectedService is undefined
-            set('settings.mediaType', action.mediaType)
+            set('settings.mediaType', action.mediaType),
+            set('activeMediaService', activeMediaService)
         )(state);
     }
     case SET_MEDIA_SERVICE: {
@@ -181,13 +187,6 @@ export default (state = DEFAULT_STATE, action) => {
         return set('loadingList', true, state);
     case MEDIA_TYPE_DISABLE:
         return set('disabledMediaType', action.mediaTypes || [], state);
-    case SET_ACTIVE_MEDIA_SERVICE:
-        const source = state?.activeMediaService ? state.activeMediaService : {};
-        let activeMediaService = {...source};
-        activeMediaService[action.activeMediaService.mediaType] = action.activeMediaService.service;
-        return compose(
-            set('activeMediaService', activeMediaService)
-        )(state);
     default:
         return state;
     }

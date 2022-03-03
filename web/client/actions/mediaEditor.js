@@ -148,5 +148,3 @@ export const loadingSelectedMedia = (loading) => ({ type: LOADING_SELECTED_MEDIA
 export const loadingMediaList = () => ({ type: LOADING_MEDIA_LIST });
 
 export const disableMediaType = (mediaTypes = []) => ({type: MEDIA_TYPE_DISABLE, mediaTypes});
-
-export const setActiveMediaService = (activeMediaService) => ({ type: SET_ACTIVE_MEDIA_SERVICE, activeMediaService});

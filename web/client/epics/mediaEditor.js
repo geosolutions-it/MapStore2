@@ -29,7 +29,9 @@ import {
     SET_MEDIA_SERVICE,
     SELECT_ITEM,
     loadingSelectedMedia,
-    loadingMediaList, MEDIA_TYPE_DISABLE, setMediaType, setActiveMediaService
+    loadingMediaList,
+    MEDIA_TYPE_DISABLE,
+    setMediaType
 } from '../actions/mediaEditor';
 
 import { HIDE, SAVE, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
@@ -324,18 +326,4 @@ export const setMediaTypeOnDisable = (action$) =>
         .switchMap(({mediaTypes})=> {
             const mediaType = find(Object.values(MediaTypes), val => !includes(mediaTypes, val));
             return mediaType ? Observable.of(setMediaType(mediaType)) : Observable.empty();
-        });
-
-/**
- * Pairs media types with the last selected media service
- * @memberof epics.mediaEditor
- * @param {Observable} action$ stream of actions
- */
-export const setMediaTypeSource = (action$) =>
-    action$.ofType(SET_MEDIA_TYPE)
-        .switchMap((action)=> {
-            const service = action.selectedService;
-            const mediaType = action.mediaType;
-            const activeMediaService = { service, mediaType};
-            return service ? Observable.of(setActiveMediaService(activeMediaService)) : Observable.empty();
         });
