@@ -99,16 +99,16 @@ const getRangeClassificationColors = (values, colorCategories, customColorEnable
  */
 const getClassification = (classificationType, values, autoColorOptions, customColorEnabled) => {
     // if chart is absolute-values/category classified
-    const colorCategories = classificationType === 'value' ? autoColorOptions?.classification :
+    const colorCategories = classificationType === 'value' ? autoColorOptions?.classification || [] :
     // if chart is range classified
-        classificationType === 'range' ? autoColorOptions?.rangeClassification :
+        classificationType === 'range' ? autoColorOptions?.rangeClassification || [] :
         // chart may not be classified or error
-            [] || [];
+            [];
 
     // if chart is absolute-values/category classified
-    const classificationColors = classificationType === 'value' ? getClassificationColors(values, colorCategories, customColorEnabled, autoColorOptions) || [] :
+    const classificationColors = classificationType === 'value' && colorCategories.length ? getClassificationColors(values, colorCategories, customColorEnabled, autoColorOptions) || [] :
         // if chart is range classified
-        classificationType === 'range' ? getRangeClassificationColors(values, colorCategories, customColorEnabled, autoColorOptions) || [] :
+        classificationType === 'range'  && colorCategories.length ? getRangeClassificationColors(values, colorCategories, customColorEnabled, autoColorOptions) || [] :
         // chart may not be classified or error
             [];
 
