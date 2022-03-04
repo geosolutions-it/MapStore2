@@ -338,6 +338,82 @@ describe('Test the CatalogUtils', () => {
         expect(records[0].metadata.type).toEqual([ 'dataset' ]);
         expect(records[0].metadata.uri).toEqual(['<ul><li><a target="_blank" href="http://www.beda.it/Beda.zip">Beda - Shapefile</a></li><li><a target="_blank" href="http://www.beda.it/Beda.kmz">Beda - KML</a></li></ul>']);
     });
+    it('csw with dc.URI.protocol = OGC:WMS', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                boundingBox: {
+                    extent: [ 43.718, 11.348, 43.84, 11.145 ],
+                    crs: 'EPSG:3003'
+                },
+                dc: {
+                    references: [],
+                    identifier: 'c_d612:sha-identifier',
+                    title: 'title',
+                    type: 'dataset',
+                    subject: [
+                        'web',
+                        'world',
+                        'sport',
+                        'transportation'
+                    ],
+                    format: [
+                        'ESRI Shapefile',
+                        'KML'
+                    ],
+                    contributor: 'contributor',
+                    rights: [
+                        'otherRestrictions',
+                        'otherRestrictions'
+                    ],
+                    source: 'source',
+                    relation: {
+                        TYPE_NAME: 'DC_1_1.SimpleLiteral'
+                    },
+                    URI: [{
+                        TYPE_NAME: "DC_1_1.URI",
+                        description: "Synthèse 2011 des POS et des PLU de Rennes Métropole",
+                        name: "synthese_pos_plu_rennes_metropole",
+                        protocol: "OGC:WMS",
+                        value: "https://geobretagne.fr/geoserver/audiar/wms?SERVICE=WMS&REQUEST=GetCapabilities"
+                    }]
+                }
+            }]
+        }, {});
+        expect(records.length).toEqual(1);
+        expect(records[0].boundingBox).toEqual({ extent: [ 43.718, 11.348, 43.84, 11.145 ], crs: 'EPSG:3003' });
+        expect(records[0].description).toEqual("");
+        expect(records[0].identifier).toEqual("c_d612:sha-identifier");
+        expect(records[0].references).toEqual([ {
+            type: 'OGC:WMS',
+            url: 'https://geobretagne.fr/geoserver/audiar/wms?SERVICE=WMS&REQUEST=GetCapabilities',
+            SRS: [],
+            params: {
+                name: 'synthese_pos_plu_rennes_metropole'
+            }
+        }]);
+        expect(records[0].thumbnail).toEqual(null);
+        expect(records[0].title).toEqual('title');
+        expect(records[0].tags).toEqual('');
+        expect(records[0].metadata.boundingBox).toEqual([ '43.718,11.348,43.84,11.145' ]);
+        expect(records[0].metadata.URI).toEqual([{
+            TYPE_NAME: "DC_1_1.URI",
+            description: "Synthèse 2011 des POS et des PLU de Rennes Métropole",
+            name: "synthese_pos_plu_rennes_metropole",
+            protocol: "OGC:WMS",
+            value: "https://geobretagne.fr/geoserver/audiar/wms?SERVICE=WMS&REQUEST=GetCapabilities"
+        }]);
+        expect(records[0].metadata.contributor).toEqual([ 'contributor' ]);
+        expect(records[0].metadata.format).toEqual([ 'ESRI Shapefile', 'KML' ]);
+        expect(records[0].metadata.identifier).toEqual([ 'c_d612:sha-identifier' ]);
+        expect(records[0].metadata.relation).toEqual([ { TYPE_NAME: 'DC_1_1.SimpleLiteral' } ]);
+        expect(records[0].metadata.rights).toEqual([ 'otherRestrictions' ]);
+        expect(records[0].metadata.references).toEqual([ '<ul><li><a target="_blank" href="https://geobretagne.fr/geoserver/audiar/wms?SERVICE=WMS&REQUEST=GetCapabilities">synthese_pos_plu_rennes_metropole</a></li></ul>' ]);
+        expect(records[0].metadata.source).toEqual(['source']);
+        expect(records[0].metadata.subject).toEqual(["<ul><li>web</li><li>world</li><li>sport</li><li>transportation</li></ul>"]);
+        expect(records[0].metadata.title).toEqual(['title']);
+        expect(records[0].metadata.type).toEqual([ 'dataset' ]);
+        expect(records[0].metadata.uri).toEqual([ '<ul><li><a target="_blank" href="https://geobretagne.fr/geoserver/audiar/wms?SERVICE=WMS&REQUEST=GetCapabilities">synthese_pos_plu_rennes_metropole</a></li></ul>' ]);
+    });
 
     it('csw dct:temporal metadata YYYY-MM-DD', () => {
         let records = CatalogUtils.getCatalogRecords('csw', {
