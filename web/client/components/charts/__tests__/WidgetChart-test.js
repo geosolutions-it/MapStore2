@@ -190,11 +190,14 @@ describe('Widget Chart: data conversions ', () => {
             expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, autoColorOptions));
         });
     });
-    it('color mapping classification and classificationAttributeType are undefined - Pie Chart', () => {
+    it('color mapping classification is undefined - Pie Chart', () => {
         const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", name: 'global.colors.custom' };
         const { data, layout } = toPlotly({
             type: 'pie',
             autoColorOptions,
+            options: {
+                classificationAttributeType: 'string'
+            },
             ...DATASET_2
         });
         expect(data.length).toBe(1);
@@ -774,11 +777,14 @@ describe('Widget Chart: data conversions ', () => {
             expect(DATASET_WITH_DATES.type).toBe('line');
             expect(data[0].x[0] <= data[0].x[1]).toBeTruthy();
         });
-        it('color mapping classification and classificationAttributeType are undefined - Bar Chart', () => {
+        it('color mapping classification is undefined - Bar Chart', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", name: 'global.colors.custom' };
             const { data, layout } = toPlotly({
                 type: 'bar',
                 autoColorOptions,
+                options: {
+                    classificationAttributeType: 'string'
+                },
                 ...DATASET_2
             });
             expect(data.length).toBe(1);
