@@ -148,10 +148,8 @@ class SharePanel extends React.Component {
             !isEqual(this.props.point, newProps.point) ||
             !isEqual(this.props.center, newProps.center) ||
             !isEqual(this.props.bbox, newProps.bbox) ||
-            !isEqual(this.props.isVisible, newProps.isVisible)) {
-            this.initializeDefaults(newProps);
-        }
-        if (!isEqual(this.props?.viewerOptions?.orientation, newProps.viewerOptions?.orientation)) {
+            !isEqual(this.props.isVisible, newProps.isVisible) ||
+            !isEqual(this.props?.viewerOptions?.orientation, newProps.viewerOptions?.orientation)) {
             this.initializeDefaults(newProps);
         }
     }
