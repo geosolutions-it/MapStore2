@@ -151,12 +151,8 @@ class SharePanel extends React.Component {
             !isEqual(this.props.isVisible, newProps.isVisible)) {
             this.initializeDefaults(newProps);
         }
-        if (this.props?.viewerOptions?.orientation) {
-            this.setState({
-                heading: convertRadianToDegrees(newProps.viewerOptions?.orientation?.heading),
-                pitch: convertRadianToDegrees(newProps.viewerOptions?.orientation?.pitch),
-                roll: convertRadianToDegrees(newProps.viewerOptions?.orientation?.roll)
-            });
+        if (!isEqual(this.props?.viewerOptions?.orientation, newProps.viewerOptions?.orientation)) {
+            this.initializeDefaults(newProps);
         }
     }
 
@@ -198,9 +194,9 @@ class SharePanel extends React.Component {
             defaultLoaded: isVisible,
             isCenterAndZoomDefault,
             isMarkerAndZoomDefault,
-            heading: viewerOptions?.orientation?.heading,
-            pitch: viewerOptions?.orientation?.pitch,
-            roll: viewerOptions?.orientation?.roll
+            heading: convertRadianToDegrees(viewerOptions?.orientation?.heading),
+            pitch: convertRadianToDegrees(viewerOptions?.orientation?.pitch),
+            roll: convertRadianToDegrees(viewerOptions?.orientation?.roll)
         });
     }
 
