@@ -57,10 +57,82 @@ Just below the chart's preview, the following configurations are available:
 
 !!! Note
     The *No operation* option is used when the aggregation method is not needed for the chart. If *No Operation* is selected, no aggregation will be carried out for the chart and the WFS service will be used to generate the chart without using the WPS process `gs:Aggregate` in GeoServer.
-
-* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*)
-
+    
+    
 * Enable the chart's legend by activating **Display Legend**
+
+* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*) or choose to **Customize the color**. 
+
+#### Color customization
+
+For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. From the **Color** option dropdown menu, the user can select the <img src="../img/button/custom-button.jpg" class="ms-docbutton"/> options and enter the **Custom Colors Settings** through the <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> button.
+
+<img src="../img/widgets/custom_colors_settings.jpg" class="ms-docimage"/> 
+
+Through this section, the user is allowed to:
+
+* Choose the **Color** of the bars or the slides through the *Color Picker*.
+
+<img src="../img/widgets/custom_colors.gif" class="ms-docimage"/> 
+
+* Select an *Attribute* in the dropdown list as a **Classification attribute**.
+
+<img src="../img/widgets/classification-attribute.gif" class="ms-docimage"/> 
+
+Once the attribute is chosen, new options appear in the *Custom Color Settings* panel that allow the user to:
+
+* Enter a **Default Class Label** to be used in the legend for all values that will not be specifically classified in the following list.
+
+<img src="../img/widgets/default_class_label.jpg" class="ms-docimage"/> 
+
+!!! Note
+    The *Default Class Label* can be a **Custom Labels** with a '${legendValue}' used as placeholder for the Y Attribute.
+
+* List the values of the *Classification Attribute* to highlight with a specific color in the chart. These values can be of two types: **String** or **Numeric**.
+
+#### String Classification Attribute
+
+When the values of a classification attribute are string by value, the user can:
+
+<img src="../img/widgets/alphanumeric.jpg" class="ms-docimage"/> 
+
+* Choose the **Class Color** through the *Color Picker*.
+
+* Choose the value of the *Classification attribute* through the dropdown menu **Class Value** 
+
+* Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
+
+!!! Note
+    The *Class Label* can be a **Custom Labels** with a '${legendValue}' used as placeholder for the Y Attribute.
+
+En example of *Bar charts* with a color customization of string attribute can be the following:
+
+<img src="../img/widgets/color-customization-alhanumeric-attribute.gif" class="ms-docimage"/> 
+
+Through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button the user can add new values before through the <img src="../img/widgets/add-new-entry-before.jpg" class="ms-docimage"/> button or after through <img src="../img/widgets/add-new-entry-after.jpg" class="ms-docimage"/> button. 
+
+#### Numeric Classification Attribute
+
+When the values of a classification attribute are numeric by value, the user can:
+
+<img src="../img/widgets/numeric.jpg" class="ms-docimage" style="max-width:450px;"/> 
+
+* Choose the **Class Color** through the *Color Picker*
+
+* Choose the **Min value** of the *Classification attribute*
+
+* Choose the **Max value** of the *Classification attribute*
+
+* Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
+
+!!! Note
+    The *Class Label* can be a **Custom Labels** choosing between: ${minValue}, used as placeholder for class Min Value; ${maxValue}, used as placeholder for class Max Value; ${legendValue} used as placeholder for the Y Attribute.
+
+En example of *Bar charts* with a color customization of numeric attribute can be the following:
+
+<img src="../img/widgets/color-customization-numeric-attribute.gif" class="ms-docimage"/> 
+
+#### Advanced Options
 
 In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
 
