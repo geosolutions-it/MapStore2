@@ -150,29 +150,6 @@ Downstream project should update following configurations:
 
 - This step is needed only for custom project with a specific `publicPath` different from the default one. In this case you may need to specify what folder deliver the  cesium build ( by default `dist/cesium`). To do that, you can add the  `cesiumBaseUrl` parameter in the webpack dev and prod configs to the correct location of the cesium static assets, widgets and workers folder.
 
-### Upgrading the printing engine
-The mapfish-print based printing engine has been upgraded to align to the latest official 2.1.5 in term of functionalities.
-
-An update to the MapStore printing engine context file (`applicationContext-print.xml`) is needed for all projects built with the printing profile enabled. The following sections should be added to the file:
-
-```diff
-<bean id="configFactory" class="org.mapfish.print.config.ConfigFactory"></bean>
-+<bean id="threadResources" class="org.mapfish.print.ThreadResources">
-+    <property name="connectionTimeout" value="30000"/>
-+    <property name="socketTimeout" value="30000" />
-+    <property name="globalParallelFetches" value="200"/>
-+    <property name="perHostParallelFetches" value="30" />
-+</bean>
-
-<bean id="pdfOutputFactory" class="org.mapfish.print.output.PdfOutputFactory"/>
-+
-+<bean id="metricRegistry" class="com.codahale.metrics.MetricRegistry" lazy-init="false"/>
-+<bean id="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry" lazy-init="false"/>
-+<bean id="loggingMetricsConfigurator" class="org.mapfish.print.metrics.LoggingMetricsConfigurator"  lazy-init="false"/>
-+<bean id="jvmMetricsConfigurator" class="org.mapfish.print.metrics.JvmMetricsConfigurator" lazy-init="false"/>
-+<bean id="jmlMetricsReporter" class="org.mapfish.print.metrics.JmxMetricsReporter" lazy-init="false"/>
-```
-
 ## Migration from 2021.02.01 to 2021.02.02
 ### Style parsers dynamic import
 
