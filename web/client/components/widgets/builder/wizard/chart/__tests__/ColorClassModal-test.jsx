@@ -13,7 +13,16 @@ import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import ColorClassModal from '../ColorClassModal';
 import { hexToRgb } from '../../../../../../utils/ColorUtils';
-import { CLASSIFICATION, CLASSIFICATION_ATTRIBUTE, DEFAULT_CUSTOM_COLOR, DEFAULT_CUSTOM_LABEL, OPTIONS, TEST_LAYER } from './sample_data';
+import {
+    CLASSIFICATION,
+    CLASSIFICATION_ATTRIBUTE,
+    DEFAULT_CUSTOM_COLOR,
+    DEFAULT_CUSTOM_LABEL,
+    OPTIONS,
+    RANGE_CLASSIFICATION,
+    RANGE_CLASSIFICATION_ATTRIBUTE,
+    TEST_LAYER
+} from './sample_data';
 
 const testHandlers = {
     onClose: () => {},
@@ -46,6 +55,8 @@ describe('Custom Colors Classification modal', () => {
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
                 layer={TEST_LAYER}
+                // strings and numbers behave the same for the modal in this test but rhe property must be there
+                classificationAttributeType={'string'}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal');
         expect(colorClassMd.length).toBe(1);
@@ -173,6 +184,8 @@ describe('Custom Colors Classification modal', () => {
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
                 layer={TEST_LAYER}
+                // strings and numbers behave the same for the modal in this test but the property must be there
+                classificationAttributeType={'number'}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const defaultLabelInput = colorClassMd.getElementsByTagName('input')[1];
@@ -181,7 +194,7 @@ describe('Custom Colors Classification modal', () => {
         expect(spyonChange).toHaveBeenCalled();
         expect(spyonChange.calls[0].arguments[0]).toBe(DEFAULT_CUSTOM_LABEL[1]);
     });
-    it('Test Color Class Modal on change color for class', () => {
+    it('Test Color Class Modal on change color for class - string attribute', () => {
         const spyonUpdate = expect.spyOn(testHandlers, 'onUpdateClasses');
         ReactDOM.render(
             <ColorClassModal
@@ -192,6 +205,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 layer={TEST_LAYER}
+                classificationAttributeType={'string'}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const colorPickerNode = colorClassMd.getElementsByClassName('ms-color-picker')[1];
@@ -219,7 +233,46 @@ describe('Custom Colors Classification modal', () => {
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0][0].color.toLowerCase()).toBe(CLASSIFICATION[1].color);
     });
-    it('Test Color Class Modal on change value for class', () => {
+    it('Test Color Class Modal on change color for class - number attribute', () => {
+        const spyonUpdate = expect.spyOn(testHandlers, 'onUpdateClasses');
+        ReactDOM.render(
+            <ColorClassModal
+                show
+                classification={RANGE_CLASSIFICATION}
+                classificationAttribute={RANGE_CLASSIFICATION_ATTRIBUTE}
+                onUpdateClasses={testHandlers.onUpdateClasses}
+                defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
+                defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
+                layer={TEST_LAYER}
+                classificationAttributeType={'number'}
+            />, document.getElementById("container"));
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        const colorPickerNode = colorClassMd.getElementsByClassName('ms-color-picker')[1];
+        // open picker
+        ReactTestUtils.Simulate.click(colorPickerNode);
+        const classColorClassSwatch = colorClassMd.getElementsByClassName('ms-color-picker-swatch')[1];
+        const sketchPicker = document.getElementsByClassName('ms-sketch-picker')[0];
+        expect(sketchPicker).toExist();
+        const colorItemButton = sketchPicker.querySelector('div[title="#417505"]');
+        expect(colorItemButton).toExist();
+        ReactTestUtils.Simulate.click(colorItemButton);
+        const defaultRgbButtonColor = colorItemButton.style.backgroundColor
+            .substring(4, colorItemButton.style.backgroundColor.length - 1)
+            .split(',')
+            .map(item => parseInt(item, 10));
+        const defaultRgbSwatchColor = classColorClassSwatch.style.backgroundColor
+            .substring(4, classColorClassSwatch.style.backgroundColor.length - 1)
+            .split(',')
+            .map(item => parseInt(item, 10));
+        expect(defaultRgbButtonColor[0]).toBe(defaultRgbSwatchColor[0]);
+        expect(defaultRgbButtonColor[1]).toBe(defaultRgbSwatchColor[1]);
+        expect(defaultRgbButtonColor[2]).toBe(defaultRgbSwatchColor[2]);
+        // close picker
+        ReactTestUtils.Simulate.click(colorPickerNode);
+        expect(spyonUpdate).toHaveBeenCalled();
+        expect(spyonUpdate.calls[0].arguments[0][0].color.toLowerCase()).toBe(CLASSIFICATION[1].color);
+    });
+    it('Test Color Class Modal on change value for class - string attribute', () => {
         const spyonUpdate = expect.spyOn(testHandlers, 'onUpdateClasses');
         ReactDOM.render(
             <ColorClassModal
@@ -231,6 +284,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
                 layer={TEST_LAYER}
+                classificationAttributeType={'string'}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const classValueInput = colorClassMd.getElementsByTagName('input')[2];
@@ -239,7 +293,24 @@ describe('Custom Colors Classification modal', () => {
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0][1].unique).toBe(CLASSIFICATION[1].unique);
     });
-    it('Test Color Class Modal on change label for class', () => {
+    it('Test Color Class Modal on change value for class - number attribute', () => {
+        ReactDOM.render(
+            <ColorClassModal
+                show
+                classification={RANGE_CLASSIFICATION}
+                classificationAttribute={RANGE_CLASSIFICATION_ATTRIBUTE}
+                onUpdateClasses={testHandlers.onUpdateClasses}
+                defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
+                defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
+                options={OPTIONS}
+                classificationAttributeType={'number'}
+            />, document.getElementById("container"));
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        const classValueInput = colorClassMd.getElementsByTagName('input')[2];
+        classValueInput.value = RANGE_CLASSIFICATION[0].max;
+        expect(parseInt(classValueInput.value, 10)).toBe(RANGE_CLASSIFICATION[0].max);
+    });
+    it('Test Color Class Modal on change label for class - string attribute', () => {
         const spyonUpdate = expect.spyOn(testHandlers, 'onUpdateClasses');
         ReactDOM.render(
             <ColorClassModal
@@ -251,6 +322,7 @@ describe('Custom Colors Classification modal', () => {
                 defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
                 options={OPTIONS}
                 layer={TEST_LAYER}
+                classificationAttributeType={'string'}
             />, document.getElementById("container"));
         const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
         const classValueInput = colorClassMd.getElementsByTagName('input')[3];
@@ -258,6 +330,24 @@ describe('Custom Colors Classification modal', () => {
         ReactTestUtils.Simulate.change(classValueInput);
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0][1].title).toBe(CLASSIFICATION[1].title);
+    });
+    it('Test Color Class Modal on change label for class - number attribute', () => {
+        ReactDOM.render(
+            <ColorClassModal
+                show
+                classification={RANGE_CLASSIFICATION}
+                classificationAttribute={RANGE_CLASSIFICATION_ATTRIBUTE}
+                onUpdateClasses={testHandlers.onUpdateClasses}
+                defaultCustomColor={DEFAULT_CUSTOM_COLOR[0]}
+                defaultClassLabel={DEFAULT_CUSTOM_LABEL[0]}
+                options={OPTIONS}
+                layer={TEST_LAYER}
+                classificationAttributeType={'number'}
+            />, document.getElementById("container"));
+        const colorClassMd = document.getElementsByClassName('ms-resizable-modal')[0];
+        const classValueInput = colorClassMd.getElementsByTagName('input')[4];
+        classValueInput.value = RANGE_CLASSIFICATION[1].title;
+        expect(classValueInput.value).toBe(RANGE_CLASSIFICATION[1].title);
     });
     it('Test Color Class Modal on confirm color classification', () => {
         const spyonSave = expect.spyOn(testHandlers, 'onSaveClassification');

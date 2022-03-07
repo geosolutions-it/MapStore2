@@ -58,9 +58,38 @@ export const SPLIT_DATASET_3 = {
     series: [{ dataKey: "value" }]
 };
 
+export const DATASET_4 = {
+    data: [
+        { name: 'Page A', value: 0, classValue: 'class1'},
+        { name: 'Page B', value: 100, classValue: 'class2'},
+        { name: 'Page C', value: 500, classValue: 'class2'},
+        { name: 'Page D', value: 900, classValue: 'class1'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const SPLIT_DATASET_4 = {
+    data: [
+        [
+            { name: 'Page A', value: 0, classValue: 'class1'}
+        ],
+        [
+            { name: 'Page B', value: 100, classValue: 'class2'},
+            { name: 'Page C', value: 500, classValue: 'class2'},
+            { name: 'Page D', value: 900, classValue: 'class1'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
 
 export const CLASSIFICATIONS = {
     dataKey: 'classValue'
+};
+
+export const RANGE_CLASSIFICATIONS = {
+    dataKey: 'value'
 };
 
 export const LABELLED_CLASSIFICATION = [
@@ -75,6 +104,21 @@ export const LABELLED_CLASSIFICATION = [
         color: '#0000ff',
         value: 'class2',
         unique: 'class2'
+    }
+];
+
+export const LABELLED_RANGE_CLASSIFICATION = [
+    {
+        title: 'Between 0 and 100',
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        title: 'Between 100 and 1000',
+        color: '#0000ff',
+        min: 100,
+        max: 1000
     }
 ];
 
@@ -93,6 +137,21 @@ export const TEMPLATE_LABELS_CLASSIFICATION = [
     }
 ];
 
+export const TEMPLATE_LABELS_RANGE_CLASSIFICATION = [
+    {
+        title: '${legendValue} - Between ${minValue} and ${maxValue}',
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        title: '${legendValue} - Between ${minValue} and ${maxValue}',
+        color: '#00ff00',
+        min: 100,
+        max: 1000
+    }
+];
+
 export const PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION = [
     {
         title: '${groupByValue} - Class 1',
@@ -108,6 +167,21 @@ export const PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION = [
     }
 ];
 
+export const PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION = [
+    {
+        title: '${groupByValue} - ${legendValue}: Between ${minValue} and ${maxValue}',
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        title: '${groupByValue} - ${legendValue}: Between ${minValue} and ${maxValue}',
+        color: '#00ff00',
+        min: 100,
+        max: 1000
+    }
+];
+
 export const UNLABELLED_CLASSIFICATION = [
     {
         color: '#ff0000',
@@ -118,6 +192,19 @@ export const UNLABELLED_CLASSIFICATION = [
         color: '#0000ff',
         value: 'class2',
         unique: 'class2'
+    }
+];
+
+export const UNLABELLED_RANGE_CLASSIFICATION = [
+    {
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        color: '#0000ff',
+        min: 100,
+        max: 1000
     }
 ];
 

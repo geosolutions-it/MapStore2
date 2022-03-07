@@ -99,7 +99,8 @@ describe('WPSWidgetOptions component', () => {
                     name: 'global.colors.custom'
                 },
                 options: {
-                    classificationAttribute: 'class2'
+                    classificationAttribute: 'class2',
+                    classificationAttributeType: 'string'
                 }
             }}
             onChange={actions.onChange}
@@ -126,10 +127,18 @@ describe('WPSWidgetOptions component', () => {
 
         expect(spyonChange.calls[2].arguments[0]).toBe('options.classificationAttribute');
         expect(spyonChange.calls[2].arguments[1]).toBe('class2');
-
-        expect(spyonChange.calls[3].arguments[0]).toBe('autoColorOptions');
-        expect(spyonChange.calls[3].arguments[1]).toEqual({
+        expect(spyonChange.calls[4].arguments[0]).toBe('autoColorOptions');
+        const savedValuesClassification = {
             classification: CLASSIFICATION,
+            defaultClassLabel: DEFAULT_CUSTOM_LABEL[2],
+            name: 'global.colors.custom'
+        };
+        expect(savedValuesClassification).toEqual({
+            classification: spyonChange.calls[4].arguments[1].classification.map(item => {
+                const classItem = {...item};
+                delete classItem.id;
+                return classItem;
+            }),
             defaultClassLabel: DEFAULT_CUSTOM_LABEL[2],
             name: 'global.colors.custom'
         });
@@ -151,7 +160,8 @@ describe('WPSWidgetOptions component', () => {
                     name: 'global.colors.custom'
                 },
                 options: {
-                    classificationAttribute: 'class2'
+                    classificationAttribute: 'class2',
+                    classificationAttributeType: 'string'
                 }
             }}
             onChange={actions.onChange}
@@ -201,7 +211,8 @@ describe('WPSWidgetOptions component', () => {
                     name: 'global.colors.custom'
                 },
                 options: {
-                    classificationAttribute: 'class2'
+                    classificationAttribute: 'class2',
+                    classificationAttributeType: 'string'
                 }
             }}
             onChange={actions.onChange}
@@ -233,9 +244,8 @@ describe('WPSWidgetOptions component', () => {
         expect(cancelBtn).toExist();
         ReactTestUtils.Simulate.click(confirmBtn);
         expect(spyonChange).toHaveBeenCalled();
-        expect(spyonChange.calls[1].arguments[1]).toBe(undefined);
-        expect(spyonChange.calls[2].arguments[1]).toExist();
-        expect(spyonChange.calls[2].arguments[1].length).toBe(1);
+        expect(spyonChange.calls[1].arguments[1][0].title).toBe('');
+        expect(spyonChange.calls[1].arguments[1][0].unique).toBe('');
     });
 
     it('Test WPSWidgetOptions onChange for color classifications on accept empty values', () => {
@@ -253,7 +263,8 @@ describe('WPSWidgetOptions component', () => {
                     name: 'global.colors.custom'
                 },
                 options: {
-                    classificationAttribute: 'class2'
+                    classificationAttribute: 'class2',
+                    classificationAttributeType: 'string'
                 }
             }}
             onChange={actions.onChange}

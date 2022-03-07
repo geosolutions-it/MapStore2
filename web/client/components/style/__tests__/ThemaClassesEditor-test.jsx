@@ -197,7 +197,10 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg2).toBe('interval');
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(3);
-        expect(arg1[0]).toEqual({"color": "#ffffff", "min": 0, "max": 1, "title": " >= 0 AND <1"});
+        expect(arg1[0].color).toEqual("#ffffff");
+        expect(arg1[0].min).toEqual(0);
+        expect(arg1[0].max).toEqual(1);
+        expect(arg1[0].title).toEqual(" >= 0 AND <1");
     });
     it('on update value by deleting a rule entry in non-unique classification', () => {
         const actions = { onUpdateClasses: () => { } };
@@ -233,7 +236,10 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg2).toBe('interval');
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(3);
-        expect(arg1[1]).toEqual({"color": "#ffffff", "min": 10, "max": 10, "title": " >= 10 AND <10"});
+        expect(arg1[1].color).toEqual("#ffffff");
+        expect(arg1[1].min).toEqual(10);
+        expect(arg1[1].max).toEqual(10);
+        expect(arg1[1].title).toEqual(" >= 10 AND <10");
     });
     it('on update value by adding new rule entry before in Unique classification', () => {
         const actions = { onUpdateClasses: () => { } };
@@ -252,7 +258,9 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg2).toBe('interval');
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(3);
-        expect(arg1[0]).toEqual({"color": "#ffffff", "unique": 0, "title": 0});
+        expect(arg1[0].color).toEqual("#ffffff");
+        expect(arg1[0].unique).toEqual(0);
+        expect(arg1[0].title).toEqual(0);
     });
     it('on update value by adding new rule entry after in Unique classification', () => {
         const actions = { onUpdateClasses: () => { } };
@@ -271,7 +279,9 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg2).toBe('interval');
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(3);
-        expect(arg1[1]).toEqual({"color": "#ffffff", "unique": 0, "title": 0});
+        expect(arg1[1].color).toEqual("#ffffff");
+        expect(arg1[1].unique).toEqual(0);
+        expect(arg1[1].title).toEqual(0);
     });
     it('on update value by deleting a rule entry in Unique classification', () => {
         const actions = { onUpdateClasses: () => { } };
@@ -309,7 +319,9 @@ describe("Test the ThemaClassesEditor component", () => {
         expect(arg2).toBe('interval');
         expect(arg1).toBeTruthy();
         expect(arg1.length).toBe(3);
-        expect(arg1[0]).toEqual({"color": "#ffffff", "unique": '', "title": ''});
+        expect(arg1[0].color).toEqual("#ffffff");
+        expect(arg1[0].unique).toEqual("");
+        expect(arg1[0].title).toEqual("");
     });
     it('removal of all rules is not allowed', () => {
         const actions = { onUpdateClasses: () => { } };
