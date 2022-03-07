@@ -190,6 +190,33 @@ describe('Widget Chart: data conversions ', () => {
             expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, autoColorOptions));
         });
     });
+    it('color mapping classification is undefined - Pie Chart', () => {
+        const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", name: 'global.colors.custom' };
+        const { data, layout } = toPlotly({
+            type: 'pie',
+            autoColorOptions,
+            options: {
+                classificationAttributeType: 'string'
+            },
+            ...DATASET_2
+        });
+        expect(data.length).toBe(1);
+        expect(data[0].type).toBe('pie');
+        expect(data[0].textposition).toEqual('inside');
+        // data values mapped
+        data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
+        // data labels mapped
+        data[0].labels.map((v, i) => {
+            const classLabel = DATASET_2.data[i].name;
+            expect(v).toBe(classLabel);
+        });
+        // colors are those defined by the user
+        data[0].marker.colors.map((v) => {
+            expect(v).toBe(autoColorOptions.defaultCustomColor);
+        });
+        // LAYOUT
+        expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+    });
     describe('Pie chart - Color coded custom classifications with absolute values', () => {
         it('custom classified colors - using custom labels and colors only', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
@@ -749,6 +776,40 @@ describe('Widget Chart: data conversions ', () => {
             });
             expect(DATASET_WITH_DATES.type).toBe('line');
             expect(data[0].x[0] <= data[0].x[1]).toBeTruthy();
+        });
+        it('color mapping classification is undefined - Bar Chart', () => {
+            const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", name: 'global.colors.custom' };
+            const { data, layout } = toPlotly({
+                type: 'bar',
+                autoColorOptions,
+                options: {
+                    classificationAttributeType: 'string'
+                },
+                ...DATASET_2
+            });
+            expect(data.length).toBe(1);
+            // expect(data[0].type).toBe('line');
+
+            // data values mapped
+            data[0].y.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey]));
+            // data labels mapped
+            data[0].x.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.xAxis.dataKey]));
+            // LAYOUT
+
+            // minimal margins, bottom automatic
+            expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+
+            // colors generated are the defaults, generated on series (1 color for series, so 1)
+            expect(layout.colorway).toEqual([autoColorOptions.defaultCustomColor]);
+
+            // yaxis
+            expect(layout.yaxis.automargin).toBeTruthy();
+            expect(layout.yaxis.showticklabels).toBeFalsy();
+            expect(layout.yaxis.showgrid).toBeFalsy();
+
+            // xaxis
+            expect(layout.xaxis.automargin).toBeTruthy();
+            expect(layout.xaxis.tickangle).toEqual('auto');
         });
     });
 });
