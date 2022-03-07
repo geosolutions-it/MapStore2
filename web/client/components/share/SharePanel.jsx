@@ -25,7 +25,7 @@ import {
     Tooltip
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join, isNil, isEqual, inRange, isEmpty } from 'lodash';
+import { join, isNil, isEqual, inRange, isEmpty, pick, omit } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
 import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
@@ -148,7 +148,8 @@ class SharePanel extends React.Component {
             !isEqual(this.props.point, newProps.point) ||
             !isEqual(this.props.center, newProps.center) ||
             !isEqual(this.props.bbox, newProps.bbox) ||
-            !isEqual(this.props.isVisible, newProps.isVisible)) {
+            !isEqual(this.props.isVisible, newProps.isVisible) ||
+            !isEqual(this.props?.viewerOptions?.orientation, newProps.viewerOptions?.orientation)) {
             this.initializeDefaults(newProps);
         }
     }
@@ -191,9 +192,9 @@ class SharePanel extends React.Component {
             defaultLoaded: isVisible,
             isCenterAndZoomDefault,
             isMarkerAndZoomDefault,
-            heading: viewerOptions?.orientation?.heading,
-            pitch: viewerOptions?.orientation?.pitch,
-            roll: viewerOptions?.orientation?.roll
+            heading: convertRadianToDegrees(viewerOptions?.orientation?.heading),
+            pitch: convertRadianToDegrees(viewerOptions?.orientation?.pitch),
+            roll: convertRadianToDegrees(viewerOptions?.orientation?.roll)
         });
     }
 
@@ -205,7 +206,7 @@ class SharePanel extends React.Component {
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
             if (mapType === 'cesium' && viewerOptions && viewerOptions.orientation) {
-                return `${shareUrl}?center=${this.state.coordinate}&zoom=${this.state.zoom}&heading=${this.state.heading}&pitch=${this.state.pitch}&roll=${this.state.roll}`;
+                return `${shareUrl}?center=${this.state.coordinate}&zoom=${this.state.zoom}&heading=${convertDegreesToRadian(this.state.heading)}&pitch=${convertDegreesToRadian(this.state.pitch)}&roll=${convertDegreesToRadian(this.state.roll)}`;
             }
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
         }
@@ -283,12 +284,28 @@ class SharePanel extends React.Component {
 
     updateMapView = (viewType, value) => {
         let update = {...this.state};
-        update[viewType] = value;
-        this.props.updateMapView(update);
+        const coordinate = update.coordinate;
+        update = pick(update, ['zoom', 'heading', 'pitch', 'roll']);
+        let updateMapProperties = {...omit(update, viewType)};
+        Object.keys(updateMapProperties).forEach(key => {
+            if (key !== 'zoom') {
+                updateMapProperties[key] = convertDegreesToRadian(this.state[key]);
+            }
+        });
+        if (viewType === 'zoom') {
+            updateMapProperties[viewType] = value;
+        } else {
+            updateMapProperties[viewType] = convertDegreesToRadian(value);
+        }
+        updateMapProperties.coordinate = coordinate;
+        this.props.updateMapView(updateMapProperties);
     }
 
     setValueBoundaries = (value, min, max) => {
-        return  value && ((value < min || value > max) ? min : value);
+        if (value.length < 1) { return 0;}
+        if (value < min) { return min;}
+        if (value > max) { return max;}
+        return  value;
     }
 
     renderAdvancedSettings = () => {
@@ -394,15 +411,18 @@ class SharePanel extends React.Component {
                                         min={0}
                                         max={360}
                                         value={
-                                            (this.state?.heading && convertRadianToDegrees(this.state.heading)) ||
-                                            (this.props?.viewerOptions?.orientation?.heading && convertRadianToDegrees(this.props.viewerOptions.orientation.heading))
+                                            this.state?.heading
                                         }
                                         onChange={({target})=>{
-                                            const angle = this.setValueBoundaries(target.value, 0, 360);
-                                            const heading = convertDegreesToRadian(angle);
-                                            this.setState({...this.state, heading});
-                                            this.updateMapView('heading', heading);
-                                        }}/>
+                                            this.setState({
+                                                heading: target.value
+                                            });
+                                        }}
+                                        onBlur={()=> {
+                                            const angle = this.setValueBoundaries(this.state.heading, 0, 360);
+                                            this.updateMapView('heading', angle);
+                                        }}
+                                    />
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel><Message msgId="share.roll" /></ControlLabel>
@@ -411,19 +431,22 @@ class SharePanel extends React.Component {
                                     </OverlayTrigger>
                                     <FormControl
                                         type="number"
-                                        name={"roll"}
+                                        name="roll"
                                         min={-90}
                                         max={90}
                                         value={
-                                            (this.state?.roll && convertRadianToDegrees(this.state.roll)) ||
-                                            (this.props?.viewerOptions?.orientation?.roll && convertRadianToDegrees(this.props.viewerOptions.orientation.roll))
+                                            this.state?.roll
                                         }
                                         onChange={({target})=>{
-                                            const angle = this.setValueBoundaries(target.value, -90, 90);
-                                            const roll = convertDegreesToRadian(angle);
-                                            this.setState({...this.state, roll});
-                                            this.updateMapView('roll', roll);
-                                        }}/>
+                                            this.setState({
+                                                roll: target.value
+                                            });
+                                        }}
+                                        onBlur={()=> {
+                                            const angle = this.setValueBoundaries(this.state.roll, -90, 90);
+                                            this.updateMapView('roll', angle);
+                                        }}
+                                    />
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel><Message msgId="share.pitch" /></ControlLabel>
@@ -434,18 +457,20 @@ class SharePanel extends React.Component {
                                         type="number"
                                         min={-90}
                                         max={90}
-                                        name={"pitch"}
+                                        name="pitch"
                                         value={
-                                            (this.state?.pitch && convertRadianToDegrees(this.state.pitch)) ||
-                                            (this.props?.viewerOptions?.orientation?.pitch &&
-                                                convertRadianToDegrees(this.props?.viewerOptions?.orientation?.pitch))
+                                            this.state?.pitch
                                         }
                                         onChange={({target})=>{
-                                            const angle = this.setValueBoundaries(target.value, -90, 90);
-                                            const pitch = convertDegreesToRadian(angle);
-                                            this.setState({...this.state, pitch});
-                                            this.updateMapView('pitch', pitch);
-                                        }}/>
+                                            this.setState({
+                                                pitch: target.value
+                                            });
+                                        }}
+                                        onBlur={()=> {
+                                            const angle = this.setValueBoundaries(this.state.pitch, -90, 90);
+                                            this.updateMapView('pitch', angle);
+                                        }}
+                                    />
                                 </FormGroup>
                             </React.Fragment>)
                     }
