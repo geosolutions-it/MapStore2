@@ -171,6 +171,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         }),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
+        new NormalModuleReplacementPlugin(/cesium\.widgets\.css/, path.join(paths.base, "node_modules", "cesium/Build/Cesium/Widgets/widgets.css")),
         new NoEmitOnErrorsPlugin()]
         .concat(castArray(plugins))
         .concat(prod ? prodPlugins : devPlugins),
