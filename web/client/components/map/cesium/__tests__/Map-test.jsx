@@ -244,6 +244,46 @@ describe('CesiumMap', () => {
         // unregister hook
         registerHook(ZOOM_TO_EXTENT_HOOK);
     });
+    it('should reorder the layer correctly even if the position property of layer exceed the imageryLayers length', () => {
+
+        let map = ReactDOM.render(
+            <CesiumMap id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
+                <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
+                <CesiumLayer type="wms" position={6} options={{ url: '/wms', name: 'layer03' }} />
+            </CesiumMap>,
+            document.getElementById('container')
+        );
+
+        expect(map).toBeTruthy();
+        expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+        expect(map.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 6]);
+        expect(map.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
+
+        map = ReactDOM.render(
+            <CesiumMap id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
+                <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
+                <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03' }} />
+            </CesiumMap>,
+            document.getElementById('container')
+        );
+
+        expect(map.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 4]);
+        expect(map.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
+
+        map = ReactDOM.render(
+            <CesiumMap id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
+                <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
+                <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03' }} />
+            </CesiumMap>,
+            document.getElementById('container')
+        );
+
+        expect(map.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 2, 3]);
+        expect(map.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer03', 'layer02' ]);
+    });
     describe("hookRegister", () => {
         it("default", () => {
             const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
