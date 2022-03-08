@@ -68,6 +68,9 @@ jobs:
 
   test-back-end:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        profile: [none, ldap, printing, printingbundle]
     steps:
       - name: "checking out"
         uses: actions/checkout@v2
@@ -91,7 +94,9 @@ jobs:
       # JAVA CHECKS
       ##############
       - name: java
-        run: mvn --batch-mode --update-snapshots verify
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: mvn --batch-mode --update-snapshots verify -P$PROFILE
   build:
     runs-on: ubuntu-latest
     steps:
