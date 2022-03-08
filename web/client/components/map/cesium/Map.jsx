@@ -8,7 +8,7 @@
 import * as Cesium from 'cesium';
 // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
 // see https://github.com/CesiumGS/cesium/issues/9212
-import 'cesium.widgets.css';
+import 'cesium/index.css';
 
 import '@znemz/cesium-navigation/dist/index.css';
 import viewerCesiumNavigationMixin from '@znemz/cesium-navigation';
