@@ -39,6 +39,7 @@ export const selectedItemSelector = createSelector(
     (resources = [], id) => find(resources, {id})
 );
 export const disabledMediaTypeSelector = state => get(state, "mediaEditor.disabledMediaType", []);
+export const activeMediaServiceSelector = state => get(state, "mediaEditor.activeMediaService", {});
 
 /**
  * Disable `apply` on empty selection for map media editor when geostory section is GeoCarousel,

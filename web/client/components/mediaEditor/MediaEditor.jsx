@@ -27,7 +27,6 @@ export default ({
     mediaType = "image",
     saveState,
     selectedItem,
-    selectedService,
     services = [{
         name: "Currently used",
         id: "geostory"
@@ -38,7 +37,8 @@ export default ({
     setMediaType = () => { },
     setMediaService = () => { },
     mediaSelector,
-    disabledMediaType
+    disabledMediaType,
+    activeMediaService
 }) => (<BorderLayout
     className="ms-mediaEditor"
     header={
@@ -49,19 +49,19 @@ export default ({
                     text: <Message msgId="mediaEditor.images" />,
                     active: mediaType === "image",
                     bsStyle: mediaType === "image" ? "primary" : "default",
-                    onClick: () => { setMediaType("image", selectedService); },
+                    onClick: () => { setMediaType("image"); },
                     disabled: (saveState && saveState.addingMedia) || includes(disabledMediaType, "image")
                 }, {
                     text: <Message msgId="mediaEditor.videos" />,
                     active: mediaType === "video",
                     bsStyle: mediaType === "video" ? "primary" : "default",
-                    onClick: () => { setMediaType("video", selectedService); },
+                    onClick: () => { setMediaType("video"); },
                     disabled: (saveState && saveState.addingMedia) || includes(disabledMediaType, "video")
                 }, {
                     text: <Message msgId="mediaEditor.maps" />,
                     active: mediaType === "map",
                     bsStyle: mediaType === "map" ? "primary" : "default",
-                    onClick: () => { setMediaType("map", selectedService); },
+                    onClick: () => { setMediaType("map"); },
                     disabled: (saveState && saveState.addingMedia) || includes(disabledMediaType, "map")
                 }]} />
             <div className="ms-mediaEditor-services">
@@ -74,7 +74,7 @@ export default ({
                     placeholder="mediaEditor.mediaPicker.selectService"
                     options={services.map(s => ({ label: <Message msgId={s.name} />, value: s.id }))}
                     onChange={setMediaService}
-                    value={selectService(services, selectedService)}
+                    value={selectService(services, activeMediaService, mediaType)}
                     clearable={false}
                 />
             </div>

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { get, findIndex, find, merge } from 'lodash';
+import { get, findIndex, find, merge, isEmpty } from 'lodash';
 import { MediaTypes } from '../utils/GeoStoryUtils';
 import { SourceTypes } from '../utils/MediaEditorUtils';
 import {
@@ -143,20 +143,35 @@ export default (state = DEFAULT_STATE, action) => {
         return set('selected', action.id, state);
     }
     case SET_MEDIA_TYPE: {
-        const defaultSource = get(state, `settings.mediaTypes[${action.mediaType}].defaultSource`, "geostory");
-        const service = action.selectedService;
         const mediaType = action.mediaType;
-        const source = state?.activeMediaService ? state.activeMediaService : {};
-        let activeMediaService = {...source};
-        activeMediaService[mediaType] = service;
+        let updatedActiveMediaService = {};
+        const activeMediaService = get(state, 'activeMediaService');
+        const defaultSource = get(state, `settings.mediaTypes[${action.mediaType}].defaultSource`, "geostory");
+        if (activeMediaService) {
+            updatedActiveMediaService = activeMediaService;
+            if (isEmpty(updatedActiveMediaService) || !updatedActiveMediaService[mediaType]) {
+                updatedActiveMediaService[mediaType] = defaultSource;
+            }
+        } else {
+            updatedActiveMediaService = {[mediaType]: defaultSource};
+        }
+        const selectSource = updatedActiveMediaService[mediaType];
         return compose(
-            set('settings.sourceId', action.selectedService ? action.selectedService : defaultSource), // reset sourceId to default when media type changes and action.selectedService is undefined
+            set('settings.sourceId', selectSource ? selectSource : defaultSource),
             set('settings.mediaType', action.mediaType),
-            set('activeMediaService', activeMediaService)
+            set('activeMediaService', updatedActiveMediaService)
         )(state);
     }
     case SET_MEDIA_SERVICE: {
-        return set('settings.sourceId', action.id, state);
+        const mediaType = get(state, `settings.mediaType`);
+        const source = state?.activeMediaService ? state.activeMediaService : {};
+        let activeMediaService = {...source};
+        activeMediaService[mediaType] = action.id;
+        return compose(
+            set('settings.sourceId', action.id),
+            set('settings.mediaType', mediaType),
+            set('activeMediaService', activeMediaService)
+        )(state);
     }
     case SHOW:
         // setup media editor settings

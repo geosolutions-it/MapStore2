@@ -32,7 +32,8 @@ import {
     getCurrentMediaResourcesTotalCount,
     getLoadingSelectedMedia,
     getLoadingMediaList,
-    disabledMediaTypeSelector
+    disabledMediaTypeSelector,
+    activeMediaServiceSelector
 } from '../../selectors/mediaEditor';
 
 import ResizableModal from '../../components/misc/ResizableModal';
@@ -93,7 +94,8 @@ const Editor = connect(createStructuredSelector({
     services: availableSourcesSelector,
     editing: editingSelector,
     saveState: saveStateSelector,
-    disabledMediaType: disabledMediaTypeSelector
+    disabledMediaType: disabledMediaTypeSelector,
+    activeMediaService: activeMediaServiceSelector
 }), {
     setMediaService,
     setMediaType

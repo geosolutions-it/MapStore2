@@ -107,7 +107,7 @@ describe('Test the mediaEditor reducer', () => {
     });
     it('SET_MEDIA_TYPE WITH A SELECTED SERVICE', () => {
         const mediaType = "mediaType";
-        const selectedService = "geonode";
+        const selectedService = "geostory";
         const activeMediaService = {
             [mediaType]: selectedService
         };
