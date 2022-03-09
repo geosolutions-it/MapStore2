@@ -136,7 +136,7 @@ Downstream project should update following configurations:
 -            </resource>
 -        </resources>
 -    </configuration>
--</execution> 
+-</execution>
 ```
 
 - remove all the external script and css related to cesium and cesium-navigation now included as packages
@@ -453,7 +453,7 @@ Here the changes in `pom.xml` and `web/pom.xml to update:
     <groupId>proxy</groupId>
     <artifactId>http_proxy</artifactId>
 -      <version>1.1.0</version>
-+      <version>1.2-SNAPSHOT</version>
++      <version>1.1.1</version>
     <type>war</type>
     <scope>runtime</scope>
     </dependency>
