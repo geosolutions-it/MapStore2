@@ -21,8 +21,6 @@ import {showCoordinateEditorSelector, measureSelector} from '../selectors/contro
 import {geomTypeSelector} from '../selectors/measurement';
 import { CLICK_ON_MAP } from '../actions/map';
 import {newAnnotation, setEditingFeature, cleanHighlight, toggleVisibilityAnnotation} from '../actions/annotations';
-import {localConfigSelector} from "../selectors/localConfig";
-import {isBrowserMobile} from "../selectors/dashboard";
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
