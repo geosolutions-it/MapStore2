@@ -1109,6 +1109,13 @@ export const convertDegreesToRadian = (deg) => {
     return isNumber(value) && ((value * Math.PI) / 180);
 };
 
+export const setValueBoundaries = (value, min, max ) => {
+    if (isNaN(value) && value.length < 1) { return 0;}
+    if (value < min) { return min;}
+    if (value > max) { return max;}
+    return  parseFloat(value);
+};
+
 CoordinatesUtils = {
     setCrsLabels,
     getUnits,
@@ -1167,6 +1174,7 @@ CoordinatesUtils = {
     getLonLatFromPoint,
     getExtentForProjection,
     convertRadianToDegrees,
-    convertDegreesToRadian
+    convertDegreesToRadian,
+    setValueBoundaries
 };
 export default CoordinatesUtils;
