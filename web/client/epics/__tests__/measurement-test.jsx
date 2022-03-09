@@ -267,13 +267,6 @@ describe('measurement epics', () => {
                     enabled: true
                 }
             },
-            localConfig: {
-                plugins: {
-                    desktop: [{
-                        name: 'Measure'
-                    }]
-                }
-            },
             measurement: {
                 currentFeature: 0,
                 features: [{
