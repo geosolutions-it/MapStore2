@@ -8,7 +8,7 @@ module.exports = function karmaConfig(config) {
             { pattern: './web/client/translations/**/*', included: false }
         ],
         browsers: ["Chrome"],
-        basePath: "..",
+        basePath: path.join(__dirname, ".."),
         path: path.join(__dirname, "..", "web", "client"),
         testFile: 'build/tests.webpack.js',
         singleRun: false
