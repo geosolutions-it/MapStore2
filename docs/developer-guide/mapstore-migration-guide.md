@@ -173,6 +173,45 @@ An update to the MapStore printing engine context file (`applicationContext-prin
 +<bean id="jmlMetricsReporter" class="org.mapfish.print.metrics.JmxMetricsReporter" lazy-init="false"/>
 ```
 
+Also, remember to update your project pom.xml with the updated dependency:
+
+ - locate the print-lib dependency in the pom.xml file
+ - replace the dependency with the following snippet 
+
+```xml
+<dependency>
+    <groupId>org.mapfish.print</groupId>
+    <artifactId>print-lib</artifactId>
+    <version>geosolutions-2.1-SNAPSHOT</version>
+    <exclusions>
+        <exclusion>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
 ## Migration from 2021.02.01 to 2021.02.02
 ### Style parsers dynamic import
 
