@@ -27,7 +27,7 @@ import {
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange, isEmpty, pick, omit } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
-import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian } from '../../utils/CoordinatesUtils';
+import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian, setValueBoundaries } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
@@ -151,6 +151,13 @@ class SharePanel extends React.Component {
             !isEqual(this.props.isVisible, newProps.isVisible) ||
             !isEqual(this.props?.viewerOptions?.orientation, newProps.viewerOptions?.orientation)) {
             this.initializeDefaults(newProps);
+        }
+        if (this.props?.viewerOptions?.orientation) {
+            this.setState({
+                heading: convertRadianToDegrees(newProps.viewerOptions?.orientation?.heading),
+                pitch: convertRadianToDegrees(newProps.viewerOptions?.orientation?.pitch),
+                roll: convertRadianToDegrees(newProps.viewerOptions?.orientation?.roll)
+            });
         }
     }
 
@@ -301,13 +308,6 @@ class SharePanel extends React.Component {
         this.props.updateMapView(updateMapProperties);
     }
 
-    setValueBoundaries = (value, min, max) => {
-        if (value.length < 1) { return 0;}
-        if (value < min) { return min;}
-        if (value > max) { return max;}
-        return  value;
-    }
-
     renderAdvancedSettings = () => {
         return (
             <SwitchPanel
@@ -419,7 +419,7 @@ class SharePanel extends React.Component {
                                             });
                                         }}
                                         onBlur={()=> {
-                                            const angle = this.setValueBoundaries(this.state.heading, 0, 360);
+                                            const angle = setValueBoundaries(this.state.heading, 0, 360);
                                             this.updateMapView('heading', angle);
                                         }}
                                     />
@@ -443,7 +443,7 @@ class SharePanel extends React.Component {
                                             });
                                         }}
                                         onBlur={()=> {
-                                            const angle = this.setValueBoundaries(this.state.roll, -90, 90);
+                                            const angle = setValueBoundaries(this.state.roll, -90, 90);
                                             this.updateMapView('roll', angle);
                                         }}
                                     />
@@ -467,7 +467,7 @@ class SharePanel extends React.Component {
                                             });
                                         }}
                                         onBlur={()=> {
-                                            const angle = this.setValueBoundaries(this.state.pitch, -90, 90);
+                                            const angle = setValueBoundaries(this.state.pitch, -90, 90);
                                             this.updateMapView('pitch', angle);
                                         }}
                                     />
