@@ -10,7 +10,11 @@ import {
     CHANGE_DRAWING_STATUS,
     SET_CURRENT_STYLE,
     GEOMETRY_CHANGED,
-    DRAW_SUPPORT_STOPPED
+    DRAW_SUPPORT_STOPPED,
+    TOGGLE_SNAPPING,
+    SET_SNAPPING_LAYER,
+    REFRESH_SNAPPING_LAYER,
+    SNAPPING_IS_LOADING
 } from '../actions/draw';
 
 import assign from 'object-assign';
@@ -21,7 +25,11 @@ const initialState = {
     drawMethod: null,
     options: {},
     features: [],
-    tempFeatures: []
+    tempFeatures: [],
+    snapping: false,
+    snappingIsLoading: false,
+    snappingLayer: false,
+    snappingShouldRefresh: false
 };
 
 function draw(state = initialState, action) {
@@ -43,6 +51,28 @@ function draw(state = initialState, action) {
         return assign({}, state, {tempFeatures: action.features});
     case DRAW_SUPPORT_STOPPED:
         return assign({}, state, {tempFeatures: []});
+    case TOGGLE_SNAPPING:
+        return {
+            ...state,
+            snapping: !state.snapping
+        };
+    case SET_SNAPPING_LAYER:
+        return {
+            ...state,
+            snappingLayer: action.snappingLayer,
+            snappingShouldRefresh: true,
+            snappingIsLoading: false
+        };
+    case SNAPPING_IS_LOADING:
+        return {
+            ...state,
+            snappingIsLoading: action.loading
+        };
+    case REFRESH_SNAPPING_LAYER:
+        return {
+            ...state,
+            snappingShouldRefresh: false
+        };
     default:
         return state;
     }

@@ -1,14 +1,16 @@
 import React from 'react';
 import './toolbar.css';
 import { sortBy } from 'lodash';
-import { ButtonGroup, Checkbox, Glyphicon } from 'react-bootstrap';
+import {ButtonGroup, Checkbox, Glyphicon, MenuItem} from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
 import withHint from '../enhancers/withHint';
 import TButtonComp from "./TButton";
+import TSplitButtonComp from "./TSplitButton";
 import { getApi } from '../../../../api/userPersistedStorage';
 
 const TButton = withHint(TButtonComp);
+const TSplitButton = withHint(TSplitButtonComp);
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     if (isDrawing) {
         return "featuregrid.toolbar.stopDrawGeom";
@@ -163,7 +165,25 @@ const standardButtons = {
         visible={showTimeSyncButton}
         active={timeSync}
         onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
-        glyph="time" />)
+        glyph="time" />),
+    snapToFeature: ({snapping, mode, events = {}}) => (<TSplitButton
+        id="snap-button"
+        keyProp="snap-button"
+        tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
+        visible={mode === "EDIT"}
+        onClick={() => events.toggleSnapping && events.toggleSnapping(!snapping)}
+        title={<Glyphicon glyph="magnet" />}
+        tooltipPosition="top"
+        className = "square-button-md no-border"
+        active={!!snapping}
+        pullLeft
+    >
+        <MenuItem eventKey="1">Action</MenuItem>
+        <MenuItem eventKey="2">Another action</MenuItem>
+        <MenuItem eventKey="3">Something else here</MenuItem>
+        <MenuItem divider />
+        <MenuItem eventKey="4">Separated link</MenuItem>
+    </TSplitButton>)
 };
 
 // standard buttons with position set to index in this array. shape {name, Component, position} is aligned with attributes expected from tools injected.
@@ -179,9 +199,10 @@ const buttons = [
     {name: "filter", Component: standardButtons.filter}, // GRID (needs query panel plugin)
     {name: "zoomAll", Component: standardButtons.zoomAll}, // GRID (should remove or hide? Is always disabled and not to much useful)
     {name: "gridSettings", position: 900, Component: standardButtons.gridSettings}, // GRID. (settings buttons are usually near the end of a toolbar)
+    {name: "snap", position: 1300, Component: standardButtons.snapToFeature}, // GRID. (settings buttons are usually near the end of a toolbar)
     // note: `syncGridFilterToMap` needs to stay at the end of the toolbar because of a bug. The tooltip active forces this button to be at the end (see #7271)
     // so to avoid a replacement after the button closes, we need to put it at the end, until the bug is solved.
-    {name: "syncGridFilterToMap", position: 1000, Component: standardButtons.syncGridFilterToMap}, // GRID
+    {name: "syncGridFilterToMap", position: 1100, Component: standardButtons.syncGridFilterToMap}, // GRID
     {name: "syncTimeParameter", Component: standardButtons.syncTimeParameter} // GRID (generic functionality not mandatory related to timeline)
 ].map(({position, ...rest}, index) => ({
     ...rest,

@@ -16,6 +16,7 @@ import {
 } from '../../actions/featuregrid';
 
 import { toggleSyncWms } from '../../actions/wfsquery';
+import {toggleSnapping} from "../../actions/draw";
 
 export default {
     createFeature: () => createNewFeatures([{}]),
@@ -34,5 +35,6 @@ export default {
     sync: () => toggleSyncWms(),
     setTimeSync,
     hideSyncPopover: () => hideSyncPopover(),
-    toggleShowAgain: () => toggleShowAgain()
+    toggleShowAgain: () => toggleShowAgain(),
+    toggleSnapping: () => toggleSnapping()
 };

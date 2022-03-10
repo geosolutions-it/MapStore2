@@ -47,6 +47,7 @@ import Select from 'ol/interaction/Select';
 import {unByKey} from 'ol/Observable';
 import {getCenter} from 'ol/extent';
 import {fromCircle, circular} from 'ol/geom/Polygon';
+import {Snap} from "ol/interaction";
 
 const geojsonFormat = new GeoJSON();
 
@@ -85,7 +86,17 @@ export default class DrawSupport extends React.Component {
         onDrawingFeatures: PropTypes.func,
         onSelectFeatures: PropTypes.func,
         onEndDrawing: PropTypes.func,
-        style: PropTypes.object
+        style: PropTypes.object,
+
+        snapping: PropTypes.bool,
+        snappingLayer: PropTypes.string,
+        snappingLayerData: PropTypes.object,
+        isSnappingLoading: PropTypes.bool,
+        snappingShouldRefresh: PropTypes.bool,
+
+        onUpdateSnappingLayer: PropTypes.func,
+        onRefreshSnappingLayer: PropTypes.func,
+        setSnappingShouldRefresh: PropTypes.func
     };
 
     static defaultProps = {
@@ -102,7 +113,9 @@ export default class DrawSupport extends React.Component {
         onDrawStopped: () => {},
         onDrawingFeatures: () => {},
         onSelectFeatures: () => {},
-        onEndDrawing: () => {}
+        onEndDrawing: () => {},
+        onUpdateSnappingLayer: () => {},
+        setSnappingShouldRefresh: () => {}
     };
 
     /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
@@ -124,7 +137,19 @@ export default class DrawSupport extends React.Component {
         if (!newProps.drawStatus && this.selectInteraction) {
             this.selectInteraction.getFeatures().clear();
         }
-        if ( this.props.drawStatus !== newProps.drawStatus || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features) {
+
+        const snappingToggledOff = !newProps.snapping && this.props.snapping;
+        snappingToggledOff && this.removeSnapInteraction();
+        this.processSnappingData(newProps);
+
+        const snappingLayerChanged = this.props.snappingLayerData !== newProps.snappingLayerData;
+        const snappingStateChanged = this.props.snapping !== newProps.snapping;
+        if (
+            this.props.drawStatus !== newProps.drawStatus ||
+            this.props.drawMethod !== newProps.drawMethod ||
+            this.props.features !== newProps.features ||
+            (snappingStateChanged || snappingLayerChanged)
+        ) {
             switch (newProps.drawStatus) {
             case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
             case "start":/* only starts draw*/ this.addInteractions(newProps); break;
@@ -148,6 +173,11 @@ export default class DrawSupport extends React.Component {
     getMapCrs = () => {
         return this.props.map.getView().getProjection().getCode();
     }
+
+    getSnappingLayerData = (layerId) => {
+        return this.props.map.getLayers().getArray().find(l => l.get('msId') === layerId);
+    }
+
     render() {
         return null;
     }
@@ -381,12 +411,27 @@ export default class DrawSupport extends React.Component {
         this.setDoubleClickZoomEnabled(false);
     };
 
+    addSnapInteraction = () => {
+        if (!this.props.snapping) return false;
+        if (this.snapInteraction) {
+            this.removeSnapInteraction();
+        }
+        const layer = this.props.map.getLayers().getArray().find(l => l.get('msId') === 'snapping');
+        if (layer) {
+            this.snapInteraction = new Snap({source: layer.getSource()});
+            this.drawSourceSnapInteraction = new Snap({source: this.drawSource});
+            this.props.map.addInteraction(this.snapInteraction);
+            this.props.map.addInteraction(this.drawSourceSnapInteraction);
+        }
+        return true;
+    };
     toMulti = (geometry) => {
         if (geometry.getType() === 'Point') {
             return new MultiPoint([geometry.getCoordinates()]);
         }
         return geometry;
     };
+
     handleDrawAndEdit = (drawMethod, startingPoint, maxPoints, newProps) => {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
@@ -740,12 +785,12 @@ export default class DrawSupport extends React.Component {
 
         this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner, updatedFeatures);
     };
-
     addInteractions = (newProps) => {
         this.clean();
         if (!this.drawLayer) {
             this.addLayer(newProps);
         }
+        this.addDrawInteraction(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps);
         this.addDrawInteraction(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps);
         if (newProps.options && newProps.options.editEnabled) {
             this.addSelectInteraction();
@@ -780,11 +825,12 @@ export default class DrawSupport extends React.Component {
             this.addFeatures(newProps);
         }
     };
+
+
     addSingleClickListener = (singleclickCallback, props) => {
         let evtKey = props.map.on('singleclick', singleclickCallback);
         return evtKey;
     };
-
 
     addDrawOrEditInteractions = (newProps) => {
         if (this.state && this.state.keySingleClickCallback) {
@@ -937,7 +983,10 @@ export default class DrawSupport extends React.Component {
         }
         if (newProps.options.editEnabled) {
 
-            !newProps.options.geodesic && this.addModifyInteraction(newProps);
+            if (!newProps.options.geodesic) {
+                this.addModifyInteraction(newProps);
+                this.addSnapInteraction();
+            }
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             if (newProps.options.translateEnabled !== false) {
                 this.addTranslateInteraction();
@@ -953,6 +1002,7 @@ export default class DrawSupport extends React.Component {
 
         if (newProps.options.drawEnabled) {
             this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps);
+            this.addSnapInteraction();
         }
     };
 
@@ -1019,13 +1069,13 @@ export default class DrawSupport extends React.Component {
 
         this.props.map.addInteraction(this.selectInteraction);
     };
-
     selectFeature = (f) => {
         f.setProperties({selected: true});
     }
     deselectFeature = (f) => {
         f.setProperties({selected: false});
     }
+
     removeDrawInteraction = () => {
         if (this.drawInteraction) {
             this.props.map.removeInteraction(this.drawInteraction);
@@ -1037,6 +1087,19 @@ export default class DrawSupport extends React.Component {
              */
             setTimeout(() => this.props.map.enableEventListener('singleclick'), 500);
             setTimeout(() => this.setDoubleClickZoomEnabled(true), 250);
+        }
+    };
+
+    removeSnapInteraction = () => {
+        if (this.snapInteraction) {
+            this.snapInteraction.setActive(false);
+            this.props.map.removeInteraction(this.snapInteraction);
+            this.snapInteraction = null;
+        }
+        if (this.drawSourceSnapInteraction) {
+            this.drawSourceSnapInteraction.setActive(false);
+            this.props.map.removeInteraction(this.drawSourceSnapInteraction);
+            this.drawSourceSnapInteraction = null;
         }
     };
 
@@ -1331,7 +1394,6 @@ export default class DrawSupport extends React.Component {
         }
         return this.olGeomFromType({type, coordinates, radius, center, projection, options});
     };
-
     olGeomFromType = ({type, coordinates, radius, center, projection, options}) => {
         // TODO check correct number of nesting arrays of coordinates for each case
         let geometry;
@@ -1367,13 +1429,13 @@ export default class DrawSupport extends React.Component {
         }
         return geometry;
     }
+
     convertGeometryTypeToStyleType = (drawMethod) => {
         switch (drawMethod) {
         case "BBOX": return "LineString";
         default: return drawMethod;
         }
     }
-
     appendToMultiGeometry = (drawMethod, geometry, drawnGeom) => {
         switch (drawMethod) {
         case "MultiPoint": geometry.appendPoint(drawnGeom); break;
@@ -1390,6 +1452,7 @@ export default class DrawSupport extends React.Component {
     calculateRadius = (center, coordinates) => {
         return isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0]) ? Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2)) : 100;
     }
+
     /**
      * @param {number[]} center in 3857 [lon, lat]
      * @param {number} radius in meters
@@ -1403,7 +1466,6 @@ export default class DrawSupport extends React.Component {
     polygonCoordsFromCircle = (center, radius, npoints = 100) => {
         return this.polygonFromCircle(center, radius, npoints).getCoordinates();
     }
-
     /**
      * replace circles with polygons in feature collection
      * @param {Feature[]} features to transform
@@ -1453,6 +1515,8 @@ export default class DrawSupport extends React.Component {
             return g;
         });
     }
+
+
     /**
      * replace polygons with circles
      * @param {Feature} feature must contain a geometry collection and property "circles"
@@ -1474,7 +1538,6 @@ export default class DrawSupport extends React.Component {
         });
     }
 
-
     addTranslateListener = () => {
         document.addEventListener("keydown", (event) => {
             if (event.altKey && event.code === "AltLeft") {
@@ -1486,6 +1549,34 @@ export default class DrawSupport extends React.Component {
                 this.translateInteraction.setActive(false);
             }
         });
+    }
+
+    processSnappingData = (newProps) => {
+        const snappingToggledOn = newProps.snapping && !this.props.snapping;
+        if (snappingToggledOn && newProps.snappingShouldRefresh) {
+            this.props.setSnappingShouldRefresh(false);
+            const layer = this.getSnappingLayerData(newProps.snappingLayer);
+            let geom = [];
+            layer.getSource().forEachFeature( function(feature) { geom.push(new Feature(feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326'))); } );
+            const features = geojsonFormat.writeFeaturesObject(geom);
+
+            this.props.onUpdateSnappingLayer(
+                'snapping',
+                'draw',
+                'overlay',
+                {
+                    id: 'snapping',
+                    features: features.features,
+                    type: "vector",
+                    name: "snapping",
+                    visibility: true,
+                    style: {
+                        opacity: 0,
+                        fillOpacity: 0
+                    }
+                }
+            );
+        }
     }
 }
 

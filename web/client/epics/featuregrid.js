@@ -15,7 +15,12 @@ import { fidFilter } from '../utils/ogc/Filter/filter';
 import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
 
 import assign from 'object-assign';
-import { changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset } from '../actions/draw';
+import {
+    changeDrawingStatus,
+    GEOMETRY_CHANGED,
+    drawSupportReset,
+    setSnappingLayer
+} from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
 import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
@@ -99,11 +104,11 @@ import {
     ACTIVATE_TEMPORARY_CHANGES,
     disableToolbar,
     FEATURES_MODIFIED,
-    deactivateGeometryFilter as  deactivateGeometryFilterAction,
+    deactivateGeometryFilter as deactivateGeometryFilterAction,
     setSelectionOptions,
     setPagination,
     launchUpdateFilterFunc,
-    LAUNCH_UPDATE_FILTER_FUNC
+    LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -153,6 +158,7 @@ import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/que
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
+import {snappingLayerSelector} from "../selectors/draw";
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -1184,3 +1190,12 @@ export const hideDrawerOnFeatureGridOpenMobile = (action$, { getState } = {}) =>
             && drawerEnabledControlSelector(getState())
         )
         .mapTo(toggleControl('drawer', 'enabled'));
+
+export const setDefaultSnappingLayerOnFeatureGridOpen = (action$, { getState } = {}) =>
+    action$
+        .ofType(SET_LAYER)
+        .filter(() => !snappingLayerSelector(getState()))
+        .switchMap(() => {
+            const selectedLayerId = selectedLayerSelector(getState())?.id;
+            return Rx.Observable.of(setSnappingLayer(selectedLayerId));
+        });

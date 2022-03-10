@@ -60,6 +60,7 @@ import {
 import { getFeatureTypeProperties, isGeometryType } from '../../../utils/ogc/WFS/base';
 import { pageEvents, toolbarEvents } from '../index';
 import settings from './AttributeSelector';
+import {availableSnappingLayers, isSnappingActive, isSnappingLoading} from "../../../selectors/draw";
 
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
@@ -90,7 +91,10 @@ const Toolbar = connect(
         hasSupportedGeometry,
         isFilterActive,
         showTimeSyncButton: showTimeSync,
-        timeSync: timeSyncActive
+        timeSync: timeSyncActive,
+        snapping: isSnappingActive,
+        availableSnappingLayers: availableSnappingLayers,
+        isSnappingLoading
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);
