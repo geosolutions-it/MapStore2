@@ -46,7 +46,7 @@ module.exports = require('./MapStore2/build/buildConfig')({
             template: path.join(__dirname, 'apiTemplate.html'),
             chunks: ['__PROJECTNAME__-api'],
             publicPath: 'dist/',
-            inject: 'head',
+            inject: 'body',
             hash: true,
             filename: 'api.html'
         }),
