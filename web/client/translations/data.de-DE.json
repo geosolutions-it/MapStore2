@@ -654,7 +654,11 @@
                 "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein",
                 "invalid_object": "Ungültige Serviceantwort",
                 "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
+                "invalid_attribute": "Ungültiger Attributtyp bei Auswahl. Bitte wählen Sie ein gültiges Attribut aus der Liste für die Klassifizierungsmethode aus",
                 "invalid_classes": "Maximum muss in jeder Klasse größer als Minimum sein"
+            },
+            "error": {
+                "defaultGroupOnTop": "Die Gruppe {groupTitle} ist als Standardzielgruppe festgelegt und muss daher oben bleiben"
             }
         },
         "print":{
