@@ -286,8 +286,11 @@ var Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
+                                            const URIs = dc.references.length > 0 ? dc.references : dc.URI;
                                             if (!_dcRef) {
-                                                _dcRef = dc.references.length > 0 ? dc.references : dc.URI;
+                                                _dcRef = URIs;
+                                            } else {
+                                                _dcRef = _dcRef.concat(URIs);
                                             }
                                             obj.dc = dc;
                                         }
