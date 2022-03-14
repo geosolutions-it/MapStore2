@@ -44,7 +44,7 @@
       },
       {
         "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
-        "authkeyParamName": "authkey",
+        "authkeyParamName": "authkey-qa",
         "method": "authkey"
     }],
     "monitorState": [
