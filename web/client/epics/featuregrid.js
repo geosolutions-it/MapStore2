@@ -158,7 +158,6 @@ import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/que
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
-import {snappingLayerSelector} from "../selectors/draw";
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -1194,7 +1193,6 @@ export const hideDrawerOnFeatureGridOpenMobile = (action$, { getState } = {}) =>
 export const setDefaultSnappingLayerOnFeatureGridOpen = (action$, { getState } = {}) =>
     action$
         .ofType(SET_LAYER)
-        .filter(() => !snappingLayerSelector(getState()))
         .switchMap(() => {
             const selectedLayerId = selectedLayerSelector(getState())?.id;
             return Rx.Observable.of(setSnappingLayer(selectedLayerId));

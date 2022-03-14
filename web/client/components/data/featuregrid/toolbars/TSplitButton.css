@@ -7,3 +7,18 @@
 #featuregrid-toolbar .btn {
     overflow: hidden;
 }
+
+.split-button-pagination {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+.split-button-pagination .pagination-next,
+.split-button-pagination .pagination-previous {
+    width: 50%;
+}
+
+.snap-tool .dropdown-menu input[type="checkbox"] {
+    position: relative;
+}

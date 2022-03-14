@@ -34,7 +34,7 @@ import {
     geometryChanged,
     drawStopped,
     selectFeatures,
-    drawingFeatures, refreshSnappingLayer
+    drawingFeatures, refreshSnappingLayer, toggleSnappingIsLoading
 } from '../../actions/draw';
 
 import { updateHighlighted } from '../../actions/highlight';
@@ -43,11 +43,7 @@ import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selectors/map';
 import {
-    isSnappingActive,
-    isSnappingLoading,
-    snappingShouldRefresh,
-    snappingLayerSelector,
-    snappingLayerDataSelector
+    snappingLayerDataSelector, snappingLayerType, snappingLayerId
 } from "../../selectors/draw";
 import {updateAdditionalLayer} from "../../actions/additionallayers";
 
@@ -101,11 +97,9 @@ const pluginsCreator = (mapType, actions) => {
         const DrawSupport = connect((state) =>
             ({
                 ...state.draw,
-                snappingLayer: snappingLayerSelector(state),
-                snappingLayerData: snappingLayerDataSelector(state),
-                snapping: isSnappingActive(state),
-                isSnappingLoading: isSnappingLoading(state),
-                snappingShouldRefresh: snappingShouldRefresh(state)
+                snappingLayerId: snappingLayerId(state),
+                snappingLayerType: snappingLayerType(state),
+                snappingLayerData: snappingLayerDataSelector(state)
             }) || {}, {
             onChangeDrawingStatus: changeDrawingStatus,
             onEndDrawing: endDrawing,
@@ -115,7 +109,8 @@ const pluginsCreator = (mapType, actions) => {
             onDrawStopped: drawStopped,
             setCurrentStyle: setCurrentStyle,
             onUpdateSnappingLayer: updateAdditionalLayer,
-            setSnappingShouldRefresh: refreshSnappingLayer
+            setSnappingShouldRefresh: refreshSnappingLayer,
+            toggleSnappingIsLoading: toggleSnappingIsLoading
         })( components.DrawSupport || Empty);
 
         const BoxSelectionSupport = connect(

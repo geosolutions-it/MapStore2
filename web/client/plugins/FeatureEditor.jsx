@@ -185,7 +185,8 @@ const FeatureDock = (props = {
                     header={getHeader({
                         toolbarItems,
                         hideCloseButton: props.hideCloseButton,
-                        hideLayerTitle: props.hideLayerTitle
+                        hideLayerTitle: props.hideLayerTitle,
+                        pluginCfg: props.pluginCfg
                     })}
                     columns={getPanels(props.tools)}
                     footer={getFooter(props)}>

@@ -5,8 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get } from 'lodash';
-import {additionalLayersSelector} from "./layers";
+import {get, isNil} from 'lodash';
+import {additionalLayersSelector, getLayerFromId, layersSelector} from "./layers";
+import {selectedLayerIdSelector} from "./featuregrid";
+import {createShallowSelectorCreator} from "../utils/ReselectUtils";
 
 export const changedGeometriesSelector = state => state && state.draw && state.draw.tempFeatures;
 export const drawSupportActiveSelector = (state) => {
@@ -14,13 +16,34 @@ export const drawSupportActiveSelector = (state) => {
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
 
-export const selectedLayerSelector = state => state?.draw.selectedLayer;
+export const snappingLayerSelector = state => state?.draw?.snappingLayer ? getLayerFromId(state, state?.draw?.snappingLayer) : false;
 
-// export const availableSnappingLayers = state => {
-//     // build list of options for snapping layers dropdown
-// };
+export const snappingLayerId = state => snappingLayerSelector(state)?.id;
+export const snappingLayerType = state => snappingLayerSelector(state)?.type;
 
-export const snappingLayerSelector = state => state?.draw?.snappingLayer;
+export const availableSnappingLayers = createShallowSelectorCreator(
+    (a, b) => {
+        return a === b
+            || !isNil(a) && !isNil(b) && a.id === b.id;
+    }
+)([
+    layersSelector,
+    selectedLayerIdSelector,
+    snappingLayerId
+],
+(layers, id, snappingId) => {
+    return [{id, title: 'Current layer', active: id === snappingId}].concat(
+        layers.map((layer) =>
+            layer.id !== id
+                && ['wms', 'wfs', 'vector'].includes(layer?.type)
+                && layer.group !== 'background'
+                && layer.visibility ? {
+                    id: layer.id,
+                    title: layer.title ?? layer.name,
+                    active: layer.id === snappingId
+                } : false).filter(Boolean)
+    );
+});
 
 export const snappingLayerDataSelector = state => {
     const additionalLayers = additionalLayersSelector(state) ?? [];

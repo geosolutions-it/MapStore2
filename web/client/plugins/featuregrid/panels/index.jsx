@@ -47,7 +47,7 @@ import {
     timeSyncActive
 } from '../../../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
-import { isCesium } from '../../../selectors/maptype';
+import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
 import {
     featureCollectionResultSelector,
     featureLoadingSelector,
@@ -60,7 +60,11 @@ import {
 import { getFeatureTypeProperties, isGeometryType } from '../../../utils/ogc/WFS/base';
 import { pageEvents, toolbarEvents } from '../index';
 import settings from './AttributeSelector';
-import {availableSnappingLayers, isSnappingActive, isSnappingLoading} from "../../../selectors/draw";
+import {
+    availableSnappingLayers,
+    isSnappingActive,
+    isSnappingLoading
+} from "../../../selectors/draw";
 
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
@@ -93,8 +97,9 @@ const Toolbar = connect(
         showTimeSyncButton: showTimeSync,
         timeSync: timeSyncActive,
         snapping: isSnappingActive,
-        availableSnappingLayers: availableSnappingLayers,
-        isSnappingLoading
+        availableSnappingLayers,
+        isSnappingLoading,
+        mapType: mapTypeSelector
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);
@@ -162,8 +167,8 @@ export const getPanels = (tools = {}) =>
             const Panel = panels[t];
             return <Panel key={t} {...(panelDefaultProperties[t] || {})} />;
         });
-export const getHeader = ({ hideCloseButton, hideLayerTitle, toolbarItems }) => {
-    return <Header hideCloseButton={hideCloseButton} hideLayerTitle={hideLayerTitle} ><Toolbar toolbarItems={toolbarItems}/></Header>;
+export const getHeader = ({ hideCloseButton, hideLayerTitle, toolbarItems, pluginCfg }) => {
+    return <Header hideCloseButton={hideCloseButton} hideLayerTitle={hideLayerTitle} ><Toolbar pluginCfg={pluginCfg} toolbarItems={toolbarItems}/></Header>;
 };
 export const getFooter = (props) => {
     return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;

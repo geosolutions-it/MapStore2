@@ -16,7 +16,7 @@ import {
 } from '../../actions/featuregrid';
 
 import { toggleSyncWms } from '../../actions/wfsquery';
-import {toggleSnapping} from "../../actions/draw";
+import {setSnappingLayer, toggleSnapping} from "../../actions/draw";
 
 export default {
     createFeature: () => createNewFeatures([{}]),
@@ -36,5 +36,6 @@ export default {
     setTimeSync,
     hideSyncPopover: () => hideSyncPopover(),
     toggleShowAgain: () => toggleShowAgain(),
-    toggleSnapping: () => toggleSnapping()
+    toggleSnapping: () => toggleSnapping(),
+    setSnappingLayer: (layerId) => setSnappingLayer(layerId)
 };

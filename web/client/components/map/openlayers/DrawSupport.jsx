@@ -89,14 +89,16 @@ export default class DrawSupport extends React.Component {
         style: PropTypes.object,
 
         snapping: PropTypes.bool,
-        snappingLayer: PropTypes.string,
+        snappingLayer: PropTypes.object,
         snappingLayerData: PropTypes.object,
         isSnappingLoading: PropTypes.bool,
         snappingShouldRefresh: PropTypes.bool,
+        snappingLayerType: PropTypes.string,
 
         onUpdateSnappingLayer: PropTypes.func,
         onRefreshSnappingLayer: PropTypes.func,
-        setSnappingShouldRefresh: PropTypes.func
+        setSnappingShouldRefresh: PropTypes.func,
+        toggleSnappingIsLoading: PropTypes.func
     };
 
     static defaultProps = {
@@ -174,7 +176,7 @@ export default class DrawSupport extends React.Component {
         return this.props.map.getView().getProjection().getCode();
     }
 
-    getSnappingLayerData = (layerId) => {
+    getLayerInstance = (layerId) => {
         return this.props.map.getLayers().getArray().find(l => l.get('msId') === layerId);
     }
 
@@ -1552,30 +1554,55 @@ export default class DrawSupport extends React.Component {
     }
 
     processSnappingData = (newProps) => {
+        const hasLayerChanged =  newProps.snappingLayer !== this.props.snappingLayer;
         const snappingToggledOn = newProps.snapping && !this.props.snapping;
-        if (snappingToggledOn && newProps.snappingShouldRefresh) {
+        const reprocessDataOnToggleOn = newProps.snappingShouldRefresh && snappingToggledOn;
+        const reprocessDataOnLayerChange = newProps.snappingShouldRefresh && newProps.snapping && hasLayerChanged;
+        if (reprocessDataOnToggleOn || reprocessDataOnLayerChange) {
             this.props.setSnappingShouldRefresh(false);
-            const layer = this.getSnappingLayerData(newProps.snappingLayer);
+            this.props.toggleSnappingIsLoading(true);
+            const layerType = newProps.snappingLayerType;
+            const layerInstance = this.getLayerInstance(newProps.snappingLayerId);
             let geom = [];
-            layer.getSource().forEachFeature( function(feature) { geom.push(new Feature(feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326'))); } );
-            const features = geojsonFormat.writeFeaturesObject(geom);
 
-            this.props.onUpdateSnappingLayer(
-                'snapping',
-                'draw',
-                'overlay',
-                {
-                    id: 'snapping',
-                    features: features.features,
-                    type: "vector",
-                    name: "snapping",
-                    visibility: true,
-                    style: {
-                        opacity: 0,
-                        fillOpacity: 0
+            // use different loading approaches based on layer type
+            // vector layer data can be loaded right from the map
+            // WMS data should be requested via API call
+            let features = [];
+            switch (layerInstance.type) {
+            case "VECTOR":
+                const crs = layerInstance.getSource().getParams ? layerInstance.getSource().getParams().CRS ?? 'EPSG:3857' : 'EPSG:3857';
+                layerInstance.getSource().forEachFeature( function(feature) { geom.push(new Feature(feature.getGeometry().clone().transform(crs, 'EPSG:4326'))); } );
+                features = geojsonFormat.writeFeaturesObject(geom);
+
+                this.props.toggleSnappingIsLoading();
+                this.props.onUpdateSnappingLayer(
+                    'snapping',
+                    'draw',
+                    'overlay',
+                    {
+                        id: 'snapping',
+                        features: features.features,
+                        type: "vector",
+                        name: "snapping",
+                        visibility: true,
+                        style: {
+                            opacity: 0,
+                            fillOpacity: 0
+                        }
                     }
+                );
+                break;
+            case "TILE":
+                // Check what layer type is it
+                // WMS layer data can be loaded.
+                if (layerType === 'wms') {
+                    // To be implemented
                 }
-            );
+                break;
+            default:
+                break;
+            }
         }
     }
 }

@@ -91,10 +91,9 @@ export function setSnappingLayer(snappingLayer) {
     };
 }
 
-export function setSnappingIsLoading() {
+export function toggleSnappingIsLoading() {
     return {
-        type: SNAPPING_IS_LOADING,
-        loading: true
+        type: SNAPPING_IS_LOADING
     };
 }
 

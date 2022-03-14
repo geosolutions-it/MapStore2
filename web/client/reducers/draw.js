@@ -66,7 +66,7 @@ function draw(state = initialState, action) {
     case SNAPPING_IS_LOADING:
         return {
             ...state,
-            snappingIsLoading: action.loading
+            snappingIsLoading: !state.snappingIsLoading
         };
     case REFRESH_SNAPPING_LAYER:
         return {
