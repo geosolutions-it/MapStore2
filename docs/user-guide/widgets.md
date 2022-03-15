@@ -65,13 +65,13 @@ Just below the chart's preview, the following configurations are available:
 
 #### Color customization
 
-For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. From the **Color** option dropdown menu, the user can select the <img src="../img/button/custom-button.jpg" class="ms-docbutton"/> options and enter the **Custom Colors Settings** through the <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> button.
+For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. From the **Color** option dropdown menu, the user can select the *Custom* option and open the **Custom Colors Settings** modal through the <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> button.
 
 <img src="../img/widgets/custom_colors_settings.jpg" class="ms-docimage"/> 
 
-Through this section, the user is allowed to:
+Inside this modal, the user is allowed to:
 
-* Choose the **Color** of the bars or the slides through the *Color Picker*.
+* Change the default **Color** of bars or slices (depending on the chart type) through the *Color Picker*. This color will be applied for all values for which a *Class Color* has not been configured.
 
 <img src="../img/widgets/custom_colors.gif" class="ms-docimage"/> 
 
@@ -86,13 +86,13 @@ Once the attribute is chosen, new options appear in the *Custom Color Settings* 
 <img src="../img/widgets/default_class_label.jpg" class="ms-docimage"/> 
 
 !!! Note
-    The *Default Class Label* can be a **Custom Labels** with a '${legendValue}' used as placeholder for the Y Attribute.
+    For both *Default Class Label* and  *Class Label* '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
 
-* List the values of the *Classification Attribute* to highlight with a specific color in the chart. These values can be of two types: **String** or **Numeric**.
+* Classify *Classification Attribute* values to assign a specific color in the chart along with its *Class Label* to use for the chart legend. Only values of type **String** or **Number** are currently supported.
 
-#### String Classification Attribute
+#### Classification Attribute of type String
 
-When the values of a classification attribute are string by value, the user can:
+When the values of a classification attribute are of type String, the user can:
 
 <img src="../img/widgets/alphanumeric.jpg" class="ms-docimage"/> 
 
@@ -103,17 +103,17 @@ When the values of a classification attribute are string by value, the user can:
 * Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
 
 !!! Note
-    The *Class Label* can be a **Custom Labels** with a '${legendValue}' used as placeholder for the Y Attribute.
+    For *Class Label*,  '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
 
-En example of *Bar charts* with a color customization of string attribute can be the following:
+An example of *Bar charts* corresponding to this type of classification can be the following:
 
 <img src="../img/widgets/color-customization-alhanumeric-attribute.gif" class="ms-docimage"/> 
 
 Through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button the user can add new values before through the <img src="../img/widgets/add-new-entry-before.jpg" class="ms-docimage"/> button or after through <img src="../img/widgets/add-new-entry-after.jpg" class="ms-docimage"/> button. 
 
-#### Numeric Classification Attribute
+#### Classification Attribute of type Number
 
-When the values of a classification attribute are numeric by value, the user can:
+When the values of a classification attribute are numbers, the user can configure a color ramp and so:
 
 <img src="../img/widgets/numeric.jpg" class="ms-docimage" style="max-width:450px;"/> 
 
@@ -126,9 +126,9 @@ When the values of a classification attribute are numeric by value, the user can
 * Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
 
 !!! Note
-    The *Class Label* can be a **Custom Labels** choosing between: ${minValue}, used as placeholder for class Min Value; ${maxValue}, used as placeholder for class Max Value; ${legendValue} used as placeholder for the Y Attribute.
+    For *Class Label* two placeholders can be used in this case: ${minValue}, can be used as a placeholder for **Min Value** and  ${maxValue}, can be used as a placeholder for Max Value; the ${legendValue} can be used in the same way as specified above.
 
-En example of *Bar charts* with a color customization of numeric attribute can be the following:
+An example of Bar chart corresponding to this type of classification can be the following:
 
 <img src="../img/widgets/color-customization-numeric-attribute.gif" class="ms-docimage"/> 
 
