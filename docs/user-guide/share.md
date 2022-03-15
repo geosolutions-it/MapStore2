@@ -81,7 +81,7 @@ The related available options allow the user to:
 
 ### Advanced options for sharing 3D maps 
 
-Once the [3D Navigation](side-bar.md#3d-navigation) is active on map, enabling the **Advanced options** in the *Share tool*, the user can include the following to the share URL:
+Once the [3D Navigation](side-bar.md#3d-navigation) is active on map, the user can include the following to the share URL by enabling the **Advanced options** in the *Share tool*:
 
 <img src="../img/share/share_window_3d_map_options.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
