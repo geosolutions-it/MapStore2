@@ -305,7 +305,7 @@ export const startFeatureExportDownload = (action$, store) =>
                     data: {
                         mimeType: 'text/xml; subtype=filter/1.1',
                         data: mergeFiltersToOGC({
-                            ogcVersion: '1.0.0',
+                            ogcVersion: '1.1.0',
                             addXmlnsToRoot: true,
                             xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
                         }, layer.layerFilter, action.filterObj)
