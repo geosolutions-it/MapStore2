@@ -145,7 +145,7 @@ export default (state = DEFAULT_STATE, action) => {
     case SET_MEDIA_TYPE: {
         const defaultSource = get(state, `settings.mediaTypes[${action.mediaType}].defaultSource`, "geostory");
         return compose(
-            set('settings.sourceId', action.selectedService ? action.selectedService : defaultSource), // reset sourceId to default when media type changes and action.selectedService is undefined
+            set('settings.sourceId', defaultSource), // reset sourceId to default when media type changes
             set('settings.mediaType', action.mediaType)
         )(state);
     }
