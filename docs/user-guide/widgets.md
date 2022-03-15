@@ -132,6 +132,25 @@ An example of Bar chart corresponding to this type of classification can be the 
 
 <img src="../img/widgets/color-customization-numeric-attribute.gif" class="ms-docimage"/> 
 
+#### Bar Chart Type
+
+If the *Classification attribute* is added to the *Bar Chart*, in the [Advanced Options](widgets.md#advanced-options),  the **Bar Chart Type** option is displayed.
+
+<img src="../img/widgets/bar_type.jpg" class="ms-docimage"/> 
+
+The user can customize the bars by choosing between:
+
+* **Grouped**. An example can be the following:
+
+<img src="../img/widgets/grouped_chart.jpg" class="ms-docimage" style="max-width:450px;"/> 
+
+* **Stacked**. An example can be the following:
+
+<img src="../img/widgets/stacked-chart.jpg" class="ms-docimage" style="max-width:450px;"/> 
+
+!!! Note
+    By default, the bar chart type is **Stacked**
+
 #### Advanced Options
 
 In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
