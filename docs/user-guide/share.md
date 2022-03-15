@@ -79,6 +79,22 @@ The related available options allow the user to:
 
 * **Add marker on loaded map** to show the center point in the shared map 
 
+### Advanced options for sharing 3D maps 
+
+Once the [3D Navigation](side-bar.md#3d-navigation) is active on map, the user can include the following to the share URL by enabling the **Advanced options** in the *Share tool*:
+
+<img src="../img/share/share_window_3d_map_options.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+* The desired center and zoom of the map by enabling the **Add center and zoom to sharing link** 
+
+<img src="../img/share/share_3d_map.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+The related available options allow the user to:
+
+* Center the shared map to specific coordinates by typing them in two different formats (*Decimal* or *Aeronautical* that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button) or by clicking on the map to set automatically the coordinate fields. 
+
+* Share the map at a specific **Zoom level** (`Min:1` and `Max:35`), **Heading** (`Min:0°` and `Max:360°`), **Roll** (`Min:-90°` and `Max:90°`) and **Pitch** (`Min:-90°` and `Max:90°`)
+
 ### Advanced options for sharing GeoStories
 
 In case of GeoStories, enabling the **Advanced options** in the *Share tool* the user can include the following to the share URL:
