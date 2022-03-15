@@ -17,6 +17,7 @@ export const SET_SNAPPING_LAYER = 'DRAW:SET_SNAPPING_LAYER';
 export const SNAPPING_IS_LOADING = 'DRAW:SNAPPING_IS_LOADING';
 export const TOGGLE_SNAPPING = 'DRAW:TOGGLE_SNAPPING';
 export const REFRESH_SNAPPING_LAYER = 'DRAW:REFRESH_SNAPPING_LAYER';
+export const REQUEST_WMS_FEATURES = 'DRAW:REQUEST_WMS_FEATURES';
 
 
 export function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
@@ -101,6 +102,13 @@ export function refreshSnappingLayer(status = true) {
     return {
         type: REFRESH_SNAPPING_LAYER,
         status
+    };
+}
+
+export function snappingRequestWMSFeatures(layerId) {
+    return {
+        type: REQUEST_WMS_FEATURES,
+        layerId
     };
 }
 

@@ -34,7 +34,10 @@ import {
     geometryChanged,
     drawStopped,
     selectFeatures,
-    drawingFeatures, refreshSnappingLayer, toggleSnappingIsLoading
+    drawingFeatures,
+    refreshSnappingLayer,
+    toggleSnappingIsLoading,
+    snappingRequestWMSFeatures
 } from '../../actions/draw';
 
 import { updateHighlighted } from '../../actions/highlight';
@@ -110,7 +113,8 @@ const pluginsCreator = (mapType, actions) => {
             setCurrentStyle: setCurrentStyle,
             onUpdateSnappingLayer: updateAdditionalLayer,
             setSnappingShouldRefresh: refreshSnappingLayer,
-            toggleSnappingIsLoading: toggleSnappingIsLoading
+            toggleSnappingIsLoading: toggleSnappingIsLoading,
+            onSnappingRequestWMSFeatures: snappingRequestWMSFeatures
         })( components.DrawSupport || Empty);
 
         const BoxSelectionSupport = connect(

@@ -96,6 +96,7 @@ export default class DrawSupport extends React.Component {
         snappingLayerType: PropTypes.string,
 
         onUpdateSnappingLayer: PropTypes.func,
+        onSnappingRequestWMSFeatures: PropTypes.func,
         onRefreshSnappingLayer: PropTypes.func,
         setSnappingShouldRefresh: PropTypes.func,
         toggleSnappingIsLoading: PropTypes.func
@@ -117,7 +118,8 @@ export default class DrawSupport extends React.Component {
         onSelectFeatures: () => {},
         onEndDrawing: () => {},
         onUpdateSnappingLayer: () => {},
-        setSnappingShouldRefresh: () => {}
+        setSnappingShouldRefresh: () => {},
+        onSnappingRequestWMSFeatures: () => {}
     };
 
     /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
@@ -1554,13 +1556,13 @@ export default class DrawSupport extends React.Component {
     }
 
     processSnappingData = (newProps) => {
-        const hasLayerChanged =  newProps.snappingLayer !== this.props.snappingLayer;
+        const hasLayerChanged = newProps.snappingLayer !== this.props.snappingLayer;
         const snappingToggledOn = newProps.snapping && !this.props.snapping;
         const reprocessDataOnToggleOn = newProps.snappingShouldRefresh && snappingToggledOn;
         const reprocessDataOnLayerChange = newProps.snappingShouldRefresh && newProps.snapping && hasLayerChanged;
         if (reprocessDataOnToggleOn || reprocessDataOnLayerChange) {
             this.props.setSnappingShouldRefresh(false);
-            this.props.toggleSnappingIsLoading(true);
+            this.props.toggleSnappingIsLoading();
             const layerType = newProps.snappingLayerType;
             const layerInstance = this.getLayerInstance(newProps.snappingLayerId);
             let geom = [];
@@ -1594,10 +1596,8 @@ export default class DrawSupport extends React.Component {
                 );
                 break;
             case "TILE":
-                // Check what layer type is it
-                // WMS layer data can be loaded.
                 if (layerType === 'wms') {
-                    // To be implemented
+                    this.props.onSnappingRequestWMSFeatures(newProps.snappingLayer);
                 }
                 break;
             default:

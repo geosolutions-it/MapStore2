@@ -1716,7 +1716,9 @@
                 "syncOnMap": "Karte mit Filter synchronisieren",
                 "enableTimeSync": "Mit der ausgewählten Zeit oder dem ausgewählten Zeitintervall synchronisieren",
                 "disableTimeSync": "Nicht mit der ausgewählten Zeit oder dem ausgewählten Intervall synchronisieren",
-                "createNewChart": "Diagramm für die ausgewählte Ebene erstellen"
+                "createNewChart": "Diagramm für die ausgewählte Ebene erstellen",
+                "enableSnapping": "Schnappen aktivieren",
+                "disableSnapping": "Schnappen deaktivieren"
             }
         },
         "layerdownload": {
