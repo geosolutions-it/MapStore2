@@ -136,8 +136,8 @@ describe('Test DrawSupport', () => {
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point"/>, document.getElementById("container"));
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="LineString  "/>, document.getElementById("container"));
-        expect(spyAddLayer.calls.length).toBe(4);
-        expect(spyAddInteraction.calls.length).toBe(4);
+        expect(spyAddLayer.calls.length).toBe(2);
+        expect(spyAddInteraction.calls.length).toBe(2);
     });
 
     it('starts drawing bbox', () => {
