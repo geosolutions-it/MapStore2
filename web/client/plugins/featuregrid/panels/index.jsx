@@ -63,7 +63,8 @@ import settings from './AttributeSelector';
 import {
     availableSnappingLayers,
     isSnappingActive,
-    isSnappingLoading
+    isSnappingLoading,
+    snappingConfig
 } from "../../../selectors/draw";
 
 const EmptyRowsView = connect(createStructuredSelector({
@@ -99,6 +100,7 @@ const Toolbar = connect(
         snapping: isSnappingActive,
         availableSnappingLayers,
         isSnappingLoading,
+        snappingConfig,
         mapType: mapTypeSelector
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})

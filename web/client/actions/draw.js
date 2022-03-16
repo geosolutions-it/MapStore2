@@ -18,6 +18,8 @@ export const SNAPPING_IS_LOADING = 'DRAW:SNAPPING_IS_LOADING';
 export const TOGGLE_SNAPPING = 'DRAW:TOGGLE_SNAPPING';
 export const REFRESH_SNAPPING_LAYER = 'DRAW:REFRESH_SNAPPING_LAYER';
 export const REQUEST_WMS_FEATURES = 'DRAW:REQUEST_WMS_FEATURES';
+export const SET_SNAPPING_DEFAULT_CONFIG = 'DRAW:SET_SNAPPING_DEFAULT_CONFIG';
+export const SET_SNAPPING_CONFIG = 'DRAW:SET_SNAPPING_CONFIG';
 
 
 export function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
@@ -79,6 +81,8 @@ export function setCurrentStyle(style) {
     };
 }
 
+export const drawSupportReset = (owner) => changeDrawingStatus("clean", "", owner, [], {});
+
 export function toggleSnapping() {
     return {
         type: TOGGLE_SNAPPING
@@ -105,6 +109,23 @@ export function refreshSnappingLayer(status = true) {
     };
 }
 
+export function setSnappingConfigDefaults(pluginCfg = { edge: true, vertex: true, pixelTolerance: 10}) {
+    return {
+        type: SET_SNAPPING_DEFAULT_CONFIG,
+        pluginCfg
+    };
+}
+
+export function setSnappingConfig(value, prop, pluginCfg) {
+    return {
+        type: SET_SNAPPING_CONFIG,
+        value,
+        prop,
+        pluginCfg
+    };
+}
+
+
 export function snappingRequestWMSFeatures(layerId) {
     return {
         type: REQUEST_WMS_FEATURES,
@@ -112,4 +133,3 @@ export function snappingRequestWMSFeatures(layerId) {
     };
 }
 
-export const drawSupportReset = (owner) => changeDrawingStatus("clean", "", owner, [], {});

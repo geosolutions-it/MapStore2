@@ -11,7 +11,7 @@ import {SplitButton} from 'react-bootstrap';
 import classNames from 'classnames';
 
 
-import './TSplitButton.css';
+import './TSplitButton.less';
 
 export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, glyph, active, className = "square-button-md", children, ...props }, ref) => {
     if (!visible) return false;

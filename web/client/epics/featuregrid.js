@@ -1202,21 +1202,15 @@ export const setDefaultSnappingLayerOnFeatureGridOpen = (action$, { getState } =
             return Rx.Observable.of(setSnappingLayer(selectedLayerId));
         });
 
-export const requestWMSLayerFeatures = (action$, { getState } = {}) =>
-    action$
+export const requestWMSLayerFeatures = (action$, { getState } = {}) => {
+    return action$
         .ofType(REQUEST_WMS_FEATURES)
-        .switchMap(({ layerId }) => {
+        .switchMap(({layerId}) => {
             const layer = getLayerById(getState(), layerId);
             return getLayerJSONFeature(layer);
         })
         .switchMap((data) => {
             const projection = parseURN(data.crs);
-            const collection = {
-                type: 'FeatureCollection',
-                features: data.features.map(f => {
-                    return reprojectGeoJson({...omit(f, ['id']), properties: null}, projection, 'EPSG:4326');
-                })
-            };
             return Rx.Observable.of(
                 toggleSnappingIsLoading(),
                 updateAdditionalLayer(
@@ -1225,7 +1219,10 @@ export const requestWMSLayerFeatures = (action$, { getState } = {}) =>
                     'overlay',
                     {
                         id: 'snapping',
-                        features: collection.features,
+                        features: data.features.map(f => reprojectGeoJson({
+                            ...omit(f, ['id']),
+                            properties: null
+                        }, projection, 'EPSG:4326')),
                         type: "vector",
                         name: "snapping",
                         visibility: true,
@@ -1238,3 +1235,4 @@ export const requestWMSLayerFeatures = (action$, { getState } = {}) =>
             );
         })
         .catch(e => Rx.Observable.from([toggleSnappingIsLoading(), queryError(e)]));
+};

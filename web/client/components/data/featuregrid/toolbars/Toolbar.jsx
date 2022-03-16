@@ -1,16 +1,17 @@
 import React from 'react';
 import './toolbar.css';
 import { sortBy } from 'lodash';
-import {ButtonGroup, Checkbox, Glyphicon, MenuItem, FormControl, FormGroup, Col} from 'react-bootstrap';
+import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col, MenuItem} from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
 import withHint from '../enhancers/withHint';
 import TButtonComp from "./TButton";
 import { getApi } from '../../../../api/userPersistedStorage';
-import TSplitButtonPaged from "./TSplitButtonPaged";
-import LoadingSpinner from "../../../misc/LoadingSpinner";
+import TSplitButtonComp from "./TSplitButton";
+import Spinner from "react-spinkit";
 
 const TButton = withHint(TButtonComp);
+const TSplitButton = withHint(TSplitButtonComp);
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     if (isDrawing) {
         return "featuregrid.toolbar.stopDrawGeom";
@@ -166,41 +167,72 @@ const standardButtons = {
         active={timeSync}
         onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
         glyph="time" />),
-    snapToFeature: ({snapping, availableSnappingLayers, isSnappingLoading, mode, mapType, pluginCfg = {}, events = {}}) => (<TSplitButtonPaged
+    snapToFeature: ({snapping, availableSnappingLayers, isSnappingLoading, snappingConfig, mode, mapType, pluginCfg = {}, events = {}}) => (<TSplitButton
         id="snap-button"
         keyProp="snap-button"
         tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
         visible={mode === "EDIT" && pluginCfg?.snapTool && mapType === 'openlayers'}
-        onClick={() => events.toggleSnapping && events.toggleSnapping(!snapping)}
-        onItemClick={(id) => events.setSnappingLayer(id)}
-        title={isSnappingLoading ? <LoadingSpinner /> : <Glyphicon glyph="magnet" />}
+        onClick={() => {
+            !snappingConfig && events.setSnappingConfigDefaults(pluginCfg?.snapConfig);
+            events.toggleSnapping && events.toggleSnapping(!snapping);
+        }}
+        onItemClick={(id) => id && events.setSnappingLayer(id)}
+        title={isSnappingLoading ? <Spinner spinnerName="ball-beat" overrideSpinnerClassName="spinner" key="loadingSpinner" noFadeIn /> : <Glyphicon glyph="magnet" />}
         tooltipPosition="top"
         className="snap-tool square-button-md no-border"
         active={!!snapping}
-        rawItems={availableSnappingLayers}
         pullLeft
     >
         {
-            [
-                {
-                    visible: availableSnappingLayers?.length > 1,
-                    pageSize: 5,
-                    header: <MenuItem header disabled>Snap to the layer</MenuItem>,
-                    items: availableSnappingLayers.map((l, idx) => <MenuItem active={l.active} id={l.id} eventKey={idx}>{l.title}</MenuItem>)
-                },
-                {
-                    items: [
-                        <MenuItem header disabled>Settings</MenuItem>,
-                        <FormGroup>
-                            <Col xs={6}><Checkbox inline onChange={() => {}}>Edge</Checkbox></Col>
-                            <Col xs={6}><Checkbox inline onChange={() => {}}>Vertex</Checkbox></Col>
-                        </FormGroup>,
-                        <FormControl  placeholder="Pixel tolerance" type="number" />
-                    ]
-                }
-            ]
+            availableSnappingLayers.length > 1 ?
+                (
+                    <>
+                        <label className="control-label"><Message msgId="featuregrid.toolbar.snapToLayer"/></label>
+                        <div className="layers" style={{"maxHeight": pluginCfg?.snapConfig?.layersListHeight ?? '130px', 'overflowY': 'auto'}}>
+                            { availableSnappingLayers.map(option => <MenuItem active={option.active} onClick={() => !option.active && events.setSnappingLayer(option.value)}>{option.label}</MenuItem>) }
+                        </div>
+                    </>
+                ) : false
         }
-    </TSplitButtonPaged>)
+        <label className="control-label"><Message msgId="featuregrid.toolbar.snappingSettings.header"/></label>
+        <FormGroup>
+            <Col xs={6}>
+                <Checkbox
+                    key="edge"
+                    checked={(snappingConfig?.edge ?? pluginCfg?.snapConfig?.edge) ?? true}
+                    inline
+                    onChange={(e) => events.setSnappingConfig(e.target.checked, 'edge', pluginCfg)}
+                >
+                    <Message msgId="featuregrid.toolbar.snappingSettings.edge"/>
+                </Checkbox>
+            </Col>
+            <Col xs={6}>
+                <Checkbox
+                    key="vertex"
+                    checked={(snappingConfig?.vertex ?? pluginCfg?.snapConfig?.vertex) ?? true}
+                    inline
+                    onChange={(e) => events.setSnappingConfig(e.target.checked, 'vertex', pluginCfg)}
+                >
+                    <Message msgId="featuregrid.toolbar.snappingSettings.vertex"/>
+                </Checkbox>
+            </Col>
+            <span className="clearfix" />
+        </FormGroup>
+        <FormGroup>
+            <Col xs={7}>
+                <span className="inline-control-label"><Message msgId="featuregrid.toolbar.snappingSettings.pixelTolerance"/></span>
+            </Col>
+            <Col xs={5}>
+                <FormControl
+                    key="pixelTolerance"
+                    type="number"
+                    onChange={(e) => events.setSnappingConfig(e.target.value, 'pixelTolerance', pluginCfg)}
+                    defaultValue={snappingConfig?.pixelTolerance ?? pluginCfg?.snapConfig?.pixelTolerance ?? 10}
+                />
+            </Col>
+            <span className="clearfix" />
+        </FormGroup>
+    </TSplitButton>)
 };
 
 // standard buttons with position set to index in this array. shape {name, Component, position} is aligned with attributes expected from tools injected.

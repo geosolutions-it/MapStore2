@@ -14,7 +14,7 @@ import {
     TOGGLE_SNAPPING,
     SET_SNAPPING_LAYER,
     REFRESH_SNAPPING_LAYER,
-    SNAPPING_IS_LOADING
+    SNAPPING_IS_LOADING, SET_SNAPPING_DEFAULT_CONFIG, SET_SNAPPING_CONFIG
 } from '../actions/draw';
 
 import assign from 'object-assign';
@@ -72,6 +72,22 @@ function draw(state = initialState, action) {
         return {
             ...state,
             snappingShouldRefresh: false
+        };
+    case SET_SNAPPING_DEFAULT_CONFIG:
+        return {
+            ...state,
+            snapConfig: {
+                ...action.pluginCfg
+            }
+        };
+    case SET_SNAPPING_CONFIG:
+        return {
+            ...state,
+            snapConfig: {
+                ...(action.pluginCfg?.snapConfig ?? {}),
+                ...(state?.snapConfig ?? {}),
+                [action.prop]: action.value
+            }
         };
     default:
         return state;

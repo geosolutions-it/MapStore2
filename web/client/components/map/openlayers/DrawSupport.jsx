@@ -94,6 +94,7 @@ export default class DrawSupport extends React.Component {
         isSnappingLoading: PropTypes.bool,
         snappingShouldRefresh: PropTypes.bool,
         snappingLayerType: PropTypes.string,
+        snapConfig: PropTypes.object,
 
         onUpdateSnappingLayer: PropTypes.func,
         onSnappingRequestWMSFeatures: PropTypes.func,
@@ -148,11 +149,12 @@ export default class DrawSupport extends React.Component {
 
         const snappingLayerChanged = this.props.snappingLayerData !== newProps.snappingLayerData;
         const snappingStateChanged = this.props.snapping !== newProps.snapping;
+        const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
         if (
             this.props.drawStatus !== newProps.drawStatus ||
             this.props.drawMethod !== newProps.drawMethod ||
             this.props.features !== newProps.features ||
-            (snappingStateChanged || snappingLayerChanged)
+            (snappingStateChanged || snappingLayerChanged || snappingConfigChanged)
         ) {
             switch (newProps.drawStatus) {
             case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
@@ -420,10 +422,11 @@ export default class DrawSupport extends React.Component {
         if (this.snapInteraction) {
             this.removeSnapInteraction();
         }
+        const configuration = this.props.snapConfig;
         const layer = this.props.map.getLayers().getArray().find(l => l.get('msId') === 'snapping');
         if (layer) {
-            this.snapInteraction = new Snap({source: layer.getSource()});
-            this.drawSourceSnapInteraction = new Snap({source: this.drawSource});
+            this.snapInteraction = new Snap({...configuration, source: layer.getSource()});
+            this.drawSourceSnapInteraction = new Snap({...configuration, source: this.drawSource});
             this.props.map.addInteraction(this.snapInteraction);
             this.props.map.addInteraction(this.drawSourceSnapInteraction);
         }

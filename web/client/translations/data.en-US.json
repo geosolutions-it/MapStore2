@@ -1679,7 +1679,14 @@
                 "enableTimeSync": "Synchronize with the selected time or time interval",
                 "disableTimeSync": "Do not synchronize with the selected time or interval",
                 "enableSnapping": "Activate snapping",
-                "disableSnapping": "Deactivate snapping"
+                "disableSnapping": "Deactivate snapping",
+                "snapToLayer": "Snap to the layer",
+                "snappingSettings": {
+                  "header": "Settings",
+                  "vertex": "Vertex",
+                  "edge": "Edge",
+                  "pixelTolerance": "Pixel tolerance"
+                }
             }
         },
         "layerdownload": {
