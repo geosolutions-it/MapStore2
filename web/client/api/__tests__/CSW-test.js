@@ -113,7 +113,7 @@ describe('Test correctness of the CSW APIs', () => {
         API.getRecords('base/web/client/test-resources/csw/getRecordsNoWMS.xml', 1, 1).then((result) => {
             try {
                 expect(result).toBeTruthy();
-                expect(result.records[0].capabilities).toNotExist();
+                expect(result.records[0].capabilities).toBeFalsy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -121,8 +121,8 @@ describe('Test correctness of the CSW APIs', () => {
         });
     });
 
-    it('includes capabilities when parsedUrl exists in getRecords', (done) => {
-        API.getRecords('base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 1).then((result) => {
+    it('obtains parsedUrl from dc:uri and gets capabilities', (done) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 1).then((result) => {
             try {
                 expect(result).toBeTruthy();
                 expect(result.records[0].capabilities).toBeTruthy();
