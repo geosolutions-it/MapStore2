@@ -184,7 +184,7 @@ const standardButtons = {
         pullLeft
     >
         {
-            availableSnappingLayers.length > 1 ?
+            availableSnappingLayers?.length > 1 ?
                 (
                     <>
                         <label className="control-label"><Message msgId="featuregrid.toolbar.snapToLayer"/></label>

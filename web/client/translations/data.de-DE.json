@@ -1718,7 +1718,14 @@
                 "disableTimeSync": "Nicht mit der ausgewählten Zeit oder dem ausgewählten Intervall synchronisieren",
                 "createNewChart": "Diagramm für die ausgewählte Ebene erstellen",
                 "enableSnapping": "Schnappen aktivieren",
-                "disableSnapping": "Schnappen deaktivieren"
+                "disableSnapping": "Schnappen deaktivieren",
+                "snapToLayer": "An der Ebene ausrichten",
+                "snappingSettings": {
+                    "header": "Einstellungen",
+                    "vertex": "Scheitelpunkt",
+                    "edge": "Kante",
+                    "pixelTolerance": "Pixeltoleranz"
+                  }
             }
         },
         "layerdownload": {

@@ -798,7 +798,6 @@ export default class DrawSupport extends React.Component {
             this.addLayer(newProps);
         }
         this.addDrawInteraction(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps);
-        this.addDrawInteraction(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps);
         if (newProps.options && newProps.options.editEnabled) {
             this.addSelectInteraction();
             if (this.translateInteraction) {

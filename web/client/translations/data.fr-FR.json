@@ -1681,7 +1681,14 @@
                 "disableTimeSync": "Ne pas synchroniser avec l'heure ou l'intervalle sélectionné",
                 "createNewChart": "Créer un graphique pour le calque sélectionné",
                 "enableSnapping": "Activer l'accrochage",
-                "disableSnapping": "Désactiver la capture"
+                "disableSnapping": "Désactiver la capture",
+              "snapToLayer": "Accrocher au calque",
+              "snappingSettings": {
+                  "header": "Paramètres",
+                  "vertex": "Vertex",
+                  "edge": "Bord",
+                  "pixelTolerance": "Tolérance de pixels"
+                }
             }
         },
         "layerdownload": {

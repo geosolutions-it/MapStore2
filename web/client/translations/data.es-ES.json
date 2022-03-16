@@ -1680,7 +1680,14 @@
                 "disableTimeSync": "No sincronizar con el tiempo o el intervalo de tiempo seleccionado",
                 "createNewChart": "Crea un gráfico para la capa seleccionada",
                 "enableSnapping": "Activar ajuste",
-                "disableSnapping": "Desactivar ajuste"
+                "disableSnapping": "Desactivar ajuste",
+                "snapToLayer": "Ajustar a la capa",
+                "snappingSettings": {
+                    "header": "Configuración",
+                    "vertex": "Vértice",
+                    "edge": "Borde",
+                    "pixelTolerance": "Tolerancia de píxeles"
+                  }
             }
         },
         "layerdownload": {

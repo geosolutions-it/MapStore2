@@ -111,7 +111,13 @@ const Dock = connect(createSelector(
   *         }
   *       }]
   *     },
-  *   "editingAllowedRoles": ["ADMIN"]
+  *   "editingAllowedRoles": ["ADMIN"],
+  *   "snapTool": true,
+  *   "snapConfig": {
+  *     "vertex": true,
+  *     "edge": true,
+  *     "pixelTolerance": 10
+  *   }
   *   }
   * }
   * ```

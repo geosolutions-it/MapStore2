@@ -1680,7 +1680,14 @@
                 "disableTimeSync": "Non sincronizzare con l'istante o l'intervallo temporale selezionato",
                 "createNewChart": "crea un grafico per il livello selezionato",
                 "enableSnapping": "Attivare lo scatto",
-                "disableSnapping": "Disattivare lo snap"
+                "disableSnapping": "Disattivare lo snap",
+                "snapToLayer": "Aggancia al livello",
+                "snappingSettings": {
+                    "header": "Impostazioni",
+                    "vertex": "Vertice",
+                    "edge": "Bordo",
+                    "pixelTolerance": "Tolleranza pixel"
+                  }
             }
         },
         "layerdownload": {
