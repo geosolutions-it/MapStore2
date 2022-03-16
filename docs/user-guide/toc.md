@@ -146,6 +146,13 @@ In this case the user is allowed to:
 
 * [Export](export-data.md) the data of the selected layer <img src="../img/button/export_data.jpg" class="ms-docbutton"/>
 
+* Open the **Layer Metadata** <img src="../img/button/info_button.jpg" class="ms-docbutton"/>, where is display the metadata layer information retrieved by the *CSW service*.
+
+<img src="../img/toc/layer_metadata_panel.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+!!! note
+    By default the **Metadata Tool** is not present on [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), for the configuration see the [TOC Plugins documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.TOC)
+
 * Open the **Compare tool** where it is possible to *Swipe* or *Spy* the selected layer <img src="../img/button/compare_tool_button.jpg" class="ms-docbutton"/>. 
 
 From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> of the **Compare tool** it is possible to click on <img src="../img/button/swipe_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button so that the Swipe tool is enabled on the map for the selected layer: to activate the Swipe it is also possible to simply click on the **Compare tool** button.
