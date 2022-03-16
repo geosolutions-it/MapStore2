@@ -7,7 +7,7 @@
  */
 import Rx from 'rxjs';
 
-import {get, head, isEmpty, find, castArray, includes, reduce, omit} from 'lodash';
+import {get, head, isEmpty, find, castArray, includes, reduce} from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import axios from '../libs/ajax';
 import bbox from '@turf/bbox';
@@ -19,9 +19,7 @@ import {
     changeDrawingStatus,
     GEOMETRY_CHANGED,
     drawSupportReset,
-    setSnappingLayer,
-    toggleSnappingIsLoading,
-    REQUEST_WMS_FEATURES
+    setSnappingLayer
 } from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
@@ -41,7 +39,7 @@ import {
     TOGGLE_SYNC_WMS,
     QUERY_ERROR,
     FEATURE_LOADING,
-    toggleSyncWms, queryError
+    toggleSyncWms
 } from '../actions/wfsquery';
 
 import { reset, QUERY_FORM_SEARCH, loadFilter } from '../actions/queryform';
@@ -140,7 +138,7 @@ import {
     getAttributeFilters,
     selectedLayerSelector,
     multiSelect,
-    paginationSelector, getLayerById
+    paginationSelector
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -158,10 +156,8 @@ import {
 import { interceptOGCError } from '../utils/ObservableUtils';
 import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/queryform';
 import { composeAttributeFilters } from '../utils/FilterUtils';
-import CoordinatesUtils, {parseURN, reprojectGeoJson} from '../utils/CoordinatesUtils';
+import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
-import {getLayerJSONFeature} from "../observables/wfs";
-import {updateAdditionalLayer} from "../actions/additionallayers";
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -1201,38 +1197,3 @@ export const setDefaultSnappingLayerOnFeatureGridOpen = (action$, { getState } =
             const selectedLayerId = selectedLayerSelector(getState())?.id;
             return Rx.Observable.of(setSnappingLayer(selectedLayerId));
         });
-
-export const requestWMSLayerFeatures = (action$, { getState } = {}) => {
-    return action$
-        .ofType(REQUEST_WMS_FEATURES)
-        .switchMap(({layerId}) => {
-            const layer = getLayerById(getState(), layerId);
-            return getLayerJSONFeature(layer);
-        })
-        .switchMap((data) => {
-            const projection = parseURN(data.crs);
-            return Rx.Observable.of(
-                toggleSnappingIsLoading(),
-                updateAdditionalLayer(
-                    'snapping',
-                    'draw',
-                    'overlay',
-                    {
-                        id: 'snapping',
-                        features: data.features.map(f => reprojectGeoJson({
-                            ...omit(f, ['id']),
-                            properties: null
-                        }, projection, 'EPSG:4326')),
-                        type: "vector",
-                        name: "snapping",
-                        visibility: true,
-                        style: {
-                            opacity: 0,
-                            fillOpacity: 0
-                        }
-                    }
-                )
-            );
-        })
-        .catch(e => Rx.Observable.from([toggleSnappingIsLoading(), queryError(e)]));
-};

@@ -102,13 +102,6 @@ export function toggleSnappingIsLoading() {
     };
 }
 
-export function refreshSnappingLayer(status = true) {
-    return {
-        type: REFRESH_SNAPPING_LAYER,
-        status
-    };
-}
-
 export function setSnappingConfigDefaults(pluginCfg = { edge: true, vertex: true, pixelTolerance: 10}) {
     return {
         type: SET_SNAPPING_DEFAULT_CONFIG,
@@ -122,14 +115,6 @@ export function setSnappingConfig(value, prop, pluginCfg) {
         value,
         prop,
         pluginCfg
-    };
-}
-
-
-export function snappingRequestWMSFeatures(layerId) {
-    return {
-        type: REQUEST_WMS_FEATURES,
-        layerId
     };
 }
 

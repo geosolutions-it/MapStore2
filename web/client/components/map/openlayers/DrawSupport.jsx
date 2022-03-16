@@ -48,6 +48,9 @@ import {unByKey} from 'ol/Observable';
 import {getCenter} from 'ol/extent';
 import {fromCircle, circular} from 'ol/geom/Polygon';
 import {Snap} from "ol/interaction";
+import {bbox, all} from "ol/loadingstrategy";
+import {getLayerUrl} from "../../../utils/LayersUtils";
+import {getFeatureURL} from "../../../api/WFS";
 
 const geojsonFormat = new GeoJSON();
 
@@ -94,6 +97,7 @@ export default class DrawSupport extends React.Component {
         isSnappingLoading: PropTypes.bool,
         snappingShouldRefresh: PropTypes.bool,
         snappingLayerType: PropTypes.string,
+        snappingLayerId: PropTypes.string,
         snapConfig: PropTypes.object,
 
         onUpdateSnappingLayer: PropTypes.func,
@@ -145,9 +149,9 @@ export default class DrawSupport extends React.Component {
 
         const snappingToggledOff = !newProps.snapping && this.props.snapping;
         snappingToggledOff && this.removeSnapInteraction();
-        this.processSnappingData(newProps);
+        // this.processSnappingData(newProps);
 
-        const snappingLayerChanged = this.props.snappingLayerData !== newProps.snappingLayerData;
+        const snappingLayerChanged = this.props.snappingLayerId !== newProps.snappingLayerId;
         const snappingStateChanged = this.props.snapping !== newProps.snapping;
         const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
         if (
@@ -417,17 +421,81 @@ export default class DrawSupport extends React.Component {
         this.setDoubleClickZoomEnabled(false);
     };
 
-    addSnapInteraction = () => {
-        if (!this.props.snapping) return false;
-        if (this.snapInteraction) {
-            this.removeSnapInteraction();
+    selectLoadingStrategy = (config) => {
+        switch (config?.strategy) {
+        case 'all':
+            return all;
+        case 'bbox':
+        default:
+            return bbox;
         }
-        const configuration = this.props.snapConfig;
-        const layer = this.props.map.getLayers().getArray().find(l => l.get('msId') === 'snapping');
-        if (layer) {
-            this.snapInteraction = new Snap({...configuration, source: layer.getSource()});
-            this.drawSourceSnapInteraction = new Snap({...configuration, source: this.drawSource});
-            this.props.map.addInteraction(this.snapInteraction);
+    }
+
+    addSnapInteraction = (newProps) => {
+        const { snapping, snappingLayerId, snapConfig, snappingLayerInstance} = newProps;
+        if (!snapping) return false;
+        this.removeSnapInteraction();
+
+        const isLoading = this.props.toggleSnappingIsLoading;
+        const layerInstance = this.getLayerInstance(snappingLayerId);
+        const layerType = newProps.snappingLayerType;
+
+        if (layerInstance) {
+            switch (layerInstance.type) {
+            case "VECTOR":
+                this.snapInteraction = new Snap({...snapConfig, source: layerInstance.getSource()});
+                break;
+            case "TILE":
+                if (layerType === 'wms') {
+                    const source = new VectorSource({
+                        format: new GeoJSON(),
+                        loader: function(extent, resolution, projection) {
+                            const proj = projection.getCode();
+                            const url = getFeatureURL(getLayerUrl(snappingLayerInstance), snappingLayerInstance.name, {
+                                version: '1.1.0',
+                                outputFormat: 'application/json',
+                                srsname: proj,
+                                bbox: extent.join(',') + ',' + proj
+                            });
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('GET', url);
+                            const onError = function() {
+                                source.removeLoadedExtent(extent);
+                            };
+                            xhr.onerror = onError;
+                            xhr.onload = function() {
+                                isLoading();
+                                if (xhr.status === 200) {
+                                    source.addFeatures(
+                                        source.getFormat().readFeatures(xhr.responseText));
+                                } else {
+                                    onError();
+                                }
+                            };
+                            isLoading();
+                            xhr.send();
+                        },
+                        strategy: this.selectLoadingStrategy(snapConfig)
+                    });
+                    this.snapLayer = new VectorLayer({
+                        source,
+                        style: new Style({
+                            stroke: new Stroke({
+                                opacity: 0,
+                                fillOpacity: 0
+                            })
+                        })
+                    });
+                    this.props.map.addLayer(this.snapLayer);
+                    this.snapInteraction = new Snap({...snapConfig, source});
+                }
+                break;
+            default:
+                break;
+            }
+
+            this.drawSourceSnapInteraction = new Snap({...snapConfig, source: this.drawSource});
+            this.snapInteraction && this.props.map.addInteraction(this.snapInteraction);
             this.props.map.addInteraction(this.drawSourceSnapInteraction);
         }
         return true;
@@ -991,7 +1059,7 @@ export default class DrawSupport extends React.Component {
 
             if (!newProps.options.geodesic) {
                 this.addModifyInteraction(newProps);
-                this.addSnapInteraction();
+                this.addSnapInteraction(newProps);
             }
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             if (newProps.options.translateEnabled !== false) {
@@ -1008,7 +1076,7 @@ export default class DrawSupport extends React.Component {
 
         if (newProps.options.drawEnabled) {
             this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps);
-            this.addSnapInteraction();
+            this.addSnapInteraction(newProps);
         }
     };
 
@@ -1106,6 +1174,9 @@ export default class DrawSupport extends React.Component {
             this.drawSourceSnapInteraction.setActive(false);
             this.props.map.removeInteraction(this.drawSourceSnapInteraction);
             this.drawSourceSnapInteraction = null;
+        }
+        if (this.snapLayer) {
+            this.props.map.removeLayer(this.snapLayer);
         }
     };
 
@@ -1555,57 +1626,6 @@ export default class DrawSupport extends React.Component {
                 this.translateInteraction.setActive(false);
             }
         });
-    }
-
-    processSnappingData = (newProps) => {
-        const hasLayerChanged = newProps.snappingLayer !== this.props.snappingLayer;
-        const snappingToggledOn = newProps.snapping && !this.props.snapping;
-        const reprocessDataOnToggleOn = newProps.snappingShouldRefresh && snappingToggledOn;
-        const reprocessDataOnLayerChange = newProps.snappingShouldRefresh && newProps.snapping && hasLayerChanged;
-        if (reprocessDataOnToggleOn || reprocessDataOnLayerChange) {
-            this.props.setSnappingShouldRefresh(false);
-            this.props.toggleSnappingIsLoading();
-            const layerType = newProps.snappingLayerType;
-            const layerInstance = this.getLayerInstance(newProps.snappingLayerId);
-            let geom = [];
-
-            // use different loading approaches based on layer type
-            // vector layer data can be loaded right from the map
-            // WMS data should be requested via API call
-            let features = [];
-            switch (layerInstance.type) {
-            case "VECTOR":
-                const crs = layerInstance.getSource().getParams ? layerInstance.getSource().getParams().CRS ?? 'EPSG:3857' : 'EPSG:3857';
-                layerInstance.getSource().forEachFeature( function(feature) { geom.push(new Feature(feature.getGeometry().clone().transform(crs, 'EPSG:4326'))); } );
-                features = geojsonFormat.writeFeaturesObject(geom);
-
-                this.props.toggleSnappingIsLoading();
-                this.props.onUpdateSnappingLayer(
-                    'snapping',
-                    'draw',
-                    'overlay',
-                    {
-                        id: 'snapping',
-                        features: features.features,
-                        type: "vector",
-                        name: "snapping",
-                        visibility: true,
-                        style: {
-                            opacity: 0,
-                            fillOpacity: 0
-                        }
-                    }
-                );
-                break;
-            case "TILE":
-                if (layerType === 'wms') {
-                    this.props.onSnappingRequestWMSFeatures(newProps.snappingLayer);
-                }
-                break;
-            default:
-                break;
-            }
-        }
     }
 }
 

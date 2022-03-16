@@ -13,7 +13,6 @@ import {
     DRAW_SUPPORT_STOPPED,
     TOGGLE_SNAPPING,
     SET_SNAPPING_LAYER,
-    REFRESH_SNAPPING_LAYER,
     SNAPPING_IS_LOADING, SET_SNAPPING_DEFAULT_CONFIG, SET_SNAPPING_CONFIG
 } from '../actions/draw';
 
@@ -67,11 +66,6 @@ function draw(state = initialState, action) {
         return {
             ...state,
             snappingIsLoading: !state.snappingIsLoading
-        };
-    case REFRESH_SNAPPING_LAYER:
-        return {
-            ...state,
-            snappingShouldRefresh: false
         };
     case SET_SNAPPING_DEFAULT_CONFIG:
         return {

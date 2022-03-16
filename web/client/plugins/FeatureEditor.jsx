@@ -116,8 +116,12 @@ const Dock = connect(createSelector(
   *   "snapConfig": {
   *     "vertex": true,
   *     "edge": true,
-  *     "pixelTolerance": 10
-  *   }
+  *     "pixelTolerance": 10,
+ *      "additionalLayers": [
+ *         "ADDITIONAL_LAYER_ID"
+ *      ],
+ *      "strategy": "bbox"
+  *   },
   *   }
   * }
   * ```

@@ -173,9 +173,9 @@ const standardButtons = {
         tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
         visible={mode === "EDIT" && pluginCfg?.snapTool && mapType === 'openlayers'}
         onClick={() => {
-            !snappingConfig && events.setSnappingConfigDefaults(pluginCfg?.snapConfig);
             events.toggleSnapping && events.toggleSnapping(!snapping);
         }}
+        onMount={() => !snappingConfig && events.setSnappingConfigDefaults && events.setSnappingConfigDefaults(pluginCfg?.snapConfig)}
         onItemClick={(id) => id && events.setSnappingLayer(id)}
         title={isSnappingLoading ? <Spinner spinnerName="ball-beat" overrideSpinnerClassName="spinner" key="loadingSpinner" noFadeIn /> : <Glyphicon glyph="magnet" />}
         tooltipPosition="top"

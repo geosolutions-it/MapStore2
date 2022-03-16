@@ -35,9 +35,7 @@ import {
     drawStopped,
     selectFeatures,
     drawingFeatures,
-    refreshSnappingLayer,
-    toggleSnappingIsLoading,
-    snappingRequestWMSFeatures
+    toggleSnappingIsLoading
 } from '../../actions/draw';
 
 import { updateHighlighted } from '../../actions/highlight';
@@ -46,7 +44,7 @@ import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selectors/map';
 import {
-    snappingLayerDataSelector, snappingLayerType, snappingLayerId
+    snappingLayerDataSelector, snappingLayerType, snappingLayerId, snappingLayerSelector
 } from "../../selectors/draw";
 import {updateAdditionalLayer} from "../../actions/additionallayers";
 
@@ -101,6 +99,7 @@ const pluginsCreator = (mapType, actions) => {
             ({
                 ...state.draw,
                 snappingLayerId: snappingLayerId(state),
+                snappingLayerInstance: snappingLayerSelector(state),
                 snappingLayerType: snappingLayerType(state),
                 snappingLayerData: snappingLayerDataSelector(state)
             }) || {}, {
@@ -112,9 +111,7 @@ const pluginsCreator = (mapType, actions) => {
             onDrawStopped: drawStopped,
             setCurrentStyle: setCurrentStyle,
             onUpdateSnappingLayer: updateAdditionalLayer,
-            setSnappingShouldRefresh: refreshSnappingLayer,
-            toggleSnappingIsLoading: toggleSnappingIsLoading,
-            onSnappingRequestWMSFeatures: snappingRequestWMSFeatures
+            toggleSnappingIsLoading: toggleSnappingIsLoading
         })( components.DrawSupport || Empty);
 
         const BoxSelectionSupport = connect(
