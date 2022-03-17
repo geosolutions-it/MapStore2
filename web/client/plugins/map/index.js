@@ -97,12 +97,12 @@ const pluginsCreator = (mapType, actions) => {
 
         const DrawSupport = connect((state) =>
             ({
-                ...state.draw,
+                ...(state.draw ?? {}),
                 snappingLayerId: snappingLayerId(state),
                 snappingLayerInstance: snappingLayerSelector(state),
                 snappingLayerType: snappingLayerType(state),
                 snappingLayerData: snappingLayerDataSelector(state)
-            }) || {}, {
+            }), {
             onChangeDrawingStatus: changeDrawingStatus,
             onEndDrawing: endDrawing,
             onGeometryChanged: geometryChanged,

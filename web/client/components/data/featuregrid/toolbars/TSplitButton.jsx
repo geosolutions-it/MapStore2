@@ -6,30 +6,36 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {forwardRef, useEffect} from 'react';
-import {SplitButton} from 'react-bootstrap';
-import classNames from 'classnames';
+import React, {useEffect} from 'react';
+import {Button, Dropdown} from 'react-bootstrap';
+import ContainerDimensions from 'react-container-dimensions';
 
 
 import './TSplitButton.less';
+import classnames from "classnames";
 
-export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, glyph, active, className = "square-button-md", children, onMount, ...props }, ref) => {
+export const SimpleTButton = ({ disabled, id, visible, onClick, glyph, active, buttonClassName = "square-button-md", menuStyle = {}, className, children, onMount, ...props }) => {
     useEffect(() => {
         typeof onMount === 'function' && onMount();
     }, []);
 
     if (!visible) return false;
-    return (<SplitButton ref={ref} {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
-        className={classNames({
-            'split-button': true,
-            [className]: true
-        })}
-        onClick={() => !disabled && onClick()}
-    >
-        {children}
-    </SplitButton>
+    return (
+        <ContainerDimensions>
+            <Dropdown className={classnames({
+                "split-button": true,
+                ...(className ? {[className]: true} : {})
+            })}>
+                <Button onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"}>{props.title}</Button>
+                <Dropdown.Toggle bsStyle={active ? "success" : "primary"} />
+                <Dropdown.Menu style={menuStyle} className="super-colors">
+                    {children}
+                </Dropdown.Menu>
+            </Dropdown>
+        </ContainerDimensions>
+
     );
-});
+};
 
 
 export default SimpleTButton;

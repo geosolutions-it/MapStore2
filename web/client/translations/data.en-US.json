@@ -1685,7 +1685,8 @@
                   "header": "Settings",
                   "vertex": "Vertex",
                   "edge": "Edge",
-                  "pixelTolerance": "Pixel tolerance"
+                  "pixelTolerance": "Tolerance (pixel)",
+                  "loadingStrategy": "Loading strategy"
                 }
             }
         },

@@ -27,7 +27,7 @@ import FooterComp from '../../../components/data/featuregrid/Footer';
 import HeaderComp from '../../../components/data/featuregrid/Header';
 import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
 import {
-    getAttributeFilter,
+    getAttributeFilter, getDockSize,
     getTitleSelector,
     hasChangesSelector,
     hasGeometrySelector,
@@ -101,7 +101,8 @@ const Toolbar = connect(
         availableSnappingLayers,
         isSnappingLoading,
         snappingConfig,
-        mapType: mapTypeSelector
+        mapType: mapTypeSelector,
+        editorHeight: getDockSize
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);

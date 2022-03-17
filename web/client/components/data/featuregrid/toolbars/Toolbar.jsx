@@ -1,7 +1,7 @@
 import React from 'react';
 import './toolbar.css';
 import { sortBy } from 'lodash';
-import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col, MenuItem} from 'react-bootstrap';
+import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col} from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
 import withHint from '../enhancers/withHint';
@@ -9,6 +9,7 @@ import TButtonComp from "./TButton";
 import { getApi } from '../../../../api/userPersistedStorage';
 import TSplitButtonComp from "./TSplitButton";
 import Spinner from "react-spinkit";
+import Select from "react-select";
 
 const TButton = withHint(TButtonComp);
 const TSplitButton = withHint(TSplitButtonComp);
@@ -167,33 +168,36 @@ const standardButtons = {
         active={timeSync}
         onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
         glyph="time" />),
-    snapToFeature: ({snapping, availableSnappingLayers, isSnappingLoading, snappingConfig, mode, mapType, pluginCfg = {}, events = {}}) => (<TSplitButton
+    snapToFeature: ({snapping, availableSnappingLayers = [], isSnappingLoading, snappingConfig, mode, mapType, editorHeight, pluginCfg, events = {}}) => (<TSplitButton
         id="snap-button"
         keyProp="snap-button"
         tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
-        visible={mode === "EDIT" && pluginCfg?.snapTool && mapType === 'openlayers'}
+        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === 'openlayers'}
         onClick={() => {
             events.toggleSnapping && events.toggleSnapping(!snapping);
         }}
-        onMount={() => !snappingConfig && events.setSnappingConfigDefaults && events.setSnappingConfigDefaults(pluginCfg?.snapConfig)}
-        onItemClick={(id) => id && events.setSnappingLayer(id)}
+        onMount={() => !snappingConfig && events.setSnappingConfig && events.setSnappingConfig(null, null, pluginCfg)}
         title={isSnappingLoading ? <Spinner spinnerName="ball-beat" overrideSpinnerClassName="spinner" key="loadingSpinner" noFadeIn /> : <Glyphicon glyph="magnet" />}
         tooltipPosition="top"
-        className="snap-tool square-button-md no-border"
+        className="snap-tool"
+        buttonClassName="square-button-md no-border"
+        menuStyle={{maxHeight: `calc(${Math.round(editorHeight * 100)}vh - 50px)`, overflowY: 'auto'}}
         active={!!snapping}
         pullLeft
     >
-        {
-            availableSnappingLayers?.length > 1 ?
-                (
-                    <>
-                        <label className="control-label"><Message msgId="featuregrid.toolbar.snapToLayer"/></label>
-                        <div className="layers" style={{"maxHeight": pluginCfg?.snapConfig?.layersListHeight ?? '130px', 'overflowY': 'auto'}}>
-                            { availableSnappingLayers.map(option => <MenuItem active={option.active} onClick={() => !option.active && events.setSnappingLayer(option.value)}>{option.label}</MenuItem>) }
-                        </div>
-                    </>
-                ) : false
-        }
+        <>
+            <label className="control-label"><Message msgId="featuregrid.toolbar.snapToLayer"/></label>
+            <Select
+                isOpen
+                isClearable={false}
+                escapeClearsValue={false}
+                options={availableSnappingLayers}
+                onChange={option => events.setSnappingLayer(option.value)}
+                value = {
+                    availableSnappingLayers.find(option => option.active)
+                }
+            />
+        </>
         <label className="control-label"><Message msgId="featuregrid.toolbar.snappingSettings.header"/></label>
         <FormGroup>
             <Col xs={6}>
@@ -229,6 +233,22 @@ const standardButtons = {
                     onChange={(e) => events.setSnappingConfig(e.target.value, 'pixelTolerance', pluginCfg)}
                     defaultValue={snappingConfig?.pixelTolerance ?? pluginCfg?.snapConfig?.pixelTolerance ?? 10}
                 />
+            </Col>
+            <span className="clearfix" />
+        </FormGroup>
+        <FormGroup>
+            <Col xs={7}>
+                <span className="inline-control-label"><Message msgId="featuregrid.toolbar.snappingSettings.loadingStrategy"/></span>
+            </Col>
+            <Col xs={5}>
+                <FormControl
+                    componentClass="select"
+                    defaultValue={snappingConfig?.strategy ?? pluginCfg?.snapConfig?.strategy ?? 'bbox'}
+                    onChange={(e) => events.setSnappingConfig(e.target.value, 'strategy', pluginCfg)}
+                >
+                    <option value="bbox">bbox</option>
+                    <option value="all">all</option>
+                </FormControl>
             </Col>
             <span className="clearfix" />
         </FormGroup>

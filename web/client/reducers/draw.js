@@ -13,7 +13,8 @@ import {
     DRAW_SUPPORT_STOPPED,
     TOGGLE_SNAPPING,
     SET_SNAPPING_LAYER,
-    SNAPPING_IS_LOADING, SET_SNAPPING_DEFAULT_CONFIG, SET_SNAPPING_CONFIG
+    SNAPPING_IS_LOADING,
+    SET_SNAPPING_CONFIG
 } from '../actions/draw';
 
 import assign from 'object-assign';
@@ -27,9 +28,10 @@ const initialState = {
     tempFeatures: [],
     snapping: false,
     snappingIsLoading: false,
-    snappingLayer: false,
-    snappingShouldRefresh: false
+    snappingLayer: false
 };
+
+const defaultSnappingConfig = { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'};
 
 function draw(state = initialState, action) {
     switch (action.type) {
@@ -59,7 +61,6 @@ function draw(state = initialState, action) {
         return {
             ...state,
             snappingLayer: action.snappingLayer,
-            snappingShouldRefresh: true,
             snappingIsLoading: false
         };
     case SNAPPING_IS_LOADING:
@@ -67,20 +68,13 @@ function draw(state = initialState, action) {
             ...state,
             snappingIsLoading: !state.snappingIsLoading
         };
-    case SET_SNAPPING_DEFAULT_CONFIG:
-        return {
-            ...state,
-            snapConfig: {
-                ...action.pluginCfg
-            }
-        };
     case SET_SNAPPING_CONFIG:
         return {
             ...state,
             snapConfig: {
-                ...(action.pluginCfg?.snapConfig ?? {}),
+                ...(action.pluginCfg?.snapConfig ?? defaultSnappingConfig),
                 ...(state?.snapConfig ?? {}),
-                [action.prop]: action.value
+                ...(action.prop && action.value ? {[action.prop]: action.value} : {})
             }
         };
     default:

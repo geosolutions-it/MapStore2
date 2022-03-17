@@ -1724,7 +1724,8 @@
                     "header": "Einstellungen",
                     "vertex": "Scheitelpunkt",
                     "edge": "Kante",
-                    "pixelTolerance": "Pixeltoleranz"
+                    "pixelTolerance": "Toleranz (pixel)",
+                    "loadingStrategy": "Ladestrategie"
                   }
             }
         },

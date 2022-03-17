@@ -95,7 +95,6 @@ export default class DrawSupport extends React.Component {
         snappingLayer: PropTypes.object,
         snappingLayerData: PropTypes.object,
         isSnappingLoading: PropTypes.bool,
-        snappingShouldRefresh: PropTypes.bool,
         snappingLayerType: PropTypes.string,
         snappingLayerId: PropTypes.string,
         snapConfig: PropTypes.object,
@@ -103,7 +102,6 @@ export default class DrawSupport extends React.Component {
         onUpdateSnappingLayer: PropTypes.func,
         onSnappingRequestWMSFeatures: PropTypes.func,
         onRefreshSnappingLayer: PropTypes.func,
-        setSnappingShouldRefresh: PropTypes.func,
         toggleSnappingIsLoading: PropTypes.func
     };
 
@@ -122,9 +120,7 @@ export default class DrawSupport extends React.Component {
         onDrawingFeatures: () => {},
         onSelectFeatures: () => {},
         onEndDrawing: () => {},
-        onUpdateSnappingLayer: () => {},
-        setSnappingShouldRefresh: () => {},
-        onSnappingRequestWMSFeatures: () => {}
+        onUpdateSnappingLayer: () => {}
     };
 
     /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
@@ -431,19 +427,26 @@ export default class DrawSupport extends React.Component {
         }
     }
 
-    addSnapInteraction = (newProps) => {
-        const { snapping, snappingLayerId, snapConfig, snappingLayerInstance} = newProps;
-        if (!snapping) return false;
+
+    /**
+     * Handler that activates snap interaction for snapping layer and draw data.
+     * Vector layer data is taken directly from the map while tile layers data will be loaded using WFS query (if supported)
+     * @param {boolean} snapping - state of snapping tool
+     * @param {object} snappingLayerInstance - snapping layer definition from the store
+     * @param {object} snapConfig - snapping tool configuration, merged from values set by localconfig.json and overwritten by user via snapping tool dropdown
+     */
+    addSnapInteraction = ({ snapping, snappingLayerInstance, snapConfig }) => {
+        if (!snapping) return;
         this.removeSnapInteraction();
 
         const isLoading = this.props.toggleSnappingIsLoading;
-        const layerInstance = this.getLayerInstance(snappingLayerId);
-        const layerType = newProps.snappingLayerType;
+        const mapLayerInstance = this.getLayerInstance(snappingLayerInstance.id);
+        const layerType = snappingLayerInstance.type;
 
-        if (layerInstance) {
-            switch (layerInstance.type) {
+        if (mapLayerInstance) {
+            switch (mapLayerInstance.type) {
             case "VECTOR":
-                this.snapInteraction = new Snap({...snapConfig, source: layerInstance.getSource()});
+                this.snapInteraction = new Snap({...snapConfig, source: mapLayerInstance.getSource()});
                 break;
             case "TILE":
                 if (layerType === 'wms') {
@@ -457,23 +460,24 @@ export default class DrawSupport extends React.Component {
                                 srsname: proj,
                                 bbox: extent.join(',') + ',' + proj
                             });
-                            const xhr = new XMLHttpRequest();
-                            xhr.open('GET', url);
-                            const onError = function() {
-                                source.removeLoadedExtent(extent);
-                            };
-                            xhr.onerror = onError;
-                            xhr.onload = function() {
-                                isLoading();
-                                if (xhr.status === 200) {
-                                    source.addFeatures(
-                                        source.getFormat().readFeatures(xhr.responseText));
-                                } else {
-                                    onError();
-                                }
-                            };
                             isLoading();
-                            xhr.send();
+                            const onError = (err) => {
+                                source.removeLoadedExtent(extent);
+                                err && console.warn(err);
+                            };
+                            axios.get(url)
+                                .then(res => {
+                                    isLoading();
+                                    if (res.status === 200) {
+                                        source.addFeatures(
+                                            source.getFormat().readFeatures(res.data)
+                                        );
+                                    } else {
+                                        onError();
+                                    }
+
+                                })
+                                .catch(onError);
                         },
                         strategy: this.selectLoadingStrategy(snapConfig)
                     });
@@ -498,7 +502,6 @@ export default class DrawSupport extends React.Component {
             this.snapInteraction && this.props.map.addInteraction(this.snapInteraction);
             this.props.map.addInteraction(this.drawSourceSnapInteraction);
         }
-        return true;
     };
     toMulti = (geometry) => {
         if (geometry.getType() === 'Point') {

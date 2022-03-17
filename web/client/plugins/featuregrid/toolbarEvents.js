@@ -18,7 +18,7 @@ import {
 import { toggleSyncWms } from '../../actions/wfsquery';
 import {
     setSnappingLayer, toggleSnapping,
-    setSnappingConfigDefaults, setSnappingConfig
+    setSnappingConfig
 } from "../../actions/draw";
 
 export default {
@@ -41,6 +41,5 @@ export default {
     toggleShowAgain: () => toggleShowAgain(),
     toggleSnapping: () => toggleSnapping(),
     setSnappingLayer: (layerId) => setSnappingLayer(layerId),
-    setSnappingConfigDefaults: (pluginCfg) => setSnappingConfigDefaults(pluginCfg),
     setSnappingConfig: (value, prop, pluginCfg) => setSnappingConfig(value, prop, pluginCfg)
 };

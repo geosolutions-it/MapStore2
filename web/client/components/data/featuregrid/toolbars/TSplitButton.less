@@ -8,53 +8,36 @@
     overflow: hidden;
 }
 
-.split-button-pagination {
-    display: block;
-    width: 100%;
-    margin: 0;
-}
+.split-button {
+    .dropdown-menu {
+        min-width: 250px;
 
-.split-button-pagination .pagination-next,
-.split-button-pagination .pagination-previous {
-    width: 50%;
-}
+        li > a {
+            display: block;
+            padding: 3px 20px;
+            clear: both;
+            font-weight: 400;
+            line-height: 1.42857143;
+            color: #333333;
+            white-space: nowrap;
+        }
 
-.split-button ~ .dropdown-menu {
-    min-width: 250px;
-}
+        & > label, .form-group > label {
+            padding: 3px 10px;
+            margin-bottom: 0;
+        }
 
-.split-button ~ .dropdown-menu .drop-up .Select-menu-outer {
-    max-height: 150px;
-    overflow-y: scroll;
-}
+        .inline-control-label {
+            display: flex;
+            height: 30px;
+            align-items: center;
+        }
+    }
+    .Select-menu-outer {
+        max-height: 9999px;
+        .Select-menu {
+            height: 100%;
+        }
+    }
 
-.split-button ~ .dropdown-menu > label,
-.split-button ~ .dropdown-menu .form-group > label
-{
-    padding: 3px 10px;
-    margin-bottom: 0;
-}
-
-.split-button ~ .dropdown-menu .inline-control-label {
-    display: flex;
-    height: 30px;
-    align-items: center;
-}
-
-.split-button ~ .dropdown-menu li > a {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: 400;
-    line-height: 1.42857143;
-    color: #333333;
-    white-space: nowrap;
-}
-
-
-.split-button ~ .dropdown-menu .active > a, .split-button ~ .dropdown-menu li > a:hover, .split-button ~ .dropdown-menu li > a:focus {
-    color: #ffffff;
-    color: var(--ms-primary-contrast, #ffffff);
-    background-color: #078aa3;
-    background-color: var(--ms-primary, #078aa3);
 }

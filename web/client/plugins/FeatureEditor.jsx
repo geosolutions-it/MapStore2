@@ -86,6 +86,7 @@ const Dock = connect(createSelector(
   * @prop {number} cfg.maxZoom the maximum zoom level for the "zoom to feature" functionality
   * @prop {boolean} cfg.hideCloseButton hide the close button from the header
   * @prop {boolean} cfg.hideLayerTitle hide the layer title from the header
+  * @prop {boolean} cfg.snapTool default true. Shows the button to enable snap tool.
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param

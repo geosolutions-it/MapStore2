@@ -1686,7 +1686,8 @@
                     "header": "Configuración",
                     "vertex": "Vértice",
                     "edge": "Borde",
-                    "pixelTolerance": "Tolerancia de píxeles"
+                    "pixelTolerance": "Tolerancia (píxel)",
+                    "loadingStrategy": "Estrategia de carga"
                   }
             }
         },

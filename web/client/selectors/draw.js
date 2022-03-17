@@ -31,7 +31,6 @@ export const snappingLayerDataSelector = state => {
 export const isSnappingActive = state => get(state, 'draw.snapping', false);
 
 export const isSnappingLoading = state => get(state, 'draw.snappingIsLoading', false);
-export const snappingShouldRefresh = state => get(state, 'draw.snappingShouldRefresh', false);
 export const snappingConfig = state => get(state, 'draw.snapConfig', false);
 export const availableSnappingLayers = createShallowSelectorCreator(
     (a, b) => {
@@ -54,6 +53,7 @@ export const availableSnappingLayers = createShallowSelectorCreator(
         layersList.map((layer) =>
             layer.id !== id
                 && ['wms', 'wfs', 'vector'].includes(layer?.type)
+                && (layer?.type === 'wms' ? layer?.search?.type === 'wfs' : true)
                 && layer.group !== 'background'
                 && layer.visibility ? {
                     value: layer.id,

@@ -16,9 +16,6 @@ export const DRAWING_FEATURE = 'DRAW:DRAWING_FEATURES';
 export const SET_SNAPPING_LAYER = 'DRAW:SET_SNAPPING_LAYER';
 export const SNAPPING_IS_LOADING = 'DRAW:SNAPPING_IS_LOADING';
 export const TOGGLE_SNAPPING = 'DRAW:TOGGLE_SNAPPING';
-export const REFRESH_SNAPPING_LAYER = 'DRAW:REFRESH_SNAPPING_LAYER';
-export const REQUEST_WMS_FEATURES = 'DRAW:REQUEST_WMS_FEATURES';
-export const SET_SNAPPING_DEFAULT_CONFIG = 'DRAW:SET_SNAPPING_DEFAULT_CONFIG';
 export const SET_SNAPPING_CONFIG = 'DRAW:SET_SNAPPING_CONFIG';
 
 
@@ -99,13 +96,6 @@ export function setSnappingLayer(snappingLayer) {
 export function toggleSnappingIsLoading() {
     return {
         type: SNAPPING_IS_LOADING
-    };
-}
-
-export function setSnappingConfigDefaults(pluginCfg = { edge: true, vertex: true, pixelTolerance: 10}) {
-    return {
-        type: SET_SNAPPING_DEFAULT_CONFIG,
-        pluginCfg
     };
 }
 
