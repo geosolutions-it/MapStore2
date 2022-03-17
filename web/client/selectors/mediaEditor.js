@@ -8,6 +8,7 @@
 
 import { get, find } from "lodash";
 import { createSelector } from "reselect";
+import { splitMapAndLayers, extractTileMatrixFromSources } from '../utils/LayersUtils';
 
 /**
  * Selects the open/closed state of the mediaEditor
@@ -36,7 +37,25 @@ export const getLoadingMediaList = state => get(state, "mediaEditor.loadingList"
 export const selectedItemSelector = createSelector(
     currentResourcesSelector,
     selectedIdSelector,
-    (resources = [], id) => find(resources, {id})
+    (resources = [], id) => {
+        const item  = find(resources, {id});
+        if (item && item.type === 'map' && item.data.layers)  {
+            return {
+                ...item,
+                data: {
+                    ...item.data,
+                    layers: item.data.layers.map(layer => {
+                        if (layer.tileMatrixSet && item.data.sources) {
+                            const tileMatrix = extractTileMatrixFromSources(item.data.sources, layer);
+                            return {...layer, ...tileMatrix};
+                        }
+                        return layer;
+                    })
+                }
+            };
+        }
+        return item;
+    }
 );
 export const disabledMediaTypeSelector = state => get(state, "mediaEditor.disabledMediaType", []);
 
