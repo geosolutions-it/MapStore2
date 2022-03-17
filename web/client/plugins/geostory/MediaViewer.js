@@ -19,6 +19,7 @@ import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../
 import emptyState from '../../components/misc/enhancers/emptyState';
 import { resourcesSelector } from '../../selectors/geostory';
 import { SectionTypes } from '../../utils/GeoStoryUtils';
+import { extractTileMatrixFromSources } from '../../utils/LayersUtils';
 import withMediaVisibilityContainer from '../../components/geostory/common/enhancers/withMediaVisibilityContainer';
 import autoMapType from '../../components/map/enhancers/autoMapType';
 import withScalesDenominators from "../../components/map/enhancers/withScalesDenominators";
@@ -43,10 +44,26 @@ const image = branch(
     )
 )(withMediaVisibilityContainer(Image));
 
-const map = compose(
+const geostoryMap = compose(
     branch(
         ({ resourceId }) => resourceId,
         connectMap
+    ),
+    withProps(
+        ({ map = {}}) => {
+            return {
+                map: {
+                    ...map,
+                    layers: map.layers && map.layers.map(layer => {
+                        if (layer.tileMatrixSet && map.sources) {
+                            const tileMatrix = extractTileMatrixFromSources(map.sources, layer);
+                            return {...layer, ...tileMatrix};
+                        }
+                        return layer;
+                    })
+                }
+            };
+        }
     ),
     autoMapType,
     withScalesDenominators,
@@ -84,7 +101,7 @@ const video = branch(
 
 const mediaTypesMap = {
     image,
-    map,
+    map: geostoryMap,
     video
 };
 
