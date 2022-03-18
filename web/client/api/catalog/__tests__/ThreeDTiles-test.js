@@ -11,8 +11,7 @@ import {
     textSearch,
     getLayerFromRecord,
     getCatalogRecords,
-    validate,
-    reset
+    validate
 } from '../ThreeDTiles';
 
 import axios from '../../../libs/ajax';
@@ -76,7 +75,6 @@ describe('Test 3D tiles catalog API', () => {
     afterEach(done => {
         mockAxios.restore();
         setTimeout(done);
-        reset();
     });
     it('should return a single record for tileset.json', (done) => {
         mockAxios.onGet().reply(200, TILSET_JSON);
