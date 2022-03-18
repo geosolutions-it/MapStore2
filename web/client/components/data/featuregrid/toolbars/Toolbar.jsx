@@ -188,8 +188,7 @@ const standardButtons = {
         <>
             <label className="control-label"><Message msgId="featuregrid.toolbar.snapToLayer"/></label>
             <Select
-                isOpen
-                isClearable={false}
+                clearable={false}
                 escapeClearsValue={false}
                 options={availableSnappingLayers}
                 onChange={option => events.setSnappingLayer(option.value)}

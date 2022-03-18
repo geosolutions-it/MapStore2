@@ -1,42 +1,14 @@
 
-.featuregrid-toolbar {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-#featuregrid-toolbar .btn {
-    overflow: hidden;
-}
-
-.split-button {
+#featuregrid-toolbar .snap-tool.split-button {
     .dropdown-menu {
         min-width: 250px;
-
-        li > a {
-            display: block;
-            padding: 3px 20px;
-            clear: both;
-            font-weight: 400;
-            line-height: 1.42857143;
-            color: #333333;
-            white-space: nowrap;
-        }
-
-        & > label, .form-group > label {
-            padding: 3px 10px;
-            margin-bottom: 0;
-        }
-
-        .inline-control-label {
-            display: flex;
-            height: 30px;
-            align-items: center;
-        }
+        min-height: 200px;
+        overflow: hidden !important;
     }
     .Select-menu-outer {
-        max-height: 9999px;
         .Select-menu {
-            height: 100%;
+            overflow: auto;
+            max-height: 150px
         }
     }
 

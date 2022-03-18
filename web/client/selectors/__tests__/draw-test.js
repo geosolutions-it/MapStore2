@@ -71,32 +71,59 @@ describe('draw changedGeometriesSelector', () => {
         expect(value.a).toBe(true);
         expect(value.b).toBe(false);
     });
-    it('test availableSnappingLayers selector', () => {
-        const value = availableSnappingLayers({
-            layers: [
-                { id: 'layer001', type: 'wms', title: '001', visibility: true, search: { type: 'wfs' } }
-            ],
-            additionallayers: [
-                { id: 'layer002', type: 'wfs', options: { id: 'layer002', title: '002', type: 'wfs', visibility: true } },
-                { id: 'layer003', type: 'example', options: { id: 'layer003', title: '003', type: 'example', visibility: true } }
-            ],
-            draw: {
-                snappingLayer: 'layer002',
-                snapConfig: {
-                    a: true,
-                    b: false,
-                    additionalLayers: [
-                        'layer002'
-                    ]
+    describe('test availableSnappingLayers selector', () => {
+        it('additional layers', () => {
+            const value = availableSnappingLayers({
+                layers: [
+                    { id: 'layer001', type: 'wms', title: '001', visibility: true, search: { type: 'wfs' } }
+                ],
+                additionallayers: [
+                    { id: 'layer002', type: 'wfs', options: { id: 'layer002', title: '002', type: 'wfs', visibility: true } },
+                    { id: 'layer003', type: 'example', options: { id: 'layer003', title: '003', type: 'example', visibility: true } }
+                ],
+                draw: {
+                    snappingLayer: 'layer002',
+                    snapConfig: {
+                        a: true,
+                        b: false,
+                        additionalLayers: [
+                            'layer002'
+                        ]
+                    }
+                },
+                featuregrid: {
+                    selectedLayer: 'layer001'
                 }
-            },
-            featuregrid: {
-                selectedLayer: 'layer001'
-            }
+            });
+            expect(value[0].value).toEqual('layer001');
+            expect(value[0].active).toEqual(false);
+            expect(value[1].value).toEqual('layer002');
+            expect(value[1].active).toEqual(true);
         });
-        expect(value[0].value).toBe('layer001');
-        expect(value[0].active).toBe(false);
-        expect(value[1].value).toBe('layer002');
-        expect(value[1].active).toBe(true);
+        it('supported types', () => {
+            const value = availableSnappingLayers({
+                layers: [
+                    { id: 'layer001', type: 'wms', title: '001', visibility: true, search: { type: 'wfs' }},
+                    { id: 'layer002', type: 'wms', title: '003', visibility: true},
+                    { id: 'layer003', type: 'wfs', title: '003', visibility: true},
+                    { id: 'layer004', type: 'vector', title: '004', visibility: true}
+                ],
+                draw: {
+                    snappingLayer: 'layer002',
+                    snapConfig: {
+                        a: true,
+                        b: false
+                    }
+                },
+                featuregrid: {
+                    selectedLayer: 'layer001'
+                }
+            });
+            expect(value.length).toEqual(3);
+            expect(value[0].value).toEqual('layer001');
+            expect(value[1].value).toEqual('layer003');
+            expect(value[2].value).toEqual('layer004');
+
+        });
     });
 });
