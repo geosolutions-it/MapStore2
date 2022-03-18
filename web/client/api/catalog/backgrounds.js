@@ -7,10 +7,24 @@
  */
 
 import mapBackground from '../mapBackground';
+import {
+    validate as commonValidate,
+    testService as commonTestService,
+    preprocess as commonPreprocess
+} from './common';
 
-export const parseUrl = url => url;
+const recordToLayer = (record) => {
+    return {
+        ...record?.background,
+        id: record?.background.name,
+        visibility: false
+    };
+};
+
 export const textSearch = mapBackground.textSearch;
-
+export const preprocess = commonPreprocess;
+export const validate = commonValidate;
+export const testService = commonTestService({ parseUrl: url => url });
 export const getCatalogRecords = (records) => {
     if (records && records.records) {
         return records.records.map(record => {
@@ -27,14 +41,6 @@ export const getCatalogRecords = (records) => {
         });
     }
     return null;
-};
-
-const recordToLayer = (record) => {
-    return {
-        ...record?.background,
-        id: record?.background.name,
-        visibility: false
-    };
 };
 
 export const getLayerFromRecord = (record, options, asPromise) => {

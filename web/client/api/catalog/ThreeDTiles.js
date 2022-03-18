@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { getConfigProp } from '../../utils/ConfigUtils';
 import { Observable } from 'rxjs';
 import axios from '../../libs/ajax';
 import { isValidURLTemplate } from '../../utils/URLUtils';
 import { convertRadianToDegrees } from '../../utils/CoordinatesUtils';
-const capabilitiesCache = {};
+import { preprocess as commonPreprocess } from './common';
 
 function regionToBoundingBox(region) {
     if (!region) {
@@ -45,54 +44,17 @@ const searchAndPaginate = (tileset, { info, url }) => {
     };
 };
 
-export const parseUrl = url => url;
-
-export const getRecords = (url, startPosition, maxRecords, text, info) => {
-    const cached = capabilitiesCache[url];
-    if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
-        return new Promise((resolve) => {
-            resolve(searchAndPaginate(cached.data, { startPosition, maxRecords, text, info, url }));
-        });
+function validateUrl(serviceUrl) {
+    if (isValidURLTemplate(serviceUrl)) {
+        const parts = serviceUrl.split(/\./g);
+        // from spec: Tileset files use the .json extension and the application/json MIME type.
+        return parts[parts.length - 1] === 'json'
+            ? true
+            : false;
     }
-    return axios.get(url)
-        .then(({ data }) => {
-            capabilitiesCache[url] = {
-                timestamp: new Date().getTime(),
-                data
-            };
-            return searchAndPaginate(data, { startPosition, maxRecords, text, info, url });
-        });
-};
+    return false;
+}
 
-export const reset = () => {
-    Object.keys(capabilitiesCache).forEach(key => {
-        delete capabilitiesCache[key];
-    });
-};
-
-export const testService = (service) => Observable.of(service);
-
-export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
-
-export const getCatalogRecords = (response) => {
-    return response?.records
-        ? response.records.map(record => {
-            const version = record?.tileset?.assets?.version !== undefined ? record?.tileset?.assets?.version : '1.0'; // currently only 1.0
-            const boundingBox = regionToBoundingBox(record?.tileset?.root?.boundingVolume?.region);
-            return {
-                serviceType: '3dtiles',
-                isValid: true,
-                description: `v. ${version}`,
-                title: record.title,
-                identifier: record.url,
-                url: record.url,
-                thumbnail: null,
-                ...(boundingBox && { boundingBox }),
-                references: []
-            };
-        })
-        : null;
-};
 
 const recordToLayer = (record) => {
     return {
@@ -114,22 +76,39 @@ const recordToLayer = (record) => {
     };
 };
 
+const getRecords = (url, startPosition, maxRecords, text, info) => {
+    return axios.get(url)
+        .then(({ data }) => {
+            return searchAndPaginate(data, { startPosition, maxRecords, text, info, url });
+        });
+};
+
+export const preprocess = commonPreprocess;
+export const testService = (service) => Observable.of(service);
+export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
+export const getCatalogRecords = (response) => {
+    return response?.records
+        ? response.records.map(record => {
+            const version = record?.tileset?.assets?.version !== undefined ? record?.tileset?.assets?.version : '1.0'; // currently only 1.0
+            const boundingBox = regionToBoundingBox(record?.tileset?.root?.boundingVolume?.region);
+            return {
+                serviceType: '3dtiles',
+                isValid: true,
+                description: `v. ${version}`,
+                title: record.title,
+                identifier: record.url,
+                url: record.url,
+                thumbnail: null,
+                ...(boundingBox && { boundingBox }),
+                references: []
+            };
+        })
+        : null;
+};
 export const getLayerFromRecord = (record, options, asPromise) => {
     const layer = recordToLayer(record, options);
     return asPromise ? Promise.resolve(layer) : layer;
 };
-
-function validateUrl(serviceUrl) {
-    if (isValidURLTemplate(serviceUrl)) {
-        const parts = serviceUrl.split(/\./g);
-        // from spec: Tileset files use the .json extension and the application/json MIME type.
-        return parts[parts.length - 1] === 'json'
-            ? true
-            : false;
-    }
-    return false;
-}
-
 export const validate = (service) => {
     if (service.title && validateUrl(service.url)) {
         return Observable.of(service);

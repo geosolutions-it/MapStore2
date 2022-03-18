@@ -25,7 +25,11 @@ import {
     buildSRSMap,
     getRecordLinks
 } from '../../utils/CatalogUtils';
-
+import {
+    validate as commonValidate,
+    testService as commonTestService,
+    preprocess as commonPreprocess
+} from './common';
 import WMTS from '../WMTS';
 
 const getWMTSBBox = (record) => {
@@ -46,84 +50,6 @@ const getNodeText = (node) => {
 
 const filterOnMatrix = (SRS, matrixIds) => {
     return SRS.filter(srs => getTileMatrixSet(matrixIds, srs, SRS, matrixIds, null));
-};
-
-export const textSearch = WMTS.textSearch;
-export const parseUrl = WMTS.parseUrl;
-
-export const getCatalogRecords = (records, options) => {
-    if (records && records.records) {
-        return records.records.map((record) => {
-            let urls = castArray(getGetTileURL(record) || (options && options.url));
-            if (urls.length === 1) {
-                urls = urls[0];
-            }
-            const capabilitiesURL = getCapabilitiesURL(record);
-            const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
-                const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
-                const tileMatrixSRS = tileMatrix && getEPSGCode(tileMatrix["ows:SupportedCRS"]);
-                const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
-                    identifier: limit.TileMatrix,
-                    ranges: {
-                        cols: {
-                            min: limit.MinTileCol,
-                            max: limit.MaxTileCol
-                        },
-                        rows: {
-                            min: limit.MinTileRow,
-                            max: limit.MaxTileRow
-                        }
-                    }
-                })) || tileMatrix.TileMatrix.map((matrix) => ({
-                    identifier: matrix["ows:Identifier"]
-                }));
-                return assign(previous, {
-                    [tileMatrix["ows:Identifier"]]: levels,
-                    [tileMatrixSRS]: levels
-                });
-            }, {});
-
-            const bbox = getWMTSBBox(record);
-            const references = [{
-                type: "OGC:WMTS",
-                url: urls,
-                SRS: filterOnMatrix(record.SRS || [], matrixIds),
-                params: {
-                    name: record["ows:Identifier"]
-                }
-            }];
-            const { wmts: ogcReferences } = extractOGCServicesReferences({ references });
-            return {
-                serviceType: 'wmts',
-                isValid: !!ogcReferences,
-                title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
-                description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
-                identifier: getNodeText(record["ows:Identifier"]),
-                tags: "",
-                layerOptions: options && options.layerOptions || {},
-                style: record.style,
-                capabilitiesURL: capabilitiesURL,
-                queryable: record.queryable,
-                requestEncoding: record.requestEncoding,
-                tileMatrixSet: record.TileMatrixSet,
-                matrixIds,
-                format: record.format,
-                TileMatrixSetLink: castArray(record.TileMatrixSetLink),
-                boundingBox: {
-                    extent: [
-                        bbox["ows:LowerCorner"].split(" ")[0],
-                        bbox["ows:LowerCorner"].split(" ")[1],
-                        bbox["ows:UpperCorner"].split(" ")[0],
-                        bbox["ows:UpperCorner"].split(" ")[1]
-                    ],
-                    crs: "EPSG:4326"
-                },
-                references,
-                ogcReferences
-            };
-        });
-    }
-    return null;
 };
 
 const recordToLayer = (record, {
@@ -199,6 +125,84 @@ const recordToLayer = (record, {
     };
 };
 
+export const textSearch = WMTS.textSearch;
+export const preprocess = commonPreprocess;
+export const validate = commonValidate;
+export const testService = commonTestService({ parseUrl: WMTS.parseUrl });
+export const getCatalogRecords = (records, options) => {
+    if (records && records.records) {
+        return records.records.map((record) => {
+            let urls = castArray(getGetTileURL(record) || (options && options.url));
+            if (urls.length === 1) {
+                urls = urls[0];
+            }
+            const capabilitiesURL = getCapabilitiesURL(record);
+            const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
+                const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
+                const tileMatrixSRS = tileMatrix && getEPSGCode(tileMatrix["ows:SupportedCRS"]);
+                const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
+                    identifier: limit.TileMatrix,
+                    ranges: {
+                        cols: {
+                            min: limit.MinTileCol,
+                            max: limit.MaxTileCol
+                        },
+                        rows: {
+                            min: limit.MinTileRow,
+                            max: limit.MaxTileRow
+                        }
+                    }
+                })) || tileMatrix.TileMatrix.map((matrix) => ({
+                    identifier: matrix["ows:Identifier"]
+                }));
+                return assign(previous, {
+                    [tileMatrix["ows:Identifier"]]: levels,
+                    [tileMatrixSRS]: levels
+                });
+            }, {});
+
+            const bbox = getWMTSBBox(record);
+            const references = [{
+                type: "OGC:WMTS",
+                url: urls,
+                SRS: filterOnMatrix(record.SRS || [], matrixIds),
+                params: {
+                    name: record["ows:Identifier"]
+                }
+            }];
+            const { wmts: ogcReferences } = extractOGCServicesReferences({ references });
+            return {
+                serviceType: 'wmts',
+                isValid: !!ogcReferences,
+                title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
+                description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
+                identifier: getNodeText(record["ows:Identifier"]),
+                tags: "",
+                layerOptions: options && options.layerOptions || {},
+                style: record.style,
+                capabilitiesURL: capabilitiesURL,
+                queryable: record.queryable,
+                requestEncoding: record.requestEncoding,
+                tileMatrixSet: record.TileMatrixSet,
+                matrixIds,
+                format: record.format,
+                TileMatrixSetLink: castArray(record.TileMatrixSetLink),
+                boundingBox: {
+                    extent: [
+                        bbox["ows:LowerCorner"].split(" ")[0],
+                        bbox["ows:LowerCorner"].split(" ")[1],
+                        bbox["ows:UpperCorner"].split(" ")[0],
+                        bbox["ows:UpperCorner"].split(" ")[1]
+                    ],
+                    crs: "EPSG:4326"
+                },
+                references,
+                ogcReferences
+            };
+        });
+    }
+    return null;
+};
 export const getLayerFromRecord = (record, options, asPromise) => {
     const layer = recordToLayer(record, options);
     return asPromise ? Promise.resolve(layer) : layer;

@@ -13,6 +13,11 @@ import { getLayerFromRecord as getLayerFromWMSRecord } from './WMS';
 import { getMessageById } from '../../utils/LocaleUtils';
 import { extractEsriReferences, extractOGCServicesReferences } from '../../utils/CatalogUtils';
 import CSW from '../CSW';
+import {
+    validate as commonValidate,
+    testService as commonTestService,
+    preprocess as commonPreprocess
+} from './common';
 
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
@@ -186,9 +191,21 @@ function getThumbnailFromDc(dc, options) {
     return thumbURL;
 }
 
-export const textSearch = CSW.textSearch;
-export const parseUrl = CSW.parseUrl;
+const recordToLayer = (record, options) => {
+    switch (record.layerType) {
+    case 'wms':
+        return getLayerFromWMSRecord(record, options);
+    case 'esri':
+        return esriToLayer(record, options);
+    default:
+        return null;
+    }
+};
 
+export const preprocess = commonPreprocess;
+export const validate = commonValidate;
+export const testService = commonTestService({ parseUrl: CSW.parseUrl });
+export const textSearch = CSW.textSearch;
 export const getCatalogRecords = (records, options, locales) => {
     let result = records;
     // let searchOptions = catalog.searchOptions;
@@ -300,17 +317,6 @@ export const getCatalogRecords = (records, options, locales) => {
         });
     }
     return null;
-};
-
-const recordToLayer = (record, options) => {
-    switch (record.layerType) {
-    case 'wms':
-        return getLayerFromWMSRecord(record, options);
-    case 'esri':
-        return esriToLayer(record, options);
-    default:
-        return null;
-    }
 };
 
 export const getLayerFromRecord = (record, options, asPromise) => {

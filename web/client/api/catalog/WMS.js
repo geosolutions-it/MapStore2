@@ -25,64 +25,10 @@ import {
     textSearch as wmsTextSearch,
     parseUrl as wmsParseUrl
 } from '../WMS';
-
-export const textSearch = wmsTextSearch;
-export const parseUrl = wmsParseUrl;
-
-export const getCatalogRecords = (records, options) => {
-    if (records && records.records) {
-        return records.records.map((record) => {
-            const references = [{
-                type: "OGC:WMS",
-                url: options && options.url,
-                SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
-                params: {
-                    name: record.Name
-                }
-            }];
-            const { wms: ogcReferences } = extractOGCServicesReferences({ references });
-            return {
-                serviceType: 'wms',
-                isValid: !!ogcReferences,
-                capabilities: record,
-                credits: record.credits,
-                boundingBox: getBBox(record),
-                description: record.Abstract || record.Title || record.Name,
-                identifier: record.Name,
-                service: records.service,
-                tags: "",
-                layerOptions: {
-                    ...(options?.layerOptions || {}),
-                    ...(records?.layerOptions || {})
-                },
-                title: getLayerTitleTranslations(record) || record.Name,
-                formats: castArray(record.formats || []),
-                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                    values: dim._ && dim._.split(',') || []
-                }, dim.$ || {}))
-                // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
-                // TODO: replace with capabilities URL service. something like this:
-                    /*
-                    .map(dim => dim && dim.name !== "time" ? dim : {
-                        ...dim,
-                        values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
-                        source: { <-- add the source
-                            type: "wms-capabilities",
-                            url: options.url
-                        }
-                    })
-                    */
-                    // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
-                    .filter(dim => dim && dim.name !== "time"),
-
-                references,
-                ogcReferences
-            };
-        });
-    }
-    return null;
-};
-
+import {
+    validate as commonValidate,
+    testService as commonTestService
+} from './common';
 
 const recordToLayer = (record, {
     removeParams = [],
@@ -174,13 +120,68 @@ const recordToLayer = (record, {
     return layer;
 };
 
-export const getLayerFromRecord = (record, options, asPromise) => {
-    const layer = recordToLayer(record, options);
-    return asPromise ? Promise.resolve(layer) : layer;
-};
-
 export const preprocess = (service) => {
     let { domainAliases } = service;
     service.domainAliases = filter(domainAliases);
     return Observable.of(service);
+};
+export const validate = commonValidate;
+export const testService = commonTestService({ parseUrl: wmsParseUrl });
+export const textSearch = wmsTextSearch;
+export const getCatalogRecords = (records, options) => {
+    if (records && records.records) {
+        return records.records.map((record) => {
+            const references = [{
+                type: "OGC:WMS",
+                url: options && options.url,
+                SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
+                params: {
+                    name: record.Name
+                }
+            }];
+            const { wms: ogcReferences } = extractOGCServicesReferences({ references });
+            return {
+                serviceType: 'wms',
+                isValid: !!ogcReferences,
+                capabilities: record,
+                credits: record.credits,
+                boundingBox: getBBox(record),
+                description: record.Abstract || record.Title || record.Name,
+                identifier: record.Name,
+                service: records.service,
+                tags: "",
+                layerOptions: {
+                    ...(options?.layerOptions || {}),
+                    ...(records?.layerOptions || {})
+                },
+                title: getLayerTitleTranslations(record) || record.Name,
+                formats: castArray(record.formats || []),
+                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
+                    values: dim._ && dim._.split(',') || []
+                }, dim.$ || {}))
+                // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
+                // TODO: replace with capabilities URL service. something like this:
+                    /*
+                    .map(dim => dim && dim.name !== "time" ? dim : {
+                        ...dim,
+                        values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
+                        source: { <-- add the source
+                            type: "wms-capabilities",
+                            url: options.url
+                        }
+                    })
+                    */
+                    // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
+                    .filter(dim => dim && dim.name !== "time"),
+
+                references,
+                ogcReferences
+            };
+        });
+    }
+    return null;
+};
+export const getLayerFromRecord = (record, options, asPromise) => {
+    const layer = recordToLayer(record, options);
+    return asPromise ? Promise.resolve(layer) : layer;
 };
