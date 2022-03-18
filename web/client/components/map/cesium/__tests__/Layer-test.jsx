@@ -22,6 +22,7 @@ import '../plugins/BingLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/OverlayLayer';
 import '../plugins/MarkerLayer';
+import '../plugins/ThreeDTilesLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1144,5 +1145,59 @@ describe('Cesium layer', () => {
         expect(layer).toBeTruthy();
         expect(map.imageryLayers.length).toBe(1);
 
+    });
+    it('should create a 3d tiles layer', () => {
+        const options = {
+            type: '3dtiles',
+            url: 'http://service.org/tileset.json',
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(cmp.layer.tileSet._url).toBe('http://service.org/tileset.json');
+    });
+    it('should create a 3d tiles layer with visibility set to false', () => {
+        const options = {
+            type: '3dtiles',
+            url: 'http://service.org/tileset.json',
+            title: 'Title',
+            visibility: false,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeFalsy();
     });
 });

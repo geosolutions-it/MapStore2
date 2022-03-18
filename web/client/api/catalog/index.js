@@ -13,6 +13,7 @@ import * as wmts from './WMTS';
 import * as tms from './TMS';
 import * as wfs from './WFS';
 import * as backgrounds from './backgrounds';
+import * as threeDTiles from './ThreeDTiles';
 import { validate, testService, preprocess } from './common';
 
 
@@ -44,35 +45,40 @@ export default {
     // TODO: we should separate catalog specific API from OGC services API, to define better the real interfaces of each API.
     // TODO: validate could be converted in a simple function
     // TODO: testService could be converted in a simple Promise
-    csw: {
+    'csw': {
         preprocess,
         validate,
         testService: testService(csw),
         ...csw
     },
-    wfs: {
+    'wfs': {
         preprocess,
         validate,
         testService: testService(wfs),
         ...wfs
     },
-    wms: {
+    'wms': {
         preprocess,
         validate,
         testService: testService(wms),
         ...wms
     },
-    tms, // has it's own validation
-    wmts: {
+    'tms': tms, // has it's own validation
+    'wmts': {
         preprocess,
         validate,
         testService: testService(wmts),
         ...wmts
     },
-    backgrounds: {
+    'backgrounds': {
         preprocess,
         validate,
         testService: testService(backgrounds),
         ...backgrounds
+    },
+    '3dtiles': {
+        preprocess,
+        testService: testService(threeDTiles),
+        ...threeDTiles
     }
 };

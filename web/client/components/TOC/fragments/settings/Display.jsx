@@ -167,7 +167,7 @@ export default class extends React.Component {
                     </Col>
                 </Row>}
 
-                <Row>
+                {this.props.element.type !== "3dtiles" && <Row>
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel>{this.props.opacityText} %</ControlLabel>
@@ -180,7 +180,7 @@ export default class extends React.Component {
                                 onChange={(val)=> this.onChange("opacity", val)}/>
                         </FormGroup>
                     </Col>
-                </Row>
+                </Row>}
 
                 <Row>
                     <Col xs={12}>
