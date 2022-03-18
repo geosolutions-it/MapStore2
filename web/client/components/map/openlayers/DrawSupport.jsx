@@ -462,7 +462,8 @@ export default class DrawSupport extends React.Component {
                                 version: '1.1.0',
                                 outputFormat: 'application/json',
                                 srsname: proj,
-                                bbox: extent.join(',') + ',' + proj
+                                bbox: extent.join(',') + ',' + proj,
+                                maxFeatures: snapConfig?.maxFeatures ?? 500000
                             });
                             isLoading();
                             const onError = (err) => {

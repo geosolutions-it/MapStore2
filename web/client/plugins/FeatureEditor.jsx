@@ -87,6 +87,14 @@ const Dock = connect(createSelector(
   * @prop {boolean} cfg.hideCloseButton hide the close button from the header
   * @prop {boolean} cfg.hideLayerTitle hide the layer title from the header
   * @prop {boolean} cfg.snapTool default true. Shows the button to enable snap tool.
+  * @prop {object} cfg.snapConfig object containing settings for snap tool.
+  * @prop {boolean} cfg.snapConfig.vertex activates or deactivates snapping to the vertices of vector shapes.
+  * @prop {boolean} cfg.snapConfig.edge activates or deactivates snapping to the edges of vector shapes.
+  * @prop {number} cfg.snapConfig.pixelTolerance Pixel tolerance for considering the pointer close enough to a segment or vertex for snapping.
+  * @prop {string} cfg.snapConfig.strategy defines strategy function for loading features. Supported values are "bbox" and "all".
+  * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
+  * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
+  *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
@@ -121,7 +129,8 @@ const Dock = connect(createSelector(
  *      "additionalLayers": [
  *         "ADDITIONAL_LAYER_ID"
  *      ],
- *      "strategy": "bbox"
+ *      "strategy": "bbox",
+ *      "maxFeatures": 4000
   *   },
   *   }
   * }
