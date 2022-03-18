@@ -25,7 +25,7 @@ import {
     centerToMarkerSelector,
     getLayersWithDimension,
     elementSelector,
-    queryableSelectedLayersSelector
+    queryableSelectedLayersSelector, getAdditionalLayerFromId
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -786,5 +786,16 @@ describe('Test layers selectors', () => {
             }
         };
         expect(queryableSelectedLayersSelector(state)).toEqual(queryableSelectedLayers);
+    });
+    it('test getAdditionalLayerFromId selector', () => {
+        const state = {
+            additionallayers: [
+                {
+                    id: 'layer_001'
+                }
+            ]
+        };
+        const props = getAdditionalLayerFromId(state, 'layer_001');
+        expect(props.id).toBe('layer_001');
     });
 });

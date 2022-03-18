@@ -53,11 +53,11 @@ import {
     SELECT_FEATURES,
     SET_PAGINATION,
     launchUpdateFilterFunc,
-    LAUNCH_UPDATE_FILTER_FUNC
+    LAUNCH_UPDATE_FILTER_FUNC, setLayer
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
-import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
+import {CHANGE_DRAWING_STATUS, geometryChanged, SET_SNAPPING_LAYER} from '../../actions/draw';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
 import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
@@ -123,7 +123,7 @@ import {
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
     deactivateSyncWmsFilterOnFeatureGridClose,
-    launchUpdateFilterEpic
+    launchUpdateFilterEpic, setDefaultSnappingLayerOnFeatureGridOpen
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -2328,5 +2328,12 @@ describe('featuregrid Epics', () => {
                 syncWmsFilter: true
             }
         }, done);
+    });
+    it('setDefaultSnappingLayerOnFeatureGridOpen', (done) => {
+        const startActions = [setLayer('some_layer')];
+        testEpic(setDefaultSnappingLayerOnFeatureGridOpen, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
+        }, {}, done);
     });
 });

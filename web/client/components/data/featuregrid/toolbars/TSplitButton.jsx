@@ -14,7 +14,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import './TSplitButton.less';
 import classnames from "classnames";
 
-export const SimpleTButton = ({ disabled, id, visible, onClick, glyph, active, buttonClassName = "square-button-md", menuStyle = {}, className, children, onMount, ...props }) => {
+export const SimpleTButton = ({ disabled, id, visible, onClick, active, buttonClassName = "square-button-md", menuStyle = {}, className, children, onMount, ...props }) => {
     useEffect(() => {
         typeof onMount === 'function' && onMount();
     }, []);
@@ -26,9 +26,9 @@ export const SimpleTButton = ({ disabled, id, visible, onClick, glyph, active, b
                 "split-button": true,
                 ...(className ? {[className]: true} : {})
             })}>
-                <Button onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"}>{props.title}</Button>
+                <Button id={id} onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"}>{props.title}</Button>
                 <Dropdown.Toggle bsStyle={active ? "success" : "primary"} />
-                <Dropdown.Menu style={menuStyle} className="super-colors">
+                <Dropdown.Menu style={menuStyle}>
                     {children}
                 </Dropdown.Menu>
             </Dropdown>

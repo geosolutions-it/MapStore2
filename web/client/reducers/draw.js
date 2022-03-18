@@ -31,7 +31,7 @@ const initialState = {
     snappingLayer: false
 };
 
-const defaultSnappingConfig = { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'};
+export const defaultSnappingConfig = { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'};
 
 function draw(state = initialState, action) {
     switch (action.type) {
@@ -74,7 +74,7 @@ function draw(state = initialState, action) {
             snapConfig: {
                 ...(action.pluginCfg?.snapConfig ?? defaultSnappingConfig),
                 ...(state?.snapConfig ?? {}),
-                ...(action.prop && action.value ? {[action.prop]: action.value} : {})
+                ...(action.prop && typeof action.value !== 'undefined' ? {[action.prop]: action.value} : {})
             }
         };
     default:

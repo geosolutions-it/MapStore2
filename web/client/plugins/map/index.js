@@ -44,7 +44,7 @@ import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selectors/map';
 import {
-    snappingLayerDataSelector, snappingLayerType, snappingLayerId, snappingLayerSelector
+    snappingLayerSelector
 } from "../../selectors/draw";
 import {updateAdditionalLayer} from "../../actions/additionallayers";
 
@@ -98,10 +98,7 @@ const pluginsCreator = (mapType, actions) => {
         const DrawSupport = connect((state) =>
             ({
                 ...(state.draw ?? {}),
-                snappingLayerId: snappingLayerId(state),
-                snappingLayerInstance: snappingLayerSelector(state),
-                snappingLayerType: snappingLayerType(state),
-                snappingLayerData: snappingLayerDataSelector(state)
+                snappingLayerInstance: snappingLayerSelector(state)
             }), {
             onChangeDrawingStatus: changeDrawingStatus,
             onEndDrawing: endDrawing,

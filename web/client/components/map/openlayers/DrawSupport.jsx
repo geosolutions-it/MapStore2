@@ -93,10 +93,8 @@ export default class DrawSupport extends React.Component {
 
         snapping: PropTypes.bool,
         snappingLayer: PropTypes.object,
-        snappingLayerData: PropTypes.object,
+        snappingLayerInstance: PropTypes.object,
         isSnappingLoading: PropTypes.bool,
-        snappingLayerType: PropTypes.string,
-        snappingLayerId: PropTypes.string,
         snapConfig: PropTypes.object,
 
         onUpdateSnappingLayer: PropTypes.func,
@@ -136,6 +134,15 @@ export default class DrawSupport extends React.Component {
  * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
 */
     UNSAFE_componentWillReceiveProps(newProps) {
+        const snappingLayerChanged = this.props.snappingLayerInstance?.id !== newProps.snappingLayerInstance?.id;
+        const snappingStateChanged = this.props.snapping !== newProps.snapping;
+        const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
+        const snappingInteractionExists = !!this.snapInteraction;
+        const snappingToggledOff = !newProps.snapping && this.props.snapping;
+        const snappingToggledOn = newProps.snapping && !this.props.snapping;
+        const reactivateSnappingInteraction = snappingInteractionExists && snappingToggledOn;
+        const recreateSnappingInteraction = (snappingStateChanged && !snappingInteractionExists);
+
         if (this.drawLayer) {
             this.updateFeatureStyles(newProps.features);
         }
@@ -143,18 +150,15 @@ export default class DrawSupport extends React.Component {
             this.selectInteraction.getFeatures().clear();
         }
 
-        const snappingToggledOff = !newProps.snapping && this.props.snapping;
-        snappingToggledOff && this.removeSnapInteraction();
-        // this.processSnappingData(newProps);
+        snappingToggledOff && this.deactivateSnapInteraction();
+        reactivateSnappingInteraction && this.reactivateSnapInteraction();
+        (snappingLayerChanged || snappingConfigChanged) && this.removeSnapInteraction();
 
-        const snappingLayerChanged = this.props.snappingLayerId !== newProps.snappingLayerId;
-        const snappingStateChanged = this.props.snapping !== newProps.snapping;
-        const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
         if (
             this.props.drawStatus !== newProps.drawStatus ||
             this.props.drawMethod !== newProps.drawMethod ||
             this.props.features !== newProps.features ||
-            (snappingStateChanged || snappingLayerChanged || snappingConfigChanged)
+            (recreateSnappingInteraction || snappingLayerChanged || snappingConfigChanged)
         ) {
             switch (newProps.drawStatus) {
             case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
@@ -1167,18 +1171,29 @@ export default class DrawSupport extends React.Component {
         }
     };
 
-    removeSnapInteraction = () => {
+    reactivateSnapInteraction = () => {
+        this.snapInteraction && this.snapInteraction.setActive(true);
+        this.drawSourceSnapInteraction && this.drawSourceSnapInteraction.setActive(true);
+    };
+
+    deactivateSnapInteraction = () => this.removeSnapInteraction(true)
+
+    removeSnapInteraction = (deactivateOnly = false) => {
         if (this.snapInteraction) {
             this.snapInteraction.setActive(false);
-            this.props.map.removeInteraction(this.snapInteraction);
-            this.snapInteraction = null;
+            if (!deactivateOnly) {
+                this.props.map.removeInteraction(this.snapInteraction);
+                this.snapInteraction = null;
+            }
         }
         if (this.drawSourceSnapInteraction) {
             this.drawSourceSnapInteraction.setActive(false);
-            this.props.map.removeInteraction(this.drawSourceSnapInteraction);
-            this.drawSourceSnapInteraction = null;
+            if (!deactivateOnly) {
+                this.props.map.removeInteraction(this.drawSourceSnapInteraction);
+                this.drawSourceSnapInteraction = null;
+            }
         }
-        if (this.snapLayer) {
+        if (this.snapLayer && !deactivateOnly) {
             this.props.map.removeLayer(this.snapLayer);
         }
     };

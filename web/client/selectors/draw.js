@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, head, isNil} from 'lodash';
-import {additionalLayersSelector, getLayerFromId, layersSelector} from "./layers";
-import {selectedLayerIdSelector} from "./featuregrid";
+import {get, isNil} from 'lodash';
+import {additionalLayersSelector, getAdditionalLayerFromId, getLayerFromId, layersSelector} from "./layers";
+import {selectedLayerSelector} from "./featuregrid";
 import {createShallowSelectorCreator} from "../utils/ReselectUtils";
 
 export const changedGeometriesSelector = state => state && state.draw && state.draw.tempFeatures;
@@ -16,18 +16,8 @@ export const drawSupportActiveSelector = (state) => {
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
 
-export const getAdditionalLayerFromId = (state, id) => head(additionalLayersSelector(state).filter(l => l.id === id))?.options;
-
 export const snappingLayerSelector = state => state?.draw?.snappingLayer ? getLayerFromId(state, state.draw.snappingLayer) ?? getAdditionalLayerFromId(state, state.draw.snappingLayer) : false;
 
-export const snappingLayerId = state => snappingLayerSelector(state)?.id;
-export const snappingLayerType = state => snappingLayerSelector(state)?.type;
-
-export const snappingLayerDataSelector = state => {
-
-    const additionalLayers = additionalLayersSelector(state) ?? [];
-    return additionalLayers.filter(({id}) => id === 'snapping')?.[0]?.options;
-};
 export const isSnappingActive = state => get(state, 'draw.snapping', false);
 
 export const isSnappingLoading = state => get(state, 'draw.snappingIsLoading', false);
@@ -40,16 +30,18 @@ export const availableSnappingLayers = createShallowSelectorCreator(
 )([
     layersSelector,
     additionalLayersSelector,
-    selectedLayerIdSelector,
-    snappingLayerId,
+    selectedLayerSelector,
+    snappingLayerSelector,
     snappingConfig
 ],
-(layers, additionalLayers, id, snappingId, config) => {
+(layers, additionalLayers, selectedLayer, snappingLayer, config) => {
     // Select extra layers from the config and concat them with layers;
+    const { id: snappingId } = snappingLayer;
+    const { id } = selectedLayer;
     const availableExtraLayers = additionalLayers.filter(l => (config?.additionalLayers ?? []).includes(l.id)).map(l => l.options);
     const layersList = availableExtraLayers.concat(layers);
 
-    return [{value: id, label: 'Current layer', active: id === snappingId}].concat(
+    return [{value: id, label: selectedLayer.title ?? selectedLayer.name, active: id === snappingId}].concat(
         layersList.map((layer) =>
             layer.id !== id
                 && ['wms', 'wfs', 'vector'].includes(layer?.type)
