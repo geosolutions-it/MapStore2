@@ -24,7 +24,6 @@ export const SimpleTButton = ({ disabled, id, visible, onClick, active, buttonCl
         <ContainerDimensions>
             <Dropdown className={classnames({
                 "split-button": true,
-                "snap-layer-menu": true,
                 ...(className ? {[className]: true} : {})
             })}>
                 <Button id={id} onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"}>{props.title}</Button>
