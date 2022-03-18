@@ -12,7 +12,6 @@ import { compose, mapPropsStream, withPropsOnChange } from 'recompose';
 import Rx from 'rxjs';
 import uuid from 'uuid';
 import API from '../../api/catalog';
-import { getCatalogRecords } from '../../utils/CatalogUtils';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 import SideGridComp from '../misc/cardgrids/SideGrid';
@@ -85,7 +84,7 @@ const loadPage = ({text, catalog = {}}, page = 0) => {
     }
     return Rx.Observable
         .fromPromise(API[type].textSearch(catalog.url, page * PAGE_SIZE + (type === "csw" ? 1 : 0), PAGE_SIZE, text, options))
-        .map((result) => ({ result, records: getCatalogRecords(type, result || [], { url: catalog && catalog.url, service: catalog })}))
+        .map((result) => ({ result, records: API[type].getCatalogRecords(result || [], { url: catalog && catalog.url, service: catalog })}))
         .map(({records, result}) => resToProps({records, result, catalog}));
 };
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};

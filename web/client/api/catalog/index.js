@@ -7,12 +7,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import csw from '../CSW';
-import wms from '../WMS';
-import wmts from '../WMTS';
+import * as csw from './CSW';
+import * as wms from './WMS';
+import * as wmts from './WMTS';
 import * as tms from './TMS';
 import * as wfs from './WFS';
-import backgrounds from '../mapBackground';
+import * as backgrounds from './backgrounds';
 import { validate, testService, preprocess } from './common';
 
 
@@ -30,7 +30,11 @@ import { validate, testService, preprocess } from './common';
  *      }
  * }
  * ```
+ * - `getCatalogRecords` (data, options) => function that returns an array of catalogs records
+ * - `getLayerFromRecord` (record, options, asPromise) => function that returns a promise/object that resolve with a mapstore layer configuration object given a catalog record
  * Optionally implements validation functions:
+ * - `parseUrl` return a url string parsed used by default testService
+ * - `preprocess` return an Observable that performs actions on service object prior to its save
  * - `validate`: function that gets the service object and returns an Observable. The stream emit an exception if the service validation fails. Otherwise it emits the `service` object and complete.
  * - `testService` function that gets the service object and returns an Observable. The stream emit an exception if the service do not respond. Otherwise it emits the `service` object and complete.
  * @memberof api

@@ -7,14 +7,7 @@
  */
 
 import expect from 'expect';
-import csw from '../../api/CSW';
-import wms from '../../api/WMS';
-import wmts from '../../api/WMTS';
-const API = {
-    csw,
-    wms,
-    wmts
-};
+import API from '../../api/catalog';
 import catalog from '../catalog';
 const {
     addLayersFromCatalogsEpic,

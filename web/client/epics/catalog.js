@@ -59,19 +59,15 @@ import { getSelectedLayer, selectedNodesSelector, layersSelector } from '../sele
 
 import {
     buildSRSMap,
-    esriToLayer,
-    extractEsriReferences,
-    extractOGCServicesReferences,
-    getCatalogRecords,
-    recordToLayer,
-    wfsToLayer,
-    getSupportedFormat
+    extractOGCServicesReferences
 } from '../utils/CatalogUtils';
+import { getSupportedFormat, getCapabilities, describeLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCapabilitiesUrl, getLayerId, getLayerUrl} from '../utils/LayersUtils';
 import { wrapStartStop } from '../observables/epics';
 import {zoomToExtent} from "../actions/map";
+import CSW from '../api/CSW';
 
 /**
     * Epics for CATALOG
@@ -141,40 +137,26 @@ export default (API) => ({
                             return Rx.Observable.of(results.map(r => {
                                 const { format, url, text, layerOptions, ...result } = r;
                                 const locales = currentMessagesSelector(state);
-                                const records = getCatalogRecords(format, result, layerOptions, locales) || [];
+                                const records = API[format].getCatalogRecords(result, layerOptions, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
-                                const { wms, wmts, wfs } = extractOGCServicesReferences(record);
-                                let layer = {};
-                                const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
-                                const authkeyParamName = authkeyParamNameSelector(state);
-                                if (wms) {
-                                    const allowedSRS = buildSRSMap(wms.SRS);
-                                    if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS("EPSG:3857", allowedSRS)) {
+                                const { wms, wmts } = extractOGCServicesReferences(record);
+                                const servicesReferences = wms || wmts;
+                                if (servicesReferences) {
+                                    const allowedSRS = buildSRSMap(servicesReferences.SRS);
+                                    if (servicesReferences.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS("EPSG:3857", allowedSRS)) {
                                         return Rx.Observable.empty(); // TODO CHANGE THIS
                                         // onError('catalog.srs_not_allowed');
-                                    }
-                                    layer = recordToLayer(record, "wms", {
-                                        removeParams: authkeyParamName,
-                                        catalogURL: format === 'csw' && url ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier : url
-                                    }, layerBaseConfig);
-                                } else if (wmts) {
-                                    layer = {};
-                                    const allowedSRS = buildSRSMap(wmts.SRS);
-                                    if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS("EPSG:3857", allowedSRS)) {
-                                        return Rx.Observable.empty(); // TODO CHANGE THIS
-                                        // onError('catalog.srs_not_allowed');
-                                    }
-                                    layer = recordToLayer(record, "wmts", {
-                                        removeParams: authkeyParamName
-                                    }, layerBaseConfig);
-                                } else if (wfs) {
-                                    layer = wfsToLayer(record);
-                                } else {
-                                    const { esri } = extractEsriReferences(record);
-                                    if (esri) {
-                                        layer = esriToLayer(record, layerBaseConfig);
                                     }
                                 }
+                                const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
+                                const authkeyParamName = authkeyParamNameSelector(state);
+                                const layer = API[format].getLayerFromRecord(record, {
+                                    removeParams: authkeyParamName,
+                                    catalogURL: format === 'csw' && url
+                                        ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier
+                                        : url,
+                                    layerBaseConfig
+                                });
                                 if (!record) {
                                     return [text];
                                 }
@@ -219,7 +201,7 @@ export default (API) => ({
                     actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
                 }
                 if (layer.type === 'wms') {
-                    return Rx.Observable.defer(() => API.wms.describeLayers(getLayerUrl(layer), layer.name))
+                    return Rx.Observable.defer(() => describeLayers(getLayerUrl(layer), layer.name))
                         .switchMap(results => {
                             if (results) {
                                 let description = find(results, (desc) => desc.name === layer.name );
@@ -322,7 +304,7 @@ export default (API) => ({
                 const state = store.getState();
                 const layer = getSelectedLayer(state);
 
-                return Rx.Observable.defer(() => API.wms.getCapabilities(getCapabilitiesUrl(layer)))
+                return Rx.Observable.defer(() => getCapabilities(getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
                         const layersXml = get(caps, 'capability.layer.layer', []);
                         const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === layer.name.split(':')[1]);
@@ -340,7 +322,7 @@ export default (API) => ({
                         );
                         const defaultMetadata = metadataUrlHTML ? {metadataUrl: metadataUrlHTML} : {};
 
-                        const cswDCFlow = Rx.Observable.defer(() => API.csw.getRecordById(layer.catalogURL))
+                        const cswDCFlow = Rx.Observable.defer(() => CSW.getRecordById(layer.catalogURL))
                             .switchMap((action) => {
                                 if (action && action.error) {
                                     return Rx.Observable.of(error({

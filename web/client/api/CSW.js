@@ -123,10 +123,11 @@ const addCapabilitiesToRecords = (url, result) => {
             };
         });
 };
+
 /**
  * API for local config
  */
-var Api = {
+const Api = {
     parseUrl,
     getRecordById: function(catalogURL) {
         return new Promise((resolve) => {
