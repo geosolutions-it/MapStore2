@@ -34,14 +34,15 @@ export const availableSnappingLayers = createShallowSelectorCreator(
     snappingLayerSelector,
     snappingConfig
 ],
-(layers, additionalLayers, selectedLayer, snappingLayer, config) => {
+(layers, additionalLayers, selectedLayer = {}, snappingLayer = {}, config) => {
     // Select extra layers from the config and concat them with layers;
-    const { id: snappingId } = snappingLayer;
-    const { id } = selectedLayer;
+    const snappingId = snappingLayer?.id;
+    const id = selectedLayer?.id;
     const availableExtraLayers = additionalLayers.filter(l => (config?.additionalLayers ?? []).includes(l.id)).map(l => l.options);
     const layersList = availableExtraLayers.concat(layers);
+    const currentLayer = id ? [{value: id, label: selectedLayer.title ?? selectedLayer.name, active: id === snappingId}] : [];
 
-    return [{value: id, label: selectedLayer.title ?? selectedLayer.name, active: id === snappingId}].concat(
+    return currentLayer.concat(
         layersList.map((layer) =>
             layer.id !== id
                 && ['wms', 'wfs', 'vector'].includes(layer?.type)

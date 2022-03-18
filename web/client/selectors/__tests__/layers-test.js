@@ -791,7 +791,10 @@ describe('Test layers selectors', () => {
         const state = {
             additionallayers: [
                 {
-                    id: 'layer_001'
+                    id: 'layer_001',
+                    options: {
+                        id: 'layer_001'
+                    }
                 }
             ]
         };
