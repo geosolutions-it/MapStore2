@@ -22,6 +22,30 @@ import {layerLoad} from "../../actions/layers";
 import {ActionsObservable} from "redux-observable";
 import Rx from "rxjs";
 
+const center = {
+    x: -74.2,
+    y: 40.7,
+    crs: "EPSG:4326"
+};
+const zoom = 16;
+const bbox = {
+    bounds: {
+        minx: -180,
+        miny: -90,
+        maxx: 180,
+        maxy: 90
+    },
+    crs: "EPSG:4326",
+    rotation: 0
+};
+const size = {
+    height: 8717,
+    width: 8717
+};
+
+const mapStateSource = 'map';
+const projection = "EPSG:900913";
+
 describe('queryparam epics', () => {
     it('test readQueryParamsOnMapEpic without params in url search', (done) => {
         const state = {
@@ -342,30 +366,6 @@ describe('queryparam epics', () => {
             }, state);
     });
     it('Test actions dispatched on Change View', (done)=>{
-
-        const center = {
-            x: -74.2,
-            y: 40.7,
-            crs: "EPSG:4326"
-        };
-        const zoom = 16;
-        const bbox = {
-            bounds: {
-                minx: -180,
-                miny: -90,
-                maxx: 180,
-                maxy: 90
-            },
-            crs: "EPSG:4326",
-            rotation: 0
-        };
-        const size = {
-            height: 8717,
-            width: 8717
-        };
-
-        const mapStateSource = 'map';
-        const projection = "EPSG:900913";
         const viewerOptions = {
             orientation: {
                 heading: 0.1,
@@ -399,30 +399,6 @@ describe('queryparam epics', () => {
     });
     //
     it('changeMapView does not trigger orientateMap if map type is not cesium', (done)=>{
-
-        const center = {
-            x: -74.2,
-            y: 40.7,
-            crs: "EPSG:4326"
-        };
-        const zoom = 16;
-        const bbox = {
-            bounds: {
-                minx: -180,
-                miny: -90,
-                maxx: 180,
-                maxy: 90
-            },
-            crs: "EPSG:4326",
-            rotation: 0
-        };
-        const size = {
-            height: 8717,
-            width: 8717
-        };
-
-        const mapStateSource = 'map';
-        const projection = "EPSG:900913";
         const viewerOptions = {
             orientation: {
                 heading: 0.1,
@@ -450,30 +426,6 @@ describe('queryparam epics', () => {
             .subscribe(checkActions);
     });
     it('changeMapView does not trigger orientateMap if any of the viewerOptions values is undefined', (done)=>{
-
-        const center = {
-            x: -74.2,
-            y: 40.7,
-            crs: "EPSG:4326"
-        };
-        const zoom = 16;
-        const bbox = {
-            bounds: {
-                minx: -180,
-                miny: -90,
-                maxx: 180,
-                maxy: 90
-            },
-            crs: "EPSG:4326",
-            rotation: 0
-        };
-        const size = {
-            height: 8717,
-            width: 8717
-        };
-
-        const mapStateSource = 'map';
-        const projection = "EPSG:900913";
         const viewerOptions = {
             orientation: {
                 pitch: -0.7,
