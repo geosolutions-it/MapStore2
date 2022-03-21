@@ -9,6 +9,8 @@ import {get, isNil} from 'lodash';
 import {additionalLayersSelector, getAdditionalLayerFromId, getLayerFromId, layersSelector} from "./layers";
 import {selectedLayerSelector} from "./featuregrid";
 import {createShallowSelectorCreator} from "../utils/ReselectUtils";
+import {getLayerTitle} from "../utils/LayersUtils";
+import {currentLocaleSelector} from "./locale";
 
 export const changedGeometriesSelector = state => state && state.draw && state.draw.tempFeatures;
 export const drawSupportActiveSelector = (state) => {
@@ -32,9 +34,10 @@ export const availableSnappingLayers = createShallowSelectorCreator(
     additionalLayersSelector,
     selectedLayerSelector,
     snappingLayerSelector,
-    snappingConfig
+    snappingConfig,
+    currentLocaleSelector
 ],
-(layers, additionalLayers, selectedLayer = {}, snappingLayer = {}, config) => {
+(layers, additionalLayers, selectedLayer = {}, snappingLayer = {}, config, locale) => {
     // Select extra layers from the config and concat them with layers;
     const snappingId = snappingLayer?.id;
     const id = selectedLayer?.id;
@@ -50,7 +53,7 @@ export const availableSnappingLayers = createShallowSelectorCreator(
                 && layer.group !== 'background'
                 && layer.visibility ? {
                     value: layer.id,
-                    label: layer.title ?? layer.name,
+                    label: getLayerTitle(layer, locale),
                     active: layer.id === snappingId
                 } : false).filter(Boolean)
     );
