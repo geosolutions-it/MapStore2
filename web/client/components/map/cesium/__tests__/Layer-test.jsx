@@ -1146,7 +1146,34 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers.length).toBe(1);
 
     });
-    it('should create a 3d tiles layer', () => {
+    it('Create a 3d tiles layer', () => {
+        const options = {
+            type: '3dtiles',
+            url: '/tileset.json',
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(cmp.layer.tileSet._url).toBe('/tileset.json');
+    });
+    it('Use proxy when needed', () => {
         const options = {
             type: '3dtiles',
             url: 'http://service.org/tileset.json',
@@ -1171,7 +1198,7 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer.tileSet).toBeTruthy();
-        expect(cmp.layer.tileSet._url).toBe('http://service.org/tileset.json');
+        expect(cmp.layer.tileSet._url).toBe('/mapstore/proxy/?url=http%3A%2F%2Fservice.org%2Ftileset.json');
     });
     it('should create a 3d tiles layer with visibility set to false', () => {
         const options = {
