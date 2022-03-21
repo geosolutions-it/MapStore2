@@ -9,6 +9,7 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
+import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
 
 function getStyle({ style }) {
     if (style?.format === '3dtiles' && style?.body) {
@@ -22,7 +23,14 @@ Layers.registerType('3dtiles', {
         if (options.visibility && options.url) {
 
             const tileSet = map.scene.primitives.add(new Cesium.Cesium3DTileset({
-                url: options.url
+                url: new Cesium.Resource({
+                    url: options.url,
+                    proxy: needProxy(options.url) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
+                    // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
+                    // if we want to use internal cesium functionality to retrieve data
+                    // we need to create a utility to set a CesiumResource that applies also this part.
+                    // in addition to this proxy.
+                })
             }));
 
             getStyle(options)
