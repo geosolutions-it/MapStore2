@@ -196,6 +196,9 @@
         }
     
         .vis-timeline {
+            .vis-item.interval {
+                height: 10px;
+            }
             .background-color-var(@theme-vars[main-bg]);
             .vis-item {
                 .color-var(@theme-vars[main-color]);
@@ -242,6 +245,12 @@
                                 .border-color-var(@theme-vars[timeline-histogram-border-color]);
                             }
                             &.vis-range {
+                                &.interval {
+                                    .background-color-var(@theme-vars[timeline-histogram-border-color]);
+                                    .border-color-var(@theme-vars[main-bg]);
+                                    border-style: solid 5px;
+                                    border-radius: 5px;
+                                }
                                 &.histogram-item {
                                     .vis-item-content {
                                         .background-color-var(@theme-vars[timeline-histogram-bg]);

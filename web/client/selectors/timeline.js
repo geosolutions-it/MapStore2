@@ -70,7 +70,8 @@ export const timeStampToItems = (ISOString, viewRange) => {
         return [{
             start: new Date(start),
             end: new Date(end || start),
-            type: end ? 'range' : 'point'
+            type: end ? 'range' : 'point',
+            ...(end && { className: 'interval'})
         }];
     }
     return null;
