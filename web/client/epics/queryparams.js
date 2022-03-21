@@ -8,7 +8,7 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange} from 'lodash';
+import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
 import url from 'url';
 
 import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap} from '../actions/map';
@@ -198,10 +198,18 @@ export const checkMapOrientation = (action$, store) =>
     action$.ofType(CHANGE_MAP_VIEW).
         switchMap(() => {
             const state = store.getState();
-            const search = get(state, 'router.location.search') || '';
-            const { query = {} } = url.parse(search, true) || {};
-            if (!search.includes('bbox')) {
-                return !isEmpty(query) ? Rx.Observable.of(orientateMap(query)) : Rx.Observable.empty();
+            const mapType = get(state, 'maptype.mapType') || '';
+            if (mapType === 'cesium') {
+                const search = get(state, 'router.location.search') || '';
+                const {query = {}} = url.parse(search, true) || {};
+                if (!search.includes('bbox')) {
+                    if (!isEmpty(query)) {
+                        const requiredKeys = ['center', 'zoom', 'heading', 'pitch', 'roll'];
+                        if (every(requiredKeys, partial(has, query))) {
+                            return  Rx.Observable.of(orientateMap(query));
+                        }
+                    }
+                }
             }
             return Rx.Observable.empty();
         });
