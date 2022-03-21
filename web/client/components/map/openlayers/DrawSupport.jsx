@@ -21,7 +21,7 @@ import castArray from 'lodash/castArray';
 import PropTypes from 'prop-types';
 import assign from 'object-assign';
 import uuid from 'uuid';
-import axios from 'axios';
+import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
@@ -141,7 +141,6 @@ export default class DrawSupport extends React.Component {
         const snappingToggledOff = !newProps.snapping && this.props.snapping;
         const snappingToggledOn = newProps.snapping && !this.props.snapping;
         const reactivateSnappingInteraction = snappingInteractionExists && snappingToggledOn;
-        const recreateSnappingInteraction = (snappingStateChanged && !snappingInteractionExists);
 
         if (this.drawLayer) {
             this.updateFeatureStyles(newProps.features);
@@ -152,13 +151,16 @@ export default class DrawSupport extends React.Component {
 
         snappingToggledOff && this.deactivateSnapInteraction();
         reactivateSnappingInteraction && this.reactivateSnapInteraction();
-        (snappingLayerChanged || snappingConfigChanged) && this.removeSnapInteraction();
+
+        if ((snappingLayerChanged || snappingConfigChanged) && snappingInteractionExists) {
+            this.addSnapInteraction(newProps);
+        }
 
         if (
             this.props.drawStatus !== newProps.drawStatus ||
             this.props.drawMethod !== newProps.drawMethod ||
             this.props.features !== newProps.features ||
-            (recreateSnappingInteraction || snappingLayerChanged || snappingConfigChanged)
+            (snappingStateChanged && !snappingInteractionExists)
         ) {
             switch (newProps.drawStatus) {
             case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
@@ -182,6 +184,49 @@ export default class DrawSupport extends React.Component {
     }
     getMapCrs = () => {
         return this.props.map.getView().getProjection().getCode();
+    }
+
+    getWMSSnapSource = (snappingLayerInstance, snapConfig) => {
+        const isLoading = this.props.toggleSnappingIsLoading;
+        if (this?.snapMetadata?.id !== snappingLayerInstance.id) {
+            const source = new VectorSource({
+                format: new GeoJSON(),
+                loader: function(extent, resolution, projection) {
+                    const proj = projection.getCode();
+                    const url = getFeatureURL(getLayerUrl(snappingLayerInstance), snappingLayerInstance.name, {
+                        version: '1.1.0',
+                        outputFormat: 'application/json',
+                        srsname: proj,
+                        bbox: extent.join(',') + ',' + proj,
+                        maxFeatures: snapConfig?.maxFeatures ?? 500000
+                    });
+                    isLoading();
+                    const onError = (err) => {
+                        source.removeLoadedExtent(extent);
+                        err && console.warn(err);
+                    };
+                    axios.get(url)
+                        .then(res => {
+                            isLoading();
+                            if (res.status === 200) {
+                                source.addFeatures(
+                                    source.getFormat().readFeatures(res.data)
+                                );
+                            } else {
+                                onError();
+                            }
+
+                        })
+                        .catch(onError);
+                },
+                strategy: this.selectLoadingStrategy(snapConfig)
+            });
+            this.snapMetadata = {
+                id: snappingLayerInstance.id,
+                source
+            };
+        }
+        return this.snapMetadata.source;
     }
 
     getLayerInstance = (layerId) => {
@@ -441,12 +486,10 @@ export default class DrawSupport extends React.Component {
      */
     addSnapInteraction = ({ snapping, snappingLayerInstance, snapConfig }) => {
         if (!snapping) return;
-        this.removeSnapInteraction();
-
-        const isLoading = this.props.toggleSnappingIsLoading;
         const mapLayerInstance = this.getLayerInstance(snappingLayerInstance.id);
         const layerType = snappingLayerInstance.type;
 
+        this.removeSnapInteraction();
         if (mapLayerInstance) {
             switch (mapLayerInstance.type) {
             case "VECTOR":
@@ -454,38 +497,7 @@ export default class DrawSupport extends React.Component {
                 break;
             case "TILE":
                 if (layerType === 'wms') {
-                    const source = new VectorSource({
-                        format: new GeoJSON(),
-                        loader: function(extent, resolution, projection) {
-                            const proj = projection.getCode();
-                            const url = getFeatureURL(getLayerUrl(snappingLayerInstance), snappingLayerInstance.name, {
-                                version: '1.1.0',
-                                outputFormat: 'application/json',
-                                srsname: proj,
-                                bbox: extent.join(',') + ',' + proj,
-                                maxFeatures: snapConfig?.maxFeatures ?? 500000
-                            });
-                            isLoading();
-                            const onError = (err) => {
-                                source.removeLoadedExtent(extent);
-                                err && console.warn(err);
-                            };
-                            axios.get(url)
-                                .then(res => {
-                                    isLoading();
-                                    if (res.status === 200) {
-                                        source.addFeatures(
-                                            source.getFormat().readFeatures(res.data)
-                                        );
-                                    } else {
-                                        onError();
-                                    }
-
-                                })
-                                .catch(onError);
-                        },
-                        strategy: this.selectLoadingStrategy(snapConfig)
-                    });
+                    const source = this.getWMSSnapSource(snappingLayerInstance, snapConfig);
                     this.snapLayer = new VectorLayer({
                         source,
                         style: new Style({
@@ -502,11 +514,11 @@ export default class DrawSupport extends React.Component {
             default:
                 break;
             }
-
-            this.drawSourceSnapInteraction = new Snap({...snapConfig, source: this.drawSource});
-            this.snapInteraction && this.props.map.addInteraction(this.snapInteraction);
-            this.props.map.addInteraction(this.drawSourceSnapInteraction);
         }
+
+        this.drawSourceSnapInteraction = new Snap({...snapConfig, source: this.drawSource});
+        this.props.map.addInteraction(this.drawSourceSnapInteraction);
+        this.snapInteraction && this.props.map.addInteraction(this.snapInteraction);
     };
     toMulti = (geometry) => {
         if (geometry.getType() === 'Point') {

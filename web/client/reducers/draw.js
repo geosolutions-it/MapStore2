@@ -72,7 +72,7 @@ function draw(state = initialState, action) {
         return {
             ...state,
             snapConfig: {
-                ...(action.pluginCfg?.snapConfig ?? defaultSnappingConfig),
+                ...({...defaultSnappingConfig, ...(action.pluginCfg?.snapConfig || {})}),
                 ...(state?.snapConfig ?? {}),
                 ...(action.prop && typeof action.value !== 'undefined' ? {[action.prop]: action.value} : {})
             }
