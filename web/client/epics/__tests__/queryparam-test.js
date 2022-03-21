@@ -19,6 +19,8 @@ import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
 import {layerLoad} from "../../actions/layers";
+import {ActionsObservable} from "redux-observable";
+import Rx from "rxjs";
 
 describe('queryparam epics', () => {
     it('test readQueryParamsOnMapEpic without params in url search', (done) => {
@@ -372,6 +374,9 @@ describe('queryparam epics', () => {
             }
         };
         const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
             router: {
                 location: {
                     search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
@@ -391,5 +396,107 @@ describe('queryparam epics', () => {
                 }
                 done();
             }, state);
+    });
+    //
+    it('changeMapView does not trigger orientateMap if map type is not cesium', (done)=>{
+
+        const center = {
+            x: -74.2,
+            y: 40.7,
+            crs: "EPSG:4326"
+        };
+        const zoom = 16;
+        const bbox = {
+            bounds: {
+                minx: -180,
+                miny: -90,
+                maxx: 180,
+                maxy: 90
+            },
+            crs: "EPSG:4326",
+            rotation: 0
+        };
+        const size = {
+            height: 8717,
+            width: 8717
+        };
+
+        const mapStateSource = 'map';
+        const projection = "EPSG:900913";
+        const viewerOptions = {
+            orientation: {
+                heading: 0.1,
+                pitch: -0.7,
+                roll: 6.2
+            }
+        };
+        const state = {
+            maptype: {
+                mapType: 'openlayer'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        const action = changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '');
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        checkMapOrientation(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+            .toArray()
+            .subscribe(checkActions);
+    });
+    it('changeMapView does not trigger orientateMap if any of the viewerOptions values is undefined', (done)=>{
+
+        const center = {
+            x: -74.2,
+            y: 40.7,
+            crs: "EPSG:4326"
+        };
+        const zoom = 16;
+        const bbox = {
+            bounds: {
+                minx: -180,
+                miny: -90,
+                maxx: 180,
+                maxy: 90
+            },
+            crs: "EPSG:4326",
+            rotation: 0
+        };
+        const size = {
+            height: 8717,
+            width: 8717
+        };
+
+        const mapStateSource = 'map';
+        const projection = "EPSG:900913";
+        const viewerOptions = {
+            orientation: {
+                pitch: -0.7,
+                roll: 6.2
+            }
+        };
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        const action = changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '');
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        checkMapOrientation(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+            .toArray()
+            .subscribe(checkActions);
     });
 });
