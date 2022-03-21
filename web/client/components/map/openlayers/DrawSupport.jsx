@@ -49,7 +49,6 @@ import {getCenter} from 'ol/extent';
 import {fromCircle, circular} from 'ol/geom/Polygon';
 import {Snap} from "ol/interaction";
 import {bbox, all} from "ol/loadingstrategy";
-import {getLayerUrl} from "../../../utils/LayersUtils";
 import {getFeatureURL} from "../../../api/WFS";
 
 const geojsonFormat = new GeoJSON();
@@ -193,7 +192,7 @@ export default class DrawSupport extends React.Component {
                 format: new GeoJSON(),
                 loader: function(extent, resolution, projection) {
                     const proj = projection.getCode();
-                    const url = getFeatureURL(getLayerUrl(snappingLayerInstance), snappingLayerInstance.name, {
+                    const url = getFeatureURL(snappingLayerInstance.search.url, snappingLayerInstance.name, {
                         version: '1.1.0',
                         outputFormat: 'application/json',
                         srsname: proj,
