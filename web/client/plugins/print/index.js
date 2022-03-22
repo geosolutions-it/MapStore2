@@ -166,8 +166,7 @@ export const standardItems = {
             "allowedFormats": [
                 {name: "PDF", value: "pdf"},
                 {name: "PNG", value: "png"},
-                {name: "JPEG", value: "jpg"},
-                {name: "GIF", value: "gif"}
+                {name: "JPEG", value: "jpg"}
             ]
         },
         position: 3
