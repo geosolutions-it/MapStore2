@@ -68,7 +68,7 @@ import { has, includes } from 'lodash';
  * (e.g. `outputFormatOptions`).
  *
  * You can customize Print plugin by creating one custom plugin (or more) that modifies the existing
- * components with your own ones. You can configure this plugin in localConfig.json as usual.
+ * components with your own ones. You can configure this plugin in `localConfig.json` as usual.
  *
  * It delegates to a printingService the creation of the final print. The default printingService
  * implements a mapfish-print v2 compatible workflow. It is possible to override the printingService to
