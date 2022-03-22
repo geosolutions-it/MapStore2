@@ -42,10 +42,10 @@
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
       },
-      {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
+        {
+          "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
+          "authkeyParamName": "authkey",
+          "method": "authkey"
     }],
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
@@ -474,7 +474,12 @@
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
             "WidgetsTray",
-            "Timeline",
+            {
+              "name": "Timeline",
+              "cfg": {
+                "expandLimit": 5
+              }
+            },
             "Playback",
             "FeedbackMask",
             "StyleEditor",

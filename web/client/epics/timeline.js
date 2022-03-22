@@ -24,6 +24,7 @@ import { error } from '../actions/notifications';
 import { getLayerFromId } from '../selectors/layers';
 
 import {
+    expandLimitSelector,
     rangeSelector,
     selectedLayerName,
     selectedLayerUrl,
@@ -46,7 +47,7 @@ import { getHistogram, describeDomains, getDomainValues } from '../api/MultiDim'
 
 const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
-const MAX_ITEMS_PER_LAYER = 20;
+// const MAX_ITEMS_PER_LAYER = 20;
 const MAX_HISTOGRAM = 20;
 
 /**
@@ -114,6 +115,7 @@ const loadRangeData = (id, timeData, getState) => {
 
     const {range, resolution} = roundRangeResolution( initialRange, MAX_HISTOGRAM);
     const layerName = getLayerFromId(getState(), id).name;
+    const expandLimit = expandLimitSelector(getState());
     const filter = {
         [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
     };
@@ -134,7 +136,7 @@ const loadRangeData = (id, timeData, getState) => {
                 filter,
                 {
                     ...multidimOptionsSelectorCreator(id)(getState()),
-                    expandLimit: MAX_ITEMS_PER_LAYER
+                    expandLimit
                 }
             )
         )

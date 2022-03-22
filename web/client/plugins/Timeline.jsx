@@ -126,6 +126,7 @@ const TimelinePlugin = compose(
         ),
         defaultProps({
             showHiddenLayers: false,
+            expandLimit: 20,
             style: {
                 marginBottom: 35,
                 marginLeft: 100,
@@ -180,11 +181,12 @@ const TimelinePlugin = compose(
         moveRangeTo,
         compactToolbar,
         showHiddenLayers,
+        expandLimit,
         onInit = () => {},
         layers
     }) => {
         useEffect(()=>{
-            onInit(showHiddenLayers);
+            onInit(showHiddenLayers, expandLimit);
         }, [onInit]);
 
         const { hideLayersName, collapsed } = options;

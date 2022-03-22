@@ -27,6 +27,7 @@ export const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
 // items
 const MAX_ITEMS = 50;
+export const expandLimitSelector = state => get(state, 'timeline.settings.expandLimit');
 
 export const isCollapsed = state => get(state, 'timeline.settings.collapsed');
 

@@ -92,7 +92,10 @@ export default (state = {
         return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined});
     }
     case INIT_TIMELINE: {
-        return set(`settings.showHiddenLayers`, action.showHiddenLayers, state);
+        return set(`settings`, {
+            showHiddenLayers: action.showHiddenLayers,
+            expandLimit: action.expandLimit
+        }, state);
     }
     default:
         return state;
