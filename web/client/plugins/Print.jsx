@@ -50,6 +50,7 @@ import { has, includes } from 'lodash';
  * with a custom one. They are (in order, from left to right and top to bottom in the UI):
  *  - `name` (`left-panel`, `position`: `1`)
  *  - `description` (`left-panel`, `position`: `2`)
+ *  - `outputFormat` (`left-panel`, `position`: `3`)
  *  - `layout` (`left-panel-accordion`, `position`: `1`)
  *  - `legend-options` (`left-panel-accordion`, `position`: `2`)
  *  - `resolution` (`right-panel`, `position`: `1`)
@@ -60,6 +61,10 @@ import { has, includes } from 'lodash';
  *
  * To remove a widget, you have to include a Null plugin with the desired target.
  * You can use the position to sort existing and custom items.
+ *
+ * Standard widgets can be configured by providing an options object as a configuration property
+ * of this (Print) plugin. The options object of a widget is named <widget_id>Options
+ * (e.g. outputFormatOptions).
  *
  * You can customize Print plugin by creating one custom plugin (or more) that modifies the existing
  * components with your ones. You can configure this plugin in localConfig.json as usual.
@@ -109,6 +114,17 @@ import { has, includes } from 'lodash';
  *       "useFixedScales": true,
  *       "mapPreviewOptions": {
  *          "enableScalebox": true
+ *       }
+ *    }
+ * }
+ *
+ * @example
+ * // restrict allowed output formats
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *       "outputFormatOptions": {
+ *          "allowedFormats": [{"name": "PDF", "value": "pdf"}, {"name": "PNG", "value": "png"}]
  *       }
  *    }
  * }
@@ -370,7 +386,8 @@ export default {
                         const {validations, ...options } = opts;
                         const Comp = item.component ?? item.plugin;
                         const {style, ...other} = this.props;
-                        return <Comp role="body" {...other} {...item.cfg} {...options} validation={validations?.[item.id ?? item.name]}/>;
+                        const itemOptions = this.props[item.id + "Options"];
+                        return <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
                     };
                     renderItems = (target, options) => {
                         return this.getItems(target)
@@ -460,7 +477,7 @@ export default {
                                         {this.renderBody()}
                                     </Panel>);
                                 }
-                                return (<Dialog id="mapstore-print-panel" style={{ left: "17%", top: "50px", zIndex: 1990, ...this.props.style}}>
+                                return (<Dialog id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
                                     <span role="header"><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                                     {this.renderBody()}
                                 </Dialog>);

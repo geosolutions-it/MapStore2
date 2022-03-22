@@ -21,6 +21,7 @@ import ConfigUtils from '../../utils/ConfigUtils';
 import {TextInput} from "./TextInput";
 import {Option} from "./Option";
 import {ActionButton} from './ActionButton';
+import {OutputFormat as OutputFormatComp} from "./OutputFormat";
 
 import {Layout as LayoutComp} from "./Layout";
 import {LegendOptions as LegendOptionsComp} from "./LegendOptions";
@@ -52,6 +53,19 @@ export const Description = connect((state) => ({
 }), {
     onChangeParameter: setPrintParameter
 })(TextInput);
+
+export const OutputFormat = connect((state) => ({
+    spec: state?.print?.spec || {},
+    items: state?.print?.capabilities?.outputFormats?.map((format) => ({
+        name: format.name,
+        value: format.name
+    })) ?? [{
+        name: 'PDF',
+        value: 'pdf'
+    }]
+}), {
+    onChangeParameter: setPrintParameter
+})(OutputFormatComp);
 
 export const Layout = connect((state) => ({
     spec: state.print?.spec || {},
@@ -130,6 +144,18 @@ export const standardItems = {
         plugin: Description,
         cfg: {},
         position: 2
+    }, {
+        id: "outputFormat",
+        plugin: OutputFormat,
+        cfg: {
+            "allowedFormats": [
+                {name: "PDF", value: "pdf"},
+                {name: "PNG", value: "png"},
+                {name: "JPEG", value: "jpg"},
+                {name: "GIF", value: "gif"}
+            ]
+        },
+        position: 3
     }],
     "left-panel-accordion": [{
         id: "layout",
