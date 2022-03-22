@@ -55,7 +55,7 @@ import {
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
-import { getSelectedLayer, selectedNodesSelector, layersSelector } from '../selectors/layers';
+import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
 
 import {
     buildSRSMap,
@@ -194,8 +194,7 @@ export default (API) => ({
                 const { layer, zoomToLayer } = value;
                 const actions = [];
                 const state = store.getState();
-                const layers = layersSelector(state);
-                const id = getLayerId(layer, layers || []);
+                const id = getLayerId(layer);
                 actions.push(addNewLayer({...layer, id}));
                 if (zoomToLayer && layer.bbox) {
                     actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
