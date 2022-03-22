@@ -67,7 +67,7 @@ class WizardComponent extends React.Component {
        const children = this.props.children || [];
        const childrenLenght = children.length >= 0 ? children.length : 1;
        return (
-           <div key="wizard-pages" className="ms-wizard">
+           <div key="wizard-pages" className="ms-wizard map-options">
                {React.Children.map(children, (child, i) => {
                    if (i === this.props.step) {
                        return React.cloneElement(child, {
