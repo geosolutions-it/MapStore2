@@ -114,7 +114,7 @@
             <configuration>
               <tasks>
                 <echo message="Downloading JRE..." />
-                <get src="https://demo.geo-solutions.it/mapstore/jre.tar.gz" dest="${project.build.directory}/jre.tar.gz" />
+                <get src="https://www.dropbox.com/s/68r915h7hxaq5ms/jre.tar.gz?dl=1" dest="${project.build.directory}/jre.tar.gz" />
                 <echo message="Untar JRE..." />
                 <gunzip src="${project.build.directory}/jre.tar.gz" dest="${project.build.directory}/jre.tar" />
                 <untar src="${project.build.directory}/jre.tar" dest="${project.build.directory}/jre" />
