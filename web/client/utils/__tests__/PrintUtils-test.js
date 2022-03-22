@@ -32,6 +32,7 @@ import { KVP1, REST1 } from '../../test-resources/layers/wmts';
 import { poi as TMS110_1 } from '../../test-resources/layers/tms';
 import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
 import { setStore } from '../StateUtils';
+import { getGoogleMercatorScales } from '../MapUtils';
 
 const layer = {
     url: "http://mygeoserver",
@@ -495,6 +496,23 @@ describe('PrintUtils', () => {
         const printSpec = getMapfishPrintSpecification({...testSpec, params: {custom: "customvalue"}});
         expect(printSpec).toExist();
         expect(printSpec.custom).toBe("customvalue");
+    });
+    it('getMapfishPrintSpecification with fixed scales', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2000000, 1000000, 500000, 100000, 50000]
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(100000);
+    });
+    it('getMapfishPrintSpecification with standard scales', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(getGoogleMercatorScales(0, 21)[3]);
     });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
