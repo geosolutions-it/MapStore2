@@ -55,7 +55,7 @@ const initialState = {
                 }
             }],
             dpis: [],
-            scales: []
+            scales: [1_000_000, 500_000, 100_000]
         }
     }
 };
@@ -158,6 +158,39 @@ describe('Print Plugin', () => {
                 ReactDOM.render(<Plugin />, document.getElementById("container"));
                 expect(document.getElementById("mapstore-print-preview-panel")).toExist();
                 done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('default configuration with useFixedScales', (done) => {
+        let submittedSpec;
+        const printingService = {
+            print(spec) {
+                submittedSpec = spec;
+            },
+            getMapConfiguration() {
+                return {
+                    layers: []
+                };
+            },
+            validate() { return {};}
+        };
+        getPrintPlugin({}).then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin printingService={printingService}
+                    useFixedScales mapPreviewOptions={{
+                        onLoadingMapPlugins: (loading) => {
+                            if (!loading) {
+                                const submit = document.getElementsByClassName("print-submit").item(0);
+                                expect(submit).toExist();
+                                submit.click();
+                                expect(submittedSpec.scales.length).toBe(3);
+                                done();
+                            }
+                        }
+                    }}/>, document.getElementById("container"));
             } catch (ex) {
                 done(ex);
             }
