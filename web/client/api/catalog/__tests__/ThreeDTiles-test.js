@@ -111,6 +111,15 @@ describe('Test 3D tiles catalog API', () => {
                 done();
             });
     });
+    it('should return a single record with title from info service if available', (done) => {
+        mockAxios.onGet().reply(200, TILSET_JSON);
+        textSearch('http://service.org/path/title/tileset.json', undefined, undefined, '', { options: { service: { title: 'Tileset' } } })
+            .then((response) => {
+                expect(response.records.length).toBe(1);
+                expect(response.records[0].title).toBe('Tileset');
+                done();
+            });
+    });
     it('should map the tileset record to a catalog record', () => {
         const records = getCatalogRecords({ records: [{
             title: 'Title',

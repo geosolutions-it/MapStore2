@@ -36,12 +36,13 @@ function getTitleFromUrl(url) {
     return parts[parts.length - 2];
 }
 
-const searchAndPaginate = (tileset, { url, text }) => {
+const searchAndPaginate = (tileset, { url, text, info }) => {
     const records = [{
         // current specification does not define the title location
         // but there is works related to the metadata in the next version of 3d tiles
-        // for the moment we can extract the title from the url
-        title: getTitleFromUrl(url),
+        // for the moment we set the name assigned to catalog service
+        // or we can extract the title from the url
+        title: info?.options?.service?.title || getTitleFromUrl(url),
         url: url,
         type: '3dtiles',
         tileset

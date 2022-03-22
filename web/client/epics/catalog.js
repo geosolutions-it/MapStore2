@@ -411,8 +411,9 @@ export default (API) => ({
             .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
-                const { type, url, filter } = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: {filter}}));
+                const service = selectedCatalogSelector(state);
+                const { type, url, filter } = service;
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: { service, filter }}));
             }),
 
     catalogCloseEpic: (action$, store) =>
