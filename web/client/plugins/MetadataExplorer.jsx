@@ -80,7 +80,7 @@ import { currentLocaleSelector, currentMessagesSelector } from '../selectors/loc
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
-import {DEFAULT_FORMAT_WMS, getCatalogRecords} from '../utils/CatalogUtils';
+import { DEFAULT_FORMAT_WMS } from '../api/WMS';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -123,7 +123,7 @@ const metadataExplorerSelector = createStructuredSelector({
 
 const Catalog = compose(
     withProps(({ result, selectedFormat, options, layerOptions, services, selectedService, locales}) => ({
-        records: result && getCatalogRecords(selectedFormat, result, { ...options, layerOptions, service: services[selectedService] }, locales) || []
+        records: result && API[selectedFormat].getCatalogRecords(result, { ...options, layerOptions, service: services[selectedService] }, locales) || []
     })),
     defaultProps({
         buttonStyle: {
@@ -175,7 +175,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }],
         active: false,
         wrap: false,
         modal: true,

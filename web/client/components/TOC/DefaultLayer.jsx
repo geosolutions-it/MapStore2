@@ -103,7 +103,7 @@ class DefaultLayer extends React.Component {
     };
 
     renderOpacitySlider = (hideOpacityTooltip) => {
-        return this.props.activateOpacityTool ? (
+        return (this.props.activateOpacityTool && this.props.node?.type !== '3dtiles') ? (
             <OpacitySlider
                 opacity={this.props.node.opacity}
                 disabled={!this.props.node.visibility}
