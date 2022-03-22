@@ -2735,6 +2735,8 @@
         "backgroundDialog": {
             "addTitle": "Add New Background",
             "editTitle": "Edit Current Background",
+            "editAttribution": "Edit Attribution Text",
+            "editAttributionPlaceholder": "Attribution Text",
             "title": "Title",
             "titlePlaceholder": "Enter displayed name",
             "add": "Add",

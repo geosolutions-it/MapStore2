@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import ReactQuill from 'react-quill';
+import localizedProps from '../misc/enhancers/localizedProps';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import assign from 'object-assign';
@@ -19,6 +21,7 @@ import Thumbnail from '../maps/forms/Thumbnail';
 import {getMessageById} from '../../utils/LocaleUtils';
 import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
+const Editor = localizedProps("placeholder")(ReactQuill);
 
 
 export default class BackgroundDialog extends React.Component {
@@ -209,6 +212,25 @@ export default class BackgroundDialog extends React.Component {
                     </div>))}
                 </Button>
             </React.Fragment>);
+        }
+        if (this.props.layer.type === "wmts") {
+            return (
+                <React.Fragment>
+                    <FormGroup controlId="formControlsSelect">
+                        <ControlLabel><Message msgId="backgroundDialog.editAttribution" /></ControlLabel>
+                        <Editor
+                            modules={{
+                                toolbar: [
+                                    [{'size': ['small', 'normal'] }, 'bold', 'italic', 'underline'],
+                                    ['clean'], ['link']
+                                ]
+                            }}
+                            placeholder="backgroundDialog.editAttributionPlaceholder"
+                            value={ this.props.layer.attributionText || '' }
+                        />
+                    </FormGroup>
+                </React.Fragment>
+            );
         }
         return null;
     }
