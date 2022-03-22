@@ -87,9 +87,6 @@ export const handleToolbar = withHandlers({
         update(focusedContent.path + ".editMap", !editMap),
     onReset: ({update, focusedContent: {path = ""} = {}}) => () => {
         update(path + `.map`, undefined);
-    },
-    discardAndClose: ({update, focusedContent = {}}) => () => {
-        update(focusedContent.path + ".editMap", false);
     }
 });
 /**
