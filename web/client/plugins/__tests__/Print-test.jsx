@@ -72,6 +72,7 @@ function expectDefaultItems() {
     expect(getByXPath("//*[text()='print.title']")).toExist();
     expect(getByXPath("//*[text()='print.description']")).toExist();
     expect(getByXPath("//*[text()='print.outputFormat']")).toExist();
+    expect(getByXPath("//*[text()='print.projection']")).toExist();
     expect(document.getElementById("print_preview")).toExist();
     expect(getByXPath("//*[text()='print.sheetsize']")).toExist();
     expect(getByXPath("//*[text()='print.alternatives.legend']")).toExist();

@@ -18,11 +18,14 @@ import {
 
 import ConfigUtils from '../../utils/ConfigUtils';
 
+import { getAvailableCRS } from '../../utils/CoordinatesUtils';
+
 import {TextInput} from "./TextInput";
 import {Option} from "./Option";
 import {ActionButton} from './ActionButton';
-import {OutputFormat as OutputFormatComp} from "./OutputFormat";
 
+import {OutputFormat as OutputFormatComp} from "./OutputFormat";
+import {Projection as ProjectionComp, projectionSelector} from "./Projection";
 import {Layout as LayoutComp} from "./Layout";
 import {LegendOptions as LegendOptionsComp} from "./LegendOptions";
 import {Resolution as ResolutionComp} from "./Resolution";
@@ -66,6 +69,18 @@ export const OutputFormat = connect((state) => ({
 }), {
     onChangeParameter: setPrintParameter
 })(OutputFormatComp);
+
+export const Projection = connect((state) => ({
+    spec: state?.print?.spec || {},
+    map: state?.print?.map,
+    projection: projectionSelector(state),
+    items: Object.keys(getAvailableCRS()).map(p => ({
+        name: p,
+        value: p
+    }))
+}), {
+    onChangeParameter: setPrintParameter
+})(ProjectionComp);
 
 export const Layout = connect((state) => ({
     spec: state.print?.spec || {},
@@ -156,6 +171,14 @@ export const standardItems = {
             ]
         },
         position: 3
+    }, {
+        id: "projection",
+        plugin: Projection,
+        cfg: {
+            "allowPreview": true,
+            "projections": [{"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+        },
+        position: 4
     }],
     "left-panel-accordion": [{
         id: "layout",
