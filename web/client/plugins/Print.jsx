@@ -64,7 +64,7 @@ import { has, includes } from 'lodash';
  * You can use the position to sort existing and custom items.
  *
  * Standard widgets can be configured by providing an options object as a configuration property
- * of this (Print) plugin. The options object of a widget is named <widget_id>Options
+ * of this (Print) plugin. The options object of a widget is named `<widget_id>Options`
  * (e.g. `outputFormatOptions`).
  *
  * You can customize Print plugin by creating one custom plugin (or more) that modifies the existing
