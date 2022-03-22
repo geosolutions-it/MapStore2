@@ -31,16 +31,25 @@ function regionToBoundingBox(region) {
     };
 }
 
-const searchAndPaginate = (tileset, { info, url }) => {
+function getTitleFromUrl(url) {
+    const parts = url.split('/');
+    return parts[parts.length - 2];
+}
+
+const searchAndPaginate = (tileset, { url, text }) => {
+    const records = [{
+        // current specification does not define the title location
+        // but there is works related to the metadata in the next version of 3d tiles
+        // for the moment we can extract the title from the url
+        title: getTitleFromUrl(url),
+        url: url,
+        type: '3dtiles',
+        tileset
+    }].filter(({ title }) => !text || title?.toLowerCase().includes(text?.toLowerCase() || ''));
     return {
-        numberOfRecordsMatched: 1,
-        numberOfRecordsReturned: 1,
-        records: [{
-            title: info?.options?.service?.title,
-            url: url,
-            type: '3dtiles',
-            tileset
-        }]
+        numberOfRecordsMatched: records.length,
+        numberOfRecordsReturned: records.length,
+        records
     };
 };
 
