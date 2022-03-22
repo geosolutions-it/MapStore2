@@ -108,6 +108,30 @@ describe('Test correctness of the CSW APIs', () => {
             }
         });
     });
+
+    it('does not include capabilities when no parsedUrl in getRecords', (done) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsNoWMS.xml', 1, 1).then((result) => {
+            try {
+                expect(result).toBeTruthy();
+                expect(result.records[0].capabilities).toBeFalsy();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('obtains parsedUrl from dc:uri and gets capabilities', (done) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 1).then((result) => {
+            try {
+                expect(result).toBeTruthy();
+                expect(result.records[0].capabilities).toBeTruthy();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
 });
 
 describe('workspaceSearch', () => {
