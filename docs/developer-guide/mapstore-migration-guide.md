@@ -84,7 +84,7 @@ Also, remember to update your project pom.xml with the updated dependency:
 </dependency>
 ```
 
-Finally, to enable printing in different formats than PDF, you should add the following to your config.yml file (at the top level):
+Finally, to enable printing in different formats than PDF, you should add the following to your `config.yml` file (at the top level):
 
 ```yml
 formats:
