@@ -10,15 +10,13 @@ import Rx from 'rxjs';
 import { compose, withState, mapPropsStream } from 'recompose';
 import isUndefined from 'lodash/isUndefined';
 import { addSearch } from '../../../observables/wms';
-import { recordToLayer } from '../../../utils/CatalogUtils';
+import API from '../../../api/catalog';
 
 // layers like tms or wmts don't need the recordToLayer conversion
 const toLayer = (r, service) => ["tms", "wfs"].includes(service?.type) // for tms and wfs the layer is ready
-    ? r : recordToLayer(
-        r, service?.type === "wmts" // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
-            ? "wmts"
-            : undefined
-    );
+    ? r
+    // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
+    : API[service?.type || 'wms'].getLayerFromRecord(r);
 
 // checks for tms wmts in order to addSearch() to skip addSearch
 const addSearchObservable = (selected, service) => ["tms", "wmts"].includes(service?.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));

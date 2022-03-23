@@ -8,16 +8,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {isObject, head, isArray, trim } from 'lodash';
-import {Image, Glyphicon} from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 
 import {
     buildSRSMap,
-    extractEsriReferences,
-    extractOGCServicesReferences,
-    esriToLayer,
-    getRecordLinks,
-    recordToLayer,
-    wfsToLayer
+    getRecordLinks
 } from '../../utils/CatalogUtils';
 import {isAllowedSRS} from '../../utils/CoordinatesUtils';
 import HtmlRenderer from '../misc/HtmlRenderer';
@@ -27,11 +22,7 @@ import Message from '../I18N/Message';
 import SharingLinks from './SharingLinks';
 import SideCard from '../misc/cardgrids/SideCard';
 import Toolbar from '../misc/toolbar/Toolbar';
-import tooltip from '../misc/enhancers/tooltip';
-import ButtonRB from '../misc/Button';
-const Button = tooltip(ButtonRB);
-import AddTMS from './buttons/AddTMS';
-import AddTileProvider from './buttons/AddTileProvider';
+import API from '../../api/catalog';
 
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
@@ -98,7 +89,8 @@ class RecordItem extends React.Component {
         defaultFormat: "image/png"
     };
     state = {
-        visibleExpand: false
+        visibleExpand: false,
+        loading: false
     }
 
     static contextTypes = {
@@ -143,125 +135,74 @@ class RecordItem extends React.Component {
         return formats ? formats : record.format && [record.format] || record.formats;
     }
 
-    renderButtons = (record, disabled) => {
-        if (!record || !record.references) {
-            // we don't have a valid record so no buttons to add
-            return null;
-        }
-        // let's extract the references we need
-        const {wms, wmts, tms, wfs}  = extractOGCServicesReferences(record);
-        // let's extract the esri
-        const {esri} = extractEsriReferences(record);
-        const background = record && record.background;
-        const tileProvider = record && record.type === "tileprovider" && record.provider;
+    getButtons = (record) => {
+        const links = this.props.showGetCapLinks ? getRecordLinks(record) : [];
+        const formats = this.getFormats(record.layerType || record.serviceType, record) || [];
+        const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
+        const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits;
+        return [
+            {
+                tooltipId: 'catalog.addToMap',
+                className: 'square-button-md',
+                bsStyle: 'primary',
+                disabled: this.state.loading,
+                loading: this.state.loading,
+                glyph: 'plus',
+                onClick: () => {
+                    const ogcReferences = record.ogcReferences || { SRS: [] };
+                    const allowedSRS = ogcReferences?.SRS?.length > 0 && buildSRSMap(ogcReferences.SRS);
+                    if (allowedSRS && !isAllowedSRS(this.props.crs, allowedSRS)) {
+                        return this.props.onError('catalog.srs_not_allowed');
+                    }
+                    this.setState({ loading: true });
+                    return API[record.serviceType].getLayerFromRecord(record, {
+                        service: this.props.service,
+                        layerBaseConfig: this.props.layerBaseConfig,
+                        removeParams: this.props.authkeyParamNames,
+                        catalogURL: this.props.catalogType === "csw" && this.props.catalogURL
+                            ? this.props.catalogURL +
+                            "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
+                            record.identifier
+                            : null,
+                        format: this.getLayerFormat(
+                            formats.filter(f => f.indexOf("image/") === 0)
+                        ),
+                        formats: {
+                            imageFormats: this.props.formatOptions,
+                            infoFormats: this.props.infoFormatOptions
+                        },
+                        ...(autoSetVisibilityLimits && {
+                            map: {
+                                projection: this.props.crs,
+                                resolutions: getResolutions()
+                            }
+                        }),
+                        localizedLayerStyles
+                    }, true)
+                        .then((layer) => {
+                            if (layer) {
+                                this.addLayer(layer, record);
+                            }
+                            this.setState({ loading: false });
+                        });
 
-        // let's create the buttons
-        let buttons = [];
-        if (background) {
-            buttons.push(disabled ?
-                <Message msgId="catalog.backgroundAlreadyAdded"/> :
-                <Button
-                    tooltipId="catalog.addToMap"
-                    className="square-button-md"
-                    bsStyle="primary"
-                    bsSize={this.props.buttonSize}
-                    onClick={() => {
-                        const layer = {...background, id: background.name, visibility: false};
-                        this.props.onLayerAdd(layer, { background });
-                    }}
-                    key="addlayer">
-                    <Glyphicon glyph="plus" />
-                </Button>
-            );
-        }
-        if (wms || wmts) {
-            const type = wms ? 'wms' : 'wmts';
-            buttons.push(
-                <Button
-                    tooltipId="catalog.addToMap"
-                    className="square-button-md"
-                    bsStyle="primary"
-                    bsSize={this.props.buttonSize}
-                    onClick={() => {
-                        const layer = this.makeLayer(type, wms || wmts, this.getFormats(type, record));
-                        if (layer) {
-                            this.addLayer(layer, {record});
-                        }
-                    }}
-                    key={`add${type}layer`}>
-                    <Glyphicon glyph="plus" />
-                </Button>
-            );
-        }
-        if (esri) {
-            buttons.push(
-                <Button
-                    tooltipId="catalog.addToMap"
-                    className="square-button-md"
-                    bsStyle="primary"
-                    bsSize={this.props.buttonSize}
-                    onClick={() => {
-                        this.addLayer(esriToLayer(this.props.record, this.props.layerBaseConfig));
-                    }}
-                    key={`addesrilayer`}>
-                    <Glyphicon glyph="plus" />
-                </Button>
-            );
-        }
-        if (tms) {
-            buttons.push(
-                <AddTMS
-                    service={this.props.service}
-                    key="addTmsLayer"
-                    tooltipId="catalog.addToMap"
-                    className="square-button-md"
-                    bsStyle="primary"
-                    bsSize={this.props.buttonSize}
-                    addLayer={this.addLayer}
-                    record={this.props.record}>
-                    <Glyphicon glyph="plus" />
-                </AddTMS>
-            );
-        }
-        if ( wfs ) {
-            buttons.push(<Button
-                tooltipId="catalog.addToMap"
-                key="addWFSLayer"
-                className="square-button-md"
-                bsStyle="primary"
-                bsSize={this.props.buttonSize}
-                onClick={() => {
-                    this.addLayer(wfsToLayer(this.props.record, this.props.layerBaseConfig));
-                }}>
-                <Glyphicon glyph="plus" />
-            </Button>);
-        }
-        if (tileProvider) {
-            buttons.push(
-                <AddTileProvider
-                    key="addTileProviderLayer"
-                    service={this.props.service}
-                    tooltipId="catalog.addToMap"
-                    className="square-button-md"
-                    bsStyle="primary"
-                    bsSize={this.props.buttonSize}
-                    addLayer={this.addLayer}
-                    record={this.props.record}>
-                    <Glyphicon glyph="plus" />
-                </AddTileProvider>
-            );
-        }
-
-        // create get capabilities links that will be used to share layers info
-        if (this.props.showGetCapLinks) {
-            let links = getRecordLinks(record);
-            if (links.length > 0) {
-                buttons.push(<SharingLinks key="sharing-links" popoverContainer={this} links={links}
-                    onCopy={this.props.onCopy} buttonSize={this.props.buttonSize} addAuthentication={this.props.addAuthentication}/>);
-            }
-        }
-
-        return buttons;
+                }
+            },
+            ...(links.length > 0
+                ? [{
+                    Element: () => (
+                        <SharingLinks
+                            key="sharing-links"
+                            popoverContainer={this}
+                            links={links}
+                            onCopy={this.props.onCopy}
+                            buttonSize={this.props.buttonSize}
+                            addAuthentication={this.props.addAuthentication}
+                        />
+                    )
+                }]
+                : [])
+        ];
     };
 
     renderDescription = (record) => {
@@ -278,9 +219,6 @@ class RecordItem extends React.Component {
 
     render() {
         const record = this.props.record;
-        const { wms, wmts, tms, wfs } = extractOGCServicesReferences(record);
-        const {esri} = extractEsriReferences(record);
-        const tileProvider = record && record.type === "tileprovider" && record.provider;
         const background = record && record.background;
         const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name ||
             layer.type === background.type && layer.source === background.source && layer.name === background.name));
@@ -300,7 +238,7 @@ class RecordItem extends React.Component {
                 caption={
                     <div>
                         {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
-                        <div>{!wms && !wmts && !esri && !background && !tms && !tileProvider && !wfs && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        <div>{!record.isValid && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                         {!this.props.hideExpand &&
                                 <div
                                     className="ms-ruler"
@@ -322,7 +260,13 @@ class RecordItem extends React.Component {
                             }
                         }}
                         buttons={[
-                            ...(record && this.renderButtons(record, disabled) || []).map(Element => ({ Element: () => Element })),
+                            {
+                                visible: !!disabled,
+                                Element: () => <Message msgId="catalog.backgroundAlreadyAdded"/>
+                            },
+                            ...(record?.references && !disabled
+                                ? this.getButtons(record)
+                                : []),
                             {
                                 glyph: this.state.fullText ? 'chevron-down' : 'chevron-left',
                                 visible: this.state.visibleExpand,
@@ -348,54 +292,6 @@ class RecordItem extends React.Component {
         }
         return formats[0];
     };
-
-    makeLayer = (type, ogcReferences, formats = [this.props.defaultFormat]) => {
-        const allowedSRS = buildSRSMap(ogcReferences.SRS);
-        if (ogcReferences.SRS.length > 0 && !isAllowedSRS(this.props.crs, allowedSRS)) {
-            this.props.onError('catalog.srs_not_allowed');
-            return null;
-        }
-
-        const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
-        const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits;
-        return recordToLayer(
-            this.props.record,
-            type,
-            {
-                removeParams: this.props.authkeyParamNames,
-                ...(type === "wms"
-                    ? {
-                        catalogURL:
-                            this.props.catalogType === "csw" &&
-                            this.props.catalogURL
-                                ? this.props.catalogURL +
-                                "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
-                                this.props.record.identifier
-                                : null,
-                        format: this.getLayerFormat(
-                            formats.filter(f => f.indexOf("image/") === 0)
-                        ),
-                        formats: {
-                            imageFormats: this.props.formatOptions,
-                            infoFormats: this.props.infoFormatOptions
-                        },
-                        ...(autoSetVisibilityLimits && {
-                            map: {
-                                projection: this.props.crs,
-                                resolutions: getResolutions()
-                            }
-                        })
-                    }
-                    : {
-                        format: this.getLayerFormat(
-                            formats.filter(f => f.indexOf("image/") === 0)
-                        )
-                    })
-            },
-            this.props.layerBaseConfig,
-            localizedLayerStyles
-        );
-    }
 
     addLayer = (layer, {background} = {}) => {
         // TODO: extenralize this switch

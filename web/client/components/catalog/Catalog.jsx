@@ -30,7 +30,8 @@ import { getMessageById } from '../../utils/LocaleUtils';
 import Message from '../I18N/Message';
 import RecordGrid from './RecordGrid';
 import Loader from '../misc/Loader';
-import { buildServiceUrl, DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from "../../utils/CatalogUtils";
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../../api/WMS';
+import { buildServiceUrl } from "../../utils/CatalogUtils";
 
 class Catalog extends React.Component {
     static propTypes = {
