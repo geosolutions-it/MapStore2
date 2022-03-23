@@ -92,6 +92,7 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",

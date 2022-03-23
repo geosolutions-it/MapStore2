@@ -18,6 +18,17 @@ function getStyle({ style }) {
     return Promise.resolve(null);
 }
 
+function updateModelMatrix(tileSet, { heightOffset }) {
+    if (heightOffset !== undefined) {
+        const boundingSphere = tileSet.boundingSphere;
+        const cartographic = Cesium.Cartographic.fromCartesian(boundingSphere.center);
+        const surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
+        const offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, heightOffset);
+        const translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
+        tileSet.modelMatrix =  Cesium.Matrix4.fromTranslation(translation);
+    }
+}
+
 Layers.registerType('3dtiles', {
     create: (options, map) => {
         if (options.visibility && options.url) {
@@ -33,6 +44,14 @@ Layers.registerType('3dtiles', {
                 })
             }));
 
+            if (tileSet.ready) {
+                updateModelMatrix(tileSet, options);
+            } else {
+                tileSet.readyPromise.then(() => {
+                    updateModelMatrix(tileSet, options);
+                });
+            }
+
             getStyle(options)
                 .then((style) => {
                     if (style) {
@@ -45,12 +64,16 @@ Layers.registerType('3dtiles', {
                 tileSet,
                 remove: () => {
                     map.scene.primitives.remove(tileSet);
+                },
+                setVisible: (visible) => {
+                    tileSet.show = !!visible;
                 }
             };
         }
         return {
             detached: true,
-            remove: () => {}
+            remove: () => {},
+            setVisible: () => {}
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
@@ -69,6 +92,15 @@ Layers.registerType('3dtiles', {
                         layer.tileSet.style = new Cesium.Cesium3DTileStyle(style);
                     }
                 });
+        }
+        if (layer?.tileSet && newOptions.heightOffset !== oldOptions.heightOffset) {
+            if (layer.tileSet.ready) {
+                updateModelMatrix(layer.tileSet, newOptions);
+            } else {
+                layer.tileSet.readyPromise.then(() => {
+                    updateModelMatrix(layer.tileSet, newOptions);
+                });
+            }
         }
         return null;
     }

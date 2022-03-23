@@ -1227,4 +1227,51 @@ describe('Cesium layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.tileSet).toBeFalsy();
     });
+    it('should create a 3d tiles layer with and offset applied to the height', (done) => {
+        const options = {
+            type: '3dtiles',
+            url: 'base/web/client/test-resources/3dtiles/tileset.json',
+            title: 'Title',
+            visibility: true,
+            heightOffset: 100,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix)).toEqual(
+            [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        );
+        cmp.layer.tileSet.readyPromise.then(() => {
+            expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix).map(Math.round)).toEqual(
+                [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    19, -74, 64, 1
+                ]
+            );
+            done();
+        });
+    });
 });

@@ -197,6 +197,19 @@ export default class extends React.Component {
                     </Col>
                 </Row>
 
+                {this.props.element.type === "3dtiles" && <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.heightOffset"/></ControlLabel>
+                            <IntlNumberFormControl
+                                type="number"
+                                name={"heightOffset"}
+                                value={this.props.element.heightOffset || 0}
+                                onChange={(val)=> this.props.onChange("heightOffset", parseFloat(val))}/>
+                        </FormGroup>
+                    </Col>
+                </Row>}
+
                 {this.props.element.type === "wms" &&
                 <Row>
                     <Col xs={12}>
