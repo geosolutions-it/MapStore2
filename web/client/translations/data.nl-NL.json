@@ -104,6 +104,7 @@
             "templateFormatInfoAlert2": "Gebruik ${ attribute } om de eigenschappen die je wenst te tonen aan te duiden.",
             "templateFormatInfoAlertExample": "Het id van het object is ${ properties }",
             "templatePreview": "Sjabloon voorbeeld",
+            "heightOffset": "Height offset (m)",
 	    "visibilityLimits": {
                 "title": "Zichtbaarheidslimieten",
                 "serverValuesUpdateUndefined": "De server heeft geen limieten voor de zichtbaarheid van de schaal voor deze laag opgegeven",
