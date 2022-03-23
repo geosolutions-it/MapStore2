@@ -1274,4 +1274,41 @@ describe('Cesium layer', () => {
             done();
         });
     });
+
+    it('should not crash if the heightOffset is not a number', () => {
+        const options = {
+            type: '3dtiles',
+            url: 'http://service.org/tileset.json',
+            title: 'Title',
+            visibility: true,
+            heightOffset: NaN,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix)).toEqual(
+            [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        );
+    });
 });

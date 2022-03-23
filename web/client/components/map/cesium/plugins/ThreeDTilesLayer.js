@@ -9,6 +9,8 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
+import isNumber from 'lodash/isNumber';
+import isNaN from 'lodash/isNaN';
 import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
 
 function getStyle({ style }) {
@@ -19,7 +21,7 @@ function getStyle({ style }) {
 }
 
 function updateModelMatrix(tileSet, { heightOffset }) {
-    if (heightOffset !== undefined) {
+    if (!isNaN(heightOffset) && isNumber(heightOffset)) {
         const boundingSphere = tileSet.boundingSphere;
         const cartographic = Cesium.Cartographic.fromCartesian(boundingSphere.center);
         const surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
