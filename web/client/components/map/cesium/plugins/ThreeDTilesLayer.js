@@ -45,10 +45,10 @@ Layers.registerType('3dtiles', {
             }));
 
             if (tileSet.ready) {
-                updateModelMatrix(tileSet, options, map);
+                updateModelMatrix(tileSet, options);
             } else {
                 tileSet.readyPromise.then(() => {
-                    updateModelMatrix(tileSet, options, map);
+                    updateModelMatrix(tileSet, options);
                 });
             }
 
@@ -95,10 +95,10 @@ Layers.registerType('3dtiles', {
         }
         if (layer?.tileSet && newOptions.heightOffset !== oldOptions.heightOffset) {
             if (layer.tileSet.ready) {
-                updateModelMatrix(layer.tileSet, newOptions, map);
+                updateModelMatrix(layer.tileSet, newOptions);
             } else {
                 layer.tileSet.readyPromise.then(() => {
-                    updateModelMatrix(layer.tileSet, newOptions, map);
+                    updateModelMatrix(layer.tileSet, newOptions);
                 });
             }
         }
