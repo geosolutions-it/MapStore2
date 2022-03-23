@@ -12,8 +12,7 @@ import {getScales, reprojectZoom} from "../../utils/MapUtils";
 
 import { getAvailableCRS, normalizeSRS } from '../../utils/CoordinatesUtils';
 
-const projectionSelector = (state) => state?.print?.spec?.params?.projection ?? state?.print?.map?.projection ?? "EPSG:3857";
-
+export const projectionSelector = (state) => state?.print?.spec?.params?.projection ?? state?.print?.map?.projection ?? "EPSG:3857";
 
 function mapTransformer(state, map) {
     const projection = projectionSelector(state);
@@ -60,19 +59,24 @@ export const Projection = ({
     onChangeParameter,
     allowPreview = false,
     projections,
+    enabled = true,
     onRefresh = () => {}
 }, context) => {
     useEffect(() => {
-        addValidator("projection", "map-preview", validator(allowPreview));
+        if (enabled) {
+            addValidator("projection", "map-preview", validator(allowPreview));
+        }
     }, [allowPreview]);
     useEffect(() => {
-        addMapTransformer("projection", mapTransformer);
+        if (enabled) {
+            addMapTransformer("projection", mapTransformer);
+        }
     }, []);
     function changeProjection(crs) {
         onChangeParameter("params.projection", crs);
         onRefresh();
     }
-    return (
+    return enabled ? (
         <>
             <Choice
                 selected={projection}
@@ -81,7 +85,7 @@ export const Projection = ({
                 label={getMessageById(context.messages, "print.projection")}
             />
         </>
-    );
+    ) : null;
 };
 
 Projection.contextTypes = {
@@ -96,6 +100,7 @@ Projection.contextTypes = {
  * @memberof plugins.print
  * @static
  *
+ * @prop {boolean} cfg.enabled allows disabling the widget in a very simple way (true by default)
  * @prop {boolean} cfg.allowPreview print preview may be enabled or not, when switching to
  * a different projection. Preview may have glitches with some projections, so it is disabled
  * by default. You can enable it again by setting this option to true.
