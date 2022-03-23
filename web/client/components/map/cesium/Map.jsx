@@ -136,6 +136,16 @@ class CesiumMap extends React.Component {
         this.setMousePointer(this.props.mousePointer);
 
         this.map = map;
+        const scene = this.map.scene;
+
+        // configure the sky environment
+        scene.skyAtmosphere.show = this.props.mapOptions?.showSkyAtmosphere ?? true;
+        scene.fog.enabled = this.props.mapOptions?.enableFog ?? false;
+        scene.globe.showGroundAtmosphere = this.props.mapOptions?.showGroundAtmosphere ?? false;
+
+        // this is needed to display correctly intersection between terrain and primitives
+        scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? true;
+
         this.forceUpdate();
         if (this.props.mapOptions.navigationTools) {
             this.cesiumNavigation = window.CesiumNavigation;

@@ -103,6 +103,7 @@
             "templateFormatInfoAlert2": "Použi ${ attribute } pre zoskupenie vlastností, ktoré potrebuješ na zobrazenie",
             "templateFormatInfoAlertExample": "ID tejto funkcie je ${ properties }",
             "templatePreview": "Náhľad šablóny",
+            "heightOffset": "Height offset (m)",
             "visibilityLimits": {
                 "title": "Limity viditeľnosti",
                 "serverValuesUpdateUndefined": "Server pre túto vrstvu neposkytol obmedzenia mierky viditeľnosti",

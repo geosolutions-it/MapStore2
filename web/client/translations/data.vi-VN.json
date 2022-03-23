@@ -697,6 +697,7 @@
             "textFormatTitle": "VĂN BẢN",
             "title": "Tiêu đề",
             "titleTranslations": "Bản dịch tiêu đề",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "both": "Tiêu đề và mô tả",
                 "bottom": "Dưới cùng",

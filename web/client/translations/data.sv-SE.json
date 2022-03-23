@@ -108,6 +108,7 @@
             "templateFormatInfoAlertExample": "Objektets id är <span style = 'white-space: nowrap'> $ {properties.id} </span> eller <span style = 'white-space: nowrap'> $ {properties [ 'data-value']} </span> ",
             "templateError": "Det uppstod ett fel när mallen skulle tillämpas på den information som servern returnerade. Kontrollera mallen",
             "templatePreview": "Förhandsvisning av mall",
+            "heightOffset": "Height offset (m)",
             "visibilityLimits": {
                 "title": "Synlighetsgränser",
                 "serverValuesUpdateUndefined": "Servern angav inga synlighetsgränser för detta lager",

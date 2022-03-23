@@ -91,6 +91,7 @@
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
             "templatePreview": "Pregled predloška",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Info oblačić",
                 "title": "Naslov",

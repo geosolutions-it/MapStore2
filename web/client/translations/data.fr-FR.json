@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est <span style='white-space:nowrap'>${ properties.ID }</span> ou <span style='white-space:nowrap'>${ properties['données-valeur'] }</span>",
             "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
+            "heightOffset": "Décalage en hauteur (m)",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
                 "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
