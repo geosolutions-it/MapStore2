@@ -575,6 +575,7 @@ export const saveLayer = (layer) => {
         tileSize: layer.tileSize,
         version: layer.version
     },
+    layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},
     layer.credits ? { credits: layer.credits } : {},
     layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
