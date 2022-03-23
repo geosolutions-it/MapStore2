@@ -216,6 +216,7 @@ class BackgroundSelector extends React.Component {
             format: editedLayer.format,
             style: editedLayer.style,
             additionalParameters: editedLayer.params,
+            attributionText: editedLayer.attributionText,
             thumbnail: {
                 data: backgroundListEntry && backgroundListEntry.thumbnail,
                 url: this.getThumb(editedLayer)

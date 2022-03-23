@@ -22,11 +22,13 @@ L.tileLayer.wmts = function(urls, options, matrixOptions) {
 
 function wmtsToLeafletOptions(options) {
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
+    const attribution = options.attributionText || '';
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     return assign({
         requestEncoding: options.requestEncoding,
         layer: options.name,
         style: options.style || "",
+        attribution,
         // set image format to png if vector to avoid errors while switching between map type
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         tileMatrixSet: tileMatrixSet,
@@ -61,7 +63,8 @@ const createLayer = options => {
 
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
-    || oldOptions.format !== newOptions.format) {
+    || oldOptions.format !== newOptions.format
+    || oldOptions.attributionText !== newOptions.attributionText) {
         return createLayer(newOptions);
     }
     return null;

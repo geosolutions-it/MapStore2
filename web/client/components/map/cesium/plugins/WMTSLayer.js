@@ -127,6 +127,7 @@ function wmtsToCesiumOptions(options) {
         //    isReady: () => true,
         //    shouldDiscardImage: ({x, y, level}) => !isValid(x, y, level)
         // }, // not supported yet
+        ...(options.attributionText && { credit: options.attributionText }),
         layer: options.name,
         style: options.style || "",
         tileMatrixLabels: matrixIds,

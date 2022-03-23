@@ -579,7 +579,8 @@ export const saveLayer = (layer) => {
     layer.params ? { params: layer.params } : {},
     layer.credits ? { credits: layer.credits } : {},
     layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
-    layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {});
+    layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {},
+    layer.attributionText ? { attributionText: layer.attributionText } : {});
 };
 /**
  * default initial constant regex rule for searching for a /geoserver/ string in a url

@@ -111,13 +111,13 @@ const createLayer = options => {
     const format = (options.availableFormats || []).indexOf(options.format) !== -1 && options.format
         || !options.availableFormats && options.format || 'image/png';
     const isVector = isVectorFormat(format);
-
     const wmtsOptions = {
         requestEncoding,
         urls: urls.map(u => u + queryParametersString),
         layer: options.name,
         version: options.version || "1.0.0",
         matrixSet: tileMatrixSetName,
+        ...(options.attributionText && {attributions: options.attributionText}),
         format,
         style: options.style || "",
         tileGrid: new WMTSTileGrid({
@@ -162,7 +162,8 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
-    || oldOptions.style !== newOptions.style) {
+    || oldOptions.style !== newOptions.style
+    || oldOptions.attributionText !== newOptions.attributionText) {
         return createLayer(newOptions);
     }
     if (oldOptions.minResolution !== newOptions.minResolution) {
