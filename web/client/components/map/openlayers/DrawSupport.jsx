@@ -212,6 +212,11 @@ export default class DrawSupport extends React.Component {
         return this.snapMetadata.source;
     }
 
+    /**
+     * Callback to get layer instance from the map using layerId
+     * @param {string} layerId
+     * @returns {object|boolean}
+     */
     getLayerInstance = (layerId) => {
         return this.props.map.getLayers().getArray().find(l => l.get('msId') === layerId);
     }
@@ -1165,8 +1170,11 @@ export default class DrawSupport extends React.Component {
     };
 
     updateSnapInteraction = (newProps) => {
-        const snappingInteractionExists = !!this.snapInteraction;
-        if (snappingInteractionExists) {
+        const snappingLayerExists = !!newProps.snappingLayerInstance?.id;
+        if (!snappingLayerExists && !!this.snapInteraction) {
+            this.removeSnapInteraction();
+        }
+        if (!!this.snapInteraction) {
             const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
             const snappingLayerChanged = this.props.snappingLayerInstance?.id !== newProps.snappingLayerInstance?.id;
             const snappingToggledOff = !newProps.snapping && this.props.snapping;
@@ -1180,7 +1188,7 @@ export default class DrawSupport extends React.Component {
             if (snappingToggledOn || snappingLayerChanged || snappingConfigChanged) {
                 this.addSnapInteraction(newProps);
             }
-        } else if (this.props.snapping) {
+        } else if (newProps.snapping && snappingLayerExists) {
             this.addSnapInteraction(newProps);
         }
     }

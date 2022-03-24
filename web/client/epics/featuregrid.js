@@ -19,7 +19,8 @@ import {
     changeDrawingStatus,
     GEOMETRY_CHANGED,
     drawSupportReset,
-    setSnappingLayer
+    setSnappingLayer,
+    toggleSnapping
 } from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
@@ -155,6 +156,7 @@ import {
 
 import { interceptOGCError } from '../utils/ObservableUtils';
 import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/queryform';
+import {isSnappingActive} from "../selectors/draw";
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
@@ -1196,4 +1198,13 @@ export const setDefaultSnappingLayerOnFeatureGridOpen = (action$, { getState } =
         .switchMap(() => {
             const selectedLayerId = selectedLayerSelector(getState())?.id;
             return Rx.Observable.of(setSnappingLayer(selectedLayerId));
+        });
+
+export const resetSnappingLayerOnFeatureGridClosed = (action$, { getState } = {}) =>
+    action$
+        .ofType(CLOSE_FEATURE_GRID)
+        .switchMap(() => {
+            const actions = [setSnappingLayer(false)];
+            isSnappingActive(getState()) && actions.push(toggleSnapping());
+            return Rx.Observable.from(actions);
         });
