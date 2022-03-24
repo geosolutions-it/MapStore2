@@ -158,7 +158,8 @@ const createLayer = options => {
 
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (newOptions.securityToken !== oldOptions.securityToken
-    || oldOptions.format !== newOptions.format) {
+    || oldOptions.format !== newOptions.format
+    || oldOptions.attributionText !== newOptions.attributionText) {
         return createLayer(newOptions);
     }
     return null;
