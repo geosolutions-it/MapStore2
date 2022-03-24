@@ -8,15 +8,13 @@
 
 import urlUtil from 'url';
 
-import {isArray, castArray, get, filter} from 'lodash';
+import { isArray, castArray, get, isEmpty, includes, uniq } from 'lodash';
 import assign from 'object-assign';
 import xml2js from 'xml2js';
-
 import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
-import Rx from "rxjs";
-
+import { getAvailableInfoFormat } from "../utils/MapInfoUtils";
 const capabilitiesCache = {};
 
 
@@ -269,12 +267,68 @@ export const reset = () => {
     });
 };
 
-export const preprocess = (service) => {
-    let { domainAliases } = service;
-    service.domainAliases = filter(domainAliases);
-    return Rx.Observable.of(service);
+export const DEFAULT_FORMAT_WMS = [{
+    label: 'image/png',
+    value: 'image/png'
+}, {
+    label: 'image/png8',
+    value: 'image/png8'
+}, {
+    label: 'image/jpeg',
+    value: 'image/jpeg'
+}, {
+    label: 'image/vnd.jpeg-png',
+    value: 'image/vnd.jpeg-png'
+}, {
+    label: 'image/vnd.jpeg-png8',
+    value: 'image/vnd.jpeg-png8'
+}, {
+    label: 'image/gif',
+    value: 'image/gif'
+}];
+
+/**
+ * Get unique array of supported info formats
+ * @return {array} info formats
+ */
+export const getUniqueInfoFormats = () => {
+    return uniq(Object.values(getAvailableInfoFormat()));
 };
 
+/**
+ * Fetch the supported formats of the WMS service
+ * @param url
+ * @param includeGFIFormats
+ * @return {object|string} formats
+ */
+export const getSupportedFormat = (url, includeGFIFormats = false) => {
+    return getCapabilities(url).then((caps) => {
+        let getMapFormats = get(caps, 'capability.request.getMap.format', []);
+        let imageFormats;
+        if (!isEmpty(getMapFormats)) {
+            const defaultFormats = DEFAULT_FORMAT_WMS.map(({value}) => value);
+            getMapFormats = getMapFormats.map(({value})=> ({label: value, value}));
+            imageFormats = getMapFormats.filter(({value})=> includes(defaultFormats, value)) || [];
+        } else {
+            imageFormats = DEFAULT_FORMAT_WMS;
+        }
+
+        let infoFormats;
+        if (includeGFIFormats) {
+            let getFeatureInfoFormats = get(caps, 'capability.request.getFeatureInfo.format', []);
+            const defaultFormats = getUniqueInfoFormats();
+            if (!isEmpty(getFeatureInfoFormats)) {
+                getFeatureInfoFormats = getFeatureInfoFormats.map(({value})=> value);
+                infoFormats = uniq(getFeatureInfoFormats.filter((value)=> includes(defaultFormats, value))) || [];
+            } else {
+                infoFormats = defaultFormats;
+            }
+        }
+        return includeGFIFormats ? {imageFormats, infoFormats} : imageFormats;
+    }).catch(()=>
+        // Fallback to default formats on exception
+        includeGFIFormats ? {imageFormats: DEFAULT_FORMAT_WMS, infoFormats: getUniqueInfoFormats()} : DEFAULT_FORMAT_WMS);
+};
 
 const Api = {
     flatLayers,
@@ -288,7 +342,8 @@ const Api = {
     parseLayerCapabilities,
     getBBox,
     reset,
-    preprocess
+    getUniqueInfoFormats,
+    getSupportedFormat
 };
 
 export default Api;

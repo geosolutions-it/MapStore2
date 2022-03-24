@@ -1081,6 +1081,15 @@ describe('LayersUtils', () => {
                     expect(l.tooltipOptions).toExist();
                     expect(l.tooltipPlacement).toExist();
                 }
+            ],
+            // save heightOffset for 3dtiles
+            [
+                {
+                    heightOffset: 10
+                },
+                l => {
+                    expect(l.heightOffset).toBe(10);
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

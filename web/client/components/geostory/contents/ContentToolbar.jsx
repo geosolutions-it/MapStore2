@@ -10,6 +10,7 @@
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar} from "./ToolbarButtons";
+import uuid from "uuid";
 
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
@@ -56,7 +57,7 @@ const toolButtons = {
         renderButton: <DeleteButtonToolbar {...props}/>
 
     }),
-    editMap: ({editMap = false, update = () => {}}) => ({
+    editMap: ({editMap = false, map, update = () => {}, ...props}) => ({
         // using normal ToolbarButton because this has no options
         glyph: "map-edit",
         visible: true,
@@ -64,7 +65,9 @@ const toolButtons = {
         bsStyle: editMap ? "success" : "default",
         tooltipId: "geostory.contentToolbar.editMap",
         onClick: () => {
+            const { center, zoom, resolution } = map ?? props;
             update( 'editMap', !editMap);
+            !editMap && update("map", {center, zoom, mapStateSource: uuid(), resolution, resetPanAndZoom: false}, 'merge');
         }
     }),
     editURL: ({ editURL = false, path, editWebPage = () => {}}) => ({

@@ -9,6 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LeafletMap from '../Map.jsx';
 import LeafLetLayer from '../Layer.jsx';
+import LeafLetFeature from '../Feature.jsx';
 import expect from 'expect';
 import {isNumber} from 'lodash';
 const {
@@ -292,6 +293,60 @@ describe('LeafletMap', () => {
         expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
+    });
+
+    it('click on layer should return intersected features', () => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [43, 10]
+            },
+            properties: {}
+        };
+        const options = {
+            id: 'vector'
+        };
+        const map = ReactDOM.render(
+            <LeafletMap
+                center={{ y: 43, x: 10 }}
+                zoom={11}
+                onClick={testHandlers.handler}
+                mapOptions={{ zoomAnimation: false }}
+            >
+                <LeafLetLayer type="vector" options={options}>
+                    <LeafLetFeature {...feature}/>
+                </LeafLetLayer>
+            </LeafletMap>
+            , document.getElementById("container"));
+
+        const leafletMap = map.map;
+        leafletMap.fire('singleclick', {
+            containerPoint: {
+                x: 100,
+                y: 100
+            },
+            latlng: {
+                lat: 10,
+                lng: 43
+            },
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments[0].intersectedFeatures).toEqual([
+            {
+                id: 'vector',
+                features: [ feature ]
+            }
+        ]);
     });
 
     it('check if the handler for "mousemove" event is called', () => {

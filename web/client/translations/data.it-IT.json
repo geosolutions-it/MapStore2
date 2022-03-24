@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "id della feature è <span style='white-space:nowrap'>${ properties.id }</span> o <span style='white-space:nowrap'>${ properties['dato-valore'] }</span>",
             "templateError": "Si è verificato un errore durante l'applicazione del template alle informazioni restituite dal server, controllare il template.",
             "templatePreview": "Anteprima template",
+            "heightOffset": "Spostamento in altezza (m)",
             "visibilityLimits": {
                 "title": "Limiti di visibilità",
                 "serverValuesUpdateUndefined": "Il server non ha fornito limiti di visibilità di scala per questo livello",

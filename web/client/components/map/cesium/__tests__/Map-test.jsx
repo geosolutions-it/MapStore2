@@ -232,6 +232,28 @@ describe('CesiumMap', () => {
             done();
         }, 800);
     });
+    it('click on layer should return intersected features', (done) => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = ReactDOM.render(
+            <CesiumMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                onClick={testHandlers.handler}
+            />
+            , document.getElementById("container"));
+        expect(map.map).toExist();
+        map.onClick(map.map, {position: {x: 100, y: 100 }});
+        setTimeout(() => {
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments.length).toEqual(1);
+            expect(spy.calls[0].arguments[0].intersectedFeatures).toEqual([]);
+            done();
+        }, 800);
+    });
     it('check if the map changes when receive new props', () => {
         let map = ReactDOM.render(
             <CesiumMap
