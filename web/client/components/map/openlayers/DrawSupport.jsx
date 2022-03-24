@@ -95,9 +95,6 @@ export default class DrawSupport extends React.Component {
         snappingLayerInstance: PropTypes.object,
         isSnappingLoading: PropTypes.bool,
         snapConfig: PropTypes.object,
-
-        onUpdateSnappingLayer: PropTypes.func,
-        onSnappingRequestWMSFeatures: PropTypes.func,
         onRefreshSnappingLayer: PropTypes.func,
         toggleSnappingIsLoading: PropTypes.func
     };
@@ -116,8 +113,7 @@ export default class DrawSupport extends React.Component {
         onDrawStopped: () => {},
         onDrawingFeatures: () => {},
         onSelectFeatures: () => {},
-        onEndDrawing: () => {},
-        onUpdateSnappingLayer: () => {}
+        onEndDrawing: () => {}
     };
 
     /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
