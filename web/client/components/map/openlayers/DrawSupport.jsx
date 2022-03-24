@@ -1171,9 +1171,7 @@ export default class DrawSupport extends React.Component {
 
     updateSnapInteraction = (newProps) => {
         const snappingLayerExists = !!newProps.snappingLayerInstance?.id;
-        if (!snappingLayerExists && !!this.snapInteraction) {
-            this.removeSnapInteraction();
-        }
+        !snappingLayerExists && !!this.snapInteraction && this.removeSnapInteraction();
         if (!!this.snapInteraction) {
             const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
             const snappingLayerChanged = this.props.snappingLayerInstance?.id !== newProps.snappingLayerInstance?.id;
