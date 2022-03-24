@@ -46,6 +46,9 @@ Layers.registerType('3dtiles', {
                 })
             }));
 
+            // assign the original mapstore id of the layer
+            tileSet.msId = options.id;
+
             if (tileSet.ready) {
                 updateModelMatrix(tileSet, options);
             } else {

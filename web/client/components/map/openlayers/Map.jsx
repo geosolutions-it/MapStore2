@@ -12,6 +12,7 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { get as getProjection, toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
+import GeoJSON from 'ol/format/GeoJSON';
 
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
@@ -31,6 +32,8 @@ import 'ol/ol.css';
 
 // add overrides for css
 import './mapstore-ol-overrides.css';
+
+const geoJSONFormat = new GeoJSON();
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -198,6 +201,7 @@ class OpenlayersMap extends React.Component {
                     }
 
                     let layerInfo;
+                    let groupIntersectedFeatures = {};
                     this.markerPresent = false;
                     /*
                      * Handle special case for vector features with handleClickOnLayer=true
@@ -215,7 +219,17 @@ class OpenlayersMap extends React.Component {
                                 coords = { x: arr[0], y: arr[1] };
                             }
                         }
+                        if (layer?.get('msId')) {
+                            const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
+                                featureProjection: this.props.projection,
+                                dataProjection: 'EPSG:4326'
+                            });
+                            groupIntersectedFeatures[layer.get('msId')] = groupIntersectedFeatures[layer.get('msId')]
+                                ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
+                                : [ geoJSONFeature ];
+                        }
                     });
+                    const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
                     const tLng = normalizeLng(coords.x);
                     const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                     this.props.onClick({
@@ -234,7 +248,8 @@ class OpenlayersMap extends React.Component {
                             ctrl: event.originalEvent.ctrlKey,
                             metaKey: event.originalEvent.metaKey, // MAC OS
                             shift: event.originalEvent.shiftKey
-                        }
+                        },
+                        intersectedFeatures
                     }, layerInfo);
                 }
             }
