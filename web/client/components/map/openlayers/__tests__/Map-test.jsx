@@ -371,9 +371,13 @@ describe('OpenlayersMap', () => {
                             getFirstCoordinate: () => [10.3, 43.9],
                             getType: () => {
                                 return 'Polygon';
-                            }
+                            },
+                            getCoordinates: () => []
                         };
-                    }
+                    },
+                    getGeometryName: () => '',
+                    getProperties: () => ({}),
+                    getId: () => ''
                 }, {
                     get: (key) => key === "handleClickOnLayer" ? false : "ID"
                 });
@@ -411,9 +415,13 @@ describe('OpenlayersMap', () => {
                             getFirstCoordinate: () => [10.3, 43.9], // this makes sense only for points, maybe centroid is more appropriate
                             getType: () => {
                                 return 'Polygon';
-                            }
+                            },
+                            getCoordinates: () => []
                         };
-                    }
+                    },
+                    getGeometryName: () => '',
+                    getProperties: () => ({}),
+                    getId: () => ''
                 }, {
                     get: (key) => key === "handleClickOnLayer" ? true : "ID"
                 });
@@ -452,9 +460,13 @@ describe('OpenlayersMap', () => {
                             getFirstCoordinate: () => [43.0, 10], // this makes sense only for points, maybe centroid is more appropriate
                             getType: () => {
                                 return 'Point';
-                            }
+                            },
+                            getCoordinates: () => []
                         };
-                    }
+                    },
+                    getGeometryName: () => '',
+                    getProperties: () => ({}),
+                    getId: () => ''
                 }, {
                     get: (key) => key === "handleClickOnLayer" ? true : "ID"
                 });
@@ -472,6 +484,62 @@ describe('OpenlayersMap', () => {
             // also layer id is passed (e.g. used as flag for hide GFI marker)
             expect(spy.calls[0].arguments[1]).toBe("ID");
 
+            done();
+        }, 500);
+    });
+
+    it('click on layer should return intersected features', (done) => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const comp = (<OpenlayersMap projection="EPSG:4326" center={{ y: 43.9, x: 10.3 }} zoom={11}
+            onClick={testHandlers.handler} />);
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        setTimeout(() => {
+            map.map.forEachFeatureAtPixel = (pixel, callback) => {
+                callback.call(null, {
+                    feature: new Feature({
+                        geometry: new Point([43.0, 10]),
+                        name: 'My Point'
+                    }),
+                    getGeometry: () => {
+                        return {
+                            getFirstCoordinate: () => [43.0, 10],
+                            getType: () => {
+                                return 'Point';
+                            },
+                            getCoordinates: () => [43.0, 10]
+                        };
+                    },
+                    getGeometryName: () => 'Point',
+                    getProperties: () => ({}),
+                    getId: () => ''
+                }, {
+                    get: (key) => key === "msId" ? "ID" : false
+                });
+            };
+            map.map.dispatchEvent({
+                type: 'singleclick',
+                coordinate: [43.3, 10.3],
+                pixel: map.map.getPixelFromCoordinate([0.5, 0.5]),
+                originalEvent: {}
+            });
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments[0].intersectedFeatures).toEqual([
+                {
+                    id: 'ID',
+                    features: [
+                        {
+                            type: 'Feature',
+                            geometry: { type: 'Point', coordinates: [43.0, 10] },
+                            properties: null,
+                            id: ''
+                        }
+                    ]
+                }
+            ]);
             done();
         }, 500);
     });
