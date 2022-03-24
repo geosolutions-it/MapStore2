@@ -2725,6 +2725,8 @@
         "backgroundDialog": {
             "addTitle": "Ajouter un nouveau fond",
             "editTitle": "Modifier le fond actuel",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Saisir le texte d'attribution",
             "title": "Titre",
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",

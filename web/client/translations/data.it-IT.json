@@ -2725,6 +2725,8 @@
         "backgroundDialog": {
             "addTitle": "Aggiungi nuovo sfondo",
             "editTitle": "Modifica sfondo corrente",
+            "editAttribution": "Attribuzione",
+            "editAttributionPlaceholder": "Immettere il testo di attribuzione",
             "title": "Titolo",
             "titlePlaceholder": "Inserisci il nome visualizzato",
             "add": "Inserisci",
