@@ -55,7 +55,6 @@ var WMTS = L.TileLayer.extend({
     },
     getWMTSParams: (matrixSet, matrixIds, zoom, nw, tilewidth) => {
         const currentScale = getScales()[zoom];
-
         const matrix = head(matrixSet.map((s, i) => {
             if (i === matrixSet.length - 1) {
                 return null;

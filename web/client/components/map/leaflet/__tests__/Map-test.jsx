@@ -696,4 +696,39 @@ describe('LeafletMap', () => {
             expect(customHooRegister.getHook(ZOOM_TO_EXTENT_HOOK)).toExist();
         });
     });
+    it('check layers for custom wmts attribution', () => {
+        const options = {
+            format: 'image/png',
+            group: 'background',
+            name: 'nurc:Arc_Sample',
+            description: "arcGridSample",
+            attribution: "<p>This is some Attribution <b>TEXT</b></p>",
+            title: "arcGridSample",
+            type: 'wmts',
+            url: "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+            bbox: {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -180.0,
+                    miny: -90.0,
+                    maxx: 180.0,
+                    maxy: 90.0
+                }
+            },
+            visibility: true,
+            singleTile: false,
+            allowedSRS: {
+                "EPSG:4326": true,
+                "EPSG:900913": true
+            },
+            matrixIds: {},
+            tileMatrixSet: []
+        };
+        const map = ReactDOM.render(<LeafletMap center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ zoomAnimation: false }}>
+            <LeafLetLayer type="wmts" options={options} />
+        </LeafletMap>, document.getElementById("container"));
+        expect(map).toExist();
+        const attributions = document.body.getElementsByClassName('leaflet-control-attribution');
+        expect(attributions.length).toBe(2);
+    });
 });

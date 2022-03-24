@@ -945,6 +945,44 @@ describe('OpenlayersMap', () => {
         attributions = document.body.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(0);
     });
+    it('WMTS layer with custom attribution', () => {
+        const options = {
+            format: 'image/png',
+            group: 'background',
+            name: 'nurc:Arc_Sample',
+            description: "arcGridSample",
+            attribution: "<p>This is some Attribution <b>TEXT</b></p>",
+            title: "arcGridSample",
+            type: 'wmts',
+            url: "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+            bbox: {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -180.0,
+                    miny: -90.0,
+                    maxx: 180.0,
+                    maxy: 90.0
+                }
+            },
+            visibility: true,
+            singleTile: false,
+            allowedSRS: {
+                "EPSG:4326": true,
+                "EPSG:900913": true
+            },
+            matrixIds: {},
+            tileMatrixSet: []
+        };
+        const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
+            <OpenlayersLayer type="wmts" options={options} />
+        </OpenlayersMap>, document.getElementById("map"));
+        expect(map).toExist();
+        const domMap = document.getElementById('map');
+        const attributions = domMap.getElementsByClassName('ol-attribution');
+        const attributionsButton = attributions[0].getElementsByTagName('button')[0];
+        expect(attributions).toExist();
+        expect(attributionsButton).toExist();
+    });
     it('test getResolutions default', () => {
         const maxResolution = 2 * 20037508.34;
         const tileSize = 256;
