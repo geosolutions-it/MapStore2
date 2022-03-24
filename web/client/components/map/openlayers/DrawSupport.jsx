@@ -140,28 +140,10 @@ export default class DrawSupport extends React.Component {
             this.selectInteraction.getFeatures().clear();
         }
 
-        const snappingStateChanged = this.props.snapping !== newProps.snapping;
-        const snappingInteractionExists = !!this.snapInteraction;
-        if (snappingInteractionExists) {
-            const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
-            const snappingLayerChanged = this.props.snappingLayerInstance?.id !== newProps.snappingLayerInstance?.id;
-            const snappingToggledOff = !newProps.snapping && this.props.snapping;
-            const snappingToggledOn = newProps.snapping && !this.props.snapping;
-            if (snappingToggledOn) {
-                this.reactivateSnapInteraction();
-            }
-            if (snappingToggledOff) {
-                this.deactivateSnapInteraction();
-            }
-            if (snappingLayerChanged || snappingConfigChanged) {
-                this.addSnapInteraction(newProps);
-            }
-        }
         if (
             this.props.drawStatus !== newProps.drawStatus ||
             this.props.drawMethod !== newProps.drawMethod ||
-            this.props.features !== newProps.features ||
-            (snappingStateChanged && !snappingInteractionExists)
+            this.props.features !== newProps.features
         ) {
             switch (newProps.drawStatus) {
             case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
@@ -173,10 +155,10 @@ export default class DrawSupport extends React.Component {
             case "clean": this.clean(); break;
             case "cleanAndContinueDrawing": this.clean(true); break;
             case "endDrawing": this.endDrawing(newProps); break;
-            default : return;
+            default : break;
             }
         }
-
+        this.updateSnapInteraction(newProps);
     }
     getNewFeature = (newDrawMethod, coordinates, radius, center) => {
         return new Feature({
@@ -516,8 +498,8 @@ export default class DrawSupport extends React.Component {
                 break;
             }
         }
-
-        this.drawSourceSnapInteraction = new Snap({...snapConfig, source: this.drawSource});
+        // TODO: removed self object snapping because it was causing problems when changing feature selected
+        // this.drawSourceSnapInteraction = new Snap({...snapConfig, source: this.drawSource});
         this.props.map.addInteraction(this.drawSourceSnapInteraction);
         this.snapInteraction && this.props.map.addInteraction(this.snapInteraction);
     };
@@ -1080,7 +1062,6 @@ export default class DrawSupport extends React.Component {
 
             if (!newProps.options.geodesic) {
                 this.addModifyInteraction(newProps);
-                this.addSnapInteraction(newProps);
             }
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             if (newProps.options.translateEnabled !== false) {
@@ -1097,7 +1078,6 @@ export default class DrawSupport extends React.Component {
 
         if (newProps.options.drawEnabled) {
             this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps);
-            this.addSnapInteraction(newProps);
         }
     };
 
@@ -1185,7 +1165,27 @@ export default class DrawSupport extends React.Component {
         }
     };
 
-    reactivateSnapInteraction = () => {
+    updateSnapInteraction = (newProps) => {
+        const snappingInteractionExists = !!this.snapInteraction;
+        if (snappingInteractionExists) {
+            const snappingConfigChanged = this.props.snapConfig !== newProps.snapConfig;
+            const snappingLayerChanged = this.props.snappingLayerInstance?.id !== newProps.snappingLayerInstance?.id;
+            const snappingToggledOff = !newProps.snapping && this.props.snapping;
+            const snappingToggledOn = newProps.snapping && !this.props.snapping;
+            if (snappingToggledOn) {
+                this.activateSnapInteraction();
+            }
+            if (snappingToggledOff) {
+                this.deactivateSnapInteraction();
+            }
+            if (snappingToggledOn || snappingLayerChanged || snappingConfigChanged) {
+                this.addSnapInteraction(newProps);
+            }
+        } else if (this.props.snapping) {
+            this.addSnapInteraction(newProps);
+        }
+    }
+    activateSnapInteraction = () => {
         this.snapInteraction?.setActive(true);
         this.drawSourceSnapInteraction?.setActive(true);
     };
@@ -1197,12 +1197,10 @@ export default class DrawSupport extends React.Component {
 
     removeSnapInteraction = () => {
         if (this.snapInteraction) {
-            this.snapInteraction.setActive(false);
             this.props.map.removeInteraction(this.snapInteraction);
             this.snapInteraction = null;
         }
         if (this.drawSourceSnapInteraction) {
-            this.drawSourceSnapInteraction.setActive(false);
             this.props.map.removeInteraction(this.drawSourceSnapInteraction);
             this.drawSourceSnapInteraction = null;
         }
@@ -1213,7 +1211,7 @@ export default class DrawSupport extends React.Component {
 
     removeInteractions = () => {
         this.removeDrawInteraction();
-
+        this.removeSnapInteraction();
         if (this.selectInteraction) {
             this.props.map.enableEventListener('singleclick');
             this.props.map.removeInteraction(this.selectInteraction);
