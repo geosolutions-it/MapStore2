@@ -370,6 +370,38 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toNotExist();
     });
 
+    it('creates a wmts layer with custom credits for Cesium map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "matrixIds": {
+                "EPSG:4326": [{
+                    ranges: {
+                        cols: {max: 0, min: 0},
+                        rows: {max: 0, min: 0}
+                    }
+                }]
+            },
+            "url": "http://sample.server/geoserver/gwc/service/wmts",
+            "attribution": "<p>This is some custom</p><b>ATTRIBUTION</b>"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wmts"
+                options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0].imageryProvider.credit).toExist();
+    });
+
     it('creates a wms layer with single tile for CesiumLayer map', () => {
         var options = {
             "type": "wms",

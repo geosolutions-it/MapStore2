@@ -22,7 +22,7 @@ L.tileLayer.wmts = function(urls, options, matrixOptions) {
 
 function wmtsToLeafletOptions(options) {
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
-    const attribution = options.attributionText || '';
+    const attribution = options.attribution || '';
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     return assign({
         requestEncoding: options.requestEncoding,
@@ -64,7 +64,7 @@ const createLayer = options => {
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
     || oldOptions.format !== newOptions.format
-    || oldOptions.attributionText !== newOptions.attributionText) {
+    || oldOptions.attribution !== newOptions.attribution) {
         return createLayer(newOptions);
     }
     return null;

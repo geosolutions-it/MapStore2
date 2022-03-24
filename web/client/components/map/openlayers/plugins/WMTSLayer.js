@@ -117,7 +117,7 @@ const createLayer = options => {
         layer: options.name,
         version: options.version || "1.0.0",
         matrixSet: tileMatrixSetName,
-        ...(options.attributionText && {attributions: options.attributionText}),
+        ...(options.attribution && {attributions: options.attribution}),
         format,
         style: options.style || "",
         tileGrid: new WMTSTileGrid({
@@ -163,7 +163,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
     || oldOptions.style !== newOptions.style
-    || oldOptions.attributionText !== newOptions.attributionText) {
+    || oldOptions.attribution !== newOptions.attribution) {
         return createLayer(newOptions);
     }
     if (oldOptions.minResolution !== newOptions.minResolution) {

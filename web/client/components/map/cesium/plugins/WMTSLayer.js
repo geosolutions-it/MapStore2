@@ -127,7 +127,7 @@ function wmtsToCesiumOptions(options) {
         //    isReady: () => true,
         //    shouldDiscardImage: ({x, y, level}) => !isValid(x, y, level)
         // }, // not supported yet
-        ...(options.attributionText && { credit: options.attributionText }),
+        ...(options.attribution && { credit: options.attribution }),
         layer: options.name,
         style: options.style || "",
         tileMatrixLabels: matrixIds,
@@ -159,7 +159,7 @@ const createLayer = options => {
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.format !== newOptions.format
-    || oldOptions.attributionText !== newOptions.attributionText) {
+    || oldOptions.attribution !== newOptions.attribution) {
         return createLayer(newOptions);
     }
     return null;

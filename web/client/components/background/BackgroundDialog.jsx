@@ -39,7 +39,7 @@ export default class BackgroundDialog extends React.Component {
         thumbURL: PropTypes.string,
         title: PropTypes.string,
         format: PropTypes.string,
-        attributionText: PropTypes.string,
+        attribution: PropTypes.string,
         style: PropTypes.string,
         thumbnail: PropTypes.object,
         additionalParameters: PropTypes.object,
@@ -104,12 +104,12 @@ export default class BackgroundDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        const pickedProps = pick(this.props, 'title', 'format', 'style', 'thumbnail', 'attributionText');
+        const pickedProps = pick(this.props, 'title', 'format', 'style', 'thumbnail', 'attribution');
         const newState = assign({}, pickedProps, {additionalParameters: this.assignParameters(this.props.additionalParameters)});
         this.state = newState;
     }
 
-    state = {title: '', format: 'image/png', thumbnail: {}, additionalParameters: [], attributionText: ''};
+    state = {title: '', format: 'image/png', thumbnail: {}, additionalParameters: [], attribution: ''};
 
     renderStyleSelector() {
         return this.props.capabilities ? (
@@ -227,8 +227,8 @@ export default class BackgroundDialog extends React.Component {
                                 ]
                             }}
                             placeholder="backgroundDialog.editAttributionPlaceholder"
-                            value={ this.state.attributionText || '' }
-                            onChange={text => this.setState({ attributionText: text || '' })}
+                            value={ this.state.attribution || '' }
+                            onChange={text => this.setState({ attribution: text || '' })}
                         />
                     </FormGroup>
                 </React.Fragment>
@@ -255,7 +255,7 @@ export default class BackgroundDialog extends React.Component {
                         const backgroundId = this.props.editing ? this.props.layer.id : uuidv1();
                         const curThumbURL = this.props.layer.thumbURL || '';
                         const format = this.state.format || this.props.defaultFormat;
-                        const attributionText = this.state.attributionText || '';
+                        const attribution = this.state.attribution || '';
                         this.props.updateThumbnail(this.state.thumbnail.data, backgroundId);
                         this.props.onSave(assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
                             {
@@ -264,7 +264,7 @@ export default class BackgroundDialog extends React.Component {
                                     ['source', 'title']
                                 ),
                                 format,
-                                attributionText,
+                                attribution,
                                 group: 'background'
                             }, !curThumbURL && !this.state.thumbnail.data ? {} : {thumbURL: this.state.thumbnail.url}));
                         this.resetParameters();
