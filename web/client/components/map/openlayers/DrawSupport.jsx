@@ -498,10 +498,6 @@ export default class DrawSupport extends React.Component {
                 break;
             }
         }
-        // TODO: removed self object snapping because it was causing problems when changing feature selected
-        // this.drawSourceSnapInteraction = new Snap({...snapConfig, source: this.drawSource});
-        this.props.map.addInteraction(this.drawSourceSnapInteraction);
-        this.snapInteraction && this.props.map.addInteraction(this.snapInteraction);
     };
     toMulti = (geometry) => {
         if (geometry.getType() === 'Point') {
@@ -1187,22 +1183,16 @@ export default class DrawSupport extends React.Component {
     }
     activateSnapInteraction = () => {
         this.snapInteraction?.setActive(true);
-        this.drawSourceSnapInteraction?.setActive(true);
     };
 
     deactivateSnapInteraction = () => {
         this.snapInteraction?.setActive(false);
-        this.drawSourceSnapInteraction?.setActive(false);
     }
 
     removeSnapInteraction = () => {
         if (this.snapInteraction) {
             this.props.map.removeInteraction(this.snapInteraction);
             this.snapInteraction = null;
-        }
-        if (this.drawSourceSnapInteraction) {
-            this.props.map.removeInteraction(this.drawSourceSnapInteraction);
-            this.drawSourceSnapInteraction = null;
         }
         if (this.snapLayer) {
             this.props.map.removeLayer(this.snapLayer);
