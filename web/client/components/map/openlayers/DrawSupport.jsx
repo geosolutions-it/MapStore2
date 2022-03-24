@@ -497,6 +497,9 @@ export default class DrawSupport extends React.Component {
             default:
                 break;
             }
+            if (this.snapInteraction) {
+                this.props.map.addInteraction(this.snapInteraction);
+            }
         }
     };
     toMulti = (geometry) => {
