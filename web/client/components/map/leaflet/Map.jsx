@@ -11,7 +11,7 @@ import React from 'react';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import {reprojectBbox, reproject} from '../../../utils/CoordinatesUtils';
 import assign from 'object-assign';
-import {
+import mapUtils, {
     getGoogleMercatorResolutions,
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -536,6 +536,19 @@ class LeafletMap extends React.Component {
                 animate: duration === 0 ? false : undefined
             }
             );
+        });
+        this.props.hookRegister.registerHook(mapUtils.CLICK_ON_MAP_HOOK, (point, coordinate, pixel) => {
+            this.map.fireEvent('singleclick', {
+                latlng: point,
+                containerPoint: pixel,
+                layerPoint: pixel,
+                originalEvent: {
+                    altKey: false,
+                    ctrlKey: false,
+                    metaKey: false,
+                    shiftKey: false
+                }
+            });
         });
     };
 
