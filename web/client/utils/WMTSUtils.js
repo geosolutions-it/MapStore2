@@ -150,9 +150,8 @@ export const sortTileMatrix = (tileMatrixSet, ids)  => {
 export const getTileMatrix = (options, srs) => {
     const tileMatrixSetName = getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     const ids = options.matrixIds && getMatrixIds(options.matrixIds, tileMatrixSetName || srs);
-    let tmSet = options.tileMatrixSet ? options.tileMatrixSet : [];
     const tileMatrixSet = sortTileMatrix(
-        head(tmSet.filter(tM => tM['ows:Identifier'] === tileMatrixSetName)),
+        head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tileMatrixSetName)),
         ids);
     // identifiers are in the same order of scales and resolutions
 
