@@ -136,6 +136,16 @@ class CesiumMap extends React.Component {
         this.setMousePointer(this.props.mousePointer);
 
         this.map = map;
+        const scene = this.map.scene;
+
+        // configure the sky environment
+        scene.skyAtmosphere.show = this.props.mapOptions?.showSkyAtmosphere ?? true;
+        scene.fog.enabled = this.props.mapOptions?.enableFog ?? false;
+        scene.globe.showGroundAtmosphere = this.props.mapOptions?.showGroundAtmosphere ?? false;
+
+        // this is needed to display correctly intersection between terrain and primitives
+        scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? true;
+
         this.forceUpdate();
         if (this.props.mapOptions.navigationTools) {
             this.cesiumNavigation = window.CesiumNavigation;
@@ -186,6 +196,7 @@ class CesiumMap extends React.Component {
     onClick = (map, movement) => {
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
+            const intersectedFeatures = this.getIntersectedFeatures(map, movement.position);
             let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
@@ -204,7 +215,8 @@ class CesiumMap extends React.Component {
                         lat: latitude,
                         lng: longitude
                     },
-                    crs: "EPSG:4326"
+                    crs: "EPSG:4326",
+                    intersectedFeatures
                 });
             }
         }
@@ -266,6 +278,30 @@ class CesiumMap extends React.Component {
     getHeightFromZoom = (zoom) => {
         return this.props.zoomToHeight / Math.pow(2, zoom - 1);
     };
+
+    getIntersectedFeatures = (map, position) => {
+        const features = map.scene.drillPick(position);
+        if (features) {
+            const groupIntersectedFeatures = features.reduce((acc, feature) => {
+                if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
+                    const msId = feature.tileset.msId;
+                    // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
+                    // it has content but refers to the whole tile model
+                    const propertyNames = feature.getPropertyNames();
+                    const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
+                    return {
+                        ...acc,
+                        [msId]: acc[msId]
+                            ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
+                            : [{ type: 'Feature', properties, geometry: null }]
+                    };
+                }
+                return acc;
+            }, []);
+            return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+        }
+        return [];
+    }
 
     render() {
         const map = this.map;

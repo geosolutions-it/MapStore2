@@ -132,11 +132,15 @@ class CesiumLayer extends React.Component {
         const oldVisibility = this.getVisibilityOption(this.props);
         const newVisibility = this.getVisibilityOption(newProps);
         if (newVisibility !== oldVisibility) {
-            if (newVisibility) {
-                this.addLayer(newProps);
-                this.updateZIndex();
+            if (this.layer?.detached && this.layer?.setVisible) {
+                this.layer.setVisible(newVisibility);
             } else {
-                this.removeLayer();
+                if (newVisibility) {
+                    this.addLayer(newProps);
+                    this.updateZIndex();
+                } else {
+                    this.removeLayer();
+                }
             }
         }
     };

@@ -7,14 +7,7 @@
  */
 
 import expect from 'expect';
-import csw from '../../api/CSW';
-import wms from '../../api/WMS';
-import wmts from '../../api/WMTS';
-const API = {
-    csw,
-    wms,
-    wmts
-};
+import API from '../../api/catalog';
 import catalog from '../catalog';
 const {
     addLayersFromCatalogsEpic,
@@ -70,7 +63,14 @@ describe('catalog Epics', () => {
         testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
-            expect(actions[0].options).toEqual({filter: "test"});
+            expect(actions[0].options).toEqual({
+                filter: "test",
+                service: {
+                    type: "csw",
+                    url: "url",
+                    filter: "test"
+                }
+            });
             done();
         }, {
             catalog: {

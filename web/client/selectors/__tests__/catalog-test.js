@@ -37,7 +37,8 @@ import {
 } from '../catalog';
 
 import { set } from '../../utils/ImmutableUtils';
-import {DEFAULT_FORMAT_WMS, getUniqueInfoFormats} from "../../utils/CatalogUtils";
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../../api/WMS';
+
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {

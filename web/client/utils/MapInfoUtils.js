@@ -18,6 +18,7 @@ import wfs from './mapinfo/wfs';
 import wms from './mapinfo/wms';
 import wmts from './mapinfo/wmts';
 import vector from './mapinfo/vector';
+import threeDTiles from './mapinfo/threeDTiles';
 
 let MapInfoUtils;
 /**
@@ -221,10 +222,11 @@ export const defaultQueryableFilter = (l) => {
     ;
 };
 export const services = {
-    wfs,
-    wms,
-    wmts,
-    vector
+    'wfs': wfs,
+    'wms': wms,
+    'wmts': wmts,
+    'vector': vector,
+    '3dtiles': threeDTiles
 };
 /**
  * To get the custom viewer with the given type

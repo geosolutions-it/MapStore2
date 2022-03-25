@@ -306,6 +306,23 @@ describe('MapInfoUtils', () => {
         expect(req1.request.lat).toBe(25);
     });
 
+    it('buildIdentifyRequest works for 3d tiles', () => {
+        const layer = {
+            type: "3dtiles"
+        };
+        const req = buildIdentifyRequest(layer, {});
+        expect(req).toEqual({
+            request: {
+                features: [],
+                outputFormat: 'application/json'
+            },
+            metadata: {
+                title: layer.title
+            },
+            url: 'client'
+        });
+    });
+
     it('getViewer and setViewer test', () => {
         let props = {
             map: {

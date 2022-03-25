@@ -22,6 +22,7 @@ import '../plugins/BingLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/OverlayLayer';
 import '../plugins/MarkerLayer';
+import '../plugins/ThreeDTilesLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1144,5 +1145,170 @@ describe('Cesium layer', () => {
         expect(layer).toBeTruthy();
         expect(map.imageryLayers.length).toBe(1);
 
+    });
+    it('Create a 3d tiles layer', () => {
+        const options = {
+            type: '3dtiles',
+            url: '/tileset.json',
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(cmp.layer.tileSet._url).toBe('/tileset.json');
+    });
+    it('Use proxy when needed', () => {
+        const options = {
+            type: '3dtiles',
+            url: 'http://service.org/tileset.json',
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(cmp.layer.tileSet._url).toBe('/mapstore/proxy/?url=http%3A%2F%2Fservice.org%2Ftileset.json');
+    });
+    it('should create a 3d tiles layer with visibility set to false', () => {
+        const options = {
+            type: '3dtiles',
+            url: 'http://service.org/tileset.json',
+            title: 'Title',
+            visibility: false,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeFalsy();
+    });
+    it('should create a 3d tiles layer with and offset applied to the height', (done) => {
+        const options = {
+            type: '3dtiles',
+            url: 'base/web/client/test-resources/3dtiles/tileset.json',
+            title: 'Title',
+            visibility: true,
+            heightOffset: 100,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix)).toEqual(
+            [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        );
+        cmp.layer.tileSet.readyPromise.then(() => {
+            expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix).map(Math.round)).toEqual(
+                [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    19, -74, 64, 1
+                ]
+            );
+            done();
+        });
+    });
+
+    it('should not crash if the heightOffset is not a number', () => {
+        const options = {
+            type: '3dtiles',
+            url: 'http://service.org/tileset.json',
+            title: 'Title',
+            visibility: true,
+            heightOffset: NaN,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="3dtiles"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.tileSet).toBeTruthy();
+        expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix)).toEqual(
+            [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ]
+        );
     });
 });

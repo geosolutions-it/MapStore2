@@ -93,6 +93,7 @@
             "templateFormatInfoAlert2": "Use ${ attribute } para identificar as propriedades que necessita visualizar",
             "templateFormatInfoAlertExample": "O id do tema é ${ properties }",
             "templatePreview": "Preview do Template",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",

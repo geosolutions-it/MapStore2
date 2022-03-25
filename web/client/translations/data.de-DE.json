@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "Die ID des Features lautet <span style='white-space:nowrap'>${ properties.daten }</span> oder <span style='white-space:nowrap'>${ properties['daten-wert'] }</span>",
             "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
             "templatePreview": "Vorschau template",
+            "heightOffset": "Höhenversatz (m)",
             "visibilityLimits": {
                 "title": "Sichtbarkeitsgrenzen",
                 "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",
