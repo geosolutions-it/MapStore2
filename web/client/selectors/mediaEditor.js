@@ -8,7 +8,7 @@
 
 import { get, find } from "lodash";
 import { createSelector } from "reselect";
-import { splitMapAndLayers, extractTileMatrixFromSources } from '../utils/LayersUtils';
+import { extractTileMatrixFromSources } from '../utils/LayersUtils';
 
 /**
  * Selects the open/closed state of the mediaEditor
