@@ -31,6 +31,8 @@ export const geoColderSelector = state => state.search && state.search;
 
 export const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
 export const additionalLayersSelector = state => get(state, "additionallayers", []);
+export const getAdditionalLayerFromId = (state, id) => head(additionalLayersSelector(state).filter(l => l.id === id))?.options;
+
 
 export const layerSelectorWithMarkers = createSelector(
     [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector,

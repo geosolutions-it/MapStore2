@@ -382,4 +382,30 @@ describe('Featuregrid toolbar component', () => {
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
     });
+    describe('snap tool button', () => {
+        it('visibility', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button")).toExist();
+            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button")).toNotExist();
+        });
+        it('active/inactive state', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button").className.split(' ')).toInclude('btn-success');
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button").className.split(' ')).toNotInclude('btn-success');
+        });
+        it('handler', () => {
+            const events = {
+                toggleSnapping: () => { }
+            };
+            const spy = spyOn(events, "toggleSnapping");
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("snap-button").click();
+            expect(spy.calls[0].arguments[0]).toBe(false);
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("snap-button").click();
+            expect(spy.calls[1].arguments[0]).toBe(true);
+        });
+    });
 });
