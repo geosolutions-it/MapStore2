@@ -21,7 +21,9 @@ import {
     CHANGE_MAP_LIMITS,
     SET_MAP_RESOLUTIONS,
     REGISTER_EVENT_LISTENER,
-    UNREGISTER_EVENT_LISTENER
+    UNREGISTER_EVENT_LISTENER,
+    ORIENTATION,
+    UPDATE_MAP_VIEW
 } from '../actions/map';
 
 import assign from 'object-assign';
@@ -32,6 +34,15 @@ function mapConfig(state = {eventListeners: {}}, action) {
     switch (action.type) {
     case CHANGE_MAP_VIEW:
         const {type, ...params} = action;
+        if (params?.viewerOptions) {
+            const heading = CoordinatesUtils.setValueBoundaries(params.viewerOptions.orientation.heading, CoordinatesUtils.convertDegreesToRadian(0), CoordinatesUtils.convertDegreesToRadian(360));
+            const pitch = CoordinatesUtils.setValueBoundaries(params.viewerOptions.orientation.pitch, CoordinatesUtils.convertDegreesToRadian(-90), CoordinatesUtils.convertDegreesToRadian(90));
+            const roll = CoordinatesUtils.setValueBoundaries(params.viewerOptions.orientation.roll, CoordinatesUtils.convertDegreesToRadian(-90), CoordinatesUtils.convertDegreesToRadian(90));
+            params.viewerOptions.orientation.heading = heading;
+            params.viewerOptions.orientation.pitch = pitch;
+            params.viewerOptions.orientation.roll = roll;
+        }
+        params.zoom = isNaN(params.zoom) ? 1 : params.zoom;
         return assign({}, state, params);
     case CHANGE_MOUSE_POINTER:
         return assign({}, state, {
@@ -137,6 +148,35 @@ function mapConfig(state = {eventListeners: {}}, action) {
         }
         return data;
     }
+    case ORIENTATION: {
+        if (action && action.orientation && (action.orientation.center || action.orientation.marker)) {
+            const center = action?.orientation?.center?.split(',') || action?.orientation?.marker?.split(',');
+            const x = center && center[0];
+            const y = center && center[1];
+            const z = action.orientation.zoom;
+            const heading = action.orientation.heading;
+            const pitch = action.orientation.pitch;
+            const roll = action.orientation.roll;
+            return assign({}, state, {orientate: {x, y, z, heading, pitch, roll}});
+        }
+        return null;
+    }
+    case UPDATE_MAP_VIEW:
+        const heading = parseFloat(action?.data?.heading);
+        const pitch = parseFloat(action?.data?.pitch);
+        const roll = parseFloat(action?.data?.roll);
+        const zoom = parseFloat(action?.data?.zoom);
+        const x = parseFloat(action?.data?.coordinate[0]);
+        const y = parseFloat(action?.data?.coordinate[1]);
+        return {
+            zoom,
+            center: {x, y},
+            viewerOptions: {
+                orientation: {
+                    heading, pitch, roll
+                }
+            }
+        };
     default:
         return state;
     }

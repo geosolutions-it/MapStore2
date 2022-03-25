@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "id della feature è <span style='white-space:nowrap'>${ properties.id }</span> o <span style='white-space:nowrap'>${ properties['dato-valore'] }</span>",
             "templateError": "Si è verificato un errore durante l'applicazione del template alle informazioni restituite dal server, controllare il template.",
             "templatePreview": "Anteprima template",
+            "heightOffset": "Spostamento in altezza (m)",
             "visibilityLimits": {
                 "title": "Limiti di visibilità",
                 "serverValuesUpdateUndefined": "Il server non ha fornito limiti di visibilità di scala per questo livello",
@@ -1292,8 +1293,14 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
             "zoomToolTip": "Min: 1 e Max: 35",
+            "headingToolTip": "Min: 0° e Max: 360°",
+            "rollToolTip": "Min: -90° e Max: 90°",
+            "pitchToolTip": "Min: -90° e Max: 90°",
             "showSectionId": "Includi posizione di scorrimento",
             "showConnections": "Mostra connessioni",
+            "heading": "Angolo di rotta",
+            "roll": "Angolo di rollio",
+            "pitch": "Angolo di inclinazione",
             "sizeOptions": {
                 "width": "larghezza",
                 "height": "altezza"
@@ -1812,11 +1819,19 @@
                         "customLabels": "Etichette personalizzate",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Attributo Y:</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per':</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per:'</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>attributo 'Raggruppa per'.</b></dt><dd>POPULATION</dd><dt><b>attributo Y:</b></dt><dd>LAND_KM</dd><dt><b>Valore massimo della Classe:</b></dt><dd>0</dd><dt><b>Valore minimo della Classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Risultato:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Example</h5><dl><dt><b>Attributo:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        
                         "defaultClassLabel": "Etichetta della Classe di Default",
                         "defaultColorRamp": "Rampa di Colori di Default",
                         "defaultColor": "Colore di Default",
                         "defaultCustomLabel": "Etichetta di Default",
                         "editCustomColors": "Modifica Colori Personalizzati",
+                        "maxValue": "Valore Massimo",
+                        "minValue": "Valore Minimo",
                         "title": "Impostazioni dei Colori Personalizzati"
                     }
                 },

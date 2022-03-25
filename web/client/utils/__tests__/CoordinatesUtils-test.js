@@ -39,7 +39,7 @@ import {
     getProjections,
     getExtentForProjection,
     checkIfLayerFitsExtentForProjection,
-    getLonLatFromPoint
+    getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian
 } from '../CoordinatesUtils';
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
 import Proj4js from 'proj4';
@@ -50,6 +50,9 @@ describe('CoordinatesUtils', () => {
 
         setTimeout(done);
     });
+    const valueIsApproximatelyEqual = (value, comparisonValue, epsilon = 0.1) => {
+        return (Math.abs(value - comparisonValue) < epsilon);
+    };
     it('convert lat lon to mercator without specifying source and dest', () => {
         const point = [45, 13];
         const transformed = reproject(point, "", "");
@@ -937,5 +940,25 @@ describe('CoordinatesUtils', () => {
         [lon, lat] = getLonLatFromPoint({latlng: {lat: 40, lng: 280}});
         expect(lat).toBe(40);
         expect(lon).toBe(-80);
+    });
+    it('test convertRadianToDegrees is within an acceptable range', ()=> {
+        const deg = convertRadianToDegrees(100);
+        const val = valueIsApproximatelyEqual(deg, 5729.58);
+        expect(val).toBe(true);
+    });
+    it('test convertDegreesToRadian is within an acceptable range', ()=> {
+        const rad = convertDegreesToRadian(5729.6);
+        const val = valueIsApproximatelyEqual(rad, 100);
+        expect(val).toBe(true);
+    });
+    it('test convertRadianToDegrees converts stringed radian to number', ()=> {
+        const deg = convertRadianToDegrees('100');
+        const val = valueIsApproximatelyEqual(deg, 5729.58);
+        expect(val).toBe(true);
+    });
+    it('test convertDegreesToRadian converts stringed degree to number', ()=> {
+        const rad = convertDegreesToRadian('5729.6');
+        const val = valueIsApproximatelyEqual(rad, 100);
+        expect(val).toBe(true);
     });
 });

@@ -208,6 +208,8 @@
                 "cfg": {
                     "showFullscreen": true,
                     "position": "bottom",
+                    "disableInfoAlert": true,
+                    "disableCoordinatesRow": true,
                     "size": 0.5,
                     "fluid": true,
                     "viewerOptions": {
@@ -639,7 +641,7 @@
               "fluid": true
             }
           }
-          , "MailingLists", "Footer", {
+          , "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",

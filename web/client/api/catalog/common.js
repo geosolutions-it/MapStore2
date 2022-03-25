@@ -43,7 +43,7 @@ export const validate = (service) => {
  * @param {Object} API the API of the catalog services
  * @returns function that takes the service and returns a stream. The stream emit the service again or throw an exception.
  */
-export const testService = ({parseUrl}) => service => {
+export const testService = ({ parseUrl = serviceUrl => serviceUrl }) => service => {
     const serviceError = "catalog.notification.errorServiceUrl";
 
     return Rx.Observable.defer(

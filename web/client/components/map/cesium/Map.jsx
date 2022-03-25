@@ -8,7 +8,7 @@
 import * as Cesium from 'cesium';
 // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
 // see https://github.com/CesiumGS/cesium/issues/9212
-import '../../../../../node_modules/cesium/Build/Cesium/Widgets/widgets.css';
+import 'cesium/index.css';
 
 import '@znemz/cesium-navigation/dist/index.css';
 import viewerCesiumNavigationMixin from '@znemz/cesium-navigation';
@@ -28,7 +28,7 @@ import {
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import assign from 'object-assign';
-import { throttle } from 'lodash';
+import { throttle, isEqual } from 'lodash';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -50,6 +50,7 @@ class CesiumMap extends React.Component {
         registerHooks: PropTypes.bool,
         hookRegister: PropTypes.object,
         viewerOptions: PropTypes.object,
+        orientate: PropTypes.object,
         zoomControl: PropTypes.bool
     };
 
@@ -122,8 +123,8 @@ class CesiumMap extends React.Component {
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
         this.subscribeClickEvent(map);
-        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
+        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
                 this.props.center.x,
@@ -135,6 +136,16 @@ class CesiumMap extends React.Component {
         this.setMousePointer(this.props.mousePointer);
 
         this.map = map;
+        const scene = this.map.scene;
+
+        // configure the sky environment
+        scene.skyAtmosphere.show = this.props.mapOptions?.showSkyAtmosphere ?? true;
+        scene.fog.enabled = this.props.mapOptions?.enableFog ?? false;
+        scene.globe.showGroundAtmosphere = this.props.mapOptions?.showGroundAtmosphere ?? false;
+
+        // this is needed to display correctly intersection between terrain and primitives
+        scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? true;
+
         this.forceUpdate();
         if (this.props.mapOptions.navigationTools) {
             this.cesiumNavigation = window.CesiumNavigation;
@@ -154,6 +165,24 @@ class CesiumMap extends React.Component {
         return false;
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props?.orientate && prevProps && (!isEqual(this.props.orientate, prevProps?.orientate))) {
+            const position = {
+                destination: Cesium.Cartesian3.fromDegrees(
+                    parseFloat(this.props.orientate.x),
+                    parseFloat(this.props.orientate.y),
+                    this.getHeightFromZoom(parseFloat(this.props.orientate.z))
+                ),
+                orientation: {
+                    heading: parseFloat(this.props.orientate.heading),
+                    pitch: parseFloat(this.props.orientate.pitch),
+                    roll: parseFloat(this.props.orientate.roll)
+                }
+            };
+            this.setView(position);
+        }
+    }
+
     componentWillUnmount() {
         this.clickStream$.complete();
         this.pauserStream$.complete();
@@ -167,6 +196,7 @@ class CesiumMap extends React.Component {
     onClick = (map, movement) => {
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
+            const intersectedFeatures = this.getIntersectedFeatures(map, movement.position);
             let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
@@ -185,7 +215,8 @@ class CesiumMap extends React.Component {
                         lat: latitude,
                         lng: longitude
                     },
-                    crs: "EPSG:4326"
+                    crs: "EPSG:4326",
+                    intersectedFeatures
                 });
             }
         }
@@ -247,6 +278,30 @@ class CesiumMap extends React.Component {
     getHeightFromZoom = (zoom) => {
         return this.props.zoomToHeight / Math.pow(2, zoom - 1);
     };
+
+    getIntersectedFeatures = (map, position) => {
+        const features = map.scene.drillPick(position);
+        if (features) {
+            const groupIntersectedFeatures = features.reduce((acc, feature) => {
+                if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
+                    const msId = feature.tileset.msId;
+                    // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
+                    // it has content but refers to the whole tile model
+                    const propertyNames = feature.getPropertyNames();
+                    const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
+                    return {
+                        ...acc,
+                        [msId]: acc[msId]
+                            ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
+                            : [{ type: 'Feature', properties, geometry: null }]
+                    };
+                }
+                return acc;
+            }, []);
+            return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+        }
+        return [];
+    }
 
     render() {
         const map = this.map;

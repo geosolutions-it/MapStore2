@@ -25,9 +25,9 @@ import {
     Tooltip
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join, isNil, isEqual, inRange, isEmpty } from 'lodash';
+import { join, isNil, isEqual, inRange, isEmpty, pick, omit } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
-import { getLonLatFromPoint } from '../../utils/CoordinatesUtils';
+import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian, setValueBoundaries } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
@@ -93,7 +93,10 @@ class SharePanel extends React.Component {
         point: PropTypes.object,
         isScrollPosition: PropTypes.bool,
         hideMarker: PropTypes.func,
-        addMarker: PropTypes.func
+        addMarker: PropTypes.func,
+        viewerOptions: PropTypes.object,
+        mapType: PropTypes.string,
+        updateMapView: PropTypes.func
     };
 
     static defaultProps = {
@@ -112,7 +115,8 @@ class SharePanel extends React.Component {
         formatCoords: "decimal",
         isScrollPosition: false,
         hideMarker: () => {},
-        addMarker: () => {}
+        addMarker: () => {},
+        updateMapView: () => {}
     };
 
     static contextTypes = {
@@ -132,7 +136,10 @@ class SharePanel extends React.Component {
             bbox,
             eventKey: SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
-            coordinate
+            coordinate,
+            heading: this.props.viewerOptions?.orientation?.heading,
+            pitch: this.props.viewerOptions?.orientation?.pitch,
+            roll: this.props.viewerOptions?.orientation?.roll
         });
     }
 
@@ -141,8 +148,16 @@ class SharePanel extends React.Component {
             !isEqual(this.props.point, newProps.point) ||
             !isEqual(this.props.center, newProps.center) ||
             !isEqual(this.props.bbox, newProps.bbox) ||
-            !isEqual(this.props.isVisible, newProps.isVisible)) {
+            !isEqual(this.props.isVisible, newProps.isVisible) ||
+            !isEqual(this.props?.viewerOptions?.orientation, newProps.viewerOptions?.orientation)) {
             this.initializeDefaults(newProps);
+        }
+        if (this.props?.viewerOptions?.orientation) {
+            this.setState({
+                heading: convertRadianToDegrees(newProps.viewerOptions?.orientation?.heading),
+                pitch: convertRadianToDegrees(newProps.viewerOptions?.orientation?.pitch),
+                roll: convertRadianToDegrees(newProps.viewerOptions?.orientation?.roll)
+            });
         }
     }
 
@@ -153,11 +168,17 @@ class SharePanel extends React.Component {
             let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
             settings.markerEnabled ? addMarker(newPoint) : hideMarker();
         }
+        if (this.props.mapType === 'cesium' && this.props.settings.markerEnabled) {
+            this.props.onUpdateSettings({
+                ...this.props.settings,
+                markerEnabled: !this.props.settings.markerEnabled
+            });
+        }
     }
 
     initializeDefaults = (props) => {
         const coordinate = this.getCoordinates(props);
-        const {settings = {}, advancedSettings = {}, zoom, isVisible, onUpdateSettings, bbox: newBbox = []} = props || {};
+        const {settings = {}, advancedSettings = {}, zoom, isVisible, onUpdateSettings, bbox: newBbox = [], viewerOptions} = props || {};
         const isCenterAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === CENTERANDZOOM || false;
         const isMarkerAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === MARKERANDZOOM || false;
         const enableDefaultBBox = advancedSettings.bbox && advancedSettings.defaultEnabled === BBOX || false;
@@ -177,17 +198,23 @@ class SharePanel extends React.Component {
             coordinate,
             defaultLoaded: isVisible,
             isCenterAndZoomDefault,
-            isMarkerAndZoomDefault
+            isMarkerAndZoomDefault,
+            heading: convertRadianToDegrees(viewerOptions?.orientation?.heading),
+            pitch: convertRadianToDegrees(viewerOptions?.orientation?.pitch),
+            roll: convertRadianToDegrees(viewerOptions?.orientation?.roll)
         });
     }
 
     getShareUrl = () => {
-        const { settings, advancedSettings } = this.props;
+        const { settings, advancedSettings, mapType, viewerOptions } = this.props;
         const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
         let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
+            if (mapType === 'cesium' && viewerOptions && viewerOptions.orientation) {
+                return `${shareUrl}?center=${this.state.coordinate}&zoom=${this.state.zoom}&heading=${convertDegreesToRadian(this.state.heading)}&pitch=${convertDegreesToRadian(this.state.pitch)}&roll=${convertDegreesToRadian(this.state.roll)}`;
+            }
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
         }
         return shareUrl;
@@ -262,13 +289,32 @@ class SharePanel extends React.Component {
         return markerSetting;
     }
 
+    updateMapView = (viewType, value) => {
+        let update = {...this.state};
+        const coordinate = update.coordinate;
+        update = pick(update, ['zoom', 'heading', 'pitch', 'roll']);
+        let updateMapProperties = {...omit(update, viewType)};
+        Object.keys(updateMapProperties).forEach(key => {
+            if (key !== 'zoom') {
+                updateMapProperties[key] = convertDegreesToRadian(this.state[key]);
+            }
+        });
+        if (viewType === 'zoom') {
+            updateMapProperties[viewType] = value;
+        } else {
+            updateMapProperties[viewType] = convertDegreesToRadian(value);
+        }
+        updateMapProperties.coordinate = coordinate;
+        this.props.updateMapView(updateMapProperties);
+    }
+
     renderAdvancedSettings = () => {
         return (
             <SwitchPanel
                 title={<Message msgId="share.advancedOptions"/>}
                 expanded={this.state.showAdvanced}
                 onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
-                {this.props.advancedSettings.bbox && <Checkbox
+                {this.props.advancedSettings.bbox && this.props.mapType !== 'cesium' && <Checkbox
                     checked={this.props.settings.bboxEnabled}
                     onChange={() =>
                         this.props.onUpdateSettings({
@@ -348,19 +394,99 @@ class SharePanel extends React.Component {
                             onChange={({target})=>{
                                 const zoom = inRange(parseInt(target.value, 10), 1, 36) ? target.value : 1;
                                 this.setState({...this.state, zoom});
+                                this.updateMapView('zoom', zoom);
                             }}/>
                     </FormGroup>
-                    <Checkbox
-                        checked={this.props.settings && this.props.settings.markerEnabled}
-                        onChange={() => {
-                            this.props.onUpdateSettings({
-                                ...this.props.settings,
-                                markerEnabled: !this.props.settings.markerEnabled
-                            });
-                        }
-                        }>
-                        <Message msgId="share.marker" />
-                    </Checkbox>
+                    {
+                        this.props.mapType && this.props.mapType === 'cesium' && (
+                            <React.Fragment>
+                                <FormGroup>
+                                    <ControlLabel><Message msgId="share.heading" /></ControlLabel>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-heading"><Message msgId="share.headingToolTip"/></Tooltip>}>
+                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                                    </OverlayTrigger>
+                                    <FormControl
+                                        type="number"
+                                        name="heading"
+                                        min={0}
+                                        max={360}
+                                        value={
+                                            this.state?.heading
+                                        }
+                                        onChange={({target})=>{
+                                            this.setState({
+                                                heading: target.value
+                                            });
+                                        }}
+                                        onBlur={()=> {
+                                            const angle = setValueBoundaries(this.state.heading, 0, 360);
+                                            this.updateMapView('heading', angle);
+                                        }}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel><Message msgId="share.roll" /></ControlLabel>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-roll"><Message msgId="share.rollToolTip"/></Tooltip>}>
+                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                                    </OverlayTrigger>
+                                    <FormControl
+                                        type="number"
+                                        name="roll"
+                                        min={-90}
+                                        max={90}
+                                        value={
+                                            this.state?.roll
+                                        }
+                                        onChange={({target})=>{
+                                            this.setState({
+                                                roll: target.value
+                                            });
+                                        }}
+                                        onBlur={()=> {
+                                            const angle = setValueBoundaries(this.state.roll, -90, 90);
+                                            this.updateMapView('roll', angle);
+                                        }}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel><Message msgId="share.pitch" /></ControlLabel>
+                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-pitch"><Message msgId="share.pitchToolTip"/></Tooltip>}>
+                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                                    </OverlayTrigger>
+                                    <FormControl
+                                        type="number"
+                                        min={-90}
+                                        max={90}
+                                        name="pitch"
+                                        value={
+                                            this.state?.pitch
+                                        }
+                                        onChange={({target})=>{
+                                            this.setState({
+                                                pitch: target.value
+                                            });
+                                        }}
+                                        onBlur={()=> {
+                                            const angle = setValueBoundaries(this.state.pitch, -90, 90);
+                                            this.updateMapView('pitch', angle);
+                                        }}
+                                    />
+                                </FormGroup>
+                            </React.Fragment>)
+                    }
+                    {
+                        this.props.mapType !== 'cesium' && ( <Checkbox
+                            checked={this.props.settings && this.props.settings.markerEnabled}
+                            onChange={() => {
+                                this.props.onUpdateSettings({
+                                    ...this.props.settings,
+                                    markerEnabled: !this.props.settings.markerEnabled
+                                });
+                            }
+                            }>
+                            <Message msgId="share.marker" />
+                        </Checkbox>)
+                    }
                 </div>
                 }
             </SwitchPanel>

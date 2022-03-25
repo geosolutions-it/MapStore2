@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est <span style='white-space:nowrap'>${ properties.ID }</span> ou <span style='white-space:nowrap'>${ properties['données-valeur'] }</span>",
             "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
+            "heightOffset": "Décalage en hauteur (m)",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
                 "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
@@ -1290,11 +1291,17 @@
             "coordinate": "Coordonner",
             "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées",
             "zoomToolTip": "Min: 1 et Max: 35",
+            "headingToolTip": "Min: 0° et Max: 360°",
+            "rollToolTip": "Min: -90° et Max: 90°",
+            "pitchToolTip": "Min: -90° et Max: 90°",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
             "showSectionId": "Inclure la position de défilement",
             "showConnections": "Afficher les connexions",
+            "heading": "Angle de cap",
+            "roll": "Angle de roulis",
+            "pitch": "Angle d'inclinaison",
             "sizeOptions": {
                 "width": "largeur",
                 "height": "la taille"
@@ -1813,11 +1820,17 @@
                         "customLabels": "Étiquettes personnalisées",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p></p><h5>Exemple</h5><dl><dt><b>Attribut Y:</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>Attribut 'Grouper par':</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>Attribut 'Grouper par':</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p><code>${minValue}</code>peut être utilisé comme espace réservé pour la valeur minimale de la classe.</p><p><code>${maxValue}</code> peut être utilisé comme espace réservé pour la valeur maximale de la classe.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>attribut 'Grouper par'.</b></dt><dd>POPULATION</dd><dt><b>attribut Y:</b></dt><dd>LAND_KM</dd><dt><b>Valeur maximale de la classe:</b></dt><dd>0</dd><dt><b>Valeur minimale de la classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Résultat:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p></p><h5>Exemple</h5><dl><dt><b>Y Attribut:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>peut être utilisé comme espace réservé pour la valeur minimale de la classe.</p><p><code>${maxValue}</code> peut être utilisé comme espace réservé pour la valeur maximale de la classe.</p><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Example</h5><dl><dt><b>Attribut:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "defaultClassLabel": "Étiquette de Classe par Défaut",
                         "defaultColorRamp": "Rampe de Couleur par Défaut",
                         "defaultColor": "Couleur par Défaut",
                         "defaultCustomLabel": "Étiquette par défaut",
                         "editCustomColors": "Modifie Couleurs Personnalisées",
+                        "maxValue": "Valeur maximum",
+                        "minValue": "Valeur minimum",
                         "title": "Paramètres de Couleurs Personnalisées"
                     }
                 },

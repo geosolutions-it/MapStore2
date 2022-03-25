@@ -103,6 +103,7 @@
             "templateFormatInfoAlert2": "Použi ${ attribute } pre zoskupenie vlastností, ktoré potrebuješ na zobrazenie",
             "templateFormatInfoAlertExample": "ID tejto funkcie je ${ properties }",
             "templatePreview": "Náhľad šablóny",
+            "heightOffset": "Height offset (m)",
             "visibilityLimits": {
                 "title": "Limity viditeľnosti",
                 "serverValuesUpdateUndefined": "Server pre túto vrstvu neposkytol obmedzenia mierky viditeľnosti",
@@ -1288,6 +1289,9 @@
             "coordinate": "Súradnice",
             "coordTooltip": "Klikni na mapu pre získanie súradníc",
             "zoomToolTip": "Minimálna hodnota: 1 and Maximálna hodnota: 35",
+            "headingToolTip": "Minimálna hodnota: 0° e Maximálna hodnota: 360°",
+            "rollToolTip": "Minimálna hodnota: -90° e Maximálna hodnota: 90°",
+            "pitchToolTip": "Minimálna hodnota: -90° e Maximálna hodnota: 90°",
             "wrongCenterAndZoomParamTitle": "Neplatný parameter pre stred a priblíženie",
             "wrongCenterAndZoomParamMessage": "Parametre pre stred a priblíženie musí byť vo formáte center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "wrongMarkerAndZoomParamTitle": "Neplatný parameter pre značku a priblíženie",
@@ -1298,7 +1302,10 @@
             "wrongBboxParamMessage": "Parametre pre bounding box musia byť v súradnicovom systéme EPSG:4326 a vo formáte bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Odkaz na domovskú stránku MapStore",
             "showSectionId": "Include scroll position",
-            "showConnections": "Zobraziť pripojenia"
+            "showConnections": "Zobraziť pripojenia",
+            "heading": "Uhol smerovania",
+            "roll": "Uhol natočenia",
+            "pitch": "Uhol sklonu"
         },
         "snapshot": {
             "title": "Ukážka snímky",

@@ -123,10 +123,11 @@ const addCapabilitiesToRecords = (url, result) => {
             };
         });
 };
+
 /**
  * API for local config
  */
-var Api = {
+const Api = {
     parseUrl,
     getRecordById: function(catalogURL) {
         return new Promise((resolve) => {
@@ -286,8 +287,11 @@ var Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
+                                            const URIs = dc.references.length > 0 ? dc.references : dc.URI;
                                             if (!_dcRef) {
-                                                _dcRef = dc.references;
+                                                _dcRef = URIs;
+                                            } else {
+                                                _dcRef = _dcRef.concat(URIs);
                                             }
                                             obj.dc = dc;
                                         }
@@ -295,9 +299,9 @@ var Api = {
                                     }
                                 }
                                 result.records = records;
-                                const {value: _url} = _dcRef?.find(t=> t.scheme === 'OGC:WMS') || {}; // Get WMS URL from references
+                                const { value: _url } = _dcRef?.find(t => t.scheme === 'OGC:WMS' || t.protocol === 'OGC:WMS') || {}; // Get WMS URL from references
                                 const [parsedUrl] = _url && _url.split('?') || [];
-                                return addCapabilitiesToRecords(parsedUrl, result);
+                                return parsedUrl ? addCapabilitiesToRecords(parsedUrl, result) : {...result};
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
                                 return {
                                     error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'

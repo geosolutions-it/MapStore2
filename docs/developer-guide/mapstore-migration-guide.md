@@ -20,6 +20,76 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2022.01.00 to 2022.02.00
+
+### Upgrading the printing engine
+The mapfish-print based printing engine has been upgraded to align to the latest official 2.1.5 in term of functionalities.
+
+An update to the MapStore printing engine context file (`applicationContext-print.xml`) is needed for all projects built with the printing profile enabled. The following sections should be added to the file:
+
+```diff
+<bean id="configFactory" class="org.mapfish.print.config.ConfigFactory"></bean>
++<bean id="threadResources" class="org.mapfish.print.ThreadResources">
++    <property name="connectionTimeout" value="30000"/>
++    <property name="socketTimeout" value="30000" />
++    <property name="globalParallelFetches" value="200"/>
++    <property name="perHostParallelFetches" value="30" />
++</bean>
+
+<bean id="pdfOutputFactory" class="org.mapfish.print.output.PdfOutputFactory"/>
++
++<bean id="metricRegistry" class="com.codahale.metrics.MetricRegistry" lazy-init="false"/>
++<bean id="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry" lazy-init="false"/>
++<bean id="loggingMetricsConfigurator" class="org.mapfish.print.metrics.LoggingMetricsConfigurator"  lazy-init="false"/>
++<bean id="jvmMetricsConfigurator" class="org.mapfish.print.metrics.JvmMetricsConfigurator" lazy-init="false"/>
++<bean id="jmlMetricsReporter" class="org.mapfish.print.metrics.JmxMetricsReporter" lazy-init="false"/>
+```
+
+Also, remember to update your project pom.xml with the updated dependency:
+
+ - locate the print-lib dependency in the pom.xml file
+ - replace the dependency with the following snippet 
+
+```xml
+<dependency>
+    <groupId>org.mapfish.print</groupId>
+    <artifactId>print-lib</artifactId>
+    <version>geosolutions-2.1-SNAPSHOT</version>
+    <exclusions>
+        <exclusion>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+Finally, to enable printing in different formats than PDF, you should add the following to your `config.yml` file (at the top level):
+
+```yml
+formats:
+  - '*'
+```
 
 ## Migration from 2021.02.00 to 2022.01.00
 
@@ -136,7 +206,7 @@ Downstream project should update following configurations:
 -            </resource>
 -        </resources>
 -    </configuration>
--</execution> 
+-</execution>
 ```
 
 - remove all the external script and css related to cesium and cesium-navigation now included as packages
@@ -453,7 +523,7 @@ Here the changes in `pom.xml` and `web/pom.xml to update:
     <groupId>proxy</groupId>
     <artifactId>http_proxy</artifactId>
 -      <version>1.1.0</version>
-+      <version>1.2-SNAPSHOT</version>
++      <version>1.1-SNAPSHOT</version>
     <type>war</type>
     <scope>runtime</scope>
     </dependency>

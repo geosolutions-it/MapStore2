@@ -953,7 +953,13 @@ const createBilTerrainProvider = function(Cesium) {
 							var limitations={highest:resultat.highest,lowest:resultat.lowest,offset:resultat.offset};
                             var proxy = resultat.proxy || { getURL: v => v } ;
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
-                            var promise = Cesium.throttleRequestByServer(proxy.getURL(url),Cesium.loadImage);
+                            var promise = Cesium.Resource.fetchImage({
+								url: proxy.getURL(url),
+								request: new Cesium.Request({
+									throttleByServer: true
+								})
+							});
+							
 							if (Cesium.defined(promise)) {
 								retour = Cesium.when(promise,function(image){
 											return GeoserverTerrainProvider.imageToHeightmapTerrainData(image,limitations,
@@ -984,7 +990,13 @@ const createBilTerrainProvider = function(Cesium) {
 							var limitations={highest:resultat.highest,lowest:resultat.lowest,offset:resultat.offset};
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
                             var proxy = resultat.proxy || { getURL: v => v };
-                            var promise = Cesium.throttleRequestByServer(proxy.getURL(urlArray),Cesium.loadArrayBuffer);
+							
+                            var promise = Cesium.Resource.fetchArrayBuffer({
+								url: proxy.getURL(urlArray),
+								request: new Cesium.Request({
+									throttleByServer: true
+								})
+							});
 					        if (Cesium.defined(promise)) {
 								retour = Cesium.when(promise,
 													function(arrayBuffer) {

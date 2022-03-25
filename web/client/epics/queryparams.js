@@ -8,10 +8,10 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange} from 'lodash';
+import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
 import url from 'url';
 
-import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView} from '../actions/map';
+import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap} from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '../actions/search';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
@@ -59,10 +59,11 @@ const paramActions = {
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
+        const viewerOptions = map.viewerOptions;
         const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
 
         if (isValid) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection)];
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
         }
         return [
             warning({
@@ -121,7 +122,6 @@ const paramActions = {
 export const readQueryParamsOnMapEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(() =>
-            // action$.ofType(CHANGE_MAP_VIEW)
             action$.ofType(LAYER_LOAD)
                 .take(1)
                 .switchMap(() => {
@@ -194,8 +194,29 @@ export const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
             );
         });
 
+export const checkMapOrientation = (action$, store) =>
+    action$.ofType(CHANGE_MAP_VIEW).
+        switchMap(() => {
+            const state = store.getState();
+            const mapType = get(state, 'maptype.mapType') || '';
+            if (mapType === 'cesium') {
+                const search = get(state, 'router.location.search') || '';
+                const {query = {}} = url.parse(search, true) || {};
+                if (!search.includes('bbox')) {
+                    if (!isEmpty(query)) {
+                        const requiredKeys = ['center', 'zoom', 'heading', 'pitch', 'roll'];
+                        if (every(requiredKeys, partial(has, query))) {
+                            return  Rx.Observable.of(orientateMap(query));
+                        }
+                    }
+                }
+            }
+            return Rx.Observable.empty();
+        });
+
 export default {
     readQueryParamsOnMapEpic,
     onMapClickForShareEpic,
-    disableGFIForShareEpic
+    disableGFIForShareEpic,
+    checkMapOrientation
 };

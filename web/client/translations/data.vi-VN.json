@@ -697,6 +697,7 @@
             "textFormatTitle": "VĂN BẢN",
             "title": "Tiêu đề",
             "titleTranslations": "Bản dịch tiêu đề",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "both": "Tiêu đề và mô tả",
                 "bottom": "Dưới cùng",
@@ -1313,7 +1314,15 @@
             "title": "Chia sẻ",
             "titlePanel": "Chia sẻ bản đồ",
             "wrongBboxParamMessage": "thông số bbox phải ở trong EPSG: 4326 và được viết dưới dạng bbox = minx, miny, maxx, maxy",
-            "wrongBboxParamTitle": "Thông số bbox không hợp lệ"
+            "wrongBboxParamTitle": "Thông số bbox không hợp lệ",
+            "heading": "Góc tiêu đề",
+            "zoom": "Phóng",
+            "roll": "Góc cuộn",
+            "pitch": "Góc sân",
+            "zoomToolTip": "Tối thiểu: 0 và Tối đa: 35",
+            "headingToolTip": "Tối thiểu: 0° và Tối: 360°",
+            "rollToolTip": "Tối thiểu: -90° và Tối: 90°",
+            "pitchToolTip": "Tối thiểu: -90° và Tối: 90°"
         },
         "showEmptyMessageGFI": "Hiển thị thông báo kết quả trống trong bảng GetFeatureInfo",
         "showMore": "Hiển thị nhiều hơn...",

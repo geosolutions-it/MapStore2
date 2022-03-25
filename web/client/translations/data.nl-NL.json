@@ -104,6 +104,7 @@
             "templateFormatInfoAlert2": "Gebruik ${ attribute } om de eigenschappen die je wenst te tonen aan te duiden.",
             "templateFormatInfoAlertExample": "Het id van het object is ${ properties }",
             "templatePreview": "Sjabloon voorbeeld",
+            "heightOffset": "Height offset (m)",
 	    "visibilityLimits": {
                 "title": "Zichtbaarheidslimieten",
                 "serverValuesUpdateUndefined": "De server heeft geen limieten voor de zichtbaarheid van de schaal voor deze laag opgegeven",
@@ -1272,12 +1273,15 @@
             "msgToCopyUrl": "Klik om te kopiëren",
             "sharedTitle": "Bekijk mijn nieuwe kaart: ",
             "addCenterAndZoomParam": "Voeg centrum en zoom toe aan link voor delen",
-	    "addMarkerAndZoomParam": "Voeg plaatsmarkering toe en zoom in op link voor delen",
+	          "addMarkerAndZoomParam": "Voeg plaatsmarkering toe en zoom in op link voor delen",
             "zoom": "Zoom",
             "marker": "Voeg marker toe op geladen kaart",
             "coordinate": "Coordinaat",
             "coordTooltip": "Klik op de kaart om de coördinaten te pakken",
             "zoomToolTip": "Min: 1 en Max: 35",
+            "headingToolTip": "Min: 0° en Max: 360°",
+            "rollToolTip": "Min: -90° en Max: 90°",
+            "pitchToolTip": "Min: -90° en Max: 90°",
             "wrongCenterAndZoomParamTitle": "Ongeldige centrum- en zoomparameter",
             "wrongCenterAndZoomParamMessage": "Centrum en zoomparameters moeten centrum = lon, lat & zoom = waarde en (+ | - 90 ° lat, + | -180 ° lon, <= + 35 zoom) zijn",
             "wrongMarkerAndZoomParamTitle": "Ongeldige marker en zoomparameter",
@@ -1288,7 +1292,10 @@
             "wrongBboxParamMessage": "Bounding box params moeten in EPSG: 4326 staan en geschreven zijn als bbox = minx, miny, maxx, maxy",
             "showHomeButton": "Link naar MapStore-startpagina",
             "showSectionId": "Inclusief scroll-positie",
-	    "showConnections": "Show connections"
+	          "showConnections": "Show connections",
+            "heading": "Koershoek",
+            "roll": "Rolhoek",
+            "pitch": "Hellingshoek"
         },
         "snapshot": {
             "title": "momentopname-voorbeeld",

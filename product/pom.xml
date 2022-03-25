@@ -323,11 +323,23 @@
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>geosolutions-2.0-SNAPSHOT</version>
+            <version>geosolutions-2.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>

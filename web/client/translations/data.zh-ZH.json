@@ -92,6 +92,7 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -1021,7 +1022,15 @@
             "addBboxParam": "Add bbox param to sharing link",
             "wrongBboxParamTitle": "Invalid bbox param",
             "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
-            "showSectionId": "Include scroll position"
+            "showSectionId": "Include scroll position",
+            "zoom": "Fēizhàng",
+            "heading": "Hángxiàng jiǎo",
+            "roll": "Cè qīngjiǎo",
+            "pitch": "Fǔyǎng jiǎo",
+            "zoomToolTip": "Zuìxiǎo zhí:1 Hé zuìdà zhí:35",
+            "headingToolTip": "Zuìxiǎo zhí:0° Hé zuìdà zhí:360°",
+            "rollToolTip": "Zuìxiǎo zhí:-90° Hé zuìdà zhí:90°",
+            "pitchToolTip": "Zuìxiǎo zhí:-90° Hé zuìdà zhí:90°"
         },
         "snapshot": {
             "title": "Snapshot Preview",

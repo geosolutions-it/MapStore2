@@ -1089,6 +1089,33 @@ export const getLonLatFromPoint = (point) => {
     return [lngCorrected, latlng && latlng.lat];
 };
 
+/**
+ * Convert radian angle to degrees
+ * @param rad {number | String} a radian angle value
+ * @returns {number} the converted degree angle
+ */
+export const convertRadianToDegrees = (rad) => {
+    const value = parseFloat(rad);
+    return isNumber(value) && ((value * 180) / Math.PI);
+};
+
+/**
+ * Convert degree angle to radian
+ * @param deg {number | String} a degree angle
+ * @returns {number} the converted radian angle
+ */
+export const convertDegreesToRadian = (deg) => {
+    const value = parseFloat(deg);
+    return isNumber(value) && ((value * Math.PI) / 180);
+};
+
+export const setValueBoundaries = (value, min, max ) => {
+    if (isNaN(value) && value.length < 1) { return 0;}
+    if (value < min) { return min;}
+    if (value > max) { return max;}
+    return  parseFloat(value);
+};
+
 CoordinatesUtils = {
     setCrsLabels,
     getUnits,
@@ -1145,6 +1172,9 @@ CoordinatesUtils = {
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
     getLonLatFromPoint,
-    getExtentForProjection
+    getExtentForProjection,
+    convertRadianToDegrees,
+    convertDegreesToRadian,
+    setValueBoundaries
 };
 export default CoordinatesUtils;

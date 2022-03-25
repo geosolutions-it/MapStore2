@@ -104,6 +104,7 @@
             "styleWarning": "El editor de estilo de capa para el tipo de geometría '{geometryType}' no es compatible.",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
+            "heightOffset": "Desplazamiento de altura (m)",
             "visibilityLimits": {
                 "title": "Límites de visibilidad",
                 "serverValuesUpdateUndefined": "El servidor no proporcionó límites de visibilidad de escala para esta capa",
@@ -1292,8 +1293,14 @@
             "coordinate": "Coordinar",
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
+            "headingToolTip": "Min: 0° y Max: 360°",
+            "rollToolTip": "Min: -90° y Max: 90°",
+            "pitchToolTip": "Min: -90° y Max: 90°",
             "showSectionId": "Incluir posición de desplazamiento",
             "showConnections": "Mostrar conexiones",
+            "heading": "Ángulo de rumbo",
+            "roll": "Ángulo de inclinación",
+            "pitch": "Ángulo de paso",
             "sizeOptions": {
                 "width": "ancho",
                 "height": "altura"
@@ -1812,11 +1819,17 @@
                         "customLabels": "Etiquetas personalizadas",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p></p><h5>Ejemplo</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Etiqueta de clase:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> se puede utilizar como marcador de posición para el atributo 'Agrupar por'.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Ejemplo</h5><dl><dt><b>Atributo 'Agrupar por':</b></dt><dd>POPULATION</dd><dt><b>Etiqueta de clase:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> se puede utilizar como marcador de posición para el atributo 'Agrupar por'.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Ejemplo</h5><dl><dt><b>Atributo 'Agrupar por':</b></dt><dd>POPULATION</dd><dt><b>Clase:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> se puede utilizar como marcador de posición para el atributo 'Agrupar por'.</p><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p><code>${minValue}</code>se puede utilizar como marcador de posición para el valor de clase mínimo.</p><p><code>${maxValue}</code>se puede utilizar como marcador de posición para el valor máximo de la clase.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Ejemplo</h5><dl><dt><b>atributo 'Agrupar por'.</b></dt><dd>POPULATION</dd><dt><b>atributo Y:</b></dt><dd>LAND_KM</dd><dt><b>Valor máximo de clase:</b></dt><dd>0</dd><dt><b>Valor mínimo de clase:</b></dt><dd>10000</dd><dt><b>Clase:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Resultado:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p></p><h5>Ejemplo</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Clase:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>se puede utilizar como marcador de posición para el valor de clase mínimo.</p><p><code>${maxValue}</code>se puede utilizar como marcador de posición para el valor máximo de la clase.</p><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Example</h5><dl><dt><b>Atributo:</b></dt><dd>POPULATION</dd><dt><b>Clase:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "defaultClassLabel": "Etiqueta de Clase Predeterminada",
                         "defaultColorRamp": "Rampa de Color Predeterminada",
                         "defaultColor": "Color Predeterminado",
                         "defaultCustomLabel": "Etiqueta predeterminada",
                         "editCustomColors": "Editar Colores Personalizados",
+                        "maxValue": "Valor máximo",
+                        "minValue": "Valor mínimo",
                         "title": "Configuración de Colores Personalizados"
                     }
                 },
