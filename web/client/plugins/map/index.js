@@ -46,7 +46,6 @@ import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selecto
 import {
     snappingLayerSelector
 } from "../../selectors/draw";
-import {updateAdditionalLayer} from "../../actions/additionallayers";
 
 const Empty = () => { return <span/>; };
 
@@ -107,7 +106,6 @@ const pluginsCreator = (mapType, actions) => {
             onDrawingFeatures: drawingFeatures,
             onDrawStopped: drawStopped,
             setCurrentStyle: setCurrentStyle,
-            onUpdateSnappingLayer: updateAdditionalLayer,
             toggleSnappingIsLoading: toggleSnappingIsLoading
         })( components.DrawSupport || Empty);
 
