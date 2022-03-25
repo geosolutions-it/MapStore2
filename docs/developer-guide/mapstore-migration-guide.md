@@ -20,8 +20,7 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-
-## Migration from 2021.02.00 to 2022.01.00
+## Migration from 2021.02.02 to 2022.01.00
 
 This release includes several libraries upgrade on the backend side,
 in particular the following have been migrated to the latest available versions:
@@ -35,26 +34,24 @@ in particular the following have been migrated to the latest available versions:
 | JPA| 1.0        |2.1|
 | hibernate-generic-dao| 0.5.1        |1.3.0-SNAPSHOT|
 | h2| 1.3.168        |1.3.175|
-| servlet-api| 2.5        |3.1|
+| servlet-api| 2.5        |3.0.1|
 
-This requires also an upgrade of Tomcat to at least version 8.5.x
+This requires also the **upgrade of Tomcat to at least version 8.5.x**.
 
 ### Updating projects configuration
 
 Projects need the following to update to this MapStore release:
 
- - update dependencies (in web/pom.xml) copying those in MapStore2/java/web/pom.xml, in particular:
+- update dependencies (in `web/pom.xml`) copying those in `MapStore2/java/web/pom.xml`, in particular (where present):
 
 | Dependency      | Version| Notes |
 | ----------- | ----------- |---|
-| mapstore-services| 1.3-SNAPSHOT| Replaces mapstore-backend|
-| geostore-webapp| 1.8-SNAPSHOT| |
-| javax.servlet-api| 3.0.1        | Tomcat 8.5 required|
+| mapstore-services| 1.3.0 | Replaces mapstore-backend|
+| geostore-webapp| 1.8.0 | |
 
+- update packagingExcludes in `web/pom.xml` to this list:
 
- - update packagingExcludes in web/pom.xml to this list:
-
-```
+```text
 WEB-INF/lib/commons-codec-1.2.jar,
 WEB-INF/lib/commons-io-1.1.jar,
 WEB-INF/lib/commons-logging-1.0.4.jar,
@@ -64,8 +61,8 @@ WEB-INF/lib/slf4j-log4j12-1.5*.jar,
 WEB-INF/lib/spring-tx-5.2.15*.jar
 ```
 
- - upgrade Tomcat to 8.5 or greater
- - update your geostore-spring-security.xml file to add the following setting, needed to disable CSRF validation, that MapStore services do not implement yet:
+- upgrade **Tomcat to 8.5** or greater
+- update your `geostore-spring-security.xml` file to add the following setting, needed to disable CSRF validation, that MapStore services do not implement yet:
 
 ```xml
 <security:http ... >
@@ -75,7 +72,7 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 </security:http>
 ```
 
- - remove the spring log4j listener from web.xml
+- remove the spring log4j listener from `web.xml`
 
 ```xml
  <!-- spring context loader
@@ -84,7 +81,11 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
     </listener>-->
 ```
 
+- If one of the libraries updated is used in your project, you should align the version with the newer one to avoid jar duplications
+- Some old project may define versions of spring and/or jackson in maven properties. You can remove these definition, they should be automatically loaded at the correct version.
+
 ### Upgrading CesiumJS
+
 CesiumJS has been upgraded to version 1.90 (from 1.17) and included directly in the mapstore bundle as async import.
 
 Downstream project should update following configurations:
@@ -151,6 +152,7 @@ Downstream project should update following configurations:
 - This step is needed only for custom project with a specific `publicPath` different from the default one. In this case you may need to specify what folder deliver the  cesium build ( by default `dist/cesium`). To do that, you can add the  `cesiumBaseUrl` parameter in the webpack dev and prod configs to the correct location of the cesium static assets, widgets and workers folder.
 
 ## Migration from 2021.02.01 to 2021.02.02
+
 ### Style parsers dynamic import
 
 The style parser libraries introduced a dynamic import to reduce the initial bundle size. This change reflects to the `getStyleParser` function provided by the VectorStyleUtils module. If a downstream project of MapStore is using `getStyleParser` it should update it to this new version:
