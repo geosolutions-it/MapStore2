@@ -34,14 +34,6 @@ function mapConfig(state = {eventListeners: {}}, action) {
     switch (action.type) {
     case CHANGE_MAP_VIEW:
         const {type, ...params} = action;
-        if (params?.viewerOptions) {
-            const heading = CoordinatesUtils.setValueBoundaries(params.viewerOptions.orientation.heading, CoordinatesUtils.convertDegreesToRadian(0), CoordinatesUtils.convertDegreesToRadian(360));
-            const pitch = CoordinatesUtils.setValueBoundaries(params.viewerOptions.orientation.pitch, CoordinatesUtils.convertDegreesToRadian(-90), CoordinatesUtils.convertDegreesToRadian(90));
-            const roll = CoordinatesUtils.setValueBoundaries(params.viewerOptions.orientation.roll, CoordinatesUtils.convertDegreesToRadian(-90), CoordinatesUtils.convertDegreesToRadian(90));
-            params.viewerOptions.orientation.heading = heading;
-            params.viewerOptions.orientation.pitch = pitch;
-            params.viewerOptions.orientation.roll = roll;
-        }
         params.zoom = isNaN(params.zoom) ? 1 : params.zoom;
         return assign({}, state, params);
     case CHANGE_MOUSE_POINTER:
