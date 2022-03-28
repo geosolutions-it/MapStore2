@@ -1291,7 +1291,7 @@
             "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées",
             "zoomToolTip": "Min: 1 et Max: 35",
             "headingToolTip": "Min: 0° et Max: 360°",
-            "rollToolTip": "Min: -90° et Max: 90°",
+            "rollToolTip": "Min: 0° et Max: 360°",
             "pitchToolTip": "Min: -90° et Max: 90°",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
