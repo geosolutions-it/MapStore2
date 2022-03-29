@@ -24,7 +24,6 @@ describe('useFiles enhancer', () => {
         setTimeout(done);
     });
     it('useFiles rendering with map', (done) => {
-
         const actions = {
             loadMap: (conf, mapId, zoomToExtent ) => {
                 expect(conf).toExist();
@@ -53,6 +52,45 @@ describe('useFiles enhancer', () => {
         const EnhancedSink = useFiles(sink);
         ReactDOM.render(<EnhancedSink maps={[ {map: {zoom: 4, center: { x: 1, y: 1 }, bbox: { x: 1, y: 1 }, maxExtent: "TEST"}} ]}
             loadAnnotations={actions.loadAnnotations} setLayers={actions.setLayers} loadMap={actions.loadMap} onClose={actions.onClose} currentMap={{zoom: 4, center: { x: 1, y: 1 }}} />, document.getElementById("container"));
+        expect(spyOnClose).toHaveBeenCalled();
+        expect(spyLoadAnnotations).toNotHaveBeenCalled();
+        expect(spySetLayers).toNotHaveBeenCalled();
+    });
+    it('useFiles rendering with map with pre-existing mapId', (done) => {
+        const actions = {
+            loadMap: (conf, mapId, zoomToExtent ) => {
+                expect(conf).toExist();
+                expect(conf.map).toExist();
+                expect(conf.map.bbox).toExist();
+                expect(conf.map.center).toExist();
+                expect(conf.map.zoom).toExist();
+                expect(mapId).toExist();
+                expect(zoomToExtent).toBe(false);
+                done();
+            },
+            loadMapInfo: (mapId, info) => {
+                expect(mapId).toBe("10");
+                expect(info).toExist();
+            },
+            onClose: () => {},
+            loadAnnotations: () => {},
+            setLayers: () => {}
+        };
+        const spyOnClose = expect.spyOn(actions, 'onClose');
+        const spyLoadMapInfo = expect.spyOn(actions, 'loadMapInfo');
+        const spyLoadAnnotations = expect.spyOn(actions, 'loadAnnotations');
+        const spySetLayers = expect.spyOn(actions, 'setLayers');
+
+        const sink = createSink( props => {
+            expect(props).toExist();
+            expect(props.maps).toExist();
+            expect(props.useFiles).toExist();
+            props.useFiles({maps: props.maps});
+        });
+        const EnhancedSink = useFiles(sink);
+        ReactDOM.render(<EnhancedSink maps={[ {map: {zoom: 4, center: { x: 1, y: 1 }, bbox: { x: 1, y: 1 }, maxExtent: "TEST"}} ]}
+            loadAnnotations={actions.loadAnnotations} setLayers={actions.setLayers} loadMap={actions.loadMap} loadMapInfo={actions.loadMapInfo} onClose={actions.onClose} currentMap={{zoom: 4, center: { x: 1, y: 1 }, mapId: "10"}} />, document.getElementById("container"));
+        expect(spyLoadMapInfo).toHaveBeenCalled();
         expect(spyOnClose).toHaveBeenCalled();
         expect(spyLoadAnnotations).toNotHaveBeenCalled();
         expect(spySetLayers).toNotHaveBeenCalled();

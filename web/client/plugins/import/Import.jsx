@@ -12,7 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import DragZone from '../../components/import/ImportDragZone';
 import { connect } from 'react-redux';
 import StyleDialog from './StyleDialog';
-import { configureMap } from '../../actions/config';
+import { configureMap, loadMapInfo } from '../../actions/config';
 import { mapSelector } from '../../selectors/map';
 
 export default compose(
@@ -36,7 +36,8 @@ export default compose(
             connect(createStructuredSelector({
                 currentMap: mapSelector
             }), {
-                loadMap: configureMap
+                loadMap: configureMap,
+                loadMapInfo
             }),
             renderComponent(DragZone)
         )
