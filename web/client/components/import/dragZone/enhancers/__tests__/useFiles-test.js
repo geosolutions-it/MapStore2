@@ -24,6 +24,7 @@ describe('useFiles enhancer', () => {
         setTimeout(done);
     });
     it('useFiles rendering with map', (done) => {
+
         const actions = {
             loadMap: (conf, mapId, zoomToExtent ) => {
                 expect(conf).toExist();
