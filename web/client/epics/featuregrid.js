@@ -1208,3 +1208,13 @@ export const resetSnappingLayerOnFeatureGridClosed = (action$, { getState } = {}
             isSnappingActive(getState()) && actions.push(toggleSnapping());
             return Rx.Observable.from(actions);
         });
+
+export const toggleSnappingOffOnFeatureGridViewMode = (action$, { getState } = {}) =>
+    action$
+        .ofType(TOGGLE_MODE)
+        .filter((a) => a.mode === "VIEW")
+        .switchMap(() => {
+            const actions = [];
+            isSnappingActive(getState()) && actions.push(toggleSnapping());
+            return Rx.Observable.from(actions);
+        });
