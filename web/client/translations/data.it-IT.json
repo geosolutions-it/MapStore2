@@ -425,6 +425,9 @@
             "error": "L'immagine fornita non è valida",
             "savedMapTitle": "Mappa Salvata",
             "savedMapMessage": "La mappa è stata salvata correttamente",
+            "renderingErrorTitle": "Errore di rendering",
+            "renderingErrorMessage": "<p>Il rendering della mappa si è interrotto e ciò potrebbe essere dovuto a diversi motivi: </p><ul><li>Lo stile applicato contiene alcune regole o variabili non supportate dalle features</li>< li>Il livello non è configurato correttamente</li></ul><p>Puoi applicare le modifiche allo stile del layer e poi prenere il pulsante 'Ricarica mappa'. <br/> Per ulteriori informazioni:< /p>",
+            "reloadMap": "Ricarica mappa",
             "thumbnailError": {
                 "error403": "Non disponi dei permessi per aggiornare la thumbnail",
                 "error404": "Non è stato possibile creare la thumbnail sul server",
@@ -2307,7 +2310,9 @@
             "imageSrcNotSupportedBase64Image": "Alcuni renderer di stili non supportano le immagini base64 anche se la risorsa è valida",
             "imageFormatEmpty": "Non è possibile identificare il formato dell'immagine. Seleziona il formato dell'immagine fra quelli disponibili nel campo 'Formato'",
             "warningTextOrderTitle": "Attenzione",
-            "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole"
+            "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole",
+            "invalidProperty": "Il tipo della proprietà { key } non è valido",
+            "notSupportedVariable": "La variabile { key } non è supportata dal tileset"
         },
         "playback": {
             "settings": {

@@ -10,6 +10,7 @@ import React from 'react';
 import HTML from '../I18N/HTML';
 import Message from '../I18N/Message';
 import Button from '../misc/Button';
+import { Alert } from 'react-bootstrap';
 
 function ErrorPanel({
     show,
@@ -33,17 +34,16 @@ function ErrorPanel({
                 left: 0,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center'
+                justifyContent: 'center'
             }}>
-            <div>
+            <div style={{ maxWidth: 500 }}>
                 <h1><HTML msgId="map.renderingErrorTitle" /></h1>
                 <p><HTML msgId="map.renderingErrorMessage" /></p>
-                {error?.message && <p>
+                {error?.message && <Alert bsStyle="danger">
                     <small>
                         {error.message}
                     </small>
-                </p>}
+                </Alert>}
                 {onReload && <Button
                     bsStyle="primary"
                     onClick={() => onReload()}
