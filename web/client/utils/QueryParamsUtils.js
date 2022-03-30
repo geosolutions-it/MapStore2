@@ -16,8 +16,9 @@ const getRequestLoadValue = (name, state) => {
         try {
             return JSON.parse(query[name]);
         } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error(`Unable to parse query parameter: ${name}`);
+            if (query[name].length) {
+                return query[name];
+            }
             return null;
         }
     }

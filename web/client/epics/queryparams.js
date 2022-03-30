@@ -8,7 +8,7 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
+import {get, head, isNaN, isString, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
 import url from 'url';
 
 import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap} from '../actions/map';
@@ -25,6 +25,7 @@ import {mapSelector} from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
+import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 
 /*
 it maps params key to function.
@@ -99,16 +100,17 @@ const paramActions = {
         ];
     },
     featureinfo: ({value = ''}) => {
-        const point = JSON.parse(value.featureinfo);
+        const point = value.featureinfo;
         if (point?.lat && point?.lng) {
             const coordinate = reproject([point.lng, point.lat], 'EPSG:4326', 'EPSG:3857');
             executeHook(CLICK_ON_MAP_HOOK, (hook) => {
                 const getPixel = getHook(GET_PIXEL_FROM_COORDINATES_HOOK);
-                return hook(point, coordinate, getPixel([coordinate.x, coordinate.y]));
+                return hook(value, coordinate, getPixel([coordinate.x, coordinate.y]));
             });
         }
         return [];
     },
+    zoom: () => {},
     actions: ({value = ''}) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
@@ -137,13 +139,19 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
                 .take(1)
                 .switchMap(() => {
                     const state = store.getState();
-                    const search = get(state, 'router.location.search') || '';
-                    const { query = {} } = url.parse(search, true) || {};
-                    const queryActions = Object.keys(query)
+                    const parameters = Object.keys(paramActions)
+                        .reduce((params, parameter) => {
+                            const value = getRequestParameterValue(parameter, state);
+                            return {
+                                ...params,
+                                ...(value ? { [parameter]: value } : {})
+                            };
+                        }, {});
+                    const queryActions = Object.keys(parameters)
                         .reduce((actions, param) => {
                             return [
                                 ...actions,
-                                ...(paramActions[param] && paramActions[param]({ value: size(query) === 1 ? query[param] : query, state }) || [])
+                                ...(paramActions[param]({ value: parameters, state }) || [])
                             ];
                         }, []);
                     return head(queryActions)
