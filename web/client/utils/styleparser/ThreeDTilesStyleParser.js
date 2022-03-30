@@ -57,6 +57,13 @@ function formatFilter(filter) {
     return filterToExpression(filter);
 }
 
+function checkValueConditions({ conditions }) {
+    if (conditions.length === 1 && conditions[0][0] === true) {
+        return conditions[0][1];
+    }
+    return { conditions };
+}
+
 function getStyleJSONFromRules({ name: title, rules = [] } = {}) {
     const reverseRules = [...rules].reverse();
     const isPointCloud = reverseRules.find(({ symbolizers }) => symbolizers[0].kind === 'Mark');
@@ -76,25 +83,28 @@ function getStyleJSONFromRules({ name: title, rules = [] } = {}) {
     const pointSizeConditions = reverseRules.map(({ filter, symbolizers }) => {
         return [formatFilter(filter), symbolizers[0].radius || DEFAULT_POINT_SIZE];
     });
-    const names = reverseRules.map(({ name }) => name).join(',');
+    const names = reverseRules.map(({ name }) => name);
+    const isNamesValid = !!names.find(name => !!name);
     return {
         ...showParam,
-        color: {
+        color: checkValueConditions({
             conditions: !validBaseColor
                 ? [...colorConditions, [true, 'color(\'#ffffff\', 1)']]
                 : colorConditions
-        },
+        }),
         ...(isPointCloud && {
-            pointSize: {
+            pointSize: checkValueConditions({
                 conditions: !validBaseColor
                     ? [...pointSizeConditions, [true, DEFAULT_POINT_SIZE]]
                     : pointSizeConditions
-            }
+            })
         }),
-        meta: {
-            title: `'${title || '3D Tile Style'}'`,
-            names: `'${names}'`
-        }
+        ...((title || isNamesValid) && {
+            meta: {
+                ...(title && { title: `'${title}'` }),
+                ...(isNamesValid && { names: `'${names.join(',')}'` })
+            }
+        })
     };
 }
 
@@ -145,7 +155,7 @@ function getGeoStylerStyleFromStyleObj({ color, pointSize, meta } = {}) {
             };
         });
     return {
-        name: meta?.title ? trim(meta.title, '\'') : '3D Tile Style',
+        name: meta?.title ? trim(meta.title, '\'') : '',
         rules: [...rules].reverse()
     };
 }

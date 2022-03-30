@@ -107,7 +107,13 @@ function VectorStyleEditor({
             request(layer.url)
                 .then(({ properties, format } = {}) => {
                     if (isMounted.current) {
-                        onUpdateNode(layer.id, 'layers', { properties, format });
+                        onUpdateNode(layer.id, 'layers', {
+                            properties: {
+                                ...properties,
+                                ...layer.properties
+                            },
+                            format: format ? format : layer.format
+                        });
                         setLoading(false);
                     }
                 })
@@ -125,7 +131,7 @@ function VectorStyleEditor({
     return (
         <StyleEditor
             canEdit
-            code={body}
+            code={!loading && body}
             error={error}
             editorType={editorType || 'textarea'}
             editors={editors}

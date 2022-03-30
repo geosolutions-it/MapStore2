@@ -592,18 +592,33 @@ export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
         });
 }
 
+/**
+ * Return attributes from a vector layer object configuration
+ * @param  {object} layer layer object configuration
+ * @return {array|null} returns an array of attributes
+ */
 export function getVectorLayerAttributes(layer) {
     if (layer?.properties) {
-        return layer.properties
-            .map((property) => ({
-                attribute: property.name,
-                label: property.name,
-                type: property.type
-            }));
+        const propertiesKeys = Object.keys(layer.properties || {});
+        const attributes = propertiesKeys.map((key) => {
+            const { minimum, maximum, type } = layer.properties[key];
+            const minMaxType = (isNumber(minimum) || isNumber(maximum)) ? 'number' : 'string';
+            return {
+                attribute: key,
+                label: key,
+                type: type || minMaxType
+            };
+        });
+        return attributes;
     }
     return null;
 }
 
+/**
+ * Return geometry type from a vector layer
+ * @param  {object} layer layer object configuration
+ * @return {string} returns the geometry type
+ */
 export function getVectorLayerGeometryType(layer) {
     if (layer.type === '3dtiles') {
         return layer?.format === 'pnts' ? 'pointcloud' : 'polyhedron';
@@ -611,6 +626,11 @@ export function getVectorLayerGeometryType(layer) {
     return 'vector';
 }
 
+/**
+ * Return a default style for a vector layer
+ * @param  {object} layer layer object configuration
+ * @return {object} returns a default empty style
+ */
 export function getVectorDefaultStyle(layer) {
     if (layer.type === '3dtiles') {
         return {

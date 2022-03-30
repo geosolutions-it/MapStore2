@@ -8,7 +8,6 @@
 
 import axios from '../libs/ajax';
 import { convertRadianToDegrees } from '../utils/CoordinatesUtils';
-import isNumber from 'lodash/isNumber';
 import { METERS_PER_UNIT } from '../utils/MapUtils';
 
 function getTitleFromUrl(url) {
@@ -58,6 +57,9 @@ function tilesetToBoundingBox(Cesium, tileset) {
         // from https://github.com/CesiumGS/cesium/blob/a11b14cab7229036b3348763d861a28b905d367d/Source/Scene/TileOrientedBoundingBox.js#L95
         const sphere = Cesium.BoundingSphere.fromOrientedBoundingBox(new Cesium.OrientedBoundingBox(center, halfAxes));
         const cartographic = Cesium.Cartographic.fromCartesian(sphere.center);
+        if (!cartographic) {
+            return null;
+        }
         const lng = convertRadianToDegrees(cartographic.longitude);
         const lat = convertRadianToDegrees(cartographic.latitude);
 
@@ -85,6 +87,9 @@ function tilesetToBoundingBox(Cesium, tileset) {
         const uniformScale = Cesium.Cartesian3.maximumComponent(scale);
         const radiusDegrees = (radius * uniformScale) / METERS_PER_UNIT.degrees;
         const cartographic = Cesium.Cartographic.fromCartesian(center);
+        if (!cartographic) {
+            return null;
+        }
         const lng = convertRadianToDegrees(cartographic.longitude);
         const lat = convertRadianToDegrees(cartographic.latitude);
         return {
@@ -113,18 +118,7 @@ function extractCapabilities(tileset) {
             const version = tileset?.asset?.version !== undefined ? tileset.asset.version : '1.0';
             const bbox = tilesetToBoundingBox(Cesium, tileset);
             const format = getFormat(tileset?.root?.content?.uri || '');
-            const propertiesKeys =  Object.keys(tileset?.properties || {});
-            const properties = propertiesKeys.map((key) => {
-                const { minimum, maximum } = tileset.properties[key];
-                return {
-                    name: key,
-                    type: isNumber(minimum) || isNumber(maximum)
-                        ? 'number'
-                        : 'string',
-                    minimum,
-                    maximum
-                };
-            });
+            const properties =  tileset?.properties;
             return {
                 version,
                 ...(bbox && { bbox }),
