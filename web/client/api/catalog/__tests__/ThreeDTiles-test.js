@@ -125,7 +125,12 @@ describe('Test 3D tiles catalog API', () => {
             title: 'Title',
             url: 'http://service.org/tileset.json',
             type: '3dtiles',
-            tileset: TILSET_JSON
+            version: '1.0',
+            tileset: TILSET_JSON,
+            bbox: {
+                bounds: { minx: -180, miny: -90, maxx: 180, maxy: 90 },
+                crs: 'EPSG:4326'
+            }
         }] });
         expect(records.length).toBe(1);
         const {
@@ -135,7 +140,7 @@ describe('Test 3D tiles catalog API', () => {
             title,
             identifier,
             url,
-            boundingBox
+            bbox
         } = records[0];
 
         expect(serviceType).toBe('3dtiles');
@@ -144,7 +149,7 @@ describe('Test 3D tiles catalog API', () => {
         expect(title).toBe('Title');
         expect(identifier).toBe('http://service.org/tileset.json');
         expect(url).toBe('http://service.org/tileset.json');
-        expect(boundingBox).toBeTruthy();
+        expect(bbox).toBeTruthy();
     });
 
     it('should extract the layer config from a catalog record', () => {
@@ -156,9 +161,14 @@ describe('Test 3D tiles catalog API', () => {
             identifier: 'http://service.org/tileset.json',
             url: 'http://service.org/tileset.json',
             thumbnail: null,
-            boundingBox: {
+            bbox: {
                 crs: 'EPSG:4326',
-                extent: [-180, -90, 180, 90]
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
             },
             references: []
         };

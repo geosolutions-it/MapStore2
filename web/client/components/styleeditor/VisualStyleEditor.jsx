@@ -92,7 +92,8 @@ function validateStyle(rules) {
     if (isStyleEmpty) {
         return {
             messageId: 'styleeditor.styleEmpty',
-            status: 400
+            status: 400,
+            isEmpty: true
         };
     }
     // find first rule with error

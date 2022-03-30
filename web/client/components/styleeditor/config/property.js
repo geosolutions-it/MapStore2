@@ -189,11 +189,11 @@ const property = {
         },
         isDisabled
     }),
-    size: ({ key = 'radius', label = 'Radius' }) => ({
+    size: ({ key = 'radius', label = 'Radius', range }) => ({
         type: 'slider',
         label,
         config: {
-            range: { min: 1, max: 100 },
+            range: range || { min: 1, max: 100 },
             format: {
                 from: value => Math.round(value),
                 to: value => Math.round(value) + ' px'

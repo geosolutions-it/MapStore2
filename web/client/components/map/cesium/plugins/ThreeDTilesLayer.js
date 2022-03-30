@@ -11,13 +11,30 @@ import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
 import isNaN from 'lodash/isNaN';
-import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
+import { getProxyUrl, needProxy } from "../../../../utils/ProxyUtils";
+import { getStyleParser } from '../../../../utils/VectorStyleUtils';
 
 function getStyle({ style }) {
-    if (style?.format === '3dtiles' && style?.body) {
-        return Promise.resolve(style.body);
+    const { format, body } = style || {};
+    if (!format || !body) {
+        return Promise.resolve(null);
     }
-    return Promise.resolve(null);
+    if (format === '3dtiles') {
+        return Promise.resolve(body);
+    }
+    if (format === 'geostyler') {
+        return getStyleParser('3dtiles')
+            .then((parser) => parser.writeStyle(body));
+    }
+    return Promise.all([
+        getStyleParser(format),
+        getStyleParser('3dtiles')
+    ])
+        .then(([parser, threeDTilesParser]) =>
+            parser
+                .readStyle(body)
+                .then(parsedStyle => threeDTilesParser.writeStyle(parsedStyle))
+        );
 }
 
 function updateModelMatrix(tileSet, { heightOffset }) {
