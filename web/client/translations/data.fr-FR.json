@@ -432,7 +432,7 @@
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
                 "error409": "Nom de la vignette déjà choisi",
-                "errorDefault": "Recharger la carte"
+                "errorDefault": "Erreur réseau"
             },
             "mapError": {
                 "errorTitle": "Impossible d'enregistrer la carte actuelle",
