@@ -8,7 +8,7 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
+import {get, head, isNaN, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
 import url from 'url';
 
 import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap} from '../actions/map';
@@ -32,8 +32,8 @@ it maps params key to function.
 functions must return an array of actions or and empty array
 */
 const paramActions = {
-    bbox: ({ value = '' }) => {
-        const extent = value.split(',')
+    bbox: (parameters) => {
+        const extent = parameters.bbox.split(',')
             .map(val => parseFloat(val))
             .filter((val, idx) => idx % 2 === 0
                 ? val > -180.5 && val < 180.5
@@ -52,11 +52,11 @@ const paramActions = {
             })
         ];
     },
-    center: ({value = {}, state}) => {
+    center: (parameters, state) => {
         const map = mapSelector(state);
-        const validCenter = value && !isEmpty(value.center) && value.center.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
-        const zoom = toNumber(value.zoom);
+        const zoom = toNumber(parameters.zoom);
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
@@ -74,11 +74,11 @@ const paramActions = {
             })
         ];
     },
-    marker: ({value = {}, state}) => {
+    marker: (parameters, state) => {
         const map = mapSelector(state);
-        const marker = value && !isEmpty(value.marker) && value.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const marker = !isEmpty(parameters.marker) && parameters.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = marker && marker.length === 2 && marker.indexOf(false) === -1 && getCenter(marker);
-        const zoom = toNumber(value.zoom);
+        const zoom = toNumber(parameters.zoom);
         const bbox =  getBbox(center, zoom);
         const lng = marker && marker[0];
         const lat = marker && marker[1];
@@ -99,27 +99,26 @@ const paramActions = {
             })
         ];
     },
-    featureinfo: ({value = ''}) => {
-        const point = value.featureinfo;
+    featureinfo: (parameters) => {
+        const point = parameters.featureinfo;
         if (point?.lat && point?.lng) {
             const coordinate = reproject([point.lng, point.lat], 'EPSG:4326', 'EPSG:3857');
             executeHook(CLICK_ON_MAP_HOOK, (hook) => {
                 const getPixel = getHook(GET_PIXEL_FROM_COORDINATES_HOOK);
-                return hook(value, coordinate, getPixel([coordinate.x, coordinate.y]));
+                return hook(parameters, coordinate, getPixel([coordinate.x, coordinate.y]));
             });
         }
         return [];
     },
     zoom: () => {},
-    actions: ({value = ''}) => {
+    actions: (parameters) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
             ZOOM_TO_EXTENT,
             ADD_LAYERS_FROM_CATALOGS
         ]);
-        if (isString(value)) {
-            const actions = JSON.parse(value);
-            return actions.filter(a => includes(whiteList, a.type));
+        if (parameters.actions) {
+            return parameters.actions.filter(a => includes(whiteList, a.type));
         }
         return [];
     }
@@ -151,7 +150,7 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
                         .reduce((actions, param) => {
                             return [
                                 ...actions,
-                                ...(paramActions[param]({ value: parameters, state }) || [])
+                                ...(paramActions[param](parameters, state) || [])
                             ];
                         }, []);
                     return head(queryActions)
