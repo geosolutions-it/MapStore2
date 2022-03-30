@@ -1293,7 +1293,7 @@
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
             "headingToolTip": "Min: 0° y Max: 360°",
-            "rollToolTip": "Min: -90° y Max: 90°",
+            "rollToolTip": "Min: 0° y Max: 360°",
             "pitchToolTip": "Min: -90° y Max: 90°",
             "showSectionId": "Incluir posición de desplazamiento",
             "showConnections": "Mostrar conexiones",
