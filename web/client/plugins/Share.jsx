@@ -20,6 +20,7 @@ import shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
+import { mapTypeSelector } from '../selectors/maptype';
 import { currentContextSelector } from '../selectors/context';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
@@ -65,6 +66,7 @@ const Share = connect(createSelector([
     shareSelector,
     versionSelector,
     mapSelector,
+    // mapTypeSelector,
     currentContextSelector,
     state => get(state, 'controls.share.settings', {}),
     (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),

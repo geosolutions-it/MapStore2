@@ -215,9 +215,9 @@ class SharePanel extends React.Component {
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
-            if (mapType === 'cesium' && viewerOptions && viewerOptions.orientation) {
-                return `${shareUrl}?center=${this.state.coordinate}&zoom=${this.state.zoom}&heading=${convertDegreesToRadian(this.state.heading)}&pitch=${convertDegreesToRadian(this.state.pitch)}&roll=${convertDegreesToRadian(this.state.roll)}`;
-            }
+            // if (mapType === 'cesium' && viewerOptions && viewerOptions.orientation) {
+            //     return `${shareUrl}?center=${this.state.coordinate}&zoom=${this.state.zoom}&heading=${convertDegreesToRadian(this.state.heading)}&pitch=${convertDegreesToRadian(this.state.pitch)}&roll=${convertDegreesToRadian(this.state.roll)}`;
+            // }
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
         }
         return shareUrl;
@@ -401,80 +401,80 @@ class SharePanel extends React.Component {
                             }}/>
                     </FormGroup>
                     {
-                        this.props.mapType && this.props.mapType === 'cesium' && (
-                            <React.Fragment>
-                                <FormGroup>
-                                    <ControlLabel><Message msgId="share.heading" /></ControlLabel>
-                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-heading"><Message msgId="share.headingToolTip"/></Tooltip>}>
-                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
-                                    </OverlayTrigger>
-                                    <FormControl
-                                        type="number"
-                                        name="heading"
-                                        min={0}
-                                        max={360}
-                                        value={
-                                            this.state?.heading
-                                        }
-                                        onChange={({target})=>{
-                                            this.setState({
-                                                heading: target.value
-                                            });
-                                        }}
-                                        onBlur={()=> {
-                                            const heading = this.setValueBoundaries(this.state.heading, 0, 360);
-                                            this.setState({ heading });
-                                            this.updateMapView('heading', heading);
-                                        }}
-                                    />
-                                </FormGroup>
-                                <FormGroup>
-                                    <ControlLabel><Message msgId="share.roll" /></ControlLabel>
-                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-roll"><Message msgId="share.rollToolTip"/></Tooltip>}>
-                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
-                                    </OverlayTrigger>
-                                    <FormControl
-                                        type="number"
-                                        name="roll"
-                                        min={0}
-                                        max={360}
-                                        value={this.state?.roll}
-                                        onChange={({target})=>{
-                                            this.setState({
-                                                roll: target.value
-                                            });
-                                        }}
-                                        onBlur={()=> {
-                                            const roll = this.setValueBoundaries(this.state.roll, 0, 360);
-                                            this.setState({ roll });
-                                            this.updateMapView('roll', roll);
-                                        }}
-                                    />
-                                </FormGroup>
-                                <FormGroup>
-                                    <ControlLabel><Message msgId="share.pitch" /></ControlLabel>
-                                    <OverlayTrigger placement="top" overlay={<Tooltip id="share-pitch"><Message msgId="share.pitchToolTip"/></Tooltip>}>
-                                        <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
-                                    </OverlayTrigger>
-                                    <FormControl
-                                        type="number"
-                                        min={-90}
-                                        max={90}
-                                        name="pitch"
-                                        value={this.state?.pitch}
-                                        onChange={({target})=>{
-                                            this.setState({
-                                                pitch: target.value
-                                            });
-                                        }}
-                                        onBlur={()=> {
-                                            const pitch = this.setValueBoundaries(this.state.pitch, -90, 90);
-                                            this.setState({ pitch });
-                                            this.updateMapView('pitch', pitch);
-                                        }}
-                                    />
-                                </FormGroup>
-                            </React.Fragment>)
+                        // this.props.mapType && this.props.mapType === 'cesium' && (
+                        //     <React.Fragment>
+                        //         <FormGroup>
+                        //             <ControlLabel><Message msgId="share.heading" /></ControlLabel>
+                        //             <OverlayTrigger placement="top" overlay={<Tooltip id="share-heading"><Message msgId="share.headingToolTip"/></Tooltip>}>
+                        //                 <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                        //             </OverlayTrigger>
+                        //             <FormControl
+                        //                 type="number"
+                        //                 name="heading"
+                        //                 min={0}
+                        //                 max={360}
+                        //                 value={
+                        //                     this.state?.heading
+                        //                 }
+                        //                 onChange={({target})=>{
+                        //                     this.setState({
+                        //                         heading: target.value
+                        //                     });
+                        //                 }}
+                        //                 onBlur={()=> {
+                        //                     const heading = this.setValueBoundaries(this.state.heading, 0, 360);
+                        //                     this.setState({ heading });
+                        //                     this.updateMapView('heading', heading);
+                        //                 }}
+                        //             />
+                        //         </FormGroup>
+                        //         <FormGroup>
+                        //             <ControlLabel><Message msgId="share.roll" /></ControlLabel>
+                        //             <OverlayTrigger placement="top" overlay={<Tooltip id="share-roll"><Message msgId="share.rollToolTip"/></Tooltip>}>
+                        //                 <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                        //             </OverlayTrigger>
+                        //             <FormControl
+                        //                 type="number"
+                        //                 name="roll"
+                        //                 min={0}
+                        //                 max={360}
+                        //                 value={this.state?.roll}
+                        //                 onChange={({target})=>{
+                        //                     this.setState({
+                        //                         roll: target.value
+                        //                     });
+                        //                 }}
+                        //                 onBlur={()=> {
+                        //                     const roll = this.setValueBoundaries(this.state.roll, 0, 360);
+                        //                     this.setState({ roll });
+                        //                     this.updateMapView('roll', roll);
+                        //                 }}
+                        //             />
+                        //         </FormGroup>
+                        //         <FormGroup>
+                        //             <ControlLabel><Message msgId="share.pitch" /></ControlLabel>
+                        //             <OverlayTrigger placement="top" overlay={<Tooltip id="share-pitch"><Message msgId="share.pitchToolTip"/></Tooltip>}>
+                        //                 <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                        //             </OverlayTrigger>
+                        //             <FormControl
+                        //                 type="number"
+                        //                 min={-90}
+                        //                 max={90}
+                        //                 name="pitch"
+                        //                 value={this.state?.pitch}
+                        //                 onChange={({target})=>{
+                        //                     this.setState({
+                        //                         pitch: target.value
+                        //                     });
+                        //                 }}
+                        //                 onBlur={()=> {
+                        //                     const pitch = this.setValueBoundaries(this.state.pitch, -90, 90);
+                        //                     this.setState({ pitch });
+                        //                     this.updateMapView('pitch', pitch);
+                        //                 }}
+                        //             />
+                        //         </FormGroup>
+                        //     </React.Fragment>)
                     }
                     {
                         this.props.mapType !== 'cesium' && ( <Checkbox
