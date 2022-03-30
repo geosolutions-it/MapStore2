@@ -123,7 +123,10 @@ import {
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
     deactivateSyncWmsFilterOnFeatureGridClose,
-    launchUpdateFilterEpic, setDefaultSnappingLayerOnFeatureGridOpen, resetSnappingLayerOnFeatureGridClosed
+    launchUpdateFilterEpic,
+    setDefaultSnappingLayerOnFeatureGridOpen,
+    resetSnappingLayerOnFeatureGridClosed,
+    toggleSnappingOffOnFeatureGridViewMode
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -2346,6 +2349,13 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(2);
             expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
             expect(actions[1].type).toBe(TOGGLE_SNAPPING);
+        }, {draw: { snapping: true }}, done);
+    });
+    it('toggleSnappingOffOnFeatureGridViewMode', (done) => {
+        const startActions = [toggleViewMode()];
+        testEpic(toggleSnappingOffOnFeatureGridViewMode, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TOGGLE_SNAPPING);
         }, {draw: { snapping: true }}, done);
     });
 });
