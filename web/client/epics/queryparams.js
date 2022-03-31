@@ -17,15 +17,19 @@ import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '..
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
 import { warning } from '../actions/notifications';
 
-import {getLonLatFromPoint, isValidExtent, reproject} from '../utils/CoordinatesUtils';
+import {getLonLatFromPoint, isValidExtent} from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
-import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
-import {CLICK_ON_MAP_HOOK, executeHook, GET_PIXEL_FROM_COORDINATES_HOOK, getBbox, getHook} from "../utils/MapUtils";
+import {featureInfoClick, hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
+import {
+    getBbox
+} from "../utils/MapUtils";
 import {mapSelector} from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
+import {mapProjectionSelector} from "../utils/PrintUtils";
+import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 
 /*
 it maps params key to function.
@@ -99,14 +103,12 @@ const paramActions = {
             })
         ];
     },
-    featureinfo: (parameters) => {
-        const point = parameters.featureinfo;
-        if (point?.lat && point?.lng) {
-            const coordinate = reproject([point.lng, point.lat], 'EPSG:4326', 'EPSG:3857');
-            executeHook(CLICK_ON_MAP_HOOK, (hook) => {
-                const getPixel = getHook(GET_PIXEL_FROM_COORDINATES_HOOK);
-                return hook(parameters, coordinate, getPixel([coordinate.x, coordinate.y]));
-            });
+    featureinfo: (parameters, state) => {
+        const value = parameters.featureinfo;
+        const { lat, lng, filterNameList } = value;
+        if (lat && lng) {
+            const projection = mapProjectionSelector(state);
+            return [featureInfoClick(updatePointWithGeometricFilter({latlng: {lat, lng}}, projection), false, filterNameList ?? [])];
         }
         return [];
     },
