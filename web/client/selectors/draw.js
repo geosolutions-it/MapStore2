@@ -43,7 +43,7 @@ export const availableSnappingLayers = createShallowSelectorCreator(
     const id = selectedLayer?.id;
     const availableExtraLayers = additionalLayers.filter(l => (config?.additionalLayers ?? []).includes(l.id)).map(l => l.options);
     const layersList = availableExtraLayers.concat(layers);
-    const currentLayer = id ? [{value: id, label: selectedLayer.title ?? selectedLayer.name, active: id === snappingId}] : [];
+    const currentLayer = id ? [{value: id, label: getLayerTitle(selectedLayer, locale), active: id === snappingId}] : [];
 
     return currentLayer.concat(
         layersList.map((layer) =>
