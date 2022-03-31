@@ -1293,7 +1293,7 @@
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
             "headingToolTip": "Min: 0° y Max: 360°",
-            "rollToolTip": "Min: -90° y Max: 90°",
+            "rollToolTip": "Min: 0° y Max: 360°",
             "pitchToolTip": "Min: -90° y Max: 90°",
             "showSectionId": "Incluir posición de desplazamiento",
             "showConnections": "Mostrar conexiones",
@@ -1679,7 +1679,17 @@
                 "syncOnMap": "Sincronizar mapa con filtro",
                 "enableTimeSync": "Sincronizar con el tiempo o el intervalo de tiempo seleccionado",
                 "disableTimeSync": "No sincronizar con el tiempo o el intervalo de tiempo seleccionado",
-                "createNewChart": "Crea un gráfico para la capa seleccionada"
+                "createNewChart": "Crea un gráfico para la capa seleccionada",
+                "enableSnapping": "Activar ajuste",
+                "disableSnapping": "Desactivar ajuste",
+                "snapToLayer": "Ajustar a la capa",
+                "snappingSettings": {
+                    "header": "Configuración",
+                    "vertex": "Vértice",
+                    "edge": "Borde",
+                    "pixelTolerance": "Tolerancia (píxel)",
+                    "loadingStrategy": "Estrategia de carga"
+                  }
             }
         },
         "layerdownload": {
