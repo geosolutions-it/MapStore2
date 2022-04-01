@@ -111,7 +111,7 @@ Number of objects passed to the options can be different to the number of layers
 
 #### Passing Parameters with POST Request
 
-Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with a entire map, or complex data. To overcome this kind of situations an adhoc `POST` service available at `mapstore/rest/config/setParams` allows to pass the parameters in the request payload as either `application/json` or `application/x-www-form-urlencoded`. 
+Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with an entire map, or complex data. To overcome this kind of situations, an adhoc `POST` service available at `mapstore/rest/config/setParams` allows to pass the parameters in the request payload as either `application/json` or `application/x-www-form-urlencoded`. 
 The parameters will be then made available in the `sessionStorage` with key `queryParams`. Optionally a `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `mapstore/#viewer/openlayers/config`.
 
 Example `application/json` request payload:
