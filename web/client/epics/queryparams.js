@@ -106,7 +106,7 @@ const paramActions = {
     featureinfo: (parameters, state) => {
         const value = parameters.featureinfo;
         const { lat, lng, filterNameList } = value;
-        if (lat && lng) {
+        if (typeof lat !== 'undefined' && typeof lng !== 'undefined') {
             const projection = mapProjectionSelector(state);
             return [featureInfoClick(updatePointWithGeometricFilter({latlng: {lat, lng}}, projection), false, filterNameList ?? [])];
         }

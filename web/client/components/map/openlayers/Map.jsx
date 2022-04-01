@@ -583,21 +583,6 @@ class OpenlayersMap extends React.Component {
                 nearest
             });
         });
-        this.props.hookRegister.registerHook(mapUtils.CLICK_ON_MAP_HOOK, (point, coordinate, pixel) => {
-            this.map.dispatchEvent({
-                type: 'singleclick',
-                coordinate: [coordinate.x, coordinate.y],
-                pixel: pixel,
-                map: this.map,
-                dragging: false,
-                originalEvent: {
-                    altKey: false,
-                    ctrlKey: false,
-                    metaKey: false,
-                    shiftKey: false
-                }
-            });
-        });
     };
 }
 

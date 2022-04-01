@@ -9,7 +9,7 @@ import {get} from "lodash";
  * LICENSE file in the root directory of this source tree.
  */
 
-const getRequestLoadValue = (name, state) => {
+export const getRequestLoadValue = (name, state) => {
     const search = get(state, 'router.location.search') || '';
     const { query = {} } = url.parse(search, true) || {};
     if (query[name]) {
@@ -25,18 +25,28 @@ const getRequestLoadValue = (name, state) => {
     return null;
 };
 
-const postRequestLoadValue = (name, storage = sessionStorage) => {
-    const item = storage.getItem(name);
-    storage.removeItem(name);
-    try {
-        return JSON.parse(decodeURIComponent(item));
-    } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(`Unable to parse query parameter from sessionStorage: ${name}`);
-        return null;
+export const postRequestLoadValue = (name, storage = sessionStorage) => {
+    const queryParams = storage.getItem('queryParams') ?? null;
+    if (queryParams) {
+        try {
+            const params = JSON.parse(queryParams);
+            const { [name]: item, ...rest } = params;
+            if (item && typeof params === 'object') {
+                const { length } = Object.keys(params);
+                length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
+                length === 1 && storage.removeItem('queryParams');
+            }
+            return item;
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(`Unable to parse query parameters from sessionStorage`);
+            storage.removeItem('queryParams');
+            return null;
+        }
     }
+    return null;
 };
 
-export const getRequestParameterValue = (name, state) => {
-    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name);
+export const getRequestParameterValue = (name, state, storage = sessionStorage) => {
+    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, storage);
 };
