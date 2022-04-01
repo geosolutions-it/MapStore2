@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, isNil} from 'lodash';
+import {get, isObject} from 'lodash';
 import {additionalLayersSelector, getAdditionalLayerFromId, getLayerFromId, layersSelector} from "./layers";
 import {selectedLayerSelector} from "./featuregrid";
 import {createShallowSelectorCreator} from "../utils/ReselectUtils";
@@ -27,7 +27,7 @@ export const snappingConfig = state => get(state, 'draw.snapConfig', false);
 export const availableSnappingLayers = createShallowSelectorCreator(
     (a, b) => {
         return a === b
-            || !isNil(a) && !isNil(b) && a.id === b.id;
+            || isObject(a) && isObject(b) && a?.id === b?.id && a?.title === b?.title;
     }
 )([
     layersSelector,
