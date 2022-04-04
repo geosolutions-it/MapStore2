@@ -12,6 +12,8 @@ import {get} from "lodash";
 /**
  * Retrieves parameters from hash "query string" of react router
  * Example: `#/viewer/openlayers/0?center=0,0&zoom=5
+ * @param {string|number} name - name of the parameter to get
+ * @param state - state of the app
  */
 export const getRequestLoadValue = (name, state) => {
     const search = get(state, 'router.location.search') || '';
@@ -43,6 +45,8 @@ export const getRequestLoadValue = (name, state) => {
  *      "page": "#/viewer/openlayers/config"
  * }
  * </pre>
+ * @param {string} name - name of the parameter to get
+ * @param {Storage} storage - sessionStorage or localStorage
  */
 export const postRequestLoadValue = (name, storage = sessionStorage) => {
     const queryParams = storage.getItem('queryParams') ?? null;
