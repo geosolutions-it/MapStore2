@@ -18,7 +18,8 @@ import {
     activeTabSettingsSelector,
     drawerEnabledControlSelector,
     showCoordinateEditorSelector,
-    shareSelector
+    shareSelector,
+    showConfirmDeleteMapModalSelector
 } from '../controls';
 
 const state = {
@@ -47,6 +48,9 @@ const state = {
                 style: 'generic'
             },
             activeTab: 'style'
+        },
+        mapDelete: {
+            enabled: true
         }
     }
 };
@@ -117,5 +121,9 @@ describe('Test controls selectors', () => {
         const retVal = shareSelector({controls: {share: {enabled: true}}});
         expect(retVal).toExist();
         expect(retVal).toBe(true);
+    });
+    it('test showConfirmDeleteMapModalSelector', () => {
+        const showConfirmDelete = showConfirmDeleteMapModalSelector(state);
+        expect(showConfirmDelete).toBe(true);
     });
 });
