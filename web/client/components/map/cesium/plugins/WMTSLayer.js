@@ -113,7 +113,8 @@ function wmtsToCesiumOptions(options) {
     }
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSetID]);
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
-
+    const cr = options.credits;
+    const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : '';
     return assign({
         // TODO: multi-domain support, if use {s} switches to RESTFul mode
         url: new Cesium.Resource({
@@ -127,7 +128,7 @@ function wmtsToCesiumOptions(options) {
         //    isReady: () => true,
         //    shouldDiscardImage: ({x, y, level}) => !isValid(x, y, level)
         // }, // not supported yet
-        ...(options.attribution && { credit: options.attribution }),
+        credit,
         layer: options.name,
         style: options.style || "",
         tileMatrixLabels: matrixIds,
@@ -159,7 +160,7 @@ const createLayer = options => {
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.format !== newOptions.format
-    || oldOptions.attribution !== newOptions.attribution) {
+    || oldOptions.credits !== newOptions.credits) {
         return createLayer(newOptions);
     }
     return null;

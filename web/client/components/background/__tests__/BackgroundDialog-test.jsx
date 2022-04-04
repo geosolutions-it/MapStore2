@@ -49,7 +49,7 @@ describe('test BackgroundDialog', () => {
         const updateThumbnailSpy = expect.spyOn(actions, 'updateThumbnail');
         const onSaveSpy = expect.spyOn(actions, 'onSave');
 
-        const dialog = ReactDOM.render(<BackgroundDialog layer={{type: 'wmts'}} updateThumbnail={actions.updateThumbnail} onSave={actions.onSave} attribution="<p>Some Attribution Text</p>"/>,
+        const dialog = ReactDOM.render(<BackgroundDialog layer={{type: 'wmts'}} updateThumbnail={actions.updateThumbnail} onSave={actions.onSave} credits={{title: "<p>Some Attribution Text</p>"}}/>,
             document.getElementById("container"));
         expect(dialog).toExist();
         const node = ReactDOM.findDOMNode(dialog);

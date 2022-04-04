@@ -380,7 +380,9 @@ describe('Leaflet layer', () => {
             "type": "wmts",
             "visibility": true,
             "name": "nurc:Arc_Sample",
-            "attribution": "<p>This is some Attribution <b>TEXT</b></p>",
+            "credits": {
+                "title": "<p>This is some Attribution <b>TEXT</b></p>"
+            },
             "group": "Meteo",
             "format": "image/png",
             "tileMatrixSet": [
@@ -402,7 +404,7 @@ describe('Leaflet layer', () => {
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
-        map.eachLayer( l => expect(l.getAttribution()).toBe(options.attribution));
+        map.eachLayer( l => expect(l.getAttribution()).toBe(options.credits.title));
     });
 
     it('creates a vector layer for leaflet map', () => {

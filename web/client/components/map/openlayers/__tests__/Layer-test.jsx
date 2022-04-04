@@ -2025,7 +2025,9 @@ describe('Openlayers layer', () => {
             type: 'wmts',
             visibility: true,
             name: 'nurc:Arc_Sample',
-            attribution: "<p>This is some Attribution <b>TEXT</b></p>",
+            credits: {
+                title: "<p>This is some Attribution <b>TEXT</b></p>"
+            },
             group: 'Meteo',
             format: 'image/png',
             tileMatrixSet: [
@@ -2043,7 +2045,7 @@ describe('Openlayers layer', () => {
             map={map}
         />, document.getElementById("container"));
         expect(layer.layer.getVisible()).toBe(true);
-        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(options.attribution);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(options.credits.title);
     });
 
     it('test wmts security token', () => {

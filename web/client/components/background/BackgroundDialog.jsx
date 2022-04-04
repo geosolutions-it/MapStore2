@@ -45,7 +45,7 @@ export default class BackgroundDialog extends React.Component {
         thumbURL: PropTypes.string,
         title: PropTypes.string,
         format: PropTypes.string,
-        attribution: PropTypes.string,
+        credits: PropTypes.object,
         style: PropTypes.string,
         thumbnail: PropTypes.object,
         additionalParameters: PropTypes.object,
@@ -110,16 +110,16 @@ export default class BackgroundDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        const pickedProps = pick(this.props, 'title', 'format', 'style', 'thumbnail', 'attribution');
-        const attributionHtml = pickedProps.attribution || '';
-        const contentBlock = htmlToDraft(attributionHtml);
+        const pickedProps = pick(this.props, 'title', 'format', 'style', 'thumbnail', 'credits');
+        const creditsTitleHtml = pickedProps?.credits?.title || '';
+        const contentBlock = htmlToDraft(creditsTitleHtml);
         const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
         const editorState = EditorState.createWithContent(contentState);
         const newState = assign({}, pickedProps, {additionalParameters: this.assignParameters(this.props.additionalParameters), editorState});
         this.state = newState;
     }
 
-    state = {title: '', format: 'image/png', thumbnail: {}, additionalParameters: [], attribution: ''};
+    state = {title: '', format: 'image/png', thumbnail: {}, additionalParameters: [], credits: {}};
 
     onEditorStateChange(editorState) {
         this.setState({
@@ -282,7 +282,7 @@ export default class BackgroundDialog extends React.Component {
                         const backgroundId = this.props.editing ? this.props.layer.id : uuidv1();
                         const curThumbURL = this.props.layer.thumbURL || '';
                         const format = this.state.format || this.props.defaultFormat;
-                        const attribution = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
+                        const creditsTitle = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
                         this.props.updateThumbnail(this.state.thumbnail.data, backgroundId);
                         this.props.onSave(assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
                             {
@@ -291,7 +291,10 @@ export default class BackgroundDialog extends React.Component {
                                     ['source', 'title']
                                 ),
                                 format,
-                                attribution,
+                                credits: {
+                                    ...this.state.credits,
+                                    title: creditsTitle
+                                },
                                 group: 'background'
                             }, !curThumbURL && !this.state.thumbnail.data ? {} : {thumbURL: this.state.thumbnail.url}));
                         this.resetParameters();

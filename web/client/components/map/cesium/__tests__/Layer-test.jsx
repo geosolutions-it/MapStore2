@@ -388,7 +388,9 @@ describe('Cesium layer', () => {
                 }]
             },
             "url": "http://sample.server/geoserver/gwc/service/wmts",
-            "attribution": "<p>This is some custom</p><b>ATTRIBUTION</b>"
+            "credits": {
+                "title": "<p>This is some custom</p><b>ATTRIBUTION</b>"
+            }
         };
         // create layers
         var layer = ReactDOM.render(
