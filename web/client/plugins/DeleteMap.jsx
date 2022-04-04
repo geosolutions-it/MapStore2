@@ -21,6 +21,13 @@ import Message from '../components/I18N/Message';
 
 class DeleteConfirmDialog extends React.Component {
 
+    static propTypes = {
+        show: PropTypes.bool,
+        mapId: PropTypes.string,
+        onConfirmDelete: PropTypes.func,
+        onClose: PropTypes.func
+    };
+
     static contextTypes = {
         router: PropTypes.object
     };
@@ -52,18 +59,7 @@ class DeleteConfirmDialog extends React.Component {
     }
 }
 
-DeleteConfirmDialog.propTypes = {
-    show: PropTypes.bool,
-    mapId: PropTypes.string,
-    onConfirmDelete: PropTypes.func,
-    onClose: PropTypes.func
-};
-
-DeleteConfirmDialog.contextTypes = {
-    router: PropTypes.object
-};
-
-const showConfirmDeleteMapModalSelector = state => state.controls && state.controls.mapDelete && state.controls.mapDelete.enabled;
+export const showConfirmDeleteMapModalSelector = state => state.controls && state.controls.mapDelete && state.controls.mapDelete.enabled;
 
 export default createPlugin('DeleteMap', {
     component:
