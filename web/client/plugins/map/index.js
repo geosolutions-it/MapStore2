@@ -34,7 +34,8 @@ import {
     geometryChanged,
     drawStopped,
     selectFeatures,
-    drawingFeatures
+    drawingFeatures,
+    toggleSnappingIsLoading
 } from '../../actions/draw';
 
 import { updateHighlighted } from '../../actions/highlight';
@@ -42,6 +43,9 @@ import { warning } from '../../actions/notifications';
 import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selectors/map';
+import {
+    snappingLayerSelector
+} from "../../selectors/draw";
 
 const Empty = () => { return <span/>; };
 
@@ -91,14 +95,18 @@ const pluginsCreator = (mapType, actions) => {
         })(components.MeasurementSupport || Empty);
 
         const DrawSupport = connect((state) =>
-            state.draw || {}, {
+            ({
+                ...(state.draw ?? {}),
+                snappingLayerInstance: snappingLayerSelector(state)
+            }), {
             onChangeDrawingStatus: changeDrawingStatus,
             onEndDrawing: endDrawing,
             onGeometryChanged: geometryChanged,
             onSelectFeatures: selectFeatures,
             onDrawingFeatures: drawingFeatures,
             onDrawStopped: drawStopped,
-            setCurrentStyle: setCurrentStyle
+            setCurrentStyle: setCurrentStyle,
+            toggleSnappingIsLoading: toggleSnappingIsLoading
         })( components.DrawSupport || Empty);
 
         const BoxSelectionSupport = connect(

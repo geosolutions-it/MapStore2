@@ -86,6 +86,15 @@ const Dock = connect(createSelector(
   * @prop {number} cfg.maxZoom the maximum zoom level for the "zoom to feature" functionality
   * @prop {boolean} cfg.hideCloseButton hide the close button from the header
   * @prop {boolean} cfg.hideLayerTitle hide the layer title from the header
+  * @prop {boolean} cfg.snapTool default true. Shows the button to enable snap tool.
+  * @prop {object} cfg.snapConfig object containing settings for snap tool.
+  * @prop {boolean} cfg.snapConfig.vertex activates or deactivates snapping to the vertices of vector shapes.
+  * @prop {boolean} cfg.snapConfig.edge activates or deactivates snapping to the edges of vector shapes.
+  * @prop {number} cfg.snapConfig.pixelTolerance Pixel tolerance for considering the pointer close enough to a segment or vertex for snapping.
+  * @prop {string} cfg.snapConfig.strategy defines strategy function for loading features. Supported values are "bbox" and "all".
+  * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
+  * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
+  *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
@@ -111,7 +120,18 @@ const Dock = connect(createSelector(
   *         }
   *       }]
   *     },
-  *   "editingAllowedRoles": ["ADMIN"]
+  *   "editingAllowedRoles": ["ADMIN"],
+  *   "snapTool": true,
+  *   "snapConfig": {
+  *     "vertex": true,
+  *     "edge": true,
+  *     "pixelTolerance": 10,
+ *      "additionalLayers": [
+ *         "ADDITIONAL_LAYER_ID"
+ *      ],
+ *      "strategy": "bbox",
+ *      "maxFeatures": 4000
+  *   },
   *   }
   * }
   * ```
@@ -185,7 +205,8 @@ const FeatureDock = (props = {
                     header={getHeader({
                         toolbarItems,
                         hideCloseButton: props.hideCloseButton,
-                        hideLayerTitle: props.hideLayerTitle
+                        hideLayerTitle: props.hideLayerTitle,
+                        pluginCfg: props.pluginCfg
                     })}
                     columns={getPanels(props.tools)}
                     footer={getFooter(props)}>
