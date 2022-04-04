@@ -9,6 +9,10 @@ import {get} from "lodash";
  * LICENSE file in the root directory of this source tree.
  */
 
+/**
+ * Retrieves parameters from hash "query string" of react router
+ * Example: `#/viewer/openlayers/0?center=0,0&zoom=5
+ */
 export const getRequestLoadValue = (name, state) => {
     const search = get(state, 'router.location.search') || '';
     const { query = {} } = url.parse(search, true) || {};
@@ -25,6 +29,21 @@ export const getRequestLoadValue = (name, state) => {
     return null;
 };
 
+/**
+ * Retrieves parameters from the `queryParams` entry (JSON) of the passed storage (by default `sessionStorage`).
+ * Example:
+ * <pre>
+ * {
+ *      "map": {"Contents of exported map"},
+ *      "featureinfo": {"lat": 0, "lng": 0, "filterNameList": []},
+ *      "bbox": "-177.84667968750014,-1.8234225930143395,-9.096679687500114,61.700290838326204",
+ *      "center": "0,0",
+ *      "zoom": 5,
+ *      "actions": [],
+ *      "page": "#/viewer/openlayers/config"
+ * }
+ * </pre>
+ */
 export const postRequestLoadValue = (name, storage = sessionStorage) => {
     const queryParams = storage.getItem('queryParams') ?? null;
     if (queryParams) {
