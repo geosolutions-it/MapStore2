@@ -40,63 +40,68 @@ Here a sample page you can create to test the service:
 
 ```html
 <html><head><meta charset="UTF-8">
-<script>
-    const POST_PATH = "rest/config/setParams";
-    window.onload = function(e){
-        document.getElementById("page").value = '../../#/viewer/openlayers/config';
-        // MAP content is a result of JSON.stringify(exportedMapObject);
-        document.getElementById("map").value = '{"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}';
-        document.getElementById("featureinfo").value = '';
-        document.getElementById("bbox").value = '';
-        document.getElementById("center").value = '1,1';
-        document.getElementById("zoom").value = '4';
-        document.getElementById("actions").value = '[]';
-        document.getElementById("post-form").addEventListener('submit', function(e) {
-            const base_url = document.getElementById('mapstore-base').value;
-            // handle GET URL
-            if(document.getElementById("method").value === "GET") {
-                const page = document.getElementById("page")?.value;
-                event.preventDefault();
-                const data = new FormData(event.target);
-                const values = Array.from(data.entries());
-                const queryString = values
-                    .filter(([k, v]) => !!v)
-                    .reduce((qs = "", [k, v]) => `${qs}&${k}=${encodeURIComponent(v)}`, "");
-                window.open(`${base_url}${page}?${queryString}`, "_blank");
-                return false;
-            }
-            document.getElementById("post-form").action = base_url + POST_PATH;
-            return true;
-        })
-    }
-</script>
+    <script>
+        const POST_PATH = "rest/config/setParams";
+        const queryParameters = {
+            "page": '../../#/viewer/openlayers/config',
+            "map": {"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}},
+            "featureinfo": {},
+            "bbox": '',
+            "center": '',
+            "zoom": 4,
+            "actions": [],
+        };
+        window.onload = function(){
+            Object.keys(queryParameters).forEach(function (key) {
+                const element = document.getElementById(key);
+                if (element) element.value = typeof queryParameters[key] === "object" || Array.isArray(queryParameters[key]) ? JSON.stringify(queryParameters[key]) : queryParameters[key];
+            });
+            document.getElementById("post-form").addEventListener('submit', function() {
+                const base_url = document.getElementById('mapstore-base').value.replace(/\/?$/, '/');
+                // handle GET URL
+                if(document.getElementById("method").value === "GET") {
+                    event.preventDefault();
+                    const page = document.getElementById("page")?.value;
+                    const data = new FormData(event.target);
+                    const values = Array.from(data.entries());
+                    const queryString = values
+                        .filter(([k, v]) => !!v)
+                        .reduce((qs = "", [k, v]) => `${qs}&${k}=${encodeURIComponent(v)}`, "");
+                    window.open(`${base_url}${page}?${queryString}`, "_blank");
+                    return false;
+                }
+                document.getElementById("post-form").action = base_url + POST_PATH;
+                return true;
+            })
+        }
+    </script>
 </head><body>
-    <fieldset>
+<fieldset>
     <legend>Options:</legend>
-     <label>format:</label><select id="method" target="_blank">
-        <option value="POST">POST</option>
-        <option value="GET">GET</option>
-    </select>
+    <label>method:</label><select id="method">
+    <option value="POST">POST</option>
+    <option value="GET">GET</option>
+</select>
     <label>format:</label><select disabled id="req-type">
-        <option value="form-url-encoded">form-url-encoded</option>
-        <option value="JSON">JSON</option><!-- no way to do it in browser (only ajax, not form submit) -->
-    </select><br/>
-     <label>URL:</label><input type="text" id="mapstore-base" value="http://localhost:8080/mapstore/">
-    </input><br/>
-    </fieldset>
+    <option value="form-url-encoded">form-url-encoded</option>
+</select><br/>
+    <label>URL:</label><input type="text" id="mapstore-base" value="http://localhost:8080/mapstore/">
+</input><br/>
+</fieldset>
 <!-- Place the URL of your MapStore in "action" -->
 <form id="post-form" action="http://localhost:8080/mapstore/rest/config/setParams" method="POST" target="_blank">
     <fieldset>
-    <legend>Params:</legend>
-    <label for="map">map:</label><br/><textarea id="map" name="map"></textarea><br/>
-    <label for="page">page:</label><br/><input type="text" id="page" name="page"></input><br/>
-    <label for="featureinfo">featureinfo:</label><br/><textarea id="featureinfo" name="featureinfo"></textarea><br/>
-    <label for="bbox">bbox:</label><br/><input type="text" id="bbox" name="bbox"></input><br/>
-    <label for="center">center:</label><br/><input type="text" id="center" name="center"></input><br/>
-    <label for="zoom">zoom:</label><br/><input type="text" id="zoom" name="zoom"></input><br/>
-    <label for="actions">actions:</label><br/><input type="text" id="actions" name="actions"></input><br/>
+        <legend>Params:</legend>
+        <label for="map">map:</label><br/><textarea id="map" name="map"></textarea><br/>
+        <label for="page">page:</label><br/><input type="text" id="page" name="page" value="../../#/viewer/openlayers/config"></input><br/>
+        <label for="featureinfo">featureinfo:</label><br/><textarea id="featureinfo" name="featureinfo"></textarea><br/>
+        <label for="bbox">bbox:</label><br/><input type="text" id="bbox" name="bbox"></input><br/>
+        <label for="center">center:</label><br/><input type="text" id="center" name="center"></input><br/>
+        <label for="zoom">zoom:</label><br/><input type="text" id="zoom" name="zoom"></input><br/>
+        <label for="actions">actions:</label><br/><textarea id="actions" name="actions"></textarea><br/>
     </fieldset>
-    <label for="submit">submit:</label><br/><input id="submit-form" value="Submit" type="submit"><br/>
+    <br/>
+    <input id="submit-form" value="Submit" type="submit"><br/>
 </form>
 </body></html>
 ```
@@ -105,7 +110,7 @@ Here a sample page you can create to test the service:
 
 ### Feature Info
 
-GET: `?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}`
+GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}`
 
 POST: ` {"featureinfo": {"lat": 43.077, "lng": 12.656, "filterNameList": []}}`
 
@@ -114,20 +119,20 @@ POST: ` {"featureinfo": {"lat": 43.077, "lng": 12.656, "filterNameList": []}}`
 Allows to pass the entire map JSON definition. (See the map configuration format of MapStore(
 GET: 
 ```
-?map={"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}
+#/viewer/openlayers/config?map={"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}
 ```
 
 ### Center / Zoom
-GET: `?center=0,0&zoom=5`
+GET: `#/viewer/openlayers/config?center=0,0&zoom=5`
 
 POST: `{"center: "0,0", "zoom": 5}`
 
 ### Marker / Zoom
-GET: `?marker=0,0&zoom=5`
+GET: `#/viewer/openlayers/config?marker=0,0&zoom=5`
 
 ### Bbox
 
-GET: `?bbox=8,8,53,53`
+GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
 
 ### Actions
 
@@ -156,7 +161,7 @@ Example:
 }
 ```
 
-GET: `?actions=[{"type": "ZOOM_TO_EXTENT","extent": [1,2,3,4],"crs": "EPSG:4326","maxZoom": 8}]`
+GET: `#/viewer/openlayers/config?actions=[{"type": "ZOOM_TO_EXTENT","extent": [1,2,3,4],"crs": "EPSG:4326","maxZoom": 8}]`
 
 For more details check out the [zoomToExtent](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
 
@@ -180,7 +185,7 @@ Example:
     "layer": "WORKSPACE:LAYER_NAME"
 }
 ```
-GET: `?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]`
+GET: `#/viewer/openlayers/config?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]`
 
 The sample request below illustrates how two actions can be concatenated:
 
@@ -215,7 +220,7 @@ Example:
     "sources": ["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]
 }
 ```
-GET: `?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]`
+GET: `#/viewer/openlayers/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]`
 
 POST: `{actions: [{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]}`
 
@@ -230,7 +235,7 @@ Data of resulting layer can be additionally filtered by passing "CQL_FILTER" int
 ```
 
 
-GET `?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]`
+GET `#/viewer/openlayers/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]`
 
 
 Number of objects passed to the options can be different to the number of layers, in this case options will be applied to the first X layers, where X is the length of options array.
