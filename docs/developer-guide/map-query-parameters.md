@@ -2,36 +2,103 @@
 
 In this section we will describe the available MapViewer query parameters that can be used when the map is loaded.
 
-MapStore allows to manipulate the map calling it with some parameters. This allows external application to open a customized viewer generating these parameters externally. With this functionality you can modifiy for instance the initial position of the map, modify the entire map and even trigger some actions.
+MapStore allows to manipulate the map by passing some parameters. This allows external application to open a customized viewer generating these parameters externally. With this functionality you can modify for instance the initial position of the map, the entire map and even trigger some actions.
 
 
 ## Passing parameters to the map
 
 ### Get Request
 
-The parameters can be passed in a query-string-like section, after the `#<path>?` of the request. Example:
+The parameters can be passed in a query-string-like section, after the `#<path>?` of the request. 
 
-```qu
-#/viewer/openlayers/new?map={"version":2,"map":{"center":{"x":16.68355617835898,"y":41.85986306892922,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":6,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"unesco:Unesco_point__031a2440-b3ff-11ec-b3fb-f9b438120ed2","format":"image/png","group":"Default","search":{"url":"https://gs-stable.geo-solutions.it/geoserver/wfs","type":"wfs"},"name":"unesco:Unesco_point","description":"Unesco Items","title":"Unesco Items","type":"wms","url":"https://gs-stable.geo-solutions.it/geoserver/wms","bbox":{"crs":"EPSG:4326","bounds":{"minx":"7.466999156080053","miny":"36.67491984727179","maxx":"18.033902263137904","maxy":"46.656160442453356"}},"visibility":true,"singleTile":false,"allowedSRS":{"EPSG:3857":true,"EPSG:900913":true,"EPSG:4326":true},"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"catalogURL":null,"useForElevation":false,"hidden":false,"version":"1.3.0","params":{}}],"groups":[{"id":"Default","title":"Default","expanded":true}],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_wms"},"widgetsConfig":{"layouts":{"xxs":[],"md":[]}},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}&featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}
+Example:
+
+```
+#/viewer/openlayers/new?center=0,0&zoom=5
 ```
 
 ### POST Request
 
-Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with an entire map, or complex data. To overcome this kind of situations, an adhoc `POST` service available at `mapstore/rest/config/setParams` allows to pass the parameters in the request payload as either `application/json` or `application/x-www-form-urlencoded`.
-The parameters will be then made available in the `sessionStorage` with key `queryParams`. Optionally a `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `mapstore/#viewer/openlayers/config`.
+Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with an entire map, or complex data. To overcome this kind of situations, an adhoc `POST` service available at `<mapstore-base-path>/rest/config/setParams` allows to pass the parameters in the request payload `application/x-www-form-urlencoded`.
+The parameters will be then passed to the client (using a temporary `queryParams` variable in `sessionStorage`). Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/openlayers/config`.
 
 Example `application/json` request payload:
 ```json
 {
- "map": {"version":2,"map":{"center":{"x":16.68355617835898,"y":41.85986306892922,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":6,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"unesco:Unesco_point__031a2440-b3ff-11ec-b3fb-f9b438120ed2","format":"image/png","group":"Default","search":{"url":"https://gs-stable.geo-solutions.it/geoserver/wfs","type":"wfs"},"name":"unesco:Unesco_point","description":"Unesco Items","title":"Unesco Items","type":"wms","url":"https://gs-stable.geo-solutions.it/geoserver/wms","bbox":{"crs":"EPSG:4326","bounds":{"minx":"7.466999156080053","miny":"36.67491984727179","maxx":"18.033902263137904","maxy":"46.656160442453356"}},"visibility":true,"singleTile":false,"allowedSRS":{"EPSG:3857":true,"EPSG:900913":true,"EPSG:4326":true},"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"catalogURL":null,"useForElevation":false,"hidden":false,"version":"1.3.0","params":{}}],"groups":[{"id":"Default","title":"Default","expanded":true}],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_wms"},"widgetsConfig":{"layouts":{"xxs":[],"md":[]}},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}},
- "featureinfo": {"lat": 43.077, "lng": 12.656, "filterNameList": []},
- "page":"#/viewer/openlayers/config"
+    "center": "0,0",
+    "zoom": 5,
+    "page": "#/viewer/openlayers/1234"
 }
 ```
 
 Example `application/x-www-form-urlencoded` request payload:
 ```
-"map"={"version":2,"map":{"center":{"x":16.68355617835898,"y":41.85986306892922,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":6,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"unesco:Unesco_point__031a2440-b3ff-11ec-b3fb-f9b438120ed2","format":"image/png","group":"Default","search":{"url":"https://gs-stable.geo-solutions.it/geoserver/wfs","type":"wfs"},"name":"unesco:Unesco_point","description":"Unesco Items","title":"Unesco Items","type":"wms","url":"https://gs-stable.geo-solutions.it/geoserver/wms","bbox":{"crs":"EPSG:4326","bounds":{"minx":"7.466999156080053","miny":"36.67491984727179","maxx":"18.033902263137904","maxy":"46.656160442453356"}},"visibility":true,"singleTile":false,"allowedSRS":{"EPSG:3857":true,"EPSG:900913":true,"EPSG:4326":true},"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"catalogURL":null,"useForElevation":false,"hidden":false,"version":"1.3.0","params":{}}],"groups":[{"id":"Default","title":"Default","expanded":true}],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_wms"},"widgetsConfig":{"layouts":{"xxs":[],"md":[]}},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}&"featureinfo"={"lat": 43.077, "lng": 12.656, "filterNameList": []}&"page"="#/viewer/openlayers/config"
+page=..%2F..%2F%23%2Fviewer%2Fopenlayers%2Fnew&featureinfo=&bbox=&center=1%2C1&zoom=4
+```
+
+Here a sample page you can create to test the service:
+
+```html
+<html><head><meta charset="UTF-8">
+<script>
+    const POST_PATH = "rest/config/setParams";
+    window.onload = function(e){
+        document.getElementById("page").value = '../../#/viewer/openlayers/config';
+        // MAP content is a result of JSON.stringify(exportedMapObject);
+        document.getElementById("map").value = '{"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}';
+        document.getElementById("featureinfo").value = '';
+        document.getElementById("bbox").value = '';
+        document.getElementById("center").value = '1,1';
+        document.getElementById("zoom").value = '4';
+        document.getElementById("actions").value = '[]';
+        document.getElementById("post-form").addEventListener('submit', function(e) {
+            const base_url = document.getElementById('mapstore-base').value;
+            // handle GET URL
+            if(document.getElementById("method").value === "GET") {
+                const page = document.getElementById("page")?.value;
+                event.preventDefault();
+                const data = new FormData(event.target);
+                const values = Array.from(data.entries());
+                const queryString = values
+                    .filter(([k, v]) => !!v)
+                    .reduce((qs = "", [k, v]) => `${qs}&${k}=${encodeURIComponent(v)}`, "");
+                window.open(`${base_url}${page}?${queryString}`, "_blank");
+                return false;
+            }
+            document.getElementById("post-form").action = base_url + POST_PATH;
+            return true;
+        })
+    }
+</script>
+</head><body>
+    <fieldset>
+    <legend>Options:</legend>
+     <label>format:</label><select id="method" target="_blank">
+        <option value="POST">POST</option>
+        <option value="GET">GET</option>
+    </select>
+    <label>format:</label><select disabled id="req-type">
+        <option value="form-url-encoded">form-url-encoded</option>
+        <option value="JSON">JSON</option><!-- no way to do it in browser (only ajax, not form submit) -->
+    </select><br/>
+     <label>URL:</label><input type="text" id="mapstore-base" value="http://localhost:8080/mapstore/">
+    </input><br/>
+    </fieldset>
+<!-- Place the URL of your MapStore in "action" -->
+<form id="post-form" action="http://localhost:8080/mapstore/rest/config/setParams" method="POST" target="_blank">
+    <fieldset>
+    <legend>Params:</legend>
+    <label for="map">map:</label><br/><textarea id="map" name="map"></textarea><br/>
+    <label for="page">page:</label><br/><input type="text" id="page" name="page"></input><br/>
+    <label for="featureinfo">featureinfo:</label><br/><textarea id="featureinfo" name="featureinfo"></textarea><br/>
+    <label for="bbox">bbox:</label><br/><input type="text" id="bbox" name="bbox"></input><br/>
+    <label for="center">center:</label><br/><input type="text" id="center" name="center"></input><br/>
+    <label for="zoom">zoom:</label><br/><input type="text" id="zoom" name="zoom"></input><br/>
+    <label for="actions">actions:</label><br/><input type="text" id="actions" name="actions"></input><br/>
+    </fieldset>
+    <label for="submit">submit:</label><br/><input id="submit-form" value="Submit" type="submit"><br/>
+</form>
+</body></html>
 ```
 
 ## Available Parameters
@@ -40,20 +107,14 @@ Example `application/x-www-form-urlencoded` request payload:
 
 GET: `?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}`
 
-POST: ` {"featureinfo: {"lat": 43.077, "lng": 12.656, "filterNameList": []}}`
+POST: ` {"featureinfo": {"lat": 43.077, "lng": 12.656, "filterNameList": []}}`
 
 ### Map
 
+Allows to pass the entire map JSON definition. (See the map configuration format of MapStore(
 GET: 
 ```
-?map={"version":2,"map":{"center":{"x":16.68355617835898,"y":41.85986306892922,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":6,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"unesco:Unesco_point__031a2440-b3ff-11ec-b3fb-f9b438120ed2","format":"image/png","group":"Default","search":{"url":"https://gs-stable.geo-solutions.it/geoserver/wfs","type":"wfs"},"name":"unesco:Unesco_point","description":"Unesco Items","title":"Unesco Items","type":"wms","url":"https://gs-stable.geo-solutions.it/geoserver/wms","bbox":{"crs":"EPSG:4326","bounds":{"minx":"7.466999156080053","miny":"36.67491984727179","maxx":"18.033902263137904","maxy":"46.656160442453356"}},"visibility":true,"singleTile":false,"allowedSRS":{"EPSG:3857":true,"EPSG:900913":true,"EPSG:4326":true},"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"catalogURL":null,"useForElevation":false,"hidden":false,"version":"1.3.0","params":{}}],"groups":[{"id":"Default","title":"Default","expanded":true}],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_wms"},"widgetsConfig":{"layouts":{"xxs":[],"md":[]}},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}
-```
-
-POST: 
-```json
-{
-    "map": {"version":2,"map":{"center":{"x":16.68355617835898,"y":41.85986306892922,"crs":"EPSG:4326"},"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"projection":"EPSG:900913","units":"m","zoom":6,"mapOptions":{},"layers":[{"id":"mapnik__0","group":"background","source":"osm","name":"mapnik","title":"Open Street Map","type":"osm","visibility":true,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"Night2012__1","group":"background","source":"nasagibs","name":"Night2012","provider":"NASAGIBS.ViirsEarthAtNight2012","title":"NASAGIBS Night 2012","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"OpenTopoMap__2","group":"background","source":"OpenTopoMap","name":"OpenTopoMap","provider":"OpenTopoMap","title":"OpenTopoMap","type":"tileprovider","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"s2cloudless:s2cloudless__3","format":"image/jpeg","group":"background","source":"s2cloudless","name":"s2cloudless:s2cloudless","opacity":1,"title":"Sentinel 2 Cloudless","type":"wms","url":["https://1maps.geo-solutions.it/geoserver/wms","https://2maps.geo-solutions.it/geoserver/wms","https://3maps.geo-solutions.it/geoserver/wms","https://4maps.geo-solutions.it/geoserver/wms","https://5maps.geo-solutions.it/geoserver/wms","https://6maps.geo-solutions.it/geoserver/wms"],"visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"undefined__4","group":"background","source":"ol","title":"Empty Background","type":"empty","visibility":false,"singleTile":false,"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"useForElevation":false,"hidden":false},{"id":"unesco:Unesco_point__031a2440-b3ff-11ec-b3fb-f9b438120ed2","format":"image/png","group":"Default","search":{"url":"https://gs-stable.geo-solutions.it/geoserver/wfs","type":"wfs"},"name":"unesco:Unesco_point","description":"Unesco Items","title":"Unesco Items","type":"wms","url":"https://gs-stable.geo-solutions.it/geoserver/wms","bbox":{"crs":"EPSG:4326","bounds":{"minx":"7.466999156080053","miny":"36.67491984727179","maxx":"18.033902263137904","maxy":"46.656160442453356"}},"visibility":true,"singleTile":false,"allowedSRS":{"EPSG:3857":true,"EPSG:900913":true,"EPSG:4326":true},"dimensions":[],"hideLoading":false,"handleClickOnLayer":false,"catalogURL":null,"useForElevation":false,"hidden":false,"version":"1.3.0","params":{}}],"groups":[{"id":"Default","title":"Default","expanded":true}],"backgrounds":[],"bookmark_search_config":{}},"catalogServices":{"services":{"gs_stable_csw":{"url":"https://gs-stable.geo-solutions.it/geoserver/csw","type":"csw","title":"GeoSolutions GeoServer CSW","autoload":true},"gs_stable_wms":{"url":"https://gs-stable.geo-solutions.it/geoserver/wms","type":"wms","title":"GeoSolutions GeoServer WMS","autoload":false},"gs_stable_wmts":{"url":"https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts","type":"wmts","title":"GeoSolutions GeoServer WMTS","autoload":false}},"selectedService":"gs_stable_wms"},"widgetsConfig":{"layouts":{"xxs":[],"md":[]}},"mapInfoConfiguration":{"trigger":"click"},"dimensionData":{},"timelineData":{}}
-}
+?map={"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}
 ```
 
 ### Center / Zoom
@@ -64,13 +125,9 @@ POST: `{"center: "0,0", "zoom": 5}`
 ### Marker / Zoom
 GET: `?marker=0,0&zoom=5`
 
-POST: `{"marker: "0,0", "zoom": 5}`
-
 ### Bbox
 
 GET: `?bbox=8,8,53,53`
-
-POST: ` {"bbox: "8,8,53,53"}`
 
 ### Actions
 
@@ -101,8 +158,6 @@ Example:
 
 GET: `?actions=[{"type": "ZOOM_TO_EXTENT","extent": [1,2,3,4],"crs": "EPSG:4326","maxZoom": 8}]`
 
-POST: `{actions: [{"type": "ZOOM_TO_EXTENT","extent": [1,2,3,4],"crs": "EPSG:4326","maxZoom": 8}]}`
-
 For more details check out the [zoomToExtent](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
 
 ### - Map info
@@ -127,8 +182,6 @@ Example:
 ```
 GET: `?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]`
 
-POST: `{actions: [{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]}`
-
 The sample request below illustrates how two actions can be concatenated:
 
 ```
@@ -145,7 +198,7 @@ For more details check out the [searchLayerWithFilter](https://mapstore.geosolut
 
 ### - Add Layers
 
-This action allows to add layers directly to the map by taking them from the Catalogs
+This action allows to add layers directly to the map by taking them from the catalogs configured, or passed.
 
 Requirements:
 
@@ -176,9 +229,9 @@ Data of resulting layer can be additionally filtered by passing "CQL_FILTER" int
 }
 ```
 
+
 GET `?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]`
 
-POST: `{"actions": [{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]}`
 
 Number of objects passed to the options can be different to the number of layers, in this case options will be applied to the first X layers, where X is the length of options array.
 
