@@ -14,7 +14,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import './TSplitButton.less';
 import classnames from "classnames";
 
-export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, active, buttonClassName = "square-button-md",
+export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, active, title, buttonClassName = "square-button-md",
     menuStyle = {}, className, children, onMount = () => {}, ...props }, ref) => {
     const [isShown, setIsShown] = useState(false);
     useEffect(() => {
@@ -44,7 +44,7 @@ export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, activ
             open={isShown}
             onToggle={onToggleHandler}
             >
-                <Button ref={ref} id={id} onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"} {...props}>{props.title}</Button>
+                <Button ref={ref} id={id} onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"} {...props}>{title}</Button>
                 <Dropdown.Toggle bsStyle={active ? "success" : "primary"} />
                 <Dropdown.Menu style={menuStyle} onSelect={onSelectHandler}>
                     {children}
