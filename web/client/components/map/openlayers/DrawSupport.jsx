@@ -487,7 +487,8 @@ export default class DrawSupport extends React.Component {
                         style: new Style({
                             stroke: new Stroke({
                                 opacity: 0,
-                                fillOpacity: 0
+                                fillOpacity: 0,
+                                strokeOpacity: 0
                             })
                         })
                     });
