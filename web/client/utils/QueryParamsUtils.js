@@ -70,6 +70,16 @@ export const postRequestLoadValue = (name, storage = sessionStorage) => {
     return null;
 };
 
+
+/**
+ * Retrieves parameter from two available sources:
+ * - from hash "query string" of react router
+ * - from the `queryParams` entry (JSON) of the passed storage
+ * Data from query string has higher priority if parameter is available in both sources.
+ * @param {string} name - name of the parameter to get
+ * @param {*} state - app state
+ * @param {Storage} storage - sessionStorage or localStorage
+ */
 export const getRequestParameterValue = (name, state, storage = sessionStorage) => {
     return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, storage);
 };
