@@ -17,6 +17,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { deleteMap } from '../actions/maps';
 import { toggleControl } from '../actions/controls';
 import { mapIdSelector } from '../selectors/mapInitialConfig';
+import { showConfirmDeleteMapModalSelector } from '../selectors/controls';
 import Message from '../components/I18N/Message';
 
 class DeleteConfirmDialog extends React.Component {
@@ -58,8 +59,6 @@ class DeleteConfirmDialog extends React.Component {
         );
     }
 }
-
-export const showConfirmDeleteMapModalSelector = state => state.controls && state.controls.mapDelete && state.controls.mapDelete.enabled;
 
 export default createPlugin('DeleteMap', {
     component:
