@@ -479,7 +479,8 @@
             "Timeline",
             "Playback",
             "FeedbackMask",
-            "StyleEditor"
+            "StyleEditor",
+            "DeleteMap"
         ],
         "embedded": ["Details", {
                 "name": "Map",
