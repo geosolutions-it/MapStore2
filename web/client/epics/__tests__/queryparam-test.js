@@ -21,6 +21,7 @@ import {toggleControl} from "../../actions/controls";
 import {layerLoad} from "../../actions/layers";
 import {ActionsObservable} from "redux-observable";
 import Rx from "rxjs";
+import {FEATURE_INFO_CLICK} from "../../actions/mapInfo";
 
 const center = {
     x: -74.2,
@@ -359,6 +360,72 @@ describe('queryparam epics', () => {
                 try {
                     expect(actions[0].type).toBe(SHOW_NOTIFICATION);
                     expect(actions[0].level).toBe( 'warning');
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+
+    it('test readQueryParamsOnMapEpic with featureinfo and zoom in url search', (done) => {
+        const state = {
+            router: {
+                location: {
+                    search: '?featureinfo={%22lat%22:%200,%20%22lng%22:%200}&zoom=5'
+                }
+            },
+            map: {
+                size: {width: 100, height: 100},
+                projection: "EPSG:4326"
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                    expect(actions[0].point.latlng).toEqual({lat: 0, lng: 0});
+                    expect(actions[0].point.pixel).toBe(undefined);
+                    expect(actions[0].point.geometricFilter).toExist();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('test readQueryParamsOnMapEpic with featureinfo and zoom in sessionStorage', (done) => {
+        sessionStorage.setItem('queryParams', JSON.stringify({featureinfo: {lat: 0, lng: 0, filterNameList: []}}));
+        const state = {
+            router: {
+                location: {
+                    search: ''
+                }
+            },
+            map: {
+                size: {width: 100, height: 100},
+                projection: "EPSG:4326"
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                    expect(actions[0].point.latlng).toEqual({lat: 0, lng: 0});
+                    expect(actions[0].point.pixel).toBe(undefined);
+                    expect(actions[0].point.geometricFilter).toExist();
                 } catch (e) {
                     done(e);
                 }
