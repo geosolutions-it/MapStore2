@@ -454,7 +454,8 @@
             "descriptionPlaceholder": "Kartenbeschreibung",
             "saveTitle": "Karte speichern",
             "saveText": "Aktuelle Karte speichern?",
-            "thumbnail": "Miniaturansicht",
+            "thumbnail": "Thumbnail",
+            "mapDelete": "Karte löschen",
             "message": "Ein Bild klicken oder hierherbewegen",
             "suggestion": "(möglichst 300px X 180px, max 500kb)",
             "errorFormat": "Unterstützte Formate: png/jpg",
@@ -1332,7 +1333,7 @@
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
             "headingToolTip": "Min: 0° und Max: 360°",
-            "rollToolTip": "Min: -90° und Max: 90°",
+            "rollToolTip": "Min: 0° und Max: 360°",
             "pitchToolTip": "Min: -90° und Max: 90°",
             "showSectionId": "Bildlaufposition einschließen",
             "showConnections": "Verbindungen anzeigen",
@@ -2829,6 +2830,10 @@
           "CRSSelector": {
             "description": "Ermöglicht das Umschalten der Kartenprojektion",
             "title": "CRS-Auswahl"
+          },
+          "DeleteMap": {
+            "description": "Ermöglicht das Löschen einer Kartenressource und aller zugehörigen Ressourcen",
+            "title": "Karte löschen"
           },
           "Details": {
             "description": "Details für eine Karte anzeigen lassen, wenn vorhanden",

@@ -417,6 +417,7 @@
             "saveTitle": "Sauver la carte",
             "saveText": "Sauver la carte courante ?",
             "thumbnail": "Vignette",
+            "mapDelete": "Supprimer la carte",
             "message": "Déposez ou cliquez pour importer une image",
             "suggestion": "(conseillé : 300 px X 180 px, 500 kb max)",
             "errorFormat": "Formats supportés: png/jpg",
@@ -1291,7 +1292,7 @@
             "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées",
             "zoomToolTip": "Min: 1 et Max: 35",
             "headingToolTip": "Min: 0° et Max: 360°",
-            "rollToolTip": "Min: -90° et Max: 90°",
+            "rollToolTip": "Min: 0° et Max: 360°",
             "pitchToolTip": "Min: -90° et Max: 90°",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
@@ -2793,6 +2794,10 @@
           "CRSSelector": {
             "description": "Permet de changer de projection cartographique",
             "title": "Sélecteur CRS"
+          },
+          "DeleteMap": {
+            "description": "Permet de supprimer une ressource cartographique et toutes ses ressources associées",
+            "title": "Supprimer la carte"
           },
           "Details": {
             "description": "Permet d'afficher les détails d'une carte, le cas échéant",

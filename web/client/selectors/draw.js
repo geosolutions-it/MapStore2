@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, isNil} from 'lodash';
+import {get, isObject} from 'lodash';
 import {additionalLayersSelector, getAdditionalLayerFromId, getLayerFromId, layersSelector} from "./layers";
 import {selectedLayerSelector} from "./featuregrid";
 import {createShallowSelectorCreator} from "../utils/ReselectUtils";
@@ -27,7 +27,7 @@ export const snappingConfig = state => get(state, 'draw.snapConfig', false);
 export const availableSnappingLayers = createShallowSelectorCreator(
     (a, b) => {
         return a === b
-            || !isNil(a) && !isNil(b) && a.id === b.id;
+            || isObject(a) && isObject(b) && a?.id === b?.id && a?.title === b?.title;
     }
 )([
     layersSelector,
@@ -43,7 +43,7 @@ export const availableSnappingLayers = createShallowSelectorCreator(
     const id = selectedLayer?.id;
     const availableExtraLayers = additionalLayers.filter(l => (config?.additionalLayers ?? []).includes(l.id)).map(l => l.options);
     const layersList = availableExtraLayers.concat(layers);
-    const currentLayer = id ? [{value: id, label: selectedLayer.title ?? selectedLayer.name, active: id === snappingId}] : [];
+    const currentLayer = id ? [{value: id, label: getLayerTitle(selectedLayer, locale), active: id === snappingId}] : [];
 
     return currentLayer.concat(
         layersList.map((layer) =>

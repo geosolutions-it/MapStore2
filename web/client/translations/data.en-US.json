@@ -417,6 +417,7 @@
             "saveTitle": "Save map",
             "saveText": "Save current map?",
             "thumbnail": "Thumbnail",
+            "mapDelete": "Delete Map",
             "message": "Drop or click to import an image",
             "suggestion": "(best 300 px X 180 px, max 500 kb)",
             "errorFormat": "Supported formats: png/jpg",
@@ -1284,7 +1285,7 @@
             "coordTooltip": "Click on map to grab the coordinates",
             "zoomToolTip": "Min: 1 and Max: 35",
             "headingToolTip": "Min: 0° and Max: 360°",
-            "rollToolTip": "Min: -90° and Max: 90°",
+            "rollToolTip": "Min: 0° and Max: 360°",
             "pitchToolTip": "Min: -90° and Max: 90°",
             "wrongCenterAndZoomParamTitle": "Invalid center and zoom param",
             "wrongCenterAndZoomParamMessage": "Center and Zoom param must be center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
@@ -2802,6 +2803,10 @@
           "CRSSelector": {
             "description": "Allows to switch map projection",
             "title": "CRS Selector"
+          },
+          "DeleteMap": {
+              "description": "Allows to delete a map resource and all its associated resources",
+              "title": "Delete Map"
           },
           "Details": {
             "description": "Allow to show detail card for a map, if any",

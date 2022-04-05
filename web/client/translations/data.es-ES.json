@@ -417,6 +417,7 @@
             "saveTitle": "Guardar el mapa",
             "saveText": "¿Guardar el mapa actual",
             "thumbnail": "Miniatura",
+            "mapDelete": "Eliminar el mapa",
             "message": "Soltar o pinchar para importar un imagen",
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",
@@ -1293,7 +1294,7 @@
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
             "headingToolTip": "Min: 0° y Max: 360°",
-            "rollToolTip": "Min: -90° y Max: 90°",
+            "rollToolTip": "Min: 0° y Max: 360°",
             "pitchToolTip": "Min: -90° y Max: 90°",
             "showSectionId": "Incluir posición de desplazamiento",
             "showConnections": "Mostrar conexiones",
@@ -2791,6 +2792,10 @@
           "CRSSelector": {
             "description": "Permite cambiar la proyección del mapa",
             "title": "Selector de CRS"
+          },
+          "DeleteMap": {
+            "description": "Permite eliminar un recurso de mapa y todos sus recursos asociados",
+            "title": "Eliminar mapa"
           },
           "Details": {
             "description": "Permitir mostrar tarjeta de detalle para un mapa, si hay",

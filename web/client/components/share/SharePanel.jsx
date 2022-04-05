@@ -27,7 +27,7 @@ import {
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange, isEmpty, pick, omit } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl, CENTERANDZOOM, BBOX, MARKERANDZOOM, SHARE_TABS } from '../../utils/ShareUtils';
-import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian, setValueBoundaries } from '../../utils/CoordinatesUtils';
+import { getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
@@ -129,6 +129,20 @@ class SharePanel extends React.Component {
         defaultLoaded: false
     };
 
+    setValueBoundaries = (value, min, max ) => {
+        if (isNaN(value) && value.length < 1) { return 0;}
+        if (value < min) { return min;}
+        if (value > max) { return max;}
+        return  parseFloat(value);
+    };
+
+    processOrientation = (props) => {
+        const heading = this.setValueBoundaries(convertRadianToDegrees(props?.viewerOptions?.orientation?.heading), 0, 360);
+        const pitch = this.setValueBoundaries(convertRadianToDegrees(props?.viewerOptions?.orientation?.pitch), -90, 90);
+        const roll = this.setValueBoundaries(convertRadianToDegrees(props?.viewerOptions?.orientation?.roll), 0, 360);
+        return { heading, pitch, roll };
+    }
+
     UNSAFE_componentWillMount() {
         const bbox = join(this.props.bbox, ',');
         const coordinate = this.getCoordinates(this.props);
@@ -137,9 +151,7 @@ class SharePanel extends React.Component {
             eventKey: SHARE_TABS[this.props.selectedTab] || 1,
             zoom: this.props.zoom,
             coordinate,
-            heading: this.props.viewerOptions?.orientation?.heading,
-            pitch: this.props.viewerOptions?.orientation?.pitch,
-            roll: this.props.viewerOptions?.orientation?.roll
+            ...this.processOrientation(this.props)
         });
     }
 
@@ -151,13 +163,6 @@ class SharePanel extends React.Component {
             !isEqual(this.props.isVisible, newProps.isVisible) ||
             !isEqual(this.props?.viewerOptions?.orientation, newProps.viewerOptions?.orientation)) {
             this.initializeDefaults(newProps);
-        }
-        if (this.props?.viewerOptions?.orientation) {
-            this.setState({
-                heading: convertRadianToDegrees(newProps.viewerOptions?.orientation?.heading),
-                pitch: convertRadianToDegrees(newProps.viewerOptions?.orientation?.pitch),
-                roll: convertRadianToDegrees(newProps.viewerOptions?.orientation?.roll)
-            });
         }
     }
 
@@ -178,7 +183,7 @@ class SharePanel extends React.Component {
 
     initializeDefaults = (props) => {
         const coordinate = this.getCoordinates(props);
-        const {settings = {}, advancedSettings = {}, zoom, isVisible, onUpdateSettings, bbox: newBbox = [], viewerOptions} = props || {};
+        const {settings = {}, advancedSettings = {}, zoom, isVisible, onUpdateSettings, bbox: newBbox = []} = props || {};
         const isCenterAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === CENTERANDZOOM || false;
         const isMarkerAndZoomDefault = advancedSettings.centerAndZoom && advancedSettings.defaultEnabled === MARKERANDZOOM || false;
         const enableDefaultBBox = advancedSettings.bbox && advancedSettings.defaultEnabled === BBOX || false;
@@ -199,9 +204,7 @@ class SharePanel extends React.Component {
             defaultLoaded: isVisible,
             isCenterAndZoomDefault,
             isMarkerAndZoomDefault,
-            heading: convertRadianToDegrees(viewerOptions?.orientation?.heading),
-            pitch: convertRadianToDegrees(viewerOptions?.orientation?.pitch),
-            roll: convertRadianToDegrees(viewerOptions?.orientation?.roll)
+            ...this.processOrientation(props)
         });
     }
 
@@ -419,8 +422,9 @@ class SharePanel extends React.Component {
                                             });
                                         }}
                                         onBlur={()=> {
-                                            const angle = setValueBoundaries(this.state.heading, 0, 360);
-                                            this.updateMapView('heading', angle);
+                                            const heading = this.setValueBoundaries(this.state.heading, 0, 360);
+                                            this.setState({ heading });
+                                            this.updateMapView('heading', heading);
                                         }}
                                     />
                                 </FormGroup>
@@ -432,19 +436,18 @@ class SharePanel extends React.Component {
                                     <FormControl
                                         type="number"
                                         name="roll"
-                                        min={-90}
-                                        max={90}
-                                        value={
-                                            this.state?.roll
-                                        }
+                                        min={0}
+                                        max={360}
+                                        value={this.state?.roll}
                                         onChange={({target})=>{
                                             this.setState({
                                                 roll: target.value
                                             });
                                         }}
                                         onBlur={()=> {
-                                            const angle = setValueBoundaries(this.state.roll, -90, 90);
-                                            this.updateMapView('roll', angle);
+                                            const roll = this.setValueBoundaries(this.state.roll, 0, 360);
+                                            this.setState({ roll });
+                                            this.updateMapView('roll', roll);
                                         }}
                                     />
                                 </FormGroup>
@@ -458,17 +461,16 @@ class SharePanel extends React.Component {
                                         min={-90}
                                         max={90}
                                         name="pitch"
-                                        value={
-                                            this.state?.pitch
-                                        }
+                                        value={this.state?.pitch}
                                         onChange={({target})=>{
                                             this.setState({
                                                 pitch: target.value
                                             });
                                         }}
                                         onBlur={()=> {
-                                            const angle = setValueBoundaries(this.state.pitch, -90, 90);
-                                            this.updateMapView('pitch', angle);
+                                            const pitch = this.setValueBoundaries(this.state.pitch, -90, 90);
+                                            this.setState({ pitch });
+                                            this.updateMapView('pitch', pitch);
                                         }}
                                     />
                                 </FormGroup>
