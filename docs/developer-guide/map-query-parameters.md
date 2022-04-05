@@ -102,6 +102,7 @@ Here a sample page you can create to test the service:
 ## Available Parameters
 
 ### Feature Info
+
 Allows to trigger [identify tool](../../user-guide/side-bar/#identify-tool) for the coordinates passed in "lat"/"lng" parameters. Optional parameter "filterNameList"
 allows limiting request to the specific layer names.
 
