@@ -45,7 +45,7 @@ Here a sample page you can create to test the service:
         const queryParameters = {
             "page": '../../#/viewer/openlayers/config',
             "map": {"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}},
-            "featureinfo": {},
+            "featureinfo": '',
             "bbox": '',
             "center": '',
             "zoom": 4,
@@ -76,16 +76,14 @@ Here a sample page you can create to test the service:
         }
     </script>
 </head><body>
-<fieldset>
-    <legend>Options:</legend>
-    <label>method:</label><select id="method">
-    <option value="POST">POST</option>
-    <option value="GET">GET</option>
-</select>
-    <label>format:</label><select disabled id="req-type">
-    <option value="form-url-encoded">form-url-encoded</option>
-</select><br/>
-    <label>URL:</label><input type="text" id="mapstore-base" value="http://localhost:8080/mapstore/">
+    <fieldset>
+        <legend>Options:</legend>
+        <label>method:</label><select id="method">
+            <option value="POST">POST</option>
+            <option value="GET">GET</option>
+        </select>
+    <br/>
+    <label>MapStore Base URL:</label><input type="text" id="mapstore-base" value="http://localhost:8080/mapstore/">
 </input><br/>
 </fieldset>
 <!-- Place the URL of your MapStore in "action" -->
@@ -98,6 +96,7 @@ Here a sample page you can create to test the service:
         <label for="bbox">bbox:</label><br/><input type="text" id="bbox" name="bbox"></input><br/>
         <label for="center">center:</label><br/><input type="text" id="center" name="center"></input><br/>
         <label for="zoom">zoom:</label><br/><input type="text" id="zoom" name="zoom"></input><br/>
+        <label for="marker">marker:</label><br/><input type="text" id="marker" name="marker"></input><br/>
         <label for="actions">actions:</label><br/><textarea id="actions" name="actions"></textarea><br/>
     </fieldset>
     <br/>
