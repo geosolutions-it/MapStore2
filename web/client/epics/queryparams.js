@@ -25,6 +25,7 @@ import { mapSelector } from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
+import { changeMapType } from '../actions/maptype';
 
 /*
 it maps params key to function.
@@ -69,7 +70,7 @@ const paramActions = {
         const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
 
         if (isValid) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions), viewerOptions && changeMapType('cesium')];
         }
         return [
             warning({
