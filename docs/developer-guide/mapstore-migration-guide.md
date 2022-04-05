@@ -105,7 +105,7 @@ in particular the following have been migrated to the latest available versions:
 | JPA| 1.0        |2.1|
 | hibernate-generic-dao| 0.5.1        |1.3.0-SNAPSHOT|
 | h2| 1.3.168        |1.3.175|
-| servlet-api| 2.5        |3.0.1|
+| javax-servlet-api | 2.5        |3.1.0|
 
 This requires also the **upgrade of Tomcat to at least version 8.5.x**.
 
