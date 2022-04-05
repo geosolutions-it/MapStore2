@@ -54,12 +54,18 @@ const paramActions = {
     center: ({value = {}, state}) => {
         const map = mapSelector(state);
         const validCenter = value && !isEmpty(value.center) && value.center.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const { heading, pitch, roll } = value;
+        const validViewerOptions = [heading, pitch, roll].map(val => !isEmpty(val) && toNumber(val));
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
         const zoom = toNumber(value.zoom);
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const viewerOptions = map.viewerOptions;
+        const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? {
+            heading: validViewerOptions[0],
+            pitch: validViewerOptions[1],
+            roll: validViewerOptions[2]
+        } : map.viewerOptions;
         const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
 
         if (isValid) {
@@ -109,6 +115,16 @@ const paramActions = {
             return actions.filter(a => includes(whiteList, a.type));
         }
         return [];
+    },
+    heading: ({value = ''}) => {
+        
+        // continue from here
+    },
+    pitch: ({value = ''}) => {
+        // continue from here
+    },
+    roll: ({value = ''}) => {
+        // continue from here
     }
 };
 
