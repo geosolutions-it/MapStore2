@@ -4,35 +4,29 @@ In this section we will describe the available MapViewer query parameters that c
 
 MapStore allows to manipulate the map by passing some parameters. This allows external application to open a customized viewer generating these parameters externally. With this functionality you can modify for instance the initial position of the map, the entire map and even trigger some actions.
 
-
 ## Passing parameters to the map
 
 ### Get Request
 
-The parameters can be passed in a query-string-like section, after the `#<path>?` of the request. 
+The parameters can be passed in a query-string-like section, after the `#<path>?` of the request.
 
 Example:
 
-```
+```text
 #/viewer/openlayers/new?center=0,0&zoom=5
 ```
+
+!!! note
+    The parameters in the request should be URL encoded. In order to make them more readable, the examples in this page will now apply the URL encoding.
 
 ### POST Request
 
 Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with an entire map, or complex data. To overcome this kind of situations, an adhoc `POST` service available at `<mapstore-base-path>/rest/config/setParams` allows to pass the parameters in the request payload `application/x-www-form-urlencoded`.
 The parameters will be then passed to the client (using a temporary `queryParams` variable in `sessionStorage`). Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/openlayers/config`.
 
-Example `application/json` request payload:
-```json
-{
-    "center": "0,0",
-    "zoom": 5,
-    "page": "#/viewer/openlayers/1234"
-}
-```
+Example `application/x-www-form-urlencoded` request payload (URL encoded):
 
-Example `application/x-www-form-urlencoded` request payload:
-```
+```text
 page=..%2F..%2F%23%2Fviewer%2Fopenlayers%2Fnew&featureinfo=&bbox=&center=1%2C1&zoom=4
 ```
 
@@ -111,22 +105,21 @@ Here a sample page you can create to test the service:
 
 GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}`
 
-POST: ` {"featureinfo": {"lat": 43.077, "lng": 12.656, "filterNameList": []}}`
-
 ### Map
 
 Allows to pass the entire map JSON definition. (See the map configuration format of MapStore(
-GET: 
-```
+GET:
+
+```text
 #/viewer/openlayers/config?map={"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}
 ```
 
 ### Center / Zoom
+
 GET: `#/viewer/openlayers/config?center=0,0&zoom=5`
 
-POST: `{"center: "0,0", "zoom": 5}`
-
 ### Marker / Zoom
+
 GET: `#/viewer/openlayers/config?marker=0,0&zoom=5`
 
 ### Bbox
@@ -145,12 +138,15 @@ To dispatch additional actions when the map viewer is started, the **actions** q
 The value of this parameter is a JSON string containing an array with an object per action. The structure of the object consist of a property type and a bunch of other properties depending on the action.
 
 ### Available actions
+
 Only the following actions can be used in the **actions** json string.
 
-### - Zoom to extent
+#### Zoom to extent
+
 It zooms the map to the defined extent.
 
 Example:
+
 ```json
 {
     "type": "ZOOM_TO_EXTENT",
@@ -164,7 +160,8 @@ GET: `#/viewer/openlayers/config?actions=[{"type": "ZOOM_TO_EXTENT","extent": [1
 
 For more details check out the [zoomToExtent](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
 
-### - Map info
+#### Map info
+
 It performs a [GetFeature](https://docs.geoserver.org/stable/en/user/services/wfs/reference.html#getfeature) request on the specified layer and then a [GetFeatureInfo](https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo) by taking a point from the retrieved features's geometry. This action can be used only for existing maps (map previously created).
 
 With the GetFeature request it takes the first coordinate of the geometry of the first retrieved feature; that coordinates are then used for an usual GFI (WMS GetFeatureInfo) request by limiting it to the specified layer.
@@ -172,6 +169,7 @@ With the GetFeature request it takes the first coordinate of the geometry of the
 A **cql_filter** is also **mandatory** for that action to properly filter required data: that filter will be used in both request (GetFeature and GFI). If you don't need to apply a filter, you can use the standard INCLUDE clause (cql_filter=INCLUDE) so the whole dataset will be queried.
 
 Requirements:
+
 - The layer specified must be visible in the map
 - There must be a geometry that can be retrieved from the GetFeature request
 
@@ -184,11 +182,12 @@ Example:
     "layer": "WORKSPACE:LAYER_NAME"
 }
 ```
+
 GET: `#/viewer/openlayers/config?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]`
 
 The sample request below illustrates how two actions can be concatenated:
 
-```
+```text
 https://dev-mapstore.geosolutionsgroup.com/mapstore/#/viewer/openlayers/4093?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"STATE_FIPS=34","layer":"topp:states"},{"type":"ZOOM_TO_EXTENT","extent":[-77.48202256347649,38.74612266051003,-72.20858506347648,40.66664704515103],"crs":"EPSG:4326","maxZoom":8}]
 ```
 
@@ -199,8 +198,7 @@ The MapStore invocation URL above executes the following operations:
 
 For more details check out the [searchLayerWithFilter](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
 
-
-### - Add Layers
+#### Add Layers
 
 This action allows to add layers directly to the map by taking them from the catalogs configured, or passed.
 
@@ -212,6 +210,7 @@ Requirements:
 Supported layer types are WMS, WMTS and WFS.
 
 Example:
+
 ```json
 {
     "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
@@ -219,11 +218,11 @@ Example:
     "sources": ["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]
 }
 ```
+
 GET: `#/viewer/openlayers/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]`
 
-POST: `{actions: [{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]}`
-
 Data of resulting layer can be additionally filtered by passing "CQL_FILTER" into the options array. Each element of array corresponds to the layer defined in action:
+
 ```json
 {
     "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
@@ -233,9 +232,6 @@ Data of resulting layer can be additionally filtered by passing "CQL_FILTER" int
 }
 ```
 
-
 GET `#/viewer/openlayers/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]`
 
-
 Number of objects passed to the options can be different to the number of layers, in this case options will be applied to the first X layers, where X is the length of options array.
-
