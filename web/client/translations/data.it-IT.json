@@ -417,6 +417,7 @@
             "saveTitle": "Salva mappa",
             "saveText": "Salvare la mappa corrente?",
             "thumbnail": "Thumbnail",
+            "mapDelete": "Cancella la mappa",
             "message": "Clicca o trascina un'immagine",
             "suggestion": "(best 300 px X 180 px, max 500 kb)",
             "errorFormat": "Formati supportati: png/jpg",
@@ -2736,6 +2737,8 @@
         "backgroundDialog": {
             "addTitle": "Aggiungi nuovo sfondo",
             "editTitle": "Modifica sfondo corrente",
+            "editAttribution": "Attribuzione",
+            "editAttributionPlaceholder": "Immettere il testo di attribuzione",
             "title": "Titolo",
             "titlePlaceholder": "Inserisci il nome visualizzato",
             "add": "Inserisci",
@@ -2793,6 +2796,10 @@
           "CRSSelector": {
             "description": "Permette di cambiare la proiezione della mappa",
             "title": "Selettore CRS"
+          },
+          "DeleteMap": {
+            "description": "Consente di eliminare una risorsa mappa e tutte le risorse associate",
+            "title": "Elimina mappa"
           },
           "Details": {
             "description": "Consentire di mostrare la scheda dettagli per una mappa, se presente",
