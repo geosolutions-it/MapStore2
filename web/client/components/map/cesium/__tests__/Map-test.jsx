@@ -114,6 +114,41 @@ describe('CesiumMap', () => {
         expect(map.map.terrainProvider).toExist();
         expect(map.map.terrainProvider.layerName).toBe('mylayer');
     });
+    it('check wmts layer for custom attribution', () => {
+        const options = {
+            format: 'image/png',
+            group: 'background',
+            name: 'nurc:Arc_Sample',
+            description: "arcGridSample",
+            attribution: "<p>This is some Attribution <b>TEXT</b></p>",
+            title: "arcGridSample",
+            type: 'wmts',
+            url: "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+            bbox: {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -180.0,
+                    miny: -90.0,
+                    maxx: 180.0,
+                    maxy: 90.0
+                }
+            },
+            visibility: true,
+            singleTile: false,
+            allowedSRS: {
+                "EPSG:4326": true,
+                "EPSG:900913": true
+            },
+            matrixIds: {},
+            tileMatrixSet: []
+        };
+        const map = ReactDOM.render(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
+            <CesiumLayer type="wmts" options={options} />
+        </CesiumMap>, document.getElementById("container"));
+        expect(map).toExist();
+        const creditsWidget = document.getElementsByClassName('cesium-widget-credits')[0];
+        expect(creditsWidget).toExist();
+    });
     it('check if the handler for "moveend" event is called', (done) => {
         const expectedCalls = 1;
         const precision = 1000000000;
