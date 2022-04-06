@@ -213,12 +213,10 @@ class AnnotationsPanel extends React.Component {
         closeGlyph: "1-close",
 
         // side panel properties
-        width: 330,
+        width: 300,
         dockProps: {
             dimMode: "none",
-            size: 0.30,
-            fluid: true,
-            position: "right",
+            position: "left",
             zIndex: 1030
         },
         dockStyle: {}
@@ -308,7 +306,7 @@ const annotationsSelector = createSelector([
 ], (active, dockStyle, list) => ({
     active,
     dockStyle,
-    width: !isEmpty(list?.selected) ? 660 : 330
+    width: !isEmpty(list?.selected) ? 600 : 300
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {
@@ -318,7 +316,12 @@ const AnnotationsPlugin = connect(annotationsSelector, {
 export default createPlugin('Annotations', {
     component: assign(AnnotationsPlugin, {
         disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }"
-    }, {
+    }),
+    containers: {
+        TOC: {
+            doNotHide: true,
+            name: "Annotations"
+        },
         BurgerMenu: {
             name: 'annotations',
             position: 40,
@@ -326,10 +329,9 @@ export default createPlugin('Annotations', {
             tooltip: "annotations.tooltip",
             icon: <Glyphicon glyph="comment"/>,
             action: conditionalToggle,
-            priority: 2,
             doNotHide: true
         }
-    }),
+    },
     reducers: {
         annotations: annotationsReducer
     },

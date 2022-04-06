@@ -491,6 +491,8 @@
             "toggleGroupVisibility": "Attiva o disattiva la visibilità del gruppo",
             "displayLegendAndTools": "Visualizza legenda",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
+            "addAnnotations": "Aggiungi annotazioni",
+            "editAnnotations": "Modifica annotazioni",
             "addLayer": "Aggiungi Livello",
             "addLayerToGroup": "Aggiungi livello al gruppo selezionato",
             "addGroup": "Aggiungi Gruppo",

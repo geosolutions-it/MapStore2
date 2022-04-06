@@ -529,6 +529,8 @@
             "toggleGroupVisibility": "Gruppensichtbarkeit umschalten",
             "displayLegendAndTools": "Legende einblenden",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
+            "addAnnotations": "Anmerkungen hinzufügen",
+            "editAnnotations": "Anmerkungen bearbeiten",
             "addLayer": "Ebene hinzufügen",
             "addLayerToGroup": "Ebene zur ausgewählten Gruppe hinzufügen",
             "addGroup": "Gruppe hinzufügen",

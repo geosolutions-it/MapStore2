@@ -491,6 +491,8 @@
             "toggleGroupVisibility": "Alternar la visibilidad del grupo",
             "displayLegendAndTools": "Mostrar la leyenda",
             "zoomToLayerExtent": "Zoom a la extensión de la capa",
+            "addAnnotations": "Agregar anotaciones",
+            "editAnnotations": "Editar anotaciones",
             "addLayer": "Añadir capa",
             "addLayerToGroup": "Añadir capa al grupo seleccionado",
             "addGroup": "Añadir grupo",

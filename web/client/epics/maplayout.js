@@ -95,6 +95,7 @@ export const updateMapLayoutEpic = (action$, store) =>
 
             const leftPanels = head([
                 get(state, "controls.queryPanel.enabled") && {left: mapLayout.left.lg} || null,
+                get(state, "controls.annotations.enabled") && {left: mapLayout.left.sm} || null,
                 get(state, "controls.widgetBuilder.enabled") && {left: mapLayout.left.md} || null,
                 get(state, "layers.settings.expanded") && {left: mapLayout.left.md} || null,
                 get(state, "controls.drawer.enabled") && { left: resizedDrawer || mapLayout.left.sm} || null
@@ -102,7 +103,6 @@ export const updateMapLayoutEpic = (action$, store) =>
 
             const rightPanels = head([
                 get(state, "controls.details.enabled") && !mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal && {right: mapLayout.right.md} || null,
-                get(state, "controls.annotations.enabled") && {right: mapLayout.right.md / 2} || null,
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,
                 get(state, "controls.userExtensions.enabled") && { right: mapLayout.right.md } || null,

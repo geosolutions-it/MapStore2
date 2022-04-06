@@ -491,6 +491,8 @@
             "toggleGroupVisibility": "Toggle group visibility",
             "displayLegendAndTools": "Display legend",
             "zoomToLayerExtent": "Zoom to layer extent",
+            "addAnnotations": "Add annotations",
+            "editAnnotations": "Edit annotations",
             "addLayer": "Add layer",
             "addLayerToGroup": "Add layer to selected group",
             "addGroup": "Add group",

@@ -491,6 +491,8 @@
             "toggleGroupVisibility": "Changer la visibilité du groupe",
             "displayLegendAndTools": "Afficher la légende",
             "zoomToLayerExtent": "Zoomer sur l'étendue de la couche",
+            "addAnnotations": "Ajouter des annotations",
+            "editAnnotations": "Modifier les annotations",
             "addLayer": "Ajouter une couche",
             "addLayerToGroup": "Ajouter une couche au groupe sélectionné",
             "addGroup": "Ajouter un groupe",
