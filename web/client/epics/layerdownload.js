@@ -108,12 +108,12 @@ const hasOutputFormat = (data) => {
 };
 
 const getWFSFeature = ({ url, filterObj = {}, layerFilter, downloadOptions = {}, options } = {}) => {
-    const { sortOptions, pn } = options;
+    const { sortOptions, propertyNames } = options;
 
     const data = mergeFiltersToOGC({ ogcVersion: '1.0.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj);
 
     return getXMLFeature(url, getFilterFeature(query(
-        filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(pn ? [propertyName(pn)] : []), ...(data ? castArray(data) : [])],
+        filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
         { srsName: downloadOptions.selectedSrs })
     ), options, downloadOptions.selectedFormat);
 
@@ -254,7 +254,7 @@ export const startFeatureExportDownload = (action$, store) =>
             layerFilter,
             options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
-                pn: propertyNames
+                propertyNames
             }
         })
             .do(({ data, headers }) => {
@@ -274,7 +274,7 @@ export const startFeatureExportDownload = (action$, store) =>
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                         sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
-                        pn: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
+                        propertyNames: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
                             extractGeometryAttributeName(layerDescribeSelector(state, layer.name))] : null
                     }
                 }).do(({ data, headers }) => {

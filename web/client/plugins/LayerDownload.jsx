@@ -38,7 +38,7 @@ import {
 import {attributesSelector, wfsURL} from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
-import { getCustomAttributesSettings } from "../selectors/featuregrid";
+import { customAttributesSettingsSelector } from "../selectors/featuregrid";
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
 import ExportDataResultsComponent from '../components/data/download/ExportDataResultsComponent';
@@ -112,7 +112,7 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         service: serviceSelector,
         checkingWPSAvailability: checkingWPSAvailabilitySelector,
         virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll,
-        customAttributeSettings: getCustomAttributesSettings,
+        customAttributeSettings: customAttributesSettingsSelector,
         attributes: attributesSelector
     }), {
         onExport: downloadFeatures,
