@@ -1332,7 +1332,7 @@
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu ändern / festzulegen",
             "zoomToolTip": "Min: 1 und Max: 35",
             "headingToolTip": "Min: 0° und Max: 360°",
-            "rollToolTip": "Min: -90° und Max: 90°",
+            "rollToolTip": "Min: 0° und Max: 360°",
             "pitchToolTip": "Min: -90° und Max: 90°",
             "showSectionId": "Bildlaufposition einschließen",
             "showConnections": "Verbindungen anzeigen",

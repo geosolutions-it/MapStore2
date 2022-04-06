@@ -93,12 +93,10 @@ describe("geostory media map component enhancers", () => {
     it('withToolbar it correctly sets buttons', (done) => {
 
         const actions = {
-            toggleEditing: () => {},
             onReset: () => {},
             toggleAdvancedEditing: () => {}
         };
 
-        const SpyToggleEditing = expect.spyOn(actions, 'toggleEditing');
         const SpyOnReset = expect.spyOn(actions, 'onReset');
         const SpyToggleAdvancedEditing = expect.spyOn(actions, 'toggleAdvancedEditing');
 
@@ -108,7 +106,7 @@ describe("geostory media map component enhancers", () => {
 
         const buttons = document.querySelectorAll("button");
         expect(buttons).toExist();
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(2);
         for (let btn of buttons) {
             ReactTestUtils.Simulate.click(btn);
         }
@@ -116,7 +114,6 @@ describe("geostory media map component enhancers", () => {
         expect(confirmButtons).toExist();
         expect(confirmButtons.length).toBe(3);
         ReactTestUtils.Simulate.click(confirmButtons[1]);
-        expect(SpyToggleEditing).toHaveBeenCalled();
         expect(SpyOnReset).toHaveBeenCalled();
         expect(SpyToggleAdvancedEditing).toHaveBeenCalled();
         done();
