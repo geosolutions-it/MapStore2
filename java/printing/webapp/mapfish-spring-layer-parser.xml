@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans default-lazy-init="false" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <bean id="geojsonLayerParser" class="org.mapfish.print.map.geotools.GeoJsonLayer$Plugin" />
+    <bean id="gmlLayerParser" class="org.mapfish.print.map.geotools.GmlLayer$Plugin" />
+    <bean id="geotiffLayerParser" class="org.mapfish.print.map.geotools.GeotiffLayer$Plugin" />
+    <bean id="wmtsLayerParser" class="org.mapfish.print.map.tiled.wmts.WmtsLayerParserPlugin" />
+    <bean id="wmsLayerParser" class="org.mapfish.print.map.image.wms.WmsLayerFactoryPlugin" />
+    <bean id="tiledWmsLayerParser" class="org.mapfish.print.map.tiled.wms.TiledWmsLayerParserPlugin" />
+    <bean id="osmLayerParser" class="org.mapfish.print.map.tiled.osm.OsmLayerParserPlugin" />
+    <bean id="gridLayerParser" class="org.mapfish.print.map.geotools.grid.GridLayerPlugin" />
+    <bean id="featureLayerParser" class="org.mapfish.print.map.geotools.FeatureLayer$Plugin" />
+    <bean id="imageLayerParser" class="org.mapfish.print.map.image.ImageLayer$ImageLayerPlugin" />
+    <bean id="cachingUrihandler" class="org.mapfish.print.map.geotools.CachingUrihandler" />
+</beans>

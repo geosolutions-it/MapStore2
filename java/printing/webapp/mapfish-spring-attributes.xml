@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="integer" class="org.mapfish.print.attribute.IntegerAttribute" scope="prototype" />
+    <bean id="float" class="org.mapfish.print.attribute.FloatAttribute" scope="prototype" />
+    <bean id="boolean" class="org.mapfish.print.attribute.BooleanAttribute" scope="prototype" />
+    <bean id="string" class="org.mapfish.print.attribute.StringAttribute" scope="prototype" />
+    <bean id="stringArray" class="org.mapfish.print.attribute.StringArrayAttribute" scope="prototype" />
+    <bean id="style" class="org.mapfish.print.attribute.StyleAttribute" scope="prototype" />
+    <bean id="features" class="org.mapfish.print.attribute.FeaturesAttribute" scope="prototype" />
+    <bean id="map" class="org.mapfish.print.attribute.map.MapAttribute" scope="prototype" />
+    <bean id="overviewMap" class="org.mapfish.print.attribute.map.OverviewMapAttribute" scope="prototype" />
+    <bean id="northArrow" class="org.mapfish.print.attribute.NorthArrowAttribute" scope="prototype" />
+    <bean id="paging" class="org.mapfish.print.attribute.map.PagingAttribute" scope="prototype" />
+    <bean id="legend" class="org.mapfish.print.attribute.LegendAttribute" scope="prototype" />
+    <bean id="table" class="org.mapfish.print.attribute.TableAttribute" scope="prototype" />
+    <bean id="scalebar" class="org.mapfish.print.attribute.ScalebarAttribute" scope="prototype" />
+    <bean id="datasource" class="org.mapfish.print.attribute.DataSourceAttribute" scope="prototype" />
+    <bean id="staticLayers" class="org.mapfish.print.attribute.map.StaticLayersAttribute" scope="prototype" />
+    <bean id="jsonDatasource" class="org.mapfish.print.attribute.JsonDatasourceAttribute" scope="prototype" />
+
+    <bean id="zoomLevels" class="org.mapfish.print.attribute.map.ZoomLevels" scope="prototype" />
+
+</beans>

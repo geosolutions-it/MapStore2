@@ -121,5 +121,21 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>icm</id>
+            <name>ICM Repository</name>
+            <url>https://maven.icm.edu.pl/artifactory/repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-plugins</id>
+            <name>Spring Plugins Repository</name>
+            <url>https://repo.spring.io/plugins-release/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 </project>

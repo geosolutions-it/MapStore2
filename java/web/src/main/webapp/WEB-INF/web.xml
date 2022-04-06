@@ -117,16 +117,13 @@
     </servlet-mapping>
 
     <!-- Printing Servlet -->
-    <servlet>
-       <servlet-name>mapfish.print</servlet-name>
-       <servlet-class>org.mapfish.print.servlet.MapPrinterServlet</servlet-class>
-       <init-param>
-         <param-name>config</param-name>
-         <param-value>printing/config.yaml</param-value>
-       </init-param>
+     <servlet>
+        <servlet-name>mapfish-print</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>4</load-on-startup>
     </servlet>
     <servlet-mapping>
-      <servlet-name>mapfish.print</servlet-name>
+      <servlet-name>mapfish-print</servlet-name>
       <url-pattern>/pdf/*</url-pattern>
     </servlet-mapping>
 

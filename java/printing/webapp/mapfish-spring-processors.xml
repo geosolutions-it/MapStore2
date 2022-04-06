@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util" default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+    <bean id="createMap" class="org.mapfish.print.processor.map.CreateMapProcessor" scope="prototype"/>
+    <bean id="createMapPages" class="org.mapfish.print.processor.map.CreateMapPagesProcessor"
+          scope="prototype"/>
+    <bean id="setStyle" class="org.mapfish.print.processor.map.SetStyleProcessor" scope="prototype"/>
+    <bean id="setFeatures" class="org.mapfish.print.processor.map.SetFeaturesProcessor" scope="prototype"/>
+    <bean id="setWmsCustomParam" class="org.mapfish.print.processor.map.SetWmsCustomParamProcessor"
+          scope="prototype"/>
+    <bean id="setTiledWms" class="org.mapfish.print.processor.map.SetTiledWmsProcessor" scope="prototype"/>
+    <bean id="createOverviewMap" class="org.mapfish.print.processor.map.CreateOverviewMapProcessor"
+          scope="prototype"/>
+    <bean id="createScalebar" class="org.mapfish.print.processor.map.scalebar.CreateScalebarProcessor"
+          scope="prototype"/>
+    <bean id="createNorthArrow" class="org.mapfish.print.processor.map.CreateNorthArrowProcessor"
+          scope="prototype"/>
+    <bean id="addBackgroundLayers" class="org.mapfish.print.processor.map.AddStaticLayersProcessor"
+          scope="prototype">
+        <property name="position" value="BOTTOM"/>
+    </bean>
+    <bean id="addOverlayLayers" class="org.mapfish.print.processor.map.AddStaticLayersProcessor"
+          scope="prototype">
+        <property name="position" value="TOP"/>
+    </bean>
+
+    <bean id="prepareLegend" class="org.mapfish.print.processor.jasper.LegendProcessor" scope="prototype"/>
+    <bean id="prepareTable" class="org.mapfish.print.processor.jasper.TableProcessor" scope="prototype"/>
+    <bean id="reportBuilder" class="org.mapfish.print.processor.jasper.JasperReportBuilder"
+          scope="prototype"/>
+    <bean id="useHttpForHttps" class="org.mapfish.print.processor.http.UseHttpForHttpsProcessor"
+          scope="prototype"/>
+    <bean id="mapUri" class="org.mapfish.print.processor.http.MapUriProcessor" scope="prototype"/>
+    <bean id="configureHttpRequests"
+          class="org.mapfish.print.processor.http.CompositeClientHttpRequestFactoryProcessor"
+          scope="prototype"/>
+    <bean id="addHeaders" class="org.mapfish.print.processor.http.AddHeadersProcessor" scope="prototype"/>
+    <bean id="forwardHeaders" class="org.mapfish.print.processor.http.ForwardHeadersProcessor"
+          scope="prototype"/>
+    <bean id="restrictUris" class="org.mapfish.print.processor.http.RestrictUrisProcessor" scope="prototype"/>
+    <bean id="createDataSource" class="org.mapfish.print.processor.jasper.DataSourceProcessor"
+          scope="prototype"/>
+    <bean id="mergeDataSources" class="org.mapfish.print.processor.jasper.MergeDataSourceProcessor"
+          scope="prototype"/>
+    <bean id="mergeSource" class="org.mapfish.print.processor.jasper.MergeDataSourceProcessor$Source"
+          scope="prototype"/>
+    <bean id="dateFormat" class="org.mapfish.print.processor.jasper.DateFormatProcessor"
+          scope="prototype"/>
+
+    <bean id="urlImage" class="org.mapfish.print.processor.jasper.HttpImageResolver" scope="prototype"/>
+    <bean id="updatePdfConfig" class="org.mapfish.print.processor.PdfConfigurationProcessor"
+          scope="prototype"/>
+    <bean id="updatePdfConfigUpdate" class="org.mapfish.print.processor.PdfConfigurationProcessor$Update"
+          scope="prototype"/>
+
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.SetStyleProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.SetFeaturesProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.SetWmsCustomParamProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.AddStaticLayersProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.AddStaticLayersProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateOverviewMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.AddStaticLayersProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.SetStyleProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.AddStaticLayersProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.SetFeaturesProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.AddStaticLayersProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.SetWmsCustomParamProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateOverviewMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.SetStyleProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateOverviewMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map;overviewMap</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.SetFeaturesProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateOverviewMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map;overviewMap</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.map.SetWmsCustomParamProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateOverviewMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>map;overviewMap</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.http.UseHttpForHttpsProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>clientHttpRequestFactory</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.http.MapUriProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>clientHttpRequestFactory</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.http.CompositeClientHttpRequestFactoryProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>clientHttpRequestFactory</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.http.AddHeadersProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>clientHttpRequestFactory</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+    <bean class="org.mapfish.print.processor.ProcessorDependency">
+        <constructor-arg type="java.lang.Class" index="0"
+                         value="org.mapfish.print.processor.http.ForwardHeadersProcessor"/>
+        <constructor-arg type="java.lang.Class" index="1"
+                         value="org.mapfish.print.processor.map.CreateMapProcessor"/>
+        <constructor-arg type="java.util.Set" index="2">
+            <util:set>
+                <value>clientHttpRequestFactory</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+</beans>

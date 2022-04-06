@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <bean id="localMatch" class="org.mapfish.print.processor.http.matcher.LocalHostMatcher" scope="prototype" />
+    <bean id="ipMatch" class="org.mapfish.print.processor.http.matcher.AddressHostMatcher" scope="prototype" />
+    <bean id="dnsMatch" class="org.mapfish.print.processor.http.matcher.DnsHostMatcher" scope="prototype" />
+    <bean id="hostnameMatch" class="org.mapfish.print.processor.http.matcher.HostnameMatcher" scope="prototype" />
+    <bean id="acceptAll" class="org.mapfish.print.processor.http.matcher.AcceptAllMatcher" scope="prototype" />
+
+    <bean id="template" class="org.mapfish.print.config.Template" scope="prototype" />
+    <bean id="pdfConfig" class="org.mapfish.print.config.PDFConfig" scope="prototype" />
+    <bean id="smtpConfig" class="org.mapfish.print.config.SmtpConfig" scope="prototype"/>
+    <bean id="s3reportStorage" class="org.mapfish.print.config.S3ReportStorage" scope="prototype"/>
+
+    <bean id="proxy" class="org.mapfish.print.http.HttpProxy" scope="prototype" />
+    <bean id="credential" class="org.mapfish.print.http.HttpCredential" scope="prototype" />
+    <bean id="certificateStore" class="org.mapfish.print.http.CertificateStore" scope="prototype" />
+
+</beans>

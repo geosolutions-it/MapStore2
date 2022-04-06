@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <bean id="mfSessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="mfDataSource"/>
+        <property name="annotatedClasses">
+            <list>
+                <value>org.mapfish.print.servlet.job.impl.PrintJobEntryImpl</value>
+                <value>org.mapfish.print.servlet.job.impl.PrintJobStatusImpl</value>
+                <value>org.mapfish.print.servlet.job.impl.PrintJobResultImpl</value>
+                <value>org.mapfish.print.servlet.job.impl.hibernate.PrintJobStatusExtImpl</value>
+                <value>org.mapfish.print.servlet.job.impl.hibernate.PrintJobResultExtImpl</value>
+                <value>org.mapfish.print.servlet.job.HibernateAccountingEntry</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.hbm2ddl.auto=update
+                hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+                hibernate.default_schema=public
+                <!-- hibernate.show_sql=true -->
+            </value>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="mfSessionFactory"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="printJobDao" class="org.mapfish.print.servlet.job.impl.hibernate.PrintJobDao"/>
+
+</beans>
