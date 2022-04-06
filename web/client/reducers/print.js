@@ -20,6 +20,9 @@ import {
     PRINT_CANCEL
 } from '../actions/print';
 
+import mapfish2 from "../utils/print/mapfish2";
+import mapfish3 from "../utils/print/mapfish3";
+
 import { TOGGLE_CONTROL } from '../actions/controls';
 import { isObject, get } from 'lodash';
 import assign from 'object-assign';
@@ -40,10 +43,6 @@ const initialSpec = {
     outputFormat: "pdf"
 };
 
-const getSheetName = (name = '') => {
-    return name.split('_')[0];
-};
-
 function print(state = {spec: initialSpec, capabilities: null, map: null, isLoading: false, pdfUrl: null}, action) {
     switch (action.type) {
     case TOGGLE_CONTROL: {
@@ -53,19 +52,10 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         return state;
     }
     case PRINT_CAPABILITIES_LOADED: {
-        const layouts = get(action, 'capabilities.layouts', [{name: 'A4'}]);
-        const sheetName = layouts.filter(l => getSheetName(l.name) === state.spec.sheet).length ?
-            state.spec.sheet : getSheetName(layouts[0].name);
-        return assign({}, state, {
-            capabilities: action.capabilities,
-            spec: assign({}, state.spec || {}, {
-                sheet: sheetName,
-                resolution: action.capabilities
-                        && action.capabilities.dpis
-                        && action.capabilities.dpis.length
-                        && action.capabilities.dpis[0].value
-            })
-        });
+        if (action.capabilities.app) {
+            return mapfish3.parseCapabilities(action.capabilities, state.spec);
+        }
+        return mapfish2.parseCapabilities(action.capabilities, state.spec);
     }
     case SET_PRINT_PARAMETER: {
         return {...state, spec: set({...state.spec}, action.name, action.value)};

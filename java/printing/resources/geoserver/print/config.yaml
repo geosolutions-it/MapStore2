@@ -3,16 +3,49 @@ transparentTileErrorColor: 'rgba(78, 78, 255, 125)'
 opaqueTileErrorColor: 'rgba(255, 155, 155, 0)'
 
 templates:
-  A4_no_legend: !template
-    reportTemplate: report.jrxml
+  A4_no_legend_landscape: !template
+    reportTemplate: A4_no_legend_landscape.jrxml
     attributes:
       title: !string
         default: 'Countries'
       map: !map
         maxDpi: 400
-        width: 535
-        height: 500
+        width: 780
+        height: 330
     processors:
       - !reportBuilder
         directory: '.'
       - !createMap {}
+  A4_no_legend: !template
+    reportTemplate: A4_no_legend.jrxml
+    attributes:
+      title: !string
+        default: 'Countries'
+      map: !map
+        maxDpi: 400
+        width: 330
+        height: 700
+    processors:
+      - !reportBuilder
+        directory: '.'
+      - !createMap {}
+  A4: !template
+    reportTemplate: A4.jrxml
+    attributes:
+      title: !string
+        default: 'Countries'
+      map: !map
+        maxDpi: 400
+        width: 330
+        height: 300
+      legend: !legend {}
+      scalebar: !scalebar
+        width: 230
+        height: 40
+    processors:
+      - !reportBuilder
+        directory: '.'
+      - !createMap {}
+      - !createScalebar {}
+      - !prepareLegend
+        template: legend.jrxml

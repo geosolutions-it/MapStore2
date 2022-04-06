@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.2.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-01-06T14:30:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="legend" pageWidth="555" pageHeight="802" columnWidth="185" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6b65086b-74e0-4bec-834b-1b74d5ae2d31">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="icon" class="java.awt.Image"/>
+	<field name="report" class="java.lang.String"/>
+	<field name="level" class="java.lang.Integer"/>
+	<detail>
+		<band height="15" splitType="Prevent">
+			<printWhenExpression><![CDATA[!$F{name}.equals("")]]></printWhenExpression>
+			<textField>
+				<reportElement x="0" y="0" width="185" height="13" uuid="804c03e8-4edc-4888-8dba-0c683717bfeb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14" splitType="Stretch">
+			<printWhenExpression><![CDATA[!$F{report}.equals("")]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="148" height="10" uuid="fa145068-76a5-4834-98ed-ce65b1976b3d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportExpression><![CDATA[$F{report}]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

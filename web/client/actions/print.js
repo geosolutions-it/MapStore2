@@ -20,6 +20,9 @@ export const PRINT_CANCEL = 'PRINT_CANCEL';
 
 import axios from '../libs/ajax';
 
+import mapfish2 from "../utils/print/mapfish2";
+import mapfish3 from "../utils/print/mapfish3";
+
 export function printCapabilitiesLoaded(capabilities) {
     return {
         type: PRINT_CAPABILITIES_LOADED,
@@ -60,11 +63,21 @@ export function printError(error) {
     };
 }
 
-export function printSubmit(url, spec) {
+export function printSubmit(url, spec, type) {
     return (dispatch) => {
         return axios.post(url, spec).then((response) => {
             if (typeof response.data === 'object') {
-                dispatch(printCreated(response.data && response.data.getURL));
+                const printUrl = type === "mapfish2" ? mapfish2.getPrintUrl(response.data) : mapfish3.getPrintUrl(response.data);
+                if (type === "mapfish2") {
+                    dispatch(printCreated(printUrl));
+                } else {
+                    mapfish3.waitForDone(mapfish3.getStatusUrl(response.data)).then(() => {
+                        dispatch(printCreated(printUrl));
+                    }).catch((e) => {
+                        dispatch(printError('Error on reading print result: ' + e.message));
+                    });
+
+                }
             } else {
                 try {
                     JSON.parse(response.data);

@@ -592,7 +592,7 @@ export default {
                             scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined
                         })
                             .then((spec) =>
-                                this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions })
+                                this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions }, this.props.printSpec.type)
                             )
                             .catch(e => {
                                 this.props.printError("Error in printing:" + e.message);
