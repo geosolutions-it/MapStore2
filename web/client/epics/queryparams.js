@@ -59,23 +59,21 @@ const paramActions = {
     },
     center: (parameters, state) => {
         const map = mapSelector(state);
-        const { heading, pitch, roll } = parameters;
-        const validViewerOptions = [heading, pitch, roll].map(val => !isEmpty(val) && toNumber(val));
+        const { heading, pitch, roll = 0 } = parameters;
+        const validViewerOptions = [heading, pitch].map(val => typeof(val) !== 'undefined');
         const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
         const zoom = toNumber(parameters.zoom);
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? {
-            heading: validViewerOptions[0],
-            pitch: validViewerOptions[1],
-            roll: validViewerOptions[2]
-        } : map.viewerOptions;
+        const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map.viewerOptions;
         const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
-
-        if (isValid) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions), viewerOptions && changeMapType('cesium')];
+        if (isValid && !viewerOptions) {
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
+        }
+        if (isValid && viewerOptions) {
+            return [changeMapType('cesium'), changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
         }
         return [
             warning({
@@ -120,6 +118,9 @@ const paramActions = {
         return [];
     },
     zoom: () => {},
+    heading: () => {},
+    pitch: () => {},
+    roll: () => {}, // roll is currently not supported, we return standard 0 roll
     actions: (parameters) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
@@ -130,16 +131,6 @@ const paramActions = {
             return parameters.actions.filter(a => includes(whiteList, a.type));
         }
         return [];
-    },
-    heading: ({value = ''}) => {
-        
-        // continue from here
-    },
-    pitch: ({value = ''}) => {
-        // continue from here
-    },
-    roll: ({value = ''}) => {
-        // continue from here
     }
 };
 
