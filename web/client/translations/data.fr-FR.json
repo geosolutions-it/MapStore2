@@ -1681,7 +1681,17 @@
                 "syncOnMap": "Synchroniser la carte avec un filtre",
                 "enableTimeSync": "Synchroniser avec l'heure ou l'intervalle de temps sélectionné",
                 "disableTimeSync": "Ne pas synchroniser avec l'heure ou l'intervalle sélectionné",
-                "createNewChart": "Créer un graphique pour le calque sélectionné"
+                "createNewChart": "Créer un graphique pour le calque sélectionné",
+                "enableSnapping": "Activer l'accrochage",
+                "disableSnapping": "Désactiver l'accrochage",
+              "snapToLayer": "Accrocher au calque",
+              "snappingSettings": {
+                  "header": "Paramètres",
+                  "vertex": "Vertex",
+                  "edge": "Bord",
+                  "pixelTolerance": "Tolérance (pixel)",
+                  "loadingStrategy": "Stratégie de chargement"
+              }
             }
         },
         "layerdownload": {

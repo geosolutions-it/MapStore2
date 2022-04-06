@@ -1680,7 +1680,17 @@
                 "syncOnMap": "Sincronizar mapa con filtro",
                 "enableTimeSync": "Sincronizar con el tiempo o el intervalo de tiempo seleccionado",
                 "disableTimeSync": "No sincronizar con el tiempo o el intervalo de tiempo seleccionado",
-                "createNewChart": "Crea un gráfico para la capa seleccionada"
+                "createNewChart": "Crea un gráfico para la capa seleccionada",
+                "enableSnapping": "Activar ajuste",
+                "disableSnapping": "Desactivar ajuste",
+                "snapToLayer": "Ajustar a la capa",
+                "snappingSettings": {
+                    "header": "Configuración",
+                    "vertex": "Vértice",
+                    "edge": "Borde",
+                    "pixelTolerance": "Tolerancia (píxel)",
+                    "loadingStrategy": "Estrategia de carga"
+                  }
             }
         },
         "layerdownload": {
