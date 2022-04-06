@@ -153,7 +153,8 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 ```
 
 - If one of the libraries updated is used in your project, you should align the version with the newer one to avoid jar duplications
-- Some old project may define versions of spring and/or jackson in maven properties. You can remove these definition, they should be automatically loaded at the correct version. In particular:
+- Some old project may define versions of spring and/or jackson in maven properties. You can remove these definition and the dependency from main `pom.xml` since they should be inherited from spring.
+In particular you may need to remove these properties :
 
 ```diff
 -        <jackson.version>1.9.10</jackson.version>
