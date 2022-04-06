@@ -2020,6 +2020,34 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getVisible()).toBe(true);
     });
 
+    it('test wmts custom attributions', () => {
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            credits: {
+                title: "<p>This is some Attribution <b>TEXT</b></p>"
+            },
+            group: 'Meteo',
+            format: 'image/png',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        expect(layer.layer.getVisible()).toBe(true);
+        expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(options.credits.title);
+    });
+
     it('test wmts security token', () => {
         const options = {
             type: 'wmts',
