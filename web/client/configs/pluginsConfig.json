@@ -480,6 +480,16 @@
       ]
     },
     {
+      "name": "DeleteMap",
+      "glyph": "trash",
+      "title": "plugins.DeleteMap.title",
+      "hidden": true,
+      "description": "plugins.DeleteMap.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
       "name": "BurgerMenu",
       "hidden": true,
       "glyph": "menu-hamburger",
