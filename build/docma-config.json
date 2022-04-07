@@ -100,6 +100,7 @@
         {
           "framework": [
             "web/client/api/SLDService.js",
+            "web/client/api/ThreeDTiles.js",
             "web/client/api/usersession/index.js",
             "web/client/components/index.jsdoc",
             "web/client/components/app/main.jsx",

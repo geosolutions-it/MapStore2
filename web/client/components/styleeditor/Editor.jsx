@@ -12,9 +12,10 @@ import 'codemirror/addon/selection/mark-selection';
 import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/javascript/javascript';
 
 import CM from 'codemirror/lib/codemirror';
-import { debounce, endsWith, isEqual, isFunction } from 'lodash';
+import { debounce, endsWith, isEqual, isFunction, isObject, isString } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -64,13 +65,14 @@ class Editor extends React.Component {
         mode: PropTypes.string,
         theme: PropTypes.string,
         style: PropTypes.object,
-        code: PropTypes.string,
+        code: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
         onChange: PropTypes.func,
         waitTime: PropTypes.number,
         hintProperties: PropTypes.object,
         error: PropTypes.object,
         inlineWidgets: PropTypes.array,
-        loading: PropTypes.bool
+        loading: PropTypes.bool,
+        onError: PropTypes.func
     };
 
     static defaultProps = {
@@ -81,13 +83,18 @@ class Editor extends React.Component {
         onChange: () => { },
         waitTime: 1000,
         hintProperties: {},
-        inlineWidgets: []
+        inlineWidgets: [],
+        onError: () => {}
     };
 
     state = {}
 
     UNSAFE_componentWillMount() {
-        this.setState({ code: this.props.code });
+        this.setState({
+            code: isObject(this.props.code)
+                ? JSON.stringify(this.props.code, null, 2) // if the code is JSON
+                : this.props.code
+        });
     }
 
     UNSAFE_componentWillUpdate(newProps) {
@@ -176,6 +183,27 @@ class Editor extends React.Component {
         return inlineWidget;
     };
 
+    getChangedCode = (code, mode) => {
+        if (mode === 'application/json' && isString(code)) {
+            try {
+                return { code: JSON.parse(code) };
+            } catch (error) {
+                return { error };
+            }
+        }
+        return { code };
+    };
+
+    getErrorMessage = () => {
+        if (this.props.error.messageId) {
+            return <Message msgId={this.props.error.messageId} msgParams={this.props.error.messageParams}/>;
+        }
+        if (this.props.error.line) {
+            return this.props.error.message;
+        }
+        return <Message msgId="styleeditor.genericValidationError"/>;
+    };
+
     render() {
         return (
             <BorderLayout
@@ -189,9 +217,7 @@ class Editor extends React.Component {
                             bsStyle="danger"
                             placement="right"
                             title={<Message msgId="styleeditor.validationErrorTitle"/>}
-                            text={this.props.error.line
-                                ? this.props.error.message
-                                : <Message msgId="styleeditor.genericValidationError"/>}/>
+                            text={this.getErrorMessage()}/>
                         }
                     </div>
                 }>
@@ -203,7 +229,12 @@ class Editor extends React.Component {
                         this.editor = editor;
                         editor.on('inputRead', this.onAutocomplete);
                         this.update = debounce(() => {
-                            this.props.onChange(this.state.code);
+                            const { error, code } = this.getChangedCode(this.state.code, this.props.mode);
+                            if (error) {
+                                this.props.onError(error);
+                            } else {
+                                this.props.onChange(code);
+                            }
                         }, this.props.waitTime);
                         CM.extendMode(this.props.mode, { hintProperties: this.props.hintProperties });
                     }}
