@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
-import {updatePages, gridUpdateToQueryUpdate} from '../FeatureGridUtils';
+import {updatePages, gridUpdateToQueryUpdate, getAttributesList} from '../FeatureGridUtils';
 
 
 describe('FeatureGridUtils', () => {
@@ -156,5 +156,63 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields[3].operator).toBe("=");
         expect(queryUpdateFilter.filterFields[4].value).toBe(10);
         expect(queryUpdateFilter.filterFields[4].operator).toBe("<");
+    });
+    it('getAttributesList', () => {
+        const attributes = [
+            {
+                "label": "ATTR1",
+                "attribute": "ATTR1",
+                "type": "number",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            },
+            {
+                "label": "ATTR2",
+                "attribute": "ATTR2",
+                "type": "string",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            },
+            {
+                "label": "ATTR3",
+                "attribute": "ATTR3",
+                "type": "number",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            },
+            {
+                "label": "ATTR4",
+                "attribute": "ATTR4",
+                "type": "number",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            }
+        ];
+        const customAttributesSettings = {
+            ATTR2: {
+                hide: true
+            },
+            ATTR3: {
+                hide: false
+            },
+            ATTR4: {
+                hide: true
+            }
+        };
+
+        const customSettings = getAttributesList(attributes, customAttributesSettings);
+        const noSettings = getAttributesList(attributes, {});
+        const allDeselected = getAttributesList(attributes, attributes.reduce((prev, attr) => {
+            prev[attr.attribute] = {hide: true};
+            return prev;
+        }, {}));
+
+        expect(customSettings).toEqual(['ATTR1', 'ATTR3']);
+        expect(noSettings).toBe(undefined);
+        expect(allDeselected).toEqual([]);
     });
 });

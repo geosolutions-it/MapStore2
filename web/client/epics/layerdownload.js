@@ -56,6 +56,7 @@ import { queryPanelSelector, wfsDownloadSelector } from '../selectors/controls';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapBboxSelector } from '../selectors/map';
+import { layerDescribeSelector } from "../selectors/query";
 import {
     isLoggedIn,
     userSelector
@@ -63,7 +64,7 @@ import {
 
 import { getLayerWFSCapabilities, getXMLFeature } from '../observables/wfs';
 import { describeProcess } from '../observables/wps/describe';
-import { download } from '../observables/wps/download';
+import { download, downloadWithAttributesFilter } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
@@ -72,6 +73,7 @@ import { getLayerTitle } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
+import {extractGeometryAttributeName} from "../utils/WFSLayerUtils";
 
 const DOWNLOAD_FORMATS_LOOKUP = {
     "gml3": "GML3.1",
@@ -106,12 +108,12 @@ const hasOutputFormat = (data) => {
 };
 
 const getWFSFeature = ({ url, filterObj = {}, layerFilter, downloadOptions = {}, options } = {}) => {
-    const { sortOptions, propertyName: pn } = options;
+    const { sortOptions, propertyNames } = options;
 
     const data = mergeFiltersToOGC({ ogcVersion: '1.0.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj);
 
     return getXMLFeature(url, getFilterFeature(query(
-        filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(pn ? [propertyName(pn)] : []), ...(data ? castArray(data) : [])],
+        filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
         { srsName: downloadOptions.selectedSrs })
     ), options, downloadOptions.selectedFormat);
 
@@ -131,6 +133,7 @@ const getDefaultSortOptions = (attribute) => {
 const getFirstAttribute = (state)=> {
     return state.query && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes && state.query.featureTypes[state.query.typeName].attributes[0] && state.query.featureTypes[state.query.typeName].attributes[0].attribute || null;
 };
+
 const wpsExecuteErrorToMessage = e => {
     switch (e.code) {
     case 'ProcessFailed': {
@@ -237,6 +240,10 @@ export const startFeatureExportDownload = (action$, store) =>
         const layer = getSelectedLayer(state);
         const mapBbox = mapBboxSelector(state);
         const currentLocale = currentLocaleSelector(state);
+        const propertyNames = action.downloadOptions.propertyName ? [
+            extractGeometryAttributeName(layerDescribeSelector(state, layer.name)),
+            ...action.downloadOptions.propertyName
+        ] : null;
 
         const { layerFilter } = layer;
 
@@ -246,7 +253,8 @@ export const startFeatureExportDownload = (action$, store) =>
             filterObj: action.filterObj,
             layerFilter,
             options: {
-                pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
+                pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
+                propertyNames
             }
         })
             .do(({ data, headers }) => {
@@ -265,7 +273,9 @@ export const startFeatureExportDownload = (action$, store) =>
                     layerFilter,
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
-                        sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
+                        sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
+                        propertyNames: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
+                            extractGeometryAttributeName(layerDescribeSelector(state, layer.name))] : null
                     }
                 }).do(({ data, headers }) => {
                     if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
@@ -292,6 +302,7 @@ export const startFeatureExportDownload = (action$, store) =>
             );
 
         const wpsFlow = () => {
+            const isVectorLayer = !!layer.search?.url;
             const cropToROI = action.downloadOptions.cropDataSet && !!mapBbox && !!mapBbox.bounds;
             const wpsDownloadOptions = {
                 layerName: layer.name,
@@ -327,7 +338,8 @@ export const startFeatureExportDownload = (action$, store) =>
                         ...(action.downloadOptions.quality ? {quality: action.downloadOptions.quality} : {})
                     } : {})
                 },
-                notifyDownloadEstimatorSuccess: true
+                notifyDownloadEstimatorSuccess: true,
+                attribute: propertyNames
             };
             const newResult = {
                 id: uuidv1(),
@@ -339,7 +351,9 @@ export const startFeatureExportDownload = (action$, store) =>
                 outputsExtractor: makeOutputsExtractor(referenceOutputExtractor)
             };
 
-            return download(action.url, wpsDownloadOptions, wpsExecuteOptions)
+            const executor = isVectorLayer && propertyNames ? downloadWithAttributesFilter : download;
+
+            return executor(action.url, wpsDownloadOptions, wpsExecuteOptions)
                 .takeUntil(action$.ofType(REMOVE_EXPORT_DATA_RESULT).filter(({id}) => id === newResult.id).take(1))
                 .flatMap((data) => {
                     if (data === 'DownloadEstimatorSuccess') {

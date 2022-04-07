@@ -6,24 +6,24 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { Observable } from 'rxjs';
-import { toPairs, keys, omit } from 'lodash';
+import {Observable} from 'rxjs';
+import {keys, omit, toPairs} from 'lodash';
 
 import {
-    processParameter,
-    processData,
-    literalData,
-    complexData,
     cdata,
-    processReference,
+    complexData,
+    downloadParameter,
+    literalData,
+    processData,
     processOutput,
-    responseForm,
-    responseDocument,
+    processParameter,
+    processReference,
     rawDataOutput,
-    writingParametersData,
-    downloadParameter
+    responseDocument,
+    responseForm,
+    writingParametersData
 } from './common';
-import { literalDataOutputExtractor, makeOutputsExtractor, executeProcess, executeProcessXML } from './execute';
+import {executeProcess, executeProcessXML, literalDataOutputExtractor, makeOutputsExtractor} from './execute';
 
 /**
  * Contains routines to work with GeoServer WPS download community module processes
@@ -100,6 +100,33 @@ export const downloadXML = ({layerName, dataFilter, outputFormat, targetCRS, roi
 );
 
 /**
+ * Construct gs:Query XML payload
+ * @memberof observables.wps.download
+ * @param {string} downloadOptions options object
+ * @param {string} downloadOptions.input WPS process reference object
+ * @param {string} downloadOptions.attribute comma-separated list of attributes to include in output
+ * @param {object} [downloadOptions.filter] object to use as filter
+ * @param {boolean} [downloadOptions.asynchronous] if true gs:Download will run asynchronously
+ * @param {boolean} [downloadOptions.outputAsReference] instructs process to return a link where output file can be downloaded instead of the file itself
+ * @param {string} [downloadOptions.resultOutput] MIME type of the output
+ */
+export const queryXML = ({input, attribute, filter, asynchronous, outputAsReference, resultOutput}) => executeProcessXML(
+    'vec:Query',
+    [
+        processParameter('features', processReference(input.mimeType, input.href.replace(/&/g, "&amp;"), 'GET')),
+        ...(attribute ? attribute.map(attr => processParameter('attribute', processData(literalData(attr)))) : []),
+        ...(filter ? [processParameter('filter', roiOrFilterToXML(filter))] : [])
+    ],
+    responseForm(!asynchronous ?
+        rawDataOutput('result', resultOutput) :
+        responseDocument(true, true, outputAsReference ?
+            processOutput(resultOutput, true, 'result') :
+            rawDataOutput('result', resultOutput)
+        )
+    )
+);
+
+/**
  * Execute gs:Download process, running gs:DownloadEstimator first
  * @memberof observables.wps.download
  * @param {string} url target url
@@ -122,7 +149,7 @@ export const download = (url, downloadOptions, executeOptions) => {
         const resultOutput = downloadOptions.resultOutput || downloadOptions.outputFormat || 'application/zip';
 
         const executeProcess$ = executeProcess(url, downloadXML({
-            ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess'),
+            ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess', 'attribute'),
             outputAsReference: downloadOptions.asynchronous ? downloadOptions.outputAsReference : false,
             resultOutput
         }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, ${resultOutput}`}});
@@ -140,6 +167,77 @@ export const download = (url, downloadOptions, executeOptions) => {
                 }
 
                 throw new Error('DownloadEstimatorFailed');
+            });
+    }
+
+    return Observable.empty();
+};
+
+
+/**
+ * Execute gs:Download process and passes results to gs:Query, running gs:DownloadEstimator first
+ * @memberof observables.wps.download
+ * @param {string} url target url
+ * @param {object} downloadOptions options to use to construct payload xml for DownloadEstimator and Download processes(except notifyDownloadEstimatorSuccess). See {@link api/framework#observables.wps.download.exports.downloadXML|downloadXML}
+ * @param {boolean} downloadOptions.notifyDownloadEstimatorSuccess if true, the returned observable emits 'DownloadEstimatorSuccess' string after successful gs:DownloadEstimator run
+ * @param {object} executeOptions options to pass to executeProcess. See {@link api/framework#observables.wps.execute.exports.executeProcess|executeProcess}
+ */
+export const downloadWithAttributesFilter = (url, downloadOptions, executeOptions) => {
+    if (url && downloadOptions) {
+        const downloadEstimator$ = executeProcess(url, downloadEstimatorXML({
+            layerName: downloadOptions.layerName,
+            ROI: downloadOptions.ROI,
+            roiCRS: downloadOptions.roiCRS,
+            dataFilter: downloadOptions.dataFilter,
+            targetCRS: downloadOptions.targetCRS
+        }), {outputsExtractor: makeOutputsExtractor(literalDataOutputExtractor)});
+
+        // use the same format of outputFormat for result
+        // if resultOutput param is undefined
+        const resultOutput = downloadOptions.resultOutput || downloadOptions.outputFormat || 'application/zip';
+
+        const executeProcess$ = executeProcess(url, downloadXML({
+            ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess', 'attribute', 'asynchronous', 'outputFormat'),
+            asynchronous: true,
+            outputAsReference: true,
+            resultOutput: 'application/wfs-collection-1.0',
+            outputFormat: 'application/wfs-collection-1.0'
+        }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/wfs-collection-1.0`}});
+
+        return downloadEstimator$
+            .catch(() => {
+                throw new Error('DownloadEstimatorException');
+            })
+            .mergeMap((estimatorResult = []) => {
+                if (estimatorResult.length > 0 && estimatorResult[0].identifier === 'result' && estimatorResult[0].data === 'true') {
+                    if (downloadOptions.notifyDownloadEstimatorSuccess) {
+                        return Observable.of('DownloadEstimatorSuccess').concat(executeProcess$);
+                    }
+                    return executeProcess$;
+                }
+
+                throw new Error('DownloadEstimatorFailed');
+            })
+            .mergeMap((result) => {
+                if (result === 'DownloadEstimatorSuccess') {
+                    return Observable.of('DownloadEstimatorSuccess');
+                }
+                if (result && result?.length === 1) {
+                    return executeProcess(url, queryXML({
+                        ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess'),
+                        input: result[0],
+                        filter: null,
+                        outputAsReference: downloadOptions.asynchronous ? downloadOptions.outputAsReference : false,
+                        resultOutput
+                    }), executeOptions, {
+                        headers: {
+                            'Content-Type': 'application/xml',
+                            'Accept': `application/xml, ${resultOutput}`
+                        }
+                    });
+                }
+
+                throw new Error('DownloadFailed');
             });
     }
 
