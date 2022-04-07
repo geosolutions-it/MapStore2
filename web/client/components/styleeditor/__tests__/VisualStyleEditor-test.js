@@ -273,4 +273,18 @@ describe('VisualStyleEditor', () => {
             />, document.getElementById('container'));
         });
     });
+    it('should disable undo and redo when history is empty', () => {
+        ReactDOM.render(<VisualStyleEditor
+            format="3dtiles"
+            code={{
+                color: 'color(\'#ff0000\')'
+            }}
+            defaultStyleJSON={null}
+        />, document.getElementById('container'));
+        const disabledButtons = document.querySelectorAll('.disabled');
+        expect([...disabledButtons].map(node => node.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-undo',
+            'glyphicon glyphicon-redo'
+        ]);
+    });
 });
