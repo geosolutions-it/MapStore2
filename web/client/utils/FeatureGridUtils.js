@@ -308,3 +308,26 @@ export const updatePages = (result, { endPage, startPage } = {}, { pages, featur
     }
     return { pages: oldPages.concat(pagesLoaded), features: oldFeatures.concat(fts) };
 };
+
+/**
+ * Process custom attributes settings of feature grid and returns array of feature attributes to be used in a query
+ * to limit results of WFS "getFeature" request
+ * undefined - all attributes to be fetched
+ * array - listed attributes to be fetched
+ * @param {array} attributes complete list of attributes available for export, see attributesSelector
+ * @param {object} customAttributesSettings object containing information about deactivated attributes, see getCustomAttributesSettings
+ * @returns undefined|array
+ */
+export const getAttributesList = (attributes, customAttributesSettings) => {
+    let result = undefined;
+    if (customAttributesSettings && attributes) {
+        result = attributes.filter((element) => {
+            const hide = customAttributesSettings[element.attribute]?.hide ?? false;
+            return !hide;
+        }).map((element) => element.attribute);
+        if (result.length === attributes.length) {
+            result = undefined;
+        }
+    }
+    return result;
+};
