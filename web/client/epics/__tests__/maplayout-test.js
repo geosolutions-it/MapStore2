@@ -171,13 +171,34 @@ describe('map layout epics', () => {
             const state = { controls: { userExtensions: { enabled: true, group: "parent" } } };
             testEpic(updateMapLayoutEpic, 1, setControlProperties("userExtensions", "enabled", true, "group", "parent"), epicResult(done), state);
         });
-        it('annotations', (done) => {
-            const state = { controls: { annotations: { enabled: true, group: "parent" } } };
-            testEpic(updateMapLayoutEpic, 1, setControlProperties("annotations", "enabled", true, "group", "parent"), epicResult(done, 329), state);
-        });
         it('details', (done) => {
             const state = { controls: { details: { enabled: true, group: "parent" } } };
             testEpic(updateMapLayoutEpic, 1, setControlProperties("details", "enabled", true, "group", "parent"), epicResult(done), state);
+        });
+    });
+
+    describe('tests layout updated for left panels', () => {
+        const epicResult = (done, left = 300) => actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual({
+                        right: 0, left, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                            bottom: 0,
+                            right: 0,
+                            left
+                        }
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        it('annotations', (done) => {
+            const state = { controls: { annotations: { enabled: true, group: "parent" } } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperties("annotations", "enabled", true, "group", "parent"), epicResult(done), state);
         });
     });
 
