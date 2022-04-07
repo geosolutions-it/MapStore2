@@ -454,7 +454,8 @@
             "descriptionPlaceholder": "Kartenbeschreibung",
             "saveTitle": "Karte speichern",
             "saveText": "Aktuelle Karte speichern?",
-            "thumbnail": "Miniaturansicht",
+            "thumbnail": "Thumbnail",
+            "mapDelete": "Karte löschen",
             "message": "Ein Bild klicken oder hierherbewegen",
             "suggestion": "(möglichst 300px X 180px, max 500kb)",
             "errorFormat": "Unterstützte Formate: png/jpg",
@@ -2777,6 +2778,8 @@
         "backgroundDialog": {
             "addTitle": "Neuen Hintergrund hinzufügen",
             "editTitle": "Aktuellen Hintergrund bearbeiten",
+            "editAttribution": "Zuschreibung",
+            "editAttributionPlaceholder": "Geben Sie Zuordnungstext ein",
             "title": "Titel",
             "titlePlaceholder": "Den angezeigten Namen eingeben",
             "add": "Hinzufügen",
@@ -2834,6 +2837,10 @@
           "CRSSelector": {
             "description": "Ermöglicht das Umschalten der Kartenprojektion",
             "title": "CRS-Auswahl"
+          },
+          "DeleteMap": {
+            "description": "Ermöglicht das Löschen einer Kartenressource und aller zugehörigen Ressourcen",
+            "title": "Karte löschen"
           },
           "Details": {
             "description": "Details für eine Karte anzeigen lassen, wenn vorhanden",

@@ -417,6 +417,7 @@
             "saveTitle": "Guardar el mapa",
             "saveText": "¿Guardar el mapa actual",
             "thumbnail": "Miniatura",
+            "mapDelete": "Eliminar el mapa",
             "message": "Soltar o pinchar para importar un imagen",
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",
@@ -2739,6 +2740,8 @@
         "backgroundDialog": {
             "addTitle": "Agregar nuevo fondo",
             "editTitle": "Editar fondo actual",
+            "editAttribution": "Atribución",
+            "editAttributionPlaceholder": "Introduce el texto de la atribución",
             "title": "Título",
             "titlePlaceholder": "Ingrese el nombre que se muestra",
             "add": "Añadir",
@@ -2796,6 +2799,10 @@
           "CRSSelector": {
             "description": "Permite cambiar la proyección del mapa",
             "title": "Selector de CRS"
+          },
+          "DeleteMap": {
+            "description": "Permite eliminar un recurso de mapa y todos sus recursos asociados",
+            "title": "Eliminar mapa"
           },
           "Details": {
             "description": "Permitir mostrar tarjeta de detalle para un mapa, si hay",

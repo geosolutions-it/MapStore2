@@ -27,6 +27,25 @@ import { isLoggedIn, userSelector } from '../selectors/security';
 import { projectionDefsSelector } from '../selectors/map';
 import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapConfig} from '../actions/usersession';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
+import {getRequestParameterValue} from "../utils/QueryParamsUtils";
+
+
+const prepareMapConfiguration = (data, override, state) => {
+    const queryParamsMap = getRequestParameterValue('map', state);
+    let mapConfig = merge({}, data, override);
+    if (queryParamsMap?.version && queryParamsMap?.map) {
+        mapConfig = {
+            ...mapConfig,
+            ...queryParamsMap,
+            map: {
+                ...(mapConfig?.map ?? {}),
+                ...(queryParamsMap?.map ?? {})
+
+            }
+        };
+    }
+    return mapConfig;
+};
 
 export const loadNewMapEpic = (action$) =>
     action$.ofType(LOAD_NEW_MAP)
@@ -81,7 +100,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
                 if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                     return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                 }
-                const mapConfig = merge({}, response.data, overrideConfig);
+                const mapConfig = prepareMapConfiguration(response.data, overrideConfig, state);
                 return isNumberId ? Observable.of(
                     configureMap(mapConfig, mapId),
                     mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
@@ -95,7 +114,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
             }
             try {
                 const data = JSON.parse(response.data);
-                const mapConfig = merge({}, data, overrideConfig);
+                const mapConfig = prepareMapConfiguration(data, overrideConfig, state);
                 return isNumberId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
                     Observable.of(
                         configureMap(mapConfig, mapId),

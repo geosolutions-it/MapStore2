@@ -417,6 +417,7 @@
             "saveTitle": "Sauver la carte",
             "saveText": "Sauver la carte courante ?",
             "thumbnail": "Vignette",
+            "mapDelete": "Supprimer la carte",
             "message": "Déposez ou cliquez pour importer une image",
             "suggestion": "(conseillé : 300 px X 180 px, 500 kb max)",
             "errorFormat": "Formats supportés: png/jpg",
@@ -2741,6 +2742,8 @@
         "backgroundDialog": {
             "addTitle": "Ajouter un nouveau fond",
             "editTitle": "Modifier le fond actuel",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Saisir le texte d'attribution",
             "title": "Titre",
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",
@@ -2798,6 +2801,10 @@
           "CRSSelector": {
             "description": "Permet de changer de projection cartographique",
             "title": "Sélecteur CRS"
+          },
+          "DeleteMap": {
+            "description": "Permet de supprimer une ressource cartographique et toutes ses ressources associées",
+            "title": "Supprimer la carte"
           },
           "Details": {
             "description": "Permet d'afficher les détails d'une carte, le cas échéant",
