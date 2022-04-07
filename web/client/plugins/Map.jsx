@@ -29,6 +29,7 @@ import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
 import { createFeatureFilter } from '../utils/FilterUtils';
+import ErrorPanel from '../components/map/ErrorPanel';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -399,6 +400,7 @@ class MapPlugin extends React.Component {
                     mapOptions={assign({}, mapOptions, this.getMapOptions())}
                     zoomControl={this.props.zoomControl}
                     onResolutionsChange={this.props.onResolutionsChange}
+                    errorPanel={ErrorPanel}
                 >
                     {this.renderLayers()}
                     {this.renderSupportTools()}

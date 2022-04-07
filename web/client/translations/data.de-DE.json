@@ -464,6 +464,9 @@
             "error": "Das bereitgestellte Bild ist ungültig",
             "savedMapTitle": "Gespeicherte Karte",
             "savedMapMessage": "Karte wurde korrekt gespeichert",
+            "renderingErrorTitle": "Renderfehler",
+            "renderingErrorMessage": "<p>Das Rendern der Karte wurde gestoppt und dies kann verschiedene Gründe haben: </p><ul><li>Der angewendete Stil enthält einige Regeln oder Variablen, die von den Funktionen nicht unterstützt werden</li>< li>Die Ebene ist nicht richtig konfiguriert</li></ul><p>Sie können Änderungen am Ebenenstil vornehmen und dann auf die Schaltfläche 'Karte neu laden' klicken. <br/> Weitere Informationen finden Sie in der folgenden Meldung:< /p>",
+            "reloadMap": "Karte neu laden",
             "thumbnailError": {
                 "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
                 "error404": "Es gab einen Fehler während der Erstellung der Miniaturansicht",
@@ -2344,7 +2347,9 @@
             "imageSrcNotSupportedBase64Image": "Einige Style-Renderer unterstützen Base64-Images nicht, selbst wenn die aktuelle Quelle gültig ist",
             "imageFormatEmpty": "Das Bildformat kann nicht identifiziert werden. Bitte wählen Sie das Bildformat aus den verfügbaren in der Dropdown-Liste 'Format' aus",
             "warningTextOrderTitle": "Warnung",
-            "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
+            "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen",
+            "invalidProperty": "Der Eigenschaftstyp { key } ist ungültig",
+            "notSupportedVariable": "Die Variable { key } wird vom Tileset nicht unterstützt"
         },
         "playback": {
             "settings": {

@@ -151,6 +151,7 @@ export function StyleEditor({
     onChange,
     loading,
     header,
+    editors: editorsProp = [],
     ...props
 }) {
 
@@ -193,7 +194,7 @@ export function StyleEditor({
             </div>);
     }
 
-    const EditorComponent = editors[editorType] || editors.textarea;
+    const EditorComponent = editorsProp[editorType] || editors[editorType] || editors.textarea;
 
     return (
         <BorderLayout
@@ -229,6 +230,8 @@ export function StyleEditor({
             }>
             {EditorComponent && <EditorComponent
                 {...props}
+                code={code}
+                error={error}
                 onChange={(newCode, style) => {
                     onChange(newCode);
                     if (isObject(style)) {
