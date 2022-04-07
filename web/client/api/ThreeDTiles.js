@@ -10,11 +10,7 @@ import axios from '../libs/ajax';
 import { convertRadianToDegrees } from '../utils/CoordinatesUtils';
 import { METERS_PER_UNIT } from '../utils/MapUtils';
 
-function getTitleFromUrl(url) {
-    const parts = url.split('/');
-    return parts[parts.length - 2];
-}
-
+// converts the boundingVolume of the root tileset to a valid layer bbox
 function tilesetToBoundingBox(Cesium, tileset) {
     if (tileset?.root?.boundingVolume?.region) {
         // Latitudes and longitudes are in the WGS 84 datum as defined in EPSG 4979 and are in radians
@@ -105,12 +101,14 @@ function tilesetToBoundingBox(Cesium, tileset) {
     return null;
 }
 
+// extract the tile format from the uri
 function getFormat(uri) {
     const parts = uri.split(/\./g);
     const format = parts[parts.length - 1];
     return format;
 }
 
+// extract version, bbox, format and properties from the tileset metadata
 function extractCapabilities(tileset) {
     return import('cesium')
         .then((mod) => {
@@ -128,34 +126,19 @@ function extractCapabilities(tileset) {
         });
 }
 
+/**
+ * Common requests to 3D tiles tileset
+ * @module api.ThreeDTiles
+ */
+
+/**
+ * get the tileset json response and additional parsed information such as: version, bbox, format and properties
+ * @param {string} url URL of the 3d tiles tileset.json file
+ * @
+ */
 export const getCapabilities = (url) => {
     return axios.get(url)
         .then(({ data }) => {
             return extractCapabilities(data).then((properties) => ({ tileset: data, ...properties }));
-        });
-};
-
-export const getRecords = (url, startPosition, maxRecords, text, info) => {
-    return axios.get(url)
-        .then(({ data }) => {
-            return extractCapabilities(data)
-                .then((properties) => {
-                    const records = [{
-                        // current specification does not define the title location
-                        // but there is works related to the metadata in the next version of 3d tiles
-                        // for the moment we set the name assigned to catalog service
-                        // or we can extract the title from the url
-                        title: info?.options?.service?.title || getTitleFromUrl(url),
-                        url: url,
-                        type: '3dtiles',
-                        tileset: data,
-                        ...properties
-                    }].filter(({ title }) => !text || title?.toLowerCase().includes(text?.toLowerCase() || ''));
-                    return {
-                        numberOfRecordsMatched: records.length,
-                        numberOfRecordsReturned: records.length,
-                        records
-                    };
-                });
         });
 };

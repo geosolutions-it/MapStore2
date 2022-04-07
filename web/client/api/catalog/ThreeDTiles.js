@@ -9,7 +9,7 @@
 import { Observable } from 'rxjs';
 import { isValidURLTemplate } from '../../utils/URLUtils';
 import { preprocess as commonPreprocess } from './common';
-import { getRecords } from '../ThreeDTiles';
+import { getCapabilities } from '../ThreeDTiles';
 
 function validateUrl(serviceUrl) {
     if (isValidURLTemplate(serviceUrl)) {
@@ -33,6 +33,33 @@ const recordToLayer = (record) => {
         ...(format && { format }),
         ...(properties && { properties })
     };
+};
+
+function getTitleFromUrl(url) {
+    const parts = url.split('/');
+    return parts[parts.length - 2];
+}
+
+const getRecords = (url, startPosition, maxRecords, text, info) => {
+    return getCapabilities(url)
+        .then(({ tileset, ...properties }) => {
+            const records = [{
+                // current specification does not define the title location
+                // but there is works related to the metadata in the next version of 3d tiles
+                // for the moment we set the name assigned to catalog service
+                // or we can extract the title from the url
+                title: info?.options?.service?.title || getTitleFromUrl(url),
+                url: url,
+                type: '3dtiles',
+                tileset,
+                ...properties
+            }].filter(({ title }) => !text || title?.toLowerCase().includes(text?.toLowerCase() || ''));
+            return {
+                numberOfRecordsMatched: records.length,
+                numberOfRecordsReturned: records.length,
+                records
+            };
+        });
 };
 
 export const preprocess = commonPreprocess;
