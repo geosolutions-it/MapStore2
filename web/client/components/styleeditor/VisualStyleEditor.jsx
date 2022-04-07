@@ -292,11 +292,11 @@ function VisualStyleEditor({
                         {
                             glyph: 'undo',
                             tooltipId: 'styleeditor.undoStyle',
-                            disabled: styleHistory?.past?.length === 0,
+                            disabled: (styleHistory?.past?.length || 0) === 0,
                             onClick: () => dispatch({ type: UNDO_STYLE })
                         },
                         {
-                            disabled: styleHistory?.future?.length === 0,
+                            disabled: (styleHistory?.future?.length || 0) === 0,
                             tooltipId: 'styleeditor.redoStyle',
                             glyph: 'redo',
                             onClick: () => dispatch({ type: REDO_STYLE })
