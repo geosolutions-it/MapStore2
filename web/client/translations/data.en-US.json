@@ -660,7 +660,8 @@
             "previewFormatUnsupported": "Unsupported format for preview",
             "projection": "Coordinates System",
             "projectionmismatch": "Coordinate system mismatch among printed and screen map",
-            "graticule": "add grid with labels"
+            "graticule": "add grid with labels",
+            "additionalLayers": "Include additional layers"
         },
         "backgroundSwitcher":{
             "tooltip": "Select Background"

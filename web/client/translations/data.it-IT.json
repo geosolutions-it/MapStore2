@@ -660,7 +660,8 @@
             "previewFormatUnsupported": "Formato non supportato per la preview",
             "projection": "Sistema di coordinate",
             "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo",
-            "graticule": "aggiungi griglia con label"
+            "graticule": "aggiungi griglia con label",
+            "additionalLayers": "Includi livelli aggiuntivi"
         },
         "backgroundSwitcher":{
             "tooltip": "Scegli lo sfondo"
