@@ -122,7 +122,6 @@ describe('CesiumMap', () => {
             group: 'background',
             name: 'nurc:Arc_Sample',
             description: "arcGridSample",
-            attribution: "<p>This is some Attribution <b>TEXT</b></p>",
             title: "arcGridSample",
             type: 'wmts',
             url: "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
@@ -142,14 +141,16 @@ describe('CesiumMap', () => {
                 "EPSG:900913": true
             },
             matrixIds: {},
-            tileMatrixSet: []
+            tileMatrixSet: [],
+            credits: {
+                title: "<p>This is some Attribution <b>TEXT</b></p>"
+            }
         };
-        const map = ReactDOM.render(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
+        ReactDOM.render(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
             <CesiumLayer type="wmts" options={options} />
         </CesiumMap>, document.getElementById("container"));
-        expect(map).toExist();
         const creditsWidget = document.getElementsByClassName('cesium-widget-credits')[0];
-        expect(creditsWidget).toExist();
+        expect(creditsWidget).toBeTruthy();
     });
     it('check if the handler for "moveend" event is called', (done) => {
         const precision = 1000000000;
