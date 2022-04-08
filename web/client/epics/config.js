@@ -33,17 +33,15 @@ import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 const prepareMapConfiguration = (data, override, state) => {
     const queryParamsMap = getRequestParameterValue('map', state);
     let mapConfig = merge({}, data, override);
-    if (queryParamsMap?.version && queryParamsMap?.map) {
-        mapConfig = {
-            ...mapConfig,
-            ...queryParamsMap,
-            map: {
-                ...(mapConfig?.map ?? {}),
-                ...(queryParamsMap?.map ?? {})
+    mapConfig = {
+        ...mapConfig,
+        ...(queryParamsMap ?? {}),
+        map: {
+            ...(mapConfig?.map ?? {}),
+            ...(queryParamsMap?.map ?? {})
 
-            }
-        };
-    }
+        }
+    };
     return mapConfig;
 };
 
