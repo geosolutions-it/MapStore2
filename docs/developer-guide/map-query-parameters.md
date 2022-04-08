@@ -123,11 +123,6 @@ It also allows partial overriding of existing map configuration by passing only 
 Following example will override "catalogServices" and "mapInfoConfiguration":
 ```text
 #/viewer/openlayers/config?map={"mapInfoConfiguration":{"trigger":"click","infoFormat":"text/html"},"catalogServices":{"services": {"wms": {"url": "http://example.com/geoserver/wms","type": "wms","title": "WMS","autoload": true}},"selectedService": "wms"}}
-```
-Following example will update map "center" and "zoom" level, but also it will change trigger event for the display of information sheet to "Hover":
-```text
-#/viewer/openlayers/config?map={"mapInfoConfiguration":{"trigger":"hover","infoFormat":"text/html"},"map":{"zoom":8,"center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"}}}
-```
 
 ### Center / Zoom
 
