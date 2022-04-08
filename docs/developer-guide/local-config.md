@@ -92,6 +92,13 @@ This is the main structure:
           ...
       }
   },
+  // allows to apply map options configuration to all the Map plugins instances defined in the plugins configuration.
+  // The mapOptions in the plugin configuration have priority so they will overrides this global config
+  "defaultMapOptions": {
+    "openlayers": { ... },
+    "leaflet": { ... },
+    "cesium": { ... }
+  },
   "plugins": {
       // plugins to load for the mobile mode
       "mobile": [...]
