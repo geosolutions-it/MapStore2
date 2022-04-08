@@ -198,7 +198,9 @@ class CesiumMap extends React.Component {
         this.hand.destroy();
         // see comment in UNSAFE_componentWillMount
         this.getDocument().removeEventListener('gesturestart', this.gestureStartListener );
-        this.map.cesiumNavigation.destroy();
+        if (this.map?.cesiumNavigation?.destroy) {
+            this.map.cesiumNavigation.destroy();
+        }
         this.map.destroy();
     }
 
