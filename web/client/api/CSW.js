@@ -84,7 +84,6 @@ export const constructXMLBody = (startPosition, maxRecords, searchText, {filter}
 
 // Extract the relevant information from the wms URL for (RNDT / INSPIRE)
 const extractWMSParamsFromURL = wms => {
-    console.log(new URLSearchParams(wms.value));
     const lowerCaseParams = new Map(Array.from(new URLSearchParams(wms.value)).map(([key, value]) => [key.toLowerCase(), value]));
     const layerName = lowerCaseParams.get('layers');
     const wmsVersion = lowerCaseParams.get('version');
