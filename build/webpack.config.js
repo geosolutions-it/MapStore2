@@ -7,6 +7,7 @@ const config = require('./buildConfig')(
     {
         bundles: {
             [process.env.bundle || "mapstore2"]: path.join(__dirname, "..", "web", "client", "product", process.env.entrypoint || process.env.bundle || "app"),
+            "print": path.join(__dirname, "..", "web", "client", "product", "print"),
             "embedded": path.join(__dirname, "..", "web", "client", "product", "embedded"),
             "ms2-api": path.join(__dirname, "..", "web", "client", "product", "api"),
             "dashboard-embedded": path.join(__dirname, "..", "web", "client", "product", "dashboardEmbedded"),
