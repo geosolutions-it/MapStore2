@@ -92,7 +92,7 @@ const extractWMSParamsFromURL = wms => {
             ...wms,
             protocol: 'OGC:WMS',
             name: layerName,
-            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERIVCE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
+            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERVICE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
         };
     }
     return false;
