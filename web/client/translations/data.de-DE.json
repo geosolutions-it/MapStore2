@@ -2773,6 +2773,8 @@
         "backgroundDialog": {
             "addTitle": "Neuen Hintergrund hinzufügen",
             "editTitle": "Aktuellen Hintergrund bearbeiten",
+            "editAttribution": "Zuschreibung",
+            "editAttributionPlaceholder": "Geben Sie Zuordnungstext ein",
             "title": "Titel",
             "titlePlaceholder": "Den angezeigten Namen eingeben",
             "add": "Hinzufügen",
