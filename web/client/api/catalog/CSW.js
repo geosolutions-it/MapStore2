@@ -6,13 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import urlUtil from 'url';
-
 import { head, isString, includes, castArray, sortBy, uniq } from 'lodash';
 import { getLayerFromRecord as getLayerFromWMSRecord } from './WMS';
 import { getMessageById } from '../../utils/LocaleUtils';
 import { extractEsriReferences, extractOGCServicesReferences } from '../../utils/CatalogUtils';
-import CSW from '../CSW';
+import CSW, { getLayerReferenceFromDc } from '../CSW';
 import {
     validate as commonValidate,
     testService as commonTestService,
@@ -27,22 +25,6 @@ const getBaseCatalogUrl = (url) => {
 const getThumb = (dc) => head(castArray(dc.references).filter((ref) => {
     return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail" || (ref.scheme === "WWW:DOWNLOAD-1.0-http--download" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1) || (ref.scheme === "WWW:DOWNLOAD-REST_MAP" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1);
 }));
-
-// Extract the relevant information from the wms URL for (RNDT / INSPIRE)
-const extractWMSParamsFromURL = wms => {
-    const lowerCaseParams = new Map(Array.from(new URLSearchParams(wms.value)).map(([key, value]) => [key.toLowerCase(), value]));
-    const layerName = lowerCaseParams.get('layers');
-    const wmsVersion = lowerCaseParams.get('version');
-    if (layerName) {
-        return {
-            ...wms,
-            protocol: 'OGC:WMS',
-            name: layerName,
-            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERIVCE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
-        };
-    }
-    return false;
-};
 
 const getMetaDataDownloadFormat = (protocol) => {
     const formatsMap = [
@@ -98,76 +80,6 @@ const esriToLayer = (record, { layerBaseConfig = {} } = {}) => {
     };
 
 };
-
-function toReference(layerType, data, options) {
-    if (!data.name) {
-        return null;
-    }
-    switch (layerType) {
-    case 'wms':
-        const urlValue = !(data.value.indexOf("http") === 0)
-            ? (options && options.catalogURL || "") + "/" + data.value
-            : data.value;
-        return {
-            type: data.protocol || data.scheme,
-            url: urlValue,
-            SRS: [],
-            params: {
-                name: data.name
-            }
-        };
-    case 'arcgis':
-        return {
-            type: 'arcgis',
-            url: data.value,
-            SRS: [],
-            params: {
-                name: data.name
-            }
-        };
-    default:
-        return null;
-    }
-}
-
-function getLayerReferenceFromDc(dc, options) {
-    const URI = dc?.URI && castArray(dc.URI);
-    // look in URI objects for wms and thumbnail
-    if (URI) {
-        const wms = head(URI.map( uri => {
-            if (uri.protocol) {
-                if (uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) || uri.protocol.match(/^OGC:WMS/g) ) {
-                    /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
-                    return uri;
-                }
-                if (uri.protocol.match(/serviceType\/ogc\/wms/g)) {
-                    /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
-                    return extractWMSParamsFromURL(uri);
-                }
-            }
-            return false;
-        }).filter(item => item));
-        if (wms) {
-            return toReference('wms', wms, options);
-        }
-    }
-    // look in references objects
-    if (dc?.references?.length) {
-        const refs = castArray(dc.references);
-        const wms = head(refs.filter((ref) => { return ref.scheme && (ref.scheme.match(/^OGC:WMS-(.*)-http-get-map/g) || ref.scheme === "OGC:WMS"); }));
-        if (wms) {
-            let urlObj = urlUtil.parse(wms.value, true);
-            let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
-            return toReference('wms', { ...wms, name: layerName }, options);
-        }
-        // checks for esri arcgis in geonode csw
-        const esri = head(refs.filter((ref) => { return ref.scheme && ref.scheme === "WWW:DOWNLOAD-REST_MAP"; }));
-        if (esri) {
-            return toReference('arcgis', { ...esri, name: dc.alternative }, options);
-        }
-    }
-    return null;
-}
 
 function getThumbnailFromDc(dc, options) {
     const URI = dc?.URI && castArray(dc.URI);
