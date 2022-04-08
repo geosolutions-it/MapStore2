@@ -35,7 +35,7 @@ const prepareMapConfiguration = (data, override, state) => {
     let mapConfig = merge({}, data, override);
     mapConfig = {
         ...mapConfig,
-        ...queryParamsMap,
+        ...(queryParamsMap ?? {}),
         map: {
             ...(mapConfig?.map ?? {}),
             ...(queryParamsMap?.map ?? {})
