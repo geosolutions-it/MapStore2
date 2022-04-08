@@ -11,7 +11,7 @@ import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 import GRDCResponse from 'raw-loader!../../test-resources/csw/getRecordsResponseDC.xml';
 
-import API, { constructXMLBody } from '../CSW';
+import API, {constructXMLBody, getLayerReferenceFromDc} from '../CSW';
 
 describe('Test correctness of the CSW APIs', () => {
     it('getRecords ISO Metadata Profile', (done) => {
@@ -46,16 +46,16 @@ describe('Test correctness of the CSW APIs', () => {
                 const [rec0, rec1, rec2, rec3] = result.records;
 
                 expect(rec0.dc).toExist();
-                expect(rec0.dc.URI).toExist();
-                expect(rec0.dc.URI[0]);
                 expect(rec0.boundingBox).toExist();
                 expect(rec0.boundingBox.crs).toBe('EPSG:4326');
                 expect(rec0.boundingBox.extent).toEqual([45.542, 11.874, 46.026, 12.718]);
-                const uri = rec0.dc.URI[0];
+
+                expect(rec1.dc.URI).toExist();
+                expect(rec1.dc.URI[0]).toExist();
+                const uri = rec1.dc.URI[0];
                 expect(uri.name).toExist();
                 expect(uri.value).toExist();
                 expect(uri.description).toExist();
-
                 expect(rec1.boundingBox).toExist();
                 expect(rec1.boundingBox.crs).toBe('EPSG:4326');
                 expect(rec1.boundingBox.extent).toEqual([12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
@@ -126,6 +126,17 @@ describe('Test correctness of the CSW APIs', () => {
             try {
                 expect(result).toBeTruthy();
                 expect(result.records[0].capabilities).toBeTruthy();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it("dc:uri do not add capabilities when layer name doesn't match", (done) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 2).then((result) => {
+            try {
+                expect(result).toBeTruthy();
+                expect(result.records[1].capabilities).toBeFalsy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -206,5 +217,43 @@ describe("constructXMLBody", () => {
         body = constructXMLBody(1, 5, null);
         expect(body.indexOf("dc:type")).toNotBe(-1); // Static filter
         expect(body.indexOf("text*")).toBe(-1); // Dynamic filter
+    });
+});
+
+describe("getLayerReferenceFromDc", () => {
+    it("test layer reference with dc.references of scheme OGC:WMS", () => {
+        const dc = {references: [{value: "http://wmsurl", scheme: 'OGC:WMS'}, {value: "wfsurl", scheme: 'OGC:WFS'}], alternative: "some_layer"};
+        const layerRef = getLayerReferenceFromDc(dc);
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WMS');
+        expect(layerRef.url).toBe('http://wmsurl');
+    });
+    it("test layer reference with dc.references of scheme OGC:WMS-http-get-map", () => {
+        const dc = {references: [{value: "http://wmsurl", scheme: 'OGC:WMS-http-get-map'}, {value: "wfsurl", scheme: 'OGC:WFS'}], alternative: "some_layer"};
+        const layerRef = getLayerReferenceFromDc(dc);
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WMS-http-get-map');
+        expect(layerRef.url).toBe('http://wmsurl');
+    });
+    it("test layer reference with dc.URI of scheme serviceType/ogc/wms and options", () => {
+        const dc = {URI: [{value: "wmsurl?service=wms&layers=some_layer&version=1.3.0", protocol: 'serviceType/ogc/wms'}, {value: "wfsurl", protocol: 'OGC:WFS'}]};
+        const layerRef = getLayerReferenceFromDc(dc, {catalogURL: "catalog_url"});
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WMS');
+        expect(layerRef.url).toBe('catalog_url/wmsurl?SERVICE=WMS&VERSION=1.3.0');
+    });
+    it("test layer reference with dc.URI of scheme OGC:WMS", () => {
+        const dc = {URI: [{value: "http://wmsurl", protocol: 'OGC:WMS', name: 'some_layer'}, {value: "wfsurl", protocol: 'OGC:WFS'}]};
+        const layerRef = getLayerReferenceFromDc(dc);
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WMS');
+        expect(layerRef.url).toBe('http://wmsurl');
+    });
+    it("test layer reference with dc.references of scheme WWW:DOWNLOAD-REST_MAP", () => {
+        const dc = {references: [{value: "http://esri_url", scheme: 'WWW:DOWNLOAD-REST_MAP'}, {value: "wfsurl", protocol: 'OGC:WFS'}], alternative: "some_layer"};
+        const layerRef = getLayerReferenceFromDc(dc);
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('arcgis');
+        expect(layerRef.url).toBe('http://esri_url');
     });
 });
