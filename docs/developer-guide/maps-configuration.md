@@ -979,7 +979,7 @@ i.e.
 #### 3D tiles
 
 This type of layer shows 3d tiles version 1.0 inside the Cesium viewer. This layer will not be visible inside 2d map viewer types: openlayer or leaflet.
-See specification for more info about 3d tiles: https://www.ogc.org/standards/3DTiles
+See specification for more info about 3d tiles [here](https://www.ogc.org/standards/3DTiles).
 
 i.e.
 
