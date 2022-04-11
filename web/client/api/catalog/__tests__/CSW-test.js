@@ -376,7 +376,7 @@ describe('Test correctness of the CSW catalog APIs', () => {
     it('csw with DC references with implicit name in wms URI (RNDT / INSPIRE)', () => {
         const wmsReferences = [{
             type: "OGC:WMS",
-            url: "http://geoserver/wms?SERIVCE=WMS&VERSION=1.3.0",
+            url: "http://geoserver/wms?SERVICE=WMS&VERSION=1.3.0",
             SRS: [],
             params: {
                 name: "workspace:layer"
