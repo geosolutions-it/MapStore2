@@ -348,6 +348,24 @@ describe('CesiumMap', () => {
         expect(ref.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 2, 3]);
         expect(ref.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer03', 'layer02' ]);
     });
+    it('should add navigation tools to the map', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        navigationTools: true
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        expect(ref.map.cesiumNavigation).toBeTruthy();
+        expect(ref.map.cesiumNavigation.destroy).toBeTruthy();
+    });
     describe("hookRegister", () => {
         it("default", () => {
             ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
