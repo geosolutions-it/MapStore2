@@ -15,6 +15,7 @@ import axios from '../libs/ajax';
 import {cleanDuplicatedQuestionMarks, getConfigProp} from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG } from '../utils/CoordinatesUtils';
 import WMS from "../api/WMS";
+import { getLayerReferenceFromDc, REGEX_WMS_ALL } from "../utils/CatalogUtils";
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -85,23 +86,28 @@ export const constructXMLBody = (startPosition, maxRecords, searchText, {filter}
 let capabilitiesCache = {};
 
 /**
- * Add capabilities data to CSW records
+ * Add capabilities data to CSW records if WMS url is found
  * Currently limited to only scale denominators (visibility limits)
- * @param {string} url wms url
+ * @param {object[]} _dcRef dc.reference or dc.URI
  * @param {object} result csw results object
  */
-const addCapabilitiesToRecords = (url, result) => {
-    const cached = capabilitiesCache[url];
+const addCapabilitiesToRecords = (_dcRef, result) => {
+    const { value: _url } = _dcRef?.find(t =>
+        REGEX_WMS_ALL.some(regex=> t?.scheme?.match(regex) || t?.protocol?.match(regex))) || {}; // Get WMS URL from references
+    const [parsedUrl] = _url && _url.split('?') || [];
+    if (!parsedUrl) return {...result}; // Return record when no url found
+
+    const cached = capabilitiesCache[parsedUrl];
     const isCached = cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000;
     return Promise.resolve(
         isCached
             ? cached.data
-            : WMS.getCapabilities(url + '?version=')
+            : WMS.getCapabilities(parsedUrl + '?version=')
                 .then((caps)=> get(caps, 'capability.layer.layer', []))
                 .catch(()=> []))
         .then((layers) => {
             if (!isCached) {
-                capabilitiesCache[url] = {
+                capabilitiesCache[parsedUrl] = {
                     timestamp: new Date().getTime(),
                     data: layers
                 };
@@ -110,10 +116,11 @@ const addCapabilitiesToRecords = (url, result) => {
             return {
                 ...result,
                 records: result?.records?.map(record=> {
+                    const name = get(getLayerReferenceFromDc(record?.dc), 'name', '');
                     const {
                         minScaleDenominator: MinScaleDenominator,
                         maxScaleDenominator: MaxScaleDenominator
-                    } = layers.find(l=> l.name === record?.dc?.identifier) || {};
+                    } = layers.find(l=> l.name === name) || {};
                     return {
                         ...record,
                         ...((!isNil(MinScaleDenominator) || !isNil(MaxScaleDenominator))
@@ -286,8 +293,11 @@ var Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
+                                            const URIs = dc.references.length > 0 ? dc.references : dc.URI;
                                             if (!_dcRef) {
-                                                _dcRef = dc.references;
+                                                _dcRef = URIs;
+                                            } else {
+                                                _dcRef = _dcRef.concat(URIs);
                                             }
                                             obj.dc = dc;
                                         }
@@ -295,9 +305,7 @@ var Api = {
                                     }
                                 }
                                 result.records = records;
-                                const {value: _url} = _dcRef?.find(t=> t.scheme === 'OGC:WMS') || {}; // Get WMS URL from references
-                                const [parsedUrl] = _url && _url.split('?') || [];
-                                return addCapabilitiesToRecords(parsedUrl, result);
+                                return addCapabilitiesToRecords(_dcRef, result);
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
                                 return {
                                     error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'

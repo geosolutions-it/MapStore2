@@ -79,7 +79,7 @@ const extractWMSParamsFromURL = wms => {
             ...wms,
             protocol: 'OGC:WMS',
             name: layerName,
-            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERIVCE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
+            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERVICE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
         };
     }
     return false;
@@ -114,6 +114,40 @@ const getURILinks = (metadata, locales, uriItem) => {
     return (`<li><a target="_blank" href="${uriItem.value}">${itemName}</a></li>`);
 };
 
+const REGEX_WMS_EXPLICIT = [/^OGC:WMS-(.*)-http-get-map/g, /^OGC:WMS/g];
+const REGEX_WMS_EXTRACT = /serviceType\/ogc\/wms/g;
+export const REGEX_WMS_ALL = REGEX_WMS_EXPLICIT.concat(REGEX_WMS_EXTRACT);
+
+export const getLayerReferenceFromDc = (dc) => {
+    const URI = dc?.URI && castArray(dc.URI);
+    if (URI) {
+        return head(URI.map( uri => {
+            if (uri.protocol) {
+                if (REGEX_WMS_EXPLICIT.some(regex => uri.protocol.match(regex))) {
+                    /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
+                    return uri;
+                }
+                if (uri.protocol.match(REGEX_WMS_EXTRACT)) {
+                    /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                    return extractWMSParamsFromURL(uri);
+                }
+            }
+            return false;
+        }).filter(item => item));
+    }
+    let refs = dc?.references && castArray(dc.references);
+    if (refs) {
+        let wms = head(refs.filter((ref) => { return ref.scheme && REGEX_WMS_EXPLICIT.some(regex => ref.scheme.match(regex)); }));
+        if (wms) {
+            let urlObj = urlUtil.parse(wms.value, true);
+            let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
+            wms = assign({}, wms, {name: layerName} );
+        }
+        return wms;
+    }
+    return null;
+};
+
 const converters = {
     csw: (records, options, locales = {}) => {
         let result = records;
@@ -129,29 +163,11 @@ const converters = {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) ) || head([].filter.call(URI, (uri) => !uri.name && uri.protocol?.indexOf('image/') > -1));
                     thumbURL = thumb ? thumb.value : null;
-                    wms = head(URI.map( uri => {
-                        if (uri.protocol) {
-                            if (uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g) || uri.protocol.match(/^OGC:WMS/g) ) {
-                                /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
-                                return uri;
-                            }
-                            if (uri.protocol.match(/serviceType\/ogc\/wms/g)) {
-                                /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
-                                return extractWMSParamsFromURL(uri);
-                            }
-                        }
-                        return false;
-                    }).filter(item => item));
+                    wms = getLayerReferenceFromDc(dc);
                 }
                 // look in references objects
                 if (!wms && dc && dc.references && dc.references.length) {
-                    let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
-                    wms = head([].filter.call(refs, (ref) => { return ref.scheme && (ref.scheme.match(/^OGC:WMS-(.*)-http-get-map/g) || ref.scheme === "OGC:WMS"); }));
-                    if (wms) {
-                        let urlObj = urlUtil.parse(wms.value, true);
-                        let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
-                        wms = assign({}, wms, {name: layerName} );
-                    }
+                    wms = getLayerReferenceFromDc(dc);
                 }// checks for esri arcgis in geonode csw
                 if (!wms && dc && dc.references && dc.references.length) {
                     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
