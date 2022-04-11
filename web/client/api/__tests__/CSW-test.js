@@ -46,12 +46,13 @@ describe('Test correctness of the CSW APIs', () => {
                 const [rec0, rec1, rec2, rec3] = result.records;
 
                 expect(rec0.dc).toExist();
-                expect(rec0.dc.URI).toExist();
-                expect(rec0.dc.URI[0]);
                 expect(rec0.boundingBox).toExist();
                 expect(rec0.boundingBox.crs).toBe('EPSG:4326');
                 expect(rec0.boundingBox.extent).toEqual([45.542, 11.874, 46.026, 12.718]);
-                const uri = rec0.dc.URI[0];
+
+                expect(rec1.dc.URI).toExist();
+                expect(rec1.dc.URI[0]).toExist();
+                const uri = rec1.dc.URI[0];
                 expect(uri.name).toExist();
                 expect(uri.value).toExist();
                 expect(uri.description).toExist();
@@ -126,6 +127,17 @@ describe('Test correctness of the CSW APIs', () => {
             try {
                 expect(result).toBeTruthy();
                 expect(result.records[0].capabilities).toBeTruthy();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it("dc:uri do not add capabilities when layer name doesn't match", (done) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 2).then((result) => {
+            try {
+                expect(result).toBeTruthy();
+                expect(result.records[1].capabilities).toBeFalsy();
                 done();
             } catch (ex) {
                 done(ex);
