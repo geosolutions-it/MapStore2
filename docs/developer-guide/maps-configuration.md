@@ -1000,9 +1000,7 @@ i.e.
 }
 ```
 
-The style body object for the format 3dtiles accepts rules described in the 3d tiles styling specification version 1.0 available here:
-
-- https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling
+The style body object for the format 3dtiles accepts rules described in the 3d tiles styling specification version 1.0 available [here](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling).
 
 ## Layer groups
 
