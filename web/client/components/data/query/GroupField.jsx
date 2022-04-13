@@ -47,7 +47,7 @@ class GroupField extends React.Component {
         booleanOperators: PropTypes.array,
         defaultOperators: PropTypes.array,
         comboOptions: PropTypes.object,
-        format: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        textFieldTooltipMessageId: PropTypes.string
     };
 
     static contextTypes = {
@@ -88,7 +88,7 @@ class GroupField extends React.Component {
         arrayOperators: ["contains"],
         booleanOperators: ["="],
         defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "><"],
-        format: false
+        textFieldTooltipMessageId: 'queryform.attributefilter.tooltipTextField'
     };
 
     getComboValues = (selected, attributes) => {
@@ -191,14 +191,14 @@ class GroupField extends React.Component {
                     operator={filterField.operator}
                     attType="number"/>
                 {
-                    // flag to swtich from AutocompleteField to TextField
+                    // flag to switch from AutocompleteField to TextField
                     this.props.autocompleteEnabled ?
                         (<AutocompleteField
                             dropUp={this.props.dropUp}
                             filterField={filterField}
                             attType="string"/>) :
                         (<TextField
-                            tooltipMessage={this.props.format === 'css' ? "queryform.attributefilter.tooltipTextFieldCSS" : "queryform.attributefilter.tooltipTextField"}
+                            tooltipMessage={this.props.textFieldTooltipMessageId}
                             operator={filterField.operator}
                             attType="string"/>)
                 }

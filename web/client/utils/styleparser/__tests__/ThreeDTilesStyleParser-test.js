@@ -425,8 +425,8 @@ describe('ThreeDTilesStyleParser', () => {
                             color: {
                                 conditions: [
                                     [ true, 'color(\'#00ff00\', 1)' ],
-                                    [ '(!(${height} === undefined || ${height} === null || isNaN(${height})) && ${height} !== 10)', 'color(\'#0000ff\', 1)' ],
-                                    [ '(!(${height} === undefined || ${height} === null || isNaN(${height})) && ${height} === 10)', 'color(\'#ff0000\', 1)' ]
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} !== 10)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} === 10)', 'color(\'#ff0000\', 1)' ]
                                 ]
                             }
                         });
@@ -468,12 +468,197 @@ describe('ThreeDTilesStyleParser', () => {
                 .then((parsed) => {
                     try {
                         expect(parsed).toEqual({
-                            show: '((!(${height} === undefined || ${height} === null || isNaN(${height})) && ${height} === 10) && (!(${category} === undefined || ${category} === null || isNaN(${category})) && ${category} === 2)) || ((!(${height} === undefined || ${height} === null || isNaN(${height})) && ${height} === 10) || (!(${category} === undefined || ${category} === null || isNaN(${category})) && ${category} === 1))',
+                            show: '((!(${height} === undefined || ${height} === null) && ${height} === 10) && (!(${category} === undefined || ${category} === null) && ${category} === 2)) || ((!(${height} === undefined || ${height} === null) && ${height} === 10) || (!(${category} === undefined || ${category} === null) && ${category} === 1))',
                             color: {
                                 conditions: [
-                                    [ '((!(${height} === undefined || ${height} === null || isNaN(${height})) && ${height} === 10) && (!(${category} === undefined || ${category} === null || isNaN(${category})) && ${category} === 2))', 'color(\'#0000ff\', 1)' ],
-                                    [ '((!(${height} === undefined || ${height} === null || isNaN(${height})) && ${height} === 10) || (!(${category} === undefined || ${category} === null || isNaN(${category})) && ${category} === 1))', 'color(\'#ff0000\', 1)' ],
+                                    [ '((!(${height} === undefined || ${height} === null) && ${height} === 10) && (!(${category} === undefined || ${category} === null) && ${category} === 2))', 'color(\'#0000ff\', 1)' ],
+                                    [ '((!(${height} === undefined || ${height} === null) && ${height} === 10) || (!(${category} === undefined || ${category} === null) && ${category} === 1))', 'color(\'#ff0000\', 1)' ],
                                     [ true, 'color(\'#ffffff\', 1)' ]
+                                ]
+                            }
+                        });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+
+        it('should create conditions for number value', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: ['==', 'height', 10],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['>', 'height', 10],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['<', 'height', 10],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['>=', 'height', 10],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['<=', 'height', 10],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['!=', 'height', 10],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#00ff00',
+                                fillOpacity: 1
+                            }
+                        ]
+                    }
+                ]
+            };
+            parser.writeStyle(style)
+                .then((parsed) => {
+                    try {
+                        expect(parsed).toEqual({
+                            color: {
+                                conditions: [
+                                    [ true, 'color(\'#00ff00\', 1)' ],
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} !== 10)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} <= 10)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} >= 10)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} < 10)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} > 10)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${height} === undefined || ${height} === null) && ${height} === 10)', 'color(\'#ff0000\', 1)' ]
+                                ]
+                            }
+                        });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+        it('should create conditions for string value', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: ['==', 'name', 'mesh_1'],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['!=', 'name', 'mesh_1'],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['==', 'name', null],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        filter: ['*=', 'name', 'me'],
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#0000ff',
+                                fillOpacity: 1
+                            }
+                        ]
+                    },
+                    {
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#00ff00',
+                                fillOpacity: 1
+                            }
+                        ]
+                    }
+                ]
+            };
+            parser.writeStyle(style)
+                .then((parsed) => {
+                    try {
+                        expect(parsed).toEqual({
+                            color: {
+                                conditions: [
+                                    [ true, 'color(\'#00ff00\', 1)' ],
+                                    [ '(!(${name} === undefined || ${name} === null) && regExp(\'me\').test(${name}) === true)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${name} === undefined) && ${name} === null)', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${name} === undefined || ${name} === null) && ${name} !== \'mesh_1\')', 'color(\'#0000ff\', 1)' ],
+                                    [ '(!(${name} === undefined || ${name} === null) && ${name} === \'mesh_1\')', 'color(\'#ff0000\', 1)' ]
                                 ]
                             }
                         });
