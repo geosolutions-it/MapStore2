@@ -13,8 +13,11 @@ import tinycolor from 'tinycolor2';
 const DEFAULT_POINT_SIZE = 1;
 
 function formatExpression(property, operator, value) {
-    const isValidProperty = `!(\${${property}} === undefined || \${${property}} === null || isNaN(\${${property}}))`;
-    return `(${isValidProperty} && \${${property}} ${operator} ${operator === '=~' ? `regExp('${value}')` : value})`;
+    const isValidProperty = `!(\${${property}} === undefined${value === null ? '' : ` || \${${property}} === null`})`;
+    if (operator === '=~') {
+        return `(${isValidProperty} && regExp('${value}').test(\${${property}}) === true)`;
+    }
+    return `(${isValidProperty} && \${${property}} ${operator} ${isString(value) ? `'${value}'` : value})`;
 }
 
 function filterToExpression(filter) {
