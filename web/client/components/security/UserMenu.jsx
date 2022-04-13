@@ -34,6 +34,7 @@ class UserMenu extends React.Component {
          */
         displayAttributes: PropTypes.func,
         bsStyle: PropTypes.string,
+        tooltipPosition: PropTypes.string,
         renderButtonText: PropTypes.bool,
         nav: PropTypes.bool,
         menuProps: PropTypes.object,
@@ -54,6 +55,7 @@ class UserMenu extends React.Component {
     static defaultProps = {
         user: {
         },
+        tooltipPosition: 'bottom',
         showAccountInfo: true,
         showPasswordChange: true,
         showLogout: true,
@@ -111,7 +113,7 @@ class UserMenu extends React.Component {
                 title={this.renderButtonText()}
                 id="dropdown-basic-primary"
                 tooltipId="user.login"
-                tooltipPosition="bottom"
+                tooltipPosition={this.props.tooltipPosition}
                 {...this.props.menuProps}>
                 <MenuItem onClick={this.props.onShowLogin}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
             </DropDown>);
@@ -141,7 +143,7 @@ class UserMenu extends React.Component {
                     bsStyle="success"
                     title={this.renderButtonText()}
                     tooltipId="user.userMenu"
-                    tooltipPosition="bottom"
+                    tooltipPosition={this.props.tooltipPosition}
                     {...this.props.menuProps}
                 >
                     <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>

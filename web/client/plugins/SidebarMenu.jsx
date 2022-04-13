@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2022, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -8,26 +8,48 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import './omnibar/omnibar.css';
-import assign from 'object-assign';
-import ToolsContainer from './containers/ToolsContainer';
 
-class OmniBar extends React.Component {
+import ToolsContainer from './containers/ToolsContainer';
+import './sidebarmenu/sidebarmenu.css';
+import {createPlugin} from "../utils/PluginsUtils";
+import {connect} from "react-redux";
+import {setControlProperty} from "../actions/controls";
+
+class SidebarMenu extends React.Component {
     static propTypes = {
         className: PropTypes.string,
         style: PropTypes.object,
         items: PropTypes.array,
         id: PropTypes.string,
-        mapType: PropTypes.string
+        mapType: PropTypes.string,
+        onInit: PropTypes.func,
+        onDetach: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object,
+        router: PropTypes.object
     };
 
     static defaultProps = {
         items: [],
-        className: "navbar-dx shadow",
+        className: "navbar-dx",
         style: {},
-        id: "mapstore-navbar",
-        mapType: "leaflet"
+        id: "mapstore-sidebar-menu",
+        mapType: "openlayers",
+        onInit: () => {},
+        onDetach: () => {}
     };
+
+    componentDidMount() {
+        const { onInit } = this.props;
+        onInit();
+    }
+
+    componentWillUnmount() {
+        const { onDetach } = this.props;
+        onDetach();
+    }
 
     getPanels = () => {
         return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
@@ -52,9 +74,9 @@ class OmniBar extends React.Component {
             className={this.props.className}
             mapType={this.props.mapType}
             container={(props) => <div {...props}>{props.children}</div>}
-            toolStyle="primary"
-            activeStyle="default"
-            stateSelector="omnibar"
+            toolStyle="default"
+            activeStyle="primary"
+            stateSelector="sidebarMenu"
             tool={(props) => <div>{props.children}</div>}
             tools={this.getTools()}
             panels={this.getPanels()}
@@ -64,18 +86,20 @@ class OmniBar extends React.Component {
 
 /**
  * Generic bar that can contains other plugins.
- * used by {@link #plugins.SearchBar|SearchBar}, {@link #plugins.BurgerMenu|BurgerMenu},
- * {@link #plugins.Login|Login} and many other, in different pages.
- * @name OmniBar
+ * used by {@link #plugins.Login|Login}, {@link #plugins.Home|Home},
+ * {@link #plugins.Login|Login} and many other, on map viewer pages.
+ * @name SidebarMenu
  * @class
  * @memberof plugins
  */
-export default {
-    OmniBarPlugin: assign(
-        OmniBar,
-        {
-            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit') || (state('sidebarMenu')?.enabled && state('router').includes('/viewer/'))}"
-        }
-    ),
-    reducers: {}
-};
+export default createPlugin(
+    'SidebarMenu',
+    {
+        component: connect((state) =>({
+            controls: state.controls
+        }), {
+            onInit: setControlProperty.bind(null, 'sidebarMenu', 'enabled', true),
+            onDetach: setControlProperty.bind(null, 'sidebarMenu', 'enabled', false)
+        })(SidebarMenu)
+    }
+);

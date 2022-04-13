@@ -72,6 +72,18 @@ export default {
             position: 4,
             tool: true,
             priority: 3
+        },
+        SidebarMenu: {
+            name: 'home',
+            position: 1,
+            cfg: {
+                className: 'btn-text square-button'
+            },
+            tool: connect(() => ({
+                bsStyle: 'text',
+                tooltipPosition: 'left'
+            }))(HomeConnected),
+            priority: 3
         }
     }),
     reducers: {},

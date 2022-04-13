@@ -31,6 +31,7 @@ import { toggleControl } from '../actions/controls';
 import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';
 import { mapTypeSelector } from '../selectors/maptype';
+import SidebarElement from "../components/sidebarmenu/SidebarElement";
 
 /**
  * Allows the user to import a file into current map.
@@ -93,6 +94,19 @@ export default {
             action: toggleControl.bind(null, 'mapimport', null),
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: "import",
+            position: 4,
+            tool: connect(() => ({
+                bsStyle: 'text',
+                tooltipId: 'mapImport.tooltip',
+                icon: 'upload'
+            }), {
+                onClick: toggleControl.bind(null, 'mapimport', null)
+            })(SidebarElement),
+            doNotHide: true,
+            priority: 2
         }
     }),
     reducers: {

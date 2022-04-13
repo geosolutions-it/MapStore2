@@ -26,7 +26,8 @@ class Home extends React.Component {
         onCloseUnsavedDialog: PropTypes.func,
         displayUnsavedDialog: PropTypes.bool,
         renderUnsavedMapChangesDialog: PropTypes.bool,
-        tooltipPosition: PropTypes.string
+        tooltipPosition: PropTypes.string,
+        bsStyle: PropTypes.string
     };
 
     static contextTypes = {
@@ -39,7 +40,8 @@ class Home extends React.Component {
         onCheckMapChanges: () => {},
         onCloseUnsavedDialog: () => {},
         renderUnsavedMapChangesDialog: true,
-        tooltipPosition: 'left'
+        tooltipPosition: 'left',
+        bsStyle: 'primary'
     };
 
     render() {
@@ -51,7 +53,7 @@ class Home extends React.Component {
                     <Button
                         id="home-button"
                         className="square-button"
-                        bsStyle="primary"
+                        bsStyle={this.props.bsStyle}
                         onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
                         {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children', 'icon', 'bsStyle', 'className'])}

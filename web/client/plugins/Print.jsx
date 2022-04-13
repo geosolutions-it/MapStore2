@@ -33,6 +33,7 @@ import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_S
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { has, includes } from 'lodash';
 import {additionalLayersSelector} from "../selectors/additionallayers";
+import SidebarElement from "../components/sidebarmenu/SidebarElement";
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -666,6 +667,18 @@ export default {
             action: toggleControl.bind(null, 'print', null),
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: "print",
+            position: 2,
+            tool: connect(() => ({
+                tooltipId: 'printbutton',
+                icon: 'print'
+            }), {
+                onClick: toggleControl.bind(null, 'print', null)
+            })(SidebarElement),
+            doNotHide: true,
+            priority: 2
         }
     }),
     reducers: {print: printReducers}

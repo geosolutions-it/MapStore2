@@ -53,7 +53,8 @@
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"},
       {"name": "userrole", "path": "security.user.role"},
-      {"name": "printEnabled", "path": "print.capabilities"}
+      {"name": "printEnabled", "path": "print.capabilities"},
+      {"name": "sidebarMenu", "path": "controls.sidebarMenu"}
     ],
     "userSessions": {
       "enabled": true
@@ -378,6 +379,7 @@
                     }
                 }
             },
+          "SidebarMenu",
             "FilterLayer",
             "AddGroup",
             "TOCItemsSettings",

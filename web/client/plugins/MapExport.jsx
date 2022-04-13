@@ -24,6 +24,7 @@ import { createControlEnabledSelector } from '../selectors/controls';
 
 import ExportPanel from '../components/export/ExportPanel';
 import * as epics from '../epics/mapexport';
+import SidebarElement from "../components/sidebarmenu/SidebarElement";
 
 const DEFAULTS = ["mapstore2", "wmc"];
 const isEnabled = createControlEnabledSelector('export');
@@ -102,6 +103,24 @@ const MapExportPlugin = {
                     () => exportMap(enabledFormats[0] || 'mapstore2'),
                 priority: 2,
                 doNotHide: true
+            };
+        },
+        SidebarMenu: config => {
+            const enabledFormats = get(config, 'cfg.enabledFormats', DEFAULTS);
+            return {
+                name: "export",
+                position: 4,
+                tool: connect(() => ({
+                    bsStyle: 'text',
+                    tooltipId: 'mapExport.tooltip',
+                    icon: 'download'
+                }), {
+                    onClick: enabledFormats.length > 1 ?
+                        () => toggleControl('export') :
+                        () => exportMap(enabledFormats[0] || 'mapstore2')
+                })(SidebarElement),
+                doNotHide: true,
+                priority: 2
             };
         }
     }),

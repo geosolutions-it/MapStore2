@@ -127,7 +127,9 @@ export default {
         WidgetsTrayPlugin: require('../plugins/WidgetsTray').default,
         ZoomAllPlugin: require('../plugins/ZoomAll').default,
         ZoomInPlugin: require('../plugins/ZoomIn').default,
-        ZoomOutPlugin: require('../plugins/ZoomOut').default
+        ZoomOutPlugin: require('../plugins/ZoomOut').default,
+        SidebarMenuPlugin: require('../plugins/SidebarMenu').default
+
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

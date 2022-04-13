@@ -1,0 +1,9 @@
+
+#mapstore-sidebar-menu {
+    position: absolute;
+    right: 0;
+    width: 52px;
+    height: 100%;
+    background: inherit;
+    z-index: 10;
+}

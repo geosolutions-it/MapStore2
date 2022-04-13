@@ -16,6 +16,7 @@ import epics from '../epics/login';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
 import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/index';
+import {connect} from "../utils/PluginsUtils";
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -62,7 +63,19 @@ export default {
         OmniBar: {
             name: "login",
             position: 3,
-            tool: LoginNav,
+            tool: connect(() => ({
+                bsStyle: 'primary'
+            }))(LoginNav),
+            tools: [UserDetails, PasswordReset, Login],
+            priority: 1
+        },
+        SidebarMenu: {
+            name: "login",
+            position: 3,
+            tool: connect(() => ({
+                bsStyle: 'text',
+                tooltipPosition: 'left'
+            }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
             priority: 1
         }
