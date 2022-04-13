@@ -110,12 +110,19 @@ GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "fil
 
 ### Map
 
-Allows to pass the entire map JSON definition. (See the map configuration format of MapStore(
+Allows to pass the entire map JSON definition (see the map configuration format of MapStore). 
+
 GET:
 
 ```text
 #/viewer/openlayers/config?map={"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}
 ```
+
+It also allows partial overriding of existing map configuration by passing only specific properties of the root object and/or the internal "map" object.
+
+Following example will override "catalogServices" and "mapInfoConfiguration":
+```text
+#/viewer/openlayers/config?map={"mapInfoConfiguration":{"trigger":"click","infoFormat":"text/html"},"catalogServices":{"services": {"wms": {"url": "http://example.com/geoserver/wms","type": "wms","title": "WMS","autoload": true}},"selectedService": "wms"}}
 
 ### Center / Zoom
 
