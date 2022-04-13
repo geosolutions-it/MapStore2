@@ -8,7 +8,7 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
+import {get, head, isNaN, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
 import url from 'url';
 
 import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap} from '../actions/map';
@@ -19,20 +19,25 @@ import { warning } from '../actions/notifications';
 
 import {getLonLatFromPoint, isValidExtent} from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
-import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from "../actions/mapInfo";
-import { getBbox } from "../utils/MapUtils";
-import { mapSelector } from '../selectors/map';
+import {featureInfoClick, hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
+import {
+    getBbox
+} from "../utils/MapUtils";
+import {mapSelector} from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
+import {getRequestParameterValue} from "../utils/QueryParamsUtils";
+import {mapProjectionSelector} from "../utils/PrintUtils";
+import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 
 /*
 it maps params key to function.
 functions must return an array of actions or and empty array
 */
 const paramActions = {
-    bbox: ({ value = '' }) => {
-        const extent = value.split(',')
+    bbox: (parameters) => {
+        const extent = parameters.bbox.split(',')
             .map(val => parseFloat(val))
             .filter((val, idx) => idx % 2 === 0
                 ? val > -180.5 && val < 180.5
@@ -51,11 +56,11 @@ const paramActions = {
             })
         ];
     },
-    center: ({value = {}, state}) => {
+    center: (parameters, state) => {
         const map = mapSelector(state);
-        const validCenter = value && !isEmpty(value.center) && value.center.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
-        const zoom = toNumber(value.zoom);
+        const zoom = toNumber(parameters.zoom);
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
@@ -73,11 +78,11 @@ const paramActions = {
             })
         ];
     },
-    marker: ({value = {}, state}) => {
+    marker: (parameters, state) => {
         const map = mapSelector(state);
-        const marker = value && !isEmpty(value.marker) && value.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const marker = !isEmpty(parameters.marker) && parameters.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = marker && marker.length === 2 && marker.indexOf(false) === -1 && getCenter(marker);
-        const zoom = toNumber(value.zoom);
+        const zoom = toNumber(parameters.zoom);
         const bbox =  getBbox(center, zoom);
         const lng = marker && marker[0];
         const lat = marker && marker[1];
@@ -98,15 +103,24 @@ const paramActions = {
             })
         ];
     },
-    actions: ({value = ''}) => {
+    featureinfo: (parameters, state) => {
+        const value = parameters.featureinfo;
+        const { lat, lng, filterNameList } = value;
+        if (typeof lat !== 'undefined' && typeof lng !== 'undefined') {
+            const projection = mapProjectionSelector(state);
+            return [featureInfoClick(updatePointWithGeometricFilter({latlng: {lat, lng}}, projection), false, filterNameList ?? [])];
+        }
+        return [];
+    },
+    zoom: () => {},
+    actions: (parameters) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
             ZOOM_TO_EXTENT,
             ADD_LAYERS_FROM_CATALOGS
         ]);
-        if (isString(value)) {
-            const actions = JSON.parse(value);
-            return actions.filter(a => includes(whiteList, a.type));
+        if (parameters.actions) {
+            return parameters.actions.filter(a => includes(whiteList, a.type));
         }
         return [];
     }
@@ -126,13 +140,19 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
                 .take(1)
                 .switchMap(() => {
                     const state = store.getState();
-                    const search = get(state, 'router.location.search') || '';
-                    const { query = {} } = url.parse(search, true) || {};
-                    const queryActions = Object.keys(query)
+                    const parameters = Object.keys(paramActions)
+                        .reduce((params, parameter) => {
+                            const value = getRequestParameterValue(parameter, state);
+                            return {
+                                ...params,
+                                ...(value ? { [parameter]: value } : {})
+                            };
+                        }, {});
+                    const queryActions = Object.keys(parameters)
                         .reduce((actions, param) => {
                             return [
                                 ...actions,
-                                ...(paramActions[param] && paramActions[param]({ value: size(query) === 1 ? query[param] : query, state }) || [])
+                                ...(paramActions[param](parameters, state) || [])
                             ];
                         }, []);
                     return head(queryActions)
