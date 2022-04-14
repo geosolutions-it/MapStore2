@@ -11,7 +11,7 @@ import { branch } from 'recompose';
 import { Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../OverlayTrigger';
 import Message from '../../I18N/Message';
-import { pick } from 'lodash';
+import { omit } from 'lodash';
 
 /**
  * Tooltip enhancer. Enhances an object adding a tooltip (with i18n support).
@@ -39,5 +39,5 @@ export default branch(
         placement={tooltipPosition}
         overlay={<Tooltip id={"tooltip-" + keyProp}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
     // avoid to pass non needed props
-    (Wrapped) => (props) => <Wrapped {...(pick(props, ["active", "disabled", "block", "onClick", "componentClass", "href", "type"]))}>{props.children}</Wrapped>
+    (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip", "tooltipPosition"]))}>{props.children}</Wrapped>
 );
