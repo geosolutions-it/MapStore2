@@ -27,11 +27,7 @@ if ""%1"" == ""debug"" goto needJavaHome
 
 rem Otherwise either JRE or JDK are fine
 
-rem forcing to use jdk otherwise in case JRE_HOME defined in the system is not compatible
-rem see https://github.com/geosolutions-it/MapStore2/issues/7810
-rem so next setup is being disabled for this reason
-rem if not "%JRE_HOME%" == "" goto gotJreHome
-
+if not "%JRE_HOME%" == "" goto gotJreHome
 if not "%JAVA_HOME%" == "" goto gotJavaHome
 echo Neither the JAVA_HOME nor the JRE_HOME environment variable is defined
 echo At least one of these environment variable is needed to run this program
