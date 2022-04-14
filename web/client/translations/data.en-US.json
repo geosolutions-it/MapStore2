@@ -1012,6 +1012,7 @@
                 "attribute_filter_header": "Attribute filter",
                 "tooltipTextField": "use <b>*</b> for any number of any char</br>use . for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
                 "tooltipTextFieldCSS": "use <b>%</b> for any number of any char</br>use <b>_</b> for a single char</br>use <b>\\</b> to escape the above two (% and _)</br>",
+                "tooltipTextField3DTiles": "use a value supported by the <strong>regExp</strong> function of the 3d tiles style specification 1.0",
                 "groupField": {
                     "any": "any",
                     "all": "all",

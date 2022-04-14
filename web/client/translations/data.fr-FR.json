@@ -1012,6 +1012,7 @@
                 "attribute_filter_header": "Attribut filtre",
                 "tooltipTextField": "utilise <b>*</b> pour tout caractère</br>utilise . pour un seul caractère</br>utilise <b>!</b> pour les caractères spéciaux (* et .)</br>",
                 "tooltipTextFieldCSS": "utilise <b>%</b> pour tout caractère</br>utilise <b>_</b> pour un seul caractère</br>utilise <b>\\</b> pour les caractères spéciaux (% et _)</br>",
+                "tooltipTextField3DTiles": "utilisez une valeur prise en charge par la fonction <strong>regExp</strong> de la spécification de style de tuiles 3d 1.0",
                 "groupField": {
                     "any": "certain",
                     "all": "tous",
