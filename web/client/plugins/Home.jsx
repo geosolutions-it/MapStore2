@@ -70,7 +70,10 @@ export default {
         OmniBar: {
             name: 'home',
             position: 4,
-            tool: true,
+            tool: connect(() => ({
+                bsStyle: 'primary',
+                tooltipPosition: 'bottom'
+            }))(HomeConnected),
             priority: 3
         },
         SidebarMenu: {

@@ -64,7 +64,7 @@ export default {
             name: "login",
             position: 3,
             tool: connect(() => ({
-                bsStyle: 'tray'
+                bsStyle: 'primary'
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
             priority: 1
@@ -73,7 +73,7 @@ export default {
             name: "login",
             position: 2,
             tool: connect(() => ({
-                bsStyle: 'text',
+                bsStyle: 'tray',
                 tooltipPosition: 'left'
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
