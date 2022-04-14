@@ -122,6 +122,24 @@ export default createPlugin('Details', {
                 }
                 return { style: {display: "none"} };
             }
+        },
+        SidebarMenu: {
+            name: "details",
+            position: 4,
+            tooltip: "details.title",
+            alwaysVisible: true,
+            icon: <Glyphicon glyph="sheet"/>,
+            action: openDetailsPanel,
+            selector: (state) => {
+                const mapId = mapIdSelector(state);
+                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                if (detailsUri) {
+                    return {};
+                }
+                return { style: {display: "none"} };
+            },
+            doNotHide: true,
+            priority: 2
         }
     },
     epics,

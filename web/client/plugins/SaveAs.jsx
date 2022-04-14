@@ -59,6 +59,20 @@ export default createPlugin('SaveAs', {
                 }
                 return { style: isLoggedIn(state) ? {} : {display: "none"} };
             }
+        },
+        SidebarMenu: {
+            name: 'saveAs',
+            position: 31,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            action: toggleControl.bind(null, 'mapSaveAs', null),
+            tooltip: "saveDialog.saveAsTooltip",
+            // display the button only if the map can be edited
+            selector: (state) => {
+                if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
+                    return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
+                }
+                return { style: isLoggedIn(state) ? {} : {display: "none"} };
+            }
         }
     }
 });

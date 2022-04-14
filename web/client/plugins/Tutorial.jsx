@@ -171,6 +171,15 @@ export default {
             action: toggleTutorial,
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'tutorial',
+            position: 1200,
+            tooltip: "tutorial.title",
+            icon: <Glyphicon glyph="book"/>,
+            action: toggleTutorial,
+            priority: 2,
+            doNotHide: true
         }
     }),
     reducers: {

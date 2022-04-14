@@ -398,6 +398,7 @@ export default {
             name: 'search',
             position: 1,
             tool: true,
+            doNotHide: true,
             priority: 1
         }
     }),

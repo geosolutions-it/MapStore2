@@ -74,7 +74,8 @@ export default {
     OmniBarPlugin: assign(
         OmniBar,
         {
-            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit') || (state('sidebarMenu')?.enabled && state('router').includes('/viewer/'))}"
+            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit') || " +
+                "(state('sidebarMenu')?.enabled && state('router').includes('/viewer/'))}"
         }
     ),
     reducers: {}

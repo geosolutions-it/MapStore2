@@ -10,10 +10,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ToolsContainer from './containers/ToolsContainer';
-import './sidebarmenu/sidebarmenu.css';
 import {createPlugin} from "../utils/PluginsUtils";
 import {connect} from "react-redux";
 import {setControlProperty} from "../actions/controls";
+import SidebarElement from "../components/sidebarmenu/SidebarElement";
+import assign from "object-assign";
+
+import './sidebarmenu/sidebarmenu.less';
 
 class SidebarMenu extends React.Component {
     static propTypes = {
@@ -33,7 +36,6 @@ class SidebarMenu extends React.Component {
 
     static defaultProps = {
         items: [],
-        className: "navbar-dx",
         style: {},
         id: "mapstore-sidebar-menu",
         mapType: "openlayers",
@@ -51,17 +53,19 @@ class SidebarMenu extends React.Component {
         onDetach();
     }
 
-    getPanels = () => {
-        return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
-            return previous.concat(
-                current.tools.map((tool, index) => ({
-                    name: current.name + index,
-                    panel: tool,
-                    cfg: current?.cfg?.toolsCfg?.[index] || {}
-                }))
+    getPanels = items => {
+        return items.filter((item) => item.panel)
+            .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
+                items.filter((item) => item.tools).reduce((previous, current) => {
+                    return previous.concat(
+                        current.tools.map((tool, index) => ({
+                            name: current.name + index,
+                            panel: tool,
+                            cfg: current.cfg.toolsCfg ? current.cfg.toolsCfg[index] : {}
+                        }))
+                    );
+                }, [])
             );
-        }, []);
-
     };
 
     getTools = () => {
@@ -74,12 +78,12 @@ class SidebarMenu extends React.Component {
             className={this.props.className}
             mapType={this.props.mapType}
             container={(props) => <div {...props}>{props.children}</div>}
-            toolStyle="default"
+            toolStyle="tray"
             activeStyle="primary"
             stateSelector="sidebarMenu"
-            tool={(props) => <div>{props.children}</div>}
+            tool={({ children: c, ...props }) => <SidebarElement{...props} >{c}</SidebarElement>}
             tools={this.getTools()}
-            panels={this.getPanels()}
+            panels={this.getPanels(this.props.items)}
         />);
     }
 }

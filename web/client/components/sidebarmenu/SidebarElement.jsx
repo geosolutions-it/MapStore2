@@ -1,5 +1,5 @@
 import tooltip from "../misc/enhancers/tooltip";
-import {Button, Glyphicon} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import React from "react";
 import classnames from "classnames";
 import {omit} from "lodash";
@@ -13,9 +13,9 @@ const Container = ({children, className, bsStyle = 'text', tooltipId, tooltipPos
         bsStyle={bsStyle}
         tooltipId={tooltipId}
         tooltipPosition={tooltipPosition}
-        {...omit(props, ['pluginCfg', 'help'])}
+        {...omit(props, ['pluginCfg', 'help', 'defaultOptions'])}
     >
-        <Glyphicon glyph={props.icon}/>
+        {children}
     </TooltipButton>
 );
 

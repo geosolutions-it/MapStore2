@@ -64,14 +64,14 @@ export default {
             name: "login",
             position: 3,
             tool: connect(() => ({
-                bsStyle: 'primary'
+                bsStyle: 'tray'
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
             priority: 1
         },
         SidebarMenu: {
             name: "login",
-            position: 3,
+            position: 2,
             tool: connect(() => ({
                 bsStyle: 'text',
                 tooltipPosition: 'left'

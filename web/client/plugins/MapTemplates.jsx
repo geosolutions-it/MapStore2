@@ -98,6 +98,15 @@ export default createPlugin('MapTemplates', {
             priority: 2,
             doNotHide: true,
             tooltip: <Message msgId="mapTemplates.tooltip" />
+        },
+        SidebarMenu: {
+            name: 'MapTemplates',
+            position: 998,
+            icon: <Glyphicon glyph="1-map" />,
+            action: openMapTemplatesPanel,
+            priority: 2,
+            doNotHide: true,
+            tooltip: "mapTemplates.tooltip"
         }
     },
     reducers: {

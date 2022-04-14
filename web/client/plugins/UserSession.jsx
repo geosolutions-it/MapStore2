@@ -104,6 +104,18 @@ export default createPlugin('UserSession', {
             },
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'UserSession',
+            position: 1500,
+            icon: <Glyphicon glyph="trash" />,
+            action: toggleControl.bind(null, 'resetUserSession', null),
+            tooltip: "userSession.tooltip",
+            selector: (state) => {
+                return { style: hasSession(state) ? {} : {display: "none"} };
+            },
+            priority: 2,
+            doNotHide: true
         }
     },
     reducers: {

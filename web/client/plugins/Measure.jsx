@@ -127,6 +127,15 @@ export default {
             text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
             action: () => setControlProperty("measure", "enabled", true)
+        },
+        SidebarMenu: {
+            name: 'measurement',
+            position: 9,
+            panel: false,
+            help: <Message msgId="helptexts.measureComponent"/>,
+            tooltip: "measureComponent.tooltip",
+            icon: <Glyphicon glyph="1-ruler"/>,
+            action: () => setControlProperty("measure", "enabled", true)
         }
     }),
     reducers: {measurement: require('../reducers/measurement').default},

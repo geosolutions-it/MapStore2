@@ -53,6 +53,21 @@ export default createPlugin('Save', {
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
             )
+        },
+        SidebarMenu: {
+            name: 'save',
+            position: 30,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            action: toggleControl.bind(null, 'mapSave', null),
+            tooltip: "saveDialog.saveTooltip",
+            // display the button only if the map can be edited
+            selector: createSelector(
+                isLoggedIn,
+                mapInfoSelector,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                })
+            )
         }
     }
 });

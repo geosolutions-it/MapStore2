@@ -83,6 +83,16 @@ export default {
             action: toggleControl.bind(null, 'snapshot', null),
             tools: [SnapshotPlugin],
             priority: 2
+        },
+        SidebarMenu: {
+            name: 'snapshot',
+            position: 3,
+            panel: SnapshotPanel,
+            icon: <Glyphicon glyph="camera"/>,
+            tooltip: "snapshot.tooltip",
+            action: toggleControl.bind(null, 'snapshot', null),
+            toggle: true,
+            priority: 2
         }
     }),
     reducers: {

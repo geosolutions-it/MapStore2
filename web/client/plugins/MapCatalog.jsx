@@ -106,6 +106,15 @@ export default createPlugin('MapCatalog', {
             action: () => toggleControl('mapCatalog', 'enabled'),
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: "mapcatalog",
+            position: 6,
+            icon: <Glyphicon glyph="maps-catalog" />,
+            tooltip: "mapCatalog.tooltip",
+            action: () => toggleControl('mapCatalog', 'enabled'),
+            priority: 2,
+            doNotHide: true
         }
     },
     reducers: {

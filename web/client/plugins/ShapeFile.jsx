@@ -87,6 +87,14 @@ export default createPlugin(
                 action: toggleControl.bind(null, 'shapefile', null),
                 priority: 2,
                 doNotHide: true
+            },
+            SidebarMenu: {
+                name: 'shapefile',
+                position: 4,
+                icon: <Glyphicon glyph="upload" />,
+                action: toggleControl.bind(null, 'shapefile', null),
+                priority: 2,
+                doNotHide: true
             }
         },
         reducers: {

@@ -21,6 +21,7 @@ import { dashboardResource, getDashboardSaveErrors, isDashboardLoading, isShowSa
 import { isLoggedIn, userSelector } from '../selectors/security';
 import { widgetsConfig } from '../selectors/widgets';
 import { createPlugin } from '../utils/PluginsUtils';
+import SidebarElement from "../components/sidebarmenu/SidebarElement";
 
 /**
  * Save dialog component enhanced for dashboard
@@ -76,6 +77,26 @@ export const DashboardSave = createPlugin('DashboardSave', {
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
             )
+        },
+        SidebarMenu: {
+            name: "dashboardSave",
+            position: 30,
+            tool: connect(() => ({
+                bsStyle: 'text',
+                tooltipId: 'save',
+                icon: 'floppy-open'
+            }), {
+                onClick: triggerSave.bind(null, true)
+            })(SidebarElement),
+            selector: createSelector(
+                isLoggedIn,
+                dashboardResource,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                })
+            ),
+            doNotHide: true,
+            priority: 2
         }
     }
 });
@@ -120,6 +141,20 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
                     style: loggedIn ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
             )
+        },
+        SidebarMenu: {
+            name: "dashboardSaveAs",
+            position: 31,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            action: triggerSaveAs.bind(null, true),
+            // always display on the BurgerMenu button if logged in
+            selector: createSelector(
+                isLoggedIn,
+                (loggedIn) => ({
+                    style: loggedIn ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                })
+            ),
+            priority: 2
         }
     }
 });

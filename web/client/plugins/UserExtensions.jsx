@@ -67,6 +67,15 @@ export default createPlugin('UserExtensions', {
             action: setControlProperty.bind(null, "userExtensions", "enabled", true, true),
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'userExtensions',
+            position: 999,
+            tooltip: "userExtensions.title",
+            icon: <Glyphicon glyph="plug" />,
+            action: setControlProperty.bind(null, "userExtensions", "enabled", true, true),
+            priority: 2,
+            doNotHide: true
         }
     }
 });

@@ -299,6 +299,14 @@ export default {
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
             doNotHide: true
         },
+        SidebarMenu: {
+            name: 'metadataexplorer',
+            position: 5,
+            tooltip: "catalog.tooltip",
+            icon: <Glyphicon glyph="folder-open"/>,
+            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+            doNotHide: true
+        },
         BackgroundSelector: {
             name: 'MetadataExplorer',
             doNotHide: true

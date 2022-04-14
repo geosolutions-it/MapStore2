@@ -45,6 +45,19 @@ export default createPlugin('HelpLink', {
             },
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'helplink',
+            position: 1100,
+            tooltip: "docsTooltip",
+            icon: <Glyphicon glyph="question-sign"/>,
+            action: () => ({type: ''}),
+            selector: (state, ownProps) => {
+                const docsUrl = get(ownProps, 'docsUrl', 'https://mapstore.readthedocs.io/en/latest/');
+                return { href: docsUrl, target: 'blank'};
+            },
+            priority: 2,
+            doNotHide: true
         }
     }
 });

@@ -41,6 +41,15 @@ export default {
                 action: toggleControl.bind(null, 'about', null),
                 priority: 1,
                 doNotHide: true
+            },
+            SidebarMenu: {
+                name: 'about',
+                position: 1500,
+                tooltip: "aboutTooltip",
+                icon: <Glyphicon glyph="info-sign"/>,
+                action: toggleControl.bind(null, 'about', null),
+                priority: 1,
+                doNotHide: true
             }
         }),
     reducers: {}

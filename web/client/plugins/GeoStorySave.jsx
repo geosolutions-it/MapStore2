@@ -97,6 +97,21 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
             action: setControl.bind(null, Controls.SHOW_SAVE, "save"),
             priority: 1,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'geoStorySave',
+            selector: createSelector(
+                isLoggedIn,
+                resourceSelector,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && (id && canEdit) ? {} : { display: "none" } // save is present only if the resource already exists and you can save
+                })
+            ),
+            position: 1,
+            icon: <Glyphicon glyph="floppy-open" />,
+            action: setControl.bind(null, Controls.SHOW_SAVE, "save"),
+            priority: 1,
+            doNotHide: true
         }
     }
 });
@@ -129,6 +144,21 @@ export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
             ),
             position: 2,
             text: <Message msgId="saveAs" />,
+            icon: <Glyphicon glyph="floppy-open" />,
+            action: setControl.bind(null, Controls.SHOW_SAVE, "saveAs"),
+            priority: 1,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'geoStorySaveAs',
+            selector: createSelector(
+                isLoggedIn,
+                resourceSelector,
+                (loggedIn ) => ({
+                    style: loggedIn ? {} : { display: "none" } // the  resource is new (no resource) or if present, is editable
+                })
+            ),
+            position: 2,
             icon: <Glyphicon glyph="floppy-open" />,
             action: setControl.bind(null, Controls.SHOW_SAVE, "saveAs"),
             priority: 1,

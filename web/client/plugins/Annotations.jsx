@@ -330,6 +330,14 @@ export default createPlugin('Annotations', {
             icon: <Glyphicon glyph="comment"/>,
             action: conditionalToggle,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: "annotations",
+            position: 40,
+            action: conditionalToggle,
+            tooltip: "annotations.tooltip",
+            icon: <Glyphicon glyph="comment"/>,
+            doNotHide: true
         }
     },
     reducers: {

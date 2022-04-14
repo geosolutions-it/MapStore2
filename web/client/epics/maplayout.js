@@ -77,7 +77,8 @@ export const updateMapLayoutEpic = (action$, store) =>
                 }));
             }
 
-            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
+            const sidebarMenuWidth = get(state, "controls.sidebarMenu.enabled") ? 52 : 0;
+            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 658 + sidebarMenuWidth}, bottom: {sm: 30}};
 
             if (get(state, "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
@@ -102,7 +103,6 @@ export const updateMapLayoutEpic = (action$, store) =>
             ].filter(panel => panel)) || {left: 0};
 
             const rightPanels = head([
-                get(state, "controls.sidebarMenu.enabled") && {right: 52} || null,
                 get(state, "controls.details.enabled") && !mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal && {right: mapLayout.right.md} || null,
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,
@@ -110,7 +110,7 @@ export const updateMapLayoutEpic = (action$, store) =>
                 get(state, "controls.mapTemplates.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "controls.mapCatalog.enabled") && { right: mapLayout.right.md } || null,
                 mapInfoEnabledSelector(state) && isMapInfoOpen(state) && !isMouseMoveIdentifyActiveSelector(state) && {right: mapLayout.right.md} || null
-            ].filter(panel => panel)) || {right: 0};
+            ].filter(panel => panel)) || {right: sidebarMenuWidth};
 
             const dockSize = getDockSize(state) * 100;
             const bottom = isFeatureGridOpen(state) && {bottom: dockSize + '%', dockSize}

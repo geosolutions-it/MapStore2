@@ -113,6 +113,15 @@ export const SharePlugin = assign(Share, {
         icon: <Glyphicon glyph="share-alt"/>,
         action: toggleControl.bind(null, 'share', null)
     },
+    SidebarMenu: {
+        name: 'share',
+        position: 1000,
+        priority: 1,
+        doNotHide: true,
+        tooltip: "share.tooltip",
+        icon: <Glyphicon glyph="share-alt"/>,
+        action: toggleControl.bind(null, 'share', null)
+    },
     Toolbar: {
         name: 'share',
         alwaysVisible: true,

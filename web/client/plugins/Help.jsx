@@ -41,6 +41,14 @@ export default {
             action: toggleControl.bind(null, 'help', null),
             priority: 2,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'help',
+            position: 1000,
+            icon: <Glyphicon glyph="question-sign"/>,
+            action: toggleControl.bind(null, 'help', null),
+            priority: 2,
+            doNotHide: true
         }
     }),
     reducers: {help}
