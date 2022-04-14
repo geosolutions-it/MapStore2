@@ -128,7 +128,9 @@ In `datadir_path/env.properties`:
 geoserverUrl=https://demo.geo-solutions.it/geoserver/wms
 ```
 
-This allows to have in `datadir_path/env.properties` a set of variables that can be used in overrides (even in different places). that are indicated by `overrides.mappings`.
+This allows to have in `datadir_path/env.properties` a set of variables that can be used in overrides (even in different places) that are indicated by `overrides.mappings`. 
+
+**Note:** `env.properties` should **not be placed** in classpath folder
 
 ## Patching front-end configuration
 
