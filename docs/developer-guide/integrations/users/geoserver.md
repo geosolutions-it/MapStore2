@@ -1,7 +1,11 @@
-# MapStore2 users GeoServer integration with Authkey
+# GeoServer integrations
+
+With the integration of MapStore you can create a fine grained access to the data and the services for the users
+
+## MapStore2 users  with Authkey
 
 This guide explains how to share users, groups and roles between MapStore and GeoServer.
-Applying this configurations will allow users logged in MapStore to be recognized by GeoServer. So security rules about restrictions on services, layers and so on can be correctly applied to MapStore users (also using GeoFence).
+Applying this configurations will allow users logged in MapStore to be recognized by GeoServer. So security rules about restrictions on services, layers and so on can be correctly applied to MapStore users (also using [GeoFence](https://docs.geoserver.org/latest/en/user/extensions/geofence-server/index.html)).
 
 ![diagram](https://docs.google.com/drawings/d/e/2PACX-1vR2FEp6iXMPotq5OY1DcCcMvMjq3jQG-aJh5lhp7yCW-tsBINugLE7Cff8O-eXprgOQoiqGKcF4Gq98/pub?w=651&amp;h=429)
 
@@ -10,15 +14,15 @@ This means that every user of MapStore will be also a user in GeoServer, with th
 
 For every user-group assigned to a user GeoServer will see also **a role** of the same name, from the role service, assigned to the members of the user-group (as user-group derived roles).
 
-Permission on GeoServer can be assigned using these roles or with more detailed granularity using a custom Resource Access Manager (like GeoFence).
+Permission on GeoServer can be assigned using these roles or with more detailed granularity using a custom Resource Access Manager (like [GeoFence](https://docs.geoserver.org/latest/en/user/extensions/geofence-server/index.html)).
 
 ## Limits of this solution
 
-This solution partially degradates the functionalities of user management UI of GeoServer (for users, groups and roles that belong to MapStore). If you want to use this solution, you should use the MapStore's user mananger and avoid the GeoSever's one.
+This solution partially degradates the functionalities of user management UI of GeoServer (for users, groups and roles that belong to MapStore). If you want to use this solution, you should use the MapStore's user manager and avoid the GeoServer's one.
 
 ## Requirements
 
-1. GeoServer must have the [Authkey Plugin Community Module](https://build.geoserver.org/geoserver/master/community-latest/) installed
+1. GeoServer must have the [Authkey Plugin Community Module](https://build.geoserver.org/geoserver/main/community-latest/) installed
 2. MapStore2 Database must be reachable by GeoServer (H2 will not work, use PostgreSQL or Oracle)
 3. MapStore2 must be reachable by GeoServer via HTTP
 
@@ -30,7 +34,7 @@ I am assuming this is a new installation, so no existing user or map will be pre
 1. Follow [Geostore wiki](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support) to setup a postgresql database (ignore the geostore_test part)
 2. Start your Tomcat at least once, so `mapstore.war`will be extracted in the `webapps` directory of tomcat instance.
 3. Stop Tomcat.
-4. Copy from the extacted folder (`<TOMCAT_DIR>/webapps/mapstore`) the file located at `WEB-INF/classes/db-conf/postgres.properties` to replace the file `WEB-INF/classes/geostore-database-ovr.properties`. 
+4. Copy from the extracted folder (`<TOMCAT_DIR>/webapps/mapstore`) the file located at `WEB-INF/classes/db-conf/postgres.properties` to replace the file `WEB-INF/classes/geostore-database-ovr.properties`. 
 5. Edit the new `WEB-INF/classes/geostore-database-ovr.properties` file with your DB URL and credentials.
 6. Start Tomcat
 
@@ -41,7 +45,7 @@ I am assuming this is a new installation, so no existing user or map will be pre
 
 ## GeoServer Setup
 
-Follow this https://github.com/geosolutions-it/geostore/tree/master/geoserver
+Follow [this guide](https://github.com/geosolutions-it/geostore/tree/master/geoserver)
 
 Create the empty GeoStore database using scripts as described in [GeoStore WIKI](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support).
 
@@ -51,7 +55,7 @@ The following procedure will make GeoServer accessible to users stored in the Ma
 
 #### Setup User Group
 
-Steps below referenve usergroup and role service configuration files, as needed download the files from [the geostore repository](https://github.com/geosolutions-it/geostore/tree/master/geoserver).
+Steps below reference usergroup and role service configuration files, as needed download the files from [the geostore repository](https://github.com/geosolutions-it/geostore/tree/master/geoserver).
 
 1. in GeoServer and add a new User Group Service
     * Setup the User Group Service
@@ -142,7 +146,56 @@ The last step is to configure MapStore to use the authkey with the configured in
  - Verify that "useAuthenticationRules" is set to `true`
  - `authenticationRules` array should contain 2 rules:
      - The first rule should already be present, and defines the authentication method used internally in mapstore
-     - The second rule (the one you need to add) should be added and defines how to autenticate to GeoServer:
+     - The second rule (the one you need to add) should be added and defines how to authenticate to GeoServer:
          - `urlPattern`: is a regular expression that identifies the request url where to apply the rule
          - `method`: set it to `authkey` to use the authentication filter you just created in Geoserver.
          - `authkeyParamName`: is the name of the authkey parameter defined in GeoServer (set to `authkey` by default)
+
+## Other geoserver integration
+
+You can allow some users to:
+
+- Execute some processes (via [WPS security](http://gs-stable.geo-solutions.it/geoserver/web/wicket/bookmarkable/org.geoserver.wps.web.WPSAccessRulePage?25&filter=false)) 
+
+  For example download feature can leverage gs:download process to allow user to download data
+
+- Edit Styles (by default allowed only to administrators, but you can change it acting on /rest/ Filter Chains). 
+
+- Access to layers based on users (standard geoserver security)
+
+- Filter layers data based on users (GeoFence), see [here](https://docs.geoserver.org/latest/en/user/extensions/geofence-server/index.html)
+
+- Allow editing of layers to certain MapStore users ([GeoServer Security](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)). The editing can be enabled in the [plugin settings of MapStore](https://dev-mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.FeatureEditor)
+
+## GeoServer Plugins and Extensions
+
+MapStore supports several plugins for GeoServer
+
+- [WMTS Multidimensional](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) despite the name, this service provides multidimensional discovery services for GeoServer in general, and is **required** to use the timeline plugin of MapStore.
+
+- [SLD Rest Service](https://docs.geoserver.org/latest/en/user/extensions/sldservice/index.html) Is an extension that can be used by the MapStore styler to classify Vector and Raster data. It can inspect the real layer data to apply classification based on values contained in it. It allows to select various classification types (quantile, equalInterval, standardDeviation…) and to customize the color scales based on parameters
+
+- [CSS Extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html): With this extension MapStore can edit styles in CSS format, in addition to the standard SLD format
+
+- [WPS Extension](https://docs.geoserver.org/stable/en/user/services/wps/install.html): Provides several process that can be executed using the OGC WPS Standard. IT contains some default services very useful for MapStore: 
+  - **gs:PagedUnique**: Provide a way to query layer attribute values with pagination and filtering by unique values. It enables autocomplete of attribute values for feature grid, attribute table, filter layer and other plugins.
+  - **gs:Aggregate**: Allows aggregation operation on vector layers. This can be used  by the charts (widgets, dashboards) to catch data
+  - **gs:Bounds**: allows to calculate bounds of a filtered layer, used to dynamically zoom in dashboards map, when filtering is active.
+
+- [WPS download community module](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html): This additional module allows to improve the default download plugin, based on WFS, with more functionalities.
+The advanced Download, activated when GeoServer provides the WPS service above, allows to
+  - Download also the raster data
+  - Schedule download processes in a download list (and download them later, when post processing is finished). 
+  - Select Spatial reference system
+  - Crop dataset to current viewport 
+  - For vector layers:
+    - Filter the dataset (based on MapStore filter)
+  - For raster layers:
+    - Select Compression type and quality
+    - Define width and height of internal tiles
+
+- [CSW Extension](https://docs.geoserver.org/latest/en/user/services/csw/installing.html): Activating this extension, MapStore can browse data of GeoServer using the CSW protocol. This is particularly useful when GeoServer contains hundreds or thousands of layers, so the WMS capabilities services can be too slow.
+
+- [Query Layer Plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module): This plugin allows the possibility to do cross-layer filtering. Cross layer filtering is the mechanism of Filtering a layer using geometries coming from another layer. The plugin allows this filtering to be performed on the server side in an efficient way. 
+
+- [DDS/BIL Plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html): this plugin add to geoserver the possibility to publish raster data in DDS/BIL format (World Wind). This particular plugin is useful if we want to use a raster data as elevation model for MapStore. This elevation model will be used in 3D mode or with the mouse coordinates plugin (displaying the elevation of a point on the map, together with the coordinates).
