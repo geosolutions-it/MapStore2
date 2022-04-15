@@ -562,14 +562,6 @@
             },
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "forkMeOnGitHub": "Chia đôi tôi trên GitHub",
-            "ml": {
-                "email": "E-mail:",
-                "subscribe": "Đăng ký",
-                "subscribe_devel": "Đăng ký vào danh sách nhận thư của nhà phát triển",
-                "subscribe_users": "Đăng ký danh sách nhận thư của người dùng",
-                "title": "Giữ liên lạc và cập nhật với danh sách gửi thư",
-                "visit_group": "Ghé thăm nhóm này"
-            },
             "open": "Mở",
             "scrollTop": "Cuộn lên đầu trang",
             "shortDescription": "Lập bản đồ web hiện đại với OpenLayers, Tờ rơi và Phản ứng<br/><small>truy cập tài liệu <a href=\"https://mapstore.readthedocs.io/en/latest/\"></a> trang</small>"
