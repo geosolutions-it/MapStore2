@@ -195,14 +195,6 @@
             "LinkedinGroup": "Mapstore Linkedin grupa",
             "scrollTop": "Pomakni gore na vrh stranice",
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Ostanite u kontaktu i informirani putem E-mail lista",
-                "subscribe_users": "Pretplati se na korisničku E-mail listu",
-                "subscribe_devel": "Pretplati se na razvojnu E-mail listu",
-                "visit_group": "Posjeti ovu grupu",
-                "subscribe": "Pretplata",
-                "email": "E-mail:"
-            },
             "examples":{
                 "viewer":{
                     "html":"<h3>Preglednik</h3><p>Jednostavni preglednik</p>"

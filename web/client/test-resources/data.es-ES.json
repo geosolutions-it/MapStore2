@@ -94,14 +94,6 @@
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
-            "ml": {
-                "title": "Esté informado a la última sobre los cambios en el desrrollo via listas de correo",
-                "subscribe_users": "Suscribirse a las listas de correo de usuarios",
-                "subscribe_devel": "Suscribirse a las listas de correo de desarrolladores",
-                "visit_group": "Visiste este grupo",
-                "subscribe": "Suscribir",
-                "email": "Correo:"
-            },
             "examples":{
                 "viewer":{
                     "html":"<h3>Visor</h3><p>Visualiseur simple</p>"

@@ -20,6 +20,13 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+
+## Migration from 2022.01.00 to 2022.01.01
+
+### MailingLists plugin has been removed
+
+`MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
+
 ## Migration from 2021.02.02 to 2022.01.00
 
 This release includes several libraries upgrade on the backend side,
