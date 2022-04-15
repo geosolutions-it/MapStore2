@@ -22,11 +22,6 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2022.01.00 to 2022.02.00
 
-### MailingLists plugin has been removed
-
-`MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
-
-
 ### Upgrading the printing engine
 The mapfish-print based printing engine has been upgraded to align to the latest official 2.1.5 in term of functionalities.
 
@@ -95,6 +90,12 @@ Finally, to enable printing in different formats than PDF, you should add the fo
 formats:
   - '*'
 ```
+
+## Migration from 2022.01.00 to 2022.01.01
+
+### MailingLists plugin has been removed
+
+`MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
 
 ## Migration from 2021.02.02 to 2022.01.00
 
