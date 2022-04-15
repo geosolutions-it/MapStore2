@@ -34,7 +34,7 @@ I am assuming this is a new installation, so no existing user or map will be pre
 1. Follow [Geostore wiki](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support) to setup a postgresql database (ignore the geostore_test part)
 2. Start your Tomcat at least once, so `mapstore.war`will be extracted in the `webapps` directory of tomcat instance.
 3. Stop Tomcat.
-4. Copy from the extracted folder (`<TOMCAT_DIR>/webapps/mapstore`) the file located at `WEB-INF/classes/db-conf/postgres.properties` to replace the file `WEB-INF/classes/geostore-database-ovr.properties`. 
+4. Copy from the extracted folder (`<TOMCAT_DIR>/webapps/mapstore`) the file located at `WEB-INF/classes/db-conf/postgres.properties` to replace the file `WEB-INF/classes/geostore-database-ovr.properties`.
 5. Edit the new `WEB-INF/classes/geostore-database-ovr.properties` file with your DB URL and credentials.
 6. Start Tomcat
 
@@ -143,10 +143,11 @@ The last step is to configure MapStore to use the authkey with the configured in
   }],
 //...
 ```
- - Verify that "useAuthenticationRules" is set to `true`
- - `authenticationRules` array should contain 2 rules:
-     - The first rule should already be present, and defines the authentication method used internally in mapstore
-     - The second rule (the one you need to add) should be added and defines how to authenticate to GeoServer:
+
+- Verify that "useAuthenticationRules" is set to `true`
+- `authenticationRules` array should contain 2 rules:
+       - The first rule should already be present, and defines the authentication method used internally in mapstore
+       - The second rule (the one you need to add) should be added and defines how to authenticate to GeoServer:
          - `urlPattern`: is a regular expression that identifies the request url where to apply the rule
          - `method`: set it to `authkey` to use the authentication filter you just created in Geoserver.
          - `authkeyParamName`: is the name of the authkey parameter defined in GeoServer (set to `authkey` by default)
@@ -155,11 +156,11 @@ The last step is to configure MapStore to use the authkey with the configured in
 
 Integrating the user/groups database with GeoServer you can allow some users to:
 
-- Execute some processes (via [WPS security](http://gs-stable.geo-solutions.it/geoserver/web/wicket/bookmarkable/org.geoserver.wps.web.WPSAccessRulePage?25&filter=false)) 
+- Execute some processes (via [WPS security](http://gs-stable.geo-solutions.it/geoserver/web/wicket/bookmarkable/org.geoserver.wps.web.WPSAccessRulePage?25&filter=false))
 
 - Download data (setting up the WPS download extension to allow/deny certain users to download data)
 
-- Edit Styles (by default allowed only to administrators, but you can change it acting on `/rest/` Filter Chains). 
+- Edit Styles (by default allowed only to administrators, but you can change it acting on `/rest/` Filter Chains).
 
 - Access to layers based on users (using the standard GeoServer security)
 
@@ -171,7 +172,7 @@ Integrating the user/groups database with GeoServer you can allow some users to:
 
 MapStore supports several plugins for GeoServer. Installing them will expand the functionalities of MapStore, allowing to navigate data with time dimension, styling layers and so on.
 
-Here a list of the extensions that MapStore can use: 
+Here a list of the extensions that MapStore can use:
 
 - [WMTS Multidimensional](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) despite the name, this service provides multidimensional discovery services for GeoServer in general, not only for WMTS, and it is **required** to use the timeline plugin of MapStore.
 
@@ -179,25 +180,25 @@ Here a list of the extensions that MapStore can use:
 
 - [CSS Extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html): With this extension the MapStore styler allows to edit styles also in CSS format, in addition to the standard SLD format
 
-- [WPS Extension](https://docs.geoserver.org/stable/en/user/services/wps/install.html): Provides several process that can be executed using the OGC WPS Standard. IT contains some default services very useful for MapStore: 
-  - **gs:PagedUnique**: Provide a way to query layer attribute values with pagination and filtering by unique values. It enables autocomplete of attribute values for feature grid, attribute table, filter layer and other plugins.
-  - **gs:Aggregate**: Allows aggregation operation on vector layers. This can be used  by the charts (widgets, dashboards) to catch data
-  - **gs:Bounds**: allows to calculate bounds of a filtered layer, used to dynamically zoom in dashboards map, when filtering is active.
+- [WPS Extension](https://docs.geoserver.org/stable/en/user/services/wps/install.html): Provides several process that can be executed using the OGC WPS Standard. IT contains some default services very useful for MapStore:
+       - **gs:PagedUnique**: Provide a way to query layer attribute values with pagination and filtering by unique values. It enables autocomplete of attribute values for feature grid, attribute table, filter layer and other plugins.
+       - **gs:Aggregate**: Allows aggregation operation on vector layers. This can be used  by the charts (widgets, dashboards) to catch data
+       - **gs:Bounds**: allows to calculate bounds of a filtered layer, used to dynamically zoom in dashboards map, when filtering is active.
 
 - [WPS download community module](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html): This additional module allows to improve the default download plugin, based on WFS, with more functionalities.
 The advanced Download, activated when GeoServer provides the WPS service above, allows to
-  - Download also the raster data
-  - Schedule download processes in a download list (and download them later, when post processing is finished). 
-  - Select Spatial reference system
-  - Crop dataset to current viewport 
-  - For vector layers:
-    - Filter the dataset (based on MapStore filter)
-  - For raster layers:
-    - Select Compression type and quality
-    - Define width and height of internal tiles
+       - Download also the raster data
+       - Schedule download processes in a download list (and download them later, when post processing is finished).
+       - Select Spatial reference system
+       - Crop dataset to current viewport
+       - For vector layers:
+           - Filter the dataset (based on MapStore filter)
+       - For raster layers:
+           - Select Compression type and quality
+           - Define width and height of internal tiles
 
 - [CSW Extension](https://docs.geoserver.org/latest/en/user/services/csw/installing.html): Activating this extension, MapStore can browse data of GeoServer using the CSW protocol. This is particularly useful when GeoServer contains hundreds or thousands of layers, so the WMS capabilities services can be too slow.
 
-- [Query Layer Plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module): This plugin allows the possibility to do cross-layer filtering. Cross layer filtering is the mechanism of Filtering a layer using geometries coming from another layer. The plugin allows this filtering to be performed on the server side in an efficient way. 
+- [Query Layer Plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module): This plugin allows the possibility to do cross-layer filtering. Cross layer filtering is the mechanism of Filtering a layer using geometries coming from another layer. The plugin allows this filtering to be performed on the server side in an efficient way.
 
 - [DDS/BIL Plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html): this plugin add to geoserver the possibility to publish raster data in DDS/BIL format (World Wind). This particular plugin is useful if we want to use a raster data as elevation model for MapStore. This elevation model will be used in 3D mode or with the mouse coordinates plugin (displaying the elevation of a point on the map, together with the coordinates).
