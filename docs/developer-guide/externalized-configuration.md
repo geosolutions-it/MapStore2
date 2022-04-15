@@ -99,12 +99,60 @@ geostoreVendorAdapter.showSql=false
 
 **NOTE: this file simply overrides the values in `geostore-datasource-ovr.properties` in the web-application, it will not replace it** usually it is configured by default to use h2 database, so configuring the database (h2, postgreSQL or oracle) will override all the properties. Anyway if you changed this file in your project, you may need to override more variables to make it work
 
+## Overriding front-end configuration
+
+Externalizing the whole `localConfig.json` file allows to keep your configurations during the various updates. Anyway keeping this long file in sync can become hard.
+You can use patch files, and this is the first suggested option.
+
+Anyway if you need to specify something in `localConfig.json` that comes from your Java application, MapStore gives you the possibility to override only some specific properties of this big file and keep these changes separated from the application,
+allowing an easier updates.
+This is particularly useful for example when you have to change only a bunch of settings on a specific instance, and use the standard configuration for everything else.
+
+You can override one or more properties in the file using the following JVM flags:
+
+- `overrides.config`: the path of a properties file (**relative to the datadir**) where override values are stored
+- `overrides.mappings`: comma limited list of JSONPath=property values to override
+
+An example of overrides that will replace the default WMS service url:
+
+In `mapstore.properties`:
+
+```properties
+overrides.config=env.properties
+overrides.mappings=initialState.defaultState.catalog.default.services.gs_stable_wms.url=geoserverUrl
+```
+
+In `datadir_path/env.properties`:
+
+```properties
+geoserverUrl=https://demo.geo-solutions.it/geoserver/wms
+```
+
+This allows to have in `datadir_path/env.properties` a set of variables that can be used in overrides (even in different places) that are indicated by `overrides.mappings`. 
+
+**Note:** `env.properties` should **not be placed** in classpath folder
+
+## Patching front-end configuration
+
+Another option is to patch the frontend configuration files, instead of overriding them completely, using a patch file
+in [json-patch](http://jsonpatch.com/) format.
+
+To patch one of the allowed resources you can put a file with a **.patch** extension in the datadir folder (e.g. localConfig.json.patch) and that file will be merged with the main localConfig.json to produce the final resource.
+
+This allows easier migration to a new MapStore version. Please notice that when you use a patch file, any new configuration from
+the newer version will be applied automatically. This can be good or bad: the good part is that new plugins and features will be available without further configuration after the migration, the bad part is that you won't be aware that new plugins and features will be automatically exposed to the final user.
+
+*Example: adding a plugin to the localConfig.json configuration file*:
+
+```json
+[{"op": "add", "path": "/plugins/desktop/-", "value": "MyAwesomePlugin"}]
+```
+
 ## Externalize front-end Configurations
 
-From version 2021.02.xx, the externalization of the front-end files is automatic on the back-end. As well as you configure the data-directory.
-Anyway for your custom application you can customize the following paths to change the defaults and implement your own services for configuration, extensions, and so on.
-
-You can externalize the following files to the data directory by adding the relative line in the `app.jsx` :
+From version 2021.02.xx, the externalization of the front-end files is automatic on the back-end, as well as you configure the data-directory.
+Anyway for your custom application you may want to customize the following paths to point your own services for configuration, extensions, and so on.
+The paths can be customized by adding the relative line in the `app.jsx` :
 
 - *Application* (`localConfig.json`):
 
@@ -139,50 +187,3 @@ ConfigUtils.setConfigProp("extensionsFolder", "extensions/");
 !!! note
     Because in this case we are modifying the `app.jsx` file, these changes can be applied only at build time in a custom project.
     Future improvements will allow to externalize these files also in the main product, without any need to rebuild the application.
-
-## Overriding front-end configuration
-
-Externalizing the whole `localConfig.json` file allows to keep your configurations during the various updates. Anyway keeping this long file in sync can become hard.
-You can use patch files, and this is the first suggested option.
-
-Anyway if you need to specify something in `localConfig.json` that comes from your Java application, MapStore gives you the possibility to override only some specific properties of this big file and keep these changes separated from the application,
-allowing an easier updates.
-This is particularly useful for example when you have to change only a bunch of settings on a specific instance, and use the standard configuration for everything else.
-
-You can override one or more properties in the file using the following JVM flags:
-
-- `overrides.config`: the path of a properties file (relative to the datadir) where override values are stored
-- `overrides.mappings`: comma limited list of JSONPath=property values to override
-
-An example of overrides that will replace the default WMS service url:
-
-In `mapstore.properties`:
-
-```properties
-overrides.config=env.properties
-overrides.mappings=initialState.defaultState.catalog.default.services.WMS Service.url=geoserverUrl
-```
-
-In `env.properties`:
-
-```properties
-geoserverUrl=https://demo.geo-solutions.it/geoserver/wms
-```
-
-This allows to have in `env.properties` a set of variables that can be used in overrides (even in different places). that are indicated by `overrides.mappings`.
-
-## Patching front-end configuration
-
-Another option is to patch the frontend configuration files, instead of overriding them completely, using a patch file
-in [json-patch](http://jsonpatch.com/) format.
-
-To patch one of the allowed resources you can put a file with a **.patch** extension in the datadir folder (e.g. localConfig.json.patch) and that file will be merged with the main localConfig.json to produce the final resource.
-
-This allows easier migration to a new MapStore version. Please notice that when you use a patch file, any new configuration from
-the newer version will be applied automatically. This can be good or bad: the good part is that new plugins and features will be available without further configuration after the migration, the bad part is that you won't be aware that new plugins and features will be automatically exposed to the final user.
-
-*Example: adding a plugin to the localConfig.json configuration file*:
-
-```json
-[{"op": "add", "path": "/plugins/desktop/-", "value": "MyAwesomePlugin"}]
-```
