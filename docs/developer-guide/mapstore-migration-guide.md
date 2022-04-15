@@ -24,8 +24,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ### MailingLists plugin has been removed
 
-This plugin has ben removed from the core of mapstore and if you want to include it again in you projects
-you have to include it as a custom plugin.
+`MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
 
 
 ### Upgrading the printing engine
