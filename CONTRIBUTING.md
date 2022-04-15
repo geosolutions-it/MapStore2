@@ -213,11 +213,10 @@ Please keep the header line short, no more than 50 characters.
 ### Be possible to merge automatically
 
 Occasionally other changes to `master` might mean that your pull request cannot
-be merged automatically. In this case you may need to rebase your branch on a
-more recent `master`, resolve any conflicts, and `git push --force` to update
-your branch so that it can be merged automatically. while doing the rebase
-do not squash anything so that it is easier to compare each change provided
-by the commits, especially for the one that solves the conflicts.
+be merged automatically. In this case you may need to merge your branch with 
+more recent `master`, resolve any conflicts, and `git push` to update
+your branch so that it can be merged automatically. 
+Please try to **not** rewrite the history of a pull request after the first review or it will be very hard for the reviewer to see if the required changes has been applied, expecially for big pull requests.
 
 ## Improving Documentation
 
