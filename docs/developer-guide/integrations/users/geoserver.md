@@ -1,8 +1,8 @@
 # GeoServer integrations
 
-With the integration of MapStore you can create a fine grained access to the data and the services for the users
+## MapStore/GeoServer users integration
 
-## MapStore2 users  with Authkey
+MapStore can share users, groups an roles with GeoServer. This type of integration allows to setup a fine grained access to the data and the services based on MapStore groups and roles.
 
 This guide explains how to share users, groups and roles between MapStore and GeoServer.
 Applying this configurations will allow users logged in MapStore to be recognized by GeoServer. So security rules about restrictions on services, layers and so on can be correctly applied to MapStore users (also using [GeoFence](https://docs.geoserver.org/latest/en/user/extensions/geofence-server/index.html)).
@@ -151,17 +151,17 @@ The last step is to configure MapStore to use the authkey with the configured in
          - `method`: set it to `authkey` to use the authentication filter you just created in Geoserver.
          - `authkeyParamName`: is the name of the authkey parameter defined in GeoServer (set to `authkey` by default)
 
-## Other geoserver integration
+### Advantages of user integration
 
-You can allow some users to:
+Integrating the user/groups database with GeoServer you can allow some users to:
 
 - Execute some processes (via [WPS security](http://gs-stable.geo-solutions.it/geoserver/web/wicket/bookmarkable/org.geoserver.wps.web.WPSAccessRulePage?25&filter=false)) 
 
-  For example download feature can leverage gs:download process to allow user to download data
+- Download data (setting up the WPS download extension to allow/deny certain users to download data)
 
-- Edit Styles (by default allowed only to administrators, but you can change it acting on /rest/ Filter Chains). 
+- Edit Styles (by default allowed only to administrators, but you can change it acting on `/rest/` Filter Chains). 
 
-- Access to layers based on users (standard geoserver security)
+- Access to layers based on users (using the standard GeoServer security)
 
 - Filter layers data based on users (GeoFence), see [here](https://docs.geoserver.org/latest/en/user/extensions/geofence-server/index.html)
 
@@ -169,13 +169,15 @@ You can allow some users to:
 
 ## GeoServer Plugins and Extensions
 
-MapStore supports several plugins for GeoServer
+MapStore supports several plugins for GeoServer. Installing them will expand the functionalities of MapStore, allowing to navigate data with time dimension, styling layers and so on.
 
-- [WMTS Multidimensional](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) despite the name, this service provides multidimensional discovery services for GeoServer in general, and is **required** to use the timeline plugin of MapStore.
+Here a list of the extensions that MapStore can use: 
 
-- [SLD Rest Service](https://docs.geoserver.org/latest/en/user/extensions/sldservice/index.html) Is an extension that can be used by the MapStore styler to classify Vector and Raster data. It can inspect the real layer data to apply classification based on values contained in it. It allows to select various classification types (quantile, equalInterval, standardDeviation…) and to customize the color scales based on parameters
+- [WMTS Multidimensional](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) despite the name, this service provides multidimensional discovery services for GeoServer in general, not only for WMTS, and it is **required** to use the timeline plugin of MapStore.
 
-- [CSS Extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html): With this extension MapStore can edit styles in CSS format, in addition to the standard SLD format
+- [SLD Rest Service](https://docs.geoserver.org/latest/en/user/extensions/sldservice/index.html): This extension can be used by the MapStore styler to classify Vector and Raster data. It can inspect the real layer data to apply classification based on values contained in it. It allows to select various classification types (quantile, equalInterval, standardDeviation…) and to customize the color scales based on parameters
+
+- [CSS Extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html): With this extension the MapStore styler allows to edit styles also in CSS format, in addition to the standard SLD format
 
 - [WPS Extension](https://docs.geoserver.org/stable/en/user/services/wps/install.html): Provides several process that can be executed using the OGC WPS Standard. IT contains some default services very useful for MapStore: 
   - **gs:PagedUnique**: Provide a way to query layer attribute values with pagination and filtering by unique values. It enables autocomplete of attribute values for feature grid, attribute table, filter layer and other plugins.
