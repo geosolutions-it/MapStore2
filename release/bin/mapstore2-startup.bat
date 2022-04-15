@@ -17,6 +17,10 @@ set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
 
 :nativeJava
   set "JAVA_HOME=%CURRENT_DIR%\jre\win"
+  rem forcing to use jdk otherwise in case JRE_HOME defined in the system is not compatible
+  rem see https://github.com/geosolutions-it/MapStore2/issues/7810
+  rem so next setup is being disabled for this reason
+  set "JRE_HOME=%JAVA_HOME%"
 
 rem if you want to customize java version used, override JAVA_HOME variable here
 
