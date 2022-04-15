@@ -196,14 +196,6 @@
       "LinkedinGroup": "Mapstore Linkedin Group",
       "scrollTop": "Vieritä sivun yläosaan",
       "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-      "ml": {
-        "title": "Ota yhteyttä ja pysy ajan tasalla postituslistojen avulla",
-        "subscribe_users": "Liity käyttäjien postituslistalle",
-        "subscribe_devel": "Liity kehittäjien postituslistalle",
-        "visit_group": "Vieraile ryhmässä",
-        "subscribe": "Liity",
-        "email": "Sähköposti:"
-      },
       "examples": {
         "viewer": {
           "html": "<h3>Viewer</h3><p>Simple Viewer</p>"
