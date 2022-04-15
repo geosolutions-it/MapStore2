@@ -197,14 +197,6 @@
             "LinkedinGroup": "Grupo Mapstore no Linkedin",
             "scrollTop": "Navegar para o topo da página",
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Mantenha-se em contacto e actualizado com as mailing lists",
-                "subscribe_users": "Subscrever a Mailing List de Utilizadores",
-                "subscribe_devel": "Subscrever a Mailing List para Developers",
-                "visit_group": "Visitar este grupo",
-                "subscribe": "Subscrever",
-                "email": "Email:"
-            },
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Visualizador Simples</p>"

@@ -286,14 +286,6 @@
             "LinkedinGroup": "Linkedin skupina MapStore",
             "scrollTop": "Prejsť do hornej časti stránky",
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Dostávaj vždy aktuálne informácie cez mailing list",
-                "subscribe_users": "Odoberať Users Mailing List",
-                "subscribe_devel": "Odoberať Developers Mailing List",
-                "visit_group": "Navštív túto skupinu",
-                "subscribe": "Odoberať",
-                "email": "Email:"
-            },
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
