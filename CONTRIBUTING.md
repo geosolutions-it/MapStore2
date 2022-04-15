@@ -121,7 +121,7 @@ Additionally if you use VScode these are the extensions to install that will hel
 - [error lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 - [ESlint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-We suggest also to add the following configuration that will fix lint errors while saving the file (.vscode/settings.json)
+We suggest also to add the following configuration that will fix lint errors while saving the file (`.vscode/settings.json`)
 
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
