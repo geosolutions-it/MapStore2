@@ -126,7 +126,8 @@ http://mapstore.geosolutionsgroup.com/mapstore/rest/geostore/session/username/{k
 - Go into the authentication page and open default filter chain.
 - Add 'geostore' into the 'Selected' filters and put it on top, and save.
 
-!!! Note: in the User Groups and Roles Services available options there are "AuthKEY WebService Body Response - UserGroup Service from WebService Response Body" and "AuthKEY REST - Role service from REST endpoint". Ignore them as they are not supported from MapStore2.
+!!! Note
+    in the User Groups and Roles Services available options there are "AuthKEY WebService Body Response - UserGroup Service from WebService Response Body" and "AuthKEY REST - Role service from REST endpoint". Ignore them as they are not supported from MapStore2.
 
 #### Configure MapStore
 
