@@ -53,84 +53,86 @@ The following procedure will make GeoServer accessible to users stored in the Ma
 
 ### User Groups and Roles
 
-#### Setup User Group
+Steps below reference user, group and role service configuration files, as needed download the files from [the geostore repository](https://github.com/geosolutions-it/geostore/tree/master/geoserver).
 
-Steps below reference usergroup and role service configuration files, as needed download the files from [the geostore repository](https://github.com/geosolutions-it/geostore/tree/master/geoserver).
+#### Setup User Group Service
 
-1. in GeoServer and add a new User Group Service
-    * Setup the User Group Service
-    * Select JDBC
-    * name: geostore
-    * Password encryption : Digest
-    * password policy default
-    * Driver org.postgresql.Driver (or JNDI)
-    * connection url jdbc:postgresql://localhost:5432/geostore (or the one for your setup)
-    * JNDI only: the JNDI resource name should look like this java:comp/env/jdbc/geostore
-    * set username and password for the db (user 'geostore' with password 'geostore')
-	* Save
-    * Place the provided files in the created directory under <gs_datadir>/security/usergroup/geostore .
-    * Then go back to geostore user group service (the ddl and dml path should have values in them)
-    * Save again
+- In GeoServer, Open the page "Security" --> "User Groups Roles" (from the left menu)
+- In the section "User Group Services" click on "add new" to a new user group service
+- Select `JDBC`
+- name: `geostore`
+- Password encryption : `Digest`
+- password policy `default`
+- Driver `org.postgresql.Driver` (or `JNDI`)
+- connection url `jdbc:postgresql://localhost:5432/geostore` (or the one for your setup)
+- JNDI only: the JNDI resource name should look like this `java:comp/env/jdbc/geostore`
+- set username and password for the db (user `geostore` with password `geostore`)
+- click on "Save" button
+- Then, in order to adapt the standard JDBC service to MapStore database, you must place the provided files in the new directory (created by GeoServer for this new user group service) inside the data directory at the following path `<gs_datadir>/security/usergroup/geostore`. (`geostore` is the name of the new user group service)
+- Then go back to `geostore` user group service page in GeoServer (the `ddl` and `dml` path should have values in them)
+- click on "Save" button again
 
 #### Setup Role Service
 
-    * Add a new Role Service
-    * select JDBC
-    * name geostore
-    * db org.postgresql.Driver
-    * connection url: jdbc:postgresql://localhost:5432/geostore (or JNDI, same as above)
-    * set user and password (user 'geostore' with password 'geostore')
-    * save
-    * add the provided files to the geostore directory under /<gs_datadir>/security/role/geostore and save again
-    * go Again in JDBC Role Service 'geostore'
-    * select Administrator role to ADMIN
-    * select Group Administrator Role to ADMIN
+- In GeoServer Open the page "Security" --> "User Groups Roles" (from the left menu)
+- In the section "Role Services" click on "add new" to a new role service
+- select `JDBC`
+- name `geostore`
+- db `org.postgresql.Driver`
+- connection url: `jdbc:postgresql://localhost:5432/geostore` (or JNDI, same as above)
+- set user and password (user `geostore` with password `geostore`)
+- click on "Save" button
+- add the provided files to the geostore directory under `/<gs_datadir>/security/role/geostore`
+- click on "Save" button again
+- go Again in JDBC Role Service `geostore`
+- select Administrator role to `ADMIN`
+- select Group Administrator Role to `ADMIN`
 
 ### Use these services as default
 
-    * go To Security Settings and set the 'Active role service' to “geostore”
-    * go to Authentication Section, scroll to Authentication Providers and Add a new one.
-    * select 'Username Password'
-    * name it “geostore”
-    * select “geostore” from the select box
-    * Save.
-    * go to Provider chain and move geostore in the right list, on top
-    * save
+- In GeoServer "Security" --> "Settings" section (from the left menu)
+- Set the **Active role service** to `geostore`
+- go to Authentication Section, scroll to Authentication Providers and Add a new one.
+- select 'Username Password'
+- name it “geostore”
+- select “geostore” from the select box
+- Save.
+- Then go to "Provider chain" and move geostore **on top** in the **right list**.
+- Save again
 
 ### Use the Auth key Module with GeoStore/GeoServer
 
 These last steps are required to allow users logged in MapStore to be authenticated correctly by GeoServer.
 
 #### Configure GeoServer
-    * Install the authkey module in GeoServer.
-    * Go to the authentication page and scroll into the 'Authentication Filters' section
-	* Click 'Add new'.
-	* Inside the 'New authentication Filter' page click on authkey module.
-	* Insert the name (i.e. 'geostore').
-	* Leave authkey as parameter name.
-	* Select the  **Web Service** as 'Authentication key user mapper'.
-	* Select the created geostore's 'User/Group Service'.
-	* Input the mapstore2 url:
-         http://<your_hostname>:<mapstore2_port>/mapstore/rest/geostore/session/username/{key}
 
-         Examples:
-         ```
-         http://localhost:36728/mapstore/rest/geostore/session/username/{key}
-         http://localhost/mapstore2/rest/geostore/session/username/{key}
-         http://mapstore.geosolutionsgroup.com/mapstore/rest/geostore/session/username/{key}
-         ```
-	* Save.
-    * Go into the authentication page and open default filter chain.
-    * Add 'geostore' into the 'Selected' filters and put it on top, and save.
+- Install the authkey module in GeoServer if needed (most recent versions of GeoServer already include it).
+- Go to the authentication page and scroll into the 'Authentication Filters' section
+- Click 'Add new'.
+- Inside the 'New authentication Filter' page click on authkey module.
+- Insert the name (i.e. 'geostore').
+- Leave authkey as parameter name.
+- Select the  **Web Service** as 'Authentication key user mapper'.
+- Select the created geostore's 'User/Group Service'.
+- Input the mapstore2 url: `http://<your_hostname>:<mapstore2_port>/mapstore/rest/geostore/session/username/{key}`. Examples:
 
+```text
+http://localhost:36728/mapstore/rest/geostore/session/username/{key}
+http://localhost/mapstore2/rest/geostore/session/username/{key}
+http://mapstore.geosolutionsgroup.com/mapstore/rest/geostore/session/username/{key}
+```
 
-Note: in the User Groups and Roles Services available options there are "AuthKEY WebService Body Response - UserGroup Service from WebService Response Body" and "AuthKEY REST - Role service from REST endpoint". Ignore them as they are not supported from MapStore2.
+- Save.
+- Go into the authentication page and open default filter chain.
+- Add 'geostore' into the 'Selected' filters and put it on top, and save.
+
+!!! Note: in the User Groups and Roles Services available options there are "AuthKEY WebService Body Response - UserGroup Service from WebService Response Body" and "AuthKEY REST - Role service from REST endpoint". Ignore them as they are not supported from MapStore2.
 
 #### Configure MapStore
 
 The last step is to configure MapStore to use the authkey with the configured instance of GeoServer. You can do it by adding to `localConfig.json` like this:
 
-```
+```javascript
 //...
 "useAuthenticationRules": true,
   "authenticationRules": [{
