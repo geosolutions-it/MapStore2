@@ -150,10 +150,9 @@ the newer version will be applied automatically. This can be good or bad: the go
 
 ## Externalize front-end Configurations
 
-From version 2021.02.xx, the externalization of the front-end files is automatic on the back-end. As well as you configure the data-directory.
-Anyway for your custom application you can customize the following paths to change the defaults and implement your own services for configuration, extensions, and so on.
-
-You can externalize the following files to the data directory by adding the relative line in the `app.jsx` :
+From version 2021.02.xx, the externalization of the front-end files is automatic on the back-end, as well as you configure the data-directory.
+Anyway for your custom application you may want to customize the following paths to point your own services for configuration, extensions, and so on.
+The paths can be customized by adding the relative line in the `app.jsx` :
 
 - *Application* (`localConfig.json`):
 
