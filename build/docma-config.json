@@ -335,8 +335,7 @@
                 "web/client/product/plugins/Fork.jsx",
                 "web/client/product/plugins/Header.jsx",
                 "web/client/product/plugins/NavMenu.jsx",
-                "web/client/product/plugins/HomeDescription.jsx",
-                "web/client/product/plugins/MailingLists.jsx"
+                "web/client/product/plugins/HomeDescription.jsx"
             ]
         }
     ]
