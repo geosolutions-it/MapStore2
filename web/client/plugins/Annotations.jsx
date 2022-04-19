@@ -341,7 +341,8 @@ export default createPlugin('Annotations', {
             action: conditionalToggle,
             tooltip: "annotations.tooltip",
             icon: <Glyphicon glyph="comment"/>,
-            doNotHide: true
+            doNotHide: true,
+            toggle: true
         }
     },
     reducers: {

@@ -49,7 +49,8 @@ export default {
                 icon: <Glyphicon glyph="info-sign"/>,
                 action: toggleControl.bind(null, 'about', null),
                 priority: 1,
-                doNotHide: true
+                doNotHide: true,
+                toggle: true
             }
         }),
     reducers: {}

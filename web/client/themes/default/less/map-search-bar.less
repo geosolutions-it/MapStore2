@@ -68,6 +68,13 @@
 // Layout
 // **************
 /* search */
+#search-bar-container {
+    position: absolute;
+    top: 0;
+    margin-right: 8px;
+    box-shadow: -1px 1px 5px 1px #5e5e5e;
+}
+
 #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
     border-radius: 0;
     position: relative;
@@ -132,7 +139,7 @@ div.MapSearchBar .form-control:focus {
     bottom: -8px;
     z-index: 1;
 }
-
+/* Small devices (tablets, 768px and up) */
 @media (max-width: 768px) {
     #mapstore-navbar .search-toggle {
         display: inline-block;
@@ -149,10 +156,7 @@ div.MapSearchBar .form-control:focus {
         left: auto;
         width: 400px;
     }
-}
 
-/* Small devices (tablets, 768px and up) */
-@media (max-width: 768px) {
     #mapstore-navbar .search-toggle {
         display: inline-block;
     }
@@ -163,6 +167,7 @@ div.MapSearchBar .form-control:focus {
         right: 1px;
         top: @square-btn-size;
         width: auto;
+        z-index: 1100;
     }
 
     #mapstore-navbar .navbar-dx .MapSearchBar .input-group {

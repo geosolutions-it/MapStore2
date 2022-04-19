@@ -26,7 +26,7 @@ class OmniBar extends React.Component {
         items: [],
         className: "navbar-dx shadow",
         style: {},
-        containerWrapperStyle: { position: 'absolute', width: '100%'},
+        containerWrapperStyle: {},
         id: "mapstore-navbar",
         mapType: "leaflet"
     };

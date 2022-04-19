@@ -14,7 +14,7 @@ import ContainerDimensions from "react-container-dimensions";
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 
-import { toggleControl } from '../actions/controls';
+import {setControlProperty, toggleControl} from '../actions/controls';
 import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
 import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate, setAllowedTemplates } from '../actions/maptemplates';
 
@@ -154,10 +154,11 @@ export default createPlugin('MapTemplates', {
             tooltip: <Message msgId="mapTemplates.tooltip" />
         },
         SidebarMenu: {
-            name: 'MapTemplates',
+            name: 'mapTemplates',
             position: 998,
             icon: <Glyphicon glyph="1-map" />,
-            action: openMapTemplatesPanel,
+            action: setControlProperty.bind(null, "mapTemplates", "enabled", true, true),
+            toggle: true,
             priority: 2,
             doNotHide: true,
             tooltip: "mapTemplates.tooltip"

@@ -116,7 +116,8 @@ export default createPlugin('UserExtensions', {
             icon: <Glyphicon glyph="plug" />,
             action: setControlProperty.bind(null, "userExtensions", "enabled", true, true),
             priority: 2,
-            doNotHide: true
+            doNotHide: true,
+            toggle: true
         }
     }
 });
