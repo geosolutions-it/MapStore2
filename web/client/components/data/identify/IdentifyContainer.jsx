@@ -69,7 +69,9 @@ export default props => {
         formatCoord,
         loaded,
         validator = () => null,
-        toggleHighlightFeature = () => {}
+        toggleHighlightFeature = () => {},
+        disableCoordinatesRow,
+        disableInfoAlert
     } = props;
     const latlng = point && point.latlng || null;
 
@@ -144,7 +146,8 @@ export default props => {
                             />
                         </div>
                     </Row>,
-                    <Row className="coordinates-edit-row">
+                    !disableCoordinatesRow &&
+                    (<Row className="coordinates-edit-row">
                         <span className="identify-icon glyphicon glyphicon-point"/>
                         <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>
                             <Coordinate
@@ -169,7 +172,7 @@ export default props => {
                                  * for this reason they ahve been disabled
                                 */
                             }/>
-                    </Row>
+                    </Row>)
                 ].filter(headRow => headRow)}>
                 <Viewer
                     index={index}
@@ -179,6 +182,7 @@ export default props => {
                     responses={responses}
                     requests={requests}
                     showEmptyMessageGFI={showEmptyMessageGFI}
+                    disableInfoAlert={disableInfoAlert}
                     {...viewerOptions}/>
             </DockablePanel>
             <Portal>

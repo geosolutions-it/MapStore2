@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est <span style='white-space:nowrap'>${ properties.ID }</span> ou <span style='white-space:nowrap'>${ properties['données-valeur'] }</span>",
             "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
+            "heightOffset": "Décalage en hauteur (m)",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
                 "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
@@ -291,15 +292,7 @@
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Restez au courant des derniers développements via les mailing lists",
-                "subscribe_users": "Souscrire à la liste de diffusion utilisateurs",
-                "subscribe_devel": "Souscrire à la liste de diffusion développeurs",
-                "visit_group": "Aller à ce groupe",
-                "subscribe": "Souscrire",
-                "email": "Courriel:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "Ce site utilise des cookies",
@@ -416,6 +409,7 @@
             "saveTitle": "Sauver la carte",
             "saveText": "Sauver la carte courante ?",
             "thumbnail": "Vignette",
+            "mapDelete": "Supprimer la carte",
             "message": "Déposez ou cliquez pour importer une image",
             "suggestion": "(conseillé : 300 px X 180 px, 500 kb max)",
             "errorFormat": "Formats supportés: png/jpg",
@@ -424,6 +418,9 @@
             "error": "L'image fournie n'est pas valide",
             "savedMapTitle": "Carte sauvegardée",
             "savedMapMessage": "La carte a été enregistrée correctement.",
+            "renderingErrorTitle": "Erreur de rendu",
+            "renderingErrorMessage": "<p>Le rendu de la carte s'est arrêté et cela peut être dû à différentes raisons : </p><ul><li>Le style appliqué contient des règles ou des variables non prises en charge par les fonctionnalités</li>< li>Le calque n'est pas correctement configuré</li></ul><p>Vous pouvez appliquer des modifications au style de calque, puis cliquer sur le bouton 'Recharger la carte'. <br/> Consultez le message ci-dessous pour plus d'informations :< /p>",
+            "reloadMap": "Recharger la carte",
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
@@ -1007,6 +1004,7 @@
                 "attribute_filter_header": "Attribut filtre",
                 "tooltipTextField": "utilise <b>*</b> pour tout caractère</br>utilise . pour un seul caractère</br>utilise <b>!</b> pour les caractères spéciaux (* et .)</br>",
                 "tooltipTextFieldCSS": "utilise <b>%</b> pour tout caractère</br>utilise <b>_</b> pour un seul caractère</br>utilise <b>\\</b> pour les caractères spéciaux (% et _)</br>",
+                "tooltipTextField3DTiles": "utilisez une valeur prise en charge par la fonction <strong>regExp</strong> de la spécification de style de tuiles 3d 1.0",
                 "groupField": {
                     "any": "certain",
                     "all": "tous",
@@ -1289,11 +1287,17 @@
             "coordinate": "Coordonner",
             "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées",
             "zoomToolTip": "Min: 1 et Max: 35",
+            "headingToolTip": "Min: 0° et Max: 360°",
+            "rollToolTip": "Min: 0° et Max: 360°",
+            "pitchToolTip": "Min: -90° et Max: 90°",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
             "showSectionId": "Inclure la position de défilement",
             "showConnections": "Afficher les connexions",
+            "heading": "Angle de cap",
+            "roll": "Angle de roulis",
+            "pitch": "Angle d'inclinaison",
             "sizeOptions": {
                 "width": "largeur",
                 "height": "la taille"
@@ -1673,7 +1677,17 @@
                 "syncOnMap": "Synchroniser la carte avec un filtre",
                 "enableTimeSync": "Synchroniser avec l'heure ou l'intervalle de temps sélectionné",
                 "disableTimeSync": "Ne pas synchroniser avec l'heure ou l'intervalle sélectionné",
-                "createNewChart": "Créer un graphique pour le calque sélectionné"
+                "createNewChart": "Créer un graphique pour le calque sélectionné",
+                "enableSnapping": "Activer l'accrochage",
+                "disableSnapping": "Désactiver l'accrochage",
+              "snapToLayer": "Accrocher au calque",
+              "snappingSettings": {
+                  "header": "Paramètres",
+                  "vertex": "Vertex",
+                  "edge": "Bord",
+                  "pixelTolerance": "Tolérance (pixel)",
+                  "loadingStrategy": "Stratégie de chargement"
+              }
             }
         },
         "layerdownload": {
@@ -1812,11 +1826,17 @@
                         "customLabels": "Étiquettes personnalisées",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p></p><h5>Exemple</h5><dl><dt><b>Attribut Y:</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>Attribut 'Grouper par':</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>Attribut 'Grouper par':</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p><code>${minValue}</code>peut être utilisé comme espace réservé pour la valeur minimale de la classe.</p><p><code>${maxValue}</code> peut être utilisé comme espace réservé pour la valeur maximale de la classe.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>attribut 'Grouper par'.</b></dt><dd>POPULATION</dd><dt><b>attribut Y:</b></dt><dd>LAND_KM</dd><dt><b>Valeur maximale de la classe:</b></dt><dd>0</dd><dt><b>Valeur minimale de la classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Résultat:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p></p><h5>Exemple</h5><dl><dt><b>Y Attribut:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>peut être utilisé comme espace réservé pour la valeur minimale de la classe.</p><p><code>${maxValue}</code> peut être utilisé comme espace réservé pour la valeur maximale de la classe.</p><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Example</h5><dl><dt><b>Attribut:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "defaultClassLabel": "Étiquette de Classe par Défaut",
                         "defaultColorRamp": "Rampe de Couleur par Défaut",
                         "defaultColor": "Couleur par Défaut",
                         "defaultCustomLabel": "Étiquette par défaut",
                         "editCustomColors": "Modifie Couleurs Personnalisées",
+                        "maxValue": "Valeur maximum",
+                        "minValue": "Valeur minimum",
                         "title": "Paramètres de Couleurs Personnalisées"
                     }
                 },
@@ -2283,7 +2303,9 @@
             "imageSrcNotSupportedBase64Image": "Certains rendus de style ne prennent pas en charge les images base64 même si la source actuelle est valide",
             "imageFormatEmpty": "Le format d'image ne peut pas être identifié. Veuillez sélectionner le format d'image parmi ceux disponibles dans la liste déroulante 'Format'",
             "warningTextOrderTitle": "Avertissement",
-            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
+            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles",
+            "invalidProperty": "Le type de propriété { key } n'est pas valide",
+            "notSupportedVariable": "La variable { key } n'est pas prise en charge par le jeu de tuiles"
         },
         "playback": {
             "settings": {
@@ -2713,6 +2735,8 @@
         "backgroundDialog": {
             "addTitle": "Ajouter un nouveau fond",
             "editTitle": "Modifier le fond actuel",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Saisir le texte d'attribution",
             "title": "Titre",
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",
@@ -2770,6 +2794,10 @@
           "CRSSelector": {
             "description": "Permet de changer de projection cartographique",
             "title": "Sélecteur CRS"
+          },
+          "DeleteMap": {
+            "description": "Permet de supprimer une ressource cartographique et toutes ses ressources associées",
+            "title": "Supprimer la carte"
           },
           "Details": {
             "description": "Permet d'afficher les détails d'une carte, le cas échéant",

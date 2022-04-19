@@ -1092,6 +1092,15 @@ describe('LayersUtils', () => {
                     expect(l.options).toExist();
                     expect(l.options.attribution).toExist();
                 }
+            ],
+            // save heightOffset for 3dtiles
+            [
+                {
+                    heightOffset: 10
+                },
+                l => {
+                    expect(l.heightOffset).toBe(10);
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

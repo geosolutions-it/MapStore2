@@ -18,7 +18,9 @@ import {
     omitBy,
     isUndefined,
     set,
-    castArray
+    castArray,
+    isObject,
+    isNumber
 } from "lodash";
 import uuidv1 from 'uuid/v1';
 
@@ -36,8 +38,9 @@ export const STYLE_OWNER_NAME = 'styleeditor';
 const StyleEditorCustomUtils = {};
 
 const EDITOR_MODES = {
-    css: 'geocss',
-    sld: 'xml'
+    'css': 'geocss',
+    'sld': 'xml',
+    '3dtiles': 'application/json'
 };
 
 const getGeometryType = (geomProperty = {}) => {
@@ -589,6 +592,111 @@ export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
         });
 }
 
+/**
+ * Return attributes from a vector layer object configuration
+ * @param  {object} layer layer object configuration
+ * @return {array|null} returns an array of attributes
+ */
+export function getVectorLayerAttributes(layer) {
+    if (layer?.properties) {
+        const propertiesKeys = Object.keys(layer.properties || {});
+        const attributes = propertiesKeys.map((key) => {
+            const { minimum, maximum, type } = layer.properties[key];
+            const minMaxType = (isNumber(minimum) || isNumber(maximum)) ? 'number' : 'string';
+            return {
+                attribute: key,
+                label: key,
+                type: type || minMaxType
+            };
+        });
+        return attributes;
+    }
+    return null;
+}
+
+/**
+ * Return geometry type from a vector layer
+ * @param  {object} layer layer object configuration
+ * @return {string} returns the geometry type
+ */
+export function getVectorLayerGeometryType(layer) {
+    if (layer.type === '3dtiles') {
+        return layer?.format === 'pnts' ? 'pointcloud' : 'polyhedron';
+    }
+    return 'vector';
+}
+
+/**
+ * Return a default style for a vector layer
+ * @param  {object} layer layer object configuration
+ * @return {object} returns a default empty style
+ */
+export function getVectorDefaultStyle(layer) {
+    if (layer.type === '3dtiles') {
+        return {
+            format: '3dtiles',
+            body: {},
+            metadata: {
+                editorType: 'visual'
+            }
+        };
+    }
+    return null;
+}
+
+export const styleValidation = {
+    '3dtiles': (body, options) => {
+
+        const { defines = {}, meta, ...style } = body;
+        const keysWithCondition = [{ key: 'color', type: 'string' }, { key: 'pointSize', type: 'number' }];
+        const keyError = keysWithCondition.find(({ key, type }) => {
+            if (type === 'string' && style[key]
+                && !isString(style[key]) && !isObject(style[key])
+            ) {
+                return true;
+            }
+            if (type === 'number' && style[key]
+                && !isString(style[key]) && !isNumber(style[key]) && !isObject(style[key])
+            ) {
+                return true;
+            }
+            if (isObject(style[key])) {
+                if ((style[key]?.conditions?.length || 0) === 0) {
+                    return true;
+                }
+                const invalidCondition = style[key].conditions.find(([filter, value]) => !value || !filter);
+                if (invalidCondition) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        if (keyError) {
+            return { messageId: 'styleeditor.invalidProperty', messageParams: keyError };
+        }
+
+        const variablesKeys = [
+            ...Object.keys(options?.properties || {}),
+            ...Object.keys(defines),
+            // default constant variable for point cloud
+            'POSITION',
+            'POSITION_ABSOLUTE',
+            'COLOR',
+            'NORMAL'
+        ].map((variable) => `\${${variable}}`);
+        const styleStr = JSON.stringify(style);
+        const usedVariables = styleStr.match(/\${(.*?)}/g);
+        if (usedVariables) {
+            const notSupported = usedVariables.find(usedVariable => !variablesKeys.includes(usedVariable));
+            if (notSupported) {
+                return { messageId: 'styleeditor.notSupportedVariable', messageParams: { key: notSupported } };
+            }
+        }
+        return false;
+    }
+};
+
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
@@ -606,5 +714,9 @@ export default {
     formatJSONStyle,
     validateImageSrc,
     updateExternalGraphicNode,
-    detectStyleCodeChanges
+    detectStyleCodeChanges,
+    getVectorLayerAttributes,
+    getVectorLayerGeometryType,
+    getVectorDefaultStyle,
+    styleValidation
 };

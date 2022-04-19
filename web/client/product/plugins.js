@@ -19,7 +19,6 @@ export default {
         HeaderPlugin: require('./plugins/Header').default,
         HomeDescriptionPlugin: require('./plugins/HomeDescription').default,
         MadeWithLovePlugin: require('./plugins/MadeWithLove').default,
-        MailingListsPlugin: require('./plugins/MailingLists').default,
         MapTypePlugin: require('./plugins/MapType').default,
         NavMenu: require('./plugins/NavMenu').default,
         // framework plugins
@@ -39,6 +38,7 @@ export default {
         Dashboard: require('../plugins/Dashboard').default,
         DashboardEditor: require('../plugins/DashboardEditor').default,
         DashboardsPlugin: require('../plugins/Dashboards').default,
+        DeleteMapPlugin: require('../plugins/DeleteMap').default,
         DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu').default,
         ExpanderPlugin: require('../plugins/Expander').default,

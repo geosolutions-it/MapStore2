@@ -636,7 +636,7 @@
               "fluid": true
             }
           }
-          , "MailingLists", "Footer", {
+          , "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",

@@ -236,9 +236,9 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
     const spec = {...baseSpec, ...params};
     const mapProjection = mapProjectionSelector(state);
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
-    const projectedZoom = reprojectZoom(spec.scaleZoom, mapProjection, spec.projection);
-    const scales = getScales(spec.projection);
-    const reprojectedScale = scales[projectedZoom] || defaultScales[Math.round(projectedZoom)];
+    const projectedZoom = Math.round(reprojectZoom(spec.scaleZoom, mapProjection, spec.projection));
+    const scales = spec.scales || getScales(spec.projection);
+    const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
 
     const projectedSpec = {
         ...spec,
@@ -442,12 +442,12 @@ export function addValidator(id, name, validator) {
  */
 export const getDefaultPrintingService = () => {
     return {
-        print: (layers) => {
+        print: (extra) => {
             const state = getStore().getState();
             const printSpec = printSpecificationSelector(state);
-            const intialSpec = layers ? {
+            const intialSpec = extra ? {
                 ...printSpec,
-                layers
+                ...extra
             } : printSpec;
             return getSpecTransformerChain().map(t => t.transformer).reduce((previous, f) => {
                 return previous.then(spec=> f(state, spec));

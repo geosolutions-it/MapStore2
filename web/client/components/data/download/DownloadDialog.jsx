@@ -20,6 +20,7 @@ import Message from '../../I18N/Message';
 import EmptyView from '../../misc/EmptyView';
 import DownloadOptions from './DownloadOptions';
 import Button from '../../misc/Button';
+import {getAttributesList} from "../../../utils/FeatureGridUtils";
 
 class DownloadDialog extends React.Component {
     static propTypes = {
@@ -43,7 +44,9 @@ class DownloadDialog extends React.Component {
         defaultSrs: PropTypes.string,
         layer: PropTypes.object,
         formatsLoading: PropTypes.bool,
-        virtualScroll: PropTypes.bool
+        virtualScroll: PropTypes.bool,
+        customAttributeSettings: PropTypes.object,
+        attributes: PropTypes.array
     };
 
     static defaultProps = {
@@ -127,7 +130,10 @@ class DownloadDialog extends React.Component {
                             wpsAdvancedOptionsVisible={!this.props.layer.search?.url}
                             downloadFilteredVisible={!!this.props.layer.search?.url}
                             layer={this.props.layer}
-                            virtualScroll={this.props.virtualScroll}/>}
+                            virtualScroll={this.props.virtualScroll}
+                            customAttributesSettings={this.props.customAttributeSettings}
+                            attributes={this.props.attributes}
+                        />}
             </div>
             {!this.props.checkingWPSAvailability && <div role="footer">
                 <Button
@@ -141,9 +147,10 @@ class DownloadDialog extends React.Component {
         </Dialog></Portal>) : null;
     }
     handleExport = () => {
-        const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport, layer} = this.props;
+        const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport, layer, attributes, customAttributeSettings} = this.props;
         const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (srsList[0] || {}).name;
-        onExport(url || layer.url, filterObj, assign({}, downloadOptions, {selectedSrs}));
+        const propertyName = getAttributesList(attributes, customAttributeSettings);
+        onExport(url || layer.url, filterObj, assign({}, downloadOptions, {selectedSrs}, {propertyName}));
     }
 }
 

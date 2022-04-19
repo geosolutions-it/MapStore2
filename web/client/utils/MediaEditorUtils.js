@@ -25,8 +25,3 @@ export const defaultLayerMapPreview = {
     loading: false,
     loadingError: false
 };
-export const selectService = (services, selectedItem)=>{
-    return services.find(service => service.id === selectedItem)
-        ? selectedItem : SourceTypes.GEOSTORY;
-};
-

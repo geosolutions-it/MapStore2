@@ -65,6 +65,7 @@ const getBlocks = (/* config = {} */) => {
             glyphAdd: 'point-plus',
             tooltipAddId: 'styleeditor.addIconRule',
             supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            hideMenu: true,
             params: {
                 image: property.image({
                     label: 'styleeditor.image',
@@ -193,6 +194,70 @@ const getBlocks = (/* config = {} */) => {
                 fillOpacity: 1,
                 outlineColor: '#777777',
                 outlineWidth: 1
+            }
+        },
+        PointCloud: {
+            kind: 'Mark',
+            glyph: '1-point',
+            glyphAdd: '1-point-add',
+            tooltipAddId: 'styleeditor.addMarkRule',
+            supportedTypes: ['pointcloud'],
+            hideMenu: true,
+            params: {
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'fillOpacity',
+                    label: 'styleeditor.fill'
+                }),
+                radius: property.size({
+                    key: 'radius',
+                    label: 'styleeditor.radius',
+                    range: {
+                        min: 1,
+                        max: 10
+                    }
+                })
+            },
+            defaultProperties: {
+                kind: 'Mark',
+                wellKnownName: 'Circle',
+                color: '#dddddd',
+                fillOpacity: 1,
+                radius: 1
+            }
+        },
+        Polyhedron: {
+            kind: 'Fill',
+            glyph: 'polygon',
+            glyphAdd: 'polygon-plus',
+            tooltipAddId: 'styleeditor.addFillRule',
+            supportedTypes: ['polyhedron'],
+            hideMenu: true,
+            params: {
+                color: property.color({
+                    label: 'styleeditor.fill',
+                    key: 'color',
+                    opacityKey: 'fillOpacity',
+                    pattern: true,
+                    graphicKey: 'graphicFill',
+                    getGroupParams: (kind) => symbolizerBlock[kind],
+                    getGroupConfig: (kind) => {
+                        if (kind === 'Mark') {
+                            return {};
+                        }
+                        if (kind === 'Icon') {
+                            return {
+                                omittedKeys: ['rotate', 'opacity']
+                            };
+                        }
+                        return {};
+                    }
+                })
+            },
+            defaultProperties: {
+                kind: 'Fill',
+                color: '#dddddd',
+                fillOpacity: 1
             }
         },
         Text: {

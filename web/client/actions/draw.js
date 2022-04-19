@@ -13,6 +13,11 @@ export const GEOMETRY_CHANGED = 'DRAW:GEOMETRY_CHANGED';
 export const DRAW_SUPPORT_STOPPED = 'DRAW:DRAW_SUPPORT_STOPPED';
 export const FEATURES_SELECTED = 'DRAW:FEATURES_SELECTED';
 export const DRAWING_FEATURE = 'DRAW:DRAWING_FEATURES';
+export const SET_SNAPPING_LAYER = 'DRAW:SET_SNAPPING_LAYER';
+export const SNAPPING_IS_LOADING = 'DRAW:SNAPPING_IS_LOADING';
+export const TOGGLE_SNAPPING = 'DRAW:TOGGLE_SNAPPING';
+export const SET_SNAPPING_CONFIG = 'DRAW:SET_SNAPPING_CONFIG';
+
 
 export function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
     return {
@@ -74,3 +79,32 @@ export function setCurrentStyle(style) {
 }
 
 export const drawSupportReset = (owner) => changeDrawingStatus("clean", "", owner, [], {});
+
+export function toggleSnapping() {
+    return {
+        type: TOGGLE_SNAPPING
+    };
+}
+
+export function setSnappingLayer(snappingLayer) {
+    return {
+        type: SET_SNAPPING_LAYER,
+        snappingLayer
+    };
+}
+
+export function toggleSnappingIsLoading() {
+    return {
+        type: SNAPPING_IS_LOADING
+    };
+}
+
+export function setSnappingConfig(value, prop, pluginCfg) {
+    return {
+        type: SET_SNAPPING_CONFIG,
+        value,
+        prop,
+        pluginCfg
+    };
+}
+

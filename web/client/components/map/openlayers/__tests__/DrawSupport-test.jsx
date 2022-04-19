@@ -16,6 +16,7 @@ import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/fe
 import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
+import VectorSource from "ol/source/Vector";
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -2458,4 +2459,44 @@ describe('Test DrawSupport', () => {
 
         done();
     });
+    it('test snapping interaction creation', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            }),
+            getLayers: () => ({
+                getArray: () => [{
+                    get: () => 'snap_layer_1',
+                    getSource: () => new VectorSource(),
+                    type: 'VECTOR'
+                }]
+            })
+        };
+
+        let support = renderDrawSupport({ map: fakeMap});
+        support = renderDrawSupport({
+            map: fakeMap,
+            snapping: true,
+            options: {geodesic: true},
+            snappingLayerInstance: { id: 'snap_layer_1' },
+            snapConfig: { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'},
+            features: []
+        });
+        const snappingInteraction = !!support?.snapInteraction;
+        expect(snappingInteraction).toBe(true);
+    });
 });
+

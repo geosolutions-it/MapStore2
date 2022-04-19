@@ -50,6 +50,8 @@ import { has, includes } from 'lodash';
  * with a custom one. They are (in order, from left to right and top to bottom in the UI):
  *  - `name` (`left-panel`, `position`: `1`)
  *  - `description` (`left-panel`, `position`: `2`)
+ *  - `outputFormat` (`left-panel`, `position`: `3`)
+ *  - `projection` (`left-panel`, `position`: `4`)
  *  - `layout` (`left-panel-accordion`, `position`: `1`)
  *  - `legend-options` (`left-panel-accordion`, `position`: `2`)
  *  - `resolution` (`right-panel`, `position`: `1`)
@@ -61,8 +63,12 @@ import { has, includes } from 'lodash';
  * To remove a widget, you have to include a Null plugin with the desired target.
  * You can use the position to sort existing and custom items.
  *
+ * Standard widgets can be configured by providing an options object as a configuration property
+ * of this (Print) plugin. The options object of a widget is named `<widget_id>Options`
+ * (e.g. `outputFormatOptions`).
+ *
  * You can customize Print plugin by creating one custom plugin (or more) that modifies the existing
- * components with your ones. You can configure this plugin in localConfig.json as usual.
+ * components with your own ones. You can configure this plugin in `localConfig.json` as usual.
  *
  * It delegates to a printingService the creation of the final print. The default printingService
  * implements a mapfish-print v2 compatible workflow. It is possible to override the printingService to
@@ -109,6 +115,35 @@ import { has, includes } from 'lodash';
  *       "useFixedScales": true,
  *       "mapPreviewOptions": {
  *          "enableScalebox": true
+ *       }
+ *    }
+ * }
+ *
+ * @example
+ * // restrict allowed output formats
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *       "outputFormatOptions": {
+ *          "allowedFormats": [{"name": "PDF", "value": "pdf"}, {"name": "PNG", "value": "png"}]
+ *       }
+ *    }
+ * }
+ *
+ * @example
+ * // enable custom projections for printing
+ * "projectionDefs": [{
+ *    "code": "EPSG:23032",
+ *    "def": "+proj=utm +zone=32 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs",
+ *    "extent": [-1206118.71, 4021309.92, 1295389.0, 8051813.28],
+ *    "worldExtent": [-9.56, 34.88, 31.59, 71.21]
+ * }]
+ * ...
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *       "projectionOptions": {
+ *          "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
  *       }
  *    }
  * }
@@ -370,7 +405,8 @@ export default {
                         const {validations, ...options } = opts;
                         const Comp = item.component ?? item.plugin;
                         const {style, ...other} = this.props;
-                        return <Comp role="body" {...other} {...item.cfg} {...options} validation={validations?.[item.id ?? item.name]}/>;
+                        const itemOptions = this.props[item.id + "Options"];
+                        return <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
                     };
                     renderItems = (target, options) => {
                         return this.getItems(target)
@@ -460,7 +496,7 @@ export default {
                                         {this.renderBody()}
                                     </Panel>);
                                 }
-                                return (<Dialog id="mapstore-print-panel" style={{ left: "17%", top: "50px", zIndex: 1990, ...this.props.style}}>
+                                return (<Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
                                     <span role="header"><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                                     {this.renderBody()}
                                 </Dialog>);
@@ -551,7 +587,10 @@ export default {
                     print = () => {
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.printingService.print(this.getMapConfiguration()?.layers)
+                        this.props.printingService.print({
+                            layers: this.getMapConfiguration()?.layers,
+                            scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined
+                        })
                             .then((spec) =>
                                 this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions })
                             )

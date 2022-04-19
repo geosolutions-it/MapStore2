@@ -148,6 +148,7 @@ class LeafletMap extends React.Component {
         // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
         this.map.on('singleclick', (event) => {
             if (this.props.onClick) {
+                const intersectedFeatures = this.getIntersectedFeatures(map, event.latlng);
                 this.props.onClick({
                     pixel: {
                         x: event.containerPoint.x,
@@ -164,7 +165,8 @@ class LeafletMap extends React.Component {
                         ctrl: event.originalEvent.ctrlKey,
                         metaKey: event.originalEvent.metaKey, // MAC OS
                         shift: event.originalEvent.shiftKey
-                    }
+                    },
+                    intersectedFeatures
                 });
             }
         });
@@ -323,6 +325,34 @@ class LeafletMap extends React.Component {
     getResolutions = () => {
         return this.props.resolutions;
     };
+
+    getIntersectedFeatures = (map, latlng) => {
+        let groupIntersectedFeatures = {};
+        const clickBounds = L.latLngBounds(latlng, latlng);
+        map.eachLayer((layer) => {
+            if (layer?.layerId && layer?.eachLayer) {
+                layer.eachLayer(feature => {
+
+                    const centerBounds = feature?.getLatLng
+                        ? L.latLngBounds(feature.getLatLng(), feature.getLatLng())
+                        : null;
+                    const bounds = feature?.getBounds
+                        ? feature.getBounds()
+                        : centerBounds;
+
+                    if (bounds && feature?.toGeoJSON) {
+                        if (bounds && clickBounds.intersects(bounds)) {
+                            const geoJSONFeature = feature.toGeoJSON();
+                            groupIntersectedFeatures[layer.layerId] = groupIntersectedFeatures[layer.layerId]
+                                ? [ ...groupIntersectedFeatures[layer.layerId], geoJSONFeature ]
+                                : [ geoJSONFeature ];
+                        }
+                    }
+                });
+            }
+        });
+        return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+    }
 
     render() {
         const map = this.map;

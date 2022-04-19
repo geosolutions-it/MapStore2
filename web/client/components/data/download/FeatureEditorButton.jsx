@@ -1,8 +1,9 @@
 import React from 'react';
-import Button from '../featuregrid/toolbars/TButton';
+import withHint from "../featuregrid/enhancers/withHint";
+import TButtonComp from "../featuregrid/toolbars/TButton";
+const TButton = withHint(TButtonComp);
 
-
-export default ({disabled, results = [], mode, isDownloadOpen, onClick = () => {}}) => <Button
+export default ({disabled, results = [], mode, isDownloadOpen, onClick = () => {}}) => <TButton
     id="download-grid"
     keyProp="download-grid"
     tooltipId="featuregrid.toolbar.downloadGridData"

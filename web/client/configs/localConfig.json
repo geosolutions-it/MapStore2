@@ -208,6 +208,8 @@
                 "cfg": {
                     "showFullscreen": true,
                     "position": "bottom",
+                    "disableInfoAlert": true,
+                    "disableCoordinatesRow": true,
                     "size": 0.5,
                     "fluid": true,
                     "viewerOptions": {
@@ -477,7 +479,8 @@
             "Timeline",
             "Playback",
             "FeedbackMask",
-            "StyleEditor"
+            "StyleEditor",
+            "DeleteMap"
         ],
         "embedded": ["Details", {
                 "name": "Map",
@@ -638,7 +641,7 @@
               "fluid": true
             }
           }
-          , "MailingLists", "Footer", {
+          , "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",

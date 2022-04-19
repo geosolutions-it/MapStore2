@@ -6,6 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import './css/backgrounddialog.css';
+
+import { Editor as WYSIWYGEditor } from 'react-draft-wysiwyg';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import localizedProps from '../misc/enhancers/localizedProps';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import assign from 'object-assign';
@@ -19,6 +27,7 @@ import Thumbnail from '../maps/forms/Thumbnail';
 import {getMessageById} from '../../utils/LocaleUtils';
 import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
+const Editor = localizedProps("placeholder")(WYSIWYGEditor);
 
 
 export default class BackgroundDialog extends React.Component {
@@ -36,6 +45,7 @@ export default class BackgroundDialog extends React.Component {
         thumbURL: PropTypes.string,
         title: PropTypes.string,
         format: PropTypes.string,
+        credits: PropTypes.object,
         style: PropTypes.string,
         thumbnail: PropTypes.object,
         additionalParameters: PropTypes.object,
@@ -100,12 +110,23 @@ export default class BackgroundDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        const pickedProps = pick(this.props, 'title', 'format', 'style', 'thumbnail');
-        const newState = assign({}, pickedProps, {additionalParameters: this.assignParameters(this.props.additionalParameters)});
+        const pickedProps = pick(this.props, 'title', 'format', 'style', 'thumbnail', 'credits');
+        const creditsTitleHtml = pickedProps?.credits?.title || '';
+        const contentBlock = htmlToDraft(creditsTitleHtml);
+        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+        const editorState = EditorState.createWithContent(contentState);
+        const newState = assign({}, pickedProps, {additionalParameters: this.assignParameters(this.props.additionalParameters), editorState});
         this.state = newState;
     }
 
-    state = {title: '', format: 'image/png', thumbnail: {}, additionalParameters: []};
+    state = {title: '', format: 'image/png', thumbnail: {}, additionalParameters: [], credits: {}};
+
+    onEditorStateChange(editorState) {
+        this.setState({
+            ...this.state,
+            editorState
+        });
+    }
 
     renderStyleSelector() {
         return this.props.capabilities ? (
@@ -210,6 +231,36 @@ export default class BackgroundDialog extends React.Component {
                 </Button>
             </React.Fragment>);
         }
+        if (this.props.layer.type === "wmts") {
+            return (
+                <React.Fragment>
+                    <FormGroup controlId="formControlsSelect">
+                        <ControlLabel><Message msgId="backgroundDialog.editAttribution" /></ControlLabel>
+                        <Editor
+                            editorState={this.state.editorState}
+                            editorClassName="ms2 form-control"
+                            toolbarClassName="bg-dialog-attribution-toolbar"
+                            onEditorStateChange={this.onEditorStateChange.bind(this)}
+                            placeholder="backgroundDialog.editAttributionPlaceholder"
+                            toolbar={{
+                                options: ['inline', 'blockType', 'link', 'remove'],
+                                inline: {
+                                    options: ['bold', 'italic', 'underline', 'strikethrough']
+                                },
+                                blockType: {
+                                    inDropDown: true,
+                                    options: ['Normal', 'H5']
+                                },
+                                link: {
+                                    inDropDown: true,
+                                    options: ['link', 'unlink']
+                                }
+                            }}
+                        />
+                    </FormGroup>
+                </React.Fragment>
+            );
+        }
         return null;
     }
 
@@ -231,6 +282,7 @@ export default class BackgroundDialog extends React.Component {
                         const backgroundId = this.props.editing ? this.props.layer.id : uuidv1();
                         const curThumbURL = this.props.layer.thumbURL || '';
                         const format = this.state.format || this.props.defaultFormat;
+                        const creditsTitle = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
                         this.props.updateThumbnail(this.state.thumbnail.data, backgroundId);
                         this.props.onSave(assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
                             {
@@ -239,6 +291,10 @@ export default class BackgroundDialog extends React.Component {
                                     ['source', 'title']
                                 ),
                                 format,
+                                credits: {
+                                    ...this.state.credits,
+                                    title: creditsTitle
+                                },
                                 group: 'background'
                             }, !curThumbURL && !this.state.thumbnail.data ? {} : {thumbURL: this.state.thumbnail.url}));
                         this.resetParameters();

@@ -103,7 +103,7 @@ export const setMediaService = (service) => ({ type: SET_MEDIA_SERVICE, id: isOb
  * change the media type in the media editor
  * @param {string} mediaType type of the media, can be one of "image", "video" or "map"
  */
-export const setMediaType = (mediaType, selectedService) => ({ type: SET_MEDIA_TYPE, mediaType, selectedService });
+export const setMediaType = (mediaType) => ({ type: SET_MEDIA_TYPE, mediaType });
 /**
  * editing media
  * @param {boolean} editing

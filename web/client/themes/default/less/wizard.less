@@ -26,7 +26,7 @@
                 &.line {
                     display: none;
                 }
-            } 
+            }
             .custom-color {
                 padding-left: 10px;
             }
@@ -60,6 +60,9 @@
 }
 .ms-wizard > .row{
     margin: 15px;
+}
+.ms-wizard.map-options {
+    padding: 8px;
 }
 .mapstore-step-title {
     font-size: 20px;
@@ -98,6 +101,19 @@
                 width: 510px;
             }
             height: 50%;
+        }
+    }
+    &.menu-open.range-class {
+        #ms-resizable-modal {
+            @media (min-width: 800px) {
+                height: 60%;
+                width: 700px;
+                left: calc((100% - 700px) / 2);
+            }
+            height: 50%;
+            .thema-classes-editor {
+                padding-left: 10px;
+            }
         }
     }
     #chart-color-class-form {

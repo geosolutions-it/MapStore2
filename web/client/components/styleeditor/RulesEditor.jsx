@@ -184,6 +184,13 @@ const RulesEditor = forwardRef(({
         return isTextSymbolizer && index > 0;
     }
 
+    function getSymbolizerInfo(kind) {
+        const symbolizerKey = Object.keys(symbolizerBlock)
+            .filter((key) => symbolizerBlock[key].supportedTypes.includes(geometryType))
+            .find(key => symbolizerBlock[key]?.kind === kind);
+        return symbolizerBlock[symbolizerKey] || symbolizerBlock[kind] || {};
+    }
+
     return (
         <div
             ref={ref}
@@ -303,13 +310,13 @@ const RulesEditor = forwardRef(({
                                         format={format}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />
-                                    <ScaleDenominatorPopover
+                                    {scales && <ScaleDenominatorPopover
                                         hide={hideScaleDenominator}
                                         value={scaleDenominator}
                                         scales={scales}
                                         zoom={zoom}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
-                                    />
+                                    />}
                                     <Button
                                         className="square-button-md no-border"
                                         tooltipId="styleeditor.removeRule"
@@ -348,7 +355,7 @@ const RulesEditor = forwardRef(({
                                     format={format}
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
-                                    const { params, glyph } = symbolizerBlock[kind] || {};
+                                    const { params, glyph, hideMenu } = getSymbolizerInfo(kind);
                                     return params &&
                                         <Symbolizer
                                             key={symbolizerId}
@@ -357,7 +364,7 @@ const RulesEditor = forwardRef(({
                                             glyph={glyph}
                                             tools={
                                                 <SymbolizerMenu
-                                                    hide={kind === 'Icon'}
+                                                    hide={hideMenu}
                                                     symbolizerKind={kind}
                                                     ruleBlock={ruleBlock}
                                                     symbolizerBlock={symbolizerBlock}
