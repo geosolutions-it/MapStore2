@@ -10,9 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './omnibar/omnibar.css';
 import ToolsContainer from './containers/ToolsContainer';
-import {createStructuredSelector} from "reselect";
-import {mapLayoutValuesSelector} from "../selectors/maplayout";
-import {connect, createPlugin} from "../utils/PluginsUtils";
+import {createPlugin} from "../utils/PluginsUtils";
 
 class OmniBar extends React.Component {
     static propTypes = {
@@ -78,9 +76,7 @@ class OmniBar extends React.Component {
 export default createPlugin(
     'OmniBar',
     {
-        component: connect(createStructuredSelector({
-            style: state => mapLayoutValuesSelector(state, { right: true })
-        }), {})(OmniBar),
+        component: OmniBar,
         options: {
             disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
         }

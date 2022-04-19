@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
-import { createSelector } from 'reselect';
+import {createSelector, createStructuredSelector} from 'reselect';
 
 import { removeAdditionalLayer } from '../actions/additionallayers';
 import { configureMap } from '../actions/config';
@@ -50,6 +50,7 @@ import { mapSelector } from '../selectors/map';
 import ConfigUtils from '../utils/ConfigUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import ToggleButton from './searchbar/ToggleButton';
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
 
 const searchSelector = createSelector([
     state => state.search || null,
@@ -310,7 +311,8 @@ const SearchPlugin = connect((state) => ({
         userServices: PropTypes.array,
         withToggle: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
         enabled: PropTypes.bool,
-        textSearchConfig: PropTypes.object
+        textSearchConfig: PropTypes.object,
+        style: PropTypes.object
     };
 
     static defaultProps = {
@@ -328,7 +330,8 @@ const SearchPlugin = connect((state) => ({
         },
         fitResultsToMapSize: true,
         withToggle: false,
-        enabled: true
+        enabled: true,
+        style: {}
     };
 
     componentDidMount() {
@@ -366,7 +369,7 @@ const SearchPlugin = connect((state) => ({
         }
         if (isArray(this.props.withToggle)) {
             return (
-                <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
+                <span id="search-bar-container" style={this.props.style}><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
                     <ToggleButton/>
                     {this.props.enabled ? search : null}
                 </MediaQuery>
@@ -393,15 +396,17 @@ const SearchPlugin = connect((state) => ({
     });
 
 export default {
-    SearchPlugin: assign(SearchPlugin, {
-        OmniBar: {
-            name: 'search',
-            position: 1,
-            tool: true,
-            doNotHide: true,
-            priority: 1
-        }
-    }),
+    SearchPlugin: assign(
+        connect(createStructuredSelector({
+            style: state => mapLayoutValuesSelector(state, { right: true })
+        }), {})(SearchPlugin), {
+            OmniBar: {
+                name: 'search',
+                position: 1,
+                tool: true,
+                priority: 1
+            }
+        }),
     epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
         search: searchReducers,
