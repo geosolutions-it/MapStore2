@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import { Row } from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
 import { get } from 'lodash';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import Message from '../../I18N/Message';
@@ -19,6 +19,8 @@ import Portal from '../../misc/Portal';
 import Coordinate from './coordinates/Coordinate';
 import { responseValidForEdit } from '../../../utils/IdentifyUtils';
 import LayerSelector from './LayerSelector';
+import DockContainer from "../../misc/panels/DockContainer";
+import ContainerDimensions from "react-container-dimensions";
 
 /**
  * Component for rendering Identify Container inside a Dockable container
@@ -108,102 +110,112 @@ export default props => {
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
     return (
-        <div id="identify-container" className={enabled && requests.length !== 0 ? "identify-active" : ""}>
-            <DockablePanel
-                bsStyle="primary"
-                glyph="map-marker"
-                open={enabled && requests.length !== 0}
-                size={size}
-                fluid={fluid}
-                position={position}
-                draggable={draggable}
-                onClose={() => {
-                    onClose();
-                    toggleHighlightFeature(false);
-                }}
-                dock={dock}
-                style={dockStyle}
-                showFullscreen={showFullscreen}
-                zIndex={zIndex}
-                header={[
-                    <Row className="layer-select-row">
-                        <div className="layer-col">
-                            <span className="identify-icon glyphicon glyphicon-1-layer"/>
-                            <LayerSelector
-                                responses={responses}
+        <DockContainer
+            dockStyle={dockStyle}
+            id="identify-container"
+            className={enabled && requests.length !== 0 ? "identify-active" : ""}
+        >
+            <ContainerDimensions>
+                {({ width }) => (
+                    <>
+                        <DockablePanel
+                            bsStyle="primary"
+                            glyph="map-marker"
+                            open={enabled && requests.length !== 0}
+                            size={size / width > 1 ? width : size}
+                            fluid={fluid}
+                            position={position}
+                            draggable={draggable}
+                            onClose={() => {
+                                onClose();
+                                toggleHighlightFeature(false);
+                            }}
+                            dock={dock}
+                            style={dockStyle}
+                            showFullscreen={showFullscreen}
+                            zIndex={zIndex}
+                            header={[
+                                <Row className="layer-select-row">
+                                    <div className="layer-col">
+                                        <span className="identify-icon glyphicon glyphicon-1-layer"/>
+                                        <LayerSelector
+                                            responses={responses}
+                                            index={index}
+                                            loaded={loaded}
+                                            setIndex={setIndex}
+                                            missingResponses={missingResponses}
+                                            emptyResponses={emptyResponses}
+                                            validator={validator}
+                                            format={format}
+                                        />
+                                        <Toolbar
+                                            btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                            buttons={getFeatureButtons(props)}
+                                            transitionProps={null}
+                                        />
+                                    </div>
+                                </Row>,
+                                !disableCoordinatesRow &&
+                                (<Row className="coordinates-edit-row">
+                                    <span className="identify-icon glyphicon glyphicon-point"/>
+                                    <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>
+                                        <Coordinate
+                                            key="coordinate-editor"
+                                            formatCoord={formatCoord}
+                                            enabledCoordEditorButton={enabledCoordEditorButton}
+                                            onSubmit={onSubmitClickPoint}
+                                            onChangeFormat={onChangeFormat}
+                                            edit={showCoordinateEditor}
+                                            coordinate={{
+                                                lat: latlng && latlng.lat,
+                                                lon: lngCorrected
+                                            }}
+                                        />
+                                    </div>
+                                    <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>
+                                    <Toolbar
+                                        btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                        buttons={toolButtons}
+                                        transitionProps={null
+                                            /* transitions was causing a bad rendering of toolbar present in the identify panel
+                                                 * for this reason they ahve been disabled
+                                                */
+                                        }/>
+                                </Row>)
+                            ].filter(headRow => headRow)}>
+                            <Viewer
                                 index={index}
-                                loaded={loaded}
                                 setIndex={setIndex}
-                                missingResponses={missingResponses}
-                                emptyResponses={emptyResponses}
-                                validator={validator}
                                 format={format}
-                            />
-                            <Toolbar
-                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={getFeatureButtons(props)}
-                                transitionProps={null}
-                            />
-                        </div>
-                    </Row>,
-                    !disableCoordinatesRow &&
-                    (<Row className="coordinates-edit-row">
-                        <span className="identify-icon glyphicon glyphicon-point"/>
-                        <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>
-                            <Coordinate
-                                key="coordinate-editor"
-                                formatCoord={formatCoord}
-                                enabledCoordEditorButton={enabledCoordEditorButton}
-                                onSubmit={onSubmitClickPoint}
-                                onChangeFormat={onChangeFormat}
-                                edit={showCoordinateEditor}
-                                coordinate={{
-                                    lat: latlng && latlng.lat,
-                                    lon: lngCorrected
-                                }}
-                            />
-                        </div>
-                        <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>
-                        <Toolbar
-                            btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                            buttons={toolButtons}
-                            transitionProps={null
-                            /* transitions was causing a bad rendering of toolbar present in the identify panel
-                                 * for this reason they ahve been disabled
-                                */
-                            }/>
-                    </Row>)
-                ].filter(headRow => headRow)}>
-                <Viewer
-                    index={index}
-                    setIndex={setIndex}
-                    format={format}
-                    missingResponses={missingResponses}
-                    responses={responses}
-                    requests={requests}
-                    showEmptyMessageGFI={showEmptyMessageGFI}
-                    disableInfoAlert={disableInfoAlert}
-                    {...viewerOptions}/>
-            </DockablePanel>
-            <Portal>
-                <ResizableModal
-                    fade
-                    title={<Message msgId="warning"/>}
-                    size="xs"
-                    show={warning}
-                    onClose={clearWarning}
-                    buttons={[{
-                        text: <Message msgId="close"/>,
-                        onClick: clearWarning,
-                        bsStyle: 'primary'
-                    }]}>
-                    <div className="ms-alert" style={{padding: 15}}>
-                        <div className="ms-alert-center text-center">
-                            <Message msgId="identifyNoQueryableLayers"/>
-                        </div>
-                    </div>
-                </ResizableModal>
-            </Portal>
-        </div>
+                                missingResponses={missingResponses}
+                                responses={responses}
+                                requests={requests}
+                                showEmptyMessageGFI={showEmptyMessageGFI}
+                                disableInfoAlert={disableInfoAlert}
+                                {...viewerOptions}/>
+                        </DockablePanel>
+                        <Portal>
+                            <ResizableModal
+                                fade
+                                title={<Message msgId="warning"/>}
+                                size="xs"
+                                show={warning}
+                                onClose={clearWarning}
+                                buttons={[{
+                                    text: <Message msgId="close"/>,
+                                    onClick: clearWarning,
+                                    bsStyle: 'primary'
+                                }]}>
+                                <div className="ms-alert" style={{padding: 15}}>
+                                    <div className="ms-alert-center text-center">
+                                        <Message msgId="identifyNoQueryableLayers"/>
+                                    </div>
+                                </div>
+                            </ResizableModal>
+                        </Portal>
+                    </>
+                )}
+            </ContainerDimensions>
+        </DockContainer>
     );
 };

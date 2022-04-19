@@ -34,6 +34,7 @@ import {
 import ConfigUtils from '../utils/ConfigUtils';
 import Message from './locale/Message';
 import { MeasureDialog } from './measure/index';
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
 
 const selector = (state) => {
     return {
@@ -60,7 +61,8 @@ const selector = (state) => {
         showAddAsLayer: isOpenlayers(state),
         isCoordEditorEnabled: state.measurement && !state.measurement.isDrawing,
         geomType: state.measurement && state.measurement.geomType,
-        format: state.measurement && state.measurement.format
+        format: state.measurement && state.measurement.format,
+        dockStyle: mapLayoutValuesSelector(state, { height: true, right: true }, true)
     };
 };
 const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
@@ -135,7 +137,10 @@ export default {
             help: <Message msgId="helptexts.measureComponent"/>,
             tooltip: "measureComponent.tooltip",
             icon: <Glyphicon glyph="1-ruler"/>,
-            action: () => setControlProperty("measure", "enabled", true)
+            action: toggleControl.bind(null, 'measure', null),
+            toggle: true,
+            toggleControl: 'measure',
+            toggleProperty: 'enabled'
         }
     }),
     reducers: {measurement: require('../reducers/measurement').default},

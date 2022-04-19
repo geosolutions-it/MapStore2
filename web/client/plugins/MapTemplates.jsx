@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
+import ContainerDimensions from "react-container-dimensions";
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 
@@ -24,6 +25,9 @@ import MapTemplatesPanel from '../components/maptemplates/MapTemplatesPanel';
 
 import maptemplates from '../reducers/maptemplates';
 import * as epics from '../epics/maptemplates';
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import DockContainer from "../components/misc/panels/DockContainer";
+import PropTypes from "prop-types";
 
 /**
  * Provides a list of map templates available inside of a currently loaded context.
@@ -34,49 +38,99 @@ import * as epics from '../epics/maptemplates';
  * @name MapTemplates
  * @prop {object[]} cfg.allowedTemplates: A list of objects with map template ids used to load templates when not in context
  */
-const mapTemplates = ({
-    active,
-    templates = [],
-    allowedTemplates = [],
-    templatesLoaded,
-    onToggleControl = () => {},
-    onMergeTemplate = () => {},
-    onReplaceTemplate = () => {},
-    onToggleFavourite = () => {},
-    onSetAllowedTemplates = () => {}
-}) => {
-    useEffect(() => {
-        if (active) {
-            onSetAllowedTemplates(allowedTemplates);
+class MapTemplatesComponent extends React.Component {
+    static propTypes = {
+        active: PropTypes.bool,
+        templatesLoaded: PropTypes.bool,
+        templates: PropTypes.array,
+        allowedTemplates: PropTypes.array,
+        dockStyle: PropTypes.object,
+        onToggleControl: PropTypes.func,
+        onMergeTemplate: PropTypes.func,
+        onReplaceTemplate: PropTypes.func,
+        onToggleFavourite: PropTypes.func,
+        onSetAllowedTemplates: PropTypes.func,
+        size: PropTypes.number
+    };
+
+    static defaultProps = {
+        active: false,
+        templatesLoaded: false,
+        templates: [],
+        allowedTemplates: [],
+        dockStyle: {},
+        onToggleControl: () => {},
+        onMergeTemplate: () => {},
+        onReplaceTemplate: () => {},
+        onToggleFavourite: () => {},
+        onSetAllowedTemplates: () => {},
+        size: 550
+    };
+
+    componentDidUpdate(prevProps) {
+        const { active, allowedTemplates, onSetAllowedTemplates } = this.props;
+        const { active: prevActive } = prevProps;
+        if (active !== prevActive) {
+            if (active) {
+                onSetAllowedTemplates(allowedTemplates);
+            }
         }
-    }, [ active ]);
-    return (
-        <DockPanel
-            open={active}
-            position="right"
-            size={660}
-            bsStyle="primary"
-            title={<Message msgId="mapTemplates.title"/>}
-            style={{ height: 'calc(100% - 30px)' }}
-            onClose={onToggleControl}>
-            {!templatesLoaded && <div className="map-templates-loader"><Loader size={352}/></div>}
-            {templatesLoaded && <MapTemplatesPanel
-                templates={templates}
-                onMergeTemplate={onMergeTemplate}
-                onReplaceTemplate={onReplaceTemplate}
-                onToggleFavourite={onToggleFavourite}/>}
-        </DockPanel>
-    );
-};
+
+    }
+
+    render() {
+        const {
+            active,
+            templates,
+            templatesLoaded,
+            onToggleControl,
+            onMergeTemplate,
+            onReplaceTemplate,
+            onToggleFavourite,
+            dockStyle,
+            size
+        } = this.props;
+        return (
+            <DockContainer
+                dockStyle={dockStyle}
+                id="map-templates-container"
+                className="dock-container"
+                style={{pointerEvents: 'none'}}
+            >
+                <ContainerDimensions>
+                    {({ width }) => (<DockPanel
+                        className="map-templates-dock-panel"
+                        open={active}
+                        position="right"
+                        size={size / width > 1 ? width : size}
+                        bsStyle="primary"
+                        title={<Message msgId="mapTemplates.title"/>}
+                        style={dockStyle}
+                        onClose={onToggleControl}>
+                        {!templatesLoaded && <div className="map-templates-loader"><Loader size={352}/></div>}
+                        {templatesLoaded && <MapTemplatesPanel
+                            templates={templates}
+                            onMergeTemplate={onMergeTemplate}
+                            onReplaceTemplate={onReplaceTemplate}
+                            onToggleFavourite={onToggleFavourite}/>}
+                    </DockPanel>)}
+                </ContainerDimensions>
+            </DockContainer>
+        );
+    }
+}
 
 const MapTemplatesPlugin = connect(createSelector(
+    state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     state => get(state, 'controls.mapTemplates.enabled'),
     templatesSelector,
     mapTemplatesLoadedSelector,
-    (active, templates, templatesLoaded) => ({
+
+    (dockStyle, active, templates, templatesLoaded) => ({
         active,
         templates,
-        templatesLoaded
+        templatesLoaded,
+        dockStyle
     })
 ), {
     onToggleControl: toggleControl.bind(null, 'mapTemplates', 'enabled'),
@@ -84,7 +138,7 @@ const MapTemplatesPlugin = connect(createSelector(
     onReplaceTemplate: replaceTemplate,
     onToggleFavourite: toggleFavouriteTemplate,
     onSetAllowedTemplates: setAllowedTemplates
-})(mapTemplates);
+})(MapTemplatesComponent);
 
 export default createPlugin('MapTemplates', {
     component: MapTemplatesPlugin,

@@ -86,6 +86,7 @@ import { annotationsInfoSelector, annotationsListSelector } from '../selectors/a
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { ANNOTATIONS } from '../utils/AnnotationsUtils';
 import { registerRowViewer } from '../utils/MapInfoUtils';
+import DockContainer from "../components/misc/panels/DockContainer";
 
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
@@ -191,6 +192,7 @@ class AnnotationsPanel extends React.Component {
         buttonStyle: PropTypes.object,
         style: PropTypes.object,
         dockProps: PropTypes.object,
+        dockStyle: PropTypes.object,
 
         // side panel properties
         width: PropTypes.number
@@ -233,19 +235,21 @@ class AnnotationsPanel extends React.Component {
 
     render() {
         return this.props.active ? (
-            <ContainerDimensions>
-                { ({ width }) =>
-                    <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
-                        <Dock
-                            fluid
-                            dockStyle={this.props.dockStyle} {...this.props.dockProps}
-                            isVisible={this.props.active}
-                            size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                            <Annotations {...this.props} width={this.props.width}/>
-                        </Dock>
-                    </span>
-                }
-            </ContainerDimensions>
+            <DockContainer dockStyle={this.props.dockStyle}>
+                <ContainerDimensions>
+                    { ({ width }) =>
+                        <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
+                            <Dock
+                                fluid
+                                dockStyle={this.props.dockStyle} {...this.props.dockProps}
+                                isVisible={this.props.active}
+                                size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                                <Annotations {...this.props} width={this.props.width}/>
+                            </Dock>
+                        </span>
+                    }
+                </ContainerDimensions>
+            </DockContainer>
         ) : null;
     }
 }

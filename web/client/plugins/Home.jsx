@@ -83,7 +83,7 @@ export default {
                 bsStyle: 'tray',
                 tooltipPosition: 'left'
             }))(HomeConnected),
-            priority: 3
+            priority: 4
         }
     }),
     reducers: {},

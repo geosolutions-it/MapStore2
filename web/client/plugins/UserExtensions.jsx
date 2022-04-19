@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import ContainerDimensions from "react-container-dimensions";
 import { connect } from 'react-redux';
 import { createPlugin } from '../utils/PluginsUtils';
 import { Glyphicon } from 'react-bootstrap';
@@ -19,29 +20,69 @@ import { createSelector } from 'reselect';
 import get from 'lodash/get';
 import DockPanel from '../components/misc/panels/DockPanel';
 import ExtensionsPanel from './userExtensions/ExtensionsPanel';
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import DockContainer from "../components/misc/panels/DockContainer";
+import * as PropTypes from "prop-types";
 
 
-const Extensions = ({
-    active,
-    onClose = () => { }
-}) => (
-    <DockPanel
-        open={active}
-        size={660}
-        position="right"
-        bsStyle="primary"
-        title={<Message msgId="userExtensions.title" />}
-        onClose={() => onClose()}
-        glyph="plug"
-        style={{ height: 'calc(100% - 30px)' }}>
-        <ExtensionsPanel />
-    </DockPanel>);
+class Extensions extends React.Component {
+    static propTypes = {
+        active: PropTypes.bool,
+        onClose: PropTypes.func,
+        dockStyle: PropTypes.object,
+        size: PropTypes.number
+    }
+
+    static defaultProps = {
+        active: false,
+        onClose: () => {},
+        dockStyle: {},
+        size: 550
+    }
+
+    render() {
+        let {
+            active,
+            onClose,
+            dockStyle,
+            size
+        } = this.props;
+        return (
+            <DockContainer
+                dockStyle={this.props.dockStyle}
+                id="measure-container"
+                className="dock-container"
+                style={{pointerEvents: 'none'}}
+            >
+                <ContainerDimensions>
+                    {({width}) => (
+                        <DockPanel
+                            open={active}
+                            size={size / width > 1 ? width : size}
+                            position="right"
+                            bsStyle="primary"
+                            title={<Message msgId="userExtensions.title"/>}
+                            onClose={() => onClose()}
+                            glyph="plug"
+                            style={dockStyle}>
+                            <ExtensionsPanel/>
+                        </DockPanel>
+                    )}
+                </ContainerDimensions>
+            </DockContainer>
+        );
+    }
+}
 
 const ExtensionsPlugin = connect(
     createSelector([
-        state => get(state, 'controls.userExtensions.enabled')
+        state => get(state, 'controls.userExtensions.enabled'),
+        state => mapLayoutValuesSelector(state, { height: true, right: true }, true)
     ],
-    (active, extensions) => ({ active, extensions })),
+    (active, dockStyle) => ({
+        active,
+        dockStyle
+    })),
     {
         onClose: toggleControl.bind(null, 'userExtensions', 'enabled')
     }

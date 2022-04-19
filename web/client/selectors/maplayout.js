@@ -42,13 +42,19 @@ export const boundingMapRectSelector = (state) => state.maplayout && state.mapla
  * @memberof selectors.mapLayout
  * @param  {object} state the state
  * @param  {object} attributes attributes to retrieve, bool {left: true}
+ * @param  {boolean} isDock flag to use dock paddings instead of toolbar paddings
  * @return {object} selected attributes of layout of the map
  */
-export const mapLayoutValuesSelector = (state, attributes = {}) => {
+export const mapLayoutValuesSelector = (state, attributes = {}, isDock = false) => {
     const layout = mapLayoutSelector(state);
     return layout && Object.keys(layout).filter(key =>
-        attributes[key]).reduce((a, key) => ({...a, [key]: layout[key]}),
-        {}) || {};
+        attributes[key]).reduce((a, key) => {
+        if (isDock) {
+            return ({...a, [key]: (layout.boundingSidebarRect[key] ?? layout[key])});
+        }
+        return ({...a, [key]: layout[key]});
+    },
+    {}) || {};
 };
 
 /**

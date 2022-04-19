@@ -9,13 +9,16 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import './omnibar/omnibar.css';
-import assign from 'object-assign';
 import ToolsContainer from './containers/ToolsContainer';
+import {createStructuredSelector} from "reselect";
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import {connect, createPlugin} from "../utils/PluginsUtils";
 
 class OmniBar extends React.Component {
     static propTypes = {
         className: PropTypes.string,
         style: PropTypes.object,
+        containerWrapperStyle: PropTypes.object,
         items: PropTypes.array,
         id: PropTypes.string,
         mapType: PropTypes.string
@@ -25,6 +28,7 @@ class OmniBar extends React.Component {
         items: [],
         className: "navbar-dx shadow",
         style: {},
+        containerWrapperStyle: { position: 'absolute', width: '100%'},
         id: "mapstore-navbar",
         mapType: "leaflet"
     };
@@ -49,6 +53,7 @@ class OmniBar extends React.Component {
     render() {
         return (<ToolsContainer id={this.props.id}
             style={this.props.style}
+            containerWrapperStyle={this.props.containerWrapperStyle}
             className={this.props.className}
             mapType={this.props.mapType}
             container={(props) => <div {...props}>{props.children}</div>}
@@ -70,13 +75,14 @@ class OmniBar extends React.Component {
  * @class
  * @memberof plugins
  */
-export default {
-    OmniBarPlugin: assign(
-        OmniBar,
-        {
-            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit') || " +
-                "(state('sidebarMenu')?.enabled && state('router').includes('/viewer/'))}"
+export default createPlugin(
+    'OmniBar',
+    {
+        component: connect(createStructuredSelector({
+            style: state => mapLayoutValuesSelector(state, { right: true })
+        }), {})(OmniBar),
+        options: {
+            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
         }
-    ),
-    reducers: {}
-};
+    }
+);

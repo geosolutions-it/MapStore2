@@ -12,6 +12,8 @@ import Message from '../I18N/Message';
 import { Panel } from 'react-bootstrap';
 import BorderLayout from '../layout/BorderLayout';
 import DockPanel from "../misc/panels/DockPanel";
+import DockContainer from "../misc/panels/DockContainer";
+import ContainerDimensions from "react-container-dimensions";
 
 class DetailsPanel extends React.Component {
     static propTypes = {
@@ -21,7 +23,8 @@ class DetailsPanel extends React.Component {
         dockStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         style: PropTypes.object,
-        onClose: PropTypes.func
+        onClose: PropTypes.func,
+        width: PropTypes.number
     };
 
     static contextTypes = {
@@ -39,27 +42,34 @@ class DetailsPanel extends React.Component {
         onClose: () => {
         },
         active: false,
-        panelClassName: "details-panel"
+        panelClassName: "details-panel",
+        width: 550
     };
 
     render() {
         return (
-            <DockPanel
-                open={this.props.active}
-                size={660}
-                position="right"
-                bsStyle="primary"
-                title={<Message msgId="details.title"/>}
-                onClose={() => this.props.onClose()}
-                glyph="sheet"
-                style={this.props.dockStyle}
-            >
-                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                    <BorderLayout>
-                        {this.props.children}
-                    </BorderLayout>
-                </Panel>
-            </DockPanel>
+            <DockContainer id="details-container" className="dock-container" dockStyle={this.props.dockStyle}>
+                <ContainerDimensions>
+                    {({ width }) => (
+                        <DockPanel
+                            open={this.props.active}
+                            size={this.props.width / width > 1 ? width : this.props.width}
+                            position="right"
+                            bsStyle="primary"
+                            title={<Message msgId="details.title"/>}
+                            onClose={() => this.props.onClose()}
+                            glyph="sheet"
+                            style={this.props.dockStyle}
+                        >
+                            <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                                <BorderLayout>
+                                    {this.props.children}
+                                </BorderLayout>
+                            </Panel>
+                        </DockPanel>)}
+                </ContainerDimensions>
+
+            </DockContainer>
         );
     }
 }

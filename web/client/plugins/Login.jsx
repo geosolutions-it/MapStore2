@@ -77,7 +77,7 @@ export default {
                 tooltipPosition: 'left'
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
-            priority: 1
+            priority: 2
         }
     }),
     reducers: {security},

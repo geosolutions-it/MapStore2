@@ -674,6 +674,7 @@ export default {
             icon: <Glyphicon glyph="print"/>,
             action: toggleControl.bind(null, 'print', null),
             doNotHide: true,
+            toggle: true,
             priority: 2
         }
     }),

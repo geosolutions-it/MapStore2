@@ -1,21 +1,31 @@
-@toolbarWidth: 52px;
+@toolbarWidth: 40px;
 
 
 #mapstore-sidebar-menu {
+    z-index: 1060;
     position: absolute;
-    right: 0;
-    width: @toolbarWidth;
-    height: 100%;
     background: inherit;
-    z-index: 10;
+    right: 0;
+    top: 0;
+    width: @toolbarWidth;
 
-    .tools-container > * {
-        border-bottom: 0;
-    }
-
-    .snapshot-panel {
+    #mapstore-sidebar-menu-container {
         position: absolute;
-        right: @toolbarWidth;
         top: 0;
+        right: 0;
+        height: auto;
+        z-index: 10;
+
+        .btn-tray, .btn {
+            border-bottom: 0;
+            height: @toolbarWidth;
+            width: @toolbarWidth;
+        }
+
+        .snapshot-panel {
+            position: absolute;
+            right: @toolbarWidth;
+            top: 0;
+        }
     }
 }

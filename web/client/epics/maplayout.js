@@ -77,8 +77,22 @@ export const updateMapLayoutEpic = (action$, store) =>
                 }));
             }
 
-            const sidebarMenuWidth = get(state, "controls.sidebarMenu.enabled") ? 52 : 0;
-            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 658 + sidebarMenuWidth}, bottom: {sm: 30}};
+            // Calculating sidebar's rectangle to be used by dock panels
+            const rightSidebars = head([
+                get(state, "controls.sidebarMenu.enabled") && {right: 40} || null
+            ]) || {right: 0};
+            const leftSidebars = head([
+                null
+            ]) || {left: 0};
+
+            const boundingSidebarRect = {
+                ...rightSidebars,
+                ...leftSidebars,
+                bottom: 0
+            };
+            /* ---------------------- */
+
+            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 548}, bottom: {sm: 30}};
 
             if (get(state, "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
@@ -110,7 +124,7 @@ export const updateMapLayoutEpic = (action$, store) =>
                 get(state, "controls.mapTemplates.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "controls.mapCatalog.enabled") && { right: mapLayout.right.md } || null,
                 mapInfoEnabledSelector(state) && isMapInfoOpen(state) && !isMouseMoveIdentifyActiveSelector(state) && {right: mapLayout.right.md} || null
-            ].filter(panel => panel)) || {right: sidebarMenuWidth};
+            ].filter(panel => panel)) || {right: 0};
 
             const dockSize = getDockSize(state) * 100;
             const bottom = isFeatureGridOpen(state) && {bottom: dockSize + '%', dockSize}
@@ -125,13 +139,20 @@ export const updateMapLayoutEpic = (action$, store) =>
                 ...rightPanels
             };
 
+            Object.keys(boundingMapRect).forEach(key => {
+                if (key === 'left' || key === 'right') {
+                    boundingMapRect[key] = boundingMapRect[key] + (boundingSidebarRect[key] ?? 0);
+                } else {
+                    boundingMapRect[key] = (parseFloat(boundingMapRect[key]) + parseFloat(boundingSidebarRect[key] ?? 0)) + '%';
+                }
+            });
+
             return Rx.Observable.of(updateMapLayout({
-                ...leftPanels,
-                ...rightPanels,
-                ...bottom,
+                ...boundingMapRect,
                 ...transform,
                 ...height,
-                boundingMapRect
+                boundingMapRect,
+                boundingSidebarRect
             }));
         });
 

@@ -179,6 +179,9 @@ export default createPlugin(
         component: connect((state) =>({
             controls: state.controls
         }))(BurgerMenu),
+        options: {
+            disablePluginIf: "(state('sidebarMenu')?.enabled && state('router').includes('/viewer/'))}"
+        },
         containers: {
             OmniBar: {
                 name: "burgermenu",

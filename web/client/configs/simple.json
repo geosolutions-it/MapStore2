@@ -224,6 +224,8 @@
 		{
 			"name": "BurgerMenu"
 		}, {
+			"name": "SidebarMenu"
+		}, {
 			"name": "Expander"
 		}, {
 			"name": "Undo"

@@ -70,6 +70,7 @@ const DetailsPlugin = ({
             {viewer}
         </ResizableModal> :
         <DetailsPanel
+            width={550}
             dockStyle={dockStyle}
             active={active}
             onClose={onClose}>
@@ -80,7 +81,7 @@ const DetailsPlugin = ({
 export default createPlugin('Details', {
     component: connect((state) => ({
         active: get(state, "controls.details.enabled"),
-        dockStyle: mapLayoutValuesSelector(state, {height: true}),
+        dockStyle: mapLayoutValuesSelector(state, { height: true, right: true }, true),
         detailsText: detailsTextSelector(state),
         showAsModal: mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
     }), {
