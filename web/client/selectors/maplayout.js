@@ -37,6 +37,15 @@ export const mapLayoutSelector = (state) => state.maplayout && state.maplayout.l
 export const boundingMapRectSelector = (state) => state.maplayout && state.maplayout.boundingMapRect || {};
 
 /**
+ * Get map layout bounds left, top, bottom and right
+ * @function
+ * @memberof selectors.mapLayout
+ * @param  {object} state the state
+ * @return {object} boundingMapRect {left, top, bottom, right}
+ */
+export const boundingSidebarRectSelector = (state) => state.maplayout && state.maplayout.boundingMapRect || {};
+
+/**
  * Retrieve only specific attribute from map layout
  * @function
  * @memberof selectors.mapLayout
@@ -47,10 +56,11 @@ export const boundingMapRectSelector = (state) => state.maplayout && state.mapla
  */
 export const mapLayoutValuesSelector = (state, attributes = {}, isDock = false) => {
     const layout = mapLayoutSelector(state);
+    const boundingSidebarRect = boundingSidebarRectSelector(state);
     return layout && Object.keys(layout).filter(key =>
         attributes[key]).reduce((a, key) => {
         if (isDock) {
-            return ({...a, [key]: (layout.boundingSidebarRect[key] ?? layout[key])});
+            return ({...a, [key]: (boundingSidebarRect[key] ?? layout[key])});
         }
         return ({...a, [key]: layout[key]});
     },
