@@ -123,7 +123,7 @@ It also allows partial overriding of existing map configuration by passing only 
 Following example will override "catalogServices" and "mapInfoConfiguration":
 ```text
 #/viewer/openlayers/config?map={"mapInfoConfiguration":{"trigger":"click","infoFormat":"text/html"},"catalogServices":{"services": {"wms": {"url": "http://example.com/geoserver/wms","type": "wms","title": "WMS","autoload": true}},"selectedService": "wms"}}
-
+```
 ### Center / Zoom
 
 GET: `#/viewer/openlayers/config?center=0,0&zoom=5`
