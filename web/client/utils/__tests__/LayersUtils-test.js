@@ -1082,6 +1082,17 @@ describe('LayersUtils', () => {
                     expect(l.tooltipPlacement).toExist();
                 }
             ],
+            [
+                {
+                    options: {
+                        attribution: "right"
+                    }
+                },
+                l => {
+                    expect(l.options).toExist();
+                    expect(l.options.attribution).toExist();
+                }
+            ],
             // save heightOffset for 3dtiles
             [
                 {
