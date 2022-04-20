@@ -103,10 +103,15 @@ Here a sample page you can create to test the service:
 
 ### Feature Info
 
-Allows to trigger [identify tool](../../user-guide/side-bar/#identify-tool) for the coordinates passed in "lat"/"lng" parameters. Optional parameter "filterNameList"
-allows limiting request to the specific layer names.
+Allows to trigger [identify tool](../../user-guide/side-bar/#identify-tool) for the coordinates passed in "lat"/"lng" parameters. 
+
+Optional parameter "filterNameList" allows limiting request to the specific layer names.
+It will be effectively used only if it's passed as non-empty array of layer names.
+Omitting or passing an empty array will have the same effect.
 
 GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}`
+
+GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": ["layerName1", "layerName2"]}`
 
 ### Map
 
