@@ -70,7 +70,8 @@ function mapConfig(state = null, action) {
             mapConfigRawData: { ...action.config }
         };
         // if map is loaded from an already saved map keep the same id
-        const mapId = action.config?.fileName && state.map.present.mapId ? state.map.present.mapId : action.mapId;
+        let mapId = state?.map?.mapId || state?.map?.present?.mapId;
+        mapId = action.config?.fileName && mapId ? mapId : action.mapId;
         newMapState.map = assign({}, newMapState.map, {mapId, size, version: hasVersion ? action.config.version : 1});
         // we store the map initial state for future usage
         return assign({}, newMapState, {mapInitialConfig: {...newMapState.map, mapId: action.mapId}});
