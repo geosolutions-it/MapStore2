@@ -9,7 +9,9 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom';
-import { createSink } from 'recompose';
+import { createSink, setObservableConfig } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
+setObservableConfig(rxjsConfig);
 import expect from 'expect';
 import useFiles from '../useFiles';
 
@@ -66,13 +68,10 @@ describe('useFiles enhancer', () => {
                 expect(conf.map.center).toExist();
                 expect(conf.map.zoom).toExist();
                 expect(mapId).toExist();
-                expect(zoomToExtent).toBe(false);
+                expect(zoomToExtent).toBeFalsy();
                 done();
             },
-            loadMapInfo: (mapId, info) => {
-                expect(mapId).toBe("10");
-                expect(info).toExist();
-            },
+            loadMapInfo: () => {},
             onClose: () => {},
             loadAnnotations: () => {},
             setLayers: () => {}
@@ -89,7 +88,7 @@ describe('useFiles enhancer', () => {
             props.useFiles({maps: props.maps});
         });
         const EnhancedSink = useFiles(sink);
-        ReactDOM.render(<EnhancedSink maps={[ {map: {zoom: 4, center: { x: 1, y: 1 }, bbox: { x: 1, y: 1 }, maxExtent: "TEST"}} ]}
+        ReactDOM.render(<EnhancedSink maps={[ {map: { zoom: 4, center: { x: 1, y: 1 }, bbox: { x: 1, y: 1 }, maxExtent: "TEST"}, fileName: "savedMap.json" } ]}
             loadAnnotations={actions.loadAnnotations} setLayers={actions.setLayers} loadMap={actions.loadMap} loadMapInfo={actions.loadMapInfo} onClose={actions.onClose} currentMap={{zoom: 4, center: { x: 1, y: 1 }, mapId: "10"}} />, document.getElementById("container"));
         expect(spyLoadMapInfo).toHaveBeenCalled();
         expect(spyOnClose).toHaveBeenCalled();
