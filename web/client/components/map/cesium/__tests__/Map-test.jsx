@@ -17,7 +17,7 @@ import {
     registerHook,
     createRegisterHooks, GET_PIXEL_FROM_COORDINATES_HOOK, GET_COORDINATES_FROM_PIXEL_HOOK
 } from '../../../../utils/MapUtils';
-
+import { act } from 'react-dom/test-utils';
 
 import '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
@@ -38,15 +38,13 @@ describe('CesiumMap', () => {
         setTimeout(done);
     });
     it('creates a div for cesium map with given id', () => {
-        const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-        expect(map).toExist();
-        expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+        ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        expect(document.querySelector('#mymap')).toBeTruthy();
     });
 
     it('creates a div for cesium map with default id (map)', () => {
-        const map = ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-        expect(map).toExist();
-        expect(ReactDOM.findDOMNode(map).id).toBe('map');
+        ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        expect(document.querySelector('#map')).toBeTruthy();
     });
 
     it('renders a map on an external window', () => {
@@ -60,7 +58,7 @@ describe('CesiumMap', () => {
             };
             ReactDOM.render(<Comp/>, document.getElementById("container"));
             const map = popup.document.getElementById("map");
-            expect(map).toExist();
+            expect(map).toBeTruthy();
             expect(map.querySelectorAll(".cesium-viewer").length).toBe(1);
         } finally {
             popup.close();
@@ -68,102 +66,128 @@ describe('CesiumMap', () => {
     });
 
     it('creates multiple maps for different containers', () => {
-        const container = ReactDOM.render(
-
+        ReactDOM.render(
             <div>
                 <div id="container1"><CesiumMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><CesiumMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
             , document.getElementById("container"));
-        expect(container).toExist();
 
-        expect(document.getElementById('map1')).toExist();
-        expect(document.getElementById('map2')).toExist();
+        expect(document.getElementById('map1')).toBeTruthy();
+        expect(document.getElementById('map2')).toBeTruthy();
     });
 
     it('populates the container with cesium objects', () => {
-        const map = ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-        expect(map).toExist();
+        ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        expect(document.querySelector('#map')).toBeTruthy();
         expect(document.getElementsByClassName('cesium-viewer').length).toBe(1);
         expect(document.getElementsByClassName('cesium-viewer-cesiumWidgetContainer').length).toBe(1);
         expect(document.getElementsByClassName('cesium-widget').length).toBe(1);
     });
 
     it('check layers init', () => {
-        var options = {
+        const options = {
             "visibility": true
         };
-        const map = ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}>
-            <CesiumLayer type="osm" options={options} />
-        </CesiumMap>, document.getElementById("container"));
-        expect(map).toExist();
-        expect(map.map.imageryLayers.length).toBe(1);
+        let ref;
+        act(() => {
+            ReactDOM.render(<CesiumMap ref={value => { ref = value; } } center={{y: 43.9, x: 10.3}} zoom={11}>
+                <CesiumLayer type="osm" options={options} />
+            </CesiumMap>, document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        expect(ref.map.imageryLayers.length).toBe(1);
     });
 
     it('check layers for elevation', () => {
-        var options = {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
             "useForElevation": true
         };
-        const map = ReactDOM.render(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
-            <CesiumLayer type="wms" options={options} />
+        let ref;
+        act(() => {
+            ReactDOM.render(<CesiumMap ref={value => { ref = value; } } center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                <CesiumLayer type="wms" options={options} />
+            </CesiumMap>, document.getElementById("container"));
+        });
+        expect(ref).toBeTruthy();
+        expect(ref.map.terrainProvider).toBeTruthy();
+        expect(ref.map.terrainProvider.layerName).toBe('mylayer');
+    });
+    it('check wmts layer for custom attribution', () => {
+        const options = {
+            format: 'image/png',
+            group: 'background',
+            name: 'nurc:Arc_Sample',
+            description: "arcGridSample",
+            title: "arcGridSample",
+            type: 'wmts',
+            url: "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+            bbox: {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -180.0,
+                    miny: -90.0,
+                    maxx: 180.0,
+                    maxy: 90.0
+                }
+            },
+            visibility: true,
+            singleTile: false,
+            allowedSRS: {
+                "EPSG:4326": true,
+                "EPSG:900913": true
+            },
+            matrixIds: {},
+            tileMatrixSet: [],
+            credits: {
+                title: "<p>This is some Attribution <b>TEXT</b></p>"
+            }
+        };
+        ReactDOM.render(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
+            <CesiumLayer type="wmts" options={options} />
         </CesiumMap>, document.getElementById("container"));
-        expect(map).toExist();
-        expect(map.map.terrainProvider).toExist();
-        expect(map.map.terrainProvider.layerName).toBe('mylayer');
+        const creditsWidget = document.getElementsByClassName('cesium-widget-credits')[0];
+        expect(creditsWidget).toBeTruthy();
     });
     it('check if the handler for "moveend" event is called', (done) => {
-        const expectedCalls = 1;
         const precision = 1000000000;
-        const testHandlers = {
-            handler: () => {}
-        };
-        var spy = expect.spyOn(testHandlers, 'handler');
-
-        const map = ReactDOM.render(
-            <CesiumMap
-                center={{y: 10, x: 44}}
-                zoom={5}
-                onMapViewChanges={testHandlers.handler}
-                viewerOptions={{
-                    orientation: {
-                        heading: 0,
-                        pitch: -1 * Math.PI / 2,
-                        roll: 0
-                    }
-                }}
-
-            />
-            , document.getElementById("container"));
-
-        const cesiumMap = map.map;
-        cesiumMap.camera.moveEnd.addEventListener(() => {
-            try {
-                // check arguments
-                expect(spy.calls[0].arguments.length).toEqual(8);
-                expect(spy.calls.length).toBe(expectedCalls);
-                // check camera moved
-                expect(Math.round(spy.calls[0].arguments[0].y * precision) / precision).toBe(30);
-                expect(Math.round(spy.calls[0].arguments[0].x * precision) / precision).toBe(20);
-                expect(spy.calls[0].arguments[1]).toEqual(5);
-
-                expect(spy.calls[0].arguments[6].orientation.heading).toBe(1);
-
-                for (let c = 0; c < spy.calls.length; c++) {
-                    expect(spy.calls[c].arguments[2].bounds).toExist();
-                    expect(spy.calls[c].arguments[2].crs).toExist();
-                    expect(spy.calls[c].arguments[3].height).toExist();
-                    expect(spy.calls[c].arguments[3].width).toExist();
-                }
-            } catch (e) {
-                done(e);
-            }
-            done();
-
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    onMapViewChanges={(center, zoom, bbox, size, id, projection, options) => {
+                        try {
+                            expect(Math.round(center.y * precision) / precision).toBe(30);
+                            expect(Math.round(center.x * precision) / precision).toBe(20);
+                            expect(zoom).toBe(5);
+                            expect(bbox.bounds).toBeTruthy();
+                            expect(bbox.crs).toBeTruthy();
+                            expect(size.height).toBeTruthy();
+                            expect(size.width).toBeTruthy();
+                            expect(options.orientation.heading).toBe(1);
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    }}
+                    viewerOptions={{
+                        orientation: {
+                            heading: 0,
+                            pitch: -1 * Math.PI / 2,
+                            roll: 0
+                        }
+                    }}
+                />
+                , document.getElementById("container"));
         });
-        cesiumMap.camera.setView({
+        expect(ref.map).toBeTruthy();
+        ref.map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
                 20,
                 30,
@@ -180,17 +204,21 @@ describe('CesiumMap', () => {
         const testHandlers = {
             handler: () => {}
         };
-        var spy = expect.spyOn(testHandlers, 'handler');
+        const spy = expect.spyOn(testHandlers, 'handler');
 
-        const map = ReactDOM.render(
-            <CesiumMap
-                center={{y: 43.9, x: 10.3}}
-                zoom={11}
-                onClick={testHandlers.handler}
-            />
-            , document.getElementById("container"));
-        expect(map.map).toExist();
-        map.onClick(map.map, {position: {x: 100, y: 100 }});
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    onClick={testHandlers.handler}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        ref.onClick(ref.map, {position: {x: 100, y: 100 }});
         setTimeout(() => {
             expect(spy.calls.length).toEqual(1);
             expect(spy.calls[0].arguments.length).toEqual(1);
@@ -203,15 +231,19 @@ describe('CesiumMap', () => {
         };
         const spy = expect.spyOn(testHandlers, 'handler');
 
-        const map = ReactDOM.render(
-            <CesiumMap
-                center={{y: 43.9, x: 10.3}}
-                zoom={11}
-                onClick={testHandlers.handler}
-            />
-            , document.getElementById("container"));
-        expect(map.map).toExist();
-        map.onClick(map.map, {position: {x: 100, y: 100 }});
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={11}
+                    onClick={testHandlers.handler}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        ref.onClick(ref.map, {position: {x: 100, y: 100 }});
         setTimeout(() => {
             expect(spy.calls.length).toEqual(1);
             expect(spy.calls[0].arguments.length).toEqual(1);
@@ -220,23 +252,29 @@ describe('CesiumMap', () => {
         }, 800);
     });
     it('check if the map changes when receive new props', () => {
-        let map = ReactDOM.render(
-            <CesiumMap
-                center={{y: 43.9, x: 10.3}}
-                zoom={10}
-            />
-            , document.getElementById("container"));
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 43.9, x: 10.3}}
+                    zoom={10}
+                />
+                , document.getElementById("container"));
+        });
 
-        const cesiumMap = map.map;
+        const cesiumMap = ref.map;
 
-        map = ReactDOM.render(
-            <CesiumMap
-                center={{y: 44, x: 10}}
-                zoom={12}
-            />
-            , document.getElementById("container"));
-
-        expect(Math.round(cesiumMap.camera.positionCartographic.height - map.getHeightFromZoom(12))).toBe(0);
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 44, x: 10}}
+                    zoom={12}
+                />
+                , document.getElementById("container"));
+        });
+        expect(Math.round(cesiumMap.camera.positionCartographic.height - ref.getHeightFromZoom(12))).toBe(0);
         expect(Math.round(cesiumMap.camera.positionCartographic.latitude * 180.0 / Math.PI)).toBe(44);
         expect(Math.round(cesiumMap.camera.positionCartographic.longitude * 180.0 / Math.PI)).toBe(10);
     });
@@ -244,7 +282,7 @@ describe('CesiumMap', () => {
         // instanciating the map that will be used to compute the bounfing box
         const testHandlers = {
             onMapViewChanges: (args) => {
-                expect(args).toExist();
+                expect(args).toBeTruthy();
                 expect(args.x).toBeGreaterThan(14);
                 expect(args.y).toBeGreaterThan(14);
                 expect(args.x).toBeLessThan(16);
@@ -260,7 +298,7 @@ describe('CesiumMap', () => {
         // computing the bounding box for the new center and the new zoom
         const hook = getHook(ZOOM_TO_EXTENT_HOOK);
         // update the map with the new center and the new zoom so we can check our computed bouding box
-        expect(hook).toExist();
+        expect(hook).toBeTruthy();
 
         hook([10, 10, 20, 20], {crs: "EPSG:4326", duration: 0});
         // unregister hook
@@ -268,59 +306,79 @@ describe('CesiumMap', () => {
     });
     it('should reorder the layer correctly even if the position property of layer exceed the imageryLayers length', () => {
 
-        let map = ReactDOM.render(
-            <CesiumMap id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                <CesiumLayer type="wms" position={6} options={{ url: '/wms', name: 'layer03' }} />
-            </CesiumMap>,
-            document.getElementById('container')
-        );
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
+                    <CesiumLayer type="wms" position={6} options={{ url: '/wms', name: 'layer03' }} />
+                </CesiumMap>,
+                document.getElementById('container')
+            );
+        });
 
-        expect(map).toBeTruthy();
-        expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-        expect(map.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 6]);
-        expect(map.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
+        expect(ref).toBeTruthy();
+        expect(ref.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 6]);
+        expect(ref.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
 
-        map = ReactDOM.render(
-            <CesiumMap id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03' }} />
-            </CesiumMap>,
-            document.getElementById('container')
-        );
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
+                    <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03' }} />
+                </CesiumMap>,
+                document.getElementById('container')
+            );
+        });
+        expect(ref.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 4]);
+        expect(ref.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
 
-        expect(map.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 4]);
-        expect(map.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
-
-        map = ReactDOM.render(
-            <CesiumMap id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03' }} />
-            </CesiumMap>,
-            document.getElementById('container')
-        );
-
-        expect(map.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 2, 3]);
-        expect(map.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer03', 'layer02' ]);
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
+                    <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03' }} />
+                </CesiumMap>,
+                document.getElementById('container')
+            );
+        });
+        expect(ref.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 2, 3]);
+        expect(ref.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer03', 'layer02' ]);
+    });
+    it('should add navigation tools to the map', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        navigationTools: true
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        expect(ref.map.cesiumNavigation).toBeTruthy();
+        expect(ref.map.cesiumNavigation.destroy).toBeTruthy();
     });
     describe("hookRegister", () => {
         it("default", () => {
-            const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-            expect(map).toExist();
-            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+            ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+            expect(document.querySelector('#mymap')).toBeTruthy();
             expect(getHook(ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
             expect(getHook(GET_PIXEL_FROM_COORDINATES_HOOK)).toBeFalsy();
             expect(getHook(GET_COORDINATES_FROM_PIXEL_HOOK)).toBeFalsy();
         });
         it("with custom hookRegister", () => {
             const customHooRegister = createRegisterHooks();
-            const map = ReactDOM.render(<CesiumMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-            expect(map).toExist();
-            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(customHooRegister.getHook(ZOOM_TO_EXTENT_HOOK)).toExist();
+            ReactDOM.render(<CesiumMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+            expect(document.querySelector('#mymap')).toBeTruthy();
+            expect(customHooRegister.getHook(ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
     });
 

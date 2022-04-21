@@ -11,6 +11,7 @@ import {normalizeSRS} from '../../../../utils/CoordinatesUtils';
 import L from 'leaflet';
 import assign from 'object-assign';
 import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import { creditsToAttribution } from '../../../../utils/LayersUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import WMTS from '../../../../utils/leaflet/WMTS';
 import { isArray } from 'lodash';
@@ -22,11 +23,13 @@ L.tileLayer.wmts = function(urls, options, matrixOptions) {
 
 function wmtsToLeafletOptions(options) {
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
+    const attribution = options.credits && creditsToAttribution(options.credits) || '';
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     return assign({
         requestEncoding: options.requestEncoding,
         layer: options.name,
         style: options.style || "",
+        attribution,
         // set image format to png if vector to avoid errors while switching between map type
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         tileMatrixSet: tileMatrixSet,
@@ -61,7 +64,8 @@ const createLayer = options => {
 
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
-    || oldOptions.format !== newOptions.format) {
+    || oldOptions.format !== newOptions.format
+    || oldOptions.credits !== newOptions.credits) {
         return createLayer(newOptions);
     }
     return null;

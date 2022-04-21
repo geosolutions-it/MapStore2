@@ -32,6 +32,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import TopoJSON from 'ol/format/TopoJSON';
 
 import { getStyle } from '../VectorStyle';
+import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
 const OL_VECTOR_FORMATS = {
     'application/vnd.mapbox-vector-tile': MVT,
@@ -118,6 +119,7 @@ const createLayer = options => {
         layer: options.name,
         version: options.version || "1.0.0",
         matrixSet: tileMatrixSetName,
+        ...(options.credits && {attributions: creditsToAttribution(options.credits)}),
         format,
         style: options.style || "",
         tileGrid: new WMTSTileGrid({
@@ -162,7 +164,8 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
-    || oldOptions.style !== newOptions.style) {
+    || oldOptions.style !== newOptions.style
+    || oldOptions.credits !== newOptions.credits) {
         return createLayer(newOptions);
     }
     if (oldOptions.minResolution !== newOptions.minResolution) {

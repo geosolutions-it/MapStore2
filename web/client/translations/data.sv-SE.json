@@ -293,15 +293,7 @@
             "Exempel": "Exempel",
             "LinkedinGroup": "Mapstore på Linkedin",
             "scrollTop": "Bläddra till toppen av sidan",
-            "footerDescription": "<strong> GeoSolutions </strong> <a href=\"mailto:sales@geosolutionsgroup.com\"> sales@geosolutionsgroup.com </a> <strong> US </strong> +1 (301 ) 337-7055 - <strong> Italien </strong>: +39 0584 962313 ",
-            "ml": {
-                "title": "Håll dig uppdaterad med våra E-postlistor",
-                "subscribe_users": "Prenumerera på E-postlista för användare",
-                "subscribe_devel": "Prenumerera på E-postlista för utvecklare",
-                "visit_group": "Besök den här gruppen",
-                "subscribe": "Prenumerera",
-                "email": "E-post:"
-            }
+            "footerDescription": "<strong> GeoSolutions </strong> <a href=\"mailto:sales@geosolutionsgroup.com\"> sales@geosolutionsgroup.com </a>"
         },
         "cookiesPolicyNotification": {
             "title": "Denna webbplats använder cookies",

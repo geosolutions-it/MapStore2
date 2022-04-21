@@ -7,52 +7,9 @@
  */
 
 import { Observable } from 'rxjs';
-import axios from '../../libs/ajax';
 import { isValidURLTemplate } from '../../utils/URLUtils';
-import { convertRadianToDegrees } from '../../utils/CoordinatesUtils';
 import { preprocess as commonPreprocess } from './common';
-
-function regionToBoundingBox(region) {
-    if (!region) {
-        return null;
-    }
-    // Latitudes and longitudes are in the WGS 84 datum as defined in EPSG 4979 and are in radians
-    // region [west, south, east, north, minimum height, maximum height]
-    const [west, south, east, north] = region;
-
-    return {
-        extent: [
-            convertRadianToDegrees(west),
-            convertRadianToDegrees(south),
-            convertRadianToDegrees(east),
-            convertRadianToDegrees(north)
-        ],
-        crs: 'EPSG:4326'
-    };
-}
-
-function getTitleFromUrl(url) {
-    const parts = url.split('/');
-    return parts[parts.length - 2];
-}
-
-const searchAndPaginate = (tileset, { url, text, info }) => {
-    const records = [{
-        // current specification does not define the title location
-        // but there is works related to the metadata in the next version of 3d tiles
-        // for the moment we set the name assigned to catalog service
-        // or we can extract the title from the url
-        title: info?.options?.service?.title || getTitleFromUrl(url),
-        url: url,
-        type: '3dtiles',
-        tileset
-    }].filter(({ title }) => !text || title?.toLowerCase().includes(text?.toLowerCase() || ''));
-    return {
-        numberOfRecordsMatched: records.length,
-        numberOfRecordsReturned: records.length,
-        records
-    };
-};
+import { getCapabilities } from '../ThreeDTiles';
 
 function validateUrl(serviceUrl) {
     if (isValidURLTemplate(serviceUrl)) {
@@ -65,31 +22,43 @@ function validateUrl(serviceUrl) {
     return false;
 }
 
-
 const recordToLayer = (record) => {
+    const { bbox, format, properties } = record;
     return {
         type: '3dtiles',
         url: record.url,
         title: record.title,
         visibility: true,
-        ...(record.boundingBox && {
-            bbox: {
-                crs: record.boundingBox.crs,
-                bounds: {
-                    minx: record.boundingBox.extent[0],
-                    miny: record.boundingBox.extent[1],
-                    maxx: record.boundingBox.extent[2],
-                    maxy: record.boundingBox.extent[3]
-                }
-            }
-        })
+        ...(bbox && { bbox }),
+        ...(format && { format }),
+        ...(properties && { properties })
     };
 };
 
+function getTitleFromUrl(url) {
+    const parts = url.split('/');
+    return parts[parts.length - 2];
+}
+
 const getRecords = (url, startPosition, maxRecords, text, info) => {
-    return axios.get(url)
-        .then(({ data }) => {
-            return searchAndPaginate(data, { startPosition, maxRecords, text, info, url });
+    return getCapabilities(url)
+        .then(({ tileset, ...properties }) => {
+            const records = [{
+                // current specification does not define the title location
+                // but there is works related to the metadata in the next version of 3d tiles
+                // for the moment we set the name assigned to catalog service
+                // or we can extract the title from the url
+                title: info?.options?.service?.title || getTitleFromUrl(url),
+                url: url,
+                type: '3dtiles',
+                tileset,
+                ...properties
+            }].filter(({ title }) => !text || title?.toLowerCase().includes(text?.toLowerCase() || ''));
+            return {
+                numberOfRecordsMatched: records.length,
+                numberOfRecordsReturned: records.length,
+                records
+            };
         });
 };
 
@@ -99,8 +68,7 @@ export const textSearch = (url, startPosition, maxRecords, text, info) => getRec
 export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
-            const version = record?.tileset?.assets?.version !== undefined ? record?.tileset?.assets?.version : '1.0'; // currently only 1.0
-            const boundingBox = regionToBoundingBox(record?.tileset?.root?.boundingVolume?.region);
+            const { version, bbox, format, properties } = record;
             return {
                 serviceType: '3dtiles',
                 isValid: true,
@@ -109,7 +77,9 @@ export const getCatalogRecords = (response) => {
                 identifier: record.url,
                 url: record.url,
                 thumbnail: null,
-                ...(boundingBox && { boundingBox }),
+                ...(bbox && { bbox }),
+                ...(format && { format }),
+                ...(properties && { properties }),
                 references: []
             };
         })

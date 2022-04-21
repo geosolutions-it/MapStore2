@@ -196,14 +196,6 @@
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "滚动到页面顶部",
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Keep in touch and stay up-to-date with the mailing lists",
-                "subscribe_users": "Subscribe Users Mailing List",
-                "subscribe_devel": "Subscribe Developers Mailing List",
-                "visit_group": "Visit this group",
-                "subscribe": "Subscribe",
-                "email": "Email:"
-            },
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Simple Viewer</p>"

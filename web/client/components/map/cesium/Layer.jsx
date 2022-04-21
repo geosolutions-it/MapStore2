@@ -196,7 +196,9 @@ class CesiumLayer extends React.Component {
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;
-            this.addLayer(newProps);
+            if (newProps.options.visibility) {
+                this.addLayer(newProps);
+            }
         }
     };
 

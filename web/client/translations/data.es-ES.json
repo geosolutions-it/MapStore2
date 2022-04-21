@@ -292,15 +292,7 @@
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Esté informado a la última sobre los cambios en el desrrollo via listas de correo",
-                "subscribe_users": "Suscribirse a las listas de correo de usuarios",
-                "subscribe_devel": "Suscribirse a las listas de correo de desarrolladores",
-                "visit_group": "Visite este grupo",
-                "subscribe": "Suscribir",
-                "email": "Correo:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "Este sitio usa cookies",
@@ -417,6 +409,7 @@
             "saveTitle": "Guardar el mapa",
             "saveText": "¿Guardar el mapa actual",
             "thumbnail": "Miniatura",
+            "mapDelete": "Eliminar el mapa",
             "message": "Soltar o pinchar para importar un imagen",
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",
@@ -425,6 +418,9 @@
             "error": "La imagen proporcionada no es válida",
             "savedMapTitle": "Mapa guardado",
             "savedMapMessage": "El mapa se ha guardado correctamente",
+            "renderingErrorTitle": "Error de procesamiento",
+            "renderingErrorMessage": "<p>La representación del mapa se detuvo y esto podría deberse a diferentes razones: </p><ul><li>El estilo aplicado contiene algunas reglas o variables que no son compatibles con las características</li>< li>La capa no está configurada correctamente</li></ul><p>Puede aplicar cambios al estilo de la capa y luego hacer clic en el botón 'Recargar mapa'. <br/> Consulte el mensaje a continuación para obtener información adicional:< /p>",
+            "reloadMap": "Recargar mapa",
             "thumbnailError": {
                 "error403": "Error al modificar la miniatura",
                 "error404": "Error al crear la miniatura",
@@ -1008,6 +1004,7 @@
                 "attribute_filter_header": "Filtro por atributo",
                 "tooltipTextField": "utiliza <b>*</b> para cualquier carácter</br>utiliza . para un solo carácter</br>utiliza <b>!</b> para caracteres especiales (* y .)</br>",
                 "tooltipTextFieldCSS": "utiliza <b>%</b> para cualquier carácter</br>utiliza <b>_</b> para un solo carácter</br>utiliza <b>\\</b> para caracteres especiales (% y _)</br>",
+                "tooltipTextField3DTiles": "use un valor compatible con la función <strong>regExp</strong> de la especificación de estilo de 3D tiles 1.0",
                 "groupField": {
                     "any": "alguna",
                     "all": "todas",
@@ -2305,7 +2302,9 @@
             "imageSrcNotSupportedBase64Image": "Algunos procesadores de estilo no admiten imágenes en base64 incluso si la fuente actual es válida",
             "imageFormatEmpty": "No se puede identificar el formato de la imagen. Seleccione el formato de imagen de los disponibles en el menú desplegable 'Formato'",
             "warningTextOrderTitle": "Advertencia",
-            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
+            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas",
+            "invalidProperty": "El tipo de propiedad { key } no es válido",
+            "notSupportedVariable": "La variable { key } no es compatible con el conjunto de fichas"
         },
         "playback": {
             "settings": {
@@ -2734,6 +2733,8 @@
         "backgroundDialog": {
             "addTitle": "Agregar nuevo fondo",
             "editTitle": "Editar fondo actual",
+            "editAttribution": "Atribución",
+            "editAttributionPlaceholder": "Introduce el texto de la atribución",
             "title": "Título",
             "titlePlaceholder": "Ingrese el nombre que se muestra",
             "add": "Añadir",
@@ -2791,6 +2792,10 @@
           "CRSSelector": {
             "description": "Permite cambiar la proyección del mapa",
             "title": "Selector de CRS"
+          },
+          "DeleteMap": {
+            "description": "Permite eliminar un recurso de mapa y todos sus recursos asociados",
+            "title": "Eliminar mapa"
           },
           "Details": {
             "description": "Permitir mostrar tarjeta de detalle para un mapa, si hay",

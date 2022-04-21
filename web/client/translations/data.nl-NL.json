@@ -277,14 +277,6 @@
             "LinkedinGroup": "Mapstore Linkedin groep",
             "scrollTop": "Terug naar boven",
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Blijf op de hoogte van de laatste ontwikkelingen via mailinglijsten",
-                "subscribe_users": "Abonneer u op de gebruikers mailinglijsten",
-                "subscribe_devel": "Abonneer je op de mailinglijsten van ontwikkelaars",
-                "visit_group": "Ga naar deze groep",
-                "subscribe": "Abonneren",
-                "email": "E-mail:"
-            },
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Eenvoudige viewer</p>"

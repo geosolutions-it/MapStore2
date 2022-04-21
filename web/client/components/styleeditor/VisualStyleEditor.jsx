@@ -92,7 +92,8 @@ function validateStyle(rules) {
     if (isStyleEmpty) {
         return {
             messageId: 'styleeditor.styleEmpty',
-            status: 400
+            status: 400,
+            isEmpty: true
         };
     }
     // find first rule with error
@@ -291,11 +292,11 @@ function VisualStyleEditor({
                         {
                             glyph: 'undo',
                             tooltipId: 'styleeditor.undoStyle',
-                            disabled: styleHistory?.past?.length === 0,
+                            disabled: (styleHistory?.past?.length || 0) === 0,
                             onClick: () => dispatch({ type: UNDO_STYLE })
                         },
                         {
-                            disabled: styleHistory?.future?.length === 0,
+                            disabled: (styleHistory?.future?.length || 0) === 0,
                             tooltipId: 'styleeditor.redoStyle',
                             glyph: 'redo',
                             onClick: () => dispatch({ type: REDO_STYLE })

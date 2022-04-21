@@ -10,7 +10,7 @@
         <ows:LowerCorner>12.718 45.542</ows:LowerCorner>
         <ows:UpperCorner>11.874 46.026</ows:UpperCorner>
       </ows:BoundingBox>
-      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name1" description="desc1">http://ows.domain.it:80/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name1" description="desc1">base/web/client/test-resources/csw/getCapability.xml</dc:URI>
       <dc:URI protocol="image/png" name="thumbnail">resources.get?id=187146&amp;fname=0171b07a-8cf1-4950-8a71-b01e6a6aee38_s.png&amp;access=public</dc:URI>
     </csw:Record>
     <csw:Record xmlns:geonet="http://www.fao.org/geonetwork" xmlns:ows="http://www.opengis.net/ows" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
@@ -23,7 +23,7 @@
         <ows:LowerCorner>12.429282000000002 45.760718</ows:LowerCorner>
         <ows:UpperCorner>12.002717999999996 46.187282</ows:UpperCorner>
       </ows:BoundingBox>
-      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name1" description="desc1">http://ows.domain.it:80/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="workspace:layer_name10" description="desc1">base/web/client/test-resources/csw/getCapability.xml</dc:URI>
       <dc:URI protocol="image/png" name="thumbnail">resources.get?id=187049&amp;fname=d698f693-6e7e-47a9-a138-918068d0b082_s.png&amp;access=public</dc:URI>
     </csw:Record>
     <csw:Record xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/">
