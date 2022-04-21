@@ -56,7 +56,7 @@ In particular:
 
 * **Url**: the URL of the remote source service
 
-* **Type**: the type of the remote source service (between *WMS*, *WFS*, *CSW*, *TMS* and *WMTS*)
+* **Type**: the type of the remote source service (between *WMS*, *WFS*, *CSW*, *TMS*, *WMTS* and *3D Tiles*)
 
 * **Title**: the title to assign to the catalog. This text will be used in the service selection dropdown menu for this service.
 
@@ -314,3 +314,11 @@ The other known services are listed as providers below "custom" and "TMS 1.0.0".
 
 <img src="../img/catalog/tms_known_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse the TMS variants</p>
+
+### 3D Tiles Catalog
+
+The 3D Tiles is a [Cesium OSM Building](https://www.ogc.org/standards) used to share, view and interact with 3D geospatial content on the internet.
+
+In **general settings of** 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
+
+<img src="../img/catalog/3dtiles_service.jpg" class="ms-docimage"  style="max-width:600px;"/>

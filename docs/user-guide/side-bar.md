@@ -39,6 +39,9 @@ The *3D navigation* in [MapStore](https://mapstore.geosolutionsgroup.com/mapstor
 
 <img src="../img/side-bar/3D-mode.jpg" class="ms-docimage"/>
 
+!!! note
+    The *3D navigation* support also the **3D Tiles** once is added to the *Catalog tool* as explained [here](catalog.md#3d-tiles-catalog).
+
 ## Identify Tool
 
 The *Identify* tool <img src="../img/button/identify.jpg" class="ms-docbutton"/> allows to retrieve information about layers on the map.

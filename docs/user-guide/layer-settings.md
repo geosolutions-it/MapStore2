@@ -248,6 +248,25 @@ The style editor can configure the *Icon* as explained [here](layer-settings.md#
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
+### Create a style for 3D Tiles
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) also allows creating a style fo [3D Tiles layer](catalog.md#3d-tiles-catalog). In this case, the style panel looks like this:
+
+<img src="../img/layer-settings/3dtiles-style-panel.jpg" class="ms-docimage">
+
+The user can **Add a fill rule** by clicking on <img src="../img/button/add_fill_button.jpg" class="ms-docbutton"/> button and customize the `Fill color`.
+
+<img src="../img/layer-settings/ex_3dtiles_style.gif" class="ms-docimage">
+
+Once the *Fill Rule* is added, the editor can:
+
+* **Filter** the style rule by clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button in order to apply the style only to certain layer features. 
+
+* **Remove** the symbolizer by clicking the <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/> button.
+
+!!!note
+    The style body object for the *3D Tiles* format accepts only the rules described in the [3D tiles styling specification version 1.0](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/maps-configuration.md#3d-tiles)
+
 ## Feature Info Form
 
 Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](side-bar.md#identify-tool):
