@@ -50,6 +50,7 @@ export default createPlugin('HelpLink', {
             name: 'helplink',
             position: 1100,
             tooltip: "docsTooltip",
+            text: <Message msgId="docs"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),
             selector: (state, ownProps) => {

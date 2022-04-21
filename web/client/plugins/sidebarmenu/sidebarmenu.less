@@ -1,15 +1,16 @@
 @toolbarWidth: 40px;
 
 
-#mapstore-sidebar-menu {
+#mapstore-sidebar-menu-container {
     z-index: 1060;
     position: absolute;
     background: inherit;
     right: 0;
     top: 0;
     width: @toolbarWidth;
+    height: 100%;
 
-    #mapstore-sidebar-menu-container {
+    #mapstore-sidebar-menu {
         position: absolute;
         top: 0;
         right: 0;
@@ -21,6 +22,10 @@
             border-bottom: 0;
             height: @toolbarWidth;
             width: @toolbarWidth;
+
+            span:not(.glyphicon) {
+                display: none;
+            }
         }
 
         .snapshot-panel {

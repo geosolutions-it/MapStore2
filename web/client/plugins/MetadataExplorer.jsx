@@ -318,6 +318,7 @@ export default {
                         onClick: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true)
                     })(SidebarElement),
                     tooltip: "catalog.tooltip",
+                    text: <Message msgId="catalog.title"/>,
                     icon: <Glyphicon glyph="folder-open"/>,
                     doNotHide: true
                 }

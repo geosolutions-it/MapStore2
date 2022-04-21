@@ -21,7 +21,6 @@ import { dashboardResource, getDashboardSaveErrors, isDashboardLoading, isShowSa
 import { isLoggedIn, userSelector } from '../selectors/security';
 import { widgetsConfig } from '../selectors/widgets';
 import { createPlugin } from '../utils/PluginsUtils';
-import SidebarElement from "../components/sidebarmenu/SidebarElement";
 
 /**
  * Save dialog component enhanced for dashboard
@@ -81,13 +80,9 @@ export const DashboardSave = createPlugin('DashboardSave', {
         SidebarMenu: {
             name: "dashboardSave",
             position: 30,
-            tool: connect(() => ({
-                bsStyle: 'text',
-                tooltipId: 'save',
-                icon: 'floppy-open'
-            }), {
-                onClick: triggerSave.bind(null, true)
-            })(SidebarElement),
+            text: <Message msgId="save"/>,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            action: triggerSave.bind(null, true),
             selector: createSelector(
                 isLoggedIn,
                 dashboardResource,
@@ -145,6 +140,7 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
         SidebarMenu: {
             name: "dashboardSaveAs",
             position: 31,
+            text: <Message msgId="saveAs"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: triggerSaveAs.bind(null, true),
             // always display on the BurgerMenu button if logged in

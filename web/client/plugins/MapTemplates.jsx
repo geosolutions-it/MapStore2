@@ -156,6 +156,7 @@ export default createPlugin('MapTemplates', {
         SidebarMenu: {
             name: 'mapTemplates',
             position: 998,
+            text: <Message msgId="mapTemplates.title" />,
             icon: <Glyphicon glyph="1-map" />,
             action: setControlProperty.bind(null, "mapTemplates", "enabled", true, true),
             toggle: true,

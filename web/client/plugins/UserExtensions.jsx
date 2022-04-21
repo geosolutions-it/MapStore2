@@ -114,6 +114,7 @@ export default createPlugin('UserExtensions', {
             position: 999,
             tooltip: "userExtensions.title",
             icon: <Glyphicon glyph="plug" />,
+            text: <Message msgId="userExtensions.title" />,
             action: setControlProperty.bind(null, "userExtensions", "enabled", true, true),
             priority: 2,
             doNotHide: true,

@@ -671,6 +671,7 @@ export default {
             name: "print",
             position: 3,
             tooltip: "printbutton",
+            text: <Message msgId="printbutton"/>,
             icon: <Glyphicon glyph="print"/>,
             action: toggleControl.bind(null, 'print', null),
             doNotHide: true,

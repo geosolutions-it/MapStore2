@@ -119,6 +119,7 @@ export const SharePlugin = assign(Share, {
         priority: 1,
         doNotHide: true,
         tooltip: "share.tooltip",
+        text: <Message msgId="share.title"/>,
         icon: <Glyphicon glyph="share-alt"/>,
         action: toggleControl.bind(null, 'share', null)
     },
@@ -130,7 +131,8 @@ export const SharePlugin = assign(Share, {
         doNotHide: true,
         tooltip: "share.title",
         icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
+        action: toggleControl.bind(null, 'share', "enabled", true, true),
+        toggle: true
     }
 });
 

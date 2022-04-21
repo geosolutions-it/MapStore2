@@ -89,6 +89,7 @@ export default createPlugin('DeleteMap', {
         SidebarMenu: {
             name: 'mapDelete',
             position: 36,
+            text: <Message msgId="map.mapDelete"/>,
             icon: <Glyphicon glyph="trash"/>,
             action: toggleControl.bind(null, 'mapDelete', null),
             tooltip: "manager.deleteMap",

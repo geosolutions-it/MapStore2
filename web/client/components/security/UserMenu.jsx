@@ -87,7 +87,8 @@ class UserMenu extends React.Component {
             useModal: false,
             closeGlyph: "1-close"
         }],
-        renderUnsavedMapChangesDialog: true
+        renderUnsavedMapChangesDialog: true,
+        renderButtonText: false
     };
 
     checkUnsavedChanges = () => {
@@ -176,7 +177,7 @@ class UserMenu extends React.Component {
     renderButtonText = () => {
 
         return this.props.renderButtonContent ?
-            this.props.renderButtonContent() :
+            this.props.renderButtonContent(this.props) :
             [<Glyphicon glyph="user" />, this.props.renderButtonText ? this.props.user && this.props.user[this.props.displayName] || "Guest" : null];
     };
 

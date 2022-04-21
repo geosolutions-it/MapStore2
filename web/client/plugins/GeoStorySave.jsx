@@ -108,6 +108,7 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
                 })
             ),
             position: 1,
+            text: <Message msgId="save" />,
             icon: <Glyphicon glyph="floppy-open" />,
             action: setControl.bind(null, Controls.SHOW_SAVE, "save"),
             priority: 1,
@@ -159,6 +160,7 @@ export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
                 })
             ),
             position: 2,
+            text: <Message msgId="saveAs" />,
             icon: <Glyphicon glyph="floppy-open" />,
             action: setControl.bind(null, Controls.SHOW_SAVE, "saveAs"),
             priority: 1,

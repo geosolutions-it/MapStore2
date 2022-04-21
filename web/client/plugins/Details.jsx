@@ -127,7 +127,8 @@ export default createPlugin('Details', {
         SidebarMenu: {
             name: "details",
             position: 4,
-            tooltip: "details.title",
+            text: <Message msgId="details.title"/>,
+            tooltip: "details.tooltip",
             alwaysVisible: true,
             icon: <Glyphicon glyph="sheet"/>,
             action: openDetailsPanel,

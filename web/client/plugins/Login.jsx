@@ -17,6 +17,7 @@ import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
 import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/index';
 import {connect} from "../utils/PluginsUtils";
+import {Glyphicon} from "react-bootstrap";
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -64,6 +65,7 @@ export default {
             name: "login",
             position: 3,
             tool: connect(() => ({
+                renderButtonContent: () => {return <Glyphicon glyph="user" />; },
                 bsStyle: 'primary'
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
@@ -74,7 +76,12 @@ export default {
             position: 2,
             tool: connect(() => ({
                 bsStyle: 'tray',
-                tooltipPosition: 'left'
+                tooltipPosition: 'left',
+                renderButtonContent: (props) => [<Glyphicon glyph="user" />, props.renderButtonText ? props.user && <span>props.user[props.displayName]</span> || <span>"Guest"</span> : null],
+                renderButtonText: true,
+                menuProps: {
+                    noCaret: true
+                }
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
             priority: 2

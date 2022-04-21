@@ -109,6 +109,7 @@ export default createPlugin('UserSession', {
             name: 'UserSession',
             position: 1500,
             icon: <Glyphicon glyph="trash" />,
+            text: <Message msgId="userSession.remove" />,
             action: toggleControl.bind(null, 'resetUserSession', null),
             tooltip: "userSession.tooltip",
             selector: (state) => {

@@ -81,7 +81,8 @@ export default {
             position: 1,
             tool: connect(() => ({
                 bsStyle: 'tray',
-                tooltipPosition: 'left'
+                tooltipPosition: 'left',
+                text: <Message msgId="gohome"/>
             }))(HomeConnected),
             priority: 4
         }

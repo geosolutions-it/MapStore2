@@ -58,6 +58,7 @@ export default createPlugin('Save', {
             name: 'save',
             position: 30,
             icon: <Glyphicon glyph="floppy-open"/>,
+            text: <Message msgId="save"/>,
             action: toggleControl.bind(null, 'mapSave', null),
             tooltip: "saveDialog.saveTooltip",
             // display the button only if the map can be edited

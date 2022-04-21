@@ -43,7 +43,7 @@ export const boundingMapRectSelector = (state) => state.maplayout && state.mapla
  * @param  {object} state the state
  * @return {object} boundingMapRect {left, top, bottom, right}
  */
-export const boundingSidebarRectSelector = (state) => state.maplayout && state.maplayout.boundingMapRect || {};
+export const boundingSidebarRectSelector = (state) => state.maplayout && state.maplayout.boundingSidebarRect || {};
 
 /**
  * Retrieve only specific attribute from map layout

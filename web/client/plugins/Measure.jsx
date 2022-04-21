@@ -136,6 +136,7 @@ export default {
             panel: false,
             help: <Message msgId="helptexts.measureComponent"/>,
             tooltip: "measureComponent.tooltip",
+            text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
             action: toggleControl.bind(null, 'measure', null),
             toggle: true,

@@ -98,6 +98,7 @@ export default {
             name: "import",
             position: 4,
             tooltip: "mapImport.tooltip",
+            text: <Message msgId="mapImport.title"/>,
             icon: <Glyphicon glyph="upload"/>,
             action: toggleControl.bind(null, 'mapimport', null),
             priority: 2,

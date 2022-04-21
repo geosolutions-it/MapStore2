@@ -8,6 +8,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import ContainerDimensions from 'react-container-dimensions';
 
 import {createPlugin} from "../utils/PluginsUtils";
 import {connect} from "react-redux";
@@ -20,6 +21,11 @@ import ToolsContainer from "./containers/ToolsContainer";
 import {createSelector} from "reselect";
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
 import {omit, pick} from "lodash";
+import {DropdownButton, Glyphicon, MenuItem} from "react-bootstrap";
+import tooltip from "../components/misc/enhancers/tooltip";
+import {bindActionCreators} from "redux";
+
+const TDropdownButton = tooltip(DropdownButton);
 
 class SidebarMenu extends React.Component {
     static propTypes = {
@@ -29,7 +35,9 @@ class SidebarMenu extends React.Component {
         id: PropTypes.string,
         mapType: PropTypes.string,
         onInit: PropTypes.func,
-        onDetach: PropTypes.func
+        onDetach: PropTypes.func,
+        sidebarWidth: PropTypes.number,
+        state: PropTypes.object
     };
 
     static contextTypes = {
@@ -49,13 +57,17 @@ class SidebarMenu extends React.Component {
         activeStyle: "primary",
         stateSelector: 'sidebarMenu',
         tool: SidebarElement,
-        toolCfg: {}
+        toolCfg: {},
+        sidebarWidth: 40
     };
 
     constructor() {
         super();
         this.defaultTool = SidebarElement;
         this.defaultTarget = 'sidebar';
+        this.state = {
+            lastActive: false
+        };
     }
 
     componentDidMount() {
@@ -88,11 +100,17 @@ class SidebarMenu extends React.Component {
             );
     };
 
-    getItems = (_target) => {
+    getItems = (_target, height) => {
+        const itemsToRender = Math.floor(height / this.props.sidebarWidth) - 1;
         const target = _target ? _target : this.defaultTarget;
         const targetMatch = (elementTarget) => elementTarget === target || !elementTarget && target === this.defaultTarget;
+        const isNotHidden = (element, state) => {
+            return element?.selector ? element.selector(state)?.style?.display !== 'none' : true;
+        };
         const filtered = this.props.items.reduce(( prev, current) => {
-            if (!current?.components && targetMatch(current.target)) {
+            if (!current?.components && targetMatch(current.target)
+                && isNotHidden(current, this.props.state)
+            ) {
                 prev.push({
                     ...current,
                     target
@@ -101,7 +119,9 @@ class SidebarMenu extends React.Component {
             }
             if (current?.components && Array.isArray(current.components)) {
                 current.components.forEach((component) => {
-                    if (targetMatch(component?.target)) {
+                    if (targetMatch(component?.target)
+                        && isNotHidden(component?.selector ? component : current, this.props.state)
+                    ) {
                         prev.push({
                             plugin: current?.plugin || this.defaultTool,
                             position: current?.position,
@@ -117,49 +137,80 @@ class SidebarMenu extends React.Component {
             }
             return prev;
         }, []);
+
+        if (itemsToRender < filtered.length) {
+            const toRender = filtered.sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0)).slice(0, itemsToRender);
+            const extra = {
+                name: "moreItems",
+                position: 9999,
+                icon: <Glyphicon glyph="option-horizontal" />,
+                tool: () => this.renderExtraItems(filtered.slice(itemsToRender)),
+                tooltip: 'Show Extras',
+                priority: 1
+            };
+            toRender.splice(itemsToRender, 0, extra);
+            return toRender;
+        }
+
         return filtered.sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
     };
 
-    getTools = (namespace = 'sidebar') => {
-        return this.getItems(namespace).sort((a, b) => a.position - b.position);
+    getTools = (namespace = 'sidebar', height) => {
+        return this.getItems(namespace, height).sort((a, b) => a.position - b.position);
+    };
+
+    renderExtraItems = (items) => {
+        const menuItems = items.map((item) => {
+            const ConnectedItem = connect(() => ({}),
+                (dispatch, ownProps) => ({
+                    onClick: bindActionCreators(ownProps.action, dispatch)
+                }))(MenuItem);
+            return <ConnectedItem action={item.action}>{item?.icon}{item?.text}</ConnectedItem>;
+        });
+        return (
+            <TDropdownButton
+                dropup
+                pullRight
+                bsStyle="tray"
+                id="extra-items"
+                tooltip="Show Extras"
+                tooltipPosition="left"
+                title={<Glyphicon glyph="option-horizontal" />}
+            >
+                {menuItems}
+            </TDropdownButton>);
     };
 
 
     render() {
         return (
-            <>
-                <ToolsContainer id={this.props.id}
-                    containerWrapperStyle={this.getStyle()}
-                    className={this.props.className}
-                    mapType={this.props.mapType}
-                    container={(props) => <div {...props}>{props.children}</div>}
-                    toolStyle="tray"
-                    activeStyle="primary"
-                    stateSelector="sidebarMenu"
-                    tool={SidebarElement}
-                    tools={this.getTools()}
-                    panels={[]}
-                />
-                <ToolsContainer id="sidebar-panel"
-                    style={this.getStyle(false)}
-                    containerWrapperStyle={this.getStyle()}
-                    mapType={this.props.mapType}
-                    container={(props) => <div {...props}>{props.children}</div>}
-                    toolStyle="tray"
-                    activeStyle="primary"
-                    stateSelector="sidebarMenu"
-                    tools={this.getTools('panel')}
-                    panels={this.getPanels(this.props.items)}
-                />
-            </>
+            <div id="mapstore-sidebar-menu-container" style={this.props.style}>
+                <ContainerDimensions>
+                    { ({ height }) =>
+                        <ToolsContainer id={this.props.id}
+                            className={this.props.className}
+                            mapType={this.props.mapType}
+                            container={(props) => <>{props.children}</>}
+                            toolStyle="tray"
+                            activeStyle="primary"
+                            stateSelector="sidebarMenu"
+                            tool={SidebarElement}
+                            tools={this.getTools('sidebar', height)}
+                            panels={[]}
+                        /> }
+                </ContainerDimensions>
+            </div>
+
         );
     }
 }
 
 const sidebarMenuSelector = createSelector([
+    state => state,
     state => mapLayoutValuesSelector(state, {bottom: true, height: true})
-], (style) => ({
-    style
+], (state, style) => ({
+    style,
+    state
 }));
 
 /**
@@ -173,6 +224,7 @@ const sidebarMenuSelector = createSelector([
 export default createPlugin(
     'SidebarMenu',
     {
+        cfg: {},
         component: connect(sidebarMenuSelector, {
             onInit: setControlProperty.bind(null, 'sidebarMenu', 'enabled', true),
             onDetach: setControlProperty.bind(null, 'sidebarMenu', 'enabled', false)

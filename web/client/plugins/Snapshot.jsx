@@ -88,6 +88,7 @@ export default {
             name: 'snapshot',
             position: 3,
             panel: SnapshotPanel,
+            text: <Message msgId="snapshot.title"/>,
             icon: <Glyphicon glyph="camera"/>,
             tooltip: "snapshot.tooltip",
             action: toggleControl.bind(null, 'snapshot', null),
