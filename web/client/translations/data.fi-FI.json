@@ -92,6 +92,7 @@
       "templateFormatInfoAlert2": "Käytä ${ attribute } kääriäksesi näytettävät ominaisuudet",
       "templateFormatInfoAlertExample": "Kohteen ID on ${ properties }",
       "templatePreview": "Mallin esikatselu",
+      "heightOffset": "Height offset (m)",
       "tooltip": {
         "label": "Työkaluvinkkejä",
         "title": "Otsikko",
@@ -1085,7 +1086,15 @@
       "addBboxParam": "Lisää bbox-parametrit jakamislinkkiin",
       "wrongBboxParamTitle": "virheellinen bbox-parametri",
       "wrongBboxParamMessage": "bbox-parametrien on oltava EPSG: 4326: ssa ja kirjoitettu bbox = minx, miny, maxx, maxy",
-      "showHomeButton": "Linkki MapStoren sivuille"
+      "showHomeButton": "Linkki MapStoren sivuille",
+      "zoom": "Zoomaus",
+      "heading": "Suuntakulma",
+      "roll": "Rullauskulma",
+      "pitch": "Nousukulma",
+      "zoomToolTip": "Min: 0 ja Max: 35",
+      "headingToolTip": "Min: 0° ja Max: 360°",
+      "rollToolTip": "Min: -90° ja Max: 90°",
+      "pitchToolTip": "Min: -90° ja Max: 90°"
     },
     "snapshot": {
       "title": "Kuvan esikatselu",

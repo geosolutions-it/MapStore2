@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "The id of the feature is <span style='white-space:nowrap'>${ properties.id }</span> or <span style='white-space:nowrap'>${ properties['data-value'] }</span>",
             "templateError": "There was an error applying the template to the information returned by the server, please check the template",
             "templatePreview": "Template preview",
+            "heightOffset": "Height offset (m)",
             "visibilityLimits": {
                 "title": "Visibility limits",
                 "serverValuesUpdateUndefined": "The server did not provided scale visibility limits for this layer",
@@ -425,6 +426,9 @@
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
             "savedMapMessage": "Map has been saved correctly.",
+            "renderingErrorTitle": "Rendering error",
+            "renderingErrorMessage": "<p>The map rendering has stopped and this could be due for different reasons: </p><ul><li>The applied style contains some rules or variables not supported by the features</li><li>The layer is not properly configured</li></ul><p>You can apply changes to the layer style and then click on 'Reload map' button. <br/> See the message below for addition information:</p>",
+            "reloadMap": "Reload map",
             "thumbnailError": {
                 "error403": "You are not allowed to update the thumbnail",
                 "error404": "An error occurred while creating the thumbnail",
@@ -1283,6 +1287,9 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Click on map to grab the coordinates",
             "zoomToolTip": "Min: 1 and Max: 35",
+            "headingToolTip": "Min: 0° and Max: 360°",
+            "rollToolTip": "Min: 0° and Max: 360°",
+            "pitchToolTip": "Min: -90° and Max: 90°",
             "wrongCenterAndZoomParamTitle": "Invalid center and zoom param",
             "wrongCenterAndZoomParamMessage": "Center and Zoom param must be center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "wrongMarkerAndZoomParamTitle": "Invalid marker and zoom param",
@@ -1294,6 +1301,9 @@
             "showHomeButton": "Link to MapStore home",
             "showSectionId": "Include scroll position",
             "showConnections": "Show connections",
+            "heading": "Heading",
+            "roll": "Roll",
+            "pitch": "Pitch",
             "sizeOptions": {
                 "width": "width",
                 "height": "height"
@@ -1673,7 +1683,16 @@
                 "syncOnMap": "Sync map with filter",
                 "enableTimeSync": "Synchronize with the selected time or time interval",
                 "disableTimeSync": "Do not synchronize with the selected time or interval",
-                "createNewChart": "Create a chart for the selected layer"
+                "enableSnapping": "Activate snapping",
+                "disableSnapping": "Deactivate snapping",
+                "snapToLayer": "Snap to the layer",
+                "snappingSettings": {
+                  "header": "Settings",
+                  "vertex": "Vertex",
+                  "edge": "Edge",
+                  "pixelTolerance": "Tolerance (pixel)",
+                  "loadingStrategy": "Loading strategy"
+                }
             }
         },
         "layerdownload": {
@@ -1813,11 +1832,17 @@
                         "customLabels": "Custom Labels",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> can be used as placeholder for the Y Attribute.</p><p></p><h5>Example</h5><dl><dt><b>Y Attribute:</b></dt><dd>POPULATION</dd><dt><b>Class Label:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Result:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> can be used as placeholder for the Group By Attribute.</p><p>legend items with the same text content will be grouped in the chart.</p><h5>Example</h5><dl><dt><b>Attribute:</b></dt><dd>POPULATION</dd><dt><b>Class Label:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Result:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> can be used as placeholder for the Group By Attribute.</p><p>legend items with the same text content will be grouped in the chart.</p><h5>Example</h5><dl><dt><b>Attribute:</b></dt><dd>POPULATION</dd><dt><b>Class Label:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Result:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> can be used as placeholder for the Group By Attribute.</p><p><code>${legendValue}</code> can be used as placeholder for the Y Attribute.</p><p><code>${minValue}</code> can be used as placeholder for class Min Value.</p><p><code>${maxValue}</code> can be used as placeholder for class Max Value.</p><p>legend items with the same text content will be grouped in the chart.</p><h5>Example</h5><dl><dt><b>Group By Attribute:</b></dt><dd>POPULATION</dd><dt><b>Y Attribute:</b></dt><dd>LAND_KM</dd><dt><b>Min Value:</b></dt><dd>0</dd><dt><b>Max Value:</b></dt><dd>10000</dd><dt><b>Class Label:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Result:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> can be used as placeholder for the Y Attribute.</p><p></p><h5>Example</h5><dl><dt><b>Y Attribute:</b></dt><dd>POPULATION</dd><dt><b>Class Label:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Result:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code> can be used as placeholder for class Min Value.</p><p><code>${maxValue}</code> can be used as placeholder for class Max Value.</p><p><code>${legendValue}</code> can be used as placeholder for the Y Attribute.</p><p>legend items with the same text content will be grouped in the chart.</p><h5>Example</h5><dl><dt><b>Attribute:</b></dt><dd>POPULATION</dd><dt><b>Class Label:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Result:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "defaultClassLabel": "Default Class Label",
                         "defaultColorRamp": "Default Color Ramp",
                         "defaultColor": "Default Color",
                         "defaultCustomLabel": "Default Label",
                         "editCustomColors": "Edit Custom Colors",
+                        "maxValue": "Max Value",
+                        "minValue": "Min Value",
                         "title": "Custom Colors Settings"
                     }
                 },
@@ -2294,7 +2319,9 @@
             "imageSrcNotSupportedBase64Image": "Some style renderer does not support base64 images even if the current source is valid",
             "imageFormatEmpty": "The image format cannot be identified. Please select the image format from the available ones in the 'Format' dropdown",
             "warningTextOrderTitle": "Warning",
-            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules",
+            "invalidProperty": "The { key } property type is invalid",
+            "notSupportedVariable": "The variable { key } is not supported by the tileset"
         },
         "playback": {
             "settings": {
@@ -2724,6 +2751,8 @@
         "backgroundDialog": {
             "addTitle": "Add New Background",
             "editTitle": "Edit Current Background",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Enter Attribution Text",
             "title": "Title",
             "titlePlaceholder": "Enter displayed name",
             "add": "Add",

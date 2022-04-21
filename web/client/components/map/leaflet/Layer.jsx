@@ -185,7 +185,9 @@ class LeafletLayer extends React.Component {
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;
-            this.addLayer();
+            if (newProps.options.visibility) {
+                this.addLayer();
+            }
             this.updateZIndex(newProps.position);
         }
     };

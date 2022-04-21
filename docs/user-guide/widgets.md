@@ -57,10 +57,101 @@ Just below the chart's preview, the following configurations are available:
 
 !!! Note
     The *No operation* option is used when the aggregation method is not needed for the chart. If *No Operation* is selected, no aggregation will be carried out for the chart and the WFS service will be used to generate the chart without using the WPS process `gs:Aggregate` in GeoServer.
-
-* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*)
-
+    
+    
 * Enable the chart's legend by activating **Display Legend**
+
+* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*) or choose to **Customize the color**. 
+
+#### Color customization
+
+For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. From the **Color** option dropdown menu, the user can select the *Custom* option and open the **Custom Colors Settings** modal through the <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> button.
+
+<img src="../img/widgets/custom_colors_settings.jpg" class="ms-docimage"/> 
+
+Inside this modal, the user is allowed to:
+
+* Change the default **Color** of bars or slices (depending on the chart type) through the *Color Picker*. This color will be applied for all values for which a *Class Color* has not been configured.
+
+<img src="../img/widgets/custom_colors.gif" class="ms-docimage"/> 
+
+* Select an *Attribute* in the dropdown list as a **Classification attribute**.
+
+<img src="../img/widgets/classification-attribute.gif" class="ms-docimage"/> 
+
+Once the attribute is chosen, new options appear in the *Custom Color Settings* panel that allow the user to:
+
+* Enter a **Default Class Label** to be used in the legend for all values that will not be specifically classified in the following list.
+
+<img src="../img/widgets/default_class_label.jpg" class="ms-docimage"/> 
+
+!!! Note
+    For both *Default Class Label* and  *Class Label* '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
+
+* Classify *Classification Attribute* values to assign a specific color in the chart along with its *Class Label* to use for the chart legend. Only values of type **String** or **Number** are currently supported.
+
+#### Classification Attribute of type String
+
+When the values of a classification attribute are of type String, the user can:
+
+<img src="../img/widgets/alphanumeric.jpg" class="ms-docimage"/> 
+
+* Choose the **Class Color** through the *Color Picker*.
+
+* Choose the value of the *Classification attribute* through the dropdown menu **Class Value** 
+
+* Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
+
+!!! Note
+    For *Class Label*,  '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
+
+An example of *Bar charts* corresponding to this type of classification can be the following:
+
+<img src="../img/widgets/color-customization-alhanumeric-attribute.gif" class="ms-docimage"/> 
+
+Through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button the user can add new values before through the <img src="../img/widgets/add-new-entry-before.jpg" class="ms-docimage"/> button or after through <img src="../img/widgets/add-new-entry-after.jpg" class="ms-docimage"/> button. 
+
+#### Classification Attribute of type Number
+
+When the values of a classification attribute are numbers, the user can configure a color ramp and so:
+
+<img src="../img/widgets/numeric.jpg" class="ms-docimage" style="max-width:450px;"/> 
+
+* Choose the **Class Color** through the *Color Picker*
+
+* Choose the **Min value** of the *Classification attribute*
+
+* Choose the **Max value** of the *Classification attribute*
+
+* Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
+
+!!! Note
+    For *Class Label* two placeholders can be used in this case: ${minValue}, can be used as a placeholder for **Min Value** and  ${maxValue}, can be used as a placeholder for Max Value; the ${legendValue} can be used in the same way as specified above.
+
+An example of Bar chart corresponding to this type of classification can be the following:
+
+<img src="../img/widgets/color-customization-numeric-attribute.gif" class="ms-docimage"/> 
+
+#### Bar Chart Type
+
+If the *Classification attribute* is added to the *Bar Chart*, in the [Advanced Options](widgets.md#advanced-options),  the **Bar Chart Type** option is displayed.
+
+<img src="../img/widgets/bar_type.jpg" class="ms-docimage"/> 
+
+The user can customize the bars by choosing between:
+
+* **Grouped**. An example can be the following:
+
+<img src="../img/widgets/grouped_chart.jpg" class="ms-docimage" style="max-width:450px;"/> 
+
+* **Stacked**. An example can be the following:
+
+<img src="../img/widgets/stacked-chart.jpg" class="ms-docimage" style="max-width:450px;"/> 
+
+!!! Note
+    By default, the bar chart type is **Stacked**
+
+#### Advanced Options
 
 In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
 

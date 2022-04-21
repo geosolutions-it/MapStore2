@@ -93,6 +93,7 @@
             "templateFormatInfoAlert2": "Use ${ attribute } para identificar as propriedades que necessita visualizar",
             "templateFormatInfoAlertExample": "O id do tema é ${ properties }",
             "templatePreview": "Preview do Template",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -1042,7 +1043,15 @@
             "advancedOptions": "Advanced Options",
             "addBboxParam": "Add bbox param to sharing link",
             "wrongBboxParamTitle": "Invalid bbox param",
-            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
+            "zoom": "Ampliação",
+            "heading": "Ângulo de direção",
+            "roll": "Ângulo de rolamento",
+            "pitch": "Ângulo de inclinação",
+            "zoomToolTip": "Min: 0 e Max: 35",
+            "headingToolTip": "Min: 0° e Max: 360°",
+            "rollToolTip": "Min: -90° e Max: 90°",
+            "pitchToolTip": "Min: -90° e Max: 90°"
         },
         "snapshot": {
             "title": "Snapshot Preview",

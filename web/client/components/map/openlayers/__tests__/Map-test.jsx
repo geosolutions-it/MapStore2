@@ -371,9 +371,13 @@ describe('OpenlayersMap', () => {
                             getFirstCoordinate: () => [10.3, 43.9],
                             getType: () => {
                                 return 'Polygon';
-                            }
+                            },
+                            getCoordinates: () => []
                         };
-                    }
+                    },
+                    getGeometryName: () => '',
+                    getProperties: () => ({}),
+                    getId: () => ''
                 }, {
                     get: (key) => key === "handleClickOnLayer" ? false : "ID"
                 });
@@ -411,9 +415,13 @@ describe('OpenlayersMap', () => {
                             getFirstCoordinate: () => [10.3, 43.9], // this makes sense only for points, maybe centroid is more appropriate
                             getType: () => {
                                 return 'Polygon';
-                            }
+                            },
+                            getCoordinates: () => []
                         };
-                    }
+                    },
+                    getGeometryName: () => '',
+                    getProperties: () => ({}),
+                    getId: () => ''
                 }, {
                     get: (key) => key === "handleClickOnLayer" ? true : "ID"
                 });
@@ -452,9 +460,13 @@ describe('OpenlayersMap', () => {
                             getFirstCoordinate: () => [43.0, 10], // this makes sense only for points, maybe centroid is more appropriate
                             getType: () => {
                                 return 'Point';
-                            }
+                            },
+                            getCoordinates: () => []
                         };
-                    }
+                    },
+                    getGeometryName: () => '',
+                    getProperties: () => ({}),
+                    getId: () => ''
                 }, {
                     get: (key) => key === "handleClickOnLayer" ? true : "ID"
                 });
@@ -472,6 +484,62 @@ describe('OpenlayersMap', () => {
             // also layer id is passed (e.g. used as flag for hide GFI marker)
             expect(spy.calls[0].arguments[1]).toBe("ID");
 
+            done();
+        }, 500);
+    });
+
+    it('click on layer should return intersected features', (done) => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const comp = (<OpenlayersMap projection="EPSG:4326" center={{ y: 43.9, x: 10.3 }} zoom={11}
+            onClick={testHandlers.handler} />);
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        setTimeout(() => {
+            map.map.forEachFeatureAtPixel = (pixel, callback) => {
+                callback.call(null, {
+                    feature: new Feature({
+                        geometry: new Point([43.0, 10]),
+                        name: 'My Point'
+                    }),
+                    getGeometry: () => {
+                        return {
+                            getFirstCoordinate: () => [43.0, 10],
+                            getType: () => {
+                                return 'Point';
+                            },
+                            getCoordinates: () => [43.0, 10]
+                        };
+                    },
+                    getGeometryName: () => 'Point',
+                    getProperties: () => ({}),
+                    getId: () => ''
+                }, {
+                    get: (key) => key === "msId" ? "ID" : false
+                });
+            };
+            map.map.dispatchEvent({
+                type: 'singleclick',
+                coordinate: [43.3, 10.3],
+                pixel: map.map.getPixelFromCoordinate([0.5, 0.5]),
+                originalEvent: {}
+            });
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments[0].intersectedFeatures).toEqual([
+                {
+                    id: 'ID',
+                    features: [
+                        {
+                            type: 'Feature',
+                            geometry: { type: 'Point', coordinates: [43.0, 10] },
+                            properties: null,
+                            id: ''
+                        }
+                    ]
+                }
+            ]);
             done();
         }, 500);
     });
@@ -944,6 +1012,44 @@ describe('OpenlayersMap', () => {
         document.body.removeChild(attributions[0]);
         attributions = document.body.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(0);
+    });
+    it('WMTS layer with custom attribution', () => {
+        const options = {
+            format: 'image/png',
+            group: 'background',
+            name: 'nurc:Arc_Sample',
+            description: "arcGridSample",
+            attribution: "<p>This is some Attribution <b>TEXT</b></p>",
+            title: "arcGridSample",
+            type: 'wmts',
+            url: "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+            bbox: {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -180.0,
+                    miny: -90.0,
+                    maxx: 180.0,
+                    maxy: 90.0
+                }
+            },
+            visibility: true,
+            singleTile: false,
+            allowedSRS: {
+                "EPSG:4326": true,
+                "EPSG:900913": true
+            },
+            matrixIds: {},
+            tileMatrixSet: []
+        };
+        const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
+            <OpenlayersLayer type="wmts" options={options} />
+        </OpenlayersMap>, document.getElementById("map"));
+        expect(map).toExist();
+        const domMap = document.getElementById('map');
+        const attributions = domMap.getElementsByClassName('ol-attribution');
+        const attributionsButton = attributions[0].getElementsByTagName('button')[0];
+        expect(attributions).toExist();
+        expect(attributionsButton).toExist();
     });
     it('test getResolutions default', () => {
         const maxResolution = 2 * 20037508.34;

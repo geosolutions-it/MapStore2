@@ -1,14 +1,18 @@
 import React from 'react';
 import './toolbar.css';
 import { sortBy } from 'lodash';
-import { ButtonGroup, Checkbox, Glyphicon } from 'react-bootstrap';
+import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col} from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
 import withHint from '../enhancers/withHint';
 import TButtonComp from "./TButton";
 import { getApi } from '../../../../api/userPersistedStorage';
+import TSplitButtonComp from "./TSplitButton";
+import Spinner from "react-spinkit";
+import Select from "react-select";
 
 const TButton = withHint(TButtonComp);
+const TSplitButton = withHint(TSplitButtonComp);
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     if (isDrawing) {
         return "featuregrid.toolbar.stopDrawGeom";
@@ -163,7 +167,91 @@ const standardButtons = {
         visible={showTimeSyncButton}
         active={timeSync}
         onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
-        glyph="time" />)
+        glyph="time" />),
+    snapToFeature: ({snapping, availableSnappingLayers = [], isSnappingLoading, snappingConfig, mode, mapType, editorHeight, pluginCfg, events = {}}) => (<TSplitButton
+        id="snap-button"
+        keyProp="snap-button"
+        tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
+        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === 'openlayers'}
+        onClick={() => {
+            events.toggleSnapping && events.toggleSnapping(!snapping);
+        }}
+        onMount={() => !snappingConfig && events.setSnappingConfig && events.setSnappingConfig(null, null, pluginCfg)}
+        title={isSnappingLoading ? <Spinner spinnerName="ball-beat" overrideSpinnerClassName="spinner" key="loadingSpinner" noFadeIn /> : <Glyphicon glyph="magnet" />}
+        tooltipPosition="top"
+        className="snap-tool"
+        buttonClassName="square-button-md no-border"
+        menuStyle={{maxHeight: `calc(${Math.round(editorHeight * 100)}vh - 50px)`, overflowY: 'auto'}}
+        active={!!snapping}
+        pullLeft
+    >
+        <>
+            <label className="control-label"><Message msgId="featuregrid.toolbar.snapToLayer"/></label>
+            <Select
+                clearable={false}
+                escapeClearsValue={false}
+                options={availableSnappingLayers}
+                onChange={option => events.setSnappingLayer(option.value)}
+                value = {
+                    availableSnappingLayers.find(option => option.active)
+                }
+            />
+        </>
+        <label className="control-label"><Message msgId="featuregrid.toolbar.snappingSettings.header"/></label>
+        <FormGroup>
+            <Col xs={6}>
+                <Checkbox
+                    key="edge"
+                    checked={(snappingConfig?.edge ?? pluginCfg?.snapConfig?.edge) ?? true}
+                    inline
+                    onChange={(e) => events.setSnappingConfig(e.target.checked, 'edge', pluginCfg)}
+                >
+                    <Message msgId="featuregrid.toolbar.snappingSettings.edge"/>
+                </Checkbox>
+            </Col>
+            <Col xs={6}>
+                <Checkbox
+                    key="vertex"
+                    checked={(snappingConfig?.vertex ?? pluginCfg?.snapConfig?.vertex) ?? true}
+                    inline
+                    onChange={(e) => events.setSnappingConfig(e.target.checked, 'vertex', pluginCfg)}
+                >
+                    <Message msgId="featuregrid.toolbar.snappingSettings.vertex"/>
+                </Checkbox>
+            </Col>
+            <span className="clearfix" />
+        </FormGroup>
+        <FormGroup>
+            <Col xs={7}>
+                <span className="inline-control-label"><Message msgId="featuregrid.toolbar.snappingSettings.pixelTolerance"/></span>
+            </Col>
+            <Col xs={5}>
+                <FormControl
+                    key="pixelTolerance"
+                    type="number"
+                    onChange={(e) => events.setSnappingConfig(e.target.value, 'pixelTolerance', pluginCfg)}
+                    defaultValue={snappingConfig?.pixelTolerance ?? pluginCfg?.snapConfig?.pixelTolerance ?? 10}
+                />
+            </Col>
+            <span className="clearfix" />
+        </FormGroup>
+        <FormGroup>
+            <Col xs={7}>
+                <span className="inline-control-label"><Message msgId="featuregrid.toolbar.snappingSettings.loadingStrategy"/></span>
+            </Col>
+            <Col xs={5}>
+                <FormControl
+                    componentClass="select"
+                    defaultValue={snappingConfig?.strategy ?? pluginCfg?.snapConfig?.strategy ?? 'bbox'}
+                    onChange={(e) => events.setSnappingConfig(e.target.value, 'strategy', pluginCfg)}
+                >
+                    <option value="bbox">bbox</option>
+                    <option value="all">all</option>
+                </FormControl>
+            </Col>
+            <span className="clearfix" />
+        </FormGroup>
+    </TSplitButton>)
 };
 
 // standard buttons with position set to index in this array. shape {name, Component, position} is aligned with attributes expected from tools injected.
@@ -179,9 +267,10 @@ const buttons = [
     {name: "filter", Component: standardButtons.filter}, // GRID (needs query panel plugin)
     {name: "zoomAll", Component: standardButtons.zoomAll}, // GRID (should remove or hide? Is always disabled and not to much useful)
     {name: "gridSettings", position: 900, Component: standardButtons.gridSettings}, // GRID. (settings buttons are usually near the end of a toolbar)
+    {name: "snap", position: 1300, Component: standardButtons.snapToFeature}, // GRID. (settings buttons are usually near the end of a toolbar)
     // note: `syncGridFilterToMap` needs to stay at the end of the toolbar because of a bug. The tooltip active forces this button to be at the end (see #7271)
     // so to avoid a replacement after the button closes, we need to put it at the end, until the bug is solved.
-    {name: "syncGridFilterToMap", position: 1000, Component: standardButtons.syncGridFilterToMap}, // GRID
+    {name: "syncGridFilterToMap", position: 1100, Component: standardButtons.syncGridFilterToMap}, // GRID
     {name: "syncTimeParameter", Component: standardButtons.syncTimeParameter} // GRID (generic functionality not mandatory related to timeline)
 ].map(({position, ...rest}, index) => ({
     ...rest,

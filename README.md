@@ -181,6 +181,8 @@ Here below is a small list of organizations using MapStore either directly or th
 * [Unesco IHP Wins - France / UN](http://ihp-wins.unesco.org/#/), this is based on GeoNode
 * [Atlas Horizon 2020](http://www.atlas-horizon2020.eu/), this is based on GeoNode
 * [Whanganui District Council - New Zealand](https://data.whanganui.govt.nz/mapstore2-whanganuidc/#/)
+* [Otorohanga District Council - New Zealand](https://maps.otodc.govt.nz)
+* [Wairoa District Council - New Zealand](https://maps.wairoadc.govt.nz/#/)
 * Cleveland Metroparks - USA
 * Minerva - Canada
 * [Moldova National GeoPortal](http://www.moldova-map.md/)

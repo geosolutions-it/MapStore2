@@ -110,7 +110,7 @@ describe('VisualStyleEditor', () => {
                 debounceTime={DEBOUNCE_TIME}
                 onError={(error) => {
                     try {
-                        expect(error).toEqual({ messageId: 'styleeditor.styleEmpty', status: 400 });
+                        expect(error).toEqual({ messageId: 'styleeditor.styleEmpty', status: 400, isEmpty: true });
                     } catch (e) {
                         done(e);
                     }
@@ -126,12 +126,11 @@ describe('VisualStyleEditor', () => {
                 expect([...buttonNodes].map(node => node.children[0].getAttribute('class'))).toEqual([
                     'glyphicon glyphicon-undo',
                     'glyphicon glyphicon-redo',
-                    'glyphicon glyphicon-1-ruler',
                     'glyphicon glyphicon-trash',
                     'glyphicon glyphicon-option-vertical'
                 ]);
                 act(() => {
-                    Simulate.click(buttonNodes[3]);
+                    Simulate.click(buttonNodes[2]);
                 });
             } catch (e) {
                 done(e);
@@ -273,5 +272,19 @@ describe('VisualStyleEditor', () => {
                 }}
             />, document.getElementById('container'));
         });
+    });
+    it('should disable undo and redo when history is empty', () => {
+        ReactDOM.render(<VisualStyleEditor
+            format="3dtiles"
+            code={{
+                color: 'color(\'#ff0000\')'
+            }}
+            defaultStyleJSON={null}
+        />, document.getElementById('container'));
+        const disabledButtons = document.querySelectorAll('.disabled');
+        expect([...disabledButtons].map(node => node.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-undo',
+            'glyphicon glyphicon-redo'
+        ]);
     });
 });

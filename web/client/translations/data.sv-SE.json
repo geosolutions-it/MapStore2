@@ -108,6 +108,7 @@
             "templateFormatInfoAlertExample": "Objektets id är <span style = 'white-space: nowrap'> $ {properties.id} </span> eller <span style = 'white-space: nowrap'> $ {properties [ 'data-value']} </span> ",
             "templateError": "Det uppstod ett fel när mallen skulle tillämpas på den information som servern returnerade. Kontrollera mallen",
             "templatePreview": "Förhandsvisning av mall",
+            "heightOffset": "Height offset (m)",
             "visibilityLimits": {
                 "title": "Synlighetsgränser",
                 "serverValuesUpdateUndefined": "Servern angav inga synlighetsgränser för detta lager",
@@ -1260,6 +1261,9 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Klicka på kartan för att ta koordinaterna",
             "zoomToolTip": "Min: 1 och Max: 35",
+            "headingToolTip": "Min: 0° och Max: 360°",
+            "rollToolTip": "Min: -90° och Max: 90°",
+            "pitchToolTip": "Min: -90° och Max: 90°",
             "wrongCenterAndZoomParamTitle": "Ogiltig center- och zoomparameter",
             "wrongCenterAndZoomParamMessage": "Centrum och zoomparameter måste vara center = lon, lat & zoom = värde och (+|- 90 ° lat,+| -180 ° lon, <=+35 zoom)",
             "wrongMarkerAndZoomParamTitle": "Ogiltig markör och zoomparameter",
@@ -1271,6 +1275,9 @@
             "showHomeButton": "Länk till MapStores hem",
             "showSectionId": "Inkludera rullningsposition",
             "showConnections": "Visa anslutningar",
+            "heading": "Kursvinkel",
+            "roll": "Rullningsvinkel",
+            "pitch": "Stigningsvinkel",
             "sizeOptions": {
                 "width": "width",
                 "height": "höjd"

@@ -29,6 +29,8 @@ export const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
 export const MOUSE_MOVE = 'MOUSE_MOVE';
 export const MOUSE_OUT = 'MOUSE_OUT';
 export const MAP_PLUGIN_LOAD = 'MAP:MAP_PLUGIN_LOAD';
+export const ORIENTATION = 'MAP:ORIENTATION';
+export const UPDATE_MAP_VIEW = 'MAP:UPDATE_MAP_VIEW';
 
 
 /**
@@ -235,6 +237,21 @@ export const mouseMove = (position) => ({
  */
 export const mouseOut = () => ({
     type: MOUSE_OUT
+});
+
+/**
+ * Dispatch orientation co-ordinates (head, pitch and roll)
+ * @param orientation
+ * @returns {{orientation, type: string}}
+ */
+export const orientateMap = (orientation) => ({
+    type: ORIENTATION,
+    orientation
+});
+
+export const updateMapView = (data) => ({
+    type: UPDATE_MAP_VIEW,
+    data
 });
 
 /**

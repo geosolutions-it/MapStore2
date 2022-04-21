@@ -91,6 +91,7 @@
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
             "templatePreview": "Pregled predloška",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Info oblačić",
                 "title": "Naslov",
@@ -1065,7 +1066,15 @@
             "advancedOptions": "Napredne mogućnosti",
             "addBboxParam": "Dodaj bbox parametar na poveznicu za dijeljenje",
             "wrongBboxParamTitle": "Neispravan bbox parametar",
-            "wrongBboxParamMessage": "bbox parametri moraju biti u EPSG:4326 i napisani kao bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox parametri moraju biti u EPSG:4326 i napisani kao bbox=minx,miny,maxx,maxy",
+            "zoom": "Zum",
+            "heading": "Smjer smjera",
+            "roll": "Kut kotrljanja",
+            "pitch": "Kut nagiba",
+            "zoomToolTip": "Min: 0 i Max: 35",
+            "headingToolTip": "Min: 0° i Max: 360°",
+            "rollToolTip": "Min: -90° i Max: 90°",
+            "pitchToolTip": "Min: -90° i Max: 90°"
         },
         "snapshot": {
             "title": "Pregled snimke",
