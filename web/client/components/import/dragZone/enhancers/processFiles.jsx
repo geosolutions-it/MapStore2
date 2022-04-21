@@ -115,7 +115,9 @@ const readFile = (onWarnings) => (file) => {
         });
     }
     if (type === 'application/vnd.wmc') {
-        return readWMC(file).then(config => [config]);
+        return readWMC(file).then((config) => {
+            return [{...config, "fileName": file.name}];
+        });
     }
     return null;
 };
