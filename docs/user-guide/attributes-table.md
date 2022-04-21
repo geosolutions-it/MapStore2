@@ -76,11 +76,32 @@ Once a new record is created, it's possible to draw a geometry for it, by clicki
 
 <img src="../img/attributes-table/drawing-line-shape.gif" class="ms-docimage"/>
 
-For *Points* layers a point is drawn for each click on the map
+* For *Points* layers a point is drawn for each click on the map
 
 <img src="../img/attributes-table/drawing-point-shape.gif" class="ms-docimage"/>
 
 The user is always allowed to delete the drawn shape through the <img src="../img/button/delete-geometry-button.jpg" class="ms-docbutton"/> button.
+
+#### Create new geometry with Snapping
+
+Once the *Add new geometry* is enabled <img src="../img/button/edit_geometry_enable.jpg" class="ms-docbutton"/>, it is possible to draw a new geometry using the snap to existing vector objects on the map, by clicking on the **Snapping** button <img src="../img/button/snapping.jpg" class="ms-docbutton"/>.
+
+<img src="../img/attributes-table/add-new-snapping-geometry.gif" class="ms-docimage"/>
+
+From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton"/> of the *Snapping* tool, the user is allows to:
+
+* Choose the layer on the map to use for snapping. 
+
+<img src="../img/attributes-table/snap-new-layer.gif" class="ms-docimage"/>
+
+* Choose where to snap the layer, enabling/disabling the **Edge** or/and the **Vertex**
+
+* Set **Tolerance** for considering the pointer close enough to a segment or vertex for snapping
+
+* Choose the **Loading strategy** for WMS layers by selecting *bbox* or *all* from the dropdown menu.
+
+!!! note
+    By default, the **Snap layer** is the current editing layer, the **Edge** and the **Vertex** are enabled; the **Tolerance** is set to 10 `pixel` and the **Loading strategy** is set to *bbox*. 
 
 ### Editing and removing existing features
 
