@@ -90,7 +90,7 @@ describe('useFiles enhancer', () => {
         const EnhancedSink = useFiles(sink);
         ReactDOM.render(<EnhancedSink maps={[ {map: { zoom: 4, center: { x: 1, y: 1 }, bbox: { x: 1, y: 1 }, maxExtent: "TEST"}, fileName: "savedMap.json" } ]}
             loadAnnotations={actions.loadAnnotations} setLayers={actions.setLayers} loadMap={actions.loadMap} loadMapInfo={actions.loadMapInfo} onClose={actions.onClose} currentMap={{zoom: 4, center: { x: 1, y: 1 }, mapId: "10"}} />, document.getElementById("container"));
-        expect(spyLoadMapInfo).toHaveBeenCalled();
+        expect(spyLoadMapInfo).toHaveBeenCalledWith("10");
         expect(spyOnClose).toHaveBeenCalled();
         expect(spyLoadAnnotations).toNotHaveBeenCalled();
         expect(spySetLayers).toNotHaveBeenCalled();
