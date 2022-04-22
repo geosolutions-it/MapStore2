@@ -49,6 +49,23 @@ In particular, from this window, the user can perform the following operations:
 
 Once the options are chosen, with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button the new background layer is definitively added to the background selector as a card and automatically set as the current one.
 
+### Add WMTS background
+
+As soon as a layer, from a [WMTS Catalog](catalog.md#wmswmts-catalog), is added to the list of backgrounds, and it is selected, the **Add New Background window** opens: 
+
+<img src="../img/background/add_wmts_background.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+The user can perform the following operations:
+
+* Add a **Thumbnail** choosing the desired local file by clicking on image preview area, or simply with the drag and drop function
+
+* Set the **Title**
+
+* Set the **Attribution** visible at the bottom left of the footer in the map viewer.
+
+<img src="../img/background/wmts-attribution.gif" class="ms-docimage" />
+
+
 ## Edit background
 
 It is possible to edit backgrounds by clicking on settings icon on top of each background card:
