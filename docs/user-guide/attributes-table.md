@@ -84,13 +84,13 @@ The user is always allowed to delete the drawn shape through the <img src="../im
 
 #### Create new geometry with Snapping
 
-Once the *Add new geometry* is enabled <img src="../img/button/edit_geometry_enable.jpg" class="ms-docbutton"/>, it is possible to draw a new geometry using the snap to existing vector objects on the map, by clicking on the **Snapping** button <img src="../img/button/snapping.jpg" class="ms-docbutton"/>.
+To fine tune the vertex position while editing or creating a new feature geometry, it is possible to leverage on the Snapping functionality. Through this function <img src="../img/button/snapping.jpg" class="ms-docbutton"/> it is possible to snap to other vertices of features belonging to the same layer or to others while editing a feature.
 
 <img src="../img/attributes-table/add-new-snapping-geometry.gif" class="ms-docimage"/>
 
-From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton"/> of the *Snapping* tool, the user is allows to:
+The tool provides the ability to tune the snapping function so that the user can:
 
-* Choose the layer on the map to use for snapping. 
+* Choose one of the visible map layers in TOC to be used for the snapping 
 
 <img src="../img/attributes-table/snap-new-layer.gif" class="ms-docimage"/>
 
@@ -98,10 +98,12 @@ From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="
 
 * Set **Tolerance** for considering the pointer close enough to a segment or vertex for snapping
 
-* Choose the **Loading strategy** for WMS layers by selecting *bbox* or *all* from the dropdown menu.
+* Choose the **Loading strategy** of features to snap with by choosing one of the available options from the dropdown menu. Available options are:</p>
+    - *bbox*: only features in the current viewport are loaded</p>
+    - *all*: all layer features are loaded
 
 !!! note
-    By default, the **Snap layer** is the current editing layer, the **Edge** and the **Vertex** are enabled; the **Tolerance** is set to 10 `pixel` and the **Loading strategy** is set to *bbox*. 
+    The snapping functionality is by default set to work with the same layer in editing mode. By default, the **Edge** and the **Vertex** are enabled, the **Tolerance** is set to 10 `pixel` and the **Loading strategy** is set to *bbox*. 
 
 ### Editing and removing existing features
 
