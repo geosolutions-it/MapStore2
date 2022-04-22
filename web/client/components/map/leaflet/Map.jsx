@@ -55,7 +55,8 @@ class LeafletMap extends React.Component {
         resolutions: PropTypes.array,
         hookRegister: PropTypes.object,
         onCreationError: PropTypes.func,
-        onMouseOut: PropTypes.func
+        onMouseOut: PropTypes.func,
+        onResolutionsChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -83,7 +84,8 @@ class LeafletMap extends React.Component {
         style: {},
         interactive: true,
         resolutions: getGoogleMercatorResolutions(0, 23),
-        onMouseOut: () => {}
+        onMouseOut: () => {},
+        onResolutionsChange: () => {}
     };
 
     state = { };
@@ -188,7 +190,7 @@ class LeafletMap extends React.Component {
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
-
+        this.props.onResolutionsChange(this.getResolutions());
         this.map.on('layeradd', (event) => {
             // we want to run init code only the first time a layer is added to the map
             if (event.layer._ms2Added) {
@@ -292,6 +294,7 @@ class LeafletMap extends React.Component {
             if (limits.minZoom !== (oldLimits && oldLimits.minZoom)) {
                 this.map.setMinZoom(limits.minZoom);
             }
+            this.props.onResolutionsChange(this.getResolutions());
         }
         return false;
     }

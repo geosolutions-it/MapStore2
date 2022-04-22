@@ -786,4 +786,39 @@ describe('LeafletMap', () => {
         const attributions = document.body.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(2);
     });
+    it('test map onResolutionsChange', () => {
+        const actions = {
+            onResolutionsChange: () => {}
+        };
+        const spyOnResolutionsChange = expect.spyOn(actions, 'onResolutionsChange');
+        let map = ReactDOM.render(
+            <LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} onResolutionsChange={actions.onResolutionsChange}/>,
+            document.getElementById("container"));
+
+        expect(map).toExist();
+        let event = {
+            layer: {
+                layerId: 2,
+                on: () => {},
+                _ms2LoadingTileCount: 1
+            }
+        };
+        map.addLayerObservable(event, true);
+        event.layer.layerLoadingStream$.next();
+        event.layer.layerErrorStream$.next({ target: { layerId: 2 }});
+        event.layer.layerLoadStream$.next();
+        expect(spyOnResolutionsChange).toHaveBeenCalled();
+    });
+    it('test map on limit change call onResolutionsChange', () => {
+        const actions = {
+            onResolutionsChange: () => {}
+        };
+        const spyOnResolutionsChange = expect.spyOn(actions, 'onResolutionsChange');
+        let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}} onResolutionsChange={actions.onResolutionsChange}/>, document.getElementById("container"));
+        map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 44, x: 10}} zoom={5} limits={{test: "test"}} onResolutionsChange={actions.onResolutionsChange}/>, document.getElementById("container"));
+        expect(map).toExist();
+
+        expect(spyOnResolutionsChange).toHaveBeenCalled();
+        expect(spyOnResolutionsChange.calls.length).toBe(2);
+    });
 });
