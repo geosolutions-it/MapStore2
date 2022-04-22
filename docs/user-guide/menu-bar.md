@@ -185,4 +185,4 @@ In particular, with these options it is possible to:
 <img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!!warning
-    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Options* menu only when the map has already been saved once.
+    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Burger Menu* only when the map has already been saved once.
