@@ -12,7 +12,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mapstore2.version>DEV</mapstore2.version>
     <tomcat.version>8.5.69</tomcat.version>
+    <spring.version>5.3.18</spring.version>
   </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
   <dependencies>
     <!-- MapStore services -->
