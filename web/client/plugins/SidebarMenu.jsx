@@ -23,6 +23,7 @@ import tooltip from "../components/misc/enhancers/tooltip";
 import {setControlProperty} from "../actions/controls";
 import {createPlugin} from "../utils/PluginsUtils";
 import sidebarMenuReducer from "../reducers/sidebarmenu";
+import sidebarMenuEpics from "../epics/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector} from "../selectors/sidebarmenu";
@@ -272,6 +273,7 @@ export default createPlugin(
             onDetach: setControlProperty.bind(null, 'sidebarMenu', 'enabled', false),
             setLastActiveItem
         })(SidebarMenu),
+        epics: sidebarMenuEpics,
         reducers: {
             sidebarmenu: sidebarMenuReducer
         }
