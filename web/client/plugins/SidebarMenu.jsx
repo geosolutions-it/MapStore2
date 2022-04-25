@@ -23,10 +23,10 @@ import tooltip from "../components/misc/enhancers/tooltip";
 import {setControlProperty} from "../actions/controls";
 import {createPlugin} from "../utils/PluginsUtils";
 import sidebarMenuReducer from "../reducers/sidebarmenu";
-import sidebarMenuEpics from "../epics/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector} from "../selectors/sidebarmenu";
+import {setLastActiveItem} from "../actions/sidebarmenu";
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -41,6 +41,7 @@ class SidebarMenu extends React.Component {
         onDetach: PropTypes.func,
         sidebarWidth: PropTypes.number,
         state: PropTypes.object,
+        setLastActiveItem: PropTypes.func,
         lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
     };
 
@@ -70,7 +71,7 @@ class SidebarMenu extends React.Component {
         this.defaultTool = SidebarElement;
         this.defaultTarget = 'sidebar';
         this.state = {
-            lastActive: false
+            lastVisible: false
         };
     }
 
@@ -181,7 +182,10 @@ class SidebarMenu extends React.Component {
                 (dispatch, ownProps) => {
                     const actions = {};
                     if (ownProps.action) {
-                        actions.onClick = bindActionCreators(ownProps.action, dispatch);
+                        actions.onClick = () => {
+                            this.props.setLastActiveItem(item?.name ?? item?.toggleProperty);
+                            bindActionCreators(ownProps.action, dispatch)();
+                        };
                     }
                     return actions;
                 })(MenuItem);
@@ -265,9 +269,9 @@ export default createPlugin(
         cfg: {},
         component: connect(sidebarMenuSelector, {
             onInit: setControlProperty.bind(null, 'sidebarMenu', 'enabled', true),
-            onDetach: setControlProperty.bind(null, 'sidebarMenu', 'enabled', false)
+            onDetach: setControlProperty.bind(null, 'sidebarMenu', 'enabled', false),
+            setLastActiveItem
         })(SidebarMenu),
-        epics: sidebarMenuEpics,
         reducers: {
             sidebarmenu: sidebarMenuReducer
         }
