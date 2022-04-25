@@ -5,7 +5,7 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import { head } from 'lodash';
+import {head, memoize} from 'lodash';
 
 import { mapSelector } from './map';
 import { parseLayoutValue } from '../utils/MapUtils';
@@ -54,7 +54,7 @@ export const boundingSidebarRectSelector = (state) => state.maplayout && state.m
  * @param  {boolean} isDock flag to use dock paddings instead of toolbar paddings
  * @return {object} selected attributes of layout of the map
  */
-export const mapLayoutValuesSelector = (state, attributes = {}, isDock = false) => {
+export const mapLayoutValuesSelector = memoize((state, attributes = {}, isDock = false) => {
     const layout = mapLayoutSelector(state);
     const boundingSidebarRect = boundingSidebarRectSelector(state);
     return layout && Object.keys(layout).filter(key =>
@@ -65,7 +65,10 @@ export const mapLayoutValuesSelector = (state, attributes = {}, isDock = false) 
         return ({...a, [key]: layout[key]});
     },
     {}) || {};
-};
+}, (state, attributes, isDock) =>
+    JSON.stringify(mapLayoutSelector(state)) +
+    JSON.stringify(boundingSidebarRectSelector(state)) +
+    JSON.stringify(attributes) + (isDock ? '_isDock' : ''));
 
 /**
  * Check if conditions match with the current layout

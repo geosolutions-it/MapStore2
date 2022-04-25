@@ -75,14 +75,13 @@ class Extensions extends React.Component {
 }
 
 const ExtensionsPlugin = connect(
-    createSelector([
+    createSelector(
         state => get(state, 'controls.userExtensions.enabled'),
-        state => mapLayoutValuesSelector(state, { height: true, right: true }, true)
-    ],
-    (active, dockStyle) => ({
-        active,
-        dockStyle
-    })),
+        state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
+        (active, dockStyle) => ({
+            active,
+            dockStyle
+        })),
     {
         onClose: toggleControl.bind(null, 'userExtensions', 'enabled')
     }

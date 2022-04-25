@@ -9,21 +9,24 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import ContainerDimensions from 'react-container-dimensions';
-
-import {createPlugin} from "../utils/PluginsUtils";
+import {DropdownButton, Glyphicon, MenuItem} from "react-bootstrap";
 import {connect} from "react-redux";
-import {setControlProperty} from "../actions/controls";
-import SidebarElement from "../components/sidebarmenu/SidebarElement";
+import {omit, pick} from "lodash";
 import assign from "object-assign";
+import {createSelector} from "reselect";
+import {bindActionCreators} from "redux";
+
+import ToolsContainer from "./containers/ToolsContainer";
+import SidebarElement from "../components/sidebarmenu/SidebarElement";
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import tooltip from "../components/misc/enhancers/tooltip";
+import {setControlProperty} from "../actions/controls";
+import {createPlugin} from "../utils/PluginsUtils";
+import sidebarMenuReducer from "../reducers/sidebarmenu";
+import sidebarMenuEpics from "../epics/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
-import ToolsContainer from "./containers/ToolsContainer";
-import {createSelector} from "reselect";
-import {mapLayoutValuesSelector} from "../selectors/maplayout";
-import {omit, pick} from "lodash";
-import {DropdownButton, Glyphicon, MenuItem} from "react-bootstrap";
-import tooltip from "../components/misc/enhancers/tooltip";
-import {bindActionCreators} from "redux";
+import {lastActiveToolSelector} from "../selectors/sidebarmenu";
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -37,7 +40,8 @@ class SidebarMenu extends React.Component {
         onInit: PropTypes.func,
         onDetach: PropTypes.func,
         sidebarWidth: PropTypes.number,
-        state: PropTypes.object
+        state: PropTypes.object,
+        lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
     };
 
     static contextTypes = {
@@ -75,6 +79,18 @@ class SidebarMenu extends React.Component {
         onInit();
     }
 
+    shouldComponentUpdate(nextProps) {
+        const newSize = nextProps.state.map?.present?.size?.height !== this.props.state.map?.present?.size?.height;
+        const newItems = nextProps.items !== this.props.items;
+        const newVisibleItems = !newItems ? nextProps.items.reduce((prev, cur, idx) => {
+            if (this.isNotHidden(cur) !== this.isNotHidden(this.props.items[idx])) {
+                prev.push(cur);
+            }
+            return prev;
+        }, []).length > 0 : false;
+        return newSize || newItems || newVisibleItems;
+    }
+
     componentWillUnmount() {
         const { onDetach } = this.props;
         onDetach();
@@ -104,12 +120,9 @@ class SidebarMenu extends React.Component {
         const itemsToRender = Math.floor(height / this.props.sidebarWidth) - 1;
         const target = _target ? _target : this.defaultTarget;
         const targetMatch = (elementTarget) => elementTarget === target || !elementTarget && target === this.defaultTarget;
-        const isNotHidden = (element, state) => {
-            return element?.selector ? element.selector(state)?.style?.display !== 'none' : true;
-        };
         const filtered = this.props.items.reduce(( prev, current) => {
             if (!current?.components && targetMatch(current.target)
-                && isNotHidden(current, this.props.state)
+                && this.isNotHidden(current)
             ) {
                 prev.push({
                     ...current,
@@ -120,7 +133,7 @@ class SidebarMenu extends React.Component {
             if (current?.components && Array.isArray(current.components)) {
                 current.components.forEach((component) => {
                     if (targetMatch(component?.target)
-                        && isNotHidden(component?.selector ? component : current, this.props.state)
+                        && this.isNotHidden(component?.selector ? component : current)
                     ) {
                         prev.push({
                             plugin: current?.plugin || this.defaultTool,
@@ -139,7 +152,9 @@ class SidebarMenu extends React.Component {
         }, []);
 
         if (itemsToRender < filtered.length) {
-            const toRender = filtered.sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0)).slice(0, itemsToRender);
+            const sorted = filtered.sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
+            this.swapLastActiveItem(sorted, itemsToRender);
+            const toRender = sorted.slice(0, itemsToRender);
             const extra = {
                 name: "moreItems",
                 position: 9999,
@@ -160,11 +175,16 @@ class SidebarMenu extends React.Component {
     };
 
     renderExtraItems = (items) => {
+        const dummySelector = () => {};
         const menuItems = items.map((item) => {
-            const ConnectedItem = connect(() => ({}),
-                (dispatch, ownProps) => ({
-                    onClick: bindActionCreators(ownProps.action, dispatch)
-                }))(MenuItem);
+            const ConnectedItem = connect((item?.selector ?? dummySelector),
+                (dispatch, ownProps) => {
+                    const actions = {};
+                    if (ownProps.action) {
+                        actions.onClick = bindActionCreators(ownProps.action, dispatch);
+                    }
+                    return actions;
+                })(MenuItem);
             return <ConnectedItem action={item.action}>{item?.icon}{item?.text}</ConnectedItem>;
         });
         return (
@@ -181,7 +201,6 @@ class SidebarMenu extends React.Component {
             </TDropdownButton>);
     };
 
-
     render() {
         return (
             <div id="mapstore-sidebar-menu-container" style={this.props.style}>
@@ -196,20 +215,39 @@ class SidebarMenu extends React.Component {
                             stateSelector="sidebarMenu"
                             tool={SidebarElement}
                             tools={this.getTools('sidebar', height)}
-                            panels={[]}
+                            panels={this.getPanels(this.props.items)}
                         /> }
                 </ContainerDimensions>
             </div>
 
         );
     }
+
+    swapLastActiveItem = (items, itemsToRender) => {
+        const name = this.props.lastActiveTool;
+        if (name) {
+            const idx = items.findIndex((el) => el?.name === name || el?.toggleProperty === name);
+            if (idx !== -1 && idx > (itemsToRender - 1)) {
+                const item = items[idx];
+                items[idx] = items[itemsToRender - 1];
+                items[itemsToRender - 2] = item;
+            }
+        }
+    }
+
+
+    isNotHidden = (element) => {
+        return element?.selector ? element.selector(this.props.state)?.style?.display !== 'none' : true;
+    };
 }
 
 const sidebarMenuSelector = createSelector([
     state => state,
+    state => lastActiveToolSelector(state),
     state => mapLayoutValuesSelector(state, {bottom: true, height: true})
-], (state, style) => ({
+], (state, lastActiveTool, style) => ({
     style,
+    lastActiveTool,
     state
 }));
 
@@ -228,6 +266,10 @@ export default createPlugin(
         component: connect(sidebarMenuSelector, {
             onInit: setControlProperty.bind(null, 'sidebarMenu', 'enabled', true),
             onDetach: setControlProperty.bind(null, 'sidebarMenu', 'enabled', false)
-        })(SidebarMenu)
+        })(SidebarMenu),
+        epics: sidebarMenuEpics,
+        reducers: {
+            sidebarmenu: sidebarMenuReducer
+        }
     }
 );

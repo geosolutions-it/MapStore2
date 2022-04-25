@@ -76,22 +76,6 @@ export const DashboardSave = createPlugin('DashboardSave', {
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
             )
-        },
-        SidebarMenu: {
-            name: "dashboardSave",
-            position: 30,
-            text: <Message msgId="save"/>,
-            icon: <Glyphicon glyph="floppy-open"/>,
-            action: triggerSave.bind(null, true),
-            selector: createSelector(
-                isLoggedIn,
-                dashboardResource,
-                (loggedIn, {canEdit, id} = {}) => ({
-                    style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
-                })
-            ),
-            doNotHide: true,
-            priority: 2
         }
     }
 });
@@ -136,21 +120,6 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
                     style: loggedIn ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
             )
-        },
-        SidebarMenu: {
-            name: "dashboardSaveAs",
-            position: 31,
-            text: <Message msgId="saveAs"/>,
-            icon: <Glyphicon glyph="floppy-open"/>,
-            action: triggerSaveAs.bind(null, true),
-            // always display on the BurgerMenu button if logged in
-            selector: createSelector(
-                isLoggedIn,
-                (loggedIn) => ({
-                    style: loggedIn ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
-                })
-            ),
-            priority: 2
         }
     }
 });

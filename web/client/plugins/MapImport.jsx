@@ -95,12 +95,13 @@ export default {
             doNotHide: true
         },
         SidebarMenu: {
-            name: "import",
+            name: "mapimport",
             position: 4,
             tooltip: "mapImport.tooltip",
             text: <Message msgId="mapImport.title"/>,
             icon: <Glyphicon glyph="upload"/>,
             action: toggleControl.bind(null, 'mapimport', null),
+            toggle: true,
             priority: 2,
             doNotHide: true
         }

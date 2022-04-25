@@ -216,6 +216,7 @@ export default {
             tooltip: "settingsTooltip",
             text: <Message msgId="settings"/>,
             icon: <Glyphicon glyph="cog"/>,
+            toggle: true,
             action: toggleControl.bind(null, 'settings', null),
             priority: 3,
             doNotHide: true

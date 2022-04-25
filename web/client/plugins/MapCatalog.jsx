@@ -141,7 +141,7 @@ export default createPlugin('MapCatalog', {
     })(MapCatalogComponent),
     containers: {
         BurgerMenu: {
-            name: 'mapcatalog',
+            name: 'mapCatalog',
             position: 6,
             text: <Message msgId="mapCatalog.title" />,
             icon: <Glyphicon glyph="maps-catalog" />,
@@ -151,12 +151,13 @@ export default createPlugin('MapCatalog', {
             doNotHide: true
         },
         SidebarMenu: {
-            name: "mapcatalog",
+            name: "mapCatalog",
             position: 6,
             icon: <Glyphicon glyph="maps-catalog" />,
             text: <Message msgId="mapCatalog.title" />,
             tooltip: "mapCatalog.tooltip",
             action: () => toggleControl('mapCatalog', 'enabled'),
+            toggle: true,
             priority: 2,
             doNotHide: true
         }

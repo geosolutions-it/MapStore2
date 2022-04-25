@@ -92,6 +92,7 @@ export default createPlugin('DeleteMap', {
             text: <Message msgId="map.mapDelete"/>,
             icon: <Glyphicon glyph="trash"/>,
             action: toggleControl.bind(null, 'mapDelete', null),
+            toggle: true,
             tooltip: "manager.deleteMap",
             selector: (state) => {
                 const { canDelete = false } = state?.map?.present?.info || {};

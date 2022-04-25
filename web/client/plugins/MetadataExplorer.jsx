@@ -81,7 +81,6 @@ import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLay
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { DEFAULT_FORMAT_WMS } from '../api/WMS';
-import SidebarElement from "../components/sidebarmenu/SidebarElement";
 import DockContainer from "../components/misc/panels/DockContainer";
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
@@ -308,21 +307,11 @@ export default {
         SidebarMenu: {
             name: 'metadataexplorer',
             position: 5,
-            components: [
-                {
-                    target: 'sidebar',
-                    tool: connect(() => ({
-                        bsStyle: 'tray',
-                        tooltipPosition: 'left'
-                    }), {
-                        onClick: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true)
-                    })(SidebarElement),
-                    tooltip: "catalog.tooltip",
-                    text: <Message msgId="catalog.title"/>,
-                    icon: <Glyphicon glyph="folder-open"/>,
-                    doNotHide: true
-                }
-            ]
+            text: <Message msgId="catalog.title"/>,
+            tooltip: "catalog.tooltip",
+            icon: <Glyphicon glyph="folder-open"/>,
+            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+            toggle: true
         }
     }),
     reducers: {catalog: require('../reducers/catalog').default},

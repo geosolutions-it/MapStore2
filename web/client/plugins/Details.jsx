@@ -31,6 +31,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 import details from '../reducers/details';
 import * as epics from '../epics/details';
+import {createStructuredSelector} from "reselect";
 
 /**
  * Allow to show details for the map.
@@ -79,11 +80,11 @@ const DetailsPlugin = ({
 };
 
 export default createPlugin('Details', {
-    component: connect((state) => ({
-        active: get(state, "controls.details.enabled"),
-        dockStyle: mapLayoutValuesSelector(state, { height: true, right: true }, true),
-        detailsText: detailsTextSelector(state),
-        showAsModal: mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
+    component: connect(createStructuredSelector({
+        active: state => get(state, "controls.details.enabled"),
+        dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
+        detailsText: detailsTextSelector,
+        showAsModal: state => mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
     }), {
         onClose: closeDetailsPanel
     })(DetailsPlugin),
@@ -136,9 +137,14 @@ export default createPlugin('Details', {
                 const mapId = mapIdSelector(state);
                 const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
                 if (detailsUri) {
-                    return {};
+                    return {
+                        bsStyle: state.controls.details && state.controls.details.enabled ? 'primary' : 'tray',
+                        active: state.controls.details && state.controls.details.enabled || false
+                    };
                 }
-                return { style: {display: "none"} };
+                return {
+                    style: {display: "none"}
+                };
             },
             doNotHide: true,
             priority: 2

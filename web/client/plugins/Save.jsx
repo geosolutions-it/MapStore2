@@ -39,7 +39,7 @@ export default createPlugin('Save', {
         }))(SaveBaseDialog),
     containers: {
         BurgerMenu: {
-            name: 'save',
+            name: 'mapSave',
             position: 30,
             text: <Message msgId="save"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
@@ -55,11 +55,12 @@ export default createPlugin('Save', {
             )
         },
         SidebarMenu: {
-            name: 'save',
+            name: 'mapSave',
             position: 30,
             icon: <Glyphicon glyph="floppy-open"/>,
             text: <Message msgId="save"/>,
             action: toggleControl.bind(null, 'mapSave', null),
+            toggle: true,
             tooltip: "saveDialog.saveTooltip",
             // display the button only if the map can be edited
             selector: createSelector(

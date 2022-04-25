@@ -179,6 +179,13 @@ export default {
             text: <I18N.Message msgId="tutorial.title"/>,
             icon: <Glyphicon glyph="book"/>,
             action: toggleTutorial,
+            selector: (state) => {
+                return {
+                    bsStyle: state.tutorial.enabled  ? 'primary' : 'tray',
+                    active: state.tutorial.enabled || false
+
+                };
+            },
             priority: 2,
             doNotHide: true
         }

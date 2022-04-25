@@ -116,6 +116,7 @@ const MapExportPlugin = {
                     () => toggleControl('export') :
                     () => exportMap(enabledFormats[0] || 'mapstore2'),
                 priority: 2,
+                toggle: true,
                 doNotHide: true
             };
         }

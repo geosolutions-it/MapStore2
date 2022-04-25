@@ -69,10 +69,12 @@ export default createPlugin('SaveAs', {
             tooltip: "saveDialog.saveAsTooltip",
             // display the button only if the map can be edited
             selector: (state) => {
-                if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
-                    return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
-                }
-                return { style: isLoggedIn(state) ? {} : {display: "none"} };
+                return {
+                    style: isLoggedIn(state) ? {} : {display: "none"},
+                    bsStyle: state.controls.mapSaveAs && state.controls.mapSaveAs.enabled ? 'primary' : 'tray',
+                    active: state.controls.mapSaveAs && state.controls.mapSaveAs.enabled || false
+
+                };
             }
         }
     }

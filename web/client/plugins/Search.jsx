@@ -11,7 +11,6 @@ import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import MediaQuery from 'react-responsive';
 import {createSelector, createStructuredSelector} from 'reselect';
 
 import { removeAdditionalLayer } from '../actions/additionallayers';
@@ -46,7 +45,7 @@ import {
 import mapInfoReducers from '../reducers/mapInfo';
 import searchReducers from '../reducers/search';
 import { layersSelector } from '../selectors/layers';
-import { mapSelector } from '../selectors/map';
+import {mapSelector, mapSizeValuesSelector} from '../selectors/map';
 import ConfigUtils from '../utils/ConfigUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import ToggleButton from './searchbar/ToggleButton';
@@ -367,15 +366,19 @@ const SearchPlugin = connect((state) => ({
         if (this.props.withToggle === true) {
             return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
         }
+        const { offsets: { right: rightOffset, left: leftOffset}, mapSize: { width: mapWidth } } = this.props;
+        const searchFit = (mapWidth - rightOffset - leftOffset - 60) >= 500;
         if (isArray(this.props.withToggle)) {
             return (
-                <span id="search-bar-container" style={this.props.style}><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
-                    <ToggleButton/>
-                    {this.props.enabled ? search : null}
-                </MediaQuery>
-                <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
-                    {search}
-                </MediaQuery>
+                <span id="search-bar-container" className={!searchFit ? 'toggled' : null} style={this.props.style}>
+                    { !searchFit ?
+                        (
+                            <>
+                                <ToggleButton/>
+                                {this.props.enabled ? search : null}
+                            </>
+                        ) : (search)
+                    }
                 </span>
             );
         }
@@ -386,6 +389,7 @@ const SearchPlugin = connect((state) => ({
         return (<span>
             {this.getSearchAndToggleButton()}
             <SearchResultList
+                containerStyle={this.props.style}
                 fitToMapSize={this.props.fitResultsToMapSize}
                 searchOptions={this.props.searchOptions}
                 onUpdateResultsStyle={this.props.onUpdateResultsStyle}
@@ -398,7 +402,9 @@ const SearchPlugin = connect((state) => ({
 export default {
     SearchPlugin: assign(
         connect(createStructuredSelector({
-            style: state => mapLayoutValuesSelector(state, { right: true })
+            style: state => mapLayoutValuesSelector(state, { right: true }),
+            offsets: state => mapLayoutValuesSelector(state, { right: true, left: true }),
+            mapSize: state => mapSizeValuesSelector({ width: true })(state)
         }), {})(SearchPlugin), {
             OmniBar: {
                 name: 'search',

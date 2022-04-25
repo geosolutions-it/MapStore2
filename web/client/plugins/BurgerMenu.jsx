@@ -180,7 +180,7 @@ export default createPlugin(
             controls: state.controls
         }))(BurgerMenu),
         options: {
-            disablePluginIf: "(state('sidebarMenu')?.enabled && state('router').includes('/viewer/'))}"
+            disablePluginIf: "{(state('sidebarMenu')?.enabled && state('router').includes('/viewer/'))}"
         },
         containers: {
             OmniBar: {
