@@ -250,22 +250,29 @@ The style editor can configure the *Icon* as explained [here](layer-settings.md#
 
 ### Create a style for 3D Tiles
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) also allows creating a style fo [3D Tiles layer](catalog.md#3d-tiles-catalog). In this case, the style panel looks like this:
+With [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to customize the style of a [3D Tiles layer](catalog.md#3d-tiles-catalog) client side. The MapStore support is working in respect of the [3D Tiles Specification 1.0](http://docs.opengeospatial.org/cs/18-053r2/18-053r2.html#97) and on top of the [Cesium Styling capabilities](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling). Below is an example of how the Style Editor of a 3D Tiles layer is appearing in the MapStore UI.
 
-<img src="../img/layer-settings/3dtiles-style-panel.jpg" class="ms-docimage">
+<img src="../img/layer-settings/3dtiles_style.jpg" class="ms-docimage">
 
-The user can **Add a fill rule** by clicking on <img src="../img/button/add_fill_button.jpg" class="ms-docbutton"/> button and customize the `Fill color`.
+For the 3D Tiles styling, while with the **Code Text Editor** it is possible to leverage completely on the styling specifications:
+
+<img src="../img/layer-settings/text-editor-3dtiles.jpg" class="ms-docimage">
+
+The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Style Editor** supports for now only a limited set of capabilities:
+
+* Customization of the **Fill color** 
 
 <img src="../img/layer-settings/ex_3dtiles_style.gif" class="ms-docimage">
 
-Once the *Fill Rule* is added, the editor can:
+* Style Rule filtering based on the available [properties dictionary ](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification#properties) defined in the tileset.json
 
-* **Filter** the style rule by clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button in order to apply the style only to certain layer features. 
+<img src="../img/layer-settings/filter_3dtiles_style.jpg" class="ms-docimage">
 
-* **Remove** the symbolizer by clicking the <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/> button.
+* Possibility to customize the radius in case of point cloud features
 
-!!!note
-    The style body object for the *3D Tiles* format accepts only the rules described in the [3D tiles styling specification version 1.0](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/maps-configuration.md#3d-tiles)
+<img src="../img/layer-settings/point_3dtiles_text.jpg" class="ms-docimage">
+
+<img src="../img/layer-settings/point_3dtiles_visual.jpg" class="ms-docimage">
 
 ## Feature Info Form
 
