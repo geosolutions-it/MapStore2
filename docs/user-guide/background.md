@@ -28,7 +28,7 @@ From the [Catalog](catalog.md) the user can choose the layers to add to the list
 
 <img src="../img/background/add-ocean.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-As soon as a layer is selected, the **Add New Background** window opens:
+As soon as a WMS layer is selected, the **Add New Background** window opens:
 
 <img src="../img/background/add-new-bck.jpg" class="ms-docimage" style="max-width:500px;" />
 
@@ -48,6 +48,23 @@ In particular, from this window, the user can perform the following operations:
     The thumbnail image size should be a square of 98x98px or 128x128px, max 500kb and the supported format are `jpg` (or `jpeg`) and `png`
 
 Once the options are chosen, with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button the new background layer is definitively added to the background selector as a card and automatically set as the current one.
+
+### Add WMTS background
+
+In case of a WMTS layer added as a background layer, the **Add New Background window** is a bit different: 
+
+<img src="../img/background/add_wmts_background.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+The user can perform the following operations:
+
+* Add a **Thumbnail** choosing the desired local file by clicking on image preview area, or simply with the drag and drop function
+
+* Set the **Title**
+
+* Set the **Attribution** visible at the bottom left of the footer in the map viewer.
+
+<img src="../img/background/wmts-attribution.gif" class="ms-docimage" />
+
 
 ## Edit background
 
