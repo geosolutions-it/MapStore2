@@ -51,7 +51,7 @@ Once the options are chosen, with the <img src="../img/button/add_group_confirm_
 
 ### Add WMTS background
 
-As soon as a layer, from a [WMTS Catalog](catalog.md#wmswmts-catalog), is added to the list of backgrounds, and it is selected, the **Add New Background window** opens: 
+In case of a WMTS layer added as a background layer, the **Add New Background window** is a bit different: 
 
 <img src="../img/background/add_wmts_background.jpg" class="ms-docimage" style="max-width:500px;"/>
 
