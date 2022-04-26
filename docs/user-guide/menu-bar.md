@@ -146,7 +146,7 @@ Once a bookmark has been created, it is always possible to *Edit* it <img src=".
 
 The *Burger Menu* is an important tools container that allows the user to perform different operations and take a look at several information:
 
-<img src="../img/menu-bar/burger-menu.jpg" class="ms-docimage" style="max-width:150px;"/>
+<img src="../img/menu-bar/burger-menu.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 In particular, with these options it is possible to:
 
@@ -163,6 +163,8 @@ In particular, with these options it is possible to:
 * **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
 
 * **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
+
+* **Delete Map** in order to delete the current map. 
 
 * Create [Annotations](annotations.md) and add them to the map
 
@@ -181,3 +183,6 @@ In particular, with these options it is possible to:
 * Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+!!!warning
+    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Burger Menu* only when the map has already been saved once.
