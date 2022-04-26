@@ -16,6 +16,8 @@ export const getFormatter = (desc) => {
         return ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null;
     } else if (['int', 'number'].includes(desc.localType)) {
         return ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;
+    } else if (desc.localType === 'Geometry') {
+        return () => null;
     }
     return null;
 };

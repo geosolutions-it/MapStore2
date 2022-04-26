@@ -292,15 +292,7 @@
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Keep in touch and stay up-to-date with the mailing lists",
-                "subscribe_users": "Subscribe Users Mailing List",
-                "subscribe_devel": "Subscribe Developers Mailing List",
-                "visit_group": "Visit this group",
-                "subscribe": "Subscribe",
-                "email": "Email:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "This website uses cookies",
@@ -1012,6 +1004,7 @@
                 "attribute_filter_header": "Attribute filter",
                 "tooltipTextField": "use <b>*</b> for any number of any char</br>use . for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
                 "tooltipTextFieldCSS": "use <b>%</b> for any number of any char</br>use <b>_</b> for a single char</br>use <b>\\</b> to escape the above two (% and _)</br>",
+                "tooltipTextField3DTiles": "use a value supported by the <strong>regExp</strong> function of the 3d tiles style specification 1.0",
                 "groupField": {
                     "any": "any",
                     "all": "all",

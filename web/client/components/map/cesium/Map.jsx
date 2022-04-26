@@ -126,11 +126,13 @@ class CesiumMap extends React.Component {
         if (this.props.registerHooks) {
             this.registerHooks();
         }
-        map.extend(viewerCesiumNavigationMixin, {
-            enableCompass: true,
-            enableZoomControls: this.props.zoomControl,
-            enableDistanceLegend: false
-        });
+        if (this.props.mapOptions?.navigationTools || this.props.zoomControl) {
+            map.extend(viewerCesiumNavigationMixin, {
+                enableCompass: this.props.mapOptions?.navigationTools,
+                enableZoomControls: this.props.zoomControl,
+                enableDistanceLegend: false
+            });
+        }
         map.scene.globe.baseColor = Cesium.Color.WHITE;
         map.imageryLayers.removeAll();
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
@@ -160,12 +162,6 @@ class CesiumMap extends React.Component {
         scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? true;
 
         this.forceUpdate();
-        if (this.props.mapOptions.navigationTools) {
-            this.cesiumNavigation = window.CesiumNavigation;
-            if (this.cesiumNavigation) {
-                this.cesiumNavigation.navigationInitialization(this.props.id, map);
-            }
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -202,7 +198,9 @@ class CesiumMap extends React.Component {
         this.hand.destroy();
         // see comment in UNSAFE_componentWillMount
         this.getDocument().removeEventListener('gesturestart', this.gestureStartListener );
-        this.map.cesiumNavigation.destroy();
+        if (this.map?.cesiumNavigation?.destroy) {
+            this.map.cesiumNavigation.destroy();
+        }
         this.map.destroy();
     }
 

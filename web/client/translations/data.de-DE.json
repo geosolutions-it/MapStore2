@@ -293,14 +293,6 @@
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
             "scrollTop": "An den Anfang der Seite scrollen",
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Bleibe in Verbindung und auf dem Laufenden mit der Mailing Liste",
-                "subscribe_users": "Abonniere die Benutzer Mailing Liste",
-                "subscribe_devel": "Abonniere die Entwickler Mailing Liste",
-                "visit_group": "Besuche diese Gruppe",
-                "subscribe": "Abonnieren",
-                "email": "Email:"
-            },
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Einfacher Viewer</p>"
@@ -1051,6 +1043,7 @@
                 "attribute_filter_header": "Attributfilter",
                 "tooltipTextField": "Verwenden <b>*</b> für ein beliebiges Zeichen</br>Verwenden . für ein einzelnes Zeichen</br>Verwenden <b>!</b> für Sonderzeichen (* und .)</br>",
                 "tooltipTextFieldCSS": "Verwenden <b>%</b> für ein beliebiges Zeichen</br>Verwenden <b>_</b> für ein einzelnes Zeichen</br>Verwenden <b>\\</b> für Sonderzeichen (% und _)</br>",
+                "tooltipTextField3DTiles": "Verwenden Sie einen Wert, der von der <strong>regExp</strong>-Funktion der 3D-Kachelstilspezifikation 1.0 unterstützt wird",
                 "groupField": {
                     "any": "einer",
                     "all": "aller",

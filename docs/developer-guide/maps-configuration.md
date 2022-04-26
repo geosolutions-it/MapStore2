@@ -186,6 +186,7 @@ title: {
 - `mapquest`: MapQuest layers
 - `graticule`: Vector layer that shows a coordinates grid over the map, with optional labels
 - `empty`: special type for empty background
+- `3dtiles`: 3d tiles layers
 
 #### WMS
 
@@ -974,6 +975,32 @@ i.e.
     }
 }
 ```
+
+#### 3D tiles
+
+This type of layer shows 3d tiles version 1.0 inside the Cesium viewer. This layer will not be visible inside 2d map viewer types: openlayer or leaflet.
+See specification for more info about 3d tiles [here](https://www.ogc.org/standards/3DTiles).
+
+i.e.
+
+```javascript
+{
+    "type": "3dtiles",
+    "url": "http..." // URL of tileset.json file
+    "title": "3D tiles layer",
+    "visibility": true,
+    // optional
+    "heightOffset": 0, // height offest applied to the complete tileset
+    "style": {
+      "format": "3dtiles",
+      "body": { // 3d tiles style
+        "color": "color('#43a2ca', 1)"
+      }
+    }
+}
+```
+
+The style body object for the format 3dtiles accepts rules described in the 3d tiles styling specification version 1.0 available [here](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling).
 
 ## Layer groups
 

@@ -36,6 +36,10 @@ Replacing:
 - [ ] Increment version in `package.json`. (as for semantic versioning the major have to be 0 until the npm package has not a stable API).
     - [ ] Commit on master 0.&lt;x-incremented&gt;.0
     - [ ] Make sure on YYYY.XX.xx we have the 0.x.&lt;number-of-minor-version&gt;
+- [ ] Create a milestone on GitHub with the same name of the release (vYYYY.XX.xx)
+    - [ ] create a temporary label "current release" and assing the label to all the issues of the current zenhub release
+    - [ ] use the label to filter the issues on github and assign to all the issue the milestone created
+    - [ ] remove the temporary label "current release"
 - [ ] Update `CHANGELOG.md`. [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation) - both master and stable
 - [ ] Fix `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
 - [ ] Update the version of java modules on the stable branch to a stable, incremental version.

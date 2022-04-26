@@ -46,4 +46,12 @@ describe('Tests for the formatter functions', () => {
         expect(formatter({value: undefined})).toBe(null);
         expect(formatter({value: 0}).props.value).toBe(0);
     });
+    it('test getFormatter for geometry', () => {
+        const formatter = getFormatter({localType: "Geometry"});
+        expect(typeof formatter).toBe("function");
+        expect(formatter()).toBe(null);
+        expect(formatter({value: {properties: {}, geometry: {type: "Point", coordinates: [1, 2]}}})).toBe(null);
+        expect(formatter({value: null})).toBe(null);
+        expect(formatter({value: undefined})).toBe(null);
+    });
 });

@@ -51,10 +51,14 @@ const FilterBuilder = ({
     onChange = () => {}
 }) => {
     const { groupFields, filterFields } = filterObj;
+    const textFieldTooltipMessageIds = {
+        'css': 'queryform.attributefilter.tooltipTextFieldCSS',
+        '3dtiles': 'queryform.attributefilter.tooltipTextField3DTiles'
+    };
     return (
         <div className="ms-style-rule-filter">
             <GroupField
-                format={format}
+                textFieldTooltipMessageId={textFieldTooltipMessageIds[format]}
                 attributes={attributes}
                 filterFields={filterFields}
                 groupFields={groupFields}

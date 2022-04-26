@@ -91,6 +91,12 @@ formats:
   - '*'
 ```
 
+## Migration from 2022.01.00 to 2022.01.01
+
+### MailingLists plugin has been removed
+
+`MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
+
 ## Migration from 2021.02.02 to 2022.01.00
 
 This release includes several libraries upgrade on the backend side,

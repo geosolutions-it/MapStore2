@@ -9,13 +9,14 @@ import { checkIfLayerFitsExtentForProjection } from '../../../../utils/Coordinat
  */
 export default compose(
     withHandlers({
-        useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { },
+        useFiles: ({ currentMap, loadMap = () => { }, loadMapInfo = () => { }, onClose = () => { }, setLayers = () => { },
             annotationsLayer, loadAnnotations = () => {}, warning = () => {}}) =>
             ({ layers = [], maps = [] }, warnings) => {
                 const map = maps[0]; // only 1 map is allowed
                 if (map) {
                     // also handles maps without zoom or center
-                    const { zoom, center } = currentMap;
+                    const { zoom, center, mapId } = currentMap;
+                    const { fileName } = map;
                     loadMap({
                         ...map,
                         map: {
@@ -23,7 +24,11 @@ export default compose(
                             zoom: map.map.zoom || zoom,
                             center: map.map.center || center
                         }
-                    }, null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}));
+                    }, mapId ? mapId : null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}));
+                    // keeps mapinfo of pre-existing map if present (to keep save map overwrite)
+                    if (mapId && fileName) {
+                        loadMapInfo(mapId);
+                    }
                     onClose(); // close if loaded the map
                 }
                 if (layers.length > 0) {

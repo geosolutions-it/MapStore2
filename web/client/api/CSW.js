@@ -8,11 +8,11 @@
 
 import urlUtil from 'url';
 
-import { get, head, last, template, isNil } from 'lodash';
+import { get, head, last, template, isNil, castArray } from 'lodash';
 import assign from 'object-assign';
 
 import axios from '../libs/ajax';
-import {cleanDuplicatedQuestionMarks, getConfigProp} from '../utils/ConfigUtils';
+import { cleanDuplicatedQuestionMarks, getConfigProp } from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG } from '../utils/CoordinatesUtils';
 import WMS from "../api/WMS";
 
@@ -82,26 +82,125 @@ export const constructXMLBody = (startPosition, maxRecords, searchText, {filter}
     return template(cswGetRecordsXml)({filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords});
 };
 
+// Extract the relevant information from the wms URL for (RNDT / INSPIRE)
+const extractWMSParamsFromURL = wms => {
+    const lowerCaseParams = new Map(Array.from(new URLSearchParams(wms.value)).map(([key, value]) => [key.toLowerCase(), value]));
+    const layerName = lowerCaseParams.get('layers');
+    const wmsVersion = lowerCaseParams.get('version');
+    if (layerName) {
+        return {
+            ...wms,
+            protocol: 'OGC:WMS',
+            name: layerName,
+            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERVICE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
+        };
+    }
+    return false;
+};
+
+const toReference = (layerType, data, options) => {
+    if (!data.name) {
+        return null;
+    }
+    switch (layerType) {
+    case 'wms':
+        const urlValue = !(data.value.indexOf("http") === 0)
+            ? (options && options.catalogURL || "") + "/" + data.value
+            : data.value;
+        return {
+            type: data.protocol || data.scheme,
+            url: urlValue,
+            SRS: [],
+            params: {
+                name: data.name
+            }
+        };
+    case 'arcgis':
+        return {
+            type: 'arcgis',
+            url: data.value,
+            SRS: [],
+            params: {
+                name: data.name
+            }
+        };
+    default:
+        return null;
+    }
+};
+
+const REGEX_WMS_EXPLICIT = [/^OGC:WMS-(.*)-http-get-map/g, /^OGC:WMS/g];
+const REGEX_WMS_EXTRACT = /serviceType\/ogc\/wms/g;
+const REGEX_WMS_ALL = REGEX_WMS_EXPLICIT.concat(REGEX_WMS_EXTRACT);
+
+export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
+    const URI = dc?.URI && castArray(dc.URI);
+    // look in URI objects for wms and thumbnail
+    if (URI) {
+        const wms = head(URI.map( uri => {
+            if (uri.protocol) {
+                if (REGEX_WMS_EXPLICIT.some(regex => uri.protocol.match(regex))) {
+                    /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
+                    return uri;
+                }
+                if (uri.protocol.match(REGEX_WMS_EXTRACT)) {
+                    /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                    return extractWMSParamsFromURL(uri);
+                }
+            }
+            return false;
+        }).filter(item => item));
+        if (wms) {
+            return toReference('wms', wms, options);
+        }
+    }
+    // look in references objects
+    if (dc?.references?.length) {
+        const refs = castArray(dc.references);
+        const wms = head(refs.filter((ref) => { return ref.scheme && REGEX_WMS_EXPLICIT.some(regex => ref.scheme.match(regex)); }));
+        if (wms) {
+            let urlObj = urlUtil.parse(wms.value, true);
+            let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
+            return toReference('wms', { ...wms, name: layerName }, options);
+        }
+        if (checkEsri) {
+            // checks for esri arcgis in geonode csw
+            const esri = head(refs.filter((ref) => {
+                return ref.scheme && ref.scheme === "WWW:DOWNLOAD-REST_MAP";
+            }));
+            if (esri) {
+                return toReference('arcgis', {...esri, name: dc.alternative}, options);
+            }
+        }
+    }
+    return null;
+};
+
 let capabilitiesCache = {};
 
 /**
- * Add capabilities data to CSW records
+ * Add capabilities data to CSW records if WMS url is found
  * Currently limited to only scale denominators (visibility limits)
- * @param {string} url wms url
+ * @param {object[]} _dcRef dc.reference or dc.URI
  * @param {object} result csw results object
  */
-const addCapabilitiesToRecords = (url, result) => {
-    const cached = capabilitiesCache[url];
+const addCapabilitiesToRecords = (_dcRef, result) => {
+    const { value: _url } = _dcRef?.find(t =>
+        REGEX_WMS_ALL.some(regex=> t?.scheme?.match(regex) || t?.protocol?.match(regex))) || {}; // Get WMS URL from references
+    const [parsedUrl] = _url && _url.split('?') || [];
+    if (!parsedUrl) return {...result}; // Return record when no url found
+
+    const cached = capabilitiesCache[parsedUrl];
     const isCached = cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000;
     return Promise.resolve(
         isCached
             ? cached.data
-            : WMS.getCapabilities(url + '?version=')
+            : WMS.getCapabilities(parsedUrl + '?version=')
                 .then((caps)=> get(caps, 'capability.layer.layer', []))
                 .catch(()=> []))
         .then((layers) => {
             if (!isCached) {
-                capabilitiesCache[url] = {
+                capabilitiesCache[parsedUrl] = {
                     timestamp: new Date().getTime(),
                     data: layers
                 };
@@ -110,10 +209,11 @@ const addCapabilitiesToRecords = (url, result) => {
             return {
                 ...result,
                 records: result?.records?.map(record=> {
+                    const name = get(getLayerReferenceFromDc(record?.dc, null, false), 'params.name', '');
                     const {
                         minScaleDenominator: MinScaleDenominator,
                         maxScaleDenominator: MaxScaleDenominator
-                    } = layers.find(l=> l.name === record?.dc?.identifier) || {};
+                    } = layers.find(l=> l.name === name) || {};
                     return {
                         ...record,
                         ...((!isNil(MinScaleDenominator) || !isNil(MaxScaleDenominator))
@@ -299,9 +399,7 @@ const Api = {
                                     }
                                 }
                                 result.records = records;
-                                const { value: _url } = _dcRef?.find(t => t.scheme === 'OGC:WMS' || t.protocol === 'OGC:WMS') || {}; // Get WMS URL from references
-                                const [parsedUrl] = _url && _url.split('?') || [];
-                                return parsedUrl ? addCapabilitiesToRecords(parsedUrl, result) : {...result};
+                                return addCapabilitiesToRecords(_dcRef, result);
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
                                 return {
                                     error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'
