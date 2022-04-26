@@ -28,7 +28,7 @@ From the [Catalog](catalog.md) the user can choose the layers to add to the list
 
 <img src="../img/background/add-ocean.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-As soon as a layer is selected, the **Add New Background** window opens:
+As soon as a WMS layer is selected, the **Add New Background** window opens:
 
 <img src="../img/background/add-new-bck.jpg" class="ms-docimage" style="max-width:500px;" />
 
