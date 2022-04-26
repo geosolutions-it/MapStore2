@@ -317,7 +317,7 @@ The other known services are listed as providers below "custom" and "TMS 1.0.0".
 
 ### 3D Tiles Catalog
 
-3D Tiles is an [OGC specification](https://www.ogc.org/standards/3DTiles) designed for streaming and rendering massive 3D geospatial content such as Photogrammetry, 3D Buildings, BIM/CAD, and Point Clouds across desktop, web, and mobile applications.
+3D Tiles is an [OGC specification](https://www.ogc.org/standards/3DTiles) designed for streaming and rendering massive 3D geospatial content such as Photogrammetry, 3D Buildings, BIM/CAD, and Point Clouds across desktop, web and mobile applications.
 MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [CesiumJS capabilities](https://github.com/CesiumGS/3d-tiles). Through the Catalog tool, a specific source type to load 3D Tiles in the Cesium Map can be configured as follows by specifying the URL of a reachable _tileset.json_. 
 
 In **general settings of** 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.

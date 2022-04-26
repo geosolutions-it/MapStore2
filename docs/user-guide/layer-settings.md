@@ -250,7 +250,7 @@ The style editor can configure the *Icon* as explained [here](layer-settings.md#
 
 ### Create a style for 3D Tiles
 
-With [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to customize the style of a [3D Tiles layer](catalog.md#3d-tiles-catalog) client side. The MapStore support is working in respect of the [3D Tiles Specification 1.0](http://docs.opengeospatial.org/cs/18-053r2/18-053r2.html#97) and on top of the [Cesium Styling capabilities](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling). Below is an example of how the Style Editor of a 3D Tiles layer is appearing in the MapStore UI.
+With [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to customize the style of a [3D Tiles layer](catalog.md#3d-tiles-catalog) client side. The MapStore support is working in respect of the [3D Tiles Specification 1.0](http://docs.opengeospatial.org/cs/18-053r2/18-053r2.html) and on top of the [Cesium Styling capabilities](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling). Below is an example of how the Style Editor of a 3D Tiles layer is appearing in the MapStore UI.
 
 <img src="../img/layer-settings/3dtiles_style.jpg" class="ms-docimage">
 
