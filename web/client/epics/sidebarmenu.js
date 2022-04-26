@@ -12,7 +12,7 @@ import {SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, setControlProperty, TOGGLE
 import ConfigUtils from "../utils/ConfigUtils";
 
 const customExclusivePanels = get(ConfigUtils.getConfigProp('miscSettings'), 'exclusiveDockPanels', []);
-const exclusiveDockPanels = ['measure', 'mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions']
+const exclusiveDockPanels = ['measure', 'mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details']
     .concat(...(Array.isArray(customExclusivePanels) ? customExclusivePanels : []));
 
 export const resetOpenDockPanels = (action$, store) => action$

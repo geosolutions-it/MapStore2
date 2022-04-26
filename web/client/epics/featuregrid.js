@@ -808,6 +808,10 @@ export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID)
         .switchMap( () => {
             let actions = [
+                setControlProperty('userExtensions', 'enabled', false),
+                setControlProperty('details', 'enabled', false),
+                setControlProperty('mapTemplates', 'enabled', false),
+                setControlProperty('mapCatalog', 'enabled', false),
                 setControlProperty('metadataexplorer', 'enabled', false),
                 setControlProperty('annotations', 'enabled', false),
                 setControlProperty('details', 'enabled', false)

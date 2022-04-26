@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import ContainerDimensions from 'react-container-dimensions';
 import {DropdownButton, Glyphicon, MenuItem} from "react-bootstrap";
 import {connect} from "react-redux";
-import {omit, pick} from "lodash";
 import assign from "object-assign";
 import {createSelector} from "reselect";
 import {bindActionCreators} from "redux";
@@ -83,14 +82,15 @@ class SidebarMenu extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         const newSize = nextProps.state.map?.present?.size?.height !== this.props.state.map?.present?.size?.height;
+        const newHeight = nextProps.style.bottom !== this.props.style.bottom;
         const newItems = nextProps.items !== this.props.items;
         const newVisibleItems = !newItems ? nextProps.items.reduce((prev, cur, idx) => {
-            if (this.isNotHidden(cur) !== this.isNotHidden(this.props.items[idx])) {
+            if (this.isNotHidden(cur, nextProps.state) !== this.isNotHidden(this.props.items[idx], this.props.state)) {
                 prev.push(cur);
             }
             return prev;
         }, []).length > 0 : false;
-        return newSize || newItems || newVisibleItems;
+        return newSize || newItems || newVisibleItems || newHeight;
     }
 
     componentWillUnmount() {
@@ -98,9 +98,9 @@ class SidebarMenu extends React.Component {
         onDetach();
     }
 
-    getStyle = (container = true) => {
-        const method = container ? pick : omit;
-        return method(this.props.style, ['height']);
+    getStyle = (style) => {
+        const hasBottomOffset = parseInt(style?.bottom, 10) !== 0;
+        return { ...style, height: hasBottomOffset ? 'auto' : '100%', maxHeight: style?.height ?? null, bottom: hasBottomOffset ? `calc(${style.bottom} + 30px)` : null };
     };
 
     getPanels = items => {
@@ -124,7 +124,7 @@ class SidebarMenu extends React.Component {
         const targetMatch = (elementTarget) => elementTarget === target || !elementTarget && target === this.defaultTarget;
         const filtered = this.props.items.reduce(( prev, current) => {
             if (!current?.components && targetMatch(current.target)
-                && this.isNotHidden(current)
+                && this.isNotHidden(current, this.props.state)
             ) {
                 prev.push({
                     ...current,
@@ -135,7 +135,7 @@ class SidebarMenu extends React.Component {
             if (current?.components && Array.isArray(current.components)) {
                 current.components.forEach((component) => {
                     if (targetMatch(component?.target)
-                        && this.isNotHidden(component?.selector ? component : current)
+                        && this.isNotHidden(component?.selector ? component : current, this.props.state)
                     ) {
                         prev.push({
                             plugin: current?.plugin || this.defaultTool,
@@ -208,7 +208,7 @@ class SidebarMenu extends React.Component {
 
     render() {
         return (
-            <div id="mapstore-sidebar-menu-container" style={this.props.style}>
+            <div id="mapstore-sidebar-menu-container" style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
                     { ({ height }) =>
                         <ToolsContainer id={this.props.id}
@@ -241,8 +241,8 @@ class SidebarMenu extends React.Component {
     }
 
 
-    isNotHidden = (element) => {
-        return element?.selector ? element.selector(this.props.state)?.style?.display !== 'none' : true;
+    isNotHidden = (element, state) => {
+        return element?.selector ? element.selector(state)?.style?.display !== 'none' : true;
     };
 }
 

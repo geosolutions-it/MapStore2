@@ -177,7 +177,7 @@ const FeatureDock = (props = {
         minDockSize: 0.1,
         position: "bottom",
         setDockSize: () => {},
-        zIndex: 1030
+        zIndex: 1060
     };
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
     const items = props?.items ?? [];

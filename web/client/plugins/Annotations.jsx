@@ -343,7 +343,10 @@ export default createPlugin('Annotations', {
             tooltip: "annotations.tooltip",
             icon: <Glyphicon glyph="comment"/>,
             doNotHide: true,
-            toggle: true
+            selector: (state) => ({
+                bsStyle: state?.controls?.annotations?.enabled ? "primary" : "tray",
+                active: !!(state?.controls?.annotations?.enabled)
+            })
         }
     },
     reducers: {

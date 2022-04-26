@@ -36,7 +36,7 @@ import {
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
 import { error, success } from '../actions/notifications';
-import { SET_CONTROL_PROPERTY, setControlProperties, setControlProperty } from '../actions/controls';
+import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { closeFeatureGrid } from '../actions/featuregrid';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -291,9 +291,9 @@ export default (API) => ({
             - GFI
             - FeatureGrid
             */
-    openCatalogEpic: (action$) =>
-        action$.ofType(SET_CONTROL_PROPERTY)
-            .filter((action) => action.control === "metadataexplorer" && action.value)
+    openCatalogEpic: (action$, store) =>
+        action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+            .filter((action) => action.control === "metadataexplorer" && activeSelector(store.getState()))
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
             }),
