@@ -197,7 +197,7 @@ const enhance = compose(
     withPropsOnChange(['status'], ({ status }) => ({
         readOnly: status === "PLAY"
     })),
-    // make timeline items lauyout stacked if we have at least one interval range item
+    // make timeline items layout stacked if we have at least one interval range item
     withPropsOnChange(['items'], ({ items, options }) => {
         const hasIntervalValues = some(items, {className: "interval"});
         return {

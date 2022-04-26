@@ -65,6 +65,9 @@ export default ({
     playbackRange = {
 
     },
+    snapTypes = [],
+    currentSnapType = "start",
+    onChangeSnapType = () => { },
     setPlaybackRange = () => { },
     playbackButtons,
     dateSelectorStyle = {
@@ -84,6 +87,32 @@ export default ({
             </ControlLabel>
             <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
         </Form>
+        {!fixedStep && (
+            <Form componentClass="fieldset" inline className="snap-type-form">
+                <ControlLabel>
+                    <Message msgId="timeline.settings.snapType" />&nbsp;
+                    <InfoPopover text={<Message msgId="timeline.settings.snapTypeTooltip" />} />
+                </ControlLabel>
+                <div className="snap-type-container">
+                    {snapTypes.map(snapType => (
+                        <div className="snap-type-item">
+                            <input
+                                type="radio"
+                                className="snap-type-radio-btn"
+                                value={snapType.value}
+                                name="snapType"
+                                checked={currentSnapType === snapType.value}
+                                onChange={ e => {
+                                    const { value } = e.target;
+                                    onChangeSnapType(value);
+                                }}
+                            />
+                            <Message msgId={snapType.label}/>
+                        </div>
+                    ))}
+                </div>
+            </Form>
+        )}
     </FormGroup>
     <h4><Message msgId="playback.settings.title" /></h4>
     <FormGroup controlId="frameDuration" >
@@ -155,3 +184,4 @@ export default ({
         </Form>
     </FormGroup>
 </div>);
+

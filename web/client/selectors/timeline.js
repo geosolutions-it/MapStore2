@@ -33,6 +33,8 @@ export const isCollapsed = state => get(state, 'timeline.settings.collapsed');
 
 export const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
 
+export const snapTypeSelector = state => get(state, "timeline.settings.snapType") || "start";
+
 /**
  * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
  * @return the flag of sync of the timeline with the map viewport

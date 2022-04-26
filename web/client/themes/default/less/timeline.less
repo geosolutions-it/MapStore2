@@ -987,14 +987,28 @@
             margin-left: 0;
             border-bottom: 1px solid @ms-main-border-color;
         }
-        .form-inline .react-numeric-input{
-            display: inline-block !important;
+        .form-inline {
+            padding-bottom: 20px;
+            .react-numeric-input{
+                display: inline-block !important;
+            }
         }
         .react-numeric-input{
             #intl-numeric{
                 font-family: inherit;
                 float: unset;
             }
+        }
+        .snap-type-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .snap-type-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .snap-type-radio-btn {
+            cursor: pointer;
         }
     }
 }

@@ -72,6 +72,12 @@ export const AUTOSELECT = "TIMELINE:AUTOSELECT";
  */
 export const autoselect = () => ({ type: AUTOSELECT });
 
+/**
+ * Sets snap to type (start, end) for dimensions with interval values
+ */
+export const SET_SNAP_TYPE = "TIMELINE:SET_SNAP_TYPE";
+export const setSnapType = snapType => ({type: SET_SNAP_TYPE, snapType});
+
 export const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
 export const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
 export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';

@@ -21,7 +21,9 @@ const getNearestDateIndex = (dates, rawTarget) => {
     let winner = -1;
 
     dates.forEach( (rawDate, index) => {
-        const date = toTime(rawDate);
+        // get start date from time intervals
+        const [start] = rawDate.split("/");
+        const date = toTime(start);
         let distance = Math.abs(date - target);
         if (distance < nearest) {
             nearest = distance;
