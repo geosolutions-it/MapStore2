@@ -14,6 +14,26 @@ const toTime = date => {
     }
     return date;
 };
+
+/**
+ * Filters the result of the describeDomain response which may get to the client as [start/end, start/end] i.e.
+ * when time occurrences are expressed as intervals, the filter keeps only the reference point in the interval
+ * (start or end) set by the customer
+ * @param {string[]} dateArray array containing the domains expressed in [start/end, start/end] dates for a given interval
+ * @param {string} snapType if snap to layer data is active - snaps to start or end point of the interval
+ * @returns {string[]} array containing the domains expressed as [start, end] filtered by snapping instant points
+ */
+const filterDateArray = (dateArray, snapType) => {
+    return dateArray.map(rawDate => {
+        const [start, end] = rawDate.split("/");
+        const snapMapping = {
+            "start": start,
+            "end": end
+        };
+        return snapMapping[snapType];
+    });
+};
+
 const getNearestDateIndex = (dates, rawTarget) => {
     const target = toTime(rawTarget);
 
@@ -21,9 +41,7 @@ const getNearestDateIndex = (dates, rawTarget) => {
     let winner = -1;
 
     dates.forEach( (rawDate, index) => {
-        // get start date from time intervals
-        const [start] = rawDate.split("/");
-        const date = toTime(start);
+        const date = toTime(rawDate);
         let distance = Math.abs(date - target);
         if (distance < nearest) {
             nearest = distance;
@@ -135,7 +153,10 @@ export const roundRangeResolution = ({start, end} = {}, max) => {
     };
 };
 
-export const getNearestDate = (dates = [], target) => dates[getNearestDateIndex(dates, target)];
+export const getNearestDate = (dates = [], target, snapType) => {
+    const filteredDates = filterDateArray(dates, snapType);
+    return filteredDates[getNearestDateIndex(filteredDates, target)];
+};
 
 export const isTimeDomainInterval = values => values && values.indexOf && values.indexOf("--") > 0;
 

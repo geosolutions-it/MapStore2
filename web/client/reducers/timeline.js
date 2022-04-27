@@ -99,7 +99,8 @@ export default (state = {
     case INIT_TIMELINE: {
         return set(`settings`, {
             showHiddenLayers: action.showHiddenLayers,
-            expandLimit: action.expandLimit
+            expandLimit: action.expandLimit,
+            snapType: action.snapType
         }, state);
     }
     default:

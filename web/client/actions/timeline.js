@@ -84,7 +84,7 @@ export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
 export const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
 
 export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
-export const initTimeline = (showHiddenLayers, expandLimit) => ({type: INIT_TIMELINE, showHiddenLayers, expandLimit});
+export const initTimeline = (showHiddenLayers, expandLimit, snapType) => ({type: INIT_TIMELINE, showHiddenLayers, expandLimit, snapType});
 /**
  * Actions for timeline
  * @module actions.timeline
