@@ -14,7 +14,6 @@ import GET_CAP_RESPONSE from 'raw-loader!../../../../../test-resources/wms/GetCa
 import Display from '../Display';
 import MockAdapter from "axios-mock-adapter";
 import axios from "../../../../../libs/ajax";
-import TestUtils from "react-dom/test-utils";
 let mockAxios;
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
@@ -186,7 +185,7 @@ describe('test Layer Properties Display module component', () => {
         ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         const isForceProxyOption = document.querySelector('[data-qa="display-forceProxy-option"]');
         expect(isForceProxyOption).toBeTruthy();
-        TestUtils.Simulate.change(isForceProxyOption, { "target": { "checked": true }});
+        ReactTestUtils.Simulate.change(isForceProxyOption, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'forceProxy', true ]);
     });
