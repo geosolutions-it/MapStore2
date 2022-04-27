@@ -74,7 +74,7 @@ describe('Test common advanced settings', () => {
         expect(advancedSettingsPanel).toBeTruthy();
         const allowUnsecureLayers = document.querySelectorAll('input[type="checkbox"]')[1];
         const formGroup = document.querySelectorAll('.form-group')[2];
-        expect(formGroup.textContent.trim()).toBe('catalog.allowUnsecureLayers');
+        expect(formGroup.textContent.trim()).toBe('catalog.allowUnsecureLayers.label');
         expect(allowUnsecureLayers).toExist();
         TestUtils.Simulate.change(allowUnsecureLayers, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();

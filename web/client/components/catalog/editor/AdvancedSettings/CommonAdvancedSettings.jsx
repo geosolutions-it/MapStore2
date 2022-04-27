@@ -10,6 +10,7 @@ import { isNil } from 'lodash';
 import { FormGroup, Checkbox, Col } from "react-bootstrap";
 
 import Message from "../../../I18N/Message";
+import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 /**
  * Common Advanced settings form WMS/CSW/WMTS/WFS
@@ -48,7 +49,7 @@ export default ({
                     <Checkbox
                         onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
                         checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
-                        <Message msgId="catalog.allowUnsecureLayers" />
+                        <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
                     </Checkbox>
                 </Col>
             </FormGroup>}

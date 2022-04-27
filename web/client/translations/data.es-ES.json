@@ -1471,7 +1471,10 @@
               "addAliasTooltip": "Agregar alias",
               "removeAliasTooltip": "Eliminar alias"
             },
-            "allowUnsecureLayers": "Permitir capas no seguras"
+            "allowUnsecureLayers": {
+              "label": "Permitir capas no seguras",
+              "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
+            }
         },
         "uploader": {
             "filename": "Nombre del fichero",

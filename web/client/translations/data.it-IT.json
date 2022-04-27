@@ -1471,7 +1471,10 @@
               "addAliasTooltip": "Aggiungi alias",
               "removeAliasTooltip": "Rimuovi alias"
             },
-            "allowUnsecureLayers": "Consenti livelli non sicuri"
+            "allowUnsecureLayers": {
+              "label": "Consenti livelli non sicuri",
+              "tooltip": "L'aggiunta di un livello da mappare con questa opzione abilitata, costringe l'applicazione ad applicare il proxy"
+            }
         },
         "uploader": {
             "filename": "File Name",

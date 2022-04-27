@@ -1509,7 +1509,10 @@
             "addAliasTooltip": "Alias hinzufügen",
             "removeAliasTooltip": "Alias entfernen"
           },
-          "allowUnsecureLayers": "Nicht sichere Ebenen zulassen"
+          "allowUnsecureLayers": {
+              "label": "Nicht sichere Ebenen zulassen",
+              "tooltip": "Das Hinzufügen einer Ebene zur Karte mit aktivierter Option zwingt die Anwendung, Proxy anzuwenden"
+          }
         },
         "uploader": {
             "filename": "Dateiname",

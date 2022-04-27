@@ -1465,7 +1465,10 @@
                 "label": "Set Visibility Limit",
                 "tooltip": "Automatically applies the visibility limits suggested by the server"
            },
-          "allowUnsecureLayers": "Allow not secure layers",
+           "allowUnsecureLayers": {
+                "label": "Allow not secure layers",
+                "tooltip": "Adding layer to map with this option enabled, forces the application to apply proxy"
+           },
           "domainAliases": {
             "title": "Domain aliases",
             "helpTooltip": "This option is used to split content across multiple subdomains",
