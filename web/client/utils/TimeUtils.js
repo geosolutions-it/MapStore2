@@ -24,14 +24,17 @@ const toTime = date => {
  * @returns {string[]} array containing the domains expressed as [start, end] filtered by snapping instant points
  */
 const filterDateArray = (dateArray, snapType) => {
-    return dateArray.map(rawDate => {
-        const [start, end] = rawDate.split("/");
-        const snapMapping = {
-            "start": start,
-            "end": end
-        };
-        return snapMapping[snapType];
-    });
+    if (snapType) {
+        return dateArray.map(rawDate => {
+            const [start, end] = rawDate.split("/");
+            const snapMapping = {
+                "start": start,
+                "end": end
+            };
+            return snapMapping[snapType];
+        });
+    }
+    return dateArray;
 };
 
 const getNearestDateIndex = (dates, rawTarget) => {
