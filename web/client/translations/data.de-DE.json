@@ -3503,6 +3503,9 @@
             "noDataForPosition": "keine Street-View-Daten für diese Position",
             "unknownError": "Unbekannter Fehler, siehe Konsole"
           }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Weitere Elemente anzeigen"
         }
     }
 }

@@ -27,6 +27,7 @@ import sidebarMenuEpics from "../epics/sidebarmenu";
 import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
+import Message from "../components/I18N/Message";
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -167,7 +168,6 @@ class SidebarMenu extends React.Component {
                 position: 9999,
                 icon: <Glyphicon glyph="option-horizontal" />,
                 tool: () => this.renderExtraItems(filtered.slice(itemsToRender)),
-                tooltip: 'Show Extras',
                 priority: 1
             };
             toRender.splice(itemsToRender, 0, extra);
@@ -203,7 +203,7 @@ class SidebarMenu extends React.Component {
                 pullRight
                 bsStyle="tray"
                 id="extra-items"
-                tooltip="Show Extras"
+                tooltip={<Message msgId="sidebarMenu.showMoreItems" />}
                 tooltipPosition="left"
                 title={<Glyphicon glyph="option-horizontal" />}
             >

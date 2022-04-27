@@ -3476,6 +3476,9 @@
             "noDataForPosition": "no street-view data for this position",
             "unknownError": "unknown error, see console"
           }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Show more items"
         }
     }
 }

@@ -3466,6 +3466,9 @@
             "noDataForPosition": "Non ci sono dati Street View per questa posizione",
             "unknownError": "Errore sconosciuto"
           }
-      }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Mostra più elementi"
+        }
     }
 }
