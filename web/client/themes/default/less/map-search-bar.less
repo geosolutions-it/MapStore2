@@ -75,6 +75,28 @@
     box-shadow: -1px 1px 5px 1px #5e5e5e;
 }
 
+#search-bar-container.no-sidebar {
+    margin-right: 0;
+    position: static;
+    order: -1;
+    box-shadow: none;
+
+    &.toggled {
+        #map-search-bar {
+            position: fixed;
+            top: 52px;
+            width: 100%;
+        }
+    }
+
+    #map-search-bar {
+        top: 0;
+        left: 0;
+        position: relative;
+        box-shadow: none;
+    }
+}
+
 #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
     border-radius: 0;
     position: relative;

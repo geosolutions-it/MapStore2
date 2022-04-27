@@ -68,7 +68,7 @@ export const openMeasureEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter((action) => action.control === "measure" && activeSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), toggleControl('annotations', null));
+            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), setControlProperty('annotations', 'enabled', false));
         });
 
 export const closeMeasureEpics = (action$, store) =>

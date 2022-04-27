@@ -8,21 +8,22 @@
 
 import React from 'react';
 import ContainerDimensions from "react-container-dimensions";
+import PropTypes from "prop-types";
 import { connect } from 'react-redux';
-import { createPlugin } from '../utils/PluginsUtils';
-import { Glyphicon } from 'react-bootstrap';
-
-import Message from '../components/I18N/Message';
-
-import { setControlProperty, toggleControl } from '../actions/controls';
-
 import { createSelector } from 'reselect';
 import get from 'lodash/get';
+
+import { Glyphicon } from 'react-bootstrap';
+
 import DockPanel from '../components/misc/panels/DockPanel';
-import ExtensionsPanel from './userExtensions/ExtensionsPanel';
-import {mapLayoutValuesSelector} from "../selectors/maplayout";
 import DockContainer from "../components/misc/panels/DockContainer";
-import * as PropTypes from "prop-types";
+import Message from '../components/I18N/Message';
+import ExtensionsPanel from './userExtensions/ExtensionsPanel';
+import { createPlugin } from '../utils/PluginsUtils';
+
+import { setControlProperty, toggleControl } from '../actions/controls';
+import * as epics from '../epics/userextensions';
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
 
 
 class Extensions extends React.Component {
@@ -119,5 +120,6 @@ export default createPlugin('UserExtensions', {
             doNotHide: true,
             toggle: true
         }
-    }
+    },
+    epics
 });

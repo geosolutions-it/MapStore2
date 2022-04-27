@@ -33,6 +33,5 @@
 
 #mapstore-navbar #mapstore-burger-menu {
     position: relative;
-    float: right;
-    left: 0;
+    order: 3;
 }

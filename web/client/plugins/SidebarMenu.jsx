@@ -25,7 +25,7 @@ import sidebarMenuReducer from "../reducers/sidebarmenu";
 import sidebarMenuEpics from "../epics/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
-import {lastActiveToolSelector} from "../selectors/sidebarmenu";
+import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 
 const TDropdownButton = tooltip(DropdownButton);
@@ -91,6 +91,11 @@ class SidebarMenu extends React.Component {
             return prev;
         }, []).length > 0 : false;
         return newSize || newItems || newVisibleItems || newHeight;
+    }
+
+    componentDidUpdate(prevProps) {
+        const { onInit } = this.props;
+        prevProps.isActive === false && onInit();
     }
 
     componentWillUnmount() {
@@ -249,11 +254,13 @@ class SidebarMenu extends React.Component {
 const sidebarMenuSelector = createSelector([
     state => state,
     state => lastActiveToolSelector(state),
-    state => mapLayoutValuesSelector(state, {bottom: true, height: true})
-], (state, lastActiveTool, style) => ({
+    state => mapLayoutValuesSelector(state, {bottom: true, height: true}),
+    sidebarIsActiveSelector
+], (state, lastActiveTool, style, isActive) => ({
     style,
     lastActiveTool,
-    state
+    state,
+    isActive
 }));
 
 /**
