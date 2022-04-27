@@ -42,6 +42,16 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>
+        {!isNil(service.type) && service.type === "wfs" &&
+            <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
+                <Col xs={12}>
+                    <Checkbox
+                        onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
+                        checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
+                        <Message msgId="catalog.allowUnsecureLayers" />
+                    </Checkbox>
+                </Col>
+            </FormGroup>}
         {children}
     </div>
 );

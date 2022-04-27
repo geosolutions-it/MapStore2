@@ -74,6 +74,8 @@ In particular, the user is allowed to:
 
 * Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wms/wmtscatalog)
 
+* Enable/disable the _Force proxy_ layer option. If enabled, forces the application to check the source and applies proxy if needed. 
+
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.

@@ -160,7 +160,8 @@
                     "title": "Errore",
                     "message": "Impossibile recuperare il formato"
                 }
-            }
+            },
+            "forceProxy": "Forza proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -1469,7 +1470,8 @@
               "helpTooltip": "Questa opzione viene utilizzata per suddividere il contenuto in più sottodomini",
               "addAliasTooltip": "Aggiungi alias",
               "removeAliasTooltip": "Rimuovi alias"
-            }
+            },
+            "allowUnsecureLayers": "Consenti livelli non sicuri"
         },
         "uploader": {
             "filename": "File Name",

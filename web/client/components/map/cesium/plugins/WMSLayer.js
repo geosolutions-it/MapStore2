@@ -51,6 +51,16 @@ NoProxy.prototype.getURL = function(resource) {
     return url + queryString;
 };
 
+// Check and apply proxy to source url
+function getProxy(options) {
+    let proxyUrl = ConfigUtils.getProxyUrl({});
+    let proxy;
+    if (proxyUrl) {
+        proxy = options.noCors || needProxy(options.url);
+    }
+    return proxy ? new WMSProxy(proxyUrl) : new NoProxy();
+}
+
 function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
@@ -77,7 +87,8 @@ function wmsToCesiumOptionsSingleTile(options) {
     return {
         url: new Cesium.Resource({
             url,
-            headers
+            headers,
+            proxy: getProxy(options)
         })
     };
 }
@@ -85,11 +96,6 @@ function wmsToCesiumOptionsSingleTile(options) {
 function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
-    let proxyUrl = ConfigUtils.getProxyUrl({});
-    let proxy;
-    if (proxyUrl) {
-        proxy = needProxy(options.url) && proxyUrl;
-    }
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
@@ -100,7 +106,7 @@ function wmsToCesiumOptions(options) {
         url: new Cesium.Resource({
             url: "{s}",
             headers,
-            proxy: proxy && new WMSProxy(proxy) || new NoProxy()
+            proxy: getProxy(options)
         }),
         // #7516 this helps Cesium to use CORS requests in a proper way, even when headers are not
         // present in the Resource
@@ -132,17 +138,12 @@ function wmsToCesiumOptions(options) {
 function wmsToCesiumOptionsBIL(options) {
 
     let url = options.url;
-    let proxyUrl = ConfigUtils.getProxyUrl({});
-    let proxy;
-    if (proxyUrl) {
-        proxy = options.noCors || needProxy(url);
-    }
     const headers = getAuthenticationHeaders(url, options.securityToken);
     return assign({
         url: new Cesium.Resource({
             url,
             headers,
-            proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy()
+            proxy: getProxy(options)
         }),
         littleEndian: options.littleendian || false,
         layerName: options.name

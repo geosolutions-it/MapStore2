@@ -160,7 +160,8 @@
                     "title": "Error",
                     "message": "Failed to fetch format"
                 }
-            }
+            },
+            "forceProxy": "Force proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -1429,7 +1430,7 @@
             "showPreview": "Show preview",
             "advancedSettings": "Advanced settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
-            "invalidUrlHttpProtocol": "Thìs catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
+            "invalidUrlHttpProtocol": "This catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",
@@ -1464,6 +1465,7 @@
                 "label": "Set Visibility Limit",
                 "tooltip": "Automatically applies the visibility limits suggested by the server"
            },
+          "allowUnsecureLayers": "Allow not secure layers",
           "domainAliases": {
             "title": "Domain aliases",
             "helpTooltip": "This option is used to split content across multiple subdomains",

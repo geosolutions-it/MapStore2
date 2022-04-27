@@ -160,7 +160,8 @@
                     "title": "Error",
                     "message": "Format konnte nicht abgerufen werden"
                 }
-            }
+            },
+            "forceProxy": "Proxy erzwingen"
         },
         "longitude": "Längengrad",
         "latitude": "Breitengrad",
@@ -1507,7 +1508,8 @@
             "helpTooltip": "Diese Option wird verwendet, um Inhalte auf mehrere Subdomains aufzuteilen",
             "addAliasTooltip": "Alias hinzufügen",
             "removeAliasTooltip": "Alias entfernen"
-          }
+          },
+          "allowUnsecureLayers": "Nicht sichere Ebenen zulassen"
         },
         "uploader": {
             "filename": "Dateiname",
