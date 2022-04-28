@@ -175,4 +175,17 @@ describe('Test the mapConfig reducer', () => {
         expect(state.map.info).toExist();
         expect(state.map.info.canEdit).toBe(true);
     });
+    it('overrides mapconfig if external file is loaded and mapId exists on current map', () => {
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', mapId: "1", config: { version: 2, map: {center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
+        state = mapConfig(state, {type: "MAP_INFO_LOADED", mapId: "1", info: {canEdit: true, canDelete: true}});
+        expect(state.map).toExist();
+        expect(state.map.info).toExist();
+        expect(state.map.info.canEdit).toBe(true);
+        state = mapConfig(state, {type: 'MAP_CONFIG_LOADED', config: {fileName: "uploadedMap.json", version: 2, map: {center: {x: 10, y: 10}, zoom: 21, layers: [] }}});
+        expect(state.map).toExist();
+        expect(state.map.mapId).toBe("1");
+        expect(state.map.center.x).toBe(10);
+        expect(state.map.center.y).toBe(10);
+        expect(state.map.zoom).toBe(21);
+    });
 });
