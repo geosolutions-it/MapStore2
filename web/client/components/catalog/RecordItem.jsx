@@ -140,6 +140,7 @@ class RecordItem extends React.Component {
         const formats = this.getFormats(record.layerType || record.serviceType, record) || [];
         const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
         const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits;
+        const allowUnsecureLayers = this.props?.service?.allowUnsecureLayers;
         return [
             {
                 tooltipId: 'catalog.addToMap',
@@ -177,7 +178,8 @@ class RecordItem extends React.Component {
                                 resolutions: getResolutions()
                             }
                         }),
-                        localizedLayerStyles
+                        localizedLayerStyles,
+                        allowUnsecureLayers
                     }, true)
                         .then((layer) => {
                             if (layer) {

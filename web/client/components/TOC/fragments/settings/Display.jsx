@@ -29,6 +29,7 @@ export default class extends React.Component {
         containerWidth: PropTypes.number,
         currentLocaleLanguage: PropTypes.string,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
+        isCesiumActive: PropTypes.bool,
         projection: PropTypes.string,
         resolutions: PropTypes.array,
         zoom: PropTypes.number
@@ -235,6 +236,14 @@ export default class extends React.Component {
                                     onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
                                     <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
                                 </Checkbox>))}
+                            {!this.props.isCesiumActive && (<Checkbox
+                                data-qa="display-forceProxy-option"
+                                value="forceProxy"
+                                key="forceProxy"
+                                onChange={(e) => this.props.onChange("forceProxy", e.target.checked)}
+                                checked={this.props.element.forceProxy} >
+                                <Message msgId="layerProperties.forceProxy"/>
+                            </Checkbox>)}
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>

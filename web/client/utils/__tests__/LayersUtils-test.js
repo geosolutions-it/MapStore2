@@ -1101,6 +1101,15 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.heightOffset).toBe(10);
                 }
+            ],
+            // save forceProxy if present
+            [
+                {
+                    forceProxy: true
+                },
+                l => {
+                    expect(l.forceProxy).toBeTruthy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

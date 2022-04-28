@@ -160,7 +160,8 @@
                     "title": "Erreur",
                     "message": "Échec de la récupération du format"
                 }
-            }
+            },
+            "forceProxy": "Forcer le proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -1465,12 +1466,16 @@
                 "label": "Définir la limite de visibilité",
                 "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             },
-          "domainAliases": {
-            "title": "Alias de domaine",
-            "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
-            "addAliasTooltip": "Ajouter un alias",
-            "removeAliasTooltip": "Supprimer l'alias"
-          }
+            "domainAliases": {
+              "title": "Alias de domaine",
+              "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
+              "addAliasTooltip": "Ajouter un alias",
+              "removeAliasTooltip": "Supprimer l'alias"
+            },
+            "allowUnsecureLayers": {
+              "label": "Autoriser les couches non sécurisées",
+              "tooltip": "L'ajout d'une couche à la carte avec cette option activée force l'application à appliquer un proxy"
+            }
         },
         "uploader": {
             "filename": "Nom du fichier",
