@@ -248,6 +248,32 @@ The style editor can configure the *Icon* as explained [here](layer-settings.md#
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
+### Create a style for 3D Tiles
+
+With [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to customize the style of a [3D Tiles layer](catalog.md#3d-tiles-catalog) client side. The MapStore support is working in respect of the [3D Tiles Specification 1.0](http://docs.opengeospatial.org/cs/18-053r2/18-053r2.html) and on top of the [Cesium Styling capabilities](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling). Below is an example of how the Style Editor of a 3D Tiles layer is appearing in the MapStore UI.
+
+<img src="../img/layer-settings/3dtiles_style.jpg" class="ms-docimage">
+
+For the 3D Tiles styling, while with the **Code Text Editor** it is possible to leverage completely on the styling specifications:
+
+<img src="../img/layer-settings/text-editor-3dtiles.jpg" class="ms-docimage">
+
+The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Style Editor** supports for now only a limited set of capabilities:
+
+* Customization of the **Fill color** 
+
+<img src="../img/layer-settings/ex_3dtiles_style.gif" class="ms-docimage">
+
+* Style Rule filtering based on the available [properties dictionary ](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification#properties) defined in the tileset.json
+
+<img src="../img/layer-settings/filter_3dtiles_style.jpg" class="ms-docimage">
+
+* Possibility to customize the radius in case of point cloud features
+
+<img src="../img/layer-settings/point_3dtiles_text.jpg" class="ms-docimage">
+
+<img src="../img/layer-settings/point_3dtiles_visual.jpg" class="ms-docimage">
+
 ## Feature Info Form
 
 Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](side-bar.md#identify-tool):
