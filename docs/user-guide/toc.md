@@ -146,6 +146,13 @@ In this case the user is allowed to:
 
 * [Export](export-data.md) the data of the selected layer <img src="../img/button/export_data.jpg" class="ms-docbutton"/>
 
+* Open the **Layer Metadata** <img src="../img/button/info_button.jpg" class="ms-docbutton"/> (if configured), to retrieve layer metadata from the remote catalog source.
+
+<img src="../img/toc/layer_metadata_panel.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+!!! note
+    The **Metadata Tool** is not configured by default in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/). A complete documentation to configure it is available as part of the [TOC Plugins documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.TOC) (see _metadataOptions_). Once the **Metadata Tool** has been configured, MapStore is able to load the layer metadata from the remote CSW service and parse it to be presented to the user according to the provided plugin configuration. This functionality automatically works in case of WMS layers coming from a CSW catalog source, while for layers coming directly from a WMS catalog source the [Metadata Link](https://docs.geoserver.org/latest/en/user/data/webadmin/layers.html#basic-info) must be present in the WMS Layer GetCapabilities.
+
 * Open the **Compare tool** where it is possible to *Swipe* or *Spy* the selected layer <img src="../img/button/compare_tool_button.jpg" class="ms-docbutton"/>. 
 
 From the dropdown menu <img src="../img/button/dropdown_menu_button.jpg" class="ms-docbutton" style="max-height:25px;"/> of the **Compare tool** it is possible to click on <img src="../img/button/swipe_button.jpg" class="ms-docbutton" style="max-height:25px;"/> button so that the Swipe tool is enabled on the map for the selected layer: to activate the Swipe it is also possible to simply click on the **Compare tool** button.
