@@ -358,6 +358,7 @@ const SearchPlugin = connect((state) => ({
 
     searchFitToTheScreen = () => {
         const { offsets: { right: rightOffset, left: leftOffset}, mapSize: { width: mapWidth = window.innerWidth } } = this.props;
+        // @todo make searchbar width configurable via configuration?
         return (mapWidth - rightOffset - leftOffset - 60) >= 500;
     }
 
@@ -390,7 +391,6 @@ const SearchPlugin = connect((state) => ({
             style={ this.props.sidebarIsActive ? this.props.style : null}>
             {this.getSearchAndToggleButton()}
             <SearchResultList
-                containerStyle={this.props.style}
                 fitToMapSize={this.props.fitResultsToMapSize}
                 searchOptions={this.props.searchOptions}
                 onUpdateResultsStyle={this.props.onUpdateResultsStyle}
