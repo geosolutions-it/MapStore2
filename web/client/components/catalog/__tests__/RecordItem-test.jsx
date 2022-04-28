@@ -907,4 +907,47 @@ describe('This test for RecordItem', () => {
         expect(button).toBeTruthy();
         button.click();
     });
+    it('check add layer with force proxy', (done) => {
+        let actions = {
+            onLayerAdd: (layer) => {
+                expect(layer.forceProxy).toBeTruthy();
+                done();
+            }
+        };
+        const item = ReactDOM.render(<RecordItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+            service={{allowUnsecureLayers: true}}
+        />, document.getElementById("container"));
+        expect(item).toBeTruthy();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toBeTruthy();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toBeTruthy();
+        button.click();
+    });
+    it('check add layer with no force proxy', (done) => {
+        let actions = {
+            onLayerAdd: (layer) => {
+                expect(layer.forceProxy).toBeFalsy();
+                done();
+            }
+        };
+        const item = ReactDOM.render(<RecordItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+        />, document.getElementById("container"));
+        expect(item).toBeTruthy();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toBeTruthy();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toBeTruthy();
+        button.click();
+    });
 });

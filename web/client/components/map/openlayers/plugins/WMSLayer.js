@@ -39,14 +39,31 @@ import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 import { generateEnvString } from '../../../../utils/LayerLocalizationUtils';
 
+/**
+ * Check source and apply proxy
+ * when `forceProxy` is set on layer options
+ * @param {boolean} forceProxy
+ * @param {string} src
+ * @returns {string}
+ */
+const proxySource = (forceProxy, src) => {
+    let newSrc = src;
+    if (forceProxy && needProxy(src)) {
+        let proxyUrl = getProxyUrl();
+        newSrc = proxyUrl + encodeURIComponent(src);
+    }
+    return newSrc;
+};
 
 const loadFunction = (options, headers) => function(image, src) {
     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
-    var img = image.getImage();
+    let img = image.getImage();
+    let newSrc = proxySource(options.forceProxy, src);
 
     if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity)) {
         // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
-        const [url, ...dataEntries] = src.split("&");
+        let [url, ...dataEntries] = src.split("&");
+        url = proxySource(options.forceProxy, url);
 
         // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
         axios.post(url, "&" + dataEntries.join("&"), {
@@ -74,7 +91,7 @@ const loadFunction = (options, headers) => function(image, src) {
         });
     } else {
         if (headers) {
-            axios.get(src, {
+            axios.get(newSrc, {
                 headers,
                 responseType: 'blob'
             }).then(response => {
@@ -87,7 +104,7 @@ const loadFunction = (options, headers) => function(image, src) {
                 console.error(e);
             });
         } else {
-            img.src = src;
+            img.src = newSrc;
         }
     }
 };
@@ -123,26 +140,12 @@ function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-// Works with geosolutions proxy
-function proxyTileLoadFunction(imageTile, src) {
-    var newSrc = src;
-    if (needProxy(src)) {
-        let proxyUrl = getProxyUrl();
-        newSrc = proxyUrl + encodeURIComponent(src);
-    }
-    imageTile.getImage().src = newSrc;
-}
-
 function tileCoordsToKey(coords) {
     return coords.join(':');
 }
 
 function elevationLoadFunction(forceProxy, imageTile, src) {
-    let newSrc = src;
-    if (forceProxy && needProxy(src)) {
-        let proxyUrl = getProxyUrl();
-        newSrc = proxyUrl + encodeURIComponent(src);
-    }
+    let newSrc = proxySource(forceProxy, src);
     const coords = imageTile.getTileCoord();
     imageTile.getImage().src = "";
     loadTile(newSrc, coords, tileCoordsToKey(coords));
@@ -151,9 +154,6 @@ function elevationLoadFunction(forceProxy, imageTile, src) {
 function addTileLoadFunction(sourceOptions, options) {
     if (options.useForElevation) {
         return assign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
-    }
-    if (options.forceProxy) {
-        return assign({}, sourceOptions, {tileLoadFunction: proxyTileLoadFunction});
     }
     return sourceOptions;
 }
@@ -284,6 +284,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || isVectorFormat(oldOptions.format) && isVectorFormat(newOptions.format) && oldOptions.format !== newOptions.format
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
         || oldOptions.tileSize !== newOptions.tileSize
+        || oldOptions.forceProxy !== newOptions.forceProxy
     );
 };
 
