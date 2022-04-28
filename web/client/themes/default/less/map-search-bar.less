@@ -81,6 +81,7 @@
     position: relative;
     order: -1;
     box-shadow: none;
+    z-index: unset;
 
     &.toggled {
         #map-search-bar {
@@ -190,7 +191,6 @@ div.MapSearchBar .form-control:focus {
         right: 1px;
         top: @square-btn-size;
         width: auto;
-        z-index: 1100;
     }
 
     #mapstore-navbar .toggled .MapSearchBar .input-group {
