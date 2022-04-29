@@ -160,7 +160,8 @@
                     "title": "Errore",
                     "message": "Impossibile recuperare il formato"
                 }
-            }
+            },
+            "forceProxy": "Forza proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -1469,6 +1470,10 @@
               "helpTooltip": "Questa opzione viene utilizzata per suddividere il contenuto in più sottodomini",
               "addAliasTooltip": "Aggiungi alias",
               "removeAliasTooltip": "Rimuovi alias"
+            },
+            "allowUnsecureLayers": {
+              "label": "Consenti livelli non sicuri",
+              "tooltip": "L'aggiunta di un livello da mappare con questa opzione abilitata, costringe l'applicazione ad applicare il proxy"
             }
         },
         "uploader": {

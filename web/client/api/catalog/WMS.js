@@ -38,7 +38,8 @@ const recordToLayer = (record, {
     formats = {},
     map = {},
     layerBaseConfig,
-    localizedLayerStyles
+    localizedLayerStyles,
+    allowUnsecureLayers
 } = {}) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
@@ -103,12 +104,11 @@ const recordToLayer = (record, {
         catalogURL,
         ...layerBaseConfig,
         ...record.layerOptions,
-        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined
+        localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
+        ...(!isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats}),
+        ...(!isNil(allowUnsecureLayers) && { forceProxy: allowUnsecureLayers })
     };
 
-    if (!isEmpty(formats)) {
-        layer = {...layer, imageFormats: formats.imageFormats, infoFormats: formats.infoFormats};
-    }
     if (!isEmpty(map) && (maxScaleDenominator || minScaleDenominator)) {
         const {resolution: minResolution} = !isNil(minScaleDenominator)
         && getResolutionObject(minScaleDenominator, 'scale', map) || {};

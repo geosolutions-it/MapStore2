@@ -193,5 +193,28 @@ describe('Test correctness of the WMS APIs', () => {
         expect(records[0].references.length).toBe(1);
         expect(records[0].references[0].url).toBe(url);
     });
+    it('wms layer with formats', () => {
+        const records = getCatalogRecords({
+            records: [{}]
+        }, {
+            url: 'http://sample'
+        });
+        const imageFormats = ["png"];
+        const infoFormats = ["text/plain"];
+        expect(records.length).toBe(1);
+        const layer = getLayerFromRecord(records[0], { formats: {imageFormats, infoFormats} });
+        expect(layer.imageFormats).toEqual(imageFormats);
+        expect(layer.infoFormats).toEqual(infoFormats);
+    });
+    it('wms layer with force proxy', () => {
+        const records = getCatalogRecords({
+            records: [{}]
+        }, {
+            url: 'http://sample'
+        });
+        expect(records.length).toBe(1);
+        const layer = getLayerFromRecord(records[0], { allowUnsecureLayers: true });
+        expect(layer.forceProxy).toBeTruthy();
+    });
 });
 

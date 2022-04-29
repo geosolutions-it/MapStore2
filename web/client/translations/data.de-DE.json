@@ -160,7 +160,8 @@
                     "title": "Error",
                     "message": "Format konnte nicht abgerufen werden"
                 }
-            }
+            },
+            "forceProxy": "Proxy erzwingen"
         },
         "longitude": "Längengrad",
         "latitude": "Breitengrad",
@@ -1507,6 +1508,10 @@
             "helpTooltip": "Diese Option wird verwendet, um Inhalte auf mehrere Subdomains aufzuteilen",
             "addAliasTooltip": "Alias hinzufügen",
             "removeAliasTooltip": "Alias entfernen"
+          },
+          "allowUnsecureLayers": {
+              "label": "Nicht sichere Ebenen zulassen",
+              "tooltip": "Das Hinzufügen einer Ebene zur Karte mit aktivierter Option zwingt die Anwendung, Proxy anzuwenden"
           }
         },
         "uploader": {
