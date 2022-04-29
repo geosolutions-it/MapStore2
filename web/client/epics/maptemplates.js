@@ -15,7 +15,7 @@ import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
     MERGE_TEMPLATE, REPLACE_TEMPLATE, SET_ALLOWED_TEMPLATES } from '../actions/maptemplates';
-import {templatesSelector, allTemplatesSelector, activeSelector} from '../selectors/maptemplates';
+import {templatesSelector, allTemplatesSelector, isActiveSelector} from '../selectors/maptemplates';
 import { mapSelector } from '../selectors/map';
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
@@ -179,7 +179,7 @@ export const replaceTemplateEpic = (action$, store) => action$
 
 export const openMapTemplatesEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-        .filter((action) => action.control === "mapTemplates" && activeSelector(store.getState()))
+        .filter((action) => action.control === "mapTemplates" && isActiveSelector(store.getState()))
         .switchMap(() => {
             return Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
         });

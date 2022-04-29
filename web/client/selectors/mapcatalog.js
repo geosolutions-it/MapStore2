@@ -8,7 +8,7 @@
 import { mapTypeSelector as mtSelector, isCesium, last2dMapTypeSelector } from '../selectors/maptype';
 import {get} from "lodash";
 
-export const activeSelector = (state) => get(state, "controls.mapCatalog.enabled");
+export const isActiveSelector = (state) => get(state, "controls.mapCatalog.enabled");
 export const triggerReloadValueSelector = state => state.mapcatalog?.triggerReloadValue;
 export const filterReloadDelaySelector = state => state.mapcatalog?.filterReloadDelay;
 export const mapTypeSelector = state => {

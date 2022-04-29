@@ -51,7 +51,7 @@ import {
     searchOptionsSelector,
     catalogSearchInfoSelector,
     getFormatUrlUsedSelector,
-    activeSelector
+    isActiveSelector
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
@@ -293,7 +293,7 @@ export default (API) => ({
             */
     openCatalogEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-            .filter((action) => action.control === "metadataexplorer" && activeSelector(store.getState()))
+            .filter((action) => action.control === "metadataexplorer" && isActiveSelector(store.getState()))
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
             }),
@@ -468,7 +468,7 @@ export default (API) => ({
     * @return {external:Observable}
     */
     updateGroupSelectedMetadataExplorerEpic: (action$, store) => action$.ofType(SELECT_NODE)
-        .filter(() => activeSelector(store.getState()))
+        .filter(() => isActiveSelector(store.getState()))
         .switchMap(({ nodeType, id }) => {
             const state = store.getState();
             const selectedNodes = selectedNodesSelector(state);

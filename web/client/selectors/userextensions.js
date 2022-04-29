@@ -8,4 +8,4 @@
 
 import {get} from "lodash";
 
-export const activeSelector = (state) => get(state, "controls.userExtensions.enabled");
+export const isActiveSelector = (state) => get(state, "controls.userExtensions.enabled");

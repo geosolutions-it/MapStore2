@@ -87,7 +87,7 @@ import { groupsSelector } from '../selectors/layers';
 
 
 import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
-import {activeSelector} from "../selectors/measurement";
+import {isActiveSelector} from "../selectors/measurement";
 /**
     * Epics for annotations
     * @name epics.annotations
@@ -538,7 +538,7 @@ export default {
             if (isFeatureGridOpen(state)) { // if FeatureGrid is open, close it
                 actions.push(closeFeatureGrid());
             }
-            if (activeSelector(state)) { // if measure is open, close it
+            if (isActiveSelector(state)) { // if measure is open, close it
                 actions.push(setControlProperty('measure', "enabled", false));
             }
             return actions.length ? Rx.Observable.from(actions) : Rx.Observable.empty();

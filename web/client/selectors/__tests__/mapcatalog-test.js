@@ -8,7 +8,8 @@
 
 import expect from 'expect';
 import {
-    triggerReloadValueSelector
+    triggerReloadValueSelector,
+    isActiveSelector
 } from '../mapcatalog';
 
 const testState = {
@@ -20,5 +21,15 @@ const testState = {
 describe('mapcatalog selectors', () => {
     it('triggerReloadValueSelector', () => {
         expect(triggerReloadValueSelector(testState)).toBe(true);
+    });
+    it('test isActiveSelector ', () => {
+        const toolState = isActiveSelector({
+            controls: {
+                mapCatalog: {
+                    enabled: true
+                }
+            }
+        });
+        expect(toolState).toBe(true);
     });
 });

@@ -18,7 +18,7 @@ import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY, TOGGLE_CONTROL}
 import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {measureSelector} from '../selectors/controls';
-import {geomTypeSelector, activeSelector} from '../selectors/measurement';
+import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
 import { CLICK_ON_MAP } from '../actions/map';
 import {
     newAnnotation,
@@ -66,7 +66,7 @@ export const addAsLayerEpic = (action$) =>
 
 export const openMeasureEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-        .filter((action) => action.control === "measure" && activeSelector(store.getState()))
+        .filter((action) => action.control === "measure" && isActiveSelector(store.getState()))
         .switchMap(() => {
             return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), setControlProperty('annotations', 'enabled', false));
         });

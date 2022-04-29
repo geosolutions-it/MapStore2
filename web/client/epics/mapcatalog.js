@@ -18,7 +18,7 @@ import {
     triggerReload
 } from '../actions/mapcatalog';
 import {SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from "../actions/controls";
-import {activeSelector} from "../selectors/mapcatalog";
+import {isActiveSelector} from "../selectors/mapcatalog";
 import {closeFeatureGrid} from "../actions/featuregrid";
 import {hideMapinfoMarker, purgeMapInfoResults} from "../actions/mapInfo";
 
@@ -60,7 +60,7 @@ export const saveMapEpic = (action$) => action$
 
 export const openMapCatalogEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-        .filter((action) => action.control === "mapCatalog" && activeSelector(store.getState()))
+        .filter((action) => action.control === "mapCatalog" && isActiveSelector(store.getState()))
         .switchMap(() => {
             return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
         });

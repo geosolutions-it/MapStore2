@@ -64,7 +64,7 @@ import { isObject, head, find, round } from 'lodash';
 import { setControlProperties, setControlProperty } from '../actions/controls';
 import { createWidget } from '../actions/widgets';
 import { getMetadataRecordById } from '../actions/catalog';
-import { activeSelector } from '../selectors/catalog';
+import { isActiveSelector } from '../selectors/catalog';
 import { isCesium } from '../selectors/maptype';
 
 const addFilteredAttributesGroups = (nodes, filters) => {
@@ -106,7 +106,7 @@ const tocSelector = createSelector(
         layerFilterSelector,
         layersSelector,
         mapNameSelector,
-        activeSelector,
+        isActiveSelector,
         widgetBuilderAvailable,
         generalInfoFormatSelector,
         isCesium,

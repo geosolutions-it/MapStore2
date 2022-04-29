@@ -50,7 +50,7 @@ import Message from '../components/I18N/Message';
 import DockPanel from '../components/misc/panels/DockPanel';
 import { metadataSourceSelector, modalParamsSelector } from '../selectors/backgroundselector';
 import {
-    activeSelector,
+    isActiveSelector,
     authkeyParamNameSelector,
     groupSelector,
     layerErrorSelector,
@@ -94,7 +94,7 @@ const metadataExplorerSelector = createStructuredSelector({
     services: servicesSelector,
     servicesWithBackgrounds: servicesSelectorWithBackgrounds,
     layerError: layerErrorSelector,
-    active: activeSelector,
+    active: isActiveSelector,
     dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     searchText: searchTextSelector,
     group: groupSelector,

@@ -7,13 +7,13 @@ import {omit} from "lodash";
 const TooltipButton = tooltip(Button);
 
 
-const Container = ({children, className, bsStyle = 'text', tooltipId, tooltipPosition = 'left', ...props}) => (
+const Container = ({children, className, bsStyle = 'link', tooltipId, tooltipPosition = 'left', ...props}) => (
     <TooltipButton
         className={classnames({'square-button': true, ...(className ? {[className]: true} : {})})}
         bsStyle={bsStyle}
         tooltipId={tooltipId}
         tooltipPosition={tooltipPosition}
-        {...omit(props, ['pluginCfg', 'help', 'defaultOptions'])}
+        {...omit(props, ['pluginCfg', 'help', 'defaultOptions', 'items', 'advancedSettings'])}
     >
         {children}
     </TooltipButton>

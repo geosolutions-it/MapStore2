@@ -7,14 +7,14 @@
  */
 
 import {SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from "../actions/controls";
-import {activeSelector} from "../selectors/userextensions";
+import {isActiveSelector} from "../selectors/userextensions";
 import {Observable} from "rxjs";
 import {closeFeatureGrid} from "../actions/featuregrid";
 import {hideMapinfoMarker, purgeMapInfoResults} from "../actions/mapInfo";
 
 export const openUserExtensionsEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-        .filter((action) => action.control === "userExtensions" && activeSelector(store.getState()))
+        .filter((action) => action.control === "userExtensions" && isActiveSelector(store.getState()))
         .switchMap(() => {
             return Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
         });

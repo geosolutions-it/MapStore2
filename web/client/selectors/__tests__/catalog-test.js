@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import {
-    activeSelector,
+    isActiveSelector,
     authkeyParamNameSelector,
     delayAutoSearchSelector,
     groupSelector,
@@ -217,8 +217,8 @@ describe('Test catalog selectors', () => {
         const retVal = layerErrorSelector(state);
         expect(retVal).toBe(null);
     });
-    it('test activeSelector', () => {
-        const retVal = activeSelector(state);
+    it('test isActiveSelector', () => {
+        const retVal = isActiveSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBeTruthy();
     });
@@ -326,5 +326,15 @@ describe('Test catalog selectors', () => {
             }
         });
         expect(urlUsed).toBe(url);
+    });
+    it('test isActiveSelector ', () => {
+        const toolState = isActiveSelector({
+            controls: {
+                metadataexplorer: {
+                    enabled: true
+                }
+            }
+        });
+        expect(toolState).toBe(true);
     });
 });
