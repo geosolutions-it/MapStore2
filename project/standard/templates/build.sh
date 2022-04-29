@@ -11,9 +11,6 @@ npm run lint
 if [ $# -eq 0 ]
   then
     mvn clean install -Dmapstore2.version=$VERSION
-    elif [ $# -eq 1 ]
-        then
-            mvn clean install -Dmapstore2.version=$1
-        else
-            mvn clean install -Dmapstore2.version=$1 -P$2
+  else
+    mvn clean install -Dmapstore2.version=$VERSION -P$1
 fi
