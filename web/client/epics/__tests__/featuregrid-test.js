@@ -918,20 +918,48 @@ describe('featuregrid Epics', () => {
                 case SET_CONTROL_PROPERTY: {
                     switch (i) {
                     case 0: {
-                        expect(action.control).toBe('metadataexplorer');
+                        expect(action.control).toBe('userExtensions');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
                         break;
                     }
                     case 1: {
-                        expect(action.control).toBe('annotations');
+                        expect(action.control).toBe('details');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
                         break;
                     }
                     case 2: {
+                        expect(action.control).toBe('mapTemplates');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 3: {
+                        expect(action.control).toBe('mapCatalog');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 4: {
+                        expect(action.control).toBe('metadataexplorer');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 5: {
+                        expect(action.control).toBe('annotations');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 6: {
                         expect(action.control).toBe('details');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);

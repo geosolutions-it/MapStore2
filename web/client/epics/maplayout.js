@@ -143,7 +143,8 @@ export const updateMapLayoutEpic = (action$, store) =>
                 if (['left', 'right', 'dockSize'].includes(key)) {
                     boundingMapRect[key] = boundingMapRect[key] + (boundingSidebarRect[key] ?? 0);
                 } else {
-                    boundingMapRect[key] = (parseFloat(boundingMapRect[key]) + parseFloat(boundingSidebarRect[key] ?? 0)) + '%';
+                    const totalOffset = (parseFloat(boundingMapRect[key]) + parseFloat(boundingSidebarRect[key] ?? 0));
+                    boundingMapRect[key] = totalOffset ? totalOffset + '%' : 0;
                 }
             });
 

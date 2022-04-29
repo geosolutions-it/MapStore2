@@ -21,7 +21,7 @@ const {
 } = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
-import {setControlProperty, SET_CONTROL_PROPERTY} from '../../actions/controls';
+import {SET_CONTROL_PROPERTY, toggleControl} from '../../actions/controls';
 import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode} from '../../actions/layers';
 import {PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER} from '../../actions/mapInfo';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
@@ -96,13 +96,13 @@ describe('catalog Epics', () => {
     });
     it('openCatalogEpic', (done) => {
         const NUM_ACTIONS = 3;
-        testEpic(openCatalogEpic, NUM_ACTIONS, setControlProperty("metadataexplorer", "enabled", true), (actions) => {
+        testEpic(openCatalogEpic, NUM_ACTIONS, toggleControl("metadataexplorer", "enabled"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(CLOSE_FEATURE_GRID);
             expect(actions[1].type).toBe(PURGE_MAPINFO_RESULTS);
             expect(actions[2].type).toBe(HIDE_MAPINFO_MARKER);
             done();
-        }, { });
+        }, { controls: { metadataexplorer: { enabled: true } }});
     });
 
     it('recordSearchEpic with two layers', (done) => {

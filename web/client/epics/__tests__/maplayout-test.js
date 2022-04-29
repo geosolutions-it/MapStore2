@@ -26,11 +26,16 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
-                        bottom: 0,
-                        left: 600,
-                        right: 658
-                    }});
+                    expect(action.layout).toEqual(
+                        { left: 600, right: 548, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                            boundingMapRect: {
+                                bottom: 0,
+                                left: 600,
+                                right: 548
+                            },
+                            boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
+                        }
+                    );
                 });
             } catch (e) {
                 done(e);
@@ -38,6 +43,32 @@ describe('map layout epics', () => {
             done();
         };
         const state = {controls: { metadataexplorer: {enabled: true}, queryPanel: {enabled: true}}};
+        testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
+    });
+
+    it('tests layout with sidebar', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                    expect(action.layout).toEqual(
+                        { left: 600, right: 588, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                            boundingMapRect: {
+                                bottom: 0,
+                                left: 600,
+                                right: 588
+                            },
+                            boundingSidebarRect: { right: 40, left: 0, bottom: 0 }
+                        }
+                    );
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = {controls: { metadataexplorer: {enabled: true}, queryPanel: {enabled: true}, sidebarMenu: {enabled: true} }};
         testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
     });
 
@@ -53,11 +84,13 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 600, right: 330, bottom: 0, transform: 'none', height: 'calc(100% - 120px)', boundingMapRect: {
+                        left: 600, right: 330, bottom: 0, transform: 'none', height: 'calc(100% - 120px)',
+                        boundingMapRect: {
                             bottom: 0,
                             left: 600,
                             right: 330
-                        }
+                        },
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
                     });
                 });
             } catch (e) {
@@ -128,11 +161,13 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 512, right: 0, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        left: 512, right: 0, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                        boundingMapRect: {
                             left: 512,
                             right: 0,
                             bottom: 0
-                        }
+                        },
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
                     });
                 });
             } catch (e) {
@@ -145,17 +180,19 @@ describe('map layout epics', () => {
     });
 
     describe('tests layout updated for right panels', () => {
-        const epicResult = (done, right = 658) => actions => {
+        const epicResult = (done, right = 548) => actions => {
             try {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 0, right, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        left: 0, right, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                        boundingMapRect: {
                             bottom: 0,
                             left: 0,
                             right
-                        }
+                        },
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
                     });
                 });
             } catch (e) {
@@ -184,11 +221,13 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        right: 0, left, bottom: 0, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        right: 0, left, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                        boundingMapRect: {
                             bottom: 0,
                             right: 0,
                             left
-                        }
+                        },
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
                     });
                 });
             } catch (e) {
@@ -226,7 +265,8 @@ describe('map layout epics', () => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
                         left: 0, right: 0, bottom: '100%', dockSize: 100, transform: "translate(0, -30px)", height: "calc(100% - 30px)",
-                        boundingMapRect: {bottom: "100%", dockSize: 100, left: 0, right: 0}
+                        boundingMapRect: {bottom: "100%", dockSize: 100, left: 0, right: 0},
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
                     });
                 });
             } catch (e) {
