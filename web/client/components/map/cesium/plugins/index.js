@@ -16,5 +16,7 @@ import './GraticuleLayer';
 import './OSMLayer';
 import './OverlayLayer';
 import './ThreeDTilesLayer';
+import './VectorLayer';
+import './WFSLayer';
 
 export default {};

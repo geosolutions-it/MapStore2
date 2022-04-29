@@ -148,15 +148,9 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
 
-    if (element?.type === '3dtiles') {
-        return {
-            Component: VectorStyleEditor
-        };
-    }
-
     if (isVectorStylableLayer({element})) {
         return {
-            Component: SimpleVectorStyleEditor
+            Component: VectorStyleEditor
         };
     }
     // get Higher priority plugin that satisfies requirements.

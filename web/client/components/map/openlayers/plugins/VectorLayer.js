@@ -21,18 +21,24 @@ Layers.registerType('vector', {
             features: features
         });
 
-        const style = getStyle(options);
-
-        return new VectorLayer({
+        const layer = new VectorLayer({
             msId: options.id,
             source: source,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
-            style,
             opacity: options.opacity,
             minResolution: options.minResolution,
             maxResolution: options.maxResolution
         });
+
+        getStyle({ ...options, asPromise: true })
+            .then((style) => {
+                if (style) {
+                    layer.setStyle(style);
+                }
+            });
+
+        return layer;
     },
     update: (layer, newOptions, oldOptions) => {
         const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
@@ -44,7 +50,12 @@ Layers.registerType('vector', {
         }
 
         if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
-            layer.setStyle(getStyle(newOptions));
+            getStyle({ ...newOptions, asPromise: true })
+                .then((style) => {
+                    if (style) {
+                        layer.setStyle(style);
+                    }
+                });
         }
 
         if (oldOptions.minResolution !== newOptions.minResolution) {
