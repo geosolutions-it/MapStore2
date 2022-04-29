@@ -57,10 +57,12 @@ import {
     selectedLayerData,
     selectedLayerTimeDimensionConfiguration,
     rangeSelector,
+    snapTypeSelector,
     timelineLayersSelector,
     multidimOptionsSelectorCreator
 } from '../selectors/timeline';
 
+import { getDatesInRange } from '../utils/TimeUtils';
 import pausable from '../observables/pausable';
 import { wrapStartStop } from '../observables/epics';
 import { getDomainValues } from '../api/MultiDim';
@@ -139,6 +141,24 @@ const filterAnimationValues = (values, getState, {fromValue, limit = BUFFER_SIZE
 };
 
 /**
+ * if we have a selected layer and time occurrences are expressed as intervals
+ * it will filter out those dates that won't fall within the animation frame limit
+ * will also consider only the dates of interest (start or end) chosen by the user
+ * @param {function} {getState} returns the application state
+ * @param {string[]} domainsArray the domain values array used to create the animation frames
+ */
+const getTimeIntervalDomains = (getState, domainsArray) => {
+    let intervalDomains = domainsArray;
+    const playbackRange = playbackRangeSelector(getState()) || {};
+    const snapTo = snapTypeSelector(getState());
+    if (snapTo) {
+        const startPlaybackTime = playbackRange?.startPlaybackTime;
+        intervalDomains = getDatesInRange(domainsArray, startPlaybackTime, snapTo);
+    }
+    return intervalDomains;
+};
+
+/**
  * Returns an observable that emit an array of time frames, based of the current configuration:
  *  - If configured as fixed steps, it returns the list of next animation frame calculating them
  *  - If there is a selected layer and there is the Multidim extension, then use it (in favour of static values configured)
@@ -154,8 +174,14 @@ const getAnimationFrames = (getState, options) => {
         if (get(timeDimConfig, "source.type") !== "multidim-extension" && values && values.length > 0) {
             return filterAnimationValues(values, getState, options);
         }
-        return getDomainValues(...domainArgs(getState, options))
-            .map(res => res.DomainValues.Domain.split(","));
+        const domainValues = getDomainValues(...domainArgs(getState, options));
+        return domainValues.map(res => {
+            const domainsArray =  res.DomainValues.Domain.split(",");
+            // if there is a selected layer check for time intervals (start/end)
+            // and filter-out domain dates falling outisde the start/end playBack time
+            const selectedLayer = selectedLayerSelector(getState());
+            return selectedLayer ? getTimeIntervalDomains(getState, domainsArray) : domainsArray;
+        });
     }
     return createAnimationValues(getState, options);
 };

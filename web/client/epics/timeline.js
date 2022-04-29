@@ -30,6 +30,7 @@ import {
     selectedLayerUrl,
     isAutoSelectEnabled,
     selectedLayerSelector,
+    snapTypeSelector,
     timelineLayersSelector,
     multidimOptionsSelectorCreator,
     isMapSync
@@ -72,6 +73,7 @@ const snapTime = (state, group, time) => {
     // TODO: evaluate to snap to clicked layer instead of current selected layer, and change layer selection
     // TODO: support local list of values for no multidim-extension.
     if (selectedLayerName(state)) {
+        const snapType = snapTypeSelector(state);
         // do parallel request and return and observable that emit the correct value/ time as it is by default
         return Rx.Observable.forkJoin(
             // TODO: find out a way to optimize and do only one request
@@ -83,7 +85,7 @@ const snapTime = (state, group, time) => {
                 .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
         )
             .map(values =>
-                getNearestDate(values.filter(v => !!v), time) || time
+                getNearestDate(values.filter(v => !!v), time, snapType) || time
             );
 
 

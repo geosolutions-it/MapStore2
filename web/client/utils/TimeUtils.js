@@ -279,3 +279,24 @@ export const domainsToDimensionsObject = ({ Domains = {} } = {}, url) => {
     }));
 };
 
+/**
+ * Given an asbosolute date "03-01-2000"
+ * and a date intervals array ["01-01-2000/05-01-2000", "04-01-2000/10-02-2000", ...]
+ * filters in all start or end dates of the date intervals, returns
+ * a dates array composed by start or end dates only ["04-01-2000", ...]
+ * @param {string[]} datesArray the date intervals array
+ * @param {string} rawDate the reference start or end date used for filtering
+ * @param {string} intervalMoment the point of the interval used to filter dates (start or end)
+ */
+export const getDatesInRange = (datesArray, rawDate, intervalMoment) => {
+    const refDate = toTime(rawDate);
+    const filteredDatesArray = datesArray.reduce((acc, cur) => {
+        const intervalDate = intervalMoment === 'end' ? cur.split('/')[1] : cur.split('/')[0];
+        if (toTime(intervalDate) > refDate) {
+            return [...acc, intervalDate];
+        }
+        return [...acc];
+    }, []);
+    return filteredDatesArray;
+};
+
