@@ -80,7 +80,7 @@ export default ({
 }) => (<div className="ms-playback-settings" style={style}>
     <h4><Message msgId="timeline.settings.title" /></h4>
     <FormGroup controlId="timelineSettings">
-        <Form componentClass="fieldset" inline>
+        <Form componentClass="fieldset" inline className="snap-guide-form">
             <ControlLabel>
                 <Message msgId="timeline.settings.snapToGuideLayer" />&nbsp;
                 <InfoPopover text={<Message msgId="timeline.settings.snapToGuideLayerTooltip" />} />
@@ -89,10 +89,12 @@ export default ({
         </Form>
         {!fixedStep && (
             <Form componentClass="fieldset" inline className="snap-type-form">
-                <ControlLabel>
-                    <Message msgId="timeline.settings.snapType" />&nbsp;
-                    <InfoPopover text={<Message msgId="timeline.settings.snapTypeTooltip" />} />
-                </ControlLabel>
+                <div className="snap-type-form-title">
+                    <ControlLabel>
+                        <Message msgId="timeline.settings.snapType" />&nbsp;
+                        <InfoPopover text={<Message msgId="timeline.settings.snapTypeTooltip" />} />
+                    </ControlLabel>
+                </div>
                 <div className="snap-type-container">
                     {snapTypes.map(snapType => (
                         <div className="snap-type-item">
@@ -107,7 +109,9 @@ export default ({
                                     onChangeSnapType(value);
                                 }}
                             />
-                            <Message msgId={snapType.label}/>
+                            <div className="snap-type-radio-btn-label">
+                                <Message msgId={snapType.label}/>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -184,4 +188,3 @@ export default ({
         </Form>
     </FormGroup>
 </div>);
-

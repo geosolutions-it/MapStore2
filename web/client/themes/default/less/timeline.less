@@ -1003,13 +1003,29 @@
         .snap-type-form {
             display: flex;
             flex-direction: column;
+            padding-bottom: 0px;
+        }
+        .snap-type-form-title {
+            padding-bottom: 5px;
         }
         .snap-type-container {
             display: flex;
             flex-direction: column;
+            margin-left: 1px;
+        }
+        .snap-type-item {
+            display: flex;
+            align-items: center;
+            &:first-child {
+                padding-bottom: 5px;
+            }
         }
         .snap-type-radio-btn {
             cursor: pointer;
+            margin-top: 0;
+        }
+        .snap-type-radio-btn-label {
+            margin-left: 5px;
         }
     }
 }
