@@ -40,10 +40,6 @@
     padding-top: 0;
 }
 
-.navbar-dx #home-button {
-    order: -1;
-}
-
 @media (min-width: 1200px) {
     .navbar-dx .search-wrap {
         width: 500px;
