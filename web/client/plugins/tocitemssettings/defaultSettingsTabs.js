@@ -32,7 +32,6 @@ import LoadingView from '../../components/misc/LoadingView';
 import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
 import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
 import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
-import SimpleVectorStyleEditor from './SimpleVectorStyleEditor';
 import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
 import { mapSelector } from '../../selectors/map';
 
