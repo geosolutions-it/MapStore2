@@ -29,6 +29,8 @@ class UserMenu extends React.Component {
         showAccountInfo: PropTypes.bool,
         showPasswordChange: PropTypes.bool,
         showLogout: PropTypes.bool,
+        hidden: PropTypes.bool,
+        displayUnsavedDialog: PropTypes.bool,
         /**
          * displayAttributes function to filter attributes to show
          */
@@ -49,7 +51,8 @@ class UserMenu extends React.Component {
         onCheckMapChanges: PropTypes.func,
         className: PropTypes.string,
         renderUnsavedMapChangesDialog: PropTypes.bool,
-        onLogoutConfirm: PropTypes.func
+        onLogoutConfirm: PropTypes.func,
+        onCloseUnsavedDialog: PropTypes.func
     };
 
     static defaultProps = {
@@ -62,6 +65,7 @@ class UserMenu extends React.Component {
         onLogout: () => {},
         onCheckMapChanges: () => {},
         onPasswordChange: () => {},
+        onCloseUnsavedDialog: () => {},
         displayName: "name",
         bsStyle: "primary",
         displayAttributes: (attr) => {
@@ -88,21 +92,10 @@ class UserMenu extends React.Component {
             closeGlyph: "1-close"
         }],
         renderUnsavedMapChangesDialog: true,
-        renderButtonText: false
+        renderButtonText: false,
+        hidden: false,
+        displayUnsavedDialog: true
     };
-
-    checkUnsavedChanges = () => {
-        if (this.props.renderUnsavedMapChangesDialog) {
-            this.props.onCheckMapChanges(this.props.onLogout);
-        } else {
-            this.logout();
-        }
-    }
-
-    logout = () => {
-        this.props.onCloseUnsavedDialog();
-        this.props.onLogout();
-    }
 
     renderGuestTools = () => {
         let DropDown = this.props.nav ? TNavDropdown : TDropdownButton;
@@ -182,7 +175,21 @@ class UserMenu extends React.Component {
     };
 
     render() {
+        if (this.props.hidden) return false;
         return this.props.user && this.props.user[this.props.displayName] ? this.renderLoggedTools() : this.renderGuestTools();
+    }
+
+    logout = () => {
+        this.props.onCloseUnsavedDialog();
+        this.props.onLogout();
+    }
+
+    checkUnsavedChanges = () => {
+        if (this.props.renderUnsavedMapChangesDialog) {
+            this.props.onCheckMapChanges(this.props.onLogout);
+        } else {
+            this.logout();
+        }
     }
 }
 

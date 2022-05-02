@@ -39,7 +39,7 @@ export default {
             text: <Message msgId="help"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: toggleControl.bind(null, 'help', null),
-            priority: 2,
+            priority: 3,
             doNotHide: true
         },
         SidebarMenu: {

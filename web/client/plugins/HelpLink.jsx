@@ -57,7 +57,7 @@ export default createPlugin('HelpLink', {
                 const docsUrl = get(ownProps, 'docsUrl', 'https://mapstore.readthedocs.io/en/latest/');
                 return { href: docsUrl, target: 'blank'};
             },
-            priority: 2,
+            priority: 1,
             doNotHide: true
         }
     }

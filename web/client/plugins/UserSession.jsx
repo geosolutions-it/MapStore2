@@ -115,7 +115,7 @@ export default createPlugin('UserSession', {
             selector: (state) => {
                 return { style: hasSession(state) ? {} : {display: "none"} };
             },
-            priority: 2,
+            priority: 1,
             doNotHide: true
         }
     },

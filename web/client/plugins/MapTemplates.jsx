@@ -160,7 +160,7 @@ export default createPlugin('MapTemplates', {
             icon: <Glyphicon glyph="1-map" />,
             action: setControlProperty.bind(null, "mapTemplates", "enabled", true, true),
             toggle: true,
-            priority: 2,
+            priority: 1,
             doNotHide: true,
             tooltip: "mapTemplates.tooltip"
         }

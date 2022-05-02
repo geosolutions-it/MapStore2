@@ -52,7 +52,8 @@ export default createPlugin('Save', {
                 (loggedIn, {canEdit, id} = {}) => ({
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
-            )
+            ),
+            priority: 2
         },
         SidebarMenu: {
             name: 'mapSave',
@@ -69,7 +70,8 @@ export default createPlugin('Save', {
                 (loggedIn, {canEdit, id} = {}) => ({
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
-            )
+            ),
+            priority: 1
         }
     }
 });

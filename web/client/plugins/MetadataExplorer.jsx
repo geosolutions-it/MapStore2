@@ -302,7 +302,8 @@ export default {
             tooltip: "catalog.tooltip",
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
-            doNotHide: true
+            doNotHide: true,
+            priority: 2
         },
         SidebarMenu: {
             name: 'metadataexplorer',
@@ -311,7 +312,8 @@ export default {
             tooltip: "catalog.tooltip",
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
-            toggle: true
+            toggle: true,
+            priority: 1
         }
     }),
     reducers: {catalog: require('../reducers/catalog').default},

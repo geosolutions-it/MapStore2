@@ -207,7 +207,7 @@ export default {
             tooltip: "settingsTooltip",
             icon: <Glyphicon glyph="cog"/>,
             action: toggleControl.bind(null, 'settings', null),
-            priority: 3,
+            priority: 4,
             doNotHide: true
         },
         SidebarMenu: {

@@ -664,7 +664,7 @@ export default {
             text: <Message msgId="printbutton"/>,
             icon: <Glyphicon glyph="print"/>,
             action: toggleControl.bind(null, 'print', null),
-            priority: 2,
+            priority: 3,
             doNotHide: true
         },
         SidebarMenu: {

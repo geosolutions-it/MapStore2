@@ -158,7 +158,7 @@ export default createPlugin('MapCatalog', {
             tooltip: "mapCatalog.tooltip",
             action: () => toggleControl('mapCatalog', 'enabled'),
             toggle: true,
-            priority: 2,
+            priority: 1,
             doNotHide: true
         }
     },

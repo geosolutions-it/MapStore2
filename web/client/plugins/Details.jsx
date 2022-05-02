@@ -92,7 +92,7 @@ export default createPlugin('Details', {
         BurgerMenu: {
             name: 'details',
             position: 1000,
-            priority: 1,
+            priority: 2,
             doNotHide: true,
             text: <Message msgId="details.title"/>,
             tooltip: "details.tooltip",
@@ -147,7 +147,7 @@ export default createPlugin('Details', {
                 };
             },
             doNotHide: true,
-            priority: 2
+            priority: 1
         }
     },
     epics,

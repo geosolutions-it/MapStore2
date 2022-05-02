@@ -93,7 +93,7 @@ export default {
             tooltip: "snapshot.tooltip",
             action: toggleControl.bind(null, 'snapshot', null),
             toggle: true,
-            priority: 2
+            priority: 1
         }
     }),
     reducers: {

@@ -58,7 +58,8 @@ export default createPlugin('SaveAs', {
                     return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
                 }
                 return { style: isLoggedIn(state) ? {} : {display: "none"} };
-            }
+            },
+            priority: 2
         },
         SidebarMenu: {
             name: 'saveAs',
@@ -75,7 +76,8 @@ export default createPlugin('SaveAs', {
                     active: state.controls.mapSaveAs && state.controls.mapSaveAs.enabled || false
 
                 };
-            }
+            },
+            priority: 1
         }
     }
 });

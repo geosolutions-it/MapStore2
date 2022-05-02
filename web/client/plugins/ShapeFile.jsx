@@ -85,7 +85,7 @@ export default createPlugin(
                 text: <Message msgId="shapefile.title" />,
                 icon: <Glyphicon glyph="upload" />,
                 action: toggleControl.bind(null, 'shapefile', null),
-                priority: 2,
+                priority: 3,
                 doNotHide: true
             },
             SidebarMenu: {

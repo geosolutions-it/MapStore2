@@ -102,7 +102,7 @@ export default {
             icon: <Glyphicon glyph="upload"/>,
             action: toggleControl.bind(null, 'mapimport', null),
             toggle: true,
-            priority: 2,
+            priority: 1,
             doNotHide: true
         }
     }),

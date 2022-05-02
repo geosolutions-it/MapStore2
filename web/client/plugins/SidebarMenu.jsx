@@ -72,7 +72,8 @@ class SidebarMenu extends React.Component {
         this.defaultTool = SidebarElement;
         this.defaultTarget = 'sidebar';
         this.state = {
-            lastVisible: false
+            lastVisible: false,
+            hidden: false
         };
     }
 
@@ -85,18 +86,29 @@ class SidebarMenu extends React.Component {
         const newSize = nextProps.state.map?.present?.size?.height !== this.props.state.map?.present?.size?.height;
         const newHeight = nextProps.style.bottom !== this.props.style.bottom;
         const newItems = nextProps.items !== this.props.items;
+        const burgerMenuState = nextProps.state?.controls?.burgermenu?.enabled !== this.props.state?.controls?.burgermenu?.enabled;
         const newVisibleItems = !newItems ? nextProps.items.reduce((prev, cur, idx) => {
             if (this.isNotHidden(cur, nextProps.state) !== this.isNotHidden(this.props.items[idx], this.props.state)) {
                 prev.push(cur);
             }
             return prev;
         }, []).length > 0 : false;
-        return newSize || newItems || newVisibleItems || newHeight;
+        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState;
     }
 
     componentDidUpdate(prevProps) {
-        const { onInit } = this.props;
-        prevProps.isActive === false && onInit();
+        const { onInit, onDetach } = this.props;
+        const { hidden } = this.state;
+        const visibleElements = this.visibleItems('sidebar').length;
+        visibleElements && prevProps.isActive === false && onInit();
+
+        if (visibleElements === 0 && !hidden) {
+            onDetach();
+            this.setState((state) => ({ ...state, hidden: true}));
+        } else if (visibleElements > 0 && hidden) {
+            onInit();
+            this.setState((state) => ({ ...state, hidden: false}));
+        }
     }
 
     componentWillUnmount() {
@@ -124,12 +136,9 @@ class SidebarMenu extends React.Component {
             );
     };
 
-    getItems = (_target, height) => {
-        const itemsToRender = Math.floor(height / this.props.sidebarWidth) - 1;
-        const target = _target ? _target : this.defaultTarget;
-        const targetMatch = (elementTarget) => elementTarget === target || !elementTarget && target === this.defaultTarget;
-        const filtered = this.props.items.reduce(( prev, current) => {
-            if (!current?.components && targetMatch(current.target)
+    visibleItems = (target) => {
+        return this.props.items.reduce(( prev, current) => {
+            if (!current?.components && this.targetMatch(target, current.target)
                 && this.isNotHidden(current, this.props.state)
             ) {
                 prev.push({
@@ -140,7 +149,7 @@ class SidebarMenu extends React.Component {
             }
             if (current?.components && Array.isArray(current.components)) {
                 current.components.forEach((component) => {
-                    if (targetMatch(component?.target)
+                    if (this.targetMatch(target, component?.target)
                         && this.isNotHidden(component?.selector ? component : current, this.props.state)
                     ) {
                         prev.push({
@@ -158,6 +167,12 @@ class SidebarMenu extends React.Component {
             }
             return prev;
         }, []);
+    }
+
+    getItems = (_target, height) => {
+        const itemsToRender = Math.floor(height / this.props.sidebarWidth) - 1;
+        const target = _target ? _target : this.defaultTarget;
+        const filtered = this.visibleItems(target);
 
         if (itemsToRender < filtered.length) {
             const sorted = filtered.sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
@@ -176,6 +191,8 @@ class SidebarMenu extends React.Component {
 
         return filtered.sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
     };
+
+    targetMatch = (target, elementTarget) => elementTarget === target || !elementTarget && target === this.defaultTarget;
 
     getTools = (namespace = 'sidebar', height) => {
         return this.getItems(namespace, height).sort((a, b) => a.position - b.position);
@@ -212,7 +229,7 @@ class SidebarMenu extends React.Component {
     };
 
     render() {
-        return (
+        return this.state.hidden ? false : (
             <div id="mapstore-sidebar-menu-container" style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
                     { ({ height }) =>

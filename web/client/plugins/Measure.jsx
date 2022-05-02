@@ -128,7 +128,8 @@ export default {
             tooltip: "measureComponent.tooltip",
             text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
-            action: () => setControlProperty("measure", "enabled", true)
+            action: () => setControlProperty("measure", "enabled", true),
+            priority: 2
         },
         SidebarMenu: {
             name: 'measurement',
@@ -141,7 +142,8 @@ export default {
             action: toggleControl.bind(null, 'measure', null),
             toggle: true,
             toggleControl: 'measure',
-            toggleProperty: 'enabled'
+            toggleProperty: 'enabled',
+            priority: 1
         }
     }),
     reducers: {measurement: require('../reducers/measurement').default},

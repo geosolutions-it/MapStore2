@@ -106,7 +106,7 @@ export const SharePlugin = assign(Share, {
     BurgerMenu: {
         name: 'share',
         position: 1000,
-        priority: 1,
+        priority: 2,
         doNotHide: true,
         text: <Message msgId="share.title"/>,
         tooltip: "share.tooltip",

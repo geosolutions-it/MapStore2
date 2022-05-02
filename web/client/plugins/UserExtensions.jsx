@@ -116,7 +116,7 @@ export default createPlugin('UserExtensions', {
             icon: <Glyphicon glyph="plug" />,
             text: <Message msgId="userExtensions.title" />,
             action: setControlProperty.bind(null, "userExtensions", "enabled", true, true),
-            priority: 2,
+            priority: 1,
             doNotHide: true,
             toggle: true
         }

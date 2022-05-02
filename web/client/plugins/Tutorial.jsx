@@ -186,7 +186,7 @@ export default {
 
                 };
             },
-            priority: 2,
+            priority: 1,
             doNotHide: true
         }
     }),

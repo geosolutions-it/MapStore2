@@ -9,14 +9,12 @@
 import React from 'react';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
-import { Glyphicon } from 'react-bootstrap';
 import { createSelector } from 'reselect';
 import isEmpty from 'lodash/isEmpty';
 import ContainerDimensions from 'react-container-dimensions';
 import Dock from 'react-dock';
 
 import { createPlugin, connect } from '../utils/PluginsUtils';
-import Message from '../components/I18N/Message';
 import { on, toggleControl } from '../actions/controls';
 import AnnotationsEditorComp from '../components/mapcontrols/annotations/AnnotationsEditor';
 import AnnotationsComp from '../components/mapcontrols/annotations/Annotations';
@@ -325,28 +323,6 @@ export default createPlugin('Annotations', {
         TOC: {
             doNotHide: true,
             name: "Annotations"
-        },
-        BurgerMenu: {
-            name: 'annotations',
-            position: 40,
-            text: <Message msgId="annotationsbutton"/>,
-            tooltip: "annotations.tooltip",
-            icon: <Glyphicon glyph="comment"/>,
-            action: conditionalToggle,
-            doNotHide: true
-        },
-        SidebarMenu: {
-            name: "annotations",
-            position: 40,
-            action: conditionalToggle,
-            text: <Message msgId="annotationsbutton"/>,
-            tooltip: "annotations.tooltip",
-            icon: <Glyphicon glyph="comment"/>,
-            doNotHide: true,
-            selector: (state) => ({
-                bsStyle: state?.controls?.annotations?.enabled ? "primary" : "tray",
-                active: !!(state?.controls?.annotations?.enabled)
-            })
         }
     },
     reducers: {

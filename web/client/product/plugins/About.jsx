@@ -39,7 +39,7 @@ export default {
                 text: <Message msgId="about_title"/>,
                 icon: <Glyphicon glyph="info-sign"/>,
                 action: toggleControl.bind(null, 'about', null),
-                priority: 1,
+                priority: 2,
                 doNotHide: true
             },
             SidebarMenu: {
