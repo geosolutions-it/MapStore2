@@ -59,7 +59,7 @@ describe('Share Plugin', () => {
             SidebarMenuPlugin: {}
         });
         expect(Object.keys(containers).length).toBe(3);
-        expect(Object.keys(containers)).toEqual(['BurgerMenu', 'Toolbar', 'SidebarMenu']);
+        expect(Object.keys(containers)).toEqual(['BurgerMenu', 'SidebarMenu', 'Toolbar']);
         expect(containers.Toolbar).toContain({alwaysVisible: true, doNotHide: true});
         expect(containers.BurgerMenu).toContain({position: 1000, priority: 2, doNotHide: true});
         expect(containers.SidebarMenu).toContain({position: 1000, priority: 1, doNotHide: true});
