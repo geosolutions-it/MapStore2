@@ -58,7 +58,7 @@ export default createPlugin('Save', {
         SidebarMenu: {
             name: 'mapSave',
             position: 30,
-            icon: <Glyphicon glyph="floppy-open"/>,
+            icon: <Glyphicon glyph="floppy-disk"/>,
             text: <Message msgId="save"/>,
             action: toggleControl.bind(null, 'mapSave', null),
             toggle: true,

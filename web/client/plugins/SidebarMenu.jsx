@@ -230,7 +230,7 @@ class SidebarMenu extends React.Component {
 
     render() {
         return this.state.hidden ? false : (
-            <div id="mapstore-sidebar-menu-container" style={this.getStyle(this.props.style)}>
+            <div id="mapstore-sidebar-menu-container" className="shadow-soft" style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
                     { ({ height }) =>
                         <ToolsContainer id={this.props.id}
