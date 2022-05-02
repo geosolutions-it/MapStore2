@@ -53,8 +53,7 @@
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"},
       {"name": "userrole", "path": "security.user.role"},
-      {"name": "printEnabled", "path": "print.capabilities"},
-      {"name": "sidebarMenu", "path": "controls.sidebarMenu"}
+      {"name": "printEnabled", "path": "print.capabilities"}
     ],
     "userSessions": {
       "enabled": true
