@@ -661,7 +661,7 @@
             "projection": "Système de coordonnées",
             "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
             "graticule": "ajouter une grille avec des étiquettes",
-            "additionalLayers": "Inclure des couches supplémentaires"
+            "additionalLayers": "Inclure les superpositions"
         },
         "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"

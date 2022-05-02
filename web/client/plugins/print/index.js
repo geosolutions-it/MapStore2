@@ -190,7 +190,7 @@ export const standardItems = {
         },
         position: 4
     }, {
-        id: "additionalLayers",
+        id: "overlayLayers",
         plugin: AdditionalLayers,
         position: 5
     }],

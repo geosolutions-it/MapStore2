@@ -661,7 +661,7 @@
             "projection": "Sistema di coordinate",
             "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo",
             "graticule": "aggiungi griglia con label",
-            "additionalLayers": "Includi livelli aggiuntivi"
+            "additionalLayers": "Includi sovrapposizioni"
         },
         "backgroundSwitcher":{
             "tooltip": "Scegli lo sfondo"
