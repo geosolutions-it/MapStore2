@@ -12,7 +12,7 @@ import { compose, withHandlers, withProps } from 'recompose';
 import { createSelector } from 'reselect';
 
 import { changeSetting, selectPlaybackRange, toggleAnimationMode } from '../../actions/playback';
-import { onRangeChanged, setSnapType } from '../../actions/timeline';
+import { onRangeChanged, setTimelineSnapType } from '../../actions/timeline';
 import Settings from "../../components/playback/Settings";
 import { playbackRangeSelector, playbackSettingsSelector } from '../../selectors/playback';
 import { rangeSelector, selectedLayerDataRangeSelector, selectedLayerSelector, snapTypeSelector } from '../../selectors/timeline';
@@ -35,7 +35,7 @@ export default compose(
     ), {
         setPlaybackRange: selectPlaybackRange,
         onSettingChange: changeSetting,
-        onChangeSnapType: setSnapType,
+        onChangeSnapType: setTimelineSnapType,
         toggleAnimationMode
     }
 

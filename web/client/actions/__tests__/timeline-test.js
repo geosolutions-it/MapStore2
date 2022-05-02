@@ -23,7 +23,7 @@ import {
     setCollapsed,
     SET_MAP_SYNC,
     setMapSync,
-    setSnapType,
+    setTimelineSnapType,
     SET_SNAP_TYPE,
     INIT_TIMELINE,
     initTimeline,
@@ -82,8 +82,8 @@ describe('timeline actions', () => {
         expect(retval.type).toBe(SET_MAP_SYNC);
         expect(retval.mapSync).toBe(true);
     });
-    it('setSnapType', () => {
-        const retval = setSnapType("start");
+    it('setTimelineSnapType', () => {
+        const retval = setTimelineSnapType("start");
         expect(retval).toExist();
         expect(retval.type).toBe(SET_SNAP_TYPE);
         expect(retval.snapType).toBe("start");

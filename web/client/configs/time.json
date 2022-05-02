@@ -1,0 +1,98 @@
+{
+    "version": 2,
+      "map": {
+      "projection": "EPSG:900913",
+          "units": "m",
+          "center": {"x": 1250000.000000, "y": 5370000.000000, "crs": "EPSG:900913"},
+      "zoom":5,
+          "maxExtent": [
+              -20037508.34, -20037508.34,
+              20037508.34, 20037508.34
+          ],
+          "layers": [
+              {
+                  "type": "osm",
+                  "title": "Open Street Map",
+                  "name": "mapnik",
+          "source": "osm",
+                  "group": "background",
+          "visibility": true
+              },
+        {
+          "type": "tileprovider",
+          "title": "NASAGIBS Night 2012",
+          "provider": "NASAGIBS.ViirsEarthAtNight2012",
+          "name": "Night2012",
+          "source": "nasagibs",
+          "group": "background",
+          "visibility": false
+        },
+        {
+          "type": "tileprovider",
+          "title": "OpenTopoMap",
+          "provider": "OpenTopoMap",
+          "name": "OpenTopoMap",
+          "source": "OpenTopoMap",
+          "group": "background",
+          "visibility": false
+        },
+        {
+          "format": "image/jpeg",
+          "name": "s2cloudless:s2cloudless",
+          "opacity": 1,
+          "title": "Sentinel 2 Cloudless",
+          "type": "wms",
+          "visibility": true,
+          "url": "https://1maps.geo-solutions.it/geoserver/wms",
+          "source": "s2cloudless",
+          "dimensions": [{
+            "name": "time",
+            "values": [
+              "2016-12-17T00:00:00.000Z/2016-12-18T00:00:00.000Z",
+              "2016-12-16T00:00:00.000Z/2016-12-21T00:00:00.000Z",
+              "2016-12-19T00:00:00.000Z/2016-12-24T00:00:00.000Z",
+              "2018-12-19T00:00:00.000Z/2019-01-24T00:00:00.000Z",
+              "2019-02-02T00:00:00.000Z/2019-02-24T00:00:00.000Z",
+              "2016-12-19T00:00:00.000Z/2016-12-24T00:00:00.000Z",
+			  "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-20T00:00:00.000Z",
+              "2018-01-05T00:00:00.000Z",
+              "2017-01-17T00:00:00.000Z/2017-05-18T00:00:00.000Z/PT20S",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2017-12-12T00:00:00.000Z/2018-01-24T00:00:00.000Z",
+              "2016-12-17T00:00:00.000Z/2016-12-18T00:00:00.000Z",
+              "2016-12-16T00:00:00.000Z/2016-12-21T00:00:00.000Z",
+              "2016-12-19T00:00:00.000Z/2016-12-24T00:00:00.000Z",
+              "2016-12-17T00:00:00.000Z/2016-12-18T00:00:00.000Z",
+              "2016-12-16T00:00:00.000Z/2016-12-21T00:00:00.000Z",
+              "2016-12-19T00:00:00.000Z/2016-12-24T00:00:00.000Z"
+            ]
+          }],
+          "singleTile": false
+        },
+        {
+          "source": "ol",
+          "group": "background",
+          "title": "Empty Background",
+          "fixed": true,
+          "type": "empty",
+          "visibility": false,
+          "args": [
+            "Empty Background", {
+              "visibility": false
+            }
+          ]
+        }
+          ]
+      }
+  }
+  
