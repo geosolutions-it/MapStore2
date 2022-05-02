@@ -885,14 +885,21 @@ export function layerToGeoStylerStyle(layer) {
             splitStyles(castArray(layer.style)).map((style) => msStyleToSymbolizer(style))
         )
             .then((symbolizers) => {
+                const geometryTypeToKind = {
+                    'point': ['Mark', 'Icon', 'Text'],
+                    'linestring': ['Line'],
+                    'polygon': ['Fill']
+                };
                 return {
                     format: 'geostyler',
                     body: {
                         name: '',
-                        rules: symbolizers.map(symbolizer => ({
-                            name: '',
-                            symbolizers: [symbolizer]
-                        }))
+                        rules: symbolizers
+                            .filter(({ kind }) => !geometryTypeToKind[layer.geometryType] || geometryTypeToKind[layer.geometryType].includes(kind))
+                            .map(symbolizer => ({
+                                name: '',
+                                symbolizers: [symbolizer]
+                            }))
                     },
                     metadata: {
                         editorType: 'visual'

@@ -43,20 +43,34 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
-    'wfs': (layer) => describeFeatureType(layer.url, layer.name)
-        .then((response) => {
-            return extractFeatureProperties({
-                describeLayer: {
-                    owsType: 'WFS'
-                },
-                describeFeatureType: response
-            });
-        })
+    'wfs': (layer) => layer.url
+        ? describeFeatureType(layer.url, layer.name)
+            .then((response) => {
+                return extractFeatureProperties({
+                    describeLayer: {
+                        owsType: 'WFS'
+                    },
+                    describeFeatureType: response
+                });
+            })
+        : Promise.resolve({})
 };
 
 function VectorStyleEditor({
     element: layer,
-    onUpdateNode
+    fonts = [
+        'Arial',
+        'Verdana',
+        'Helvetica',
+        'Tahoma',
+        'Trebuchet MS',
+        'Times New Roman',
+        'Georgia',
+        'Garamond',
+        'Courier New',
+        'Brush Script MT'
+    ],
+    onUpdateNode = () => {}
 }) {
 
     const request = capabilitiesRequest[layer?.type];
@@ -123,31 +137,39 @@ function VectorStyleEditor({
     }, []);
 
     useEffect(() => {
-        layerToGeoStylerStyle(layer)
-            .then((updatedStyle) => {
-                if (!updatedStyle?.body) {
-                    handleClearStyle();
-                } else {
-                    style.current = updatedStyle;
-                    setError(null);
-                    onUpdateNode(layer.id, 'layers', { style: { ...style.current } });
-                }
-            });
-    }, [layer.id]);
-
-    useEffect(() => {
         if (!loading && request) {
             setLoading(true);
-            request(layer)
+            (request
+                ? request(layer)
+                : Promise.resolve(layer))
                 .then(({ properties, format, geometryType } = {}) => {
+                    const newLayer = {
+                        ...layer,
+                        properties: {
+                            ...properties,
+                            ...layer.properties
+                        },
+                        format: format ? format : layer.format,
+                        geometryType: geometryType ? geometryType : layer.geometryType
+                    };
+                    return newLayer;
+                })
+                .then((newLayer) => layerToGeoStylerStyle(newLayer).then((updatedStyle) => ({ ...newLayer, style: updatedStyle })))
+                .then(({
+                    properties,
+                    format,
+                    geometryType,
+                    style: updatedStyle
+                } = {}) => {
                     if (isMounted.current) {
+                        const newStyle = !updatedStyle?.body ? getVectorDefaultStyle(layer) : updatedStyle;
+                        style.current = newStyle;
+                        setError(null);
                         onUpdateNode(layer.id, 'layers', {
-                            properties: {
-                                ...properties,
-                                ...layer.properties
-                            },
-                            format: format ? format : layer.format,
-                            geometryType: geometryType ? geometryType : layer.geometryType
+                            properties,
+                            format,
+                            geometryType,
+                            style: newStyle
                         });
                         setLoading(false);
                     }
@@ -158,7 +180,7 @@ function VectorStyleEditor({
                     }
                 });
         }
-    }, [layer.id, layer.url, request]);
+    }, [layer.id, request]);
 
     const { format, metadata, body } = style.current || {};
     const { editorType, styleJSON } = metadata || {};
@@ -180,7 +202,8 @@ function VectorStyleEditor({
             onError={handleError}
             exactMatchGeometrySymbol
             config={{
-                simple: true
+                simple: true,
+                fonts
             }}
         />
     );
