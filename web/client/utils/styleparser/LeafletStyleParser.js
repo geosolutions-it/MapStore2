@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import { castArray } from 'lodash';
 
 const geometryTypeToKind = {
     'Point': ['Mark', 'Icon', 'Text'],
@@ -8,6 +9,17 @@ const geometryTypeToKind = {
     'Polygon': ['Fill'],
     'MultiPolygon': ['Fill']
 };
+
+function parseLabel(feature, label = '') {
+    if (!feature.properties) {
+        return label;
+    }
+    return Object.keys(feature.properties)
+        .reduce((str, key) => {
+            const regExp = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+            return str.replace(regExp, feature.properties[key] ?? '');
+        }, label);
+}
 
 function getStyleFuncFromRules({ rules = [] }, {
     geoStylerFilter,
@@ -88,7 +100,32 @@ function getStyleFuncFromRules({ rules = [] }, {
                     }
                 }
                 if (firstValidSymbolizer.kind === 'Text') {
-                    // return L.marker(latlng, { });
+                    const label = parseLabel(feature, firstValidSymbolizer.label);
+                    const haloProperties = `
+                        -webkit-text-stroke-width:${firstValidSymbolizer.haloWidth}px;
+                        -webkit-text-stroke-color:${firstValidSymbolizer.haloColor || ''};
+                    `;
+                    const textIcon = L.divIcon({
+                        html: `<div style="
+                            color:${firstValidSymbolizer.color};
+                            font-family: ${castArray(firstValidSymbolizer.font || []).join(', ')};
+                            font-style: ${firstValidSymbolizer.fontStyle || 'normal'};
+                            font-weight: ${firstValidSymbolizer.fontWeight || 'normal'};
+                            font-size: ${firstValidSymbolizer.size}px;
+
+                            position: absolute;
+                            transform: translate(${firstValidSymbolizer?.offset?.[0] ?? 0}px, ${firstValidSymbolizer?.offset?.[1] ?? 0}px) rotateZ(${firstValidSymbolizer?.rotate ?? 0}deg);
+
+                            ${firstValidSymbolizer.haloWidth > 0 ? haloProperties : ''}
+                        ">
+                            ${label}
+                            </div>`,
+                        className: ''
+                    });
+                    return L.marker(latlng, {
+                        icon: textIcon,
+                        opacity: 1 * globalOpacity
+                    });
                 }
                 return null;
             },

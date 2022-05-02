@@ -8,6 +8,7 @@
 
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
+import { castArray } from 'lodash';
 import range from 'lodash/range';
 
 function getCesiumColor({ color, opacity }) {
@@ -42,6 +43,17 @@ function getCesiumDashArray({ color, opacity, dasharray }) {
             .map((value, idx) => range(value).map(() => idx % 2 === 0 ? '1' : '0').join(''))
             .join('')), 2)
     });
+}
+
+function parseLabel(feature, label = '') {
+    if (!feature.properties) {
+        return label;
+    }
+    return Object.keys(feature.properties)
+        .reduce((str, key) => {
+            const regExp = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+            return str.replace(regExp, feature.properties[key] ?? '');
+        }, label);
 }
 
 const GRAPHIC_KEYS = [
@@ -162,7 +174,24 @@ function getStyleFuncFromRules({
                             });
                         }
                         if (symbolizer.kind === 'Text' && entity.position) {
-                            // entity.label = new Cesium.LabelGraphics({});
+                            entity.label = new Cesium.LabelGraphics({
+                                text: parseLabel({ properties }, symbolizer.label),
+                                font: [symbolizer.fontStyle, symbolizer.fontWeight,  `${symbolizer.size}px`, castArray(symbolizer.font || ['serif']).join(', ')]
+                                    .filter(val => val)
+                                    .join(' '),
+                                fillColor: getCesiumColor({
+                                    color: symbolizer.color,
+                                    opacity: 1 * globalOpacity
+                                }),
+                                pixelOffset: new Cesium.Cartesian2(symbolizer?.offset?.[0] ?? 0, symbolizer?.offset?.[1] ?? 0),
+                                // outline is not working
+                                // rotation is not available as property
+                                outlineColor: getCesiumColor({
+                                    color: symbolizer.haloColor,
+                                    opacity: 1 * globalOpacity
+                                }),
+                                outlineWidth: symbolizer.haloWidth
+                            });
                         }
                     }
                 });
