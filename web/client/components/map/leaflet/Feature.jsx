@@ -169,7 +169,14 @@ class Feature extends React.Component {
     }
     render() {
         return this.props.container._msLegacyGeoJSON
-            ? <FeatureComponent {...this.props} />
+            ? <FeatureComponent
+                {...this.props}
+                ref={(cmp) => {
+                    if (cmp) {
+                        this._layers = cmp._layers;
+                    }
+                }}
+            />
             : null;
     }
 }

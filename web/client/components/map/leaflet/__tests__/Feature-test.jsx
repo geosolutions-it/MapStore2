@@ -13,7 +13,8 @@ import expect from 'expect';
 
 const container = {
     addLayer: () => {},
-    removeLayer: () => {}
+    removeLayer: () => {},
+    _msLegacyGeoJSON: true
 };
 
 describe('leaflet Feature component', () => {
