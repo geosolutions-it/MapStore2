@@ -91,6 +91,15 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>
+        {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
+            <Col xs={12}>
+                <Checkbox
+                    onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
+                    checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
+                    <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
+                </Checkbox>
+            </Col>
+        </FormGroup>}
         {(!isNil(service.type) ? (service.type === "csw" && !service.excludeShowTemplate) : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Col xs={12}>
                 <Checkbox

@@ -74,6 +74,8 @@ In particular, the user is allowed to:
 
 * Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wms/wmtscatalog)
 
+* Enable/disable the _Force proxy_ layer option. If enabled, forces the application to check the source and applies proxy if needed. 
+
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.
@@ -247,6 +249,32 @@ With the *Pattern icon style*  it is possible to represent *Line* or *Fill* styl
 The style editor can configure the *Icon* as explained [here](layer-settings.md#icon) along with the usual options available for rules of type [line](layer-settings.md#line) or [fill](layer-settings.md#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
+
+### Create a style for 3D Tiles
+
+With [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to customize the style of a [3D Tiles layer](catalog.md#3d-tiles-catalog) client side. The MapStore support is working in respect of the [3D Tiles Specification 1.0](http://docs.opengeospatial.org/cs/18-053r2/18-053r2.html) and on top of the [Cesium Styling capabilities](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling). Below is an example of how the Style Editor of a 3D Tiles layer is appearing in the MapStore UI.
+
+<img src="../img/layer-settings/3dtiles_style.jpg" class="ms-docimage">
+
+For the 3D Tiles styling, while with the **Code Text Editor** it is possible to leverage completely on the styling specifications:
+
+<img src="../img/layer-settings/text-editor-3dtiles.jpg" class="ms-docimage">
+
+The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Style Editor** supports for now only a limited set of capabilities:
+
+* Customization of the **Fill color** 
+
+<img src="../img/layer-settings/ex_3dtiles_style.gif" class="ms-docimage">
+
+* Style Rule filtering based on the available [properties dictionary ](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification#properties) defined in the tileset.json
+
+<img src="../img/layer-settings/filter_3dtiles_style.jpg" class="ms-docimage">
+
+* Possibility to customize the radius in case of point cloud features
+
+<img src="../img/layer-settings/point_3dtiles_text.jpg" class="ms-docimage">
+
+<img src="../img/layer-settings/point_3dtiles_visual.jpg" class="ms-docimage">
 
 ## Feature Info Form
 

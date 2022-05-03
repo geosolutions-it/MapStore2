@@ -375,6 +375,38 @@ describe('Leaflet layer', () => {
         expect(urls.length).toBe(2);
     });
 
+    it('creates a wmts layer with attribution for leaflet map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "credits": {
+                "title": "<p>This is some Attribution <b>TEXT</b></p>"
+            },
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": [
+                {
+                    "TileMatrix": [],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
+                }
+            ],
+            "url": ["http://sample.server/geoserver/gwc/service/wmts"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wmts"
+                options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+        map.eachLayer( l => expect(l.getAttribution()).toBe(options.credits.title));
+    });
+
     it('creates a vector layer for leaflet map', () => {
         var options = {
             "type": "wms",

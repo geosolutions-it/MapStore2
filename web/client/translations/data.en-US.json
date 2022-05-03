@@ -160,7 +160,8 @@
                     "title": "Error",
                     "message": "Failed to fetch format"
                 }
-            }
+            },
+            "forceProxy": "Force proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -292,15 +293,7 @@
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Keep in touch and stay up-to-date with the mailing lists",
-                "subscribe_users": "Subscribe Users Mailing List",
-                "subscribe_devel": "Subscribe Developers Mailing List",
-                "visit_group": "Visit this group",
-                "subscribe": "Subscribe",
-                "email": "Email:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "This website uses cookies",
@@ -426,6 +419,9 @@
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
             "savedMapMessage": "Map has been saved correctly.",
+            "renderingErrorTitle": "Rendering error",
+            "renderingErrorMessage": "<p>The map rendering has stopped and this could be due for different reasons: </p><ul><li>The applied style contains some rules or variables not supported by the features</li><li>The layer is not properly configured</li></ul><p>You can apply changes to the layer style and then click on 'Reload map' button. <br/> See the message below for addition information:</p>",
+            "reloadMap": "Reload map",
             "thumbnailError": {
                 "error403": "You are not allowed to update the thumbnail",
                 "error404": "An error occurred while creating the thumbnail",
@@ -1012,6 +1008,7 @@
                 "attribute_filter_header": "Attribute filter",
                 "tooltipTextField": "use <b>*</b> for any number of any char</br>use . for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
                 "tooltipTextFieldCSS": "use <b>%</b> for any number of any char</br>use <b>_</b> for a single char</br>use <b>\\</b> to escape the above two (% and _)</br>",
+                "tooltipTextField3DTiles": "use a value supported by the <strong>regExp</strong> function of the 3d tiles style specification 1.0",
                 "groupField": {
                     "any": "any",
                     "all": "all",
@@ -1436,7 +1433,7 @@
             "showPreview": "Show preview",
             "advancedSettings": "Advanced settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
-            "invalidUrlHttpProtocol": "Thìs catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
+            "invalidUrlHttpProtocol": "This catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",
@@ -1470,6 +1467,10 @@
            "autoSetVisibilityLimits": {
                 "label": "Set Visibility Limit",
                 "tooltip": "Automatically applies the visibility limits suggested by the server"
+           },
+           "allowUnsecureLayers": {
+                "label": "Allow not secure layers",
+                "tooltip": "Adding layer to map with this option enabled, forces the application to apply proxy"
            },
           "domainAliases": {
             "title": "Domain aliases",
@@ -2319,7 +2320,9 @@
             "imageSrcNotSupportedBase64Image": "Some style renderer does not support base64 images even if the current source is valid",
             "imageFormatEmpty": "The image format cannot be identified. Please select the image format from the available ones in the 'Format' dropdown",
             "warningTextOrderTitle": "Warning",
-            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules",
+            "invalidProperty": "The { key } property type is invalid",
+            "notSupportedVariable": "The variable { key } is not supported by the tileset"
         },
         "playback": {
             "settings": {
@@ -2749,6 +2752,8 @@
         "backgroundDialog": {
             "addTitle": "Add New Background",
             "editTitle": "Edit Current Background",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Enter Attribution Text",
             "title": "Title",
             "titlePlaceholder": "Enter displayed name",
             "add": "Add",

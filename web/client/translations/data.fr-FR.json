@@ -160,7 +160,8 @@
                     "title": "Erreur",
                     "message": "Échec de la récupération du format"
                 }
-            }
+            },
+            "forceProxy": "Forcer le proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -292,15 +293,7 @@
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
-            "ml": {
-                "title": "Restez au courant des derniers développements via les mailing lists",
-                "subscribe_users": "Souscrire à la liste de diffusion utilisateurs",
-                "subscribe_devel": "Souscrire à la liste de diffusion développeurs",
-                "visit_group": "Aller à ce groupe",
-                "subscribe": "Souscrire",
-                "email": "Courriel:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "Ce site utilise des cookies",
@@ -426,6 +419,9 @@
             "error": "L'image fournie n'est pas valide",
             "savedMapTitle": "Carte sauvegardée",
             "savedMapMessage": "La carte a été enregistrée correctement.",
+            "renderingErrorTitle": "Erreur de rendu",
+            "renderingErrorMessage": "<p>Le rendu de la carte s'est arrêté et cela peut être dû à différentes raisons : </p><ul><li>Le style appliqué contient des règles ou des variables non prises en charge par les fonctionnalités</li>< li>Le calque n'est pas correctement configuré</li></ul><p>Vous pouvez appliquer des modifications au style de calque, puis cliquer sur le bouton 'Recharger la carte'. <br/> Consultez le message ci-dessous pour plus d'informations :< /p>",
+            "reloadMap": "Recharger la carte",
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
@@ -1012,6 +1008,7 @@
                 "attribute_filter_header": "Attribut filtre",
                 "tooltipTextField": "utilise <b>*</b> pour tout caractère</br>utilise . pour un seul caractère</br>utilise <b>!</b> pour les caractères spéciaux (* et .)</br>",
                 "tooltipTextFieldCSS": "utilise <b>%</b> pour tout caractère</br>utilise <b>_</b> pour un seul caractère</br>utilise <b>\\</b> pour les caractères spéciaux (% et _)</br>",
+                "tooltipTextField3DTiles": "utilisez une valeur prise en charge par la fonction <strong>regExp</strong> de la spécification de style de tuiles 3d 1.0",
                 "groupField": {
                     "any": "certain",
                     "all": "tous",
@@ -1472,12 +1469,16 @@
                 "label": "Définir la limite de visibilité",
                 "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             },
-          "domainAliases": {
-            "title": "Alias de domaine",
-            "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
-            "addAliasTooltip": "Ajouter un alias",
-            "removeAliasTooltip": "Supprimer l'alias"
-          }
+            "domainAliases": {
+              "title": "Alias de domaine",
+              "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
+              "addAliasTooltip": "Ajouter un alias",
+              "removeAliasTooltip": "Supprimer l'alias"
+            },
+            "allowUnsecureLayers": {
+              "label": "Autoriser les couches non sécurisées",
+              "tooltip": "L'ajout d'une couche à la carte avec cette option activée force l'application à appliquer un proxy"
+            }
         },
         "uploader": {
             "filename": "Nom du fichier",
@@ -2310,7 +2311,9 @@
             "imageSrcNotSupportedBase64Image": "Certains rendus de style ne prennent pas en charge les images base64 même si la source actuelle est valide",
             "imageFormatEmpty": "Le format d'image ne peut pas être identifié. Veuillez sélectionner le format d'image parmi ceux disponibles dans la liste déroulante 'Format'",
             "warningTextOrderTitle": "Avertissement",
-            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
+            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles",
+            "invalidProperty": "Le type de propriété { key } n'est pas valide",
+            "notSupportedVariable": "La variable { key } n'est pas prise en charge par le jeu de tuiles"
         },
         "playback": {
             "settings": {
@@ -2740,6 +2743,8 @@
         "backgroundDialog": {
             "addTitle": "Ajouter un nouveau fond",
             "editTitle": "Modifier le fond actuel",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Saisir le texte d'attribution",
             "title": "Titre",
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",

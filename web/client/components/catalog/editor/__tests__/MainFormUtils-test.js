@@ -28,4 +28,29 @@ describe('Catalog Main Form Editor Utils', () => {
             expect(!!result).toEqual(!!valid, `${catalogURL} - added when location is ${locationURL} should be ${valid}, but it is ${result}`);
         });
     });
+    it('isValidURL with allowUnsecureLayers', () => {
+        const URLS = [
+            // http
+            ['http://myDomain.com/geoserver/wms', 'https://myMapStore.com/geoserver/wms', true, true],
+            ['http://myDomain.com/geoserver/wms', 'http://myMapStore.com/geoserver/wms', true, false],
+            // https
+            ['https://myDomain.com/geoserver/wms', 'http://myMapStore.com/geoserver/wms', true, true],
+            ['https://myDomain.com/geoserver/wms', 'https://myMapStore.com/geoserver/wms', true, false],
+            // protocol relative URL
+            ['//myDomain.com/geoserver/wms', 'http://myMapStore.com/geoserver/wms', true, false],
+            ['//myDomain.com/geoserver/wms', 'https://myMapStore.com/geoserver/wms', true, false],
+            // absolute path
+            ['/geoserver/wms', 'http://myMapStore.com/geoserver/wms', true, false],
+            ['/geoserver/wms', 'https://myMapStore.com/geoserver/wms', true, false],
+            // relative path
+            ["geoserver/wms", "http://myMapStore.com/geoserver/wms", true, false],
+            ["geoserver/wms", "https://myMapStore.com/geoserver/wms", true, true]
+
+
+        ];
+        URLS.forEach(([catalogURL, locationURL, valid, allowUnsecureLayers]) => {
+            const result = isValidURL(catalogURL, locationURL, allowUnsecureLayers);
+            expect(!!result).toEqual(!!valid, `${catalogURL} - added when location is ${locationURL} should be ${valid}, but it is ${result}`);
+        });
+    });
 });

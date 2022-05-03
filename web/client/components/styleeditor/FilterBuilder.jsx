@@ -51,10 +51,14 @@ const FilterBuilder = ({
     onChange = () => {}
 }) => {
     const { groupFields, filterFields } = filterObj;
+    const textFieldTooltipMessageIds = {
+        'css': 'queryform.attributefilter.tooltipTextFieldCSS',
+        '3dtiles': 'queryform.attributefilter.tooltipTextField3DTiles'
+    };
     return (
         <div className="ms-style-rule-filter">
             <GroupField
-                format={format}
+                textFieldTooltipMessageId={textFieldTooltipMessageIds[format]}
                 attributes={attributes}
                 filterFields={filterFields}
                 groupFields={groupFields}
@@ -167,6 +171,7 @@ export function FilterBuilderPopover({
     if (hide || !attributes || attributes.length === 0) {
         return null;
     }
+    const isActive = value?.filterFields?.length > 0;
     return (
         <Popover
             placement={placement}
@@ -180,7 +185,7 @@ export function FilterBuilderPopover({
             }>
             <Button
                 className="square-button-md no-border"
-                active={!!value}
+                active={isActive}
                 tooltipId="styleeditor.openFilterBuilder">
                 <Glyphicon
                     glyph="filter"

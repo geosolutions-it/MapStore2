@@ -1082,6 +1082,17 @@ describe('LayersUtils', () => {
                     expect(l.tooltipPlacement).toExist();
                 }
             ],
+            [
+                {
+                    options: {
+                        attribution: "right"
+                    }
+                },
+                l => {
+                    expect(l.options).toExist();
+                    expect(l.options.attribution).toExist();
+                }
+            ],
             // save heightOffset for 3dtiles
             [
                 {
@@ -1089,6 +1100,15 @@ describe('LayersUtils', () => {
                 },
                 l => {
                     expect(l.heightOffset).toBe(10);
+                }
+            ],
+            // save forceProxy if present
+            [
+                {
+                    forceProxy: true
+                },
+                l => {
+                    expect(l.forceProxy).toBeTruthy();
                 }
             ]
         ];

@@ -18,9 +18,10 @@ function initParserLib(mod) {
 }
 
 const StyleParsers = {
-    sld: () => import('@geosolutions/geostyler-sld-parser').then(initParserLib),
-    css: () => import('@geosolutions/geostyler-geocss-parser').then(initParserLib),
-    openlayers: () =>  import('geostyler-openlayers-parser').then(initParserLib)
+    'sld': () => import('@geosolutions/geostyler-sld-parser').then(initParserLib),
+    'css': () => import('@geosolutions/geostyler-geocss-parser').then(initParserLib),
+    'openlayers': () =>  import('geostyler-openlayers-parser').then(initParserLib),
+    '3dtiles': () => import('./styleparser/ThreeDTilesStyleParser').then(initParserLib)
 };
 
 /**

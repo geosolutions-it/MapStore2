@@ -7,7 +7,6 @@
  */
 import React from 'react';
 
-import MailingLists from './MailingLists';
 import MadeWithLove from '../../assets/img/mwlii.png';
 
 class Footer extends React.Component {
@@ -16,7 +15,6 @@ class Footer extends React.Component {
             <div id="footer" style={{
                 textAlign: "center"
             }}>
-                <MailingLists/>
                 <br />
                 <img src={MadeWithLove} />
                 <p align="center"><b><a href="http://www.geo-solutions.it">GeoSolutions s.a.s.</a></b> • Via Poggio alle Viti 1187 - 55054 Massarosa (Lucca) - Italy</p>
