@@ -233,7 +233,7 @@ class AnnotationsPanel extends React.Component {
         return this.props.active ? (
             <ResponsivePanel
                 containerId="annotations-panel"
-                className="annotations"
+                className="ms-annotations-panel"
                 containerStyle={this.props.dockStyle}
                 hideHeader
                 style={this.props.dockStyle}
