@@ -82,7 +82,9 @@ class Catalog extends React.Component {
         formatOptions: PropTypes.array,
         infoFormatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object,
-        service: PropTypes.object
+        service: PropTypes.object,
+        isNewServiceAdded: PropTypes.bool,
+        setNewServiceStatus: PropTypes.func
     };
 
     static contextTypes = {
@@ -110,6 +112,7 @@ class Catalog extends React.Component {
         onReset: () => { },
         onSearch: () => { },
         changeLayerProperties: () => { },
+        setNewServiceStatus: () => { },
         pageSize: 4,
         records: [],
         loading: false,
@@ -196,7 +199,7 @@ class Catalog extends React.Component {
     }
 
     renderPagination = () => {
-        if (this.props.result) {
+        if (this.props.result && !this.props.isNewServiceAdded) {
             let total = this.props.result.numberOfRecordsMatched;
             let returned = this.props.result.numberOfRecordsReturned;
             let start = this.props.searchOptions.startPosition;
@@ -238,6 +241,11 @@ class Catalog extends React.Component {
                 hideThumbnail = selectedService.hideThumbnail;
             }
         }
+        const records = !this.props.isNewServiceAdded ? this.props.records.map(
+            (record) => showTemplate && metadataTemplate
+                ? { ...record, metadataTemplate }
+                : record
+        ) : [];
 
         return (<div className="catalog-results">
             <RecordGrid
@@ -245,10 +253,7 @@ class Catalog extends React.Component {
                 crs={this.props.crs}
                 key="records"
                 hideThumbnail={hideThumbnail}
-                records={this.props.records.map(
-                    (record) => showTemplate && metadataTemplate
-                        ? { ...record, metadataTemplate }
-                        : record)}
+                records={records}
                 clearModal={this.props.clearModal}
                 layers={this.props.layers}
                 modalParams={this.props.modalParams}
@@ -359,12 +364,14 @@ class Catalog extends React.Component {
 
     isValidServiceSelected = () => {
         return this.props.services[this.props.selectedService] !== undefined;
-
     };
     search = ({ services, selectedService, start = 1, searchText = "" } = {}) => {
         const url = buildServiceUrl(services[selectedService]);
         const type = services[selectedService].type;
-        this.props.onSearch({ format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || "", options: { service: this.props.services[selectedService] } });
+        this.props.isNewServiceAdded && this.props.setNewServiceStatus(false);
+        if (!this.props.isNewServiceAdded || searchText !== "") {
+            this.props.onSearch({ format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || "", options: { service: this.props.services[selectedService] } });
+        }
     };
 
     reset = () => {
