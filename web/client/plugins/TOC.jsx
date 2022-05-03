@@ -129,10 +129,10 @@ const tocSelector = createSelector(
         selectedNodes,
         filterText,
         generalInfoFormat,
+        layers,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         updatableLayersCount: layers.filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length > 0,
-        annotationsLayerExists: layers.filter(l => l.id === 'annotations').length > 0,
         selectedGroups: selectedNodes.map(n => getNode(groups, n)).filter(n => n && n.nodes),
         mapName,
         filteredGroups: addFilteredAttributesGroups(groups, [
@@ -175,6 +175,7 @@ class LayerTree extends React.Component {
     static propTypes = {
         id: PropTypes.number,
         items: PropTypes.array,
+        layers: PropTypes.array,
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
@@ -250,10 +251,6 @@ class LayerTree extends React.Component {
         activateAddLayerButton: PropTypes.bool,
         activateAddGroupButton: PropTypes.bool,
         activateLayerFilterTool: PropTypes.bool,
-        activateAnnotations: PropTypes.bool,
-        activateAnnotationsEdit: PropTypes.bool,
-        onAnnotations: PropTypes.func,
-        annotationsLayerExists: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func,
         hideOpacityTooltip: PropTypes.bool,
@@ -273,6 +270,7 @@ class LayerTree extends React.Component {
 
     static defaultProps = {
         items: [],
+        layers: [],
         groupPropertiesChangeHandler: () => {},
         layerPropertiesChangeHandler: () => {},
         retrieveLayerData: () => {},
@@ -304,8 +302,6 @@ class LayerTree extends React.Component {
         activateQueryTool: true,
         activateDownloadTool: true,
         activateWidgetTool: false,
-        activateAnnotations: true,
-        activateAnnotationsEdit: false,
         activateLayerFilterTool: false,
         activateLayerInfoTool: true,
         maxDepth: 3,
@@ -349,8 +345,7 @@ class LayerTree extends React.Component {
         refreshLayerVersion: () => {},
         metadataTemplate: null,
         onLayerInfo: () => {},
-        onSetSwipeMode: () => {},
-        onAnnotations: () => {}
+        onSetSwipeMode: () => {}
     };
 
     getNoBackgroundLayers = (group) => {
@@ -423,6 +418,7 @@ class LayerTree extends React.Component {
                         <Toolbar
                             items={this.props.items.filter(({ target }) => target === "toolbar")}
                             groups={this.props.groups}
+                            layers={this.props.layers}
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}
@@ -446,9 +442,7 @@ class LayerTree extends React.Component {
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool,
                                 activateLayerFilterTool: this.props.activateLayerFilterTool,
-                                activateLayerInfoTool: this.props.updatableLayersCount > 0 && this.props.activateLayerInfoTool,
-                                activateAnnotations: !this.props.annotationsLayerExists && this.props.activateAnnotations,
-                                activateAnnotationsEdit: this.props.annotationsLayerExists && this.props.activateAnnotations
+                                activateLayerInfoTool: this.props.updatableLayersCount > 0 && this.props.activateLayerInfoTool
                             }}
                             options={{
                                 modalOptions: {},
@@ -476,10 +470,6 @@ class LayerTree extends React.Component {
                                 addGroupTooltip: <Message msgId="toc.addGroup" />,
                                 addSubGroupTooltip: <Message msgId="toc.addSubGroup" />,
                                 createWidgetTooltip: <Message msgId="toc.createWidget"/>,
-                                annotations: <Message msgId="toc.addAnnotations"/>,
-                                annotationsTooltip: <Message msgId="toc.addAnnotations" />,
-                                annotationsEdit: <Message msgId="toc.addAnnotations"/>,
-                                annotationsEditTooltip: <Message msgId="toc.editAnnotations"/>,
                                 zoomToTooltip: {
                                     LAYER: <Message msgId="toc.toolZoomToLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolZoomToLayersTooltip"/>
@@ -523,8 +513,7 @@ class LayerTree extends React.Component {
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler,
-                                onLayerInfo: this.props.onLayerInfo,
-                                onAnnotations: this.props.onAnnotations
+                                onLayerInfo: this.props.onLayerInfo
                             }}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -614,9 +603,7 @@ const checkPluginsEnhancer = branch(
             "activateLayerFilterTool",
             "activateSettingsTool",
             "FeatureEditor",
-            "activateLayerInfoTool",
-            "activateAnnotations",
-            "activateAnnotationsEdit"
+            "activateLayerInfoTool"
         ],
         ({
             items = [],
@@ -627,9 +614,7 @@ const checkPluginsEnhancer = branch(
             activateLayerFilterTool = true,
             activateWidgetTool = true,
             activateLayerInfoTool = true,
-            activateDownloadTool = true,
-            activateAnnotations = true,
-            activateAnnotationsEdit = true
+            activateDownloadTool = true
         }) => ({
             activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "MetadataExplorer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
@@ -640,9 +625,7 @@ const checkPluginsEnhancer = branch(
             // the button should hide if also widgets plugins is not available. Maybe is a good idea to merge the two plugins
             activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) && !!find(items, { name: "Widgets" }),
             activateLayerInfoTool: activateLayerInfoTool && !!find(items, { name: "LayerInfo" }) || false,
-            activateDownloadTool: activateDownloadTool && !!find(items, { name: "LayerDownload" }) || false,
-            activateAnnotations: activateAnnotations && !!find(items, { name: "Annotations" }) || false,
-            activateAnnotationsEdit: activateAnnotationsEdit && !!find(items, { name: "Annotations" }) || false
+            activateDownloadTool: activateDownloadTool && !!find(items, { name: "LayerDownload" }) || false
         })
     )
 );
@@ -922,8 +905,7 @@ const TOCPlugin = connect(tocSelector, {
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion,
-    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false),
-    onAnnotations: setControlProperty.bind(null, 'annotations', 'enabled', true, false)
+    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false)
 })(compose(
     securityEnhancer,
     checkPluginsEnhancer

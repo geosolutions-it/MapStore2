@@ -23,6 +23,7 @@ class Toolbar extends React.Component {
     static propTypes = {
         groups: PropTypes.array,
         items: PropTypes.array,
+        layers: PropTypes.array,
         selectedLayers: PropTypes.array,
         generalInfoFormat: PropTypes.string,
         selectedGroups: PropTypes.array,
@@ -41,6 +42,7 @@ class Toolbar extends React.Component {
     static defaultProps = {
         groups: [],
         items: [],
+        layers: [],
         selectedLayers: [],
         selectedGroups: [],
         onToolsActions: {
@@ -62,8 +64,7 @@ class Toolbar extends React.Component {
             onGetMetadataRecord: () => {},
             onHideLayerMetadata: () => {},
             onShow: () => {},
-            onLayerInfo: () => {},
-            onAnnotations: () => {}
+            onLayerInfo: () => {}
         },
         maxDepth: 3,
         text: {
@@ -324,26 +325,6 @@ class Toolbar extends React.Component {
                         overlay={<Tooltip id="legend-tooltip-metadata">{this.props.text.layerMetadataTooltip}</Tooltip>}>
                         <Button key="layer-metadata" bsStyle={this.props.layerMetadata.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => this.showMetadata()}>
                             <Glyphicon glyph="info-sign" />
-                        </Button>
-                    </OverlayTrigger>
-                    : null}
-                {this.props.activateTool.activateAnnotations && !this.props.selectedLayers.length ?
-                    <OverlayTrigger
-                        key="annotations"
-                        placement="top"
-                        overlay={<Tooltip id="legend-tooltip-annotations">{this.props.text.annotationsTooltip}</Tooltip>}>
-                        <Button key="annotations" bsStyle={'primary'} className="square-button-md" onClick={() => this.props.onToolsActions.onAnnotations()}>
-                            <Glyphicon glyph="comment" />
-                        </Button>
-                    </OverlayTrigger>
-                    : null}
-                {this.props.activateTool.activateAnnotationsEdit && this.props.selectedLayers[0]?.id === 'annotations' ?
-                    <OverlayTrigger
-                        key="annotations"
-                        placement="top"
-                        overlay={<Tooltip id="legend-tooltip-annotations-edit">{this.props.text.annotationsEditTooltip}</Tooltip>}>
-                        <Button key="annotations-edit" bsStyle={'primary'} className="square-button-md" onClick={() => this.props.onToolsActions.onAnnotations()}>
-                            <Glyphicon glyph="pencil" />
                         </Button>
                     </OverlayTrigger>
                     : null}

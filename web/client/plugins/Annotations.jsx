@@ -83,6 +83,10 @@ import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { ANNOTATIONS } from '../utils/AnnotationsUtils';
 import { registerRowViewer } from '../utils/MapInfoUtils';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import {Glyphicon, Tooltip} from "react-bootstrap";
+import Button from "../components/misc/Button";
+import OverlayTrigger from "../components/misc/OverlayTrigger";
+import Message from "../components/I18N/Message";
 
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
@@ -317,7 +321,39 @@ export default createPlugin('Annotations', {
     containers: {
         TOC: {
             doNotHide: true,
-            name: "Annotations"
+            name: "Annotations",
+            target: 'toolbar',
+            selector: () => true,
+            Component: connect(() => {}, {
+                onClick: conditionalToggle
+            })(({onClick, layers, selectedLayers, status}) => {
+                if (status === 'DESELECT' && layers.filter(l => l.id === 'annotations').length === 0) {
+                    return (<OverlayTrigger
+                        key="annotations"
+                        placement="top"
+                        overlay={<Tooltip
+                            id="legend-tooltip-annotations"><Message msgId="toc.addAnnotations"/></Tooltip>}>
+                        <Button key="annotations" bsStyle={'primary'} className="square-button-md"
+                            onClick={onClick}>
+                            <Glyphicon glyph="comment"/>
+                        </Button>
+                    </OverlayTrigger>);
+                }
+                if (selectedLayers[0]?.id === 'annotations') {
+                    return (
+                        <OverlayTrigger
+                            key="annotations-edit"
+                            placement="top"
+                            overlay={<Tooltip
+                                id="legend-tooltip-annotations-edit"><Message msgId="toc.editAnnotations"/></Tooltip>}>
+                            <Button key="annotations" bsStyle={'primary'} className="square-button-md"
+                                onClick={onClick}>
+                                <Glyphicon glyph="pencil"/>
+                            </Button>
+                        </OverlayTrigger>);
+                }
+                return false;
+            })
         }
     },
     reducers: {
