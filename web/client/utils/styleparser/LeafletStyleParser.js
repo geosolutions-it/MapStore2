@@ -29,11 +29,17 @@ function parseLabel(feature, label = '') {
         }, label);
 }
 
-function getStyleFuncFromRules({ rules = [] }, {
+function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
     geoStylerFilter,
     images,
     getImageIdFromSymbolizer
 }) {
+
+    // the last rules of the array should the one we'll apply
+    // in case we have multiple symbolizers on the same features
+    // we ensure to find the last symbolizer matching the filter and geometry type
+    // by reversing all the rules
+    const rules = [...geoStylerStyleRules].reverse();
     return ({
         opacity: globalOpacity = 1
     } = {}) => {
