@@ -34,18 +34,20 @@ Replacing:
   - [ ] for geostore, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
   - [ ] for http_proxy, check if [here](https://mvnrepository.com/artifact/proxy/http_proxy) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
 - [ ] If major release (YYYY.XX.00), create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
-- [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
-- [ ] Increment version in `package.json`. (as for semantic versioning the major have to be 0 until the npm package has not a stable API).
-    - [ ] Commit on master 0.&lt;x-incremented&gt;.0
-    - [ ] Make sure on YYYY.XX.xx we have the 0.x.&lt;number-of-minor-version&gt;
+- [ ] If major release, Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
+- [ ] Check version in `package.json`. (as for semantic versioning the major have to be 0 until the npm package has not a stable API).
+    - [ ] Take note of current version of mapstore in `package.json` in master branch, it should be in the form 0.x.0
+    - [ ] If major release, commit on master **0.&lt;x-incremented&gt;.0**
+    - [ ] if minor release, commit on YYYY.XX.xx **0.x.&lt;number-of-minor-version&gt;**
 - [ ] Create a milestone on GitHub with the same name of the release (vYYYY.XX.xx)
-    - [ ] create a temporary label "current release" and assing the label to all the issues of the current zenhub release
-    - [ ] use the label to filter the issues on github and assign to all the issue the milestone created
-    - [ ] remove the temporary label "current release"
+    - [ ] assign the label "current-release" to all the issues and Prs of the current zenhub release
+    - [ ] use the label to filter the issues on github and assign to all the issues and Prs the milestone created
+    - [ ] remove assignments of "current-release" 
 - [ ] Update `CHANGELOG.md`. [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation) - both master and stable
 - [ ] Fix `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
 - [ ] Update the version of java modules on the stable branch to a stable, incremental version.
-    - [ ] Run `mvn versions:set -DnewVersion=<VERSION> -DprocessAllModules -DgenerateBackupPoms=false` to update package version, where <VERSION> is the version of the java packages (e.g. `1.2.2`).
+    - [ ] Run `mvn release:update-versions -DdevelopmentVersion=1.3.1 -Pprinting,printingbundle,release
+` to update package version, where <VERSION> is the version of the java packages (e.g. `1.2.2`).
     - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`
 - [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp should be deployed for new project system and product).
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
