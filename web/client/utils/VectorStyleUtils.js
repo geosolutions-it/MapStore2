@@ -257,7 +257,7 @@ function getWellKnownNameImageFromSymbolizer(symbolizer) {
     });
 }
 
-function drawIcons(geoStylerStyle) {
+export function drawIcons(geoStylerStyle) {
     const { rules = [] } = geoStylerStyle || {};
     const symbolizers = flatten(rules.map(rule => rule.symbolizers));
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
@@ -278,7 +278,7 @@ function drawIcons(geoStylerStyle) {
 
 // function extracted from the geostyler-openlayers-parser library
 // https://github.com/geostyler/geostyler-openlayers-parser/blob/v3.0.2/src/OlStyleParser.ts#L694-L776
-const geoStylerFilter = (feature, filter) => {
+export const geoStylerStyleFilter = (feature, filter) => {
     const operatorMapping = {
         '&&': true,
         '||': true,
@@ -300,7 +300,7 @@ const geoStylerFilter = (feature, filter) => {
                 intermediate = true;
                 restFilter = filter.slice(1);
                 restFilter.forEach((f) => {
-                    if (!geoStylerFilter(feature, f)) {
+                    if (!geoStylerStyleFilter(feature, f)) {
                         intermediate = false;
                     }
                 });
@@ -310,14 +310,14 @@ const geoStylerFilter = (feature, filter) => {
                 intermediate = false;
                 restFilter = filter.slice(1);
                 restFilter.forEach((f) => {
-                    if (geoStylerFilter(feature, f)) {
+                    if (geoStylerStyleFilter(feature, f)) {
                         intermediate = true;
                     }
                 });
                 matchesFilter = intermediate;
                 break;
             case '!':
-                matchesFilter = !geoStylerFilter(feature, filter[1]);
+                matchesFilter = !geoStylerStyleFilter(feature, filter[1]);
                 break;
             default:
                 throw new Error('Cannot parse Filter. Unknown combination or negation operator.');
@@ -372,10 +372,10 @@ function initParserLib(mod, options = {}) {
 const StyleParsers = {
     'sld': () => import('@geosolutions/geostyler-sld-parser').then(initParserLib),
     'css': () => import('@geosolutions/geostyler-geocss-parser').then(initParserLib),
-    'openlayers': () =>  import('./styleparser/OLStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerFilter })),
+    'openlayers': () =>  import('./styleparser/OLStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter })),
     '3dtiles': () => import('./styleparser/ThreeDTilesStyleParser').then(initParserLib),
-    'cesium': () => import('./styleparser/CesiumStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerFilter })),
-    'leaflet': () => import('./styleparser/LeafletStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerFilter })),
+    'cesium': () => import('./styleparser/CesiumStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter })),
+    'leaflet': () => import('./styleparser/LeafletStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter })),
     'geostyler': () => import('./styleparser/GeoStylerStyleParser').then(initParserLib)
 };
 

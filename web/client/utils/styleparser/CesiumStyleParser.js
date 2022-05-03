@@ -81,7 +81,7 @@ function getStyleFuncFromRules({
 } = {}, {
     images = [],
     getImageIdFromSymbolizer,
-    geoStylerFilter = () => true
+    geoStylerStyleFilter = () => true
 }) {
     return ({
         entities,
@@ -101,11 +101,14 @@ function getStyleFuncFromRules({
             }
         });
 
+        // TODO: optimize the rule loop
+        // we could loop on entities instead o the rules
+        // but this needs a logic to get the last rule that match the filter
         rules.forEach((rule) => {
             rule.symbolizers.forEach(symbolizer => {
                 entities.forEach((entity) => {
                     const properties = entity?.properties?.getValue(Cesium.JulianDate.now()) || {};
-                    if (!rule.filter || geoStylerFilter({ properties: properties || {}}, rule.filter)) {
+                    if (!rule.filter || geoStylerStyleFilter({ properties: properties || {}}, rule.filter)) {
 
                         if (symbolizer.kind === 'Mark' && entity.position) {
                             const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
@@ -202,12 +205,12 @@ function getStyleFuncFromRules({
 
 class CesiumStyleParser {
 
-    constructor({ drawIcons, getImageIdFromSymbolizer, geoStylerFilter } = {}) {
+    constructor({ drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter } = {}) {
         this._drawIcons = drawIcons ? drawIcons : () => Promise.resolve(null);
         this._getImageIdFromSymbolizer = getImageIdFromSymbolizer
             ? getImageIdFromSymbolizer
             : (symbolizer) => symbolizer.symbolizerId;
-        this._geoStylerFilter = geoStylerFilter ? geoStylerFilter : () => true;
+        this._geoStylerStyleFilter = geoStylerStyleFilter ? geoStylerStyleFilter : () => true;
     }
 
     readStyle() {
@@ -228,7 +231,7 @@ class CesiumStyleParser {
                         const styleFunc = getStyleFuncFromRules(geoStylerStyle, {
                             images,
                             getImageIdFromSymbolizer: this._getImageIdFromSymbolizer,
-                            geoStylerFilter: this._geoStylerFilter
+                            geoStylerStyleFilter: this._geoStylerStyleFilter
                         });
                         resolve(styleFunc);
                     });

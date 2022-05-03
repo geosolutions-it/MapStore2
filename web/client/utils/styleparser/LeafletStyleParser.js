@@ -30,7 +30,7 @@ function parseLabel(feature, label = '') {
 }
 
 function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
-    geoStylerFilter,
+    geoStylerStyleFilter,
     images,
     getImageIdFromSymbolizer
 }) {
@@ -55,7 +55,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         // the symbolizer should be included in the supported ones
                         rule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind))
                         // the filter should match the expression or be undefined
-                        && (!rule.filter || geoStylerFilter(feature, rule.filter))
+                        && (!rule.filter || geoStylerStyleFilter(feature, rule.filter))
                     )
                 ) {
                     return true;
@@ -70,7 +70,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         // the symbolizer should be included in the supported ones
                         rule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind))
                         // the filter should match the expression or be undefined
-                        && (!rule.filter || geoStylerFilter(feature, rule.filter))
+                        && (!rule.filter || geoStylerStyleFilter(feature, rule.filter))
                     ) || {};
                 const firstValidSymbolizer = firstValidRule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind)) || {};
                 if (firstValidSymbolizer.kind === 'Mark') {
@@ -152,7 +152,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         // the symbolizer should be included in the supported ones
                         rule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind))
                         // the filter should match the expression or be undefined
-                        && (!rule.filter || geoStylerFilter(feature, rule.filter))
+                        && (!rule.filter || geoStylerStyleFilter(feature, rule.filter))
                     ) || {};
                 const firstValidSymbolizer = firstValidRule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind)) || {};
                 if (firstValidSymbolizer.kind === 'Line') {
@@ -189,12 +189,12 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
 
 class LeafletStyleParser {
 
-    constructor({ drawIcons, getImageIdFromSymbolizer, geoStylerFilter } = {}) {
+    constructor({ drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter } = {}) {
         this._drawIcons = drawIcons ? drawIcons : () => Promise.resolve(null);
         this._getImageIdFromSymbolizer = getImageIdFromSymbolizer
             ? getImageIdFromSymbolizer
             : (symbolizer) => symbolizer.symbolizerId;
-        this._geoStylerFilter = geoStylerFilter ? geoStylerFilter : () => true;
+        this._geoStylerStyleFilter = geoStylerStyleFilter ? geoStylerStyleFilter : () => true;
     }
 
     readStyle() {
@@ -215,7 +215,7 @@ class LeafletStyleParser {
                         const styleFunc = getStyleFuncFromRules(geoStylerStyle, {
                             images,
                             getImageIdFromSymbolizer: this._getImageIdFromSymbolizer,
-                            geoStylerFilter: this._geoStylerFilter
+                            geoStylerStyleFilter: this._geoStylerStyleFilter
                         });
                         resolve(styleFunc);
                     });

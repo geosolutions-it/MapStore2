@@ -593,7 +593,7 @@ export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
         });
 }
 
-function getAttributes(properties) {
+export function getAttributes(properties) {
     const stringTypeToCheck = [ 'string'];
     const numberTypeToCheck = ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal', 'number', 'int'];
     return Object.keys(properties)
