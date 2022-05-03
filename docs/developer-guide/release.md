@@ -30,7 +30,9 @@ Replacing:
 
 ```markdown
 - [ ] Create an issue with this checklist in the release milestone.
-- [ ] Verify if it is needed to release a new version of http-proxy or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process)
+- [ ] Verify if it is needed to release a new version of http_proxy or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process)
+  - [ ] for geostore, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
+  - [ ] for http_proxy, check if [here](https://mvnrepository.com/artifact/proxy/http_proxy) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
 - [ ] If major release (YYYY.XX.00), create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
 - [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
 - [ ] Increment version in `package.json`. (as for semantic versioning the major have to be 0 until the npm package has not a stable API).
