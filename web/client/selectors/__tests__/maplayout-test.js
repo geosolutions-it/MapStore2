@@ -13,6 +13,7 @@ import {
     mapLayoutValuesSelector,
     checkConditionsSelector,
     rightPanelOpenSelector,
+    leftPanelOpenSelector,
     bottomPanelOpenSelector,
     boundingMapRectSelector,
     mapPaddingSelector
@@ -56,9 +57,15 @@ describe('Test map layout selectors', () => {
     });
 
     it('test rightPanelOpenSelector', () => {
-        expect(rightPanelOpenSelector({maplayout: { layout: {right: 658, bottom: 500}}})).toBe(true);
-        expect(rightPanelOpenSelector({maplayout: { layout: {left: 300, bottom: 30}}})).toBe(false);
+        expect(rightPanelOpenSelector({maplayout: { layout: {rightPanel: true, leftPanel: false}}})).toBe(true);
+        expect(rightPanelOpenSelector({maplayout: { layout: {rightPanel: false, leftPanel: false}}})).toBe(false);
         expect(rightPanelOpenSelector({})).toBe(false);
+    });
+
+    it('test leftPanelOpenSelector', () => {
+        expect(leftPanelOpenSelector({maplayout: { layout: {rightPanel: true, leftPanel: true}}})).toBe(true);
+        expect(leftPanelOpenSelector({maplayout: { layout: {rightPanel: false, leftPanel: false}}})).toBe(false);
+        expect(leftPanelOpenSelector({})).toBe(false);
     });
 
     it('test bottomPanelOpenSelector', () => {
@@ -67,7 +74,7 @@ describe('Test map layout selectors', () => {
         expect(bottomPanelOpenSelector({})).toBe(false);
     });
 
-    it('test bottomPanelOpenSelector', () => {
+    it('test boundingMapRectSelector', () => {
 
         expect(boundingMapRectSelector({
             maplayout: {

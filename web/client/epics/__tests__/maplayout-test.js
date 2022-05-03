@@ -33,7 +33,9 @@ describe('map layout epics', () => {
                                 left: 600,
                                 right: 548
                             },
-                            boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
+                            boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
+                            leftPanel: true,
+                            rightPanel: true
                         }
                     );
                 });
@@ -59,7 +61,9 @@ describe('map layout epics', () => {
                                 left: 600,
                                 right: 588
                             },
-                            boundingSidebarRect: { right: 40, left: 0, bottom: 0 }
+                            boundingSidebarRect: { right: 40, left: 0, bottom: 0 },
+                            leftPanel: true,
+                            rightPanel: true
                         }
                     );
                 });
@@ -84,13 +88,15 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 600, right: 330, bottom: 0, transform: 'none', height: 'calc(100% - 120px)',
+                        left: 0, right: 330, bottom: 0, transform: 'none', height: 'calc(100% - 120px)',
                         boundingMapRect: {
                             bottom: 0,
-                            left: 600,
+                            left: 0,
                             right: 330
                         },
-                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
+                        leftPanel: false,
+                        rightPanel: true
                     });
                 });
             } catch (e) {
@@ -98,7 +104,7 @@ describe('map layout epics', () => {
             }
             done();
         };
-        const state = { controls: { metadataexplorer: { enabled: true }, queryPanel: { enabled: true } } };
+        const state = { controls: { metadataexplorer: { enabled: true }, queryPanel: { enabled: false } } };
         testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
     });
 
@@ -167,7 +173,9 @@ describe('map layout epics', () => {
                             right: 0,
                             bottom: 0
                         },
-                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
+                        rightPanel: false,
+                        leftPanel: true
                     });
                 });
             } catch (e) {
@@ -192,7 +200,9 @@ describe('map layout epics', () => {
                             left: 0,
                             right
                         },
-                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
+                        rightPanel: !!right,
+                        leftPanel: false
                     });
                 });
             } catch (e) {
@@ -227,7 +237,9 @@ describe('map layout epics', () => {
                             right: 0,
                             left
                         },
-                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
+                        leftPanel: true,
+                        rightPanel: false
                     });
                 });
             } catch (e) {
@@ -266,7 +278,9 @@ describe('map layout epics', () => {
                     expect(action.layout).toEqual({
                         left: 0, right: 0, bottom: '100%', dockSize: 100, transform: "translate(0, -30px)", height: "calc(100% - 30px)",
                         boundingMapRect: {bottom: "100%", dockSize: 100, left: 0, right: 0},
-                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 }
+                        boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
+                        leftPanel: false,
+                        rightPanel: false
                     });
                 });
             } catch (e) {

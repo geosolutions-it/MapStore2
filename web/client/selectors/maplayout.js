@@ -8,7 +8,8 @@
 import {head, memoize} from 'lodash';
 
 import { mapSelector } from './map';
-import { parseLayoutValue } from '../utils/MapUtils';
+import {DEFAULT_MAP_LAYOUT, parseLayoutValue} from '../utils/MapUtils';
+import ConfigUtils from "../utils/ConfigUtils";
 
 /**
  * selects map layout state
@@ -97,9 +98,20 @@ export const checkConditionsSelector = (state, conditions = []) => {
  * @return {boolean} returns true if right panels are open
  */
 export const rightPanelOpenSelector = state => {
-    // need to remove 658 and manage it from the state with all dafault layout variables
-    return checkConditionsSelector(state, [{ key: 'right', value: 658 }]);
+    return !!mapLayoutSelector(state)?.rightPanel;
 };
+
+/**
+ * Check if left panels are open
+ * @function
+ * @memberof selectors.mapLayout
+ * @param  {object} state the state
+ * @return {boolean} returns true if left panels are open
+ */
+export const leftPanelOpenSelector = state => {
+    return !!mapLayoutSelector(state)?.leftPanel;
+};
+
 /**
  * Check if bottom panel is open
  * @function
@@ -108,8 +120,9 @@ export const rightPanelOpenSelector = state => {
  * @return {boolean} returns true if bottom panel is open
  */
 export const bottomPanelOpenSelector = state => {
-    // need to remove 30 and manage it from the state with all dafault layout variables
-    return checkConditionsSelector(state, [{ key: 'bottom', value: 30, type: 'not' }]);
+    const mapLayout = ConfigUtils.getConfigProp("mapLayout") || DEFAULT_MAP_LAYOUT;
+    const bottomMapOffset = mapLayout?.bottom.sm ?? 0;
+    return checkConditionsSelector(state, [{ key: 'bottom', value: bottomMapOffset, type: 'not' }]);
 };
 
 /**
