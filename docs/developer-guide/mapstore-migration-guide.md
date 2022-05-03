@@ -91,6 +91,29 @@ formats:
   - '*'
 ```
 
+### Replacing BurgerMenu with SidebarMenu
+There were several changes applied to the application layout, one of them is the Sidebar Menu that comes to replace Burger menu on map viewer and in contexts.
+Following actions need to be applied to make a switch:
+- Update localConfig.json and add "SidebarMenu" entry to the "desktop" section:
+```json
+{
+    "desktop": [
+        ...
+        "SidebarMenu",
+        ...
+    ]
+}
+```
+- Remove "BurgerMenu" entry from "desktop" section.
+
+#### Updating contexts to use Sidebar Menu
+Existing contexts need to be updated manually using following procedure:
+- Edit context and proceed to the step of plugins configuration.
+- Remove "BurgerMenu" from list of enabled plugins.
+- Save context.
+
+"SidebarMenu" will be used by context if "BurgerMenu" is not in the list of enabled plugins.
+
 ## Migration from 2021.02.00 to 2022.01.00
 
 This release includes several libraries upgrade on the backend side,

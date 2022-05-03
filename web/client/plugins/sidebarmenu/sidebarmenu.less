@@ -1,5 +1,4 @@
-@toolbarWidth: 40px;
-
+@import '../../themes/default/ms-variables.less';
 
 #mapstore-sidebar-menu-container {
     z-index: 1030;
@@ -7,7 +6,7 @@
     background: inherit;
     right: 0;
     top: 0;
-    width: @toolbarWidth;
+    width: @square-btn-size;
     height: 100%;
 
     #mapstore-sidebar-menu {
@@ -20,8 +19,8 @@
         & > .btn-tray, & > .btn,
         & > .btn-group .btn {
             border-bottom: 0;
-            height: @toolbarWidth;
-            width: @toolbarWidth;
+            height: @square-btn-size;
+            width: @square-btn-size;
 
             span:not(.glyphicon) {
                 display: none;
@@ -30,7 +29,7 @@
 
         .snapshot-panel {
             position: absolute;
-            right: @toolbarWidth;
+            right: @square-btn-size;
             top: 60px;
             background: #ffffffab;
         }
