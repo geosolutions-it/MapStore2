@@ -1,3 +1,11 @@
+/*
+ * Copyright 2022, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import L from 'leaflet';
 import { castArray } from 'lodash';
 
@@ -28,7 +36,7 @@ function getStyleFuncFromRules({ rules = [] }, {
 }) {
     return ({
         opacity: globalOpacity = 1
-    }) => {
+    } = {}) => {
         return {
             filter: (feature) => {
                 const geometryType = feature?.geometry?.type;
@@ -63,10 +71,11 @@ function getStyleFuncFromRules({ rules = [] }, {
                     const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(firstValidSymbolizer)) || {};
                     if (image) {
                         const aspect = width / height;
-                        let iconSizeW = firstValidSymbolizer.size;
+                        const size = firstValidSymbolizer.radius * 2;
+                        let iconSizeW = size;
                         let iconSizeH = iconSizeW / aspect;
                         if (height > width) {
-                            iconSizeH = firstValidSymbolizer.size;
+                            iconSizeH = size;
                             iconSizeW = iconSizeH * aspect;
                         }
                         return L.marker(latlng, {

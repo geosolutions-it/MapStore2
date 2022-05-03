@@ -16,7 +16,7 @@ import MarkerUtils from './MarkerUtils';
 
 let imagesCache = {};
 
-function getImageIdFromSymbolizer({
+export function getImageIdFromSymbolizer({
     image,
     color,
     fillOpacity,
