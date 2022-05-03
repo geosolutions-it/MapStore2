@@ -12,7 +12,6 @@ import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
-import ContainerDimensions from 'react-container-dimensions';
 import { connect } from 'react-redux';
 import { branch, compose, defaultProps, renderComponent, withProps } from 'recompose';
 import { createStructuredSelector } from 'reselect';
@@ -47,7 +46,6 @@ import API from '../api/catalog';
 import CatalogComp from '../components/catalog/Catalog';
 import CatalogServiceEditor from '../components/catalog/CatalogServiceEditor';
 import Message from '../components/I18N/Message';
-import DockPanel from '../components/misc/panels/DockPanel';
 import { metadataSourceSelector, modalParamsSelector } from '../selectors/backgroundselector';
 import {
     isActiveSelector,
@@ -81,7 +79,7 @@ import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLay
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { DEFAULT_FORMAT_WMS } from '../api/WMS';
-import DockContainer from "../components/misc/panels/DockContainer";
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -218,28 +216,23 @@ class MetadataExplorerComponent extends React.Component {
             />
         );
         return (
-            <DockContainer
-                dockStyle={this.props.dockStyle}
-                id="catalog-root"
+            <ResponsivePanel
+                containerStyle={this.props.dockStyle}
+                containerId="catalog-root"
                 className={this.props.active ? 'catalog-active' : ''}
-                style={{pointerEvents: 'none'}}
+                open={this.props.active}
+                size={this.props.width}
+                position="right"
+                bsStyle="primary"
+                title={<Message msgId="catalog.title"/>}
+                onClose={() => this.props.closeCatalog()}
+                glyph="folder-open"
+                style={this.props.dockStyle}
             >
-                <ContainerDimensions>
-                    {({ width }) => (<DockPanel
-                        open={this.props.active}
-                        size={this.props.width / width > 1 ? width : this.props.width}
-                        position="right"
-                        bsStyle="primary"
-                        title={<Message msgId="catalog.title"/>}
-                        onClose={() => this.props.closeCatalog()}
-                        glyph="folder-open"
-                        style={this.props.dockStyle}>
-                        <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {panel}
-                        </Panel>
-                    </DockPanel>)}
-                </ContainerDimensions>
-            </DockContainer>
+                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    {panel}
+                </Panel>
+            </ResponsivePanel>
         );
     }
 }
@@ -313,6 +306,7 @@ export default {
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
             toggle: true,
+            doNotHide: true,
             priority: 1
         }
     }),

@@ -11,8 +11,6 @@ import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import { createSelector } from 'reselect';
 import isEmpty from 'lodash/isEmpty';
-import ContainerDimensions from 'react-container-dimensions';
-import Dock from 'react-dock';
 
 import { createPlugin, connect } from '../utils/PluginsUtils';
 import { on, toggleControl } from '../actions/controls';
@@ -84,7 +82,7 @@ import { annotationsInfoSelector, annotationsListSelector } from '../selectors/a
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { ANNOTATIONS } from '../utils/AnnotationsUtils';
 import { registerRowViewer } from '../utils/MapInfoUtils';
-import DockContainer from "../components/misc/panels/DockContainer";
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
@@ -233,21 +231,18 @@ class AnnotationsPanel extends React.Component {
 
     render() {
         return this.props.active ? (
-            <DockContainer dockStyle={this.props.dockStyle}>
-                <ContainerDimensions>
-                    { ({ width }) =>
-                        <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
-                            <Dock
-                                fluid
-                                dockStyle={this.props.dockStyle} {...this.props.dockProps}
-                                isVisible={this.props.active}
-                                size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                                <Annotations {...this.props} width={this.props.width}/>
-                            </Dock>
-                        </span>
-                    }
-                </ContainerDimensions>
-            </DockContainer>
+            <ResponsivePanel
+                containerId="annotations-panel"
+                className="annotations"
+                containerStyle={this.props.dockStyle}
+                hideHeader
+                style={this.props.dockStyle}
+                open={this.props.active}
+                size={this.props.width}
+                {...this.props.dockProps}
+            >
+                <Annotations {...this.props} width={this.props.width}/>
+            </ResponsivePanel>
         ) : null;
     }
 }

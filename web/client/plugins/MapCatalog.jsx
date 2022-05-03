@@ -26,16 +26,14 @@ import {
 } from '../selectors/mapcatalog';
 
 import MapCatalogPanel from '../components/mapcatalog/MapCatalogPanel';
-import DockPanel from '../components/misc/panels/DockPanel';
 import Message from '../components/I18N/Message';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import mapcatalog from '../reducers/mapcatalog';
 import * as epics from '../epics/mapcatalog';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
-import DockContainer from "../components/misc/panels/DockContainer";
-import ContainerDimensions from "react-container-dimensions";
 import * as PropTypes from "prop-types";
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 /**
  * Allows users to existing maps directly on the map.
@@ -84,41 +82,36 @@ class MapCatalogComponent extends React.Component {
             ...props
         } = this.props;
         return (
-            <DockContainer
-                dockStyle={dockStyle}
-                id="map-catalog-container"
-                className="dock-container"
-                style={{pointerEvents: 'none'}}
+            <ResponsivePanel
+                containerStyle={dockStyle}
+                containerId="map-catalog-container"
+                containerClassName="dock-container"
+                className="map-catalog-dock-panel"
+                open={active}
+                position="right"
+                size={size}
+                bsStyle="primary"
+                glyph="maps-catalog"
+                title={<Message msgId="mapCatalog.title"/>}
+                onClose={() => onToggleControl()}
+                style={dockStyle}
             >
-                <ContainerDimensions>
-                    {({width}) => (<DockPanel
-                        className="map-catalog-dock-panel"
-                        open={active}
-                        position="right"
-                        size={size / width > 1 ? width : size}
-                        bsStyle="primary"
-                        glyph="maps-catalog"
-                        title={<Message msgId="mapCatalog.title"/>}
-                        onClose={() => onToggleControl()}
-                        style={dockStyle}>
-                        <MapCatalogPanel
-                            mapType={mapType}
-                            user={user}
-                            triggerReloadValue={triggerReloadValue}
-                            filterReloadDelay={filterReloadDelay}
-                            setFilterReloadDelay={props.setFilterReloadDelay}
-                            onTriggerReload={onTriggerReload}
-                            onDelete={onDelete}
-                            onSave={onSave}
-                            getShareUrl={(map) => map.contextName ?
-                                `context/${map.contextName}/${map.id}` :
-                                `viewer/${mapType}/${map.id}`
-                            }
-                            toggleCatalog={() => onToggleControl()}
-                            shareApi/>
-                    </DockPanel>)}
-                </ContainerDimensions>
-            </DockContainer>
+                <MapCatalogPanel
+                    mapType={mapType}
+                    user={user}
+                    triggerReloadValue={triggerReloadValue}
+                    filterReloadDelay={filterReloadDelay}
+                    setFilterReloadDelay={props.setFilterReloadDelay}
+                    onTriggerReload={onTriggerReload}
+                    onDelete={onDelete}
+                    onSave={onSave}
+                    getShareUrl={(map) => map.contextName ?
+                        `context/${map.contextName}/${map.id}` :
+                        `viewer/${mapType}/${map.id}`
+                    }
+                    toggleCatalog={() => onToggleControl()}
+                    shareApi/>
+            </ResponsivePanel>
         );
     }
 }

@@ -9,14 +9,12 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import ContainerDimensions from "react-container-dimensions";
 import { isEqual } from 'lodash';
 import MeasureComponent from './MeasureComponent';
-import DockablePanel from '../../misc/panels/DockablePanel';
 import Message from '../../I18N/Message';
 import Dialog from '../../misc/Dialog';
 import { Glyphicon } from 'react-bootstrap';
-import DockContainer from "../../misc/panels/DockContainer";
+import ResponsivePanel from "../../misc/panels/ResponsivePanel";
 
 class MeasureDialog extends React.Component {
     static propTypes = {
@@ -79,29 +77,21 @@ class MeasureDialog extends React.Component {
         // TODO FIX TRANSALATIONS TITLE
         return this.props.show ? (
             this.props.showCoordinateEditor ?
-                <DockContainer
-                    dockStyle={this.props.dockStyle}
-                    id="measure-container"
-                    className="dock-container"
-                    style={{pointerEvents: 'none'}}
+                <ResponsivePanel
+                    dock
+                    containerId="measure-container"
+                    containerStyle={this.props.dockStyle}
+                    bsStyle="primary"
+                    position="right"
+                    title={<Message key="title" msgId="measureComponent.Measure"/>}
+                    glyph="1-ruler"
+                    size={this.props.size}
+                    open={this.props.show}
+                    onClose={this.onClose}
+                    style={this.props.dockStyle}
                 >
-                    <ContainerDimensions>
-                        {({width}) => (
-                            <DockablePanel
-                                dock
-                                bsStyle="primary"
-                                position="right"
-                                title={<Message key="title" msgId="measureComponent.Measure"/>}
-                                glyph="1-ruler"
-                                size={this.props.size / width > 1 ? width : this.props.size}
-                                open={this.props.show}
-                                onClose={this.onClose}
-                                style={this.props.dockStyle}>
-                                <MeasureComponent id="measure-panel" {...this.props}/>
-                            </DockablePanel>
-                        )}
-                    </ContainerDimensions>
-                </DockContainer>
+                    <MeasureComponent id="measure-panel" {...this.props}/>
+                </ResponsivePanel>
                 : (<Dialog id="measure-dialog">
                     <div key="header" role="header">
                         <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>

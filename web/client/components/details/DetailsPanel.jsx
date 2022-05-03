@@ -11,9 +11,7 @@ import PropTypes from 'prop-types';
 import Message from '../I18N/Message';
 import { Panel } from 'react-bootstrap';
 import BorderLayout from '../layout/BorderLayout';
-import DockPanel from "../misc/panels/DockPanel";
-import DockContainer from "../misc/panels/DockContainer";
-import ContainerDimensions from "react-container-dimensions";
+import ResponsivePanel from "../misc/panels/ResponsivePanel";
 
 class DetailsPanel extends React.Component {
     static propTypes = {
@@ -48,28 +46,25 @@ class DetailsPanel extends React.Component {
 
     render() {
         return (
-            <DockContainer id="details-container" className="dock-container" dockStyle={this.props.dockStyle}>
-                <ContainerDimensions>
-                    {({ width }) => (
-                        <DockPanel
-                            open={this.props.active}
-                            size={this.props.width / width > 1 ? width : this.props.width}
-                            position="right"
-                            bsStyle="primary"
-                            title={<Message msgId="details.title"/>}
-                            onClose={() => this.props.onClose()}
-                            glyph="sheet"
-                            style={this.props.dockStyle}
-                        >
-                            <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                                <BorderLayout>
-                                    {this.props.children}
-                                </BorderLayout>
-                            </Panel>
-                        </DockPanel>)}
-                </ContainerDimensions>
-
-            </DockContainer>
+            <ResponsivePanel
+                containerId="details-container"
+                containerClassName="dock-container"
+                containerStyle={this.props.dockStyle}
+                open={this.props.active}
+                size={this.props.width}
+                position="right"
+                bsStyle="primary"
+                title={<Message msgId="details.title"/>}
+                onClose={() => this.props.onClose()}
+                glyph="sheet"
+                style={this.props.dockStyle}
+            >
+                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    <BorderLayout>
+                        {this.props.children}
+                    </BorderLayout>
+                </Panel>
+            </ResponsivePanel>
         );
     }
 }

@@ -129,6 +129,7 @@ export default {
             text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
             action: () => setControlProperty("measure", "enabled", true),
+            doNotHide: true,
             priority: 2
         },
         SidebarMenu: {
@@ -143,6 +144,7 @@ export default {
             toggle: true,
             toggleControl: 'measure',
             toggleProperty: 'enabled',
+            doNotHide: true,
             priority: 1
         }
     }),

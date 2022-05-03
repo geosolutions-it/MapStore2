@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import ContainerDimensions from "react-container-dimensions";
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -15,8 +14,6 @@ import get from 'lodash/get';
 
 import { Glyphicon } from 'react-bootstrap';
 
-import DockPanel from '../components/misc/panels/DockPanel';
-import DockContainer from "../components/misc/panels/DockContainer";
 import Message from '../components/I18N/Message';
 import ExtensionsPanel from './userExtensions/ExtensionsPanel';
 import { createPlugin } from '../utils/PluginsUtils';
@@ -24,6 +21,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { setControlProperty, toggleControl } from '../actions/controls';
 import * as epics from '../epics/userextensions';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 
 class Extensions extends React.Component {
@@ -49,28 +47,21 @@ class Extensions extends React.Component {
             size
         } = this.props;
         return (
-            <DockContainer
-                dockStyle={this.props.dockStyle}
-                id="measure-container"
-                className="dock-container"
-                style={{pointerEvents: 'none'}}
+            <ResponsivePanel
+                containerStyle={this.props.dockStyle}
+                containerId="user-extensions-container"
+                containerClassName="dock-container"
+                open={active}
+                size={size}
+                position="right"
+                bsStyle="primary"
+                title={<Message msgId="userExtensions.title"/>}
+                onClose={() => onClose()}
+                glyph="plug"
+                style={dockStyle}
             >
-                <ContainerDimensions>
-                    {({width}) => (
-                        <DockPanel
-                            open={active}
-                            size={size / width > 1 ? width : size}
-                            position="right"
-                            bsStyle="primary"
-                            title={<Message msgId="userExtensions.title"/>}
-                            onClose={() => onClose()}
-                            glyph="plug"
-                            style={dockStyle}>
-                            <ExtensionsPanel/>
-                        </DockPanel>
-                    )}
-                </ContainerDimensions>
-            </DockContainer>
+                <ExtensionsPanel/>
+            </ResponsivePanel>
         );
     }
 }

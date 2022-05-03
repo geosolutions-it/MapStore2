@@ -10,7 +10,6 @@ import React from 'react';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
-import ContainerDimensions from "react-container-dimensions";
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 
@@ -20,14 +19,13 @@ import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteT
 
 import Message from '../components/I18N/Message';
 import Loader from '../components/misc/Loader';
-import DockPanel from '../components/misc/panels/DockPanel';
 import MapTemplatesPanel from '../components/maptemplates/MapTemplatesPanel';
 
 import maptemplates from '../reducers/maptemplates';
 import * as epics from '../epics/maptemplates';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
-import DockContainer from "../components/misc/panels/DockContainer";
 import PropTypes from "prop-types";
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 /**
  * Provides a list of map templates available inside of a currently loaded context.
@@ -91,31 +89,26 @@ class MapTemplatesComponent extends React.Component {
             size
         } = this.props;
         return (
-            <DockContainer
-                dockStyle={dockStyle}
-                id="map-templates-container"
-                className="dock-container"
-                style={{pointerEvents: 'none'}}
+            <ResponsivePanel
+                containerStyle={dockStyle}
+                containerId="map-templates-container"
+                containerClassName="dock-container"
+                className="map-templates-dock-panel"
+                open={active}
+                position="right"
+                size={size}
+                bsStyle="primary"
+                title={<Message msgId="mapTemplates.title"/>}
+                style={dockStyle}
+                onClose={onToggleControl}
             >
-                <ContainerDimensions>
-                    {({ width }) => (<DockPanel
-                        className="map-templates-dock-panel"
-                        open={active}
-                        position="right"
-                        size={size / width > 1 ? width : size}
-                        bsStyle="primary"
-                        title={<Message msgId="mapTemplates.title"/>}
-                        style={dockStyle}
-                        onClose={onToggleControl}>
-                        {!templatesLoaded && <div className="map-templates-loader"><Loader size={352}/></div>}
-                        {templatesLoaded && <MapTemplatesPanel
-                            templates={templates}
-                            onMergeTemplate={onMergeTemplate}
-                            onReplaceTemplate={onReplaceTemplate}
-                            onToggleFavourite={onToggleFavourite}/>}
-                    </DockPanel>)}
-                </ContainerDimensions>
-            </DockContainer>
+                {!templatesLoaded && <div className="map-templates-loader"><Loader size={352}/></div>}
+                {templatesLoaded && <MapTemplatesPanel
+                    templates={templates}
+                    onMergeTemplate={onMergeTemplate}
+                    onReplaceTemplate={onReplaceTemplate}
+                    onToggleFavourite={onToggleFavourite}/>}
+            </ResponsivePanel>
         );
     }
 }
