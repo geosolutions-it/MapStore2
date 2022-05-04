@@ -97,10 +97,10 @@ Replacing:
 - [ ] Prepare a PR towards master branch **YYYY.XX.xx** in order to reset versions of java modules to `-SNAPSHOT`
     - `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`
     where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT).
-    - for geostore check here what to use
-    - for printing check here what to use
+    - for geostore check [here](https://github.com/geosolutions-it/geostore/blob/master/pom.xml) what to use
+    - for proxy check [here](https://github.com/geosolutions-it/http-proxy/blob/master/pom.xml) what to use 
 - [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for https://github.com/geosolutions-it/MapStoreExtension with the same name and tag
-  - [ ] target of the release is master branch : **YYYY.XX.xx**
+  - [ ] target of the release is **master** branch
   - [ ] tag is **vYYYY.XX.mm**
   - [ ] Update revision of mapstore to the release tag **vYYYY.XX.mm**
   - [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and attach to the release the file `SampleExtension.zip` from the `/dist` folder
