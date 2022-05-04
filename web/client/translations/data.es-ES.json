@@ -536,6 +536,7 @@
             "filterIconDisabled": "Habilitar filtro de capa",
             "notVisibleZoomIn": "La capa no es visible porque está fuera de los límites de resolución. Acercar para mostrar la capa",
             "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
+            "notVisibleSwitchTo3D": "Cambie al modo de mapa 3D para ver esta capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",

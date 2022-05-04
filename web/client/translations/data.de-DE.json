@@ -575,6 +575,7 @@
             "filterIconDisabled": "Ebenenfilter aktivieren",
             "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
             "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
+            "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
