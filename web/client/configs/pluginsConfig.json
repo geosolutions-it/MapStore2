@@ -618,7 +618,7 @@
       "title": "plugins.StreetView.title",
       "description": "plugins.StreetView.description",
       "dependencies": [
-        "Toolbar"
+        "SidebarMenu"
       ]
     },
     {
