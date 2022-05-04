@@ -107,20 +107,25 @@ Following actions need to be applied to make a switch:
 - Remove "BurgerMenu" entry from "desktop" section.
 
 #### Updating contexts to use Sidebar Menu
+
 Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "SidebarMenu" in contexts.
+
 - Find "BurgerMenu" plugin confuguration in `pluginsConfig.json` and remove `"hidden": true` line from it:
+
 ```json
     {
-  "name": "BurgerMenu",
-  "glyph": "menu-hamburger",
-  "title": "plugins.BurgerMenu.title",
-  "description": "plugins.BurgerMenu.description",
-  "dependencies": [
-    "OmniBar"
-  ]
+    "name": "BurgerMenu",
+    "glyph": "menu-hamburger",
+    "title": "plugins.BurgerMenu.title",
+    "description": "plugins.BurgerMenu.description",
+    "dependencies": [
+        "OmniBar"
+    ]
 }
 ```
-- Add "SidebarMenu" entry to the "plugins" array:
+
+- Add `SidebarMenu` entry to the "plugins" array:
+
 ```json
 {
     "plugins": [
@@ -133,7 +138,9 @@ Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new 
     ]
 }
 ```
-- Go through all plugins definitions and replace "BurgerMenu" dependency with "SidebarMenu", e.g.:
+
+- Go through all plugins definitions and replace `BurgerMenu` dependency with `SidebarMenu`, e.g.:
+
 ```json
     {
       "name": "MapExport",
@@ -146,12 +153,19 @@ Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new 
     }
 ```
 
-Existing contexts need to be updated manually using following procedure:
-- Edit context and proceed to the step of plugins configuration.
-- Remove "BurgerMenu" from list of enabled plugins.
-- Save context.
+- Also the `StreetView` plugin needs to depend from `SidebarMenu`.
 
-"SidebarMenu" will be used by context if "BurgerMenu" is not in the list of enabled plugins.
+```json
+{
+      "name": "StreetView",
+      "glyph": "road",
+      "title": "plugins.StreetView.title",
+      "description": "plugins.StreetView.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+}
+```
 
 
 ## Migration from 2022.01.00 to 2022.01.01
