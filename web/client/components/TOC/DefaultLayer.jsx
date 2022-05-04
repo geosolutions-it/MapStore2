@@ -96,15 +96,12 @@ class DefaultLayer extends React.Component {
     };
 
     getVisibilityMessage = () => {
+        if (this.props.node.exclusiveMapType) return this.props.node?.type === '3dtiles' && 'toc.notVisibleSwitchTo3D';
         const maxResolution = this.props.node.maxResolution || Infinity;
         return this.props.resolution >=  maxResolution
             ? 'toc.notVisibleZoomIn'
             : 'toc.notVisibleZoomOut';
     };
-
-    getExclusiveMapTypeMessage = () => {
-        return this.props.node?.type === '3dtiles' && 'toc.notVisibleSwitchTo3D';
-    }
 
     renderOpacitySlider = (hideOpacityTooltip) => {
         return (this.props.activateOpacityTool && this.props.node?.type !== '3dtiles') ? (
@@ -185,8 +182,7 @@ class DefaultLayer extends React.Component {
                     onContextMenu={this.props.onContextMenu}
                 />
                 {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
-                {!isInsideResolutionsLimits(this.props.node, this.props.resolution) && <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/>}
-                {this.props.node.exclusiveMapType && <GlyphIndicator glyph="info-sign" tooltipId={this.getExclusiveMapTypeMessage()} style={{ 'float': 'right' }}/>}
+                {!isInsideResolutionsLimits(this.props.node, this.props.resolution) || this.props.node.exclusiveMapType ? <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/> : null}
                 {this.props.indicators ? this.renderIndicators() : null}
             </div>
         );
