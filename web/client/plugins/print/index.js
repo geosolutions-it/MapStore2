@@ -192,6 +192,9 @@ export const standardItems = {
     }, {
         id: "overlayLayers",
         plugin: AdditionalLayers,
+        cfg: {
+            enabled: false
+        },
         position: 5
     }],
     "left-panel-accordion": [{
