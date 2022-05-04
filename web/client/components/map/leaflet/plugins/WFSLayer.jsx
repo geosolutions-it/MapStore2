@@ -17,13 +17,14 @@ import { getFeature } from '../../../../api/WFS';
 import { needsReload } from '../../../../utils/WFSLayerUtils';
 import {
     getStyle,
-    layerToGeoStylerStyle
+    layerToGeoStylerStyle,
+    applyDefaultStyleToLayer
 } from '../../../../utils/VectorStyleUtils';
 
 const setStyle = (layer, options) => {
     layerToGeoStylerStyle(options)
         .then((style) => {
-            getStyle({ ...options, style }, 'leaflet')
+            getStyle(applyDefaultStyleToLayer({ ...options, style }), 'leaflet')
                 .then((styleUtils) => {
                     const {
                         style: styleFunc,

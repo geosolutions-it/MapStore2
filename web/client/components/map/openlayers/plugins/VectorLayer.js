@@ -12,6 +12,7 @@ import {getStyle} from '../VectorStyle';
 import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+import { applyDefaultStyleToLayer } from '../../../../utils/VectorStyleUtils';
 
 Layers.registerType('vector', {
     create: (options) => {
@@ -31,7 +32,7 @@ Layers.registerType('vector', {
             maxResolution: options.maxResolution
         });
 
-        getStyle({ ...options, asPromise: true })
+        getStyle(applyDefaultStyleToLayer({ ...options, asPromise: true }))
             .then((style) => {
                 if (style) {
                     layer.setStyle(style);
@@ -50,7 +51,7 @@ Layers.registerType('vector', {
         }
 
         if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
-            getStyle({ ...newOptions, asPromise: true })
+            getStyle(applyDefaultStyleToLayer({ ...newOptions, asPromise: true }))
                 .then((style) => {
                     if (style) {
                         layer.setStyle(style);

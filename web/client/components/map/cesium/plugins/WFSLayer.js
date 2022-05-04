@@ -15,7 +15,8 @@ import { needsReload } from '../../../../utils/WFSLayerUtils';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import {
     getStyle,
-    layerToGeoStylerStyle
+    layerToGeoStylerStyle,
+    applyDefaultStyleToLayer
 } from '../../../../utils/VectorStyleUtils';
 
 const requestFeatures = (options, params, cancelToken) => {
@@ -44,7 +45,7 @@ const createLayer = (options, map) => {
                 map.dataSources.add(dataSource);
                 layerToGeoStylerStyle(options)
                     .then((style) => {
-                        getStyle({ ...options, style }, 'cesium')
+                        getStyle(applyDefaultStyleToLayer({ ...options, style }), 'cesium')
                             .then((styleFunc) => {
                                 if (styleFunc) {
                                     styleFunc({
@@ -96,7 +97,7 @@ Layers.registerType('wfs', {
         ) {
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
-                    getStyle({ ...newOptions, style }, 'cesium')
+                    getStyle(applyDefaultStyleToLayer({ ...newOptions, style }), 'cesium')
                         .then((styleFunc) => {
                             if (styleFunc) {
                                 styleFunc({

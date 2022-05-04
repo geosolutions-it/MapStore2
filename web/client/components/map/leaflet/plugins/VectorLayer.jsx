@@ -9,7 +9,10 @@
 import Layers from '../../../../utils/leaflet/Layers';
 import { isEqual, isNil } from 'lodash';
 import L from 'leaflet';
-import { getStyle } from '../../../../utils/VectorStyleUtils';
+import {
+    getStyle,
+    applyDefaultStyleToLayer
+} from '../../../../utils/VectorStyleUtils';
 
 const setOpacity = (layer, opacity) => {
     if (layer.eachLayer) {
@@ -55,7 +58,7 @@ const createLayer = (options) => {
         hideLoading: hideLoading
     });
 
-    getStyle(options, 'leaflet')
+    getStyle(applyDefaultStyleToLayer(options), 'leaflet')
         .then((styleUtils) => {
             const {
                 style: styleFunc,
@@ -86,7 +89,7 @@ const updateLayerLegacy = (layer, newOptions, oldOptions) => {
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (!isEqual(oldOptions.style, newOptions.style)
     || newOptions.opacity !== oldOptions.opacity) {
-        getStyle(newOptions, 'leaflet')
+        getStyle(applyDefaultStyleToLayer(newOptions), 'leaflet')
             .then((styleUtils) => {
                 const {
                     style: styleFunc,

@@ -708,7 +708,7 @@ export const getStyleParser = (format = 'sld') => {
 };
 
 function msStyleToSymbolizer(style) {
-    if (style.kind === 'Mark') {
+    if (style.symbolizerKind === 'Mark') {
         return Promise.resolve({
             kind: 'Mark',
             color: style.fillColor,
@@ -815,7 +815,7 @@ function splitStyles(styles) {
             ...(isFillStyle(style) && style.radius
                 ? [
                     {
-                        kind: 'Mark',
+                        symbolizerKind: 'Mark',
                         fillColor: style.fillColor,
                         fillOpacity: style.fillOpacity ?? 1,
                         color: style.color,
@@ -928,4 +928,67 @@ export function getStyle({ style }, parserFormat) {
                 .readStyle(body)
                 .then(parsedStyle => outParser.writeStyle(parsedStyle))
         );
+}
+
+
+export function applyDefaultStyleToLayer(layer) {
+    const features = flattenFeatures(layer?.features || []);
+    const hasFeatureStyle = features.find(feature => !isEmpty(feature?.style || {}) && feature?.properties?.id);
+    if (hasFeatureStyle
+    || layer?.style?.format && !isEmpty(layer?.style?.body)
+    || !layer?.style?.format && !isEmpty(layer.style)) {
+        return layer;
+    }
+
+    return {
+        ...layer,
+        style: {
+            format: 'geostyler',
+            body: {
+                name: 'Default Style',
+                rules: [
+                    {
+                        name: 'Default Point Style',
+                        symbolizers: [
+                            {
+                                kind: 'Mark',
+                                color: '#f2f2f2',
+                                fillOpacity: 0.3,
+                                opacity: 0.5,
+                                strokeColor: '#3075e9',
+                                strokeOpacity: 1,
+                                strokeWidth: 2,
+                                wellKnownName: 'Circle',
+                                radius: 10
+                            }
+                        ]
+                    },
+                    {
+                        name: 'Default Line Style',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                color: '#3075e9',
+                                opacity: 1,
+                                width: 2
+                            }
+                        ]
+                    },
+                    {
+                        name: 'Default Polygon Style',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#f2f2f2',
+                                fillOpacity: 0.3,
+                                outlineColor: '#3075e9',
+                                outlineOpacity: 1,
+                                outlineWidth: 2
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    };
 }
