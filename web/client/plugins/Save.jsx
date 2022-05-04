@@ -53,7 +53,8 @@ export default createPlugin('Save', {
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
             ),
-            priority: 2
+            priority: 2,
+            doNotHide: true
         },
         SidebarMenu: {
             name: 'mapSave',
@@ -71,7 +72,8 @@ export default createPlugin('Save', {
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
             ),
-            priority: 1
+            priority: 1,
+            doNotHide: true
         }
     }
 });

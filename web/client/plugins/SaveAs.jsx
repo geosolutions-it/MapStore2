@@ -59,7 +59,8 @@ export default createPlugin('SaveAs', {
                 }
                 return { style: isLoggedIn(state) ? {} : {display: "none"} };
             },
-            priority: 2
+            priority: 2,
+            doNotHide: true
         },
         SidebarMenu: {
             name: 'saveAs',
@@ -77,7 +78,8 @@ export default createPlugin('SaveAs', {
 
                 };
             },
-            priority: 1
+            priority: 1,
+            doNotHide: true
         }
     }
 });

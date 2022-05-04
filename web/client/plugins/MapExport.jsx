@@ -104,7 +104,8 @@ const MapExportPlugin = createPlugin('MapExport', {
                     () => toggleControl('export') :
                     () => exportMap(enabledFormats[0] || 'mapstore2'),
                 priority: 1,
-                toggle: true
+                toggle: true,
+                doNotHide: true
             };
         },
         BurgerMenu: config => {
@@ -119,7 +120,8 @@ const MapExportPlugin = createPlugin('MapExport', {
                     () => toggleControl('export') :
                     () => exportMap(enabledFormats[0] || 'mapstore2'),
                 priority: 2,
-                toggle: true
+                toggle: true,
+                doNotHide: true
             };
         }
     },
