@@ -102,6 +102,10 @@ class DefaultLayer extends React.Component {
             : 'toc.notVisibleZoomOut';
     };
 
+    getExclusiveMapTypeMessage = () => {
+        return this.props.node?.type === '3dtiles' && 'toc.notVisibleSwitchTo3D';
+    }
+
     renderOpacitySlider = (hideOpacityTooltip) => {
         return (this.props.activateOpacityTool && this.props.node?.type !== '3dtiles') ? (
             <OpacitySlider
@@ -182,6 +186,7 @@ class DefaultLayer extends React.Component {
                 />
                 {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                 {!isInsideResolutionsLimits(this.props.node, this.props.resolution) && <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/>}
+                {this.props.node.exclusiveMapType && <GlyphIndicator glyph="info-sign" tooltipId={this.getExclusiveMapTypeMessage()} style={{ 'float': 'right' }}/>}
                 {this.props.indicators ? this.renderIndicators() : null}
             </div>
         );
@@ -196,7 +201,7 @@ class DefaultLayer extends React.Component {
 
     render() {
         let {children, propertiesChangeHandler, onToggle, connectDragSource, connectDropTarget, ...other } = this.props;
-        const hide = !this.props.node.visibility || this.props.node.invalid || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
+        const hide = !this.props.node.visibility || this.props.node.invalid || this.props.node.exclusiveMapType || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
         const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
