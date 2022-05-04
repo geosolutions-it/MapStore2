@@ -53,7 +53,7 @@ class OLStyleParser {
                                                 }
                                             }
                                             // the openlayers parser does not support fillOpacity
-                                            if (symbolizer.kind === 'Fill') {
+                                            if (symbolizer.kind === 'Fill' || symbolizer.kind === 'Mark') {
                                                 return {
                                                     ...symbolizer,
                                                     opacity: symbolizer.fillOpacity
