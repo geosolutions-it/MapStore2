@@ -312,15 +312,15 @@
     }
 
     &.toc-head-sections-1 {
-        height: @square-btn-size;
+        height: @card-height;
     }
 
     &.toc-head-sections-2 {
-        height: @square-btn-size * 2;
+        height: @card-height * 2;
     }
 
     &.toc-head-sections-3 {
-        height: @square-btn-size * 3;
+        height: @card-height * 3;
     }
 
     .toc-inline-loader {
@@ -332,7 +332,7 @@
             display: table-cell;
             vertical-align: middle;
             width: 270px;
-            height: @square-btn-size;
+            height: @card-height;
             color: @ms-primary;
             font-weight: bold;
             .glyphicon {
@@ -342,7 +342,7 @@
     }
 
     .col-xs-12 {
-        height: @square-btn-size;
+        height: @card-height;
         border-top: 1px solid @ms-main-border-color;
 
         .btn-sm {
@@ -463,15 +463,15 @@
     }
 
     &.toc-body-sections-1 .mapstore-layers-container {
-        height: ~"calc(100% - @{square-btn-size})";
+        height: ~"calc(100% - @{card-height})";
     }
 
     &.toc-body-sections-2 .mapstore-layers-container {
-        height: ~"calc(100% - @{square-btn-size} * 2 )";
+        height: ~"calc(100% - @{card-height} * 2 )";
     }
 
     &.toc-body-sections-3 .mapstore-layers-container {
-        height: ~"calc(100% - @{square-btn-size} * 3 )";
+        height: ~"calc(100% - @{card-height} * 3 )";
     }
 
     .toc-filter-no-results {
@@ -804,7 +804,7 @@
 .is-placeholder.toc-default-layer.selected {
     background-color: transparent !important;
     border: 1px dashed @ms-primary !important;
-    height: @square-btn-size !important;
+    height: @card-height !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     .toc-default-layer-head {
