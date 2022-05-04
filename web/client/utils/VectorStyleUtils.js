@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isNil, flatten, isEmpty, castArray, max } from 'lodash';
+import { isNil, flatten, isEmpty, castArray, max, isObject } from 'lodash';
 
 import { set } from './ImmutableUtils';
 import { colorToRgbaStr } from './ColorUtils';
@@ -33,12 +33,14 @@ export function getImageIdFromSymbolizer({
 }
 
 export const flattenFeatures = (features, mapFunc = feature => feature) => {
-    return flatten(features.map((feature) => {
+    // check if features is a collection object or an array of features/feature collection
+    const parsedFeatures = isObject(features) ? features?.features : features;
+    return flatten( parsedFeatures || []).map((feature) => {
         if (feature.type === 'FeatureCollection') {
             return feature.features || [];
         }
         return [feature];
-    })).map(mapFunc);
+    }).map(mapFunc);
 };
 
 function getImageFromSymbolizer(symbolizer) {
