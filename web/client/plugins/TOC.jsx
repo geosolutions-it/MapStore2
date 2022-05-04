@@ -156,7 +156,7 @@ const tocSelector = createSelector(
                 func: (node) => node.id === "annotations" && isCesiumActive
             },
             {
-                options: { invalid: true },
+                options: { exclusiveMapType: true },
                 func: (node) => node.type === "3dtiles" && !isCesiumActive
             }
         ]),
