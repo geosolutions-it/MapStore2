@@ -71,6 +71,7 @@ Replacing:
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
     * Any fix must be done on **YYYY.XX.xx**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
+    * Test creation  of a standard project and run the internal backend, with `npm run backend` and `npm start`, then check localhost:8081 that homepage is empty
 - [ ] Test [Binary](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build-NEW/) (take the mapstore2-QA-<RELEASE_BRANCH>-bin.zip, from latest build)
 - [ ] Lunch the [stable deploy](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Stable/) to install the latest stable version on official demo, remember to change version to **YYYY.XX.mm** 
 - [ ] Manually edit the `localConfig.json` on mapstore.geosolutionsgroup.com to fit the authkey for production (change from `authkey-qa` to `authkey-prod`)
