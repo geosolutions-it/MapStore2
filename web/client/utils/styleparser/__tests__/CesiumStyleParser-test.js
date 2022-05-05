@@ -67,10 +67,8 @@ describe('CesiumStyleParser', () => {
                             const entities = dataSource?.entities?.values;
                             styleFunc({ entities });
                             expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
-                            expect(entities[0].polygon.height.getValue()).toBe(0);
-                            expect(entities[0].polygon.outline.getValue()).toBe(true);
-                            expect(entities[0].polygon.outlineWidth.getValue()).toBe(2);
-                            expect({ ...entities[0].polygon.outlineColor.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
+                            expect(entities[0].polyline.width.getValue()).toBe(2);
+                            expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
                         } catch (e) {
                             done(e);
                         }

@@ -155,7 +155,9 @@ function getStyleFuncFromRules({
                                         opacity: symbolizer.opacity * globalOpacity
                                     }),
                                 width: symbolizer.width,
-                                positions: entity._msStoredCoordinates.polyline
+                                positions: entity._msStoredCoordinates.polyline,
+                                // by default the line will try to follow the terrain/3d tiles profile
+                                clampToGround: true
                             });
                         }
                         if (symbolizer.kind === 'Fill' && entity._msStoredCoordinates.polygon) {
@@ -165,16 +167,26 @@ function getStyleFuncFromRules({
                                     opacity: symbolizer.fillOpacity * globalOpacity
                                 }),
                                 hierarchy: entity._msStoredCoordinates.polygon,
-                                height: 0,
-                                ...((symbolizer.outlineColor && symbolizer.outlineWidth !== 0) && {
-                                    outlineColor: getCesiumColor({
+                                // height should be introduced with concept of extrusion
+                                // height: 0,
+                                classificationType: Cesium.ClassificationType.BOTH
+                            });
+
+                            // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
+                            // this is a workaround to visualize the outline with the correct side
+                            // this only for the footprint
+                            if (symbolizer.outlineColor && symbolizer.outlineWidth !== 0) {
+                                entity.polyline = new Cesium.PolylineGraphics({
+                                    material: getCesiumColor({
                                         color: symbolizer.outlineColor,
                                         opacity: symbolizer.outlineOpacity * globalOpacity
                                     }),
-                                    outlineWidth: symbolizer.outlineWidth,
-                                    outline: true
-                                })
-                            });
+                                    width: symbolizer.outlineWidth,
+                                    positions: entity._msStoredCoordinates.polygon.getValue().positions,
+                                    // by default the line will try to follow the terrain/3d tiles profile
+                                    clampToGround: true
+                                });
+                            }
                         }
                         if (symbolizer.kind === 'Text' && entity.position) {
                             entity.label = new Cesium.LabelGraphics({
