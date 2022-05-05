@@ -7,6 +7,7 @@ import { highlighedFeatures } from '../../selectors/highlight';
 import { securityTokenSelector } from '../../selectors/security';
 import { currentLocaleLanguageSelector } from '../../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesNameSelector } from '../../selectors/localizedLayerStyles';
+import {sidebarIsActiveSelector} from "../../selectors/sidebarmenu";
 
 /**
  * Map state to props selector for Map plugin
@@ -15,6 +16,7 @@ export default createStructuredSelector({
     projectionDefs: projectionDefsSelector,
     map: mapSelector,
     mapType: mapTypeSelector,
+    sidebar: sidebarIsActiveSelector,
     layers: layerSelectorWithMarkers,
     features: highlighedFeatures,
     loadingError: state => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,

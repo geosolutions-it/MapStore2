@@ -53,7 +53,8 @@ class CesiumMap extends React.Component {
         orientate: PropTypes.object,
         zoomControl: PropTypes.bool,
         errorPanel: PropTypes.func,
-        onReload: PropTypes.func
+        onReload: PropTypes.func,
+        sidebar: PropTypes.bool
     };
 
     static defaultProps = {
@@ -77,7 +78,8 @@ class CesiumMap extends React.Component {
                 roll: 0
             }
         },
-        onReload: () => {}
+        onReload: () => {},
+        sidebar: false
     };
 
     state = {
@@ -327,7 +329,7 @@ class CesiumMap extends React.Component {
         }) : null;
         const ErrorPanel = this.props.errorPanel;
         return (
-            <div id={this.props.id}>
+            <div id={this.props.id} data-sidebar={this.props.sidebar ? true : null}>
                 {children}
                 {ErrorPanel ? <ErrorPanel
                     show={!!this.state.renderError}
