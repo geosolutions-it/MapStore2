@@ -92,7 +92,9 @@ export const groupsSelector = (state) => state.layers && state.layers.flat && st
 export const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
 export const getSelectedLayers = state => {
     const selectedIds = selectedNodesSelector(state);
-    return selectedIds.map((id) => find(layersSelector(state), {id}));
+    // We need to exclude undefined values from the result
+    const layers = selectedIds.map((id) => find(layersSelector(state), {id})).filter(l => l !== undefined);
+    return layers;
 };
 export const getSelectedLayer = state => {
     const selected = getSelectedLayers(state) || [];
