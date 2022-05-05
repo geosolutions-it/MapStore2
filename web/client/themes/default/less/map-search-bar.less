@@ -68,6 +68,44 @@
 // Layout
 // **************
 /* search */
+#search-bar-container {
+    position: absolute;
+    top: 0;
+    margin-right: 5px;
+    box-shadow: -1px 1px 5px 1px #5e5e5e;
+    z-index: 1031;
+}
+
+#search-bar-container.no-sidebar {
+    margin-right: 0;
+    position: relative;
+    float: left;
+    box-shadow: none;
+    z-index: unset;
+
+    &.toggled {
+        #map-search-bar {
+            position: fixed;
+            top: 52px;
+            width: 100%;
+        }
+    }
+
+    #map-search-bar {
+        top: 0;
+        left: 0;
+        position: relative;
+        box-shadow: none;
+    }
+
+    @media (max-width: 767px ) {
+        #map-search-bar, .search-result-list {
+            width: 400px;
+        }
+    }
+
+}
+
 #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
     border-radius: 0;
     position: relative;
@@ -113,7 +151,7 @@ div.MapSearchBar .form-control:focus {
     position: relative;
     -webkit-box-shadow: unset;
     box-shadow: unset;
-    flex: 1 1 0%;
+    flex: 1 1 0;
     margin-right: 8px;
     display: table;
     border-collapse: separate;
@@ -133,31 +171,21 @@ div.MapSearchBar .form-control:focus {
     z-index: 1;
 }
 
-@media (max-width: 768px) {
-    #mapstore-navbar .search-toggle {
+    #mapstore-navbar .toggled .search-toggle {
         display: inline-block;
     }
 
-    #mapstore-navbar .MapSearchBar {
+    #mapstore-navbar .toggled .MapSearchBar {
         width: 400px;
         top: @square-btn-size;
         left: auto;
     }
 
-    #mapstore-navbar .search-result-list {
-        top: 85px;
-        left: auto;
-        width: 400px;
-    }
-}
-
-/* Small devices (tablets, 768px and up) */
-@media (max-width: 768px) {
-    #mapstore-navbar .search-toggle {
+    #mapstore-navbar .toggled .search-toggle {
         display: inline-block;
     }
 
-    #mapstore-navbar .navbar-dx .MapSearchBar {
+    #mapstore-navbar .toggled .MapSearchBar {
         position: fixed;
         left: 1px;
         right: 1px;
@@ -165,43 +193,29 @@ div.MapSearchBar .form-control:focus {
         width: auto;
     }
 
-    #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
+    #mapstore-navbar .toggled .MapSearchBar .input-group {
         width: 100%;
     }
 
-    #mapstore-navbar .navbar-dx .search-result-list {
+    #mapstore-navbar .toggled .search-result-list {
         position: fixed;
         left: 15px;
         right: 15px;
         top: 105px;
         width: 95%;
     }
+
+#mapstore-navbar .MapSearchBar {
+    width: 500px;
+    right: auto;
 }
 
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: 992px) {
-    #mapstore-navbar .MapSearchBar {
-        width: 500px;
-        right: auto;
-    }
-
-    #mapstore-navbar .search-result-list {
-        width: 500px;
-        right: auto;
-    }
-}
-
-/* Large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {
-    #mapstore-navbar .MapSearchBar {
-        width: 500px;
-        position: absolute;
-    }
-
-    #mapstore-navbar .search-result-list {
-        width: 500px;
-        right: auto;
-    }
+#mapstore-navbar .search-result-list {
+    width: 500px;
+    top: 35px;
+    right: 0;
+    left: auto;
+    margin: 0;
 }
 
 #mapstore-navbar .form-group {
@@ -215,7 +229,7 @@ div.MapSearchBar .form-control:focus {
         flex: 1;
         height: 100%;
         position: relative;
-        min-height: 52px;
+        min-height: @square-btn-size;
         align-items: center;
     }
 
@@ -224,7 +238,7 @@ div.MapSearchBar .form-control:focus {
         flex: 1;
         height: 100%;
         position: relative;
-        min-height: 52px;
+        min-height: @square-btn-size;
         align-items: center;
     }
 
@@ -234,7 +248,7 @@ div.MapSearchBar .form-control:focus {
         box-sizing: border-box;
         margin: 6px 0 !important;
         display: flex;
-        flex: 1 1 0%;
+        flex: 1 1 0;
         justify-content: space-between;
         padding: 0 6px;
 
@@ -242,7 +256,7 @@ div.MapSearchBar .form-control:focus {
             margin-left: unset;
             margin-right: unset;
             padding: 5px;
-            flex: 1 1 0%;
+            flex: 1 1 0;
 
             .coordinateLabel {
                 margin-top: 9px;
@@ -349,7 +363,7 @@ div.MapSearchBar .form-control:focus {
         .input-group{
             .input-group-addon{
                width: auto;
-               border: 0px solid transparent;
+               border: 0 solid transparent;
                .selectedItem-text{
                     max-width: 200px;
                }

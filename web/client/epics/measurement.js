@@ -17,10 +17,15 @@ import {STYLE_TEXT} from '../utils/AnnotationsUtils';
 import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from '../actions/controls';
 import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
-import {showCoordinateEditorSelector, measureSelector} from '../selectors/controls';
-import {geomTypeSelector} from '../selectors/measurement';
+import {measureSelector} from '../selectors/controls';
+import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
 import { CLICK_ON_MAP } from '../actions/map';
-import {newAnnotation, setEditingFeature, cleanHighlight, toggleVisibilityAnnotation} from '../actions/annotations';
+import {
+    newAnnotation,
+    setEditingFeature,
+    cleanHighlight,
+    toggleVisibilityAnnotation
+} from '../actions/annotations';
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -60,10 +65,10 @@ export const addAsLayerEpic = (action$) =>
         });
 
 export const openMeasureEpic = (action$, store) =>
-    action$.ofType(SET_CONTROL_PROPERTY)
-        .filter((action) => action.control === "measure" && action.value && showCoordinateEditorSelector(store.getState()))
+    action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+        .filter((action) => action.control === "measure" && isActiveSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
+            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), setControlProperty('annotations', 'enabled', false));
         });
 
 export const closeMeasureEpics = (action$, store) =>

@@ -36,6 +36,7 @@ import { mapInfoDetailsSettingsFromIdSelector, isMouseMoveIdentifyActiveSelector
 import { head, get } from 'lodash';
 
 import { isFeatureGridOpen, getDockSize } from '../selectors/featuregrid';
+import {DEFAULT_MAP_LAYOUT} from "../utils/MapUtils";
 
 /**
  * Capture that cause layout change to update the proper object.
@@ -77,7 +78,22 @@ export const updateMapLayoutEpic = (action$, store) =>
                 }));
             }
 
-            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
+            // Calculating sidebar's rectangle to be used by dock panels
+            const rightSidebars = head([
+                get(state, "controls.sidebarMenu.enabled") && {right: 40} || null
+            ]) || {right: 0};
+            const leftSidebars = head([
+                null
+            ]) || {left: 0};
+
+            const boundingSidebarRect = {
+                ...rightSidebars,
+                ...leftSidebars,
+                bottom: 0
+            };
+            /* ---------------------- */
+
+            const mapLayout = ConfigUtils.getConfigProp("mapLayout") || DEFAULT_MAP_LAYOUT;
 
             if (get(state, "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
@@ -95,6 +111,7 @@ export const updateMapLayoutEpic = (action$, store) =>
 
             const leftPanels = head([
                 get(state, "controls.queryPanel.enabled") && {left: mapLayout.left.lg} || null,
+                get(state, "controls.annotations.enabled") && {left: mapLayout.left.sm} || null,
                 get(state, "controls.widgetBuilder.enabled") && {left: mapLayout.left.md} || null,
                 get(state, "layers.settings.expanded") && {left: mapLayout.left.md} || null,
                 get(state, "controls.drawer.enabled") && { left: resizedDrawer || mapLayout.left.sm} || null
@@ -102,7 +119,6 @@ export const updateMapLayoutEpic = (action$, store) =>
 
             const rightPanels = head([
                 get(state, "controls.details.enabled") && !mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal && {right: mapLayout.right.md} || null,
-                get(state, "controls.annotations.enabled") && {right: mapLayout.right.md / 2} || null,
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,
                 get(state, "controls.userExtensions.enabled") && { right: mapLayout.right.md } || null,
@@ -124,13 +140,23 @@ export const updateMapLayoutEpic = (action$, store) =>
                 ...rightPanels
             };
 
+            Object.keys(boundingMapRect).forEach(key => {
+                if (['left', 'right', 'dockSize'].includes(key)) {
+                    boundingMapRect[key] = boundingMapRect[key] + (boundingSidebarRect[key] ?? 0);
+                } else {
+                    const totalOffset = (parseFloat(boundingMapRect[key]) + parseFloat(boundingSidebarRect[key] ?? 0));
+                    boundingMapRect[key] = totalOffset ? totalOffset + '%' : 0;
+                }
+            });
+
             return Rx.Observable.of(updateMapLayout({
-                ...leftPanels,
-                ...rightPanels,
-                ...bottom,
+                ...boundingMapRect,
                 ...transform,
                 ...height,
-                boundingMapRect
+                boundingMapRect,
+                boundingSidebarRect,
+                rightPanel: rightPanels.right > 0,
+                leftPanel: leftPanels.left > 0
             }));
         });
 

@@ -91,11 +91,89 @@ formats:
   - '*'
 ```
 
+### Replacing BurgerMenu with SidebarMenu
+There were several changes applied to the application layout, one of them is the Sidebar Menu that comes to replace Burger menu on map viewer and in contexts.
+Following actions need to be applied to make a switch:
+- Update localConfig.json and add "SidebarMenu" entry to the "desktop" section:
+```json
+{
+    "desktop": [
+        ...
+        "SidebarMenu",
+        ...
+    ]
+}
+```
+- Remove "BurgerMenu" entry from "desktop" section.
+
+#### Updating contexts to use Sidebar Menu
+
+Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "SidebarMenu" in contexts.
+
+- Find "BurgerMenu" plugin confuguration in `pluginsConfig.json` and remove `"hidden": true` line from it:
+
+```json
+    {
+    "name": "BurgerMenu",
+    "glyph": "menu-hamburger",
+    "title": "plugins.BurgerMenu.title",
+    "description": "plugins.BurgerMenu.description",
+    "dependencies": [
+        "OmniBar"
+    ]
+}
+```
+
+- Add `SidebarMenu` entry to the "plugins" array:
+
+```json
+{
+    "plugins": [
+        ...
+        {
+            "name": "SidebarMenu",
+            "hidden": true
+        }
+        ...
+    ]
+}
+```
+
+- Go through all plugins definitions and replace `BurgerMenu` dependency with `SidebarMenu`, e.g.:
+
+```json
+    {
+      "name": "MapExport",
+      "glyph": "download",
+      "title": "plugins.MapExport.title",
+      "description": "plugins.MapExport.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+    }
+```
+
+- Also the `StreetView` plugin needs to depend from `SidebarMenu`.
+
+```json
+{
+      "name": "StreetView",
+      "glyph": "road",
+      "title": "plugins.StreetView.title",
+      "description": "plugins.StreetView.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+}
+```
+
+
 ## Migration from 2022.01.00 to 2022.01.01
 
 ### MailingLists plugin has been removed
 
 `MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
+
 
 ## Migration from 2021.02.02 to 2022.01.00
 

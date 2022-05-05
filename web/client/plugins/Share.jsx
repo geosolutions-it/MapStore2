@@ -106,12 +106,23 @@ export const SharePlugin = assign(Share, {
     BurgerMenu: {
         name: 'share',
         position: 1000,
-        priority: 1,
+        priority: 2,
         doNotHide: true,
         text: <Message msgId="share.title"/>,
         tooltip: "share.tooltip",
         icon: <Glyphicon glyph="share-alt"/>,
         action: toggleControl.bind(null, 'share', null)
+    },
+    SidebarMenu: {
+        name: 'share',
+        position: 1000,
+        priority: 1,
+        doNotHide: true,
+        tooltip: "share.tooltip",
+        text: <Message msgId="share.title"/>,
+        icon: <Glyphicon glyph="share-alt"/>,
+        action: toggleControl.bind(null, 'share', null),
+        toggle: true
     },
     Toolbar: {
         name: 'share',

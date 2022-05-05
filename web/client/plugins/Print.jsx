@@ -32,6 +32,7 @@ import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { has, includes } from 'lodash';
+import {additionalLayersSelector} from "../selectors/additionallayers";
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -337,7 +338,10 @@ export default {
                     UNSAFE_componentWillReceiveProps(nextProps) {
                         const hasBeenOpened = nextProps.open && !this.props.open;
                         const mapHasChanged = this.props.open && this.props.syncMapPreview && mapUpdated(this.props.map, nextProps.map);
-                        const specHasChanged = nextProps.printSpec.defaultBackground !== this.props.printSpec.defaultBackground;
+                        const specHasChanged = (
+                            nextProps.printSpec.defaultBackground !== this.props.printSpec.defaultBackground ||
+                                nextProps.printSpec.additionalLayers !== this.props.printSpec.additionalLayers
+                        );
                         if (hasBeenOpened || mapHasChanged || specHasChanged) {
                             this.configurePrintMap(nextProps);
                         }
@@ -608,18 +612,19 @@ export default {
                     (state) => state.print && state.print.error,
                     mapSelector,
                     layersSelector,
+                    additionalLayersSelector,
                     scalesSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
                     mapTypeSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, mapType) => ({
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, additionalLayers, scales, usePreview, currentLocale, mapType) => ({
                     open,
                     capabilities,
                     printSpec,
                     pdfUrl,
                     error,
                     map,
-                    layers: layers.filter(l => !l.loadingError),
+                    layers: [...layers.filter(l => !l.loadingError), ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(l => !l.loadingError) : [])],
                     scales,
                     usePreview,
                     currentLocale,
@@ -659,8 +664,19 @@ export default {
             text: <Message msgId="printbutton"/>,
             icon: <Glyphicon glyph="print"/>,
             action: toggleControl.bind(null, 'print', null),
-            priority: 2,
+            priority: 3,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: "print",
+            position: 3,
+            tooltip: "printbutton",
+            text: <Message msgId="printbutton"/>,
+            icon: <Glyphicon glyph="print"/>,
+            action: toggleControl.bind(null, 'print', null),
+            doNotHide: true,
+            toggle: true,
+            priority: 2
         }
     }),
     reducers: {print: printReducers}

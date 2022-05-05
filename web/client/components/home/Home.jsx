@@ -26,7 +26,9 @@ class Home extends React.Component {
         onCloseUnsavedDialog: PropTypes.func,
         displayUnsavedDialog: PropTypes.bool,
         renderUnsavedMapChangesDialog: PropTypes.bool,
-        tooltipPosition: PropTypes.string
+        tooltipPosition: PropTypes.string,
+        bsStyle: PropTypes.string,
+        hidden: PropTypes.bool
     };
 
     static contextTypes = {
@@ -39,19 +41,21 @@ class Home extends React.Component {
         onCheckMapChanges: () => {},
         onCloseUnsavedDialog: () => {},
         renderUnsavedMapChangesDialog: true,
-        tooltipPosition: 'left'
+        tooltipPosition: 'left',
+        bsStyle: 'primary',
+        hidden: false
     };
 
     render() {
-        const { tooltipPosition, ...restProps} = this.props;
+        const { tooltipPosition, hidden, ...restProps} = this.props;
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
-        return (
+        return hidden ? false : (
             <React.Fragment>
                 <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
                     <Button
                         id="home-button"
                         className="square-button"
-                        bsStyle="primary"
+                        bsStyle={this.props.bsStyle}
                         onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
                         {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children', 'icon', 'bsStyle', 'className'])}

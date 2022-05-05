@@ -125,6 +125,16 @@ export const DefaultBackgrounOption = connect((state) => ({
     onChangeParameter: setPrintParameter
 })(Option);
 
+export const AdditionalLayers = connect((state) => ({
+    spec: state.print?.spec || {},
+    path: "",
+    property: "additionalLayers",
+    additionalProperty: false,
+    label: "print.additionalLayers"
+}), {
+    onChangeParameter: setPrintParameter
+})(Option);
+
 export const PrintSubmit = connect((state) => ({
     spec: state?.print?.spec || {},
     loading: state.print && state.print.isLoading || false,
@@ -140,6 +150,7 @@ export const PrintPreview = connect((state) => ({
     scale: state.controls && state.controls.print && state.controls.print.viewScale || 0.5,
     currentPage: state.controls && state.controls.print && state.controls.print.currentPage || 0,
     pages: state.controls && state.controls.print && state.controls.print.pages || 1,
+    additionalLayers: state.print?.spec?.additionalLayers ?? false,
     outputFormat: state.print?.spec?.outputFormat || "pdf"
 }), {
     back: printCancel,
@@ -178,6 +189,13 @@ export const standardItems = {
             "projections": [{"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
         },
         position: 4
+    }, {
+        id: "overlayLayers",
+        plugin: AdditionalLayers,
+        cfg: {
+            enabled: false
+        },
+        position: 5
     }],
     "left-panel-accordion": [{
         id: "layout",

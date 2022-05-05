@@ -5,10 +5,11 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import { head } from 'lodash';
+import {head, memoize} from 'lodash';
 
 import { mapSelector } from './map';
-import { parseLayoutValue } from '../utils/MapUtils';
+import {DEFAULT_MAP_LAYOUT, parseLayoutValue} from '../utils/MapUtils';
+import ConfigUtils from "../utils/ConfigUtils";
 
 /**
  * selects map layout state
@@ -37,19 +38,38 @@ export const mapLayoutSelector = (state) => state.maplayout && state.maplayout.l
 export const boundingMapRectSelector = (state) => state.maplayout && state.maplayout.boundingMapRect || {};
 
 /**
+ * Get map layout bounds left, top, bottom and right
+ * @function
+ * @memberof selectors.mapLayout
+ * @param  {object} state the state
+ * @return {object} boundingMapRect {left, top, bottom, right}
+ */
+export const boundingSidebarRectSelector = (state) => state.maplayout && state.maplayout.boundingSidebarRect || {};
+
+/**
  * Retrieve only specific attribute from map layout
  * @function
  * @memberof selectors.mapLayout
  * @param  {object} state the state
  * @param  {object} attributes attributes to retrieve, bool {left: true}
+ * @param  {boolean} isDock flag to use dock paddings instead of toolbar paddings
  * @return {object} selected attributes of layout of the map
  */
-export const mapLayoutValuesSelector = (state, attributes = {}) => {
+export const mapLayoutValuesSelector = memoize((state, attributes = {}, isDock = false) => {
     const layout = mapLayoutSelector(state);
+    const boundingSidebarRect = boundingSidebarRectSelector(state);
     return layout && Object.keys(layout).filter(key =>
-        attributes[key]).reduce((a, key) => ({...a, [key]: layout[key]}),
-        {}) || {};
-};
+        attributes[key]).reduce((a, key) => {
+        if (isDock) {
+            return ({...a, [key]: (boundingSidebarRect[key] ?? layout[key])});
+        }
+        return ({...a, [key]: layout[key]});
+    },
+    {}) || {};
+}, (state, attributes, isDock) =>
+    JSON.stringify(mapLayoutSelector(state)) +
+    JSON.stringify(boundingSidebarRectSelector(state)) +
+    JSON.stringify(attributes) + (isDock ? '_isDock' : ''));
 
 /**
  * Check if conditions match with the current layout
@@ -78,9 +98,20 @@ export const checkConditionsSelector = (state, conditions = []) => {
  * @return {boolean} returns true if right panels are open
  */
 export const rightPanelOpenSelector = state => {
-    // need to remove 658 and manage it from the state with all dafault layout variables
-    return checkConditionsSelector(state, [{ key: 'right', value: 658 }]);
+    return !!mapLayoutSelector(state)?.rightPanel;
 };
+
+/**
+ * Check if left panels are open
+ * @function
+ * @memberof selectors.mapLayout
+ * @param  {object} state the state
+ * @return {boolean} returns true if left panels are open
+ */
+export const leftPanelOpenSelector = state => {
+    return !!mapLayoutSelector(state)?.leftPanel;
+};
+
 /**
  * Check if bottom panel is open
  * @function
@@ -89,8 +120,9 @@ export const rightPanelOpenSelector = state => {
  * @return {boolean} returns true if bottom panel is open
  */
 export const bottomPanelOpenSelector = state => {
-    // need to remove 30 and manage it from the state with all dafault layout variables
-    return checkConditionsSelector(state, [{ key: 'bottom', value: 30, type: 'not' }]);
+    const mapLayout = ConfigUtils.getConfigProp("mapLayout") || DEFAULT_MAP_LAYOUT;
+    const bottomMapOffset = mapLayout?.bottom.sm ?? 0;
+    return checkConditionsSelector(state, [{ key: 'bottom', value: bottomMapOffset, type: 'not' }]);
 };
 
 /**

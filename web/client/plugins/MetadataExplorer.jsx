@@ -12,7 +12,6 @@ import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
-import ContainerDimensions from 'react-container-dimensions';
 import { connect } from 'react-redux';
 import { branch, compose, defaultProps, renderComponent, withProps } from 'recompose';
 import { createStructuredSelector } from 'reselect';
@@ -47,10 +46,9 @@ import API from '../api/catalog';
 import CatalogComp from '../components/catalog/Catalog';
 import CatalogServiceEditor from '../components/catalog/CatalogServiceEditor';
 import Message from '../components/I18N/Message';
-import DockPanel from '../components/misc/panels/DockPanel';
 import { metadataSourceSelector, modalParamsSelector } from '../selectors/backgroundselector';
 import {
-    activeSelector,
+    isActiveSelector,
     authkeyParamNameSelector,
     groupSelector,
     layerErrorSelector,
@@ -81,6 +79,7 @@ import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLay
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { DEFAULT_FORMAT_WMS } from '../api/WMS';
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -93,8 +92,8 @@ const metadataExplorerSelector = createStructuredSelector({
     services: servicesSelector,
     servicesWithBackgrounds: servicesSelectorWithBackgrounds,
     layerError: layerErrorSelector,
-    active: activeSelector,
-    dockStyle: state => mapLayoutValuesSelector(state, { height: true }),
+    active: isActiveSelector,
+    dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     searchText: searchTextSelector,
     group: groupSelector,
     source: metadataSourceSelector,
@@ -191,7 +190,7 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: true,
 
         // side panel properties
-        width: 660,
+        width: 550,
         dockProps: {
             dimMode: "none",
             fluid: false,
@@ -217,24 +216,23 @@ class MetadataExplorerComponent extends React.Component {
             />
         );
         return (
-            <div id="catalog-root" className={this.props.active ? 'catalog-active' : ''} style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
-                <ContainerDimensions>
-                    {({ width }) => (<DockPanel
-                        open={this.props.active}
-                        size={this.props.width / width > 1 ? width : this.props.width}
-                        position="right"
-                        bsStyle="primary"
-                        title={<Message msgId="catalog.title"/>}
-                        onClose={() => this.props.closeCatalog()}
-                        glyph="folder-open"
-                        zIndex={1031}
-                        style={this.props.dockStyle}>
-                        <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {panel}
-                        </Panel>
-                    </DockPanel>)}
-                </ContainerDimensions>
-            </div>
+            <ResponsivePanel
+                containerStyle={this.props.dockStyle}
+                containerId="catalog-root"
+                className={this.props.active ? 'catalog-active' : ''}
+                open={this.props.active}
+                size={this.props.width}
+                position="right"
+                bsStyle="primary"
+                title={<Message msgId="catalog.title"/>}
+                onClose={() => this.props.closeCatalog()}
+                glyph="folder-open"
+                style={this.props.dockStyle}
+            >
+                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    {panel}
+                </Panel>
+            </ResponsivePanel>
         );
     }
 }
@@ -297,15 +295,19 @@ export default {
             tooltip: "catalog.tooltip",
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
-            doNotHide: true
+            doNotHide: true,
+            priority: 2
         },
-        BackgroundSelector: {
-            name: 'MetadataExplorer',
-            doNotHide: true
-        },
-        TOC: {
-            name: 'MetadataExplorer',
-            doNotHide: true
+        SidebarMenu: {
+            name: 'metadataexplorer',
+            position: 5,
+            text: <Message msgId="catalog.title"/>,
+            tooltip: "catalog.tooltip",
+            icon: <Glyphicon glyph="folder-open"/>,
+            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+            toggle: true,
+            doNotHide: true,
+            priority: 1
         }
     }),
     reducers: {catalog: require('../reducers/catalog').default},
