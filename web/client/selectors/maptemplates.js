@@ -7,7 +7,9 @@
  */
 import { createSelector } from 'reselect';
 import { templatesSelector as contextTemplatesSelector } from './context';
+import {get} from "lodash";
 
+export const isActiveSelector = (state) => get(state, "controls.mapTemplates.enabled");
 export const mapTemplatesLoadedSelector = state => state.maptemplates && state.maptemplates.mapTemplatesLoaded;
 export const mapTemplatesLoadErrorSelector = state => state.maptemplates && state.maptemplates.mapTemplatesLoadError;
 export const templatesSelector = state => state.maptemplates && state.maptemplates.templates;

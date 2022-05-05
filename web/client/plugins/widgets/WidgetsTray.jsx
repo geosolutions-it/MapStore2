@@ -20,6 +20,7 @@ import { filterHiddenWidgets } from './widgetsPermission';
 import BorderLayout from '../../components/layout/BorderLayout';
 import WidgetsBar from './WidgetsBar';
 import BButton from '../../components/misc/Button';
+import {mapLayoutValuesSelector} from "../../selectors/maplayout";
 
 const Button = tooltip(BButton);
 
@@ -78,20 +79,22 @@ class WidgetsTray extends React.Component {
         toolsOptions: PropTypes.object,
         items: PropTypes.array,
         expanded: PropTypes.bool,
-        setExpanded: PropTypes.func
+        setExpanded: PropTypes.func,
+        layout: PropTypes.object
     };
     static defaultProps = {
         enabled: true,
         items: [],
         expanded: false,
-        setExpanded: () => { }
+        setExpanded: () => { },
+        layout: {}
     };
     render() {
         return this.props.enabled
             ? (<div className="widgets-tray"
                 style={{
                     marginBottom: 32,
-                    marginRight: 80,
+                    marginRight: (this.props.layout?.right ?? 0) + 65,
                     bottom: 0,
                     right: 0,
                     position: "absolute"
@@ -113,7 +116,8 @@ export default compose(
     withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,
-        (widgets = []) => ({ widgets })
+        (state) => mapLayoutValuesSelector(state, { right: true }),
+        (widgets, layout = []) => ({ widgets, layout })
     ), {
         toggleTray
     }),

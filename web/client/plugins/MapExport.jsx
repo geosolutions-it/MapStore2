@@ -8,7 +8,6 @@
 
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
-import assign from 'object-assign';
 import { pick, get } from 'lodash';
 import { connect } from 'react-redux';
 import { compose, withState, defaultProps } from 'recompose';
@@ -24,6 +23,7 @@ import { createControlEnabledSelector } from '../selectors/controls';
 
 import ExportPanel from '../components/export/ExportPanel';
 import * as epics from '../epics/mapexport';
+import {createPlugin} from "../utils/PluginsUtils";
 
 const DEFAULTS = ["mapstore2", "wmc"];
 const isEnabled = createControlEnabledSelector('export');
@@ -86,26 +86,46 @@ const MapExport = enhanceExport(
  * @name MapExport
  * @property {string[]} cfg.enabledFormats the list of allowed formats. By default ["mapstore2", "wmc"]
  */
-const MapExportPlugin = {
-    MapExportPlugin: assign(MapExport, {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
+const MapExportPlugin = createPlugin('MapExport', {
+    component: MapExport,
+    options: {
+        disablePluginIf: "{state('mapType') === 'cesium'}"
+    },
+    containers: {
+        SidebarMenu: config => {
+            const enabledFormats = get(config, 'cfg.enabledFormats', DEFAULTS);
+            return {
+                name: "export",
+                position: 4,
+                tooltip: "mapExport.tooltip",
+                text: <Message msgId="mapExport.title" />,
+                icon: <Glyphicon glyph="download" />,
+                action: enabledFormats.length > 1 ?
+                    () => toggleControl('export') :
+                    () => exportMap(enabledFormats[0] || 'mapstore2'),
+                priority: 1,
+                toggle: true,
+                doNotHide: true
+            };
+        },
         BurgerMenu: config => {
             const enabledFormats = get(config, 'cfg.enabledFormats', DEFAULTS);
             return {
-                name: 'export',
+                name: "export",
                 position: 4,
-                text: <Message msgId="mapExport.title" />,
                 tooltip: "mapExport.tooltip",
+                text: <Message msgId="mapExport.title" />,
                 icon: <Glyphicon glyph="download" />,
                 action: enabledFormats.length > 1 ?
                     () => toggleControl('export') :
                     () => exportMap(enabledFormats[0] || 'mapstore2'),
                 priority: 2,
+                toggle: true,
                 doNotHide: true
             };
         }
-    }),
+    },
     epics: epics
-};
+});
 
 export default MapExportPlugin;

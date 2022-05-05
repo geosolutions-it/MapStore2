@@ -486,6 +486,8 @@
             "toggleGroupVisibility": "Toggle group visibility",
             "displayLegendAndTools": "Display legend",
             "zoomToLayerExtent": "Zoom to layer extent",
+            "addAnnotations": "Add annotations",
+            "editAnnotations": "Edit annotations",
             "addLayer": "Add layer",
             "addLayerToGroup": "Add layer to selected group",
             "addGroup": "Add group",
@@ -653,7 +655,8 @@
             "previewFormatUnsupported": "Unsupported format for preview",
             "projection": "Coordinates System",
             "projectionmismatch": "Coordinate system mismatch among printed and screen map",
-            "graticule": "add grid with labels"
+            "graticule": "add grid with labels",
+            "additionalLayers": "Include overlays"
         },
         "backgroundSwitcher":{
             "tooltip": "Select Background"
@@ -3473,6 +3476,9 @@
             "noDataForPosition": "no street-view data for this position",
             "unknownError": "unknown error, see console"
           }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Show more items"
         }
     }
 }

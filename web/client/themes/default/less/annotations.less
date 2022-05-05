@@ -262,7 +262,8 @@
     .mapstore-annotations-panel-card-title{
         margin-top: 5px;
         text-overflow: ellipsis;
-        width: 100px;
+        width: 150px;
+        overflow: hidden;
     }
     .mapstore-side-card-desc{
         border-bottom: none;
@@ -513,7 +514,7 @@
     }
     .mapstore-annotations-info-viewer-expanded {
         flex: 1;
-        order: -1;
+        order: 2;
         border-right-width: 1px;
         border-right-style: solid;
         display: flex;
@@ -524,6 +525,7 @@
         .tab-container{
             flex: 1;
             padding-top: 8px;
+            padding-right: 8px;
             position: relative;
             overflow-y: auto;
             overflow-x: hidden;

@@ -13,7 +13,8 @@ import {
     isCoordinateEditorEnabledSelector,
     showAddAsAnnotationSelector,
     measurementSelector,
-    getValidFeatureSelector
+    getValidFeatureSelector,
+    isActiveSelector
 } from '../measurement';
 
 import {
@@ -79,5 +80,15 @@ describe('Test maptype', () => {
             }
         });
         expect(retval.feature.geometry.coordinates).toEqual( lineFeature3.geometry.coordinates );
+    });
+    it('test isActiveSelector ', () => {
+        const toolState = isActiveSelector({
+            controls: {
+                measure: {
+                    enabled: true
+                }
+            }
+        });
+        expect(toolState).toBe(true);
     });
 });

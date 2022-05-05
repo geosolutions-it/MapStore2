@@ -45,7 +45,7 @@ export const selectedServiceSelector = (state) => get(state, "catalog.selectedSe
 export const modeSelector = (state) => get(state, "catalog.mode", "view");
 export const layerErrorSelector = (state) => get(state, "catalog.layerError");
 export const searchTextSelector = (state) => get(state, "catalog.searchOptions.text", "");
-export const activeSelector = (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled");
+export const isActiveSelector = (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled");
 export const authkeyParamNameSelector = (state) => {
     return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
 };

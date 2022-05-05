@@ -55,12 +55,14 @@ describe('Share Plugin', () => {
         };
         const { containers } = getPluginForTest(SharePlugin, { controls }, {
             ToolbarPlugin: {},
-            BurgerMenuPlugin: {}
+            BurgerMenuPlugin: {},
+            SidebarMenuPlugin: {}
         });
-        expect(Object.keys(containers).length).toBe(2);
-        expect(Object.keys(containers)).toEqual(['BurgerMenu', 'Toolbar']);
+        expect(Object.keys(containers).length).toBe(3);
+        expect(Object.keys(containers)).toEqual(['BurgerMenu', 'SidebarMenu', 'Toolbar']);
         expect(containers.Toolbar).toContain({alwaysVisible: true, doNotHide: true});
-        expect(containers.BurgerMenu).toContain({position: 1000, priority: 1, doNotHide: true});
+        expect(containers.BurgerMenu).toContain({position: 1000, priority: 2, doNotHide: true});
+        expect(containers.SidebarMenu).toContain({position: 1000, priority: 1, doNotHide: true});
     });
 
     it('test Share plugin on close', (done) => {

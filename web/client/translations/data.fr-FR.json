@@ -486,6 +486,8 @@
             "toggleGroupVisibility": "Changer la visibilité du groupe",
             "displayLegendAndTools": "Afficher la légende",
             "zoomToLayerExtent": "Zoomer sur l'étendue de la couche",
+            "addAnnotations": "Ajouter des annotations",
+            "editAnnotations": "Modifier les annotations",
             "addLayer": "Ajouter une couche",
             "addLayerToGroup": "Ajouter une couche au groupe sélectionné",
             "addGroup": "Ajouter un groupe",
@@ -653,7 +655,8 @@
             "previewFormatUnsupported": "Format non pris en charge pour l'aperçu",
             "projection": "Système de coordonnées",
             "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
-            "graticule": "ajouter une grille avec des étiquettes"
+            "graticule": "ajouter une grille avec des étiquettes",
+            "additionalLayers": "Inclure les superpositions"
         },
         "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"
@@ -3463,6 +3466,9 @@
             "noDataForPosition": "pas de données Street View pour cette position",
             "unknownError": "erreur inconnue, voir console"
           }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Afficher plus d'éléments"
         }
     }
 }
