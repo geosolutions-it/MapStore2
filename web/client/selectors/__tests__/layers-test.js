@@ -804,7 +804,7 @@ describe('Test layers selectors', () => {
     });
 
     // eslint-disable-next-line no-only-tests/no-only-tests
-    it.only('test getSelectedLayers selector', () => {
+    it('test getSelectedLayers selector', () => {
         const queryableSelectedLayers = [
             {
                 type: 'wms',
