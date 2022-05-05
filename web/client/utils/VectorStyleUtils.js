@@ -709,7 +709,21 @@ export const getStyleParser = (format = 'sld') => {
     return StyleParsers[format]();
 };
 
-function msStyleToSymbolizer(style) {
+function msStyleToSymbolizer(style, feature) {
+    if (isTextStyle(style) && feature?.properties?.valueText) {
+        const fontParts = (style.font || '').split(' ');
+        return Promise.resolve({
+            kind: 'Text',
+            label: feature.properties.valueText,
+            font: [fontParts[fontParts.length - 1]],
+            size: parseFloat(style.fontSize),
+            fontStyle: style.fontStyle,
+            fontWeight: style.fontWeight,
+            color: style.fillColor,
+            haloColor: style.color,
+            haloWidth: 1
+        });
+    }
     if (style.symbolizerKind === 'Mark') {
         return Promise.resolve({
             kind: 'Mark',
@@ -789,11 +803,6 @@ function msStyleToSymbolizer(style) {
             ...(style?.dashArray && { dasharray: style.dashArray.map((value) => parseFloat(value)) })
         });
     }
-    if (isTextStyle(style) ) {
-        return Promise.resolve({
-
-        });
-    }
     return Promise.resolve({});
 }
 
@@ -861,7 +870,7 @@ export function layerToGeoStylerStyle(layer) {
             flatten(filteredFeatures.map((feature) => {
                 const styles = castArray(feature.style);
                 return styles.map((style) =>
-                    msStyleToSymbolizer(style)
+                    msStyleToSymbolizer(style, feature)
                         .then((symbolizer) => ({ symbolizer, filter: ['==', 'id', feature.properties.id] }))
                 );
             }))
