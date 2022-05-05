@@ -31,16 +31,16 @@ Replacing:
 ### naming conventions
 
 **release and tag**
-- **vYYYY.XX.mm** name of the release and tag
+- **vYYYY.XX.mm** name of the release and tag. (e.g. `v2022.01.01`) 
 - **YYYY** is the year,
 - **XX** is the incremental number of the release for the current year (starting from 01) 
 - **mm** is an incremental value (starting from 00) to increment for minor releases
 
 **stable branch**
-- **YYYY.XX.xx** name of stable branch
+- **YYYY.XX.xx** name of stable branch (e.g. `2022.01.xx` )
 - **YYYY** is the year
 - **XX** is the incremental number of the release for the current year (starting from 01) 
-- **xx** is a fixed text
+- **xx** is the fixed text `xx`
 
 ### Release procedure
 
@@ -61,17 +61,16 @@ Replacing:
 - [ ] Prepare PR for updating `CHANGELOG.md` for **master** and **stable** [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
 - [ ] Fix `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
 - [ ] Update the version of java modules on the stable branch to a stable, incremental version.
-    - [ ] Run `mvn release:update-versions -DdevelopmentVersion=<version> -Pprinting,printingbundle,release
-` to update package version, where <VERSION> is the version of the java packages (e.g. `1.2.2`).
+    - [ ] Run `mvn release:update-versions -DdevelopmentVersion=<VERSION> -Pprinting,printingbundle,release`
+    to update package version, where <VERSION> is the version of the java packages (e.g. `1.2.2`).
     - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`
-- [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp (java/web) should be deployed for new project system and product). 
-  - [ ] for mapstore-webapp use `mvn clean install deploy -f java/pom.xml`
-  - [ ] for the product use `mvn clean install deploy -f product/pom.xml` if this does not work it can be ignored
+- [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp (java/web) should be deployed for new project system). 
+  - [ ] Use `mvn clean install deploy -f java/pom.xml` to deploy `mapstore-services` and `mapstore-webapp`.
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
     * Any fix must be done on **YYYY.XX.xx**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
-    * Test creation  of a standard project and run the internal backend, with `npm run backend` and `npm start`, then check localhost:8081 that homepage is empty
+    * Test the creation of a standard project starting in from the stable branch and with the internal backend, so `npm run backend` and `npm start`, then check that an empty homepage loads correctly
 - [ ] Test [Binary](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build-NEW/) (take the mapstore2-QA-<RELEASE_BRANCH>-bin.zip, from latest build)
 - [ ] Lunch the [stable deploy](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Stable/) to install the latest stable version on official demo, remember to change version to **YYYY.XX.mm** 
 - [ ] Manually edit the `localConfig.json` on mapstore.geosolutionsgroup.com to fit the authkey for production (change from `authkey-qa` to `authkey-prod`)
@@ -81,10 +80,10 @@ Replacing:
   - [ ] to test the change has been applied, login on mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key). 
 - [ ] Commit the changelog to the stable branch **YYYY.XX.xx**
 - [ ] Create a [github draft release](https://github.com/geosolutions-it/MapStore2/releases)
-  - [ ] branch **YYYY.XX.xx** 
-  - [ ] tag **vYYYY.XX.mm** (create a new tag from UI after entering this value)
-  - [ ] release name equal to tag **vYYYY.XX.mm**  
-  - [ ] description describe the major changes and link the Changelog paragraph.
+  - [ ] `branch` **YYYY.XX.xx** 
+  - [ ] `tag` **vYYYY.XX.mm** (create a new tag from UI after entering this value)
+  - [ ] `release` name equal to tag **vYYYY.XX.mm**  
+  - [ ] `description` describe the major changes and add links of the Changelog paragraph.
 - [ ] Launch [MapStore2-Releaser](https://build.geo-solutions.it/jenkins/job/MapStore2-Releaser/) Jenkins job with **YYYY.XX.mm** for the version and **YYYY.XX.xx** for the branch to build and  **wait the end**). **Note:** Using the MapStore2 Releaser allows to write the correct version number into the binary packages.
     - [ ] Get the [latest mapstore.war](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/product/target/mapstore.war) from the Releaser Jenkins build 
     - [ ] Get the [latest mapstore2-YYYY.XX.mm-bin.zip](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/release/target/) from the Releaser Jenkins build
@@ -98,8 +97,8 @@ Replacing:
 - [ ] Prepare a PR towards master branch **YYYY.XX.xx** in order to reset versions of java modules to `-SNAPSHOT`
     - `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`
     where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT).
-    - for geostore check [here](https://github.com/geosolutions-it/geostore/blob/master/pom.xml) what to use
-    - for proxy check [here](https://github.com/geosolutions-it/http-proxy/blob/master/pom.xml) what to use 
+    make sure that only mapstore-services has changed
+
 - [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for https://github.com/geosolutions-it/MapStoreExtension with the same name and tag
   - [ ] target of the release is **master** branch
   - [ ] tag is **vYYYY.XX.mm**
