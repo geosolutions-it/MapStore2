@@ -219,7 +219,7 @@ class MetadataExplorerComponent extends React.Component {
             <ResponsivePanel
                 containerStyle={this.props.dockStyle}
                 containerId="catalog-root"
-                className={this.props.active ? 'catalog-active' : ''}
+                containerClassName={this.props.active ? 'catalog-active' : ''}
                 open={this.props.active}
                 size={this.props.width}
                 position="right"
