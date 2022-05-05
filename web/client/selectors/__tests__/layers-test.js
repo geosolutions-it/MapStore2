@@ -9,6 +9,7 @@
 import expect from 'expect';
 
 import {
+    getSelectedLayers,
     getLayerFromName,
     getLayerFromId,
     layersSelector,
@@ -800,5 +801,52 @@ describe('Test layers selectors', () => {
         };
         const props = getAdditionalLayerFromId(state, 'layer_001');
         expect(props.id).toBe('layer_001');
+    });
+
+    // eslint-disable-next-line no-only-tests/no-only-tests
+    it.only('test getSelectedLayers selector', () => {
+        const queryableSelectedLayers = [
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:states__7'
+            },
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:Types__6'
+            }
+        ];
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'mapnik__0',
+                        group: 'background',
+                        type: 'osm',
+                        visibility: true
+                    },
+                    {
+                        id: 'Night2012__1',
+                        group: 'background',
+                        type: 'tileprovider',
+                        visibility: false
+                    },
+                    {
+                        type: 'wms',
+                        visibility: true,
+                        id: 'mapstore:DE_USNG_UTM18__8'
+                    },
+                    ...queryableSelectedLayers
+                ],
+                selected: [
+                    'mapstore:states__7',
+                    'mapstore:Types__6',
+                    'mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal__5',
+                    'Default'
+                ]
+            }
+        };
+        expect(getSelectedLayers(state)).toEqual(queryableSelectedLayers);
     });
 });
