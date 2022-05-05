@@ -324,10 +324,7 @@ export default {
                         currentLocale: 'en-US',
                         overrideOptions: {},
                         items: [],
-                        printingService: getDefaultPrintingService(),
-                        overlayLayersOptions: {
-                            "enabled": true
-                        }
+                        printingService: getDefaultPrintingService()
                     };
 
                     state = {
