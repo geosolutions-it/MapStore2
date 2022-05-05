@@ -85,7 +85,8 @@ export default createPlugin('DeleteMap', {
                 const { canDelete = false } = state?.map?.present?.info || {};
                 return canDelete ? {} : { style: {display: "none"} };
             },
-            priority: 2
+            priority: 2,
+            doNotHide: true
         },
         SidebarMenu: {
             name: 'mapDelete',
@@ -99,7 +100,8 @@ export default createPlugin('DeleteMap', {
                 const { canDelete = false } = state?.map?.present?.info || {};
                 return canDelete ? {} : { style: {display: "none"} };
             },
-            priority: 1
+            priority: 1,
+            doNotHide: true
         }
     }
 });
