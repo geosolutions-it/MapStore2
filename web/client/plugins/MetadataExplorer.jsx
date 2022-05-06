@@ -75,6 +75,7 @@ import {
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
+import {burgerMenuSelector} from "../selectors/controls";
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
@@ -296,7 +297,17 @@ export default {
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
             doNotHide: true,
-            priority: 2
+            priority: 1
+        },
+        BackgroundSelector: {
+            name: 'MetadataExplorer',
+            doNotHide: true,
+            priority: 1
+        },
+        TOC: {
+            name: 'MetadataExplorer',
+            doNotHide: true,
+            priority: 1
         },
         SidebarMenu: {
             name: 'metadataexplorer',
@@ -305,6 +316,9 @@ export default {
             tooltip: "catalog.tooltip",
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+            selector: (state) => ({
+                style: { display: burgerMenuSelector(state) ? 'none' : null }
+            }),
             toggle: true,
             doNotHide: true,
             priority: 1
