@@ -72,9 +72,10 @@ export const animationStepMove = (direction) => ({
     direction
 });
 
-export const updateMetadata = ({next, previous, forTime}) => ({
+export const updateMetadata = ({next, previous, forTime, timeIntervalData}) => ({
     type: UPDATE_METADATA,
     forTime,
     next,
-    previous
+    previous,
+    timeIntervalData
 });

@@ -1,6 +1,7 @@
 import { REMOVE_NODE } from '../actions/layers';
 import { RESET_CONTROLS } from '../actions/controls';
 import { RANGE_CHANGED, RANGE_DATA_LOADED, LOADING, SELECT_LAYER, INIT_SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC, INIT_TIMELINE, SET_SNAP_TYPE } from '../actions/timeline';
+import { UPDATE_METADATA } from '../actions/playback';
 import { set } from '../utils/ImmutableUtils';
 import { assign, pickBy, has } from 'lodash';
 
@@ -52,7 +53,8 @@ export default (state = {
     settings: {
         autoSelect: true, // selects the first layer available as guide layer. This is a configuration only setting for now
         collapsed: false,
-        snapType: "start" // in case of interval values snapping is defaulted to the start of the interval
+        snapType: "start", // in case of interval values snapping is defaulted to the start of the interval
+        snapRadioButtonEnabled: false // initial state of snapping radio button is disabled, will be enabled according to layer time data
     }
 }, action) => {
     switch (action.type) {
@@ -82,7 +84,22 @@ export default (state = {
     case LOADING: {
         return action.layerId ? set(`loading[${action.layerId}]`, action.loading, state) : set(`loading.timeline`, action.loading, state);
     }
-    case SELECT_LAYER: case INIT_SELECT_LAYER: {
+    case SELECT_LAYER: {
+        const newState = {
+            ...state,
+            selectedLayer: action.layerId,
+            settings: {
+                ...state.settings,
+                snapType: "start",
+                snapRadioButtonEnabled: false
+            }
+        };
+        return newState;
+    }
+    case UPDATE_METADATA: {
+        return set('settings.snapRadioButtonEnabled', action.timeIntervalData, state);
+    }
+    case INIT_SELECT_LAYER: {
         return set('selectedLayer', action.layerId, state);
     }
     case REMOVE_NODE: {

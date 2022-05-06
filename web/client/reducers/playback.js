@@ -59,7 +59,7 @@ export default (state = { status: STATUS.STOP, currentFrame: -1, settings: DEFAU
         return set(`settings[${action.name}]`, action.value, state);
     }
     case UPDATE_METADATA: {
-        return set('metadata', { next: action.next, previous: action.previous, forTime: action.forTime}, state);
+        return set('metadata', { next: action.next, previous: action.previous, forTime: action.forTime, timeIntervalData: action.timeIntervalData}, state);
     }
     case RESET_CONTROLS: {
         return set('metadata', undefined, set('framesLoading', undefined, set('playbackRange', undefined, set('frames', undefined,

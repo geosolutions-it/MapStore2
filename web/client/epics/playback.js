@@ -83,9 +83,11 @@ const domainArgs = (getState, paginationOptions = {}) => {
     const layerUrl = selectedLayerUrl(getState());
     const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
     const shouldFilter = statusSelector(getState()) === STATUS.PLAY || statusSelector(getState()) === STATUS.PAUSE;
+    const fromEnd = snapTypeSelector(getState()) === 'end';
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE, // default, can be overridden by pagination options
         time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
+        fromEnd,
         ...paginationOptions
     },
     multidimOptionsSelectorCreator(id)(getState())
@@ -151,11 +153,10 @@ const getTimeIntervalDomains = (getState, domainsArray) => {
     let intervalDomains = domainsArray;
     const playbackRange = playbackRangeSelector(getState()) || {};
     const snapTo = snapTypeSelector(getState());
-    if (snapTo) {
-        const startPlaybackTime = playbackRange?.startPlaybackTime;
-        intervalDomains = getDatesInRange(domainsArray, startPlaybackTime, snapTo);
-    }
-    return intervalDomains;
+    const endPlaybackTime = playbackRange?.endPlaybackTime;
+    const startPlaybackTime =  playbackRange?.startPlaybackTime;
+    intervalDomains = snapTo && snapTo === 'end' ?  domainsArray.map(date => date.split('/')[1]) : domainsArray.map(date => date.split('/')[0]);
+    return startPlaybackTime && endPlaybackTime ? getDatesInRange(intervalDomains, startPlaybackTime, endPlaybackTime) : intervalDomains;
 };
 
 /**
@@ -180,7 +181,8 @@ const getAnimationFrames = (getState, options) => {
             // if there is a selected layer check for time intervals (start/end)
             // and filter-out domain dates falling outisde the start/end playBack time
             const selectedLayer = selectedLayerSelector(getState());
-            return selectedLayer ? getTimeIntervalDomains(getState, domainsArray) : domainsArray;
+            const x = selectedLayer ? getTimeIntervalDomains(getState, domainsArray) : domainsArray;
+            return x;
         });
     }
     return createAnimationValues(getState, options);
@@ -226,7 +228,8 @@ export const retrieveFramesForPlayback = (action$, { getState = () => { } } = {}
                     && playbackRangeSelector(getState()).endPlaybackTime)
                     ? undefined
                 // ...otherwise, start from the current time (start animation from cursor position)
-                    : currentTimeSelector(getState())
+                    : currentTimeSelector(getState()),
+            ...(snapTypeSelector(getState()) === 'end' ? {fromEnd: true} : {})
         })
             .map((frames) => setFrames(frames))
             .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
@@ -242,13 +245,14 @@ export const retrieveFramesForPlayback = (action$, { getState = () => { } } = {}
                 action$
                     .ofType(SET_CURRENT_FRAME)
                     .filter(({ frame }) => frame % BUFFER_SIZE === ((BUFFER_SIZE - PRELOAD_BEFORE)))
-                    .switchMap(() =>
-                        getAnimationFrames(getState, {
-                            fromValue: lastFrameSelector(getState())
+                    .switchMap(() => {
+                        return getAnimationFrames(getState, {
+                            fromValue: lastFrameSelector(getState()),
+                            ...(snapTypeSelector(getState()) === 'end' ? {fromEnd: true} : {})
                         })
                             .map(appendFrames)
-                            .let(wrapStartStop(framesLoading(true), framesLoading(false)))
-                    )
+                            .let(wrapStartStop(framesLoading(true), framesLoading(false)));
+                    })
             )
             .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
             // this removes loading mask even if the STOP action is triggered before frame end (empty result)
@@ -320,10 +324,13 @@ export const playbackMoveStep = (action$, { getState = () => { } } = {}) =>
                 return Rx.Observable.of(direction > 0 ? md.next : md.previous);
             }
             // if not downloaded yet, download it
-            return getAnimationFrames(getState, { limit: 1, sort: direction > 0 ? "asc" : "desc", fromValue: currentTimeSelector(getState()) })
+            return getAnimationFrames(getState, { limit: 1, sort: direction > 0 ? "asc" : "desc", fromValue: currentTimeSelector(getState()), ...(snapTypeSelector(getState()) === 'end' ? {fromEnd: true} : {}) })
                 .map(([t] = []) => t);
         }).filter(t => !!t)
-        .map(t => moveTime(t));
+        .map(t => {
+            const time = (snapTypeSelector(getState()) === 'end' ? t.split('/')[1] : t.split('/')[0]) ?? t;
+            return moveTime(time);
+        });
 /**
  * Pre-loads next and previous values for the current time, when change.
  * This is useful to enable/disable playback buttons in guide-layer mode. The state updated by this
@@ -347,12 +354,16 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
                 getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
-            ).map(([next, previous]) =>
-                updateMetadata({
+            ).map(([next, previous]) => {
+                const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
+                return updateMetadata({
                     forTime: time,
                     next,
-                    previous
-                })
+                    previous,
+                    timeIntervalData: isTimeIntervalData
+                });
+            }
+
             );
         });
 /**

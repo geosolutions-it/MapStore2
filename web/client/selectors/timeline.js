@@ -35,6 +35,8 @@ export const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSe
 
 export const snapTypeSelector = state => get(state, "timeline.settings.snapType") || "start";
 
+export const snapRadioButtonEnabledSelector = state => get(state, "timeline.settings.snapRadioButtonEnabled") || false;
+
 /**
  * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
  * @return the flag of sync of the timeline with the map viewport

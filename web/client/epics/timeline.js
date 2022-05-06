@@ -61,9 +61,11 @@ const domainArgs = (state, paginationOptions = {}) => {
     const layerName = selectedLayerName(state);
     const layerUrl = selectedLayerUrl(state);
     const bboxOptions = multidimOptionsSelectorCreator(id)(state);
+    const fromEnd = snapTypeSelector(state) === 'end';
     return [layerUrl, layerName, "time", {
         limit: 1,
-        ...paginationOptions
+        ...paginationOptions,
+        fromEnd
     }, bboxOptions];
 };
 /**
@@ -77,10 +79,10 @@ const snapTime = (state, group, time) => {
         // do parallel request and return and observable that emit the correct value/ time as it is by default
         return Rx.Observable.forkJoin(
             // TODO: find out a way to optimize and do only one request
-            getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))
+            getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
-            getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time }))
+            getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
         )
