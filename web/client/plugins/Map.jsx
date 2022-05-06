@@ -222,8 +222,7 @@ class MapPlugin extends React.Component {
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
-        onMapTypeLoaded: PropTypes.func,
-        sidebar: PropTypes.bool
+        onMapTypeLoaded: PropTypes.func
     };
 
     static defaultProps = {
@@ -262,8 +261,7 @@ class MapPlugin extends React.Component {
         onResolutionsChange: () => {},
         items: [],
         onLoadingMapPlugins: () => {},
-        onMapTypeLoaded: () => {},
-        sidebar: false
+        onMapTypeLoaded: () => {}
     };
     state = {
         canRender: true
@@ -410,7 +408,6 @@ class MapPlugin extends React.Component {
                     zoomControl={this.props.zoomControl}
                     onResolutionsChange={this.props.onResolutionsChange}
                     errorPanel={ErrorPanel}
-                    sidebar={this.props.sidebar}
                 >
                     {this.renderLayers()}
                     {this.renderSupportTools()}
