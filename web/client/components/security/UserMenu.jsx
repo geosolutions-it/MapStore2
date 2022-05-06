@@ -94,7 +94,7 @@ class UserMenu extends React.Component {
         renderUnsavedMapChangesDialog: true,
         renderButtonText: false,
         hidden: false,
-        displayUnsavedDialog: true
+        displayUnsavedDialog: false
     };
 
     renderGuestTools = () => {
