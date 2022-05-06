@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import ContainerDimensions from 'react-container-dimensions';
 import {DropdownButton, Glyphicon, MenuItem} from "react-bootstrap";
 import {connect} from "react-redux";
-import assign from "object-assign";
 import {createSelector} from "reselect";
 import {bindActionCreators} from "redux";
 
@@ -83,6 +82,7 @@ class SidebarMenu extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        const markedAsInactive = nextProps.isActive === false;
         const newSize = nextProps.state.map?.present?.size?.height !== this.props.state.map?.present?.size?.height;
         const newHeight = nextProps.style.bottom !== this.props.style.bottom;
         const newItems = nextProps.items !== this.props.items;
@@ -93,7 +93,7 @@ class SidebarMenu extends React.Component {
             }
             return prev;
         }, []).length > 0 : false;
-        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState;
+        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState || markedAsInactive;
     }
 
     componentDidUpdate(prevProps) {
@@ -121,19 +121,17 @@ class SidebarMenu extends React.Component {
         return { ...style, height: hasBottomOffset ? 'auto' : '100%', maxHeight: style?.height ?? null, bottom: hasBottomOffset ? `calc(${style.bottom} + 30px)` : null };
     };
 
-    getPanels = items => {
-        return items.filter((item) => item.panel)
-            .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
-                items.filter((item) => item.tools).reduce((previous, current) => {
-                    return previous.concat(
-                        current.tools.map((tool, index) => ({
-                            name: current.name + index,
-                            panel: tool,
-                            cfg: current.cfg.toolsCfg ? current.cfg.toolsCfg[index] : {}
-                        }))
-                    );
-                }, [])
+    getPanels = () => {
+        return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
+            return previous.concat(
+                current.tools.map((tool, index) => ({
+                    name: current.name + index,
+                    panel: tool,
+                    cfg: current?.cfg?.toolsCfg?.[index] || {}
+                }))
             );
+        }, []);
+
     };
 
     visibleItems = (target) => {
