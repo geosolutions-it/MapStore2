@@ -96,6 +96,7 @@ class DefaultLayer extends React.Component {
     };
 
     getVisibilityMessage = () => {
+        if (this.props.node.exclusiveMapType) return this.props.node?.type === '3dtiles' && 'toc.notVisibleSwitchTo3D';
         const maxResolution = this.props.node.maxResolution || Infinity;
         return this.props.resolution >=  maxResolution
             ? 'toc.notVisibleZoomIn'
@@ -181,7 +182,7 @@ class DefaultLayer extends React.Component {
                     onContextMenu={this.props.onContextMenu}
                 />
                 {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
-                {!isInsideResolutionsLimits(this.props.node, this.props.resolution) && <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/>}
+                {!isInsideResolutionsLimits(this.props.node, this.props.resolution) || this.props.node.exclusiveMapType ? <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/> : null}
                 {this.props.indicators ? this.renderIndicators() : null}
             </div>
         );
@@ -196,7 +197,7 @@ class DefaultLayer extends React.Component {
 
     render() {
         let {children, propertiesChangeHandler, onToggle, connectDragSource, connectDropTarget, ...other } = this.props;
-        const hide = !this.props.node.visibility || this.props.node.invalid || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
+        const hide = !this.props.node.visibility || this.props.node.invalid || this.props.node.exclusiveMapType || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
         const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
