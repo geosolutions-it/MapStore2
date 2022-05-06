@@ -803,7 +803,6 @@ describe('Test layers selectors', () => {
         expect(props.id).toBe('layer_001');
     });
 
-    // eslint-disable-next-line no-only-tests/no-only-tests
     it('test getSelectedLayers selector', () => {
         const queryableSelectedLayers = [
             {
