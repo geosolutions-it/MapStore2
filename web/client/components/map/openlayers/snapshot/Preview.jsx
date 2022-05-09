@@ -113,6 +113,7 @@ export default class GrabLMap extends React.Component {
                 style={{
                     maxWidth: "400px",
                     maxHeight: "400px",
+                    width: "100%",
                     visibility: this.props.active ? "block" : "none"
                 }}
                 ref="canvas" />

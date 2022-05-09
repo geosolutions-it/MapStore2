@@ -47,7 +47,7 @@ import {
     setEditingFeature
 } from '../../actions/annotations';
 
-import { TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
 import { STYLE_POINT_MARKER } from '../../utils/AnnotationsUtils';
 import annotationsEpics from '../annotations';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
@@ -1156,7 +1156,7 @@ describe('annotations Epics', () => {
         store.subscribe(() => {
             const actions = store.getActions();
             if (actions.length >= 2) {
-                expect(actions[1].type).toBe(TOGGLE_CONTROL);
+                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
                 expect(actions[1].control).toBe("measure");
                 done();
             }

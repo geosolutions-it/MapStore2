@@ -33,7 +33,7 @@ describe('MapTemplates Plugins', () => {
             }
         });
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
-        expect(document.getElementsByClassName('map-templates-panel')[0]).toExist();
+        expect(document.getElementsByClassName('map-templates-loader')[0]).toExist();
     });
     it('shows MapTemplates loaded, empty', () => {
         const { Plugin } = getPluginForTest(MapTemplates, {

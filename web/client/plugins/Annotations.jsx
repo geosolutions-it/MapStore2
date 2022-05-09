@@ -9,14 +9,10 @@
 import React from 'react';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
-import { Glyphicon } from 'react-bootstrap';
 import { createSelector } from 'reselect';
 import isEmpty from 'lodash/isEmpty';
-import ContainerDimensions from 'react-container-dimensions';
-import Dock from 'react-dock';
 
 import { createPlugin, connect } from '../utils/PluginsUtils';
-import Message from '../components/I18N/Message';
 import { on, toggleControl } from '../actions/controls';
 import AnnotationsEditorComp from '../components/mapcontrols/annotations/AnnotationsEditor';
 import AnnotationsComp from '../components/mapcontrols/annotations/Annotations';
@@ -86,6 +82,11 @@ import { annotationsInfoSelector, annotationsListSelector } from '../selectors/a
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { ANNOTATIONS } from '../utils/AnnotationsUtils';
 import { registerRowViewer } from '../utils/MapInfoUtils';
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import {Glyphicon, Tooltip} from "react-bootstrap";
+import Button from "../components/misc/Button";
+import OverlayTrigger from "../components/misc/OverlayTrigger";
+import Message from "../components/I18N/Message";
 
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
@@ -191,6 +192,7 @@ class AnnotationsPanel extends React.Component {
         buttonStyle: PropTypes.object,
         style: PropTypes.object,
         dockProps: PropTypes.object,
+        dockStyle: PropTypes.object,
 
         // side panel properties
         width: PropTypes.number
@@ -213,12 +215,10 @@ class AnnotationsPanel extends React.Component {
         closeGlyph: "1-close",
 
         // side panel properties
-        width: 330,
+        width: 300,
         dockProps: {
             dimMode: "none",
-            size: 0.30,
-            fluid: true,
-            position: "right",
+            position: "left",
             zIndex: 1030
         },
         dockStyle: {}
@@ -235,19 +235,18 @@ class AnnotationsPanel extends React.Component {
 
     render() {
         return this.props.active ? (
-            <ContainerDimensions>
-                { ({ width }) =>
-                    <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
-                        <Dock
-                            fluid
-                            dockStyle={this.props.dockStyle} {...this.props.dockProps}
-                            isVisible={this.props.active}
-                            size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                            <Annotations {...this.props} width={this.props.width}/>
-                        </Dock>
-                    </span>
-                }
-            </ContainerDimensions>
+            <ResponsivePanel
+                containerId="annotations-panel"
+                className="ms-annotations-panel"
+                containerStyle={this.props.dockStyle}
+                hideHeader
+                style={this.props.dockStyle}
+                open={this.props.active}
+                size={this.props.width}
+                {...this.props.dockProps}
+            >
+                <Annotations {...this.props} width={this.props.width}/>
+            </ResponsivePanel>
         ) : null;
     }
 }
@@ -308,7 +307,7 @@ const annotationsSelector = createSelector([
 ], (active, dockStyle, list) => ({
     active,
     dockStyle,
-    width: !isEmpty(list?.selected) ? 660 : 330
+    width: !isEmpty(list?.selected) ? 600 : 300
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {
@@ -318,18 +317,45 @@ const AnnotationsPlugin = connect(annotationsSelector, {
 export default createPlugin('Annotations', {
     component: assign(AnnotationsPlugin, {
         disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }"
-    }, {
-        BurgerMenu: {
-            name: 'annotations',
-            position: 40,
-            text: <Message msgId="annotationsbutton"/>,
-            tooltip: "annotations.tooltip",
-            icon: <Glyphicon glyph="comment"/>,
-            action: conditionalToggle,
-            priority: 2,
-            doNotHide: true
-        }
     }),
+    containers: {
+        TOC: {
+            doNotHide: true,
+            name: "Annotations",
+            target: 'toolbar',
+            selector: () => true,
+            Component: connect(() => {}, {
+                onClick: conditionalToggle
+            })(({onClick, layers, selectedLayers, status}) => {
+                if (status === 'DESELECT' && layers.filter(l => l.id === 'annotations').length === 0) {
+                    return (<OverlayTrigger
+                        key="annotations"
+                        placement="top"
+                        overlay={<Tooltip
+                            id="legend-tooltip-annotations"><Message msgId="toc.addAnnotations"/></Tooltip>}>
+                        <Button key="annotations" bsStyle={'primary'} className="square-button-md"
+                            onClick={onClick}>
+                            <Glyphicon glyph="comment"/>
+                        </Button>
+                    </OverlayTrigger>);
+                }
+                if (selectedLayers[0]?.id === 'annotations') {
+                    return (
+                        <OverlayTrigger
+                            key="annotations-edit"
+                            placement="top"
+                            overlay={<Tooltip
+                                id="legend-tooltip-annotations-edit"><Message msgId="toc.editAnnotations"/></Tooltip>}>
+                            <Button key="annotations" bsStyle={'primary'} className="square-button-md"
+                                onClick={onClick}>
+                                <Glyphicon glyph="pencil"/>
+                            </Button>
+                        </OverlayTrigger>);
+                }
+                return false;
+            })
+        }
+    },
     reducers: {
         annotations: annotationsReducer
     },

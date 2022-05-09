@@ -29,11 +29,14 @@ class UserMenu extends React.Component {
         showAccountInfo: PropTypes.bool,
         showPasswordChange: PropTypes.bool,
         showLogout: PropTypes.bool,
+        hidden: PropTypes.bool,
+        displayUnsavedDialog: PropTypes.bool,
         /**
          * displayAttributes function to filter attributes to show
          */
         displayAttributes: PropTypes.func,
         bsStyle: PropTypes.string,
+        tooltipPosition: PropTypes.string,
         renderButtonText: PropTypes.bool,
         nav: PropTypes.bool,
         menuProps: PropTypes.object,
@@ -48,18 +51,21 @@ class UserMenu extends React.Component {
         onCheckMapChanges: PropTypes.func,
         className: PropTypes.string,
         renderUnsavedMapChangesDialog: PropTypes.bool,
-        onLogoutConfirm: PropTypes.func
+        onLogoutConfirm: PropTypes.func,
+        onCloseUnsavedDialog: PropTypes.func
     };
 
     static defaultProps = {
         user: {
         },
+        tooltipPosition: 'bottom',
         showAccountInfo: true,
         showPasswordChange: true,
         showLogout: true,
         onLogout: () => {},
         onCheckMapChanges: () => {},
         onPasswordChange: () => {},
+        onCloseUnsavedDialog: () => {},
         displayName: "name",
         bsStyle: "primary",
         displayAttributes: (attr) => {
@@ -85,21 +91,11 @@ class UserMenu extends React.Component {
             useModal: false,
             closeGlyph: "1-close"
         }],
-        renderUnsavedMapChangesDialog: true
+        renderUnsavedMapChangesDialog: true,
+        renderButtonText: false,
+        hidden: false,
+        displayUnsavedDialog: false
     };
-
-    checkUnsavedChanges = () => {
-        if (this.props.renderUnsavedMapChangesDialog) {
-            this.props.onCheckMapChanges(this.props.onLogout);
-        } else {
-            this.logout();
-        }
-    }
-
-    logout = () => {
-        this.props.onCloseUnsavedDialog();
-        this.props.onLogout();
-    }
 
     renderGuestTools = () => {
         let DropDown = this.props.nav ? TNavDropdown : TDropdownButton;
@@ -111,7 +107,7 @@ class UserMenu extends React.Component {
                 title={this.renderButtonText()}
                 id="dropdown-basic-primary"
                 tooltipId="user.login"
-                tooltipPosition="bottom"
+                tooltipPosition={this.props.tooltipPosition}
                 {...this.props.menuProps}>
                 <MenuItem onClick={this.props.onShowLogin}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
             </DropDown>);
@@ -141,7 +137,7 @@ class UserMenu extends React.Component {
                     bsStyle="success"
                     title={this.renderButtonText()}
                     tooltipId="user.userMenu"
-                    tooltipPosition="bottom"
+                    tooltipPosition={this.props.tooltipPosition}
                     {...this.props.menuProps}
                 >
                     <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
@@ -174,12 +170,26 @@ class UserMenu extends React.Component {
     renderButtonText = () => {
 
         return this.props.renderButtonContent ?
-            this.props.renderButtonContent() :
+            this.props.renderButtonContent(this.props) :
             [<Glyphicon glyph="user" />, this.props.renderButtonText ? this.props.user && this.props.user[this.props.displayName] || "Guest" : null];
     };
 
     render() {
+        if (this.props.hidden) return false;
         return this.props.user && this.props.user[this.props.displayName] ? this.renderLoggedTools() : this.renderGuestTools();
+    }
+
+    logout = () => {
+        this.props.onCloseUnsavedDialog();
+        this.props.onLogout();
+    }
+
+    checkUnsavedChanges = () => {
+        if (this.props.renderUnsavedMapChangesDialog) {
+            this.props.onCheckMapChanges(this.props.onLogout);
+        } else {
+            this.logout();
+        }
     }
 }
 

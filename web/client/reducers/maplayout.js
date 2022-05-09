@@ -17,11 +17,11 @@ import assign from 'object-assign';
  *
  * @memberof reducers
  */
-function mapLayout(state = { layout: {}, boundingMapRect: {} }, action) {
+function mapLayout(state = { layout: {}, boundingMapRect: {}, boundingSidebarRect: {} }, action) {
     switch (action.type) {
     case UPDATE_MAP_LAYOUT: {
-        const {boundingMapRect = {}, ...layout} = action.layout;
-        return assign({}, state, {layout: assign({}, layout, layout), boundingMapRect: {...boundingMapRect}});
+        const {boundingMapRect = {}, boundingSidebarRect = {}, ...layout} = action.layout;
+        return assign({}, state, {layout: assign({}, layout, layout), boundingMapRect: {...boundingMapRect}, boundingSidebarRect: {...boundingSidebarRect}});
     }
     default:
         return state;

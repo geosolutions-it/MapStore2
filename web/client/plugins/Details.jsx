@@ -31,6 +31,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 import details from '../reducers/details';
 import * as epics from '../epics/details';
+import {createStructuredSelector} from "reselect";
 
 /**
  * Allow to show details for the map.
@@ -70,6 +71,7 @@ const DetailsPlugin = ({
             {viewer}
         </ResizableModal> :
         <DetailsPanel
+            width={550}
             dockStyle={dockStyle}
             active={active}
             onClose={onClose}>
@@ -78,11 +80,11 @@ const DetailsPlugin = ({
 };
 
 export default createPlugin('Details', {
-    component: connect((state) => ({
-        active: get(state, "controls.details.enabled"),
-        dockStyle: mapLayoutValuesSelector(state, {height: true}),
-        detailsText: detailsTextSelector(state),
-        showAsModal: mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
+    component: connect(createStructuredSelector({
+        active: state => get(state, "controls.details.enabled"),
+        dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
+        detailsText: detailsTextSelector,
+        showAsModal: state => mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
     }), {
         onClose: closeDetailsPanel
     })(DetailsPlugin),
@@ -90,7 +92,7 @@ export default createPlugin('Details', {
         BurgerMenu: {
             name: 'details',
             position: 1000,
-            priority: 1,
+            priority: 2,
             doNotHide: true,
             text: <Message msgId="details.title"/>,
             tooltip: "details.tooltip",
@@ -122,6 +124,30 @@ export default createPlugin('Details', {
                 }
                 return { style: {display: "none"} };
             }
+        },
+        SidebarMenu: {
+            name: "details",
+            position: 4,
+            text: <Message msgId="details.title"/>,
+            tooltip: "details.tooltip",
+            alwaysVisible: true,
+            icon: <Glyphicon glyph="sheet"/>,
+            action: openDetailsPanel,
+            selector: (state) => {
+                const mapId = mapIdSelector(state);
+                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                if (detailsUri) {
+                    return {
+                        bsStyle: state.controls.details && state.controls.details.enabled ? 'primary' : 'tray',
+                        active: state.controls.details && state.controls.details.enabled || false
+                    };
+                }
+                return {
+                    style: {display: "none"}
+                };
+            },
+            doNotHide: true,
+            priority: 1
         }
     },
     epics,

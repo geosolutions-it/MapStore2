@@ -84,7 +84,24 @@ export default createPlugin('DeleteMap', {
             selector: (state) => {
                 const { canDelete = false } = state?.map?.present?.info || {};
                 return canDelete ? {} : { style: {display: "none"} };
-            }
+            },
+            priority: 2,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'mapDelete',
+            position: 36,
+            text: <Message msgId="map.mapDelete"/>,
+            icon: <Glyphicon glyph="trash"/>,
+            action: toggleControl.bind(null, 'mapDelete', null),
+            toggle: true,
+            tooltip: "manager.deleteMap",
+            selector: (state) => {
+                const { canDelete = false } = state?.map?.present?.info || {};
+                return canDelete ? {} : { style: {display: "none"} };
+            },
+            priority: 1,
+            doNotHide: true
         }
     }
 });

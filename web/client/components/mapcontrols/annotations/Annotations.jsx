@@ -268,7 +268,8 @@ class Annotations extends React.Component {
                 }}
                 btnGroupProps={{
                     style: {
-                        margin: 10
+                        margin: 10,
+                        whiteSpace: 'nowrap'
                     }
                 }}
                 buttons={[
@@ -379,16 +380,16 @@ class Annotations extends React.Component {
             <div style={this.props.styling || { width: '100%' }}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <div>
-                        <Button className="square-button no-events">
-                            <Glyphicon glyph="comment"/>
+                        <Button className="square-button no-border" onClick={this.props.toggleControl} >
+                            <Glyphicon glyph="1-close"/>
                         </Button>
                     </div>
                     <div style={{flex: "1 1 0%", padding: 8, textAlign: "center"}}>
                         <h4><Message msgId="annotations.title"/></h4>
                     </div>
                     <div>
-                        <Button className="square-button no-border" onClick={this.props.toggleControl} >
-                            <Glyphicon glyph="1-close"/>
+                        <Button className="square-button no-events">
+                            <Glyphicon glyph="comment"/>
                         </Button>
                     </div>
                 </div>

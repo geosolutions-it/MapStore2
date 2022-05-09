@@ -21,10 +21,11 @@ import { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV
 import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
 
-const RIGHT_MARGIN = 70;
+const RIGHT_MARGIN = 55;
 import { widthProvider, heightProvider } from '../components/layout/enhancers/gridLayout';
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
 
 const WidgetsView =
 compose(
@@ -35,12 +36,14 @@ compose(
             getFloatingWidgetsLayout,
             getMaximizedState,
             dependenciesSelector,
-            (id, widgets, layouts, maximized, dependencies) => ({
+            (state) => mapLayoutValuesSelector(state, { right: true}),
+            (id, widgets, layouts, maximized, dependencies, mapLayout) => ({
                 id,
                 widgets,
                 layouts,
                 maximized,
-                dependencies
+                dependencies,
+                mapLayout
             })
         ), {
             editWidget,
@@ -57,7 +60,8 @@ compose(
     compose(
         heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
         widthProvider({ overrideWidthProvider: false }),
-        withProps(({width, height, maximized} = {}) => {
+        withProps(({width, height, maximized, mapLayout} = {}) => {
+            const rightOffset = mapLayout?.right ?? 0;
             const divHeight = height - 120;
             const nRows = 4;
             const rowHeight = Math.floor(divHeight / nRows - 20);
@@ -78,7 +82,7 @@ compose(
                 breakpoints: { xxs: 0 },
                 cols: { xxs: 1 }
             } : {};
-            const viewWidth = width && width > 800 ? width - (500 + RIGHT_MARGIN) : width - RIGHT_MARGIN;
+            const viewWidth = width && width > 800 ? width - (500 + rightOffset + RIGHT_MARGIN) : width - rightOffset - RIGHT_MARGIN;
             const widthOptions = width ? {width: viewWidth - 1} : {};
             return ({
                 rowHeight,

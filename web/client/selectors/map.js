@@ -9,7 +9,7 @@
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 
 import { createSelector } from 'reselect';
-import { get } from 'lodash';
+import {get, memoize} from 'lodash';
 import {detectIdentifyInMapPopUp} from "../utils/MapUtils";
 
 /**
@@ -95,6 +95,19 @@ export const mapVersionSelector = (state) => state.map && state.map.present && s
  * @return {string} name/title of the map
  */
 export const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
+
+export const mapSizeSelector = (state) => state?.map?.present?.size ?? 0;
+
+export const mapSizeValuesSelector = memoize((attributes = {}) => createSelector(
+    mapSizeSelector,
+    (sizes) => {
+        return sizes && Object.keys(sizes).filter(key =>
+            attributes[key]).reduce((a, key) => {
+            return ({...a, [key]: sizes[key]});
+        },
+        {}) || {};
+    }
+), (attributes) => JSON.stringify(attributes));
 
 export const mouseMoveListenerSelector = (state) => get(mapSelector(state), 'eventListeners.mousemove', []);
 

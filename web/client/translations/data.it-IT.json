@@ -486,6 +486,8 @@
             "toggleGroupVisibility": "Attiva o disattiva la visibilità del gruppo",
             "displayLegendAndTools": "Visualizza legenda",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
+            "addAnnotations": "Aggiungi annotazioni",
+            "editAnnotations": "Modifica annotazioni",
             "addLayer": "Aggiungi Livello",
             "addLayerToGroup": "Aggiungi livello al gruppo selezionato",
             "addGroup": "Aggiungi Gruppo",
@@ -653,7 +655,8 @@
             "previewFormatUnsupported": "Formato non supportato per la preview",
             "projection": "Sistema di coordinate",
             "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo",
-            "graticule": "aggiungi griglia con label"
+            "graticule": "aggiungi griglia con label",
+            "additionalLayers": "Includi sovrapposizioni"
         },
         "backgroundSwitcher":{
             "tooltip": "Scegli lo sfondo"
@@ -3463,6 +3466,9 @@
             "noDataForPosition": "Non ci sono dati Street View per questa posizione",
             "unknownError": "Errore sconosciuto"
           }
-      }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Mostra più elementi"
+        }
     }
 }

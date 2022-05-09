@@ -80,13 +80,14 @@ import { MEASURE_TYPE } from '../utils/MeasurementUtils';
 import { createSvgUrl } from '../utils/VectorStyleUtils';
 
 import { isFeatureGridOpen } from '../selectors/featuregrid';
-import { queryPanelSelector, measureSelector } from '../selectors/controls';
+import { queryPanelSelector } from '../selectors/controls';
 import { annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector, editingSelector } from '../selectors/annotations';
 import { mapNameSelector } from '../selectors/map';
 import { groupsSelector } from '../selectors/layers';
 
 
 import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
+import {isActiveSelector} from "../selectors/measurement";
 /**
     * Epics for annotations
     * @name epics.annotations
@@ -537,8 +538,8 @@ export default {
             if (isFeatureGridOpen(state)) { // if FeatureGrid is open, close it
                 actions.push(closeFeatureGrid());
             }
-            if (measureSelector(state)) { // if measure is open, close it
-                actions.push(toggleControl("measure"));
+            if (isActiveSelector(state)) { // if measure is open, close it
+                actions.push(setControlProperty('measure', "enabled", false));
             }
             return actions.length ? Rx.Observable.from(actions) : Rx.Observable.empty();
         }),

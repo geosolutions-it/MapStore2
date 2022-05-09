@@ -524,6 +524,8 @@
             "toggleGroupVisibility": "Gruppensichtbarkeit umschalten",
             "displayLegendAndTools": "Legende einblenden",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
+            "addAnnotations": "Anmerkungen hinzufügen",
+            "editAnnotations": "Anmerkungen bearbeiten",
             "addLayer": "Ebene hinzufügen",
             "addLayerToGroup": "Ebene zur ausgewählten Gruppe hinzufügen",
             "addGroup": "Gruppe hinzufügen",
@@ -692,7 +694,8 @@
             "previewFormatUnsupported": "Nicht unterstütztes Format für die Vorschau",
             "projection": "Koordinatensystem",
             "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte",
-            "graticule": "Raster mit Etiketten hinzufügen"
+            "graticule": "Raster mit Etiketten hinzufügen",
+            "additionalLayers": "Überlagerungen einschließen"
         },
         "backgroundSwitcher":{
             "tooltip": "Wähle Hintergrund"
@@ -3500,6 +3503,9 @@
             "noDataForPosition": "keine Street-View-Daten für diese Position",
             "unknownError": "Unbekannter Fehler, siehe Konsole"
           }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Weitere Elemente anzeigen"
         }
     }
 }

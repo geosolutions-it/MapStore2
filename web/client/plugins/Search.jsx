@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import { get, isArray } from 'lodash';
+import { get } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import MediaQuery from 'react-responsive';
-import { createSelector } from 'reselect';
+import {createSelector, createStructuredSelector} from 'reselect';
 
 import { removeAdditionalLayer } from '../actions/additionallayers';
 import { configureMap } from '../actions/config';
@@ -46,10 +45,13 @@ import {
 import mapInfoReducers from '../reducers/mapInfo';
 import searchReducers from '../reducers/search';
 import { layersSelector } from '../selectors/layers';
-import { mapSelector } from '../selectors/map';
+import {mapSelector, mapSizeValuesSelector} from '../selectors/map';
 import ConfigUtils from '../utils/ConfigUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import ToggleButton from './searchbar/ToggleButton';
+import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
+import classnames from "classnames";
 
 const searchSelector = createSelector([
     state => state.search || null,
@@ -110,7 +112,6 @@ const SearchResultList = connect(selector, {
  * {
  *  "name": "Search",
  *  "cfg": {
- *      "withToggle": ["max-width: 768px", "min-width: 768px"],
  *      "resultsStyle": {
  *          "iconUrl": "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
  *          "shadowUrl": "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png",
@@ -286,8 +287,6 @@ An example to require the data api:
  * Note that, in the following cases, the point used for GFI request is a point on surface of the geometry of the selected record
  * - "single_layer", it performs the GFI request for one layer only with only that record as a result, info_format is forced to be application/json
  * - "all_layers", it performs the GFI for all layers, as a normal GFI triggered by clicking on the map
-
-* @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
  */
 const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,
@@ -310,7 +309,9 @@ const SearchPlugin = connect((state) => ({
         userServices: PropTypes.array,
         withToggle: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
         enabled: PropTypes.bool,
-        textSearchConfig: PropTypes.object
+        textSearchConfig: PropTypes.object,
+        style: PropTypes.object,
+        sidebarIsActive: PropTypes.bool
     };
 
     static defaultProps = {
@@ -328,7 +329,9 @@ const SearchPlugin = connect((state) => ({
         },
         fitResultsToMapSize: true,
         withToggle: false,
-        enabled: true
+        enabled: true,
+        style: {},
+        sidebarIsActive: false
     };
 
     componentDidMount() {
@@ -353,6 +356,12 @@ const SearchPlugin = connect((state) => ({
         return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, {services: selectedServices}) : searchOptions;
     };
 
+    searchFitToTheScreen = () => {
+        const { offsets: { right: rightOffset, left: leftOffset}, mapSize: { width: mapWidth = window.innerWidth } } = this.props;
+        // @todo make searchbar width configurable via configuration?
+        return (mapWidth - rightOffset - leftOffset - 60) >= 500;
+    }
+
     getSearchAndToggleButton = () => {
         const search = (<SearchBar
             key="searchBar"
@@ -361,26 +370,25 @@ const SearchPlugin = connect((state) => ({
             placeholder={this.getServiceOverrides("placeholder")}
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
         />);
-        if (this.props.withToggle === true) {
-            return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
-        }
-        if (isArray(this.props.withToggle)) {
-            return (
-                <span><MediaQuery query={"(" + this.props.withToggle[0] + ")"}>
-                    <ToggleButton/>
-                    {this.props.enabled ? search : null}
-                </MediaQuery>
-                <MediaQuery query={"(" + this.props.withToggle[1] + ")"}>
-                    {search}
-                </MediaQuery>
-                </span>
-            );
-        }
-        return search;
+        return (
+            !this.searchFitToTheScreen() ?
+                (
+                    <>
+                        <ToggleButton/>
+                        {this.props.enabled ? search : null}
+                    </>
+                ) : (search)
+        );
     };
 
     render() {
-        return (<span>
+        return (<span
+            id="search-bar-container"
+            className={classnames({
+                'toggled': !this.searchFitToTheScreen(),
+                'no-sidebar': !this.props.sidebarIsActive
+            })}
+            style={ this.props.sidebarIsActive ? this.props.style : null}>
             {this.getSearchAndToggleButton()}
             <SearchResultList
                 fitToMapSize={this.props.fitResultsToMapSize}
@@ -393,14 +401,20 @@ const SearchPlugin = connect((state) => ({
     });
 
 export default {
-    SearchPlugin: assign(SearchPlugin, {
-        OmniBar: {
-            name: 'search',
-            position: 1,
-            tool: true,
-            priority: 1
-        }
-    }),
+    SearchPlugin: assign(
+        connect(createStructuredSelector({
+            style: state => mapLayoutValuesSelector(state, { right: true }),
+            offsets: state => mapLayoutValuesSelector(state, { right: true, left: true }),
+            mapSize: state => mapSizeValuesSelector({ width: true })(state),
+            sidebarIsActive: state => sidebarIsActiveSelector(state)
+        }), {})(SearchPlugin), {
+            OmniBar: {
+                name: 'search',
+                position: 1,
+                tool: true,
+                priority: 1
+            }
+        }),
     epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
         search: searchReducers,

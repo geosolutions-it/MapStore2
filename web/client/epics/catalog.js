@@ -36,7 +36,7 @@ import {
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
 import { error, success } from '../actions/notifications';
-import { SET_CONTROL_PROPERTY, setControlProperties, setControlProperty } from '../actions/controls';
+import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { closeFeatureGrid } from '../actions/featuregrid';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -51,7 +51,7 @@ import {
     searchOptionsSelector,
     catalogSearchInfoSelector,
     getFormatUrlUsedSelector,
-    activeSelector
+    isActiveSelector
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
@@ -291,9 +291,9 @@ export default (API) => ({
             - GFI
             - FeatureGrid
             */
-    openCatalogEpic: (action$) =>
-        action$.ofType(SET_CONTROL_PROPERTY)
-            .filter((action) => action.control === "metadataexplorer" && action.value)
+    openCatalogEpic: (action$, store) =>
+        action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+            .filter((action) => action.control === "metadataexplorer" && isActiveSelector(store.getState()))
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
             }),
@@ -468,7 +468,7 @@ export default (API) => ({
     * @return {external:Observable}
     */
     updateGroupSelectedMetadataExplorerEpic: (action$, store) => action$.ofType(SELECT_NODE)
-        .filter(() => activeSelector(store.getState()))
+        .filter(() => isActiveSelector(store.getState()))
         .switchMap(({ nodeType, id }) => {
             const state = store.getState();
             const selectedNodes = selectedNodesSelector(state);

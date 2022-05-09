@@ -191,6 +191,7 @@ describe('measurement epics', () => {
         const state = {
             controls: {
                 measure: {
+                    enabled: true,
                     showCoordinateEditor: true
                 }
             }

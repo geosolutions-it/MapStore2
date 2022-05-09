@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import { isOpenlayers } from '../selectors/maptype';
+import { isOpenlayers } from './maptype';
 
-import { showCoordinateEditorSelector } from '../selectors/controls';
+import { showCoordinateEditorSelector } from './controls';
 import { set } from '../utils/ImmutableUtils';
 import { validateFeatureCoordinates } from '../utils/MeasureUtils';
+import {get} from "lodash";
 
 /**
  * selects measurement state
@@ -18,6 +19,8 @@ import { validateFeatureCoordinates } from '../utils/MeasureUtils';
  * @memberof selectors
  * @static
  */
+
+export const isActiveSelector = (state) => get(state, "controls.measure.enabled");
 
 /**
  * selects the showCoordinateEditor flag from state
