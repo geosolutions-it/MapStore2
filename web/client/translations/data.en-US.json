@@ -2496,6 +2496,7 @@
             "addMediaContent": "Add Media Content",
             "addWebPageContent": "Add Web Page Content",
             "zoomToContent": "Zoom to content",
+            "delete": "Delete geostory",
             "emptyTitle": "This story is empty",
             "emptyDescription": "Start creating an awesome geostory by adding new content",
             "closeFullscreenMap": "Close fullscreen map",
