@@ -128,6 +128,7 @@ const TimelinePlugin = compose(
             showHiddenLayers: false,
             expandLimit: 20,
             snapType: "start",
+            endValuesSupport: undefined,
             style: {
                 marginBottom: 35,
                 marginLeft: 100,
@@ -184,11 +185,12 @@ const TimelinePlugin = compose(
         showHiddenLayers,
         expandLimit,
         snapType,
+        endValuesSupport,
         onInit = () => {},
         layers
     }) => {
         useEffect(()=>{
-            onInit(showHiddenLayers, expandLimit, snapType);
+            onInit(showHiddenLayers, expandLimit, snapType, endValuesSupport);
         }, [onInit]);
 
         const { hideLayersName, collapsed } = options;

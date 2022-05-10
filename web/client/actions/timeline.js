@@ -77,6 +77,8 @@ export const autoselect = () => ({ type: AUTOSELECT });
  */
 export const SET_SNAP_TYPE = "TIMELINE:SET_SNAP_TYPE";
 export const setTimelineSnapType = snapType => ({type: SET_SNAP_TYPE, snapType});
+export const SET_END_VALUES_SUPPORT = "TIMELINE:SET_END_VALUES_SUPPORT";
+export const setEndValuesSupport = endValuesSupport =>  ({type: SET_END_VALUES_SUPPORT, endValuesSupport});
 
 export const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
 export const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
@@ -84,7 +86,7 @@ export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
 export const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
 
 export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
-export const initTimeline = (showHiddenLayers, expandLimit, snapType) => ({type: INIT_TIMELINE, showHiddenLayers, expandLimit, snapType});
+export const initTimeline = (showHiddenLayers, expandLimit, snapType, endValuesSupport) => ({type: INIT_TIMELINE, showHiddenLayers, expandLimit, snapType, endValuesSupport});
 /**
  * Actions for timeline
  * @module actions.timeline

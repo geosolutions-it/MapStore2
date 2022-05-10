@@ -69,6 +69,7 @@ export default ({
     snapTypes = [],
     currentSnapType = "start",
     snapRadioButtonEnabled = false,
+    endValuesSupport = undefined,
     onChangeSnapType = () => { },
     setPlaybackRange = () => { },
     playbackButtons,
@@ -89,7 +90,7 @@ export default ({
             </ControlLabel>
             <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
         </Form>
-        {!fixedStep && (
+        {!fixedStep && endValuesSupport && (
             <Form componentClass="fieldset" inline className="snap-type-form" disabled={!snapRadioButtonEnabled}>
                 <div className="snap-type-form-title">
                     <ControlLabel>

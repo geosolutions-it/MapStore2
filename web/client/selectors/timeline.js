@@ -37,6 +37,9 @@ export const snapTypeSelector = state => get(state, "timeline.settings.snapType"
 
 export const snapRadioButtonEnabledSelector = state => get(state, "timeline.settings.snapRadioButtonEnabled") || false;
 
+// detects Geoserver version if fromEnd querystring parameter is supported
+export const endValuesSupportSelector = state => get(state, "timeline.settings.endValuesSupport") || undefined;
+
 /**
  * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
  * @return the flag of sync of the timeline with the map viewport

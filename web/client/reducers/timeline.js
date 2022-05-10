@@ -1,6 +1,17 @@
 import { REMOVE_NODE } from '../actions/layers';
 import { RESET_CONTROLS } from '../actions/controls';
-import { RANGE_CHANGED, RANGE_DATA_LOADED, LOADING, SELECT_LAYER, INIT_SELECT_LAYER, SET_COLLAPSED, SET_MAP_SYNC, INIT_TIMELINE, SET_SNAP_TYPE } from '../actions/timeline';
+import {
+    RANGE_CHANGED,
+    RANGE_DATA_LOADED,
+    LOADING, SELECT_LAYER,
+    INIT_SELECT_LAYER,
+    SET_COLLAPSED,
+    SET_MAP_SYNC,
+    INIT_TIMELINE,
+    SET_SNAP_TYPE,
+    SET_END_VALUES_SUPPORT
+} from '../actions/timeline';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 import { UPDATE_METADATA } from '../actions/playback';
 import { set } from '../utils/ImmutableUtils';
 import { assign, pickBy, has } from 'lodash';
@@ -67,6 +78,9 @@ export default (state = {
     case SET_SNAP_TYPE: {
         return set(`settings.snapType`, action.snapType, state);
     }
+    case SET_END_VALUES_SUPPORT: {
+        return set(`settings.endValuesSupport`, action.endValuesSupport, state);
+    }
     case RANGE_CHANGED: {
         return set(`range`, {
             start: action.start,
@@ -114,11 +128,23 @@ export default (state = {
         return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined});
     }
     case INIT_TIMELINE: {
+        const endValuesSupport = state?.settings?.endValuesSupport;
         return set(`settings`, {
             showHiddenLayers: action.showHiddenLayers,
             expandLimit: action.expandLimit,
-            snapType: action.snapType
+            snapType: action.snapType,
+            endValuesSupport: endValuesSupport !== undefined ? endValuesSupport : action.endValuesSupport
         }, state);
+    }
+    case MAP_CONFIG_LOADED: {
+        const newState = {
+            ...state,
+            settings: {
+                ...state.settings,
+                endValuesSupport: action?.config?.timelineData?.endValuesSupport
+            }
+        };
+        return newState;
     }
     default:
         return state;
