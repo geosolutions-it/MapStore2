@@ -12,10 +12,6 @@ import NumberFormat from '../../../../I18N/Number';
 import {getFormatter} from '../index';
 
 describe('Tests for the formatter functions', () => {
-    it('test getFormatter for strings', () => {
-        const formatter = getFormatter({localType: "string"});
-        expect(formatter).toBe(null);
-    });
     it('test getFormatter for booleans', () => {
         const formatter = getFormatter({localType: "boolean"});
         expect(typeof formatter).toBe("function");
@@ -26,7 +22,7 @@ describe('Tests for the formatter functions', () => {
         expect(formatter({value: null})).toBe(null);
         expect(formatter({value: undefined})).toBe(null);
     });
-    it('test getFormatter for string', () => {
+    it('test getFormatter for strings', () => {
         const value = 'Test https://google.com with google link';
         const formatter = getFormatter({localType: "string"});
         expect(typeof formatter).toBe("function");
