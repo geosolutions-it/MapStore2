@@ -11,19 +11,19 @@ import PropTypes from "prop-types";
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { setControl } from '../actions/geostory';
 import ConfirmDialog from '../components/misc/ConfirmDialog';
 import { createPlugin } from '../utils/PluginsUtils';
-import { Controls } from '../utils/GeoStoryUtils';
-import { deleteGeostory } from '../actions/geostories';
-import { geostoryIdSelector, deleteDialogSelector } from '../selectors/geostory';
+import { Controls } from '../utils/DashboardUtils';
+import { deleteDashboard, setControl } from '../actions/dashboards';
+import { getDashboardId } from '../selectors/dashboard';
+import { deleteDialogSelector } from '../selectors/dashboards';
 import Message from '../components/I18N/Message';
 
 class DeleteConfirmDialog extends React.Component {
 
     static propTypes = {
         show: PropTypes.bool,
-        geostoryId: PropTypes.string,
+        dashboardId: PropTypes.string,
         onConfirmDelete: PropTypes.func,
         onClose: PropTypes.func
     };
@@ -34,7 +34,7 @@ class DeleteConfirmDialog extends React.Component {
 
     static defaultProps = {
         show: false,
-        geostoryId: '',
+        dashboardId: '',
         onConfirmDelete: () => {},
         onClose: () => {}
     };
@@ -44,11 +44,11 @@ class DeleteConfirmDialog extends React.Component {
             <ConfirmDialog
                 show={this.props.show}
                 onClose={this.props.onClose}
-                title={<Message msgId="geostory.delete" />}
+                title={<Message msgId="dashboard.delete" />}
                 onConfirm={() => {
                     this.context.router.history.push("/");
                     this.props.onClose();
-                    this.props.onConfirmDelete(this.props.geostoryId);
+                    this.props.onConfirmDelete(this.props.dashboardId);
                 }}
                 fitContent
             >
@@ -60,24 +60,24 @@ class DeleteConfirmDialog extends React.Component {
     }
 }
 
-export default createPlugin('DeleteGeoStory', {
+export default createPlugin('DeleteDashboard', {
     component:
         connect(createSelector(
             deleteDialogSelector,
-            geostoryIdSelector,
-            (show, geostoryId) => {
-                return { show, geostoryId };
+            getDashboardId,
+            (show, dashboardId) => {
+                return { show, dashboardId };
             }
         ),
         {
-            onConfirmDelete: (geostoryId) => deleteGeostory(geostoryId),
+            onConfirmDelete: (dashboardId) => deleteDashboard(dashboardId),
             onClose: setControl.bind(null, Controls.SHOW_DELETE, false)
         })(DeleteConfirmDialog),
     containers: {
         BurgerMenu: {
-            name: 'geostoryDelete',
-            position: 5,
-            text: <Message msgId="geostory.delete"/>,
+            name: 'dashboardDelete',
+            position: 300,
+            text: <Message msgId="dashboard.delete"/>,
             icon: <Glyphicon glyph="trash"/>,
             action: setControl.bind(null, Controls.SHOW_DELETE, true),
             priority: 1,
