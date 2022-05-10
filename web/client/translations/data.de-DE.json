@@ -2067,7 +2067,8 @@
                 "showConnections": "Verbindungen anzeigen",
                 "hideConnections": "Verbindungen ausblenden"
             },
-            "emptyTitle": "Das Dashboard ist leer"
+            "emptyTitle": "Das Dashboard ist leer",
+            "delete": "Dashboard löschen"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Dashboard wird geladen",

@@ -2030,7 +2030,8 @@
                 "showConnections": "Afficher les connexions",
                 "hideConnections": "Masquer les connexions"
             },
-            "emptyTitle": "Le tableau de bord est vide"
+            "emptyTitle": "Le tableau de bord est vide",
+            "delete": "Supprimer le tableau"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Chargement du tableau de bord",
@@ -2488,6 +2489,7 @@
             "zoomToContent": "Zoom sur le contenu",
             "addWebPageContent": "Ajouter du contenu de page web",
             "emptyTitle": "Cette story est vide",
+            "delete": "Supprimer geostory",
             "emptyDescription": "Commencer une story géniale en ajoutant du nouveau contenu",
             "closeFullscreenMap": "Fermer la carte plein écran",
             "showFullscreenMap": "Montrer la carte en plein écran",

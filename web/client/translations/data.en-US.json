@@ -2029,7 +2029,8 @@
                 "showConnections": "Show connections",
                 "hideConnections": "HideConnections"
             },
-            "emptyTitle": "The dashboard is empty"
+            "emptyTitle": "The dashboard is empty",
+            "delete": "Delete dashboard"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Loading Dashboard",

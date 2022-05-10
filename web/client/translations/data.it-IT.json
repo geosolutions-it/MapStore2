@@ -2031,7 +2031,8 @@
                 "showConnections": "Mostra connessioni",
                 "hideConnections": "Nascondi connessioni"
             },
-            "emptyTitle": "La dashboard è vuota"
+            "emptyTitle": "La dashboard è vuota",
+            "delete": "Cancellare la dashboard"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Caricamento Dashboard",

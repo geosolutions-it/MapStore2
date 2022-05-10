@@ -2029,7 +2029,8 @@
                 "showConnections": "Mostrar conexiones",
                 "hideConnections": "Ocultar conexiones"
             },
-            "emptyTitle": "El panel de control está vacío"
+            "emptyTitle": "El panel de control está vacío",
+            "delete": "Eliminar panel de control"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Cargando panel de control",
