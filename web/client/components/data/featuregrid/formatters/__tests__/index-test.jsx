@@ -26,6 +26,18 @@ describe('Tests for the formatter functions', () => {
         expect(formatter({value: null})).toBe(null);
         expect(formatter({value: undefined})).toBe(null);
     });
+    it('test getFormatter for string', () => {
+        const value = 'Test https://google.com with google link';
+        const formatter = getFormatter({localType: "string"});
+        expect(typeof formatter).toBe("function");
+        expect(formatter()).toBe(null);
+        expect(formatter({value: 'Test no links'})[0]).toBe('Test no links');
+        expect(formatter({value})[0]).toBe('Test ');
+        expect(formatter({value})[1].props.href).toBe('https://google.com');
+        expect(formatter({value})[2]).toBe(' with google link');
+        expect(formatter({value: null})).toBe(null);
+        expect(formatter({value: undefined})).toBe(null);
+    });
     it('test getFormatter for number', () => {
         const formatter = getFormatter({localType: "number"});
         expect(typeof formatter).toBe("function");

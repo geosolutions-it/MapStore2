@@ -18,9 +18,9 @@ export const getFormatter = (desc) => {
     } else if (['int', 'number'].includes(desc.localType)) {
         return ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;
     } else if (desc.localType === 'string') {
-        return ({value} = {}) => reactStringReplace(value, /(https?:\/\/\S+)/g, (match, i) => (
+        return ({value} = {}) => !isNil(value) ? reactStringReplace(value, /(https?:\/\/\S+)/g, (match, i) => (
             <a key={match + i} href={match} target={"_blank"}>{match}</a>
-        ));
+        )) : null;
     } else if (desc.localType === 'Geometry') {
         return () => null;
     }
