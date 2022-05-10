@@ -49,9 +49,10 @@ export const controlSelectorCreator = control => state => get(state, `geostory.c
 export const saveDialogSelector = state => controlSelectorCreator(Controls.SHOW_SAVE)(state);
 
 /**
- * Gets the state of the delete dialog ("save" or "saveAs" values typically identify what window is open)
+ * Gets the state of the delete dialog
  * @param {object} state the application state
- */
+ * @returns the status of the delete dialog (if true the dialog is visible)
+ * */
 export const deleteDialogSelector = state => controlSelectorCreator(Controls.SHOW_DELETE)(state);
 
 /**
