@@ -15,8 +15,9 @@ import ConfirmDialog from '../components/misc/ConfirmDialog';
 import { createPlugin } from '../utils/PluginsUtils';
 import { Controls } from '../utils/DashboardUtils';
 import { deleteDashboard, setControl } from '../actions/dashboards';
-import { getDashboardId } from '../selectors/dashboard';
+import { getDashboardId, dashboardResource } from '../selectors/dashboard';
 import { deleteDialogSelector } from '../selectors/dashboards';
+import { isLoggedIn } from '../selectors/security';
 import Message from '../components/I18N/Message';
 
 class DeleteConfirmDialog extends React.Component {
@@ -80,6 +81,13 @@ export default createPlugin('DeleteDashboard', {
             text: <Message msgId="dashboard.delete"/>,
             icon: <Glyphicon glyph="trash"/>,
             action: setControl.bind(null, Controls.SHOW_DELETE, true),
+            selector: createSelector(
+                isLoggedIn,
+                dashboardResource,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && (id && canEdit) ? {} : { display: "none" } // save is present only if the resource already exists and you can save
+                })
+            ),
             priority: 1,
             doNotHide: true
         }

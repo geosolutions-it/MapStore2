@@ -16,7 +16,8 @@ import ConfirmDialog from '../components/misc/ConfirmDialog';
 import { createPlugin } from '../utils/PluginsUtils';
 import { Controls } from '../utils/GeoStoryUtils';
 import { deleteGeostory } from '../actions/geostories';
-import { geostoryIdSelector, deleteDialogSelector } from '../selectors/geostory';
+import { geostoryIdSelector, deleteDialogSelector, resourceSelector } from '../selectors/geostory';
+import { isLoggedIn } from '../selectors/security';
 import Message from '../components/I18N/Message';
 
 class DeleteConfirmDialog extends React.Component {
@@ -80,6 +81,13 @@ export default createPlugin('DeleteGeoStory', {
             text: <Message msgId="geostory.delete"/>,
             icon: <Glyphicon glyph="trash"/>,
             action: setControl.bind(null, Controls.SHOW_DELETE, true),
+            selector: createSelector(
+                isLoggedIn,
+                resourceSelector,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && (id && canEdit) ? {} : { display: "none" } // save is present only if the resource already exists and you can save
+                })
+            ),
             priority: 1,
             doNotHide: true
         }
