@@ -82,7 +82,7 @@ export const queryMultidimensionalAPIExtensionOnAddLayer = (action$, { getState 
                                 ...flatten(dimensions.map(d => [
                                     updateLayerDimensionData(layer.id, d.name, d),
                                     autoselect(),
-                                    ...(endValuesSupportSelector(getState()) === undefined ? [setEndValuesSupport(parseFloat(d.source.version) >= 1.2)] : [])
+                                    ...(endValuesSupportSelector(getState()) === undefined ? [setEndValuesSupport(d.source.version === "1.2")] : [])
                                 ])
                                 ));
                         }

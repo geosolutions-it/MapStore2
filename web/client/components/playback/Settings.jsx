@@ -10,7 +10,6 @@ import React from 'react';
 import moment from 'moment';
 import { isNaN } from 'lodash';
 import { Form, FormGroup, ControlLabel, FormControl, InputGroup } from 'react-bootstrap';
-import classnames from 'classnames';
 import Message from '../I18N/Message';
 import InfoPopover from '../widgets/widget/InfoPopover';
 import InlineDateTimeSelector from '../time/InlineDateTimeSelector';
@@ -68,7 +67,6 @@ export default ({
     },
     snapTypes = [],
     currentSnapType = "start",
-    snapRadioButtonEnabled = false,
     endValuesSupport = undefined,
     onChangeSnapType = () => { },
     setPlaybackRange = () => { },
@@ -91,7 +89,7 @@ export default ({
             <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
         </Form>
         {!fixedStep && endValuesSupport && (
-            <Form componentClass="fieldset" inline className="snap-type-form" disabled={!snapRadioButtonEnabled}>
+            <Form componentClass="fieldset" inline className="snap-type-form">
                 <div className="snap-type-form-title">
                     <ControlLabel>
                         <Message msgId="timeline.settings.snapType" />&nbsp;
@@ -103,7 +101,7 @@ export default ({
                         <div className="snap-type-item">
                             <input
                                 type="radio"
-                                className={classnames('snap-type-radio-btn', {'disabled': !snapRadioButtonEnabled})}
+                                className="snap-type-radio-btn"
                                 value={snapType.value}
                                 name="snapType"
                                 checked={currentSnapType === snapType.value}

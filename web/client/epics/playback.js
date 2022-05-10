@@ -27,7 +27,7 @@ import {
 } from '../actions/playback';
 
 import { moveTime, SET_CURRENT_TIME, MOVE_TIME } from '../actions/dimension';
-import { selectLayer, onRangeChanged, timeDataLoading, SELECT_LAYER, SET_MAP_SYNC } from '../actions/timeline';
+import { selectLayer, onRangeChanged, timeDataLoading, SELECT_LAYER, SET_MAP_SYNC, SET_SNAP_TYPE } from '../actions/timeline';
 import { changeLayerProperties, REMOVE_NODE } from '../actions/layers';
 import { error } from '../actions/notifications';
 
@@ -338,29 +338,28 @@ export const playbackMoveStep = (action$, { getState = () => { } } = {}) =>
  */
 export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } } = {}) =>
     action$
-        .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC )
+        .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC, SET_SNAP_TYPE)
         .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
         .filter(() => selectedLayerSelector(getState()))
         .filter( t => !!t )
         .switchMap(({time: actionTime}) => {
             // get current time in case of SELECT_LAYER
             const time = actionTime || currentTimeSelector(getState());
+            const snapType = snapTypeSelector(getState());
             return Rx.Observable.forkJoin(
                 // TODO: find out a way to optimize and do only one request
                 // TODO: support for local list of values (in case of missing multidim-extension)
-                getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
+                getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
-                getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time }))
+                getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
             ).map(([next, previous]) => {
-                const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
                 return updateMetadata({
                     forTime: time,
                     next,
-                    previous,
-                    timeIntervalData: isTimeIntervalData
+                    previous
                 });
             }
 

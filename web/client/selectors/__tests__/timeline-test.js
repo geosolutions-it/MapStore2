@@ -211,11 +211,11 @@ describe('timeline selector', () => {
             // CRS may be ignored, bbox referred to tileMatrixSet
             expect(opts).toEqual({ bbox: '-20,-20,20,20', crs: 'EPSG:4326' });
         });
-        it('mapSync on v 1.1', () => {
+        it('mapSync on v 1.2', () => {
             const opts = multidimOptionsSelectorCreator(TEST_LAYER_ID)(
                 compose(
                     set('timeline.settings.mapSync', true),
-                    set(`dimension.data.time.${TEST_LAYER_ID}.source.version`, "1.1")
+                    set(`dimension.data.time.${TEST_LAYER_ID}.source.version`, "1.2")
                 )(STATE_WITH_MAP));
             expect(opts).toEqual({ bbox: '-20,-20,20,20,EPSG:4326' });
         });

@@ -989,7 +989,9 @@
             border-bottom: 1px solid @ms-main-border-color;
         }
         .form-inline {
-            padding-bottom: 20px;
+            &:not(:last-child) {
+                padding-bottom: 20px;
+            }
             .react-numeric-input{
                 display: inline-block !important;
             }
@@ -1010,14 +1012,13 @@
         }
         .snap-type-container {
             display: flex;
-            flex-direction: column;
             margin-left: 1px;
         }
         .snap-type-item {
             display: flex;
             align-items: center;
             &:first-child {
-                padding-bottom: 5px;
+                margin-right: 64px;
             }
         }
         .snap-type-radio-btn {

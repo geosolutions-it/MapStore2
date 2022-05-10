@@ -41,7 +41,7 @@ describe('Timeline/Playback Settings component', () => {
             value: 'end',
             label: 'timeline.settings.snapToEnd'
         }];
-        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes}/>, document.getElementById("container"));
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
         expect(document.querySelectorAll('input[type=checkbox]')[0].checked).toBe(true);
         let radioButtonInputs = document.getElementsByClassName('snap-type-radio-btn');
         expect(radioButtonInputs).toExist();
@@ -65,7 +65,7 @@ describe('Timeline/Playback Settings component', () => {
             value: 'end',
             label: 'timeline.settings.snapToEnd'
         }];
-        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes}/>, document.getElementById("container"));
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
         const radioButtonInputs = document.querySelectorAll('input[type=radio]');
         expect(radioButtonInputs).toExist();
         expect(radioButtonInputs.length).toBe(2);

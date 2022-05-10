@@ -12,7 +12,6 @@ import {
     SET_END_VALUES_SUPPORT
 } from '../actions/timeline';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import { UPDATE_METADATA } from '../actions/playback';
 import { set } from '../utils/ImmutableUtils';
 import { assign, pickBy, has } from 'lodash';
 
@@ -64,8 +63,7 @@ export default (state = {
     settings: {
         autoSelect: true, // selects the first layer available as guide layer. This is a configuration only setting for now
         collapsed: false,
-        snapType: "start", // in case of interval values snapping is defaulted to the start of the interval
-        snapRadioButtonEnabled: false // initial state of snapping radio button is disabled, will be enabled according to layer time data
+        snapType: "start" // in case of interval values snapping is defaulted to the start of the interval
     }
 }, action) => {
     switch (action.type) {
@@ -104,14 +102,10 @@ export default (state = {
             selectedLayer: action.layerId,
             settings: {
                 ...state.settings,
-                snapType: "start",
-                snapRadioButtonEnabled: false
+                snapType: "start"
             }
         };
         return newState;
-    }
-    case UPDATE_METADATA: {
-        return set('settings.snapRadioButtonEnabled', action.timeIntervalData, state);
     }
     case INIT_SELECT_LAYER: {
         return set('selectedLayer', action.layerId, state);
