@@ -40,6 +40,7 @@ import {
     toggleVisibilityAnnotation
 } from '../actions/annotations';
 import {findIndex, get, keys} from "lodash";
+import {shutdownTool} from "../utils/EpicsUtils";
 
 const dockPanels = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details', 'cadastrapp'];
 
@@ -141,12 +142,13 @@ export const addCoordinatesEpic = (action$, {getState = () => {}}) =>
  * @returns {Observable<unknown>}
  */
 export const tearDownMeasureDockOnAnotherDockOpen = (action$, store) =>
-    action$.ofType(SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-        .filter(() => {
-            const {showCoordinateEditor, enabled} = store.getState()?.controls?.measure || {};
-            return showCoordinateEditor && enabled;
-        })
-        .filter(({control, property, properties = [], type}) => {
+    shutdownTool(
+        action$,
+        store,
+        [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL],
+        'measure',
+        dockPanels,
+        ({control, property, properties = [], type}) => {
             const state = store.getState();
             const controlState = state.controls[control].enabled;
             switch (type) {
@@ -156,12 +158,23 @@ export const tearDownMeasureDockOnAnotherDockOpen = (action$, store) =>
             default:
                 return findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && dockPanels.includes(control);
             }
-        })
-        .switchMap(() => {
-            const actions = [];
-            actions.push(setControlProperty("measure", 'enabled', null));
-            return Observable.from(actions);
-        });
+        }
+    );
+
+/**
+ * Closes measure tool when another drawing tool is open
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
+export const tearDownMeasureOnDrawToolOpen = (action$, store) =>
+    shutdownTool(
+        action$,
+        store,
+        [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL],
+        'measure',
+        ['street-view', 'annotations']
+    );
 
 /**
  * Closes another docks when measure dock (coordinates editor is active in config) is open
@@ -192,5 +205,6 @@ export default {
     setMeasureStateFromAnnotationEpic,
     addCoordinatesEpic,
     tearDownMeasureDockOnAnotherDockOpen,
-    tearDownAnotherDockOnMeasurementOpen
+    tearDownAnotherDockOnMeasurementOpen,
+    tearDownMeasureOnDrawToolOpen
 };
