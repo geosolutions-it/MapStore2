@@ -239,7 +239,7 @@ describe('measurement epics', () => {
             }, state);
     });
     it('test closeMeasureEpics', (done) => {
-        const NUMBER_OF_ACTIONS = 1;
+        const NUMBER_OF_ACTIONS = 2;
         const state = {
             controls: {
                 measure: {
@@ -255,7 +255,7 @@ describe('measurement epics', () => {
                 toggleControl('measure', null)
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[0].type).toBe("ANNOTATIONS:CLEAN_HIGHLIGHT");
+                expect(actions[1].type).toBe("ANNOTATIONS:CLEAN_HIGHLIGHT");
                 done();
             }, state);
     });
