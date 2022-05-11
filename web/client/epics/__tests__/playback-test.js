@@ -51,6 +51,37 @@ const ANIMATION_MOCK_STATE = {
     }
 };
 
+const ANIMATION_MOCK_STATE_WITH_END_SNAPPING = {
+    dimension: {
+        currentTime: '2016-09-05T00:00:00.000Z'
+    },
+    layers: {
+        flat: [
+            {
+                id: 'playback:selected_layer',
+                name: 'playback_layer',
+                dimensions: [
+                    {
+                        name: 'time',
+                        source: {
+                            type: 'multidim-extension',
+                            url: 'MOCK_DOMAIN_VALUES'
+                        }
+                    }
+                ],
+                visibility: true
+            }
+        ]
+    },
+    timeline: {
+        selectedLayer: 'playback:selected_layer',
+        settings: {
+            snapType: "end",
+            endValuesSupport: true
+        }
+    }
+};
+
 describe('playback Epics', () => {
     let mock;
     beforeEach(() => {
@@ -105,8 +136,8 @@ describe('playback Epics', () => {
             expect(mock.history.get.length).toBe(1);
             expect(mock.history.get[0].params.domain).toBe("time");
             // if animation range is not active, animation should start from current time
-            expect(mock.history.get[0].params.fromValue).toBe(ANIMATION_MOCK_STATE.dimension.currentTime);
-            expect(mock.history.get[0].params.layer).toBe(ANIMATION_MOCK_STATE.layers.flat[0].name);
+            expect(mock.history.get[0].params.fromValue).toBe(ANIMATION_MOCK_STATE_WITH_END_SNAPPING.dimension.currentTime);
+            expect(mock.history.get[0].params.layer).toBe(ANIMATION_MOCK_STATE_WITH_END_SNAPPING.layers.flat[0].name);
             expect(mock.history.get[0].params.limit).toBe(20);
             expect(mock.history.get[0].params.request).toBe("GetDomainValues");
             expect(mock.history.get[0].params.service).toBe("WMTS");
@@ -115,7 +146,7 @@ describe('playback Epics', () => {
             expect(mock.history.get.length).toBe(1);
 
             done();
-        }, ANIMATION_MOCK_STATE);
+        }, ANIMATION_MOCK_STATE_WITH_END_SNAPPING);
     });
     it('retrieveFramesForPlayback with animation range', done => {
         mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_VALUES_RESPONSE);
@@ -166,7 +197,7 @@ describe('playback Epics', () => {
             expect(mock.history.get[0].params.fromValue).toNotExist();
             done();
         }, {
-            ...ANIMATION_MOCK_STATE,
+            ...ANIMATION_MOCK_STATE_WITH_END_SNAPPING,
             playback: {
                 playbackRange: {
                     startPlaybackTime: '2021-09-08T22:00:00.000Z',

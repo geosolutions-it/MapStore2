@@ -24,13 +24,15 @@ import {
     SET_MAP_SYNC,
     setMapSync,
     setTimelineSnapType,
+    setEndValuesSupport,
     SET_SNAP_TYPE,
     INIT_TIMELINE,
     initTimeline,
     SELECT_LAYER,
     selectLayer,
     INIT_SELECT_LAYER,
-    initializeSelectLayer
+    initializeSelectLayer,
+    SET_END_VALUES_SUPPORT
 } from '../timeline';
 
 describe('timeline actions', () => {
@@ -87,6 +89,12 @@ describe('timeline actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_SNAP_TYPE);
         expect(retval.snapType).toBe("start");
+    });
+    it('setEndValuesSupport', () => {
+        const retval = setEndValuesSupport(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_END_VALUES_SUPPORT);
+        expect(retval.endValuesSupport).toBe(true);
     });
     it('initTimeline', () => {
         const retval = initTimeline(true, 20, "end");
