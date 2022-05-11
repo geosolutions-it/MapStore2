@@ -21,7 +21,9 @@ import {
     dashboardDeleted,
     DASHBOARD_DELETED,
     reloadDashboards,
-    RELOAD
+    RELOAD,
+    setControl,
+    SET_CONTROL
 } from '../dashboards';
 
 describe('dashboards (browse) actions', () => {
@@ -77,5 +79,12 @@ describe('dashboards (browse) actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(RELOAD);
     });
-
+    it('setControl', () => {
+        const control = 'delete.show';
+        const retval = setControl(control, true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_CONTROL);
+        expect(retval.control).toBe(control);
+        expect(retval.value).toBe(true);
+    });
 });
