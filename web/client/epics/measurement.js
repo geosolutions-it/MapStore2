@@ -11,7 +11,14 @@ import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
 import {validateCoord} from '../utils/MeasureUtils';
-import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, SET_ANNOTATION_MEASUREMENT, setMeasurementConfig, changeMeasurement, changeCoordinates} from '../actions/measurement';
+import {
+    ADD_MEASURE_AS_ANNOTATION,
+    ADD_AS_LAYER,
+    SET_ANNOTATION_MEASUREMENT,
+    setMeasurementConfig,
+    changeMeasurement,
+    changeCoordinates
+} from '../actions/measurement';
 import {addLayer} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
 import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from '../actions/controls';
@@ -72,10 +79,20 @@ export const openMeasureEpic = (action$, store) =>
         });
 
 export const closeMeasureEpics = (action$, store) =>
-    action$.ofType(TOGGLE_CONTROL)
+    action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter(action => action.control === "measure" && !measureSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(cleanHighlight());
+            const newMeasureState = {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false,
+                geomType: null,
+                // reset old measurements
+                len: 0,
+                area: 0,
+                bearing: 0
+            };
+            return Rx.Observable.of(changeMeasurement(newMeasureState), cleanHighlight());
         });
 
 export const setMeasureStateFromAnnotationEpic = (action$, store) =>
