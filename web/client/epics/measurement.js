@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import Rx from 'rxjs';
+import Rx, {Observable} from 'rxjs';
 import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
@@ -21,7 +21,13 @@ import {
 } from '../actions/measurement';
 import {addLayer} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
-import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from '../actions/controls';
+import {
+    toggleControl,
+    setControlProperty,
+    SET_CONTROL_PROPERTY,
+    TOGGLE_CONTROL,
+    SET_CONTROL_PROPERTIES
+} from '../actions/controls';
 import {closeFeatureGrid} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {measureSelector} from '../selectors/controls';
@@ -33,6 +39,9 @@ import {
     cleanHighlight,
     toggleVisibilityAnnotation
 } from '../actions/annotations';
+import {findIndex, get, keys} from "lodash";
+
+const dockPanels = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details', 'cadastrapp'];
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -125,11 +134,63 @@ export const addCoordinatesEpic = (action$, {getState = () => {}}) =>
             return Rx.Observable.empty();
         });
 
+/**
+ * Closes measure dock (coordinates editor is active in config) when another dock panel is open
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
+export const tearDownMeasureDockOnAnotherDockOpen = (action$, store) =>
+    action$.ofType(SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+        .filter(() => {
+            const {showCoordinateEditor, enabled} = store.getState()?.controls?.measure || {};
+            return showCoordinateEditor && enabled;
+        })
+        .filter(({control, property, properties = [], type}) => {
+            const state = store.getState();
+            const controlState = state.controls[control].enabled;
+            switch (type) {
+            case SET_CONTROL_PROPERTY:
+            case TOGGLE_CONTROL:
+                return (property === 'enabled' || !property) && controlState && dockPanels.includes(control);
+            default:
+                return findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && dockPanels.includes(control);
+            }
+        })
+        .switchMap(() => {
+            const actions = [];
+            actions.push(setControlProperty("measure", 'enabled', null));
+            return Observable.from(actions);
+        });
+
+/**
+ * Closes another docks when measure dock (coordinates editor is active in config) is open
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
+export const tearDownAnotherDockOnMeasurementOpen = (action$, store) =>
+    action$.ofType(SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+        .filter(() => {
+            const {showCoordinateEditor, enabled} = store.getState()?.controls?.measure || {};
+            return showCoordinateEditor && enabled;
+        })
+        .switchMap(() => {
+            const actions = [];
+            const state = store.getState();
+            dockPanels.forEach((controlName) => {
+                const enabled = get(state, ['controls', controlName, 'enabled'], false);
+                enabled && actions.push(setControlProperty(controlName, 'enabled', null));
+            });
+            return Observable.from(actions);
+        });
 export default {
     addAnnotationFromMeasureEpic,
     addAsLayerEpic,
     openMeasureEpic,
     closeMeasureEpics,
     setMeasureStateFromAnnotationEpic,
-    addCoordinatesEpic
+    addCoordinatesEpic,
+    tearDownMeasureDockOnAnotherDockOpen,
+    tearDownAnotherDockOnMeasurementOpen
 };
