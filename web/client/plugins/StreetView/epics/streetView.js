@@ -1,7 +1,12 @@
 
 import Rx from 'rxjs';
 
-import { RESET_CONTROLS, TOGGLE_CONTROL } from "../../../actions/controls";
+import {
+    RESET_CONTROLS,
+    SET_CONTROL_PROPERTIES,
+    SET_CONTROL_PROPERTY,
+    TOGGLE_CONTROL
+} from "../../../actions/controls";
 import { info, error } from '../../../actions/notifications';
 
 import { updateAdditionalLayer, removeAdditionalLayer } from '../../../actions/additionallayers';
@@ -15,6 +20,7 @@ import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYE
 import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "../selectors/streetView";
 import { setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
 import { getLocation } from '../api/gMaps';
+import {shutdownTool} from "../../../utils/EpicsUtils";
 
 const getNavigationArrowSVG = function({rotation = 0}) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
@@ -197,3 +203,9 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
         });
     });
 };
+
+export const tearDownStreetViewOnToolActivated = (action$, store) =>
+    shutdownTool(action$, store, [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL], CONTROL_NAME, ['annotations', 'FeatureEditor', 'measure']);
+
+export const tearDownAnnotationsOnStreetViewOpen = (action$, store) =>
+    shutdownTool(action$, store, [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL], ['annotations'], [CONTROL_NAME]);
