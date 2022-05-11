@@ -48,7 +48,7 @@ const getNavigationArrowSVG = function({rotation = 0}) {
  */
 export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =>
     action$
-        .ofType(TOGGLE_CONTROL)
+        .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
         .filter(({control}) => control === CONTROL_NAME)
         // if the enable event happens when the mapInfo is active
         .filter(() => enabledSelector(getState()))
@@ -77,7 +77,7 @@ export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =
  */
 export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
     action$
-        .ofType(TOGGLE_CONTROL)
+        .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
         .filter(({control}) => control === CONTROL_NAME)
         .filter(() => enabledSelector(getState()))
         .switchMap(() => {
@@ -111,7 +111,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
             ]).concat(
                 // tear down
                 action$
-                    .ofType(TOGGLE_CONTROL)
+                    .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
                     .filter(({control}) => control === CONTROL_NAME)
                     .filter(() => !enabledSelector(getState()))
                     .take(1)
