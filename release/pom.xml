@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-bin-release</artifactId>
@@ -130,7 +129,7 @@
               <!-- remove some unwanted dependencies that get pulled over -->
               <tasks>
                 <delete>
-                  <fileset dir="${project.build.directory}/dependency" includes="servlet-api-*.jar,core*.jar"/>
+                  <fileset dir="${project.build.directory}/dependency" includes="servlet-api-*.jar,core*.jar" />
                 </delete>
               </tasks>
             </configuration>
