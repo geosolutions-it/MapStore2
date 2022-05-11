@@ -85,9 +85,11 @@ export const layerDimensionRangeSelector = (state, layerId) => {
     }
     const values = timeRange && timeRange.domain && timeRange.domain.split(",");
     if (values && values.length > 0) {
+        const startValue = values[0];
+        const endValue = values[values.length - 1];
         return {
-            start: values[0],
-            end: values[values.length - 1]
+            start: startValue.indexOf('/') !== -1 ? startValue.split('/')[0] : startValue,
+            end: endValue.indexOf('/') !== -1 ? endValue.split('/')[1] : endValue
         };
     }
     return null;
