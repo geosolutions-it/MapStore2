@@ -117,7 +117,7 @@ import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from
 import {
     queryPanelSelector,
     showCoordinateEditorSelector,
-    drawerEnabledControlSelector
+    drawerEnabledControlSelector, createControlEnabledSelector
 } from '../selectors/controls';
 
 import { setHighlightFeaturesPath as setHighlightFeaturesPathAction } from '../actions/highlight';
@@ -807,16 +807,16 @@ export const resetEditingOnFeatureGridClose = (action$, store) => action$.ofType
 export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID)
         .switchMap( () => {
+            const state = store.getState();
             let actions = [
-                setControlProperty('userExtensions', 'enabled', false),
-                setControlProperty('details', 'enabled', false),
-                setControlProperty('mapTemplates', 'enabled', false),
-                setControlProperty('mapCatalog', 'enabled', false),
-                setControlProperty('metadataexplorer', 'enabled', false),
-                setControlProperty('annotations', 'enabled', false),
-                setControlProperty('details', 'enabled', false)
+                ...(createControlEnabledSelector('userExtensions')(state) ? [setControlProperty('userExtensions', 'enabled', false)] : []),
+                ...(createControlEnabledSelector('details')(state) ? [setControlProperty('details', 'enabled', false)] : []),
+                ...(createControlEnabledSelector('mapTemplates')(state) ? [setControlProperty('mapTemplates', 'enabled', false)] : []),
+                ...(createControlEnabledSelector('mapCatalog')(state) ? [setControlProperty('mapCatalog', 'enabled', false)] : []),
+                ...(createControlEnabledSelector('metadataexplorer')(state) ? [setControlProperty('metadataexplorer', 'enabled', false)] : []),
+                ...(createControlEnabledSelector('annotations')(state) ? [setControlProperty('annotations', 'enabled', false)] : [])
             ];
-            if (showCoordinateEditorSelector(store.getState())) {
+            if (showCoordinateEditorSelector(store.getState()) && createControlEnabledSelector('measure')(state)) {
                 actions.push(setControlProperty('measure', 'enabled', false));
             }
             return Rx.Observable.from(actions);

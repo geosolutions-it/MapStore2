@@ -28,19 +28,20 @@ import {
     TOGGLE_CONTROL,
     SET_CONTROL_PROPERTIES
 } from '../actions/controls';
-import {closeFeatureGrid} from '../actions/featuregrid';
+import {closeFeatureGrid, OPEN_FEATURE_GRID} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
-import {measureSelector} from '../selectors/controls';
+import {createControlEnabledSelector, measureSelector} from '../selectors/controls';
 import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
 import { CLICK_ON_MAP } from '../actions/map';
 import {
     newAnnotation,
     setEditingFeature,
     cleanHighlight,
-    toggleVisibilityAnnotation
+    toggleVisibilityAnnotation, START_DRAWING
 } from '../actions/annotations';
 import {findIndex, get, keys} from "lodash";
 import {shutdownTool} from "../utils/EpicsUtils";
+import {CHANGE_DRAWING_STATUS} from "../actions/draw";
 
 const dockPanels = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details', 'cadastrapp'];
 
@@ -85,7 +86,7 @@ export const openMeasureEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter((action) => action.control === "measure" && isActiveSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), setControlProperty('annotations', 'enabled', false));
+            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
         });
 
 export const closeMeasureEpics = (action$, store) =>
@@ -171,10 +172,36 @@ export const tearDownMeasureOnDrawToolOpen = (action$, store) =>
     shutdownTool(
         action$,
         store,
-        [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL],
+        [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL, OPEN_FEATURE_GRID],
         'measure',
-        ['street-view', 'annotations']
+        ['street-view']
     );
+
+/**
+ * Closes measurement tool when annotations coordinate editor is open
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
+export const tearDownMeasureOnAnnotationsDrawing = (action$, store) =>
+    action$.ofType(START_DRAWING, CHANGE_DRAWING_STATUS)
+        .filter(({type, status, owner}) => {
+            const isActive = createControlEnabledSelector("measure")(store.getState());
+            switch (type) {
+            case CHANGE_DRAWING_STATUS:
+                return isActive &&
+                    ((status === 'drawOrEdit' && owner === 'annotations') || (status === 'start' && owner === 'queryform'));
+            case START_DRAWING:
+            default:
+                return isActive;
+            }
+        })
+        .switchMap( () => {
+            let actions = [
+                setControlProperty("measure", "enabled", null)
+            ];
+            return Rx.Observable.from(actions);
+        });
 
 /**
  * Closes another docks when measure dock (coordinates editor is active in config) is open
@@ -206,5 +233,6 @@ export default {
     addCoordinatesEpic,
     tearDownMeasureDockOnAnotherDockOpen,
     tearDownAnotherDockOnMeasurementOpen,
-    tearDownMeasureOnDrawToolOpen
+    tearDownMeasureOnDrawToolOpen,
+    tearDownMeasureOnAnnotationsDrawing
 };
