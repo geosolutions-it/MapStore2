@@ -23,7 +23,7 @@ const toTime = date => {
  * @param {string} snapType if snap to layer data is active - snaps to start or end point of the interval
  * @returns {string[]} array containing the domains expressed as [start, end] filtered by snapping instant points
  */
-const filterDateArray = (dateArray, snapType) => {
+export const filterDateArray = (dateArray, snapType) => {
     if (snapType) {
         return dateArray.map(rawDate => {
             const [start, end] = rawDate.split("/");
@@ -280,10 +280,11 @@ export const domainsToDimensionsObject = ({ Domains = {} } = {}, url) => {
 };
 
 /**
- * Given an asbosolute date "03-01-2000"
- * and a date intervals array ["01-01-2000/05-01-2000", "04-01-2000/10-02-2000", ...]
- * filters in all start or end dates of the date intervals, returns
- * a dates array composed by start or end dates only ["04-01-2000", ...]
+ * Given an start and end date "03-01-2000" "20-12-2020"
+ * and a date intervals array ["02-01-2000", "04-02-2000", "24-12-2020"]
+ * filters dates array for dates falling within the start/end date range ["04-01-2000"]
+ * this function is used when dealing with intervals that sometimes start or end
+ * outside the specifed animation dates range
  * @param {string[]} datesArray the date intervals array
  * @param {string} startRawDate the reference start date used for filtering
  * @param {string} endRawDate the reference end date used for filtering
@@ -301,3 +302,21 @@ export const getDatesInRange = (datesArray, startRawDate, endRawDate) => {
     return filteredDatesArray;
 };
 
+/**
+ * Given an array of dates or dates intervals in strings
+ * example ["2016-02-23T06:00:00.000Z", "2016-02-23T06:00:00.000Z/2017-02-23T06:00:00.000Z"]
+ * sorts date in ascending order and return the two extremes [high, low] of the dates
+ * @param {string[]} datesArray the date intervals array
+ * @param {string} startRawDate the reference start date used for filtering
+ * @param {string} endRawDate the reference end date used for filtering
+ */
+export const getLowestAndHighestDates = (datesArray) =>  {
+    const sortedDatesArray = datesArray.reduce((acc, cur) => {
+        if (cur.indexOf('/') !== -1) {
+            const [startIntervalDate, endIntervalDate] = cur.split('/');
+            return [...acc, startIntervalDate, endIntervalDate];
+        }
+        return [...acc, cur];
+    }, []).sort();
+    return [sortedDatesArray[0], sortedDatesArray[sortedDatesArray.length - 1]];
+};
