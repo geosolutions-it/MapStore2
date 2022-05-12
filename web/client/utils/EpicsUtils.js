@@ -9,6 +9,7 @@
 import {SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL} from "../actions/controls";
 import {findIndex, keys} from "lodash";
 import {Observable} from "rxjs";
+import {OPEN_FEATURE_GRID} from "../actions/featuregrid";
 
 /**
  * Default wrapper for the epics. This avoids to close all epics system for unhandled exceptions.
@@ -49,24 +50,34 @@ export const wrapEpics = (epics, wrapper = defaultEpicWrapper) =>
  * @param {string|array} toolName - tool name(s) that should be toggled off
  * @param {array} triggers - list of tools that should trigger epic when they are activated
  * @param {function} filter - optional filter to use only subset of actions for epic
+ * @param {function} apply - optional function to override action triggered by default
  * @returns {Observable<unknown>}
  */
-export const shutdownTool = (action$, store, actions, toolName, triggers, filter = () => true) =>
+export const shutdownTool = (action$, store, actions, toolName, triggers, filter = () => true,
+    apply = (state, tool) => {
+        return Array.isArray(tool)
+            ? Observable.from(tool.map(_tool => state.controls[_tool].enabled ? setControlProperty(_tool, 'enabled', null) : null).filter(Boolean))
+            : Observable.from([state?.controls[tool]?.enabled ? setControlProperty(tool, 'enabled', null) : null].filter(Boolean));
+    }) =>
     action$.ofType(...actions)
-        .filter(filter)
+        .filter((action) => filter(action))
         .filter(({control, property, properties = [], type}) => {
+            let assertion = false;
             const state = store.getState();
-            const controlState = state.controls[control].enabled;
+            const controlState = state?.controls[control]?.enabled;
             switch (type) {
+            case OPEN_FEATURE_GRID:
+                return true;
             case SET_CONTROL_PROPERTY:
             case TOGGLE_CONTROL:
-                return (property === 'enabled' || !property) && controlState && triggers.includes(control);
+                assertion = (property === 'enabled' || !property) && controlState && triggers.includes(control);
+                break;
             default:
-                return findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && triggers.includes(control);
+                assertion = findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && triggers.includes(control);
+                break;
             }
+            return assertion && filter({control, property, properties, type});
         })
-        .switchMap(() => {
-            return Array.isArray(toolName)
-                ? Observable.from(toolName.map(tool => setControlProperty(tool, 'enabled', null)))
-                : Observable.from([setControlProperty(toolName, 'enabled', null)]);
+        .switchMap((action) => {
+            return apply(store.getState(), toolName, action);
         });
