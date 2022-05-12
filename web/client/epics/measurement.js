@@ -151,13 +151,14 @@ export const tearDownMeasureDockOnAnotherDockOpen = (action$, store) =>
         dockPanels,
         ({control, property, properties = [], type}) => {
             const state = store.getState();
+            const { showCoordinateEditor } = state?.controls?.measure || {};
             const controlState = state.controls[control].enabled;
             switch (type) {
             case SET_CONTROL_PROPERTY:
             case TOGGLE_CONTROL:
-                return (property === 'enabled' || !property) && controlState && dockPanels.includes(control);
+                return (property === 'enabled' || !property) && controlState && dockPanels.includes(control) && showCoordinateEditor;
             default:
-                return findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && dockPanels.includes(control);
+                return findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && dockPanels.includes(control) && showCoordinateEditor;
             }
         }
     );
