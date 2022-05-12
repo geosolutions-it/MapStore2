@@ -355,14 +355,12 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
                 getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
-            ).map(([next, previous]) => {
-                return updateMetadata({
+            ).map(([next, previous]) =>
+                updateMetadata({
                     forTime: time,
                     next,
                     previous
-                });
-            }
-
+                })
             );
         });
 /**

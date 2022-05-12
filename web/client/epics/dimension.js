@@ -88,7 +88,9 @@ export const queryMultidimensionalAPIExtensionOnAddLayer = (action$, { getState 
                         }
                     }
                     return Observable.empty();
-                }).catch(() => Observable.empty()));
+                })
+                // no multi-dimension support
+                .catch(() => Observable.empty()) );
 /**
  * Updates dimension state for layers that has multidimensional extension.
  */
