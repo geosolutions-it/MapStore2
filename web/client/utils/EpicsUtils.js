@@ -76,7 +76,7 @@ export const shutdownToolOnAnotherToolDrawing = (action$, store, toolName,
                     (status === 'drawOrEdit' || status === 'start') && owner !== toolName;
             case START_DRAWING:
             default:
-                return isActive;
+                return isActive && toolName !== 'annotations';
             }
         })
         .switchMap((action) => {

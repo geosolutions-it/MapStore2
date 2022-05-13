@@ -12,8 +12,8 @@ import assign from 'object-assign';
 import ConfigUtils from "../utils/ConfigUtils";
 import {get} from "lodash";
 
-const DEFAULT_RIGHT_DOCK_PANELS = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details'];
-const DEFAULT_LEFT_DOCK_PANELS = [];
+export const DEFAULT_RIGHT_DOCK_PANELS = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details'];
+export const DEFAULT_LEFT_DOCK_PANELS = [];
 
 const customRightPanels = get(ConfigUtils.getConfigProp('miscSettings'), 'exclusiveDockPanels.right', []);
 const customLeftPanels = get(ConfigUtils.getConfigProp('miscSettings'), 'exclusiveDockPanels.left', []);

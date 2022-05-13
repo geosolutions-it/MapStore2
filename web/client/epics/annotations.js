@@ -85,7 +85,6 @@ import { groupsSelector } from '../selectors/layers';
 
 import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
 import {shutdownToolOnAnotherToolDrawing} from "../utils/EpicsUtils";
-import {CONTROL_NAME} from "../plugins/StreetView/constants";
 /**
     * Epics for annotations
     * @name epics.annotations
@@ -525,8 +524,8 @@ export default {
     /**
         this epic closes annotation once other tools takes control over drawing
         */
-    tearDownByDrawingToolsEpic: (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, CONTROL_NAME,
-        () => purgeMapInfoResults()),
+    tearDownByDrawingToolsEpic: (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'annotations',
+        () => Rx.Observable.of(purgeMapInfoResults())),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === ANNOTATIONS && !store.getState().controls.annotations.enabled)
         .switchMap(() => {
