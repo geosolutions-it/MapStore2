@@ -24,12 +24,7 @@ import {OPEN_FEATURE_GRID} from "../actions/featuregrid";
  * @returns {Observable<unknown>}
  */
 export const shutdownToolOnAnotherToolDrawing = (action$, store, toolName,
-    apply = (state, tool) => {
-        let actions = [
-            setControlProperty(tool, "enabled", null)
-        ];
-        return Rx.Observable.from(actions);
-    },
+    apply = (state, tool) => Rx.Observable.from([setControlProperty(tool, "enabled", null)]),
     isActiveCallback = (state, name) => createControlEnabledSelector(name)(state)
 ) =>
     action$.ofType(START_DRAWING, CHANGE_DRAWING_STATUS, REGISTER_EVENT_LISTENER, OPEN_FEATURE_GRID)
