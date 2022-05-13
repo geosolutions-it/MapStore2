@@ -141,3 +141,5 @@ export const mapPaddingSelector = state => {
         top: parseLayoutValue(boundingMapRect.top, map.size.height)
     };
 };
+
+export const dockPanelsSelector = (state) => state?.maplayout?.dockPanels ?? { left: [], right: []};

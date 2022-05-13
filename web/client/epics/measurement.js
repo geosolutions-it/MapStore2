@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import Rx, {Observable} from 'rxjs';
+import Rx from 'rxjs';
 import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
@@ -25,25 +25,20 @@ import {
     toggleControl,
     setControlProperty,
     SET_CONTROL_PROPERTY,
-    TOGGLE_CONTROL,
-    SET_CONTROL_PROPERTIES
+    TOGGLE_CONTROL
 } from '../actions/controls';
-import {closeFeatureGrid, OPEN_FEATURE_GRID} from '../actions/featuregrid';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
-import {createControlEnabledSelector, measureSelector} from '../selectors/controls';
+import {measureSelector} from '../selectors/controls';
 import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
-import { CLICK_ON_MAP } from '../actions/map';
+import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../actions/map';
 import {
     newAnnotation,
     setEditingFeature,
     cleanHighlight,
-    toggleVisibilityAnnotation, START_DRAWING
+    toggleVisibilityAnnotation
 } from '../actions/annotations';
-import {findIndex, get, keys} from "lodash";
-import {shutdownTool} from "../utils/EpicsUtils";
-import {CHANGE_DRAWING_STATUS} from "../actions/draw";
-
-const dockPanels = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details', 'cadastrapp'];
+import {shutdownToolOnAnotherToolDrawing} from "../utils/EpicsUtils";
+import {updateDockPanelsList} from "../actions/maplayout";
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -86,7 +81,13 @@ export const openMeasureEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter((action) => action.control === "measure" && isActiveSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
+            const actions = [purgeMapInfoResults(), hideMapinfoMarker(),
+                registerEventListener('click', 'measure')];
+            const {showCoordinateEditor} = store.getState()?.controls?.measure || {};
+            if (showCoordinateEditor) {
+                actions.push(updateDockPanelsList('measure', 'add', 'right'));
+            }
+            return Rx.Observable.from(actions);
         });
 
 export const closeMeasureEpics = (action$, store) =>
@@ -103,7 +104,13 @@ export const closeMeasureEpics = (action$, store) =>
                 area: 0,
                 bearing: 0
             };
-            return Rx.Observable.of(changeMeasurement(newMeasureState), cleanHighlight());
+            const actions = [changeMeasurement(newMeasureState), cleanHighlight(), unRegisterEventListener('click', 'measure')];
+
+            const {showCoordinateEditor} = store.getState()?.controls?.measure || {};
+            if (showCoordinateEditor) {
+                actions.push(updateDockPanelsList('measure', 'remove', 'right'));
+            }
+            return Rx.Observable.from(actions);
         });
 
 export const setMeasureStateFromAnnotationEpic = (action$, store) =>
@@ -137,94 +144,13 @@ export const addCoordinatesEpic = (action$, {getState = () => {}}) =>
         });
 
 /**
- * Closes measure dock (coordinates editor is active in config) when another dock panel is open
+ * Closes measurement tool when one of the drawing tools takes control
  * @param action$
  * @param store
  * @returns {Observable<unknown>}
  */
-export const tearDownMeasureDockOnAnotherDockOpen = (action$, store) =>
-    shutdownTool(
-        action$,
-        store,
-        [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL],
-        'measure',
-        dockPanels,
-        ({control, property, properties = [], type}) => {
-            const state = store.getState();
-            const { showCoordinateEditor } = state?.controls?.measure || {};
-            const controlState = state.controls[control].enabled;
-            switch (type) {
-            case SET_CONTROL_PROPERTY:
-            case TOGGLE_CONTROL:
-                return (property === 'enabled' || !property) && controlState && dockPanels.includes(control) && showCoordinateEditor;
-            default:
-                return findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && dockPanels.includes(control) && showCoordinateEditor;
-            }
-        }
-    );
+export const tearDownMeasureOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'measure');
 
-/**
- * Closes measure tool when another drawing tool is open
- * @param action$
- * @param store
- * @returns {Observable<unknown>}
- */
-export const tearDownMeasureOnDrawToolOpen = (action$, store) =>
-    shutdownTool(
-        action$,
-        store,
-        [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL, OPEN_FEATURE_GRID],
-        'measure',
-        ['street-view']
-    );
-
-/**
- * Closes measurement tool when annotations coordinate editor is open
- * @param action$
- * @param store
- * @returns {Observable<unknown>}
- */
-export const tearDownMeasureOnAnnotationsDrawing = (action$, store) =>
-    action$.ofType(START_DRAWING, CHANGE_DRAWING_STATUS)
-        .filter(({type, status, owner}) => {
-            const isActive = createControlEnabledSelector("measure")(store.getState());
-            switch (type) {
-            case CHANGE_DRAWING_STATUS:
-                return isActive &&
-                    ((status === 'drawOrEdit' && owner === 'annotations') || (status === 'start' && owner === 'queryform'));
-            case START_DRAWING:
-            default:
-                return isActive;
-            }
-        })
-        .switchMap( () => {
-            let actions = [
-                setControlProperty("measure", "enabled", null)
-            ];
-            return Rx.Observable.from(actions);
-        });
-
-/**
- * Closes another docks when measure dock (coordinates editor is active in config) is open
- * @param action$
- * @param store
- * @returns {Observable<unknown>}
- */
-export const tearDownAnotherDockOnMeasurementOpen = (action$, store) =>
-    action$.ofType(SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-        .filter(() => {
-            const {showCoordinateEditor, enabled} = store.getState()?.controls?.measure || {};
-            return showCoordinateEditor && enabled;
-        })
-        .switchMap(() => {
-            const actions = [];
-            const state = store.getState();
-            dockPanels.forEach((controlName) => {
-                const enabled = get(state, ['controls', controlName, 'enabled'], false);
-                enabled && actions.push(setControlProperty(controlName, 'enabled', null));
-            });
-            return Observable.from(actions);
-        });
 export default {
     addAnnotationFromMeasureEpic,
     addAsLayerEpic,
@@ -232,8 +158,5 @@ export default {
     closeMeasureEpics,
     setMeasureStateFromAnnotationEpic,
     addCoordinatesEpic,
-    tearDownMeasureDockOnAnotherDockOpen,
-    tearDownAnotherDockOnMeasurementOpen,
-    tearDownMeasureOnDrawToolOpen,
-    tearDownMeasureOnAnnotationsDrawing
+    tearDownMeasureOnDrawToolActive
 };
