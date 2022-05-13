@@ -187,7 +187,7 @@ describe('measurement epics', () => {
             }, null);
     });
     it('test openMeasureEpic', (done) => {
-        const NUMBER_OF_ACTIONS = 3;
+        const NUMBER_OF_ACTIONS = 4;
         const state = {
             controls: {
                 measure: {
@@ -198,14 +198,15 @@ describe('measurement epics', () => {
         };
 
         testEpic(
-            addTimeoutEpic(openMeasureEpic, 10),
+            addTimeoutEpic(openMeasureEpic, 100),
             NUMBER_OF_ACTIONS, [
                 setControlProperty("measure", "enabled", true)
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[0].type).toBe("FEATUREGRID:CLOSE_GRID");
-                expect(actions[1].type).toBe("PURGE_MAPINFO_RESULTS");
-                expect(actions[2].type).toBe("HIDE_MAPINFO_MARKER");
+                expect(actions[0].type).toBe("PURGE_MAPINFO_RESULTS");
+                expect(actions[1].type).toBe("HIDE_MAPINFO_MARKER");
+                expect(actions[2].type).toBe("REGISTER_EVENT_LISTENER");
+                expect(actions[3].type).toBe("MAP_LAYOUT:UPDATE_DOCK_PANELS");
                 done();
             }, state);
     });
