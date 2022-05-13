@@ -6,10 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL} from "../actions/controls";
-import {findIndex, keys} from "lodash";
-import {Observable} from "rxjs";
+import {setControlProperty} from "../actions/controls";
+import Rx from "rxjs";
 import {OPEN_FEATURE_GRID} from "../actions/featuregrid";
+import {createControlEnabledSelector} from "../selectors/controls";
+import {REGISTER_EVENT_LISTENER} from "../actions/map";
+import {CHANGE_DRAWING_STATUS} from "../actions/draw";
+import {START_DRAWING} from "../actions/annotations";
 
 /**
  * Default wrapper for the epics. This avoids to close all epics system for unhandled exceptions.
@@ -43,41 +46,39 @@ export const wrapEpics = (epics, wrapper = defaultEpicWrapper) =>
 
 
 /**
- * Common part of the workflow that toggles one plugin off when another is activated
+ * Common part of the workflow that toggles one plugin off when another plugin intend to perform drawing action
  * @param action$
  * @param store
- * @param {array} actions - list of actions that epic will track
- * @param {string|array} toolName - tool name(s) that should be toggled off
- * @param {array} triggers - list of tools that should trigger epic when they are activated
- * @param {function} filter - optional filter to use only subset of actions for epic
+ * @param {string} toolName - tool name(s) that should be toggled off
  * @param {function} apply - optional function to override action triggered by default
+ * @param isActiveCallback - optional function to override callback to check tool activeness
  * @returns {Observable<unknown>}
  */
-export const shutdownTool = (action$, store, actions, toolName, triggers, filter = () => true,
+export const shutdownToolOnAnotherToolDrawing = (action$, store, toolName,
     apply = (state, tool) => {
-        return Array.isArray(tool)
-            ? Observable.from(tool.map(_tool => state.controls[_tool].enabled ? setControlProperty(_tool, 'enabled', null) : null).filter(Boolean))
-            : Observable.from([state?.controls[tool]?.enabled ? setControlProperty(tool, 'enabled', null) : null].filter(Boolean));
-    }) =>
-    action$.ofType(...actions)
-        .filter((action) => filter(action))
-        .filter(({control, property, properties = [], type}) => {
-            let assertion = false;
-            const state = store.getState();
-            const controlState = state?.controls[control]?.enabled;
+        let actions = [
+            setControlProperty(tool, "enabled", null)
+        ];
+        return Rx.Observable.from(actions);
+    },
+    isActiveCallback = (state, name) => createControlEnabledSelector(name)(state)
+) =>
+    action$.ofType(START_DRAWING, CHANGE_DRAWING_STATUS, REGISTER_EVENT_LISTENER, OPEN_FEATURE_GRID)
+        .filter(({type, status, owner, eventName, toolName: name}) => {
+            const isActive = isActiveCallback(store.getState(), toolName);
             switch (type) {
             case OPEN_FEATURE_GRID:
-                return true;
-            case SET_CONTROL_PROPERTY:
-            case TOGGLE_CONTROL:
-                assertion = (property === 'enabled' || !property) && controlState && triggers.includes(control);
-                break;
+                return toolName !== 'featureGrid';
+            case REGISTER_EVENT_LISTENER:
+                return isActive && eventName === 'click' && name !== toolName;
+            case CHANGE_DRAWING_STATUS:
+                return isActive &&
+                    (status === 'drawOrEdit' || status === 'start') && owner !== toolName;
+            case START_DRAWING:
             default:
-                assertion = findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && triggers.includes(control);
-                break;
+                return isActive;
             }
-            return assertion && filter({control, property, properties, type});
         })
         .switchMap((action) => {
-            return apply(store.getState(), toolName, action);
+            return isActiveCallback(store.getState(), toolName) ? apply(store.getState(), toolName, action) : Rx.Observable.empty();
         });

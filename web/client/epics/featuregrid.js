@@ -112,11 +112,15 @@ import {
     LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER
 } from '../actions/featuregrid';
 
-import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
+import {
+    TOGGLE_CONTROL,
+    resetControls,
+    setControlProperty,
+    toggleControl
+} from '../actions/controls';
 
 import {
     queryPanelSelector,
-    showCoordinateEditorSelector,
     drawerEnabledControlSelector, createControlEnabledSelector
 } from '../selectors/controls';
 
@@ -160,6 +164,8 @@ import {isSnappingActive} from "../selectors/draw";
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
+import {dockPanelsSelector} from "../selectors/maplayout";
+import {shutdownToolOnAnotherToolDrawing} from "../utils/EpicsUtils";
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -804,23 +810,36 @@ export const resetEditingOnFeatureGridClose = (action$, store) => action$.ofType
 
 );
 
+/**
+ * close all dock panels at the right whenever feature editor is open
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
 export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID)
         .switchMap( () => {
+            const actions = [];
             const state = store.getState();
-            let actions = [
-                ...(createControlEnabledSelector('userExtensions')(state) ? [setControlProperty('userExtensions', 'enabled', false)] : []),
-                ...(createControlEnabledSelector('details')(state) ? [setControlProperty('details', 'enabled', false)] : []),
-                ...(createControlEnabledSelector('mapTemplates')(state) ? [setControlProperty('mapTemplates', 'enabled', false)] : []),
-                ...(createControlEnabledSelector('mapCatalog')(state) ? [setControlProperty('mapCatalog', 'enabled', false)] : []),
-                ...(createControlEnabledSelector('metadataexplorer')(state) ? [setControlProperty('metadataexplorer', 'enabled', false)] : []),
-                ...(createControlEnabledSelector('annotations')(state) ? [setControlProperty('annotations', 'enabled', false)] : [])
-            ];
-            if (showCoordinateEditorSelector(store.getState()) && createControlEnabledSelector('measure')(state)) {
-                actions.push(setControlProperty('measure', 'enabled', false));
-            }
+            const rightPanels = dockPanelsSelector(state).right;
+            rightPanels.forEach(panel => {
+                if (createControlEnabledSelector(panel)(state)) actions.push(setControlProperty(panel, 'enabled', false));
+            });
             return Rx.Observable.from(actions);
         });
+
+/**
+ * closes feature editor once another drawing tool is open
+ * @param action$
+ * @param store
+ * @returns {Observable<*>}
+ */
+export const closeFeatureGridOnDrawingToolOpen = (action$, store) =>
+    shutdownToolOnAnotherToolDrawing(action$, store, 'featureGrid',
+        () => Rx.Observable.from([closeFeatureGrid()]),
+        (state) => isFeatureGridOpen(state)
+    );
+
 /**
  * intercept geometry changed events in draw support to update current
  * modified geometry in featuregrid

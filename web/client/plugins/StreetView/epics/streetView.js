@@ -4,30 +4,23 @@ import Rx from 'rxjs';
 import {
     RESET_CONTROLS,
     SET_CONTROL_PROPERTIES,
-    SET_CONTROL_PROPERTY, setControlProperty,
+    SET_CONTROL_PROPERTY,
     TOGGLE_CONTROL
 } from "../../../actions/controls";
 import { info, error } from '../../../actions/notifications';
 
 import { updateAdditionalLayer, removeAdditionalLayer } from '../../../actions/additionallayers';
-import { CLICK_ON_MAP } from '../../../actions/map';
+import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../../../actions/map';
 
 
-import {hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from '../../../actions/mapInfo';
+import {hideMapinfoMarker, toggleMapInfoState} from '../../../actions/mapInfo';
 import { mapInfoEnabledSelector } from "../../../selectors/mapInfo";
 
 import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "../constants";
 import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "../selectors/streetView";
 import {setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
 import { getLocation } from '../api/gMaps';
-import {shutdownTool} from "../../../utils/EpicsUtils";
-import {START_DRAWING} from "../../../actions/annotations";
-import {CHANGE_DRAWING_STATUS} from "../../../actions/draw";
-import {createControlEnabledSelector} from "../../../selectors/controls";
-import {coordinateEditorEnabledSelector} from "../../../selectors/annotations";
-import {findIndex, keys, get} from "lodash";
-import {closeFeatureGrid, OPEN_FEATURE_GRID} from "../../../actions/featuregrid";
-import {isFeatureGridOpen} from "../../../selectors/featuregrid";
+import {shutdownToolOnAnotherToolDrawing} from "../../../utils/EpicsUtils";
 
 const getNavigationArrowSVG = function({rotation = 0}) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
@@ -89,7 +82,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
         .switchMap(() => {
             // setup
             return Rx.Observable.from([
-                ...(isFeatureGridOpen(getState()) ? [closeFeatureGrid()] : []),
+                registerEventListener('click', CONTROL_NAME),
                 ...(useStreetViewDataLayerSelector(getState())
                     ? [updateAdditionalLayer(
                         STREET_VIEW_DATA_LAYER_ID,
@@ -124,6 +117,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
                     .take(1)
                     .switchMap(() => {
                         return  Rx.Observable.from([
+                            unRegisterEventListener('click', CONTROL_NAME),
                             ...(useStreetViewDataLayerSelector(getState()) ? [removeAdditionalLayer({id: STREET_VIEW_DATA_LAYER_ID, owner: STREET_VIEW_OWNER})] : []),
                             removeAdditionalLayer({id: MARKER_LAYER_ID, owner: STREET_VIEW_OWNER})
                         ]);
@@ -211,49 +205,10 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
     });
 };
 
-export const tearDownStreetViewOnToolActivated = (action$, store) => {
-    const toolList = ['measure'];
-    return shutdownTool(action$, store, [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL, OPEN_FEATURE_GRID], CONTROL_NAME, toolList,
-        ({control, property, properties = [], type}) => {
-            const state = store.getState();
-            const controlState = get(state, ['controls', control, 'enabled'], null);
-            switch (type) {
-            case OPEN_FEATURE_GRID:
-                return true;
-            case SET_CONTROL_PROPERTY:
-            case TOGGLE_CONTROL:
-                return (property === 'enabled' || !property) && controlState && toolList.includes(control);
-            default:
-                return findIndex(keys(properties), prop => prop === 'enabled') > -1 && controlState && toolList.includes(control);
-            }
-        }
-    );
-};
-
-export const tearDownAnnotationsOnStreetViewOpen = (action$, store) =>
-    shutdownTool(action$, store, [SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL], ['annotations'], [CONTROL_NAME],
-        () => {
-            const state = store.getState();
-            return createControlEnabledSelector(CONTROL_NAME)(state) && coordinateEditorEnabledSelector(state);
-        },
-        () => Rx.Observable.from([purgeMapInfoResults()])
-    );
-
-export const tearDownStreetViewOnAnnotationsDrawing = (action$, store) =>
-    action$.ofType(START_DRAWING, CHANGE_DRAWING_STATUS)
-        .filter(({type, status, owner}) => {
-            const isActive = createControlEnabledSelector(CONTROL_NAME)(store.getState());
-            switch (type) {
-            case CHANGE_DRAWING_STATUS:
-                return isActive && ((status === 'drawOrEdit' && owner === 'annotations') || (status === 'start' && owner === 'queryform'));
-            case START_DRAWING:
-            default:
-                return isActive;
-            }
-        })
-        .switchMap( () => {
-            let actions = [
-                setControlProperty(CONTROL_NAME, "enabled", null)
-            ];
-            return Rx.Observable.from(actions);
-        });
+/**
+ * Closes street-view tool when one of the drawing tools takes control
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
+export const tearDownStreetViewOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, CONTROL_NAME);
