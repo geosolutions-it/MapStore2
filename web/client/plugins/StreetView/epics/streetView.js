@@ -20,7 +20,7 @@ import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYE
 import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "../selectors/streetView";
 import {setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
 import { getLocation } from '../api/gMaps';
-import {shutdownToolOnAnotherToolDrawing} from "../../../utils/EpicsUtils";
+import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
 
 const getNavigationArrowSVG = function({rotation = 0}) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">

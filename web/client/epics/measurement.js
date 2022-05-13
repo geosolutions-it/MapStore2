@@ -37,8 +37,8 @@ import {
     cleanHighlight,
     toggleVisibilityAnnotation
 } from '../actions/annotations';
-import {shutdownToolOnAnotherToolDrawing} from "../utils/EpicsUtils";
 import {updateDockPanelsList} from "../actions/maplayout";
+import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
