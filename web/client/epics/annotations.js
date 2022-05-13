@@ -84,7 +84,7 @@ import { groupsSelector } from '../selectors/layers';
 
 
 import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
-import {shutdownToolOnAnotherToolDrawing} from "../utils/EpicsUtils";
+import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 /**
     * Epics for annotations
     * @name epics.annotations

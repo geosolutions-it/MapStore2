@@ -165,7 +165,7 @@ import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
 import {dockPanelsSelector} from "../selectors/maplayout";
-import {shutdownToolOnAnotherToolDrawing} from "../utils/EpicsUtils";
+import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
