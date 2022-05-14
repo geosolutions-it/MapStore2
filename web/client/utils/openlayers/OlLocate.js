@@ -173,7 +173,8 @@ OlLocate.prototype._updatePosFt = function() {
         } else {
            let accuracypolygon = this.geolocate.getAccuracyGeometry();
            this.posFt.setGeometry(new GeometryCollection([point, accuracypolygon]));
-        }    } else {
+        }
+    } else {
         this.posFt.setGeometry(new GeometryCollection([point]));
     }
     const heading = this.geolocate.getHeading();
