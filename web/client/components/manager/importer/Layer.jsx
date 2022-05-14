@@ -10,7 +10,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 import { Panel } from 'react-bootstrap';
 import Message from '../../I18N/Message';
 

@@ -1,5 +1,10 @@
 # Create your own MapStore project
 
+
+!!! note
+    From version 2021.02.xx MapStore introduced a new project system. Take a look [here](https://github.com/geosolutions-it/MapStore2/issues/6314) to learn more about the new project system.
+
+
 To create a new MapStore based project you can use the createProject script.
 First of all, if you don't have done it before, clone the MapStore2 repository master branch into a local folder:
 
@@ -82,3 +87,5 @@ To sync MapStore2 dependencies just run npm install from project root folder.
 ```sh
 npm install
 ```
+
+Also make sure to follow the migration guidelines [here](../mapstore-migration-guide).

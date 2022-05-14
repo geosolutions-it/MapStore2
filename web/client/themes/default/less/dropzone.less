@@ -1,18 +1,94 @@
-.dropzone.alert.alert-info {
-	cursor: pointer;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+
+    .dropzone-thumbnail-container .alert,
+    .dropzone-filedrop-container .alert {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .dropzone-filedrop-container {
+        .dropzone:hover .dropzone-filedrop-remove span {
+            .color-var(@theme-vars[danger]);
+        }
+
+        .dropzone {
+            .dropzone-filedrop-remove span:hover {
+                .color-var(@theme-vars[danger]);
+                opacity: 0.7;
+            }
+        }
+    }
+
+    .dropzone .dropzone-content-image-added {
+        .color-var(@theme-vars[main-bg]);
+        text-shadow: @ms-main-border-color 2px 2px 2px;
+    }
+
+    .dropzone:hover .dropzone-remove span {
+        .color-var(@theme-vars[main-bg]);
+    }
+
+    .dropzone-remove span:hover {
+        .color-var(@theme-vars[danger], true);
+    }
+
+    .ms-thumbnail {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        .dropzone-remove {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        .dropzone-remove .glyphicon {
+            .color-var(@theme-vars[main-color]);
+
+            &:hover {
+                .color-var(@theme-vars[main-color]);
+            }
+        }
+
+        .ms-thumbnail-dropzone-active {
+            outline-width: 2px;
+            outline-style: solid;
+            .outline-color-var(@theme-vars[primary]);
+        }
+
+        .ms-thumbnail-dropzone-reject {
+            outline-width: 2px;
+            outline-style: solid;
+            .outline-color-var(@theme-vars[danger]);
+        }
+    }
 }
 
-.dropzone-thumbnail-container .alert, .dropzone-filedrop-container .alert {
-	overflow: hidden;
-	position: relative;
-	height: 180px;
-	margin: 0;
-	padding: 0;
-	border-color: @ms2-color-shade-lighter;
+// **************
+// Layout
+// **************
+.dropzone.alert.alert-info {
+    cursor: pointer;
+}
+
+.dropzone-thumbnail-container .alert,
+.dropzone-filedrop-container .alert {
+    overflow: hidden;
+    position: relative;
+    height: 180px;
+    margin: 0;
+    padding: 0;
 }
 
 .dropzone-thumbnail-container div.dropzone-content-image-added {
-	transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
 }
 
 .dropzone-filedrop-container {
@@ -20,10 +96,6 @@
         width: 50%;
         float: left;
         font-weight: normal;
-    }
-
-    .dropzone:hover .dropzone-filedrop-remove span {
-        color: red;
     }
 
     .dropzone {
@@ -62,174 +134,162 @@
             font-size: 16px;
         }
 
-        .dropzone-filedrop-remove span:hover {
-            color: #f45353;
-        }
     }
 }
 
 .dropzone .dropzone-content-image-added {
-	visibility: hidden;
-	padding-top: 40px;
-	color: @ms2-color-background;
-	text-shadow: @ms2-color-shade-darker 2px 2px 2px;
-	vertical-align: middle;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	text-align: center;
-	position: absolute;
-	width: 100%;
+    visibility: hidden;
+    padding-top: 40px;
+    vertical-align: middle;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    position: absolute;
+    width: 100%;
 }
 
 .dropzone:hover .dropzone-content-image-added {
-	visibility: visible;
-	transition: all 0.2s ease-in;
-	z-index: 2;
-	background: rgba(0,0,0,.7);
+    visibility: visible;
+    transition: all 0.2s ease-in;
+    z-index: 2;
+    background: rgba(0, 0, 0, .7);
 }
 
 .dropzone .dropzone-content-image {
-	padding-top: 40px;
-	transition: all 0.2s ease-in;
-	font-size: normal;
-	text-align: center;
+    padding-top: 40px;
+    transition: all 0.2s ease-in;
+    font-size: normal;
+    text-align: center;
 }
 
 .dropzone:hover .dropzone-content-image {
-	transition: all 0.2s ease-in;
-	font-size: large;
+    transition: all 0.2s ease-in;
+    font-size: large;
 }
 
 .dropzone-thumbnail-container img {
-	width: 100%;
-	height: auto;
+    width: 100%;
+    height: auto;
 }
 
 .dropzone-remove {
-	top: 0;
-	right: 0;
-	z-index: 5;
-	position: absolute;
-	font-size: x-large;
-}
-
-.dropzone:hover .dropzone-remove span {
-	color: @ms2-color-background;
+    top: 0;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    font-size: x-large;
 }
 
 .dropzone-remove span {
-	color: transparent;
-}
-
-.dropzone-remove span:hover {
-	color: @ms2-color-danger !important;
+    color: transparent;
 }
 
 .dropzone-errorBox {
-	margin-bottom: 10px;
-	padding: 15px;
+    margin-bottom: 10px;
+    padding: 15px;
 }
 
 
 .ms-thumbnail {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	height: 180px;
-	border: 1px solid @ms2-color-shade-lighter;
-	.ms-thumbnail-dropzone {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
-	.dropzone-content-image,
-	.dropzone-content-image-added {
-		word-break: break-word;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 8px;
-		background: rgba(0, 0, 0, 0.4);
-		color: #ffffff;
-		text-align: center;
-		cursor: pointer;
-	}
+    position: relative;
+    width: 100%;
+    height: 100%;
+    height: 180px;
 
-	.dropzone-content-image-added {
-		opacity: 0;
-		&:hover {
-			opacity: 1;
-		}
-	}
-	.dropzone-remove {
-		top: 4px;
-		right: 4px;
-		position: absolute;
-		padding: 2px;
-		font-size: 18px;
-		width: 24px;
-		height: 24px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background-color: @ms2-color-background;
-		opacity: 0.8;
-		.shadow-soft;
-	}
-	.dropzone-remove .glyphicon {
-		color: @ms2-color-text;
-		cursor: pointer;
-		&:hover {
-			color: @ms2-color-text;
-			opacity: 0.75;
-		}
-	}
-	.ms-thumbnail-dropzone-active {
-		outline: 2px solid lighten(@ms2-color-primary, 20%);
-		.dropzone-content-image,
-		.dropzone-content-image-added {
-			background: rgba(0, 0, 0, 0.2);
-		}
-	}
-	.ms-thumbnail-dropzone-reject {
-		outline: 2px solid lighten(@ms2-color-danger, 10%);
-	}
-	&.ms-loading {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+    .ms-thumbnail-dropzone {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
 
-	.btn-group {
-		position: absolute;
-		right: 0;
-		top: 0;
-		padding: 4px;
+    .dropzone-content-image,
+    .dropzone-content-image-added {
+        word-break: break-word;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        background: rgba(0, 0, 0, 0.4);
+        color: #ffffff;
+        text-align: center;
+        cursor: pointer;
+    }
 
-		.btn {
-			.shadow-soft;
-		}
-	}
+    .dropzone-content-image-added {
+        opacity: 0;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .dropzone-remove {
+        top: 4px;
+        right: 4px;
+        position: absolute;
+        padding: 2px;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.8;
+        .shadow-soft;
+    }
+
+    .dropzone-remove .glyphicon {
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+
+    .ms-thumbnail-dropzone-active {
+        .dropzone-content-image,
+        .dropzone-content-image-added {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    &.ms-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-group {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 4px;
+
+        .btn {
+            .shadow-soft;
+        }
+    }
 }
 
 /* buttons in map thumbnails */
 .dropzone-thumbnail-container {
-	.btn-group {
-		position: absolute;
-		right: 0;
-		top: 0;
-		padding: 4px;
-		z-index: 2;
-		.btn {
-			.shadow-soft;
-		}
-	}
+    .btn-group {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 4px;
+        z-index: 2;
+
+        .btn {
+            .shadow-soft;
+        }
+    }
 }

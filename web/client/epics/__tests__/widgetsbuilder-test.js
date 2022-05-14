@@ -166,7 +166,7 @@ describe('widgetsbuilder epic', () => {
                 default:
                     done(new Error("Action not recognized"));
                 }
-            }, );
+            } );
             done();
         }, {
             controls: {
@@ -193,7 +193,7 @@ describe('widgetsbuilder epic', () => {
                 default:
                     done(new Error("Action not recognized"));
                 }
-            }, );
+            } );
             done();
         }, {
             controls: {

@@ -1,4 +1,4 @@
-Contributing to MapStore 2
+Contributing to MapStore 
 ==========================
 
  1. [Getting Involved](#getting-involved)
@@ -8,26 +8,27 @@ Contributing to MapStore 2
 
 ## Getting Involved
 
-There are several ways you can contribute to MapStore 2 development.
-If you are a developer, you can contribute new features and bug fixes, using pull requests.
-But you can also help by discovering and [reporting bugs](#reporting-bugs);
-[improving documentation](#improving-documentation);
-helping others on the [MapStore users mailing list](https://groups.google.com/d/forum/mapstore-users)
-and [GitHub issues](https://github.com/geosolutions-it/MapStore2/issues).
+There are several ways you can contribute to MapStore development.
+If you are a developer, you can provide new features and bug fixes, by using pull requests.
+But you can also help by:
+- discovering and [reporting bugs](#reporting-bugs);
+- improving [documentation](#improving-documentation);
+- helping others on the [MapStore users mailing list](https://groups.google.com/d/forum/mapstore-users) or [MapStore developers mailing list](https://groups.google.com/d/forum/mapstore-developers)
+- helping others on the [GitHub issues](https://github.com/geosolutions-it/MapStore2/issues).
 
 ## Reporting Bugs
 
 Before reporting a bug on the project's [issues page](https://github.com/geosolutions-it/MapStore2/issues),
-first make sure that your issue is caused by MapStore 2, not your application code
+first make sure that your issue is caused by MapStore, not your application code
 (e.g. passing incorrect arguments to methods, etc.).
 Second, search the already reported issues for similar cases,
 and if it's already reported, just add any additional details in the comments.
 
-After you've made sure that you've found a new MapStore 2 bug,
+After you've made sure that you've found a new MapStore bug,
 here are some tips for creating a helpful report that will make fixing it much easier and quicker:
 
  * Write a **descriptive, specific title**. Bad: *Map does not show*. Good: *Doing X in IE9 causes Z*.
- * Include **browser, OS and MapStore 2 version** info in the description.
+ * Include **browser, OS and MapStore version** info in the description.
  * Create a **simple test case** that demonstrates the bug (e.g. using [JSFiddle](http://jsfiddle.net/) or [JS Bin](http://jsbin.com/)).
  * Check whether the bug can be reproduced in **other browsers**.
  * Check if the bug occurs in the stable version, master, or both.
@@ -50,14 +51,14 @@ Before sending a pull request with a new feature, check if it's been discussed b
 or [on the MapStore developers mailing list](https://groups.google.com/d/forum/mapstore-developers)),
 and ask yourself two questions:
 
- 1. Are you sure that this new feature is important enough to justify its presence in the MapStore 2 core?
+ 1. Are you sure that this new feature is important enough to justify its presence in the MapStore core?
     Or will it look better as a plugin in a separate repository?
  2. Is it written in a simple, concise way that doesn't add bulk to the codebase?
 
 If your feature did get merged into master,
 please consider submitting another pull request with the corresponding [documentation update](#improving-documentation).
 
-### Making Changes to MapStore 2 Source
+### Making Changes to MapStore Source
 
 If you're not yet familiar with the way GitHub works (forking, pull requests, etc.),
 be sure to check out the awesome [article about forking](https://help.github.com/articles/fork-a-repo)
@@ -70,12 +71,12 @@ Please do not commit to the `master` branch, or your unrelated changes will go i
 
 Your pull request must:
 
- * Follow MapStore 2's coding style.
+ * Follow MapStore's coding style.
 
- * Pass the integration tests run automatically by the Travis Continuous
+ * Pass the integration tests run automatically by the Github Action - Continuous
    Integration system.
 
- * Address a single issue or add a single item of functionality. (Start the pull request title with the addressed issues if in case)
+ * Address a single issue or add a single item of functionality. (Start the pull request title with the addressed issues if in case and #NUMBER_OF_ISSUE)
 
  * Contain a clean history of small, incremental, logically separate commits,
    with no merge commits.
@@ -94,7 +95,7 @@ It is strongly recommended that you run
     $ npm run lint
 
 before every commit.  This will catch many problems quickly, and it is much
-faster than waiting for the Travis CI integration tests to run.
+faster than waiting for the CI integration tests to run.
 
 The `test` build target runs a number of quick tests on your code.
 
@@ -110,16 +111,26 @@ If you are testing a specific component follow the following convention:
 * Component: `MyComponent.jsx`
 * Test File: `MyComponent-test.jsx`
 
-### Follow MapStore 2's coding style
+### Follow MapStore's coding style
 
-MapStore 2 follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
+MapStore follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
 
 The set of used rules can be found in the ESLint config package[eslint-config-mapstore](https://github.com/geosolutions-it/MapStore2/blob/master/utility/eslint/index.js) file, deployed on npm and configured in the `package.json`.
+
+Additionally if you use VScode these are the extensions to install that will help notify lint errors on the fly
+- [error lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
+- [ESlint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+We suggest also to add the following configuration that will fix lint errors while saving the file (`.vscode/settings.json`)
+
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
 
 You can run the linter locally on your machine before committing using the `lint`
 target:
 
-    $ npm lint
+    $ npm run lint
 
 In addition, take care of adding the standard file header in each javascript / css added file, and update copyright years in modified ones.
 
@@ -146,7 +157,7 @@ http://editorconfig.org/#download) site links to plugins for various editors.
 ### Pass the integration tests run automatically by the Travis CI system
 
 The integration tests contain a number of automated checks to ensure that the
-code follows the MapStore 2 style and does not break tests or examples.  You
+code follows the MapStore style and does not break tests or examples.  You
 can run the integration tests locally using the `test` target:
 
     $ npm test
@@ -202,9 +213,10 @@ Please keep the header line short, no more than 50 characters.
 ### Be possible to merge automatically
 
 Occasionally other changes to `master` might mean that your pull request cannot
-be merged automatically.  In this case you may need to rebase your branch on a
-more recent `master`, resolve any conflicts, and `git push --force` to update
-your branch so that it can be merged automatically.
+be merged automatically. In this case you may need to merge your branch with 
+more recent `master`, resolve any conflicts, and `git push` to update
+your branch so that it can be merged automatically. 
+Please try to **not** rewrite the history of a pull request after the first review or it will be very hard for the reviewer to see if the required changes has been applied, expecially for big pull requests.
 
 ## Improving Documentation
 

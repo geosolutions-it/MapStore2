@@ -10,6 +10,7 @@
 import React from "react";
 import Toolbar from '../../misc/toolbar/Toolbar';
 import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar} from "./ToolbarButtons";
+import uuid from "uuid";
 
 const BUTTON_CLASSES = 'square-button-md no-border';
 const toolButtons = {
@@ -40,7 +41,7 @@ const toolButtons = {
         tooltipId: cover ? "geostory.contentToolbar.contentHeightAuto" : "geostory.contentToolbar.contentHeightView",
         onClick: () => updateSection({cover: !cover}, "merge")
     }),
-    editMedia: ({editMap: disabled = false, path, editMedia = () => {} }) => ({
+    editMedia: ({editMap: disabled = false, path, editMedia = () => {}, sectionType }) => ({
         // using normal ToolbarButton because this has no options
         glyph: "pencil",
         "data-button": "pencil",
@@ -48,7 +49,7 @@ const toolButtons = {
         disabled,
         tooltipId: "geostory.contentToolbar.editMedia",
         onClick: () => {
-            editMedia({path});
+            editMedia({path}, path ? sectionType : "");
         }
     }),
     // remove content
@@ -56,7 +57,7 @@ const toolButtons = {
         renderButton: <DeleteButtonToolbar {...props}/>
 
     }),
-    editMap: ({editMap = false, update = () => {}}) => ({
+    editMap: ({editMap = false, map, update = () => {}, ...props}) => ({
         // using normal ToolbarButton because this has no options
         glyph: "map-edit",
         visible: true,
@@ -64,7 +65,9 @@ const toolButtons = {
         bsStyle: editMap ? "success" : "default",
         tooltipId: "geostory.contentToolbar.editMap",
         onClick: () => {
+            const { center, zoom, resolution } = map ?? props;
             update( 'editMap', !editMap);
+            !editMap && update("map", {center, zoom, mapStateSource: uuid(), resolution, resetPanAndZoom: false}, 'merge');
         }
     }),
     editURL: ({ editURL = false, path, editWebPage = () => {}}) => ({
@@ -113,6 +116,41 @@ const toolButtons = {
         onClick: () => {
             update('showCaption', !showCaption);
         }
+    }),
+    add: ({ editMap = false, addDisabled = false, add = () => {}, bsStyle = 'default' }) => ({
+        glyph: 'plus',
+        visible: true,
+        bsStyle,
+        tooltipId: "geostory.contentToolbar.add",
+        disabled: editMap || addDisabled,
+        onClick: add
+    }),
+    edit: ({ editMap: disabled = false, edit = () => {}, bsStyle = 'default' }) => ({
+        glyph: 'pencil',
+        visible: true,
+        bsStyle,
+        tooltipId: "geostory.contentToolbar.edit",
+        disabled,
+        onClick: edit
+    }),
+    marker: ({ editMap = false, markerDisabled = false, marker = () => {}, bsStyle = 'default' }) => ({
+        glyph: 'map-marker',
+        visible: true,
+        tooltipId: "geostory.contentToolbar.marker",
+        bsStyle,
+        disabled: editMap || markerDisabled,
+        onClick: marker
+    }),
+    closeDraw: ({editMap = false, bsStyle = 'default', update = () => {}, onEnableDraw = () => {}}) => ({
+        glyph: '1-close',
+        visible: true,
+        tooltipId: "geostory.contentToolbar.closeMapEditing",
+        bsStyle,
+        disabled: !editMap,
+        onClick: ()=> {
+            onEnableDraw(null);
+            update('editMap', !editMap);
+        }
     })
 };
 
@@ -144,6 +182,7 @@ const toolButtons = {
  */
 export default function ContentToolbar({
     tools = [],
+    children,
     ...props
 }) {
     return (
@@ -156,6 +195,7 @@ export default function ContentToolbar({
                 buttons={tools
                     .filter((tool) => tool?.id && toolButtons[tool.id] || toolButtons[tool])
                     .map(tool => tool?.id && toolButtons[tool.id]({ ...props, ...tool }) || toolButtons[tool](props))}/>
+            {children}
         </div>
     );
 }

@@ -2,7 +2,7 @@
 
 The Catalog Service for the Web (CSW) is an [OGC Standard](https://www.ogc.org/standards) used to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the Catalog offers the possibility to access WMS, WFS, CSW, WMTS and TMS Remote Services and to add the related layers to the map. By default, as soon as a user opens the Catalog, a CSW a WMS and a WMTS Demo Services are available, allowing to import layers from the GeoSolutions GeoServer.
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the Catalog offers the possibility to access WMS, WFS, CSW, WMTS and TMS Remote Services and to add the related layers to the map. By default, as soon as a user opens the Catalog, a CSW a WMS and a WMTS Demo Services are available, allowing to import layers from the GeoSolutions GeoServer.
 The user can access the Catalog with a click on the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:25px;" /> option present in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. As soon as you open it, the first display is like the following:
 
 <img src="../img/catalog/catalog_panel.jpg" class="ms-docimage"  style="max-width:500px;" />
@@ -28,7 +28,7 @@ By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docb
 
 ## Managing Remote Services
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
 
 <img src="../img/catalog/add_edit_services.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
@@ -56,7 +56,7 @@ In particular:
 
 * **Url**: the URL of the remote source service
 
-* **Type**: the type of the remote source service (between *WMS*, *WFS*, *CSW*, *TMS* and *WMTS*)
+* **Type**: the type of the remote source service (between *WMS*, *WFS*, *CSW*, *TMS*, *WMTS* and *3D Tiles*)
 
 * **Title**: the title to assign to the catalog. This text will be used in the service selection dropdown menu for this service.
 
@@ -85,8 +85,15 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 #### Advanced Settings
 
-* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this is particularly useful when the user wants to use optimized formats by default (`png8`, `vnd.jpeg-png`) for all the layers, without having to select it for each layer in layer settings.
-* *Show metadata template*: This can be enabled when the user wants to insert in the layer description a text with metadata information
+<img src="../img/catalog/advanced_settings_csw.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Set Visibility Limit*: if checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source.
+
+* *Show metadata template*: this can be enabled when the user wants to insert in the layer description a text with metadata information
 
 !!! warning
     The *Metadata Template* function is available for **CSW Services** only.
@@ -95,7 +102,7 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 In order to better understand this function, let's make an example supposing to edit the `GeoSolutions GeoServer CSW` service:
 
-* Change the *Format* of the image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`) for layers belonging to the selected source
+* Change the *Format* of the image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`,`vnd.jpeg-png8` or `gif`) for layers belonging to the selected source
 
 * *Show metadata template* can be enabled when the user wants to insert in the layer description a text with metadata information 
 
@@ -142,13 +149,53 @@ Inserting this text and saving, the result should be that each layer will show i
 !!! note
     If some metadata are missing, the server response will be `source Not Available`
 
+#### Static Filter and Dynamic Filter
+
+From the *Advanced Settings* of the *CSW catalog* the user has the possibility to configure a *Static Filter* and a *Dynamic Filter* to customize the search request.
+
+In order to better understand this function, let's make an example supposing to edit the `GeoSolutions GeoServer CSW` service:
+
+* From the *Static Filter* text area it is possible to insert the custom filter for that service.
+
+<img src="../img/catalog/csw_static_filters.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+In order to present desired *Static Filter* configuration, it is possible to add a text like the following:
+
+    <ogc:Or>
+        <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>dc:type</ogc:PropertyName>
+            <ogc:Literal>dataset</ogc:Literal>
+        </ogc:PropertyIsEqualTo>
+        <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>dc:type</ogc:PropertyName>
+            <ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal>
+        </ogc:PropertyIsEqualTo>
+    </ogc:Or>
+
+Inserting this text and saving. The filter is applied, even in empty search.
+
+* From the *Dynamic Filter* text area it is possible to insert the custom filter to applied in AND with *Static Filter*. The template is used with ${searchText} placeholder to append search string
+
+<img src="../img/catalog/csw_dynamic_filters.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+In this case it is possible to add a text like the following:
+
+    <ogc:PropertyIsLike wildCard='*' singleChar='_' escapeChar='\\'>
+      <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+      <ogc:Literal>${searchText}*</ogc:Literal>
+    </ogc:PropertyIsLike>
+
+Inserting this text and saving, the filter is applied when text is typed into the service search tool.
+
 ### WMS/WMTS Catalog
 
 WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protocol for publishing maps (and tile maps) on the Internet. The user can add these kind of services as catalogs to browse and add to the map the layers published using these protocols.
 
 In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service and its URL.
 
-In **Advanced Settings** the user can set, other than the standard options, also:
+In addition to the standard options, only for WMS catalog sources, through the **Advanced Settings** the user can configure also the following options:
+
+<img src="../img/catalog/advanced_settings_wms.jpg" class="ms-docimage"  style="max-width:500px;" />
 
 * *Localized styles* (only for the WMS service) if enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server so that the WMS server, if properly configured, can use that locale to:
 
@@ -158,9 +205,20 @@ In **Advanced Settings** the user can set, other than the standard options, also
 
     - Produce a localized output for GetFeatureInfo requests (the freemarker template need to be properly configured to retrieve [the locale from the request](https://docs.geoserver.org/stable/en/user/tutorials/freemarker.html))
 
+* *Set Visibility Limit*: available only for WMS layers coming from CSW or WMS catalog sources type. If checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source
+
+* *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser. 
+
 Enabling that option, all layers added to the map from this catalog source will be localized as described above (it is possible to tune again that setting for each single layer by opening the [Layer Settings](layer-settings.md#display) in TOC).
 
-* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this configuration property is particularly useful when the user wants to use an optimized format by default (`png8`, `vnd.jpeg-png`) for all the layers added from the catalog's source without having to select it for each layer in [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display)..
+* *Format*: the default image format for layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+!!! note
+    In case of WMS services, the list of available formats is retrieved from the WMS server 
+
+* *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Domain aliases*: available only for WMS catalogs type. This option is used to improve the performances of the application for tiled layer requests when multiple domains can be defined server side for the configured catalog source in MapStore (domain sharding). The user can configure multiple URLs referring to the same WMS service through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button. Useful information about other kind of performance improvements can be found in the [MapStore online training documentation](https://training.mapstore.geosolutionsgroup.com/administration/best.html#performances).
 
 ### TMS Catalog
 
@@ -258,3 +316,12 @@ The other known services are listed as providers below "custom" and "TMS 1.0.0".
 
 <img src="../img/catalog/tms_known_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse the TMS variants</p>
+
+### 3D Tiles Catalog
+
+3D Tiles is an [OGC specification](https://www.ogc.org/standards/3DTiles) designed for streaming and rendering massive 3D geospatial content such as Photogrammetry, 3D Buildings, BIM/CAD, and Point Clouds across desktop, web and mobile applications.
+MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [CesiumJS capabilities](https://github.com/CesiumGS/3d-tiles). Through the Catalog tool, a specific source type to load 3D Tiles in the Cesium Map can be configured as follows by specifying the URL of a reachable _tileset.json_. 
+
+In **general settings of** 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
+
+<img src="../img/catalog/3dtiles_service.jpg" class="ms-docimage"  style="max-width:600px;"/>

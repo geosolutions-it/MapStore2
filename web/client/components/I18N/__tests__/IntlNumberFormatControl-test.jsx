@@ -9,6 +9,7 @@ import expect from 'expect';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
 import {compose, withContext} from 'recompose';
 
@@ -102,5 +103,33 @@ describe('IntlNumberFormControl', () => {
         expect(cmp).toExist();
         const elements = document.querySelectorAll('input');
         expect(elements[0].value).toEqual("1899,01");
+    });
+
+    it('checks if the value in US locale', () => {
+        const intl = {locale: "en-US"};
+        const formProps = {
+            name: "name",
+            value: 1899.01,
+            onChange: () => {}
+        };
+        const InputIntl = intlNumberFormControlWithContext(intl);
+        const cmp = ReactDOM.render(
+            <InputIntl {...formProps}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const [element] = document.querySelectorAll('input');
+        TestUtils.Simulate.change(element, {target: {value: '12.'}});
+        expect(element.value).toBe("12");
+        TestUtils.Simulate.change(element, {target: {value: '12.0'}});
+        expect(element.value).toBe("12");
+        TestUtils.Simulate.change(element, {target: {value: '12.04'}});
+        expect(element.value).toBe("12.04");
+        TestUtils.Simulate.change(element, {target: {value: '12.402'}});
+        expect(element.value).toBe("12.402");
+        TestUtils.Simulate.change(element, {target: {value: '-12.04'}});
+        expect(element.value).toBe("-12.04");
+        TestUtils.Simulate.change(element, {target: {value: '-12.40'}});
+        expect(element.value).toBe("-12.4");
+        TestUtils.Simulate.change(element, {target: {value: '-12.0'}});
+        expect(element.value).toBe("-12");
     });
 });

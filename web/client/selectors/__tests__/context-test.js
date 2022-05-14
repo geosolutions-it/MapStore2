@@ -13,7 +13,8 @@ import {
     contextMonitoredStateSelector,
     isLoadingSelector,
     pluginsSelector,
-    resourceSelector
+    resourceSelector,
+    contextThemeSelector
 } from '../context';
 import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
 import context from '../../reducers/context';
@@ -48,5 +49,29 @@ describe('context selectors', () => {
 
     it('resourceSelector', () => {
         expect(resourceSelector(stateMocker(setResource(CONTEXT_SHORT_RESOURCE)))).toBe(CONTEXT_SHORT_RESOURCE);
+    });
+    it('contextThemeSelector', () => {
+        const theme = {
+            id: 'dark',
+            type: 'link',
+            href: 'path/to/dark.css'
+        };
+        expect(contextThemeSelector({
+            context: {
+                currentContext: {
+                    theme: theme
+                }
+            }
+        })).toEqual(theme);
+        expect(contextThemeSelector({
+            context: {
+                currentContext: {
+                    theme: theme
+                }
+            }
+        })).toEqual(theme);
+        expect(contextThemeSelector({
+            context: {}
+        })).toEqual({});
     });
 });

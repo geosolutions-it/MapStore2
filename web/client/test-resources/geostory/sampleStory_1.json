@@ -94,6 +94,84 @@
             "align": "center"
         }
       }]
+    },
+    {
+      "type": "carousel",
+      "id": "SomeID_carousel",
+      "title": "Abstract",
+      "background": {
+        "resourceId": "resource_id",
+        "type": "map",
+        "map": {
+          "layers": [{
+            "type": "vector",
+            "id": "geostory",
+            "features": [{
+              "type": "FeatureCollection",
+              "features": [{
+                "type": "Feature",
+                "geometry": null,
+                "properties": "1",
+                "style": [{
+                  "id": "2",
+                  "highlight":true,
+                  "iconColor":"cyan",
+                  "iconText":"2",
+                  "iconShape":"circle"
+                }]
+              }],
+              "contentRefId": "ccol1"
+              },
+              {
+                "type": "FeatureCollection",
+                "features": [],
+                "contentRefId": "ccol2"
+              }
+            ]
+          }]
+        }
+      },
+      "contents": [
+        {
+          "id": "ccol1",
+          "type": "column",
+          "background": {},
+          "title": "Card one",
+          "contents": [
+            {
+              "id": "car1_col1_content1",
+              "type": "text",
+              "html": "<p>this is some html content</p>"
+
+            },
+            {
+              "id": "car1_col1_content2",
+              "type": "media",
+              "lazy": false
+            }
+          ],
+          "thumbnail": {
+            "data": "img1.png"
+          }
+        },
+        {
+          "id": "ccol2",
+          "type": "column",
+          "background": {},
+          "contents": [
+            {
+              "id": "car1_col2_content1",
+              "type": "text",
+              "html": "<p>this is some html content</p>"
+            },
+            {
+              "id": "car1_col2_content2",
+              "type": "media",
+              "lazy": false
+            }
+          ]
+        }
+      ]
     }
   ]
 }

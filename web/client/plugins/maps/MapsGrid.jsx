@@ -40,7 +40,7 @@ export default compose(
     resourceGrid,
     // add and configure share tool panel
     compose(
-        defaultProps({ shareOptions: { embedPanel: false } }),
+        defaultProps({ shareOptions: { embedPanel: true } }),
         withShareTool
     )
 )(ResourceGrid);

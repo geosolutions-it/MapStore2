@@ -1,0 +1,110 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// css properties functions
+// these functions can be used to apply a css variable to a selector including a fallback value
+
+// @var: color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return color properties with css variable and fallback value
+.color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    color: @fallback if(@important, ~'!important', );
+    color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: stroke variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return stroke properties with css variable and fallback value
+.stroke-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    stroke: @fallback if(@important, ~'!important', );
+    stroke: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: background color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return background-color properties with css variable and fallback value
+.background-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    background-color: @fallback if(@important, ~'!important', );
+    background-color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: border color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return border-color properties with css variable and fallback value
+.border-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    border-color: @fallback if(@important, ~'!important', );
+    border-color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: border top color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return border-top-color properties with css variable and fallback value
+.border-top-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    border-top-color: @fallback if(@important, ~'!important', );
+    border-top-color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: border bottom color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return border-bottom-color properties with css variable and fallback value
+.border-bottom-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    border-bottom-color: @fallback if(@important, ~'!important', );
+    border-bottom-color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: border left color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return border-left-color properties with css variable and fallback value
+.border-left-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    border-left-color: @fallback if(@important, ~'!important', );
+    border-left-color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: border right color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return border-right-color properties with css variable and fallback value
+.border-right-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    border-right-color: @fallback if(@important, ~'!important', );
+    border-right-color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: outline color variable as array with css property key and fallback value, eg: --my-css-property-key, #ffffff
+// @important: if true it adds !important flag to the css property
+// return outline-color-color properties with css variable and fallback value
+.outline-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    outline-color: @fallback if(@important, ~'!important', );
+    outline-color: var(@value, @fallback) if(@important, ~'!important', );
+}
+
+// @var: font family variable as array with css property key and fallback value, eg: --my-css-property-key, monospace
+// @important: if true it adds !important flag to the css property
+// return font-family properties with css variable and fallback value
+.font-family-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    font-family: @fallback if(@important, ~'!important', );
+    font-family: var(@value, @fallback) if(@important, ~'!important', );
+}

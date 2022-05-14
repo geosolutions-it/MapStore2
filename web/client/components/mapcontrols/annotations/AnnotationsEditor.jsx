@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import 'react-quill/dist/quill.snow.css';
-
-import { head, isEmpty, isFunction } from 'lodash';
+import { head, isEmpty, isFunction, isUndefined } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -43,6 +41,7 @@ import Manager from '../../style/vector/Manager';
 import defaultConfig from './AnnotationsConfig';
 import FeaturesList from './FeaturesList';
 import GeometryEditor from './GeometryEditor';
+import { getApi } from '../../../api/userPersistedStorage';
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -132,6 +131,7 @@ import GeometryEditor from './GeometryEditor';
  * @prop {function} onFilterMarker triggered when marker/glyph name is specified for filtering
  * @prop {object[]} annotations list of annotations
  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features
+ * @prop {boolean} geodesic enable to draw a geodesic geometry (supported only for Circle)
  * @prop {function} onHideMeasureWarning triggered when warning is ignored with "Don't show again" flag
  * @prop {boolean} showAgain flag for checkbox on the measure annotation popup warning
  * @prop {boolean} showPopupWarning flag to show warning modal on navigating to measurement panel from annotation
@@ -236,13 +236,15 @@ class AnnotationsEditor extends React.Component {
         onFilterMarker: PropTypes.func,
         annotations: PropTypes.array,
         measurementAnnotationEdit: PropTypes.bool,
+        geodesic: PropTypes.bool,
         onHideMeasureWarning: PropTypes.func,
         showAgain: PropTypes.bool,
         showPopupWarning: PropTypes.bool,
         onToggleShowAgain: PropTypes.func,
         onInitPlugin: PropTypes.func,
         onGeometryHighlight: PropTypes.func,
-        onUnSelectFeature: PropTypes.func
+        onUnSelectFeature: PropTypes.func,
+        onValidateFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -260,6 +262,7 @@ class AnnotationsEditor extends React.Component {
         stylerType: "marker",
         annotations: [],
         measurementAnnotationEdit: false,
+        geodesic: true,
         onInitPlugin: () => {}
     };
     /**
@@ -317,7 +320,7 @@ class AnnotationsEditor extends React.Component {
                                 tooltipId: "annotations.back",
                                 visible: this.props.showBack,
                                 onClick: () => {
-                                    this.props.onCancelEdit();
+                                    this.props.onCancelEdit(this.props?.feature?.properties);
                                     this.props.onCancel(); this.props.onCleanHighlight();
                                 }
                             }, {
@@ -335,7 +338,7 @@ class AnnotationsEditor extends React.Component {
                                 onClick: () => {
                                     this.setState({removing: this.props.id});
                                 }
-                            }, {  // TODO should this be included on geometry card
+                            }, {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
                                 visible: true,
@@ -348,6 +351,7 @@ class AnnotationsEditor extends React.Component {
     };
 
     renderEditingCoordButtons = () => {
+        const areAllFeaturesValid = this.validateFeatures();
         return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
             <Row className="text-center noTopMargin">
                 <Col xs={12}>
@@ -357,6 +361,7 @@ class AnnotationsEditor extends React.Component {
                             {
                                 glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
+                                tooltipPosition: 'bottom',
                                 visible: true,
                                 disabled: this.props?.selected?.properties
                                     && !this.props?.selected?.properties?.isValidFeature || false,
@@ -373,7 +378,7 @@ class AnnotationsEditor extends React.Component {
                                         this.props.onToggleUnsavedChangesModal();
                                     } else {
                                         this.props.onResetCoordEditor();
-                                        this.props.onCancelEdit();
+                                        this.props.onCancelEdit(this.props.editing?.properties);
                                         // Reset geometry editor tab
                                         this.setState({...this.state, tabValue: 'coordinates'});
                                     }
@@ -382,6 +387,7 @@ class AnnotationsEditor extends React.Component {
                             }, {
                                 glyph: 'trash',
                                 tooltipId: "annotations.remove",
+                                tooltipPosition: 'bottom',
                                 disabled: !this.props.annotations.length,
                                 visible: !this.props.selected,
                                 onClick: () => {
@@ -389,14 +395,16 @@ class AnnotationsEditor extends React.Component {
                                 }
                             }, {
                                 glyph: 'floppy-disk',
-                                tooltipId: !isEmpty(this.props.selected) ? "annotations.saveGeometry" : "annotations.save",
-                                disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
+                                tooltipPosition: 'bottom',
+                                tooltipId: !areAllFeaturesValid ? "annotations.annotationSaveGeometryError" : !isEmpty(this.props.selected) ? "annotations.saveGeometry" : "annotations.save",
+                                disabled: (this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature) || !areAllFeaturesValid,
                                 onClick: () => this.save()
                             },
                             {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
-                                disabled: Object.keys(this.validate()).length !== 0,
+                                tooltipPosition: 'bottom',
+                                disabled: Object.keys(this.validate()).length !== 0 || this.props.unsavedChanges,
                                 visible: !this.props.selected,
                                 onClick: () => {
                                     const {newFeature, ...features} = this.props.editing;
@@ -493,6 +501,11 @@ class AnnotationsEditor extends React.Component {
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
                     setPopupWarning={this.setPopupWarning}
                     showPopupWarning={this.props.showPopupWarning}
+                    geodesic={this.props.geodesic}
+                    defaultPointType={this.getConfig().defaultPointType}
+                    defaultStyles={this.props.defaultStyles}
+                    onValidateFeature={this.props.onValidateFeature}
+                    validateFeatures={this.validateFeatures}
                 />
                 }
             </div>
@@ -510,7 +523,7 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onCancelClose}
-                onConfirm={this.props.onConfirmClose}
+                onConfirm={()=> this.props.onConfirmClose(this.props.editing?.properties)}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
@@ -524,7 +537,7 @@ class AnnotationsEditor extends React.Component {
                 onClose={this.props.onToggleUnsavedChangesModal}
                 onConfirm={() => {
                     this.props.selected && this.props.onResetCoordEditor();
-                    this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal();
+                    this.props.onCancelEdit(this.props.editing?.properties); this.props.onToggleUnsavedChangesModal();
                 }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
@@ -585,6 +598,7 @@ class AnnotationsEditor extends React.Component {
                     this.state.removing && this.setState({removing: null});
                     this.props.onCancelRemove();
                 }}
+                focusConfirm={this.props.removing}
                 onConfirm={() => {
                     if (this.state.removing) {
                         this.setState({removing: null});
@@ -724,6 +738,7 @@ class AnnotationsEditor extends React.Component {
                                 onSetInvalidSelected={this.props.onSetInvalidSelected}
                                 onChangeText={this.props.onChangeText}
                                 renderer={"annotations"}
+                                onValidateFeature={this.props.onValidateFeature}
                             />
                             }
                             {this.state.tabValue === 'style' &&
@@ -745,7 +760,6 @@ class AnnotationsEditor extends React.Component {
                                 defaultShapeSize={this.props.defaultShapeSize}
                                 defaultShapeFillColor={this.props.defaultShapeFillColor}
                                 defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
-                                defaultPointType={this.getConfig().defaultPointType}
                                 defaultStyles={this.props.defaultStyles}
                                 lineDashOptions={this.props.lineDashOptions}
                                 markersOptions={this.getConfig()}
@@ -758,6 +772,14 @@ class AnnotationsEditor extends React.Component {
             </div>
         );
     }
+
+    validateFeatures = () => {
+        let areAllGeometriesValid = true;
+        if (Array.isArray(this.props?.editing?.features)) {
+            areAllGeometriesValid = this.props.editing.features.every(feature => feature?.properties?.isValidFeature);
+        }
+        return areAllGeometriesValid;
+    };
 
     change = (field, value) => {
         this.props.onChangeProperties(field, value);
@@ -818,14 +840,23 @@ class AnnotationsEditor extends React.Component {
     }
 
     save = () => {
-        const errors = this.validate();
-        if (Object.keys(errors).length === 0) {
-            this.props.onError({});
-            this.props.selected ? this.props.onAddNewFeature() :
-                this.props.onSave(this.props.id, assign({}, this.props.editedFields),
-                    this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
+        if (!isEmpty(this.props.selected)) {
+            this.props.onAddNewFeature();
         } else {
-            this.props.onError(errors);
+            const errors = this.validate();
+            if (Object.keys(errors).length === 0) {
+                this.props.onError({});
+                this.props.onSave(this.props.id, assign({}, this.props.editedFields),
+                    this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, {
+                        ...this.props.editing.properties,
+                        visibility: !isUndefined(this.props.editing.properties.visibility)
+                            ? this.props.editing.properties.visibility
+                            : this.props.editing.visibility
+                    }
+                );
+            } else {
+                this.props.onError(errors);
+            }
         }
     };
 
@@ -846,13 +877,17 @@ class AnnotationsEditor extends React.Component {
 
     setAnnotationMeasurement = () => {
         // Excluding geometry types not supported by measurement
-        this.props.onSetAnnotationMeasurement(this.props.editing.features.filter(f=> f.geometry.type !== 'Point' && !f.properties.isCircle), this.props.editing?.properties.id);
+        this.props.onSetAnnotationMeasurement(this.props.editing.features.filter(f=> f.geometry.type !== 'Point' && !f.properties.isCircle), this.props.editing?.properties);
         this.hideWarning();
     }
 
     hideWarning = () => {
         if (this.props.showAgain) {
-            localStorage.setItem("showPopupWarning", false);
+            try {
+                getApi().setItem("showPopupWarning", false);
+            } catch (e) {
+                console.error(e);
+            }
             this.props.onHideMeasureWarning();
         }
         this.setPopupWarning(false);

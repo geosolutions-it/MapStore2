@@ -57,17 +57,19 @@ const TIMELINE_STATE_VALUES = timeline(undefined, rangeDataLoaded(
 
 // sample dimension state for TEST_LAYER
 const DIMENSION_STATE = dimension(undefined, updateLayerDimensionData(TEST_LAYER_ID, "time", TIME_DIMENSION_DATA));
-
+const VISIBILITY = {visibility: true};
 const LAYERS_NO_TIME_STATE = {
     flat: [{
-        id: TEST_LAYER_ID
+        id: TEST_LAYER_ID,
+        ...VISIBILITY
     }]
 };
 
 const LAYERS_WITH_TIME = {
     flat: [{
         id: TEST_LAYER_ID,
-        dimensions: [TIME_DIMENSION_DATA]
+        dimensions: [TIME_DIMENSION_DATA],
+        ...VISIBILITY
     }]
 };
 

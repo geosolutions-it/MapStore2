@@ -22,6 +22,7 @@ import {
     onSuccess
 } from '../actions/mapimport';
 
+import { warning } from '../actions/notifications';
 import { zoomToExtent } from '../actions/map';
 import { addLayer } from '../actions/layers';
 import { loadAnnotations } from '../actions/annotations';
@@ -75,7 +76,8 @@ export default {
                 onZoomSelected: zoomToExtent,
                 updateBBox,
                 setLoading,
-                onClose: toggleControl.bind(null, 'mapimport', null)
+                onClose: toggleControl.bind(null, 'mapimport', null),
+                warning
             })(Import);
 
             resolve(ImportPlugin);
@@ -86,9 +88,21 @@ export default {
             name: 'import',
             position: 4,
             text: <Message msgId="mapImport.title"/>,
+            tooltip: "mapImport.tooltip",
             icon: <Glyphicon glyph="upload"/>,
             action: toggleControl.bind(null, 'mapimport', null),
             priority: 2,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            name: "mapimport",
+            position: 4,
+            tooltip: "mapImport.tooltip",
+            text: <Message msgId="mapImport.title"/>,
+            icon: <Glyphicon glyph="upload"/>,
+            action: toggleControl.bind(null, 'mapimport', null),
+            toggle: true,
+            priority: 1,
             doNotHide: true
         }
     }),

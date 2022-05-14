@@ -7,7 +7,9 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Suspense } from 'react';
+import LoadingView from '../components/misc/LoadingView';
+
 import ContainerDimensions from 'react-container-dimensions';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -16,10 +18,9 @@ import { createSelector } from 'reselect';
 import { error } from '../actions/notifications';
 import { rulesSelected, setFilter, setLoading } from '../actions/rulesmanager';
 import rulesgridComp from '../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid';
-import RulesGridComp from '../components/manager/rulesmanager/rulesgrid/RulesGrid';
 import rulesmanager from '../reducers/rulesmanager';
 import { filterSelector, isEditorActive, selectedRules, triggerLoadSel } from '../selectors/rulesmanager';
-
+const RulesGridComp = React.lazy(() => import('../components/manager/rulesmanager/rulesgrid/RulesGrid'));
 const ruelsSelector = createSelector([selectedRules, filterSelector, triggerLoadSel], (rules, filters, triggerLoad) => {
     return {
         selectedIds: rules.map(r => r.id),
@@ -58,7 +59,9 @@ class RulesDataGrid extends React.Component {
          return (<ContainerDimensions>{({width, height}) =>
              (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
                  {!this.props.enabled && (<div className="ms-overlay"/>)}
-                 <RulesGrid width={width} height={height}/>
+                 <Suspense fallback={<LoadingView />}>
+                     <RulesGrid width={width} height={height}/>
+                 </Suspense>
              </div>)
          }
          </ContainerDimensions>);

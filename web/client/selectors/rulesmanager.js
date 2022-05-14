@@ -8,7 +8,7 @@
 
 import assign from 'object-assign';
 
-import _ from 'lodash';
+import { uniq } from 'lodash';
 import { createSelector } from 'reselect';
 
 export const rulesSelector = (state) => {
@@ -39,7 +39,7 @@ export const optionsSelector = (state) => {
     options.workspaces = stateOptions.workspaces
         && stateOptions.workspaces.map(workspace => workspace.name);
     options.layers = stateOptions.layers && stateOptions.layers.records
-        && _.uniq(stateOptions.layers.records.map(layer => layer.dc.identifier.replace(/^.*?:/g, '')));
+        && uniq(stateOptions.layers.records.map(layer => layer.dc.identifier.replace(/^.*?:/g, '')));
     options.layersPage = stateOptions.layersPage || 1;
     options.layersCount = stateOptions.layersCount || 0;
     return options;

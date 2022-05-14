@@ -16,7 +16,6 @@ import StyleCanvas from './StyleCanvas';
 import Slider from 'react-nouislider';
 import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
-import 'react-widgets/lib/less/react-widgets.less';
 import Message from '../I18N/Message';
 import { isNil } from 'lodash';
 import tinycolor from 'tinycolor2';

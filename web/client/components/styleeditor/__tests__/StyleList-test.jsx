@@ -159,7 +159,7 @@ describe('test StyleList module component', () => {
 
         TestUtils.Simulate.click(cards[0]);
 
-        expect(spyOnSelect).toHaveBeenCalledWith({style: ''}, true);
+        expect(spyOnSelect).toHaveBeenCalledWith({ style: 'point' }, true);
     });
 
 

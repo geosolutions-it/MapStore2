@@ -27,6 +27,23 @@ import { isLoggedIn, userSelector } from '../selectors/security';
 import { projectionDefsSelector } from '../selectors/map';
 import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapConfig} from '../actions/usersession';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
+import {getRequestParameterValue} from "../utils/QueryParamsUtils";
+
+
+const prepareMapConfiguration = (data, override, state) => {
+    const queryParamsMap = getRequestParameterValue('map', state);
+    let mapConfig = merge({}, data, override);
+    mapConfig = {
+        ...mapConfig,
+        ...(queryParamsMap ?? {}),
+        map: {
+            ...(mapConfig?.map ?? {}),
+            ...(queryParamsMap?.map ?? {})
+
+        }
+    };
+    return mapConfig;
+};
 
 export const loadNewMapEpic = (action$) =>
     action$.ofType(LOAD_NEW_MAP)
@@ -55,6 +72,7 @@ export const loadNewMapEpic = (action$) =>
  * @param {Object} overrideConfig override object of the given or loaded config, allows to apply a
  * partial override of the main configuration (e.g. for sessions management)
  * @returns {Observable} map configuration flow
+ * @ignore
  */
 const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, overrideConfig = {}) => {
     // delay here is to postpone map load to ensure that
@@ -80,7 +98,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
                 if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                     return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                 }
-                const mapConfig = merge({}, response.data, overrideConfig);
+                const mapConfig = prepareMapConfiguration(response.data, overrideConfig, state);
                 return isNumberId ? Observable.of(
                     configureMap(mapConfig, mapId),
                     mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
@@ -94,7 +112,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
             }
             try {
                 const data = JSON.parse(response.data);
-                const mapConfig = merge({}, data, overrideConfig);
+                const mapConfig = prepareMapConfiguration(data, overrideConfig, state);
                 return isNumberId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
                     Observable.of(
                         configureMap(mapConfig, mapId),
@@ -108,6 +126,12 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
         .catch((e) => Observable.of(configureError(e, mapId)));
 };
 
+/**
+ * Intercepts the LOAD_MAP_CONFIG action and loads the Map configuration for the given configName and mapId.
+ * This epic loads also the user session, if enabled. The session load is skipped if `overrideConfig` is passed (e.g. for context loading it is delegated to it)
+ * Hint: Use `overrideConfig={}` in the action to skip the session loading at all.
+ * @memberof epics.config
+ */
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap(({configName, mapId, config, mapInfo, overrideConfig}) => {

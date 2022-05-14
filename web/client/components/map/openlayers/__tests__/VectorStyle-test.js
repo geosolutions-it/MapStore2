@@ -15,7 +15,8 @@ import {
     getGeometryTrasformation,
     getFilter,
     parseStyles,
-    getStyle
+    getStyle,
+    centerPoint
 } from '../VectorStyle';
 
 import isArray from 'lodash/isArray';
@@ -562,6 +563,20 @@ describe('Test VectorStyle', () => {
         const olStyles = parseStyles({style: [markerStyle]});
         expect(isArray(olStyles)).toBe(true);
         expect(olStyles.length).toBe(2);
+    });
+    it('centerPoint of a circle', () => {
+        let circleFt = new Feature({
+            geometry: new Polygon([[[1, 2], [2, 3], [3, 4], [5, 6], [1, 2]]])
+        });
+        // Geodesic circle
+        circleFt.setProperties({isGeodesic: true, isCircle: true});
+        let center = centerPoint(circleFt);
+        expect(center.getCoordinates()).toEqual([3, 4]);
+
+        // Non-geodesic circle
+        circleFt.setProperties({isGeodesic: false, isCircle: true});
+        center = centerPoint(circleFt);
+        expect(center.getCoordinates()).toEqual([4, 4]);
     });
     it('parseStyles of a feature, with a style [polygonStyle, markerStyle]', () => {
         const markerStyle = {

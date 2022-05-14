@@ -44,8 +44,8 @@ describe('GeoStorySave Plugins (GeoStorySave, GeoStorySaveAs)', () => {
             // check log-in logout properties selector for button in burger menu
             // hide when not logged in
             expect(containers.BurgerMenu.selector({ security: {} }).style.display).toBe("none");
-            // show when logged in
-            expect(containers.BurgerMenu.selector({security: {user: {}}}).style.display).toNotExist();
+            // hide when logged in if resource is not set
+            expect(containers.BurgerMenu.selector({security: {user: {}}}).style.display).toBe("none");
             // hide if you don't have permissions
             expect(containers.BurgerMenu.selector({ security: { user: {} }, geostory: { resource: { id: 1234, canEdit: false } } }).style.display ).toBe("none");
         });
@@ -79,8 +79,8 @@ describe('GeoStorySave Plugins (GeoStorySave, GeoStorySaveAs)', () => {
             // check log-in logout properties selector for button in burger menu
             // hide when not logged in
             expect(containers.BurgerMenu.selector({ security: {} }).style.display).toBe("none");
-            // hide when logged in if resource is not set
-            expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toBe("none");
+            // show when logged in
+            expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toNotExist();
             // show if resource is available for clone
             expect(containers.BurgerMenu.selector({
                 security: { user: {} },

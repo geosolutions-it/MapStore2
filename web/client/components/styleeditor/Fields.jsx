@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef, useState, useEffect } from 'react';
-import { FormGroup, FormControl as FormControlRB  } from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import { FormGroup, FormControl as FormControlRB } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
@@ -19,16 +19,14 @@ import ColorRamp from './ColorRamp';
 import DashArray from '../style/vector/DashArray';
 import ThemaClassesEditor from '../style/ThemaClassesEditor';
 import Message from '../I18N/Message';
-import Select from 'react-select';
 import localizedProps from '../misc/enhancers/localizedProps';
 import PropertyField from './PropertyField';
 import MarkSelector from './MarkSelector';
 import Band from './Band';
+import IconInput from './IconInput';
+import SelectInput from './SelectInput';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
-const ReactSelect = localizedProps(['placeholder', 'noResultsText'])(Select);
-
-const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Select.Creatable);
 
 export const fields = {
     color: ({
@@ -36,7 +34,8 @@ export const fields = {
         config = {},
         value,
         onChange = () => {},
-        disableAlpha
+        disableAlpha,
+        format
     }) => {
 
         // needed for slider
@@ -64,6 +63,7 @@ export const fields = {
                             disableAlpha: blockConfig.disableAlpha
                         }}
                         onChange={(values) => onChange({ ...state.current.value, ...values })}
+                        format={format}
                     />
                     <PropertyField divider/>
                 </>
@@ -106,7 +106,7 @@ export const fields = {
             </PropertyField>
         );
     },
-    input: ({ label, value, config = {}, onChange = () => {} }) => {
+    input: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
         return (
             <PropertyField
                 label={label}>
@@ -114,6 +114,7 @@ export const fields = {
                     <FormControl
                         type={config.type || 'text'}
                         value={value}
+                        disabled={disabled}
                         placeholder="styleeditor.placeholderInput"
                         onChange={event => onChange(event.target.value)}/>
                 </FormGroup>
@@ -155,98 +156,53 @@ export const fields = {
     image: ({
         label,
         value,
-        config: {
-            isValid
-        },
+        config: {},
         onChange
     }) => {
-
-        const valid = !isValid || isValid({ value });
+        const [error, setError] = useState(false);
+        const currentValue = isObject(value)
+            ? value.src
+            : value;
         return (
             <PropertyField
                 label={label}
-                invalid={!valid}>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <FormGroup style={{ flex: 1 }}>
-                        <FormControl
-                            placeholder="styleeditor.placeholderEnterImageUrl"
-                            value={value}
-                            onChange={event => onChange(event.target.value)}/>
-                    </FormGroup>
-                    <img src={value} style={{ width: 28, height: 28, objectFit: 'contain' }}/>
-                </div>
+                invalid={!!(error?.type === 'error')}
+                warning={!!(error?.type === 'warning')}>
+                <IconInput
+                    label={label}
+                    value={currentValue}
+                    onChange={(newValue) => {
+                        onChange(newValue);
+                        setError(false);
+                    }}
+                    onLoad={(err, src) => {
+                        setError(err);
+                        if (err) {
+                            // send the error to VisualStyleEditor component
+                            onChange({ src, errorId: err.messageId });
+                        }
+                    }}
+                />
             </PropertyField>
         );
     },
-    select: ({
-        label,
-        value,
-        config: {
-            getOptions = () => [],
-            selectProps = {},
-            isValid
-        },
-        onChange,
-        ...props
-    }) => {
+    select: (props) => {
         const {
-            creatable,
-            clearable = false,
-            multi
-        } = selectProps;
-
-        function updateOptions(options = [], newValue) {
-            const optionsValues = options.map(option => option.value);
-            const isMissing = newValue?.value && optionsValues.indexOf(newValue.value) === -1;
-            return isMissing
-                ? [ newValue, ...options]
-                : options;
-        }
-
-        function initOptions(options) {
-            if (!value) {
-                return options;
-            }
-            return [{ value, label: value }].reduce(updateOptions, options);
-        }
-
-        const options = getOptions(props);
-
-        const [newOptions, setNewOptions] = useState(initOptions(options));
-
-        useEffect(() => {
-            setNewOptions(initOptions(options));
-        }, [options?.length]);
-
-        const SelectInput = creatable
-            ? ReactSelectCreatable
-            : ReactSelect;
+            label,
+            value,
+            config: {
+                isValid
+            },
+            visible = true
+        } = props;
+        if (!visible) return null;
         const valid = !isValid || isValid({ value });
         return (
             <PropertyField
                 label={label}
                 invalid={!valid}>
                 <SelectInput
-                    clearable={clearable}
-                    placeholder="styleeditor.selectPlaceholder"
-                    noResultsText="styleeditor.noResultsSelectInput"
-                    {...selectProps}
-                    options={newOptions.map((option) => ({
-                        ...option,
-                        label: option.labelId
-                            ? <Message msgId={option.labelId}/>
-                            : option.label
-                    }))}
-                    value={value}
-                    onChange={option => {
-                        if (multi) {
-                            return onChange(option.length > 0
-                                ? option.map((entry) => entry.value)
-                                : undefined);
-                        }
-                        setNewOptions(updateOptions(newOptions, option));
-                        return onChange(option.value);
-                    }}
+                    {...props}
                 />
             </PropertyField>
         );
@@ -483,13 +439,15 @@ export const fields = {
  * @prop {string} params[keyParam].label label of the field
  * @prop {string} params[keyParam].key property key
  * @prop {object} config external configuration needed in field (eg: bands, attributes, ...)
+ * @prop {object} format parser type 'css' or 'sld'
  * @prop {function} onChange return the changed value
  */
 function Fields({
     properties,
     params,
     config: fieldsConfig,
-    onChange
+    onChange,
+    format
 }) {
 
     // needed for slider
@@ -503,7 +461,7 @@ function Fields({
     return <>
         {Object.keys(params)
             .map((keyParam) => {
-                const { type, setValue, getValue, isDisabled, config, label, key: keyProperty } = params[keyParam] || {};
+                const { type, setValue, getValue, isDisabled, config, label, key: keyProperty, isVisible } = params[keyParam] || {};
                 const key = keyProperty || keyParam;
                 const FieldComponent = fields[type];
                 const value = setValue && setValue(properties[key], state.current.properties);
@@ -512,7 +470,9 @@ function Fields({
                     key={key}
                     label={label || key}
                     config={config}
-                    disabled={isDisabled && isDisabled(properties[key], state.current.properties)}
+                    format={format}
+                    visible={isVisible && isVisible(properties[key], state.current.properties, format)}
+                    disabled={isDisabled && isDisabled(properties[key], state.current.properties, fieldsConfig)}
                     value={!isNil(value) ? value : properties[key]}
                     onChange={(values) => onChange(getValue && getValue(values, state.current.properties) || values)}/>;
             })}

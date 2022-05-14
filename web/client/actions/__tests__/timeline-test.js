@@ -22,10 +22,26 @@ import {
     SET_COLLAPSED,
     setCollapsed,
     SET_MAP_SYNC,
-    setMapSync
+    setMapSync,
+    INIT_TIMELINE,
+    initTimeline,
+    SELECT_LAYER,
+    selectLayer,
+    INIT_SELECT_LAYER,
+    initializeSelectLayer
 } from '../timeline';
 
 describe('timeline actions', () => {
+    it('selectLayer', () => {
+        const retVal = selectLayer();
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(SELECT_LAYER);
+    });
+    it('initializeSelectLayer', () => {
+        const retVal = initializeSelectLayer();
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(INIT_SELECT_LAYER);
+    });
     it('onRangeChanged', () => {
         const retVal = onRangeChanged();
         expect(retVal).toExist();
@@ -63,5 +79,11 @@ describe('timeline actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_MAP_SYNC);
         expect(retval.mapSync).toBe(true);
+    });
+    it('initTimeline', () => {
+        const retval = initTimeline(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(INIT_TIMELINE);
+        expect(retval.showHiddenLayers).toBe(true);
     });
 });

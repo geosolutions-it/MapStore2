@@ -1,3 +1,20 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+// #ms-components-theme(@theme-vars) {}
+
+// **************
+// Layout
+// **************
 /**
  * Customization for cesium
  */
@@ -5,4 +22,14 @@
     img {
         max-height: 3em; // max size of images in credits
     }
+}
+.cesium-credit-text{
+    color: black;
+    text-shadow: none;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#map .cesium-viewer .compass {
+    right: 40px;
 }

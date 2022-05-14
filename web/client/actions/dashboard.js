@@ -20,7 +20,12 @@ export const DASHBOARD_RESET = "DASHBOARD:DASHBOARD_RESET";
 export const DASHBOARD_LOADED = "DASHBOARD:DASHBOARD_LOADED";
 export const DASHBOARD_LOADING = "DASHBOARD:DASHBOARD_LOADING";
 export const DASHBOARD_LOAD_ERROR = "DASHBOARD:DASHBOARD_LOAD_ERROR";
-
+export const DASHBOARD_UPDATE_SERVICES = "DASHBOARD:UPDATE_SERVICES";
+export const DASHBOARD_SET_SELECTED_SERVICE = "DASHBOARD:SET_SELECTED_SERVICE";
+export const DASHBOARD_ADD_NEW_SERVICE = "DASHBOARD:ADD_NEW_SERVICE";
+export const DASHBOARD_CATALOG_MODE = "DASHBOARD:CATALOG_MODE";
+export const DASHBOARD_DELETE_SERVICE = "DASHBOARD:DELETE_SERVICE";
+export const DASHBOARD_SAVE_SERVICE_LOADING = "DASHBOARD:SAVE_SERVICE_LOADING";
 
 export const setEditing = (editing) => ({type: SET_EDITING, editing });
 
@@ -45,3 +50,42 @@ export const dashboardLoading = (value, name = "loading") => ({
     value
 });
 export const dashboardLoadError = error => ({type: DASHBOARD_LOAD_ERROR, error});
+
+/**
+ * @param {object} services the object with dashboard catalog services
+*/
+
+export const dashboardUpdateServices = services => ({ type: DASHBOARD_UPDATE_SERVICES, services});
+
+/**
+ * @param {object} service the object of the selected dashboard catalog service
+ * @param {object} services the current dashboard catalog services
+*/
+
+export const dashboardSetSelectedService = (service, services) => ({ type: DASHBOARD_SET_SELECTED_SERVICE, service, services });
+
+/**
+ * @param {object} service new or updated dashboard catalog service
+ * @param {object} services the current dashboard catalog services
+ * @param {bolean} isNew if a service is New or not (adding or updating)
+*/
+
+export const updateDashboardService = (service, services, isNew) => ({ type: DASHBOARD_ADD_NEW_SERVICE, service, services, isNew});
+
+/**
+ * @param {string} mode the status dashboard catalog either view or edit
+ * @param {bolean} isNew if a service is New or not (adding or updating)
+*/
+export const setDashboardCatalogMode = (mode, isNew) => ({ type: DASHBOARD_CATALOG_MODE, mode, isNew});
+
+/**
+ * @param {object} service the object of the service being deleted
+ * @param {object} services the current dashboard catalog services
+*/
+
+export const dashboardDeleteService = (service, services) => ({ type: DASHBOARD_DELETE_SERVICE, service, services});
+
+/**
+ * @param {bolean} loading the loading state of the dashboard catalog saving
+*/
+export const setDashboardServiceSaveLoading = loading => ({ type: DASHBOARD_SAVE_SERVICE_LOADING, loading});

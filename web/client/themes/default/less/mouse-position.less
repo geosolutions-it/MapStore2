@@ -1,10 +1,66 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    #mapstore-mouseposition {
+        span {
+            .color-var(@theme-vars[main-color]);
+        }
+
+        .mapstore-mouse-coordinates {
+            h5 {
+                .background-color-var(@theme-vars[main-variant-bg]);
+
+            }
+        }
+
+        .mapstore-mouse-elevation {
+            h5 {
+                .background-color-var(@theme-vars[main-variant-bg]);
+            }
+        }
+
+        button {
+            span {
+                .color-var(@theme-vars[primary-contrast]);
+            }
+        }
+
+        .form-group {
+            select {
+                .background-color-var(@theme-vars[main-variant-bg]);
+                .color-var(@theme-vars[main-variant-color]);
+            }
+
+            option {
+                .background-color-var(@theme-vars[main-bg]);
+                .color-var(@theme-vars[main-color]);
+            }
+        }
+
+        .mouseposition-crs {
+            .background-color-var(@theme-vars[main-variant-bg]);
+            .color-var(@theme-vars[main-variant-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 #mapstore-mouseposition {
     width: auto !important;
     background-color: transparent !important;
     span {
         font-size: @font-size-small;
-        color: @ms2-color-text;
         font-weight: normal;
     }
 
@@ -27,7 +83,6 @@
             margin: 0 !important;
             width: 250px;
             height: 25px;
-            background-color: darken(@ms2-color-background, 5%);
             -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
             padding: 4px;
@@ -48,7 +103,6 @@
             margin: 0 !important;
             width: 90px;
             height: 25px;
-            background-color: darken(@ms2-color-background, 5%);
             -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
             padding: 4px;
@@ -63,9 +117,6 @@
         padding: 0;
         margin-left: 5px;
         margin-right: 5px;
-        span {
-            color: @ms2-color-text-primary;
-        }
     }
 
     .form-group {
@@ -79,17 +130,10 @@
 
         select {
             display: inline-block;
-            background-color: darken(@ms2-color-background, 5%);
-            color: @ms2-color-text;
             border: none;
             margin-bottom: 0;
             width: 171px !important;
             height: 25px;
-        }
-
-        option {
-            background-color: @ms2-color-background;
-            color: @ms2-color-text;
         }
 	}
 
@@ -98,9 +142,6 @@
         height: 25px;
         font-weight: normal !important;
         display: block;
-
-        background-color: darken(@ms2-color-background, 5%);
-        color: @ms2-color-text;
         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
         padding: 4px;

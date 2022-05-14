@@ -23,7 +23,7 @@ import FormatEditor from './FormatEditor';
  *
  * Currently custom editors available by default are:
  *
- * * {@link #components.data.featuregrid.editors.DropDownEditor | DropDownEditor} - editor that allows to choose a value from a preconfigured values list
+ * * {@link #components.data.featuregrid.editors.DropDownEditor | DropDownEditor} - editor that allows to choose a value from a pre-configured values list
  * * {@link #components.data.featuregrid.editors.NumberEditor | NumberEditor} - editor that supports numeric data, setting min/max bounds on a value
  * * {@link #components.data.featuregrid.editors.FormatEditor | FormatEditor} - editor that checks if data matches a particular regular expression
  *

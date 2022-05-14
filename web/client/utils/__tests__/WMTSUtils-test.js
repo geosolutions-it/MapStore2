@@ -54,4 +54,44 @@ describe('Test the WMTSUtils', () => {
             done();
         });
     });
+    describe('getDefaultStyleIdentifier', () => {
+        it('tests fetching the style when it is missing', () => {
+            let style = WMTSUtils.getDefaultStyleIdentifier({});
+            expect(style).toBeFalsy();
+            style = WMTSUtils.getDefaultStyleIdentifier();
+            expect(style).toBeFalsy();
+        });
+        it('tests fetching the style from a layer record', () => {
+            const layer = {
+                Style: {
+                    "$": {
+                        "isDefault": "true"
+                    },
+                    "ows:Title": "generic Legend",
+                    "ows:Abstract": "abstract",
+                    "ows:Keywords": {
+                        "ows:Keyword": "default"
+                    },
+                    "ows:Identifier": "normal"
+                }
+            };
+            const style = WMTSUtils.getDefaultStyleIdentifier(layer);
+            expect(style).toBe('normal');
+        });
+        it('tests fetching the default style when "isDefault" is not present', () => {
+            const layer = {
+                Style: {
+                    "ows:Title": "generic Legend",
+                    "ows:Abstract": "abstract",
+                    "ows:Keywords": {
+                        "ows:Keyword": "default"
+                    },
+                    "ows:Identifier": "default"
+                }
+            };
+            const style = WMTSUtils.getDefaultStyleIdentifier(layer);
+            expect(style).toBe('default');
+        });
+
+    });
 });

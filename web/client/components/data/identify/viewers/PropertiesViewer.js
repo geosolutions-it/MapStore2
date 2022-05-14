@@ -8,14 +8,13 @@
 
 import React from 'react';
 
-import PropertiesViewer from './row/PropertiesViewer';
+import RowViewer from './row/RowViewer';
 
 export default ({response, layer, rowViewer}) => {
-    const RowViewer = (layer && layer.rowViewer) || rowViewer || PropertiesViewer;
     return (
         <div className="mapstore-json-viewer">
             {(response?.features || []).map((feature, i) => {
-                return <RowViewer key={i} feature={feature} title={feature.id + ''} exclude={["bbox"]} {...feature.properties}/>;
+                return <RowViewer key={i} feature={feature} layer={layer} component={rowViewer}/>;
             })}
         </div>
     );

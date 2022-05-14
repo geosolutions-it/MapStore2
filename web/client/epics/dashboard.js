@@ -123,18 +123,21 @@ export const loadDashboardStream = (action$, {getState = () => {}}) => action$
                 dashboardLoading(true, "loading"),
                 dashboardLoading(false, "loading"),
                 e => {
-                    let message = "dashboard.errors.loading.unknownError";
+                    const page = window.location.href.match('dashboard-embedded')
+                        ? 'dashboardEmbedded'
+                        : 'dashboard';
+                    let message = page + ".errors.loading.unknownError";
                     if (e.status === 403 ) {
-                        message = "dashboard.errors.loading.pleaseLogin";
+                        message = page + ".errors.loading.pleaseLogin";
                         if ( isLoggedIn(getState())) {
-                            message = "dashboard.errors.loading.dashboardNotAccessible";
+                            message = page + ".errors.loading.dashboardNotAccessible";
                         }
                     } if (e.status === 404) {
-                        message = "dashboard.errors.loading.dashboardDoesNotExist";
+                        message = page + ".errors.loading.dashboardDoesNotExist";
                     }
                     return Rx.Observable.of(
                         error({
-                            title: "dashboard.errors.loading.title",
+                            title: page + ".errors.loading.title",
                             message
                         }),
                         dashboardLoadError({...e, messageId: message})
@@ -159,7 +162,7 @@ export const saveDashboard = action$ => action$
                 resource.id ? triggerSave(false) : triggerSaveAs(false),
                 !resource.id
                     ? push(`/dashboard/${rid}`)
-                    : loadDashboard(rid),
+                    : loadDashboard(rid)
             ).merge(
                 Rx.Observable.of(show({
                     id: "DASHBOARD_SAVE_SUCCESS",
@@ -176,7 +179,6 @@ export const saveDashboard = action$ => action$
                 ({ status, statusText, data, message, ...other } = {}) => Rx.Observable.of(dashboardSaveError(status ? { status, statusText, data } : message || other), dashboardLoading(false, "saving"))
             )
     );
-
 
 export default {
     openDashboardWidgetEditor,

@@ -19,7 +19,7 @@ function findLinkEntities(contentBlock, callback, contentState) {
         contentState.getEntity(entityKey).getType() === 'LINK'
             );
         },
-        callback,
+        callback
     );
 }
 

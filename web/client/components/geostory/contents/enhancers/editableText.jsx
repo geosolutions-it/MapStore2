@@ -112,7 +112,7 @@ export const withGeoStoryEditor = compose(
         // both sections and columns can be scrolled to
         const availableStorySections = sections.reduce((availableSections, section) => {
             const s = [];
-            if (section.type === SectionTypes.IMMERSIVE) {
+            if ([SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL].includes(section.type)) {
                 const contents = section.contents;
                 contents.forEach((c) => {
                     s.push(c);

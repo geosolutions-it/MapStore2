@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-let L = require('leaflet');
-const HighlightFeatureSupport = require('../HighlightFeatureSupport');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import L from 'leaflet';
+import HighlightFeatureSupport from '../HighlightFeatureSupport';
 
 let defaultStyle = {
     radius: 5,

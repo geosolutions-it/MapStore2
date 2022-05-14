@@ -12,12 +12,13 @@ const parseLocalPart = {
     'double': 'number',
     'long': 'number',
     'decimal': 'number',
+    'integer': 'number',
     'int': 'number'
 };
 
-const getType = ({localPart, prefix}) => {
+const getType = ({localType, prefix}) => {
     return prefix === 'gml' && 'geometry'
-    || parseLocalPart[localPart] || localPart || '';
+    || parseLocalPart[localType] || localType || '';
 };
 
 export default function(CodeMirror) {
@@ -103,5 +104,3 @@ export default function(CodeMirror) {
         return null;
     });
 }
-
-

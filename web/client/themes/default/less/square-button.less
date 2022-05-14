@@ -1,8 +1,29 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+// #ms-components-theme(@theme-vars) {}
+
+// **************
+// Layout
+// **************
 .square-button {
     // !important due to vertical btn-group eg. dashboard
     height: @square-btn-size;
     width: @square-btn-size;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     outline: 0;
+    padding: 0;
     .glyphicon {
         margin: auto;
         font-size: @icon-size;
@@ -13,7 +34,8 @@
         margin: auto;
         > div {
             margin: auto;
-            .mapstore-circle-loader(@icon-size / 10, @icon-size, @ms2-color-text-primary);
+            .mapstore-circle-loader-with-css-variables(@icon-size / 10, @icon-size);
+            
         }
     }
 }
@@ -44,7 +66,7 @@
         margin: auto;
         > div {
             margin: auto;
-            .mapstore-circle-loader(@icon-size-md / 10, @icon-size-md, @ms2-color-text-primary);
+            .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md);
         }
     }
 }
@@ -61,39 +83,6 @@
         font-size: @icon-size-sm;
     }
 }
-
-.square-button-disabled(
-    @background: @ms2-color-disabled,
-    @color: @ms2-color-text-disabled,
-    @border: @ms2-color-disabled) {
-
-    &.square-button,
-    &.square-button-md,
-    &.square-button-sm {
-        &.disabled,
-        &[disabled],
-        fieldset[disabled] & {
-            &,
-            &.active,
-            &.focus,
-            &:active,
-            &:focus,
-            &:not(.nohover):hover {
-                background-color: @background;
-                color: @color;
-                border-color: @border;
-                opacity: 1.0;
-            }
-        }
-    }
-};
-
-.square-button-disabled();
-
-.btn-default {
-    .square-button-disabled(@ms2-color-background, @ms2-color-shade-light, transparent);
-
-};
 
 .dropdown.btn-group > .square-button-md+button.dropdown-toggle {
     height: @square-btn-medium-size;

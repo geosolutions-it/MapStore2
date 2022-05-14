@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import geoStoreMock from './geoStoreMock';
-import { createResource, deleteResource, getResourceIdByName, updateResource } from '../geostore';
+import { createResource, deleteResource, getResourceIdByName, updateResource, getResource } from '../geostore';
 const testAndResolve = (test = () => {}, value) => (...args) => {
     test(...args);
     return Promise.resolve(value);
@@ -211,5 +211,119 @@ describe('geostore observables for resources management', () => {
                 e => done(e)
             );
         });
+        it('updateResource linked resource is updated', done => {
+            const testResource = {
+                id: 10,
+                data: {},
+                category: "TEST",
+                metadata: {
+                    name: "RES2"
+                },
+                linkedResources: {
+                    details: { category: "DETAILS", data: "<p>Test</p>"}
+                }
+            };
+
+            const DummyAPI = {
+                getResourceAttributes: () => Promise.resolve([{
+                    name: 'details',
+                    type: 'STRING',
+                    value: 'rest/geostore/data/134'
+                }]),
+                putResourceMetadataAndAttributes: () => Promise.resolve(10),
+                putResource: () => Promise.resolve(10),
+                updateResourceAttribute: () => Promise.resolve(11)
+            };
+            updateResource(testResource, DummyAPI).subscribe(
+                () => done(),
+                e => done(e)
+            );
+        });
+    });
+    it('getResource with default arguments', done => {
+
+        const ID = 7;
+
+        const DummyAPI = {
+            getShortResource: testAndResolve(
+                id => expect(id).toBe(ID),
+                {}
+            ),
+            getResourceAttributes: testAndResolve(
+                id => expect(id).toBe(ID),
+                [{
+                    "name": "thumbnail",
+                    "type": "STRING",
+                    "value": "rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri"
+                }]
+            ),
+            getData: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            )
+        };
+        getResource(ID, {}, DummyAPI)
+            .subscribe(
+                (res) => {
+                    try {
+                        expect(res).toEqual(
+                            {
+                                attributes: { thumbnail: 'rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri' },
+                                data: {},
+                                permissions: undefined
+                            }
+                        );
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                },
+                e => expect(true).toBe(false, e)
+            );
+    });
+    it('getResource with includeAttributes set to false ', done => {
+
+        const ID = 7;
+
+        const DummyAPI = {
+            getShortResource: testAndResolve(
+                id => expect(id).toBe(ID),
+                {}
+            ),
+            getResourceAttributes: testAndResolve(
+                id => expect(id).toBe(ID),
+                [{
+                    "name": "thumbnail",
+                    "type": "STRING",
+                    "value": "rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri"
+                }]
+            ),
+            getData: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            )
+        };
+        getResource(ID, { includeAttributes: false }, DummyAPI)
+            .subscribe(
+                (res) => {
+                    try {
+                        expect(res).toEqual(
+                            {
+                                attributes: {},
+                                data: {},
+                                permissions: undefined
+                            }
+                        );
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                },
+                e => expect(true).toBe(false, e)
+            );
     });
 });

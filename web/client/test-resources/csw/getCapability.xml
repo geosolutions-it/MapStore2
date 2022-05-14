@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0" updateSequence="20293" xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wms https://gs-stable.geo-solutions.it/geoserver/schemas/wms/1.3.0/capabilities_1_3_0.xsd?authkey=7acaf4f3-6863-422c-a9ef-26877880f0ad">
+    <Capability>
+        <Layer>
+            <Title/>
+            <Abstract/>
+            <CRS>EPSG:4329</CRS>
+            <CRS>EPSG:3857</CRS>
+            <CRS>EPSG:900913</CRS>
+            <CRS>EPSG:3395</CRS>
+            <CRS>EPSG:4326</CRS>
+            <CRS>CRS:84</CRS>
+            <EX_GeographicBoundingBox>
+                <westBoundLongitude>-180.00833333333333</westBoundLongitude>
+                <eastBoundLongitude>180.00833333333338</eastBoundLongitude>
+                <southBoundLatitude>-90.00833333333331</southBoundLatitude>
+                <northBoundLatitude>90.00833333333334</northBoundLatitude>
+            </EX_GeographicBoundingBox>
+            <BoundingBox CRS="CRS:84" minx="-180.00833333333333" miny="-90.00833333333331" maxx="180.00833333333338" maxy="90.00833333333334"/>
+            <Layer queryable="1">
+                <Name>workspace:layer_name1</Name>
+                <Title>workspace:layer_name1</Title>
+                <Abstract>Test layer group 1</Abstract>
+                <KeywordList/>
+                <CRS>EPSG:4326</CRS>
+                <EX_GeographicBoundingBox>
+                    <westBoundLongitude>-74.02722</westBoundLongitude>
+                    <eastBoundLongitude>-73.907005</eastBoundLongitude>
+                    <southBoundLatitude>40.684221</southBoundLatitude>
+                    <northBoundLatitude>40.878178</northBoundLatitude>
+                </EX_GeographicBoundingBox>
+                <BoundingBox CRS="CRS:84" minx="-74.02722" miny="40.684221" maxx="-73.907005" maxy="40.878178"/>
+                <BoundingBox CRS="EPSG:4326" minx="40.684221" miny="-74.02722" maxx="40.878178" maxy="-73.907005"/>
+                <Style>
+                    <Name>default-style</Name>
+                    <Title>style</Title>
+                    <Abstract>Default style</Abstract>
+                    <LegendURL width="20" height="20">
+                        <Format>image/png</Format>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://demo/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=ny_layergroup&amp;authkey=7acaf4f3-6863-422c-a9ef-26877880f0ad"/>
+                    </LegendURL>
+                </Style>
+                <MinScaleDenominator>9028.0</MinScaleDenominator>
+                <MaxScaleDenominator>288896.0</MaxScaleDenominator>
+            </Layer>
+            <Layer queryable="1">
+                <Name>workspace:layer_name2</Name>
+                <Title>workspace:layer_name2</Title>
+                <Abstract>Layer-Group</Abstract>
+                <KeywordList/>
+                <CRS>EPSG:4326</CRS>
+                <EX_GeographicBoundingBox>
+                    <westBoundLongitude>-124.73142200000001</westBoundLongitude>
+                    <eastBoundLongitude>148.47914100000003</eastBoundLongitude>
+                    <southBoundLatitude>-43.648056</southBoundLatitude>
+                    <northBoundLatitude>49.371735</northBoundLatitude>
+                </EX_GeographicBoundingBox>
+                <BoundingBox CRS="CRS:84" minx="-124.73142200000001" miny="-43.648056" maxx="148.47914100000003" maxy="49.371735"/>
+                <BoundingBox CRS="EPSG:4326" minx="-43.648056" miny="-124.73142200000001" maxx="49.371735" maxy="148.47914100000003"/>
+                <Style>
+                    <Name>default-style</Name>
+                    <Title>style</Title>
+                    <Abstract>Default style</Abstract>
+                    <LegendURL width="20" height="20">
+                        <Format>image/png</Format>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://demo/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=topp%3Astates-tasmania&amp;authkey=7acaf4f3-6863-422c-a9ef-26877880f0ad"/>
+                    </LegendURL>
+                </Style>
+            </Layer>
+        </Layer>
+    </Capability>
+</WMS_Capabilities>

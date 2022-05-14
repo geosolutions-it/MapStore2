@@ -63,6 +63,7 @@ export const HIDE_MEASURE_WARNING = 'ANNOTATIONS:HIDE_MEASURE_WARNING';
 export const TOGGLE_SHOW_AGAIN = 'ANNOTATIONS:TOGGLE_SHOW_AGAIN';
 export const GEOMETRY_HIGHLIGHT = 'ANNOTATIONS:GEOMETRY_HIGHLIGHT';
 export const UNSELECT_FEATURE = 'ANNOTATIONS:UNSELECT_FEATURE';
+export const VALIDATE_FEATURE = 'ANNOTATIONS:VALIDATE_FEATURE';
 
 export const initPlugin = () => ({
     type: INIT_PLUGIN
@@ -168,10 +169,11 @@ export const addText = () => {
     };
 };
 
-export const toggleVisibilityAnnotation = (id) => {
+export const toggleVisibilityAnnotation = (id, visibility) => {
     return {
         type: TOGGLE_ANNOTATION_VISIBILITY,
-        id
+        id,
+        visibility
     };
 };
 
@@ -206,9 +208,10 @@ export const cancelRemoveAnnotation = () => {
         type: CANCEL_REMOVE_ANNOTATION
     };
 };
-export const cancelEditAnnotation = () => {
+export const cancelEditAnnotation = (properties) => {
     return {
-        type: CANCEL_EDIT_ANNOTATION
+        type: CANCEL_EDIT_ANNOTATION,
+        properties
     };
 };
 export const saveAnnotation = (id, fields, geometry, style, newFeature, properties) => {
@@ -292,9 +295,10 @@ export const closeAnnotations = () => {
         type: CLOSE_ANNOTATIONS
     };
 };
-export const confirmCloseAnnotations = () => {
+export const confirmCloseAnnotations = (properties) => {
     return {
-        type: CONFIRM_CLOSE_ANNOTATIONS
+        type: CONFIRM_CLOSE_ANNOTATIONS,
+        properties
     };
 };
 export const setUnsavedChanges = (unsavedChanges) => {
@@ -325,9 +329,10 @@ export const cancelCloseAnnotations = () => {
         type: CANCEL_CLOSE_ANNOTATIONS
     };
 };
-export const startDrawing = () => {
+export const startDrawing = (options = {}) => {
     return {
-        type: START_DRAWING
+        type: START_DRAWING,
+        options
     };
 };
 export const toggleUnsavedChangesModal = () => {
@@ -417,3 +422,8 @@ export const hideMeasureWarning = () => ({
 export const toggleShowAgain = () => ({
     type: TOGGLE_SHOW_AGAIN
 });
+
+export const validateFeature = () => ({
+    type: VALIDATE_FEATURE
+});
+

@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
 import { DOMParser } from 'xmldom';
-import { head, get, find, isArray, isString, isObject, keys, toPairs } from 'lodash';
+import {head, get, find, isArray, isString, isObject, keys, toPairs, merge} from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -19,6 +19,7 @@ import {
     GET_METADATA_RECORD_BY_ID,
     TEXT_SEARCH,
     CATALOG_CLOSE,
+    FORMAT_OPTIONS_FETCH,
     addCatalogService,
     setLoading,
     deleteCatalogService,
@@ -29,11 +30,13 @@ import {
     changeCatalogMode,
     resetCatalog,
     textSearch,
-    changeSelectedService
+    changeSelectedService,
+    formatsLoading,
+    setSupportedFormats, ADD_LAYER_AND_DESCRIBE, describeError, addLayer
 } from '../actions/catalog';
-import { showLayerMetadata, addLayer } from '../actions/layers';
+import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
 import { error, success } from '../actions/notifications';
-import { SET_CONTROL_PROPERTY, setControlProperties } from '../actions/controls';
+import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { closeFeatureGrid } from '../actions/featuregrid';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -46,23 +49,25 @@ import {
     servicesSelector,
     selectedCatalogSelector,
     searchOptionsSelector,
-    catalogSearchInfoSelector
+    catalogSearchInfoSelector,
+    getFormatUrlUsedSelector,
+    isActiveSelector
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
-import { getSelectedLayer } from '../selectors/layers';
+import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
 
 import {
     buildSRSMap,
-    esriToLayer,
-    extractEsriReferences,
-    extractOGCServicesReferences,
-    getCatalogRecords,
-    recordToLayer
+    extractOGCServicesReferences
 } from '../utils/CatalogUtils';
+import { getSupportedFormat, getCapabilities, describeLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import {getCapabilitiesUrl} from '../utils/LayersUtils';
-
+import ConfigUtils from '../utils/ConfigUtils';
+import {getCapabilitiesUrl, getLayerId, getLayerUrl} from '../utils/LayersUtils';
+import { wrapStartStop } from '../observables/epics';
+import {zoomToExtent} from "../actions/map";
+import CSW from '../api/CSW';
 
 /**
     * Epics for CATALOG
@@ -79,8 +84,9 @@ export default (API) => ({
     recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
             .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
+                const filter = get(options, 'service.filter') || get(options, 'filter');
                 return Rx.Observable.defer(() =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, { options, ...catalogSearchInfoSelector(store.getState()) })
+                    API[format].textSearch(url, startPosition, maxRecords, text, { options, filter, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -111,59 +117,50 @@ export default (API) => ({
             // the results. In that case a more detailed search with full record name can be helpful
             .switchMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
-                const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
-                    .filter((l, i) => !!services[sources[i]]) // ignore wrong catalog name
+                    .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
-                        const { type: format, url } = services[sources[i]];
+                        const layerOptions = get(options, i, searchOptionsSelector(state));
+                        const source = sources[i];
+                        const service = typeof source === 'object' ? source : services[source];
+                        const format = service.type.toLowerCase();
+                        const url = service.url;
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({ results: [] }))
-                        ).map(r => ({ ...r, format, url, text }));
+                            API[format].textSearch(url, startPosition, maxRecords, text, {...layerOptions, ...service}).catch(() => ({ results: [] }))
+                        ).map(r => ({ ...r, format, url, text, layerOptions }));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
                             return Rx.Observable.of(results.map(r => {
-                                const { format, url, text, ...result } = r;
+                                const { format, url, text, layerOptions, ...result } = r;
                                 const locales = currentMessagesSelector(state);
-                                const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
-                                const record = head(records.filter(rec => rec.identifier === text)); // exact match of text and record identifier
+                                const records = API[format].getCatalogRecords(result, layerOptions, locales) || [];
+                                const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
                                 const { wms, wmts } = extractOGCServicesReferences(record);
-                                let layer = {};
+                                const servicesReferences = wms || wmts;
+                                if (servicesReferences) {
+                                    const allowedSRS = buildSRSMap(servicesReferences.SRS);
+                                    if (servicesReferences.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS("EPSG:3857", allowedSRS)) {
+                                        return Rx.Observable.empty(); // TODO CHANGE THIS
+                                        // onError('catalog.srs_not_allowed');
+                                    }
+                                }
                                 const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
                                 const authkeyParamName = authkeyParamNameSelector(state);
-                                if (wms) {
-                                    const allowedSRS = buildSRSMap(wms.SRS);
-                                    if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS("EPSG:3857", allowedSRS)) {
-                                        return Rx.Observable.empty(); // TODO CHANGE THIS
-                                        // onError('catalog.srs_not_allowed');
-                                    }
-                                    layer = recordToLayer(record, "wms", {
-                                        removeParams: authkeyParamName,
-                                        catalogURL: format === 'csw' && url ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier : url
-                                    }, layerBaseConfig);
-                                } else if (wmts) {
-                                    layer = {};
-                                    const allowedSRS = buildSRSMap(wmts.SRS);
-                                    if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS("EPSG:3857", allowedSRS)) {
-                                        return Rx.Observable.empty(); // TODO CHANGE THIS
-                                        // onError('catalog.srs_not_allowed');
-                                    }
-                                    layer = recordToLayer(record, "wmts", {
-                                        removeParams: authkeyParamName
-                                    }, layerBaseConfig);
-                                } else {
-                                    const { esri } = extractEsriReferences(record);
-                                    if (esri) {
-                                        layer = esriToLayer(record, layerBaseConfig);
-                                    }
-                                }
+                                const layer = API[format].getLayerFromRecord(record, {
+                                    removeParams: authkeyParamName,
+                                    catalogURL: format === 'csw' && url
+                                        ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier
+                                        : url,
+                                    layerBaseConfig
+                                });
                                 if (!record) {
-                                    return text;
+                                    return [text];
                                 }
-                                return layer;
+                                return [layer, layerOptions];
                             }));
                         }
                         return Rx.Observable.empty();
@@ -171,17 +168,58 @@ export default (API) => ({
             })
             .mergeMap(results => {
                 if (results) {
-                    const allRecordsNotFound = results.filter(r => isString(r)).join(" ");
+                    const allRecordsNotFound = results.filter(r => isString(r[0])).join(" ");
                     let actions = [];
                     if (allRecordsNotFound) {
                         // return one notification for all records that have not been found
                         actions = [recordsNotFound(allRecordsNotFound)];
                     }
                     // add all layers found to the map
-                    actions = [...actions, ...results.filter(r => isObject(r)).map(r => addLayer(r))];
+                    actions = [
+                        ...actions,
+                        ...results.filter(r => isObject(r[0])).map(r => {
+                            return addLayer(merge({}, r[0], r[1]));
+                        })
+                    ];
                     return Rx.Observable.from(actions);
                 }
                 return Rx.Observable.empty();
+            })
+            .catch(() => {
+                return Rx.Observable.empty();
+            }),
+    addLayerAndDescribeEpic: (action$, store) =>
+        action$.ofType(ADD_LAYER_AND_DESCRIBE)
+            .mergeMap((value) => {
+                const { layer, zoomToLayer } = value;
+                const actions = [];
+                const state = store.getState();
+                const id = getLayerId(layer);
+                actions.push(addNewLayer({...layer, id}));
+                if (zoomToLayer && layer.bbox) {
+                    actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
+                }
+                if (layer.type === 'wms') {
+                    return Rx.Observable.defer(() => describeLayers(getLayerUrl(layer), layer.name))
+                        .switchMap(results => {
+                            if (results) {
+                                let description = find(results, (desc) => desc.name === layer.name );
+                                if (description && description.owsType === 'WFS') {
+                                    const filteredUrl = ConfigUtils.filterUrlParams(ConfigUtils.cleanDuplicatedQuestionMarks(description.owsURL), authkeyParamNameSelector(state));
+                                    return Rx.Observable.of(changeLayerProperties(id, {
+                                        search: {
+                                            url: filteredUrl,
+                                            type: 'wfs'
+                                        }
+                                    }));
+                                }
+                            }
+                            return Rx.Observable.empty();
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                return Rx.Observable.from(actions);
             })
             .catch(() => {
                 return Rx.Observable.empty();
@@ -202,6 +240,7 @@ export default (API) => ({
                 const newService = newServiceSelector(state);
                 return Rx.Observable.of(newService)
                     // validate
+                    .switchMap((service) => API[service.type]?.preprocess?.(service) ?? ( Rx.Observable.of(service)))
                     .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
                     .switchMap((service) => API[service.type]?.testService?.(service) ?? (Rx.Observable.of(service)))
                     .switchMap(() => {
@@ -252,9 +291,9 @@ export default (API) => ({
             - GFI
             - FeatureGrid
             */
-    openCatalogEpic: (action$) =>
-        action$.ofType(SET_CONTROL_PROPERTY)
-            .filter((action) => action.control === "metadataexplorer" && action.value)
+    openCatalogEpic: (action$, store) =>
+        action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
+            .filter((action) => action.control === "metadataexplorer" && isActiveSelector(store.getState()))
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
             }),
@@ -264,7 +303,7 @@ export default (API) => ({
                 const state = store.getState();
                 const layer = getSelectedLayer(state);
 
-                return Rx.Observable.defer(() => API.wms.getCapabilities(getCapabilitiesUrl(layer)))
+                return Rx.Observable.defer(() => getCapabilities(getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
                         const layersXml = get(caps, 'capability.layer.layer', []);
                         const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === layer.name.split(':')[1]);
@@ -282,7 +321,7 @@ export default (API) => ({
                         );
                         const defaultMetadata = metadataUrlHTML ? {metadataUrl: metadataUrlHTML} : {};
 
-                        const cswDCFlow = Rx.Observable.defer(() => API.csw.getRecordById(layer.catalogURL))
+                        const cswDCFlow = Rx.Observable.defer(() => CSW.getRecordById(layer.catalogURL))
                             .switchMap((action) => {
                                 if (action && action.error) {
                                     return Rx.Observable.of(error({
@@ -300,7 +339,7 @@ export default (API) => ({
                                 return Rx.Observable.empty();
                             });
 
-                        const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl))
+                        const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl, {headers: {'Accept': 'application/xml'}}))
                             .pluck('data')
                             .map(metadataXml => new DOMParser().parseFromString(metadataXml))
                             .map(metadataDoc => {
@@ -372,8 +411,9 @@ export default (API) => ({
             .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
-                const { type, url } = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text }));
+                const service = selectedCatalogSelector(state);
+                const { type, url, filter } = service;
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: { service, filter }}));
             }),
 
     catalogCloseEpic: (action$, store) =>
@@ -388,5 +428,53 @@ export default (API) => ({
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?
                     [changeSelectedService(head(keys(services))), allowBackgroundsDeletion(true)] : [])));
-            })
+            }),
+
+    /**
+     * Fetch all supported formats of a WMS service configured (infoFormats and imageFormats)
+     * Dispatches an action that sets the supported formats of the service.
+     * @param {Observable} action$ the actions triggered
+     * @param {object} getState store object
+     * @memberof epics.catalog
+     * @return {external:Observable}
+     */
+    getSupportedFormatsEpic: (action$, {getState = ()=> {}} = {}) =>
+        action$.ofType(FORMAT_OPTIONS_FETCH)
+            .filter((action)=> getFormatUrlUsedSelector(getState()) !== action?.url)
+            .switchMap(({url = ''} = {})=> {
+                return Rx.Observable.defer(() => getSupportedFormat(url, true))
+                    .switchMap((supportedFormats) => Rx.Observable.of(setSupportedFormats(supportedFormats, url)))
+                    .let(
+                        wrapStartStop(
+                            formatsLoading(true),
+                            formatsLoading(false),
+                            () => {
+                                return Rx.Observable.of(
+                                    error({ title: "layerProperties.format.error.title", message: 'layerProperties.format.error.message' }),
+                                    formatsLoading(false)
+                                );
+                            }
+                        )
+                    );
+            }),
+
+    /**
+    * Sets control property to currently selected group when catalogue is open
+    * Sets the currently selected group as the detination of new layers in catalogue
+    * if a layer instead of a group is selected it resets the groupId to Default
+    *  Action performed: setControlProperty (only if catalogue is open)
+    * @memberof epics.layers
+    * @param {external:Observable} action$ manages `SELECT_NODE`
+    * @return {external:Observable}
+    */
+    updateGroupSelectedMetadataExplorerEpic: (action$, store) => action$.ofType(SELECT_NODE)
+        .filter(() => isActiveSelector(store.getState()))
+        .switchMap(({ nodeType, id }) => {
+            const state = store.getState();
+            const selectedNodes = selectedNodesSelector(state);
+            const groupId = (selectedNodes.length === 0 || nodeType !== 'group')
+                ? 'Default'
+                : id;
+            return Rx.Observable.of(setControlProperty('metadataexplorer', "group", groupId));
+        })
 });

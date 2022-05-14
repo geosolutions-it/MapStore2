@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { Table, Glyphicon, Label, Tooltip } from 'react-bootstrap';
 import { findIndex } from 'lodash';
 
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 import Message from '../../I18N/Message';
 import { getbsStyleForState } from '../../../utils/ImporterUtils';
 import OverlayTrigger from '../../misc/OverlayTrigger';

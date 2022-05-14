@@ -98,14 +98,29 @@ describe('maptemplates epics', () => {
                     }]
                 }
             },
-            maptemplates: {},
-            localConfig: {
-                plugins: {
-                    desktop: [
-                        {name: "MapTemplates", cfg: {allowedTemplates: [{ id: 1 }]}}
-                    ]
-                }
+            maptemplates: {}
+        }, done);
+    });
+    it('setAllowedTemplatesEpic with no allowed templates', (done) => {
+        mockAxios.onPost('/resources/search/list').reply(config => get(config, 'params.includeAttributes', false) ? [200, {
+            ResourceList: {
+                Resource: []
             }
+        }] : [404, {}]);
+        testEpic(setAllowedTemplatesEpic, 2, setAllowedTemplates(), actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_TEMPLATES);
+            expect(actions[0].templates).toExist();
+            expect(actions[0].templates.length).toBe(0);
+            expect(actions[1].type).toBe(SET_MAP_TEMPLATES_LOADED);
+            expect(actions[1].loaded).toBe(true);
+        }, {
+            context: {
+                currentContext: {
+                    templates: []
+                }
+            },
+            maptemplates: {}
         }, done);
     });
 });

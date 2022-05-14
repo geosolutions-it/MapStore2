@@ -14,7 +14,7 @@ import wpsAggregate from '../../../observables/wps/aggregate';
 import { getWpsUrl } from '../../../utils/LayersUtils';
 import propsStreamFactory from '../../misc/enhancers/propsStreamFactory';
 
-const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
+export const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
     AggregationResults.map((res) => ({
         ...GroupByAttributes.reduce((a, p, i) => {
             let value = res[i];
@@ -50,12 +50,13 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.groupByAttributes === o2.groupByAttributes
+    && o1.classificationAttribute === o2.classificationAttribute
     && o1.viewParams === o2.viewParams;
 
 
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes)
+        .filter(({layer = {}, options}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes || options.classificationAttribute)
         .distinctUntilChanged(
             ({layer = {}, options = {}, filter}, newProps) =>
                 (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
@@ -71,6 +72,7 @@ const dataStreamFactory = ($props) =>
                     error: undefined,
                     data: wpsAggregateToChartData(data),
                     series: [{dataKey: `${data.AggregationFunctions[0]}(${data.AggregationAttribute})`}],
+                    classifications: {dataKey: options.classificationAttribute},
                     xAxis: {dataKey: data.GroupByAttributes[0]}
                 })).do(onLoad)
                     .catch((e) => Rx.Observable.of({

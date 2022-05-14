@@ -16,6 +16,7 @@ import {
     generalInfoFormatSelector,
     stopGetFeatureInfoSelector,
     isMapInfoOpen,
+    isMapPopup,
     mapInfoConfigurationSelector,
     showEmptyMessageGFISelector,
     clickPointSelector,
@@ -24,7 +25,12 @@ import {
     itemIdSelector,
     filterNameListSelector,
     overrideParamsSelector,
-    mapTriggerSelector
+    mapTriggerSelector,
+    hoverEnabledSelector,
+    currentFeatureSelector,
+    mapInfoEnabledSelector,
+    mapInfoDisabledSelector,
+    enableInfoForSelectedLayersSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -168,7 +174,7 @@ describe('Test mapinfo selectors', () => {
                 enabled: true
             }
         });
-        expect(props).toEqual(false);
+        expect(props).toEqual(true);
     });
     it('test stopGetFeatureInfoSelector when identify is disabled', () => {
         const props = stopGetFeatureInfoSelector({
@@ -229,7 +235,7 @@ describe('Test mapinfo selectors', () => {
                 }
             }
         });
-        expect(stop).toEqual(false); // it should pass
+        expect(stop).toEqual(true); // it should pass
     });
     it('test stopGetFeatureInfoSelector with identify not in context', () => {
         const stop = stopGetFeatureInfoSelector({
@@ -348,5 +354,44 @@ describe('Test mapinfo selectors', () => {
         expect(mapTriggerSelector({mapInfo: { configuration: {} }})).toBe('click');
         // when mapInfo is present
         expect(mapTriggerSelector({mapInfo: { configuration: { trigger: 'hover' } }})).toBe('hover');
+    });
+    it('test hoverEnabledSelector', () => {
+        // when no mapInfo object is not present in state
+        expect(hoverEnabledSelector({})).toBe(true);
+        // when mapInfo is present
+        expect(hoverEnabledSelector({maptype: {mapType: "openlayers"} })).toBe(true);
+        expect(hoverEnabledSelector({maptype: {mapType: "cesium"} })).toBe(false);
+    });
+    it('isMapPopup', () => {
+        expect(isMapPopup({ mapInfo: {showInMapPopup: true} })).toBeTruthy();
+    });
+
+    it('test currentFeatureSelector with default index', () => {
+        const state = { mapInfo: {...RESPONSE_STATE_WITH_FEATURES_METADATA.mapInfo, highlight: true}};
+        const [feature] = currentFeatureSelector(state);
+        expect(feature).toBeTruthy();
+        expect(feature.id).toBe('poi.4');
+    });
+    it('test currentFeatureSelector with derived index', () => {
+        const mapInfo = RESPONSE_STATE_WITH_FEATURES_METADATA.mapInfo;
+        const state = { mapInfo: {...mapInfo, responses: [{response: "no features were found"}, {...mapInfo.responses[0]}], highlight: true, index: 1}};
+        const [feature] = currentFeatureSelector(state);
+        expect(feature).toBeTruthy();
+        expect(feature.id).toBe('poi.4');
+    });
+    it('test mapInfoEnabledSelector ', () => {
+        const state = { mapInfo: { enabled: true}};
+        const mapInfoEnabled = mapInfoEnabledSelector(state);
+        expect(mapInfoEnabled).toBeTruthy();
+    });
+    it('test mapInfoDisabledSelector ', () => {
+        const state = { mapInfo: { enabled: true}};
+        const mapInfoEnabled = mapInfoDisabledSelector(state);
+        expect(mapInfoEnabled).toBeFalsy();
+    });
+    it('test enableInfoForSelectedLayersSelector ', () => {
+        const state = { mapInfo: { enableInfoForSelectedLayers: false}};
+        const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(state);
+        expect(enableInfoForSelectedLayers).toBeFalsy();
     });
 });

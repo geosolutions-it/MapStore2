@@ -92,6 +92,7 @@
       "templateFormatInfoAlert2": "Käytä ${ attribute } kääriäksesi näytettävät ominaisuudet",
       "templateFormatInfoAlertExample": "Kohteen ID on ${ properties }",
       "templatePreview": "Mallin esikatselu",
+      "heightOffset": "Height offset (m)",
       "tooltip": {
         "label": "Työkaluvinkkejä",
         "title": "Otsikko",
@@ -194,15 +195,7 @@
       "Examples": "Esimerkit",
       "LinkedinGroup": "Mapstore Linkedin Group",
       "scrollTop": "Vieritä sivun yläosaan",
-      "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
-      "ml": {
-        "title": "Ota yhteyttä ja pysy ajan tasalla postituslistojen avulla",
-        "subscribe_users": "Liity käyttäjien postituslistalle",
-        "subscribe_devel": "Liity kehittäjien postituslistalle",
-        "visit_group": "Vieraile ryhmässä",
-        "subscribe": "Liity",
-        "email": "Sähköposti:"
-      },
+      "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
       "examples": {
         "viewer": {
           "html": "<h3>Viewer</h3><p>Simple Viewer</p>"
@@ -417,7 +410,7 @@
     "toc": {
       "toggleLayerVisibility": "Vaihda tason näkyvyys",
       "toggleGroupVisibility": "Vaihda ryhmän näkyvyyttä",
-      "displayLegendAndTools": "Näytä selite ja työkalut",
+      "displayLegendAndTools": "Näytä selite",
       "zoomToLayerExtent": "Zoomaa tason laajuuteen",
       "addLayer": "Lisää taso",
       "addLayerToGroup": "Lisää taso valittuun ryhmään",
@@ -544,7 +537,7 @@
       },
       "layoutWarning": "Asettelu ei sallittu"
     },
-    "backgroundSwither": {
+    "backgroundSwitcher": {
       "tooltip": "Valitse tausta"
     },
     "info": {
@@ -900,7 +893,8 @@
         "operation": "Toiminto",
         "placeholder": "Valitse taso",
         "errors": {
-          "noCrossLayerAvailable": "Ristiinsuodatus ei ole käytettävissä valitulle tasolle"
+          "noCrossLayerAvailable": "Ristiinsuodatus ei ole käytettävissä valitulle tasolle",
+          "layersExcluded": "Vain kerrokset, jotka tulevat samasta lähteestä, voidaan valita tämän kerroksen suodattimen kohdekerrokseksi"
         }
       },
       "changedFilter": "Suodatin vaihdettu",
@@ -1084,7 +1078,15 @@
       "addBboxParam": "Lisää bbox-parametrit jakamislinkkiin",
       "wrongBboxParamTitle": "virheellinen bbox-parametri",
       "wrongBboxParamMessage": "bbox-parametrien on oltava EPSG: 4326: ssa ja kirjoitettu bbox = minx, miny, maxx, maxy",
-      "showHomeButton": "Linkki MapStoren sivuille"
+      "showHomeButton": "Linkki MapStoren sivuille",
+      "zoom": "Zoomaus",
+      "heading": "Suuntakulma",
+      "roll": "Rullauskulma",
+      "pitch": "Nousukulma",
+      "zoomToolTip": "Min: 0 ja Max: 35",
+      "headingToolTip": "Min: 0° ja Max: 360°",
+      "rollToolTip": "Min: -90° ja Max: 90°",
+      "pitchToolTip": "Min: -90° ja Max: 90°"
     },
     "snapshot": {
       "title": "Kuvan esikatselu",
@@ -1366,6 +1368,7 @@
       "featureClose": "Oletko varma, että suljet ominaisuusruudun?",
       "delete": "Vahvistatko kohteiden poistamisen ({count} kpl)?",
       "missingGeometry": "Geometria puuttuu",
+      "zoomObject": "Zoomaa kohteeseen",
       "filter": {
         "placeholders": {
           "default": "Haku...",

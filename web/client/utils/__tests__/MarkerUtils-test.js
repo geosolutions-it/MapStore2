@@ -10,6 +10,18 @@ import expect from 'expect';
 import MarkerUtils from '../MarkerUtils';
 
 describe('Test the MarkerUtils', () => {
+    let old = MarkerUtils.extraMarkers.images[1];
+    beforeEach((done) => {
+        // prevent issues with lazy load in karma by faking image and preloading
+        MarkerUtils.extraMarkers.images[1] = new Image();
+        MarkerUtils.extraMarkers.images[1].onload = () => {
+            done();
+        };
+        MarkerUtils.extraMarkers.images[1].src = MarkerUtils.extraMarkers.images[0].src;
+    });
+    afterEach(() => {
+        MarkerUtils.extraMarkers.images[1] = old;
+    });
     it('extraMarker offsets', () => {
         expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[0], MarkerUtils.extraMarkers.shapes[0])).toEqual([-2, 0]);
         expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[1], MarkerUtils.extraMarkers.shapes[0])).toEqual([-(MarkerUtils.extraMarkers.size[0] + 2), 0]);

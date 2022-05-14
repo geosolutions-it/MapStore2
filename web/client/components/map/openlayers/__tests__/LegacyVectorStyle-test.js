@@ -8,8 +8,8 @@
 import expect from 'expect';
 import { getStyle, styleFunction, firstPointOfPolylineStyle, lastPointOfPolylineStyle, startEndPolylineStyle } from '../LegacyVectorStyle';
 
-import {geomCollFeature} from '../../../../test-resources/drawsupport/features';
-import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
+import {geomCollFeature, multipointFt, lineStringFt, polygonFt, multipolygonFt} from '../../../../test-resources/drawsupport/features';
+import {DEFAULT_ANNOTATIONS_STYLES, STYLE_CIRCLE, STYLE_POLYGON} from '../../../../utils/AnnotationsUtils';
 
 import Feature from 'ol/Feature';
 import {Point, LineString, MultiLineString, Polygon, MultiPolygon} from 'ol/geom';
@@ -415,5 +415,52 @@ describe('Test LegacyVectorStyle', () => {
         }));
         expect(styleGenerated).toExist();
     });
+    it('test getStyle with FeatureCollection', () => {
+        const styleFunc = getStyle({
+            features: [{...lineStringFt, type: "FeatureCollection"}],
+            style: {
+                color: "ff0000",
+                opacity: 0.5,
+                ...DEFAULT_ANNOTATIONS_STYLES
+            }
+        }, false, ["textValue"]);
+        expect(styleFunc).toExist();
 
+        const styleGenerated = styleFunc(new Feature({
+            geometry: new LineString([
+                [100.0, 0.0], [101.0, 1.0]
+            ])
+        })
+        );
+        expect(styleGenerated).toExist();
+    });
+    it('test getStyle with MultiPoint', () => {
+        const styleObject = getStyle({
+            features: [multipointFt],
+            style: {
+                color: "ff0000",
+                opacity: 0.5,
+                ...STYLE_CIRCLE
+            }
+        }, false, []);
+        expect(styleObject).toExist();
+        expect(styleObject.image_).toExist();
+    });
+    it('test getStyle with Polygon & MultiPolygon', () => {
+        [polygonFt, multipolygonFt].forEach(ft=> {
+            let styleObject = getStyle({ features: [ft], style: {...STYLE_POLYGON}}, false, []);
+            expect(styleObject).toExist();
+            let polygonStyle = styleObject[1];
+            expect(polygonStyle.fill_.color_).toBe("rgba(255, 255, 255, 0.2)");
+            expect(polygonStyle.stroke_.color_).toBe("rgb(255, 204, 51)");
+            styleObject = getStyle({
+                features: [ft],
+                style: {...STYLE_POLYGON, fillOpacity: 0, opacity: 0}
+            }, false, []);
+            expect(styleObject).toExist();
+            polygonStyle = styleObject[1];
+            expect(polygonStyle.fill_.color_).toBe("rgba(255, 255, 255, 0)");
+            expect(polygonStyle.stroke_.color_).toBe("rgba(255, 204, 51, 0)");
+        });
+    });
 });

@@ -13,7 +13,15 @@ import Message from '../I18N/Message';
 import { compose, withHandlers, withState, withProps} from 'recompose';
 
 const ConfirmModal = compose(
-    withProps(({setConfirming}) => ({onClose: () => setConfirming(false)})))(({
+    withProps(({setConfirming}) => ({
+        onClose: (event) => {
+            // avoid propagation of events
+            if (event?.stopPropagation) {
+                event.stopPropagation();
+            }
+            setConfirming(false);
+        }
+    })))(({
     confirmYes = <Message msgId="yes" />,
     confirmNo = <Message msgId="no"/>,
     confirmTitle = <Message msgId="confirm"/>,
@@ -66,6 +74,11 @@ export default (Component) => compose(
     withState('confirming', 'setConfirming', false),
     withHandlers({
         onClick: ({ setConfirming = () => { }, onClick = () => {}, confirmPredicate = true}) => (...args) => {
+            const [event] = args || [];
+            // avoid propagation of events
+            if (event?.stopPropagation) {
+                event.stopPropagation();
+            }
             if (confirmPredicate) {
                 setConfirming(true);
             } else {

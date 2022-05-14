@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const {isEqual} = require("lodash");
+const isEqual = require("lodash/isEqual");
 const {parseTemplate} = require('../../../../utils/TemplateUtils');
 
 class Template extends React.Component {
@@ -68,4 +68,4 @@ class Template extends React.Component {
     };
 }
 
-export default Template;
+module.exports = Template;

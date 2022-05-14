@@ -5,7 +5,7 @@ The *Menu Bar* consist of four different parts:
 
 * The **Search bar**
 
-* The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/)
+* The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 * The **Login** button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
 
@@ -15,7 +15,7 @@ The *Menu Bar* consist of four different parts:
 
 ## Search Bar
 
-The search bar is a tool that allows the user to query the layers in order to find a specific information. In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to perform the search in four different ways:
+The search bar is a tool that allows the user to query the layers in order to find a specific information. In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to perform the search in four different ways:
 
 * By **Location name**
 
@@ -51,7 +51,7 @@ Once the coordinates are set, it is possible to perform the search with the <img
 
 ### Configuring a search service
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user also to extend or replace the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/>, the following window opens:
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user also to extend or replace the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/>, the following window opens:
 
 <img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -81,12 +81,12 @@ In this case, the user can define the following settings:
 
 * The **Priority**, a parameter which determines the position of the records in the results list. Lower values imply a higher positions in the results list and vice versa. By default the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, therefore in order to see the custom results in a higher position a lower priority value is needed 
 
-* The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](side-bar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up once a record from the search results is selected. Selecting *All Layers* the Identify tool is triggered and the related panel opens displaying the information of all layers visible in the map. With *Search Layer* instead, the Identify tool is triggered only for the layer (if it is present and visible in the map) related to the selected record in the search result list.
+* The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](side-bar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up once a record from the search results is selected. Selecting *All Layers* or *Single Layer* the Identify tool is triggered, and the related panel opens displaying the information of all/single layer(s) visible in the map. With *Single Layer* instead, the Identify tool is triggered only for the layer (if it is present and visible in the map) related to the selected record in the search result list.
 
 <img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 !!! note
-    Note that, selecting *All Layers* or *Search Layer* options, the point used for Identify request is a point belonging to the surface of the geometry of the selected record. Moreover, using *Search Layer* the Identify request will filter results to the selected record and to its layer; it will also force the info_format to "application/json" to allow filtering features by using the ID of the selected record.
+    Note that, selecting *All Layers* or *Single Layer* options, the point used for Identify request is a point belonging to the surface of the geometry of the selected record. Moreover, using *Single Layer*, the Identify request will filter results to the selected record and to its layer, using `featureid` which might be ignored by other servers, but can be used by GeoServer to select the specific feature of the results, when info_format is other than *application/json*. In order to achieve filtering of feature on servers other than GeoServer, one can select the format (*info_format*) as *application/json* for the layer to **GetFeatureInfo** from the layer settings in TOC to allow filtering features by using the ID of the selected record.
 
 Once all the option are set, it is possible to move forward with the Next button <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> that opens the *Optional properties* panel:
 
@@ -146,7 +146,7 @@ Once a bookmark has been created, it is always possible to *Edit* it <img src=".
 
 The *Burger Menu* is an important tools container that allows the user to perform different operations and take a look at several information:
 
-<img src="../img/menu-bar/burger-menu.jpg" class="ms-docimage" style="max-width:150px;"/>
+<img src="../img/menu-bar/burger-menu.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 In particular, with these options it is possible to:
 
@@ -164,6 +164,8 @@ In particular, with these options it is possible to:
 
 * **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
 
+* **Delete Map** in order to delete the current map. 
+
 * Create [Annotations](annotations.md) and add them to the map
 
 * Access the map **Settings** where the user can change the current *Language*, select the *Identify response format* (*Text*, *html* or *Properties*) and see the application *Version* (more information about the *Identify response format* can be found in the [Identify tool](side-bar.md#identify-tool) section)
@@ -178,6 +180,9 @@ In particular, with these options it is possible to:
 
 * Start the **Tutorial** 
 
-* Know more information **About** [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)
+* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+!!!warning
+    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Burger Menu* only when the map has already been saved once.

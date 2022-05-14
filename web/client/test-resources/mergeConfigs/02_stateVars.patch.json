@@ -1,0 +1,80 @@
+[
+  { "op": "replace", "jsonpath": "$.initialState.defaultState.annotations", "value": {
+    "config": {
+      "geometryEditorOptions": { "measureOptions": {"displayUom": "nm"}},
+      "multiGeometry": true,
+      "validationErrors": {}
+    },
+    "format": "aeronautical",
+    "defaultTextAnnotation": "New"
+  } },
+  { "op": "replace", "jsonpath": "$.initialState.defaultState.catalog.default.services", "value": {
+    "Inspire WMS Service": {
+      "url": "https:/inspire/geoserver/inspire/wms",
+      "type": "wms",
+      "title": "Inspire WMS Service",
+      "autoload": true
+    },
+    "Free WMS Service": {
+      "url": "https://free/geoserver/free/wms",
+      "type": "wms",
+      "title": "Free WMS Service",
+      "autoload": true
+    },
+    "Inspire CSW Service": {
+      "url": "https://inspire/geonetwork/srv/eng/csw-inspire",
+      "type": "csw",
+      "title": "Inspire CSW Service",
+      "autoload": true
+    },
+    "Free CSW Service": {
+      "url": "https://free/geonetwork/srv/eng/csw-free",
+      "type": "csw",
+      "title": "Free CSW Service",
+      "autoload": true
+    },
+    "Demo CSW Service": {
+      "url": "https://demo.geo-solutions.it/geoserver/csw",
+      "type": "csw",
+      "title": "Demo CSW Service",
+      "autoload": true
+    },
+    "Demo WMS Service": {
+      "url": "https://demo.geo-solutions.it/geoserver/wms",
+      "type": "wms",
+      "title": "Demo WMS Service",
+      "autoload": false
+    },
+    "Demo WMTS Service": {
+      "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+      "type": "wmts",
+      "title": "Demo WMTS Service",
+      "autoload": false
+    }
+  }},
+  { "op": "replace", "jsonpath": "$.initialState.defaultState.catalog.default.selectedService", "value": "Free WMS Service"},
+  { "op": "replace", "jsonpath": "$.initialState.defaultState.measurement", "value": {
+    "supportedLocales": {
+      "en": {
+        "code": "en-US",
+        "description": "English"
+      },
+      "de": {
+        "code": "de-DE",
+        "description": "Deutsch"
+      }
+    }
+  }},
+  { "op": "add", "jsonpath": "$.initialState.defaultState.measurement", "value": {
+    "lengthFormula": "vincenty",
+    "showLabel": true,
+    "startEndPoint": {
+      "startPointOptions": {
+        "radius": 3
+      },
+      "endPointOptions": {
+        "radius": 3
+      }
+    }
+  }}
+]

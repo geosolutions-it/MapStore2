@@ -8,6 +8,9 @@
 
 import property from './property';
 import omit from 'lodash/omit';
+import includes from 'lodash/includes';
+import isObject from 'lodash/isObject';
+import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const getBlocks = (/* config = {} */) => {
     const symbolizerBlock = {
@@ -44,7 +47,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.rotation'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Mark',
                 wellKnownName: 'Circle',
                 color: '#dddddd',
@@ -62,11 +65,21 @@ const getBlocks = (/* config = {} */) => {
             glyphAdd: 'point-plus',
             tooltipAddId: 'styleeditor.addIconRule',
             supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            hideMenu: true,
             params: {
                 image: property.image({
                     label: 'styleeditor.image',
-                    key: 'image',
-                    isValid: ({ value }) => !!value
+                    key: 'image'
+                }),
+                format: property.select({
+                    label: 'styleeditor.format',
+                    key: 'format',
+                    isVisible: (value, { image } = {}, format) => {
+                        return format !== 'css'
+                        && !isObject(image)
+                        && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
+                    },
+                    getOptions: () => SUPPORTED_MIME_TYPES
                 }),
                 opacity: property.opacity({
                     label: 'styleeditor.opacity'
@@ -79,7 +92,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.rotation'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Icon',
                 image: '',
                 opacity: 1,
@@ -129,7 +142,7 @@ const getBlocks = (/* config = {} */) => {
                     key: 'join'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Line',
                 color: '#777777',
                 width: 1,
@@ -175,12 +188,76 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.outlineWidth'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Fill',
                 color: '#dddddd',
                 fillOpacity: 1,
                 outlineColor: '#777777',
                 outlineWidth: 1
+            }
+        },
+        PointCloud: {
+            kind: 'Mark',
+            glyph: '1-point',
+            glyphAdd: '1-point-add',
+            tooltipAddId: 'styleeditor.addMarkRule',
+            supportedTypes: ['pointcloud'],
+            hideMenu: true,
+            params: {
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'fillOpacity',
+                    label: 'styleeditor.fill'
+                }),
+                radius: property.size({
+                    key: 'radius',
+                    label: 'styleeditor.radius',
+                    range: {
+                        min: 1,
+                        max: 10
+                    }
+                })
+            },
+            defaultProperties: {
+                kind: 'Mark',
+                wellKnownName: 'Circle',
+                color: '#dddddd',
+                fillOpacity: 1,
+                radius: 1
+            }
+        },
+        Polyhedron: {
+            kind: 'Fill',
+            glyph: 'polygon',
+            glyphAdd: 'polygon-plus',
+            tooltipAddId: 'styleeditor.addFillRule',
+            supportedTypes: ['polyhedron'],
+            hideMenu: true,
+            params: {
+                color: property.color({
+                    label: 'styleeditor.fill',
+                    key: 'color',
+                    opacityKey: 'fillOpacity',
+                    pattern: true,
+                    graphicKey: 'graphicFill',
+                    getGroupParams: (kind) => symbolizerBlock[kind],
+                    getGroupConfig: (kind) => {
+                        if (kind === 'Mark') {
+                            return {};
+                        }
+                        if (kind === 'Icon') {
+                            return {
+                                omittedKeys: ['rotate', 'opacity']
+                            };
+                        }
+                        return {};
+                    }
+                })
+            },
+            defaultProperties: {
+                kind: 'Fill',
+                color: '#dddddd',
+                fillOpacity: 1
             }
         },
         Text: {
@@ -254,9 +331,8 @@ const getBlocks = (/* config = {} */) => {
                     axis: 'y'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Text',
-                label: 'Label',
                 color: '#333333',
                 size: 14,
                 fontStyle: 'normal',
@@ -278,7 +354,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.opacity'
                 })
             },
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Raster',
                 opacity: 1,
                 contrastEnhancement: {}
@@ -322,16 +398,20 @@ const getBlocks = (/* config = {} */) => {
                     method: property.select({
                         key: 'method',
                         label: 'styleeditor.method',
-                        getOptions: ({ methods, method }) => {
+                        isDisabled: (value, properties, {attributes})=>
+                            attributes?.filter(({label}) => label === properties?.attribute)?.[0]?.type === 'string'
+                            && properties?.method !== 'customInterval',
+                        getOptions: ({ methods, method, methodEdit }) => {
                             const options = methods?.map((value) => ({
                                 labelId: 'styleeditor.' + value,
                                 value
                             })) || [];
                             return [
-                                ...(method === 'customInterval'
+                                ...(method === "customInterval"
                                     ? [
                                         {
-                                            labelId: 'styleeditor.' + method,
+                                            labelId: "styleeditor." + methodEdit,
+                                            glyphId: 'edit',
                                             value: method
                                         }
                                     ]
@@ -341,7 +421,9 @@ const getBlocks = (/* config = {} */) => {
                         }
                     }),
                     intervals: property.intervals({
-                        label: 'styleeditor.intervals'
+                        label: 'styleeditor.intervals',
+                        isDisabled: (value, properties) =>
+                            includes(['customInterval', 'uniqueInterval'], properties?.method)
                     })
                 },
                 (symbolizerKind) => {
@@ -384,7 +466,7 @@ const getBlocks = (/* config = {} */) => {
                     })
                 }
             ],
-            deaultProperties: {
+            defaultProperties: {
                 kind: 'Classification',
                 classification: [],
                 intervals: 5,
@@ -399,39 +481,69 @@ const getBlocks = (/* config = {} */) => {
             classificationType: 'classificationRaster',
             hideInputLabel: false,
             hideFilter: true,
-            params: [{
-                channel: property.channel({}),
-                opacity: property.opacity({
-                    label: 'styleeditor.opacity'
-                }),
-                ramp: property.colorRamp({
-                    key: 'ramp',
-                    label: 'styleeditor.colorRamp',
-                    getOptions: ({ getColors }) => getColors()
-                }),
-                reverse: property.bool({
-                    key: 'reverse',
-                    label: 'styleeditor.reverse'
-                }),
-                continuous: property.bool({
-                    key: 'continuous',
-                    label: 'styleeditor.continuous'
-                }),
-                method: property.select({
-                    key: 'method',
-                    label: 'styleeditor.method',
-                    getOptions: ({ methods }) => {
-                        return methods?.map((value) => ({
-                            labelId: 'styleeditor.' + value,
-                            value
-                        }));
-                    }
-                }),
-                intervals: property.intervals({
-                    label: 'styleeditor.intervals'
-                })
-            }],
-            deaultProperties: {
+            params: [
+                {
+                    channel: property.channel({}),
+                    opacity: property.opacity({
+                        label: 'styleeditor.opacity'
+                    }),
+                    ramp: property.colorRamp({
+                        key: 'ramp',
+                        label: 'styleeditor.colorRamp',
+                        getOptions: ({ getColors }) => getColors()
+                    }),
+                    reverse: property.bool({
+                        key: 'reverse',
+                        label: 'styleeditor.reverse',
+                        isDisabled: (value, properties) =>
+                            properties?.ramp === 'custom'
+                            || properties?.method === 'customInterval'
+                    }),
+                    continuous: property.bool({
+                        key: 'continuous',
+                        label: 'styleeditor.continuous',
+                        isDisabled: (value, properties) =>
+                            properties?.ramp === 'custom'
+                            || properties?.method === 'customInterval'
+                    }),
+                    colorMapType: property.colorMapType({
+                        key: 'colorMapType',
+                        label: 'styleeditor.colorMapType.label'
+                    }),
+                    method: property.select({
+                        key: 'method',
+                        label: 'styleeditor.method',
+                        getOptions: ({ methods, method, methodEdit }) => {
+                            const options = methods?.map((value) => ({
+                                labelId: 'styleeditor.' + value,
+                                value
+                            })) || [];
+                            return [
+                                ...(method === "customInterval"
+                                    ? [
+                                        {
+                                            labelId: "styleeditor." + methodEdit,
+                                            glyphId: 'edit',
+                                            value: method
+                                        }
+                                    ]
+                                    : []),
+                                ...options
+                            ];
+                        }
+                    }),
+                    intervals: property.intervals({
+                        label: 'styleeditor.intervals'
+                    })
+                },
+                {
+                    classification: property.colorMap({
+                        key: 'classification',
+                        rampKey: 'ramp'
+                    })
+                }
+            ],
+            defaultProperties: {
                 kind: 'Raster',
                 opacity: 1,
                 classification: [],
@@ -439,6 +551,7 @@ const getBlocks = (/* config = {} */) => {
                 method: 'equalInterval',
                 reverse: false,
                 continuous: true,
+                colorMapType: 'ramp',
                 symbolizerKind: 'Raster'
             }
         }

@@ -25,7 +25,6 @@ import {
 
 import { measurementSelector } from '../../selectors/measurement';
 import { changeSelectionState } from '../../actions/selection';
-import { changeLocateState, onLocateError } from '../../actions/locate';
 import { boxSelectionStatus } from '../../selectors/box';
 
 import {
@@ -35,7 +34,8 @@ import {
     geometryChanged,
     drawStopped,
     selectFeatures,
-    drawingFeatures
+    drawingFeatures,
+    toggleSnappingIsLoading
 } from '../../actions/draw';
 
 import { updateHighlighted } from '../../actions/highlight';
@@ -43,6 +43,9 @@ import { warning } from '../../actions/notifications';
 import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selectors/map';
+import {
+    snappingLayerSelector
+} from "../../selectors/draw";
 
 const Empty = () => { return <span/>; };
 
@@ -91,23 +94,19 @@ const pluginsCreator = (mapType, actions) => {
             changeMeasurement
         })(components.MeasurementSupport || Empty);
 
-        const Locate = connect((state) => ({
-            status: state.locate && state.locate.state,
-            messages: state.locale && state.locale.messages ? state.locale.messages.locate : undefined
-        }), {
-            changeLocateState,
-            onLocateError
-        })(components.Locate || Empty);
-
         const DrawSupport = connect((state) =>
-            state.draw || {}, {
+            ({
+                ...(state.draw ?? {}),
+                snappingLayerInstance: snappingLayerSelector(state)
+            }), {
             onChangeDrawingStatus: changeDrawingStatus,
             onEndDrawing: endDrawing,
             onGeometryChanged: geometryChanged,
             onSelectFeatures: selectFeatures,
             onDrawingFeatures: drawingFeatures,
             onDrawStopped: drawStopped,
-            setCurrentStyle: setCurrentStyle
+            setCurrentStyle: setCurrentStyle,
+            toggleSnappingIsLoading: toggleSnappingIsLoading
         })( components.DrawSupport || Empty);
 
         const BoxSelectionSupport = connect(
@@ -147,7 +146,6 @@ const pluginsCreator = (mapType, actions) => {
             Feature: components.Feature || Empty,
             tools: {
                 measurement: MeasurementSupport,
-                locate: Locate,
                 overview: components.Overview || Empty,
                 scalebar: components.ScaleBar || Empty,
                 draw: DrawSupport,
@@ -155,7 +153,8 @@ const pluginsCreator = (mapType, actions) => {
                 selection: SelectionSupport,
                 popup: PopupSupport,
                 box: BoxSelectionSupport
-            }
+            },
+            mapType
         };
     });
 

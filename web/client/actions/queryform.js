@@ -50,6 +50,7 @@ export const LOADING_FILTER_FIELD_OPTIONS = 'LOADING_FILTER_FIELD_OPTIONS';
 export const ADD_CROSS_LAYER_FILTER_FIELD = 'QUERYFORM:ADD_CROSS_LAYER_FILTER_FIELD';
 export const UPDATE_CROSS_LAYER_FILTER_FIELD = 'QUERYFORM:UPDATE_CROSS_LAYER_FILTER_FIELD';
 export const REMOVE_CROSS_LAYER_FILTER_FIELD = 'QUERYFORM:REMOVE_CROSS_LAYER_FILTER_FIELD';
+export const UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS = 'QUERYFORM:UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS';
 export const SET_AUTOCOMPLETE_MODE = 'SET_AUTOCOMPLETE_MODE';
 export const TOGGLE_AUTOCOMPLETE_MENU = 'TOGGLE_AUTOCOMPLETE_MENU';
 export const LOAD_FILTER = 'QUERYFORM:LOAD_FILTER';
@@ -78,11 +79,12 @@ export function removeFilterField(rowId) {
     };
 }
 
-export function toggleMenu(rowId, status) {
+export function toggleMenu(rowId, status, layerFilterType = "filterField") {
     return {
         type: TOGGLE_AUTOCOMPLETE_MENU,
         rowId,
-        status
+        status,
+        layerFilterType
     };
 }
 
@@ -400,17 +402,27 @@ export function resetCrossLayerFilter() {
     };
 }
 
-export function loadingFilterFieldOptions(status, filterField) {
+export function loadingFilterFieldOptions(status, filterField, layerFilterType = "filterField") {
     return {
         type: LOADING_FILTER_FIELD_OPTIONS,
         status,
-        filterField
+        filterField,
+        layerFilterType
     };
 }
 
 export function updateFilterFieldOptions(filterField, options, valuesCount) {
     return {
         type: UPDATE_FILTER_FIELD_OPTIONS,
+        filterField,
+        options,
+        valuesCount
+    };
+}
+
+export function updateCrossLayerFilterFieldOptions(filterField, options, valuesCount) {
+    return {
+        type: UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS,
         filterField,
         options,
         valuesCount

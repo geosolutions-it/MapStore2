@@ -1,0 +1,20 @@
+{
+  "plugins": {
+    "desktop":
+    [
+      {
+          "name": "Home"
+      },
+      {
+          "name": "Home",
+          "CFG": {}
+      },
+      {
+          "name": "FeatureEditor"
+      },
+      {
+          "name": "WFSDownload"
+      }
+  ]
+  }
+}

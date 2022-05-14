@@ -23,6 +23,7 @@ class Toolbar extends React.Component {
     static propTypes = {
         groups: PropTypes.array,
         items: PropTypes.array,
+        layers: PropTypes.array,
         selectedLayers: PropTypes.array,
         generalInfoFormat: PropTypes.string,
         selectedGroups: PropTypes.array,
@@ -41,6 +42,7 @@ class Toolbar extends React.Component {
     static defaultProps = {
         groups: [],
         items: [],
+        layers: [],
         selectedLayers: [],
         selectedGroups: [],
         onToolsActions: {
@@ -296,7 +298,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                     : null}
-                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && this.props.selectedLayers[0].search !== 'vector' && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
+                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && this.props.selectedLayers[0].search && this.props.selectedLayers[0].search !== 'vector' && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.layerdownload.expanded ?
                     <OverlayTrigger
                         key="widgets"
                         placement="top"

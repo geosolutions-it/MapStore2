@@ -27,7 +27,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
-    wasTutorialShownSelector} from '../selectors/contextcreator';
+    wasTutorialShownSelector, selectedThemeSelector, customVariablesEnabledSelector} from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
@@ -95,10 +95,14 @@ export const saveContextResource = (action$, store) => action$
         }) : plugin);
         const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
         const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
+        const theme = selectedThemeSelector(state);
+        const customVariablesEnabled = customVariablesEnabledSelector(state);
 
         const newContext = {
             ...context,
             mapConfig,
+            theme,
+            customVariablesEnabled,
             plugins: {desktop: unselectablePlugins},
             userPlugins
         };
@@ -133,7 +137,7 @@ export const saveContextResource = (action$, store) => action$
                     push(destLocation || `/context/${context.name}`),
                     loadExtensions(),
                     loading(false, 'contextSaving')
-                ),
+                )
             ))
             .catch(({status, data}) => Rx.Observable.of(error({
                 title: 'contextCreator.saveErrorNotification.titleContext',
@@ -492,9 +496,9 @@ export const mapViewerLoadEpic = (action$, store) => action$
             Rx.Observable.merge(
                 Rx.Observable.of(
                     initMap(true),
-                    loadMapConfig(configUrl, null, cloneDeep(mapConfig)),
+                    loadMapConfig(configUrl, null, cloneDeep(mapConfig), undefined, {}),
                     mapViewerLoaded(true)
-                ),
+                )
             );
     });
 

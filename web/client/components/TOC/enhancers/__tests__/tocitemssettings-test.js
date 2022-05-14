@@ -148,150 +148,59 @@ describe("test updateSettingsLifecycle", () => {
         expect(spyOnSetTab).toHaveBeenCalledWith("display");
     });
 
-    it('test component on save', () => {
-        const testHandlers = {
-            onHideSettings: () => {},
-            onShowAlertModal: () => {},
-            onUpdateOriginalSettings: () => {},
-            onUpdateInitialSettings: () => {}
-        };
-
-        const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
-        const spyOnShowAlertModal = expect.spyOn(testHandlers, 'onShowAlertModal');
-        const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
-        const spyOnUpdateInitialSettings = expect.spyOn(testHandlers, 'onUpdateInitialSettings');
-
-        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={() => onSave()}></div>);
-        ReactDOM.render(<Component
-            onHideSettings={testHandlers.onHideSettings}
-            onShowAlertModal={testHandlers.onShowAlertModal}
-            onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
-            onUpdateInitialSettings={testHandlers.onUpdateInitialSettings} />, document.getElementById("container"));
-
-        const testSave = document.getElementById('test-save');
-        TestUtils.Simulate.click(testSave);
-        expect(spyOnHideSettings).toHaveBeenCalled();
-        expect(spyOnShowAlertModal).toHaveBeenCalled();
-        expect(spyOnShowAlertModal).toHaveBeenCalledWith(false);
-
-        expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
-        expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
-    });
-
     it('test component on close equal options', () => {
         const testHandlers = {
-            onUpdateNode: () => {},
-            onHideSettings: () => {},
-            onShowAlertModal: () => {}
+            onHideSettings: () => {}
         };
-        const spyOnUpdateNode = expect.spyOn(testHandlers, 'onUpdateNode');
         const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
-        const spyOnShowAlertModal = expect.spyOn(testHandlers, 'onShowAlertModal');
 
         const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose()}></div>);
         ReactDOM.render(<Component
             onUpdateNode={testHandlers.onUpdateNode}
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: {}}}
-            onHideSettings={testHandlers.onHideSettings}
-            onShowAlertModal={testHandlers.onShowAlertModal} />, document.getElementById("container"));
+            onHideSettings={testHandlers.onHideSettings}/>, document.getElementById("container"));
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
 
-        expect(spyOnUpdateNode).toHaveBeenCalled();
         expect(spyOnHideSettings).toHaveBeenCalled();
-        expect(spyOnShowAlertModal).toHaveBeenCalled();
     });
 
     it('test component on close opacity 1.0', () => {
         // opacity 1.0 and opacity undefined are interpreted as equal
         const testHandlers = {
-            onUpdateNode: () => {},
-            onHideSettings: () => {},
-            onShowAlertModal: () => {}
+            onHideSettings: () => {}
         };
-        const spyOnUpdateNode = expect.spyOn(testHandlers, 'onUpdateNode');
         const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
-        const spyOnShowAlertModal = expect.spyOn(testHandlers, 'onShowAlertModal');
 
         const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose()}></div>);
         ReactDOM.render(<Component
-            onUpdateNode={testHandlers.onUpdateNode}
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { opacity: 1.0 }}}
-            onHideSettings={testHandlers.onHideSettings}
-            onShowAlertModal={testHandlers.onShowAlertModal} />, document.getElementById("container"));
+            onHideSettings={testHandlers.onHideSettings} />, document.getElementById("container"));
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
 
-        expect(spyOnUpdateNode).toHaveBeenCalled();
         expect(spyOnHideSettings).toHaveBeenCalled();
-        expect(spyOnShowAlertModal).toHaveBeenCalled();
     });
 
-    it('test component on close alert new params', () => {
+    it('test component hideSettings on new style params', () => {
         const testHandlers = {
-            onUpdateNode: () => {},
-            onHideSettings: () => {},
-            onShowAlertModal: () => {}
+            onHideSettings: () => {}
         };
-        const spyOnUpdateNode = expect.spyOn(testHandlers, 'onUpdateNode');
         const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
-        const spyOnShowAlertModal = expect.spyOn(testHandlers, 'onShowAlertModal');
 
         const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose()}></div>);
         ReactDOM.render(<Component
-            onUpdateNode={testHandlers.onUpdateNode}
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
-            onHideSettings={testHandlers.onHideSettings}
-            onShowAlertModal={testHandlers.onShowAlertModal} />, document.getElementById("container"));
+            onHideSettings={testHandlers.onHideSettings} />, document.getElementById("container"));
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
-
-        expect(spyOnUpdateNode).toNotHaveBeenCalled();
-        expect(spyOnHideSettings).toNotHaveBeenCalled();
-        expect(spyOnShowAlertModal).toHaveBeenCalled();
-        expect(spyOnShowAlertModal).toHaveBeenCalledWith(true);
-    });
-
-    it('test component on forced close', () => {
-        const testHandlers = {
-            onUpdateNode: () => {},
-            onHideSettings: () => {},
-            onShowAlertModal: () => {},
-            onUpdateOriginalSettings: () => {},
-            onUpdateInitialSettings: () => {}
-        };
-        const spyOnUpdateNode = expect.spyOn(testHandlers, 'onUpdateNode');
-        const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
-        const spyOnUpdateInitialSettings = expect.spyOn(testHandlers, 'onUpdateInitialSettings');
-
-        const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
-        const spyOnShowAlertModal = expect.spyOn(testHandlers, 'onShowAlertModal');
-
-        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(true)}></div>);
-        ReactDOM.render(<Component
-            onUpdateNode={testHandlers.onUpdateNode}
-            originalSettings={{}}
-            settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
-            onHideSettings={testHandlers.onHideSettings}
-            onShowAlertModal={testHandlers.onShowAlertModal}
-            onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
-            onUpdateInitialSettings={testHandlers.onUpdateInitialSettings} />, document.getElementById("container"));
-
-        const testClose = document.getElementById('test-close');
-        TestUtils.Simulate.click(testClose);
-
-        expect(spyOnUpdateNode).toHaveBeenCalled();
         expect(spyOnHideSettings).toHaveBeenCalled();
-        expect(spyOnShowAlertModal).toHaveBeenCalled();
-
-        expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
-        expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
     });
 
     it('test component on close with tabCloseActions (forced close)', () => {
@@ -305,7 +214,7 @@ describe("test updateSettingsLifecycle", () => {
             testHandlers.tabCloseAction
         ];
 
-        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(true, tabCloseActions)}></div>);
+        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(tabCloseActions)}></div>);
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
@@ -327,7 +236,7 @@ describe("test updateSettingsLifecycle", () => {
             "not a function"
         ];
 
-        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(true, tabCloseActions)}></div>);
+        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(tabCloseActions)}></div>);
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
@@ -349,7 +258,7 @@ describe("test updateSettingsLifecycle", () => {
             tabCloseAction: testHandlers.tabCloseAction
         };
 
-        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(true, tabCloseActions)}></div>);
+        const Component = settingsLifecycle(({onClose}) => <div id="test-close" onClick={() => onClose(tabCloseActions)}></div>);
         ReactDOM.render(<Component
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
@@ -360,63 +269,5 @@ describe("test updateSettingsLifecycle", () => {
         expect(spyTabCloseAction).toNotHaveBeenCalled();
     });
 
-    it('test component on save with tabCloseActions', () => {
-        const testHandlers = {
-            tabCloseAction: () => {}
-        };
-
-        const spyTabCloseAction = expect.spyOn(testHandlers, 'tabCloseAction');
-
-        const tabCloseActions = [
-            testHandlers.tabCloseAction
-        ];
-
-        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={() => onSave(tabCloseActions)}></div>);
-        ReactDOM.render(<Component />, document.getElementById("container"));
-
-        const testSave = document.getElementById('test-save');
-        TestUtils.Simulate.click(testSave);
-
-        expect(spyTabCloseAction).toHaveBeenCalled();
-    });
-
-    it('test component on save with tabCloseActions but not function', () => {
-        const testHandlers = {
-            tabCloseAction: () => {}
-        };
-
-        const spyTabCloseAction = expect.spyOn(testHandlers, 'tabCloseAction');
-
-        const tabCloseActions = [
-            "not a function"
-        ];
-        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={() => onSave(tabCloseActions)}></div>);
-        ReactDOM.render(<Component />, document.getElementById("container"));
-
-        const testSave = document.getElementById('test-save');
-        TestUtils.Simulate.click(testSave);
-
-        expect(spyTabCloseAction).toNotHaveBeenCalled();
-    });
-
-    it('test component on save with arg different from array', () => {
-        const testHandlers = {
-            tabCloseAction: () => {}
-        };
-
-        const spyTabCloseAction = expect.spyOn(testHandlers, 'tabCloseAction');
-
-        const tabCloseActions = {
-            tabCloseAction: testHandlers.tabCloseAction
-        };
-
-        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={() => onSave(tabCloseActions)}></div>);
-        ReactDOM.render(<Component />, document.getElementById("container"));
-
-        const testSave = document.getElementById('test-save');
-        TestUtils.Simulate.click(testSave);
-
-        expect(spyTabCloseAction).toNotHaveBeenCalled();
-    });
 
 });

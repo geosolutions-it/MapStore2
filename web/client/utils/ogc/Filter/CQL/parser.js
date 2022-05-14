@@ -16,7 +16,7 @@ const spatialOperators = {
     WITHIN: "WITHIN"
 };
 const patterns = {
-    PROPERTY: /^[_a-zA-Z]\w*/,
+    PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE)/i,
     IS_NULL: /^IS NULL/i,
     COMMA: /^,/,
@@ -100,6 +100,12 @@ const tryToken = (text, pattern) => {
     }
     return pattern(text);
 };
+const sanitize = (text, token) => {
+    if (token === "PROPERTY") {
+        return text.replaceAll('"', ''); // remove intercepted do
+    }
+    return text;
+};
 const nextToken = (text, tokens) => {
     let i;
     let token;
@@ -113,7 +119,7 @@ const nextToken = (text, tokens) => {
             let remainder = text.substr(match.length).replace(/^\s*/, "");
             return {
                 type: token,
-                text: match,
+                text: sanitize(match, token),
                 remainder: remainder
             };
         }

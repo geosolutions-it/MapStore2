@@ -19,6 +19,7 @@ import { isEqual, head, findIndex } from 'lodash';
 
 class SimpleFilterField extends React.Component {
     static propTypes = {
+        dropUp: PropTypes.bool,
         operator: PropTypes.string.isRequired,
         maxLabelSize: PropTypes.number,
         label: PropTypes.string,
@@ -226,6 +227,7 @@ class SimpleFilterField extends React.Component {
         return (
             <div>
                 <ComboField
+                    dropUp={this.props.dropUp}
                     valueField="val"
                     textField="text"
                     style={this.props.comboStyle}

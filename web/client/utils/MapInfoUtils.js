@@ -18,6 +18,7 @@ import wfs from './mapinfo/wfs';
 import wms from './mapinfo/wms';
 import wmts from './mapinfo/wmts';
 import vector from './mapinfo/vector';
+import threeDTiles from './mapinfo/threeDTiles';
 
 let MapInfoUtils;
 /**
@@ -169,7 +170,7 @@ export const getValidator = (format) => {
         getNoValidResponses: () => []
     };
     return {
-        getValidResponses: (responses, renderEmpty = false) => {
+        getValidResponses: (responses) => {
             return responses.reduce((previous, current) => {
                 if (current) {
                     let infoFormat;
@@ -181,7 +182,7 @@ export const getValidator = (format) => {
                     if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
                         infoFormat = current.queryParams.outputFormat;
                     }
-                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current], renderEmpty);
+                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
                     return [...previous, ...valid];
                 }
                 return [...previous];
@@ -221,10 +222,11 @@ export const defaultQueryableFilter = (l) => {
     ;
 };
 export const services = {
-    wfs,
-    wms,
-    wmts,
-    vector
+    'wfs': wfs,
+    'wms': wms,
+    'wmts': wmts,
+    'vector': vector,
+    '3dtiles': threeDTiles
 };
 /**
  * To get the custom viewer with the given type
@@ -270,6 +272,15 @@ export const filterRequestParams = (layer, includeOptions, excludeParams) => {
     return options;
 };
 
+let rowViewers = {};
+
+export const registerRowViewer = (name, options) => {
+    rowViewers[name] = options;
+};
+
+export const getRowViewer = (name) => {
+    return rowViewers[name];
+};
 
 MapInfoUtils = {
     AVAILABLE_FORMAT,
@@ -281,6 +292,8 @@ MapInfoUtils = {
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfoViewer,
     getLayerFeatureInfo,
-    VIEWERS: {}
+    VIEWERS: {},
+    registerRowViewer,
+    getRowViewer
 };
 

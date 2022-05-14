@@ -15,7 +15,7 @@ import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
 import ConfigUtils from '../utils/ConfigUtils';
-import { errorLoadingFont, setMapResolutions } from '../actions/map';
+import { setMapResolutions, mapPluginLoad } from '../actions/map';
 import { isString } from 'lodash';
 import selector from './map/selector';
 import mapReducer from "../reducers/map";
@@ -27,6 +27,9 @@ import mapTypeReducer from "../reducers/maptype";
 import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
+import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
+import { createFeatureFilter } from '../utils/FilterUtils';
+import ErrorPanel from '../components/map/ErrorPanel';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -162,7 +165,13 @@ import pluginsCreator from "./map/index";
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
- * @prop {number} toolsOptions.locate.maxZoom The maximum zoom for automatic view setting to the user location
+ * @prop {object} mapOptions map options grouped by map type
+ * @prop {object} mapOptions[mapType] this object contains configuration specific for a map type. The mapType could be `openlayers`, `leaflet` or `cesium`
+ * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
+ * @prop {boolean} mapOptions.cesium.showSkyAtmosphere enable sky atmosphere of the globe (default true)
+ * @prop {boolean} mapOptions.cesium.showGroundAtmosphere enable ground atmosphere of the globe (default false)
+ * @prop {boolean} mapOptions.cesium.enableFog enable fog in the view (default false)
+ * @prop {boolean} mapOptions.cesium.depthTestAgainstTerrain if true all primitive 3d features will be tested against the terrain while if false they will be drawn on top of the terrain even if hidden by it (default true)
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
@@ -177,6 +186,7 @@ import pluginsCreator from "./map/index";
  *         "format": "application/bil16",
  *         "useForElevation": true,
  *         "nodata": -9999,
+ *         "littleendian": false,
  *         "hidden": true
  *      }]
  *   }
@@ -201,7 +211,6 @@ class MapPlugin extends React.Component {
         mapOptions: PropTypes.object,
         projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
-        onFontError: PropTypes.func,
         onResolutionsChange: PropTypes.func,
         actions: PropTypes.object,
         features: PropTypes.array,
@@ -212,7 +221,8 @@ class MapPlugin extends React.Component {
         localizedLayerStylesName: PropTypes.string,
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
-        onLoadingMapPlugins: PropTypes.func
+        onLoadingMapPlugins: PropTypes.func,
+        onMapTypeLoaded: PropTypes.func
     };
 
     static defaultProps = {
@@ -221,7 +231,7 @@ class MapPlugin extends React.Component {
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
-        tools: ["measurement", "locate", "scalebar", "draw", "highlight", "popup", "box"],
+        tools: ["measurement", "scalebar", "draw", "highlight", "popup", "box"],
         options: {},
         mapOptions: {},
         fonts: ['FontAwesome'],
@@ -248,10 +258,10 @@ class MapPlugin extends React.Component {
         additionalLayers: [],
         shouldLoadFont: false,
         elevationEnabled: false,
-        onFontError: () => {},
         onResolutionsChange: () => {},
         items: [],
-        onLoadingMapPlugins: () => {}
+        onLoadingMapPlugins: () => {},
+        onMapTypeLoaded: () => {}
     };
     state = {
         canRender: true
@@ -268,8 +278,8 @@ class MapPlugin extends React.Component {
                 fonts.map(f =>
                     loadFont(f, {
                         timeoutAfter: 5000 // 5 seconds in milliseconds
-                    }).catch(() => {
-                        this.props.onFontError({family: f});
+                    }).catch((error) => {
+                        console.warn("Fonts loading check for map style responded slowly or with an error. Fonts in map may not be rendered correctly. This is not necessarily an issue.", error);  // eslint-disable-line no-console
                     }
                     ))
             ).then(() => {
@@ -278,12 +288,17 @@ class MapPlugin extends React.Component {
 
         }
         this.updatePlugins(this.props);
+        this._isMounted = true;
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     getHighlightLayer = (projection, index, env) => {
@@ -346,8 +361,8 @@ class MapPlugin extends React.Component {
 
     renderLayerContent = (layer, projection) => {
         const plugins = this.state.plugins;
-        if (layer.features && layer.type === "vector") {
-            return layer.features.map( (feature) => {
+        if (layer.features) {
+            return layer.features.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
                 return (
                     <plugins.Feature
                         key={feature.id}
@@ -371,7 +386,7 @@ class MapPlugin extends React.Component {
         // Tools passed by other plugins
         const toolsFromItems = this.props.items
             .filter(({Tool}) => !!Tool)
-            .map(({Tool, name}) => <Tool key={name} />);
+            .map(({Tool, name, cfg}) => <Tool {...cfg} key={name} mapType={this.props.mapType} />);
 
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);
@@ -392,6 +407,7 @@ class MapPlugin extends React.Component {
                     mapOptions={assign({}, mapOptions, this.getMapOptions())}
                     zoomControl={this.props.zoomControl}
                     onResolutionsChange={this.props.onResolutionsChange}
+                    errorPanel={ErrorPanel}
                 >
                     {this.renderLayers()}
                     {this.renderSupportTools()}
@@ -425,19 +441,27 @@ class MapPlugin extends React.Component {
         return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
     };
     updatePlugins = (props) => {
+        this.currentMapType = props.mapType;
         props.onLoadingMapPlugins(true);
+        // reset the map plugins to avoid previous map library in children
+        this.setState({plugins: undefined });
         pluginsCreator(props.mapType, props.actions).then((plugins) => {
-            this.setState({plugins});
-            props.onLoadingMapPlugins(false, props.mapType);
+            // #6652 fix mismatch on multiple concurrent plugins loading
+            // to make the last mapType match the list of plugins
+            if (this._isMounted && plugins.mapType === this.currentMapType) {
+                this.setState({plugins});
+                props.onLoadingMapPlugins(false, props.mapType);
+                props.onMapTypeLoaded(true, props.mapType);
+            }
         });
     };
 }
 
 export default createPlugin('Map', {
     component: connect(selector, {
-        onFontError: errorLoadingFont,
-        onResolutionsChange: setMapResolutions
-    })(MapPlugin),
+        onResolutionsChange: setMapResolutions,
+        onMapTypeLoaded: mapPluginLoad
+    })(withScalesDenominators(MapPlugin)),
     reducers: {
         map: mapReducer,
         layers: layersReducer,

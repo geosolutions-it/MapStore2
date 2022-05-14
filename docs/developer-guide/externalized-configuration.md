@@ -1,55 +1,51 @@
 # Externalized Configuration
 
-Most of the MapStore configuration files can be externalized using a **data directory**.
+The **data directory** is a directory on the file-system, configured for an instance of MapStore, that will be used to externalize configuration of MapStore.
 
-Currently this functionality can only be enabled for projects, not for the main product. For the main product the externalization support is limited to the [Database Setup](../database-setup) )
+Configuring this directory you will be able to:
 
-Externalization of configurations is useful if you have custom configurations that you don't want to overwrite when you deploy a new version of your MapStore project.
+- Externalize database configuration
+- Externalize proxy configuration
+- Externalize JSON configs files for the application (`localConfig.json`, `new.json`)
+- Apply patches to default JSON config files (e.g. to store only the differences)
+- Store extensions installed
 
-This is a list of backend configuration files that can be externalized in the data directory:
-
-* proxy configuration (`proxy.properties`)
-* log4j configuration (`log4j.properties`)
-* geostore database connection settings (`geostore-datasource-ovr.properties`)
-
-This is a list of frontend configuration files that can be externalized in the data directory:
-
-* app configuration (`localConfig.json`)
-* extensions configuration (`extensions.json`)
-* context plugins configuration (`pluginsConfig.json`)
-* demo map configuration (`config.json`)
-* new map template configuration (`new.json`)
-* base folder for extensions bundles and assets
-
-## Configuration environment variables
-
-Some of the configuration parameters can be set using JVM environment variables:
-This can be done using flags in the JVM start script:
-
-```sh
-java -Dsome_setting=some_value ...
-```
-
-Flags can also be set using a mapstore.properties file in the JVM classpath. A default one (empty) is included in
-the MapStore WEB-INF/classes folder.
-All examples will use the JVM flag syntax, but writing the property in the properties file is always possible.
+All the configuration stored here will persist across MapSore updates.
 
 ## Using a data directory
 
-To use a data directory, this must be configured through a specific JVM system property: **datadir.location**
+To use a data directory, this must be configured through a specific JVM system property: `datadir.location`
 
 ```sh
-java -Ddatadir.location=/etc/mapstore ...
+java -Ddatadir.location=/etc/mapstore/datadir
 ```
 
-Temporarily, the geostore properties file must be also configured as a specific JVM system property, **geostore-ovr**, We are going to remove this in a near future.
+The data-directory must exist, but all the files inside it are optional. Due to some particular operations (e.g. installation of extensions), some files may be stored in data-dir by the application itself.
 
-```sh
-java -Dgeostore-ovr=file:<path to the override file> ...
+The structure of the data-dir is the following:
+
+```text
+.
+├── configs                  (JSON configs)
+│   └── pluginsConfig.json.patch
+├── extensions
+│   ├── extensions.json      (extensions index)
+|   └── SampleExtension      (One directory for each extension installed)
+|       ├── index.js
+|       ├── assets
+|       └── translations
+├── geostore-datasource-ovr.properties (database configuration)
+├── ldap.properties
+├── mapstore-ovr.properties
+└── mapstore.properties
+
 ```
 
-But this is not enough. Currently usage of the datadir must be enabled for every configuration file that can be externalized.
-We will see how to enable externalization for each of them in the following sections.
+- `configs`: files in this folder can override the files in `configs` file of the application (`pluginsConfig.json`, `localConfig.json`).
+  - If a file with the same name is present, it will be provided instead of the original one
+  - If a patch file is present,(e.g. `localConfig.json.patch`) the patch will be applied to the JSON (original or overridden) and provided patched to the client
+- `extensions`: this folder contains all the files for the installed extensions, one folder for each installed extension
+  - `extensions.json`: the index of the current extensions installed.
 
 ### Multiple data directory locations
 
@@ -60,9 +56,9 @@ by an administrator of the server. An example are uploaded extensions, and their
 
 MapStore looks for configuration resources in these places in order:
 
-* the first datadir.location path
-* other datadir.location paths, if any, in order
-* the application root folder
+- the first datadir.location path
+ other datadir.location paths, if any, in order
+- the application root folder
 
 Dynamic files will always be written by the UI in the first location in the list, so the first path is for dynamic stuff.
 
@@ -72,22 +68,9 @@ Dynamic files will always be written by the UI in the first location in the list
 -Ddatadir.location=/etc/mapstore_extensions,/etc/mapstore_static_config
 ```
 
-## Externalize back-end configuration
-
-### Proxy
-
-This must be done in the `WEB-INF/web.xml` file:
-
-```xml
-<context-param>
-      <param-name>proxyPropPath</param-name>
-      <param-value>${datadir.location}/proxy.properties</param-value>
-</context-param>
-```
-
 ### Logging
 
-This must be done in the `WEB-INF/web.xml` file:
+Logging has not been externalized yet, You can manually do this change in `WEB-INF/web.xml` file to externalize also this file:
 
 ```xml
 <context-param>
@@ -98,7 +81,9 @@ This must be done in the `WEB-INF/web.xml` file:
 
 ### Database Connection
 
-This must be done in the `geostore-datasource-ovr.properties` file:
+If you create a file in the datadir called `geostore-datasource-ovr.properties` , it will be used and override the current
+
+*Example:*
 
 ```properties
 geostoreDataSource.driverClassName=org.postgresql.Driver
@@ -112,71 +97,21 @@ geostoreVendorAdapter.generateDdl=true
 geostoreVendorAdapter.showSql=false
 ```
 
-## Externalize front-end Configurations
-
-MapStore by default fetches configuration files directly via HTTP, without any needing of any special back-end service in the middle (this simplifies the usage in a no-back-end context, as a framework). The `app.jsx` of the **MapStore project** allows to customize these URLs for these static configuration files (usually relative paths) to use your custom versions.
-
-MapStore back-end provides a configuration service utility (at `/rest/config/load`) to provide the configuration files from the data directory.
-
-So to externalize the configuration files you can simply change their URLs to the ones provided by the configuration service utility. This utility provides also some advanced functionalities to better handle your externalized customizations (see the section about "overriding" or "patching" configuration).
-
-!!! note
-    Fallback works only within the deployed application, if you are running `npm start` you need to comment the custom entries in `app.jsx`
-
-!!! note
-    The configuration service utility can be used to load only allowed files (this is done for security reasons). Only json files can be allowed, and the extension is automatically appended.
-    By default the following resources are allowed:
-    `localConfig.json`, `pluginsConfig.json`, `extensions.json`, `config.json`, `new.json`.
-    The list of allowed resources can be changed, via the allowed.resources JVM environment variable:
-    `java -Dallowed.resources=localConfig,pluginsConfig,extensions,config,new ...`
-
-**You can externalize the following files to the data directory by adding the relative line in the `app.jsx`** :
-
-* Application (`localConfig.json`):
-
-```javascript
-ConfigUtils.setLocalConfigurationFile("rest/config/load/localConfig.json");
-```
-
-* Static maps (`new.json` and `config.json`):
-
-```javascript
-ConfigUtils.setConfigProp("configurationFolder", "rest/config/load/");
-```
-
-* Extensions configuration (`extensions.json`):
-
-```javascript
-ConfigUtils.setConfigProp("extensionsRegistry", "rest/config/load/extensions.json");
-```
-
-* Context Editor (`pluginsConfig.json`):
-
-```javascript
-ConfigUtils.setConfigProp("contextPluginsConfiguration", "rest/config/load/pluginsConfig.json");
-```
-
-* Assets folder: (setting this will cause assets are loaded using a different service, `/rest/config/loadasset.`):
-
-```javascript
-ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=");
-```
-
-!!! note
-    Because in this case we are modifying the `app.jsx` file, these changes can be applied only at build time in a custom project. Future improvements will allow to externalize these files also in the main product, without any need to rebuild the application.
+**NOTE: this file simply overrides the values in `geostore-datasource-ovr.properties` in the web-application, it will not replace it** usually it is configured by default to use h2 database, so configuring the database (h2, postgreSQL or oracle) will override all the properties. Anyway if you changed this file in your project, you may need to override more variables to make it work
 
 ## Overriding front-end configuration
 
 Externalizing the whole `localConfig.json` file allows to keep your configurations during the various updates. Anyway keeping this long file in sync can become hard.
+You can use patch files, and this is the first suggested option.
 
-For this reason, MapStore gives you the possibility to override only some specific properties of this big file and keep these changes separated from the application,
+Anyway if you need to specify something in `localConfig.json` that comes from your Java application, MapStore gives you the possibility to override only some specific properties of this big file and keep these changes separated from the application,
 allowing an easier updates.
 This is particularly useful for example when you have to change only a bunch of settings on a specific instance, and use the standard configuration for everything else.
 
 You can override one or more properties in the file using the following JVM flags:
 
-* `overrides.config`: the path of a properties file (relative to the datadir) where override values are stored
-* `overrides.mappings`: comma limited list of JSONPath=property values to override
+- `overrides.config`: the path of a properties file (**relative to the datadir**) where override values are stored
+- `overrides.mappings`: comma limited list of JSONPath=property values to override
 
 An example of overrides that will replace the default WMS service url:
 
@@ -184,16 +119,18 @@ In `mapstore.properties`:
 
 ```properties
 overrides.config=env.properties
-overrides.mappings=initialState.defaultState.catalog.default.services.WMS Service.url=geoserverUrl
+overrides.mappings=initialState.defaultState.catalog.default.services.gs_stable_wms.url=geoserverUrl
 ```
 
-In `env.properties`:
+In `datadir_path/env.properties`:
 
 ```properties
 geoserverUrl=https://demo.geo-solutions.it/geoserver/wms
 ```
 
-This allows to have in `env.properties` a set of variables that can be used in overrides (even in different places). that are indicated by `overrides.mappings`.
+This allows to have in `datadir_path/env.properties` a set of variables that can be used in overrides (even in different places) that are indicated by `overrides.mappings`. 
+
+**Note:** `env.properties` should **not be placed** in classpath folder
 
 ## Patching front-end configuration
 
@@ -210,3 +147,43 @@ the newer version will be applied automatically. This can be good or bad: the go
 ```json
 [{"op": "add", "path": "/plugins/desktop/-", "value": "MyAwesomePlugin"}]
 ```
+
+## Externalize front-end Configurations
+
+From version 2021.02.xx, the externalization of the front-end files is automatic on the back-end, as well as you configure the data-directory.
+Anyway for your custom application you may want to customize the following paths to point your own services for configuration, extensions, and so on.
+The paths can be customized by adding the relative line in the `app.jsx` :
+
+- *Application* (`localConfig.json`):
+
+```javascript
+ConfigUtils.setLocalConfigurationFile("configs/localConfig.json");
+```
+
+- *Static maps* (`new.json` and `config.json`):
+
+```javascript
+ConfigUtils.setConfigProp("configurationFolder", "configs/");
+```
+
+- *Extensions configuration* (`extensions.json`):
+
+```javascript
+ConfigUtils.setConfigProp("extensionsRegistry", "extensions/extensions.json");
+```
+
+- *Context Editor* (`pluginsConfig.json`):
+
+```javascript
+ConfigUtils.setConfigProp("contextPluginsConfiguration", "configs/pluginsConfig.json");
+```
+
+- *Extensions folder* ( folder where to get the extensions found in `extensions.json`):
+
+```javascript
+ConfigUtils.setConfigProp("extensionsFolder", "extensions/");
+```
+
+!!! note
+    Because in this case we are modifying the `app.jsx` file, these changes can be applied only at build time in a custom project.
+    Future improvements will allow to externalize these files also in the main product, without any need to rebuild the application.

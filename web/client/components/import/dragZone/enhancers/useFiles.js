@@ -1,5 +1,6 @@
 
 import { compose, mapPropsStream, withHandlers } from 'recompose';
+import { checkIfLayerFitsExtentForProjection } from '../../../../utils/CoordinatesUtils';
 
 /**
  * Enhancer for processing map configuration and layers object
@@ -8,13 +9,14 @@ import { compose, mapPropsStream, withHandlers } from 'recompose';
  */
 export default compose(
     withHandlers({
-        useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { },
-            annotationsLayer, loadAnnotations = () => {} }) =>
+        useFiles: ({ currentMap, loadMap = () => { }, loadMapInfo = () => { }, onClose = () => { }, setLayers = () => { },
+            annotationsLayer, loadAnnotations = () => {}, warning = () => {}}) =>
             ({ layers = [], maps = [] }, warnings) => {
                 const map = maps[0]; // only 1 map is allowed
                 if (map) {
                     // also handles maps without zoom or center
-                    const { zoom, center } = currentMap;
+                    const { zoom, center, mapId } = currentMap;
+                    const { fileName } = map;
                     loadMap({
                         ...map,
                         map: {
@@ -22,7 +24,11 @@ export default compose(
                             zoom: map.map.zoom || zoom,
                             center: map.map.center || center
                         }
-                    }, null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}));
+                    }, mapId ? mapId : null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}));
+                    // keeps mapinfo of pre-existing map if present (to keep save map overwrite)
+                    if (mapId && fileName) {
+                        loadMapInfo(mapId);
+                    }
                     onClose(); // close if loaded the map
                 }
                 if (layers.length > 0) {
@@ -31,7 +37,22 @@ export default compose(
                         loadAnnotations(layers[0].features, false);
                         onClose(); // close if loaded a new annotation layer
                     } else {
-                        setLayers(layers, warnings); // TODO: warnings
+                        let validLayers = [];
+                        layers.forEach((layer) => {
+                            const valid = layer.type === "vector" ? checkIfLayerFitsExtentForProjection(layer) : true;
+                            if (valid) {
+                                validLayers.push(layer);
+                            } else {
+                                warning({
+                                    title: "notification.warning",
+                                    message: "mapImport.errors.fileBeyondBoundaries",
+                                    autoDismiss: 6,
+                                    position: "tc",
+                                    values: {filename: layer.name ?? " "}
+                                });
+                            }
+                        });
+                        setLayers(validLayers, warnings); // TODO: warnings
                     }
                 }
             }
@@ -44,3 +65,4 @@ export default compose(
             .ignoreElements()
     ))
 );
+

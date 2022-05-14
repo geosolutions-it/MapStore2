@@ -16,7 +16,7 @@ import TaskProgress from './TaskProgress';
 import { getbsStyleForState } from '../../../utils/ImporterUtils';
 import { Grid, Row, Panel, Label, Table, Glyphicon, Tooltip } from 'react-bootstrap';
 import './style/importer.css';
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 
 class Task extends React.Component {
     static propTypes = {

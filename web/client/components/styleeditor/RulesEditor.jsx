@@ -9,6 +9,7 @@
 import React, { useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
+import isArray from 'lodash/isArray';
 import { Glyphicon, FormControl as FormControlRB, FormGroup } from 'react-bootstrap';
 import Fields from './Fields';
 import uuidv1 from 'uuid/v1';
@@ -87,7 +88,9 @@ const RulesEditor = forwardRef(({
         zoom,
         fonts,
         methods,
-        getColors
+        getColors,
+        classification,
+        format
     } = config;
 
     // needed for slider
@@ -181,6 +184,13 @@ const RulesEditor = forwardRef(({
         return isTextSymbolizer && index > 0;
     }
 
+    function getSymbolizerInfo(kind) {
+        const symbolizerKey = Object.keys(symbolizerBlock)
+            .filter((key) => symbolizerBlock[key].supportedTypes.includes(geometryType))
+            .find(key => symbolizerBlock[key]?.kind === kind);
+        return symbolizerBlock[symbolizerKey] || symbolizerBlock[kind] || {};
+    }
+
     return (
         <div
             ref={ref}
@@ -204,7 +214,7 @@ const RulesEditor = forwardRef(({
                                         ruleId: uuidv1(),
                                         symbolizers: [
                                             {
-                                                ...symbolizerBlock[kind].deaultProperties,
+                                                ...symbolizerBlock[kind].defaultProperties,
                                                 symbolizerId: uuidv1()
                                             }
                                         ]
@@ -222,7 +232,7 @@ const RulesEditor = forwardRef(({
                                         onClick: () => handleAdd({
                                             name: '',
                                             ruleId: uuidv1(),
-                                            ...ruleBlock[kind].deaultProperties
+                                            ...ruleBlock[kind].defaultProperties
                                         })
                                     };
                                 })
@@ -239,7 +249,8 @@ const RulesEditor = forwardRef(({
                         scaleDenominator = {},
                         ruleId,
                         kind: ruleKind,
-                        errorId: ruleErrorId
+                        errorId: ruleErrorId,
+                        msgParams: ruleMsgParams
                     } = rule;
 
                     const {
@@ -250,6 +261,12 @@ const RulesEditor = forwardRef(({
                         hideScaleDenominator,
                         classificationType
                     } = ruleBlock[ruleKind] || {};
+                    // ensure that attributes is an array
+                    // before to look if the current selected attribute is of type number
+                    // the attribute select of the classification rule changes the disabled attribute based on type
+                    const isCustomNumber =  isArray(attributes)
+                        ? (attributes.find(({ label }) => label === rule?.attribute) || {})?.type === 'number'
+                        : false;
                     return (
                         <Rule
                             // force render if draggable is enabled
@@ -258,6 +275,7 @@ const RulesEditor = forwardRef(({
                             id={ruleId}
                             index={index}
                             errorId={ruleErrorId}
+                            msgParams={ruleMsgParams}
                             onSort={handleSortRules}
                             title={
                                 hideInputLabel
@@ -289,15 +307,16 @@ const RulesEditor = forwardRef(({
                                         hide={hideFilter}
                                         value={filter}
                                         attributes={attributes}
+                                        format={format}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />
-                                    <ScaleDenominatorPopover
+                                    {scales && <ScaleDenominatorPopover
                                         hide={hideScaleDenominator}
                                         value={scaleDenominator}
                                         scales={scales}
                                         zoom={zoom}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
-                                    />
+                                    />}
                                     <Button
                                         className="square-button-md no-border"
                                         tooltipId="styleeditor.removeRule"
@@ -318,20 +337,25 @@ const RulesEditor = forwardRef(({
                                     symbolizerBlock={symbolizerBlock}
                                     glyph={ruleGlyph}
                                     classificationType={classificationType}
+                                    config={classification || {}}
                                     params={ruleParams}
                                     methods={methods}
                                     getColors={getColors}
                                     bands={bands}
                                     attributes={attributes && attributes.map((attribute) => ({
                                         ...attribute,
-                                        disabled: attribute.type !== 'number'
+                                        ...( rule.method === "customInterval"
+                                            ? { disabled: isCustomNumber ? attribute.type !== 'number' : attribute.label !== rule.attribute }
+                                            : rule.method !== "uniqueInterval" && { disabled: attribute.type !== 'number' }
+                                        )
                                     }))}
                                     onUpdate={onUpdate}
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     onReplace={handleReplaceRule}
+                                    format={format}
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
-                                    const { params, glyph } = symbolizerBlock[kind] || {};
+                                    const { params, glyph, hideMenu } = getSymbolizerInfo(kind);
                                     return params &&
                                         <Symbolizer
                                             key={symbolizerId}
@@ -340,7 +364,7 @@ const RulesEditor = forwardRef(({
                                             glyph={glyph}
                                             tools={
                                                 <SymbolizerMenu
-                                                    hide={kind === 'Icon'}
+                                                    hide={hideMenu}
                                                     symbolizerKind={kind}
                                                     ruleBlock={ruleBlock}
                                                     symbolizerBlock={symbolizerBlock}
@@ -352,6 +376,7 @@ const RulesEditor = forwardRef(({
                                             }>
                                             <Fields
                                                 properties={properties}
+                                                format={format}
                                                 params={params}
                                                 config={{
                                                     bands,
@@ -365,11 +390,11 @@ const RulesEditor = forwardRef(({
                         </Rule>);
                 })}
                 {loading && <div
+                    className="ms-style-rule-overlay-loader"
                     style={{
                         position: 'absolute',
                         width: '100%',
                         height: '100%',
-                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
                         zIndex: 10,
                         transition: '0.3s all'
                     }}>

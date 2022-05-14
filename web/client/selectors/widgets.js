@@ -13,7 +13,7 @@ import { getSelectedLayer } from './layers';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
 import { getWidgetsGroups, getWidgetDependency } from '../utils/WidgetsUtils';
-import { isDashboardAvailable, isDashboardEditing } from './dashboard';
+import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
 
@@ -161,5 +161,6 @@ export const dependenciesSelector = createShallowSelector(
 );
 export const widgetsConfig = createStructuredSelector({
     widgets: getFloatingWidgets,
-    layouts: getFloatingWidgetsLayout
+    layouts: getFloatingWidgetsLayout,
+    catalogs: dashboardServicesSelector
 });

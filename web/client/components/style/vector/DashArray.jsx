@@ -79,7 +79,7 @@ class DashArray extends React.Component {
         const pattern = this.props.styleRendererPattern ||
             (<svg style={{ height: 33, width: '100%' }} viewBox="0 0 300 25">
                 <path
-                    stroke={'#333333'}
+                    className="ms-dash-array"
                     strokeWidth={this.props.defaultStrokeWidth}
                     strokeDasharray={value || option.value}
                     d="M0 12.5, 300 12.5" />

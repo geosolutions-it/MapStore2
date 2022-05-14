@@ -94,7 +94,8 @@ import {
     INIT_PLUGIN, initPlugin,
     TOGGLE_SHOW_AGAIN, toggleShowAgain,
     HIDE_MEASURE_WARNING, hideMeasureWarning,
-    UNSELECT_FEATURE, unSelectFeature
+    UNSELECT_FEATURE, unSelectFeature,
+    VALIDATE_FEATURE, validateFeature
 } from '../annotations';
 
 describe('Test correctness of the annotations actions', () => {
@@ -207,12 +208,19 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.unsavedStyle).toEqual(true);
     });
     it('cancel edit annotation', () => {
-        const result = cancelEditAnnotation();
+        const result = cancelEditAnnotation({id: 1});
         expect(result.type).toEqual(CANCEL_EDIT_ANNOTATION);
+        expect(result.properties).toEqual({id: 1});
     });
     it('startDrawing', () => {
         const result = startDrawing();
         expect(result.type).toEqual(START_DRAWING);
+    });
+    it('startDrawing with options', () => {
+        const options = {geodesic: false};
+        const result = startDrawing(options);
+        expect(result.type).toEqual(START_DRAWING);
+        expect(result.options).toEqual(options);
     });
     it('toggleUnsavedChangesModal', () => {
         const result = toggleUnsavedChangesModal();
@@ -315,8 +323,9 @@ describe('Test correctness of the annotations actions', () => {
     });
 
     it('confirm close annotations', () => {
-        const result = confirmCloseAnnotations();
+        const result = confirmCloseAnnotations({id: 1});
         expect(result.type).toEqual(CONFIRM_CLOSE_ANNOTATIONS);
+        expect(result.properties).toEqual({id: 1});
     });
 
     it('changeRadius', () => {
@@ -428,5 +437,9 @@ describe('Test correctness of the annotations actions', () => {
     it('unSelectFeature ', () => {
         const result = unSelectFeature();
         expect(result.type).toBe(UNSELECT_FEATURE);
+    });
+    it('validateFeature ', () => {
+        const result = validateFeature();
+        expect(result.type).toBe(VALIDATE_FEATURE);
     });
 });

@@ -14,7 +14,7 @@ import head from 'lodash/head';
 import last from 'lodash/last';
 import find from 'lodash/find';
 import isObject from 'lodash/isObject';
-
+import {getCenter} from 'ol/extent';
 import {colorToRgbaStr} from '../../../utils/ColorUtils';
 import {reproject, transformLineToArcs} from '../../../utils/CoordinatesUtils';
 import Icons from '../../../utils/openlayers/Icons';
@@ -29,10 +29,6 @@ import {Point, LineString} from 'ol/geom';
 
 import {Promise} from 'es6-promise';
 import axios from '../../../libs/ajax';
-
-import OlStyleParser from 'geostyler-openlayers-parser';
-
-const olStyleParser = new OlStyleParser();
 
 import {
     getStyle as getStyleLegacy, getMarkerStyle as getMarkerStyleLegacyFun,
@@ -204,8 +200,9 @@ export const addDefaultStartEndPoints = (styles = [], startPointOptions = {radiu
 
 export const centerPoint = (feature) => {
     const geometry = feature.getGeometry();
+    const { isGeodesic = false } = feature.getProperties();
     const extent = geometry.getExtent();
-    let center = geometry.getCenter && geometry.getCenter() || [extent[2] - extent[0], extent[3] - extent[1]];
+    let center = isGeodesic ? getCenter(extent) : (geometry.getCenter && geometry.getCenter() || [extent[2] - extent[0], extent[3] - extent[1]]);
     return new Point(center);
 };
 export const lineToArc = (feature) => {
@@ -314,12 +311,21 @@ export const parseStyles = (feature = {properties: {}}) => {
 export const getStyle = (options, isDrawing = false, textValues = []) => {
     if (options.style && options.style.url) {
         return axios.get(options.style.url).then(response => {
-            return getStyleParser(options.style.format).readStyle(response.data)
-                .then(style => olStyleParser.writeStyle(style));
+            return Promise.all([
+                getStyleParser(options.style.format),
+                getStyleParser('openlayers')
+            ])
+                .then(([parser, olStyleParser]) =>
+                    parser
+                        .readStyle(response.data)
+                        .then(style =>
+                            olStyleParser.writeStyle(style))
+                );
         });
     }
     if (options.style && options.style.format === 'geostyler') {
-        return olStyleParser.writeStyle(options.style.styleObj);
+        return getStyleParser('openlayers')
+            .then((olStyleParser) => olStyleParser.writeStyle(options.style.styleObj));
     }
     const style = getStyleLegacy(options, isDrawing, textValues);
     if (options.asPromise) {

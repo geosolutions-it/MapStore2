@@ -115,6 +115,34 @@ describe('config epics', () => {
                 }
             );
         });
+        // this option is used by contexts (for loading their own session) and for context-manager (empty object, to not use a session at all)
+        it('don\'t use the user session if the localConfig.json includes it\'s own overrides', (done) => {
+            ConfigUtils.setConfigProp("userSessions", {
+                enabled: true
+            });
+            mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
+            mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
+            const checkActions = ([a, b, c]) => {
+                expect(a).toExist();
+                expect(a.type).toNotEqual(LOAD_USER_SESSION);
+                expect(b.type).toNotEqual(LOAD_USER_SESSION);
+                expect(c.type).toNotEqual(LOAD_USER_SESSION);
+                done();
+            };
+            testEpic(loadMapConfigAndConfigureMap,
+                3,
+                [loadMapConfig('base/web/client/test-resources/testConfig.json', 1398, undefined, undefined, {})],
+                checkActions,
+                {
+                    security: {
+                        user: {
+                            role: "ADMIN",
+                            name: "Saitama"
+                        }
+                    }
+                }
+            );
+        });
         it('does not load a missing configuration file', (done) => {
             mockAxios.onGet("missingConfig.json").reply(() => ([ 404, {} ]));
             const checkActions = ([a]) => {

@@ -58,20 +58,23 @@ const styleUpdateTypes = {
 };
 
 function getAttributes(hintProperties, geometryType) {
+    const stringTypeToCheck = [ 'string'];
+    const numberTypeToCheck = ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal', 'number', 'int'];
+
     return hintProperties && geometryType !== 'raster' && Object.keys(hintProperties)
-        .filter((key) => ['integer', 'long', 'double', 'float', 'bigdecimal', 'string', 'decimal']
-            .indexOf(hintProperties[key].localPart.toLowerCase()) !== -1)
+        .filter((key) => [...stringTypeToCheck, ...numberTypeToCheck]
+            .indexOf(hintProperties[key].localType.toLowerCase()) !== -1)
         .map((key) => {
-            const { localPart } = hintProperties[key];
+            const { localType } = hintProperties[key];
             return {
                 attribute: key,
                 label: key,
-                type: ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal']
-                    .indexOf(localPart.toLowerCase()) !== -1
+                type: numberTypeToCheck
+                    .indexOf(localType.toLowerCase()) !== -1
                     ? 'number'
                     : 'string'
             };
-        });
+        }) || [];
 }
 
 const ConnectedVisualStyleEditor = connect(
@@ -103,7 +106,8 @@ const ConnectedVisualStyleEditor = connect(
             fonts: styleService.fonts || [],
             methods: (geometryType === 'raster'
                 ? styleService?.classificationMethods?.raster
-                : styleService?.classificationMethods?.vector) || SLDService.methods
+                : styleService?.classificationMethods?.vector) || SLDService.methods,
+            styleService: { baseUrl: styleService?.baseUrl, isStatic: styleService?.isStatic }
         })
     ),
     {
@@ -138,7 +142,7 @@ const editors = {
     textarea: ConnectedTextareaEditor
 };
 
-function StyleEditor({
+export function StyleEditor({
     code,
     error,
     canEdit,
@@ -146,6 +150,8 @@ function StyleEditor({
     onUpdateMetadata,
     onChange,
     loading,
+    header,
+    editors: editorsProp = [],
     ...props
 }) {
 
@@ -188,21 +194,24 @@ function StyleEditor({
             </div>);
     }
 
-    const EditorComponent = editors[editorType] || editors.textarea;
+    const EditorComponent = editorsProp[editorType] || editors[editorType] || editors.textarea;
 
     return (
         <BorderLayout
             style={{ position: 'relative' }}
             header={
-                <div className="ms-style-editor-switch">
+                <div className="ms-style-editor-toolbar">
+                    <div className="ms-style-editor-toolbar-left">
+                        {header}
+                    </div>
                     <Toolbar
                         buttons={[
                             {
-                                className: 'square-button-md no-border',
-                                glyph: 'code',
-                                active: editorType === 'textarea',
+                                className: 'no-border',
+                                bsSize: 'xs',
                                 disabled: loading,
-                                tooltipId: editorType === 'visual'
+                                active: editorType === 'textarea',
+                                textId: editorType === 'visual'
                                     ? 'styleeditor.switchToTextareaEditor'
                                     : 'styleeditor.switchToVisualEditor',
                                 onClick: () => {
@@ -221,6 +230,8 @@ function StyleEditor({
             }>
             {EditorComponent && <EditorComponent
                 {...props}
+                code={code}
+                error={error}
                 onChange={(newCode, style) => {
                     onChange(newCode);
                     if (isObject(style)) {

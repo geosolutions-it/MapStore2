@@ -31,7 +31,7 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects.
+This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client/configs` directory for standard MapStore or in `configs/` folder for a custom projects.
 You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).
 
 If you have enabled the datadir, then you can externalize the new.json or config.json files. (see [here](../externalized-configuration) for more details)
@@ -63,6 +63,7 @@ The following options define the map options (projection, position, layers):
 - `center: [object]` center of the map with starting point in the bottom-left corner
 - `zoom: {number}` level of zoom
 - `resolutions: {number[]}` resolutions for each level of zoom
+- `scales: {number[]}` scales used to compute the map resolutions
 - `maxExtent: {number[]}` max bbox of the map expressed [minx, miny, maxx, maxy]
 - `layers: {object[]}` list of layers to be loaded on the map
 - `groups {object[]}`: contains information about the layer groups
@@ -78,6 +79,7 @@ i.e.
     "zoom": 15,
     "mapOptions": {
       "view": {
+        "scales": [175000, 125000, 100000, 75000, 50000, 25000, 10000, 5000, 2500],
         "resolutions": [
           84666.66666666688,
           42333.33333333344,
@@ -111,6 +113,13 @@ i.e.
 }
 ```
 
+!!! note
+    The option to configure a list of scale denominators allow to have them in human friendly format, and calculate the map resolutions from scales.
+
+!!! warning
+    If the scales and resolutions property are declared, in the same json object, the scales have priority.
+    In the array, the values have be in descending order.
+
 !!! warning
     Actually the custom resolution values are valid for one single CRS. It's therefore suggested to avoid to add this parameter when multiple CRSs in the same map configuration are needed.
 
@@ -139,6 +148,9 @@ Every layer has it's own properties. Anyway there are some options valid for eve
 - `visibility`: `{boolean}`: indicates if the layer is visible or not
 - `queriable`: `{boolean}`: Indicates if the layer is queriable (e.g. getFeatureInfo). If not present the default is true for every layer that have some implementation available (WMS, WMTS). Usually used to set it explicitly to false, where the query service is not available.
 - `hideLoading`: {boolean}. If true, loading events will be ignored ( useful to hide loading with some layers that have problems or trigger errors loading some tiles or if they do not have any kind of loading.).
+- `minResolution`: `{number}`: layer is visible if zoom resolution is greater or equal than this value (inclusive)
+- `maxResolution`: `{number}`: layer is visible if zoom resolution is less than this value (exclusive)
+- `disableResolutionLimits`: `{boolean}`: this property disables the effect of minResolution and maxResolution if set to true
 
 i.e.
 
@@ -172,7 +184,9 @@ title: {
 - `bing`: Bing Maps layers
 - `google`: Google Maps layers
 - `mapquest`: MapQuest layers
+- `graticule`: Vector layer that shows a coordinates grid over the map, with optional labels
 - `empty`: special type for empty background
+- `3dtiles`: 3d tiles layers
 
 #### WMS
 
@@ -188,6 +202,7 @@ i.e.
     "name": "mapnik",
     "group": "background",
     "visibility": false,
+    "params": {}, // can be used to add parameters to the request, or override the default ones
     "credits": { // optional
         "imageUrl": "somePic.png", // URL for the image to put in attribution
         "link": "http://someURL.org", // URL where attribution have to link to
@@ -263,6 +278,7 @@ in `localConfig.json`
             "format": "application/bil16",
             ...
             "name": "elevation",
+            "littleendian": false,
             "visibility": true,
             "useForElevation": true
         }]
@@ -508,6 +524,13 @@ TODO
 
 #### Google
 
+!!! note
+    The use of Google maps tiles in MapStore is not enabled and maintained due to licensing reasons. If your usage conditions respect the google license, you can enable the google layers by:
+    
+    * Adding `<script src="https://maps.google.com/maps/api/js?v=3"></script>` to all `html` files you need it.
+    * Add your API-KEY to the request
+    * Fix the code, if needed.
+    
 example:
 
 ```json
@@ -910,6 +933,75 @@ This layer differs from the "vector" because all the loading/filtering/querying 
 }
 ```
 
+#### Graticule
+
+i.e.
+
+```javascript
+{
+    "type": "graticule",
+    "labels": true,
+    "frame": true, // adds a frame to the map, to better highlight labels
+    "frameRatio": 0.07, // frame percentage size (7%)
+    "style": { // style for the grid lines
+        "color": "#000000",
+        "weight": 1,
+        "lineDash": [0.5, 4],
+        "opacity": 0.5
+    },
+    "frameStyle": { // style for the optional frame
+        "color": "#000000",
+        "weight": 1,
+        "fillColor": "#FFFFFF"
+    },
+    "labelXStyle": { // style for X coordinates labels
+        "color": "#000000",
+        "font": "sans-serif",
+        "fontWeight": "bold",
+        "fontSize": "20",
+        "labelOutlineColor": "#FFFFFF",
+        "labelOutlineWidth": 2
+    },
+    "labelYStyle": { // style for Y coordinates labels
+        "color": "#000000",
+        "font": "sans-serif",
+        "fontWeight": "bold",
+        "fontSize": "20",
+        "labelOutlineColor": "#FFFFFF",
+        "labelOutlineWidth": 2,
+        "rotation": 90,
+        "verticalAlign": "top",
+        "textAlign": "center"
+    }
+}
+```
+
+#### 3D tiles
+
+This type of layer shows 3d tiles version 1.0 inside the Cesium viewer. This layer will not be visible inside 2d map viewer types: openlayer or leaflet.
+See specification for more info about 3d tiles [here](https://www.ogc.org/standards/3DTiles).
+
+i.e.
+
+```javascript
+{
+    "type": "3dtiles",
+    "url": "http..." // URL of tileset.json file
+    "title": "3D tiles layer",
+    "visibility": true,
+    // optional
+    "heightOffset": 0, // height offest applied to the complete tileset
+    "style": {
+      "format": "3dtiles",
+      "body": { // 3d tiles style
+        "color": "color('#43a2ca', 1)"
+      }
+    }
+}
+```
+
+The style body object for the format 3dtiles accepts rules described in the 3d tiles styling specification version 1.0 available [here](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling).
+
 ## Layer groups
 
 Inside the map configuration, near the `layers` entry, you can find also the `groups` entry. This array contains information about the groups in the TOC.
@@ -1060,6 +1152,10 @@ Openlayers:
 <ol:isBaseLayer xmlns:ol="http://openlayers.org/context">false</ol:isBaseLayer>
 <ol:opacity xmlns:ol="http://openlayers.org/context">1</ol:opacity>
 ```
+
+Cesium:
+
+- `tileDiscardPolicy` sets a policy for discarding (missing/broken) tiles (https://cesium.com/learn/cesiumjs/ref-doc/TileDiscardPolicy.html). If it is not specified the NeverTileDiscardPolicy will be used. If "none" is specified, no policy at all will be set.
 
 MapStore specific:
 

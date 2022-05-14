@@ -29,7 +29,7 @@ export default (
         borderRadius = 8,
         stopEventsOnTargets = false,
         onMaskClicked = () => {}
-    } = {},
+    } = {}
 ) => branch(
     showFocusMask,
     (A) => nest(({focusedContent, children}) => {

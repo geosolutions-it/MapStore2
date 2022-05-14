@@ -61,7 +61,7 @@ class Tutorial extends React.Component {
         run: PropTypes.bool,
         resizeDebounce: PropTypes.bool,
         resizeDebounceDelay: PropTypes.number,
-        scrollIntoViewOptions: PropTypes.bool,
+        scrollIntoViewOptions: PropTypes.object,
         scrollOffset: PropTypes.number,
         scrollToFirstStep: PropTypes.bool,
         scrollToSteps: PropTypes.bool,

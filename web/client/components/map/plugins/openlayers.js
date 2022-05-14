@@ -12,7 +12,6 @@ export default () => {
         Map: require('../openlayers/Map').default,
         Layer: require('../openlayers/Layer').default,
         Feature: require('../openlayers/Feature').default,
-        Locate: require('../openlayers/Locate').default,
         MeasurementSupport: require('../openlayers/MeasurementSupport').default,
         Overview: require('../openlayers/Overview').default,
         ScaleBar: require('../openlayers/ScaleBar').default,

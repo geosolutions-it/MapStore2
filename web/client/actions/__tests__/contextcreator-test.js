@@ -44,7 +44,11 @@ import {
     addPluginToUpload,
     ADD_PLUGIN_TO_UPLOAD,
     removePluginToUpload,
-    REMOVE_PLUGIN_TO_UPLOAD
+    REMOVE_PLUGIN_TO_UPLOAD,
+    SET_SELECTED_THEME,
+    setSelectedTheme,
+    onToggleCustomVariables,
+    ON_TOGGLE_CUSTOM_VARIABLES
 } from '../contextcreator';
 
 describe('contextcreator actions', () => {
@@ -155,5 +159,22 @@ describe('contextcreator actions', () => {
         const retval = loadExtensions([{}]);
         expect(retval).toExist();
         expect(retval.type).toBe(LOAD_EXTENSIONS);
+    });
+    it('setSelectedTheme', () => {
+        const theme = {
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: 'dist/themes/dark.css'
+        };
+        const retval = setSelectedTheme(theme);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_SELECTED_THEME);
+        expect(retval.theme).toEqual(theme);
+    });
+    it('onToggleCustomVariables', () => {
+        const retval = onToggleCustomVariables([{}]);
+        expect(retval).toBeTruthy();
+        expect(retval.type).toBe(ON_TOGGLE_CUSTOM_VARIABLES);
     });
 });

@@ -14,7 +14,7 @@ import NormalContent from './NormalContent';
 export default compose(
     branch(
         ({loading}) => loading,
-        renderComponent(LoadingContent),
+        renderComponent(LoadingContent)
     ),
     branch(
         ({error}) => error,

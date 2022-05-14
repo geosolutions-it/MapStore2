@@ -12,10 +12,10 @@ import pointOnSurface from '@turf/point-on-surface';
 import assign from 'object-assign';
 import { sortBy, isNil } from 'lodash';
 
-import { queryableLayersSelector, getLayerFromName } from '../selectors/layers';
+import { queryableLayersSelector, getLayerFromName, centerToMarkerSelector } from '../selectors/layers';
 
 import { updateAdditionalLayer } from '../actions/additionallayers';
-import { showMapinfoMarker, featureInfoClick } from '../actions/mapInfo';
+import { showMapinfoMarker, featureInfoClick, updateCenterToMarker, LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO  } from '../actions/mapInfo';
 import { zoomToExtent, zoomToPoint } from '../actions/map';
 import { changeLayerProperties } from '../actions/layers';
 import {
@@ -43,7 +43,10 @@ import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
+import { getDefaultInfoFormatValueFromLayer } from '../utils/MapInfoUtils';
+import { identifyOptionsSelector } from '../selectors/mapInfo';
 
+const getInfoFormat = (layerObj, state) => getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(state)});
 
 /**
  * Gets every `TEXT_SEARCH_STARTED` event.
@@ -136,19 +139,32 @@ export const searchItemSelected = (action$, store) =>
                         const latlng = { lng: coord[0], lat: coord[1] };
                         const typeName = item.__SERVICE__.options.typeName;
                         if (coord) {
-                            const layerObj = typeName && getLayerFromName(store.getState(), typeName);
+                            const state = store.getState();
+                            const layerObj = typeName && getLayerFromName(state, typeName);
                             let itemId = null;
                             let filterNameList = [];
                             let overrideParams = {};
                             let forceVisibility = false;
                             if (item.__SERVICE__.launchInfoPanel === "single_layer") {
                                 /* take info from the item selected and restrict feature info to this layer
-                                 * and force info_format to application/json for allowing
-                                 * filtering results later on (identify epic) */
+                                 * and filtering with `featureid` which might be ignored by other servers,
+                                 * but can be used by GeoServer to select the specific feature instead to showing all the results
+                                 * when info_format is other than application/json */
                                 forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
                                 filterNameList = [typeName];
                                 itemId = item.id;
-                                overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: "application/json" } };
+                                overrideParams = {
+                                    [item.__SERVICE__.options.typeName]: {
+                                        info_format: getInfoFormat(layerObj, state),
+                                        ...(itemId
+                                            ? {
+                                                featureid: itemId,
+                                                CQL_FILTER: undefined
+                                            }
+                                            : {}
+                                        )
+                                    }
+                                };
                             }
                             return [
                                 ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
@@ -191,6 +207,7 @@ export const searchItemSelected = (action$, store) =>
  */
 export const textSearchShowGFIEpic = (action$, store) =>
     action$.ofType(TEXT_SEARCH_SHOW_GFI)
+        .filter(({item = {}}) => !item?.__SERVICE__?.customGFI)
         .switchMap(({item}) => {
             const state = store.getState();
             const typeName = item?.__SERVICE__?.options?.typeName;
@@ -198,17 +215,43 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const bbox = item.bbox || item.properties.bbox || toBbox(item);
             const coord = pointOnSurface(item).geometry.coordinates;
             const latlng = { lng: coord[0], lat: coord[1] };
-
+            const itemId = item.id;
             return !!coord &&
                 showGFIForService(item?.__SERVICE__) && layerIsVisibleForGFI(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
                     ...(item?.__SERVICE__?.forceSearchLayerVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                    featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: "application/json" } }, item.id),
+                    featureInfoClick({ latlng }, typeName, [typeName], {
+                        [typeName]: {
+                            info_format: getInfoFormat(layerObj, state),
+                            ...(itemId
+                                ? {
+                                    featureid: itemId,
+                                    // GeoServer rises an error in case CQL_FILTER and featureId are present in the same time
+                                    // so we need to remove it (anyway featureid filter is enough)
+                                    CQL_FILTER: undefined
+                                }
+                                : {}
+                            )
+                        } }, itemId),
                     showMapinfoMarker(),
-                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item?.__SERVICE__?.options?.maxZoomLevel || 21),
-                    addMarker(item),
-                ) :
-                Rx.Observable.empty();
+                    addMarker(item)
+                ).merge(
+                    // wait for response received (so feature info panel open)
+                    // to zoom to extent, in order to center the geometry in the visible bounding box
+                    bbox ?
+                        action$
+                            .ofType(LOAD_FEATURE_INFO)
+                            .take(1)
+                            .mapTo(zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item?.__SERVICE__?.options?.maxZoomLevel || 21))
+                            .takeUntil(action$.ofType(EXCEPTIONS_FEATURE_INFO, ERROR_FEATURE_INFO))
+                        : Rx.Observable.empty()
+                )
+                // disable temporary centerToMarker when this operation happens, because we have the zoom
+                    .let(stream$ => bbox && centerToMarkerSelector(store.getState())
+                        ? stream$.startWith(updateCenterToMarker(false)).concat(Rx.Observable.of(updateCenterToMarker(true)))
+                        : stream$
+                    )
+                : Rx.Observable.empty();
         });
 
 /**

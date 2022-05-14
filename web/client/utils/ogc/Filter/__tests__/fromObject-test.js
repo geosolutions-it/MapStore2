@@ -1,7 +1,7 @@
-const expect = require('expect');
-const {read} = require('../CQL/parser');
-const filterBuilder = require('../FilterBuilder');
-const fromObject = require('../fromObject');
+import expect from 'expect';
+import {read} from '../CQL/parser';
+import filterBuilder from '../FilterBuilder';
+import fromObject from '../fromObject';
 
 const COMPARISON_TESTS = [
     // numeric

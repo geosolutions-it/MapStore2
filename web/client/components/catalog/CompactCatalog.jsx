@@ -6,16 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isNil, isObject } from 'lodash';
+import { isNil, isObject, isEmpty } from 'lodash';
 import React from 'react';
-import { compose, mapPropsStream } from 'recompose';
+import { compose, mapPropsStream, withPropsOnChange } from 'recompose';
 import Rx from 'rxjs';
-
-import CSW from '../../api/CSW';
-import mapBackground from '../../api/mapBackground';
-import WMS from '../../api/WMS';
-import WMTS from '../../api/WMTS';
-import { getCatalogRecords } from '../../utils/CatalogUtils';
+import uuid from 'uuid';
+import API from '../../api/catalog';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 import SideGridComp from '../misc/cardgrids/SideGrid';
@@ -26,13 +22,6 @@ import withControllableState from '../misc/enhancers/withControllableState';
 import Icon from '../misc/FitIcon';
 import LoadingSpinner from '../misc/LoadingSpinner';
 import CatalogForm from './CatalogForm';
-
-const API = {
-    "csw": CSW,
-    "wms": WMS,
-    "wmts": WMTS,
-    "backgrounds": mapBackground
-};
 
 const defaultPreview = <Icon glyph="geoserver" padding={20}/>;
 const SideGrid = compose(
@@ -51,16 +40,32 @@ const SideGrid = compose(
         })
 
 )(SideGridComp);
+
+/*
+ * assigns an identifier to a record
+ */
+/*
+ * assigns an identifier to a record. The ID is required for local selection.
+ * TODO: improve identifier generation.
+ */
+const getIdentifier = (r) =>
+    r.identifier ? r.identifier
+        :  r.provider
+            ? r.provider + (r.variant ?? "") // existing tileprovider
+            : (r.tileMapUrl // TMS 1.0.0
+        || r.url + uuid()); //  default
 /*
  * converts record item into a item for SideGrid
  */
-const resToProps = ({records, result = {}}) => ({
+const resToProps = ({records, result = {}, catalog = {}}) => ({
     items: (records || []).map((record = {}) => ({
         title: record.title && isObject(record.title) && record.title.default || record.title,
-        caption: record.identifier,
+        caption: getIdentifier(record),
         description: record.description,
-        preview: record.thumbnail ? <img src="thumbnail" /> : defaultPreview,
-        record
+        preview: !catalog.hideThumbnail ? record.thumbnail ? <img src={record.thumbnail} /> : defaultPreview : null,
+        record: {
+            ...record, identifier: getIdentifier(record)
+        }
     })),
     total: result && result.numberOfRecordsMatched
 });
@@ -68,11 +73,21 @@ const PAGE_SIZE = 10;
 /*
  * retrieves data from a catalog service and converts to props
  */
-const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
-    .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text))
-    .map((result) => ({ result, records: getCatalogRecords(catalog.type, result || [], { url: catalog && catalog.url, service: catalog })}))
-    .map(resToProps);
-const scrollSpyOptions = {querySelector: ".ms2-border-layout-body", pageSize: PAGE_SIZE};
+const loadPage = ({text, catalog = {}}, page = 0) => {
+    const type = catalog.type;
+    const _tempOption = {options: {service: catalog}};
+    let options = {};
+    if (type === 'csw') {
+        options = {..._tempOption, filter: catalog.filter};
+    } else if (type === 'tms') {
+        options = _tempOption;
+    }
+    return Rx.Observable
+        .fromPromise(API[type].textSearch(catalog.url, page * PAGE_SIZE + (type === "csw" ? 1 : 0), PAGE_SIZE, text, options))
+        .map((result) => ({ result, records: API[type].getCatalogRecords(result || [], { url: catalog && catalog.url, service: catalog })}))
+        .map(({records, result}) => resToProps({records, result, catalog}));
+};
+const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};
 /**
  * Compat catalog : Reusable catalog component, with infinite scroll.
  * You can simply pass the catalog to browse and the handler onRecordSelected.
@@ -92,21 +107,33 @@ export default compose(
     withControllableState('searchText', "setSearchText", ""),
     withVirtualScroll({loadPage, scrollSpyOptions}),
     mapPropsStream( props$ =>
-        props$.merge(props$.take(1).switchMap(({catalog, loadFirst = () => {} }) =>
+        props$.merge(props$.take(1).switchMap(({loadFirst = () => {}, services }) =>
             props$
                 .debounceTime(500)
-                .startWith({searchText: "", catalog})
+                .startWith({searchText: ""})
                 .distinctUntilKeyChanged('searchText')
-                .do(({searchText, catalog: nextCatalog} = {}) => loadFirst({text: searchText, catalog: nextCatalog}))
+                .do(({searchText, selectedService: nextSelectedService} = {}) => !isEmpty(services[nextSelectedService]) && loadFirst({text: searchText, catalog: services[nextSelectedService] }))
                 .ignoreElements() // don't want to emit props
-        )))
-
-)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector, error}) => {
+        ))),
+    withPropsOnChange(['selectedService'], props => {
+        const service = props.services[props.selectedService];
+        if (!isEmpty(service)) {
+            props.loadFirst({text: props.searchText || "", catalog: service});
+        }
+    })
+)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector = true, error,
+    onChangeSelectedService = () => {},
+    selectedService, onChangeCatalogMode = () => {}}) => {
     return (<BorderLayout
         className="compat-catalog"
-        header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
+        header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
+            services={Object.keys(services).map(key =>({ label: services[key]?.title, value: {...services[key], key}}))}
+            selectedService={services[selectedService]} showCatalogSelector={showCatalogSelector}
+            title={title}
+            searchText={searchText}
+            onSearchTextChange={setSearchText}/>}
         footer={<div className="catalog-footer">
-            <span>{loading ? <LoadingSpinner /> : null}</span>
+            {loading ? <LoadingSpinner /> : null}
             {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
         </div>}>
         <SideGrid

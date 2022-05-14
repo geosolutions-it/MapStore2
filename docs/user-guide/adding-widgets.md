@@ -19,7 +19,9 @@ In particular, it is possible to choose between:
 
 Creating *Chart*, *Text*, *Table* and *Counter* widgets the procedure is almost the same as that described for [create widgets in maps](widgets.md). The only minor differences are the following:
 
-* In dashboards as soon as the user select the widget type, a panel appears in order to select the layer from which the widget will be created
+* In dashboards as soon as the user selects the widget type, a panel appears to select the layer from which the widget will be created. [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to choose between CSW, WMS and WMTS GeoSolutions Services, present by default, or by accessing WMS, WFS, CSW, WMTS and TMS Remote Services as explained in the [Managing Remote Services](catalog.md#managing-remote-services) section
+
+<img src="../img/adding-widgets/default-services.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 * In dashboards the possibility to connect/disconnect widgets to the map is replaced with the possibility to connect/disconnect the Map widgets together or with other widget types (this point will be better explained in [Connecting Widgets](connecting-widgets.md) section)
 
@@ -33,36 +35,41 @@ In dashboards, selecting the Map type widget, the following panel appears:
 
 Here the user can:
 
-* Go back <img src="../img/button/back.jpg" class="ms-docbutton"/> to widget type selection
+* Go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button 
 
 * Search for a map by writing its title
 
-* Select a map (mandatory in order to move forward)
+* Select a map from the list of maps (mandatory in order to move forward)
 
-* Move forward to the next step <img src="../img/button/next.jpg" class="ms-docbutton"/>
+* Move forward to the next step through the <img src="../img/button/next.jpg" class="ms-docbutton"/> button
 
-The next panel is similar to the following (in this case an empty map was selected):
-
-<img src="../img/adding-widgets/wid-map-options.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-Now the user is allowed to add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button:
-
-<img src="../img/adding-widgets/wid-add-layer.gif" class="ms-docimage"  style="max-width:400px;"/>
-
-Once a layer is added to the map widget, it will be displayed in preview and in layers list:
+Once a map has been selected, a panel opens and the layers present in the map are displayed in the preview and listed in the layer list:
 
 <img src="../img/adding-widgets/wid-layers-list.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-It's now possible to toggle the layer visibility, and set layers transparency (more information in [Display options](toc.md#display-options-in-panel) section). Furthermore, by selecting it, new buttons are added to the toolbar allowing to:
-
-* Zoom to layers <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>
-
-* Access [Layer Settings](layer-settings.md) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
-
-* Remove layers <img src="../img/button/delete.jpg" class="ms-docbutton"/>
-
 !!!note
-    Adding layers is not mandatory, it is possible to create a widget map using an empty map.
+    If the **Empty Map** has been selected the user can:
+
+    * Create a map widget using an empty map
+
+    * Add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button, as follows: <img src="../img/adding-widgets/wid-add-layer.gif" class="ms-docimage"  style="max-width:400px;"/>
+
+On the **Configure map options** panel the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
+
+<img src="../img/adding-widgets/wid-layers-new-buttons.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+Here, the user is allowed to:
+
+* **Zoom** to layers though the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button
+
+* Access [Layer Settings](layer-settings.md) through the <img src="../img/button/properties.jpg" class="ms-docbutton"/> button
+
+* **Remove** layers through the <img src="../img/button/delete.jpg" class="ms-docbutton"/> button
+
+* Disable/Enable the [Floating Identify Tool](side-bar.md#floating-identify-tool) to retrieve Identify information about layers available on the map through the <img src="../img/button/identify_green_burron.jpg" class="ms-docbutton"/> button 
+
+!!!warning
+    The *Floating Identify* tool is active by default (the button is green)
 
 Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked, the last step of the process is displayed like the following:
 

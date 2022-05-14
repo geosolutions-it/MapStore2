@@ -23,7 +23,8 @@ import {
     mouseMoveListenerSelector,
     isMouseMoveActiveSelector,
     isMouseMoveCoordinatesActiveSelector,
-    isMouseMoveIdentifyActiveSelector
+    isMouseMoveIdentifyActiveSelector,
+    identifyFloatingToolSelector
 } from '../map';
 
 const center = {x: 1, y: 1};
@@ -167,5 +168,17 @@ describe('Test map selectors', () => {
     it('test isMouseMoveIdentifyActiveSelector', () => {
         const isMouseMoveIdentifyActive = isMouseMoveIdentifyActiveSelector({map: {present: {eventListeners: {mousemove: ['identifyFloatingTool']}}}});
         expect(isMouseMoveIdentifyActive).toBe(true);
+    });
+    it('test identifyFloatingToolSelector', () => {
+        const renderValidOnly = identifyFloatingToolSelector({mode: "embedded"});
+        expect(renderValidOnly).toBe(true);
+    });
+    it('test identifyFloatingToolSelector should display mapPopUp data if identify is enabled for pop up maps', () => {
+        const renderValidOnly = identifyFloatingToolSelector({mapPopups: {popups: [{component: 'identify'}]}});
+        expect(renderValidOnly).toBe(true);
+    });
+    it('test identifyFloatingToolSelector should non display mapPopUp data if identify is not enabled for pop up maps', () => {
+        const renderValidOnly = identifyFloatingToolSelector({mapPopups: {popups: [{component: 'sampleComponent'}]}});
+        expect(renderValidOnly).toBe(false);
     });
 });

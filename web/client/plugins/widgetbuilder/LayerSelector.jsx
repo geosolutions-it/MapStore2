@@ -23,18 +23,19 @@ const Catalog = compose(
     branch(
         ({catalog} = {}) => !catalog,
         connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
-    ),
+    )
 )(CatalogComp);
 
 /**
  * Builder page that allows layer's selection
  * @prop {function} [layerValidationStream]
  */
-export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, catalogServices} = {}) =>
+export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, defaultServices,
+    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
-            <Toolbar stepButtons={stepButtons} canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
+            <Toolbar stepButtons={stepButtons} canProceed={canProceed && selected} onProceed={() => onLayerChoice(layer)} />
             {selected && !canProceed && error ? <InfoPopover
                 trigger={false}
                 glyph="warning-sign"
@@ -43,5 +44,8 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
                 text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
         </BuilderHeader>}
     >
-        <Catalog services={catalogServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
+        <Catalog
+            onChangeCatalogMode={onChangeCatalogMode}
+            selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
+            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
     </BorderLayout>);

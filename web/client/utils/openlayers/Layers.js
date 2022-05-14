@@ -24,7 +24,7 @@ export const updateLayer = function(type, layer, newOptions, oldOptions, map, ma
     var layerCreator = layerTypes[type];
     if (layerCreator && layerCreator.update) {
         return layerCreator.update(layer, newOptions, oldOptions, map, mapId);
-    } else if (oldOptions && layer && layer.getSource() && layer.getSource().updateParams) {
+    } else if (oldOptions && layer?.getSource?.()?.updateParams) {
         // old method, keept for compatibility.
         // TODO move it in specific layerCreator where possibile
         let changed = false;

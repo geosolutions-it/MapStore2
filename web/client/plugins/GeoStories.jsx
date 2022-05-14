@@ -25,6 +25,7 @@ import { userRoleSelector } from '../selectors/security';
 import EmptyGeostoriesView from './geostories/EmptyGeostoriesView';
 import GeostoryGrid from './geostories/GeostoriesGrid';
 import PaginationToolbar from './geostories/PaginationToolbar';
+import {GEOSTORY_DEFAULT_SHARE_OPTIONS} from "../utils/ShareUtils";
 
 const geostoriesCountSelector = createSelector(
     totalCountSelector,
@@ -38,6 +39,9 @@ const geostoriesCountSelector = createSelector(
  * @class
  * @memberof plugins
  * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
+ * @prop {object} cfg.shareOptions configuration applied to share panel
+ * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
  */
 class Geostories extends React.Component {
     static propTypes = {
@@ -49,7 +53,10 @@ class Geostories extends React.Component {
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
-        fluid: PropTypes.bool
+        fluid: PropTypes.bool,
+        shareOptions: PropTypes.object,
+        shareToolEnabled: PropTypes.bool,
+        emptyView: PropTypes.object
     };
 
     static contextTypes = {
@@ -70,7 +77,10 @@ class Geostories extends React.Component {
             md: 4,
             className: 'ms-map-card-col'
         },
-        maps: []
+        maps: [],
+        shareOptions: GEOSTORY_DEFAULT_SHARE_OPTIONS,
+        shareToolEnabled: true,
+        emptyView: {}
     };
 
     componentDidMount() {
@@ -85,6 +95,8 @@ class Geostories extends React.Component {
             colProps={this.props.colProps}
             viewerUrl={(geostory) => {this.context.router.history.push(`geostory/${geostory.id}`); }}
             getShareUrl={(geostory) => `geostory/${geostory.id}`}
+            shareOptions={this.props.shareOptions}
+            shareToolEnabled={this.props.shareToolEnabled}
             bottom={<PaginationToolbar />}
         />);
     }
@@ -108,10 +120,14 @@ const GeoStoriesPlugin = compose(
     }),
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
-        ({showCreateButton = true}) => ({
+        ({showCreateButton = true, emptyView}) => ({
             glyph: "geostory",
             title: <Message msgId="resources.geostories.noGeostoryAvailable" />,
-            description: <EmptyGeostoriesView showCreateButton={showCreateButton}/>
+            description: <EmptyGeostoriesView showCreateButton={showCreateButton}/>,
+            iconFit: true,
+            imageStyle: {
+                height: emptyView?.iconHeight ?? '200px'
+            }
         })
 
     )

@@ -7,7 +7,7 @@
  */
 import Rx from 'rxjs';
 
-import { get, head, isEmpty, find, castArray, includes, reduce } from 'lodash';
+import {get, head, isEmpty, find, castArray, includes, reduce} from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import axios from '../libs/ajax';
 import bbox from '@turf/bbox';
@@ -15,7 +15,13 @@ import { fidFilter } from '../utils/ogc/Filter/filter';
 import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
 
 import assign from 'object-assign';
-import { changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset } from '../actions/draw';
+import {
+    changeDrawingStatus,
+    GEOMETRY_CHANGED,
+    drawSupportReset,
+    setSnappingLayer,
+    toggleSnapping
+} from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
 import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
@@ -99,9 +105,11 @@ import {
     ACTIVATE_TEMPORARY_CHANGES,
     disableToolbar,
     FEATURES_MODIFIED,
-    deactivateGeometryFilter as  deactivateGeometryFilterAction,
+    deactivateGeometryFilter as deactivateGeometryFilterAction,
     setSelectionOptions,
-    setPagination
+    setPagination,
+    launchUpdateFilterFunc,
+    LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER
 } from '../actions/featuregrid';
 
 import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
@@ -138,7 +146,6 @@ import { error, warning } from '../actions/notifications';
 
 import {
     describeSelector,
-    isDescribeLoaded,
     getFeatureById,
     wfsURL,
     wfsFilter,
@@ -149,6 +156,7 @@ import {
 
 import { interceptOGCError } from '../utils/ObservableUtils';
 import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/queryform';
+import {isSnappingActive} from "../selectors/draw";
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
@@ -261,9 +269,6 @@ const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
         ogcVersion: '1.1.0'
     });
 
-    if (isDescribeLoaded(store.getState(), name)) {
-        return Rx.Observable.of(createInitialQuery(), featureTypeSelected(url, name));
-    }
     return Rx.Observable.of(featureTypeSelected(url, name)).merge(
         action$.ofType(FEATURE_TYPE_LOADED).filter(({typeName} = {}) => typeName === name)
             .map(createInitialQuery)
@@ -300,13 +305,13 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
         }
         const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", spatialFieldOperator);
         const filter = {...filterObj, ...composedFilterFields};
-        return updateQuery(filter, update.type);
+        return updateQuery({updates: filter, reason: update?.type});
     }
     let u = update;
     if (append && !!update?.attribute) {
         u = getAttributeFilters(store.getState())[update?.attribute];
     }
-    return updateQuery(gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), u?.type);
+    return updateQuery({updates: gridUpdateToQueryUpdate(u, wfsFilter(store.getState())), reason: u?.type});
 };
 
 
@@ -389,7 +394,7 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                 // flag to see if virtualScroll page size has been modified
                 let virtualScrollSet = false;
                 return action$.ofType(UPDATE_FILTER)
-                    .filter(({ update = {} }) => update.type === 'geometry')
+                    .filter(({ update = {} }) => update.type === 'geometry' && update.enabled && !update.deactivated)
                     .switchMap((a, i) => {
                         if (i === 0) {
                             virtualScrollSet = true;
@@ -437,13 +442,23 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
                             });
                             // if closed for other causes, need to restore anyway the pagination
                             if (virtualScrollSet) {
-                                return Rx.Observable.of(setPagination(originalSize), resetFilter, updateFilterFunc(store)(resetFilter));
+                                return Rx.Observable.of(setPagination(originalSize), resetFilter, launchUpdateFilterFunc(resetFilter));
                             }
-                            return Rx.Observable.of(resetFilter, updateFilterFunc(store)(resetFilter));
+                            return Rx.Observable.of(resetFilter, launchUpdateFilterFunc(resetFilter));
                         })
                     );
             });
     });
+
+/**
+ * @memberof epics.featuregrid
+ * this epic has been created because there was a non correct sequence of actions dispatched by featureGridUpdateGeometryFilter when CLOSE_FEATURE_GRID was triggered
+ * the resetFilter action is now dispatched before executing updateFilterFunc that is now using the correct data from the store
+ * see #6366
+  */
+export const launchUpdateFilterEpic = (action$, store) => action$.ofType(LAUNCH_UPDATE_FILTER_FUNC).switchMap((a) => {
+    return Rx.Observable.of(updateFilterFunc(store)(a.updateFilterAction));
+});
 /**
  * Performs the query when the text filters are updated
  * @memberof epics.featuregrid
@@ -476,7 +491,7 @@ export const disableMultiSelect = (action$) =>
     action$.ofType(UPDATE_FILTER)
         .filter(({update = {}}) => update.type === 'geometry' && !update.enabled)
         .switchMap(() => {
-            return Rx.Observable.of(setSelectionOptions());
+            return Rx.Observable.of(setSelectionOptions({multiselect: false}));
         });
 export const handleClickOnMap = (action$, store) =>
     action$.ofType(UPDATE_FILTER)
@@ -492,7 +507,7 @@ export const handleClickOnMap = (action$, store) =>
                 const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
-                    setSelectionOptions({multiselect: ctrl || metaKey}),
+                    setSelectionOptions({multiselect: (ctrl || metaKey) ?? false}),
                     updateFilter({
                         ...currentFilter,
                         value: {
@@ -525,7 +540,7 @@ export const handleBoxSelectionDrawEnd =  (action$, store) =>
                 const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
                 return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(
-                    setSelectionOptions({multiselect: ctrl || metaKey}),
+                    setSelectionOptions({multiselect: (ctrl || metaKey) ?? false}),
                     updateFilter({
                         ...currentFilter,
                         value: {
@@ -635,7 +650,7 @@ export const featureGridChangePage = (action$, store) =>
                     let features = get(ra, "result.features", []);
                     const multipleSelect = multiSelect(store.getState());
                     const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-                    if (multipleSelect && geometryFilter.enabled) {
+                    if (multipleSelect && geometryFilter?.enabled) {
                         features = selectedFeaturesSelector(store.getState());
                     }
                     // TODO: Handle pagination when multi-select due to control
@@ -793,6 +808,10 @@ export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID)
         .switchMap( () => {
             let actions = [
+                setControlProperty('userExtensions', 'enabled', false),
+                setControlProperty('details', 'enabled', false),
+                setControlProperty('mapTemplates', 'enabled', false),
+                setControlProperty('mapCatalog', 'enabled', false),
                 setControlProperty('metadataexplorer', 'enabled', false),
                 setControlProperty('annotations', 'enabled', false),
                 setControlProperty('details', 'enabled', false)
@@ -991,9 +1010,8 @@ export const autoReopenFeatureGridOnFeatureInfoClose = (action$) =>
         );
 export const onOpenAdvancedSearch = (action$, store) =>
     action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
-        const selected = selectedFeaturesSelector(store.getState());
         return Rx.Observable.of(
-            // temporarily hide selected features from map
+            // hide selected features from map
             selectFeatures([]),
             loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
             closeFeatureGrid(),
@@ -1014,8 +1032,8 @@ export const onOpenAdvancedSearch = (action$, store) =>
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
                         .mergeMap(() => {
                             const {drawStatus} = (store.getState()).draw || {};
-                            const acts = (drawStatus !== 'clean' && selected.length === 0) ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
-                            return Rx.Observable.from(acts.concat(selectFeatures(selected, true), openFeatureGrid()));
+                            const acts = (drawStatus !== 'clean') ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
+                            return Rx.Observable.from(acts.concat(openFeatureGrid()));
                         }
                         )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
@@ -1177,3 +1195,30 @@ export const hideDrawerOnFeatureGridOpenMobile = (action$, { getState } = {}) =>
             && drawerEnabledControlSelector(getState())
         )
         .mapTo(toggleControl('drawer', 'enabled'));
+
+export const setDefaultSnappingLayerOnFeatureGridOpen = (action$, { getState } = {}) =>
+    action$
+        .ofType(SET_LAYER)
+        .switchMap(() => {
+            const selectedLayerId = selectedLayerSelector(getState())?.id;
+            return Rx.Observable.of(setSnappingLayer(selectedLayerId));
+        });
+
+export const resetSnappingLayerOnFeatureGridClosed = (action$, { getState } = {}) =>
+    action$
+        .ofType(CLOSE_FEATURE_GRID)
+        .switchMap(() => {
+            const actions = [setSnappingLayer(false)];
+            isSnappingActive(getState()) && actions.push(toggleSnapping());
+            return Rx.Observable.from(actions);
+        });
+
+export const toggleSnappingOffOnFeatureGridViewMode = (action$, { getState } = {}) =>
+    action$
+        .ofType(TOGGLE_MODE)
+        .filter((a) => a.mode === "VIEW")
+        .switchMap(() => {
+            const actions = [];
+            isSnappingActive(getState()) && actions.push(toggleSnapping());
+            return Rx.Observable.from(actions);
+        });

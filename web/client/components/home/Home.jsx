@@ -13,7 +13,12 @@ import { Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import Message from '../../components/I18N/Message';
 import ConfirmModal from '../../components/misc/ResizableModal';
-
+import { get, pick } from "lodash";
+import ConfigUtils from "../../utils/ConfigUtils";
+export const getPath = () => {
+    const miscSettings = ConfigUtils.getConfigProp('miscSettings');
+    return get(miscSettings, ['homePath'], '/');
+};
 class Home extends React.Component {
     static propTypes = {
         icon: PropTypes.node,
@@ -21,7 +26,9 @@ class Home extends React.Component {
         onCloseUnsavedDialog: PropTypes.func,
         displayUnsavedDialog: PropTypes.bool,
         renderUnsavedMapChangesDialog: PropTypes.bool,
-        tooltipPosition: PropTypes.string
+        tooltipPosition: PropTypes.string,
+        bsStyle: PropTypes.string,
+        hidden: PropTypes.bool
     };
 
     static contextTypes = {
@@ -34,22 +41,24 @@ class Home extends React.Component {
         onCheckMapChanges: () => {},
         onCloseUnsavedDialog: () => {},
         renderUnsavedMapChangesDialog: true,
-        tooltipPosition: 'left'
+        tooltipPosition: 'left',
+        bsStyle: 'primary',
+        hidden: false
     };
 
     render() {
-        const { tooltipPosition, ...restProps} = this.props;
+        const { tooltipPosition, hidden, ...restProps} = this.props;
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
-        return (
+        return hidden ? false : (
             <React.Fragment>
                 <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
                     <Button
                         id="home-button"
                         className="square-button"
-                        bsStyle="primary"
+                        bsStyle={this.props.bsStyle}
                         onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
-                        {...restProps}
+                        {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children', 'icon', 'bsStyle', 'className'])}
                     >{this.props.icon}</Button>
                 </OverlayTrigger>
                 <ConfirmModal
@@ -85,7 +94,7 @@ class Home extends React.Component {
     }
 
     goHome = () => {
-        this.context.router.history.push("/");
+        this.context.router.history.push(getPath());
     };
 }
 

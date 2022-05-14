@@ -5,18 +5,30 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Cesium from '../../../libs/cesium';
+import * as Cesium from 'cesium';
+// it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
+// see https://github.com/CesiumGS/cesium/issues/9212
+import 'cesium/index.css';
+
+import '@znemz/cesium-navigation/dist/index.css';
+import viewerCesiumNavigationMixin from '@znemz/cesium-navigation';
 
 import PropTypes from 'prop-types';
 import Rx from 'rxjs';
-import React from 'react';
+import React, { useState, forwardRef } from 'react';
 import ReactDOM from 'react-dom';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import ClickUtils from '../../../utils/cesium/ClickUtils';
-import { ZOOM_TO_EXTENT_HOOK, registerHook } from '../../../utils/MapUtils';
+import {
+    ZOOM_TO_EXTENT_HOOK,
+    registerHook,
+    GET_PIXEL_FROM_COORDINATES_HOOK,
+    GET_COORDINATES_FROM_PIXEL_HOOK,
+    getResolutions
+} from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import assign from 'object-assign';
-import { throttle } from 'lodash';
+import { throttle, isEqual } from 'lodash';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -37,7 +49,11 @@ class CesiumMap extends React.Component {
         zoomToHeight: PropTypes.number,
         registerHooks: PropTypes.bool,
         hookRegister: PropTypes.object,
-        viewerOptions: PropTypes.object
+        viewerOptions: PropTypes.object,
+        orientate: PropTypes.object,
+        zoomControl: PropTypes.bool,
+        errorPanel: PropTypes.func,
+        onReload: PropTypes.func
     };
 
     static defaultProps = {
@@ -60,10 +76,13 @@ class CesiumMap extends React.Component {
                 pitch: -1 * Math.PI / 2,
                 roll: 0
             }
-        }
+        },
+        onReload: () => {}
     };
 
-    state = { };
+    state = {
+        renderError: null
+    };
 
     UNSAFE_componentWillMount() {
         /*
@@ -76,7 +95,9 @@ class CesiumMap extends React.Component {
     }
 
     componentDidMount() {
-        var map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
+        const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '#footer-attribution-container');
+        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
+            imageryProvider: new Cesium.OpenStreetMapImageryProvider(), // redefining to avoid to use default bing (that queries the bing API without any reason, because baseLayerPicker is false, anyway)
             baseLayerPicker: false,
             animation: false,
             fullscreenButton: false,
@@ -87,15 +108,38 @@ class CesiumMap extends React.Component {
             selectionIndicator: false,
             timeline: false,
             navigationHelpButton: false,
-            navigationInstructionsInitiallyVisible: false
+            navigationInstructionsInitiallyVisible: false,
+            // if creditContainer is null we should pass undefined
+            // to avoid error on mount
+            creditContainer: creditContainer
+                ? creditContainer
+                : undefined
         }, this.getMapOptions(this.props.mapOptions)));
+
+        if (this.props.errorPanel) {
+            // override the default error message overlay
+            map.cesiumWidget.showErrorPanel = (title, message, error) => {
+                this.setState({ renderError: { title, message, error } });
+            };
+        }
+
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
+        if (this.props.mapOptions?.navigationTools || this.props.zoomControl) {
+            map.extend(viewerCesiumNavigationMixin, {
+                enableCompass: this.props.mapOptions?.navigationTools,
+                enableZoomControls: this.props.zoomControl,
+                enableDistanceLegend: false
+            });
+        }
         map.scene.globe.baseColor = Cesium.Color.WHITE;
         map.imageryLayers.removeAll();
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
         this.subscribeClickEvent(map);
-        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
+        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
                 this.props.center.x,
@@ -107,16 +151,17 @@ class CesiumMap extends React.Component {
         this.setMousePointer(this.props.mousePointer);
 
         this.map = map;
+        const scene = this.map.scene;
+
+        // configure the sky environment
+        scene.skyAtmosphere.show = this.props.mapOptions?.showSkyAtmosphere ?? true;
+        scene.fog.enabled = this.props.mapOptions?.enableFog ?? false;
+        scene.globe.showGroundAtmosphere = this.props.mapOptions?.showGroundAtmosphere ?? false;
+
+        // this is needed to display correctly intersection between terrain and primitives
+        scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? true;
+
         this.forceUpdate();
-        if (this.props.mapOptions.navigationTools) {
-            this.cesiumNavigation = window.CesiumNavigation;
-            if (this.cesiumNavigation) {
-                this.cesiumNavigation.navigationInitialization(this.props.id, map);
-            }
-        }
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -129,18 +174,40 @@ class CesiumMap extends React.Component {
         return false;
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props?.orientate && prevProps && (!isEqual(this.props.orientate, prevProps?.orientate))) {
+            const position = {
+                destination: Cesium.Cartesian3.fromDegrees(
+                    parseFloat(this.props.orientate.x),
+                    parseFloat(this.props.orientate.y),
+                    this.getHeightFromZoom(parseFloat(this.props.orientate.z))
+                ),
+                orientation: {
+                    heading: parseFloat(this.props.orientate.heading),
+                    pitch: parseFloat(this.props.orientate.pitch),
+                    roll: parseFloat(this.props.orientate.roll)
+                }
+            };
+            this.setView(position);
+        }
+    }
+
     componentWillUnmount() {
         this.clickStream$.complete();
         this.pauserStream$.complete();
         this.hand.destroy();
         // see comment in UNSAFE_componentWillMount
         this.getDocument().removeEventListener('gesturestart', this.gestureStartListener );
+        if (this.map?.cesiumNavigation?.destroy) {
+            this.map.cesiumNavigation.destroy();
+        }
         this.map.destroy();
     }
 
     onClick = (map, movement) => {
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
+            const intersectedFeatures = this.getIntersectedFeatures(map, movement.position);
             let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
@@ -159,14 +226,15 @@ class CesiumMap extends React.Component {
                         lat: latitude,
                         lng: longitude
                     },
-                    crs: "EPSG:4326"
+                    crs: "EPSG:4326",
+                    intersectedFeatures
                 });
             }
         }
     };
 
     onMouseMove = (movement) => {
-        if (this.props.onMouseMove && movement.endPosition) {
+        if (this.props.onMouseMove && movement.endPosition && this.map?.camera) {
             const cartesian = this.map.camera.pickEllipsoid(movement.endPosition, this.map.scene.globe.ellipsoid);
             let cartographic = ClickUtils.getMouseXYZ(this.map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
@@ -222,15 +290,50 @@ class CesiumMap extends React.Component {
         return this.props.zoomToHeight / Math.pow(2, zoom - 1);
     };
 
+    getIntersectedFeatures = (map, position) => {
+        const features = map.scene.drillPick(position);
+        if (features) {
+            const groupIntersectedFeatures = features.reduce((acc, feature) => {
+                if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
+                    const msId = feature.tileset.msId;
+                    // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
+                    // it has content but refers to the whole tile model
+                    const propertyNames = feature.getPropertyNames();
+                    const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
+                    return {
+                        ...acc,
+                        [msId]: acc[msId]
+                            ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
+                            : [{ type: 'Feature', properties, geometry: null }]
+                    };
+                }
+                return acc;
+            }, []);
+            return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+        }
+        return [];
+    }
+
     render() {
         const map = this.map;
         const mapProj = this.props.projection;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map, projection: mapProj, onCreationError: this.props.onCreationError}) : null;
+            return child ? React.cloneElement(child, {
+                map: map,
+                projection: mapProj,
+                onCreationError: this.props.onCreationError,
+                zoom: this.props.zoom
+            }) : null;
         }) : null;
+        const ErrorPanel = this.props.errorPanel;
         return (
             <div id={this.props.id}>
                 {children}
+                {ErrorPanel ? <ErrorPanel
+                    show={!!this.state.renderError}
+                    error={this.state.renderError?.error}
+                    onReload={() => this.props.onReload()}
+                /> : null}
             </div>
         );
     }
@@ -335,6 +438,12 @@ class CesiumMap extends React.Component {
         this.pauserStream$ = pauserStream$;
     };
     registerHooks = () => {
+        // Unregister hooks as coming from a leaflet or openlayer map retains hooks
+        // causing issue in feature info click
+        this.props.hookRegister.registerHook(GET_PIXEL_FROM_COORDINATES_HOOK);
+        this.props.hookRegister.registerHook(GET_COORDINATES_FROM_PIXEL_HOOK);
+
+        // Register hook
         this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
             // TODO: manage padding and maxZoom
             const bounds = reprojectBbox(extent, crs, 'EPSG:4326');
@@ -366,27 +475,51 @@ class CesiumMap extends React.Component {
             height: Math.round(this.props.standardWidth * (zoom + 1)),
             width: Math.round(this.props.standardHeight * (zoom + 1))
         };
-        this.props.onMapViewChanges({
-            x: center.longitude,
-            y: center.latitude,
-            crs: "EPSG:4326"
-        }, zoom, {
-            bounds: {
-                minx: -180.0,
-                miny: -90.0,
-                maxx: 180.0,
-                maxy: 90.0
+        this.props.onMapViewChanges(
+            {
+                x: center.longitude,
+                y: center.latitude,
+                crs: "EPSG:4326"
             },
-            crs: 'EPSG:4326',
-            rotation: 0
-        }, size, this.props.id, this.props.projection, {
-            orientation: {
-                heading: this.map.camera.heading,
-                pitch: this.map.camera.pitch,
-                roll: this.map.camera.roll
-            }
-        });
+            zoom,
+            {
+                bounds: {
+                    minx: -180.0,
+                    miny: -90.0,
+                    maxx: 180.0,
+                    maxy: 90.0
+                },
+                crs: 'EPSG:4326',
+                rotation: 0
+            },
+            size,
+            this.props.id,
+            this.props.projection,
+            {
+                orientation: {
+                    heading: this.map.camera.heading,
+                    pitch: this.map.camera.pitch,
+                    roll: this.map.camera.roll
+                }
+            },
+            getResolutions()[zoom]
+        );
     };
 }
 
-export default CesiumMap;
+const ReloadCesiumMap = forwardRef((props, ref) => {
+    // once the cesium map crashes the internal render cycle is stopped
+    // we allow a complete refresh of the map by changing the key based on a reload request
+    // new key will unmount and mount again the component
+    const [key, setKey] = useState(1);
+    return (
+        <CesiumMap
+            key={key}
+            ref={ref}
+            {...props}
+            onReload={() => setKey(key + 1)}
+        />
+    );
+});
+
+export default ReloadCesiumMap;

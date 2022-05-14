@@ -20,6 +20,14 @@ export class ServiceValidationError extends Error {
 }
 
 /**
+ * Performs actions on service object prior to its save. This is the default handler that does nothing and returns object as is
+ *  @returns function that takes the service as parameter and return a stream. The stream emit the service again.
+ */
+export const preprocess = (service) => {
+    return Rx.Observable.of(service);
+};
+
+/**
  * Validate the current service setup. This is the default validation that checks url and title to be filled
  *  @returns function that takes the service as parameter and return a stream. The stream emit the service again or throw an exception.
  */
@@ -35,7 +43,7 @@ export const validate = (service) => {
  * @param {Object} API the API of the catalog services
  * @returns function that takes the service and returns a stream. The stream emit the service again or throw an exception.
  */
-export const testService = ({parseUrl}) => service => {
+export const testService = ({ parseUrl = serviceUrl => serviceUrl }) => service => {
     const serviceError = "catalog.notification.errorServiceUrl";
 
     return Rx.Observable.defer(

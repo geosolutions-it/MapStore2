@@ -1,6 +1,6 @@
 # Application configuration
 
-The application will load by default it will load the `localConfig.json`
+The application will load by default it will load the `localConfig.json` which is now stored in the configs\ folder
 
 You can load a custom configuration by passing the `localConfig` argument in query string:
 
@@ -63,6 +63,11 @@ This is the main structure:
   "unsavedMapChangesDialog": false,
   // optional flag to set default coordinate format (decimal, aeronautical)
   "defaultCoordinateFormat": "aeronautical",
+  // optionals misc settings
+  "miscSettings": {
+      // Use POST requests for each WMS length URL highter than this value.
+      "maxURLLength": 5000
+  },
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {
       // default initial state for every mode (will override initialState imposed by plugins reducers)
@@ -86,6 +91,13 @@ This is the main structure:
       "mobile": {
           ...
       }
+  },
+  // allows to apply map options configuration to all the Map plugins instances defined in the plugins configuration.
+  // The mapOptions in the plugin configuration have priority so they will overrides this global config
+  "defaultMapOptions": {
+    "openlayers": { ... },
+    "leaflet": { ... },
+    "cesium": { ... }
   },
   "plugins": {
       // plugins to load for the mobile mode
@@ -131,6 +143,7 @@ Inside defaultState you can set default catalog services adding the following ke
       "type": "wms",
       "title": "",
       "isNew": true,
+      "editable": true,
       "autoload": false
     },
     "selectedService": "Demo CSW Service",
@@ -146,6 +159,7 @@ Inside defaultState you can set default catalog services adding the following ke
         "layerOptions": {
           "tileSize": 512
           },
+          "format": "image/png8"
         "type": "wms",
         "title": "A title for Demo WMS Service",
         "autoload": false
@@ -171,9 +185,28 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   "type": "the type of webservice used. (this need to be consistent with the web service pointed by the url)",
   "title": "the label used for recognizing the catalog service",
   "autoload": "if true, when selected or when catalog panel is opened it will trigger an automatic search of the layers. if false, search must be manually performed."
+  "readOnly": "if true, makes the service not editable from catalog plugin"
+  "titleMsgId": "optional, string used to localize the title of the service, the string must be present in translations",
+  "format": "image/png8" // the image format to use by default for layers coming from this catalog (or tiles).
   "layerOptions": { // optional
+      "format": "image/png8", // image format needs to be configured also inside layerOptions
       "tileSize": 512 // determine the default tile size for the catalog, valid for WMS and CSW catalogs
   },
+  "filter": { // applicable only for CSW service
+      "staticFilter": "filter is always applied, even when search text is NOT PRESENT",
+      "dynamicFilter": "filter is used when search text is PRESENT and is applied in `AND` with staticFilter. The template is used with ${searchText} placeholder to append search string"
+  }
+}
+```
+CSW service
+<br> `filter` - For both static and dynamic filter, input only xml element contained within <ogc:Filter> (i.e. Do not enclose the filter value in <ogc:Filter>)<br>
+<br>Example:<br>
+```javascript
+{
+    "filter": { // Default filter values
+        "staticFilter": "<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>",
+        "dynamicFilter": "<ogc:PropertyIsLike wildCard='%' singleChar='_' escapeChar='\\'><ogc:PropertyName>csw:AnyText</ogc:PropertyName><ogc:Literal>%${searchText}%</ogc:Literal></ogc:PropertyIsLike>"
+    }
 }
 ```
 
@@ -316,3 +349,133 @@ with the following properties:
   - EPSG:3857
   - EPSG:4326
 - **allowedRoles** - CRS Selector will be accessible only to these roles. By default, CRS Selector will be available for any logged in user.
+
+### Search plugin configuration
+
+The search plugin provides several configurations to customize the services behind the search bar in the map: 
+- Allow to configure more many services to use in parallel, in the `services` array.
+- Natively supports nominatim and WFS protcols
+- Allows to register **your own** custom services to develop and use in your custom project
+- Allows to configure services in cascade, typically when you have a hierarchical data structures ( e.g. search for municipality, then for street name, than for house number, or search state,then region, then specific feature, and so on...)
+
+Following you can find some examples of the various configurations. For more details about the properties, please check to plugin API documentation: [https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search)
+
+Nominatim configuration:
+```javascript
+{
+   "type": "nominatim",
+   "searchTextTemplate": "${properties.display_name}", // text to use as searchText when an item is selected. Gets the result properties.
+   "options": {
+     "polygon_geojson": 1,
+     "limit": 3
+}
+```
+
+WFS configuration:
+```javascript
+"plugins": {
+  ...
+  "desktop": [
+    ...}, {
+      "name": "Search",
+      "cfg": {
+        "showCoordinatesSearchOption": false,
+        "maxResults": 20,
+        "searchOptions": {
+          "services": [{
+            "type": "wfs",
+            "priority": 3,
+            "displayName": "${properties.propToDisplay}",
+            "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+            "options": {
+              "url": "/geoserver/wfs",
+              "typeName": "workspace:layer",
+              "queriableAttributes": ["attribute_to_query"],
+              "sortBy": "id",
+              "srsName": "EPSG:4326",
+              "maxFeatures": 20,
+              "blacklist": ["... an array of strings to exclude from the final search filter "]
+            }
+        ]
+        }
+      }
+    }, {
+  ]
+}
+```
+
+WFS configuration with nested services:
+```javascript
+"plugins": {
+  ...
+  "desktop": [
+    ...}, {
+      "name": "Search",
+      "cfg": {
+        "showCoordinatesSearchOption": false,
+        "maxResults": 20,
+        "searchOptions": {
+          "services": [{
+            "type": "wfs",
+            "priority": 3,
+            "displayName": "${properties.propToDisplay}",
+            "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+            "options": {
+              "url": "/geoserver/wfs",
+              "typeName": "workspace:layer",
+              "queriableAttributes": ["attribute_to_query"],
+              "sortBy": "id",
+              "srsName": "EPSG:4326",
+              "maxFeatures": 20,
+              "blacklist": ["... an array of strings to exclude from the final search filter "]
+            },
+
+            "nestedPlaceholder": "the placeholder will be displayed in the input text, after you have performed the first search",
+            "then": [{
+              "type": "wfs",
+              "priority": 1,
+              "displayName": "${properties.propToDisplay} ${properties.propToDisplay}",
+              "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+              "searchTextTemplate": "${properties.propToDisplay}",
+              "options": {
+                "staticFilter": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
+                "url": "/geoserver/wfs",
+                "typeName": "workspace:layer",
+                "queriableAttributes": ["attribute_to_query"],
+                "srsName": "EPSG:4326",
+                  "maxFeatures": 10
+                }
+            }]
+  }
+
+        ]
+        }
+      }
+    }, {
+  ]
+}
+```
+
+Custom services configuration:
+```javascript
+{
+  "type": "custom Service Name",
+  "searchTextTemplate": "${properties.propToDisplay}",
+  "displayName": "${properties.propToDisplay}",
+  "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
+  "options": {
+    "pathname": "/path/to/service",
+    "idVia": "${properties.code}"
+  },
+  "priority": 2,
+  "geomService" : {
+    "type": "wfs",
+    "options": {
+      "url": "/geoserver/wfs",
+      "typeName":  "workspace:layer",
+      "srsName": "EPSG:4326",
+      "staticFilter": "ID = ${properties.code}"
+    }
+  }
+}
+```

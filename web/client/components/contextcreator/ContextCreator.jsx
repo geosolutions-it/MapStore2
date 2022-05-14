@@ -14,10 +14,12 @@ import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
 import ConfigurePlugins from './ConfigurePluginsStep';
 import ConfigureMap from './ConfigureMapStep';
+import ConfigureThemes from './ConfigureThemes';
 import {CONTEXT_TUTORIALS} from '../../actions/contextcreator';
 /**
- * Filters plugins and applies overrides.
- * The resulting array will filter the pluginsConfig returning only the ones present in viewerPlugins.
+ * Merges plugins "cfg" from pluginsConfigs and applies "overrides" from viewerPlugins.
+ * The resulting array will return viewerPlugins with "cfg" applied directly from the pluginsConfigs and optionally overridden
+ * with "overrides" from viewerPlugins.
  * If some viewerPlugin is an object, it can contain a special entry "overrides". If so, the configuration here
  * will override the ones in the original plugin config.
  * Actually overrides are supported only for "cfg" values.
@@ -45,17 +47,20 @@ import {CONTEXT_TUTORIALS} from '../../actions/contextcreator';
  *               "cfg": { activateQueryTool: false, otherOptions: true }
  *           },
  *   ```
+ * NOTE: Logic has changed to support custom list of plugins to be active on the map configuration step of context wizard.
+ * The final result will match previous implementation except that it will also contain plugins that are missing
+ * in "viewer"/"desktop" array inside localConfig.json -> plugins
  * @param {array} pluginsConfigs array of plugins (Strings or objects) to override
  * @param {array} viewerPlugins list of plugins to use
  */
 export const pluginsFilterOverride = (pluginsConfigs, viewerPlugins) => {
-    return pluginsConfigs.map(p => {
-        const pName = isObject(p) ? p.name : p;
+    return viewerPlugins.map((viewerPlugin) => {
+        const pName = isObject(viewerPlugin) ? viewerPlugin.name : viewerPlugin;
         // find out
-        const viewerPlugin = find(viewerPlugins, vp => {
-            return pName === (isObject(vp) ? vp.name : vp);
+        const p = find(pluginsConfigs, plugin => {
+            return pName === (isObject(plugin) ? plugin.name : plugin);
         });
-        if (viewerPlugin) {
+        if (p) {
             if (isObject(viewerPlugin) && viewerPlugin.overrides) {
                 const newP = isObject(p) ? p : { name: p };
                 const cfg = {
@@ -69,8 +74,8 @@ export const pluginsFilterOverride = (pluginsConfigs, viewerPlugins) => {
             }
             return p;
         }
-        return null;
-    }).filter(p => p); // remove plugins not found
+        return viewerPlugin;
+    });
 };
 
 export default class ContextCreator extends React.Component {
@@ -78,6 +83,7 @@ export default class ContextCreator extends React.Component {
         user: PropTypes.object,
         loading: PropTypes.bool,
         loadFlags: PropTypes.object,
+        contextId: PropTypes.object,
         isValidContextName: PropTypes.bool,
         contextNameChecked: PropTypes.bool,
         curStepId: PropTypes.string,
@@ -146,7 +152,14 @@ export default class ContextCreator extends React.Component {
         showBackToPageConfirmation: PropTypes.bool,
         backToPageDestRoute: PropTypes.string,
         backToPageConfirmationMessage: PropTypes.string,
-        tutorials: PropTypes.object
+        tutorials: PropTypes.object,
+        themes: PropTypes.array,
+        setSelectedTheme: PropTypes.func,
+        selectedTheme: PropTypes.string,
+        basicVariables: PropTypes.object,
+        customVariablesEnabled: PropTypes.bool,
+        onToggleCustomVariables: PropTypes.func,
+        enableClickOnStep: PropTypes.bool
     };
 
     static contextTypes = {
@@ -162,6 +175,21 @@ export default class ContextCreator extends React.Component {
         contextNameChecked: true,
         newContext: {},
         resource: {},
+        themes: [{
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: (__MAPSTORE_PROJECT_CONFIG__.themePath || 'dist/themes') + '/dark.css',
+            defaultVariables: {
+                "ms-main-color": "#eeeeee",
+                "ms-main-bg": "#333333",
+                "ms-primary-contrast": "#111111",
+                "ms-primary": "#43a4ff",
+                "ms-success-contrast": "#111111",
+                "ms-success": "#398439"
+            }
+        }
+        ],
         viewerPlugins: [
             "Map",
             "BackgroundSelector",
@@ -215,6 +243,7 @@ export default class ContextCreator extends React.Component {
         onSetStep: () => { },
         onShowTutorial: () => { },
         onChangeAttribute: () => { },
+        onToggleCustomVariables: () => { },
         onReloadConfirm: () => { },
         uploadEnabled: false,
         pluginsToUpload: [],
@@ -240,6 +269,7 @@ export default class ContextCreator extends React.Component {
 
         return (
             <Stepper
+                enableClickOnStep={this.props.enableClickOnStep}
                 loading={this.props.loading && this.props.loadFlags.contextSaving}
                 currentStepId={this.props.curStepId}
                 onSetStep={this.props.onSetStep}
@@ -252,11 +282,12 @@ export default class ContextCreator extends React.Component {
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
                     extraToolbarButtons: extraToolbarButtons('general-settings'),
-                    disableNext: !this.props.resource.name || !this.props.resource.name.length ||
+                    disableNext: !this.props.resource.name ||
                         !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length ||
                         this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
                     component:
                         <GeneralSettings
+                            contextId={this.props.contextId}
                             contextName={this.props.resource.name}
                             windowTitle={this.props.newContext.windowTitle}
                             isValidContextName={this.props.isValidContextName}
@@ -343,7 +374,22 @@ export default class ContextCreator extends React.Component {
                             onEditTemplate={this.props.onEditTemplate}
                             onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
                             onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
-                }]} />
+                },
+                {
+                    id: 'configure-themes',
+                    label: 'contextCreator.configureThemes.label',
+                    extraToolbarButtons: extraToolbarButtons('configure-themes'),
+                    disableNext: false,
+                    component: <ConfigureThemes
+                        themes={this.props.themes}
+                        customVariablesEnabled={this.props.customVariablesEnabled}
+                        basicVariables={this.props.basicVariables}
+                        setSelectedTheme={this.props.setSelectedTheme}
+                        onToggleCustomVariables={this.props.onToggleCustomVariables}
+                        selectedTheme={this.props.selectedTheme}
+                    />
+                }
+                ]} />
         );
     }
 }

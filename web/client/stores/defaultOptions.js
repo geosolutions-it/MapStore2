@@ -12,6 +12,8 @@ import layersEpics from '../epics/layers';
 import controlsEpics from '../epics/controls';
 import * as configEpics from '../epics/config';
 import timeManagerEpics from '../epics/dimension';
+import mapTypeEpics from '../epics/maptype';
+
 
 import layers from '../reducers/layers';
 import mapConfig from '../reducers/config';
@@ -39,7 +41,8 @@ export const standardEpics = {
     ...layersEpics,
     ...controlsEpics,
     ...timeManagerEpics,
-    ...configEpics
+    ...configEpics,
+    ...mapTypeEpics // these are related to product routing so they should not to be included as baseEpics (maptype reducer instead is in baseEpics)
 };
 
 /**

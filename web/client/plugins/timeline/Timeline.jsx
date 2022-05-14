@@ -8,7 +8,7 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-import { isString, differenceBy, isNil } from 'lodash';
+import { isString, isObject, differenceBy, isNil } from 'lodash';
 import { currentTimeSelector } from '../../selectors/dimension';
 import { selectTime, selectLayer, onRangeChanged } from '../../actions/timeline';
 
@@ -33,6 +33,7 @@ import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import customTimesHandlers from '../../components/time/enhancers/customTimesHandlers';
 import customTimesEnhancer from '../../components/time/enhancers/customTimesEnhancer';
 import moment from 'moment';
+import { currentLocaleSelector } from '../../selectors/locale';
 /**
  * Optimization to skip re-render when the layers update properties that are not needed.
  * Typically `loading` attribute
@@ -54,27 +55,30 @@ const layerData = compose(
             itemsSelector,
             timeLayersSelector,
             loadingSelector,
-            (viewRange, items, layers, loading) => ({
+            currentLocaleSelector,
+            (viewRange, items, layers, loading, currentLocale) => ({
                 viewRange,
                 items,
                 layers,
-                loading
+                loading,
+                currentLocale
             })
         )
     ),
     withPropsOnChange(
         (props, nextProps) => {
-            const { layers = [], loading, selectedLayer} = props;
-            const { layers: nextLayers, loading: nextLoading, selectedLayer: nextSelectedLayer } = nextProps;
+            const { layers = [], loading, selectedLayer, currentLocale} = props;
+            const { layers: nextLayers, loading: nextLoading, selectedLayer: nextSelectedLayer, nextLocale } = nextProps;
             const hideNamesChange = props.hideLayersName !== nextProps.hideLayersName;
             return loading !== nextLoading
                 || selectedLayer !== nextSelectedLayer
+                || currentLocale !== nextLocale
                 || hideNamesChange
                 || (layers && nextLayers && layers.length !== nextLayers.length)
                 || differenceBy(layers, nextLayers || [], ({id, title, name} = {}) => id + title + name).length > 0;
         },
         // (props = {}, nextProps = {}) => Object.keys(props.data).length !== Object.keys(nextProps.data).length,
-        ({ layers = [], loading = {}, selectedLayer }) => ({
+        ({ layers = [], loading = {}, selectedLayer, currentLocale }) => ({
             groups: layers.map((l) => ({
                 id: l.id,
                 className: (loading[l.id] ? "loading" : "") + ((l.id && l.id === selectedLayer) ? " selected" : ""),
@@ -86,8 +90,8 @@ const layerData = compose(
                                 ? '<i class="glyphicon glyphicon-time"></i>'
                                 : ''
                             }</div>`)
-                        + `<div class="timeline-layer-title">${(isString(l.title) ? l.title : l.name)}</div>`
-                    + "</div>" // TODO: i18n for layer titles*/
+                        + `<div class="timeline-layer-title">${isObject(l.title) ? l.title[currentLocale] ?? l.title.default : isString(l.title) && l.title ? l.title : l.name}</div>`
+                    + "</div>"
             }))
         })
     )
@@ -201,5 +205,6 @@ const enhance = compose(
     )
 );
 import Timeline from '../../components/time/TimelineComponent';
+
 
 export default enhance(Timeline);

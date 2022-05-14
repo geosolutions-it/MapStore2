@@ -953,7 +953,8 @@ describe('Test the queryform reducer', () => {
         let testAction = {
             type: TOGGLE_AUTOCOMPLETE_MENU,
             rowId: 100,
-            status: true
+            status: true,
+            "layerFilterType": "filterField"
         };
 
         let initialState = {
@@ -968,6 +969,31 @@ describe('Test the queryform reducer', () => {
         expect(state).toExist();
 
         expect(state.filterFields[0].openAutocompleteMenu).toBe(true);
+
+    });
+    it('toggle autocomplete mode crossLayerFilter', () => {
+        let testAction = {
+            type: TOGGLE_AUTOCOMPLETE_MENU,
+            rowId: 100,
+            status: true,
+            "layerFilterType": "crossLayer"
+        };
+
+        let initialState = {
+            openAutocompleteMenu: false,
+            crossLayerFilter: {collectGeometries: {
+                queryCollection: {
+                    filterFields: [{
+                        rowId: 100,
+                        openAutocompleteMenu: false
+                    }]
+                }
+            } }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.crossLayerFilter.collectGeometries.queryCollection.filterFields[0].openAutocompleteMenu).toBe(true);
 
     });
     it('toggle crosslayer', () => {

@@ -32,6 +32,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import TopoJSON from 'ol/format/TopoJSON';
 
 import { getStyle } from '../VectorStyle';
+import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
 const OL_VECTOR_FORMATS = {
     'application/vnd.mapbox-vector-tile': MVT,
@@ -118,6 +119,7 @@ const createLayer = options => {
         layer: options.name,
         version: options.version || "1.0.0",
         matrixSet: tileMatrixSetName,
+        ...(options.credits && {attributions: creditsToAttribution(options.credits)}),
         format,
         style: options.style || "",
         tileGrid: new WMTSTileGrid({
@@ -139,7 +141,8 @@ const createLayer = options => {
         msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         zIndex: options.zIndex,
-        maxResolution,
+        minResolution: options.minResolution,
+        maxResolution: options.maxResolution < maxResolution ? options.maxResolution : maxResolution,
         visible: options.visibility !== false,
         source: isVector
             ? new VectorTile({
@@ -161,8 +164,15 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
-    || oldOptions.style !== newOptions.style) {
+    || oldOptions.style !== newOptions.style
+    || oldOptions.credits !== newOptions.credits) {
         return createLayer(newOptions);
+    }
+    if (oldOptions.minResolution !== newOptions.minResolution) {
+        layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+    }
+    if (oldOptions.maxResolution !== newOptions.maxResolution) {
+        layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
     }
     return null;
 };

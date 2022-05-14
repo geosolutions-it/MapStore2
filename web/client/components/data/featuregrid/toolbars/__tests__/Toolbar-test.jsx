@@ -34,9 +34,7 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.render(<Toolbar/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
-        const downloadBtn = document.getElementById("fg-download-grid");
         const editButton = document.getElementById("fg-edit-mode");
-        expect(isVisibleButton(downloadBtn)).toBe(false);
         expect(isVisibleButton(editButton)).toBe(false);
     });
     it('check showAdvancedFilterButton false', () => {
@@ -66,15 +64,6 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         const advFilterButton = document.getElementById("fg-grid-map-filter");
         expect(isVisibleButton(advFilterButton)).toBe(true);
-    });
-    it('check download displayDownload', () => {
-        ReactDOM.render(<Toolbar displayDownload />, document.getElementById("container"));
-        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
-        const downloadBtn = document.getElementById("fg-download-grid");
-        const editButton = document.getElementById("fg-edit-mode");
-        expect(isVisibleButton(downloadBtn)).toBe(true);
-        expect(isVisibleButton(editButton)).toBe(false);
     });
     it('check edit-mode button', () => {
         const events = {
@@ -311,13 +300,13 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.render(<Toolbar mode="EDIT" selectedCount={0} hasSupportedGeometry={false} />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
-        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(2);
+        expect(filter(document.getElementsByClassName("square-button-md"), function(b) { return isVisibleButton(b); }).length).toBe(2);
         expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-back-view"))).toBe(true);
         expect(isVisibleButton(document.getElementById("fg-grid-map-filter"))).toBe(true);
 
         ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} />, document.getElementById("container"));
-        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(3);
+        expect(filter(document.getElementsByClassName("square-button-md"), function(b) { return isVisibleButton(b); }).length).toBe(3);
         expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
@@ -327,7 +316,7 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
 
         ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} hasChanges/>, document.getElementById("container"));
-        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(3);
+        expect(filter(document.getElementsByClassName("square-button-md"), function(b) { return isVisibleButton(b); }).length).toBe(3);
         expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-save-feature"))).toBe(true);
@@ -345,10 +334,27 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         let zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
-        expect(el.children[2].classList.contains('disabled')).toBe(true);
+        expect(zoomAllButton.classList.contains('disabled')).toBe(true);
         ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false}/>, document.getElementById("container"));
         zoomAllButton = document.getElementById("fg-zoom-all");
-        expect(el.children[2].classList.contains('disabled')).toBe(false);
+        expect(zoomAllButton.classList.contains('disabled')).toBe(false);
+    });
+    describe('toolbarItems', () => {
+        it('render toolbarItems component', () => {
+            const DummyComponent = ({sampleProp}) => <button id="dummy-cmp" className={sampleProp}/>;
+            ReactDOM.render(<Toolbar sampleProp="TEST_SAMPLE_PROP" toolbarItems={[{Component: DummyComponent }]}/>, document.getElementById("container"));
+            const button = document.querySelector('.btn-group #dummy-cmp');
+            expect(button).toExist();
+            expect(button.className).toEqual("TEST_SAMPLE_PROP");
+        });
+        it('toolbarItems inherited disableToolbar', () => {
+            const DummyComponent = ({disabled, sampleProp}) => <button id="dummy-cmp" disabled={disabled} className={sampleProp}/>;
+            ReactDOM.render(<Toolbar sampleProp="TEST_SAMPLE_PROP" disableToolbar toolbarItems={[{Component: DummyComponent }]}/>, document.getElementById("container"));
+            const button = document.querySelector('.btn-group #dummy-cmp');
+            expect(button).toExist();
+            expect(button.disabled).toBeTruthy();
+            expect(button.className).toEqual("TEST_SAMPLE_PROP");
+        });
     });
     describe('time sync button', () => {
         it('visibility', () => {
@@ -376,16 +382,30 @@ describe('Featuregrid toolbar component', () => {
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
     });
-    it('check chart button', () => {
-        const events = {
-            chart: () => {}
-        };
-        spyOn(events, "chart");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" showChartButton />, document.getElementById("container"));
-        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
-        let chart = document.getElementById("fg-grid-map-chart");
-        expect(isVisibleButton(chart)).toBe(true);
-
+    describe('snap tool button', () => {
+        it('visibility', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button")).toExist();
+            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button")).toNotExist();
+        });
+        it('active/inactive state', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button").className.split(' ')).toInclude('btn-success');
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button").className.split(' ')).toNotInclude('btn-success');
+        });
+        it('handler', () => {
+            const events = {
+                toggleSnapping: () => { }
+            };
+            const spy = spyOn(events, "toggleSnapping");
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("snap-button").click();
+            expect(spy.calls[0].arguments[0]).toBe(false);
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("snap-button").click();
+            expect(spy.calls[1].arguments[0]).toBe(true);
+        });
     });
 });

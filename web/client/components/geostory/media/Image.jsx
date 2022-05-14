@@ -39,8 +39,8 @@ class Image extends Component {
         onClick: PropTypes.func,
         onChangeStatus: PropTypes.func,
         status: PropTypes.string,
-        loaderComponent: PropTypes.element,
-        errorComponent: PropTypes.element,
+        loaderComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+        errorComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
         caption: PropTypes.string,
         loaderStyle: PropTypes.object
     };

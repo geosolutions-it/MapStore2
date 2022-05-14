@@ -1,0 +1,606 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// bootstrap component theme mixins with css variables used by write .write-ms-theme function
+
+// @button-vars: ruleset of button variables, see @ms-theme-vars[@button-default] in variables.less file as example
+// return classes for a button variant using css variables
+.button-variant-with-css-variables(@button-vars) {
+    .color-var(@button-vars[button-color]);
+    .background-color-var(@button-vars[button-bg]);
+    .border-color-var(@button-vars[button-border-color]);
+
+    &:focus,
+    &.focus {
+        .color-var(@button-vars[button-focus-color]);
+        .background-color-var(@button-vars[button-focus-bg]);
+        .border-color-var(@button-vars[button-focus-border-color]);
+    }
+
+    &:hover {
+        .color-var(@button-vars[button-hover-color]);
+        .background-color-var(@button-vars[button-hover-bg]);
+        .border-color-var(@button-vars[button-hover-border-color]);
+    }
+
+    &:active,
+    &.active,
+    .open>.dropdown-toggle& {
+        .color-var(@button-vars[button-active-color]);
+        .background-color-var(@button-vars[button-active-bg]);
+        .border-color-var(@button-vars[button-active-border-color]);
+
+        &:hover,
+        &:focus,
+        &.focus {
+            .color-var(@button-vars[button-active-hover-color]);
+            .background-color-var(@button-vars[button-active-hover-bg]);
+            .border-color-var(@button-vars[button-active-hover-border-color]);
+        }
+    }
+
+    &:active,
+    &.active,
+    .open>.dropdown-toggle& {
+        background-image: none;
+    }
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        opacity: 1;
+        &,
+        &:hover,
+        &:focus,
+        &.focus,
+        &:active,
+        &.active {
+            .color-var(@button-vars[button-disabled-color]);
+            .background-color-var(@button-vars[button-disabled-bg]);
+            .border-color-var(@button-vars[button-disabled-border-color]);
+        }
+    }
+
+    .badge {
+        .color-var(@button-vars[button-badge-color]);
+        .background-color-var(@button-vars[button-badge-bg]);
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all base classes override for bootstrap with css variables
+.bootstrap-base-with-css-variables(@theme-vars) {
+    a {
+        .color-var(@theme-vars[link-color]);
+        text-decoration: none;
+
+        &:hover {
+            .color-var(@theme-vars[link-hover-color]);
+            text-decoration: none;
+        }
+    }
+    .print-download a {
+        .color-var(@theme-vars[primary-contrast]);
+    }
+
+    hr {
+        .border-top-color-var(@theme-vars[main-border-color]);
+    }
+
+    .text-body {
+        .color-var(@theme-vars[main-color]);
+    }
+
+    .text-primary {
+        .color-var(@theme-vars[primary]);
+    }
+
+    .text-success {
+        .color-var(@theme-vars[success]);
+    }
+
+    .bg-body {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .bg-primary {
+        .color-var(@theme-vars[primary-contrast]);
+        .background-color-var(@theme-vars[primary]);
+    }
+    .close {
+        .color-var(@theme-vars[primary-contrast]);
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0); // todo verify if this needs to be removed
+        &:hover,
+        &:focus {
+            .color-var(@theme-vars[primary-contrast]);
+        }
+    }
+    pre {
+        .color-var(@theme-vars[main-variant-color]);
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all the button variant of bootstrap classes with css variables
+.buttons-with-css-variables(@theme-vars) {
+    .btn {
+
+        &:hover,
+        &:focus,
+        &.focus {
+            .color-var(@theme-vars[link-color]);
+        }
+    }
+
+    .btn-link {
+        .color-var(@theme-vars[link-color]);
+    }
+
+    .btn-default {
+        .button-variant-with-css-variables(@theme-vars[@button-default]);
+    }
+
+    .btn-primary {
+        .button-variant-with-css-variables(@theme-vars[@button-primary]);
+    }
+
+    .btn-info {
+        .button-variant-with-css-variables(@theme-vars[@button-info]);
+    }
+
+    .btn-success {
+        .button-variant-with-css-variables(@theme-vars[@button-success]);
+    }
+
+    .btn-warning {
+        .button-variant-with-css-variables(@theme-vars[@button-warning]);
+    }
+
+    .btn-danger {
+        .button-variant-with-css-variables(@theme-vars[@button-danger]);
+    }
+
+    /* Button with bottom border for collapsed items in list - see widgets tray */
+    .btn-tray {
+        .button-variant-with-css-variables(@theme-vars[@button-tray]);
+        border-left: none;
+        border-top: none;
+        border-right: none;
+        border-bottom-width: 3px;
+        border-bottom-style: solid;
+        .border-bottom-color-var(@theme-vars[@button-tray][button-border-color]);
+
+        &:active,
+        &.active {
+            .color-var(@theme-vars[@button-tray][button-active-color]);
+            border-bottom-width: 3px;
+            border-bottom-style: solid;
+            .border-bottom-color-var(@theme-vars[@button-tray][button-active-border-color]);
+        }
+
+        &:focus,
+        &.focus {
+            .color-var(@theme-vars[@button-tray][button-color]);
+            .background-color-var(@theme-vars[@button-tray][button-bg]);
+            border-bottom-width: 3px;
+            border-bottom-style: solid;
+            .border-bottom-color-var(@theme-vars[@button-tray][button-border-color]);
+        }
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap inputs with css variables
+.inputs-with-css-variables(@theme-vars) {
+    .form-control {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+
+        &:focus {
+            outline: 1px solid #ffffff;
+            box-shadow: none;
+            .border-color-var(@theme-vars[focus-color]);
+            .outline-color-var(@theme-vars[focus-color]);
+        }
+
+        // Firefox
+        &::-moz-placeholder {
+            .color-var(@theme-vars[placeholder-color]);
+            opacity: 1;
+        }
+
+        &:-ms-input-placeholder {
+            .color-var(@theme-vars[placeholder-color]);
+        }
+
+        // Internet Explorer 10+
+        &::-webkit-input-placeholder {
+            .color-var(@theme-vars[placeholder-color]);
+        }
+
+        // Safari and Chrome
+
+        &[disabled],
+        &[readonly],
+        fieldset[disabled] & {
+            .color-var(@theme-vars[disabled-color]);
+            .background-color-var(@theme-vars[disabled-bg]);
+        }
+    }
+
+    .input-group-addon {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap pagination with css variables
+.pagination-with-css-variables(@theme-vars) {
+    .pagination {
+        >li {
+
+            >a,
+            >span {
+                .color-var(@theme-vars[main-color]);
+                .background-color-var(@theme-vars[main-bg]);
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        >li>a,
+        >li>span {
+
+            &:hover,
+            &:focus {
+                .color-var(@theme-vars[main-hover-color]);
+                .background-color-var(@theme-vars[main-hover-bg]);
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        >.active>a,
+        >.active>span {
+
+            &,
+            &:hover,
+            &:focus {
+                .color-var(@theme-vars[primary-contrast]);
+                .background-color-var(@theme-vars[primary]);
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        >.disabled {
+
+            >span,
+            >span:hover,
+            >span:focus,
+            >a,
+            >a:hover,
+            >a:focus {
+                .color-var(@theme-vars[disabled-color]);
+                .background-color-var(@theme-vars[disabled-bg]);
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap dropdown with css variables
+.dropdown-with-css-variables(@theme-vars) {
+    .dropdown-menu {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+
+        // Dividers (basically an hr) within the dropdown
+        .divider {
+            .background-color-var(@theme-vars[main-border-color]);
+        }
+
+        // Links within the dropdown menu
+        >li>a {
+            .color-var(@theme-vars[main-color]);
+        }
+    }
+
+    // Hover/Focus state
+    .dropdown-menu>li>a {
+
+        &:hover,
+        &:focus {
+            .color-var(@theme-vars[main-hover-color]);
+            .background-color-var(@theme-vars[main-hover-bg]);
+        }
+    }
+
+    // Active state
+    .dropdown-menu>.active>a {
+
+        &,
+        &:hover,
+        &:focus {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+        }
+    }
+
+    // Disabled state
+    .dropdown-menu>.disabled>a {
+
+        &,
+        &:hover,
+        &:focus {
+            .color-var(@theme-vars[disabled-color]);
+        }
+    }
+
+    .dropdown-menu .dropdown-header {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap nav with css variables
+.nav-with-css-variables(@theme-vars) {
+    .nav {
+        >li {
+            >a {
+
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                    .background-color-var(@theme-vars[main-hover-bg]);
+                }
+            }
+
+            // Disabled state sets text to gray and nukes hover/tab effects
+            &.disabled>a {
+                .color-var(@theme-vars[disabled-color]);
+
+                &:hover,
+                &:focus {
+                    .color-var(@theme-vars[disabled-color]);
+                }
+            }
+        }
+
+        // Open dropdowns
+        .open>a {
+
+            &,
+            &:hover,
+            &:focus {
+                .color-var(@theme-vars[link-color]);
+                .background-color-var(@theme-vars[main-hover-bg]);
+            }
+        }
+
+        .nav-divider {
+            .background-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    // Tabs
+    // -------------------------
+    // Give the tabs something to sit on
+    .nav-tabs {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        >li {
+
+            // Actual tabs (as links)
+            >a {
+                &:hover {
+                    .border-color-var(@theme-vars[main-border-color]);
+                }
+            }
+
+            // Active state, and its :hover to override normal :hover
+            &.active>a {
+
+                &,
+                &:hover,
+                &:focus {
+                    .color-var(@theme-vars[main-color]);
+                    .background-color-var(@theme-vars[main-bg]);
+                    .border-color-var(@theme-vars[main-border-color]);
+                    border-bottom-color: transparent;
+                }
+            }
+        }
+    }
+
+    // Pills
+    // -------------------------
+    .nav-pills {
+        >li {
+
+            // Active state
+            &.active>a {
+
+                &,
+                &:hover,
+                &:focus {
+                    .color-var(@theme-vars[primary-contrast]);
+                    .background-color-var(@theme-vars[primary]);
+                }
+            }
+        }
+    }
+
+    // Move borders to anchors instead of bottom of list
+    .nav-tabs-justified {
+
+        >.active>a,
+        >.active>a:hover,
+        >.active>a:focus {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+
+        @media (min-width: @screen-sm-min) {
+            >li>a {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+            }
+
+            >.active>a,
+            >.active>a:hover,
+            >.active>a:focus {
+                .border-bottom-color-var(@theme-vars[main-bg]);
+            }
+        }
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap panel with css variables
+.panel-with-css-variables(@theme-vars) {
+    .panel-variant-with-css() {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        &>.panel-heading {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+            .border-color-var(@theme-vars[main-border-color]);
+
+            +.panel-collapse>.panel-body {
+                .border-top-color-var(@theme-vars[main-border-color]);
+            }
+
+            .badge {
+                .background-color-var(@theme-vars[main-bg]);
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        &>.panel-footer {
+            +.panel-collapse>.panel-body {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+
+    .panel {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .panel-default {
+        .panel-variant-with-css();
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap modal with css variables
+.modal-with-css-variables(@theme-vars) {
+    .modal-header {
+        .color-var(@theme-vars[primary-contrast]);
+        .background-color-var(@theme-vars[primary]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .modal-content,
+    .modal-footer {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap popover with css variables
+.popover-with-css-variables(@theme-vars) {
+    .popover {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .popover-title {
+        .color-var(@theme-vars[main-variant-color]);
+        .background-color-var(@theme-vars[main-variant-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .popover {
+        &.top>.arrow {
+            .border-top-color-var(@theme-vars[main-bg]);
+        }
+
+        &.right>.arrow {
+            .border-right-color-var(@theme-vars[main-bg]);
+        }
+
+        &.bottom>.arrow {
+            .border-bottom-color-var(@theme-vars[main-bg]);
+        }
+
+        &.left>.arrow {
+            border-left-color: @popover-arrow-outer-color;
+            .border-left-color-var(@theme-vars[main-bg]);
+        }
+    }
+}
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return all classes for bootstrap list group with css variables
+.list-group-with-css-variables(@theme-vars) {
+    .list-group-item {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    a.list-group-item,
+    button.list-group-item {
+        .color-var(@theme-vars[link-color]);
+        .list-group-item-heading {
+            .color-var(@theme-vars[main-color]);
+        }
+        &:hover,
+        &:focus {
+            .color-var(@theme-vars[link-hover-color]);
+            .background-color-var(@theme-vars[main-hover-bg]);
+        }
+    }
+    .list-group-item {
+        &.disabled,
+        &.disabled:hover,
+        &.disabled:focus {
+            .color-var(@theme-vars[disabled-color]);
+            .background-color-var(@theme-vars[disabled-bg]);
+
+            .list-group-item-heading {
+                color: inherit;
+            }
+            .list-group-item-text {
+                .color-var(@theme-vars[disabled-color]);
+            }
+        }
+
+        &.active,
+        &.active:hover,
+        &.active:focus {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+            .border-color-var(@theme-vars[main-border-color]);
+            .list-group-item-heading,
+            .list-group-item-heading>small,
+            .list-group-item-heading>.small {
+                color: inherit;
+            }
+            .list-group-item-text {
+                .color-var(@theme-vars[primary-contrast]);
+            }
+        }
+    }
+}

@@ -38,6 +38,7 @@ import { mapSelector } from '../selectors/map';
 import { isLoggedIn } from '../selectors/security';
 import { isSharedStory } from '../selectors/geostory';
 import { pathnameSelector } from '../selectors/router';
+import { getGeostoryMode } from '../utils/GeoStoryUtils';
 
 
 /**
@@ -45,7 +46,7 @@ import { pathnameSelector } from '../selectors/router';
  * @param {Observable} action$ stream of actions. Manages `INIT_MAP`, `MAP_CONFIG_LOADED`, `MAP_CONFIG_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`
  * @param {Array} loadActions array of actions to control
  * @param {Function} isEnabled needs to return true or false to update the enabled state of feedbackMask
- * @param {Function} mode declare mode to display the mask (map or dashboard)
+ * @param {String} mode declare mode to display the mask (map or dashboard)
  * @memberof epics.feedbackMask
  * @return {Observable}
  */
@@ -96,7 +97,10 @@ export const updateDashboardVisibility = action$ =>
         .switchMap(() => {
             const loadActions = [DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR];
             const isEnabled = ({type}) => type === DASHBOARD_LOAD_ERROR;
-            const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'dashboard');
+            const mode = window.location.href.match('dashboard-embedded')
+                ? 'dashboardEmbedded'
+                : 'dashboard';
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, mode);
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
@@ -115,7 +119,7 @@ export const updateGeoStoryFeedbackMaskVisibility = action$ =>
         .switchMap(() => {
             const loadActions = [GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR];
             const isEnabled = ({ type }) => type === LOAD_GEOSTORY_ERROR;
-            const updateObservable = updateVisibility(action$, loadActions, isEnabled, 'geostory');
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, getGeostoryMode());
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)

@@ -12,6 +12,7 @@ import Rx from 'rxjs';
 import { SET_MORE_DETAILS_VISIBILITY, setCookieVisibility, setDetailsCookieHtml } from '../actions/cookie';
 import { CHANGE_LOCALE } from '../actions/locale';
 import axios from '../libs/ajax';
+import { getApi } from '../api/userPersistedStorage';
 
 /**
  * Show the cookie policy notification
@@ -24,14 +25,21 @@ import axios from '../libs/ajax';
 export const cookiePolicyChecker = (action$) =>
     action$.ofType(LOCATION_CHANGE )
         .take(1)
-        .filter( () => !localStorage.getItem("cookies-policy-approved"))
+        .filter( () => {
+            try {
+                return !getApi().getItem("cookies-policy-approved");
+            } catch (e) {
+                console.error(e);
+                return false;
+            }
+        })
         .switchMap(() =>
             Rx.Observable.of(setCookieVisibility(true))
         );
 
 export const loadCookieDetailsPage = (action$, store) =>
     action$.ofType(SET_MORE_DETAILS_VISIBILITY, CHANGE_LOCALE )
-        .filter( () => !localStorage.getItem("cookies-policy-approved") && store.getState().cookie.seeMore && !store.getState().cookie.html[store.getState().locale.current])
+        .filter( () => !getApi().getItem("cookies-policy-approved") && store.getState().cookie.seeMore && !store.getState().cookie.html[store.getState().locale.current])
         .switchMap(() => Rx.Observable.fromPromise(
             axios.get("translations/fragments/cookie/cookieDetails-" + store.getState().locale.current + ".html", null, {
                 timeout: 60000,

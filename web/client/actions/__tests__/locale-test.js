@@ -8,6 +8,8 @@
 import expect from 'expect';
 
 import { loadLocale } from '../locale';
+import { setSupportedLocales, getSupportedLocales } from '../../utils/LocaleUtils';
+
 
 describe('Test locale related actions', () => {
     it('does not load a missing translation file', (done) => {
@@ -148,7 +150,15 @@ describe('Test locale related actions', () => {
         });
     });
 
-    it('loads an existing translation file', (done) => {
+    it('loads an existing translation file by default', (done) => {
+        const locales = {
+            "en": {
+                code: "en-US",
+                description: "English"
+            }
+        };
+        const oldLocales = getSupportedLocales();
+        setSupportedLocales(locales);
         loadLocale('base/web/client/test-resources')((e) => {
             try {
                 expect(e).toExist();
@@ -156,6 +166,8 @@ describe('Test locale related actions', () => {
                 done();
             } catch (ex) {
                 done(ex);
+            } finally {
+                setSupportedLocales(oldLocales);
             }
         });
     });

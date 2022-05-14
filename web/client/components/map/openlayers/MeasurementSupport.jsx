@@ -19,7 +19,7 @@ import {
     transformLineToArcs,
     midpoint
 } from '../../../utils/CoordinatesUtils';
-import {convertUom, getFormattedBearingValue} from '../../../utils/MeasureUtils';
+import {convertUom, getFormattedBearingValue, validateCoord} from '../../../utils/MeasureUtils';
 import {set} from '../../../utils/ImmutableUtils';
 import {startEndPolylineStyle} from './VectorStyle';
 import {getMessageById} from '../../../utils/LocaleUtils';
@@ -71,11 +71,13 @@ export default class MeasurementSupport extends React.Component {
         startEndPoint: {
             startPointOptions: {
                 radius: 3,
-                fillColor: "green"
+                fillColor: "green",
+                applyToPolygon: true
             },
             endPointOptions: {
                 radius: 3,
-                fillColor: "red"
+                fillColor: "red",
+                applyToPolygon: true
             }
         },
         updateOnMouseMove: false
@@ -160,21 +162,91 @@ export default class MeasurementSupport extends React.Component {
         return null;
     }
 
-    validateCoords = (coords) => {
-        return coords.filter((c) => !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
+    /**
+     * Update the draw interaction when feature in edit
+     */
+    updateInteraction = (props, features) => {
+        const disableInteraction = features.some(ft=> get(ft, 'properties.disabled'));
+        if (disableInteraction) {
+            // Disable interaction (To allow add coordinate points by click on map)
+            this.removeDrawInteraction();
+        } else if (this.drawInteraction === null) {
+            // Re-enable interaction when feature is valid
+            this.restoreDrawState();
+            this.addDrawInteraction(props);
+        }
     }
-    updateFeatures = (props) => {
-        const oldFeatures = this.source.getFeatures();
 
+    /**
+     * Create LineString geometry for Polygon to display the feature
+     * when polygon is not fully formed
+     */
+    convertPolyToLineFeature = (coordinates = []) => {
+        let reprojectedCoords = [];
+        const firstIndexValid = validateCoord(coordinates[0]);
+        if (firstIndexValid && validateCoord(coordinates[1])) {
+            reprojectedCoords = this.reprojectedCoordinatesFrom4326([coordinates[0], coordinates[1]]);
+        } else if (firstIndexValid) {
+            reprojectedCoords = this.reprojectedCoordinatesFrom4326([coordinates[0]]);
+        }
+        if (reprojectedCoords.length) {
+            return new LineString(reprojectedCoords);
+        }
+        return null;
+    }
+
+    /**
+     * Modify feature based on the geometries validity
+     */
+    modifyFeatures = (props) => {
+        let {currentFeature, features} = props.measurement || {};
+        let coordinates = features[currentFeature]?.geometry?.coordinates || [];
+        let type = features[currentFeature]?.geometry?.type || '';
+        if (type === "Polygon") {
+            coordinates = coordinates?.[0] || [];
+        }
+        const coordinatesLength = coordinates.length;
+        const hasInvalidCoords = coordinates.some(c=> !validateCoord(c));
+        let geometryObj;
+        // Modify only when LineString or Polygon is not fully formed
+        if (!hasInvalidCoords && type === 'LineString' && coordinatesLength < 2) {
+            const reprojectedCoords = this.reprojectedCoordinatesFrom4326(coordinates);
+            geometryObj = new LineString(reprojectedCoords);
+            features[currentFeature] = set("properties.disabled", true, set("geometry.coordinates", [...coordinates, ["", ""]], features[currentFeature]));
+        } else if (!hasInvalidCoords && type === "Polygon" && coordinatesLength <= 4
+            && isEqual(coordinates[coordinatesLength - 1], coordinates[coordinatesLength - 2])) {
+            coordinates.splice(2, 0, ["", ""]);
+            coordinates.pop();
+            features[currentFeature] = set("properties.disabled", true, set("geometry.coordinates", [coordinates], features[currentFeature]));
+        }
+        if (type === "Polygon" && coordinatesLength <= 4) {
+            geometryObj = this.convertPolyToLineFeature(coordinates);
+        }
+        if (!hasInvalidCoords && isEqual(coordinates[coordinatesLength - 1], coordinates[coordinatesLength - 2])) {
+            features[currentFeature]?.geometry?.coordinates?.[0]?.pop(); // Pop last duplicate coordinate of a Polygon to prevent extra rows in Measure panel
+        }
+        let currentOlFt;
+        if (geometryObj) {
+            this.source.clear();
+            currentOlFt = new Feature({geometry: geometryObj}); // Add feature with new geometry
+        }
+        return [features, currentOlFt];
+    }
+
+    updateFeatures = (props) => {
+        const [features, currentOlFt] = this.modifyFeatures(props) || [];
+        const oldFeatures = this.source.getFeatures();
         this.removeMeasureTooltips();
         this.removeSegmentLengthOverlays();
         this.source.clear();
         this.textLabels = [];
         this.segmentLengths = [];
-
-        const results = props.measurement.features.map((feature, index) => {
+        let indexOfFeatureInEdit = null;
+        this.updateInteraction(props, features);
+        const results = features.map((feature, index) => {
             if (get(feature, 'properties.disabled')) {
-                return [feature, oldFeatures && oldFeatures[index] && oldFeatures[index].getGeometry()];
+                indexOfFeatureInEdit = index;
+                return [feature, oldFeatures && oldFeatures[index] && oldFeatures[index].getGeometry() || currentOlFt?.getGeometry()];
             }
 
             const geomType = feature.geometry.type;
@@ -182,8 +254,12 @@ export default class MeasurementSupport extends React.Component {
             const isBearing = (featureValues[0] || {}).type === 'bearing' ||
                 (!(featureValues[0] || {}).type && props.measurement.bearingMeasureEnabled);
             const coords = geomType === 'Polygon' ? feature.geometry.coordinates[0] : feature.geometry.coordinates;
-            const reprojectedCoords = this.reprojectedCoordinatesFrom4326(coords);
-            const geometryObj = geomType === 'Polygon' ? new Polygon([reprojectedCoords]) : new LineString(reprojectedCoords);
+            let newCoords = coords;
+            if (geomType === 'LineString' && coords.length >= 2 && !isBearing) {
+                newCoords = transformLineToArcs(coords); // Maintain the arc when updating features
+            }
+            const newReprojectedCoords = this.reprojectedCoordinatesFrom4326(newCoords);
+            const geometryObj = geomType === 'Polygon' ? new Polygon([newReprojectedCoords]) : new LineString(newReprojectedCoords);
 
             const getMeasureValue = {
                 'Point': () => coords,
@@ -203,6 +279,7 @@ export default class MeasurementSupport extends React.Component {
                 'Polygon': () => this.formatAreaValue(this.getArea(geometryObj), props.uom)
             };
 
+            const reprojectedCoords = this.reprojectedCoordinatesFrom4326(coords);
             // recalculate segments
             if (!isBearing) {
                 for (let i = 0; i < coords.length - 1; ++i) {
@@ -213,10 +290,22 @@ export default class MeasurementSupport extends React.Component {
                     const bearingText = this.props.measurement && this.props.measurement.showLengthAndBearingLabel && " | " + getFormattedBearingValue(segmentLengthBearing, this.props.measurement.trueBearing) || "";
                     const overlayText = this.formatLengthValue(segmentLengthDistance, props.uom, isBearing) + bearingText;
                     last(this.segmentOverlayElements).innerHTML = overlayText;
-                    last(this.segmentOverlays).setPosition(midpoint(reprojectedCoords[i], reprojectedCoords[i + 1], true));
+                    let textLabelPosition = midpoint(coords[i], coords[i + 1], true);
+                    let segmentOverlayPosition = midpoint(reprojectedCoords[i], reprojectedCoords[i + 1], true);
+
+                    // Generate correct textLabels and update segment overlays
+                    if (geomType === 'LineString') {
+                        const middlePoint = newCoords[100 * i + 50];
+                        if (middlePoint) {
+                            textLabelPosition = middlePoint;
+                            segmentOverlayPosition = pointObjectToArray(reproject(middlePoint, 'EPSG:4326', getProjectionCode(this.props.map)));
+                        }
+                    }
+
+                    last(this.segmentOverlays).setPosition(segmentOverlayPosition);
                     this.textLabels[this.segmentOverlays.length - 1] = {
                         text: overlayText,
-                        position: midpoint(coords[i], coords[i + 1], true)
+                        position: textLabelPosition
                     };
                     this.segmentLengths[this.segmentOverlays.length - 1] = {
                         value: segmentLengthDistance,
@@ -284,17 +373,22 @@ export default class MeasurementSupport extends React.Component {
         const geometries = results.map(result => result[1]);
 
         this.source.addFeatures(geometries.filter(g => !!g).map(geometry => new Feature({geometry})));
-        const tempTextLabels = [...this.textLabels];
-        newFeatures.map((newFeature) => {
+        let tempTextLabels = [...this.textLabels];
+        // Add segment length labels to the feature
+        newFeatures.map((newFeature, index) => {
             const isBearing = !!newFeature.properties?.values?.find(val=>val.type === 'bearing');
             const isPolygon = newFeature.geometry.type === "Polygon";
             const sliceVal = (isPolygon || isBearing) ? 0 : 1;
             const coordinates = isPolygon ? newFeature.geometry.coordinates[0] : newFeature.geometry.coordinates;
-            const tempCoordinateLengthCurr = isPolygon ? coordinates.length - 1 : isBearing ? 0 : coordinates.length;
-            newFeature.geometry.textLabels =  tempTextLabels.splice(0, tempCoordinateLengthCurr - sliceVal) || [];
+            const hasInvalidCoords = coordinates.some(c=> !validateCoord(c));
+            const currentCoordinateLength = isPolygon ? coordinates.length - 1 : isBearing ? 0 : coordinates.length;
+            if (indexOfFeatureInEdit !== null && indexOfFeatureInEdit === index && hasInvalidCoords) {
+                newFeature.geometry.textLabels = newFeature.geometry.textLabels.concat([{text: "0"}]); // Add empty label when coordinate row is empty
+            } else {
+                newFeature.geometry.textLabels =  tempTextLabels.splice(0, currentCoordinateLength - sliceVal) || [];
+            }
             return newFeature;
         });
-
         this.props.changeGeometry(newFeatures);
         this.props.setTextLabels([...this.textLabels]);
 

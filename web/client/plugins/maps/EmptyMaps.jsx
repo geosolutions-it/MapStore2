@@ -40,5 +40,5 @@ export default connect(
     createSelector([isLoggedIn, mapTypeSelector], (loggedIn, mapType) => ({
         loggedIn: !!loggedIn,
         mapType
-    })),
+    }))
 )(EmptyMaps);

@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import { toggle3d, updateLast2dMapType, TOGGLE_3D, UPDATE_LAST_2D_MAPTYPE } from '../globeswitcher';
+import { toggle3d, TOGGLE_3D } from '../globeswitcher';
 
 describe('Test correctness of the maptype actions', () => {
 
@@ -17,11 +17,5 @@ describe('Test correctness of the maptype actions', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(TOGGLE_3D);
         expect(retVal.enable).toBe(true);
-    });
-    it('updateLast2dMapType', () => {
-        const retVal = updateLast2dMapType("leaflet");
-        expect(retVal).toExist();
-        expect(retVal.type).toBe(UPDATE_LAST_2D_MAPTYPE);
-        expect(retVal.mapType).toBe('leaflet');
     });
 });

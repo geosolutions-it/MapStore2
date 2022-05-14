@@ -11,11 +11,17 @@ import { isNil } from 'lodash';
 import { set } from './ImmutableUtils';
 import { colorToRgbaStr } from './ColorUtils';
 import axios from 'axios';
-import SLDParser from 'geostyler-sld-parser';
-import GeoCSSParser from 'geostyler-geocss-parser';
+
+function initParserLib(mod) {
+    const Parser = mod.default;
+    return new Parser();
+}
+
 const StyleParsers = {
-    sld: new SLDParser(),
-    css: new GeoCSSParser()
+    'sld': () => import('@geosolutions/geostyler-sld-parser').then(initParserLib),
+    'css': () => import('@geosolutions/geostyler-geocss-parser').then(initParserLib),
+    'openlayers': () =>  import('geostyler-openlayers-parser').then(initParserLib),
+    '3dtiles': () => import('./styleparser/ThreeDTilesStyleParser').then(initParserLib)
 };
 
 /**
@@ -333,6 +339,15 @@ export const createStylesAsync = (styles = []) => {
     });
 };
 
+/**
+ * Import a style parser based on the format
+ * @param  {string} format format encoding of the style: css, sld or openlayers
+ * @return {promise} returns the parser instance if available
+ */
 export const getStyleParser = (format = 'sld') => {
-    return StyleParsers[format];
+    if (!StyleParsers[format]) {
+        return Promise.resolve(null);
+    }
+    // import parser libraries dynamically
+    return StyleParsers[format]();
 };

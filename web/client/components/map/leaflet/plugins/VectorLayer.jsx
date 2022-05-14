@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Layers = require('../../../../utils/leaflet/Layers');
-const { isNil } = require('lodash');
-const L = require('leaflet');
+import Layers from '../../../../utils/leaflet/Layers';
+import { isNil } from 'lodash';
+import L from 'leaflet';
 
 const setOpacity = (layer, opacity) => {
     if (layer.eachLayer) {

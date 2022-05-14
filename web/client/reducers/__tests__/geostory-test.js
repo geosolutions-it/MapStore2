@@ -30,7 +30,9 @@ import {
     removeResource,
     setPendingChanges,
     updateUrlOnScroll,
-    updateMediaEditorSettings
+    updateMediaEditorSettings,
+    hideCarouselItems,
+    enableDraw
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -450,5 +452,19 @@ describe('geostory reducer', () => {
         };
         const state = geostory(undefined, updateMediaEditorSettings(mediaEditorSettings));
         expect(state.mediaEditorSettings).toBe(mediaEditorSettings);
+    });
+    it('HIDE_CAROUSEL_ITEMS', () => {
+        let state = geostory(undefined, setCurrentStory(TEST_STORY));
+        expect(state.currentStory.sections.length).toBe(5);
+        state = geostory(state, hideCarouselItems('SomeID_carousel', 'ccol1'));
+        const [section] = state.currentStory.sections.filter(({type})=> type === 'carousel') || [];
+        expect(section.contents.length).toBe(2);
+        expect(section.contents[0].hideContent).toBe(false);
+        expect(section.contents[1].hideContent).toBe(true);
+    });
+    it('ENABLE_DRAW', () => {
+        const drawOptions = {};
+        let state = geostory(undefined, enableDraw(drawOptions));
+        expect(state.drawOptions).toBe(drawOptions);
     });
 });

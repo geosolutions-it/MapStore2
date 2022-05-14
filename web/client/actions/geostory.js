@@ -17,6 +17,7 @@ export const EDIT_RESOURCE = "GEOSTORY:EDIT_RESOURCE";
 export const EDIT_WEBPAGE = "GEOSTORY:EDIT_WEBPAGE";
 export const ERRORS_LOGO = "GEOSTORY:ERRORS_LOGO";
 export const GEOSTORY_LOADED = "GEOSTORY:GEOSTORY_LOADED";
+export const GEOSTORY_SCROLLING = "GEOSTORY:SCROLLING";
 export const LOAD_GEOSTORY = "GEOSTORY:LOAD_GEOSTORY";
 export const LOAD_GEOSTORY_ERROR = "GEOSTORY:LOAD_GEOSTORY_ERROR";
 export const LOADING_GEOSTORY = "GEOSTORY:LOADING_GEOSTORY";
@@ -41,6 +42,8 @@ export const REMOVE_RESOURCE = "GEOSTORY:REMOVE_RESOURCE";
 export const SET_PENDING_CHANGES = "GEOSTORY:SET_PENDING_CHANGES";
 export const SET_UPDATE_URL_SCROLL = "GEOSTORY:SET_UPDATE_URL_SCROLL";
 export const UPDATE_MEDIA_EDITOR_SETTINGS = "GEOSTORY:UPDATE_MEDIA_EDITOR_SETTINGS";
+export const HIDE_CAROUSEL_ITEMS = "GEOSTORY:HIDE_CAROUSEL_ITEMS";
+export const ENABLE_DRAW = "GEOSTORY:ENABLE_DRAW";
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
  *
@@ -241,3 +244,21 @@ export const setPendingChanges = value => ({type: SET_PENDING_CHANGES, value});
 export const updateUrlOnScroll = value => ({type: SET_UPDATE_URL_SCROLL, value});
 
 export const updateMediaEditorSettings = mediaEditorSettings => ({ type: UPDATE_MEDIA_EDITOR_SETTINGS, mediaEditorSettings });
+
+/**
+ * This action can be used to disable/enable URL update during story load,
+ * to avoid conflicts due to the initial scroll when the user opens a link pointing to a section/column.
+ * @param {boolean} status true if the application is actually scrolling
+ * @returns the action
+ */
+export const geostoryScrolling = (status) => ({ type: GEOSTORY_SCROLLING, status});
+
+/**
+ * Hide the carousel item in the section
+ */
+export const hideCarouselItems = (sectionId, showContentId) => ({ type: HIDE_CAROUSEL_ITEMS, sectionId, showContentId });
+
+export const enableDraw = (drawOptions) => ({
+    type: ENABLE_DRAW,
+    drawOptions
+});

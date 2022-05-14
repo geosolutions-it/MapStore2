@@ -7,6 +7,49 @@
  */
 import Url from 'url';
 import { trimStart, replace } from 'lodash';
+
+export const CENTERANDZOOM = 'centerAndZoom';
+export const MARKERANDZOOM = 'markerAndZoom';
+export const BBOX = 'bbox';
+
+export const DASHBOARD_DEFAULT_SHARE_OPTIONS = {
+    embedPanel: true,
+    advancedSettings: {},
+    shareUrlRegex: "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+    shareUrlReplaceString: "$1dashboard-embedded.html#/$2",
+    embedOptions: {
+        showTOCToggle: false,
+        showConnectionsParamToggle: true,
+        allowFullScreen: false
+    }
+};
+
+export const GEOSTORY_DEFAULT_SHARE_OPTIONS = {
+    embedPanel: true,
+    showAPI: false,
+    embedOptions: { showTOCToggle: false, allowFullScreen: false },
+    shareUrlRegex: "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+    shareUrlReplaceString: "$1geostory-embedded.html#/$3",
+    advancedSettings: {
+        hideInTab: "embed",
+        homeButton: true
+    }
+};
+
+export const CONTEXT_DEFAULT_SHARE_OPTIONS = {
+    embedPanel: true,
+    showAPI: false,
+    advancedSettings: {
+        hideInTab: "embed",
+        homeButton: true
+    }
+};
+
+export const SHARE_TABS = {
+    link: 1,
+    social: 2,
+    embed: 3
+};
 /**
  * Utility functions for Share tools.
  * @memberof utils

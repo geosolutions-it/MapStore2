@@ -11,19 +11,17 @@ To create the final war, you have several options:
 
 * full build, including submodules and frontend (e.g. GeoStore)
 
- `./build.sh [version_identifier]`
+ `./build.sh [version_identifier] [profiles]`
 
- Where version_identifier is an optional identifier of the generated war that will be shown in the settings panel of the application.
+ Where `version_identifier` is an optional identifier of the generated war that will be shown in the settings panel of the application and profiles is an optional list of comma delimited building profiles (e.g. `printing`, `ldap`)
 
 * fast build (will use the last compiled version of submodules and compiled frontend)
 
-`mvn clean install -Dmapstore2.version=[version_identifier]`
+`mvn clean install -Dmapstore2.version=[version_identifier] [profiles]`
 
 * release build (produces also the binary)
 
 `mvn clean install -Dmapstore2.version=[version_identifier] -Prelease`
-
-Where `[version_identifier]` is the version you want to export (e.g. 2020.01.00). This version name will appear in "Settings --> version information" and used to create handle bundles version (i.e. caching).
 
 ## Building the documentation
 
@@ -58,7 +56,7 @@ The generated folders can be removed with:
 
 `npm run cleandoc`
 
-## Undestanding frontend building tools
+## Understanding frontend building tools
 
 Frontend building is delegated to [NPM](https://www.npmjs.com/) and so leverages the NodeJS ecosystem.
 
@@ -78,7 +76,6 @@ In particular:
 |--------------------------|--------------------------------------------------------------|
 | `npm install`            | download dependencies and init developer environment         |
 | `npm start`              | start development instance                                   |
-| `npm run examples`       | start development instance with examples                     |
 | `npm run compile`        | run single build / bundling                                  |
 | `npm test`               | run test suite once                                          |
 | `npm run continuoustest` | run continuous test suite running (useful during developing) |

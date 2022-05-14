@@ -63,9 +63,10 @@ export default ({
                 expandable: expandableMedia,
                 mediaViewer,
                 contentToolbar,
-                overrideTools: {
+                overrideTools: (tools) => ({
+                    ...tools,
                     [ContentTypes.TEXT]: [size(true), 'remove']
-                }
+                })
             }}
             sections={sections}
             storyFonts={storyFonts}
@@ -99,6 +100,13 @@ export default ({
                 tooltipId: 'geostory.addImmersiveSection',
                 onClick: () => {
                     add(`sections`, id, SectionTypes.IMMERSIVE);
+                }
+            },
+            {
+                glyph: 'story-carousel-section',
+                tooltipId: 'geostory.addGeocarouselSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.CAROUSEL);
                 }
             },
             {

@@ -54,6 +54,14 @@ describe('GroupField', () => {
             value: "attribute1",
             type: "list",
             exception: null
+        }, {
+            rowId: 300,
+            groupId: 1,
+            attribute: "Attribute_array",
+            operator: "contains",
+            value: "1234",
+            type: "array",
+            exception: null
         }];
 
         const attributes = [{
@@ -83,7 +91,7 @@ describe('GroupField', () => {
 
         expect(groupfield).toExist();
         expect(groupfield.props.filterFields).toExist();
-        expect(groupfield.props.filterFields.length).toBe(2);
+        expect(groupfield.props.filterFields.length).toBe(3);
         expect(groupfield.props.groupFields).toExist();
         expect(groupfield.props.groupFields.length).toBe(1);
         expect(groupfield.props.groupLevels).toExist();
@@ -105,12 +113,12 @@ describe('GroupField', () => {
         expect(childNodes[1].className === 'query-content').toBeTruthy();
 
         const buttons = document.getElementsByClassName('btn btn-default');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(5);
 
         const list = groupfield.getOperator({type: "list"});
         expect(list).toEqual(["="]);
         const string = groupfield.getOperator({type: "string"});
-        expect(string).toEqual(["=", "like", "ilike", "isNull"]);
+        expect(string).toEqual(["=", "<>", "like", "ilike", "isNull"]);
         const boolean = groupfield.getOperator({type: "boolean"});
         expect(boolean).toEqual(["="]);
         const noType = groupfield.getOperator();

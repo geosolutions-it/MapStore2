@@ -1,7 +1,7 @@
 # Adding Annotations 
 ********************
 
-[Mapstore](https://mapstore.geo-solutions.it/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
+[Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
 Those features make up the so called **Annotations** layers.
 
 Starting from a new map or an already existing one:
@@ -42,9 +42,11 @@ New vertices can be also added using the <img src="../img/button/++.jpg" class="
 
 <img src="../img/annotations/add_vertex_button.jpg" class="ms-docimage" style="max-width:500px;" />
 
-Invalid vertices are notified with a red exclamation point icon.
-
-<img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
+!!! note
+    If the vertices are invalid, they are notified with a red exclamation point.
+    <img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
+    In this case, it is not possible to add new geometry or save the annotation until a valid value is entered. It is still possible to interact with the geometries already present in the annotation, by zooming in on it or deleting it, as follows:
+    <img src="../img/annotations/invalid_vertex2.gif" class="ms-docimage" style="max-width:500px;" />
 
 * **Click** the *Style* tab of the annotation viewer (optional) to manage the annotation style (see the next paragraph).
 
@@ -63,7 +65,7 @@ The annotations layer will be added to the TOC and the annotation will be visibl
 Styling Annotations
 -------------------
 
-Based on which type of annotation was chosen, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
+Based on which type of annotation was chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
 
 <img src="../img/annotations/annotations_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -101,7 +103,7 @@ See the example below to better understand these options.
 ***Text***
 
 *Text* annotations are a bit different from the geometric ones. They display a formatted text on a given point of the map.
-The style editor lets you customize the text `Font` (`Family`, `Size`, `Style`, `Weight`) and the `Alignment` (`left`, `center` or `right`).
+The style editor allows you to customize the text `Font` (`Family`, `Size`, `Style`, `Weight`), the `Alignment` (`left`, `center` or `right`) and `Rotation`.
 You can also choose the text `Fill color` and its `Opacity`, the `Stroke` type, its `Color`, `Opacity` and `Width`. Take a look at the following example.
 
 <img src="../img/annotations/text_annotation_editor.jpg" class="ms-docimage" style="max-width:500px;"/>

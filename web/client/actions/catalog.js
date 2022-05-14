@@ -17,18 +17,8 @@ var API = {
     backgrounds
 };
 
-import {addLayer as addNewLayer, changeLayerProperties} from './layers';
-import { zoomToExtent } from './map';
-
-
-import {getLayerId, getLayerUrl} from '../utils/LayersUtils';
-import * as ConfigUtils from '../utils/ConfigUtils';
-import {find} from 'lodash';
-import {authkeyParamNameSelector} from '../selectors/catalog';
-import {layersSelector} from '../selectors/layers';
-
-
 export const ADD_LAYERS_FROM_CATALOGS = 'CATALOG:ADD_LAYERS_FROM_CATALOGS';
+export const ADD_LAYER_AND_DESCRIBE = 'CATALOG:ADD_LAYER_AND_DESCRIBE';
 export const TEXT_SEARCH = 'CATALOG:TEXT_SEARCH';
 export const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 export const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
@@ -58,17 +48,22 @@ export const SET_LOADING = 'CATALOG:SET_LOADING';
 export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
+export const FORMAT_OPTIONS_FETCH = 'CATALOG:FORMAT_OPTIONS_FETCH';
+export const FORMAT_OPTIONS_LOADING = 'CATALOG:FORMAT_OPTIONS_LOADING';
+export const SET_FORMAT_OPTIONS = 'CATALOG:SET_FORMAT_OPTIONS';
 
 /**
  * Adds a list of layers from the given catalogs to the map
  * @param {string[]} layers list with workspace to be added in the map
- * @param {string[]} sources catalog names related to each layer
+ * @param {string[] | object[] } sources catalog names related to each layer
+ * @param {object[]} options related to each layer. Can be used to overwrite default configuration or parameters
  */
-export function addLayersMapViewerUrl(layers = [], sources = []) {
+export function addLayersMapViewerUrl(layers = [], sources = [], options = []) {
     return {
         type: ADD_LAYERS_FROM_CATALOGS,
         layers,
-        sources
+        sources,
+        options
     };
 }
 /**
@@ -261,36 +256,13 @@ export function describeError(layer, error) {
 }
 
 export function addLayerAndDescribe(layer, {zoomToLayer = false} = {}) {
-    return (dispatch, getState) => {
-        const state = getState();
-        const layers = layersSelector(state);
-        const id = getLayerId(layer, layers || []);
-        dispatch(addNewLayer({...layer, id}));
-        if (zoomToLayer && layer.bbox) {
-            dispatch(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
-        }
-        if (layer.type === 'wms') {
-            // try to describe layer
-            return API.wms.describeLayers(getLayerUrl(layer), layer.name).then((results) => {
-                if (results) {
-                    let description = find(results, (desc) => desc.name === layer.name );
-                    if (description && description.owsType === 'WFS') {
-                        const filteredUrl = ConfigUtils.filterUrlParams(ConfigUtils.cleanDuplicatedQuestionMarks(description.owsURL), authkeyParamNameSelector(state));
-                        dispatch(changeLayerProperties(id, {
-                            search: {
-                                url: filteredUrl,
-                                type: 'wfs'
-                            }
-                        }));
-                    }
-                }
-
-            }).catch((e) => dispatch(describeError(layer, e)));
-        }
-
-        return null;
+    return {
+        type: ADD_LAYER_AND_DESCRIBE,
+        layer,
+        zoomToLayer
     };
 }
+
 export const addLayer = addLayerAndDescribe;
 export function addLayerError(error) {
     return {
@@ -308,6 +280,9 @@ export const changeMetadataTemplate = (metadataTemplate) => ({type: CHANGE_METAD
 export const toggleAdvancedSettings = () => ({type: TOGGLE_ADVANCED_SETTINGS});
 export const toggleTemplate = () => ({type: TOGGLE_TEMPLATE});
 export const toggleThumbnail = () => ({type: TOGGLE_THUMBNAIL});
+export const formatOptionsFetch = (url) => ({type: FORMAT_OPTIONS_FETCH, url});
+export const formatsLoading = (loading) => ({type: FORMAT_OPTIONS_LOADING, loading});
+export const setSupportedFormats = (formats, url) => ({type: SET_FORMAT_OPTIONS, formats, url});
 
 import {error} from './notifications';
 

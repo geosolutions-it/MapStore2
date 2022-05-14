@@ -44,22 +44,20 @@ export const checkZipBundle = (file, plugins = []) => {
         if (!zip.files["index.json"]) {
             throw ERROR.MISSING_INDEX;
         }
-        const bundles = zip.file(/\.js$/);
-        if (bundles.length === 1) {
-            return zip.files["index.json"].async("text").then((json) => {
-                const index = parseIndex(json, plugins);
-                if (index.error) {
-                    throw index.error;
-                }
-                return {
-                    ...index,
-                    file
-                };
-            });
-        }
+        const bundles = zip.file(/index\.js$/);
         if (bundles.length === 0) {
             throw ERROR.MISSING_BUNDLE;
         }
-        throw ERROR.TOO_MANY_BUNDLES;
+        return zip.files["index.json"].async("text").then((json) => {
+            const index = parseIndex(json, plugins);
+            if (index.error) {
+                throw index.error;
+            }
+            return {
+                ...index,
+                file
+            };
+        });
+
     });
 };

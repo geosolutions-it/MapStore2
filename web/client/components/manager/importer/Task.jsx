@@ -6,15 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'react-widgets/lib/less/react-widgets.less';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Col, Row, Panel, Label, Alert } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import { DropdownList } from 'react-widgets';
 
-import Button from '../misc/Button';
+import Button from '../../misc/Button';
 import { Message } from '../../I18N/I18N';
 import { getbsStyleForState } from '../../../utils/ImporterUtils';
 import Layer from './Layer';

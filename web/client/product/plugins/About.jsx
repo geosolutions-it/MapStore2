@@ -35,11 +35,23 @@ export default {
             BurgerMenu: {
                 name: 'about',
                 position: 1500,
+                tooltip: "aboutTooltip",
+                text: <Message msgId="about_title"/>,
+                icon: <Glyphicon glyph="info-sign"/>,
+                action: toggleControl.bind(null, 'about', null),
+                priority: 2,
+                doNotHide: true
+            },
+            SidebarMenu: {
+                name: 'about',
+                position: 1500,
+                tooltip: "aboutTooltip",
                 text: <Message msgId="about_title"/>,
                 icon: <Glyphicon glyph="info-sign"/>,
                 action: toggleControl.bind(null, 'about', null),
                 priority: 1,
-                doNotHide: true
+                doNotHide: true,
+                toggle: true
             }
         }),
     reducers: {}

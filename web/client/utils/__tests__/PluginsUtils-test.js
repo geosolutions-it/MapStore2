@@ -11,7 +11,6 @@ import {Provider} from 'react-redux';
 import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
 import assign from 'object-assign';
-import axios from '../../libs/ajax';
 
 import MapSearchPlugin from '../../plugins/MapSearch';
 
@@ -142,6 +141,142 @@ describe('PluginsUtils', () => {
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
         expect(items2.length).toBe(1);
     });
+    describe('getPluginItems - containers as array', () => {
+        it('supports arrays', () => {
+            const plugins = {
+                Test1Plugin: {
+                    Container1: [{
+                        id: 1
+                    }, {
+                        id: 2
+                    }]
+                },
+                Container1: {}
+            };
+
+            const pluginsConfig = [{
+                name: "Test1"
+            }, "Container1", "Container2"];
+            const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+            expect(items.length).toBe(2);
+            expect(items.map(({id}) => id).includes(1, 2));
+        });
+        describe('priority with arrays', () => {
+            it('Multiple containers [2,2],1', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 2
+                        }, {
+                            id: 2,
+                            priority: 2
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 1
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
+
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(2);
+                expect(items.map(({id}) => id).includes(1, 2));
+            });
+            it('Multiple containers [1,1],2', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 1
+                        }, {
+                            id: 2,
+                            priority: 1
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 2
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
+
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(0);
+                const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+                expect(items2.length).toBe(1);
+                expect(items2.map(({id}) => id).includes(3));
+            });
+
+            it('Multiple containers [1,2],2', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 1
+                        }, {
+                            id: 2,
+                            priority: 2
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 2
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
+
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(1);
+                expect(items.map(({id}) => id).includes(2));
+                const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+                expect(items2.length).toBe(1);
+                expect(items2.map(({id}) => id).includes(3));
+            });
+            it('Multiple containers [1,2],3', () => {
+                const plugins = {
+                    Test1Plugin: {
+                        Container1: [{
+                            id: 1,
+                            priority: 1
+                        }, {
+                            id: 2,
+                            priority: 2
+                        }],
+                        Container2: {
+                            id: 3,
+                            priority: 3
+                        }
+                    },
+                    Container1Plugin: {},
+                    Container2Plugin: {}
+                };
+
+                const pluginsConfig = [{
+                    name: "Test1"
+                }, "Container1", "Container2"];
+                const items = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+                expect(items.length).toBe(0);
+                const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+                expect(items2.length).toBe(1);
+                expect(items2.map(({id}) => id).includes(3));
+            });
+        });
+    });
+
 
     it('getPluginItems with showIn', () => {
         const plugins = {
@@ -358,30 +493,6 @@ describe('PluginsUtils', () => {
         });
     });
 
-    it('importPlugin', (done) => {
-        axios.get('base/web/client/test-resources/lazy/dummy.js').then(source => {
-            PluginsUtils.importPlugin(source.data, (name, plugin) => {
-                expect(name).toBe('Dummy');
-                plugin.loadPlugin((pluginDef) => {
-                    expect(pluginDef).toExist();
-                    expect(pluginDef.component).toExist();
-                    done();
-                });
-            });
-        });
-    });
-
-    it('loadPlugin', (done) => {
-        PluginsUtils.loadPlugin('base/web/client/test-resources/lazy/dummy.js').then(({name, plugin}) => {
-            expect(name).toBe('Dummy');
-            plugin.loadPlugin((pluginDef) => {
-                expect(pluginDef).toExist();
-                expect(pluginDef.component).toExist();
-                done();
-            });
-        });
-    });
-
     it('combineReducers', () => {
         const P1 = {
             reducers: {
@@ -444,5 +555,53 @@ describe('PluginsUtils', () => {
             expect(counter).toBe(1);
             done();
         });
+    });
+    it('should load lazy plugins with stateSelector', () => {
+
+        const pluginDef = {
+            name: 'StateSelectorLazy',
+            stateSelector: 'selector'
+        };
+        const pluginWithSelectorState = (stateSelector) => function Plugin() { return <div className={stateSelector}></div>; };
+        const plugins = {
+            StateSelectorLazyPlugin: {
+                loadPlugin: (resolve) => resolve(pluginWithSelectorState)
+            }
+        };
+        const loadedPlugins = {
+            StateSelectorLazy: pluginWithSelectorState
+        };
+        const { impl: LoadedPlugin } = PluginsUtils.getPluginDescriptor({}, plugins, [], pluginDef, loadedPlugins);
+        ReactDOM.render(<LoadedPlugin/>, document.getElementById('container'));
+        expect(document.querySelector('.selector')).toBeTruthy();
+    });
+
+    it('should not throw an error if the loaded plugin is an object with component key', () => {
+
+        function MockStyleEditor() {
+            return <div></div>;
+        }
+        const pluginDef = {
+            ToolbarComponent: () => null,
+            cfg: {},
+            items: [],
+            name: 'StyleEditor',
+            plugin: MockStyleEditor,
+            priority: 1,
+            target: 'style'
+        };
+
+        const loadedPlugins = {
+            StyleEditor: {
+                component: MockStyleEditor,
+                containers: {},
+                epics: {},
+                name: 'StyleEditor',
+                reducers: {}
+            }
+        };
+        const result = PluginsUtils.getConfiguredPlugin(pluginDef, loadedPlugins);
+        expect(result.loaded).toBe(true);
+
     });
 });

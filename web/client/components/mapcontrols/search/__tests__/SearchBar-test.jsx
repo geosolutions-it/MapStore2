@@ -16,7 +16,11 @@ import SearchBar from '../SearchBar';
 import TestUtils from 'react-dom/test-utils';
 
 describe("test the SearchBar", () => {
-    const items = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => <MenuItem>Search by bookmark</MenuItem>}];
+    const items = [{
+        name: 'SearchByBookmark',
+        bookmarkConfig: () =>({glyph: "cog", visible: true}),
+        menuItem: () => <MenuItem>Search by bookmark</MenuItem>
+    }];
 
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -445,7 +449,11 @@ describe("test the SearchBar", () => {
         const actions = {
             onToggleControl: () =>{}
         };
-        const itemsProps = [{bookmarkConfig: (toggleConfig) =>({onClick: () => toggleConfig("searchBookmarkConfig"), glyph: "cog", visible: true}), menuItem: () => <MenuItem>Search by bookmark</MenuItem>}];
+        const itemsProps = [{
+            name: 'SearchByBookmark',
+            bookmarkConfig: (toggleConfig) =>({onClick: () => toggleConfig("searchBookmarkConfig"), glyph: "cog", visible: true}),
+            menuItem: () => <MenuItem>Search by bookmark</MenuItem>
+        }];
         const spyOnToggleControl = expect.spyOn(actions, 'onToggleControl');
         const props = {
             showOptions: true,

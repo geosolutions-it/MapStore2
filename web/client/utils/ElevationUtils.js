@@ -31,10 +31,10 @@ const addErroredElevationTile = (error, coords, key) => {
     });
 };
 
-const getValueAtXY = (ncols, tile, x, y, nodata = -9999) => {
+const getValueAtXY = (ncols, tile, x, y, nodata = -9999, littleendian = false) => {
     const index = (y * ncols) + x;
     try {
-        const result = tile.dataView.getInt16(index * 2, false);
+        const result = tile.dataView.getInt16(index * 2, littleendian);
         if (result !== nodata && result !== 32767 && result !== -32768) {
             return result;
         }
@@ -77,17 +77,18 @@ export const loadTile = (url, coords, key) => {
  * @param tilePixelPosition a pixel position inside the tile (x, y)
  * @param tileSize in pixels (e.g. 256)
  * @param nodata value to be used for nodata (no elevation available)
+ * @param littleendian whether or not the BIL data is in little endian or big endian
  * @returns an object with the following properties:
  *   * available: true / false
  *   * value: elevation value if available is true
  *   * message: an error message if available is false
  */
-export const getElevation = (key, tilePixelPosition, tileSize, nodata = -9999) => {
+export const getElevation = (key, tilePixelPosition, tileSize, nodata = -9999, littleendian = false) => {
     const tile = elevationTiles.get(key);
     if (tile && tile.status === "success") {
         return {
             available: true,
-            value: getValueAtXY(tileSize, tile, tilePixelPosition.x, tilePixelPosition.y, nodata)
+            value: getValueAtXY(tileSize, tile, tilePixelPosition.x, tilePixelPosition.y, nodata, littleendian)
         };
     } else if (tile && tile.status === "loading") {
         return {

@@ -14,7 +14,7 @@ import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 
 import axios from '../libs/ajax';
-import { getWFSFilterData } from '../utils/FilterUtils';
+import { createFeatureFilter, getWFSFilterData } from '../utils/FilterUtils';
 import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -80,6 +80,103 @@ export const getPagination = (filterObj = {}, options = {}) =>
             startIndex: options.startIndex,
             maxFeatures: options.maxFeatures
         };
+
+const createFeatureCollection = (features) => (
+    {
+        crs: {type: "name", properties: {name: "urn:ogc:def:crs:EPSG::4326"}},
+        numberMatched: features.length,
+        numberReturned: features.length,
+        timeStamp: "2020-07-20T11:36:20.118Z",
+        totalFeatures: features.length,
+        type: 'FeatureCollection',
+        features: features
+    }
+);
+
+const getFeaturesFiltered = (features, filterObj) => {
+    if (filterObj.filterFields && filterObj.filterFields.length !== 0) {
+        const featuresFiltered = features.features.filter(createFeatureFilter(filterObj));
+
+        features.features = featuresFiltered;
+        features.numberMatched = featuresFiltered.length;
+        features.numberReturned = featuresFiltered.length;
+        features.totalFeatures = featuresFiltered.length;
+    }
+    if (filterObj.sortOptions && filterObj.sortOptions.sortBy && filterObj.sortOptions.sortOrder &&
+        filterObj.sortOptions.sortOrder !== "NONE") {
+        features.features.sort((a, b) => {
+            const avalue = a.properties[filterObj.sortOptions.sortBy];
+            const bvalue = b.properties[filterObj.sortOptions.sortBy];
+            const diff = avalue.toLowerCase().localeCompare(bvalue.toLowerCase());
+            if (filterObj.sortOptions.sortOrder === "ASC") {
+                return diff;
+            }
+
+            return -1 * diff;
+        });
+    }
+    return features;
+
+};
+
+/**
+ * Get data and query string for WFS query for either JSON or XML formats
+ * @param {string} searchUrl URL of WFS service
+ * @param {object} filterObj FilterObject
+ * @param {*} downloadOption selected format for query
+ * @returns {Object} The data and query string
+ */
+const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption = 'json') => {
+    const data = getWFSFilterData(filterObj, options);
+
+    const urlParsedObj = urlUtil.parse(searchUrl, true);
+    let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
+    params.service = 'WFS';
+    params.outputFormat = downloadOption;
+    const queryString = urlUtil.format({
+        protocol: urlParsedObj.protocol,
+        host: urlParsedObj.host,
+        pathname: urlParsedObj.pathname,
+        query: params
+    });
+
+    if (options.layer && options.layer.type === 'vector') {
+        return Rx.Observable.defer(() => new Promise((resolve) => {
+            let features = createFeatureCollection(options.layer.features);
+            let featuresFiltered = getFeaturesFiltered(features, filterObj);
+            resolve(featuresFiltered);
+        }));
+    }
+
+    return {
+        data,
+        queryString
+    };
+};
+
+/**
+ * Get Features in xml format.
+ * @param {string} searchUrl URL of WFS service
+ * @param {object} filterObj FilterObject
+ * @param {*} downloadOption selected format for download
+ * @returns {Observable} a stream that emits the XML
+ */
+export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption) => {
+
+    if (options.layer && options.layer.type === 'vector') {
+        return getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
+    }
+
+    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
+
+    return Rx.Observable.defer(() =>
+        axios.post(queryString, data, {
+            timeout: 60000,
+            responseType: 'arraybuffer',
+            headers: { 'Accept': `application/xml`, 'Content-Type': `application/xml` }
+        }));
+};
+
 /**
  * Get Features in json format. Intercepts request with 200 errors and workarounds GEOS-7233 if `totalFeatures` is passed
  * @param {string} searchUrl URL of WFS service
@@ -88,23 +185,17 @@ export const getPagination = (filterObj = {}, options = {}) =>
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
 export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
-    const data = getWFSFilterData(filterObj, options);
 
-    const urlParsedObj = urlUtil.parse(searchUrl, true);
-    let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
-    params.service = 'WFS';
-    params.outputFormat = 'json';
-    const queryString = urlUtil.format({
-        protocol: urlParsedObj.protocol,
-        host: urlParsedObj.host,
-        pathname: urlParsedObj.pathname,
-        query: params
-    });
+    if (options.layer && options.layer.type === 'vector') {
+        return getFeatureUtilities(searchUrl, filterObj, options);
+    }
+
+    const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options);
 
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
             timeout: 60000,
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+            headers: { 'Accept': 'application/json', 'Content-Type': `application/xml` }
         }))
         .let(interceptOGCError)
         .map((response) => workaroundGEOS7233(response.data, getPagination(filterObj, options), options.totalFeatures));
@@ -198,3 +289,4 @@ export default {
     describeFeatureType,
     getLayerWFSCapabilities
 };
+

@@ -1,13 +1,53 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .modal-properties-container {
+
+        .dropzone-thumbnail-container,
+        .dropzone-filedrop-container {
+            .dropzone {
+                .background-color-var(@theme-vars[main-bg]);
+            }
+        }
+
+        .ms-section {
+            &.ms-transition {
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+
+        .ms-permissions-container {
+            .ms-permission-row {
+                .Select {
+                    .Select-control {
+                        .Select-arrow-zone {
+                            .border-color-var(@theme-vars[main-border-color]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms-detail-body {
     padding: 15px;
 
     p {
         word-wrap: break-word;
     }
-
-    /*img {
-        width: 100%;
-    }*/
 }
 
 .mapstore-permission-group {
@@ -17,13 +57,13 @@
         display: flex;
         padding: 0 15px;
         .ms-col-grab {
-            width: @icon-size / 2;
+            width: (@icon-size / 2);
             padding: 0;
             overflow: hidden;
             display: flex;
             span {
-                width: @icon-size / 4;
-                height: @icon-size / 2;
+                width: (@icon-size / 4);
+                height: (@icon-size / 2);
                 margin: auto;
             }
         }
@@ -60,7 +100,7 @@
         }
     }
     .col-xs-12 {
-        margin-top: ( @square-btn-size - 34px) / 2;
+        margin-top: (( @square-btn-size - 34px) / 2);
         .form-group {
 
             height: @square-btn-size;
@@ -71,29 +111,34 @@
             label {
 
                 .col-xs-6;
+                padding: 0;
                 float: left;
                 font-weight: normal;
                 line-height: 34px;
                 margin: 0;
-                margin-top:( @square-btn-size - 34px) / 2;
+                margin-top:(( @square-btn-size - 34px) / 2);
             }
             input {
-                margin-top:( @square-btn-size - 34px) / 2;
+                margin-top:(( @square-btn-size - 34px) / 2);
                 float: left;
                 .col-xs-6;
+                padding: 4px 8px;
             }
         }
     }
     .dropzone-thumbnail-container, .dropzone-filedrop-container {
         label {
             .col-xs-6;
+            padding: 0;
             float: left;
+
             font-weight: normal;
         }
         .dropzone {
             overflow: hidden;
             float: left;
             .col-xs-6;
+            padding: 0;
             transition: 0.3s;
             &:hover {
                 transform: scale(1.05);
@@ -101,7 +146,6 @@
                     font-size: inherit !important;
                 }
             }
-            background-color: @ms2-color-background;
             .shadow-soft;
             border: none;
             max-width: 300px;
@@ -119,11 +163,8 @@
         .ms-details-preview-container {
             overflow-y: auto;
             flex: 1;
-            overflow-y: auto;
             .ms-details-preview {
-                width: ~"calc(100% - 30px)";
                 margin: 5px 15px;
-                padding: 10px;
                 height: auto;
                 min-height: 500px;
                 .shadow;
@@ -135,7 +176,6 @@
                 }
                 p {
                     word-wrap: break-word;
-                    width: 100%;
                 }
             }
         }
@@ -145,7 +185,8 @@
 
                 flex: 1;
                 height: auto;
-                border-bottom: 1px solid @ms2-color-shade-lighter;
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
                 /* workaround for height transition */
 
                 /* end - workaround for height transition */
@@ -190,8 +231,6 @@
     }
 
     .ms-permissions-container {
-        /*border-bottom: 1px solid @ms2-color-shade-lighter;*/
-
         z-index: 50;
         & > .row {
             & > .col-xs-12 {
@@ -201,7 +240,6 @@
         .ms-permission-row {
             width: 100%;
 
-            /*border-left: 2px solid contrast(@ms2-color-background);*/
             height: @square-btn-size;
             & > * {
                 float: left;
@@ -221,13 +259,14 @@
                     }
                     .Select-arrow-zone {
                         padding-left: 5px;
-                        border-left: 1px solid @ms2-color-shade-lighter;
+                        border-left-width: 1px;
+                        border-left-style: solid;
                     }
                 }
             }
             button {
                 float: right;
-                margin-top: (@square-btn-size - @square-btn-medium-size) / 2;
+                margin-top: ((@square-btn-size - @square-btn-medium-size) / 2);
             }
             .ms-permission-title {
                 width: ~"calc(50% - 20px)";
@@ -242,7 +281,6 @@
             border-left: none;
             margin-bottom: @square-btn-size / 4;
             margin-top: 10px;
-            /*border-bottom: 1px solid @ms2-color-shade-lighter;*/
         }
     }
 
@@ -251,13 +289,13 @@
         margin: 0;
 
         .m-label {
-            margin-top:( @square-btn-size - @square-btn-medium-size) / 2;
+            margin-top:(( @square-btn-size - @square-btn-medium-size) / 2);
             height: @square-btn-medium-size;
             line-height: @square-btn-medium-size;
         }
 
         .btn-group {
-            margin-top:( @square-btn-size - @square-btn-medium-size) / 2;
+            margin-top:(( @square-btn-size - @square-btn-medium-size) / 2);
         }
 
         .ms-details-sheet {
@@ -276,13 +314,6 @@
                 width: 100%;
                 height: auto;
             }
-            /*.shadow;*/
-
-            /*&:hover {
-                @move-up: @square-btn-size * 3 / 4;
-                cursor: pointer;
-                transform: ~"translateY(-@{move-up})";
-            }*/
         }
     }
 }
@@ -292,10 +323,10 @@
         margin: 4px 0;
         padding-left: 4px;
         padding-right: 4px;
-        height: @square-btn-size * 3.5;
+        height: @square-btn-size * 4.5;
         overflow: visible;
         .gridcard {
-            height: @square-btn-size * 3.5;
+            height: @square-btn-size * 4.5;
             transition: all 0.3s;
             &:hover {
                 .shadow-far;

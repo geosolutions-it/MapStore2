@@ -89,6 +89,7 @@ import Button from '../../misc/Button';
  * @prop {string} defaultShapeSize default symbol shape size in px
  * @prop {object} defaultStyles object with default symbol styles
  * @prop {number} textRotationStep rotation step of text styler
+ * @prop {boolean} geodesic draw geodesic annotation (Currently applicable only for Circle annotation)
  *
  * the annotation's attributes.
  */
@@ -146,7 +147,8 @@ class Annotations extends React.Component {
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
         textRotationStep: PropTypes.number,
-        measurementAnnotationEdit: PropTypes.bool
+        measurementAnnotationEdit: PropTypes.bool,
+        geodesic: PropTypes.bool
     };
 
     static contextTypes = {
@@ -266,7 +268,8 @@ class Annotations extends React.Component {
                 }}
                 btnGroupProps={{
                     style: {
-                        margin: 10
+                        margin: 10,
+                        whiteSpace: 'nowrap'
                     }
                 }}
                 buttons={[
@@ -348,7 +351,7 @@ class Annotations extends React.Component {
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
         const Editor = this.props.editor;
         if (this.props.mode === 'detail') {
-            return (<Editor feature={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width}
+            return (<Editor feature={annotation} geodesic={this.props.geodesic} showBack id={this.props.current} config={this.props.config} width={this.props.width}
                 {...annotation.properties}
             />);
         }
@@ -368,6 +371,7 @@ class Annotations extends React.Component {
             textRotationStep={this.props.textRotationStep}
             annotations={this.props.annotations}
             measurementAnnotationEdit={this.props.measurementAnnotationEdit}
+            geodesic={this.props.geodesic}
         />;
     };
 
@@ -376,16 +380,16 @@ class Annotations extends React.Component {
             <div style={this.props.styling || { width: '100%' }}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <div>
-                        <Button className="square-button no-events">
-                            <Glyphicon glyph="comment"/>
+                        <Button className="square-button no-border" onClick={this.props.toggleControl} >
+                            <Glyphicon glyph="1-close"/>
                         </Button>
                     </div>
                     <div style={{flex: "1 1 0%", padding: 8, textAlign: "center"}}>
                         <h4><Message msgId="annotations.title"/></h4>
                     </div>
                     <div>
-                        <Button className="square-button no-border" onClick={this.props.toggleControl} >
-                            <Glyphicon glyph="1-close"/>
+                        <Button className="square-button no-events">
+                            <Glyphicon glyph="comment"/>
                         </Button>
                     </div>
                 </div>

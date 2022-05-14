@@ -17,7 +17,10 @@ export default {
     pages: [{
         name: "mapviewer",
         path: "/:mapId",
-        component: require('./pages/MapViewer').default
+        component: require('./pages/MapViewer').default,
+        pageConfig: {
+            className: 'viewer map-viewer-embedded'
+        }
     }],
     pluginsDef: require('./apiPlugins.js').default,
     initialState: {

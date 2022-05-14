@@ -43,7 +43,7 @@ const TEST_URL_OPTIONS = {
 const BASE_STATE = mockState({ featuregrid, dimension, layers })(
     addLayer({id: LAYER_ID, type: "wms"}),
     updateLayerDimensionData(LAYER_ID, "time", {type: "something"}),
-    setLayer(LAYER_ID),
+    setLayer(LAYER_ID)
 );
 const TIME_STATE = mockState({ featuregrid, dimension, layers}, BASE_STATE)(
     changeLayerParams(LAYER_ID, {

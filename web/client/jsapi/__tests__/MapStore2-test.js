@@ -16,13 +16,44 @@ import { CHANGE_BROWSER_PROPERTIES } from '../../actions/browser';
 import { LOCAL_CONFIG_LOADED } from '../../actions/localConfig';
 import expect from 'expect';
 import MapStore2 from '../MapStore2';
+import { getApi, setApi } from '../../api/userPersistedStorage';
 
 const testConfig = {
     versionURL: 'base/web/client/test-resources/version.txt',
     configUrl: 'base/web/client/test-resources/geostore/data/1#',
     originalUrl: 'base/web/client/test-resources/geostore/extjs/search/category/MAP/1.json#'
 };
-describe.skip('MapStore2 API', () => {
+
+describe('MapStore2 API', () => {
+    describe('loadConfigFromStorage', () => {
+        let api = null;
+        beforeEach(() => {
+            api = getApi();
+            setApi("localStorage");
+            api.removeItem("mapstore.embedded");
+        });
+        it('not found mapstore.embedded in default storage', (done) => {
+            const cfg = MapStore2.loadConfigFromStorage();
+            expect(cfg).toBe(null);
+            done();
+        });
+        it('found a result mapstore.embedded in default storage', (done) => {
+            api.setItem("mapstore.embedded", JSON.stringify({"key": 2}));
+            const cfg = MapStore2.loadConfigFromStorage();
+            expect(cfg).toEqual({ key: 2 });
+            done();
+        });
+        it('found a result mapstore.embedded in default storage', (done) => {
+            expect(api.getItem("mapstore.embedded")).toBeFalsy();
+            setApi("memoryStorage");
+            api = getApi();
+            api.setAccessDenied(true);
+            const cfg = MapStore2.loadConfigFromStorage();
+            expect(cfg).toEqual(null);
+            api.setAccessDenied(false);
+            done();
+        });
+    });
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         ConfigUtils.setLocalConfigurationFile('base/web/client/test-resources/localConfig.json');
@@ -49,7 +80,7 @@ describe.skip('MapStore2 API', () => {
             ...testConfig
         });
     });
-    it('initMap action called before map load action', (done) => {
+    it.skip('initMap action called before map load action', (done) => {
 
         MapStore2.create('container', {
             epics: {

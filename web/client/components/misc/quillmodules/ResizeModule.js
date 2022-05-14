@@ -517,13 +517,13 @@ export default Quill => {
             this.removeModules();
 
             this.modules = this.moduleClasses.map(
-                ModuleClass => new (knownModules[ModuleClass] || ModuleClass)(this),
+                ModuleClass => new (knownModules[ModuleClass] || ModuleClass)(this)
             );
 
             this.modules.forEach(
                 (module) => {
                     module.onCreate();
-                },
+                }
             );
 
             this.onUpdate();
@@ -534,7 +534,7 @@ export default Quill => {
             this.modules.forEach(
                 (module) => {
                     module.onUpdate();
-                },
+                }
             );
         };
 
@@ -542,7 +542,7 @@ export default Quill => {
             this.modules.forEach(
                 (module) => {
                     module.onDestroy();
-                },
+                }
             );
 
             this.modules = [];

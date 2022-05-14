@@ -55,9 +55,16 @@ Through the second section of the layer settings panel it is possible to change 
 
 In particular, the user is allowed to:
 
-* Set the rendering image format (choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif`)
+* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` and `gif` 
+
+!!! note
+    The list of available format is the same of the related [catalog source](catalog.md#catalog-types). Therefore, for WMS services, the updated list of formats supported by the WMS server is used.
+    
+* Set the size of layer tiles: choosing between `256` or `512`
 
 * Set the opacity value of the layer (in %)
+
+* Enable/disable the **Visibility limits** to display the layer only within certain scale limits. The user is allowed to request the `MinScaleDenominator` and  `MaxScaleDenominator` value present on the *WMS GetCapabilities* of the layer though the <img src="../img/button/sync_to_server.jpg" class="ms-docbutton"/> button or set the *Max value* and the *Min value* and select the *Limits type* choosing between `Scale` or `Resolution`.
 
 * Enable/disable the transparency for that layer
 
@@ -67,9 +74,14 @@ In particular, the user is allowed to:
 
 * Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wms/wmtscatalog)
 
+* Enable/disable the _Force proxy_ layer option. If enabled, forces the application to check the source and applies proxy if needed. 
+
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.
+
+!!!Warning
+    The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources. 
 
 ## Style
 
@@ -103,7 +115,7 @@ It is possible to create a new style with a click on the <img src="../img/button
 <img src="../img/layer-settings/style_editor_add_style_template.jpg" class="ms-docimage" style="max-width:500px;">
 
 !!!note
-    The availability of the style formats depends, firstly, from the [GeoServer](http://geoserver.org/). [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), by default, will add all the supported format that the server provides. To edit or create styles using the CSS format the [CSS extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html) must be installed in GeoServer
+    The availability of the style formats depends, firstly, from the [GeoServer](http://geoserver.org/). [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), by default, will add all the supported format that the server provides. To edit or create styles using the CSS format the [CSS extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html) must be installed in GeoServer
 
 Once the new style is chosen, with a click on the <img src="../img/button/style_editor_add_style_button.jpg" class="ms-docbutton"/> button the following window opens:
 
@@ -134,6 +146,136 @@ The editor is easy to approach thanks also to the following functions:
 !!!warning
     The *autocomplete* and the *color picker* functions are available only in the CSS editor.
 
+### Visual Editor Style
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) also allows to edit the layers style using a *Visual editor* with a most user friendly UI.Clicking on the <img src="../img/button/visual_editor_style_button.jpg" class="ms-docbutton"/> button a section opens so that the user can customize the style through with a visual style editor by adding/editing symbolizers, which can be: *Mark*, *Icon*, *Line*, *Fill* and *Text*. It is anyway possible to switch to the text editor mode if necessary for a more complex styling.
+
+<img src="../img/layer-settings/visual_editor_style.jpg" class="ms-docimage"  style="max-width:500px;">
+
+Once a symbolizer has been added and customized, you can:
+
+<img src="../img/layer-settings/style_options.jpg" class="ms-docimage"  style="max-width:500px;">
+
+* **Filter** the style rule, as explained [here](filtering-layers.md#attribute-filter), in order to apply the style only to certain layer features. It is possible clicking on the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button.
+
+* Add a **Scale denominator filter** (`max` and `min` scale) to visualize the style rule only within certain scale limits. This is possible by clicking the <img src="../img/button/scale_denominator_button.jpg" class="ms-docbutton"/> button.
+
+* **Remove** the symbolizer by clicking the <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/> button.
+
+#### Mark
+
+The mark type allows you to add a mark to the layer: clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button a mark panel appears: 
+
+<img src="../img/layer-settings/mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The mark can have different `Shape`, `Color`, `Stroke` with different `Color` and `Width` and customizable `Radius` and `Rotation`. Take a look at the following example.
+
+<img src="../img/layer-settings/mark_style_ex.jpg" class="ms-docimage">
+
+#### Icon 
+
+With the icon panel, which opens by clicking on <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, the style editor is allowed to add an image as an icon (by specifying its *URL*) and customize the icon `Opacity`, `Size` and `Rotation` angle:
+
+<img src="../img/layer-settings/icon_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+#### Line
+
+The line rule is used to style linear features of the layer: clicking on the <img src="../img/button/add_line_button.jpg" class="ms-docbutton"/>  button a panel allows the user to edit the corresponding properties. 
+
+<img src="../img/layer-settings/line_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The editor can change the `Stroke color`, the `Stroke width`, the `Line style` (*continuous*, *dashed*, etc), the `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). An example can be the following one:
+
+<img src="../img/layer-settings/ex_line_style.gif" class="ms-docimage">
+
+#### Fill
+
+The Fill rule is used to style polygon features. Clicking on <img src="../img/button/add_fill_button.jpg" class="ms-docbutton"/> button, the editor is allowed to customize the `Fill color`, the `Outline color` and the `Outline width`:
+
+<img src="../img/layer-settings/ex_fill_style.gif" class="ms-docimage">
+
+#### Text
+
+The Text rule is used to style features as text labels. Text labels are positioned either at points or along linear paths derived from the geometry being labelled. Clicking on the <img src="../img/button/add_text_button.jpg" class="ms-docbutton"/> button a specific panel opens: 
+
+<img src="../img/layer-settings/text_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
+
+<img src="../img/layer-settings/ex_text_style.gif" class="ms-docimage">
+
+### Style Methods 
+
+Different styles methods can be used for each style rule. Clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel of each symbolizer, the editor can choose one of the following depending on the rule type:
+
+* *Simple style*
+
+* *Classification style*
+
+* *Pattern mark style*  (available only for rules of type Line and Fill)
+
+* *Patter icon style*  (available only for rules of type Line and Fill)
+
+#### Simple style
+
+The Simple style is the default style described above for each symbolizer. 
+
+#### Classification style
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to classify the style based on the attributes of the layer. The *Classification style* is available for *Marker*, *Line*, *Fill* and *Text* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Classification style** options from the dropdown menu. 
+
+<img src="../img/layer-settings/classification_styl_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+It this case the editor is allowed to choose a `Color ramp` and the order (with `Reverse order`) of the classification intervals colors. It is obviously possible to select the layer `Attribute` to use for the classification along with the classification `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Standard deviation*), the number of classification `Intervals` and the `Opacity` (%) of each interval range. An example of the *Classification style* for a *Fill* rule type can be the following one:
+
+<img src="../img/layer-settings/classification_style_ex.jpg" class="ms-docimage">
+
+#### Pattern mark style
+
+With the *Pattern mark style* it is possible to represent *Line* or *Fill*  style rules with a mark by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern mark style** options from the dropdown menu. 
+
+<img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The style editor can configure a *Mark* as explained [here](layer-settings.md#mark) along with the usual options available for rules of type [line](layer-settings.md#line) or [fill](layer-settings.md#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
+
+<img src="../img/layer-settings/classify_mark_ex.jpg" class="ms-docimage">
+
+#### Patter icon style
+
+With the *Pattern icon style*  it is possible to represent *Line* or *Fill* style rules with an icon by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern icon style** options from the dropdown menu. 
+
+<img src="../img/layer-settings/classify_icon_style_panel.jpg" class="ms-docimage"  style="max-width:500px;">
+
+The style editor can configure the *Icon* as explained [here](layer-settings.md#icon) along with the usual options available for rules of type [line](layer-settings.md#line) or [fill](layer-settings.md#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
+
+<img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
+
+### Create a style for 3D Tiles
+
+With [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to customize the style of a [3D Tiles layer](catalog.md#3d-tiles-catalog) client side. The MapStore support is working in respect of the [3D Tiles Specification 1.0](http://docs.opengeospatial.org/cs/18-053r2/18-053r2.html) and on top of the [Cesium Styling capabilities](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling). Below is an example of how the Style Editor of a 3D Tiles layer is appearing in the MapStore UI.
+
+<img src="../img/layer-settings/3dtiles_style.jpg" class="ms-docimage">
+
+For the 3D Tiles styling, while with the **Code Text Editor** it is possible to leverage completely on the styling specifications:
+
+<img src="../img/layer-settings/text-editor-3dtiles.jpg" class="ms-docimage">
+
+The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Style Editor** supports for now only a limited set of capabilities:
+
+* Customization of the **Fill color** 
+
+<img src="../img/layer-settings/ex_3dtiles_style.gif" class="ms-docimage">
+
+* Style Rule filtering based on the available [properties dictionary ](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification#properties) defined in the tileset.json
+
+<img src="../img/layer-settings/filter_3dtiles_style.jpg" class="ms-docimage">
+
+* Possibility to customize the radius in case of point cloud features
+
+<img src="../img/layer-settings/point_3dtiles_text.jpg" class="ms-docimage">
+
+<img src="../img/layer-settings/point_3dtiles_visual.jpg" class="ms-docimage">
+
 ## Feature Info Form
 
 Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](side-bar.md#identify-tool):
@@ -141,6 +283,8 @@ Through the last section of the layer settings panel, it is possible to decide t
 <img src="../img/layer-settings/feature-info-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 In particular, the user can choose between:
+
+* **Disable Identify** to disable the Identify for the layer
 
 * **Text**
 

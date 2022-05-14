@@ -5,15 +5,17 @@ The MapStore2 [plugins architecture](../plugins-architecture) allows building yo
 Extensions are plugins that can be distributed as a separate package (a zip file), and be installed, activated and used at runtime.
 Creating an extension is similar to creating a plugin. If you are not familiar with plugins, please, read the [Plugins HowTo page](../plugins-howto) first.
 
-## Introduction
+## Developing an extension
 
-During this tutorial, you will learn how to create and build a plugin as an extension for MapStore.
+The easiest way to develop an extension is to start from the [MapStoreExtension project](https://github.com/geosolutions-it/MapStoreExtension) that gives you a sandbox to create/test and build your extension.
+
+Read [the readme of the project](https://github.com/geosolutions-it/MapStoreExtension/blob/master/README.md) to understand how to run, debug and build a new extension starting from the sampleExtension in the project.
+
+Here you can find some details about the structure extension files, useful for development and debugging.
 
 ## An extension example
 
 A MapStore extension is a plugin, with some additional features.
-
-`build/extensions/plugins/SampleExtension.jsx`
 
 ```javascript
 import {connect} from "react-redux";
@@ -71,45 +73,31 @@ As you can see from the code, the most important difference is that you need to 
 The extension definition will import or define all the needed dependencies (components, reducers, epics) as well as the plugin configuration elements
 (e.g. containers).
 
-### Testing your extension
-
-The extension source code has to be stored *INSIDE* the MapStore source code tree. We suggest to modify the sample app in the `build/extensions` folder.
-Edit the `plugins/SampleExtension.jsx` file to create your own extension (and add any additional files you may need).
-
-To run the sample app (with your extension) in developer mode, use the following command:
-
-```javascript
-npm run run-extension
-```
-
-This works exactly as npm start, but will give you a simple map viewer with your extension included.
-
-### Building the compiled extension bundle
-
-To build an extension a specific npm run task can be used:
-
-```javascript
-npm run build-extension
-```
-
-You will find the built javascript in `build/extensions/dist/extension.js`
-
 ### Distributing your extension as an uploadable module
 
-To distribute your extension so that it can be uploaded to a running MapStore instance and included in a context, you have to create a zip file with the following content:
+The sample project allow you to create the final zip file for you.
 
-* the js bundle built above, renamed to a convenient file name (e.g. `my-wonderful-extension.js`)
+The final zip file must have this form:
+
+* the file named `index.js` is the main entry point, for the module.
 * an `index.json` file that describes the extension, an example follows
-* optionally, a translations folder with localized message files used by the extension (in one or more languages of your choice)
-
-...note: You will find both the `index.json` file and a sample translation folder in `build/extensions/bundle`.
+* `assets` folder, that contains additional bundles (js, css) came out from the bundle compilation. All additional files (js chunks, css ...) must stay in this folder.
+* optionally, a `translations` folder with localized message files used by the extension (in one or more languages of your choice)
 
 ```text
 my-extension.zip
 |── index.js
 ├── index.json
+├── assets
+    ├── css
+        └── 123.abcd.css
+        └── ...
+    └── js
+        └── 456.abcd.js
+        └── ...
 └── translations
     └── data.en_EN.json
+    └── ...
 ```
 
 #### index.json
@@ -117,7 +105,8 @@ my-extension.zip
 The `index.json file should contain all the information about the extension:
 
 * An `id` that identifies the extension
-* A `version` to show in UI. Semantic versioning is suggested.
+* A `version` to show in UI. Semantic versioning is suggested.+
+
 * `title` and `description` to display in UI, mnemonic hints for the administrator
 * `plugins` the list of plugins that it adds to the application, with all the data useful for the context manager. Format of the JSON object for plugins is suggested [here](https://github.com/georchestra/mapstore2-georchestra/issues/15#issuecomment-564974270)
 
@@ -179,7 +168,7 @@ ConfigUtils.setConfigProp("contextPluginsConfiguration", "rest/config/load/plugi
 Change `app.jsx` to include the following statement:
 
 ```javascript
-ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=");
+ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset");
 ```
 
 Assets are loaded using a different service, `/rest/config/loadasset`.

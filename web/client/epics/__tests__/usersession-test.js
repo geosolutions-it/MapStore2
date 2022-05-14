@@ -6,9 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { testEpic } from './epicTestUtils';
-import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator, loadUserSessionEpicCreator } from "../usersession";
+import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator, loadUserSessionEpicCreator, removeUserSessionEpicCreator } from "../usersession";
 import { saveUserSession, loadUserSession,
-    USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION, USER_SESSION_LOADED, userSessionStartSaving, userSessionStopSaving } from "../../actions/usersession";
+    USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION, USER_SESSION_LOADED, USER_SESSION_REMOVED, userSessionStartSaving, userSessionStopSaving, removeUserSession
+} from "../../actions/usersession";
+import { CLOSE_FEATURE_GRID } from '../../actions/featuregrid';
+import { TEXT_SEARCH_RESET } from '../../actions/search';
 import expect from "expect";
 import {Providers} from  "../../api/usersession";
 import {Observable} from "rxjs";
@@ -42,7 +45,7 @@ describe('usersession Epics', () => {
         Providers.test = {
             getSession: () => Observable.of(["1", {}]),
             writeSession: (id) => Observable.of(id),
-            removeSession: () => () => Observable.empty()
+            removeSession: (id) => Observable.of(id)
         };
     });
     afterEach(() =>  {
@@ -114,6 +117,22 @@ describe('usersession Epics', () => {
             expect(actions[1].type).toBe(USER_SESSION_LOADED);
             expect(actions[1].id).toBe("1");
             expect(actions[1].session).toExist();
+        }, initialState, done);
+    });
+
+    it('user session is removed', (done) => {
+        testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
+            expect(actions[0].type).toBe(USER_SESSION_LOADING);
+            expect(actions[1].type).toBe(USER_SESSION_REMOVED);
+            expect(actions[1].id).toBeFalsy();
+            expect(actions[1].session).toBeFalsy();
+        }, initialState, done);
+    });
+
+    it('CLOSE_FEATURE_GRID and TEXT_SEARCH_RESET actions are triggered', (done) => {
+        testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
+            expect(actions[2].type).toBe(CLOSE_FEATURE_GRID);
+            expect(actions[3].type).toBe(TEXT_SEARCH_RESET);
         }, initialState, done);
     });
 

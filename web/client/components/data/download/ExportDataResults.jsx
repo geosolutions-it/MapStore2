@@ -54,7 +54,7 @@ const ExportDataResults = ({
                             </OverlayTrigger> : null}
                         {status === 'failed' && (!result || !result.msgId) ? failButton : null}
                         {status === 'completed' &&
-                            <a href={result}>
+                            <a href={result} target="_blank" rel="noopener noreferrer">
                                 <Button bsStyle="primary" bsSize="small">
                                     <Glyphicon glyph="floppy-disk"/>
                                 </Button>

@@ -18,26 +18,35 @@ let startEvent = isTouchSupported ? 'touchstart' : 'mousedown';
 let moveEvent = isTouchSupported ? 'touchmove' : 'mousemove';
 let endEvent = isTouchSupported ? 'touchend' : 'mouseup';
 
+
+function getGMapsLib() {
+    return window?.google?.maps;
+}
 Layers.registerType('google', {
     create: (options, map, mapId) => {
         if (document.getElementById(mapId + 'gmaps')) {
-            let google = window.google;
+            let gMapsLib = getGMapsLib();
+            if (!gMapsLib) {
+                return null;
+            }
             if (!layersMap) {
                 layersMap = {
-                    'HYBRID': google.maps.MapTypeId.HYBRID,
-                    'SATELLITE': google.maps.MapTypeId.SATELLITE,
-                    'ROADMAP': google.maps.MapTypeId.ROADMAP,
-                    'TERRAIN': google.maps.MapTypeId.TERRAIN
+                    'HYBRID': gMapsLib.MapTypeId.HYBRID,
+                    'SATELLITE': gMapsLib.MapTypeId.SATELLITE,
+                    'ROADMAP': gMapsLib.MapTypeId.ROADMAP,
+                    'TERRAIN': gMapsLib.MapTypeId.TERRAIN
                 };
             }
             if (!gmaps[mapId]) {
-                gmaps[mapId] = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
+                gmaps[mapId] = new gMapsLib.Map(document.getElementById(mapId + 'gmaps'), {
                     disableDefaultUI: true,
                     keyboardShortcuts: false,
                     draggable: false,
                     disableDoubleClickZoom: true,
                     scrollwheel: false,
-                    streetViewControl: false
+                    streetViewControl: false,
+                    minZoom: options.minZoom,
+                    maxZoom: options.maxZoom
                 });
             }
             gmaps[mapId].setMapTypeId(layersMap[options.name]);
@@ -45,7 +54,7 @@ Layers.registerType('google', {
             let setCenter = function() {
                 if (gmaps[mapId] && mapContainer.style.visibility !== 'hidden') {
                     const center = transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
-                    gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
+                    gmaps[mapId].setCenter(new gMapsLib.LatLng(center[1], center[0]));
                 }
             };
             let setZoom = function() {
@@ -106,7 +115,7 @@ Layers.registerType('google', {
                     const rotation = map.getView().getRotation() * 180 / Math.PI;
 
                     mapContainer.style.transform = "rotate(" + rotation + "deg)";
-                    google.maps.event.trigger(gmaps[mapId], "resize");
+                    gMapsLib.event.trigger(gmaps[mapId], "resize");
                 }
             };
 
@@ -138,7 +147,7 @@ Layers.registerType('google', {
                     mapContainer.style.height = size.height + 'px';
                     mapContainer.style.left = Math.round((map.getSize()[0] - size.width) / 2.0) + 'px';
                     mapContainer.style.top = Math.round((map.getSize()[1] - size.height) / 2.0) + 'px';
-                    google.maps.event.trigger(gmaps[mapId], "resize");
+                    gMapsLib.event.trigger(gmaps[mapId], "resize");
                     setCenter();
                 }
             };
@@ -193,12 +202,19 @@ Layers.registerType('google', {
         if (!gmaps[mapId]) {
             return;
         }
-        let google = window.google;
+        let gMapsLib = getGMapsLib();
+
         if (!oldOptions.visibility && newOptions.visibility) {
             let view = map.getView();
             const center = transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
-            gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
+            gmaps[mapId].setCenter(new gMapsLib.LatLng(center[1], center[0]));
             gmaps[mapId].setZoom(view.getZoom());
+        }
+        if (!oldOptions.minZoom && newOptions.minZoom) {
+            gmaps[mapId].setOptions({ minZoom: newOptions.minZoom });
+        }
+        if (!oldOptions.maxZoom && newOptions.maxZoom) {
+            gmaps[mapId].setOptions({ maxZoom: newOptions.maxZoom });
         }
     },
     remove(options, map, mapId) {

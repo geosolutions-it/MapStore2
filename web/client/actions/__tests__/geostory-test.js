@@ -49,12 +49,25 @@ import {
     update,
     updateCurrentPage,
     updateSetting,
-    removeResource, REMOVE_RESOURCE,
-    updateUrlOnScroll, SET_UPDATE_URL_SCROLL,
-    updateMediaEditorSettings
+    removeResource,
+    REMOVE_RESOURCE,
+    updateUrlOnScroll,
+    SET_UPDATE_URL_SCROLL,
+    updateMediaEditorSettings,
+    geostoryScrolling,
+    GEOSTORY_SCROLLING,
+    hideCarouselItems,
+    HIDE_CAROUSEL_ITEMS,
+    enableDraw,
+    ENABLE_DRAW
 } from '../geostory';
 
 describe('test geostory action creators', () => {
+    it('geostoryScrolling', () => {
+        const status = true;
+        const action = geostoryScrolling(status);
+        expect(action).toEqual({type: GEOSTORY_SCROLLING, status});
+    });
     it('clearSaveError', () => {
         const action = clearSaveError();
         expect(action.type).toBe(CLEAR_SAVE_ERROR);
@@ -242,5 +255,20 @@ describe('test geostory action creators', () => {
         const action = updateMediaEditorSettings(mediaEditorSettings);
         expect(action.type).toBe(UPDATE_MEDIA_EDITOR_SETTINGS);
         expect(action.mediaEditorSettings).toBe(mediaEditorSettings);
+    });
+    it('hideCarouselItems', () => {
+        const sectionId = 1;
+        const showContentId = 2;
+        const action = hideCarouselItems(sectionId, showContentId);
+        expect(action.type).toBe(HIDE_CAROUSEL_ITEMS);
+        expect(action.sectionId).toBe(sectionId);
+        expect(action.showContentId).toBe(showContentId);
+    });
+    it('enableDraw', () => {
+        const sectionId = 1;
+        const contentId = 2;
+        const action = enableDraw({ sectionId, contentId });
+        expect(action.type).toBe(ENABLE_DRAW);
+        expect(action.drawOptions).toEqual({ sectionId, contentId });
     });
 });

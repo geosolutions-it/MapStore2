@@ -14,7 +14,8 @@ import {
     CHANGE_PASSWORD_FAIL,
     RESET_ERROR,
     REFRESH_SUCCESS,
-    SESSION_VALID
+    SESSION_VALID,
+    CHANGE_PASSWORD
 } from '../actions/security';
 
 import { SET_CONTROL_PROPERTY } from '../actions/controls';
@@ -80,17 +81,25 @@ function security(state = {user: null, errorCause: null}, action) {
             authHeader: null,
             loginError: null
         });
+    case CHANGE_PASSWORD:
+        return  assign({}, state, {
+            passwordError: null,
+            changePasswordLoading: true
+        });
     case CHANGE_PASSWORD_SUCCESS:
         return assign({}, state, {
             user: assign({}, state.user, assign({}, action.user, {date: new Date().getTime()})),
             authHeader: action.authHeader,
             passwordChanged: true,
-            passwordError: null
+            passwordError: null,
+            changePasswordLoading: false
         });
     case CHANGE_PASSWORD_FAIL:
         return assign({}, state, {
             passwordError: action.error,
-            passwordChanged: false
+            passwordChanged: false,
+            changePasswordLoading: false
+
         });
     case SESSION_VALID:
     {

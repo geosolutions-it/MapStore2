@@ -18,7 +18,7 @@
 
     <modules>
         <module>web</module>
-        <module>MapStore2/backend</module>
+        <module>MapStore2/java/services</module>
     </modules>
 
 </project>

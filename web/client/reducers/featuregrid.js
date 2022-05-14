@@ -50,9 +50,10 @@ import {
     SET_PAGINATION
 } from '../actions/featuregrid';
 
-import { FEATURE_TYPE_LOADED, QUERY_CREATE } from '../actions/wfsquery';
+import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsquery';
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
 import uuid from 'uuid';
+import { getApi } from '../api/userPersistedStorage';
 
 const emptyResultsState = {
     advancedFilters: {},
@@ -66,7 +67,7 @@ const emptyResultsState = {
     canEdit: false,
     focusOnEdit: false,
     showAgain: false,
-    showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
+    showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
     mode: MODES.VIEW,
     changes: [],
     pagination: {
@@ -74,7 +75,6 @@ const emptyResultsState = {
         size: 20
     },
     select: [],
-    multiselect: false,
     drawing: false,
     newFeatures: [],
     features: [],
@@ -151,7 +151,7 @@ function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
         return assign({}, state, {
-            showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
+            showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             virtualScroll: !!action.options.virtualScroll,
             maxStoredPages: action.options.maxStoredPages || 5
@@ -196,7 +196,7 @@ function featuregrid(state = emptyResultsState, action) {
             select: state.select.filter(f1 => !isPresent(f1, action.features))
         });
     case SET_SELECTION_OPTIONS: {
-        return assign({}, state, {multiselect: action.multiselect});
+        return assign({}, state, {multiselect: action.multiselect ?? state.multiselect, showCheckbox: action.showCheckbox ?? state.showCheckbox});
     }
     case UPDATE_EDITORS_OPTIONS:
         return assign({}, state, { customEditorsOptions: action.payload });
@@ -231,7 +231,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     case TOGGLE_MODE: {
         return assign({}, state, {
-            showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : action.mode !== MODES.EDIT,
+            showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : action.mode !== MODES.EDIT,
             tools: action.mode === MODES.EDIT ? {} : state.tools,
             mode: action.mode,
             multiselect: action.mode === MODES.EDIT,
@@ -275,11 +275,11 @@ function featuregrid(state = emptyResultsState, action) {
     case CREATE_NEW_FEATURE: {
         let id = uuid.v1();
         return assign({}, state, {
-            newFeatures: action.features.map(f => ({...f, _new: true, id: id, type: "Feature",
-                geometry: null
+            newFeatures: action.features.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
+                geometry: f.geometry ? f.geometry : null
             })),
-            select: action.features.map(f => ({...f, _new: true, id: id, type: "Feature",
-                geometry: null
+            select: action.features.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
+                geometry: f.geometry ? f.geometry : null
             }))
         });
     }
@@ -402,6 +402,12 @@ function featuregrid(state = emptyResultsState, action) {
             filters: {
             }
         });
+    }
+    case UPDATE_QUERY: {
+        return {
+            ...state,
+            useLayerFilter: action.useLayerFilter ?? state.useLayerFilter // if not present, keep current
+        };
     }
     case SIZE_CHANGE : {
         const maxDockSize = action.dockProps && action.dockProps.maxDockSize;

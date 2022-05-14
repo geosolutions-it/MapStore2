@@ -15,10 +15,12 @@ import Spinner from 'react-spinkit';
 
 import Loader from '../../misc/Loader';
 import Dialog from '../../misc/Dialog';
+import Portal from '../../misc/Portal';
 import Message from '../../I18N/Message';
 import EmptyView from '../../misc/EmptyView';
 import DownloadOptions from './DownloadOptions';
 import Button from '../../misc/Button';
+import {getAttributesList} from "../../../utils/FeatureGridUtils";
 
 class DownloadDialog extends React.Component {
     static propTypes = {
@@ -26,13 +28,12 @@ class DownloadDialog extends React.Component {
         closeGlyph: PropTypes.string,
         url: PropTypes.string,
         service: PropTypes.string,
-        onMount: PropTypes.func,
-        onUnmount: PropTypes.func,
         enabled: PropTypes.bool,
         loading: PropTypes.bool,
         checkingWPSAvailability: PropTypes.bool,
         onClose: PropTypes.func,
         onExport: PropTypes.func,
+        onCheckWPSAvailability: PropTypes.func,
         onDownloadOptionChange: PropTypes.func,
         onClearDownloadOptions: PropTypes.func,
         onFormatOptionsFetch: PropTypes.func,
@@ -43,12 +44,12 @@ class DownloadDialog extends React.Component {
         defaultSrs: PropTypes.string,
         layer: PropTypes.object,
         formatsLoading: PropTypes.bool,
-        virtualScroll: PropTypes.bool
+        virtualScroll: PropTypes.bool,
+        customAttributeSettings: PropTypes.object,
+        attributes: PropTypes.array
     };
 
     static defaultProps = {
-        onMount: () => {},
-        onUnmount: () => {},
         onExport: () => {},
         onClose: () => {},
         onCheckWPSAvailability: () => {},
@@ -80,14 +81,6 @@ class DownloadDialog extends React.Component {
         downloadOptions: {}
     };
 
-    componentDidMount() {
-        this.props.onMount();
-    }
-
-    componentWillUnmount() {
-        this.props.onUnmount();
-    }
-
     componentDidUpdate(oldProps) {
         if (this.props.enabled !== oldProps.enabled && this.props.enabled) {
             this.props.onClearDownloadOptions();
@@ -115,7 +108,7 @@ class DownloadDialog extends React.Component {
             validWFSFormats.filter(f => this.props.wfsFormats.find(wfsF => wfsF.name.toLowerCase() === f.name.toLowerCase())) :
             this.props.wfsFormats;
 
-        return this.props.enabled ? (<Dialog id="mapstore-export" draggable={false} modal>
+        return this.props.enabled ? (<Portal><Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
                 <span className="about-panel-title"><Message msgId="layerdownload.title" /></span>
                 <button onClick={this.onClose} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
@@ -137,7 +130,10 @@ class DownloadDialog extends React.Component {
                             wpsAdvancedOptionsVisible={!this.props.layer.search?.url}
                             downloadFilteredVisible={!!this.props.layer.search?.url}
                             layer={this.props.layer}
-                            virtualScroll={this.props.virtualScroll}/>}
+                            virtualScroll={this.props.virtualScroll}
+                            customAttributesSettings={this.props.customAttributeSettings}
+                            attributes={this.props.attributes}
+                        />}
             </div>
             {!this.props.checkingWPSAvailability && <div role="footer">
                 <Button
@@ -148,12 +144,13 @@ class DownloadDialog extends React.Component {
                     {this.renderIcon()} <Message msgId="layerdownload.export" />
                 </Button>
             </div>}
-        </Dialog>) : null;
+        </Dialog></Portal>) : null;
     }
     handleExport = () => {
-        const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport, layer} = this.props;
+        const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport, layer, attributes, customAttributeSettings} = this.props;
         const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (srsList[0] || {}).name;
-        onExport(url || layer.url, filterObj, assign({}, downloadOptions, {selectedSrs}));
+        const propertyName = getAttributesList(attributes, customAttributeSettings);
+        onExport(url || layer.url, filterObj, assign({}, downloadOptions, {selectedSrs}, {propertyName}));
     }
 }
 

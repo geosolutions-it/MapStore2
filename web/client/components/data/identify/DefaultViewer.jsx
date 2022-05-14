@@ -14,7 +14,7 @@ import HTML from '../../../components/I18N/HTML';
 import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
 import ViewerPage from './viewers/ViewerPage';
-import { isEmpty, reverse } from 'lodash';
+import { isEmpty, reverse, startsWith } from 'lodash';
 import { getFormatForResponse } from '../../../utils/IdentifyUtils';
 
 class DefaultViewer extends React.Component {
@@ -37,9 +37,10 @@ class DefaultViewer extends React.Component {
         onUpdateIndex: PropTypes.func,
         setIndex: PropTypes.func,
         showEmptyMessageGFI: PropTypes.bool,
-        renderEmpty: PropTypes.bool,
+        renderValidOnly: PropTypes.bool,
         loaded: PropTypes.bool,
-        isMobile: PropTypes.bool
+        isMobile: PropTypes.bool,
+        disableInfoAlert: PropTypes.bool
     };
 
     static defaultProps = {
@@ -58,11 +59,12 @@ class DefaultViewer extends React.Component {
         },
         containerProps: {},
         showEmptyMessageGFI: true,
-        renderEmpty: false,
+        renderValidOnly: false,
         onNext: () => {},
         onPrevious: () => {},
         setIndex: () => {},
-        isMobile: false
+        isMobile: false,
+        disableInfoAlert: false
     };
 
     shouldComponentUpdate(nextProps) {
@@ -75,7 +77,7 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses, this.props.renderEmpty) : responses;
+        const validResponses = this.props.renderValidOnly ? validator.getValidResponses(responses) : responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -92,7 +94,7 @@ class DefaultViewer extends React.Component {
      */
     getCurrentResponse = (response) => {
         const validator = this.props.validator(this.props.format);
-        return validator.getValidResponses([response], true);
+        return validator.getValidResponses([response]);
     }
 
     renderEmptyLayers = () => {
@@ -101,7 +103,7 @@ class DefaultViewer extends React.Component {
             return null;
         }
         let allowRender = invalidResponses.length !== 0;
-        if (!this.props.renderEmpty) {
+        if (!this.props.renderValidOnly) {
             allowRender =  allowRender && this.props.missingResponses === 0;
         }
         if (allowRender) {
@@ -109,7 +111,7 @@ class DefaultViewer extends React.Component {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
             });
-            return this.props.showEmptyMessageGFI ? (
+            return this.props.showEmptyMessageGFI && !this.props.disableInfoAlert ? (
                 <Alert bsStyle={"info"}>
                     <Message msgId={"noInfoForLayers"} />
                     <b>{titles.join(', ')}</b>
@@ -149,12 +151,13 @@ class DefaultViewer extends React.Component {
             if (layerMetadata?.viewer?.type) {
                 customViewer = getViewer(layerMetadata.viewer.type);
             }
+            const size = responses.filter(resp => !startsWith(resp.response, "no features were found")).length;
             return (<Panel
                 eventKey={i}
                 key={i}
                 collapsible={this.props.collapsible}
                 header={PageHeader ? <span><PageHeader
-                    size={responses.length}
+                    size={size}
                     {...this.props.headerOptions}
                     {...layerMetadata}
                     index={this.props.index}

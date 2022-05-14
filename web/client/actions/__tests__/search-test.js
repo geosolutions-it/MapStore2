@@ -32,7 +32,9 @@ import {
     selectSearchItem,
     selectNestedService,
     cancelSelectedItem,
-    updateResultsStyle
+    updateResultsStyle,
+    hideMarker,
+    HIDE_MARKER
 } from '../search';
 
 describe('Test correctness of the search actions', () => {
@@ -131,5 +133,10 @@ describe('Test correctness of the search actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_FORMAT);
         expect(retval.format).toEqual(format);
+    });
+    it('hide marker', () => {
+        const retval = hideMarker();
+        expect(retval).toExist();
+        expect(retval.type).toBe(HIDE_MARKER);
     });
 });

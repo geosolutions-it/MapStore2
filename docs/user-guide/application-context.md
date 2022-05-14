@@ -1,7 +1,7 @@
 # Application Context
 *******************
 
-In order to create a context, the *Admin* can click on the **New Context** button <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> in the [Contexts page](managing-contexts.md) and he will be addressed directly to a wizard. The wizard is composed by the following three steps:
+In order to create a context, the *Admin* can click on the **New Context** button <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> in the [Contexts page](managing-contexts.md) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
 
 <img src="../img/application-context/wizard.jpg" class="ms-docimage"/>
 
@@ -123,3 +123,55 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 * The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins) in another page.
 
 
+## Configure Theme
+
+The last wizard steps allows to configure the theme to use for a context. A dropdown allows to select one of the available themes (see the [Styling and Theming](../developer-guide/customize-theme.md) section of the online documentation to know how to create and include additional themes to MapStore). By default in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) a **default** and a **dark** themes are available.
+
+<img src="../img/application-context/step_four.jpg" class="ms-docimage"/>
+
+### Default Theme
+
+The **default** theme is always available for a context and it is the MapStore default one. This theme is automatically applied to the context if the *Configure Theme* wizard step is skipped during the context creation or when the theme selection drop-down is cleared. An example of a default context can be the following:
+
+<img src="../img/application-context/default_theme.jpg" class="ms-docimage"/>
+
+### Dark Theme
+
+MapStore also provides by default an additional theme, the dark one, that can be selected from the drop-down menu to be used as an alternative theme for application contexts.
+
+<img src="../img/application-context/dark_theme.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+An example of the **dark** theme applied to a context is the following one:
+
+<img src="../img/application-context/dark_context.jpg" class="ms-docimage"/>
+
+### Custom Theme
+
+After selecting a theme from the drop-down, it is also possible to customize it from UI by enabling **Custom Variables**. 
+
+<img src="../img/application-context/custom_variables.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+Once **Custom Variables** is enabled, the context editor can modify main, primary and secondary colors for both backgrounds and texts (an helper clarifies the UI elements involved for each field in the form). Clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker is displayed to allow the selection of the desire color, as follows:
+
+<img src="../img/application-context/color_picker_theme.gif" class="ms-docimage"/>
+
+The colors that can be customized are the following ones:
+
+* **Main Text Color** to choose the color used in panel or dialog texts
+
+* **Main Background Color** to choose the color used in panel or dialog backgrounds
+
+* **Primary Text Color** to choose the color used for icons inside toolbar, header and button texts
+
+* **Primary Color** to choose the color used for icons inside toolbar, header and button backgrounds
+
+* **Secondary Text Color** to choose the color used as button text when a button is active or selected 
+
+* **Secondary Color** to choose the color used as button background when a button is active or selected 
+
+!!! warning
+    To ensure a good and well readable color contrast between each UI component, make sure to not use a secondary color too similar to the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary).
+
+An example of a custom context can be the following:
+
+<img src="../img/application-context/cutom_context.jpg" class="ms-docimage"/>

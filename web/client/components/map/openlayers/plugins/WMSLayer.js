@@ -13,12 +13,13 @@ import isEqual from 'lodash/isEqual';
 import union from 'lodash/union';
 import isArray from 'lodash/isArray';
 import assign from 'object-assign';
-
+import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
+import { getConfigProp } from '../../../../utils/ConfigUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
-import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
 import MapUtils from '../../../../utils/MapUtils';
@@ -38,6 +39,75 @@ import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 import { generateEnvString } from '../../../../utils/LayerLocalizationUtils';
 
+/**
+ * Check source and apply proxy
+ * when `forceProxy` is set on layer options
+ * @param {boolean} forceProxy
+ * @param {string} src
+ * @returns {string}
+ */
+const proxySource = (forceProxy, src) => {
+    let newSrc = src;
+    if (forceProxy && needProxy(src)) {
+        let proxyUrl = getProxyUrl();
+        newSrc = proxyUrl + encodeURIComponent(src);
+    }
+    return newSrc;
+};
+
+const loadFunction = (options, headers) => function(image, src) {
+    // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
+    let img = image.getImage();
+    let newSrc = proxySource(options.forceProxy, src);
+
+    if (typeof window.btoa === 'function' && src.length >= (options.maxLengthUrl || getConfigProp('miscSettings')?.maxURLLength || Infinity)) {
+        // GET ALL THE PARAMETERS OUT OF THE SOURCE URL**
+        let [url, ...dataEntries] = src.split("&");
+        url = proxySource(options.forceProxy, url);
+
+        // SET THE PROPER HEADERS AND FINALLY SEND THE PARAMETERS
+        axios.post(url, "&" + dataEntries.join("&"), {
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+                ...headers
+            },
+            responseType: 'arraybuffer'
+        }).then(response => {
+            if (response.status === 200) {
+                const uInt8Array = new Uint8Array(response.data);
+                let i = uInt8Array.length;
+                const binaryString = new Array(i);
+                while (i--) {
+                    binaryString[i] = String.fromCharCode(uInt8Array[i]);
+                }
+                const dataImg = binaryString.join('');
+                const type = response.headers['content-type'];
+                if (type.indexOf('image') === 0) {
+                    img.src = 'data:' + type + ';base64,' + window.btoa(dataImg);
+                }
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    } else {
+        if (headers) {
+            axios.get(newSrc, {
+                headers,
+                responseType: 'blob'
+            }).then(response => {
+                if (response.status === 200 && response.data) {
+                    image.getImage().src = URL.createObjectURL(response.data);
+                } else {
+                    console.error("Status code: " + response.status);
+                }
+            }).catch(e => {
+                console.error(e);
+            });
+        } else {
+            img.src = newSrc;
+        }
+    }
+};
 /**
     @param {object} options of the layer
     @return the Openlayers options from the layers ones and/or default.
@@ -70,26 +140,12 @@ function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-// Works with geosolutions proxy
-function proxyTileLoadFunction(imageTile, src) {
-    var newSrc = src;
-    if (needProxy(src)) {
-        let proxyUrl = getProxyUrl();
-        newSrc = proxyUrl + encodeURIComponent(src);
-    }
-    imageTile.getImage().src = newSrc;
-}
-
 function tileCoordsToKey(coords) {
     return coords.join(':');
 }
 
 function elevationLoadFunction(forceProxy, imageTile, src) {
-    let newSrc = src;
-    if (forceProxy && needProxy(src)) {
-        let proxyUrl = getProxyUrl();
-        newSrc = proxyUrl + encodeURIComponent(src);
-    }
+    let newSrc = proxySource(forceProxy, src);
     const coords = imageTile.getTileCoord();
     imageTile.getImage().src = "";
     loadTile(newSrc, coords, tileCoordsToKey(coords));
@@ -98,9 +154,6 @@ function elevationLoadFunction(forceProxy, imageTile, src) {
 function addTileLoadFunction(sourceOptions, options) {
     if (options.useForElevation) {
         return assign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
-    }
-    if (options.forceProxy) {
-        return assign({}, sourceOptions, {tileLoadFunction: proxyTileLoadFunction});
     }
     return sourceOptions;
 }
@@ -125,7 +178,7 @@ function getElevation(pos) {
     try {
         const tilePoint = getTileFromCoords(this, pos);
         const tileSize = this.getSource().getTileGrid().getTileSize();
-        const elevation = getElevationFunc(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
+        const elevation = getElevationFunc(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'), this.get('littleEndian'));
         if (elevation.available) {
             return elevation.value;
         }
@@ -136,11 +189,12 @@ function getElevation(pos) {
 }
 const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;
 
+
 const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmsToOpenlayersOptions(options) || {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
-
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
     const vectorFormat = isVectorFormat(options.format);
 
     if (options.singleTile && !vectorFormat) {
@@ -149,17 +203,21 @@ const createLayer = (options, map) => {
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
+            minResolution: options.minResolution,
+            maxResolution: options.maxResolution,
             source: new ImageWMS({
                 url: urls[0],
                 crossOrigin: options.crossOrigin,
                 attributions: toOLAttributions(options.credits),
                 params: queryParameters,
-                ratio: options.ratio || 1
+                ratio: options.ratio || 1,
+                imageLoadFunction: loadFunction(options, headers)
             })
         });
     }
     const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-    const extent = get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
+    const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
+    const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
     const sourceOptions = addTileLoadFunction({
         attributions: toOLAttributions(options.credits),
         urls: urls,
@@ -170,14 +228,17 @@ const createLayer = (options, map) => {
             resolutions: options.resolutions || MapUtils.getResolutions(),
             tileSize: options.tileSize ? options.tileSize : 256,
             origin: options.origin ? options.origin : [extent[0], extent[1]]
-        })
+        }),
+        tileLoadFunction: loadFunction(options, headers)
     }, options);
     const wmsSource = new TileWMS({ ...sourceOptions });
     const layerConfig = {
         msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
-        zIndex: options.zIndex
+        zIndex: options.zIndex,
+        minResolution: options.minResolution,
+        maxResolution: options.maxResolution
     };
     let layer;
     if (vectorFormat) {
@@ -192,6 +253,7 @@ const createLayer = (options, map) => {
             })
         });
     } else {
+
         layer = new TileLayer({
             ...layerConfig,
             source: wmsSource
@@ -206,6 +268,7 @@ const createLayer = (options, map) => {
     }
     if (options.useForElevation) {
         layer.set('nodata', options.nodata);
+        layer.set('littleEndian', options.littleendian ?? false);
         layer.set('getElevation', getElevation.bind(layer));
     }
     return layer;
@@ -221,6 +284,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || isVectorFormat(oldOptions.format) && isVectorFormat(newOptions.format) && oldOptions.format !== newOptions.format
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
         || oldOptions.tileSize !== newOptions.tileSize
+        || oldOptions.forceProxy !== newOptions.forceProxy
     );
 };
 
@@ -243,7 +307,8 @@ Layers.registerType('wms', {
         const vectorSource = newIsVector ? layer.getSource() : null;
 
         if (oldOptions.srs !== newOptions.srs) {
-            const extent = get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
+            const normalizedSrs = CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS);
+            const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
             if (newOptions.singleTile && !newIsVector) {
                 layer.setExtent(extent);
             } else {
@@ -295,18 +360,22 @@ Layers.registerType('wms', {
             needsRefresh = needsRefresh || changed;
         }
 
+        if (oldOptions.minResolution !== newOptions.minResolution) {
+            layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+        }
+        if (oldOptions.maxResolution !== newOptions.maxResolution) {
+            layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
+        }
         if (needsRefresh) {
             // forces tile cache drop
             // this prevents old cached tiles at lower zoom levels to be
-            // rendered during new params load, but causes a blink glitch.
-            // TODO: find out a way to refresh only once to clear lower zoom level cache.
-            if (wmsSource.refresh) {
-                wmsSource.refresh();
-            }
+            // rendered during new params load
+            wmsSource?.tileCache?.pruneExceptNewestZ?.();
             if (vectorSource) {
                 vectorSource.clear();
                 vectorSource.refresh();
             }
+
             if (changed) {
                 const params = assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 

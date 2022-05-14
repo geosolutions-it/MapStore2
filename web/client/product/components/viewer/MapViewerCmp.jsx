@@ -23,7 +23,8 @@ class MapViewerComponent extends React.Component {
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        location: PropTypes.object
+        location: PropTypes.object,
+        className: PropTypes.string
     };
     static defaultProps = {
         mode: 'desktop',
@@ -56,6 +57,7 @@ class MapViewerComponent extends React.Component {
             pluginsConfig={this.props.pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}
+            className={this.props.className}
         />);
     }
     updateMap = (id, contextId) => {

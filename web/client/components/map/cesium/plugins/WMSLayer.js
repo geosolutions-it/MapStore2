@@ -6,22 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Layers = require('../../../../utils/cesium/Layers');
-const Cesium = require('../../../../libs/cesium');
-const BILTerrainProvider = require('../../../../utils/cesium/BILTerrainProvider')(Cesium);
-const ConfigUtils = require('../../../../utils/ConfigUtils').default;
-const {
-    getProxyUrl,
-    needProxy
-} = require('../../../../utils/ProxyUtils');
-const assign = require('object-assign');
-const {isArray} = require('lodash');
-const WMSUtils = require('../../../../utils/cesium/WMSUtils');
-const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
-const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
-const {addAuthenticationToSLD} = require('../../../../utils/SecurityUtils');
+import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from 'cesium';
+import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
+const BILTerrainProvider = createBILTerrainProvider(Cesium);
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
+import assign from 'object-assign';
+import {isArray, isEqual} from 'lodash';
+import WMSUtils from '../../../../utils/cesium/WMSUtils';
+import {getAuthenticationParam, getURLs} from '../../../../utils/LayersUtils';
+import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
+import {addAuthenticationToSLD, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 
-const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -53,6 +51,16 @@ NoProxy.prototype.getURL = function(resource) {
     return url + queryString;
 };
 
+// Check and apply proxy to source url
+function getProxy(options) {
+    let proxyUrl = ConfigUtils.getProxyUrl({});
+    let proxy;
+    if (proxyUrl) {
+        proxy = options.noCors || needProxy(options.url);
+    }
+    return proxy ? new WMSProxy(proxyUrl) : new NoProxy();
+}
+
 function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
@@ -73,28 +81,40 @@ function wmsToCesiumOptionsSingleTile(options) {
         srs: "EPSG:4326"
     }, params || {}, getAuthenticationParam(options));
 
+    const url = (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
+        + getQueryString(addAuthenticationToSLD(parameters, options));
+    const headers = getAuthenticationHeaders(url, options.securityToken);
     return {
-        url: (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
-            + getQueryString(addAuthenticationToSLD(parameters, options))
+        url: new Cesium.Resource({
+            url,
+            headers,
+            proxy: getProxy(options)
+        })
     };
 }
 
 function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
-    let proxyUrl = ConfigUtils.getProxyUrl({});
-    let proxy;
-    if (proxyUrl) {
-        proxy = needProxy(options.url) && proxyUrl;
-    }
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
+    const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
+
     return assign({
-        url: "{s}",
+        url: new Cesium.Resource({
+            url: "{s}",
+            headers,
+            proxy: getProxy(options)
+        }),
+        // #7516 this helps Cesium to use CORS requests in a proper way, even when headers are not
+        // present in the Resource
+        tileDiscardPolicy: options.tileDiscardPolicy === "none" ?
+            undefined :
+            (options.tileDiscardPolicy ?? new Cesium.NeverTileDiscardPolicy()),
         credit,
-        subdomains: getURLs(isArray(options.url) ? options.url : [options.url]),
-        proxy: proxy && new WMSProxy(proxy) || new NoProxy(),
+        subdomains: urls,
         layers: options.name,
         enablePickFeatures: false,
         parameters: assign({
@@ -116,17 +136,16 @@ function wmsToCesiumOptions(options) {
 }
 
 function wmsToCesiumOptionsBIL(options) {
-    let proxyUrl = ConfigUtils.getProxyUrl({});
-    let proxy;
+
     let url = options.url;
-    if (proxyUrl) {
-        proxy = needProxy(options.url) && proxyUrl;
-        if (proxy) {
-            url = proxy + encodeURIComponent(url);
-        }
-    }
+    const headers = getAuthenticationHeaders(url, options.securityToken);
     return assign({
-        url,
+        url: new Cesium.Resource({
+            url,
+            headers,
+            proxy: getProxy(options)
+        }),
+        littleEndian: options.littleendian || false,
         layerName: options.name
     });
 }
@@ -160,9 +179,12 @@ const updateLayer = (layer, newOptions, oldOptions) => {
         .filter((key) => {
             const oldOption = oldOptions[key] === undefined ? oldParams && oldParams[key] : oldOptions[key];
             const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
-            return oldOption !== newOption;
+            return !isEqual(oldOption, newOption);
         });
-    if (newParameters.length > 0 || newOptions.securityToken !== oldOptions.securityToken || newOptions.tileSize !== oldOptions.tileSize) {
+    if (newParameters.length > 0 ||
+        newOptions.securityToken !== oldOptions.securityToken ||
+        !isEqual(newOptions.layerFilter, oldOptions.layerFilter) ||
+        newOptions.tileSize !== oldOptions.tileSize) {
         return createLayer(newOptions);
     }
     return null;

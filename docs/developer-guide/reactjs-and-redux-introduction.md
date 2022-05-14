@@ -1,4 +1,4 @@
-# Main Frontend Tecnologies
+# Main Frontend Technologies
 
 The main tecnologies used on the mapstore 2 are:
 

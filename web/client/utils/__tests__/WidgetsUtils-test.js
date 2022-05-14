@@ -9,8 +9,10 @@
 import expect from 'expect';
 
 import { getConnectionList, getWidgetsGroups, shortenLabel } from '../WidgetsUtils';
-import { widgets } from '../../test-resources/widgets/widgets1.json';
-import { widgets as complexGraphWidgets } from '../../test-resources/widgets/complex_graph.json';
+import SAMPLE_1 from '../../test-resources/widgets/widgets1.json';
+const widgets = SAMPLE_1.widgets;
+import SAMPLE_2 from '../../test-resources/widgets/complex_graph.json';
+const complexGraphWidgets = SAMPLE_2.widgets;
 describe('Test WidgetsUtils', () => {
     it('test getConnectionList', () => {
         const pairs = getConnectionList(widgets);

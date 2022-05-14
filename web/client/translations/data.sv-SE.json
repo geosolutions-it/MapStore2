@@ -1,0 +1,3370 @@
+
+{
+    "locale": "sv-SE",
+    "messages": {
+        "Language": "Språk",
+        "msgId0": "{name} tog {numPhotos, plural, = 0 {no photos} = 1 {one photo} annat {# photos}} den {takenDate, date, long}.",
+        "htmlTest": "{name} {surname}",
+        "about_title": "Om",
+        "aboutTooltip": "Om",
+        "aboutLbl": "Om",
+        "about_p0-0": "MapStore är ett ramverk för att bygga webbkartor med hjälp av vanliga kartbibliotek, t.ex.",
+        "about_p0-1": "och",
+        "about_p1": "Det finns flera exempelapplikationer för MapStore:",
+        "about_ul0_li0": "MapViewer är en enkel visare av förkonfigurerade kartor (valfritt lagrade i en databas med GeoStore)",
+        "about_ul0_li1": "MapPublisher har utvecklats för att på ett enkelt och intuitivt sätt skapa, spara och dela kartor och mashups med innehåll från välkända källor som Google Maps och OpenStreetMap eller från tjänster som tillhandahålls av organisationer som använder öppna protokoll som OGC WMS, WFS, WMTS eller TMS och så vidare. För mer information, se",
+        "about_h20": "Licenser",
+        "about_p3": "MapStore bygger på fri och öppen källkod, baserad på OpenLayers, Leaflet och ReactJS och licensierad under den förenklade BSD -licensen.",
+        "about_p5-0": "För mer information, besök",
+        "about_a0": "denna",
+        "about_p5-1": "sida.",
+        "about_h21": "Erkännanden",
+        "about_p6": "MapStore görs av:",
+        "enable": "Aktivera",
+        "layers": "Lager",
+        "warning": "Varning",
+        "errorTitleDefault": "Fel",
+        "errorDefault": "Ett fel uppstod.",
+        "pageInfoShowMore": "Objekt: {count} av {total}",
+        "showMore": "Visa mer ...",
+        "collapse": "Fäll ihop",
+        "expand": "Expandera",
+        "Links": "Länkar",
+        "Forbidden": "Förbjudet",
+        "layerNameChangeError": {
+            "title": "Fel vid namnbyte",
+            "message": "Lagret kunde inte laddas om med det ändrade namnet"
+        },
+        "version": {
+            "label": "Version"
+        },
+        "errorPage": {
+            "title": "Hoppsan, något gick fel.",
+            "subtitle":"Var snäll och klicka på ikonen nedan för att ladda om MapStore",
+            "description":"Om du vill kan du rapportera detta fel till vår E-postlista.",
+            "descriptionAdmin":"Vänligen kontakta administratören"
+        },
+        "autorefresh": {
+            "of": "av",
+            "updating": "Uppdaterar ...",
+            "layers": "lager"
+        },
+        "localeErrors": {
+            "404": "Språkfilen kunde inte hittas"
+        },
+        "details": {
+            "title": "Om den här kartan",
+            "tooltip": "Om den här kartan"
+        },
+        "showEmptyMessageGFI": "Visa tomt resultatmeddelande i GetFeatureInfo-panelen",
+        "remove": "Ta bort",
+        "removeThumbnail": "Ta bort miniatyrbild",
+        "layerProperties": {
+            "windowTitle": "Lageregenskaper",
+            "title": "Titel",
+            "name": "Namn",
+            "group": "Grupp",
+            "general": "Allmänt",
+            "description": "Beskrivning",
+            "display": "Visning",
+            "style": "Stil",
+            "transparent": "Transparent",
+            "singleTile": "Single tile",
+            "cached": "Använd cachealternativ",
+            "styleCustom": "Använd stil med namnet {value}",
+            "styleListLoadError": "Ett fel uppstod när formatlistan skulle laddas",
+            "stylesRefreshList": "Uppdatera lista med stilar",
+            "delete": "Ta bort",
+            "deleteLayer": "Ta bort lager",
+            "deleteLayerMessage": "Vill du verkligen ta bort det här lagret?",
+            "deleteLayerGroup": "Ta bort grupp",
+            "deleteLayerGroupMessage": "Vill du verkligen ta bort den här gruppen och alla dess lager?",
+            "confirmDelete": "Är du säker?",
+            "featureTypeError": "Kan inte ladda lagerattribut",
+            "featureTypeErrorInvalidJSON": "Kan inte ladda lagerattribut. Svaret är ogiltigt",
+            "elevation": "Höjd",
+            "titleTranslations": "Titelöversättningar",
+            "groupProperties": "Gruppegenskaper",
+            "featureInfo": "Objektinformation",
+            "featureInfoFormatLbl": "Identifiera svarsformat",
+            "legenderror": "Ingen teckenförklaring",
+            "editCustomFormat": "Redigera anpassat format",
+            "exampleOfResponse": "Exempel",
+            "modifiedSettings": "Ändrade inställningar",
+            "modifiedSettingsAlert": "Du stänger inställningspanelen utan att spara dina ändringar",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Visar objektinformation som ren text",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Visar objektinformation som html",
+            "propertiesFormatTitle": "EGENSKAPER",
+            "propertiesFormatDescription": "Visar objektinformation som egenskapslista",
+            "templateFormatTitle": "MALL",
+            "templateFormatDescription": "Anpassa resultatformat för objektinfo",
+            "hideFormatTitle": "INAKTIVERA IDENTIFIERA",
+            "hideFormatDescription": "Inaktivera objektinformation för detta lager",
+            "styleWarning": "Lagerstilsredigerare för geometritypen {geometryType} stöds inte.",
+            "templateFormatInfoAlert1": "Klicka på redigeringsknappen för att lägga till en ny mall.",
+            "templateFormatInfoAlert2": "Använd $ {attribute} för att omsluta de egenskaper du behöver visa",
+            "templateFormatInfoAlertExample": "Objektets id är <span style = 'white-space: nowrap'> $ {properties.id} </span> eller <span style = 'white-space: nowrap'> $ {properties [ 'data-value']} </span> ",
+            "templateError": "Det uppstod ett fel när mallen skulle tillämpas på den information som servern returnerade. Kontrollera mallen",
+            "templatePreview": "Förhandsvisning av mall",
+            "heightOffset": "Height offset (m)",
+            "visibilityLimits": {
+                "title": "Synlighetsgränser",
+                "serverValuesUpdateUndefined": "Servern angav inga synlighetsgränser för detta lager",
+                "serverValuesUpdate": "Servern angav min och max zoomskala för detta lager",
+                "serverValuesUpdateMinScale": "Servern gav endast min zoomskala för detta lager",
+                "serverValuesUpdateMaxScale": "Servern gav endast max zoomskala för detta lager",
+                "rangeError": "Minsta värde är större än maxvärdet. Ange ett område där det maximala värdet är större än minimivärdet",
+                "serverValuesError": "Det är inte möjligt att begära lägsta och högsta skalbarhetsgräns för servern. Troligen på grund av fel i nätverksanslutningen eller saknad kapacitet slutpunkt",
+                "updateWMSCapabilities": "Begär begränsningar för minsta och största skalbarhet för servern",
+                "maxValue": "Max värde (exkluderat)",
+                "maxValuePlaceholder": "Välj maxvärde",
+                "valueNoResultsText": "Inga alternativ matchar ingångsvärdet",
+                "createOption": "Lägg till nytt värde {label}",
+                "minValue": "Minsta värde (ingår)",
+                "minValuePlaceholder": "Välj minvärde",
+                "type": "Gränsvärde",
+                "scale": "Skala",
+                "resolution": "Upplösning"
+            },
+            "tooltip": {
+                "label": "Verktygstips",
+                "title": "Titel",
+                "description": "Beskrivning",
+                "both": "Titel och beskrivning",
+                "none": "Inget verktygstips",
+                "labelPlacement": "Placering",
+                "right": "Höger",
+                "left": "Vänster",
+                "bottom": "Nederst",
+                "top": "Överst",
+                "editLayerName": "Redigera lagernamn",
+                "confirmLayerName": "Bekräfta lagernamnändring"
+            },
+            "legendOptions": {
+              "title": "Förklaring",
+              "legendWidth": "Bredd",
+              "legendHeight": "Höjd",
+              "legendPreview": "Förhandsgranska"
+            },
+            "enableLocalizedLayerStyles": {
+                "label": "Aktivera lokal stil",
+                "tooltip": "Obs! Denna parameter kräver specifika konfigurationer på GeoServer"
+            },
+            "format": {
+                "title": "Format",
+                "refresh": "Hämta format som stöds",
+                "loading": "Läser in ...",
+                "noOption": "Inget alternativ",
+                "error": {
+                    "title": "Fel",
+                    "message": "Det gick inte att hämta formatet"
+                }
+            }
+        },
+        "longitude": "Lon",
+        "latitude": "Lat",
+        "notification": {
+            "update": "Uppdatera",
+            "warning": "Varning",
+            "success": "Framgång",
+            "backgroundLayerNotSupported": "Den tidigare valda bakgrunden stöds inte för den här typen av kartor. Den första tillgängliga används istället.",
+            "noBackgroundLayerSupported": "Det finns inga bakgrundslager som stöds för den här typen av kartor.",
+            "updateOldMap": "Detta är en gammal karta, så alla funktioner kan inte aktiveras. Klicka på uppgraderingsknappen för att uppgradera kartan eller helt enkelt avvisa den här aviseringen om du inte vill uppgradera den.",
+            "warningSaveUpdatedMap": "Vissa lager har inte uppdaterats korrekt.",
+            "saveUpdatedMap": "Alla lager har uppdaterats.",
+            "incompatibleBackgroundAndProjection": "Projektionen du valde är inte kompatibel för bakgrund. Byt till en kompatibel -eller en tom -bakgrund och välj sedan den här projektionen.",
+            "incompatibleDataAndProjection": "Nuvarande lager (er) och kartprojektion är inte helt kompatibla. Delar eller all data kanske inte visas på kartan."
+        },
+        "dock": {
+            "row": "{rowsSelected} rad vald",
+            "rader": "{rader utvalda} rader markerade"
+        },
+        "globeswitcher": {
+            "tooltipDeactivate": "Avsluta 3D -läge",
+            "tooltipActivate": "Öppna 3D -läge"
+        },
+        "cookie":{
+            "info": "Den här webbplatsen använder cookies för att förbättra din upplevelse. Vi antar att du är ok med detta, men du kan välja bort det om du vill.",
+            "moreDetailsButton": "Fler detaljer",
+            "leave": "Lämna",
+            "accept": "Acceptera"
+        },
+        "background": "Bakgrund",
+        "language": "Språk",
+        "mousePositionCoordinates": "Markörens koordinater",
+        "mouseCoordinates": "Koordinater:",
+        "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Höjd:",
+        "mousePositionNoElevation": "Ej tillgängligt",
+        "elevationLoading": "Läser in ...",
+        "elevationLoadingError": "Fel",
+        "elevationNotAvailable": "Ej tillgängligt",
+        "mapScale": "Skala:",
+        "showMousePositionCoordinates": "Visa/dölj koordinater",
+        "showCrsSelector": "Välj projektion",
+        "crsSelectorFilterPlaceholder": "Filterprojektion",
+        "crsSelectorSelectedCRS": "Vald:",
+        "menu": "Meny",
+        "options": "Alternativ",
+        "settings": "Inställningar",
+        "settingsTooltip": "Inställningar",
+        "help": "Hjälp",
+        "docs": "Dokumentation",
+        "docsTooltip": "Dokumentation",
+        "gohome": "Tillbaka till startsidan",
+        "back": "Tillbaka till importören",
+        "printbutton": "Skriv ut",
+        "printToolTip": "Skriv ut",
+        "annotationsbutton": "Karttexter",
+        "noresultfound": "Inget resultat hittades",
+        "save": "Spara",
+		"saveAs": "Spara som ...",
+        "opacity": "Genomsynlighet",
+        "elevation": "Höjd",
+        "close": "Stäng",
+        "cancel": "Avbryt",
+        "no": "No",
+        "yes": "Ja",
+        "confirm": "Bekräfta",
+        "confirmTitle": "Bekräftar du?",
+        "pageInfo": "{total, plural, =0 {Inga objekt} =1 {{total} karta av {total}} other {Kartor: {start}-{end} av {total}}}",
+        "loading": "Läser in ...",
+        "group": "Grupp",
+        "groups": "Grupper",
+        "permission": "Behörighet",
+        "permissions": "Behörigheter",
+        "global": {
+            "colors": {
+                "red": "{number, plural, = 0 {Red} = 1 {Red} annan {Reds}}",
+                "blue": "{number, plural, = 0 {Blue} = 1 {Blue} annan {Blues}}",
+                "green": "{number, plural, = 0 {Green} = 1 {Green} annan {Greens}}",
+                "gray": "{number, plural, = 0 {Gray} = 1 {Gray} annan {Grays}}",
+                "jet": "{number, plural, = 0 {Jet} = 1 {Jet} annan {Jet}}",
+                "brown": "{number, plural, = 0 {Brown} = 1 {Brown} annan {Browns}}",
+                "purple": "{number, plural, = 0 {purple} = 1 {purple} annan {Purples}}",
+                "random": "{number, plural, = 0 {Random} = 1 {Random} annan {Random}}",
+                "orrd": "OrRd",
+                "pubu": "PuBu",
+                "bupu": "BuPu",
+                "oranges": "Oranges",
+                "bugn": "BuGn",
+                "ylorbr": "YlOrBr",
+                "ylgn": "YlGn",
+                "reds": "Röd",
+                "rdpu": "RdPu",
+                "greens": "Greens",
+                "ylgnbu": "YlGnBu",
+                "purples": "Purples",
+                "gnbu": "GnBu",
+                "greys": "Greys",
+                "ylorrd": "YlOrRd",
+                "purd": "PuRd",
+                "blues": "Blues",
+                "pubugn": "PuBuGn",
+                "viridis": "grönt",
+                "spectral": "spektrum",
+                "rdylgn": "RdYlGn",
+                "rdbu": "RdBu",
+                "piyg": "PiYg",
+                "prgn": "PrGn",
+                "rdylbu": "RdYlBu",
+                "brbg": "BrBg",
+                "rdgy": "RdGy",
+                "puor": "PuOr",
+                "set2": "Set 2",
+                "accent": "Accent",
+                "set1": "Set 1",
+                "set3": "Set 3",
+                "dark2": "Dark 2",
+                "paired": "Parade",
+                "pastel2": "Pastell 2",
+                "pastel1": "Pastell 1",
+                "custom": "Custom"
+            }
+        },
+        "home":{
+            "open": "Öppna",
+            "shortDescription": "En modern webbkarta som bygger på OpenLayers, Leaflet och ReactJS. <br/> <small> Besök <a href=\"https://mapstore.readthedocs.io/en/latest/\"> MapStores dokumentation </a ></small> ",
+            "forkMeOnGitHub": "Skapa en fork på GitHub",
+            "description": "MapStore har utvecklats för att på ett enkelt och intuitivt sätt skapa, spara och dela kartor och mashups som skapats genom att välja innehåll från välkända källor som OpenStreetMap, Google Maps eller från tjänster som tillhandahålls av organisationer som använder öppna protokoll som OGC WMS , WFS, WMTS eller TMS och så vidare ... <br/> Besök <a href=\"https://mapstore.readthedocs.io/en/latest/\"> startsidan </a> för mer information.",
+            "Applications": "Applikationer",
+            "Exempel": "Exempel",
+            "LinkedinGroup": "Mapstore på Linkedin",
+            "scrollTop": "Bläddra till toppen av sidan",
+            "footerDescription": "<strong> GeoSolutions </strong> <a href=\"mailto:sales@geosolutionsgroup.com\"> sales@geosolutionsgroup.com </a>"
+        },
+        "cookiesPolicyNotification": {
+            "title": "Denna webbplats använder cookies",
+            "meddelande": "Genom att fortsätta använda vår webbplats accepterar du vår användning av cookies.",
+            "confirm": "Jag håller med"
+        },
+        "manager": {
+            "openInANewTab": "Öppna karta",
+            "deleteMap": "Ta bort karta",
+            "deleteMapMessage": "Vill du verkligen ta bort den här kartan?",
+            "editMapMetadata": "Redigera kartegenskaper",
+            "mapTypes_combo": "Välj kartvisning:",
+            "theme_combo": "Välj tema:",
+            "maps_title": "Kartor",
+            "locales_combo": "Språk:",
+            "featuredMaps": "Topplista"
+        },
+        "newMap": "Ny karta",
+        "newMapEmpty": "Tom karta",
+        "newMapContext": "Befintligt sammanhang",
+		"maps": {
+            "title": "Kartor",
+            "addToFeaturedMaps": "Lägg till i topplistan",
+            "removeFromFeaturedMaps": "Ta bort från topplistan",
+            "feedback": {
+                "noDetailsAvailable": "Kartinformation inte tillgänglig",
+                "successSavedMap": "Kartan har skapats korrekt",
+                "errorDeletingMap": "Fel vid borttagning av denna karta",
+                "errorDeletingThumbnailOfMap": "Fel vid radering av miniatyrbild för den här kartan",
+                "errorDeletingDetailsOfMap": "Fel vid borttagning av detaljer för den här kartan",
+                "allResDeleted": "Alla resurser som är associerade med den här kartan har tagits bort",
+                "errorFetchingDetailsOfMap": "Fel vid hämtning av detaljer för den här kartan",
+                "detaljer": {
+                    "deleteSuccesfully": "Uppgifterna har tagits bort korrekt",
+                    "savedSuccesfully": "Detaljerna har sparats korrekt",
+                    "updatedSuccesfully": "Detaljerna har uppdaterats korrekt"
+                },
+                "thumbnail": {
+                    "deleteSuccesfully": "Miniatyrbilden har tagits bort korrekt",
+                    "savedSuccesfully": "Miniatyrbilden har sparats korrekt",
+                    "updatedSuccesfully": "Miniatyrbilden har uppdaterats korrekt"
+                },
+                "errorWhenSaving": "Ett fel uppstod under lagringsprocessen",
+                "errorWhenUpdating": "Ett fel uppstod under uppdateringsprocessen",
+                "errorWhenDeleting": "Ett fel uppstod under borttagningsprocessen",
+                "errorSizeExceeded": "Prova att minska storleken eller kvaliteten på bilderna",
+                "errorLoadingContexts": "Ett fel uppstod när webbkarta laddades"
+            },
+			"search": "Sök..."
+		},
+        "resources": {
+            "successSaved": "Den här resursen har sparats korrekt",
+            "savingError": "Det gick inte att spara resursen",
+            "deleteConfirmTitle": "Är du säker",
+            "deleteConfirmMessage": "Är du säker på att du vill ta bort den här resursen?",
+            "deleteConfirmButtonText": "Ta bort",
+            "deleteCancelButtonText": "Stäng",
+            "resource": {
+                "deleteResource": "Ta bort",
+                "editResource": "Redigera egenskaper",
+                "editResourceData": "Redigera resursdata",
+                "addToFeatured": "Lägg till i topplistan",
+                "removeFromFeatured": "Ta bort från topplistan",
+                "showDetails": "Visa detaljer"
+            },
+            "contents": {
+                "title": "Innehåll"
+            },
+            "dashboards": {
+                "newDashboard": "Ny verktygspanel",
+                "title": "Verktygspaneler ({count})",
+                "titleNoCount": "Verktygspaneler",
+                "create": "Skapa verktygspanel",
+                "noDashboardAvailable": "Ingen verktygspanel tillgänglig",
+                "createANewOne": "Skapa en ny",
+                "deleteError": "Det gick inte att radera verktygspanelen.",
+                "errorLoadingDashboards": "Ett fel uppstod när verktygspanelen skulle laddas."
+            },
+            "maps": {
+                "title": "Kartor ({count})",
+                "noMapAvailable": "Ingen karta tillgänglig",
+                "createNewOne": "Skapa en ny",
+                "unsavedMapConfirmTitle": "Ej sparade ändringar",
+                "unsavedMapConfirmMessage": "Är du säker på att du vill lämna osparade ändringar?",
+                "unsavedMapConfirmButtonText": "Lämna",
+                "unsavedMapCancelButtonText": "Stäng"
+            },
+            "geostories": {
+                "newGeostory": "Ny kartberättelse",
+                "title": "Kartberättelser ({count})",
+                "titleNoCount": "Kartberättelser",
+                "create": "Skapa kartberättelse",
+                "noGeostoryAvailable": "Ingen kartberättelse tillgänglig",
+                "createANewOne": "Skapa en ny",
+                "deleteError": "Ett fel uppstod när en kartberättelse skulle raderas",
+                "errorLoadingGeostories": "Ett fel uppstod när kartbeättelser skulle laddas"
+            }
+        },
+        "map": {
+            "errorLoadingFont": "Teckensnittsfamiljen {familj} har inte lästs in korrekt. Vissa element (som symboler i markörer) kan ha återgivningsproblem.",
+            "loading": "Läser in ...",
+            "loadingSpinner": "Läser in karta",
+            "loadingerror": "Fel vid kartläsning",
+            "name": "Namn",
+            "description": "Beskrivning",
+            "namePlaceholder": "Kartnamn",
+            "descriptionPlaceholder": "Kartbeskrivning",
+            "saveTitle": "Spara karta",
+            "saveText": "Spara aktuell karta?",
+            "thumbnail": "Miniatyrbild",
+            "message": "Släpp eller klicka för att importera en bild",
+            "suggestion": "(bäst 300 px X 180 px, max 500 kb)",
+            "errorFormat": "Format som stöds: png/jpg",
+            "errorSize": "Max tillåten storlek: 500 kb",
+            "errorCustomSize": "Max tillåten storlek: {maxFileSize}",
+            "error": "Den angivna bilden är ogiltig",
+            "savedMapTitle": "Sparad karta",
+            "savedMapMessage": "Kartan har sparats korrekt.",
+            "thumbnailError": {
+                "error403": "Du får inte lov att uppdatera miniatyren",
+                "error404": "Ett fel uppstod när miniatyrbilden skapades",
+                "error409": "En miniatyrbild med detta namn finns redan",
+                "errorDefault": "Nätverksfel"
+            },
+            "mapError": {
+                "errorTitle": "Kan inte spara den aktuella kartan",
+                "error403": "Du får inte uppdatera kartan",
+                "error404": "Ett fel uppstod när kartan skapades på servern",
+                "error409": "En resurs med detta namn finns redan",
+                "error500": "Internt serverfel. Kontrollera om kartans konfigurationsfilstorlek överskrider den fasta gränsen",
+                "errorDefault": "Nätverksfel"
+            },
+            "permissions": {
+                "noRules": "Inga regler",
+                "addRule": "Lägg till en regel ...",
+                "selectGroup": "Välj en grupp ...",
+                "canView": "kan visa",
+                "canWrite": "kan redigera",
+                "noResult": "inga resultat hittades",
+                "title": "Gruppbehörigheter"
+            },
+            "details": {
+                "back": "Back",
+                "save": "Spara",
+                "show": "Visa informationsblad",
+                "add": "Lägg till nya detaljer",
+                "edit": "Redigera detaljer",
+                "rowTitle": "Detaljblad",
+                "title": "Detaljblad - {name}",
+                "undo": "Ångra borttagning",
+                "showPreview": "Visa förhandsgranskning",
+                "hidePreview": "Dölj förhandsgranskning",
+                "delete": "Ta bort informationsblad",
+                "titleUnsavedChanges": "Är du säker på att stänga utan att spara dina ändringar?",
+                "sureToClose": "Vill du stänga utan att spara dina ändringar?",
+                "fieldsChanged": "Vissa attribut har ändrats",
+                "showAtStartup": "Visa vid start",
+                "showAsModal": "Visa som modal"
+            },
+            "errors": {
+                "loading": {
+                    "title": "Fel vid inläsning av karta",
+                    "notFound": "Karta hittades inte",
+                    "notAccessible": "Karta inte tillgänglig",
+                    "unknownError": "<p> <small> En av följande saker kan vara orsaken: </small> <ul> <li> du har inte behörighet att komma åt kartan </li> <li> du är försöker komma åt en karta som inte finns </li> <li> kartan har tagits bort </li> <li> kartans projektion är inte konfigurerad </li> </ul> <p> ",
+                    "projectionError": "Kartans projektion {projektion} är inte konfigurerad",
+                    "title": "Kartan kan inte visas"
+                }
+            }
+        },
+        "floatinglegend": {
+            "showTOC": "Visa lager",
+            "showLegend": "Visa legend",
+            "hideLegend": "Dölj legend"
+        },
+        "addgroup": {
+            "addbtn": "Lägg till",
+            "groupName": "Gruppnamn"
+        },
+        "toc": {
+            "toggleLayerVisibility": "Släck/tänd lager",
+            "toggleGroupVisibility": "Släck/tänd grupp",
+            "displayLegendAndTools": "Visa teckenförklaring",
+            "zoomToLayerExtent": "Zooma till lagrets utbredning",
+            "addLayer": "Lägg till lager",
+            "addLayerToGroup": "Lägg till lager i vald grupp",
+            "addGroup": "Lägg till grupp",
+            "addSubGroup": "Lägg till undergrupp till den valda gruppen",
+            "toolZoomToLayerTooltip": "Zooma till lagrets utbredning",
+            "toolZoomToLayersTooltip": "Zooma till valda  lagers utbredning",
+            "toolLayerSettingsTooltip": "Valda lagerinställningar",
+            "toolGroupSettingsTooltip": "Valda gruppinställningar",
+            "toolTrashLayerTooltip": "Ta bort valt lager",
+            "toolTrashLayersTooltip": "Ta bort valda lager",
+            "toolTrashGroupTooltip": "Ta bort vald grupp",
+            "toolFeaturesGridTooltip": "Öppna attributtabell",
+            "layerFilterTooltip": "Filtrera lager",
+            "toolDownloadTooltip": "Exportera lagerdata",
+            "noFilteredResults": "Inga resultat",
+            "filterPlaceholder": "Filtrera lager",
+            "clearFilter": "Rensa filter",
+            "toolReloadLayerTooltip": "Tvinga om laddning av valt lager",
+            "toolReloadLayersTooltip": "Tvinga om laddning av valda lager",
+            "statusIconOpen": "Stäng grupp",
+            "statusIconClose": "Öppna grupp",
+            "grabLayerIcon": "Drag och sortera lager",
+            "grabGroupIcon": "Drag och sortera grupp",
+            "toggleLayerVisibilityWarning": "Växla lagersynlighet. Varning: lagret laddades inte korrekt",
+            "createWidget": "Skapa en widget för det valda lagret",
+            "editLayerProperties": "Redigera lageregenskaper",
+            "browseData": "Öppna attributbord",
+            "removeLayer": "Ta bort lager",
+            "loadingerror": "Lagret har inte laddats korrekt eller är inte tillgängligt.",
+            "measure": "Mät",
+            "layers": "Lager",
+            "drawerButton": "Lager",
+            "refreshTitle": "Uppdatera lager",
+            "refreshConfirm": "Uppdatera",
+            "refreshMessage": "Ladda om WMS-lagerkonfigurationen från servern / servern",
+            "refreshError": "Fel vid uppdatering av lager:",
+            "epsgNotSupported": "CRS {epsg} stöds inte för zoom till lager",
+            "compareTool": "Verktyg för att jämföra lager",
+            "configureTool": "Konfigurera",
+            "spyconfiguration": "Titthål",
+            "swipeconfiguration": "Rullgardin",
+            "swipe": "Rullgardin",
+            "spyGlass": "Titthål",
+            "direction": "Svepriktning",
+            "radius": "Radie",
+            "filterIconEnabled": "Inaktivera lagerfilter",
+            "filterIconDisabled": "Aktivera lagerfilter",
+            "notVisibleZoomIn": "Lagret är inte synligt eftersom det ligger utanför upplösningsgränserna. Zooma in för att visa lagret",
+            "notVisibleZoomOut": "Lagret är inte synligt eftersom det ligger utanför upplösningsgränserna. Zooma ut för att visa lagret",
+            "refreshOptions": {
+                "bbox": "Uppdatera BBOX",
+                "search": "Uppdatera sökalternativ",
+                "title": "Uppdatera titel",
+                "dimensions": "Uppdatera dimensioner"
+            },
+            "layerInfoTooltip": "Uppdatera lagertitel och beskrivning",
+            "layerMetadata": {
+                "identifier": "Identifierare",
+                "title": "Titel",
+                "abstract": "Abstract",
+                "purpose": "Syfte",
+                "source": "Source",
+                "createdDate": "Datum för skapande",
+                "lastRevisionDate": "Datum för senaste översyn",
+                "pointsOfContact": "Kontaktpunkter",
+                "individualName": "Individuellt namn",
+                "organisationName": "Organisationsnamn",
+                "contactInfo": "Kontaktinformation",
+                "phone": "Telefonnummer",
+                "deliveryPoints": "Leveransställen",
+                "city": "Stad",
+                "postalCode": "Postnummer",
+                "country": "Land",
+                "URL": "URL",
+                "metadataUrl": "Metadata URL",
+                "role": "Roll",
+                "hoursOfService": "Öppettider",
+                "electronicMailAddress": "E-postadress",
+                "subject": "Subject",
+                "type": "Typ",
+                "creator": "Skapad av",
+                "defaultPropName": "Egenskap = {propName} ",
+                "toolLayerMetadataTooltip": "Visa det valda lagrets metadata",
+                "layerMetadataPanelTitle": "Lagermetadata",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Fel i metadatasökning"
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Kontakt",
+                    "default": "Artikel"
+                },
+                "emptyMetadata": "Inga metadata tillgängliga"
+            },
+            "thematic": {
+                "ification_field ":" Klassificeringsfält: ",
+                "ification_method ":" Klassificeringsmetod: ",
+                "ranking_aggregate": "Sammanlagd funktion:",
+                "ranking_colors": "Färgramp:",
+                "ification_intervals ":" Intervaller: ",
+                "preview": "Förhandsgranska",
+                "remove_thematic": "Tillbaka till enkel stil",
+                "värden": {
+                    "equalInterval": "Lika intervall",
+                    "quantile": "Quantile",
+                    "jenks": "Naturliga raster",
+                    "sum": "Summa",
+                    "avg": "Genomsnitt",
+                    "count": "Count",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Konfiguration",
+                "apply": "Tillämpa klassificering",
+                "restore": "Återställ anpassningar",
+                "go_to_cfg": "Konfigurera ...",
+                "go_to_thema": "Använd den här konfigurationen",
+                "cfgError": "Fel i konfigurationen JSON",
+                "classify": "Klassificera",
+                "remove": "Ta bort klassificering",
+                "data_panel": "Data",
+                "classification_stroke ":" Stroke ",
+                "classification_error": "Fel vid anrop till klassificeringstjänsten: {meddelande}",
+                "fields_error": "Fel vid inläsning av fältlista: {meddelande}",
+                "interval_limit": "Intervaller bör vara ett tal mellan {min} och {max}",
+                "invalid_object": "Ogiltigt servicesvar",
+                "invalid_geometry": "Geometritypen är ogiltig, inte en punkt, rad eller polygon",
+                "invalid_attribute": "Ogiltig attributtyp i urvalet. Välj ett giltigt attribut från listan för klassificeringsmetoden",
+                "invalid_classes": "Max måste vara större än min i varje klass"
+            },
+            "error": {
+                "defaultGroupOnTop": "Gruppen {groupTitle} är inställd som standardmålgrupp, därför måste den ligga kvar överst"
+            }
+        },
+        "print":{
+            "paneltitle": "Skriv ut",
+            "layout": "Layout",
+            "sheetsize": "Arkstorlek:",
+            "legendoptions": "Förklaring alternativ",
+            "submit": "Skriv ut",
+            "title": "Titel",
+            "titleplaceholder": "Ange en titel ...",
+            "description": "Beskrivning",
+            "descriptionplaceholder": "Ange en beskrivning ...",
+            "resolution": "Upplösning:",
+            "defaultBackground": "Använd OSM som bakgrund",
+            "printtooltip": "Skriv ut",
+            "alternatives": {
+                "legend": "Inkludera legend",
+                "2pages": "Förklaring på distinkt sida",
+                "landscape": "Landskap",
+                "portrait": "Porträtt"
+            },
+            "legend": {
+                "font": "Etiketter Config:",
+                "forceLabels": "Tvinga etiketter:",
+                "antiAliasing": "Typsnitts-antialiasing:",
+                "iconsSize": "Ikonstorlek:",
+                "dpi": "Dpi:"
+            },
+            "layoutWarning": "Otillåten layout"
+        },
+        "backgroundSwitcher": {
+            "tooltip": "Välj bakgrund"
+        },
+        "info":{
+            "tooltip": "Fråga på objekt på kartan"
+        },
+        "expandtoolbar": {
+            "tooltip": "Fäll upp / Fäll ihop"
+        },
+        "getFeatureInfoTitle": "Objektinformation",
+        "identifyTitle": "Objektinformation",
+        "identifyNoQueryableLayers": "Inget aktivt sökbart lager",
+        "identifyRevGeocodeHeader": "Koordinater",
+        "identifyZoomToFeature": "Zooma till objekt",
+        "identifyStopHighlightingFeatures": "Markera inte objekt",
+        "identifyHighlightFeatures": "Markera objekt",
+        "identifyShowCoordinateEditor": "Visa koordinatredigerare",
+        "identifyHideCoordinateEditor": "Dölj koordinatredigerare",
+        "identifyCoordinateApplyChanges": "Tillämpa ändringar",
+        "identifyChangeCoordinateFormat": "Ändra koordinatformat",
+        "identifyRevGeocodeModalTitle": "Adress",
+        "identifyRevGeocodeSubmitText": "Mer information",
+        "identifyRevGeocodeCloseText": "Stäng",
+        "identifyRevGeocodeError": "Det gick inte att geokoda",
+        "identifyEdit": "Redigera",
+        "identifyLayerSelectNoResult": "Inga lager hittades",
+        "getFeatureInfoError": {
+            "title": "Oj, något är fel",
+            "text": "Ett fel har uppstått under denna <b> GetFeatureInfo </b> begäran"
+        },
+        "noFeatureInfo": "Det finns ingen information tillgänglig i denna punkt",
+        "noInfoForLayers": "Det finns inga objekt här i dessa lager: ",
+        "history":{
+            "barLabel": "Karthistorik",
+            "undoBtnTooltip": "Föregående vy",
+            "redoBtnTooltip": "Efterkommande vy"
+        },
+        "infoFormatLbl": "Informationsbladets format",
+        "infoTriggerLabel": "Händelse för visning av informationsbladet",
+        "click": "Vid klick på objektet",
+        "hover": "Håll muspekaren över objektet",
+        "measureSupport": {
+            "continueLine": "Klicka för att fortsätta dra linjen",
+            "continuePolygon": "Klicka för att fortsätta rita polygonen",
+            "startDrawing": "Klicka för att börja rita"
+        },
+        "measureComponent": {
+            "Measure": "Mät",
+            "MeasureLength": "Mät avstånd",
+            "MeasureArea": "Mätområde",
+            "MeasureBearing": "Mät lager",
+            "MeasureTrueBearing": "Mät sant lager",
+            "tooltip": "Mät längd, yta och lager",
+            "title": "Mät",
+            "lengthButtonText": "Linje",
+            "areaButtonText": "Area",
+            "resetButtonText": "Återställ",
+            "lengthLabel": "Length",
+            "areaLabel": "Area",
+            "bearingLabel": "Bäring",
+            "trueBearingLabel": "Sann bäring",
+            "formula": "Formel för avståndsberäkning",
+            "showLabel": "Visa mät-etikett",
+            "saveMeasure": "Spara mätningen som en karttext",
+            "addAsAnnotation": "Lägg till som karttext",
+            "newMeasure": "Ny karttext",
+            "selectTool": "Välj ett mätverktyg",
+            "exportToGeoJSON": "Exportera till GeoJSON",
+            "resetTooltip": "Rensa åtgärder",
+            "addAsLayer": "Lägg till som lager"
+        },
+        "search":{
+            "layerMustBeVisible": "Målskiktet är inaktivt",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautiskt",
+            "changeSearchInputField": "Ändra sökverktyget",
+            "addressSearch": "Sök efter plats",
+            "coordinatesSearch": "Sök på koordinater",
+            "searchservicesbutton": "Konfigurera söktjänster",
+            "configpaneltitle": "Skapa/redigera en söktjänst",
+            "serviceslistlabel": "Tillgängliga tjänster",
+            "overriedservice": "Åsidosätt standardtjänster",
+            "addbtn": "Lägg till",
+            "nextbtn": "Nästa",
+            "prevbtn": "Tillbaka",
+            "savebtn": "Spara/uppdatera",
+            "cancelbtn": "Avbryt",
+            "confirmremove": "Ta bort?",
+            "cancelconfirm": "Är du säker?",
+            "searchByBookmark": "Sök efter bokmärke",
+            "bookmarksettings": "Bokmärkeinställningar",
+            "zoomToBookmark": "Zooma till valt bokmärke",
+            "bookmarkFilter": "Filtrera bokmärken",
+            "editBookmark": "Redigera bokmärke",
+            "deleteBookmark": "Radera bokmärke",
+            "b_listpaneltitle": "Visa bokmärken",
+            "b_newpaneltitle": "Lägg till ett nytt bokmärke",
+            "latitude": "Lat",
+            "longitude": "Lon",
+            "b_title": "Titel",
+            "b_layer_tooltip": "Växla mellan omladdning av lagersynlighet",
+            "b_bbox": "Gränslåda",
+            "b_bbox_tooltip": "Använd aktuell vy som begränsningsruta",
+            "b_bbox_south": "Söder",
+            "b_bbox_south_placeholder": "Ange söder",
+            "b_bbox_west": "Väst",
+            "b_bbox_west_placeholder": "Ange väst",
+            "b_bbox_east": "Öst",
+            "b_bbox_east_placeholder": "Gå in i öst",
+            "b_bbox_north": "Norr",
+            "b_bbox_north_placeholder": "Ange norr",
+            "bookmarkslistempty": "Inget bokmärke definierat",
+            "b_placeholder": "Välj ett bokmärke ...",
+            "b_clearvalue": "Rensa bokmärke",
+            "b_noresult": "Inga bokmärken hittades",
+            "s_name": "Namn",
+            "s_title": "Titel",
+            "s_description": "Beskrivning",
+            "s_priority": "Prioritet",
+            "s_url": "Tjänste -webbadress",
+            "s_layer": "Lager",
+            "s_attributes": "Attribut",
+            "s_sort": "Sortera efter",
+            "s_max_features": "Max antal objekt",
+            "s_max_zoom": "Max zoomnivå",
+            "s_wfs_props_label": "WFS -tjänstegenskaper",
+            "s_wfs_opt_props_label": "Valfria egenskaper",
+            "s_result_props_label": "Resultatvisningsegenskaper",
+            "s_priority_info": "Används för att sortera sökresultat, lägre värden först. Nominatim-resultat har prioritet = 5",
+            "serviceslistempty": "Inga anpassade tjänster definierade",
+            "service_missing": "Tjänsten {serviceType} är inte konfigurerad",
+            "generic_error": "Ett fel uppstod under sökningen. Felinformation: {message}",
+            "showGFI": "Visa GFI",
+            "errors": {
+                "nonQueriableLayers": "Skiktet i URL:en kan inte frågas eller är inte synligt på kartan.",
+                "serverError": "Servern har returnerat ett fel när GetFeatureInfo -begäran utförs. Kontrollera om parametrarna är korrekta."
+            },
+            "s_launch_info_panel": {
+                "label": "Starta informationspanelen",
+                "no_info": "Ingen information",
+                "all_layers": "Alla lager",
+                "single_layer": "Enkelt lager",
+                "no_info_description": "Identifieringspanelen visas inte vid sökning",
+                "all_layers_description": "Identifieringspanelen kommer att visa information om alla lager som är synliga på kartan",
+                "single_layer_description": "Identifieringspanelen visar endast information om detta lager",
+                "openFeatureInfoButtonCheckbox": "Använd knappen för att öppna objektinformation",
+                "forceSearchLayerVisibility": "Tvinga söklagers synlighet"
+            },
+            "advancedSearchPanel": {
+                "title": "Avancerade sökfilter",
+                "context": {
+                "title": "Webbkarta"
+                },
+                "showTooltip": "Visa avancerade filter",
+                "showTooltipActive": "Visa avancerade filter (aktiva)",
+                "hideTooltip": "Dölj avancerade filter",
+                "hideTooltipActive": "Dölj avancerade filter (aktiva)"
+            }
+        },
+        "draw": {
+            "fill": "Fyll",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Färg",
+            "lineDash": "Linjemönster",
+            "stroke": "Linje",
+            "opacity": "Opacitet",
+            "width": "Bredd",
+            "textRotation": "Rotation",
+            "font": {
+                "textColor": "Färg",
+                "family": "Familj",
+                "size": "Storlek",
+                "style": "Stil",
+                "weight": "Vikt",
+                "textAlign": "Justera"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Form",
+                "size": "Storlek",
+                "type": "Typ",
+                "icon": "Ikon"
+            }
+        },
+        "drawLocal": {
+            "draw": {
+                "toolbar": {
+                    "actions": {
+                        "title": "Avbryt ritning",
+                        "text": "Avbryt"
+                    },
+                    "undo": {
+                        "title": "Ta bort den senast ritade punkten",
+                        "text": "Radera sista punkten"
+                    },
+                    "buttons": {
+                        "polyline": "Rita en polylinje",
+                        "polygon": "Rita en polygon",
+                        "rectangle": "Rita en rektangel",
+                        "circle": "Rita en cirkel",
+                        "marker": "Rita en markör"
+                    }
+                },
+                "handlers": {
+                    "circle": {
+                        "tooltip": {
+                            "start": "Klicka och dra för att rita en cirkel."
+                        }
+                    },
+                    "marker": {
+                        "tooltip": {
+                            "start": "Klicka på kartan för att placera en markör."
+                        }
+                    },
+                    "polygon": {
+                        "tooltip": {
+                            "start": "Klicka för att börja rita en form.",
+                            "forts": "Klicka för att fortsätta rita en form.",
+                            "end": "Klicka på den första punkten för att stänga den här formen."
+                        }
+                    },
+                    "polyline": {
+                        "error": "Fel: formkanterna får inte korsas!",
+                        "tooltip": {
+                            "start": "Klicka för att börja rita en linje.",
+                            "forts": "Klicka för att fortsätta rita linjen.",
+                            "end": "Klicka på sista punkten för att avsluta raden."
+                        }
+                    },
+                    "rectangle": {
+                        "verktygstips": {
+                            "start": "Klicka och dra för att rita en rektangel."
+                        }
+                    },
+                    "simpleshape": {
+                        "tooltip": {
+                            "end": "Släpp musen för att avsluta ritningen."
+                        }
+                    }
+                }
+            },
+            "edit": {
+                "tooltip": {
+                    "actions": {
+                        "save": {
+                            "title": "Spara ändringar.",
+                            "text": "Spara"
+                        },
+                        "cancel": {
+                            "title": "Avbryt redigeringen, kasserar alla ändringar.",
+                            "text": "Avbryt"
+                        }
+                    },
+                    "buttons": {
+                        "edit": "Redigera lager.",
+                        "editDisabled": "Inga lager att redigera.",
+                        "remove": "Ta bort lager.",
+                        "removeDisabled": "Inga lager att ta bort."
+                    }
+                },
+                "handlers": {
+                    "edit": {
+                        "tooltip": {
+                            "text": "Dra handtag eller markör för att redigera objektet.",
+                            "subtext": "Klicka på Avbryt för att ångra ändringar."
+                        }
+                    },
+                    "remove": {
+                        "tooltip": {
+                            "text": "Klicka på ett objekt för att ta bort det"
+                        }
+                    }
+                }
+            }
+        },
+        "locate": {
+            "tooltip": "Visa min position",
+            "tooltipDeactivate": "Sluta visa min position",
+            "metersUnit": "meter",
+            "feetUnit": "fot",
+            "popup": "Du befinner dig inom {distance} {unit} från den här punkten",
+            "outsideMapBoundsMsg": "Du verkar befinna dig utanför kartans gränser"
+        },
+        "zoombuttons": {
+            "zoomInTooltip": "Zooma in",
+            "zoomOutTooltip": "Zooma ut",
+            "zoomAllTooltip": "Zooma till maximal utbredning"
+        },
+        "fullscreen": {
+            "tooltipActivate": "Byt till helskärm",
+            "tooltipDeactivate": "Avsluta helskärm",
+            "viewLargerMap": "Visa större karta"
+        },
+        "helptexts": {
+            "scaleBox": "Detta är hjälptexten för ScaleBox",
+            "zoomToMaxExtentButton": "Detta är hjälptexten för ZoomToMaxExtentButton",
+            "zoomIn": "Detta är hjälptexten för ZoomIn",
+            "zoomOut": "Detta är hjälptexten för ZoomOut",
+            "searchBar": "Skriv adressen till en plats att hitta, t.ex. Kungsgatan 1 Stockholm. Du kan till och med infoga koordinater i det här formatet: 43.87,10.20",
+            "metadataexplorer": "Detta är hjälptexten för MetadataExplorer",
+            "settingsPanel": "Detta är hjälptexten för SettingsPanel",
+            "gohome": "Detta är hjälptexten för Home",
+            "measureComponent": "Detta är hjälptexten för MeasureComponent",
+            "layerSwitcher": "Detta är hjälptexten för LayerSwitcher",
+            "infoButton": "Detta är hjälptexten för InfoButton",
+            "locateBtn": "Detta är hjälptexten för LocateBtn",
+            "snapshot": "Detta är hjälptexten för ögonblicksbilden",
+            "print": "Detta är hjälptexten för Print",
+            "shapefile": "Detta är hjälptexten för Shapefile",
+            "rasterstyler": "Definiera minvärde, maxvärde, antal klasser och färgramp för att generera en ny klassificering för det valda rasterskiktet",
+            "expandToolbar": "Detta är hjälptexten för Expand / Collapse",
+            "historyundo": "Använd den här knappen för att gå till föregående kartzoom och plats",
+            "historyredo": "Använd den här knappen för att gå till nästa kartzoom och plats",
+            "vectorstyler": "Lägg till regel och generera ett nytt stylat vektorgikt",
+            "styler": "Lägg till regel och skapa ett nytt stylat lager"
+        },
+        "queryform": {
+            "title": "Avancerad sökning",
+            "query": "Sök",
+            "apply": "Apply",
+            "reset": "Återställ",
+            "save": "Spara",
+            "discard": "Ångra",
+            "query_request_exception": "Begär fel",
+            "config": {
+                "load_config_exception": "Fel vid inläsning av konfiguration"
+            },
+            "comboField": {
+                "default_placeholder": "Välj...",
+                "drop_down": "Öppna rullgardinsmeny"
+            },
+            "form": {
+                "header": "Hitta i datamängden",
+                "dataset_header": "Datauppsättning"
+            },
+            "emptyfilter": "Inget filter har ställts in. Sökningen kan ta timeout om paginering inte stöds av servern.",
+            "attributefilter": {
+                "add_condition": "Lägg till villkor",
+                "delete": "Ta bort",
+                "deleteGroup": "Ta bort grupp",
+                "add_group": "Lägg till grupp",
+                "group_label_a": "Matcha",
+                "group_label_b": "av följande villkor:",
+                "combo_placeholder": "Attribut",
+                "text_placeholder": "Skriv text för sökning",
+                "attribute_filter_header": "Attributfilter",
+                "tooltipTextField": "använd <b>*</b> för valfritt antal av alla tecken </br> använd <b>. </b> för ett enda tecken </br> använd <b>! </b> för att undvika de två ovanstående (* och.) </br> ",
+                "groupField": {
+                    "any": "vilken som helst",
+                    "all": "alla",
+                    "none": "ingen"
+                },
+                "numberfield": {
+                    "isRequired": "Fältvärde krävs",
+                    "wrong_range": "Nedre gränsen måste vara lägre än den övre gränsen"
+                },
+                "datefield": {
+                    "wrong_date_range": "Startdatum måste vara tidigare än slutdatum"
+                },
+                "autocomplete": {
+                    "emptyList": "Inga resultat",
+                    "emptyFilter": "Filtret gav inga resultat",
+                    "open": "Öppen kombinationsruta"
+                }
+            },
+            "spatialfilter": {
+                "filterType": "Filtertyp",
+                "geometric_operation": "Geometrisk operation",
+                "combo_placeholder": "Välj...",
+                "spatial_filter_header": "Intresseområde",
+                "remove": "Ta bort",
+                "draw_start_label": "Rita området av intresse på kartan",
+                "dwithin_label": "meter",
+                "details": {
+                    "detail_button_label": "Detaljer",
+                    "details_header": "Urvalsinformation",
+                    "details_bbox_label": "Redigera koordinaterna för att ändra området",
+                    "details_circle_label": "Redigera de numeriska fälten för att ändra cirkelns radie och centrum",
+                    "reset_bbox": "Återställ",
+                    "save_bbox": "Spara BBOX -ändringar",
+                    "save_radius": "Spara radien/centrumändringarna",
+                    "radius": "Radie ({enhet})"
+                },
+                "methods": {
+                    "zone": "Zone",
+                    "viewport": "Viewport",
+                    "regions": "Regioner",
+                    "box": "Rektangel",
+                    "buffer": "Buffert",
+                    "circle": "Cirkel",
+                    "poly": "Polygon",
+                    "cql": "CQL"
+                },
+                "operations": {
+                    "intersects": "Korsar",
+                    "bbox": "BoundingBox",
+                    "contains": "Innehåller",
+                    "dwithin": "Avstånd från",
+                    "within": "Innehåller"
+                }
+            },
+            "crossLayerFilter": {
+                "title": "Lagerfilter",
+                "targetLayer": "Målskikt",
+                "clear": "Rensa filter",
+                "operation": "Operation",
+                "placeholder": "Välj lager",
+                "errors": {
+                    "noCrossLayerAvailable": "Tvärlagrefiltrering är inte tillgänglig för det valda lagret",
+                    "layerExcluded": "Endast lager som kommer från samma källa kan väljas som mållager för detta lagerfilter"
+                }
+            },
+            "modifiedFilter": "Filter bytt",
+            "modifiedFilterAlert": "Det finns ändringar som inte har sparats. Vill du spara dem?",
+            "resetFilter": "Ta bort filter",
+            "confirmReset": "Bekräfta",
+            "loadingError": "Det aktuella filtret orsakade ett renderingsproblem för lagret på kartan. Kontrollera lagerkonfigurationen på servern eller åtgärda filtret",
+            "modifiedFilterWithErrorAlert": "Filtret orsakar fel i återgivningen av lager, vill du spara det ändå?"
+        },
+        "annotations": {
+            "errorLoadingSymbols": "Det uppstod ett problem när symbollistan skulle laddas. Kontakta administratören för att kontrollera konfigurationsalternativen.",
+            "edit": "Redigera",
+            "remove": "Ta bort",
+            "save": "Spara karttext",
+            "saveGeometry": "Spara geometri",
+            "cancel": "Avbryt",
+            "back": "Tillbaka till karttext",
+            "applyStyle": "Tillämpa stil",
+            "addGeometry": "Lägg till en ny geometri",
+            "styleGeometry": "Ändra stil",
+            "deleteGeometry": "Ta bort alla karttextsgeometrier",
+            "geometries": "Geometrier",
+            "removeeannotation": "Vill du ta bort karttexten med titel: {title}?",
+            "removegeometry": "Vill du ta bort karttexten?",
+            "confirm": "Bekräfta",
+            "mandatory": "Obligatoriskt fält",
+            "emptygeometry": "Lägg till minst en giltig geometri",
+            "empty": "Inga karttexter ännu, klicka på [+] för att lägga till en karttext",
+            "add": "Ny",
+            "filter": "Filtrera karttexter ...",
+            "undo": "Är du säker på att du vill lämna redigeringen av karttexter?",
+            "titleUndoGeom": "Geometrin har ändrats",
+            "undoGeom": "Är du säker på att avsluta utan att spara? (Du kommer att förlora dina ändringar)",
+            "confirmGeom": "Bekräfta",
+            "cancelModalGeom": "Avbryt",
+            "deleteFeature": "Ta bort det här objektet",
+            "undoDeleteFeature": "Vill du radera det här objektet?",
+            "enableEdit": "Aktivera redigering",
+            "editMeasurement": "Redigera mätning",
+            "title": "Karttexter",
+            "zoomTo": "Zooma till karttexter",
+            "zoomToGeometry": "Zooma till geometri",
+            "removeGeometry": "Ta bort",
+            "hide": "Dölj karttext",
+            "show": "Visa karttext",
+            "tabCoordinates": "Koordinater",
+            "warning": "Varning!",
+            "measureWarningText": "Om du flyttar till redigering av mätpanelen kommer all stilsättning att tas bort",
+            "notShowAgain": "Visa inte detta meddelande igen",
+            "tabStyle": "Stil",
+            "insertText": "Sätt in karttexten",
+            "downloadtooltip": "Ladda ner karttexter",
+            "downloadcurrenttooltip": "Ladda ner aktuell karttext",
+            "downloadError": "Exportfel",
+            "loadtooltip": "Importera karttexter",
+            "loadtitle": "Importera karttexter",
+            "selectfiletext": "Släpp din fil här eller klicka för att välja den karttextsfil som ska importeras. (filer som stöds: JSON)",
+            "loadoverride": "Ersätt karttexter",
+            "loaderror": "Välj en eller flera textfiler. (filer som stöds: JSON)",
+            "defaulttitle": "Redigera standardtitel",
+            "tooltip": "Karttexter",
+            "field": {
+                "title": "Titel",
+                "description": "Beskrivning"
+            },
+            "titles": {
+                "marker": "Markör",
+                "line": "Line",
+                "polygon": "Polygon",
+                "text": "Text",
+                "circle": "Cirkel"
+            },
+            "editor": {
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautiskt",
+                "title": {
+                    "Polygon": "Polygonredigerare",
+                    "LineString": "Linjeredigerare",
+                    "Bearing": "Vinkelredigerare",
+                    "Circle": "Cirkelredigerare",
+                    "Point": "Markörredigerare",
+                    "MultiPoint": "Flerpunktsredigerare",
+                    "Text": "Textredigerare"
+                },
+                "center": "Center",
+                "add": "Lägg till nya koordinater",
+                "addByClick": "Lägg till nya koordinater genom att klicka på plus-knappen eller på kartan",
+                "valid": "Geometri är giltig",
+                "radius": "Radie",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitud",
+                "notValidMarker": "Infoga en giltig koordinat ( +|- 90 ° lat, +| -180 ° lon)",
+                "notValidPolyline": "All koordinat måste vara giltig ( +|- 90 ° lat, +| -180 ° lon)",
+                "notValidText": "Infoga ett textvärde och en giltig koordinat ( +|- 90 ° lat, +| -180 ° lon)",
+                "notValidCircle": "Infoga ett radievärde och en giltig koordinat ( +|- 90 ° lat, +| -180 ° lon)"
+            }
+        },
+        "user":{
+            "login": "Logga in",
+            "logout": "Logga ut",
+            "info": "Kontoinformation",
+            "details": "Användarinformation",
+            "noAttributesMessage": "Det finns ingen information relaterad till ditt konto",
+            "changePwd": "Ändra lösenord",
+            "newPwd": "Nytt lösenord",
+            "retypePwd": "Skriv om lösenord",
+            "passwordMinlenght": "Ditt lösenord måste vara minst {data} tecken",
+            "passwordCheckFail": "Lösenord matchar inte!",
+            "passwordInvalid": "Ogiltigt lösenord",
+            "username": "Användarnamn",
+            "password": "Lösenord",
+            "passwordMessage": "Lösenordet måste innehålla minst 6 tecken.",
+            "passwordInvalidChar": "Lösenordet får inte innehålla dessa tecken: {data}",
+            "passwordChanged": "Lösenord ändrat",
+            "passwordError": "Fel vid ändring av lösenord",
+            "signIn": "Logga in",
+            "loginFail": "Inloggning misslyckas",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Ange användarnamn och lösenord",
+                "usernamePwdIncorrect": "Fel användarnamn eller lösenord"
+            },
+            "detailsName": "Namn",
+            "detailsRole": "Roll",
+            "detailsGroups": "Grupper",
+            "detailsEmail": "E-post",
+            "detailsCompany": "Företag",
+            "detailsNotes": "Anteckningar"
+        },
+        "users": {
+            "title": "Hantera konton",
+            "users": "Användare",
+            "manageUsers": "Hantera användare",
+            "searchUsers": "sök efter användare ...",
+            "newUser": "Ny användare",
+            "editUser": "Redigera användare",
+            "deleteUser": "Ta bort användare",
+            "statusTitle": "status",
+            "enabled": "Enabled",
+            "groupTitle": "Grupper:",
+            "roleTitle": "Roll",
+            "saveUser": "Spara",
+            "savingUser": "Sparar ...",
+            "userSaved": "Sparad!",
+            "createUser": "Skapa",
+            "creatingUser": "Skapar ...",
+            "userCreated": "Skapad!",
+            "deleting": "Radera ...",
+            "delete": "Ta bort",
+            "confirmDeleteUser": "Är du säker på att du vill ta bort den här användaren?",
+            "errorDelete": "Ett fel uppstod när den här användaren skulle raderas:",
+            "errorSaving": "Ett fel uppstod när användaren skulle sparas:",
+            "selectedGroups": "VALDA GRUPPER",
+            "requiredFiedsMessage": "Fält markerade med asterisk (*) är obligatoriska"
+        },
+        "usergroups": {
+          "searchGroups": "Sök grupper ...",
+          "groups": "Groups",
+          "nameLimit": "Namnet är begränsat till 255 tecken.",
+          "descLimit": "Beskrivningen är begränsad till 255 tecken.",
+          "editGroup": "Redigera grupp",
+          "deleteGroup": "Ta bort grupp",
+          "removeUser": "Ta bort användare",
+          "newGroup": "Ny grupp",
+          "manageGroups": "Hantera grupper",
+          "description": "Beskrivning:",
+          "noDescriptionAvailable": "(Ingen beskrivning)",
+          "groupName": "Gruppnamn",
+          "groupDescription": "Beskrivning",
+          "saveGroup": "Spara",
+          "createGroup": "Skapa",
+          "creatingGroup": "Skapar ...",
+          "groupMembers": "Medlemmar:",
+          "addMember": "Lägg till medlem:",
+          "selectMemberPlaceholder": "Välj medlem ...",
+          "noUsers": "Inga användare för den här gruppen",
+          "errorSaving": "Ett fel uppstod när den här gruppen skulle sparas",
+          "errorDelete": "Ett fel uppstod när den här gruppen skulle raderas",
+          "confirmDeleteGroup": "Är du säker på att du vill ta bort den här gruppen?"
+        },
+        "share":{
+            "title": "Dela",
+            "tooltip": "Dela",
+            "titlePanel": "Dela kartan",
+            "socialIntro": "I ditt favorit sociala nätverk",
+            "directLinkTitle": "Via en direktlänk",
+            "embeddedLinkTitle": "Via den inbäddade koden",
+            "social": "Social",
+            "direct": "Länk",
+            "code": "Bädda in",
+            "forceDrawer": "Visa innehållsförteckning",
+            "apiLinkTitle": "Använda API: er",
+            "QRCodeLinkTitle": "QR -kod",
+            "msgCopiedUrl": "Kopierade",
+            "msgToCopyUrl": "Klicka för att kopiera",
+            "sharedTitle": "Kolla in min nya karta:",
+            "addCenterAndZoomParam": "Lägg till center och zoom till delningslänk",
+            "addMarkerAndZoomParam": "Lägg till platsmärke och zoom till delningslänk",
+            "zoom": "Zooma",
+            "marker": "Lägg till markör på laddad karta",
+            "coordinate": "Coordinate",
+            "coordTooltip": "Klicka på kartan för att ta koordinaterna",
+            "zoomToolTip": "Min: 1 och Max: 35",
+            "headingToolTip": "Min: 0° och Max: 360°",
+            "rollToolTip": "Min: -90° och Max: 90°",
+            "pitchToolTip": "Min: -90° och Max: 90°",
+            "wrongCenterAndZoomParamTitle": "Ogiltig center- och zoomparameter",
+            "wrongCenterAndZoomParamMessage": "Centrum och zoomparameter måste vara center = lon, lat & zoom = värde och (+|- 90 ° lat,+| -180 ° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Ogiltig markör och zoomparameter",
+            "wrongMarkerAndZoomParamMessage": "Parameter för markör och zoom måste vara markör = lon, lat & zoom = värde och (+|- 90 ° lat,+| -180 ° lon, <=+35 zoom)",
+            "advancedOptions": "Avancerade alternativ",
+            "addBboxParam": "Lägg till parametern för gränslådan till delningslänken",
+            "wrongBboxParamTitle": "Ogiltig begränsningsboxparameter",
+            "wrongBboxParamMessage": "Avgränsande boxparametrar måste vara i EPSG: 4326 och skriven som bbox = minx, miny, maxx, maxy",
+            "showHomeButton": "Länk till MapStores hem",
+            "showSectionId": "Inkludera rullningsposition",
+            "showConnections": "Visa anslutningar",
+            "heading": "Kursvinkel",
+            "roll": "Rullningsvinkel",
+            "pitch": "Stigningsvinkel",
+            "sizeOptions": {
+                "width": "width",
+                "height": "höjd"
+            }
+        },
+        "snapshot": {
+            "title": "Förhandsgranskning av ögonblicksbild",
+            "save": "Spara",
+            "tooltip": "Spara en ögonblicksbild av kartan.",
+            "googleBingError": "Google- och Bing-lager är inte tillgängliga för ögonblicksbilden på grund av upphovsrättsbegränsningar.",
+            "downloadingSnapshots": "väntar på bild av ögonblicksbild",
+            "date": "Datum",
+            "layer": "Lager",
+            "size": "Size",
+            "notsupported": "Snapshot stöds inte",
+            "taintedMessage": "Funktionen för att spara ögonblicksbilder är begränsad på grund av vissa webbläsarsäkerhetsregler. För bättre resultat högerklickar du på förhandsgranskningen och väljer Spara bild som ... (stöds av Firefox och Chrome)."
+        },
+        "shapefile": {
+            "title": "Lägg till lokala vektorfiler",
+            "tooltip": "Lägg till lokala vektorfiler på kartan.",
+            "placeholder": "Släpp dina filer här eller klicka för att välja de vektorfiler som ska importeras. (filer som stöds: shapefiler (som zip -arkiv), KML/KMZ, GPX)",
+            "defaultStyle": "Standardstil",
+            "zoom": "Zooma in vektorfilerna",
+            "fel": {
+                "select": "Välj en eller flera filer. (filer som stöds: shapefiler (som zip -arkiv), KML/KMZ, GPX)",
+                "shapeFileParsingError": "Kan inte ladda vektorfilen. Filen kan vara skadad eller inte välformad.",
+                "genericLoadError": "Kan inte ladda vektorfilen på kartan",
+                "missingPrj": "Saknas projektionsinformation (.prj), koordinatsystemet ska vara EPSG: 4326"
+            },
+            "merge": "Slå ihop med det befintliga annotationsskiktet",
+            "Ersätt": "Ersätt det befintliga annotationsskiktet",
+            "add": "Lägg till",
+            "cancel": "Avbryt",
+            "success": "korrekt importerad",
+            "next": "Nästa",
+            "skip": "Hoppa över",
+            "finish": "Slutför",
+            "layerOf": "lager {count} av {total}:",
+            "styleCustomizationDisabled": "Det här lagret har redan en stil definierad och det är inte möjligt att anpassa det."
+        },
+        "mapImport": {
+            "title": "Importera",
+            "tooltip": "Importera en kartfil eller vektordata",
+            "dropZone": {
+                "heading": "<p> <h4> Släpp din webbkarta eller vektorfiler här </h4> <small> eller </small> </p>",
+                "selectFiles": "Välj filer ...",
+                "infoSupported": "<p> <small> Webbkartor som stöds: äldre MapStore -format, WMC <br /> Vektorlagerfiler som stöds: shapefiler (måste vara zip-arkiv), KML /KMZ, GeoJSON, Annotations eller GPX </small> </p> ",
+                "OBS": "<p> <small> <i> <strong> note </strong>: nuvarande karta åsidosätts vid kartkontextfiler </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Filen stöds inte",
+                "unknownError": "det uppstod ett okänt fel under importen",
+                "projectionNotSupported": "Projektionen av filen / filerna du försöker importera stöds inte",
+                "fileBeyondBoundaries": "Filen {filnamn} kan inte importeras eftersom den inte passar kartgränserna"
+            }
+        },
+        "mapExport": {
+            "title": "Exportera",
+            "tooltip": "Exportera den aktuella kartan",
+            "exportPanel": {
+                "title": "<p> <h4> Välj ditt format </h4> </p>",
+                "exportButtonLabel": "Exportera"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p> <small> MapStore -kartkonfigurationsformat </small> </p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p> <small> OGC Web Map Context format </small> </p>",
+                    "note": "<p> <small> <i> <strong> note </strong>: WMC -format stöder <strong> endast WMS -lager </strong> </i> </small> </p>"
+                }
+            },
+            "errorTitle": "Kartexport misslyckades",
+            "wmcNoLayersError": "Minst ett WMS-lager behövs för att exportera till WMC, hittade inget"
+        },
+        "catalog": {
+            "start": "Startdatum",
+            "end": "Slutdatum",
+            "notAvailable": "Inte tillgängligt",
+            "title": "Katalog",
+            "tooltip": "Lägg till lager på kartan",
+            "autoload": "Sök vid val av tjänst",
+            "clearValueText": "Rensa urval",
+            "noResultsText": "Inget resultat",
+            "addToMap": "Lägg till på kartan",
+            "getWMSLink": "Hämta WMS -länk",
+            "error": "Ett fel uppstod när data laddades",
+            "pageInfo": "Resultat {start}-{end} av {total}",
+            "resultInfo": "{total, plural, = 0 {Inga objekt} = 1 {{total} Artikel av {total}} annan {{start}-{end} av {total}}}",
+            "pageInfoInfinite": "{total, plural, = undefined {} = 0 {Inga resultat} = 1 {{total} av {total} matchade} annan {Loaded {laddad} av {total} matchad}}",
+            "noRecordsMatched": "Ingen post matchade",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Dela",
+            "copyToClipboard": "Kopiera till urklipp",
+            "copied": "Kopierat!",
+            "textSearchPlaceholder": "text att söka ...",
+            "search": "Sök",
+            "delete": "Ta bort",
+            "reset": "Rensa",
+            "options": "Alternativ",
+            "srs_not_allowed": "Koordinatsystemet stöds inte av den här tjänsten",
+            "add": "Lägg till",
+            "service": "Tjänst",
+            "servicePlaceholder": "skriv en tjänst",
+            "url": "URL",
+            "urlPlaceholder": "skriv en webbadress",
+            "type": "Typ",
+            "serviceTitle": "Titel",
+            "serviceTitlePlaceholder": "skriv en titel",
+            "tms": {
+              "provider": "Provider",
+              "urlTemplate": "URL -mall",
+              "urlTemplateHint": "<p> Mall -URL för din anpassade TMS -tjänst, med möjlighet att infoga variabler (uttryckta med klammerparenteser, t.ex. <code> {var_name} </code>) som kommer att ersättas av programmet. <br />. <code> {x} </code>, <code> {y} </code> och <code> {z} </code> -variablerna är reserverade för värden för rutnätskoordinater. Du kan också använda variabel <code> {s} </code> för underdomäner. Alla andra variabler som anges i webbadressen måste också anges i alternativen i Anpassad TMS -konfiguration (avancerade inställningar) </p> ",
+              "customTMSConfiguration": "Anpassad TMS -konfiguration",
+              "customTMSConfigurationHint": "<p> Alternativ kan innehålla: <br/> <ul><li> <code> \" subdomains : ['a', 'b'] </code>: används för flera domäner, byta ut <code> {s} </code> i webbadressmallen </li> <li> <code> maxNativeZoom : 20 </code>: maxzoom från servern </li> </ul> < /p> ",
+              "forceDefaultTileGrid": "Tvinga standard grid",
+              "forceDefaultTileGridDescription": "Använd den globala projektionens grid istället för ursprung och upplösningar från servern. Detta är användbart för vissa TMS -tjänster som visar fel origo eller upplösningar."
+            },
+            "tileprovider": {
+              "tooltip": "x, y, z är kakelposition, s är underdomänen (standard)"
+            },
+            "missingReference": "Saknas OGC -referensmetadata",
+            "showDescription": "Visa fullständig beskrivning",
+            "hideDescription": "Dölj fullständig beskrivning",
+            "templateFormatDescriptionExample": "Beskrivningen av lagret är",
+            "showTemplate": "Visa metadatamall",
+            "showPreview": "Visa förhandsgranskning",
+            "advancedSettings": "Avancerade inställningar",
+            "templateMetadataAvailable": "Metadata tillgänglig från Dublin Core -format: abstract, boundingBox, bidragsgivare, skapare, beskrivning, format, identifierare, referenser, rättigheter, källa, ämne, tidsmässig, titel, typ, uri",
+            "invalidUrlHttpProtocol": "Denna katalog kan inte läggas till i de tillgängliga eftersom den använder ett http -protokoll. Ange en katalogurl som använder https -protokoll",
+            "notification": {
+                "errorTitle": "Fel",
+                "errorSearchingRecords": "Vissa poster har inte hittats: {records} Kontrollera frågeadressen och dess parametrar.",
+                "warningAddCatalogService": "Infoga en giltig URL och titel",
+                "addCatalogService": "Tjänsten har lagts till korrekt",
+                "duplicatedServiceTitle": "En tjänst med den titeln finns redan. Ändra titel",
+                "serviceDeletedCorrectly": "Tjänsten raderades korrekt",
+                "errorServiceUrl": "Tjänsten är inte tillgänglig. Kontrollera webbadressen"
+            },
+            "backgroundAlreadyAdded": "Lagt till i bakgrundsväljaren",
+            "enableLocalizedLayerStyles": {
+                "label": "Aktivera lokala stilar",
+                "tooltip": "Obs! Denna parameter kräver särskild konfiguration på GeoServer"
+            },
+            "format": {
+                "noOption": "Inget alternativ",
+                "loading": "Läser in ..."
+            }
+        },
+        "uploader": {
+            "filename": "Filnamn",
+            "type": "Typ",
+            "lastModified": "Senast ändrad",
+            "filesize": "Storlek",
+            "beforeUpload": "Förhandsöverföring ...",
+            "uploadingFiles": "Överför filer ...",
+            "dropfile": "släpp filer här för att ladda upp",
+            "dropfileImport": "släpp filer här för att lägga till dem i den här processen"
+        },
+        "importer": {
+            "title": "Importera data",
+            "imports": "Importera sessioner",
+            "importN": "Session {id}",
+            "creationImportProcess": "Skapa importsession ...",
+            "dropfile": "släpp filer här för att skapa en ny importsession",
+            "dropfileImport": "släpp filer här för att lägga till dem i den här sessionen",
+            "process": "Session",
+            "number": "#",
+            "workspace": {
+                "create": "Skapa",
+                "createWS": "skapa en ny arbetsyta:",
+                "target": "target workspace:",
+                "failure": "Fel när arbetsytan skapades: {statusWS}",
+                "success": "Arbetsytan {statusWS} skapades framgångsrikt",
+                "select": "Välj målarbetsyta",
+                "new": "Nytt arbetsytans namn ..."
+            },
+            "import": {
+                "actions": "Åtgärder",
+                "tasks": "Paket",
+                "runImport": "Kör",
+                "deleteImport": "Ta bort session",
+                "deleteTask": "Ta bort",
+                "status": "Status",
+                "archive": "Arkiv",
+                "deleting": "Radera ...",
+                "analyzing": "Analysera paket ...",
+                "applyPreset": "Tillämpar förinställningar ..."
+            },
+            "task": {
+                "panelTitle": "Importera paket {id}",
+                "general": "Allmän information",
+                "status": "Status",
+                "updateMode": "Uppdateringsläge",
+                "originalData": "Originalfil",
+                "file": "Filnamn",
+                "format": "Format",
+                "targetStore": "Målplats",
+                "storeType": "Måltyp",
+                "storeName": "Målnamn",
+                "layer": "Lager",
+                "transforms": "Transformation Chain",
+                "update": "Uppdatera",
+                "run": "Importera det här paketet",
+                "edit": "Redigera standardstil",
+                "delete": "Ta bort det här paketet"
+            },
+            "transform": {
+                "panelTitle": "Transformation {id}",
+                "type": "Transformationstyp",
+                "actions": "Åtgärder",
+                "options": "Transformationsalternativ",
+                "overviewlevels": "Översiktsnivåer",
+                "delete": "Ta bort den här transformationen"
+            }
+        },
+        "rasterstyler": {
+            "tooltip": "Skapa och redigera rasterlagerstil",
+            "paneltitle": "Raster Styler",
+            "layerlabel": "Lager",
+            "typelabel": "Stiltyp",
+            "opacitylabel": "Opacitet",
+            "redtitle": "Röd",
+            "greentitle": "Grön",
+            "bluetitle": "Blå",
+            "graytitle": "Grå",
+            "pseudobandtitle": "Bandval",
+            "eqinttitle": "Klassificering av lika intervall",
+            "pseudotitle": "PseudoColor -inställningar",
+            "applybtn": "Tillämpa stil"
+        },
+        "bandselector": {
+            "band": "Band",
+            "enhancement": "Förbättring",
+            "algorithmTitle": "Valfri algoritm",
+            "value": "Value",
+            "min": "Min",
+            "max": "Max",
+            "enha": {
+                "none": "None",
+                "Normalize": "Normalize",
+                "Histogram": "Histogram",
+                "GammaValue": "Gamma -korrigering"
+            },
+            "algorithm": {
+                "none": "None",
+                "StretchToMinimumMaximum": "Stretch",
+                "ClipToMinimumMaximum": "Klipp",
+                "ClipToZero": "Clip To Zero"
+            }
+        },
+        "equalinterval": {
+            "min": "Min",
+            "max": "Max",
+            "classes": "Klasser",
+            "ramp": "Färgramp",
+            "classify": "Klassificera",
+            "maxerror": "Maxvärdet måste vara större än minvärdet",
+            "minerror": "Minsta värde måste vara lägre än maxvärdet"
+        },
+        "colormapgrid": {
+            "color": "Färg",
+            "mängd": "Kvantitet",
+            "label": "Etikett",
+            "minmaxerror": "Värdet måste ligga mellan värdena för föregående och nästa cell"
+        },
+        "pseudocolorsettings": {
+            "type": "Typ",
+            "extended": "Utökad",
+            "colormap": "Färgkarta",
+            "add": "Lägg till post",
+            "remove": "Ta bort post"
+        },
+        "rasterstyletype": {
+            "rgb": "Röd grön blå",
+            "grey": "GrayScale",
+            "pseudo": "PseudoColor",
+            "multi": "Multi Band",
+            "single": "Singelband"
+        },
+        "featuregrid": {
+            "columns": "Kolumner",
+            "header": "Sökresultatlista",
+            "tools": "Verktygspanel",
+            "export": "Exportera",
+            "selectall": "Välj alla",
+            "deselectall": "Rensa markering",
+            "backtosearch": "Tillbaka till sökning",
+            "resultInfo": "{total, plural, = 0 {Inga objekt} = 1 {{total} Artikel av {total}} annan {{start}-{end} av {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {Inga objekt} =1 {{total} Objekt} other {{total} Objekt}}",
+            "selectedInfo": "({selected} Selected)",
+            "pageInfo": "{totalPages, plural, = 0 {Inga sidor} = 1 {sida {totalPages}} {totalPages}} annan {sida {sida} av {totalPages}}}",
+            "pagination": {
+                "page": "Sida",
+                "of":   "av",
+                "to":   "till",
+                "more": "mer"
+            },
+            "noFeaturesAvailable": "Inga tillgängliga objekt",
+            "errorSaving": "Ett fel uppstod vid lagring",
+            "errorProjFetch": "Fel vid hämtning av proj4-definitionen från spatialreference.org. Synkverktyget kan inte tillämpa det rumsliga filtret.",
+            "notSupportedGeometryTitle": "Geometrityp stöds inte",
+            "notSupportedGeometry": "Nuvarande lagergeometrityp stöds inte av redigering men du kan fortfarande redigera attribut",
+            "yesButton": "Ja",
+            "noButton": "Nej",
+            "deleteButton": "Ta bort",
+            "clear": "Är du säker på att avbryta alla ändringar du har gjort?",
+            "featureClose": "Är du säker på att stänga objektnätet?",
+            "delete": "Bekräftar du att radera {count} objekt?",
+            "missingGeometry": "Saknad geometri",
+            "zoomObject": "Zooma till objektet",
+            "filter": {
+                "placeholders": {
+                    "default": "Sök ...",
+                    "string": "Skriv text att filtrera på...",
+                    "date": "Skriv datum att filtrera...",
+                    "number": "Skriv tal eller uttryck ..."
+                },
+                "tooltips": {
+                    "editMode": "Snabbsökning är inte tillgänglig i redigeringsläge",
+                    "default": "Sök ...",
+                    "string": "Skriv text som ska filtreras ...",
+                    "number": "Skriv ett tal eller ett uttryck. Exempel: 10,> 2, <10",
+                    "date": "Skriv ett datum eller ett uttryck. Använd {format} för datumet.",
+                    "geometry": {
+                        "disabled": "Aktivera urval genom klick eller sökruta på kartan.",
+                        "enabled": "Klicka på kartan för att välja ett objekt / Rita en sökruta med alt+musdrag. Håll nere ctrl och klicka/ruta för att lägga till objekt",
+                        "applied": "Rensa urvalet"
+                    }
+                }
+            },
+            "toolbar": {
+                "synchPopoverTitle": "Synkronisera karta med filter",
+                "synchPopoverText": "Använd det här verktyget för att synkronisera kartan med det valda filtret",
+                "notShowAgain": "Visa inte detta meddelande igen",
+                "editMode": "Redigeringsläge",
+                "advancedFilter": "Avancerad sökning",
+                "quitEditMode": "Avsluta redigeringsläge",
+                "addNewFeatures": "Lägg till ett nytt objekt",
+                "editFeature": "Redigera objekt",
+                "drawGeom": "Rita objekt",
+                "stopDrawGeom": "Avbryt skapande av geometri",
+                "addGeom": "Lägg till en form i den befintliga geometrin",
+                "deleteSelectedFeatures": "Ta bort valda objekt",
+                "saveChanges": "Spara ändringar",
+                "saving": "Sparar ...",
+                "cancelChanges": "Avbryt ändringar",
+                "deleteGeometry": "Ta bort geometri",
+                "downloadGridData": "Ladda ner tabelldata",
+                "hideShowColumns": "Dölj/visa kolumner",
+                "zoomAll": "Zooma till sidomfattning",
+                "syncOnMap": "Synkronisera karta med filter",
+                "enableTimeSync": "Synkronisera med vald tid eller tidsintervall",
+                "disableTimeSync": "Synkronisera inte med den valda tiden eller intervallet",
+                "createNewChart": "Skapa ett diagram för det valda lagret"
+            }
+        },
+        "layerdownload": {
+            "title": "Exportera data",
+            "format": "Filformat",
+            "srs": "Geodetiskt referenssystem",
+            "export": "Exportera",
+            "downloadonlycurrentpage": "Hämta endast aktuell sida",
+            "cropDataSet": "Beskär datamängd till nuvarande visningsport",
+            "downloadFilteredDataSet": "Ladda ner filtrerad datamängd",
+            "advancedOptions": "Avancerade alternativ",
+            "compression": "Compression",
+            "tileWidth": "Tilebredd",
+            "tileHeight": "Tilehöjd",
+            "quality": "Quality",
+            "error": {
+                "title": "Fel vid export",
+                "invalidOutputFormat": "Det valda exportformatet är inte tillgängligt",
+                "downloadEstimatorTitle": "Fel i DownloadEstimator",
+                "downloadEstimatorFailed": "DownloadEstimator -begäran misslyckades, vilket innebär att den exporterade filen överskrider konfigurerade servergränser. Försök att ändra nedladdningsalternativ eller lägg till filter i ditt lager och försök igen."
+            },
+            "exportResultsMessages": {
+                "newExport": "Filen är tillgänglig här när exporten är klar",
+                "exportFailure": "Export för lager {layerTitle} misslyckades! Öppna dialogrutan för exportresultat för mer information.",
+                "exportSuccess": "Export för lager {layerTitle} slutfördes.",
+                "invalidHref": "Svaret från servern innehöll inte en giltig webbadress för exporterade filer!"
+            },
+            "wpsExecuteError": {
+                "processFailed": "Nedladdningsprocessen misslyckades! Servern har returnerat följande undantagsrapport {exceptionReport} ",
+                "badResponse": "Nedladdningsprocessen misslyckades! Servern har returnerat felaktiga data, felkod: {errorCode} ",
+                "executeProcessXhrFailed": "ExecuteProcess -begäran misslyckades! Servern kan vara felkonfigurerad eller den har blivit oåtkomlig",
+                "getExecutionStatusXhrFailed": "GetExecutionStatus -begäran misslyckades! Servern kan vara felkonfigurerad eller den har blivit oåtkomlig",
+                "unknownError": "Ett oväntat fel inträffade"
+            },
+            "noSupportedServiceFound": "Servern stöder inte WFS- eller WPS -nedladdning för detta lager!"
+        },
+        "exportDataResults": {
+            "title": "Exportera dataresultat",
+            "emptyStateMessage": "Exportlistan är tom"
+        },
+        "widgets": {
+            "types": {
+                "map": {
+                    "title": "Karta",
+                    "caption": "lägg till en karta"
+                },
+                "legend": {
+                    "title": "Förklaring",
+                    "caption": "lägg till en legend"
+                },
+                "chart": {
+                    "title": "Diagram",
+                    "caption": "lägg till ett diagram"
+                },
+                "text": {
+                    "title": "Text",
+                    "caption": "lägg till ett textområde"
+                },
+                "table": {
+                    "title": "Tabell",
+                    "caption": "lägg till en tabell"
+                },
+                "counter": {
+                    "title": "Räknare",
+                    "caption": "lägg till en räknare"
+                }
+            },
+            "selectWidgetType": "Välj widgettyp",
+            "selectChartType": {
+                "title": "Välj diagramtyp"
+            },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Inga lager",
+                    "noLayerDescription": "Det finns inga lager på kartan. Om du vill lägga till ett lager från katalogen klickar du på knappen + i verktygsfältet överst"
+                },
+                "emptyMap": {
+                    "title": "Tom karta",
+                    "description": "Starta från en tom karta"
+                }
+            },
+            "title": "Titel",
+            "description": "Beskrivning",
+            "fel": {
+                "notext": "Ingen text tillgänglig",
+                "nodata": "Ingen data tillgänglig för det valda lagret/filtret",
+                "noLegend": "Inga legendartiklar att visa",
+                "noLegendDescription": "Den anslutna kartan har inga lager att visa i förklaring",
+                "nodatainviewport": "Inga data i den aktuella visningsporten",
+                "timeoutExpired": "Det tog för lång tid att svara på tjänsten. Kanske är frågan för komplex eller servern är upptagen",
+                "genericError": "Ett fel uppstod vid datahämtning",
+                "genericErrorWithMessage": "Ett fel uppstod vid datahämtning: {meddelande} "
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Tillbaka till diagramtypsval",
+                    "backToWidgetTypeSelection": "Tillbaka till widgettypsval",
+                    "backToFeatureGrid": "Tillbaka till objektsnätet",
+                    "backToLayerSelection": "Tillbaka till lagerval",
+                    "backToMapSelection": "Tillbaka till kartval",
+                    "backToPreview": "Tillbaka till förhandsgranskning",
+                    "backToChartOptions": "Tillbaka till diagramalternativ",
+                    "selectALayer": "Välj ett lager",
+                    "selectAMap": "Välj en karta",
+                    "configureChartOptions": "Konfigurera diagramalternativ",
+                    "configureWidgetOptions": "Konfigurera widgetalternativ",
+                    "backToTableOptions": "Tillbaka till tabellalternativ",
+                    "configureTableOptions": "Konfigurera tabellalternativ",
+                    "resetColumnsSizes": "Återställ alla ändringar i kolumnstorlekarna",
+                    "updateWidget": "Uppdatera widgeten",
+                    "addTheWidget": "Lägg till widgeten",
+                    "titlePlaceholder": "Infoga titel ...",
+                    "textPlaceholder": "Infoga text ...",
+                    "useThisMap": "Använd den här kartan",
+                    "configureMapOptions": "Konfigurera kartalternativ",
+                    "enableIdentifyTool": "Aktivera identifieringsverktyg",
+                    "disableIdentifyTool": "Inaktivera identifieringsverktyg",
+                    "preview": "Förhandsgranska",
+                    "addLayer": "Lägg till ett lager på kartan",
+                    "useTheSelectedLayer": "Använd det valda lagret",
+                    "connectToAMap": "Anslut till en annan widget",
+                    "connectToTheMap": "Anslut till den andra widgeten",
+                    "selectMapToConnect": "Välj widgeten som ska anslutas",
+                    "clearConnection": "Rensa anslutning"
+                },
+                "errors": {
+                    "noAttributesTitle": "Inga attribut att visa",
+                    "noAttributesDescription": "Det valda lagret har inga attribut att visa. Välj en annan widgettyp eller lager",
+                    "noWidgetsAvailableTitle": "Kan inte skapa widgeten för det valda lagret",
+                    "noWidgetsAvailableDescription": "<p> <strong> Försök att välja ett annat lager eller en widgettyp </strong> </p> <p> Servern tillhandahåller inte de tjänster som behövs för lagret och den valda widgettypen </ p> <p> Möjliga orsaker är: <ul> <li> Det valda lagret är ett rasterlager </li> <li> WFS -tjänsten är inte tillgänglig </li> <li> WPS -processen <code> gs: aggregate </code> är inte tillgänglig </li> </ul> </p> ",
+                    "checkAtLeastOneAttribute": "Du måste välja minst en kolumn",
+                    "noMapAvailableForLegend": "Ingen karta tillgänglig",
+                    "noMapAvailableForLegendDescription": "Du behöver minst en kartwidget för att skapa legenden"
+                },
+                "setupFilter": "Konfigurera ett filter för widgetdata"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Visa diagramdata",
+                    "edit": "Redigera",
+                    "delete": "Ta bort",
+                    "collapse": "Fäll ihop",
+                    "confirmDelete": "Är du säker?",
+                    "downloadData": "Ladda ner data",
+                    "exportImage": "Exportera bild",
+                    "maximize": "Maximera",
+                    "minimize": "Minimera",
+                    "pin": "Fäst",
+                    "unpin": "Lossa",
+                    "hide": "Dölj",
+                    "hideDescription": "Dölj denna widget för andra användare",
+                    "unhide": "Unhide",
+                    "unhideDescription": "Visa widgeten för andra användare"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Stapeldiagram",
+                    "description": "Skapa ett stapeldiagram som du vill lägga till på kartan",
+                    "caption": "bar"
+                },
+                "pie": {
+                    "title": "Cirkeldiagram",
+                    "description": "Skapa ett cirkeldiagram som du vill lägga till på kartan",
+                    "caption": "paj"
+                },
+                "line": {
+                    "title": "Linjediagram",
+                    "description": "Skapa ett linjediagram som ska läggas till på kartan",
+                    "caption": "line"
+                },
+                "gauge": {
+                    "title": "Visardiagram",
+                    "description": "Skapa ett visardiagram som du vill lägga till på kartan",
+                    "caption": "mätare"
+                }
+            },
+            "chartOptionsTitle": "Konfigurera data",
+            "widgetOptionsTitle": "Konfigurera widgetinformation",
+            "placeHolder":{
+                "default": "Välj attribut"
+            },
+            "operations": {
+              "COUNT": "COUNT",
+              "SUMM": "SUMM",
+              "AVG": "AVG",
+              "STDDEV": "STDDEV",
+              "MIN": "MIN",
+              "MAX": "MAX",
+              "NONE": "Ingen operation"
+            },
+            "groupByAttributes": {
+                "line": "X -attribut",
+                "pie": "Gruppera efter",
+                "bar": "X -attribut",
+                "gauge": "Gruppera efter",
+                "counter": "Gruppera efter",
+                "default": "Gruppera efter"
+            },
+            "aggregationAttribute": {
+                "line": "Y -attribut",
+                "pie": "Använd",
+                "bar": "Y -attribut",
+                "gauge": "Använd",
+                "counter": "Använd",
+                "default": "Använd"
+            },
+            "aggregateFunction": {
+                "line": "Operation",
+                "pie": "Operation",
+                "bar": "Operation",
+                "gauge": "Operation",
+                "counter": "Operation",
+                "default": "Operation"
+            },
+            "colorRamp": {
+                "line": "Färg",
+                "pie": "Färgramp",
+                "bar": "Färg",
+                "gauge": "Färg",
+                "counter": "Färg",
+                "default": "Färg"
+            },
+            "uom": {
+                "line": "måttenhet",
+                "pie": "måttenhet",
+                "bar": "måttenhet",
+                "gauge": "måttenhet",
+                "counter": "måttenhet",
+                "default": "Måttenhet"
+            },
+            "mapSync": "Live -filter efter visningsport",
+            "displayLegend": {
+                "line": "Display Legend",
+                "pie": "Display Legend",
+                "bar": "Display Legend",
+                "gauge": "Visa etiketter"
+            },
+            "advanced": {
+              "displayCartesian": "Dölj rutnät",
+              "xAxis": "X -axel",
+              "xAxisAngle": "Etikettrotation",
+              "hideLabels": "Dölj etiketter",
+              "format": "Format",
+              "prefix": "Prefix",
+              "suffix": "Suffix",
+              "examples": "Exempel",
+              "formatExamples": "<div> <ul> <li> <code> .0%</code>: avrundad procent, '12%'</li> <li> <code> .2s </code>: SI -prefix med två signifikanta siffror, '42M' </li> <li> <code>, .2r </code>: grupperade tusentals med två signifikanta siffror '4200' </li> </ul> <em> Mer information om formateringssyntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> här </a>. </em> </div > ",
+              "formula": "Formel",
+              "formulaExamples": "<div> Transformera värdet med en formel. Använd variabeln <code> värde </code> i uttrycket: <h5> Exempel </h5> <ul> <li> <code> värde + 2 </code></li><li> <code> value/100 </code> </li> </ul> <em> Mer information om syntaxen <a target = _ blank  href =  https://github.com/m93a/filtrex#expressions\">här </a>. </em> </div> ",
+              "xAxisType": "Typ",
+              "forceTicks": "Hoppa aldrig över etiketter",
+              "maxXAxisLabels": "Etiketterna kan ändå inte vara mer än {max}",
+              "yAxis": "Y -axel",
+              "yAxisType": "Typ",
+              "yAxisLabel": "Förklaringsetikett",
+              "title": "Avancerade alternativ",
+              "legend": "Förklaring",
+              "axisTypes": {
+                "auto": "Auto",
+                "linear": "Linjär",
+                "category": "Kategori",
+                "log": "Logga",
+                "date": "Datum"
+              }
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Utöka widgetfacket",
+                "collapsTray": "Dölj widgetfack",
+                "expandAll": "Utöka alla widgets",
+                "collapseAll": "Dölj alla widgets",
+                "notifications": {
+                    "collapsed": {
+                        "message": "Tidslinje och widgetar kan inte finnas samtidigt. Använd widgetens fack för att växla mellan tidslinje och widgets",
+                        "timelineTitle": "Tidslinjen har dolts",
+                        "widgetsTitle": "Widgets har dolts"
+                    }
+                }
+            }
+        },
+        "dashboard": {
+            "loadingSpinner": "Laddar Verktygspanel",
+            "errors": {
+                "loading": {
+                    "title": "Fel vid laddning av Verktygspanel",
+                    "dashboardNotAccessible": "Du har inte behörighet att komma åt denna Verktygspanel. Kontakta resursägaren",
+                    "pleaseLogin": "Den här Verktygspanelen är inte offentlig. Försök att logga in",
+                    "dashboardDoesNotExist": "Verktygspanelen du försöker komma åt finns inte",
+                    "unknownError": "Ett fel uppstod när Verktygspanelen skulle laddas. Kontakta administratören",
+                    "notFound": "Verktygspanelen hittades inte",
+	                "notAccessible": "Verktygspanelen är inte tillgänglig"
+                },
+                "resourceAlreadyExists": "En resurs med detta namn finns redan",
+                "forbidden": "Ett oväntat fel uppstod (403 förbjudet). Kontakta administratören",
+                "forbidden405": "Ett oväntat fel uppstod (405 förbjudet). Kontakta administratören"
+            },
+            "editor": {
+                "save": "Spara Verktygspanelen",
+                "addACardToTheDashboard": "Lägg till en widget i Verktygspanelen",
+                "showConnections": "Visa anslutningar",
+                "hideConnections": "HideConnections"
+            },
+            "emptyTitle": "Verktygspanelen är tom"
+        },
+        "dashboardEmbedded": {
+            "loadingSpinner": "Laddar Verktygspanel",
+            "errors": {
+                "loading": {
+                    "title": "Fel vid laddning av Verktygspanel",
+                    "dashboardNotAccessible": "Du har inte behörighet att komma åt den här Verktygspanelen",
+                    "pleaseLogin": "Den här Verktygspanelen är inte offentlig",
+                    "dashboardDoesNotExist": "Verktygspanelen du försöker komma åt finns inte",
+                    "unknownError": "Ett fel uppstod när Verktygspanelen skulle laddas",
+                    "notFound": "Verktygspanelen hittades inte",
+	                "notAccessible": "Verktygspanelen är inte tillgänglig"
+                }
+            },
+            "emptyTitle": "Verktygspanelen är tom"
+        },
+        "context": {
+            "loadingSpinner": "Laddar webbkarta",
+            "errors": {
+                "loading": {
+                    "title": "Fel vid inläsning av webbkarta",
+                    "notAccessible": "Du har inte behörighet att komma åt en resurs. Kontakta resursägaren",
+                    "pleaseLogin": "Vissa resurser kanske inte är offentliga. Försök att logga in",
+                    "unknownError": "Ett fel uppstod när kartan eller webbkartan skulle laddas. Kontakta administratören",
+                    "notFound": "Resurs hittades inte",
+	                "notAccessible": "Resurs inte tillgänglig"
+                },
+                "context": {
+                    "notAccessible": "Du har inte behörighet att komma åt denna webbkarta. Kontakta resursägaren",
+                    "pleaseLogin": "Den här webbkartan är inte offentlig. Försök att logga in",
+                    "unknownError": "Ett fel uppstod när kartan  skulle laddas. Kontakta administratören",
+                    "notFound": "Den karta du försöker komma åt finns inte",
+	                "notAccessible": "Du har inte rätt behörighet att komma åt denna karta. Kontakta administratören för att få tillgång"
+                },
+                "template": {
+                    "title": "Fel vid inläsning av mall",
+                    "notAccessible": "Du har inte behörighet att komma åt den här mallen. Kontakta resursägaren",
+                    "pleaseLogin": "Den här mallen är inte offentlig. Försök att logga in",
+                    "unknownError": "Ett fel uppstod när mallen skulle laddas. Kontakta administratören",
+                    "notFound": "Mallen du försöker komma åt finns inte"
+                },
+                "map": {
+                    "notAccessible": "Du har inte behörighet att komma åt den här kartan. Kontakta resursägaren",
+                    "pleaseLogin": "Den här kartan eller kartan är inte offentlig. Försök att logga in",
+                    "unknownError": "Ett fel uppstod när kartan skulle laddas. Kontakta administratören",
+                    "notFound": "Kartan du försöker komma åt finns inte",
+	                "notAccessible": "Du har inte rätt behörighet att komma åt den här kartan. Kontakta administratören för att få åtkomst"
+                },
+                "plugins": {
+                  "upload": "Fel vid uppladdning av plugin",
+                  "uninstall": "Fel vid avinstallation av plugin"
+                },
+                "resourceAlreadyExists": "En resurs med detta namn finns redan"
+            }
+        },
+        "wizard": {
+            "next": "Nästa",
+            "prev": "Föregående",
+            "finish": "Avsluta"
+        },
+        "vectorstyler": {
+            "tooltip": "Skapa och redigera vektorslagerstil",
+            "paneltitle": "Vector Styler",
+            "layerlabel": "Lager",
+            "rulelabel": "Regler",
+            "namelabel": "Regelnamn",
+            "symboltitle": "Symbol",
+            "labeltitle": "Etikett",
+            "conditiontitle": "Villkor",
+            "applybtn": "Tillämpa stil",
+            "addrulebtn": "Lägg till regel",
+            "removerulebtn": "Ta bort regel"
+        },
+        "scaledenominator": {
+            "minlabel": "Min skala nämnare",
+            "maxlabel": "Max skala -nämnare",
+            "maxerror": "Maxvärdet måste vara större än minvärdet",
+            "minerror": "Minsta värde måste vara lägre än maxvärdet",
+            "none": "None"
+        },
+        "markNameSelector": {
+            "cirkel": "Cirkel",
+            "square": "Square",
+            "triangel": "Triangel",
+            "star": "Star",
+            "cross": "Cross",
+            "x": "X"
+        },
+        "styler": {
+            "tooltip": "Skapa och redigera lagerstil",
+            "paneltitle": "Styler",
+            "layerlabel": "Lager"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtrera stilar efter namn, titel eller beskrivning",
+            "templateFilterPlaceholder": "Filtrera mallar efter titel",
+            "createStyleFromTemplate": "Välj en mall för att skapa en ny stil",
+            "titleRequired": "<div> Titel krävs! </div> <div> Titel och beskrivning måste vara alfanumeriska </div>",
+            "titleSettings": "Titel",
+            "titleSettingsplaceholder": "Ange titel (alfanumerisk)",
+            "abstractSettings": "Abstrakt",
+            "abstractSettingsplaceholder": "Ange beskrivning (alfanumeriskt)",
+            "createStyleModalTitle": "Skapa ny stil",
+            "filterMatchNotFound": "Inga stilar matchar inmatat textfilter",
+            "backToList": "Tillbaka till stillistan",
+            "createNewStyle": "Skapa ny stil",
+            "editSelectedStyle": "Redigera vald stil",
+            "saveCurrentStyle": "Spara aktuell stil",
+            "addSelectedTemplate": "Lägg till vald mall i listan med stilar",
+            "deleteSelectedStyle": "Ta bort vald stil",
+            "closeWithoutSaveAlertTitle": "Stil har ändrats",
+            "closeWithoutSaveAlert": "Du avslutar stilredigeraren utan att spara dina ändringar",
+            "deleteStyleAlertTitle": "Ta bort stil",
+            "deleteStyleAlert": "Den valda stilen raderas permanent",
+            "delete": "Ta bort",
+            "defaultStyle": "Standardstil",
+            "availableStyle": "Tillgänglig stil",
+            "styleNotFound": "Stil hittades inte",
+            "noPermission": "Användaren kan inte redigera stilar",
+            "deleteStyleSuccessTitle": "Ta bort stil",
+            "deleteStyleSuccessMessage": "Stilen har tagits bort",
+            "deleteStyleErrorTitle": "Radera stilfel",
+            "deleteStyleErrorMessage": "Det gick inte att ta bort aktuell stil",
+            "savedStyleTitle": "Stil sparad",
+            "savedStyleMessage": "Stilen har sparats",
+            "errorTitle": "StyleEditor -fel",
+            "parsingCapabilitiesError": "<h4> Möjliga orsaker: </h4> det var inte möjligt att analysera funktionerna och hämta stilarna",
+            "globalError": "<h4> Möjliga orsaker: </h4> det var inte möjligt att ansluta till tjänsten",
+            "missingAvailableStylesMessage": "<ul> <h4> Möjliga orsaker: </h4> <li> Valt lager är en lagergrupp </li> <li> Lagret är inte korrekt konfigurerad på serversidan </li> </ul>" ,
+            "createTmpErrorTitle": "Ny tillfällig stil",
+            "createTmpStyleErrorMessage": "Tillfällig stil kunde inte skapas. Detta kan bero på ett format som inte stöds på stiltjänsten",
+            "updateTmpErrorTitle": "Tillfällig stiluppdatering",
+            "updateTmpStyleErrorMessage": "Tillfällig stil kunde inte uppdateras. Detta kan bero på format som inte stöds eller anslutningsproblem.",
+            "createStyleErrorTitle": "Ny stil",
+            "createStyleErrorMessage": "Det gick inte att spara stil på stiltjänsten. Detta kan bero på format som inte stöds eller anslutningsproblem.",
+            "updateStyleErrorTitle": "Redigera stil",
+            "updateStyleErrorMessage": "Det gick inte att uppdatera stilen på stiltjänsten. Detta kan bero på format som inte stöds eller anslutningsproblem.",
+            "validationErrorTitle": "Valideringsfel",
+            "genericValidationError": "Stilen är ogiltig och kunde inte tillämpas.",
+            "setDefaultStyle": "Ange vald stil som standard för det aktuella lagret",
+            "setDefaultStyleSuccessTitle": "Framgång med inställt standardstil",
+            "setDefaultStyleSuccessMessage": "Standardstil har tillämpats",
+            "setDefaultStyleErrorTitle": "Fel vid inställt standardstil",
+            "setDefaultStyleErrorMessage": "Det är inte möjligt att använda vald stil som standard",
+
+            "enterLegendLabelPlaceholder": "Ange legendetikett",
+            "addMarkSymbolizer": "Lägg till märkesymboliserare",
+            "addMarkRule": "Lägg till märkesregel",
+            "shape": "Form",
+            "fill": "Fyllningsfärg",
+            "strokeColor": "Stroke färg",
+            "strokeWidth": "Slagbredd",
+            "radius": "Radie",
+            "rotation": "Rotation",
+            "addIconSymbolizer": "Lägg till ikonsymboliserare",
+            "addIconRule": "Lägg till ikonregel",
+            "image": "Bild",
+            "format": "Format",
+            "opacity": "Opacity",
+            "size": "Size",
+            "addLineSymbolizer": "Lägg till linjesymboliserare",
+            "addLineRule": "Lägg till radregel",
+            "lineStyle": "Linjestil",
+            "lineCap": "Linjekåpa",
+            "lineJoin": "Line join",
+            "addFillSymbolizer": "Lägg till symbol för fyllning",
+            "addFillRule": "Lägg till fyllningsregel",
+            "outlineColor": "Konturfärg",
+            "outlineWidth": "Konturbredd",
+            "addTextSymbolizer": "Lägg till text symboliserare",
+            "addTextRule": "Lägg till textregel",
+            "label": "Etikett",
+            "fontFamily": "Teckensnittsfamilj",
+            "fontColor": "Teckensnittsfärg",
+            "fontSize": "Teckensnittsstorlek",
+            "fontStyle": "Teckensnitt",
+            "fontWeight": "Teckensnittsvikt",
+            "haloColor": "Halofärg",
+            "haloWidth": "Halobredd",
+            "offsetX": "Offset x",
+            "offsetY": "Offset y",
+            "addRasterSymbolizer": "Lägg till raster -symboliserare",
+            "addRasterRule": "Lägg till rasterregel",
+            "colorRamp": "Färgramp",
+            "reverse": "Omvänd ordning",
+            "attribute": "Attribut",
+            "method": "Metod",
+            "intervals": "Intervaller",
+            "continuous": "Kontinuerliga färger",
+
+            "lineCapButt": "Butt",
+            "lineCapRound": "Round",
+            "lineCapSquare": "Fyrkant",
+
+            "lineJoinBevel": "Avfasning",
+            "lineJoinRound": "Round",
+            "lineJoinMitre": "Gerning",
+            "fontStyleNormal": "Normal",
+            "fontStyleItalic": "Italic",
+            "fontWeightNormal": "Normal",
+            "fontWeightBold": "Fet",
+            "boolTrue": "Sant",
+            "boolFalse": "Falskt",
+
+            "colorMapType": {
+                "label": "Färgkartstyp",
+                "ramp": "Ramp",
+                "intervaller": "Intervaller",
+                "värden": "Värden"
+            },
+
+            "addRuleBefore": "Lägg till ny post före",
+            "addRuleAfter": "Lägg till ny post efter",
+            "remove": "Ta bort",
+
+            "cirkel": "Cirkel",
+            "square": "Kvadrat",
+            "triangel": "Triangel",
+            "star": "Stjärna",
+            "cross": "Kors",
+            "x": "X",
+            "verticalLine": "Vertikal linje",
+            "horizontalLine": "Horisontell linje",
+            "slash": "Snedstreck",
+            "backslash": "Backslash",
+            "dot": "Prick",
+            "plus": "Plus",
+            "times": "Times",
+            "openArrow": "Öppna pil",
+            "closedArrow": "Stängd pil",
+            "band": "Band",
+            "none": "None",
+            "normalize": "Normalisera",
+            "histogram": "Histogram",
+            "contrastEnhancement": "Kontrastförbättring",
+            "placeholderInput": "Ange värde",
+            "placeholderEnterImageUrl": "Ange bildadress",
+            "selectPlaceholder": "Välj värde",
+            "noResultsSelectInput": "Inga resultat",
+            "channelAuto": "Auto",
+            "openFilterBuilder": "Öppna filterbyggare",
+            "removeRule": "Ta bort regel",
+
+            "openScaleDenominator": "Filter för öppen skala -nämnare",
+            "selectScale": "Välj skala",
+            "noResultScales": "Ingen skala matchar ditt filter",
+            "maxScaleDenominator": "Max skala",
+            "minScaleDenominator": "Min skala",
+
+            "simpleStyle": "Enkel stil",
+            "classificationStyle": "Klassificeringsstil",
+            "patternMarkStyle": "Mönstermärkesstil",
+            "patternIconStyle": "Mönsterikonstil",
+            "singleBand": "Singelband",
+            "rgbaBands": "RGB -band",
+            "pseudoColor": "Pseudofärg",
+
+            "undoStyle": "Ångra stil",
+            "redoStyle": "Gör om stil",
+
+            "equalInterval": "Lika intervall",
+            "uniqueInterval": "Unikt intervall",
+            "quantile": "Quantile",
+            "jenks": "Naturliga raster (Jenks)",
+            "standardDeviation": "Standardavvikelse",
+            "switchToTextareaEditor": "Kodredigerare",
+            "switchToVisualEditor": "Visual editor",
+            "alertForceTranslate": "Du kommer att förlora alla ändringar som läggs till i textläget genom att byta till visuell redigerare. Är du säker på att du byter till läget för visuell stilredigerare?",
+            "stayInTextareaEditor": "Nej, fortsätt med textredigerare",
+            "useLatestValidStyle": "Ja, byt till visuell redigerare",
+            "validationError": "Valideringsfel",
+            "incorrectPropertyInputError": "Detta beror troligen på att värdet saknas eller är ogiltigt i egendomsinmatningarna i formatredigeraren.",
+
+            "emptyRuleEditorTitle": "Lägg till nya regler",
+            "emptyRuleEditor": "Det finns inga regler för den här stilen. Lägg till en ny regel genom att klicka på den önskade symboliseratypen i verktygsfältet",
+            "ificationError ":" Tjänsten är inte tillgänglig. För närvarande är det inte möjligt att skapa en klassificering ",
+            "rankingRasterError": "Tjänsten är inte tillgänglig. För närvarande är det inte möjligt att skapa en rasterklassificering",
+            "ificationRasterUniqueIntervalError ":" Kan inte utföra unik värdeklassificering över raster av flottörtyp, endast heltal stöds. Försök med en annan klassificering istället ",
+            "ificationUniqueIntervalError ":" Maximala intervallgränser överskridna! Du försöker skapa en unik intervallklassificering med ett attribut som innehåller mer än {intervalsForUnique} olika klasser. Unik intervallklassificering bör tillämpas på attribut med en begränsad uppsättning intervall för att möjliggöra en bättre läsbarhet för stilen. Du kan prova en annan metod för det valda attributet ",
+            "redChannel": "Röd kanal",
+            "greenChannel": "Grön kanal",
+            "blueChannel": "Blå kanal",
+            "grayChannel": "Kanal",
+            "ruleClassification": "Klassificering",
+            "ruleRaster": "Raster",
+            "customInterval": "Anpassat intervall",
+            "styleEmpty": "Denna stil har inga regler",
+            "incompleteClassification": "Klassificeringen är ofullständig eftersom uppgifterna inte är tillgängliga. Se till att alla egenskaper är korrekt angivna",
+            "imageSrcEmpty": "Bildkällans webbadress saknas i ikonstilen",
+            "imageSrcLoadError": "Den angivna bildkällan kunde inte laddas. Försök med en annan webbadress eller se till att källan kan nås av MapStore",
+            "imageSrcInvalidBase64": "Det här är inte en giltig base64 -bild. Vissa stilåtergivare stöder inte den här typen av källor, du kan istället använda en extern URL -källa",
+            "imageSrcNotSupportedBase64Image": "Någon stilåtergivare stöder inte base64 -bilder även om den aktuella källan är giltig",
+            "imageFormatEmpty": "Bildformatet kan inte identifieras. Välj bildformat bland de tillgängliga i rullgardinsmenyn Format ",
+            "warningTextOrderTitle": "Varning",
+            "warningTextOrder": "Regelordningen som innehåller textstil kunde inte matcha återgivningsordningen på kartan. Detta beteende är relaterat till någon återgivningsmotor som ritar etikett ovanpå andra regler"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Inställningar",
+                "title": "Uppspelningsinställningar",
+                "frameDuration": "Frame Duration",
+                "range": {
+                    "title": "Animationsintervall",
+                    "zoomTooltip": "Zooma till aktuellt animationsintervall",
+                    "animationStart": "Animationsstart",
+                    "animationEnd": "Animation slut",
+                    "zoomToCurrentPlayackRange": "Zooma till det aktuella uppspelningsområdet",
+                    "setToCurrentViewRange": "Ställ in på aktuellt visningsområde",
+                    "fitToSelectedLayerRange": "Passar till det valda lagrets område"
+                },
+                "step": {
+                    "tooltip": "När alternativet Snap to guide Layer är inaktiverat kan du anpassa animationssteget",
+                    "label": "Animationssteg",
+                    "year": "{number, plural, = 0 {Year} = 1 {Year} annat {Years}}",
+                    "vecka": "{nummer, plural, = 0 {vecka} = 1 {vecka} annan {vecka}}",
+                    "day": "{number, plural, = 0 {Day} = 1 {Day} annan {Days}}",
+                    "timme": "{nummer, plural, = 0 {timme} = 1 {timme} annan {timme}}",
+                    "minut": "{nummer, plural, = 0 {minut} = 1 {minut} annan {minut}}",
+                    "second": "{number, plural, = 0 {Second} = 1 {Second} annan {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Följ animationen",
+                    "followingDescription": "När animationen är aktiv, följ markören"
+                }
+            },
+            "backwardStep": "Steg bakåt",
+            "forwardStep": "Gå framåt",
+            "play": "Spela",
+            "pause": "Paus",
+            "paused": "Spela (pausad)",
+            "stop": "Stopp"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Tidslinjeinställningar",
+                "snapToGuideLayer": "Snap to guide layer",
+                "snapToGuideLayerTooltip": "Tvingar tidmarkören att snäppa till det valda lagrets data. Inaktivera det här alternativet för att låsa upp tidmarkörerna och aktivera anpassningen av animationssteg"
+            },
+            "hide": "Dölj tidslinje",
+            "show": "Visa tidslinje",
+            "mapSyncOn": "Visa alla tider, utan att filtrera efter viewport",
+            "mapSyncOff": "Visa endast tillgängliga tider i den aktuella vyporten",
+            "currentTime": "Gå till aktuell tid",
+            "rangeStart": "Gå till det aktuella tidsintervallet",
+            "rangeEnd": "Gå till det aktuella tidsintervallet",
+            "hideLayerName": "Dölj lagernamn",
+            "showLayerName": "Visa lagers namn",
+            "enableRange": "Aktivera tidsintervall",
+            "disableRange": "Inaktivera tidsintervall",
+            "enablePlayBack": "Aktivera uppspelningskontroller",
+            "disablePlayBack": "Inaktivera uppspelningskontroller",
+            "expand": "Expandera tidreglaget",
+            "collapse": "Skjutreglage för kollaps",
+            "collapsed": {
+                "title": "Tidslinjen har kollapsats",
+                "tooltip": "Klicka här för att expandera det igen"
+            },
+            "errors": {
+                "multidim_error_title": "Backend -tjänsten svarar inte",
+                "multidim_error_message": "De tjänster som krävs för multidimensionell support svarar inte. Försök igen senare eller kontakta administratören."
+            }
+        },
+        "rulesmanager": {
+            "apply": "Apply",
+            "remove": "Ta bort geometri",
+            "resetconstraints": "Återställer begränsningar",
+            "constraintsmsg": "Om du ändrar bidrag, arbetsyta eller lager kommer detaljerna att raderas. Är du säker på att du vill göra det?",
+            "defstyle": "Standardstil",
+            "avstyle": "Tillgängliga stilar",
+            "clearbtn": "Rensa allt",
+            "selectbtn": "Välj alla",
+            "placeholders": {
+                "role": "Skriv för att söka roller",
+                "user": "Skriv för att söka användare",
+                "service": "Skriv för att söka efter tjänster",
+                "request": "Skriv för att söka begäranden",
+                "workspace": "Skriv för att söka arbetsytor",
+                "layer": "Skriv för att söka lager",
+                "access": "Skriv för att söka åtkomst",
+                "ip": "###. ###. ###. ###/##",
+                "priority": "Välj prioritet",
+                "filter": "Filterstilar ..."
+            },
+            "menutitle": "Hantera åtkomstregler",
+            "tooltip": {
+                "addT": "Lägg till en regel",
+                "editT": "Redigera vald regel",
+                "addBeT": "Lägg till ny regel innan du väljer",
+                "addAfT": "Lägg till ny regel efter valet",
+                "deleteT": "Ta bort valda regler",
+                "cacheT": "Rensa cache",
+                "save": "Spara aktuell regel",
+                "close": "Avsluta från skapa -regel"
+            },
+            "navItems": {
+                "main": "Allmän regel",
+                "style": "Stil",
+                "filter": "Filter",
+                "attribute": "Attributregel"
+            },
+            "rule": "Regel",
+            "cachetitle": "Rensa cache",
+            "cachemsg": "Är du säker på att du rensar regelcachen?",
+            "deltitle": "Ta bort regel",
+            "delmsg": "Vill du verkligen ta bort denna regel?",
+            "invalidForm": "Formuläret är ogiltiga kontrollfältvärden",
+            "ip": "IP",
+            "title": "Åtkomstregler",
+            "role": "Roll",
+            "user": "Användare",
+            "prioritet": "Prioritet",
+            "service": "Service",
+            "request": "Begäran",
+            "workspace": "Arbetsyta",
+            "layer": "Layer",
+            "filters": "Filter",
+            "regler": "Regler",
+            "access": "Åtkomst",
+            "newModal": "Ny regel",
+            "editModal": "Redigera regel",
+            "newButton": "Skapa",
+            "editButton": "Spara",
+            "close": "Stäng",
+            "previous": "föregående",
+            "next": "nästa",
+            "cacheCleaned": "Cachen har rensats",
+            "errorTitle": "Geofence",
+            "errorCQL": "Geometri ogiltig!",
+            "errorCleaningCache": "Fel vid rengöring av reglercache.",
+            "errorLoadingRoles": "Fel vid inläsning av roller.",
+            "errorLoadingUsers": "Fel vid laddning av användare.",
+            "errorLoadingWorkspaces": "Fel vid inläsning av arbetsytor.",
+            "errorLoadingLayers": "Fel vid laddning av lager.",
+            "errorLoadingRules": "Fel vid inläsning av regler.",
+            "errorMovingRules": "Fel vid flytt av regler.",
+            "errorDeletingRules": "Fel vid borttagning av regler.",
+            "errorAddingRule": "Fel vid tillägg av regel.",
+            "errorUpdatingRule": "Fel vid lagring av regel.",
+            "errorDuplicateRule": "Duplicerad regel.",
+            "errorLoading": "Fel vid inläsning",
+            "deleteModal": "Ta bort regler",
+            "selectedRulesDelete": "Ta bort valda regler?",
+            "deleteButton": "Ta bort",
+            "cancelButton": "Avbryt",
+            "cqlRead": "Läsregler för CQL -filter",
+            "cqlWrite": "Skrivregler för CQL -filter",
+            "missingconfig": "Regelhanteraren saknar konfiguration. Åtkomst nekad!",
+            "selectworkspace": "Du måste välja arbetsyta för att aktivera avancerade alternativ"
+        },
+        "geostory": {
+            "storyResources": "Berättelseresurser",
+            "geostoreMap": "MapStore -kartor",
+            "loadingSpinner": "Läser in berättelse",
+            "addTitleSection": "Lägg till titelavsnitt",
+            "addBannerSection": "Lägg till bannersektion",
+            "addParagraphSection": "Lägg till stycke avsnitt",
+            "addImmersiveSection": "Lägg till nedsänkande avsnitt",
+            "addMediaSection": "Lägg till mediasektion",
+            "addWebPageSection": "Lägg till avsnitt för webbsidor",
+            "addImmersiveContent": "Lägg till nedsänkt innehåll",
+            "addGeocarouselSection": "Lägg till Geocarousel -avsnitt",
+            "addGeocarouselContent": "Lägg till geokarouselinnehåll",
+            "addTextContent": "Lägg till textinnehåll",
+            "addMediaContent": "Lägg till medieinnehåll",
+            "addWebPageContent": "Lägg till innehåll på webbsidan",
+            "zoomToContent": "Zooma till innehåll",
+            "emptyTitle": "Den här historien är tom",
+            "emptyDescription": "Börja skapa en fantastisk kartberättelse genom att lägga till nytt innehåll",
+            "closeFullscreenMap": "Stäng helskärmskarta",
+            "showFullscreenMap": "Visa helskärmskarta",
+            "carouselAddTitle": "Lägg till ny miniatyr för kort",
+            "carouselEditTitle": "Redigera kortminiatyr",
+            "carouselAddMapInfo": "Lägg till en bakgrundskarta",
+            "carouselAddItemInfo": "Lägg till en ny markör för det valda karusellobjektet",
+            "carouselPlaceMarkerInfo": "Klicka på kartan för att lägga till en ny markör",
+            "contentToolbar": {
+                "contentSize": "Ändra storlek",
+                "contentHeightAuto": "Gör det här avsnittet anpassat efter innehållshöjden",
+                "contentHeightView": "Gör det här avsnittet så att det passar vyn vertikalt",
+                "smallSizeLabel": "Liten",
+                "mediumSizeLabel": "Medium",
+                "largeSizeLabel": "Stor",
+                "fullSizeLabel": "Full",
+                "contentAlign": "Justera innehåll",
+                "leftAlignLabel": "Vänster",
+                "centerAlignLabel": "Center",
+                "rightAlignLabel": "Rätt",
+                "contentTheme": "Ändra fälttema",
+                "brightThemeLabel": "Bright",
+                "brightTextThemeLabel": "Ljus text",
+                "darkThemeLabel": "Mörk",
+                "darkTextThemeLabel": "Mörk text",
+                "defaultThemeLabel": "Standard",
+                "customizeThemeLabel": "Anpassa",
+                "customizeThemeRemoveLabel": "Ta bort anpassning",
+                "cover": "Få bakgrunden att täcka hela behållarutrymmet",
+                "fit": "Gör hela bakgrunden synlig inuti behållaren",
+                "editMedia": "Ändra mediekälla",
+                "remove": "Ta bort",
+                "add": "Lägg till",
+                "edit": "Redigera",
+                "marker": "Lägg till markör på kartan",
+                "removeConfirmTitle": "Är du säker?",
+                "removeConfirmContent": "Vill du ta bort det här innehållet från berättelsen?",
+                "editMap": "Redigera kartkonfiguration",
+                "resetMap": "Återställ kartan till dess ursprungliga konfiguration",
+                "resetMapConfirm": "Återställ kartkonfiguration",
+                "resetConfirmContent": "Vill du återställa kartkonfigurationen till den ursprungliga?",
+                "saveChanges": "Spara ändringar",
+                "closeMapEditing": "Stäng",
+                "confirmCloseMapEditing": "Stäng kartredigering",
+                "pendingChangesDiscardConfirm": "Kassera aktuella kartändringar?",
+                "editURL": "Redigera webbadress",
+                "advancedMapEditor": "Öppna avancerad kartredigerare",
+                "enableAudio": "Aktivera ljud",
+                "disableAudio": "Stäng av video",
+                "enableAutoplay": "Aktivera autoplay",
+                "disableAutoplay": "Inaktivera autoplay",
+                "enableLoop": "Aktivera loop",
+                "disableLoop": "Inaktivera loop",
+                "hideCaption": "Dölj bildtext",
+                "showCaption": "Använd beskrivning som bildtext"
+            },
+            "navigation": {
+                "edit": "Redigera berättelse"
+            },
+            "builder": {
+                "defaults": {
+                    "htmlTitlePlaceholder": "Infoga titel",
+                    "htmlPlaceholder": "Infoga text här ...",
+                    "titleTitle": "Titelavsnitt",
+                    "titleBanner": "Bannersektion",
+                    "titleParagraph": "Avsnittsavsnitt",
+                    "titleImmersive": "Fördjupning",
+                    "titleImmersiveContent": "Fördjupning",
+                    "titleGeocarousel": "Geokarusellsektion",
+                    "titleGeocarouselContent": "Geokarusellinnehåll",
+                    "titleMedia": "Mediasektion",
+                    "titleImage": "Bild",
+                    "titleText": "Text",
+                    "titleWebPage": "Webbsida",
+                    "titleWebPageSection": "Webbsida",
+                    "titleUnknown": "Okänt"
+                },
+                "delete": "Ta bort valt avsnitt",
+                "preview": "Visa förhandsgranskning",
+                "edit": "Redigera berättelse",
+                "noContents": "Inget innehåll tillgängligt",
+                "collapseAll": "Dölj alla",
+                "expandAll": "Expandera alla",
+                "fullscreen": "Visa förhandsgranskning i helskärm",
+                "settings": {
+                    "tooltip": "Inställningar",
+                    "back": "Tillbaka till byggaren",
+                    "backConfirmTitle": "Inställningarna har ändrats",
+                    "backConfirmBody": "Är du säker på att du stänger inställningspanelen utan att spara dina ändringar",
+                    "backConfirmNo": "Nej",
+                    "backConfirmYes": "Ja",
+                    "save": "Spara inställningar",
+                    "storyTheme": "Storytema",
+                    "storyHeader": "Story Header",
+                    "title": "Titel",
+                    "titlePlaceholder": "Ange titel",
+                    "logo": "Logotyp",
+                    "logoPlaceholder": "Släpp din logotypbild här eller klicka för att välja en bildfil (format som stöds är png och jpeg)",
+                    "autoplay": "Autoplay",
+                    "enableAutoplay": "Aktivera autoplay",
+                    "autoplayInterval": "Autoplay -intervall (sekunder)",
+                    "autoplayIntervalPlaceholder": "Aktivera autoplay -intervall",
+                    "navbar": "Navigationsfält",
+                    "showNavbar": "Visa navbar",
+                    "theme": "Standardtema",
+                    "fontFamily": "Teckensnittsfamilj",
+                    "webFontLoadError": "Det gick inte att läsa in några teckensnitt från lokal konfiguration",
+                    "fontSize": "Teckensnittsstorlek",
+                    "overlay": "Overlay",
+                    "templateTooltip": "Med den här inställningen kan du aktivera identifieringsfunktionen på kartan genom att definiera ett generiskt format för alla lager. Det är möjligt att konfigurera ett annat format för varje enskilt lager med hjälp av den avancerade kartredigeraren (pennikon). För mer information, se <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> användarhandbok </a>. Om en layer har definierat sitt eget Identify -format, kommer det att användas istället för det generiska som ställs in på kartnivå. "
+                }
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "kartberättelse hittades inte",
+                    "title": "Fel",
+                    "unknownError": "Okänt fel",
+                    "pleaseLogin": "Vänligen logga in",
+                    "notAccessible": "Den här historien är inte tillgänglig",
+                    "geostoryNotAccessible": "Du har inte behörighet att komma åt den här artikeln. Kontakta resursägaren",
+                    "geostoryDoesNotExist": "Den här historien finns inte",
+                    "video": "Tyvärr! Ett fel har uppstått. Försök igen senare."
+
+                }
+            },
+            "mapEditor": {
+                "configureMapOptions": "Konfigurera karta",
+                "settings": "Inställningar",
+                "settingsSubTitle": "Hantera användarinteraktioner",
+                "toc": "Lager",
+                "pan": "Pan interaktion",
+                "zoom": "Zooma in/ut -interaktioner",
+                "topLeft": "Överst till vänster",
+                "topRight": "Överst till höger",
+                "bottomLeft": "Nedre vänster",
+                "bottomRight": "Nederst till höger",
+                "identify": "Identifiera"
+            },
+            "webPageCreator": {
+                "title": "Webbsida",
+                "saveButton": "Spara",
+                "error": "Ange en giltig webbadress",
+                "url": {
+                    "label": "URL"
+                }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Bakgrund",
+                "textColorLabel": "Text",
+                "shadowLabel": "Skugga",
+                "useAlternativeTextColor": "Använd alternativ textfärg",
+                "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded": {
+            "loadingSpinner": "Läser in berättelse",
+            "fel": {
+                "läser in": {
+                    "notFound": "kartberättelse hittades inte",
+                    "title": "Fel",
+                    "unknownError": "Okänt fel",
+                    "notAccessible": "Den här historien är inte tillgänglig",
+                    "pleaseLogin": "Resursen är inte offentlig",
+                    "geostoryNotAccessible": "Du har inte behörighet att komma åt den här artikeln",
+                    "geostoryDoesNotExist": "Den här historien finns inte"
+                }
+            }
+        },
+        "saveDialog": {
+            "title": "Redigera egenskaper",
+            "name": "Namn",
+            "description": "Beskrivning",
+            "createdAt": "Skapad",
+            "modifiedAt": "Ändrad",
+            "namePlaceholder": "Skriv ett namn ...",
+            "descriptionPlaceholder": "Skriv en beskrivning ...",
+            "confirmCloseText": "Det finns ändringar som väntar, är du säker på att du vill stänga utan att spara?",
+            "close": "Stäng",
+            "cancel": "Avbryt",
+            "saveSuccessTitle": "Framgång",
+            "saveSuccessMessage": "Sparad framgångsrikt",
+            "saveTooltip": "Spara",
+            "saveAsTooltip": "Spara som"
+        },
+        "mapEditor": {
+            "modalTitle": "Kartredigerare",
+            "confirmExitTitle": "Stäng kartredigerare",
+            "confirmExitContent": "Kassera väntande ändringar?"
+        },
+        "mediaEditor": {
+            "modalTitle": "Media",
+            "images": "Bilder",
+            "videos": "Videor",
+            "maps": "Kartor",
+            "preview": "Förhandsgranska",
+            "apply": "Apply",
+            "confirmExitTitle": "Stäng Media Editor",
+            "confirmExitContent": "Kassera väntande ändringar?",
+            "mediaPicker": {
+                "services": "Tjänster:",
+                "clean": "Rensa resultat",
+                "noResults": "Inga resultat",
+                "selectService": "Välj en tjänst",
+                "add": "Lägg till",
+                "back": "Bakåt",
+                "save": "Spara",
+                "edit": "Redigera",
+                "sourcePlaceholder": "Ange en källa",
+                "source": "Källa",
+                "titlePlaceholder": "Ange en titel",
+                "title": "Titel",
+                "altTextPlaceholder": "Ange en alternativ text",
+                "altText": "Alternativ text",
+                "descriptionPlaceholder": "Ange en beskrivning",
+                "description": "Beskrivning",
+                "creditsPlaceholder": "Ange krediter",
+                "credits": "Credits",
+                "mapFilter": "Filtrera kartor",
+                "videoFilter": "Filtrera videor",
+                "imageFilter": "Filtrera bilder",
+                "import": "Importera resurs till lokal butik",
+                "trash": "Ta bort resurs",
+                "videoUrl": "Video URL",
+                "videoUrlPlaceholder": "Ange en videoadress",
+                "thumbnail": "Lägg till miniatyrbild (maxstorlek 500kb)",
+                "createVideoThumbnail": "Skapa en miniatyrbild från videokällan",
+                "thumbnailCreateError": "Det är inte möjligt att skapa en miniatyrbild från den aktuella videokällan. Klicka eller släpp en bild i miniatyrinmatningen för att ladda upp den manuellt"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Stäng medieformulär",
+                "confirmExitContent": "Kassera väntande ändringar?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Storleken på bilderna ska vara en kvadrat på 98px x 98px, max 100kb",
+                "confirmMapSaveTitle": "Kartuppdatering",
+                "confirmMapSaveContent": "Uppdatering av denna karta återställer alla beroende kartor i berättelsen som tidigare anpassats via inline -redigeraren, bekräfta?"
+            },
+            "mediaList": {
+                "removeResourceTitle": "Är du säker?",
+                "confirmRemoveResource": "Vill du ta bort denna mediaresurs från berättelsen?",
+                "confirmRemoveUsedResource": "Den här resursen kommer också att tas bort från alla avsnitt/innehåll där den används och lämna dem tomma. Vill du ta bort den från berättelsen?",
+                "resultsCount": "{count} av {total} {total, plural, en {Resultat} annan {Resultat}}"
+            },
+            "imageList": {
+                "emptyList": "Klicka på plusknappen för att lägga till en ny bild. Se användarhandboken <a href = 'https: //mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/# images 'target =' _ blank '/> här </a> "
+            },
+            "mapList": {
+                "emptyList": "Klicka på plusknappen för att skapa en karta eller välja en annan karttjänst. Se användarhandboken <a href = 'https: //mapstore.readthedocs.io/en/latest/user-guide/media- editor-window/#maps 'target =' _ blank '/> här </a> "
+            },
+            "videoList": {
+                "emptyList": "Klicka på plusknappen för att lägga till en ny video. Se användarhandboken <a href = 'https: //mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/# videos 'target =' _ blank '/> här </a> "
+            }
+        },
+        "backgroundDialog": {
+            "addTitle": "Lägg till ny bakgrund",
+            "editTitle": "Redigera nuvarande bakgrund",
+            "title": "Titel",
+            "titlePlaceholder": "Ange visat namn",
+            "add": "Lägg till",
+            "thumbnailMessage": "Storleken på bilderna ska vara en kvadrat på 98px x 98px eller 128px x 128px, max 500kb",
+            "additionalParameters": "Ytterligare parametrar",
+            "addAdditionalParameterTooltip": "Lägg till parameter",
+            "removeAdditionalParameterTooltip": "Ta bort parameter",
+            "parameter": "Parameter",
+            "value": "Value",
+            "string": "Sträng",
+            "number": "Number",
+            "boolean": "Boolean"
+        },
+        "defaultMapBackgroundsServiceTitle": "Standardbakgrunder",
+        "backgroundSelector": {
+            "addTooltip": "Lägg till ny bakgrund",
+            "confirmDelete": "Är du säker på att du vill radera  {title}  bakgrund?"
+        },
+        "stepper": {
+            "back": "Bakåt",
+            "next": "Nästa"
+        },
+        "newMapDialog": {
+            "title": "Välj en webbkarta",
+            "noContexts": "Ingen webbkarta hittades",
+            "filterPlaceholder": "Sök webbkarta ..."
+        },
+        "plugins": {
+          "Om": {
+            "description": "Verktyg som visar fönstret Om",
+            "title": "Om"
+          },
+          "AddGroup": {
+            "description": "Tillåter användare att skapa nya lagergrupper i innehållsförteckningen",
+            "title": "Lägg till lagergrupp"
+          },
+          "annotations": {
+            "description": "Verktyg för att rita karttexter",
+            "title": "Karttexter"
+          },
+          "AutoMapUpdate": {
+            "description": "Tillåter användaren att uppdatera kartan (gammal MapStore-version)",
+            "title": "Automatisk kartuppdatering"
+          },
+          "BackgroundSelector": {
+            "description": "Gör det möjligt att välja kartbakgrund",
+            "title": "Bakgrundsväljare"
+          },
+          "BurgerMenu": {
+            "description": "Meny längst upp till höger på kartan som innehåller andra plug-ins",
+            "title": "Burgermeny"
+          },
+          "CRSSelector": {
+            "description": "Gör det möjligt att byta kartprojektion",
+            "title": "CRS -väljare"
+          },
+          "details": {
+            "description": "Tillåt att visa detaljkort för en karta, om någon",
+            "title": "Kartinformation"
+          },
+          "Expander": {
+            "description": "Verktyg för sidofält (navigering) som gör det möjligt att dölja några knappar",
+            "title": "Expander"
+          },
+          "FeatureEditor": {
+            "description": "Bläddra bland attribut i en tabell",
+            "title": "Attributtabell"
+          },
+          "FilterLayer": {
+            "description": "Tillåter att lägga till ett filter i ett lager",
+            "title": "Filterskikt"
+          },
+          "HelpLink": {
+            "description": "En knapp för åtkomst till MapStore -dokumentation",
+            "title": "Dokumentationslänk"
+          },
+          "Home": {
+            "description": "Länk till hemsidan",
+            "title": "Hem"
+          },
+          "Identify": {
+            "description": "Fråga objekten på kartan",
+            "title": "Identifiera"
+          },
+          "Locate": {
+            "description": "Hitta och följ användarens position på kartan",
+            "title": "Platsverktyg"
+          },
+          "Login": {
+            "description": "Inloggningsverktyg",
+            "title": "Logga in"
+          },
+          "MapCatalog": {
+            "description": "Tillåter surfning, redigering, radering och laddning av kartor som är tillgängliga på servern",
+            "title": "Kartkatalog"
+          },
+          "MapExport": {
+            "description": "Tillåter att exportera karta i en fil",
+            "title": "Kartexport"
+          },
+          "MapImport": {
+            "description": "Gör det möjligt att importera data (SHP, KML/KMZ, GeoJSON, GPX) eller ladda om exporterade kartor.",
+            "title": "Importera"
+          },
+          "MapLoading": {
+            "description": "En snurr i sidofältet som anger om kartan laddas",
+            "title": "Indikator för kartläsning"
+          },
+          "Measure": {
+            "description": "Gör det möjligt att mäta avstånd och områden på kartan",
+            "title": "Mät"
+          },
+          "MetadataExplorer": {
+            "description": "Bläddra bland tjänster (WMS/WMTS/CSW) för att lägga till lager på kartan",
+            "title": "Katalog"
+          },
+          "MousePosition": {
+            "description": "Visar koordinaterna för spetsen med muspekaren",
+            "title": "Musposition"
+          },
+          "Print": {
+            "description": "Gör det möjligt att skriva ut den aktuella kartan med förklaring",
+            "title": "Utskriftsverktyg"
+          },
+          "Save": {
+            "description": "Gör det möjligt att spara ändringarna på kartan på servern",
+            "title": "Spara"
+          },
+          "SaveAs": {
+            "description": "Gör det möjligt att skapa eller klona kartor på servern",
+            "title": "Spara som"
+          },
+          "ScaleBox": {
+            "description": "En indikator och en väljare för den aktuella skalan på kartan",
+            "title": "Skalväljare"
+          },
+          "Search": {
+            "description": "Textverktyg (GeoCoder)",
+            "title": "Sökfält"
+          },
+          "Settings": {
+            "description": "Gör det möjligt att redigera vissa inställningar för kartan (språk, standardinformationsformat ...)",
+            "title": "Inställningar"
+          },
+          "Share": {
+            "description": "Gör det möjligt att dela kartan på olika sätt (länk, QR-kod, bädda in, sociala nätverk ...)",
+            "title": "Delningsverktyg"
+          },
+          "StyleEditor": {
+            "description": "Stileditor för lagret",
+            "title": "Stileditor"
+          },
+          "TOC": {
+            "description": "Ger en lista över lager med möjlighet att sortera dem",
+            "title": "Lista över lager"
+          },
+          "TOCItemsSettings": {
+            "description": "Tillåt att redigera lagerets inställningar",
+            "title": "Lagerinställningar"
+          },
+          "Timeline": {
+            "description": "Tillåter tidsresor för data med tidsdimension",
+            "title": "Tidslinje"
+          },
+          "Tutorial": {
+            "description": "Lägger till en handledning för att förklara de olika funktionerna",
+            "title": "Handledning"
+          },
+          "UserExtensions": {
+            "description": "Tillåter användaren att aktivera/inaktivera användartillägg",
+            "title": "Användartillägg"
+          },
+          "UserSession": {
+            "title": "Användarsession",
+            "description": "Aktiverar en automatiskt sparad användarsession för varje webbkarta"
+          },
+          "Version": {
+            "description": "Visar versionen av MapStore i kartinställningsverktyget",
+            "descriptionGeorchestra": "Visar versionen av GeOrchestra i kartinställningsverktyget",
+            "title": "Version"
+          },
+          "LayerDownload": {
+            "description": "Tillåter att ladda ner data från attributbordet",
+            "title": "Ladda ner data"
+          },
+          "Widgets": {
+            "description": "Tillåter att lägga till och visa widgets på kartan",
+            "title": "Widgets"
+          },
+          "WidgetsTray": {
+            "description": "Ett fack för att komprimera och expandera widgets på kartan.",
+            "title": "Widgets fack"
+          },
+          "Globe": {
+            "description": "Sidofältsknapp för att slå på/av 3D -läge",
+            "title": "3D"
+          },
+          "ZoomAll": {
+            "description": "Sidofältsknapp för att zooma till kartans omfattning",
+            "title": "Zooma till maxstorlek"
+          },
+          "ZoomaIn": {
+            "description": "Knapp som ökar zoomnivån på kartan",
+            "title": "Zooma in"
+          },
+          "ZoomOut": {
+            "description": "Knapp som minskar zoomnivån på kartan",
+            "title": "Zooma ut"
+          }
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Allmänna inställningar",
+                "title": "Skapa ny webbkarta",
+                "edit": "Redigera webbkarta",
+                "name": "Namn",
+                "namePlaceholder": "Ange namn för kartan...",
+                "windowTitle": "Fönstertitel",
+                "windowTitlePlaceholder": "Ange fönstertitel ..."
+            },
+            "configureThemes": {
+              "title": "Konfigurera tema",
+              "label": "Tema",
+              "themes": "Välj ett tema",
+              "noThemes": "Inga teman hittades",
+              "customVariables": "Anpassade variabler",
+              "main": "Huvudtextfärg",
+              "background": "Huvudbakgrundsfärg",
+              "primaryContrast": "Primär textfärg",
+              "primary": "Primär färg",
+              "successContrast": "Sekundär textfärg",
+              "success": "Sekundär färg",
+              "guidelines": "Se till att inte använda en sekundär färg som är för lik den primära och uppenbarligen den primära textfärgen med dess motsvarighet (samma gäller för de andra paren färger: huvud, sekundär)",
+              "alternativeTextPrimarySecondary": "<p> Varning: den sekundära färgen kan inte läsas jämfört med den primära </p> <p> En alternativ färg är {color} & nbsp; <span class = \" ms-custom-theme- picker-alternative-text  style =  background-color: {color}  > </span> </p>",
+              "tooltip": {
+                "main": "Textfärg som används i paneler eller dialogrutor",
+                "background": "Bakgrundsfärg som används i paneler eller dialogrutor",
+                "primaryContrast": "Textfärg i motsats till primärfärg och framgång bacgrkound -färg: ikoner i verktygsfält, rubriker, knappar",
+                "primary": "Primär bakgrundsfärg: verktygsfält, rubriker, knappar",
+                "successContrast": "Textfärg tillämpas när sekundärfärgen används som bakgrund",
+                "success": "Bakgrundsfärg används för att visa när en knapp är aktiv eller vald ",
+                "customColorsDescription": "Du kan ändra (eller inte) en av dessa färger till ett förkonfigurerat tema som valts ovan"
+              }
+            },
+            "configurePlugins": {
+                "label": "Konfigurera plugins",
+                "pluginsFilterPlaceholder": "Filtrera insticksprogram efter namn ...",
+                "availablePlugins": "Tillgängliga plugins",
+                "enabledPlugins": "Aktiverade plugins",
+                "availablePluginsEmpty": "Alla tillgängliga plugins är aktiverade",
+                "enabledPluginsEmpty": "Lägg till plugins i konfigurationen från listan över tillgängliga plugins",
+                "searchResultsEmpty": "Inga plugins hittades som uppfyller sökkriterierna",
+                "cfgParsingError": {
+                    "title": "Konfigurationsfel",
+                    "body": "JSON -analys av konfiguration misslyckades. n Följande fel uppstod:  {error} "
+                },
+                "uploadLabel": "Dra ett tilläggspaket eller klicka för att bläddra och ladda upp det",
+                "uploadTitle": "Installera ett MapStore -plugin",
+                "uploadParseError": "index.json -fil index.json har fel format",
+                "uploadMissingIndexError": "index.json -fil saknas i zip",
+                "uploadMissingPluginError": "Inga insticksprogram definierade i index.json",
+                "uploadMissingBundleError": "Inget javascript -paket i uppladdad fil",
+                "uploadTooManyBundlesError": "För många javascript -paket i zip -paketet",
+                "uploadWrongFileFormatError": "Fel filformat, zip -fil förväntas",
+                "uploadAlreadyInstalledError": "Tillägget är redan installerat. Tar bort nuvarande tillägg innan det installeras om",
+                "confirmRemovePlugin": "Är du säker på att du vill ta bort tillägget?",
+                "cancelUpload": "Stäng",
+                "install": "Installera",
+                "uploadError": "Fel vid installation:",
+                "uploadOk": "Tillägget har installerats korrekt",
+                "tooltip": {
+                    "enableUserPlugin": "Aktivera val av aktuell plugin för användare",
+                    "disableUserPlugin": "Inaktivera val av aktuell plugin för användare",
+                    "enablePlugin": "Aktivera laddning av detta plugin vid start",
+                    "deactivatePlugin": "Inaktivera laddning av detta plugin vid start",
+                    "editConfiguration": "Redigera plugin -konfiguration",
+                    "pluginDocumentation": "Öppna plugin -konfigurationsdokumentation",
+                    "uploadPlugin": "Lägg till ett tillägg till MapStore",
+                    "removePlugin": "Ta bort det här tillägget från MapStore",
+                    "mapTemplatesConfig": "Konfigurera kartmallarna"
+                },
+                "tutorialPlugins": {
+                    "availableTitle": "Tillgängligt plugin",
+                    "availableDescription": "Detta plugin är inaktiverat",
+                    "enabledTitle": "Aktiverat plugin",
+                    "enabledDescription": "Det här tillägget är aktiverat"
+                },
+                "saveCfgErrorNotification": {
+                    "title": "Syntaxfel i plugin -konfiguration",
+                    "message": "Plugin {pluginName} innehåller ett fel i konfigurationen. Åtgärda innan du fortsätter"
+                }
+            },
+            "configureTemplates": {
+                "title": "Konfigurera kartmallar",
+                "availableTemplates": "Tillgängliga kartmallar",
+                "enabledTemplates": "Aktiverade kartmallar",
+                "templatesFilterPlaceholder": "Filtrera kartmallar efter namn ...",
+                "availableTemplatesEmpty": "Alla tillgängliga kartmallar är aktiverade",
+                "enabledTemplatesEmpty": "Lägg till kartmallar i konfigurationen från listan över tillgängliga mallar",
+                "searchResultsEmpty": "Inga kartmallar som uppfyller sökkriterierna hittades",
+                "fileDrop": {
+                    "label": "Kartmall",
+                    "clear": "Släpp eller klicka för att välja en kartfil (exporterade JSON MapStore -kartor eller WMC -filer stöds)"
+                },
+                "uploadDialog": {
+                    "title": "Ladda upp kartmall",
+                    "save": "Ladda upp",
+                    "jsonParsingError": "JSON -analys misslyckades: {error} ",
+                    "fileReadError": "Ett oväntat filläsningsfel inträffade"
+                },
+                "tooltip": {
+                    "uploadTool": "Ladda upp ny kartmall",
+                    "editTemplate": "Redigera kartmallsegenskaper",
+                    "deleteTemplate": "Ta bort kartmall"
+                },
+                "deleteError": "Det gick inte att ta bort kartmallen, ett fel uppstod",
+                "deleteConfirm": "Är du säker på att du vill ta bort den här kartmallen {templateName} ?"
+            },
+            "configureMap": {
+                "label": "Konfigurera karta",
+                "reload": "Ladda om karta",
+                "confirm": "Detta kommer att kasta alla aktuella kartändringar. Vill du fortsätta?"
+            },
+            "saveErrorNotification": {
+                "titleContext": "Det gick inte att spara webbkartan",
+                "titleTemplate": "Mallsparningen misslyckades",
+                "conflict": "En resurs med detta namn finns redan",
+                "defaultMessage": "Okänt fel",
+                "categoryError": "Misslyckades att skapa saknad kategori {categoryName}"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Det gick inte att komma åt malldata, användaren saknar nödvändiga behörigheter!",
+                "defaultMessage": "Ett oväntat fel uppstod"
+            },
+            "contextNameErrorNotification": {
+                "title": "Felaktigt namn på webbkarta",
+                "unknownError": "Ett oväntat fel inträffade"
+            },
+            "undo": "Är du säker på att du vill lämna redigeringen av kartan?",
+            "showTutorial": "Visa självstudier"
+        },
+        "contextManager": {
+            "title": "Hantera webbkarta",
+            "gridTitle": "Webbkartor",
+            "searchPlaceholder": "sök ...",
+            "newContext": "Ny webbkarta",
+            "editContextTooltip": "Redigera webbkarta"
+        },
+        "userExtensions": {
+          "title": "Användartillägg",
+          "emptyTitle": "Inget resultat",
+          "emptyDescription": "Inmatat filter matchar inte namn eller beskrivning av tillägg",
+          "filterPlaceholder": "Filter ...",
+          "addExtension": "Lägg till tillägg",
+          "removeExtension": "Ta bort tillägg"
+        },
+        "mapTemplates": {
+            "title": "Kartmallar",
+            "tooltip": "Bläddra i kartmallar",
+            "favouritesTitle": "Favoriter",
+            "allTitle": "Alla",
+            "filterPlaceholder": "Filtrera kartmall ...",
+            "transfer": "Ersätt karta med den här kartmallen",
+            "merge": "Lägg till den här kartmallen på kartan",
+            "favouriteAdd": "Lägg till i favoriter",
+            "favouriteRemove": "Ta bort från favoriter",
+            "emptyTitle": "Inget resultat",
+            "emptyDescription": "Inmatat filter matchar inte namn eller beskrivning av någon av kartmallen",
+            "noTemplatesTitle": "Ingen kartmall hittades",
+            "noTemplatesDescription": "Denna webbkarta innehåller ingen kartmall",
+            "confirmReplaceTitle": "Ersätt kartinnehåll",
+            "confirmReplaceMessage": "Du kommer att ersätta alla lager och kartkonfiguration med den valda kartmallen genom att klicka på knappen Ersätt ",
+            "confirmReplaceConfirmButton": "Ersätt"
+        },
+        "mapCatalog": {
+            "title": "Kartkatalog",
+            "tooltip": "Bläddra och ladda kartor",
+            "filterPlaceholder": "Sök på kartor ...",
+            "deleteConfirmContent": "Är du säker på att du vill radera {mapName} karta?",
+            "tooltip": {
+                "edit": "Redigera egenskaper",
+                "delete": "Ta bort resurs",
+                "share": "Dela"
+            },
+            "deleteMap": {
+                "title": "Borttagen karta",
+                "message": "Kartan har tagits bort"
+            },
+            "updatedMap": {
+                "title": "Sparad karta",
+                "message": "Kartan har sparats"
+            },
+            "deleteError": "Ett oväntat fel inträffade när kartan raderades",
+            "updateError": "Ett oväntat fel inträffade när kartan sparades"
+        },
+        "layerInfo": {
+            "title": "Uppdatera lagertitlar och beskrivningar",
+            "noLayers": "Inga lager hittades",
+            "syncButton": "Synkronisera titlar och beskrivningar",
+            "selectAll": "Markera alla",
+            "deselectAll": "Avmarkera alla",
+            "updatingLayers": "Uppdaterar lager {updatedCount}/{totalCount}",
+            "tooltip": {
+                "syncSuccess": "Titel och beskrivning har uppdaterats för detta lager",
+                "syncError": "Det är inte möjligt att uppdatera titeln och beskrivningen av detta lager. Du kan verifiera om alla lageralternativ är korrekta i inställningspanelen"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Serversparfel",
+                "message": "Ett oväntat fel uppstod när uppdaterade lager sparades på servern"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Allmänt fel",
+                "message": "Ett oväntat fel uppstod under lagersynkronisering. Det finns förmodligen ett fel i MapStore"
+            },
+            "layerType": "type: {type}"
+        },
+        "tutorial": {
+            "title": "Guide",
+            "back": "Tillbaka",
+            "next": "Nästa",
+            "close": "Stäng",
+            "skip": "Hoppa över",
+            "last": "Avsluta",
+            "start": "Starta",
+            "checkbox": "visa inte detta meddelande igen",
+            "error": "Fel: målet hittades inte",
+            "intro": {
+                "title": "Välkommen på MapStore",
+                "text": "ramverk för att bygga webbmappningsapplikationer med standardmappningsbibliotek, till exempel OpenLayers och Leaflet."
+            },
+            "drawerMenu": {
+                "title": "Huvudmeny",
+                "text": "Du kan hitta information och verktyg för att hantera lager"
+            },
+            "searchBar": {
+                "title": "Sökfält",
+                "text": "Skriv adressen till en plats att hitta. t.ex. Kungsgatan 1 Stockholm. Du kan till och med infoga koordinater i det här formatet: 43.87,10.20"
+            },
+            "home": {
+                "title": "Hem",
+                "text": "Klicka för att gå till hemsidan"
+            },
+            "searchButton": {
+                "title": "Sök",
+                "text": "Klicka för att öppna sökfältet och skriv sedan adressen till en plats att hitta. t.ex.Kungsgatan 1 Stockholm. Du kan till och med infoga koordinater i det här formatet: 43.87,10.20"
+            },
+            "burgerMenu": {
+                "title": "Alternativmeny",
+                "text": "Du hittar alternativ, inställningar och hjälp"
+            },
+            "zoomInButton": {
+                "title": "Zooma in",
+                "text": "Klicka för att förstora kartan"
+            },
+            "zoomOutButton": {
+                "title": "Zooma ut",
+                "text": "Klicka för att minska kartan"
+            },
+            "fullscreen": {
+                "title": "Helskärm",
+                "text": "Klicka för att gå i helskärm"
+            },
+            "identifyButton": {
+                "title": "Info",
+                "text": "Tryck på knappen för att aktivera verktyget, klicka sedan på kartan för att hämta information från lager"
+            },
+            "mapType": {
+                "title": "Bibliotek",
+                "text": "Du kan välja Leaflet eller OpenLayers för att återge dina kartor"
+            },
+            "mapsGrid": {
+                "title": "Kartor",
+                "text": "Här några exempel på MapStore. Klicka på en bild för att prova demoen."
+            },
+            "examples": {
+                "title": "Anpassad applikation",
+                "text": "Du kan använda komponenter och plugins till MapStore för att skapa anpassade applikationer"
+            },
+            "introCesium": {
+                "title": "3D -kartanvisningar",
+                "text": "Klicka på nästa knapp för att starta självstudien"
+            },
+            "cesium": {
+                "title": "Interaktioner med kartan",
+                "pan": "Panvy",
+                "zoom": "Zoomvy",
+                "tilt": "Tilt view",
+                "rotate": "Rotera vy",
+                "oneDrag": "Drag med ett finger",
+                "twoPinch": "Nypa med två fingrar",
+                "twoDragSame": "Drag med två fingrar, samma riktning",
+                "twoDragOpposite": "Drag med två fingrar, motsatt riktning",
+                "leftClick": "Vänsterklicka + dra",
+                "rightClick": "Högerklicka + dra eller rulla mushjul",
+                "middleClick": "Mellanklicka + dra eller CTRL + vänster/högerklicka + dra"
+
+            },
+            "cesiumCompass": {
+                "title": "Kompass",
+                "text": "Du kan använda kompassen för att kretsa runt jorden. Dra för att rotera kartan"
+            },
+            "cesiumNavigation": {
+                "title": "Navigation",
+                "text": "Här hittar du zoom -in och zoom -ut -knapparna"
+            },
+            "dashboardIntro": {
+                "title": "Handbok för Verktygspanelen",
+                "text": "Översikt över Verktygspanelens funktioner"
+            },
+            "dashboardNav": {
+                "title": "Navigationsfält",
+                "text": "Här hittar du språkväljare, inloggning, länk till hemsida och alternativmeny"
+            },
+            "dashboardContainer": {
+                "title": "Översikt",
+                "text": "<p> En Verktygspanel i MapStore tillhandahåller en uppsättning information som är lämpligt insamlad för att visa aggregerad data i en bildvy. Geospatiala data som visas på en karta kan placeras sida vid sida till relaterade attributtabeller, diagram och annat, med syftet att ansluta olika typer av information, visa statistiska detaljer och textbeskrivningar relaterade till ett specifikt kontext. </p> <p> Alla användare kan visualisera och interagera med publicerade Verktygspaneler men bara användare som får redigera kan lägga till, ordna, ändra storlek eller ta bort alla widgetar i en Verktygspanel </p> "
+            },
+            "dashboardAddWidget": {
+                "title": "Lägg till widget",
+                "text": "Om du vill lägga till en widget på Verktygspanelen kan du klicka på + -knappen"
+            },
+            "dashboardBuilder": {
+                "title": "Skapa en ny widget",
+                "text": "Du kan välja vilken typ av widget du vill ha och sedan lägga till i Verktygspanelen genom att välja ett av objekten i listan"
+            },
+            "dashboardAddChart": {
+                "title": "Chart Widget",
+                "text": "<p> Det är en widget som visar och sammanställer data till cirkel-, rad- eller stapeldiagram. </p> <p> Steg: </p> <p> <ul> <li> Välj ett vektorgikt </li> <li> Välj diagramtyp </li> <li> Konfigurera diagramdata </li> <li> Spara och lägg till i Verktygspanelen </li> </ul> </p> "
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p> Lägg till din egen text på Verktygspanelen. </p> <p> Steg: </p> <p> <ul> <li> Redigera text i redigeraren </li> <li> Spara och lägg till Verktygspanelen </li> </ul> </p> "
+            },
+            "dashboardAddTable": {
+                "title": "Tabellwidget",
+                "text": "<p> Lägg till en attributtabell i Verktygspanelen som innehåller data från ett valt vektorgikt. Du kan också filtrera data för att anpassa din tabell. </p> <p> Steg: </p> <p> <ul> <li> Välj ett vektorlager </li> <li> Konfigurera tabelldata </li> <li> Spara och lägg till i Verktygspanelen </li> </ul> </p> "
+            },
+            "dashboardAddCounter": {
+                "title": "Counter Widget",
+                "text": "<p> Lägg till en ny räknare på Verktygspanelen. Räknaren visar numerisk värdeaggregeringsdata från ett valt vektorgikt. </p> <p> Steg: </p> <p> <ul> <li > Välj ett vektorlager </li> <li> Konfigurera motdata </li> <li> Spara och lägg till i Verktygspanelen </li> </ul> </p> "
+            },
+            "dashboardAddMap": {
+                "title": "Karta -widget",
+                "text": "<p> Lägg till en ny interaktiv karta på Verktygspanelen. Du kan lägga till mer än en karta med möjlighet att ansluta andra widgetar till dem. Efter att ha sparat den första kartan läggs legend -widgeten till i listan. Legend Widget visar en legend relaterad till den anslutna kartan. </p> <p> Steg: </p> <p> <ul> <li> Välj en karta </li> <li> Förbättra kartan genom att lägga till nya lager </li> <li> Spara och lägg till i Verktygspanelen </li> </ul> </p> "
+            },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Handledning för skapande av webbkarta",
+                        "text": "Detta är en steg-för-steg-guide för att skapa och redigera MapStore-webbkartor"
+                    },
+                    "stepsOverview": {
+                        "title": "Steg för innehållsskapare",
+                        "text": "<p> Varje webbkarta skapas i tre steg: </p> <p> <ul> <li> Allmänna inställningar </li> <li> Konfigurera karta </li> <li> Konfigurera insticksprogram < /li> </ul> </p> "
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navigation: Nästa",
+                            "text": "<p> Tryck på den här knappen för att gå till nästa steg. Om knappen är inaktiverad betyder det att antingen data som du konfigurerade valideras, eller att den är ogiltig. </p>"
+                        },
+                        "back": {
+                            "title": "Navigation: Tillbaka",
+                            "text": "<p> Tryck på den här knappen för att gå till föregående steg. </p>"
+                        },
+                        "close": {
+                            "title": "Navigation: Stäng",
+                            "text": "<p> Tryck på den här knappen för att lämna webbkarteprocessen utan att spara. Detta kan göras när som helst i skapandet. </p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Allmänna inställningar",
+                        "text": "<p> I det första steget för att skapa en kartapp måste du ange namnet på webbkartan, som också definierar dess unika URL och titel som kommer att användas som titel på webbläsarens fönster när webbkartan öppnas och är aktiv. Obs: webbkartnamn kan endast innehålla latinska bokstäver, siffror 0-9 och understrykningstecken. Fönstret kan inte vara tomt. </p> "
+                    },
+                    "showTutorial": {
+                        "title": "Visa handledning",
+                        "text": "<p> Om du vill gå igenom handledningen ett steg igen kan du göra det när som helst genom att trycka på den här knappen. </p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Konfigurera karta",
+                        "text": "<p> I det här steget kan du med hjälp av MapStore kartvisningsverktyg konfigurera standardkartan som öppnas vid anrop till webbkartan. </p>"
+                    },
+                    "reloadMap": {
+                        "title": "Ladda om karta",
+                        "text": "<p> Om du vill kasta bort alla ändringar du har gjort på kartan hittills och börja om kan du göra det genom att trycka på den här knappen. </p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Konfigurera plugins",
+                        "text": "<p> Med det här steget kan du konfigurera plugins som finns i webbkartan. </p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Tillgängliga plugins",
+                        "text": "<p> Denna lista innehåller MapStore-plugins som kan läggas till i en webbkarta. Om du vill välja ett plugin klickar du bara på dess flik. Om du håller ned CTRL -tangenten kan du välja flera plugins. </p > "
+                    },
+                    "pluginManipulation": {
+                        "title": "Moving Plugins",
+                        "text": "<p> När de har valts kan tillgängliga plugins flyttas till den högra kolumnen, vilket aktiverar dem i webbkartan. Vissa plugins kräver att andra plugins fungerar, i så fall kommer de att aktiveras automatiskt tillsammans med plugins som du uttryckligen har aktiverat. </p> <p> Insticksprogram kan också flyttas från kolumnen aktiverad till tillgänglig för att ta bort plugins från webbkartan. Om du tar bort ett plugin, inaktiveras alla plugins som det kräver för att fungera, såvida det inte finns aktiverade plugins som också kräver ett sådant plugin. </p> "
+                    },
+                    "enabledPlugins": {
+                        "title": "Aktiverade plugins",
+                        "text": "<p> Denna lista innehåller MapStore-plugins som finns i webbkartan. Varje plugin här kan konfigureras ytterligare med verktygsknappar. </p>"
+                    },
+                    "userPlugin": {
+                        "title": "Insticksverktyg: Användarinsticksprogram",
+                        "text": "<p> Genom att trycka på den här knappen kan du tillåta att ett plugin aktiveras/inaktiveras av användare, vilket gör det till ett användar -plugin. Sådana plugins visas i plugin -tillägget User Extensions. Detta plugin läggs till automatiskt i webbkartan om det finns minst ett aktiverat användarplugin. </p> "
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Insticksverktyg: Användarinsticksprogram",
+                        "text": "<p> Om ett plugin är ett användar-plugin, styr den här kryssrutan om ett användar-plugin ska aktiveras automatiskt vid webbkartainläsning. </p>"
+                    },
+                    "cfgTool": {
+                        "title": "Insticksverktyg: konfigurationsverktyg",
+                        "text": "<p> Om du trycker på den här knappen visas en redigerare där du kan redigera plugins standardkonfiguration. </p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Insticksverktyg: konfigurationsredigerare",
+                        "text": "<p> Redigeraren stöder syntaxmarkering. Alla dina ändringar sparas kontinuerligt när du redigerar. Om konfigurationen innehåller ett syntaxfel informeras du på rätt sätt. Felet måste åtgärdas innan du fortsätter. </p > "
+                    },
+                    "documentationTool": {
+                        "title": "Plugin -verktyg: Dokumentation",
+                        "text": "<p> Om du trycker på den här knappen kommer du till plugins dokumentationssida där du kan leta upp information om vad plugin-programmet gör och vilka konfigurationsparametrar det stöder. </p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Insticksverktyg: kartmallar",
+                        "text": "<p> Kartmallar-plugin har också ett specialverktyg som låter dig konfigurera en kartmall som blir tillgänglig i webbkartan. </p>"
+                    },
+                    "extensions": {
+                        "title": "Tillägg",
+                        "text": "<p> MapStore stöder också uppladdning av anpassade extensions. Du kan göra det genom att klicka på den här knappen. </p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Tillägg",
+                        "text": "<p> Redan överförda tillägg kan tas bort när som helst genom att trycka på den här knappen. </p>"
+                    }
+                }
+            },
+            "geostoryIntro": {
+              "title": "Handledning för berättelser",
+              "text": "<p> Översikt över kartberättelser</p> <p> Utforska den relaterade användarhandboken <a target = '_ blank' href = 'https: //mapstore.readthedocs.io/en/latest/user- guide/exploring-stories/'> här </a> "
+            },
+            "geostoryViewHeader": {
+              "title": "Rubrik",
+              "text": "Här hittar du språkväljare, inloggning, länk till hemsida och alternativmeny"
+            },
+            "geostoryViewNavItems": {
+              "title": "Navigerbara objekt",
+              "text": "Här kan du hitta objekt i historien som du kan använda för att navigera/hoppa till. Den visar också den aktuella positionen i berättelsen"
+            },
+            "geostoryViewNavTitle": {
+              "title": "Berättelsens titel",
+              "text": "Här kan du se berättelsens titel"
+            },
+            "geostoryViewNavLogo": {
+              "title": "Story -logotyp",
+              "text": "Här kan du se berättelsens logotyp"
+            },
+            "geostoryViewContent": {
+              "title": "Berättelsens innehåll",
+              "text": "Detta kommer att vara innehållet i berättelsen"
+            },
+            "geostoryViewEditButton": {
+              "title": "Redigera berättelse",
+              "text": "Genom att klicka här kan du redigera berättelsens innehåll och inställningar"
+            },
+            "geostoryEditSidebar": {
+              "title": "Sidofält",
+              "text": "<p> I sidofältet kan du se en översikt över berättelsen där varje objekt identifieras med en annan ikon eller med en förhandsvisning i händelse av bilder eller kartor </p> <p> Här kan du: < /p> <ul> <li> Ändra titel till varje avsnitt eller innehållstitel </li> <li> Ändra ordning genom att dra avsnitt och dess innehåll </li> <li> Zooma till ett specifikt innehåll med timglassknappen < /li> </ul> "
+            },
+            "geostoryEditSidebarToolbar": {
+              "title": "Verktyg",
+              "text": "<p> Från vänster till höger: </p> <ul> <li> Radera ett valt avsnitt </li> <li> Gå i visningsläge </li> <li> Redigera inställningar </li > <li> Dölj/expandera alla </li> </ul> "
+            },
+            "geostoryEditSidebarSettings": {
+              "title": "Story Settings",
+              "text": "<p> Här kan du: </p> <ul> <li> Visa/dölja/redigera berättelsens titel </li> <li> Redigera berättelsens tema </li> <li> Visa/dölja/redigera berättelsens logotyp </li> <li> Anpassa navigeringsfältet i visningsläge </li> </ul> <p> För mer information se den relaterade användarhandboken <a target = '_ blank' href = 'https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>här </a> "
+            },
+            "geostoryEditContainer": {
+              "title": "Berättelsens innehåll",
+              "text": "<p> Här kan du se berättelsens innehåll, redigera det genom att lägga till eller ta bort avsnitt, stycken etc. </p> <p> Varje verktygsfält låter dig manipulera berättelsens innehåll, till exempel: < /p> <img src = 'data: image/png; base64,iVBORw0KGgoAAAANSUhEUgAAALsAAAAfCAIAAAAwfyvFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAWqSURBVHhe7ZhJbFtFGIB9Q0gIsUiUVWxFXBAcuCCQANEDSBxBQqxCSOXQAwIJcaHc4EApRG3SNKjQQps4zUqd0jRRQkOSJk1CkpKN7Iuz76ljx4mdOOGTZvT0YsfPb7xEocynX5bnzf / s53nf / DPPDo9Go4LDr9Go4AhqNCo4NjQaFRwhjUYFx2YshpeW19Y3ZCMZ + AJBV5 / b2TVE5HcPz / j8smM7ox4vaSTLtib1MNqlA2NVI1ProZA8FIFjy5KywYn70 / O / rG4NbITkoYSZ8K48 + eNvj2QWPn6yiDcX + kZlx3aKe937s4pJlm3bdMwu5f4zLKJ2dGZzUx4X0OSgkUCy7NhLeALBw9WtH12qCwsO0iWTks28f + 0VZ / ktR84RB0vrg6Gd77iVMejy6vmK7M7B5EqDBC / nlMVUIW5jvq5r23csDx2JN4qrwoaY5gcXa0UvaSTLjr0Ev5rfLm6eOeIbEAvE / Lk + vWDWxfqLohqDLvel57 + YXTbp9fOhSZSGS7E2ZtrnP1TecLqtn + su6Bn5qvp6WJ2wBglsemA / c5dhE / Cne9oohEZwkC6ZlAxaphf2Hc + 759j5x04WGboQz58tXVoLyKTt7GyMN7D + 1oVqcXLSpZny + Q84yy2MaZ9dxBUWrLvSch86UfBmRJ2wJtXGLK4G5lZWI28cI9M2s0hpHF9eSeptTSFc86eVTbd + l224QjDyFot11BqDYpR08RGpqDTWXBufpcLx1bgVTfZofHutgxhb9oVN0LAgQWTK02zzXkkNNTJM4qtjMw9mFIjhIl7Lq1C9bEHMyxZBmjwhMVaC6x / + fvXhE4WGNNa6gNU + JqXSMAuZqVQaI6g95o / lu6gu8Y07MNfFlUcLEmSqIpHGjHp8T51yMURuj49V42zHwO3fOzNaumW3CtS8sOvcMeK + eDNCF + LGWtCoNJktPbI7ClbGwHIg + I6rRlxlcqVhxBl38ckiWE0bJ + dkd8LspjFFPW4WUDYZook0vuC6eK / KrtUYQxfeMHu / qW + / 4wcn0vBAMHzDK5N2IoYxkCJpbiZjKAzGxWe19oonYd6I3j1IpC4v5ZQhyhdXmgnr2xrbGAiTJq2p64msYh5N87qHZYY6N5Mxv7QPMEFFjUEUnt7Z05AmelWhRPG0aF6vzUFXgo9Lhi6M9qm / + w5Xt6ILhUB2x8KWMWCW5t7jeexM8cbiGSwmwVCocnjSXGkLe0bm / Wuye2traMnL3I27jO2mMQOLyzydvl9Sy82gyU199szFuI3hRjJ5wq7WiATnldCFEujqGxXPFmLdkN02sGsMCGlYsKvcUzTZqD79k + tMe7 / oTS7o8szPJSyrB0vrVaU53dZPNE / Ni9UhWpAgMuVptkEFNrYoIv4G / KSikYOU2zvTcqm7HKeX9 / HtfKFv0fPCuVLx4ZFBFwkyVZHEdQEFYwBpKLl3p + V + VtnEBpsy89yvl + ZMhcEO5DMdmYiyHQG / gv / C6N92NIfvUt0w2f + XxX6mmfrxWXNppCmOs2RgyaHyBmfXkOqY7ALGYkRxjVsXUDMGWEMZI0RhGj2QUUAZUC0zjCxVnVfZjqB3wXPAWX60sXN / VjGv77pq9pQx / 1HYYD2aWZTe3J2ILqBsjABvroxMsVrz3SwfFgUjkpjGALscpgLG8BiputFDgrdd1aIAlA9NhNlm3j + RtqeMKekfNf5Jsw7SSJan2YNfapwety4QpzEC7uXlwXF2M5grD9kAVziFu8WC + VHL + tbpBdmxHWGMtVg7wlAam5UjDZ1hxtDkoJGgOu4ppW5sxmLPaw7SSJan2cAXXH89v1KcS / 2OWxdIyBgB3vQseNY2NmQ7Fourgc // + EvcMAtj2JmSRrJsaxKD59CW6QVvIM6 / Fg2SYIzmf4U2RqOGNkajhjZGo4Y2RqOGNkajhjZGo4Y2RqOGNkajwtbWv + UsZ02x4CaBAAAAAElFTkSuQmCC '/> <ul> <li> förändring mediakälla </ li> <li> gör avsnittet att anpassa sig till innehåll höjd eller för att passa uppfattningen vertikalt </li> <li> gör bakgrunden för att täcka behållarutrymmet eller inte </li> <li> ändra storlek </li> <li> anpassa behållaren (tillgänglig om storleken inte är full) </li> <li > ändra tema </li> </ul> <img src = 'data: image/png; base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY / wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY / wKN2HLnCYMwBztD + YGzYLF + F1OGV19 / MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc + / AZKgIBSgK8DNvDnBnk + XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf / z5G8rDBM ++ fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95 / ZnBYthOshhAg6JCXX78zmCzYwiA / bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69 + cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l + 4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37 / vr7j + HG24 / gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg == '/> <p> med den här ikonen kan du redigera den relaterade kartan </p> <img src =' '/> <b> tips: på det här verktyget med musen för att se mer "
+            },
+            "geostoryEditAddbar": {
+              "title": "Lägg till nytt innehåll",
+              "text": "<p> Här kan du lägga till olika typer av scetions: </p> <p> <img src = 'data: image/png; base64,iVBORw0KGgoAAAANSUhEUgAAAU4AAACDCAYAAADiUvK3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAABT5SURBVHhe7Z0NcBzleccf2 / iwOWwjMJYBiwGZAbmAMMTDVJMhhpm4TbBJgXFNXDRD4mJE8Zg6devg4oqicWLixIWJhiSyigiJQgN0igp2KXVmQEBHM4zMhwyxTGIRIwORMBaWOcBnRLv / 1b7i1cue7vZ2b3fv7v + befTuvs9 + VM / t3l / v1 + 5N + j8L0Th + / LidTp061U5NovYPDw / b6cyZM + 3UJO7l9 + tn / IwfMP5o459s / yWEEJIzFE5CCPEIhZMQQjwy6ciRI0XVx3n06FE7nTFjhp2axL38fv2Mn / EDxh9t / KxxEkKIRziqbhB3P + nn / IDxc1SdEEKKikiEE5VcGo1Gy8fiQEGF0y1oGCGE5IubpsDCJFDhjDIQQkh5E6b + BCKcmQqqB0Gj0WiFNJNM + UEwKZ1Ojzuy11Ens2DW8ew0k9 / vqBZHFRk / YPyMX2fSpEl2qvZPJBJ2qjD9fsvnSzhNUcQ6 / EJV / tmE1STb + XnjMH7A + MS7 / lmzZtmpQhdGLGN / lafAelDly3se5wknnGCnQB0CKfxIsb er9D9bmQ7P28cxg8Yf + / + nGDwHU41cCqYQRKfbX8xWffvqpnfotX17CqQuf2h0pDP6XXnpJpkyZMuZTYF0VXBdenWz VCplp8lk0k5N / B4 / 7n7Gz / GB40 OE0SA9ZGREbnsssvGhNMUT + + + gTlkMXTr2prXZFqgxCOcVV1xh + wghJCyef / 55WzjRx6mEUxdPpW9mH6giV + H0Paqui6YyQgiJijA0yZNw6gUwC6bss88 + s6vLhBASNtAeaJCbNsEU + Ni + 5FXjNE + qCoUCq0ITQkjYmDpkalFQ2jQZbfZ8DH2Zph07dsxO4SeEkLBR2qS0yDRdw / xYYH2cusJjmRBCwsbUIbUcNJMxepSLYXqAnqplPR9TkCZPnmwbIYSEjdIfaJGuTWpZretpPpZ3H6eu4modBpVnjZMQEgVKf3RNUpjrfvBVNdQLZxohhISNmxYpC5JA2tSFLiQhhORCWFoUyOCQotCFJYSQiXDToELoUd7CaRZGrReikIQQkiuZtChIbcppHmem + U8qX0 / xkL56UJ8QQsJE6Y + bNiE1LVN + Ngukj1MHqs5aJyEkCsLSn5znceZqas4UIYSEjdIfN20K0gKrcbKWSQiJE4XUpMCb6oQQUupQOAkhxCMUTkII8UhBhJP9nYSQKAhLe3L6eWC9MJj3hHW8fUQ9UI + 3LmPuFNJPPvlEXn75ZbnuuuucPcJgSPpe3C + HnTV3ElJVWyuV06zFoT7p / t3EW7tzqsy / vFoqnDWSjVyui8bs + bKoOv6fbvrdHunpH / 3traBIVNVK7Rnuv4NTSEopFvD444 / LpZdeKtOmTRt7Q5L + 1jZoFH57SP / NIfWbRMBN / 3SUv0SEs0davrFJdlVUSgWEceRDGRpMiYxbr5Jv / + tWWTrHWn + lRb7RuBM7emSpbH6iQWqdNZKN0euS8yf99c3yxN / E / 9Md2LFNHp26WOqC0vihLuk8vkLWL6t0MsJjYEezdNasGv1eBMHgTmnrXSxrI4gFhCaclggGKpwff / yxLZzXXHONs0cYjH5BpekJaVhorVoXb8PNLTJfrQ93SlP9TvlSsQrnYLe0b2 + Xzn6RqsuXSv1fLpHqcT + r3SvtDduk01nLjcWyvqVeapy1wlCqwtki3Zc3BCo2LS8ukoZIhNNbLNbX3xIdZ8WNCGMBTz75pC2c06dPp3B6xhROk5G0pFKjcXpjqiRnhtwE + cQSn5st8UlXy + LFp0rvM90yMPNa2dq6SmqmONt4FSibcP4JpIdTkvMnnUhKEi2EmGOKTepAj + wdrpAFf1IlybFr4oEiEc7 + / 1gjax6ulc3 / PsF9UybCWZ6j6lMSlgBaX1LPFrJoguF + 2T9spZdeJ7euaZTN61fI0qsXSMU4NbLiOaNSKj1Z0tqr8CRcP8cMVgSiaTLw1Aa5ae0mabpzjdz2QI8E21sYJ1LS97vDkjxvnlQ5OeVMedY4cx4c0gaUImNAdv7DamnZl5DKLzdI498vkap8ajWRUJqDQ5 / X0tLS9aPlsuU5x5GwavET1cbASL / s + lGTtA3Uyfo7Vski1PRiWeO0hHJHmzyeXiJrr6 + xvglWq2b5Jnl22Wa5a + Yu2ZW4TlYtq5aks / UYZVLjLE / hzLmPs0YaVL9oRKT3tMjqO3dJYl6FDB0ckPS0alnxT9 + T + ou / cMvGkNLv4xx6pklW39tt1zQrLFFpvaU2c03 + UJc037FNdg2qemlCar + 1VTbW7ZX23TESToj71k3S3DUkiYVrpbVpiVS82yHrGtqk6rv3S + 3T35HmV9JSUbdWNm8w / pGzqU7iQO8LO2Vo9rWy8Setcu / tdVL5WZ88eudt0rJHbxRicGi1rPZk7dZexC8VVzXKwy1bpfGHrfLQBKKZ2tMm627dookmSEvPz9fJTX / 7oOx3ciIH4t5gCWNXSqqXNUrrXZZoWtnpvv3SJ9Uyv7pKltzVKo1WbTPV1SzfaWiWrkOju5YTJTIdySBbjdPD4NDUZFISETaNe366XDY9lZTF371P1n / ZuoUPdsiGdW3S + 5VGeeL2RWorDg6FSNYBlfSAdD / WIo8erJO1dtdKv3SsXSNtBxy / CzW3tMrWqGucw52yZdU26bIEcunGu6ThS593m / T + fKVs2HHluK6Iod0tcveWnZag1sn6to2yGDM9Iq5xhjUdiYNDWSxK0QS1135bahJD0vkDq5b4404ZmFMjNZa4JKbpdRsODsWCoT7pfGCDrPyr1dL0SLf0 / q + qkVXJ4r + IfxeEJCqk8hTrrkgflL2798vQiJMvA9L7Skrk4hqZ7 + TIyJDs371XDloV6MQplVIRxs0UI0qvjzPVLz0vdEjz / buk8sZGqb9qkdRE2EcZCIe6pWXzPbKzz2nmzbZqi83Wf / 4i6OacuMYZwfSuAPhCjXOwRzp + 0SLtz / W7j6onaqTeavL2390sna4bxKTGCSxB7Lp / g2z7zYDInCWy9vtrrZpkl2xbsUV6b7xfWm + o0u5Hkcqvrpeta + qkQlUw2MdZpBzqk64DCVm0bKlUHdktna / 3O44iZrZ1I257SO67xbpBsT78oaSKYmS9Rx6sXykrM9qD1hbFS + pAp7TdsVKW37xJ2jKJJkj3Svud7dIz7qGFmDKlQupuH + 1PTw7ukm13tEvfgb3Sbblqz8NEpD5p39BkiWbS2u5eabW2GxPNMqI0R9X9kuqTnR17ZcE1S40ndCLA + nK2PN0tU2tWyaqvVMjAf66T1Q / 0ydJx / bf90rn9vzwO9tTI1bcsLvCcvGx9rx77WWNyXQZ2NMmmjh4ZGDfQ44 / Y1Dg1Ugd7ZP / IfKn87d2y + qciDW1bZels / MOw8qfMl9p5Lk2eMqlxUjgNUr / FKT / + fsvoSGGiUuq + tVFu / 3p1fk + EBEHKaibdtEU6pVrq / min + HH + xU7oHa2TtQ5tlyVjffbEODuXeVI / TdRnYsUFWbw92TkIchVPRs325bHruatnavir7I7psqpcf / b / ZIrf9nfPlBOkB6dq + Tm5q2CK7Djp5YZOsk / U / aZQVVu2yb3eP9M + sk4Z / 2aiJJijWwaHcShDL61JG1P71w / JvbTmIZhnBGifQOsQzN74SUn3DZvnejTVffFqCFIaYXpfSqnGW1tuRQmuqW0IYqHDGYh7nRDhz7Dqn18ut148 + MpZ6pklW3ovu72yE07wtS4rouvB9nBPD93E6lIRwDvdL52PN8rOneiVl3yeJz6dSHO + SbfVbMk4V + ZwwvqD5DPTkQxiDQzlQNNeFFAN8H2dQDPbIzsfa5MGn + 1ybe4nqa6WxaZVUPLVG1vwq29SlML6g + Qz05EPEYlN014UUAxxV90n63W55dHuLdOyeqH / MYVqtNPxjnXQ1tmSZV0jh9AuvSzYYix8onHkytG + XTD / YJp2 / TWX / YupYH2TC2sMKbwKiEZtSoPivC4XTOxROZym + wjnwSsfoz0vg4dmCQeH0Sulcl1Lqey7dfnQKpydK6T9owDf17Dqpv742oilUpVuzIfGEwukJNqMyckGDtP5wqUQzq47CScIlNOG0hDBQ4Yzy54EpnC5QOAOC1yUjkcYyHs7j9EQpfUFLCQpnRiicBYHzOD1RZpPGiwYOqGQk0r7nUoplPOzjJIQQj4QlnHw7EiGEeITCSQghHqFwEkKIRyichBDikUlHjhzxPTgE06cjvfrqq3LDDTc4exBCSDg88sgjcskll4ybjqQGhjg4RAghEcLpSISQkoHTkQghJKZQOAkhxCMUTkII8QiFkxBCPBLLwaGTdrzuLBFCyo2Pll3oLHkntMEhLARpEFAYIYSEjdIfN20K0thUJ4QQj3AeJyGkZCjqeZx6QQghJCzC0h421QkhxCMUTkII8QiFkxBCPBKYcLJfkxASJwqpSZzHSQgpGYp2HidUnrVPQkgUhKU / kzFfKZthztNE + XqKeVMwQggJG6U / btqE1LRM + dks7xqnqepqnbVNQkiUZNKiILUppyeHgNpMPTkEVdefHFKG3xzCk0MopO7HPlhG / wOWMZsfGKe3twXKb / LRRx / Z6UknnWSnJtn2L3Z / scb / 3nvvyYUXXihXXnmlk + OPZ599Vl5 // XU5 / fTTnZxR4hq / wq + / XO9 / JXp4MhHLiB9PAmEZ26ong6AneHJI / eaQMuWH / mAf1DSBOq4ik / 4plD8Q4VTiCINwIkWBVJ6 + HY6v9jdObaPOD78bH374oZ2efPLJdmqiBqYy7V / s / MKO / + 2335bZs2fbN7Yfuru7ZWhoSM466ywn53PiHD / w6y + X + 99NuKApiB / pjBkzxsQQpgQSmoJUF059Oxwf + 0cqnEgzCScKqUQTqdpWCScC0lHHz / bBUjiLO / 4DBw7InDlzZOHChU6ON3bv3i3vvPOOnH / ++ U7OeOIev19 / UD3 / prClUik7TwknlpU4IoXGIHUTTmyL4yONRDgBAlOiCZ8SzmPHjo0JpxJNtQ1SJZzY3zi1TbYPlsJZ / PGj5okm9sUXX + zk5saePXvk4MGDcuaZZ / L6l2H8EDnEj1QXTiWaSnOwfOKJJ44Jp9oGpo7vVzhznseJE + qpWtbzlUgq00VTiaRadhNNMJEP0F / 8fgjf4cOHbSHMFWyLfc444wzf56e / OP3Kp / xqWdcaXXt0bVLLal1P87FJVg1yXCmRCdwUF4WEHyn + I + gFR4rCokaKdaX + yqdSdfxM / 3FUjTaT4h89etRO8R / HjYnKD4rdX0rxo / Z4yimnyEUXXWTnZeK1116TDz74QObNm8frXybxqxqhiapxI35Vk9RrlEp7sL9e20QKg1gixfmRmuRavpyb6kAJH1L4kcJ0cURTHSmEEanyKdOb + m5kKzi / OKUVf39 / vySTSVmwYIG9brJ37167X6uqqspe5 / Uv7 / iVcM6cOXNMDGFKOCGMSNFUV4KpCyeOjxTHR2qSa / nyEk6g1zh1M4XT9GN / PPL + cPzilF78b731lj295IILLnByRtm3b589 / ebss892cnj9Gf9RW / AQvxJDZaZwmn4Y / ADHx7pJruXzJJxAb0orMdQNfqSoJps + YDbFVb4ilw8O8ItTWvFDPDESqkbL33jjDXuGhi6agNe / PONXIqfiR40T6KIIQ3chUjTVTR9MHT9TV0Cu5fMtnACpMiWcqimu + wCOj2WvH5yCX5zSjR / IIx + 4AF8AUzQBrz / jhwCq + HVRBKoP0xROgFQdP3ThhF8XPrU7Upjyq6a88qk014Jl8g8PD9up + o9j4vf4cfeXUvzoykH / Jbp3kI / 1N9980 / afe + 65dpML2 + H3Y2BY5 / Vn / ADx64KoUnPwx9wGx1d + N3ItX17CCfTBHVMYkWJ / PV + h + 93Idn7eOMUfP5rgeHQOhoEh9EfhfsI + 6r7CFwDbIoWwQmAhnvDDeP3LN34Inx6 / Lo7YXwmjnq / Q + zjdyLV8nqYjAd2vCyLAOvy6MJrbmH2cJtnOzxuneOOHD49KomaJaUiZmpuZQDMN + 6Pmeeqpp2Y8B4giPlBoP + // 0fhnzZplpwoljtjfFE4F1oMqny / hBNmE0fT7LThvnOKMHzVGzMU87bTTPAumCQT0 / ffft8UXNVaduMav8Ovn / e8evy6cwOzDNP1 + y5d3U13364fQ / aZognyOr8Mbp / jix5uR0NyeO3fuuC4eP + Af9ODgoN3M19 + QFMf4dfz6ef9njj9TjVKveQZVvkDeAI + C6YVTqHxa + dqhQ4fsvky8yQg3o9s2 + RgEE8dEnxXO4bYNrbzMJFN + EAT60xl6EIUqMCke0KRGTRNP / aBfMmhwTNRicQ41TYeUL2HqT / B3s4YZiDJS + qCWiX5IvNCjEKKpwLFxDpwL5ySlj5umwMKkoMKZCbegaaVlGAjCezfVixZysnSv / KD5VzK9 + X / k1bSLP4PhHDgXzunmp5WWxYFIhJOUNhhBB + aId1aG3pdXjlnpsffkv38 / mpUr6lysdZIw8D0dyaTQfo4qxj9 + NJsx0o1nzz3xxxfkm7 / 8g3RYi // 85 / Vyr + 1odq5ANDFQhClPUcYPCuXn / R + P + FnjJIGCZ8wxDc2zaAYAnizCuVEGQgpJIPM4dQrt53 / ceMePt7TjlkKtzzM + a5wAtV30g + HJIjei / nz8 + nn / s8ZJShA0lz33bQYIarrq6TVCCgVrnAZx98c9fvwQG2qbEzbVU / vkZ79 + VTrMcZzPRmTvsREZsBbPSSTkHPOnt6efLvd88ypZOIEu4wUiqHW6 / XQwiPrz8evn / c8aJylBcGNletehYqD7NVl3OC3PfmyYI5rgD1at8Qv + w2 / Lfd1 / dLZwB + dWNzchhYLCSQIFbz7KNuG9ctEl8usFc + Vi + YadPV3Ur61 / bY6Lf / 45sm7RXGcLd3BulIGQQsKmukHc / XGPv6 + vT6qrq501jwQwOAQmKkPUn49fP + // eMTPeZwGcffHPX78amUchFP9KqZJ1J + pXZ / v / 3jEz6Y6IYR4hE11g7j74x4 / m + qF9fP + Z42TkMyYU5EIiREUThIfKk6TP02KnJOcK187z8kjJIZQOEl8OHGBrLutXnpv + 6osPNHJIySGUDgJIcQjFE5CCPEI53EaxN0f9 / h9zeMMCM7jjG / 5 / fo5qk4IIUUK53EaxN0f9 / h9zeMMCM7jjG / 5 /fpZ4ySEkCKFwkkIIR6hcBJCiEconIQQ4gmR/we6YgNq8eeDXgAAAABJRU5ErkJggg == '/> </p> <ul> <li> Titelavsnitt </li> <li> Avsnittsavsnitt </li> <li> Immersiv sektion </li> <li> li> <li> Webbsida </li> </ul> "
+            },
+            "geostoryEditMediaEditor": {
+              "title": "Media Editor",
+              "text": "<p> Med Media Editor kan du inkludera olika typer av medieinnehåll i historien, till exempel: <ul> <li> bilder </li> <li> videor </li> <li> kartor < /li> </ul> </p> <p> Mer information finns i den relaterade användarhandboken <a target = '_ blank' href = 'https: //mapstore.readthedocs.io/en/latest/user-guide/ media-editor-window/'> här </a> "
+            }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Det gick inte att spara användarsessionen",
+            "categoryError": "Skapande saknas kategori {categoryName} misslyckades",
+            "defaultMessage": "Okänt fel"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Borttagning av användarsession misslyckades",
+            "defaultMessage": "Okänt fel"
+          },
+          "tooltip": "Rensa den aktuella användarsessionen sparad",
+          "successRemoved": "Användarsession borttagen",
+          "remove": "Återställ användarsession",
+          "confirmRemove": "Är du säker på att du vill återställa standardkonfigurationen?"
+        }
+    }
+}

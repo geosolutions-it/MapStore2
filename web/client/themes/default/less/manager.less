@@ -1,12 +1,44 @@
-.group-thumb,
-.user-thumb {
-	background-color: darken(@ms2-color-background, 4%);
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+
+    .group-thumb,
+    .user-thumb {
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+
+    .group-edit-dialog,
+    .user-edit-dialog {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .user-status .glyphicon-ok-sign {
+        .color-var(@theme-vars[success]);
+    }
+
+    .user-status .glyphicon-minus-sign {
+        .color-var(@theme-vars[danger]);
+    }
+
+    .ms-user-details-table {
+        .row {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
 }
 
-.group-edit-dialog,
-.user-edit-dialog {
-	background: @ms2-color-background;
-}
+// **************
+// Layout
+// **************
 
 .user-status {
     width: @grid-btn-size + @grid-btn-padding-left * 2;
@@ -18,18 +50,12 @@
     padding: 0 0 @grid-btn-padding-left 0;
 }
 
-.user-status .glyphicon-ok-sign {
-    color: @ms2-color-success;
-}
-
-.user-status .glyphicon-minus-sign {
-    color: @ms2-color-danger;
-}
-
 .ms-user-details-table {
     padding: 15px;
+
     .row {
-        border-bottom: 1px solid @ms2-color-shade-lighter;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
         min-height: @square-btn-size;
         display: flex;
 
@@ -38,8 +64,10 @@
             display: flex;
             flex: 1;
             align-items: center;
+
             &:last-child {
                 flex-direction: column;
+
                 * {
                     align-self: flex-end;
                     margin: auto 0;
@@ -55,10 +83,12 @@
         .row {
             flex-direction: column;
             padding-bottom: 5px;
+
             .col-sm-6 {
                 &:first-child {
                     margin: 5px 0;
                 }
+
                 &:last-child {
                     * {
                         align-self: flex-start;

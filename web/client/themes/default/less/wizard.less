@@ -1,11 +1,54 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+// #ms-components-theme(@theme-vars) {}
+
+// **************
+// Layout
+// **************
 .ms-wizard {
     position: absolute;
     width: 100%;
-    .form-horizontal .control-label {
-        text-align: left;
-        font-weight: normal;
-        > span:after {
-            content: ":"
+    .form-horizontal {
+        .form-group {
+            .custom-color-btn {
+                margin-left: -8px;
+                margin-top: 2px;
+                &.line {
+                    display: none;
+                }
+            }
+            .custom-color {
+                padding-left: 10px;
+            }
+        }
+        .control-label {
+            text-align: left;
+            font-weight: normal;
+            > span:after {
+                content: ":"
+            }
+        }
+        .bar-chart-type {
+            padding-top: 43px;
+            padding-bottom: 43px;
+            .control-label {
+                span {
+                    margin: 0;
+                }
+            }
+            span {
+                margin-left: 5px;
+            }
         }
     }
 }
@@ -17,6 +60,9 @@
 }
 .ms-wizard > .row{
     margin: 15px;
+}
+.ms-wizard.map-options {
+    padding: 8px;
 }
 .mapstore-step-title {
     font-size: 20px;
@@ -34,3 +80,49 @@
         margin: 0 auto;
     }
 }
+
+.chart-color-class-modal {
+    #ms-resizable-modal {
+        @media (max-width: 1500px) {
+            height: 40%;
+        }
+        height: 30%;
+        .row {
+            margin: 5% 0 auto;
+            .text-info {
+                padding-left: 5px;
+            }
+        }
+    }
+    &.menu-open {
+        #ms-resizable-modal {
+            @media (max-width: 1500px) {
+                height: 60%;
+                width: 510px;
+            }
+            height: 50%;
+        }
+    }
+    &.menu-open.range-class {
+        #ms-resizable-modal {
+            @media (min-width: 800px) {
+                height: 60%;
+                width: 700px;
+                left: calc((100% - 700px) / 2);
+            }
+            height: 50%;
+            .thema-classes-editor {
+                padding-left: 10px;
+            }
+        }
+    }
+    #chart-color-class-form {
+        .chart-color-class-form-group.form-group {
+            margin: 0;
+            .control-label {
+                text-align: left;
+            }
+        }
+    }
+}
+

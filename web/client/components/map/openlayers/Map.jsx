@@ -10,11 +10,9 @@ import { defaults, DragPan, MouseWheelZoom } from 'ol/interaction';
 import { defaults as defaultControls } from 'ol/control';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { toLonLat } from 'ol/proj';
+import { get as getProjection, toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
-import Units from 'ol/proj/Units';
-
-import { getWidth, getHeight } from 'ol/extent';
+import GeoJSON from 'ol/format/GeoJSON';
 
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
@@ -22,19 +20,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import assign from 'object-assign';
 
-import {reproject, reprojectBbox, normalizeLng, normalizeSRS} from '../../../utils/CoordinatesUtils';
+import {reproject, reprojectBbox, normalizeLng, normalizeSRS, getExtentForProjection} from '../../../utils/CoordinatesUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
-import mapUtils from '../../../utils/MapUtils';
+import mapUtils, { getResolutionsForProjection } from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
 import {isEqual, find, throttle, isArray, isNil} from 'lodash';
 
-
 import 'ol/ol.css';
 
 // add overrides for css
 import './mapstore-ol-overrides.css';
+
+const geoJSONFormat = new GeoJSON();
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -56,7 +55,7 @@ class OpenlayersMap extends React.Component {
         onLayerLoading: PropTypes.func,
         onLayerLoad: PropTypes.func,
         onLayerError: PropTypes.func,
-        resize: PropTypes.number,
+        resize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
         registerHooks: PropTypes.bool,
@@ -94,7 +93,16 @@ class OpenlayersMap extends React.Component {
     };
 
     componentDidMount() {
-        this.props.projectionDefs.forEach(p => {
+        // adding EPSG:4269, by default included in proj4 definitions,
+        // so that we have extents needed by ol
+        const defs = [{
+            "code": "EPSG:4269",
+            "def": "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
+            "axisOrientation": "neu",
+            "extent": [-172.54, 23.81, -47.74, 86.46],
+            "worldExtent": [-172.54, 23.81, -47.74, 86.46]
+        }, ...this.props.projectionDefs];
+        defs.forEach(p => {
             const projDef = proj4.defs(p.code);
             projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || projDef.axis || 'enu', projDef.units || 'm');
         });
@@ -154,6 +162,9 @@ class OpenlayersMap extends React.Component {
         });
 
         this.map = map;
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         this.map.disabledListeners = {};
         this.map.disableEventListener = (event) => {
             this.map.disabledListeners[event] = true;
@@ -171,7 +182,7 @@ class OpenlayersMap extends React.Component {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
                 let view = this.map.getView();
                 let pos = event.coordinate.slice();
-                let projectionExtent = view.getProjection().getExtent();
+                let projectionExtent = view.getProjection().getExtent() || getExtentForProjection(this.props.projection);
                 if (this.props.projection === 'EPSG:4326') {
                     pos[0] = normalizeLng(pos[0]);
                 }
@@ -190,6 +201,7 @@ class OpenlayersMap extends React.Component {
                     }
 
                     let layerInfo;
+                    let groupIntersectedFeatures = {};
                     this.markerPresent = false;
                     /*
                      * Handle special case for vector features with handleClickOnLayer=true
@@ -207,7 +219,17 @@ class OpenlayersMap extends React.Component {
                                 coords = { x: arr[0], y: arr[1] };
                             }
                         }
+                        if (layer?.get('msId')) {
+                            const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
+                                featureProjection: this.props.projection,
+                                dataProjection: 'EPSG:4326'
+                            });
+                            groupIntersectedFeatures[layer.get('msId')] = groupIntersectedFeatures[layer.get('msId')]
+                                ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
+                                : [ geoJSONFeature ];
+                        }
                     });
+                    const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
                     const tLng = normalizeLng(coords.x);
                     const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                     this.props.onClick({
@@ -226,7 +248,8 @@ class OpenlayersMap extends React.Component {
                             ctrl: event.originalEvent.ctrlKey,
                             metaKey: event.originalEvent.metaKey, // MAC OS
                             shift: event.originalEvent.shiftKey
-                        }
+                        },
+                        intersectedFeatures
                     }, layerInfo);
                 }
             }
@@ -234,16 +257,12 @@ class OpenlayersMap extends React.Component {
         const mouseMove = throttle(this.mouseMoveEvent, 100);
         // TODO support disableEventListener
         map.on('pointermove', mouseMove);
-
         this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
 
         this.props.onResolutionsChange(this.getResolutions());
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -347,102 +366,20 @@ class OpenlayersMap extends React.Component {
      * - custom tile sizes
      *
      */
-    getResolutions = () => {
-        const tileWidth = 256; // TODO: pass as parameters
-        const tileHeight = 256; // TODO: pass as parameters - allow different from tileWidth
+    getResolutions = (srs) => {
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
             return this.props.mapOptions.view.resolutions;
         }
-        const defaultMaxZoom = 28;
-        const defaultZoomFactor = 2;
-
-        let minZoom = this.props.mapOptions.minZoom !== undefined ?
-            this.props.mapOptions.minZoom : 0;
-
-        let maxZoom = this.props.mapOptions.maxZoom !== undefined ?
-            this.props.mapOptions.maxZoom : defaultMaxZoom;
-
-        let zoomFactor = this.props.mapOptions.zoomFactor !== undefined ?
-            this.props.mapOptions.zoomFactor : defaultZoomFactor;
-
-        const projection = this.map.getView().getProjection();
+        const projection = srs ? getProjection(srs) : this.map.getView().getProjection();
         const extent = projection.getExtent();
-
-        const extentWidth = !extent ? 360 * Units.METERS_PER_UNIT[Units.DEGREES] /
-            Units.METERS_PER_UNIT[projection.getUnits()] :
-            getWidth(extent);
-        const extentHeight = !extent ? 360 * Units.METERS_PER_UNIT[Units.DEGREES] /
-            Units.METERS_PER_UNIT[projection.getUnits()] :
-            getHeight(extent);
-
-        let resX = extentWidth / tileWidth;
-        let resY = extentHeight / tileHeight;
-        let tilesWide;
-        let tilesHigh;
-        if (resX <= resY) {
-            // use one tile wide by N tiles high
-            tilesWide = 1;
-            tilesHigh = Math.round(resY / resX);
-            // previous resY was assuming 1 tile high, recompute with the actual number of tiles
-            // high
-            resY = resY / tilesHigh;
-        } else {
-            // use one tile high by N tiles wide
-            tilesHigh = 1;
-            tilesWide = Math.round(resX / resY);
-            // previous resX was assuming 1 tile wide, recompute with the actual number of tiles
-            // wide
-            resX = resX / tilesWide;
-        }
-        // the maximum of resX and resY is the one that adjusts better
-        const res = Math.max(resX, resY);
-
-        /*
-            // TODO: this is how GWC creates the bbox adjusted.
-            // We should calculate it to have the correct extent for a grid set
-            const adjustedExtentWidth = tilesWide * tileWidth * res;
-            const adjustedExtentHeight = tilesHigh * tileHeight * res;
-            BoundingBox adjExtent = new BoundingBox(extent);
-            adjExtent.setMaxX(adjExtent.getMinX() + adjustedExtentWidth);
-            // Do we keep the top or the bottom fixed?
-            if (alignTopLeft) {
-                adjExtent.setMinY(adjExtent.getMaxY() - adjustedExtentHeight);
-            } else {
-                adjExtent.setMaxY(adjExtent.getMinY() + adjustedExtentHeight);
-
-         */
-
-        const defaultMaxResolution = res;
-
-        const defaultMinResolution = defaultMaxResolution / Math.pow(
-            defaultZoomFactor, defaultMaxZoom - 0);
-
-        // user provided maxResolution takes precedence
-        let maxResolution = this.props.mapOptions.maxResolution;
-        if (maxResolution !== undefined) {
-            minZoom = 0;
-        } else {
-            maxResolution = defaultMaxResolution / Math.pow(zoomFactor, minZoom);
-        }
-
-        // user provided minResolution takes precedence
-        let minResolution = this.props.mapOptions.minResolution;
-        if (minResolution === undefined) {
-            if (this.props.mapOptions.maxZoom !== undefined) {
-                if (this.props.mapOptions.maxResolution !== undefined) {
-                    minResolution = maxResolution / Math.pow(zoomFactor, maxZoom);
-                } else {
-                    minResolution = defaultMaxResolution / Math.pow(zoomFactor, maxZoom);
-                }
-            } else {
-                minResolution = defaultMinResolution;
-            }
-        }
-
-        // given discrete zoom levels, minResolution may be different than provided
-        maxZoom = minZoom + Math.floor(
-            Math.log(maxResolution / minResolution) / Math.log(zoomFactor));
-        return Array.apply(0, Array(maxZoom - minZoom + 1)).map((x, y) => maxResolution / Math.pow(zoomFactor, y));
+        return getResolutionsForProjection(
+            srs ?? this.map.getView().getProjection().getCode(),
+            this.props.mapOptions.minResolution,
+            this.props.mapOptions.maxResolution,
+            this.props.mapOptions.minZoom,
+            this.props.mapOptions.maxZoom,
+            this.props.mapOptions.zoomFactor,
+            extent);
     };
 
     render() {
@@ -455,7 +392,8 @@ class OpenlayersMap extends React.Component {
                 onLayerError: this.props.onLayerError,
                 onLayerLoad: this.props.onLayerLoad,
                 projection: this.props.projection,
-                onCreationError: this.props.onCreationError
+                onCreationError: this.props.onCreationError,
+                resolutions: this.getResolutions()
             }) : null;
         }) : null;
 
@@ -501,7 +439,7 @@ class OpenlayersMap extends React.Component {
     updateMapInfoState = () => {
         let view = this.map.getView();
         let tempCenter = view.getCenter();
-        let projectionExtent = view.getProjection().getExtent();
+        let projectionExtent = view.getProjection().getExtent() || getExtentForProjection(this.props.projection);
         const crs = view.getProjection().getCode();
         // some projections are repeated on the x axis
         // and they need to be updated also if the center is outside of the projection extent
@@ -516,16 +454,28 @@ class OpenlayersMap extends React.Component {
                 width: this.map.getSize()[0],
                 height: this.map.getSize()[1]
             };
-            this.props.onMapViewChanges({ x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326' }, view.getZoom(), {
-                bounds: {
-                    minx: bbox[0],
-                    miny: bbox[1],
-                    maxx: bbox[2],
-                    maxy: bbox[3]
+            this.props.onMapViewChanges(
+                {
+                    x: c[0] || 0.0, y: c[1] || 0.0,
+                    crs: 'EPSG:4326'
                 },
-                crs,
-                rotation: view.getRotation()
-            }, size, this.props.id, this.props.projection);
+                view.getZoom(),
+                {
+                    bounds: {
+                        minx: bbox[0],
+                        miny: bbox[1],
+                        maxx: bbox[2],
+                        maxy: bbox[3]
+                    },
+                    crs,
+                    rotation: view.getRotation()
+                },
+                size,
+                this.props.id,
+                this.props.projection,
+                undefined, // viewerOptions,
+                view.getResolution() // resolution
+            );
         }
     };
 
@@ -584,8 +534,8 @@ class OpenlayersMap extends React.Component {
     };
 
     registerHooks = () => {
-        this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
-            return this.getResolutions();
+        this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, (srs) => {
+            return this.getResolutions(srs);
         });
         this.props.hookRegister.registerHook(mapUtils.RESOLUTION_HOOK, () => {
             return this.map.getView().getResolution();
@@ -612,7 +562,7 @@ class OpenlayersMap extends React.Component {
         this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration} = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {}) => {
             let bounds = reprojectBbox(extent, crs, this.props.projection);
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
@@ -629,7 +579,8 @@ class OpenlayersMap extends React.Component {
                 size: this.map.getSize(),
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
                 maxZoom,
-                duration
+                duration,
+                nearest
             });
         });
     };

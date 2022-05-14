@@ -1,14 +1,15 @@
 import axios from 'axios';
-import ANNOTATION_GEO_JSON_FILE_URL from 'file-loader!../../../../../test-resources/caput-mundi/caput-mundi.config';
-import GEO_JSON_FILE_URL from 'file-loader!../../../../../test-resources/caput-mundi/caput-mundi.geojson';
-import GPX_FILE_URL from 'file-loader!../../../../../test-resources/caput-mundi/caput-mundi.gpx';
-import KML_FILE_URL from 'file-loader!../../../../../test-resources/caput-mundi/caput-mundi.kml';
-import KMZ_FILE_URL from 'file-loader!../../../../../test-resources/caput-mundi/caput-mundi.kmz';
-import SHP_FILE_URL from 'file-loader!../../../../../test-resources/caput-mundi/caput-mundi.zip';
-import MAP_FILE from 'file-loader!../../../../../test-resources/map.config';
-import UNSUPPORTED_MAP_FILE from 'file-loader!../../../../../test-resources/unsupportedMap.config';
 // const b64toBlob = require('b64-to-blob');
 import * as Rx from 'rxjs';
+
+const SHP_FILE_URL = 'base/web/client/test-resources/caput-mundi/caput-mundi.zip';
+const ANNOTATION_GEO_JSON_FILE_URL = 'base/web/client/test-resources/caput-mundi/caput-mundi.config';
+const GEO_JSON_FILE_URL = 'base/web/client/test-resources/caput-mundi/caput-mundi.geojson';
+const GPX_FILE_URL = 'base/web/client/test-resources/caput-mundi/caput-mundi.gpx';
+const KML_FILE_URL = 'base/web/client/test-resources/caput-mundi/caput-mundi.kml';
+const KMZ_FILE_URL = 'base/web/client/test-resources/caput-mundi/caput-mundi.kmz';
+const MAP_FILE = 'base/web/client/test-resources/map.config';
+const UNSUPPORTED_MAP_FILE = 'base/web/client/test-resources/unsupportedMap.config';
 
 export const getFile = (url, fileName = "file") =>
     Rx.Observable.defer( () => axios.get(url, {

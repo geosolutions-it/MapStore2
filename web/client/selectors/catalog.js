@@ -7,16 +7,22 @@
  */
 
 import { createSelector, createStructuredSelector } from 'reselect';
-import { get, pick } from 'lodash';
+import { get } from 'lodash';
 
 import { projectionSelector } from './map';
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../api/WMS';
 
 export const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
 export const servicesSelector = (state) => get(state, "catalog.services");
-export const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, servicesSelector, (staticServices, services) => ({
-    ...services,
-    ...(pick(staticServices, "default_map_backgrounds"))
-}));
+export const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, servicesSelector, (staticServices, services) => {
+    const backgroundService = staticServices?.default_map_backgrounds;
+    if (backgroundService) {
+        // static services are readOnly by default
+        backgroundService.readOnly = true;
+        return {...services, default_map_backgrounds: backgroundService};
+    }
+    return services;
+});
 export const selectedStaticServiceTypeSelector =
     (state) => get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw");
 
@@ -39,7 +45,7 @@ export const selectedServiceSelector = (state) => get(state, "catalog.selectedSe
 export const modeSelector = (state) => get(state, "catalog.mode", "view");
 export const layerErrorSelector = (state) => get(state, "catalog.layerError");
 export const searchTextSelector = (state) => get(state, "catalog.searchOptions.text", "");
-export const activeSelector = (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled");
+export const isActiveSelector = (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled");
 export const authkeyParamNameSelector = (state) => {
     return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
 };
@@ -49,3 +55,7 @@ export const delayAutoSearchSelector = (state) => get(state, "catalog.delayAutoS
 export const catalogSearchInfoSelector = createStructuredSelector({
     projection: projectionSelector
 });
+export const formatsLoadingSelector = (state) => get(state, "catalog.formatsLoading", false);
+export const getSupportedFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.imageFormats", DEFAULT_FORMAT_WMS);
+export const getSupportedGFIFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.infoFormats", getUniqueInfoFormats());
+export const getFormatUrlUsedSelector = (state) => get(state, "catalog.newService.formatUrlUsed", '');

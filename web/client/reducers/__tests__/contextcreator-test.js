@@ -21,7 +21,9 @@ import {
     templatesSelector,
     editedPluginSelector,
     editedCfgSelector,
-    editedTemplateSelector
+    editedTemplateSelector,
+    selectedThemeSelector,
+    customVariablesEnabledSelector
 } from '../../selectors/contextcreator';
 import {
     setFilterText,
@@ -47,14 +49,23 @@ import {
     setSelectedTemplates,
     setEditedTemplate,
     setTemplates,
-    changeTemplatesKey
+    changeTemplatesKey,
+    setSelectedTheme,
+    onToggleCustomVariables,
+    loadContext
 } from '../../actions/contextcreator';
-
+const themeDark = {
+    id: 'dark',
+    label: 'Dark',
+    type: 'link',
+    href: 'dist/themes/dark.css'
+};
 const testContextResource = {
     data: {
         windowTitle: 'title',
         mapConfig: {},
         templates: [{id: 2}],
+        theme: themeDark,
         plugins: {
             desktop: [{
                 name: 'Catalog',
@@ -105,7 +116,11 @@ const defaultPlugins = [{
     defaultOverride: {
         parameter: 'value2'
     }
-}];
+}, {
+    name: 'NewPlugin',
+    docUrl: 'https://domain.com/documentation'
+}
+];
 
 const pluginsConfig = {plugins: defaultPlugins};
 
@@ -169,6 +184,8 @@ describe('contextcreator reducer', () => {
         const newContext = newContextSelector(state);
         const plugins = pluginsSelector(state);
         const templates = templatesSelector(state);
+        const selectedTheme = selectedThemeSelector(state);
+        expect(selectedTheme).toEqual(data.theme);
         expect(newContext).toExist();
         expect(newContext.windowTitle).toBe(data.windowTitle);
         expect(newContext.plugins).toNotExist();
@@ -184,7 +201,7 @@ describe('contextcreator reducer', () => {
         expect(mapConfigSelector(state)).toEqual(data.mapConfig);
         expect(resourceSelector(state)).toEqual(resource);
         expect(plugins).toExist();
-        expect(plugins.length).toBe(4);
+        expect(plugins.length).toBe(5);
         expect(plugins[0].name).toBe(defaultPlugins[0].name);
         expect(plugins[0].title).toBe(defaultPlugins[0].title);
         expect(plugins[0].enabled).toBe(false);
@@ -227,6 +244,13 @@ describe('contextcreator reducer', () => {
         expect(plugins[3].pluginConfig.name).toEqual(defaultPlugins[4].name);
         expect(plugins[3].pluginConfig.cfg).toNotExist();
         expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultOverride);
+        expect(plugins[4].name).toBe(defaultPlugins[5].name);
+        expect(plugins[4].title).toBe(defaultPlugins[5].title);
+        expect(plugins[4].enabled).toBe(false);
+        expect(plugins[4].isUserPlugin).toBe(false);
+        expect(plugins[4].active).toBe(false);
+        expect(plugins[4].docUrl).toExist();
+        expect(plugins[4].docUrl).toEqual("https://domain.com/documentation");
     });
     it('setResource with context with templates inside MapTemplates config', () => {
         const contextResource = {
@@ -292,7 +316,7 @@ describe('contextcreator reducer', () => {
         expect(mapConfigSelector(state)).toEqual(data.mapConfig);
         expect(resourceSelector(state)).toEqual(resource);
         expect(plugins).toExist();
-        expect(plugins.length).toBe(5);
+        expect(plugins.length).toBe(6);
         expect(plugins[0].name).toBe(defaultPlugins[0].name);
         expect(plugins[0].title).toBe(defaultPlugins[0].title);
         expect(plugins[0].enabled).toBe(false);
@@ -335,14 +359,21 @@ describe('contextcreator reducer', () => {
         expect(plugins[3].pluginConfig.name).toEqual(defaultPlugins[4].name);
         expect(plugins[3].pluginConfig.cfg).toNotExist();
         expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultOverride);
-        expect(plugins[4].name).toBe('MapTemplates');
+        expect(plugins[4].name).toBe(defaultPlugins[5].name);
+        expect(plugins[4].title).toBe(defaultPlugins[5].title);
         expect(plugins[4].enabled).toBe(false);
         expect(plugins[4].isUserPlugin).toBe(false);
         expect(plugins[4].active).toBe(false);
-        expect(plugins[4].pluginConfig).toExist();
-        expect(plugins[4].pluginConfig.cfg).toExist();
-        expect(plugins[4].pluginConfig.cfg.allowedTemplates).toExist();
-        expect(plugins[4].pluginConfig.cfg.allowedTemplates.length).toBe(1);
+        expect(plugins[4].docUrl).toExist();
+        expect(plugins[4].docUrl).toEqual("https://domain.com/documentation");
+        expect(plugins[5].name).toBe('MapTemplates');
+        expect(plugins[5].enabled).toBe(false);
+        expect(plugins[5].isUserPlugin).toBe(false);
+        expect(plugins[5].active).toBe(false);
+        expect(plugins[5].pluginConfig).toExist();
+        expect(plugins[5].pluginConfig.cfg).toExist();
+        expect(plugins[5].pluginConfig.cfg.allowedTemplates).toExist();
+        expect(plugins[5].pluginConfig.cfg.allowedTemplates.length).toBe(1);
     });
     it('setSelectedPlugins', () => {
         const pluginsToSelect = ['Catalog', 'ZoomIn'];
@@ -492,6 +523,15 @@ describe('contextcreator reducer', () => {
         expect(state.uploadResult).toExist();
         expect(state.uploadResult.result).toBe("ok");
     });
+    it('pluginUploaded with documentation url', () => {
+        const state = contextcreator(undefined, pluginUploaded([{ name: 'myplugin', docUrl: 'https://domain.com/documentation' }]));
+        expect(state).toExist();
+        expect(state.plugins.length).toBe(1);
+        expect(state.plugins[0].name).toBe('myplugin');
+        expect(state.plugins[0].docUrl).toBe('https://domain.com/documentation');
+        expect(state.uploadResult).toExist();
+        expect(state.uploadResult.result).toBe("ok");
+    });
     it('pluginUploaded no duplicates', () => {
         const state = contextcreator({plugins: [{name: "myplugin"}]}, pluginUploaded([{ name: 'myplugin', error: "myerror" }]));
         expect(state).toExist();
@@ -531,5 +571,20 @@ describe('contextcreator reducer', () => {
         const state = contextcreator(undefined, showBackToPageConfirmation(true));
         expect(state).toExist();
         expect(state.showBackToPageConfirmation).toBe(true);
+    });
+    it('setSelectedTheme', () => {
+        const state = contextcreator(undefined, setSelectedTheme(themeDark));
+        expect(state).toExist();
+        expect(selectedThemeSelector({contextcreator: state})).toEqual(themeDark);
+    });
+    it('onToggleCustomVariables', () => {
+        const state = contextcreator(undefined, onToggleCustomVariables(themeDark));
+        expect(state).toExist();
+        expect(customVariablesEnabledSelector({contextcreator: state})).toEqual(true);
+    });
+    it('loadContext', () => {
+        const state = contextcreator(undefined, loadContext('testId'));
+        expect(state).toExist();
+        expect(state.contextId).toBe('testId');
     });
 });

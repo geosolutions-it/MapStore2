@@ -28,7 +28,9 @@ import {
     SET_LOADING,
     TOGGLE_THUMBNAIL,
     TOGGLE_TEMPLATE,
-    TOGGLE_ADVANCED_SETTINGS
+    TOGGLE_ADVANCED_SETTINGS,
+    FORMAT_OPTIONS_LOADING,
+    SET_FORMAT_OPTIONS
 } from '../actions/catalog';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -37,7 +39,7 @@ import { isNil } from 'lodash';
 import assign from 'object-assign';
 import uuid from 'uuid';
 
-const emptyService = {
+export const emptyService = {
     url: "",
     type: "wms",
     title: "",
@@ -125,7 +127,7 @@ function catalog(state = {
     case CHANGE_TEXT:
         return set("searchOptions.text", action.text, state);
     case CHANGE_SERVICE_PROPERTY: {
-        return  set(`newService["${action.property}"]`, action.value, state);
+        return  set(`newService.${action.property}`, action.value, state);
     }
     case CHANGE_TITLE:
         return set("newService.title", action.title, state);
@@ -204,6 +206,12 @@ function catalog(state = {
     }
     case TOGGLE_ADVANCED_SETTINGS: {
         return set("newService.showAdvancedSettings", !state.newService.showAdvancedSettings, state);
+    }
+    case FORMAT_OPTIONS_LOADING: {
+        return set("formatsLoading", action.loading, state);
+    }
+    case SET_FORMAT_OPTIONS: {
+        return set("newService.supportedFormats", action.formats, set("newService.formatUrlUsed", action.url, state));
     }
     default:
         return state;

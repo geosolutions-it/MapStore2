@@ -19,12 +19,12 @@ const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
             {
                 value: 'Simple',
                 labelId: 'styleeditor.simpleStyle',
-                onSelect: ({ ruleId, deaultProperties }) => ({
+                onSelect: ({ ruleId, defaultProperties }) => ({
                     ruleId,
                     name: '',
                     symbolizers: [
                         {
-                            ...deaultProperties,
+                            ...defaultProperties,
                             symbolizerId: uuidv1()
                         }
                     ]
@@ -33,10 +33,10 @@ const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
             {
                 value: 'Classification',
                 labelId: 'styleeditor.classificationStyle',
-                onSelect: ({ ruleId, symbolizerKind, deaultProperties }) => {
+                onSelect: ({ ruleId, symbolizerKind, defaultProperties }) => {
                     return {
-                        ...deaultProperties,
-                        ...ruleBlock.Classification.deaultProperties,
+                        ...defaultProperties,
+                        ...ruleBlock.Classification.defaultProperties,
                         ruleId,
                         symbolizerKind
                     };
@@ -46,16 +46,16 @@ const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
                 value: 'Mark',
                 labelId: 'styleeditor.patternMarkStyle',
                 isVisible: ({ graphicKey }) => !!graphicKey,
-                onSelect: ({ ruleId, deaultProperties, graphicKey }) => ({
+                onSelect: ({ ruleId, defaultProperties, graphicKey }) => ({
                     ruleId,
                     name: '',
                     symbolizers: [
                         {
-                            ...deaultProperties,
+                            ...defaultProperties,
                             symbolizerId: uuidv1(),
                             fill: undefined,
                             [graphicKey]: {
-                                ...symbolizerBlock.Mark.deaultProperties
+                                ...symbolizerBlock.Mark.defaultProperties
                             }
                         }
                     ]
@@ -65,16 +65,16 @@ const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
                 value: 'Icon',
                 labelId: 'styleeditor.patternIconStyle',
                 isVisible: ({ graphicKey }) => !!graphicKey,
-                onSelect: ({ ruleId, deaultProperties, graphicKey }) => ({
+                onSelect: ({ ruleId, defaultProperties, graphicKey }) => ({
                     ruleId,
                     name: '',
                     symbolizers: [
                         {
-                            ...deaultProperties,
+                            ...defaultProperties,
                             symbolizerId: uuidv1(),
                             fill: undefined,
                             [graphicKey]: {
-                                ...symbolizerBlock.Icon.deaultProperties
+                                ...symbolizerBlock.Icon.defaultProperties
                             }
                         }
                     ]
@@ -90,7 +90,7 @@ const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
                     name: '',
                     symbolizers: [
                         {
-                            ...symbolizerBlock.Raster.deaultProperties,
+                            ...symbolizerBlock.Raster.defaultProperties,
                             symbolizerId: uuidv1()
                         }
                     ]
@@ -104,7 +104,7 @@ const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
                     name: '',
                     symbolizers: [
                         {
-                            ...symbolizerBlock.Raster.deaultProperties,
+                            ...symbolizerBlock.Raster.defaultProperties,
                             channelSelection: {
                                 redChannel: {
                                     sourceChannelName: undefined,
@@ -128,7 +128,7 @@ const defaultGetOptions = ({ ruleBlock, symbolizerBlock, kind }) =>
                 value: 'PseudoColor',
                 labelId: 'styleeditor.pseudoColor',
                 onSelect: ({ ruleId }) => ({
-                    ...ruleBlock.Raster.deaultProperties,
+                    ...ruleBlock.Raster.defaultProperties,
                     ruleId
                 })
             }
@@ -171,7 +171,7 @@ export function SymbolizerMenu({
 
     const options = getOptions({ ruleBlock, symbolizerBlock, kind: symbolizerKind });
 
-    const { deaultProperties, params = {} } = symbolizerKind
+    const { defaultProperties, params = {} } = symbolizerKind
         ? symbolizerBlock[symbolizerKind]
         : {};
 
@@ -208,7 +208,7 @@ export function SymbolizerMenu({
                                     ruleId,
                                     ruleKind,
                                     symbolizerKind,
-                                    deaultProperties,
+                                    defaultProperties,
                                     graphicKey
                                 }))}>
                             <Message msgId={option.labelId} />

@@ -18,7 +18,7 @@ import {
     removeExportDataResult,
     checkExportDataEntries
 } from '../actions/layerdownload';
-import { toggleControl, setControlProperty } from '../actions/controls';
+import { toggleControl } from '../actions/controls';
 
 import {
     layerDonwloadControlEnabledSelector,
@@ -35,24 +35,26 @@ import {
     infoBubbleMessageSelector,
     checkingExportDataEntriesSelector
 } from '../selectors/layerdownload';
-import { wfsURL } from '../selectors/query';
+import {attributesSelector, wfsURL} from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
+import { customAttributesSettingsSelector } from "../selectors/featuregrid";
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
 import ExportDataResultsComponent from '../components/data/download/ExportDataResultsComponent';
 
+import FeatureEditorButton from '../components/data/download/FeatureEditorButton';
 import * as epics from '../epics/layerdownload';
-import layerdownload from '../reducers/layerdownload';
 
+import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
- * Provides advanced export functionalities using WFS and WPS.
+ * Provides advanced data export functionalities using [WPS download process](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html) or using WFS service, if WPS download process is missing.
  * @memberof plugins
  * @name LayerDownload
  * @class
- * @prop {object[]} formats An array of name-label objects for the allowed formats available.
+ * @prop {object[]} formats An array of name-label objects for the allowed formats available. This object can contain an optional `validServices` entry, that contains an array of the  services where the formats should be used. If no "wfs" service is configured, the plugin will retrieve the list from the "WFS" service.
  * @prop {object[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
  * @prop {string} defaultSrs Default selected srs
  * @prop {string} closeGlyph The icon to use for close the dialog
@@ -74,6 +76,28 @@ import { createPlugin } from '../utils/PluginsUtils';
  *     "defaultSrs": "native"
  *  }
  * }
+ * // it is possible to support GeoPackage format when the targeted GeoServer uses wps download extensions
+ * // here an example of configuration that include GeoPackage for wps
+ *
+ *  {
+ *      "name": "LayerDownload",
+ *      "cfg": {
+ *          "formats": [
+ *              { "name": "application/json", "label": "GeoJSON", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/arcgrid", "label": "ArcGrid", "type": "raster", "validServices": ["wps"] },
+ *              { "name": "image/tiff", "label": "TIFF", "type": "raster", "validServices": ["wps"] },
+ *              { "name": "image/png", "label": "PNG", "type": "raster", "validServices": ["wps"] },
+ *              { "name": "image/jpeg", "label": "JPEG", "type": "raster", "validServices": ["wps"]},
+ *              { "name": "application/wfs-collection-1.0", "label": "wfs-collection-1.0", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/wfs-collection-1.1", "label": "wfs-collection-1.1", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/zip", "label": "Shapefile", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "text/csv", "label": "CSV", "type": "vector", "validServices": ["wps"] },
+ *
+ *              { "name": "application/geopackage+sqlite3", "label": "GeoPackage", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/geopackage+sqlite3", "label": "GeoPackage", "type": "raster", "validServices": ["wps"] }
+ *          ]
+ *      }
+ *  }
  */
 const LayerDownloadPlugin = createPlugin('LayerDownload', {
     component: connect(createStructuredSelector({
@@ -87,15 +111,15 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         layer: getSelectedLayer,
         service: serviceSelector,
         checkingWPSAvailability: checkingWPSAvailabilitySelector,
-        virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll
+        virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll,
+        customAttributeSettings: customAttributesSettingsSelector,
+        attributes: attributesSelector
     }), {
         onExport: downloadFeatures,
         onDownloadOptionChange,
         onClearDownloadOptions: clearDownloadOptions,
         onFormatOptionsFetch,
         onCheckWPSAvailability: checkWPSAvailability,
-        onMount: () => setControlProperty("layerdownload", "available", true),
-        onUnmount: () => setControlProperty("layerdownload", "available", false),
         onClose: () => toggleControl("layerdownload")
     })(DownloadDialog),
     containers: {
@@ -103,7 +127,19 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
             doNotHide: true,
             name: "LayerDownload"
         },
+        FeatureEditor: {
+            doNotHide: true,
+            name: "LayerDownload",
+            position: 20,
+            target: "toolbar",
+            Component: connect(createStructuredSelector({
+                isDownloadOpen: state =>  state?.controls?.layerdownload?.enabled
+            }), {
+                onClick: () => toggleControl("layerdownload")
+            })(FeatureEditorButton)
+        },
         MapFooter: {
+            doNotHide: true,
             name: "LayerDownload",
             position: 1,
             tool: connect(createStructuredSelector({

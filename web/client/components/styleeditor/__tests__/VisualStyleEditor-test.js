@@ -110,7 +110,7 @@ describe('VisualStyleEditor', () => {
                 debounceTime={DEBOUNCE_TIME}
                 onError={(error) => {
                     try {
-                        expect(error).toEqual({ messageId: 'styleeditor.styleEmpty', status: 400 });
+                        expect(error).toEqual({ messageId: 'styleeditor.styleEmpty', status: 400, isEmpty: true });
                     } catch (e) {
                         done(e);
                     }
@@ -126,12 +126,11 @@ describe('VisualStyleEditor', () => {
                 expect([...buttonNodes].map(node => node.children[0].getAttribute('class'))).toEqual([
                     'glyphicon glyphicon-undo',
                     'glyphicon glyphicon-redo',
-                    'glyphicon glyphicon-1-ruler',
                     'glyphicon glyphicon-trash',
                     'glyphicon glyphicon-option-vertical'
                 ]);
                 act(() => {
-                    Simulate.click(buttonNodes[3]);
+                    Simulate.click(buttonNodes[2]);
                 });
             } catch (e) {
                 done(e);
@@ -228,7 +227,7 @@ describe('VisualStyleEditor', () => {
                 debounceTime={DEBOUNCE_TIME}
                 onError={(error) => {
                     try {
-                        expect(error).toEqual({ messageId: 'styleeditor.emptyImageIconSymbolizer', status: 400 });
+                        expect(error).toEqual({ messageId: 'styleeditor.imageSrcEmpty', status: 400 });
                     } catch (e) {
                         done(e);
                     }
@@ -236,5 +235,56 @@ describe('VisualStyleEditor', () => {
                 }}
             />, document.getElementById('container'));
         });
+    });
+    it('should throw an error when icon symbolizer has image with no format', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="sld"
+                code={"<?xml"}
+                defaultStyleJSON={{
+                    name: "Base SLD1",
+                    rules: [
+                        {
+                            name: "",
+                            ruleId: "1",
+                            symbolizers: [
+                                {
+                                    kind: "Icon",
+                                    image: "https://test.com/linktoImage",
+                                    opacity: 1,
+                                    size: 32,
+                                    rotate: 0,
+                                    symbolizerId: "2"
+                                }
+                            ]
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'styleeditor.imageFormatEmpty', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+    });
+    it('should disable undo and redo when history is empty', () => {
+        ReactDOM.render(<VisualStyleEditor
+            format="3dtiles"
+            code={{
+                color: 'color(\'#ff0000\')'
+            }}
+            defaultStyleJSON={null}
+        />, document.getElementById('container'));
+        const disabledButtons = document.querySelectorAll('.disabled');
+        expect([...disabledButtons].map(node => node.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-undo',
+            'glyphicon glyphicon-redo'
+        ]);
     });
 });

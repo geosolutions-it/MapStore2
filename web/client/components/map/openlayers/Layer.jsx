@@ -16,6 +16,8 @@ import isNumber from 'lodash/isNumber';
 import isArray from 'lodash/isArray';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
+import isNil from 'lodash/isNil';
+import { getZoomFromResolution } from '../../../utils/MapUtils';
 
 export default class OpenlayersLayer extends React.Component {
     static propTypes = {
@@ -33,7 +35,8 @@ export default class OpenlayersLayer extends React.Component {
         position: PropTypes.number,
         observables: PropTypes.array,
         securityToken: PropTypes.string,
-        env: PropTypes.array
+        env: PropTypes.array,
+        resolutions: PropTypes.array
     };
 
     static defaultProps = {
@@ -55,13 +58,14 @@ export default class OpenlayersLayer extends React.Component {
             this.props.options,
             this.props.position,
             this.props.securityToken,
-            this.props.env
+            this.props.env,
+            this.props.resolutions
         );
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        const newVisibility = newProps.options && newProps.options.visibility !== false;
-        this.setLayerVisibility(newVisibility);
+
+        this.setLayerVisibility(newProps);
 
         const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
@@ -82,6 +86,8 @@ export default class OpenlayersLayer extends React.Component {
                 this.imageLoadEndStream$.complete();
                 this.imageStopStream$.complete();
             }
+            // detached layers are layers that do not attach directly to the map
+            // they have their own lifecycle methods instead (e.g. remove)
             if (this.layer.detached) {
                 this.layer.remove();
             } else {
@@ -110,10 +116,11 @@ export default class OpenlayersLayer extends React.Component {
         return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     }
 
-    setLayerVisibility = (visibility) => {
-        var oldVisibility = this.props.options && this.props.options.visibility !== false;
-        if (visibility !== oldVisibility && this.layer && this.isValid()) {
-            this.layer.setVisible(visibility);
+    setLayerVisibility = (newProps) => {
+        const oldVisibility = this.props.options && this.props.options.visibility !== false;
+        const newVisibility = newProps.options && newProps.options.visibility !== false;
+        if (newVisibility !== oldVisibility && this.layer && this.isValid()) {
+            this.layer.setVisible(newVisibility);
         }
     };
 
@@ -124,7 +131,23 @@ export default class OpenlayersLayer extends React.Component {
         }
     };
 
-    generateOpts = (options, position, srs, securityToken, env) => {
+    generateOpts = (layerOptions, position, srs, securityToken, env, resolutions) => {
+        const {
+            minResolution,
+            maxResolution,
+            disableResolutionLimits,
+            ...otherOptions
+        } = layerOptions;
+        const options = {
+            ...otherOptions,
+            ...(!disableResolutionLimits && {
+                minResolution,
+                maxResolution,
+                // google layer
+                minZoom: !isNil(maxResolution) ? getZoomFromResolution(maxResolution, resolutions) : undefined,
+                maxZoom: !isNil(minResolution) ? getZoomFromResolution(minResolution, resolutions) : undefined
+            })
+        };
         return assign({}, options, isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
@@ -135,11 +158,13 @@ export default class OpenlayersLayer extends React.Component {
         });
     };
 
-    createLayer = (type, options, position, securityToken, env) => {
+    createLayer = (type, options, position, securityToken, env, resolutions) => {
         if (type) {
-            const layerOptions = this.generateOpts(options, position, normalizeSRS(this.props.srs), securityToken, env);
+            const layerOptions = this.generateOpts(options, position, normalizeSRS(this.props.srs), securityToken, env, resolutions);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             const compatible = Layers.isCompatible(type, layerOptions);
+            // detached layers are layers that do not attach directly to the map
+            // for this reason addLayer is not called on them
             if (this.layer && !this.layer.detached) {
                 const parentMap = this.props.map;
                 const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
@@ -188,14 +213,20 @@ export default class OpenlayersLayer extends React.Component {
         const newLayer = Layers.updateLayer(
             this.props.type,
             this.layer,
-            this.generateOpts(newProps.options, newProps.position, newProps.projection, newProps.securityToken, newProps.env),
-            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection, oldProps.securityToken, oldProps.env),
+            this.generateOpts(newProps.options, newProps.position, newProps.projection, newProps.securityToken, newProps.env, newProps.resolutions),
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection, oldProps.securityToken, oldProps.env, oldProps.resolutions),
             this.props.map,
             this.props.mapId);
         if (newLayer) {
-            this.props.map.removeLayer(this.layer);
-            this.layer = newLayer;
-            this.addLayer(newProps.options);
+            // detached layers are layers that do not attach directly to the map
+            // for this reason addLayer /removeLayer should not be called on them
+            if (!newLayer.detached) {
+                this.props.map.removeLayer(this.layer);
+                this.layer = newLayer;
+                this.addLayer(newProps.options);
+            } else {
+                this.layer = newLayer;
+            }
         }
     };
 

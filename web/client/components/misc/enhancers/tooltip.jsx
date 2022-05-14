@@ -39,5 +39,5 @@ export default branch(
         placement={tooltipPosition}
         overlay={<Tooltip id={"tooltip-" + keyProp}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
     // avoid to pass non needed props
-    (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip"]))}>{props.children}</Wrapped>
+    (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip", "tooltipPosition"]))}>{props.children}</Wrapped>
 );

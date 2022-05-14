@@ -1,8 +1,33 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms2-transfer {
+        .border-color-var(@theme-vars[main-border-color]);
+
+        .btn-group-vertical {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms2-transfer {
     display: flex;
     width: 100%;
     height: 100%;
-    border: 1px solid #ddd;
+    border-width: 1px;
+    border-style: solid;
 
     .ms2-transfer-subpanel {
         display: flex;
@@ -33,6 +58,7 @@
                     max-width: 128px;
                     max-height: 128px;
                 }
+
                 h1 {
                     font-size: @font-size-base * 1.1;
                     overflow-wrap: break-word;
@@ -46,8 +72,10 @@
         flex-direction: column;
         justify-content: center;
         padding: 8px;
-        border-left: 1px solid #ddd;
-        border-right: 1px solid #ddd;
+        border-left-width: 1px;
+        border-left-style: solid;
+        border-right-width: 1px;
+        border-right-style: solid;
     }
 
 }
@@ -55,7 +83,7 @@
 .ms2-transfer-sidegrid {
     padding: 0 8px 0 8px;
     overflow: auto;
-    
+
     .ms2-transfer-lastcard {
         margin: 10px 0 10px 0;
     }

@@ -29,7 +29,6 @@ import {
     MOUSE_MOVE,
     MOUSE_OUT,
     zoomToPoint,
-    errorLoadingFont,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -47,10 +46,13 @@ import {
     registerEventListener,
     unRegisterEventListener,
     mouseMove,
-    mouseOut
+    mouseOut,
+    mapPluginLoad,
+    MAP_PLUGIN_LOAD,
+    orientateMap,
+    ORIENTATION
 } from '../map';
 
-import { SHOW_NOTIFICATION } from '../notifications';
 
 describe('Test correctness of the map actions', () => {
 
@@ -71,6 +73,16 @@ describe('Test correctness of the map actions', () => {
         expect(retval.projection).toBe(testProjection);
     });
 
+    it('test map plugin load', () => {
+        const errorMap = {status: 404};
+        const retval = mapPluginLoad('loading', 'mapType', 'loaded', errorMap);
+        expect(retval.type).toBe(MAP_PLUGIN_LOAD);
+        expect(retval.loading).toBe('loading');
+        expect(retval.mapType).toBe('mapType');
+        expect(retval.loaded).toBe('loaded');
+        expect(retval.error).toEqual(errorMap);
+    });
+
     it('set a new clicked point', () => {
         const testVal = "val";
         const retval = clickOnMap(testVal);
@@ -80,40 +92,6 @@ describe('Test correctness of the map actions', () => {
         expect(retval.point).toBe(testVal);
     });
 
-    it('test errorLoadingFont', () => {
-        const err = {family: "FontAwesome"};
-        let {type, values, title, message, autoDismiss, position } = errorLoadingFont(err);
-
-        expect(type).toBe(SHOW_NOTIFICATION);
-        expect(values).toExist();
-        expect(values.family).toExist();
-        expect(title).toExist();
-        expect(message).toExist();
-        expect(position).toExist();
-        expect(autoDismiss).toExist();
-        expect(values.family).toBe("FontAwesome");
-        expect(title).toBe("warning");
-        expect(message).toBe("map.errorLoadingFont");
-        expect(position).toBe("tc");
-        expect(autoDismiss).toBe(10);
-    });
-
-    it('test errorLoadingFont default', () => {
-        let {type, values, title, message, autoDismiss, position } = errorLoadingFont();
-
-        expect(type).toBe(SHOW_NOTIFICATION);
-        expect(values).toExist();
-        expect(title).toExist();
-        expect(message).toExist();
-        expect(position).toExist();
-        expect(autoDismiss).toExist();
-        expect(values.family).toBe("");
-        expect(title).toBe("warning");
-        expect(message).toBe("map.errorLoadingFont");
-        expect(position).toBe("tc");
-        expect(autoDismiss).toBe(10);
-
-    });
 
     it('set a new mouse pointer', () => {
         const testVal = 'pointer';
@@ -134,13 +112,15 @@ describe('Test correctness of the map actions', () => {
     });
 
     it('zoom to extent', () => {
-        const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18);
+        const options = {nearest: true};
+        const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18, options);
 
         expect(retval).toExist();
         expect(retval.type).toBe(ZOOM_TO_EXTENT);
         expect(retval.extent).toExist();
         expect(retval.crs).toBe('EPSG:4326');
         expect(retval.maxZoom).toBe(18);
+        expect(retval.options).toEqual(options);
     });
 
     it('changes map crs', () => {
@@ -261,5 +241,12 @@ describe('Test correctness of the map actions', () => {
         const retval = mouseOut();
         expect(retval).toExist();
         expect(retval.type).toEqual(MOUSE_OUT);
+    });
+    it('Orientate map action', () => {
+        const orientation = { heading: 10 };
+        const retval = orientateMap(orientation);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(ORIENTATION);
+        expect(retval.orientation).toEqual(orientation);
     });
 });

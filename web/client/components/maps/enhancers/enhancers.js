@@ -53,14 +53,14 @@ const loadPage = ({ text = "*", options = {} }, page = 0) => getResources({
         items: [],
         total: 0
     }));
-const scrollSpyOptions = { querySelector: ".ms2-border-layout-body", pageSize: PAGE_SIZE };
+const scrollSpyOptions = { querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE };
 
 /**
  * transforms loadPage to add the empty map item on top
  * @param {function} fn the original loadPage function
  */
 const emptyMap = fn => (opts, page) => {
-    if (page === 0 && opts && !opts.text) {
+    if (!opts.disableEmptyMap && page === 0 && opts && !opts.text) {
         return fn(opts, page).map(({ items, total, ...props}) => ({
             ...props,
             total,
@@ -70,7 +70,7 @@ const emptyMap = fn => (opts, page) => {
                 description: <Message msgId="widgets.selectMap.emptyMap.description" />,
                 preview: defaultPreview,
                 map: {
-                    id: "new.json"
+                    id: "configs/new.json"
                 }
             }, ...items]
         }));
@@ -91,7 +91,7 @@ export const withEmptyMapVirtualScrollProperties = ({ loadPage: lp, scrollSpyOpt
     loadPage: emptyMap(lp),
     hasMore: ({total, items}) => {
         if (items && items.length >= 1 && items[0].id === "EMPTY_MAP") {
-            return total > (items.length + 1);
+            return total > (items.length - 1);
         }
         return total > items.length;
     }
@@ -114,12 +114,12 @@ export const withVirtualScroll = withVirtualScrollEnhancer(({ loadPage: loadPage
 
 // trigger loadFirst on text change
 export const searchOnTextChange = mapPropsStream(props$ =>
-    props$.merge(props$.take(1).switchMap(({ loadFirst = () => { } }) =>
+    props$.merge(props$.take(1).switchMap(({ loadFirst = () => { }, disableEmptyMap }) =>
         props$
             .debounceTime(500)
             .startWith({ searchText: "" })
             .distinctUntilKeyChanged('searchText', (a, b) => a === b)
-            .do(({ searchText, options } = {}) => loadFirst({ text: searchText, options }))
+            .do(({ searchText, options } = {}) => loadFirst({ text: searchText, options, disableEmptyMap }))
             .ignoreElements() // don't want to emit props
     )));
 

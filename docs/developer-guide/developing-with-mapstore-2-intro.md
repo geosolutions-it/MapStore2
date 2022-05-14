@@ -20,8 +20,3 @@ Keeping your customization separated and MapStore as a git sub-modules has the f
 - **Clear separation between the framework and your customization**
 - **Easy framework update**: updating the git sub-module.
 - **Easy customization of MapStore**: You can fork the project, if you need hard customization. If your customization can be included in MapStore, you can do a pull request to the main project and work on a branch while waiting the pull request merge.
-
-### Build application using examples
-
-Another way to do your application is to create your custom files in a folder (like mapstore examples).
-If you want to learn how to develop a simple MapStore based application in this way you can follow the [tutorial](../application-tutorial)

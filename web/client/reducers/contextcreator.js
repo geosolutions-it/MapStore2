@@ -15,8 +15,9 @@ import {INIT, SET_CREATION_STEP, SET_WAS_TUTORIAL_SHOWN, SET_TUTORIAL_STEP, MAP_
     CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE, LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG,
     SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR, ADD_PLUGIN_TO_UPLOAD,
     REMOVE_PLUGIN_TO_UPLOAD, PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
-    BACK_TO_PAGE_SHOW_CONFIRMATION} from "../actions/contextcreator";
+    BACK_TO_PAGE_SHOW_CONFIRMATION, SET_SELECTED_THEME, ON_TOGGLE_CUSTOM_VARIABLES, LOAD_CONTEXT} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
+
 
 const defaultPlugins = [
     {
@@ -72,6 +73,7 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     name: plugin.name,
     title: plugin.title,
     description: plugin.description,
+    docUrl: plugin.docUrl, // custom documentation url (useful for plugin as extension with extension specific documentation)
     glyph: plugin.glyph,
     parent,
     mandatory: !!plugin.mandatory,
@@ -130,6 +132,9 @@ export default (state = {}, action) => {
     }
     case SET_TUTORIAL_STEP: {
         return set('tutorialStep', action.stepId, state);
+    }
+    case SET_SELECTED_THEME: {
+        return set('selectedTheme', action.theme, state);
     }
     case MAP_VIEWER_LOADED: {
         return set('mapViewerLoaded', action.status, state);
@@ -200,7 +205,7 @@ export default (state = {}, action) => {
     }
     case SET_RESOURCE: {
         const {data = {plugins: {desktop: []}}, ...resource} = action.resource || {};
-        const {plugins = {desktop: []}, userPlugins = [], templates = [], ...otherData} = data;
+        const {plugins = {desktop: []}, userPlugins = [], templates = [], theme, customVariablesEnabled, ...otherData} = data;
         const contextPlugins = get(plugins, 'desktop', []);
 
         const allPlugins = makePluginTree(get(action.pluginsConfig, 'plugins'), ConfigUtils.getConfigProp('plugins'));
@@ -245,7 +250,11 @@ export default (state = {}, action) => {
                 enabled: (pluginTemplates || templates || []).reduce((result, cur) => result || cur.id === template.id, false),
                 selected: false
             })),
-            set('newContext', otherData, set('plugins', contextCreatorPlugins, set('resource', resource, state)))));
+            set('newContext', otherData,
+                set('plugins', contextCreatorPlugins,
+                    set('resource', resource,
+                        set('selectedTheme', theme,
+                            set('customVariablesEnabled', customVariablesEnabled, state)))))));
     }
     case UPDATE_TEMPLATE: {
         const newResource = action.resource || {};
@@ -263,6 +272,12 @@ export default (state = {}, action) => {
     }
     case CLEAR_CONTEXT_CREATOR: {
         return {};
+    }
+    case LOAD_CONTEXT: {
+        return {
+            ...state,
+            contextId: action.id
+        };
     }
     case SET_FILTER_TEXT: {
         return set(`filterText.${action.propName}`, action.text, state);
@@ -347,6 +362,9 @@ export default (state = {}, action) => {
     }
     case BACK_TO_PAGE_SHOW_CONFIRMATION: {
         return set('showBackToPageConfirmation', action.show, state);
+    }
+    case ON_TOGGLE_CUSTOM_VARIABLES: {
+        return set('customVariablesEnabled', !state.customVariablesEnabled, state);
     }
     default:
         return state;

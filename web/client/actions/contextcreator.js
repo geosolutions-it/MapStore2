@@ -19,6 +19,7 @@ export const CLEAR_CONTEXT_CREATOR = 'CONTEXTCREATOR:CLEAR_CONTEXT_CREATOR';
 export const CHANGE_ATTRIBUTE = 'CONTEXTCREATOR:CHANGE_ATTRIBUTE';
 export const SHOW_DIALOG = 'CONTEXTCREATOR:SHOW_DIALOG';
 export const CHANGE_TEMPLATES_KEY = 'CONTEXTCREATOR:CHANGE_TEMPLATES_KEY';
+export const SET_SELECTED_THEME = 'CONTEXTCREATOR:SET_SELECTED_THEME';
 export const SET_SELECTED_TEMPLATES = 'CONTEXTCREATOR:SET_SELECTED_TEMPLATES';
 export const SET_PARSED_TEMPLATE = 'CONTEXTCREATOR:SET_PARSED_TEMPLATE';
 export const SET_FILE_DROP_STATUS = 'CONTEXTCREATOR:SET_FILE_DROP_STATUS';
@@ -67,6 +68,7 @@ export const PLUGIN_UNINSTALLED = 'CONTEXTCREATOR:PLUGIN_UNINSTALLED';
 export const UNINSTALL_PLUGIN_ERROR = 'CONTEXTCREATOR:UNINSTALL_PLUGIN_ERROR';
 export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
 export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
+export const ON_TOGGLE_CUSTOM_VARIABLES = 'CONTEXTCREATOR:ON_TOGGLE_CUSTOM_VARIABLES';
 export const CONTEXT_TUTORIALS = {
     "general-settings": "contextcreator_generalsettings_tutorial",
     "configure-map": "contextcreator_configuremap_tutorial",
@@ -155,6 +157,15 @@ export const changeTemplatesKey = (ids, key, value) => ({
     ids,
     key,
     value
+});
+
+/**
+ * Sets currently selected theme
+ * @param {string} theme the id of the theme
+ */
+export const setSelectedTheme = (theme) => ({
+    type: SET_SELECTED_THEME,
+    theme
 });
 
 /**
@@ -546,4 +557,8 @@ export const uninstallPluginError = (plugin, error) => ({
 export const showBackToPageConfirmation = (show) => ({
     type: BACK_TO_PAGE_SHOW_CONFIRMATION,
     show
+});
+
+export const onToggleCustomVariables = () => ({
+    type: ON_TOGGLE_CUSTOM_VARIABLES
 });

@@ -6,19 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'react-widgets/lib/less/react-widgets.less';
-
 import { clamp, isNil, isNumber } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Checkbox, Col, ControlLabel, FormGroup, Grid, Row } from 'react-bootstrap';
-import { DropdownList } from 'react-widgets';
-
+import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB} from 'react-bootstrap';
+import tooltip from '../../../misc/enhancers/buttonTooltip';
+const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../legend/Legend';
-
+import VisibilityLimitsForm from './VisibilityLimitsForm';
+import Select from 'react-select';
+import { DEFAULT_FORMAT_WMS, getSupportedFormat } from '../../../../api/WMS';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -28,7 +28,11 @@ export default class extends React.Component {
         onChange: PropTypes.func,
         containerWidth: PropTypes.number,
         currentLocaleLanguage: PropTypes.string,
-        isLocalizedLayerStylesEnabled: PropTypes.bool
+        isLocalizedLayerStylesEnabled: PropTypes.bool,
+        isCesiumActive: PropTypes.bool,
+        projection: PropTypes.string,
+        resolutions: PropTypes.array,
+        zoom: PropTypes.number
     };
 
     static defaultProps = {
@@ -95,6 +99,14 @@ export default class extends React.Component {
         });
     };
 
+    onFormatOptionsFetch = (url) => {
+        this.setState({formatLoading: true});
+        getSupportedFormat(url).then((imageFormats)=>{
+            this.props.onChange("imageFormats", imageFormats);
+            this.setState({formatLoading: false});
+        });
+    }
+
     getValidationState = (name) =>{
         if (this.state.legendOptions && this.state.legendOptions[name]) {
             return parseInt(this.state.legendOptions[name], 10) < 12 && "error";
@@ -105,36 +117,58 @@ export default class extends React.Component {
         return (
             <Grid
                 fluid
-                className={"fluid-container " + (!this.props.containerWidth && "adjust-display")}>
+                className={"fluid-container ms-display-form " + (!this.props.containerWidth && "adjust-display")}>
                 {this.props.element.type === "wms" &&
                 <Row>
                     <Col xs={12}>
                         <FormGroup>
-                            <ControlLabel><Message msgId="layerProperties.format" /></ControlLabel>
-                            <DropdownList
-                                key="format-dropdown"
-                                data={this.props.formats || ["image/png", "image/png8", "image/jpeg", "image/vnd.jpeg-png", "image/gif"]}
-                                value={this.props.element && this.props.element.format || "image/png"}
-                                onChange={(value) => {
-                                    this.props.onChange("format", value);
-                                }}/>
+                            <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
+                            <div className={'ms-format-container'}>
+                                <Select
+                                    className={'format-select'}
+                                    key="format-dropdown"
+                                    clearable={false}
+                                    noResultsText={<Message
+                                        msgId={this.state.formatLoading
+                                            ? "layerProperties.format.loading" : "layerProperties.format.noOption"}
+                                    />}
+                                    isLoading={!!this.state.formatLoading}
+                                    options={this.state.formatLoading
+                                        ? []
+                                        : (this.props.formats?.map((value) => ({ value, label: value }))
+                                    || this.props.element?.imageFormats
+                                    || DEFAULT_FORMAT_WMS)
+                                    }
+                                    value={this.props.element && this.props.element.format || "image/png"}
+                                    onChange={({ value }) => {
+                                        this.props.onChange("format", value);
+                                    }}/>
+                                <Button
+                                    tooltipId="layerProperties.format.refresh"
+                                    className="square-button-md no-border format-refresh"
+                                    onClick={() => {this.onFormatOptionsFetch(this.props.element?.url);}}
+                                    key="format-refresh">
+                                    <Glyphicon glyph="refresh" />
+                                </Button>
+                            </div>
                         </FormGroup>
                     </Col>
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel><Message msgId="WMS Layer tile size" /></ControlLabel>
-                            <DropdownList
+                            <Select
                                 key="wsm-layersize-dropdown"
-                                data={[256, 512]}
+                                clearable={false}
+                                options={[{ value: 256, label: 256 }, { value: 512, label: 512 }]}
                                 value={this.props.element && this.props.element.tileSize || 256}
-                                onChange={(value) => {
+                                onChange={({ value }) => {
                                     this.props.onChange("tileSize", value);
                                 }}/>
                         </FormGroup>
                     </Col>
                 </Row>}
 
-                <Row>
+                {this.props.element.type !== "3dtiles" && <Row>
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel>{this.props.opacityText} %</ControlLabel>
@@ -147,7 +181,35 @@ export default class extends React.Component {
                                 onChange={(val)=> this.onChange("opacity", val)}/>
                         </FormGroup>
                     </Col>
+                </Row>}
+
+                <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <VisibilityLimitsForm
+                                title={<ControlLabel><Message msgId="layerProperties.visibilityLimits.title"/></ControlLabel>}
+                                layer={this.props.element}
+                                onChange={this.props.onChange}
+                                projection={this.props.projection}
+                                resolutions={this.props.resolutions}
+                                zoom={this.props.zoom}
+                            />
+                        </FormGroup>
+                    </Col>
                 </Row>
+
+                {this.props.element.type === "3dtiles" && <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.heightOffset"/></ControlLabel>
+                            <IntlNumberFormControl
+                                type="number"
+                                name={"heightOffset"}
+                                value={this.props.element.heightOffset || 0}
+                                onChange={(val)=> this.props.onChange("heightOffset", parseFloat(val))}/>
+                        </FormGroup>
+                    </Col>
+                </Row>}
 
                 {this.props.element.type === "wms" &&
                 <Row>
@@ -174,6 +236,14 @@ export default class extends React.Component {
                                     onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
                                     <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
                                 </Checkbox>))}
+                            {!this.props.isCesiumActive && (<Checkbox
+                                data-qa="display-forceProxy-option"
+                                value="forceProxy"
+                                key="forceProxy"
+                                onChange={(e) => this.props.onChange("forceProxy", e.target.checked)}
+                                checked={this.props.element.forceProxy} >
+                                <Message msgId="layerProperties.forceProxy"/>
+                            </Checkbox>)}
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>

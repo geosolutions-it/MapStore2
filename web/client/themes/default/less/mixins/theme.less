@@ -1,0 +1,36 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// theme functions
+
+// @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
+// return a mapstore theme with only the theming part and not the css related to the structure/layout of the page
+.write-ms-theme(@theme-vars) {
+
+    // app container styles
+    [data-ms2-container] {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+        .font-family-var(@theme-vars[font-family-base]);
+    }
+
+    // bootstrap theme overrides
+    .bootstrap-base-with-css-variables(@theme-vars);
+    .buttons-with-css-variables(@theme-vars);
+    .inputs-with-css-variables(@theme-vars);
+    .pagination-with-css-variables(@theme-vars);
+    .dropdown-with-css-variables(@theme-vars);
+    .nav-with-css-variables(@theme-vars);
+    .panel-with-css-variables(@theme-vars);
+    .modal-with-css-variables(@theme-vars);
+    .popover-with-css-variables(@theme-vars);
+    .list-group-with-css-variables(@theme-vars);
+
+    // ms themes
+    #ms-components-theme(@theme-vars);
+}

@@ -48,13 +48,16 @@ export const LOADING = "TIMELINE:LOADING";
  */
 export const timeDataLoading = (layerId, loading) => ({ type: LOADING, layerId, loading});
 
+export const INIT_SELECT_LAYER = "TIMELINE:INIT_SELECT_LAYER";
+
+export const initializeSelectLayer = layerId => { return {type: INIT_SELECT_LAYER, layerId}; };
 
 export const SELECT_LAYER = "TIMELINE:SELECT_LAYER";
 /**
  * Triggered when a layer is selected from the timeline
  * @param {string} layerId the id of the selected layer
  */
-export const selectLayer = layerId => ({ type: SELECT_LAYER, layerId});
+export const selectLayer = layerId => { return {type: SELECT_LAYER, layerId}; };
 
 export const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
 /**
@@ -74,6 +77,8 @@ export const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
 export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
 export const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
 
+export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
+export const initTimeline = (showHiddenLayers) => ({type: INIT_TIMELINE, showHiddenLayers});
 /**
  * Actions for timeline
  * @module actions.timeline

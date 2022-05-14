@@ -21,6 +21,7 @@ import draggableComponent from '../../misc/enhancers/draggableComponent';
 import draggableContainer from '../../misc/enhancers/draggableContainer';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import TitleEditable from './TitleEditable';
+import { SectionTypes } from "../../../utils/GeoStoryUtils";
 
 const DraggableSideGrid = draggableContainer(SideGrid);
 const DraggableSideCard = draggableComponent((props) => <SideCard {...props} dragSymbol={<Glyphicon glyph="menu-hamburger"/>} />);
@@ -50,6 +51,7 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         banner: 'story-banner-section',
         paragraph: 'story-paragraph-section',
         immersive: 'story-immersive-section',
+        carousel: 'story-carousel-section',
         media: 'story-media-section',
         map: '1-map',
         columnleft: 'align-left',
@@ -122,7 +124,7 @@ const previewContents = {
                 })} />
         </div>
     ),
-    column: ({ sectionId, id, contents, isCollapsed, scrollTo, onSort, onUpdate }) => (
+    column: ({ sectionId, id, contents, isCollapsed, scrollTo, onSort, onUpdate, sectionType }) => (
         <div style={{ position: 'relative' }}>
             <DraggableSideGrid
                 containerId={id}
@@ -152,6 +154,7 @@ const previewContents = {
                             buttons={[
                                 {
                                     glyph: 'zoom-to',
+                                    visible: sectionType !== SectionTypes.CAROUSEL,
                                     tooltipId: "geostory.zoomToContent",
                                     onClick: scrollToHandler(content.id, scrollTo)
                                 }
@@ -219,6 +222,53 @@ const previewContents = {
                     };
                 })} />
         </div>
+    ),
+    carousel: ({ id, contents, isCollapsed, scrollTo, onUpdate, onSort, currentPage }) => (
+        <div style={{ position: 'relative' }}>
+            <DraggableSideGrid
+                containerId={id}
+                isDraggable
+                onSort={(sortIdTo, sortIdFrom, itemDataTo, itemDataFrom) => {
+                    if (itemDataTo.containerId === itemDataFrom.containerId) {
+                        const source = `sections[{ "id": "${id}" }].contents[{"id":"${itemDataFrom.id}"}]`;
+                        const target = `sections[{ "id": "${id}" }].contents`;
+                        const position = sortIdTo;
+                        const newId = uuid();
+                        onSort(source, target, position, newId, `sections[{ "id": "${id}" }].contents[{"id":"${newId}"}]`);
+                    }
+                }}
+                cardComponent={DraggableSideCard}
+                items={contents.map((content) => {
+                    const contentType = content.type === 'column'
+                        ? `${content.type}${content.align || 'center'}`
+                        : content.type;
+                    const PreviewContents = previewContents[content.type];
+                    return {
+                        className: currentPage && currentPage.columns && currentPage.columns[id] && currentPage.columns[id] === content.id && currentPage.sectionId === id
+                            ? 'ms-highlight'
+                            : '',
+                        id: content.id,
+                        preview: <Icon type={contentType} thumbnail={content?.thumbnail?.image} />,
+                        tools: null,
+                        title: <TitleEditable
+                            // render again when it gets a new title from the state
+                            key={content.title}
+                            title={content.title || capitalize(content.type)}
+                            onUpdate={(text) => onUpdate(`sections[{"id": "${id}"}].contents[{"id":"${content.id}"}]`, {title: text}, "merge")}/>,
+                        description: `type: ${content.type}`,
+                        body: PreviewContents
+                            && <PreviewContents
+                                id={content.id}
+                                sectionId={id}
+                                onSort={onSort}
+                                onUpdate={onUpdate}
+                                scrollTo={scrollTo}
+                                isCollapsed={isCollapsed}
+                                sectionType={SectionTypes.CAROUSEL}
+                                contents={content.contents}/>
+                    };
+                })} />
+        </div>
     )
 };
 
@@ -257,7 +307,6 @@ const sectionToItem = ({
                 {
                     onClick: scrollToHandler(id, scrollTo),
                     glyph: 'zoom-to',
-                    // visible: type !== 'immersive',
                     tooltipId: "geostory.zoomToContent"
                 }
             ]} />,

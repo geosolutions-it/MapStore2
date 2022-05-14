@@ -238,7 +238,7 @@ describe("test the MeasureComponent", () => {
         cmp = ReactDOM.render(
             <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled bearingMeasureValueEnabled trueBearingLabel = {<Message msgId="True Bearing"/>}/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>045° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>045°</strong></h3>");
 
         const bearingTitleText = TestUtils.findRenderedDOMComponentWithClass(cmp, 'form-group');
         expect(bearingTitleText.textContent).toContain('True Bearing');
@@ -246,17 +246,17 @@ describe("test the MeasureComponent", () => {
         cmp = ReactDOM.render(
             <MeasureComponent measurement={{...measurement, bearing: 135.235648, trueBearing: {...measurement.trueBearing, fractionDigits: 4}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>135.2356° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>135.2356°</strong></h3>");
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={{...measurement, bearing: 225.83202, trueBearing: {...measurement.trueBearing, fractionDigits: 2}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>225.83° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>225.83°</strong></h3>");
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("<h3><strong>315° T</strong></h3>");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>315°</strong></h3>");
     });
 
     it('test uom format area and lenght', () => {
@@ -476,7 +476,7 @@ describe("test the MeasureComponent", () => {
         expect(spyOnAddAnnotation.calls[0].arguments[1]).toEqual(measurement.textLabels);
         expect(spyOnAddAnnotation.calls[0].arguments[2]).toEqual(uom);
         expect(spyOnAddAnnotation.calls[0].arguments[3]).toBe(false);
-        expect(spyOnAddAnnotation.calls[0].arguments[4]).toBe(1);
+        expect(spyOnAddAnnotation.calls[0].arguments[4].id).toBe(1);
     });
 
     it("test Measurement default", () =>{
@@ -520,5 +520,51 @@ describe("test the MeasureComponent", () => {
         // Restrict unselect of the geometry
         TestUtils.Simulate.click(buttons[0]);
         expect(buttons[0].className).toContain('active');
+    });
+    it("test Measurement with invalid features", () =>{
+        let measurement = {
+            lineMeasureEnabled: true,
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[1, 2], [2, 5], ["", ""]]
+                },
+                properties: {
+                    disabled: true
+                }
+            }],
+            textLabels: [{position: [1, 2], text: "1,714 m"},
+                {position: [1, 1], text: "1,723 m"}],
+            id: 1,
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                measurement={measurement}
+                format="decimal"
+                isDraggable
+                useSingleFeature
+                lineMeasureEnabled
+                showAddAsAnnotation
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+        const toolbar = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-toolbar");
+        const toolBarGroup = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "btn-group");
+        expect(toolbar).toExist();
+        expect(toolBarGroup.length).toBe(3);
+        const geomTypeButtons = toolBarGroup[0].querySelectorAll('button');
+        expect(geomTypeButtons.length).toBe(3);
+        geomTypeButtons.forEach((btn, i)=> {
+            if (i === 0) return expect(btn.className).toContain('active');
+            return expect(btn.className).toContain('disabled');
+        });
+
+        const exportTools = toolBarGroup[2].querySelectorAll('button');
+        expect(exportTools.length).toBe(3);
+        exportTools.forEach((btn)=> expect(btn.className).toContain('disabled'));
     });
 });

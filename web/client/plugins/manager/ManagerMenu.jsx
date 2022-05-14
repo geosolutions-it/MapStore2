@@ -11,14 +11,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { isPageConfigured } from '../../selectors/plugins';
+import tooltip from '../../components/misc/enhancers/tooltip';
+
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 
+const TDropdownButton = tooltip(DropdownButton);
 const Container = connect(() => ({
     noCaret: true,
     pullRight: true,
     bsStyle: "primary",
-    title: <Glyphicon glyph="1-menu-manage"/>
-}))(DropdownButton);
+    title: <Glyphicon glyph="1-menu-manage"/>,
+    tooltipId: "manager.managerMenu",
+    tooltipPosition: "bottom"
+}), {})(TDropdownButton);
 
 import ToolsContainer from '../containers/ToolsContainer';
 import Message from '../locale/Message';
@@ -49,7 +54,7 @@ class ManagerMenu extends React.Component {
     };
 
     static defaultProps = {
-        id: "mapstore-burger-menu",
+        id: "mapstore-manager-menu",
         entries: [{
             "msgId": "users.title",
             "glyph": "1-group-mod",

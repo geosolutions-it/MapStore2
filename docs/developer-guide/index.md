@@ -24,7 +24,7 @@ npm start
 
 Then point your preferred browser to [http://localhost:8081](http://localhost:8081).
 
-**note:** This running demo uses [https://dev.geo-solutions.it/mapstore/](https://dev.geo-solutions.it/mapstore/) as back-end.
+**note:** This running demo uses [https://dev-mapstore.geosolutionsgroup.com/mapstore/](https://dev-mapstore.geosolutionsgroup.com/mapstore/) as back-end.
 
 ## Other useful commands
 
@@ -51,6 +51,6 @@ Build the deployable war:
 
 Where version_identifier is an optional identifier of the generated war that will be shown in the settings panel of the application.
 
-Deploy the generated `mapstore.war` file (in web/target) to your favourite J2EE container (e.g. Tomcat).
+Deploy the generated `mapstore.war` file (in product/target) to your favourite J2EE container (e.g. Tomcat).
 
 [Here](database-setup) you can find how to setup the database.

@@ -39,7 +39,7 @@ export function getFormattedBearingValue(azimuth = 0, {measureTrueBearing = fals
             prefix = "0";
         }
         const adjValue = fractionDigits > 0  ? azimuth.toFixed(fractionDigits) : Math.floor(azimuth);
-        bearing =  prefix + adjValue + "° " + "T";
+        bearing =  prefix + adjValue + "°";
     }
 
     return bearing;
@@ -188,3 +188,4 @@ export const isValidGeometry = ({coordinates, type} = {}) => {
     validatedCoords = type === "Polygon" ? head(validatedCoords) : validatedCoords;
     return validatedCoords.length > 0;
 };
+

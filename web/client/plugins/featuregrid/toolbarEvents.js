@@ -1,5 +1,3 @@
-import { toggleControl } from '../../actions/controls';
-
 import {
     toggleTool,
     toggleEditMode,
@@ -17,8 +15,11 @@ import {
     zoomAll
 } from '../../actions/featuregrid';
 
-import { createChart } from '../../actions/widgets';
 import { toggleSyncWms } from '../../actions/wfsquery';
+import {
+    setSnappingLayer, toggleSnapping,
+    setSnappingConfig
+} from "../../actions/draw";
 
 export default {
     createFeature: () => createNewFeatures([{}]),
@@ -26,7 +27,6 @@ export default {
     clearFeatureEditing: () => toggleTool("clearConfirm", true),
     deleteGeometry: () => deleteGeometry(),
     deleteFeatures: () => toggleTool("deleteConfirm", true),
-    download: () => toggleControl("layerdownload"),
     settings: () => toggleTool("settings"),
     switchEditMode: () => toggleEditMode(),
     startEditingFeature: () => startEditingFeature(),
@@ -39,5 +39,7 @@ export default {
     setTimeSync,
     hideSyncPopover: () => hideSyncPopover(),
     toggleShowAgain: () => toggleShowAgain(),
-    chart: () => createChart()
+    toggleSnapping: () => toggleSnapping(),
+    setSnappingLayer: (layerId) => setSnappingLayer(layerId),
+    setSnappingConfig: (value, prop, pluginCfg) => setSnappingConfig(value, prop, pluginCfg)
 };

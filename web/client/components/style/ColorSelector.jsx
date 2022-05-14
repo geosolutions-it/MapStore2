@@ -19,6 +19,7 @@ import ColorPicker from './ColorPicker';
  * @prop {bool} disableAlpha disable alpha channel of picker
  * @prop {node} containerNode container node target for picker overlay
  * @prop {function} onOpen detect when color picker is open
+ * @prop {boolean} disabled disabled flag
  * @prop {array} presetColors preset colors to display under the color picker
  * @prop {string} placement preferred placement of picker, one of 'top', 'right', 'bottom' or 'left'
  */
@@ -30,6 +31,7 @@ function ColorSelector({
     disableAlpha,
     containerNode,
     onOpen,
+    disabled,
     presetColors,
     placement
 }) {
@@ -48,6 +50,7 @@ function ColorSelector({
                     presetColors
                 }}
                 containerNode={containerNode}
+                disabled={disabled}
                 onOpen={onOpen}
                 placement={placement}
             />
@@ -65,6 +68,7 @@ ColorSelector.propTypes = {
     onChangeColor: PropTypes.func,
     disableAlpha: PropTypes.bool,
     containerNode: PropTypes.node,
+    disabled: PropTypes.bool,
     onOpen: PropTypes.func,
     presetColors: PropTypes.array,
     placement: PropTypes.string

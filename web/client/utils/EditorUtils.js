@@ -25,7 +25,7 @@ export const customGetEntityId = (node) => {
             entityId = Entity.__create(
                 'MENTION',
                 'IMMUTABLE',
-                entityConfig,
+                entityConfig
             );
         } else {
             entityConfig.url = node.getAttribute ? node.getAttribute('href') || node.href : node.href;
@@ -48,7 +48,7 @@ export const customGetEntityId = (node) => {
             entityId = Entity.__create(
                 'LINK',
                 'MUTABLE',
-                entityConfig,
+                entityConfig
             );
         }
     }

@@ -25,6 +25,7 @@ import {
     head,
     last
 } from 'lodash';
+import turfCircle from '@turf/circle';
 
 import lineIntersect from '@turf/line-intersect';
 import polygonToLinestring from '@turf/polygon-to-linestring';
@@ -33,6 +34,9 @@ import toPoint from 'turf-point';
 import bboxPolygon from '@turf/bbox-polygon';
 import overlap from '@turf/boolean-overlap';
 import contains from '@turf/boolean-contains';
+import turfBbox from '@turf/bbox';
+import { getConfigProp } from './ConfigUtils';
+
 let CoordinatesUtils;
 
 export const FORMULAS = {
@@ -449,8 +453,12 @@ export const getEPSGCode = (code) => {
     }
     return code;
 };
+
+const MERCATOR_NAMES = ['EPSG:900913', 'EPSG:3857', 'EPSG:3785', 'EPSG:102113', 'GOOGLE'];
+const WGS84_NAMES = ['EPSG:4326', 'WGS84'];
+
 export const normalizeSRS = function(srs, allowedSRS) {
-    const result = srs === 'EPSG:900913' ? 'EPSG:3857' : srs;
+    const result = MERCATOR_NAMES.indexOf(srs) !== -1 ? 'EPSG:3857' : (WGS84_NAMES.indexOf(srs) !== -1 ? 'EPSG:4326' : srs);
     if (allowedSRS && !allowedSRS[result]) {
         return CoordinatesUtils.getCompatibleSRS(result, allowedSRS);
     }
@@ -540,8 +548,8 @@ export const getGeoJSONExtent = function(geoJSON) {
     let newExtent = [Infinity, Infinity, -Infinity, -Infinity];
     const reduceCollectionExtent = (extent, collectionElement) => {
         let ext = CoordinatesUtils.getGeoJSONExtent(collectionElement);
-        if (this.isValidExtent(ext)) {
-            return this.extendExtent(ext, extent);
+        if (CoordinatesUtils.isValidExtent(ext)) {
+            return CoordinatesUtils.extendExtent(ext, extent);
         }
         return ext;
     };
@@ -1013,6 +1021,94 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
 };
 
 
+/**
+ * helper use to create a geojson Feature with a Polygon geometry
+ * starting from circle data
+ * @see https://turfjs.org/docs/#circle
+ * @param {number[]} center in the form of [x, y]
+ * @param {number} radius
+ * @param {string} [units="degrees"] the unit measure
+ * @param {number} [steps=100] number of vertices of the polygon
+ */
+export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 100) => {
+    if (!center || !radius) {
+        return null;
+    }
+    return turfCircle(center, radius, {steps, units});
+};
+
+/**
+ * Returns an array of projections
+ * @return {array} of projection Definitions [{code, extent}]
+ */
+export const getProjections = () => {
+    const projections = (getConfigProp('projectionDefs') || []).concat([{code: "EPSG:3857", extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]},
+        {code: "EPSG:4326", extent: [-180, -90, 180, 90]}
+    ]);
+    return projections;
+};
+
+/**
+ * Return a projection from a list of projections
+ * @param code {string} code for the projection EPSG:3857
+ * @return {object} {extent, code} fallsback to default {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]}
+ */
+export const getExtentForProjection = (code = "EPSG:3857") => {
+    return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
+};
+
+/**
+ * Return a boolean to show if a layer fits within a boundary/extent
+ * @param layer {object} to check if fits with in a projection boundary
+ * @return {boolean} true or false
+ */
+export const checkIfLayerFitsExtentForProjection = (layer = {}) => {
+    const crs = layer.bbox?.crs || "EPSG:3857";
+    const [crsMinX, crsMinY, crsMaxX, crsMaxY] = getExtentForProjection(crs).extent;
+    const [minx, minY, maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
+    return ((minx >= crsMinX) && (minY >= crsMinY) && (maxX <= crsMaxX) && (maxY <= crsMaxY));
+};
+
+/**
+ * Generates longitude and latitude value from the point
+ * @param {object} point with latlng data
+ * @return {array} corrected longitude and latitude
+ */
+export const getLonLatFromPoint = (point) => {
+    const latlng = point && point.latlng || null;
+    let lngCorrected = null;
+    /* lngCorrected is the converted longitude in order to have the value between
+         * the range (-180 / +180).
+         * Precision has to be >= than the coordinate editor precision
+         * especially in the case of aeronautical degree editor which is 12
+    */
+    if (latlng) {
+        lngCorrected = latlng && Math.round(latlng.lng * 100000000000000000) / 100000000000000000;
+        lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
+    }
+    return [lngCorrected, latlng && latlng.lat];
+};
+
+/**
+ * Convert radian angle to degrees
+ * @param rad {number | String} a radian angle value
+ * @returns {number} the converted degree angle
+ */
+export const convertRadianToDegrees = (rad) => {
+    const value = parseFloat(rad);
+    return isNumber(value) && ((value * 180) / Math.PI);
+};
+
+/**
+ * Convert degree angle to radian
+ * @param deg {number | String} a degree angle
+ * @returns {number} the converted radian angle
+ */
+export const convertDegreesToRadian = (deg) => {
+    const value = parseFloat(deg);
+    return isNumber(value) && ((value * Math.PI) / 180);
+};
+
 CoordinatesUtils = {
     setCrsLabels,
     getUnits,
@@ -1065,7 +1161,12 @@ CoordinatesUtils = {
     extractCrsFromURN,
     crsCodeTable,
     makeNumericEPSG,
-    makeBboxFromOWS
-
+    makeBboxFromOWS,
+    getPolygonFromCircle,
+    checkIfLayerFitsExtentForProjection,
+    getLonLatFromPoint,
+    getExtentForProjection,
+    convertRadianToDegrees,
+    convertDegreesToRadian
 };
 export default CoordinatesUtils;

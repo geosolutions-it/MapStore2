@@ -3,4 +3,10 @@
     width: 40px !important;
     position:static !important;
     border-radius: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#mapstore-globalspinner > .spinner {
+    margin: 0;
 }

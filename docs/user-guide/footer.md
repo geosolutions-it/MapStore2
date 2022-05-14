@@ -1,7 +1,7 @@
 # Footer
 ********
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) some of the map information are reported in the *Footer*. By default, as soon as the user opens the map, the scale bar and the scale switcher are showed so that the user can change the scale bar by zooming in/out the map or by selecting a map scale through the scale switcher.
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) some of the map information are reported in the *Footer*. By default, as soon as the user opens the map, the scale bar and the scale switcher are showed so that the user can change the scale bar by zooming in/out the map or by selecting a map scale through the scale switcher.
 
 <img src="../img/footer/show_scale1.jpg" class="ms-docimage" />
 
@@ -11,7 +11,7 @@ In order to visualize the map coordinates corresponding to the mouse pointer in 
 
 ## CRS Selector
 
- [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows also to change the *Coordinate Reference System* of the map by clicking on the **Select Projection** button <img src="../img/button/crs_selector_icon.jpg" class="ms-docbutton"/>. A CRS selector opens to select one of the available CRSs, as follows:
+ [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows also to change the *Coordinate Reference System* of the map by clicking on the **Select Projection** button <img src="../img/button/crs_selector_icon.jpg" class="ms-docbutton"/>. A CRS selector opens to select one of the available CRSs, as follows:
 
 <img src="../img/footer/CRS_selector.gif" class="ms-docimage"/>
 

@@ -5,9 +5,6 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React from 'react';
-import { Glyphicon } from 'react-bootstrap';
-
 import { setControlProperty } from '../../actions/controls';
 import { checkPendingChanges } from '../../actions/pendingChanges';
 import { changePassword, login, loginFail, logout, logoutWithReload, resetError } from '../../actions/security';
@@ -52,7 +49,8 @@ export const PasswordReset = connect((state) => ({
     user: state.security && state.security.user,
     show: state.controls.ResetPassword && state.controls.ResetPassword.enabled,
     changed: state.security && state.security.passwordChanged && true || false,
-    error: state.security && state.security.passwordError
+    error: state.security && state.security.passwordError,
+    loading: state.security && state.security.changePasswordLoading || false
 }), {
     onPasswordChange: (user, pass) => { return changePassword(user, pass); },
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
@@ -72,9 +70,6 @@ export const Login = connect((state) => ({
 export const LoginNav = connect((state) => ({
     user: state.security && state.security.user,
     nav: false,
-    renderButtonText: false,
-    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
-    bsStyle: "primary",
     className: "square-button",
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state)

@@ -54,6 +54,19 @@
     zIndex: 100;
 }
 
+.mapstore-print-preview-img-wrapper {
+    position: relative;
+    top: 0;
+    height: 500px;
+    width: 100%;
+    overflow: auto;
+}
+
+.mapstore-print-preview-img-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .mapstore-print-panel .form-inline label {
     margin-right: 20px;
 }
@@ -157,10 +170,6 @@
 
 #mapstore-print-panel .print-download {
     margin-right: 10px;
-}
-
-#mapstore-print-panel .print-download a {
-    color: white;
 }
 
 #mapstore-print-panel .print-legend-options .container-fluid {

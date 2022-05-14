@@ -136,4 +136,36 @@ describe('StylePanel component', () => {
         const btn = document.querySelectorAll('button')[2];
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
     });
+
+    it("Test StylePanel show Style customization information if layer.features has styles", (done) => {
+        const layers = [{name: "Feature", features: [{
+            type: "Feature",
+            id: "poi.1",
+            geometry: {
+                type: "Point",
+                coordinates: [
+                    -74.0104611,
+                    40.70758763
+                ]
+            },
+            geometry_name: "the_geom",
+            properties: {
+                NAME: "museam",
+                THUMBNAIL: "pics/22037827-Ti.jpg",
+                MAINPAGE: "pics/22037827-L.jpg"
+            },
+            style: [{color: 'red'}]
+        }]}];
+        const cmp = ReactDOM.render(<StylePanel
+            errors={[W1]}
+            layers={layers}
+            selected={layers[0]}
+            stylers={{ "Point": <div></div> }}
+        />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const container = document.getElementById('container');
+        const el = container.querySelector('.style-customisation-disabled-container');
+        expect(el).toExist();
+        done();
+    });
 });

@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { fill, findIndex, get, isArray, isNil } from 'lodash';
+import { identity, trim, fill, findIndex, get, isArray, isNil, isString } from 'lodash';
 
 import {
     findGeometryProperty,
@@ -174,14 +174,77 @@ export const createNewAndEditingFilter = (hasChanges, newFeatures, changes) => f
 export const hasValidNewFeatures = (newFeatures = [], describeFeatureType) => newFeatures.map(f => isValid(f, describeFeatureType)).reduce((acc, cur) => cur && acc, true);
 export const applyAllChanges = (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {});
 
+export const EXPRESSION_REGEX = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?\s*(-?\d*\.?\d*)\s*/;
+
+/**
+ * handle parsing of raw values for string and number types
+ * @param {string} value the value in string form, with operator in case of number
+ * @param {string} type the type of the value, number or string
+ */
+export const getOperatorAndValue = (value, type) => {
+    if (type === "string") {
+        return {newVal: trim(value), operator: "ilike"};
+    }
+    const match = EXPRESSION_REGEX.exec(value);
+    let operator = "=";
+    let newVal;
+    if (match) {
+        operator = match[1] || "=";
+        // replace with standard operators
+        if (operator === "!==" | operator === "!=") {
+            operator = "<>";
+        } else if (operator === "===" | operator === "==") {
+            operator = "=";
+        }
+        newVal = parseFloat(match[2]);
+    } else {
+        newVal = parseFloat(value, 10);
+    }
+    return {newVal, operator};
+};
+
+
 export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+
+    const cleanGroupFields = oldFilterObj.groupFields?.filter((group) => attribute !== group.id && group.id !== 1 ) || [];
+    if ((type === 'string' || type === 'number') && isString(value) && value?.indexOf(",") !== -1) {
+        const multipleValues = value?.split(",").filter(identity) || [];
+        const cleanFilterFields = oldFilterObj.filterFields?.filter((field) => attribute !== field.attribute) || [];
+        return {
+            ...oldFilterObj,
+            groupFields: cleanGroupFields.concat([
+                {
+                    id: attribute,
+                    logic: "OR",
+                    groupId: 1,
+                    index: 0
+                }]),
+            filterFields: cleanFilterFields.concat(multipleValues.map((v) => {
+                let {operator: op, newVal} = getOperatorAndValue(v, type);
+
+                return {
+                    attribute,
+                    rowId: Date.now(),
+                    type: type,
+                    groupId: attribute,
+                    operator: op,
+                    value: newVal
+                };
+            })),
+            spatialField: oldFilterObj.spatialField,
+            spatialFieldOperator: oldFilterObj.spatialFieldOperator
+        };
+    }
+
     return {
         ...oldFilterObj,
-        groupFields: [{
-            id: 1,
-            logic: "AND",
-            index: 0
-        }],
+        groupFields: cleanGroupFields.concat([
+            {
+                id: 1,
+                logic: "AND",
+                groupId: 1,
+                index: 0
+            }]),
         filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
             ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                 attribute,
@@ -244,4 +307,27 @@ export const updatePages = (result, { endPage, startPage } = {}, { pages, featur
         pagesLoaded.push(startIndex + (size * i));
     }
     return { pages: oldPages.concat(pagesLoaded), features: oldFeatures.concat(fts) };
+};
+
+/**
+ * Process custom attributes settings of feature grid and returns array of feature attributes to be used in a query
+ * to limit results of WFS "getFeature" request
+ * undefined - all attributes to be fetched
+ * array - listed attributes to be fetched
+ * @param {array} attributes complete list of attributes available for export, see attributesSelector
+ * @param {object} customAttributesSettings object containing information about deactivated attributes, see getCustomAttributesSettings
+ * @returns undefined|array
+ */
+export const getAttributesList = (attributes, customAttributesSettings) => {
+    let result = undefined;
+    if (customAttributesSettings && attributes) {
+        result = attributes.filter((element) => {
+            const hide = customAttributesSettings[element.attribute]?.hide ?? false;
+            return !hide;
+        }).map((element) => element.attribute);
+        if (result.length === attributes.length) {
+            result = undefined;
+        }
+    }
+    return result;
 };

@@ -14,7 +14,7 @@ import { compose, withHandlers, withPropsOnChange } from 'recompose';
  */
 export default compose(
     withHandlers({
-        onMapViewChanges: ({ map = {}, onMapViewChanges = () => {}}) => (center, zoom, bbox, size, mapStateSource, projection) => {
+        onMapViewChanges: ({ map = {}, onMapViewChanges = () => {}}) => (center, zoom, bbox, size, mapStateSource, projection, viewerOptions, resolution, orientate) => {
             onMapViewChanges({
                 ...map,
                 center,
@@ -25,7 +25,9 @@ export default compose(
                 zoom,
                 size,
                 mapStateSource,
-                projection
+                projection,
+                resolution,
+                orientate
             });
         }
     }),

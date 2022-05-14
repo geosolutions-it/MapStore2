@@ -16,6 +16,7 @@ import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/fe
 import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
+import VectorSource from "ol/source/Vector";
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -1360,6 +1361,33 @@ describe('Test DrawSupport', () => {
         expect(coords[0].length).toBe(101);
 
     });
+    it('test createOLGeometry with type in properties', () => {
+        const features = [{"type": "Feature", "id": "protected_areas.1", "geometry": {"type": "MultiPolygon", "coordinates": [[[[15.5436, 40.1345], [15.5439, 40.1358], [15.5448, 40.1376], [15.5456, 40.1397], [15.5444, 40.1419], [15.5443, 40.1439], [15.5462, 40.1446], [15.5473, 40.1455], [15.5485, 40.1464], [15.5496, 40.1482], [15.5506, 40.1483], [15.5514, 40.1473], [15.552, 40.1459], [15.5526, 40.1448], [15.5529, 40.1443], [15.5529, 40.1424], [15.552, 40.1414], [15.553, 40.1389], [15.5536, 40.137], [15.5527, 40.136], [15.5511, 40.1373], [15.5498, 40.1361], [15.5476, 40.1345], [15.5449, 40.1339], [15.5436, 40.1345]]]]}, "geometry_name": "the_geom", "properties": {"fid_1": 1, "fid": 1, "id": "214710630", "type": "protected_area", "name": "Oasi del Bussento"}, "bbox": [15.5436, 40.1339, 15.5536, 40.1483]}];
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        let support = ReactDOM.render(<DrawSupport options={{geodesic: true}} map={fakeMap}/>, document.getElementById("container"));
+        support = ReactDOM.render(<DrawSupport options={{geodesic: true}} map={fakeMap} projection={"EPSG:900913"} features={features} method="MultiPolygon" drawStatus="drawOrEdit"/>, document.getElementById("container"));
+
+        const geomType = support.drawSource.getFeatures()[0].getGeometry().getType();
+        expect(geomType).toBe("MultiPolygon");
+    });
     it('test createOLGeometry type Circle geodesic', () => {
         const support = ReactDOM.render(<DrawSupport options={{geodesic: true}}/>, document.getElementById("container"));
         const type = 'Circle';
@@ -1816,6 +1844,44 @@ describe('Test DrawSupport', () => {
             drawMethod: "Circle"
         });
         expect(support).toExist();
+        expect(support.drawSource.getFeatures()[0].getGeometry().getType()).toBe("Circle");
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+    it('test click callbacks in edit mode with Circle feature with geodesic', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                radius: 1111,
+                isCircle: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderAndClick({
+            feature,
+            drawMethod: "Circle",
+            options: {
+                drawEnabled: false,
+                editEnabled: true,
+                addClickCallback: true,
+                geodesic: true
+            }
+        });
+        expect(support.drawSource.getFeatures()[0].getGeometry().getType()).toBe("Polygon");
+        expect(support).toExist();
         expect(spyOnDrawingFeatures).toHaveBeenCalled();
         done();
     });
@@ -1860,6 +1926,54 @@ describe('Test DrawSupport', () => {
         expect(ArgsGeometryChanged[0][0]).toEqual(ArgsEndDrawing[0]);
 
         done();
+    });
+    it('test drawend callbacks with Circle with geodesic, transformed into feature collection', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+        const simplifiedCircle = new Feature({
+            geometry: new Polygon([[
+                [1260844.6064174946, 5858067.29727681],
+                [1260960.7874218025, 5857951.114737838],
+                [1260844.6064174946, 5857834.9352681665],
+                [1260728.4254131867, 5857951.114737838],
+                [1260844.6064174946, 5858067.29727681]
+            ]])
+        });
+        const features = JSON.parse(`[{"type":"FeatureCollection","id":"1","geometry":null,"features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[]]},"properties":{"id":"1","isValidFeature":false,"canEdit":true,"isCircle":true,"isDrawing":true}}],"newFeature":true,"properties":{"id":"1"},"tempFeatures":[]}]`);
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const support = ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={features} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Circle" options={{
+                stopAfterDrawing: true,
+                geodesic: true,
+                drawEnabled: true,
+                transformToFeatureCollection: true
+            }}
+            onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: simplifiedCircle
+        });
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: simplifiedCircle
+        });
+        expect(spyEnd).toHaveBeenCalled();
+        const [feature] = spyEnd.calls[0].arguments[0].features;
+        expect(feature.properties.radius).toBe(79.91);
     });
 
     it('test drawend callbacks with Text, transformed int feature collection', (done) => {
@@ -2215,6 +2329,22 @@ describe('Test DrawSupport', () => {
 
         done();
     });
+    it('test modifyInteraction of Circle with geodesic', (done) => {
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: true,
+                editEnabled: true,
+                geodesic: true
+            }
+        });
+        expect(support).toExist();
+        expect(support.modifyInteraction).toBeFalsy();
+        done();
+    });
     it('test drawPropertiesForGeometryType for BBOX', (done) => {
         let support = renderDrawSupport();
         support = renderDrawSupport({
@@ -2329,4 +2459,44 @@ describe('Test DrawSupport', () => {
 
         done();
     });
+    it('test snapping interaction creation', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            }),
+            getLayers: () => ({
+                getArray: () => [{
+                    get: () => 'snap_layer_1',
+                    getSource: () => new VectorSource(),
+                    type: 'VECTOR'
+                }]
+            })
+        };
+
+        let support = renderDrawSupport({ map: fakeMap});
+        support = renderDrawSupport({
+            map: fakeMap,
+            snapping: true,
+            options: {geodesic: true},
+            snappingLayerInstance: { id: 'snap_layer_1' },
+            snapConfig: { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'},
+            features: []
+        });
+        const snappingInteraction = !!support?.snapInteraction;
+        expect(snappingInteraction).toBe(true);
+    });
 });
+

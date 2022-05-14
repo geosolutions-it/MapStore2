@@ -6,18 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'react-selectize/themes/index.css';
-
-import { find, isObject, isString } from 'lodash';
+import { find, includes, isObject, isString, uniqBy } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Col, ControlLabel, FormControl, FormGroup, Grid, InputGroup } from 'react-bootstrap';
-import { SimpleSelect } from 'react-selectize';
+import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
 import { getMessageById, getSupportedLocales } from '../../../../utils/LocaleUtils';
-import { createFromSearch, flattenGroups, getLabelName } from '../../../../utils/TOCUtils';
+import { isValidNewGroupOption, flattenGroups,
+    getLabelName as _getLabelName, getTitle as _getTitle } from '../../../../utils/TOCUtils';
 import Message from '../../../I18N/Message';
 import LayerNameEditField from './LayerNameEditField';
 
@@ -34,7 +33,8 @@ class General extends React.Component {
         pluginCfg: PropTypes.object,
         showTooltipOptions: PropTypes.bool,
         allowNew: PropTypes.bool,
-        enableLayerNameEditFeedback: PropTypes.bool
+        enableLayerNameEditFeedback: PropTypes.bool,
+        currentLocale: PropTypes.string
     };
 
     static contextTypes = {
@@ -47,8 +47,12 @@ class General extends React.Component {
         nodeType: 'layers',
         showTooltipOptions: true,
         pluginCfg: {},
-        allowNew: false
+        allowNew: false,
+        currentLocale: 'en-US'
     };
+
+    getTitle = (label) => _getTitle(label, this.props.currentLocale);
+    getLabelName = (label, groups) => _getLabelName(this.getTitle(label), groups);
 
     render() {
         const locales = getSupportedLocales();
@@ -67,6 +71,10 @@ class General extends React.Component {
             { value: "bottom", label: getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
+        const eleGroupLabel = this.findGroupLabel(this.props.element && this.props.element.group || "Default");
+
+        const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
+
         return (
             <Grid fluid style={{ paddingTop: 15, paddingBottom: 15 }}>
                 <form ref="settings">
@@ -100,10 +108,11 @@ class General extends React.Component {
                         }
                         )}
                     </FormGroup>)}
+                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
-                        onUpdateEntry={this.updateEntry.bind(null)}/>
+                        onUpdateEntry={this.updateEntry.bind(null)}/>}
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                         {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle" /> :
@@ -118,34 +127,36 @@ class General extends React.Component {
                     {this.props.nodeType === 'layers' ?
                         <div>
                             <label key="group-label" className="control-label"><Message msgId="layerProperties.group" /></label>
-                            <SimpleSelect
+                            <SelectCreatable
+                                clearable={false}
                                 key="group-dropdown"
                                 options={
-                                    (groups || (this.props.element && this.props.element.group) || []).map(item => {
-                                        if (isObject(item)) {
-                                            return {...item, label: getLabelName(item.label, groups)};
-                                        }
-                                        return { label: getLabelName(item, groups), value: item };
-                                    })
+                                    uniqBy([
+                                        { value: 'Default', label: 'Default' },
+                                        ...(groups || (this.props.element && this.props.element.group) || []).map(item => {
+                                            if (isObject(item)) {
+                                                return {...item, label: this.getLabelName(item.label, groups)};
+                                            }
+                                            return { label: this.getLabelName(item, groups), value: item };
+                                        })
+                                    ], 'value')
                                 }
-                                defaultValue={{ label: getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
-                                placeholder={getLabelName(this.props.element && this.props.element.group || "Default", groups)}
-                                onChange={(value) => {
-                                    this.updateEntry("group", { target: { value: value || "Default" } });
+                                isValidNewOption={isValidNewGroupOption}
+                                newOptionCreator={function(option) {
+                                    const { valueKey, label, labelKey } = option;
+                                    const value = label.replace(/\./g, '${dot}').replace(/\//g, '.');
+                                    return {
+                                        [valueKey]: value,
+                                        [labelKey]: label,
+                                        className: 'Select-create-option-placeholder'
+                                    };
                                 }}
-                                theme="bootstrap3"
-                                createFromSearch={this.props.allowNew ? createFromSearch : undefined}
-                                hideResetButton={!this.props.allowNew}
-                                editable={this.props.allowNew}
-                                onValueChange={function(item) {
-                                    // here, we add the selected item to the options array, the "new-option"
-                                    // property, added to items created by the "create-from-search" function above,
-                                    // helps us ensure that the item doesn't already exist in the options array
-                                    if (!!item && !!item.newOption) {
-                                        this.options.unshift({ label: item.label, value: item.value });
-                                    }
-                                    this.onChange(item ? item.value : null);
-                                }} />
+                                value={{ label: this.getLabelName(eleGroupLabel, groups), value: eleGroupLabel}}
+                                placeholder={this.getLabelName(eleGroupLabel, groups)}
+                                onChange={(item) => {
+                                    this.updateEntry("group", { target: { value: item.value || "Default" } });
+                                }}
+                            />
                         </div> : null}
                     {   /* Tooltip section */
                         this.props.showTooltipOptions &&
@@ -153,26 +164,23 @@ class General extends React.Component {
                             <Col xs={12} sm={8} className="first-selectize">
                                 <br />
                                 <label key="tooltip-label" className="control-label"><Message msgId="layerProperties.tooltip.label" /></label>
-                                <SimpleSelect
-                                    hideResetButton
-                                    dropdownDirection={-1}
+                                <Select
+                                    clearable={false}
                                     key="tooltips-dropdown"
                                     options={tooltipItems}
-                                    theme="bootstrap3"
                                     value={find(tooltipItems, o => o.value === (this.props.element.tooltipOptions || "title"))}
-                                    onValueChange={(item) => { this.updateEntry("tooltipOptions", { target: { value: item.value || "title" } }); }} />
+                                    onChange={(item) => { this.updateEntry("tooltipOptions", { target: { value: item.value || "title" } }); }} />
                             </Col>
                             <Col xs={12} sm={4} className="second-selectize">
                                 <br />
                                 <label key="tooltip-placement-label" className="control-label"><Message msgId="layerProperties.tooltip.labelPlacement" /></label>
-                                <SimpleSelect
-                                    hideResetButton
-                                    dropdownDirection={-1}
+                                <Select
+                                    clearable={false}
                                     key="tooltips-placement-dropdown"
                                     options={tooltipPlacementItems}
-                                    theme="bootstrap3"
                                     value={find(tooltipPlacementItems, o => o.value === (this.props.element.tooltipPlacement || "top"))}
-                                    onValueChange={(item) => { this.updateEntry("tooltipPlacement", { target: { value: item.value || "top" } }); }} />
+                                    onChange={(item) => { this.updateEntry("tooltipPlacement", { target: { value: item.value || "top" } }); }}
+                                />
                             </Col>
                         </div>
                     }
@@ -181,6 +189,8 @@ class General extends React.Component {
             </Grid>
         );
     }
+
+    supportedNameEditLayerTypes = ['wms'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
 
@@ -191,6 +201,13 @@ class General extends React.Component {
 
         this.props.onChange('title', title);
     };
+
+    findGroupLabel = () => {
+        const wholeGroups = this.props.groups && flattenGroups(this.props.groups, 0, true);
+        const eleGroupName = this.props.element && this.props.element.group || "Default";
+        const group = find(wholeGroups, (gp)=> gp.id === eleGroupName) || {};
+        return this.getTitle(group.title);
+    }
 }
 
 export default General;

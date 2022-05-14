@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const L = require('leaflet');
-const PropTypes = require('prop-types');
-const React = require('react');
-const ConfigUtils = require('../../../utils/ConfigUtils').default;
-const {reprojectBbox, reproject} = require('../../../utils/CoordinatesUtils');
-const assign = require('object-assign');
-const {
+import L from 'leaflet';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ConfigUtils from '../../../utils/ConfigUtils';
+import {reprojectBbox, reproject} from '../../../utils/CoordinatesUtils';
+import assign from 'object-assign';
+import {
     getGoogleMercatorResolutions,
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -20,12 +20,12 @@ const {
     GET_COORDINATES_FROM_PIXEL_HOOK,
     ZOOM_TO_EXTENT_HOOK,
     registerHook
-} = require('../../../utils/MapUtils');
-const Rx = require('rxjs');
+} from '../../../utils/MapUtils';
+import Rx from 'rxjs';
 
-const {throttle} = require('lodash');
+import {throttle} from 'lodash';
 
-require('./SingleClick');
+import './SingleClick';
 
 class LeafletMap extends React.Component {
     static propTypes = {
@@ -47,7 +47,7 @@ class LeafletMap extends React.Component {
         onLayerLoading: PropTypes.func,
         onLayerLoad: PropTypes.func,
         onLayerError: PropTypes.func,
-        resize: PropTypes.number,
+        resize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
         registerHooks: PropTypes.bool,
@@ -55,7 +55,8 @@ class LeafletMap extends React.Component {
         resolutions: PropTypes.array,
         hookRegister: PropTypes.object,
         onCreationError: PropTypes.func,
-        onMouseOut: PropTypes.func
+        onMouseOut: PropTypes.func,
+        onResolutionsChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -83,7 +84,8 @@ class LeafletMap extends React.Component {
         style: {},
         interactive: true,
         resolutions: getGoogleMercatorResolutions(0, 23),
-        onMouseOut: () => {}
+        onMouseOut: () => {},
+        onResolutionsChange: () => {}
     };
 
     state = { };
@@ -125,7 +127,9 @@ class LeafletMap extends React.Component {
             Math.round(this.props.zoom));
 
         this.map = map;
-
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
         // store zoomControl in the class to target the right control while add/remove
         if (this.props.zoomControl) {
             this.mapZoomControl = L.control.zoom();
@@ -146,6 +150,7 @@ class LeafletMap extends React.Component {
         // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
         this.map.on('singleclick', (event) => {
             if (this.props.onClick) {
+                const intersectedFeatures = this.getIntersectedFeatures(map, event.latlng);
                 this.props.onClick({
                     pixel: {
                         x: event.containerPoint.x,
@@ -162,7 +167,8 @@ class LeafletMap extends React.Component {
                         ctrl: event.originalEvent.ctrlKey,
                         metaKey: event.originalEvent.metaKey, // MAC OS
                         shift: event.originalEvent.shiftKey
-                    }
+                    },
+                    intersectedFeatures
                 });
             }
         });
@@ -184,7 +190,7 @@ class LeafletMap extends React.Component {
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
-
+        this.props.onResolutionsChange(this.getResolutions());
         this.map.on('layeradd', (event) => {
             // we want to run init code only the first time a layer is added to the map
             if (event.layer._ms2Added) {
@@ -247,10 +253,6 @@ class LeafletMap extends React.Component {
         });
 
         this.drawControl = null;
-
-        if (this.props.registerHooks) {
-            this.registerHooks();
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -292,6 +294,7 @@ class LeafletMap extends React.Component {
             if (limits.minZoom !== (oldLimits && oldLimits.minZoom)) {
                 this.map.setMinZoom(limits.minZoom);
             }
+            this.props.onResolutionsChange(this.getResolutions());
         }
         return false;
     }
@@ -326,6 +329,34 @@ class LeafletMap extends React.Component {
         return this.props.resolutions;
     };
 
+    getIntersectedFeatures = (map, latlng) => {
+        let groupIntersectedFeatures = {};
+        const clickBounds = L.latLngBounds(latlng, latlng);
+        map.eachLayer((layer) => {
+            if (layer?.layerId && layer?.eachLayer) {
+                layer.eachLayer(feature => {
+
+                    const centerBounds = feature?.getLatLng
+                        ? L.latLngBounds(feature.getLatLng(), feature.getLatLng())
+                        : null;
+                    const bounds = feature?.getBounds
+                        ? feature.getBounds()
+                        : centerBounds;
+
+                    if (bounds && feature?.toGeoJSON) {
+                        if (bounds && clickBounds.intersects(bounds)) {
+                            const geoJSONFeature = feature.toGeoJSON();
+                            groupIntersectedFeatures[layer.layerId] = groupIntersectedFeatures[layer.layerId]
+                                ? [ ...groupIntersectedFeatures[layer.layerId], geoJSONFeature ]
+                                : [ geoJSONFeature ];
+                        }
+                    }
+                });
+            }
+        });
+        return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+    }
+
     render() {
         const map = this.map;
         const mapProj = this.props.projection;
@@ -335,7 +366,9 @@ class LeafletMap extends React.Component {
                 projection: mapProj,
                 zoomOffset: this.zoomOffset,
                 onCreationError: this.props.onCreationError,
-                onClick: this.props.onClick
+                onClick: this.props.onClick,
+                resolutions: this.getResolutions(),
+                zoom: this.props.zoom
             }) : null;
         }) : null;
         return (
@@ -396,16 +429,30 @@ class LeafletMap extends React.Component {
             width: this.map.getSize().x
         };
         const center = this.map.getCenter();
-        this.props.onMapViewChanges({x: center.lng, y: center.lat, crs: "EPSG:4326"}, this.map.getZoom(), {
-            bounds: {
-                minx: parseFloat(bbox[0]),
-                miny: parseFloat(bbox[1]),
-                maxx: parseFloat(bbox[2]),
-                maxy: parseFloat(bbox[3])
+        const zoom = this.map.getZoom();
+        this.props.onMapViewChanges(
+            {
+                x: center.lng,
+                y: center.lat,
+                crs: "EPSG:4326"
             },
-            crs: 'EPSG:4326',
-            rotation: 0
-        }, size, this.props.id, this.props.projection );
+            zoom,
+            {
+                bounds: {
+                    minx: parseFloat(bbox[0]),
+                    miny: parseFloat(bbox[1]),
+                    maxx: parseFloat(bbox[2]),
+                    maxy: parseFloat(bbox[3])
+                },
+                crs: 'EPSG:4326',
+                rotation: 0
+            },
+            size,
+            this.props.id,
+            this.props.projection,
+            undefined, // viewerOptions
+            this.getResolutions()[zoom] // resolution
+        );
     };
 
     setMousePointer = (pointer) => {
@@ -526,4 +573,4 @@ class LeafletMap extends React.Component {
     };
 }
 
-module.exports = LeafletMap;
+export default LeafletMap;

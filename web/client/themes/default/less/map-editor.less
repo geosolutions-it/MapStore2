@@ -1,21 +1,51 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .map-editor-modal {
+        .ms-resizable-modal .modal-content {
+            .modal-footer {
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .map-editor-modal {
     z-index: 2995;
+
     .ms-resizable-modal .modal-content {
         .modal-footer {
-            border-top: 1px solid #d8ddde;
+            border-top-width: 1px;
+            border-top-style: solid;
         }
-    } 
+    }
 }
+
 .map-editor-modal-body {
-    #catalog-root.catalog-active, #identify-container.identify-active {
-        & > div > div > div {
-            left:unset !important;
+
+    #catalog-root.catalog-active,
+    #identify-container.identify-active {
+        &>div>div>div {
+            left: unset !important;
             right: 0px;
         }
     }
 
 }
 
-.with-confirm-modal .modal, .map-editor-search-config {
-        z-index: 3000;
-    }
+.with-confirm-modal .modal,
+.map-editor-search-config {
+    z-index: 3000;
+}

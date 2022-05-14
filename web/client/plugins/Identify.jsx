@@ -22,6 +22,7 @@ import {
     changeMapInfoFormat,
     changePage,
     clearWarning,
+    setShowInMapPopup,
     closeIdentify,
     editLayerFeatures,
     hideMapinfoMarker,
@@ -33,7 +34,9 @@ import {
     toggleMapInfoState,
     toggleShowCoordinateEditor,
     updateCenterToMarker,
-    updateFeatureInfoClickPoint
+    updateFeatureInfoClickPoint,
+    checkIdentifyIsMounted,
+    onInitPlugin
 } from '../actions/mapInfo';
 import DefaultViewerComp from '../components/data/identify/DefaultViewer';
 import { defaultViewerDefaultProps, defaultViewerHandlers } from '../components/data/identify/enhancers/defaultViewer';
@@ -45,6 +48,7 @@ import FeatureInfoFormatSelectorComp from '../components/misc/FeatureInfoFormatS
 import FeatureInfoTriggerSelectorComp from '../components/misc/FeatureInfoTriggerSelector';
 import epics from '../epics/identify';
 import mapInfo from '../reducers/mapInfo';
+import mapPopups from '../reducers/mapPopups';
 import { isEditingAllowedSelector } from '../selectors/featuregrid';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
@@ -60,7 +64,9 @@ import {
     requestsSelector,
     responsesSelector,
     showEmptyMessageGFISelector,
-    validResponsesSelector
+    validResponsesSelector,
+    hoverEnabledSelector,
+    mapInfoEnabledSelector
 } from '../selectors/mapInfo';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { isCesium, mapTypeSelector } from '../selectors/maptype';
@@ -71,7 +77,7 @@ import getToolButtons from './identify/toolButtons';
 import Message from './locale/Message';
 
 const selector = createStructuredSelector({
-    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
+    enabled: (state) => mapInfoEnabledSelector(state) || state.controls && state.controls.info && state.controls.info.enabled || false,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: requestsSelector,
@@ -83,7 +89,7 @@ const selector = createStructuredSelector({
     reverseGeocodeData: (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     warning: (state) => state.mapInfo && state.mapInfo.warning,
     currentLocale: currentLocaleSelector,
-    dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
+    dockStyle: (state) => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp('defaultCoordinateFormat'),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
@@ -98,7 +104,7 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, isLoadedResponseSelector, (state) =>state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
+        createSelector(indexSelector, isLoadedResponseSelector, (state) => state.browser && state.browser.mobile,  (index, loaded, isMobile) => ({ index, loaded, isMobile })),
         {
             setIndex: changePage
         }
@@ -108,7 +114,7 @@ const DefaultViewer = compose(
     identifyIndex,
     defaultViewerDefaultProps,
     defaultViewerHandlers,
-    loadingState(({loaded}) => isUndefined(loaded))
+    loadingState(({ loaded }) => isUndefined(loaded))
 )(DefaultViewerComp);
 
 
@@ -122,12 +128,13 @@ const identifyDefaultProps = defaultProps({
     responses: [],
     viewerOptions: {},
     viewer: DefaultViewer,
-    purgeResults: () => {},
-    hideMarker: () => {},
-    clearWarning: () => {},
-    changeMousePointer: () => {},
-    showRevGeocode: () => {},
-    hideRevGeocode: () => {},
+    purgeResults: () => { },
+    hideMarker: () => { },
+    clearWarning: () => { },
+    changeMousePointer: () => { },
+    showRevGeocode: () => { },
+    checkIdentifyIsMounted: () => {},
+    hideRevGeocode: () => { },
     containerProps: {
         continuous: false
     },
@@ -157,7 +164,7 @@ const identifyDefaultProps = defaultProps({
     showMoreInfo: true,
     showEdit: false,
     position: 'right',
-    size: 660,
+    size: 550,
     getToolButtons,
     getFeatureButtons,
     showFullscreen: false,
@@ -195,6 +202,8 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.zIndex {number} component z index order
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
  * @prop cfg.showMoreInfo {boolean} if true shows the more info icon which allow user to show/hide Geocode viewer as popup (true by default)
+ * @prop cfg.showEdit {boolean} if true, and when the FeatureEditor plugin is present, shows and edit button to edit the current feature(s) clicked in the grid.
+ * @prop cfg.enableInfoForSelectedLayers {boolean} if true, if some layer is selected in the TOC, the feature info is performed only on the selected ones. if false, the info is queried for all the layers, independently from selection. (default is true).
  *
  * @example
  * {
@@ -211,9 +220,9 @@ const identifyDefaultProps = defaultProps({
  * }
  *
  */
-
 const IdentifyPlugin = compose(
     connect(selector, {
+        onInitPlugin,
         purgeResults: purgeMapInfoResults,
         closeIdentify,
         onSubmitClickPoint: updateFeatureInfoClickPoint,
@@ -225,7 +234,8 @@ const IdentifyPlugin = compose(
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
-        onEdit: editLayerFeatures
+        onEdit: editLayerFeatures,
+        checkIdentifyIsMounted
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,
@@ -251,6 +261,9 @@ const IdentifyPlugin = compose(
     identifyDefaultProps,
     identifyIndex,
     defaultViewerHandlers,
+    connect(() => ({}), {
+        setShowInMapPopup
+    }),
     identifyLifecycle
 )(IdentifyContainer);
 
@@ -262,9 +275,12 @@ const FeatureInfoFormatSelector = connect((state) => ({
 })(FeatureInfoFormatSelectorComp);
 
 const FeatureInfoTriggerSelector = connect((state) => ({
-    trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
+    trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click',
+    hoverEnabled: hoverEnabledSelector(state)
 }), {
-    onSetMapTrigger: setMapTrigger
+    onSetMapTrigger: setMapTrigger,
+    onPurgeMapInfoResults: purgeMapInfoResults,
+    onHideMapinfoMarker: hideMapinfoMarker
 })(FeatureInfoTriggerSelectorComp);
 
 export default {
@@ -273,8 +289,8 @@ export default {
             name: 'info',
             position: 6,
             tooltip: "info.tooltip",
-            icon: <Glyphicon glyph="map-marker"/>,
-            help: <Message msgId="helptexts.infoButton"/>,
+            icon: <Glyphicon glyph="map-marker" />,
+            help: <Message msgId="helptexts.infoButton" />,
             action: toggleMapInfoState,
             selector: (state) => ({
                 bsStyle: state.mapInfo && state.mapInfo.enabled ? "success" : "primary",
@@ -285,11 +301,11 @@ export default {
             tool: [<FeatureInfoFormatSelector
                 key="featureinfoformat"
                 label={<Message msgId="infoFormatLbl" />
-                }/>, <FeatureInfoTriggerSelector
+                } />, <FeatureInfoTriggerSelector
                 key="featureinfotrigger" />],
             position: 3
         }
     }),
-    reducers: {mapInfo},
+    reducers: { mapInfo, mapPopups },
     epics
 };

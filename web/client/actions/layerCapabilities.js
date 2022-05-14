@@ -12,22 +12,21 @@ import WMS from '../api/WMS';
 import * as WFS from '../api/WFS';
 import WCS from '../api/WCS';
 import {getCapabilitiesUrl, formatCapabitiliesOptions} from '../utils/LayersUtils';
-import { get, head } from 'lodash';
+import { get } from 'lodash';
+import { extractGeometryType } from '../utils/WFSLayerUtils';
 
 export function getDescribeLayer(url, layer, options) {
     return (dispatch /* , getState */) => {
         return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
             if (describeLayer && describeLayer.owsType === "WFS") {
-                return WFS.describeFeatureTypeOGCSchemas(url, describeLayer.name).then((describeFeatureType) => {
-                    // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
-                    let types = get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
-                    let geometryType = head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
-                    geometryType = geometryType && geometryType.type.localPart;
-                    describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
-                    return dispatch(updateNode(layer.id, "id", {describeLayer, describeFeatureType}));
-                }).catch(() => {
-                    return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe feature found"}}));
-                });
+                return WFS.describeFeatureType(url, describeLayer.name)
+                    .then( (describeFeatureType) => {
+                        describeLayer.geometryType = extractGeometryType(describeFeatureType);
+                        return dispatch(updateNode(layer.id, "id", { describeLayer, describeFeatureType }));
+                    })
+                    .catch(() => {
+                        return dispatch(updateNode(layer.id, "id", { describeLayer: describeLayer || { "error": "no describe feature found" }}));
+                    });
             } else if ( describeLayer && describeLayer.owsType === "WCS" ) {
                 WCS.describeCoverage(url, describeLayer.name).then((describeCoverage) => {
                     // TODO move the management of this bands in the proper components, getting the describeFeatureType entry:

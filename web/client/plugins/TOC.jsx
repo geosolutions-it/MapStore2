@@ -55,16 +55,16 @@ import { generalInfoFormatSelector } from '../selectors/mapInfo';
 import { userSelector } from '../selectors/security';
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { getNode, toggleByType } from '../utils/LayersUtils';
-import { getScales } from '../utils/MapUtils';
+import { getScales, getResolutions } from '../utils/MapUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import Message from '../components/I18N/Message';
 import assign from 'object-assign';
 import layersIcon from './toolbar/assets/img/layers.png';
-import { isObject, head, find } from 'lodash';
+import { isObject, head, find, round } from 'lodash';
 import { setControlProperties, setControlProperty } from '../actions/controls';
 import { createWidget } from '../actions/widgets';
 import { getMetadataRecordById } from '../actions/catalog';
-import { activeSelector } from '../selectors/catalog';
+import { isActiveSelector } from '../selectors/catalog';
 import { isCesium } from '../selectors/maptype';
 
 const addFilteredAttributesGroups = (nodes, filters) => {
@@ -106,7 +106,7 @@ const tocSelector = createSelector(
         layerFilterSelector,
         layersSelector,
         mapNameSelector,
-        activeSelector,
+        isActiveSelector,
         widgetBuilderAvailable,
         generalInfoFormatSelector,
         isCesium,
@@ -129,6 +129,7 @@ const tocSelector = createSelector(
         selectedNodes,
         filterText,
         generalInfoFormat,
+        layers,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         updatableLayersCount: layers.filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length,
@@ -154,6 +155,10 @@ const tocSelector = createSelector(
             {
                 options: { showComponent: false },
                 func: (node) => node.id === "annotations" && isCesiumActive
+            },
+            {
+                options: { exclusiveMapType: true },
+                func: (node) => node.type === "3dtiles" && !isCesiumActive
             }
         ]),
         catalogActive,
@@ -174,6 +179,7 @@ class LayerTree extends React.Component {
     static propTypes = {
         id: PropTypes.number,
         items: PropTypes.array,
+        layers: PropTypes.array,
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
@@ -258,7 +264,8 @@ class LayerTree extends React.Component {
         onLayerInfo: PropTypes.func,
         onSetSwipeActive: PropTypes.func,
         updatableLayersCount: PropTypes.number,
-        onSetSwipeMode: PropTypes.func
+        onSetSwipeMode: PropTypes.func,
+        resolutions: PropTypes.func
     };
 
     static contextTypes = {
@@ -267,6 +274,7 @@ class LayerTree extends React.Component {
 
     static defaultProps = {
         items: [],
+        layers: [],
         groupPropertiesChangeHandler: () => {},
         layerPropertiesChangeHandler: () => {},
         retrieveLayerData: () => {},
@@ -366,6 +374,8 @@ class LayerTree extends React.Component {
     }
     getDefaultLayer = () => {
         const LayerNode = this.props.layerNodeComponent || DefaultLayer;
+        const resolutions = this.props.resolutions || getResolutions();
+        const resolution = resolutions[round(this.props.currentZoomLvl)];
         return (
             <LayerNode
                 {...this.props.layerOptions}
@@ -386,6 +396,7 @@ class LayerTree extends React.Component {
                 onUpdateNode={this.props.updateNode}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
                 language={this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : null}
+                resolution={resolution}
             />
         );
     }
@@ -411,6 +422,7 @@ class LayerTree extends React.Component {
                         <Toolbar
                             items={this.props.items.filter(({ target }) => target === "toolbar")}
                             groups={this.props.groups}
+                            layers={this.props.layers}
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}
@@ -676,11 +688,19 @@ const checkPluginsEnhancer = branch(
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
+ * @prop {boolean} cfg.activateMetedataTool activate metadata tool in the toolbar, to retrieve metadata from original catalog (WMS and/or CSW), default `false`
  * @prop {boolean} cfg.checkPlugins if true, check if AddLayer, AddGroup ... plugins are present to auto-configure the toolbar
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `true`
  * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
+ * @prop {boolean} cfg.activateRemoveGroup if set to false, do not show the remove button for layer groups. default `true`
+  * @prop {boolean} [addLayersPermissions=true] if false, only users of role ADMIN can see the "add layers" button. Default true.
+   @prop {boolean} [removeLayersPermissions=true] if false, only users of role ADMIN have the permission to remove layers. Default true.
+   @prop {boolean} [sortingPermissions=true] if false, only users of role ADMIN have the permission to move layers in the TOC. Default true.
+   @prop {boolean} [addGroupsPermissions=true] if false, only users of role ADMIN have the permission to add groups to the TOC. Default true.
+   @prop {boolean} [removeGroupsPermissions=true] if false, only users of role ADMIN can remove groups from the TOC. Default true.
+   @prop {boolean} [layerInfoToolPermissions=false] if false, only users of role ADMIN can see the layer info tool. Default false.
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
  * example :
  * ```
@@ -723,8 +743,8 @@ const checkPluginsEnhancer = branch(
  * @prop {element} cfg.groupNodeComponent render a custom component for group node
  * @prop {element} cfg.layerNodeComponent render a custom component for layer node
  * @prop {object} cfg.layerOptions: options to pass to the layer.
- * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
- * For instance you can pass some styling props to the legend.
+ * @prop {object} cfg.layerOptions.legendOptions default options for legend
+ * Some of the `layerOptions` are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend CSS.
  * this example is to make the legend scrollable horizontally
  * ```
  * "layerOptions": {
@@ -738,25 +758,23 @@ const checkPluginsEnhancer = branch(
  *   }
  *  }
  * ```
- * Another legendOptions entry can be `WMSLegendOptions` it is styling prop for the wms legend.
+ * Other `legendOptions` entries can be:
+ * - `WMSLegendOptions` it is styling prop for the wms legend.
+ * - `legendWidth`: default `width` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
+ * - `legendHeight`: default `height` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
+ * - `scaleDependent`, this option activates / deactivates scale dependency.
  * example:
  * ```
  * "layerOptions": {
  *  "legendOptions": {
- *   "WMSLegendOptions": "forceLabels:on"
+ *   "scaleDependent": true,
+ *   "WMSLegendOptions": "forceLabels:on",
+ *   "legendWidth": 12,
+ *   "legendHeight": 12
  *  }
  * }
  * ```
- * Another one legendOptions entry is `scaleDependent`, this option activates / deactivates scale dependency.
- * example:
- * ```
- * "layerOptions": {
- *  "legendOptions": {
- *   "scaleDependent": true
- *  }
- * }
- * ```
- * Another layerOptions entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
+ * @prop {object} cfg.layerOptions.indicators Another `layerOptions` entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
  * For the moment only indicators of type `dimension` are supported.
  * example :
  * ```
@@ -779,10 +797,9 @@ const checkPluginsEnhancer = branch(
  *   }]
  * }
  * ```
- *
- * Another layerOptions entry is `tooltipOptions` which contains options for customizing the tooltip
+ * @prop {object} cfg.layerOptions.tooltipOptions Another `layerOptions` entry is `tooltipOptions` which contains options for customizing the tooltip
  * You can customize the max length for the tooltip with `maxLength` (Default is 807)
- * You can change the conjuction string in the "both" case with `separator` (Default is " - ")
+ * You can change the conjunction string in the "both" case with `separator` (Default is " - ")
  * for example
  * ```
  * "layerOptions" : {

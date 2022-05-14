@@ -8,6 +8,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 
 import expect from 'expect';
 import Column from '../Column';
@@ -44,9 +45,10 @@ describe('Column component', () => {
     describe('Column contents has proper toolbars', () => {
         it('text', () => {
             const size = () => ({id: 'size'});
-            const overrideTools =  {
+            const overrideTools = (tools) => ({
+                ...tools,
                 [ContentTypes.TEXT]: [size(), 'remove']
-            };
+            });
             // text content should contain only size and delete button
             ReactDOM.render(<Column
                 mode={Modes.EDIT}
@@ -157,6 +159,22 @@ describe('Column component', () => {
                     'glyphicon glyphicon-map-edit', // map edit tool
                     'glyphicon glyphicon-resize-horizontal', // resize tool
                     'glyphicon glyphicon-caption', // show caption tool
+                    'glyphicon glyphicon-trash' // delete tool
+                ]);
+        });
+        it('Webpage', () => {
+            const store = { dispatch: () => {}, subscribe: () => {}, getState: () => ({}) };
+            ReactDOM.render(<Provider store={store}>
+                <Column mode={Modes.EDIT} contents={[{ type: ContentTypes.WEBPAGE, size: 'h-medium,v-small', url: 'https://domain.com' }]} /></Provider>, document.getElementById("container"));
+            let webpageToolbar = document.querySelector('.ms-content-toolbar .btn-group');
+            expect(webpageToolbar).toExist();
+            const buttons = webpageToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
+            expect(buttons.length).toBe(4);
+            expect([...webpageToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
+                .toEqual([
+                    'glyphicon glyphicon-resize-horizontal', // horizontal size tool
+                    'glyphicon glyphicon-pencil', // edit iframe url
+                    'glyphicon glyphicon-resize-vertical', // vertical size tool
                     'glyphicon glyphicon-trash' // delete tool
                 ]);
         });

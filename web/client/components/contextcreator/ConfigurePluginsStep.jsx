@@ -60,12 +60,12 @@ const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL
         active: plugin.name === editedPlugin,
         onClick: () => onEditPlugin(plugin.name === editedPlugin ? undefined : plugin.name)
     }, {
-        visible: !!documentationBaseURL,
+        visible: !!(plugin.docUrl || documentationBaseURL),
         glyph: 'question-sign',
         tooltipId: 'contextCreator.configurePlugins.tooltips.pluginDocumentation',
         Element: (props) =>
             <a target="_blank" rel="noopener noreferrer"
-                href={documentationBaseURL && documentationBaseURL + '#plugins.' + (plugin.docName || plugin.name)}>
+                href={plugin.docUrl || documentationBaseURL && documentationBaseURL + '#plugins.' + (plugin.docName || plugin.name)}>
                 <ToolbarButton {...props}/>
             </a>
     }, {
@@ -335,6 +335,7 @@ const configurePluginsStep = ({
     return (
         <div className="configure-plugins-step">
             <Transfer
+                localizeItems
                 leftColumn={{
                     items: availableItems,
                     title: 'contextCreator.configurePlugins.availablePlugins',

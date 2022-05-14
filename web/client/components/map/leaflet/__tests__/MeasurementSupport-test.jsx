@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const L = require('leaflet');
-const MeasurementSupport = require('../MeasurementSupport');
-const {getFormattedBearingValue} = require("../../../../utils/MeasureUtils");
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import L from 'leaflet';
+import MeasurementSupport from '../MeasurementSupport';
+import {getFormattedBearingValue} from "../../../../utils/MeasureUtils";
 let defaultPrecision = {
     km: 2,
     ha: 2,
@@ -341,7 +341,7 @@ describe('Leaflet MeasurementSupport', () => {
             }
         };
         let distanceStr = L.GeometryUtil.readableDistance(distance, isMetric, isFeet, isNauticalMile, precision, options);
-        expect(distanceStr).toBe("080° T");
+        expect(distanceStr).toBe("080°");
     });
     it('test L.GeometryUtil.readableDistance length with trehsold', () => {
         const distance = 1;
@@ -558,7 +558,7 @@ describe('Leaflet MeasurementSupport', () => {
         L.Draw.Polyline.prototype._markers = [L.marker([50.5, 30.5]), L.marker([52.5, 30.5])];
 
         let distanceStr = L.Draw.Polyline.prototype._getMeasurementString();
-        expect(distanceStr).toBe("084.8239° T");
+        expect(distanceStr).toBe("084.8239°");
 
     });
 

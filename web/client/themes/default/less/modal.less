@@ -1,4 +1,41 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+@import '~react-quill/dist/quill.snow.css';
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    // quill style
+    .ql-container.ql-snow,
+    .ql-toolbar.ql-snow {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .ql-snow .ql-stroke {
+        .stroke-var(@theme-vars[main-color]);
+    }
+    .ql-snow .ql-picker-options {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .ql-snow .ql-picker {
+        .color-var(@theme-vars[main-color]);
+    }
+    .ql-editor.ql-blank::before {
+        .color-var(@theme-vars[placeholder-color]);
+    }
+}
+
+// **************
+// Layout
+// **************
 #mapstore-layer-settings-metadata {
     position: fixed;
 }
@@ -100,18 +137,22 @@
         }
 
         & > .modal-header {
-            height: @square-btn-size;
-            padding: (@square-btn-size - @font-size-h4) / 2;
+            @media (min-width: @screen-xs-max) {
+                height: @square-btn-size;
+            }
+            padding: ((@square-btn-size - @font-size-h4) / 2);
             border: none;
             flex-shrink: 0;
             .modal-title {
                 display: flex;
                 .ms-title {
                     flex: 1;
-                    height: @font-size-h4;
-                    line-height: @font-size-h4;
                     text-overflow: ellipsis;
-                    white-space: nowrap;
+                    @media (min-width: @screen-xs-max) {
+                        white-space: nowrap;
+                        height: @font-size-h4;
+                        line-height: @font-size-h4;
+                    }
                 }
                 .ms-header-btn {
                     cursor: pointer;
@@ -193,7 +234,7 @@
                 min-height: @square-btn-size;
             }
             .btn-group {
-                margin: (@square-btn-size - 34) / 2;
+                margin: ((@square-btn-size - 34) / 2);
             }
         }
     }
@@ -275,7 +316,7 @@
             .shadow-soft;
             min-height: @square-btn-size;
             // 24px height of quill icons
-            padding: (@square-btn-size - 24px) / 2;
+            padding: ((@square-btn-size - 24px) / 2);
 
         }
         .ql-container {

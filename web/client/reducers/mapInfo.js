@@ -30,13 +30,17 @@ import {
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
-    SET_MAP_TRIGGER
+    SET_MAP_TRIGGER,
+    SET_SHOW_IN_MAP_POPUP,
+    INIT_PLUGIN
 } from '../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { RESET_CONTROLS } from '../actions/controls';
 import assign from 'object-assign';
 import { findIndex, isUndefined, isEmpty } from 'lodash';
+import { MAP_TYPE_CHANGED } from './../actions/maptype';
+
 import { getValidator } from '../utils/MapInfoUtils';
 
 /**
@@ -47,18 +51,18 @@ import { getValidator } from '../utils/MapInfoUtils';
  * @param {boolean} isVector type of the response received is vector or not
  */
 const isIndexValid = (state, responses, requestIndex, isVector) => {
-    const {configuration, requests, queryableLayers, index} = state;
+    const {configuration, requests, queryableLayers = [], index} = state;
     const {infoFormat} = configuration || {};
 
     // Index when first response received is valid
-    const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]], true);
-    const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses, true);
-    return ((isUndefined(index) && !!validResponse.length)
-        || (!isVector && requests.length === inValidResponse.filter(res=>res).length)
-        || (isUndefined(index) && isVector && requests.filter(r=>isEmpty(r)).length === queryableLayers.length) // Check if all requested layers are vector
-    );
+    const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]]);
+    const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses);
+    const cond1 = isUndefined(index) && !!validResponse.length;
+    const cond2 = !isVector && requests.length === inValidResponse.filter(res => res).length;
+    const cond3 = isUndefined(index) && isVector && requests.filter(r => isEmpty(r)).length === queryableLayers.length;
+    return (cond1 || cond2 || cond3);
+    // Check if all requested layers are vector
 };
-
 /**
  * Handles responses based on the type ["data"|"exceptions","error","vector"] of the responses received
  * @param {object} state current state of the reducer
@@ -82,7 +86,7 @@ function receiveResponse(state, action, type) {
         // Handle data and vector responses
         const {configuration: config, requests} = state;
         let responses = state.responses || [];
-        const isHover = (config?.trigger === "hover"); // Display info trigger
+        const isHover = (config?.trigger === "hover") || state?.showInMapPopup; // Display feature info in popup
 
         if (!isVector) {
             const updateResponse = {
@@ -105,8 +109,11 @@ function receiveResponse(state, action, type) {
             indexObj = {loaded: true, index: 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
             indexObj = {loaded: true, index: requestIndex};
+        } else if (responses.length === requests.length && !indexObj?.loaded) {
+            // if all responses are empty hence valid but with no valid index
+            // then set loaded to true
+            indexObj = {loaded: true};
         }
-
         // Set responses and index as first response is received
         return assign({}, state, {
             ...(isVector && {requests}),
@@ -136,6 +143,7 @@ const initState = {
  * }
  * ```
  * @prop {object} configuration contains the configuration for getFeatureInfo tool.
+ * @prop {boolean} showInMapPopup if true, the results are always shown in a popup (if configuration.hover = true, they are by default)
  * @prop {array} requests the requests performed. Here a sample:
  * ```javascript
  * {
@@ -322,7 +330,11 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             showMarker: false,
             responses: [],
-            requests: []
+            requests: [],
+            configuration: {
+                ...state.configuration,
+                trigger: "click"
+            }
         });
     }
     case GET_VECTOR_INFO: {
@@ -375,7 +387,8 @@ function mapInfo(state = initState, action) {
 
         );
         let responses = state.responses || [];
-        const isHover = state?.configuration?.trigger === 'hover' || false;
+        // Display feature info in popup
+        const isHover = state?.configuration?.trigger === 'hover' || state?.showInMapPopup;
         const vectorResponse = {
             response: {
                 crs: null,
@@ -447,6 +460,27 @@ function mapInfo(state = initState, action) {
                 trigger: action.trigger
             }
         };
+    }
+    case SET_SHOW_IN_MAP_POPUP: {
+        return {
+            ...state,
+            showInMapPopup: action.value // this is global, actually not saved in map configuration (configuration part)
+        };
+    }
+    case MAP_TYPE_CHANGED: {
+        if (action.mapType === "cesium") {
+            return {
+                ...state,
+                configuration: {
+                    ...state.configuration,
+                    trigger: "click"
+                }
+            };
+        }
+        return state;
+    }
+    case INIT_PLUGIN: {
+        return { ...state, ...action.cfg };
     }
     default:
         return state;

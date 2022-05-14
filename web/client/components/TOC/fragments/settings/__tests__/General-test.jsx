@@ -25,7 +25,7 @@ describe('test  Layer Properties General module component', () => {
         setTimeout(done);
     });
 
-    it('tests General component', () => {
+    it('tests General component show LayerNameEditField = FALSE', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -44,8 +44,28 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(16);
+        expect(inputs.length).toBe(17);
+    });
+    it('tests General component show LayerNameEditField = TRUE', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
 
+        // wrap in a stateful component, stateless components render return null
+        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
+        const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
+        expect(comp).toExist();
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        expect(inputs).toExist();
+        expect(inputs.length).toBe(18);
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
@@ -69,7 +89,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(16);
+        expect(inputs.length).toBe(18);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
         expect(spy.calls.length).toBe(1);
@@ -139,5 +159,61 @@ describe('test  Layer Properties General module component', () => {
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         expect(labels.length).toBe(5);
         expect(labels[4].innerText).toBe("layerProperties.group");
+    });
+    it('TEST layer group dropdown', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            group: 'first'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const groups = [{
+            "id": "first",
+            "title": "First",
+            "name": "first",
+            "nodes": [
+                {
+                    "id": "first.second",
+                    "title": "second",
+                    "name": "second",
+                    "nodes": [
+                        {
+                            "id": "first.second.third",
+                            "title": "third",
+                            "name": "third",
+                            "nodes": [
+                                {
+                                    "id": "topp:states__6",
+                                    "name": "topp:states",
+                                    "title": "USA Population"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }];
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} groups={groups} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
+        expect(labels.length).toBe(5);
+        expect(labels[4].innerText).toBe("layerProperties.group");
+        const cmp = document.getElementById('container');
+        let selectValue = cmp.querySelector('.Select-value-label');
+        let input = cmp.querySelector('.Select-input > input');
+        expect(selectValue.innerText).toBe("First");
+
+        ReactTestUtils.act(() => {
+            ReactTestUtils.Simulate.focus(input);
+            ReactTestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
+        });
+        const selectMenuOptionNodes = cmp.querySelectorAll('.Select-option');
+        expect(selectMenuOptionNodes.length).toBe(4);
     });
 });

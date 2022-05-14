@@ -29,7 +29,7 @@ export default compose(
     // so inside the content you can simply call update('html', value) or add update('contents[{id: "some-sub-content-id"}])
     // Add the intersection-observer only to immersive section columns
     branch(
-        ({type, sectionType}) => sectionType === SectionTypes.IMMERSIVE && type === ContentTypes.COLUMN,
+        ({type, sectionType}) => [SectionTypes.IMMERSIVE, SectionTypes.CAROUSEL].includes(sectionType) && type === ContentTypes.COLUMN,
         visibilityHandler({ threshold: DEFAULT_THRESHOLD})
     ),
     wrap(ContentWrapper),

@@ -1,3 +1,37 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .maps-search .input-group-addon {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-top-color-var(@theme-vars[main-border-color]);
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+    }
+
+    .search-result-list {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .search-result-list .search-result {
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+    }
+
+    .search-result-list .search-result:hover {
+        .background-color-var(@theme-vars[main-hover-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .MapSearchBar {
     left: 65px;
     position: absolute;
@@ -11,7 +45,7 @@
 }
 .MapSearchBar .input-group,
 .MapSearchBar .advanced-search-panel {
-    box-shadow: 2px 2px 4px #A7A7A7;
+    .shadow();
     border-radius: 4px;
 }
 
@@ -21,14 +55,6 @@
     display: none;
 }
 
-/*.searchclear {
-    top:0;
-    bottom:0;
-    height:14px;
-    margin:auto;
-    font-size:14px;
-    cursor:pointer;
-}*/
 .search-result-list{
     position: absolute;
     top: 50px;
@@ -54,7 +80,6 @@
     height: 100%;
     margin-right: 5px;
     display: block;
-    vertical-align: middle;
     float: left;
 }
 .search-result-list .search-result .search-result-left-container {
@@ -73,77 +98,20 @@
 #mapstore-navbar .MapSearchBar {
     top: 0;
     left: -500px;
-}
-
-#mapstore-navbar .search-result-list{
-    top: 35px;
-    left: -500px;
+    right: 0;
 }
 
 .search-toggle {
     display: none;
 }
 
-@media (max-width: 768px ) {
-    #mapstore-navbar .search-toggle {
-        display: inline-block;
-    }
-    #mapstore-navbar .MapSearchBar {
-        width: 400px;
-        top: 50px;
-        left: auto;
-    }
-
-    #mapstore-navbar .search-result-list{
-        top: 85px;
-        left: auto;
-        width: 400px;
-    }
-}
-
-/* Small devices (tablets, 768px and up) */
-@media (min-width: 768px ) {
-    .MapSearchBar {
-        width: 500px;
-        right: auto;
-    }
-    .search-result-list{
-        width: 500px;
-        right: auto;
-    }
-}
-
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: 992px) {
-    .MapSearchBar {
-        width: 500px;
-        right: auto;
-    }
-    .search-result-list{
-        width: 500px;
-        right: auto;
-    }
-}
-
-/* Large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {
-    .MapSearchBar {
-        width: 500px;
-        position:absolute;
-    }
-    .search-result-list{
-        width: 500px;
-        right: auto;
-    }
-}
-
 /* Maps Search */
 .maps-search.MapSearchBar{
     width: 90%;
-    left: 0px;
+    left: 0;
     position: relative;
-    right: 0px;
-    top: 0px;
+    right: 0;
+    top: 0;
     margin-left: auto;
     margin-right: auto;
 }
@@ -164,10 +132,10 @@
 /* User Search */
 .user-search.MapSearchBar{
     width: 90%;
-    left: 0px;
+    left: 0;
     position: relative;
-    right: 0px;
-    top: 0px;
+    right: 0;
+    top: 0;
     margin-left: auto;
     margin-right: auto;
 }

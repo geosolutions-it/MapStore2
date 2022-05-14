@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import { isNil, has, omit } from 'lodash';
+import { isNil } from 'lodash';
 
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
@@ -30,6 +30,8 @@ import { getMessageById } from '../../utils/LocaleUtils';
 import Message from '../I18N/Message';
 import RecordGrid from './RecordGrid';
 import Loader from '../misc/Loader';
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../../api/WMS';
+import { buildServiceUrl } from "../../utils/CatalogUtils";
 
 class Catalog extends React.Component {
     static propTypes = {
@@ -78,7 +80,9 @@ class Catalog extends React.Component {
         layers: PropTypes.array,
         clearModal: PropTypes.func,
         formatOptions: PropTypes.array,
-        layerBaseConfig: PropTypes.object
+        infoFormatOptions: PropTypes.array,
+        layerBaseConfig: PropTypes.object,
+        service: PropTypes.object
     };
 
     static contextTypes = {
@@ -112,24 +116,10 @@ class Catalog extends React.Component {
         services: {},
         wrapOptions: false,
         zoomToLayer: true,
-        formatOptions: [{
-            label: 'image/png',
-            value: 'image/png'
-        }, {
-            label: 'image/png8',
-            value: 'image/png8'
-        }, {
-            label: 'image/jpeg',
-            value: 'image/jpeg'
-        }, {
-            label: 'image/vnd.jpeg-png',
-            value: 'image/vnd.jpeg-png'
-        }, {
-            label: 'image/gif',
-            value: 'image/gif'
-        }],
+        formatOptions: DEFAULT_FORMAT_WMS,
         layerBaseConfig: {},
-        crs: "EPSG:3857"
+        crs: "EPSG:3857",
+        service: {}
     };
 
     state = {
@@ -172,13 +162,15 @@ class Catalog extends React.Component {
         }
     };
     getServices = () => {
-        const startKeys = has(this.props.services, 'default_map_backgrounds') ? ['default_map_backgrounds'] : [];
-        return startKeys.concat(Object.keys(omit(this.props.services, 'default_map_backgrounds'))).map(s => {
-            return assign({}, this.props.services[s], {
-                label: getMessageById(this.context.messages, this.props.services[s].title), value: s
+        return Object.keys(this.props.services).map(s => {
+            const service = this.props.services[s];
+            return assign({}, {
+                label: service.titleMsgId ? getMessageById(this.context.messages, service.titleMsgId) : service.title,
+                value: s
             });
         });
     };
+
     renderResult = () => {
         if (this.props.result) {
             if (this.props.result.numberOfRecordsMatched === 0) {
@@ -279,7 +271,8 @@ class Catalog extends React.Component {
                 hideExpand={this.props.hideExpand}
                 onAddBackground={this.props.onAddBackground}
                 defaultFormat={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].format}
-                formatOptions={this.props.formatOptions}
+                formatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.formatOptions : DEFAULT_FORMAT_WMS}
+                infoFormatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.infoFormatOptions : getUniqueInfoFormats()}
                 layerBaseConfig={this.props.layerBaseConfig}
                 onAdd={() => {
                     this.search({ services: this.props.services, selectedService: this.props.selectedService });
@@ -340,7 +333,7 @@ class Catalog extends React.Component {
                                 value={this.props.selectedService}
                                 onChange={(val) => this.props.onChangeSelectedService(val && val.value ? val.value : "")}
                                 placeholder={getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
-                            {this.isValidServiceSelected() && this.props.selectedService !== 'default_map_backgrounds' ? (<InputGroup.Addon className="btn"
+                            {this.isValidServiceSelected() && !this.props.services[this.props.selectedService].readOnly ? (<InputGroup.Addon className="btn"
                                 onClick={() => this.props.onChangeCatalogMode("edit", false)}>
                                 <Glyphicon glyph="pencil" />
                             </InputGroup.Addon>) : null}
@@ -369,7 +362,7 @@ class Catalog extends React.Component {
 
     };
     search = ({ services, selectedService, start = 1, searchText = "" } = {}) => {
-        const url = services[selectedService].url;
+        const url = buildServiceUrl(services[selectedService]);
         const type = services[selectedService].type;
         this.props.onSearch({ format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || "", options: { service: this.props.services[selectedService] } });
     };

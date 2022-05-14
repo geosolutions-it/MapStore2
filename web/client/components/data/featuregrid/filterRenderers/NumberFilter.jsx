@@ -8,9 +8,10 @@
 
 import AttributeFilter from './AttributeFilter';
 
-import { trim } from 'lodash';
+import { trim, identity } from 'lodash';
 import { compose, withHandlers, withState, defaultProps } from 'recompose';
-const EXPRESSION_REGEX = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?\s*(-?\d*\.?\d*)\s*/;
+const COMMA_REGEX = /\,/;
+import { getOperatorAndValue } from '../../../../utils/FeatureGridUtils';
 
 export default compose(
     defaultProps({
@@ -20,34 +21,39 @@ export default compose(
     withHandlers({
         onChange: props => ({value, attribute} = {}) => {
             props.onValueChange(value);
-            let operator = "=";
-            let newVal;
-            const match = EXPRESSION_REGEX.exec(value);
-            if (match) {
-                operator = match[1] || "=";
-                // replace with standard opeartors
-                if (operator === "!==" | operator === "!=") {
-                    operator = "<>";
-                } else if (operator === "===" | operator === "==") {
-                    operator = "=";
+            if (!COMMA_REGEX.exec(value)) {
+                let {operator, newVal} = getOperatorAndValue(value, "number");
+                if (isNaN(newVal) && trim(value) !== "") {
+                    props.setValid(false);
+                } else {
+                    props.setValid(true);
                 }
-                newVal = parseFloat(match[2]);
+                props.onChange({
+                    value: isNaN(newVal) ? undefined : newVal,
+                    rawValue: value,
+                    operator,
+                    type: 'number',
+                    attribute
+                });
             } else {
-                newVal = parseFloat(value, 10);
+                if (/,\s*$/.exec(value)) { // Expression ending with comma
+                    props.setValid(false);
+                } else {
+                    const multipleValues = value?.split(",").filter(identity) || [];
+                    const isValid = multipleValues.reduce((valid, v) => {
+                        let {newVal} = getOperatorAndValue(v);
+                        return valid && !(isNaN(newVal) && trim(v) !== "");
+                    }, true);
+                    props.setValid(isValid);
+                    isValid && props.onChange({
+                        value,
+                        rawValue: value,
+                        operator: "=",
+                        type: 'number',
+                        attribute
+                    });
+                }
             }
-
-            if (isNaN(newVal) && trim(value) !== "") {
-                props.setValid(false);
-            } else {
-                props.setValid(true);
-            }
-            props.onChange({
-                value: isNaN(newVal) ? undefined : newVal,
-                rawValue: value,
-                operator,
-                type: 'number',
-                attribute
-            });
         }
     }),
     defaultProps({

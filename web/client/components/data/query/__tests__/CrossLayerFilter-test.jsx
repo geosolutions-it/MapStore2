@@ -116,4 +116,42 @@ describe('CrossLayerFilter component', () => {
         expect(expected).toEqual('false');
     });
 
+    it('Test CrossLayerFilter show tooltip for non matching layer source', () => {
+        const container = document.getElementById('container');
+        ReactDOM.render(<CrossLayerFilter
+            layers={[{name: "test", url: "https://google.com"}, {name: 'test2', url: 'https://example.com'}]}
+            queryCollection={{
+                typeName: "test",
+                geometryName: "geometry"
+            }}
+            searchUrl="https://google.com"
+            operation="WITHIN"
+            spatialOperations={[{
+                id: "WITHIN",
+                name: "Within"
+            }]}
+        />, document.getElementById("container"));
+        const infoIcon = container.querySelector('.mapstore-info-popover');
+        expect(infoIcon).toExist();
+    });
+
+    it('Test CrossLayerFilter not show tooltip for matching layer source', () => {
+        const container = document.getElementById('container');
+        ReactDOM.render(<CrossLayerFilter
+            layers={[{name: "test", url: "https://google.com"}, {name: 'test2', url: 'https://google.com'}]}
+            queryCollection={{
+                typeName: "test",
+                geometryName: "geometry"
+            }}
+            searchUrl="https://google.com"
+            operation="WITHIN"
+            spatialOperations={[{
+                id: "WITHIN",
+                name: "Within"
+            }]}
+        />, document.getElementById("container"));
+        const infoIcon = container.querySelector('.mapstore-info-popover');
+        expect(infoIcon).toNotExist();
+    });
+
 });

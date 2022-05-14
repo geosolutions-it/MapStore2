@@ -54,7 +54,7 @@ export default compose(
             if (!mapSync) {
                 return {
                     filter: !isEmpty(newFilterObj) || layerFilter ? filter(and(
-                        ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(layerFilter && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
                         ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
                     )) : undefined
                 };
@@ -81,7 +81,7 @@ export default compose(
                 return {
                     filter: filter(and(
                         ...cqlFilterRules,
-                        ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(layerFilter  && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
                         ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
                         property(geomProp).intersects(geom)))
                 };

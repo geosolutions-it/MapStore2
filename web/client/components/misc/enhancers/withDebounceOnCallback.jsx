@@ -22,7 +22,7 @@ import debounce from 'lodash/debounce';
  *
  * function MyComponent({ text, onUpdate }) {
  *  return (
- *   <InputControl
+ *   <InputControlWithDebounce
  *    value={text}
  *    debounceTime={200} // default debounce time can be override with the debounceTime prop (unit of measure ms)
  *    onChange={onUpdate}

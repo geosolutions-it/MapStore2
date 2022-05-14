@@ -1,4 +1,4 @@
-const {isArray} = require('lodash');
+const isArray = require('lodash/isArray');
 const isGML2 = (version) => version.indexOf("2.") === 0;
 const closePolygon = (coords) => {
     if (coords.length >= 3) {
@@ -41,7 +41,7 @@ const polygonElement = (coordinates, srsName, version) => {
             return coordinate[0] + (gml2 ? "," : " ") + coordinate[1];
         });
         const exterior = (gml2 ? "outerBoundaryIs" : "exterior");
-        const interior = (gml2 ? "innerBoundaryIs" : "exterior");
+        const interior = (gml2 ? "innerBoundaryIs" : "interior");
         gmlPolygon +=
             (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
                     '<gml:LinearRing>' +

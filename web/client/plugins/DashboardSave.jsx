@@ -109,6 +109,7 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
         BurgerMenu: {
             name: 'dashboardSaveAs',
             position: 31,
+            tooltip: "saveAs",
             text: <Message msgId="saveAs"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: triggerSaveAs.bind(null, true),

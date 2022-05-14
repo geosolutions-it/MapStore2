@@ -10,6 +10,8 @@ import React from 'react';
 import Layers from '../../../utils/cesium/Layers';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
+import { round, isNil } from 'lodash';
+import { getResolutions } from '../../../utils/MapUtils';
 
 class CesiumLayer extends React.Component {
     static propTypes = {
@@ -18,20 +20,21 @@ class CesiumLayer extends React.Component {
         options: PropTypes.object,
         onCreationError: PropTypes.func,
         position: PropTypes.number,
-        securityToken: PropTypes.string
+        securityToken: PropTypes.string,
+        zoom: PropTypes.number
     };
 
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map, this.props.securityToken);
-        if (this.props.options && this.layer && this.props.options.visibility !== false) {
+        if (this.props.options && this.layer && this.getVisibilityOption(this.props)) {
             this.addLayer(this.props);
             this.updateZIndex();
         }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        const newVisibility = newProps.options && newProps.options.visibility !== false;
-        this.setLayerVisibility(newVisibility, newProps);
+
+        this.setLayerVisibility(newProps);
 
         const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
@@ -65,7 +68,9 @@ class CesiumLayer extends React.Component {
 
     componentWillUnmount() {
         if (this.layer && this.props.map && !this.props.map.isDestroyed()) {
-            if (this.layer.detached) {
+            // detached layers are layers that do not work through a provider
+            // for this reason they cannot be added or removed from the map imageryProviders
+            if (this.layer.detached && this.layer?.remove) {
                 this.layer.remove();
             } else {
                 if (this.layer.destroy) {
@@ -98,34 +103,69 @@ class CesiumLayer extends React.Component {
 
     updateZIndex = (position) => {
         const layerPos = position || this.props.position;
-        const actualPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
-            return this.provider === current ? index : previous;
-        }, -1);
-        let newPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
-            return previous === -1 && layerPos < current._position ? index : previous;
-        }, -1);
-        if (newPos === -1) {
-            newPos = actualPos;
-        }
-        const diff = newPos - actualPos;
-        if (diff !== 0) {
-            Array.apply(null, {length: Math.abs(diff)}).map(Number.call, Number)
-                .forEach(() => {
-                    this.props.map.imageryLayers[diff > 0 ? 'raise' : 'lower'](this.provider);
-                });
+        // in some cases the position index inside layer state
+        // does not match the one inside imagery layers of Cesium
+        // because a 3D environment could contain others entities that does not follow the imagery z index
+        // (eg: terrain or meshes)
+        if (this.provider) {
+            // take the current index of the image layer
+            const previousIndex = this.props.map.imageryLayers._layers.indexOf(this.provider);
+            // sort list of imagery layers by new positions
+            const nextImageryLayersOrder = [...this.props.map.imageryLayers._layers].sort((a, b) => {
+                const aPosition = a === this.provider ? layerPos : a._position;
+                const bPosition = b === this.provider ? layerPos : b._position;
+                return aPosition - bPosition;
+            });
+            // take the next index of the image layer
+            const nextIndex = nextImageryLayersOrder.indexOf(this.provider);
+            const diff = nextIndex - previousIndex;
+            if (diff !== 0) {
+                [...new Array(Math.abs(diff)).keys()]
+                    .forEach(() => {
+                        this.props.map.imageryLayers[diff > 0 ? 'raise' : 'lower'](this.provider);
+                    });
+            }
         }
     };
 
-    setLayerVisibility = (visibility, newProps) => {
-        var oldVisibility = this.props.options && this.props.options.visibility !== false;
-        if (visibility !== oldVisibility) {
-            if (visibility) {
-                this.addLayer(newProps);
-                this.updateZIndex();
+    setLayerVisibility = (newProps) => {
+        const oldVisibility = this.getVisibilityOption(this.props);
+        const newVisibility = this.getVisibilityOption(newProps);
+        if (newVisibility !== oldVisibility) {
+            if (this.layer?.detached && this.layer?.setVisible) {
+                this.layer.setVisible(newVisibility);
             } else {
-                this.removeLayer();
+                if (newVisibility) {
+                    this.addLayer(newProps);
+                    this.updateZIndex();
+                } else {
+                    this.removeLayer();
+                }
             }
         }
+    };
+
+    getVisibilityOption = (props) => {
+        // use the global resolutions as fallback
+        // cesium does not provide resolutions
+        const { options = {}, zoom, resolutions = getResolutions() } = props;
+        const intZoom = round(zoom);
+        const {
+            visibility,
+            minResolution = -Infinity,
+            maxResolution = Infinity,
+            disableResolutionLimits
+        } = options || {};
+        if (!disableResolutionLimits && !isNil(resolutions[intZoom])) {
+            const resolution = resolutions[intZoom];
+            // use similar approach of ol
+            // maxResolution is exclusive
+            // minResolution is inclusive
+            if (!(resolution < maxResolution && resolution >= minResolution)) {
+                return false;
+            }
+        }
+        return visibility !== false;
     };
 
     setLayerOpacity = (opacity) => {
@@ -156,7 +196,9 @@ class CesiumLayer extends React.Component {
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;
-            this.addLayer(newProps);
+            if (newProps.options.visibility) {
+                this.addLayer(newProps);
+            }
         }
     };
 
@@ -173,6 +215,8 @@ class CesiumLayer extends React.Component {
     };
 
     addLayer = (newProps) => {
+        // detached layers are layers that do not work through a provider
+        // for this reason they cannot be added or removed from the map imageryProviders
         if (this.layer && !this.layer.detached) {
             this.addLayerInternal(newProps);
             if (this.props.options.refresh && this.layer.updateParams) {
@@ -191,6 +235,11 @@ class CesiumLayer extends React.Component {
         const toRemove = provider || this.provider;
         if (toRemove) {
             this.props.map.imageryLayers.remove(toRemove);
+        }
+        // detached layers are layers that do not work through a provider
+        // for this reason they cannot be added or removed from the map imageryProviders
+        if (this.layer?.detached && this.layer?.remove) {
+            this.layer.remove();
         }
     };
 }

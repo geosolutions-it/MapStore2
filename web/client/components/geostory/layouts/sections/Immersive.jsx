@@ -150,7 +150,14 @@ const Immersive = ({
                 glyph: 'story-immersive-content',
                 tooltipId: 'geostory.addImmersiveContent',
                 onClick: () => {
-                    add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN); // position undefined means append
+                    add(`sections[{"id": "${id}"}].contents`, undefined, ContentTypes.COLUMN, "geostory.builder.defaults.titleImmersiveContent"); // position undefined means append
+                }
+            },
+            {
+                glyph: 'story-carousel-section',
+                tooltipId: 'geostory.addGeocarouselSection',
+                onClick: () => {
+                    add(`sections`, id, SectionTypes.CAROUSEL);
                 }
             },
             {
@@ -169,6 +176,7 @@ const Immersive = ({
             }]}/>}
     </section>);
 };
+
 
 export default compose(
     immersiveBackgroundManager,

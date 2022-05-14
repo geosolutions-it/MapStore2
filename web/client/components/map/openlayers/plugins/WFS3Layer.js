@@ -106,7 +106,9 @@ const createLayer = (options) => {
         msId: options.id,
         source: source,
         visible: options.visibility !== false,
-        zIndex: options.zIndex
+        zIndex: options.zIndex,
+        minResolution: options.minResolution,
+        maxResolution: options.maxResolution
     });
 
     applyStyle(options.vectorStyle, layer);
@@ -119,6 +121,12 @@ Layers.registerType('wfs3', {
         if (oldOptions.securityToken !== newOptions.securityToken
         || oldOptions.srs !== newOptions.srs) {
             return createLayer(newOptions);
+        }
+        if (oldOptions.minResolution !== newOptions.minResolution) {
+            layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+        }
+        if (oldOptions.maxResolution !== newOptions.maxResolution) {
+            layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
         return null;
     },

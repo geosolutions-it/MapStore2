@@ -17,6 +17,32 @@ import isObject from "lodash/isObject";
 import isString from "lodash/isString";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
+const BUTTON_BSSTYLE = { primary: 'btn-primary', "default": 'btn-default'};
+
+const getToolbarSizeProps = (size, sizeType) => {
+    const HORIZONTAL = 'horizontal';
+    const VERTICAL = 'vertical';
+    let pre = '';
+    let [hSize, vSize] = size && size.split(',') || [];
+    let _size = size;
+    let glyph = 'resize-horizontal';
+    if (sizeType === HORIZONTAL) {
+        pre = 'h-';
+        _size = hSize;
+    } else if (sizeType === 'vertical') {
+        pre = 'v-';
+        _size = vSize;
+        glyph = 'resize-vertical';
+    }
+    return {
+        sizeProp: (selected) => (
+            sizeType
+                ? `${sizeType === HORIZONTAL ? selected : hSize},${sizeType === VERTICAL ? selected : vSize}`
+                : selected
+        ),
+        pre, _size, glyph
+    };
+};
 
 /**
  * these components have been created because it was causing an excessive re-rendering
@@ -29,33 +55,36 @@ const BUTTON_CLASSES = 'square-button-md no-border';
  * @prop {function} filterOptions filter dropdown options by value (eg `({ value }) => value !== 'full'` to exclude `full` option)
  * @prop {function} pullRight pull dropdown right
  */
-export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {}, filterOptions, pullRight }) =>
-    (<ToolbarDropdownButton
-        value={size}
+export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {}, filterOptions, pullRight, sizeType}) => {
+    const {pre, _size, glyph, sizeProp} = getToolbarSizeProps(size, sizeType);
+    return (<ToolbarDropdownButton
+        value={_size}
         noTooltipWhenDisabled
         disabled={disabled}
-        glyph="resize-horizontal"
-        pullRight={pullRight || (align === "right" || size === "full" || size === "large") && !sectionType}
+        glyph={glyph}
+        pullRight={pullRight || (align === "right" || _size === `${pre}full` || _size === `${pre}large`) && !sectionType}
         tooltipId="geostory.contentToolbar.contentSize"
         options={[{
-            value: 'small',
+            value: `${pre}small`,
             glyph: 'size-small',
             label: <Message msgId="geostory.contentToolbar.smallSizeLabel"/>
         }, {
-            value: 'medium',
+            value: `${pre}medium`,
             glyph: 'size-medium',
             label: <Message msgId="geostory.contentToolbar.mediumSizeLabel"/>
         }, {
-            value: 'large',
+            value: `${pre}large`,
             glyph: 'size-large',
             label: <Message msgId="geostory.contentToolbar.largeSizeLabel"/>
         }, {
-            value: 'full',
+            value: `${pre}full`,
             glyph: 'size-extra-large',
             label: <Message msgId="geostory.contentToolbar.fullSizeLabel"/>
         }].filter((option) => !filterOptions || filterOptions(option))}
-        onSelect={(selected) => update('size', selected)}/>
-    );
+        onSelect={(selected) => update('size', sizeProp(selected))}
+        {...sizeType && {showSelectionInTitle: false}}
+    />);
+};
 
 export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {} }) =>
     (<ToolbarDropdownButton
@@ -127,13 +156,13 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
     );
 
 
-export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = () => { } }) =>
+export const DeleteButtonToolbar = ({ editMap: disabled = false, forceDelBtnDisable = false, path, remove = () => { }, bsStyle }) =>
     (<DeleteButton
         glyph={"trash"}
         visible
         noTooltipWhenDisabled
-        disabled={disabled}
-        className={BUTTON_CLASSES}
+        disabled={disabled || forceDelBtnDisable}
+        className={`${BUTTON_CLASSES} ${bsStyle && BUTTON_BSSTYLE[bsStyle]}`}
         tooltipId={"geostory.contentToolbar.remove"}
         confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
         confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}

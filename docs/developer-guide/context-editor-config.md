@@ -1,6 +1,6 @@
 # Configuration of Application Context Manager
 
-The Application Context Manager can be configured editing the `pluginsConfig.json` file.
+The Application Context Manager can be configured editing the `configs/pluginsConfig.json` file.
 
 The configuration file has this shape:
 
@@ -28,7 +28,8 @@ The configuration file has this shape:
         "name": "TOCItemSettings",
         "...": "..."
     }, {
-        "name": "MyPlugin" // <-- this is typically an extension
+        "name": "MyPlugin", // <-- this is typically an extension,
+        "docUrl": "https://domain.com/documentation"  // <-- custom documentation url
     }, {
        "name": "Footer",
        "children": ["MousePosition", "CRSSelector",  "ScaleBox"]
@@ -53,6 +54,7 @@ These are the properties allowed for the plugin entry object:
 * `name`: `{string}` the name (ID) of the plugin
 * `title`: `{string}` the title string OR messageId (from localization file)
 * `description`: `{string}`: the description string OR messageId (from localization file)
+* `docUrl`: `{string}`: the plugin/extension specific documentation url
 * `symbol`: {string}`: icon (or image) symbol for the plugin
 * `defaultConfig` `{object}`: optional object containing the default configuration to pass to the context-creator.
 * `mandatory` `{boolean}`: if true, the plugin must be added to the map, so not possible to remove (but can be customized)

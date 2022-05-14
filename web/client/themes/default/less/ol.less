@@ -1,64 +1,158 @@
-/* OpenLayers minimap style */
-.ol-custom-overviewmap button {
-	background-color: @ms2-color-primary !important;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ol-viewport {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    /* OpenLayers minimap style */
+    .ol-custom-overviewmap button {
+        .background-color-var(@theme-vars[primary]);
+    }
+
+    .ol-custom-overviewmap .ol-control button:focus,
+    .ol-custom-overviewmap button:hover {
+        .background-color-var(@theme-vars[primary]);
+    }
+
+    .ol-custom-overviewmap:not(.ol-collapsed) {
+        .background-color-var(@theme-vars[primary]);
+    }
+
+    .ol-attribution.ol-uncollapsible {
+        .color-var(@theme-vars[main-color]);
+    }
+
+    div.ol-scale-line.ol-unselectable {
+        .border-color-var(@theme-vars[main-color]);
+        border-top: none;
+    }
+
+    .ol-attribution ul {
+        .color-var(@theme-vars[main-color]);
+    }
+
+    div.ol-scale-line-inner {
+        .color-var(@theme-vars[main-color]);
+    }
+
+    .ol-scale-line {
+        background-color: transparent;
+        .color-var(@theme-vars[main-color]);
+    }
+
+    .ol-viewport {
+        .segment-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+
+        .segment-overlay-static {
+            background-color: transparent;
+            color: black;
+            text-shadow: -1px 0 #ffa332, 0 1px #ffa332, 1px 0 #ffa332, 0 -1px #ffa332;
+        }
+
+        .tooltip {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+
+        .tooltip-static {
+            background-color: #ffcc33;
+            color: black;
+            border: 1px solid white;
+        }
+
+        .tooltip-measure:before,
+        .tooltip-static:before {
+            border-top: 6px solid rgba(0, 0, 0, 0.5);
+            border-right: 6px solid transparent;
+            border-left: 6px solid transparent;
+        }
+
+        .tooltip-static:before {
+            border-top-color: #ffcc33;
+        }
+    }
+
+    .ol-rotate {
+        .ol-rotate-reset {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+
+        .ol-rotate-reset:hover,
+        .ol-rotate-reset:focus {
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+    }
 }
 
-.ol-custom-overviewmap .ol-control button:focus,
-.ol-custom-overviewmap button:hover {
-	background-color: @ms2-color-primary !important;
-}
+// **************
+// Layout
+// **************
+/* OpenLayers minimap style */
 
 .ol-custom-overviewmap:not(.ol-collapsed) {
-	background: @ms2-color-primary !important;
-	border-radius: 3px !important;
+    border-radius: 3px !important;
 }
 
 .ol-custom-overviewmap .ol-overviewmap-map {
-	height: 133px !important;
+    height: 133px !important;
 }
 
 .ol-custom-overviewmap {
-	margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 .ol-attribution.ol-uncollapsible {
-    color: @ms2-color-text;
     li {
         font-size: 11px;
     }
 }
 
 div.ol-scale-line.ol-unselectable {
-	border: 2px solid @ms2-color-text;
-	border-top: none;
-	line-height: 1.0;
-	border-radius: 0;
-	right: 10px;
-	padding: 2px 5px 1px;
-	white-space: nowrap;
-	overflow: hidden;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
-	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-	top: 10px;
-	position: relative;
+    border-width: 2px;
+    border-style: solid;
+    border-top: none;
+    line-height: 1.0;
+    border-radius: 0;
+    right: 10px;
+    padding: 2px 5px 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    top: 10px;
+    position: relative;
 }
 
 .ol-attribution ul {
-    color: @ms2-color-text;
     text-shadow: none;
 }
 
 div.ol-scale-line-inner {
-	border: 0;
-	border-top: 0;
-	color: @ms2-color-text;
-	font-size: 11px;
-	text-align: center;
-	margin: 0;
+    border: 0;
+    border-top: 0;
+    font-size: 11px;
+    text-align: center;
+    margin: 0;
 }
 
-.ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
+.ol-custom-overviewmap,
+.ol-custom-overviewmap.ol-uncollapsible {
     bottom: 55px !important;
     left: auto !important;
     right: 57px !important;
@@ -72,8 +166,7 @@ div.ol-scale-line-inner {
 }
 
 .ol-scale-line {
-	background-color: transparent !important;
-	color: @ms2-color-text !important;
+    background-color: transparent !important;
 }
 
 .ol-viewport {
@@ -110,15 +203,18 @@ div.ol-scale-line-inner {
         opacity: 0.7;
         white-space: nowrap;
     }
+
     .tooltip-measure {
         opacity: 1;
         font-weight: bold;
     }
+
     .tooltip-static {
         background-color: #ffcc33;
         color: black;
         border: 1px solid white;
     }
+
     .tooltip-measure:before,
     .tooltip-static:before {
         border-top: 6px solid rgba(0, 0, 0, 0.5);
@@ -130,6 +226,7 @@ div.ol-scale-line-inner {
         margin-left: -7px;
         left: 50%;
     }
+
     .tooltip-static:before {
         border-top-color: #ffcc33;
     }
@@ -140,21 +237,18 @@ div.ol-scale-line-inner {
     height: @square-btn-size;
     background: none;
     margin-right: 7px;
+
     .ol-rotate-reset {
         box-shadow: -1px 1px 5px 1px #5e5e5e;
         height: @square-btn-size;
         width: @square-btn-size;
-        color: @ms2-color-text-primary;
-        background-color: @ms2-color-primary;
-        border-color: @btn-primary-border;
+
         .ol-compass {
             font-size: 36px;
         }
     }
-    .ol-rotate-reset:hover, .ol-rotate-reset:focus {
-        background-color: darken(@ms2-color-primary, 5%);
-    }
 }
+
 .ol-rotate:hover {
     background: none;
 }

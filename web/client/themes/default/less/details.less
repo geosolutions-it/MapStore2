@@ -1,20 +1,91 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .details-panel .panel-heading {
+        .color-var(@theme-vars[primary-contrast]);
+        .background-color-var(@theme-vars[primary]);
+    }
+
+
+    .details-panel div div div.ms2-border-layout-body {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
 .details-close {
     float: right
-}
-
-.details-panel .panel-heading {
-    background-color: @ms2-color-primary;
-    color: @ms2-color-text-primary;
-}
-
-.details-panel div div div.ms2-border-layout-body {
-    background-color: @ms2-color-background;
 }
 
 .details-panel .panel-body {
     height: ~'calc(100% - 31px)'
 }
+.ms-details-text {
+    word-break: break-word;
+}
 
-.details-viewer-modal {
-    padding: 8px !important;
+.details-viewer-modal, .ms-details-preview {
+    .ms-details-text
+
+}
+
+// Workaround: This emulates the br tags inside p or h tags in the editor, when pressing enter,
+// that are not included in the output of draftToHtml(DraftJS converter)
+// see https://github.com/geosolutions-it/MapStore2/issues/6728
+.ms-details-preview {
+    p{
+        margin: 1rem;
+    }
+    img, h1, h2, h3, h4, h5, h6, blockquote {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    p, h1, h2, h3, h4, h5, h6, blockquote{
+        &:empty::after {
+            content: "\a";
+            white-space: pre;
+        }
+    }
+}
+
+// Make wysiwyg editor of map details use same margin rule for floating images
+// so that user actually see that margin between floating image and text.
+.ms-details-draftjs-editor {
+    .ms-text-editor-main {
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        .rdw-image-alignment {
+            &.rdw-image-left {
+                margin-right: 1rem;
+            }
+            &.rdw-image-right {
+                margin-left: 1rem;
+            }
+        }
+    }
+}
+
+/////////////////////
+// LIBRARIES FIX
+/////////////////////
+// issue in react-draft-wysiwyg align not working on multi line paragraph TODO: unify with GeoStory's fix in a separated less file for editor
+.ms-details-draftjs-editor {
+        .ms-text-editor-main {
+            .ms-details-text
+        }
+        .public-DraftStyleDefault-ltr {
+        text-align: inherit;
+    }
 }

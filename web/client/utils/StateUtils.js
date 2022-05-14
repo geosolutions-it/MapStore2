@@ -164,9 +164,9 @@ export const createStore = ({
     const epic = rootEpic || combineEpics(...wrapEpics(epics));
     const allMiddlewares = epic ? [persistMiddleware(createEpicMiddleware(epic)), ...middlewares] : middlewares;
     const middleware = applyMiddleware.apply(null, getMiddlewares(allMiddlewares, debug));
-    const finalCreateStore = (window.devToolsExtension && debug ? compose(
+    const finalCreateStore = (window.__REDUX_DEVTOOLS_EXTENSION__ && debug ? compose(
         middleware,
-        window.devToolsExtension()
+        window.__REDUX_DEVTOOLS_EXTENSION__()
     ) : middleware)(createReduxStore);
     return setStore(finalCreateStore(reducer, state, enhancer));
 };
@@ -204,7 +204,7 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
  */
 export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     const rootReducer = fetchReducer();
-    const reducer = (state, action) => {
+    const reducer = persistReducer((state, action) => {
         const initialStoreKeys = Object.keys(rootReducer({}, {}));
         const newState = {...state, ...rootReducer(state, action)};
         return Object.keys(reducers)
@@ -217,8 +217,9 @@ export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
                     [current]: reducers[current](previous[current], action)
                 };
             }, newState);
-    };
+    });
     (store || getStore()).replaceReducer(reducer);
+
     const rootEpic = fetchEpic();
 
     wrapEpics(epics).forEach((epic) => {

@@ -9,14 +9,10 @@
 import React from 'react';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
-import { Glyphicon } from 'react-bootstrap';
 import { createSelector } from 'reselect';
 import isEmpty from 'lodash/isEmpty';
-import ContainerDimensions from 'react-container-dimensions';
-import Dock from 'react-dock';
 
 import { createPlugin, connect } from '../utils/PluginsUtils';
-import Message from '../components/I18N/Message';
 import { on, toggleControl } from '../actions/controls';
 import AnnotationsEditorComp from '../components/mapcontrols/annotations/AnnotationsEditor';
 import AnnotationsComp from '../components/mapcontrols/annotations/Annotations';
@@ -74,7 +70,8 @@ import {
     hideMeasureWarning,
     initPlugin,
     geometryHighlight,
-    unSelectFeature
+    unSelectFeature,
+    validateFeature
 } from '../actions/annotations';
 
 import annotationsEpics from '../epics/annotations';
@@ -83,6 +80,14 @@ import { setAnnotationMeasurement } from '../actions/measurement';
 import { zoomToExtent } from '../actions/map';
 import { annotationsInfoSelector, annotationsListSelector } from '../selectors/annotations';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { ANNOTATIONS } from '../utils/AnnotationsUtils';
+import { registerRowViewer } from '../utils/MapInfoUtils';
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import {Glyphicon, Tooltip} from "react-bootstrap";
+import Button from "../components/misc/Button";
+import OverlayTrigger from "../components/misc/OverlayTrigger";
+import Message from "../components/I18N/Message";
+
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
     onSetErrorSymbol: setErrorSymbol,
@@ -131,7 +136,8 @@ const commonEditorActions = {
     onHideMeasureWarning: hideMeasureWarning,
     onToggleShowAgain: toggleShowAgain,
     onInitPlugin: initPlugin,
-    onUnSelectFeature: unSelectFeature
+    onUnSelectFeature: unSelectFeature,
+    onValidateFeature: validateFeature
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
     {
@@ -186,6 +192,7 @@ class AnnotationsPanel extends React.Component {
         buttonStyle: PropTypes.object,
         style: PropTypes.object,
         dockProps: PropTypes.object,
+        dockStyle: PropTypes.object,
 
         // side panel properties
         width: PropTypes.number
@@ -208,32 +215,38 @@ class AnnotationsPanel extends React.Component {
         closeGlyph: "1-close",
 
         // side panel properties
-        width: 330,
+        width: 300,
         dockProps: {
             dimMode: "none",
-            size: 0.30,
-            fluid: true,
-            position: "right",
+            position: "left",
             zIndex: 1030
         },
         dockStyle: {}
     };
 
+    componentDidMount() {
+        // register the viewer using the constant layer id of annotation
+        registerRowViewer(ANNOTATIONS, AnnotationsInfoViewer);
+    }
+
+    componentWillUnmount() {
+        registerRowViewer(ANNOTATIONS, undefined);
+    }
+
     render() {
         return this.props.active ? (
-            <ContainerDimensions>
-                { ({ width }) =>
-                    <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
-                        <Dock
-                            fluid
-                            dockStyle={this.props.dockStyle} {...this.props.dockProps}
-                            isVisible={this.props.active}
-                            size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                            <Annotations {...this.props} width={this.props.width}/>
-                        </Dock>
-                    </span>
-                }
-            </ContainerDimensions>
+            <ResponsivePanel
+                containerId="annotations-panel"
+                className="ms-annotations-panel"
+                containerStyle={this.props.dockStyle}
+                hideHeader
+                style={this.props.dockStyle}
+                open={this.props.active}
+                size={this.props.width}
+                {...this.props.dockProps}
+            >
+                <Annotations {...this.props} width={this.props.width}/>
+            </ResponsivePanel>
         ) : null;
     }
 }
@@ -252,18 +265,39 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * Annotations are geometries (currently only markers are supported) with a set of properties. By default a title and
   * a description are managed, but you can configure a different set of fields, and other stuff in localConfig.json.
   * Look at {@link #components.mapControls.annotations.AnnotationsConfig} for more documentation on configuration options
-  * @prop {object[]} lineDashOptions [{value: [line1 gap1 line2 gap2 line3...]}, {...}] defines how dahsed lines are displayed.
+  * @prop {object[]} lineDashOptions [{value: [line1 gap1 line2 gap2 line3...]}, {...}] defines how dashed lines are displayed.
   * Use values without unit identifier.
   * If an odd number of values is inserted then they are added again to reach an even number of values
   * for more information see [this page](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
-  * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root)
   * @prop {string} defaultShape the default symbol used when switching for the symbol styler
   * @prop {string} defaultShapeStrokeColor default symbol stroke color
   * @prop {string} defaultShapeFillColor default symbol fill color
   * @prop {string} defaultShapeSize default symbol shape size in px
+  * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root) symbols.json can be structured like [this](https://github.com/geosolutions-it/MapStore2/blob/90fb33465fd3ff56c4bbaafb5ab0ed492826622c/web/client/product/assets/symbols/symbols.json)
+  * @prop {boolean} measurementAnnotationEdit flag for measurement specific annotation features. Enabling this will allow user to edit measurements saved as annotation
+  * @prop {boolean} geodesic draw geodesic annotation. By default geodesic is true (Currently applicable only for Circle annotation)
   * @class Annotations
   * @memberof plugins
   * @static
+  * @example
+  * symbols.json present in symbolsPath folder is mandatory and it contains the list of symbols to be used in the Annotations Plugin
+  * - width and height of SVGs should be 64px
+  * - the name is related to the filename of the s symbol
+  * - the label is used in the symbol dropdown menu
+  * [
+  *   {"name": "filename", "label": "label"},
+  *   {"name": "square", "label": "Square"}
+  * ]
+  *
+  * Typical configuration of the plugin
+  *
+  * {
+  *   "name": "Annotations",
+  *    "cfg": {
+  *        measurementAnnotationEdit: false,
+  *        geodesic: true
+  *    }
+  * }
   */
 
 const annotationsSelector = createSelector([
@@ -273,7 +307,7 @@ const annotationsSelector = createSelector([
 ], (active, dockStyle, list) => ({
     active,
     dockStyle,
-    width: !isEmpty(list?.selected) ? 660 : 330
+    width: !isEmpty(list?.selected) ? 600 : 300
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {
@@ -283,19 +317,47 @@ const AnnotationsPlugin = connect(annotationsSelector, {
 export default createPlugin('Annotations', {
     component: assign(AnnotationsPlugin, {
         disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }"
-    }, {
-        BurgerMenu: {
-            name: 'annotations',
-            position: 40,
-            text: <Message msgId="annotationsbutton"/>,
-            icon: <Glyphicon glyph="comment"/>,
-            action: conditionalToggle,
-            priority: 2,
-            doNotHide: true
-        }
     }),
+    containers: {
+        TOC: {
+            doNotHide: true,
+            name: "Annotations",
+            target: 'toolbar',
+            selector: () => true,
+            Component: connect(() => {}, {
+                onClick: conditionalToggle
+            })(({onClick, layers, selectedLayers, status}) => {
+                if (status === 'DESELECT' && layers.filter(l => l.id === 'annotations').length === 0) {
+                    return (<OverlayTrigger
+                        key="annotations"
+                        placement="top"
+                        overlay={<Tooltip
+                            id="legend-tooltip-annotations"><Message msgId="toc.addAnnotations"/></Tooltip>}>
+                        <Button key="annotations" bsStyle={'primary'} className="square-button-md"
+                            onClick={onClick}>
+                            <Glyphicon glyph="comment"/>
+                        </Button>
+                    </OverlayTrigger>);
+                }
+                if (selectedLayers[0]?.id === 'annotations') {
+                    return (
+                        <OverlayTrigger
+                            key="annotations-edit"
+                            placement="top"
+                            overlay={<Tooltip
+                                id="legend-tooltip-annotations-edit"><Message msgId="toc.editAnnotations"/></Tooltip>}>
+                            <Button key="annotations" bsStyle={'primary'} className="square-button-md"
+                                onClick={onClick}>
+                                <Glyphicon glyph="pencil"/>
+                            </Button>
+                        </OverlayTrigger>);
+                }
+                return false;
+            })
+        }
+    },
     reducers: {
         annotations: annotationsReducer
     },
-    epics: annotationsEpics(AnnotationsInfoViewer)
+    epics: annotationsEpics
 });

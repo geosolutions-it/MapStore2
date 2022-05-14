@@ -6,17 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import { InputGroup, Glyphicon } from 'react-bootstrap';
 import localizedProps from '../misc/enhancers/localizedProps';
 const Select = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(require('react-select').default);
 
 export default ({
-    isValidServiceSelected,
     services,
     selectedService,
+    onChangeSelectedService = () => {},
     onChangeCatalogMode = () => {},
-    onChangeSelectedService = () => {}
+    isValidServiceSelected
 }) => (<InputGroup>
     <Select
         clearValueText={"catalog.clearValueText"}

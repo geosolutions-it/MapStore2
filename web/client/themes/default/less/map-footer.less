@@ -1,11 +1,46 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
 
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .mapstore-map-footer {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+
+        .map-footer-btn {
+            span {
+                .color-var(@theme-vars[primary-contrast]);
+            }
+        }
+
+        .leaflet-control-attribution {
+            background-color: transparent;
+            .color-var(@theme-vars[main-color]);
+        }
+
+        .ol-attribution.ol-uncollapsible {
+            background-color: transparent;
+            .color-var(@theme-vars[main-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .mapstore-map-footer {
 
     position: absolute;
     bottom: 0;
     height: 30px;
     width: 100%;
-    background-color: @ms2-color-background;
     z-index: 1030;
     -webkit-box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.12), 4px 0 8px rgba(0, 0, 0, 0.24);
 	-moz-box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.12), 4px 0 8px rgba(0, 0, 0, 0.24);
@@ -22,10 +57,6 @@
         padding: 0;
         margin-right: 5px;
         margin-top: 2px;
-        span {
-            color: @ms2-color-text-primary;
-        }
-
     }
 
     .leaflet-control-attribution {
@@ -39,7 +70,6 @@
         height: 30px;
         font-size: 11px;
         background-color: transparent;
-        color: @ms2-color-text;
         overflow: hidden;
         padding-right: 100px;
    }
@@ -60,7 +90,6 @@
        height: 30px;
        text-align: left;
        background-color: transparent;
-       color: @ms2-color-text;
        width: 50%;
        overflow: hidden;
        font-size: 11px;
@@ -78,16 +107,9 @@
     border: none;
 
     .dropdown-toggle-primary {
-        .btn-primary;
         box-shadow: none;
         border-width: 1px;
         border: transparent;
-    }
-    &.open {
-        .dropdown-toggle-primary {
-            .btn-success;
-            .active;
-        }
     }
 
     .ms-prj-header {

@@ -41,8 +41,9 @@ export const timeDataSelector = state => layersSelector(state).reduce((timeDataM
  * Returns a list of layers with time data
  * @param {object} state application state
  */
-export const layersWithTimeDataSelector = state => layersSelector(state).filter(l => getLayerStaticDimension(l, "time"));
-
+export const layersWithTimeDataSelector = state => layersSelector(state).filter(l => {
+    return getLayerStaticDimension(l, "time");
+});
 export const currentTimeSelector = state => {
     const currentTime = get(state, 'dimension.currentTime');
     return currentTime && currentTime.split('/')[0];

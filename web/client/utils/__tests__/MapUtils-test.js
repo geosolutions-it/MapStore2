@@ -14,6 +14,7 @@ import {
     EXTENT_TO_ZOOM_HOOK,
     COMPUTE_BBOX_HOOK,
     RESOLUTION_HOOK,
+    DEFAULT_SCREEN_DPI,
     registerHook,
     dpi2dpm,
     getSphericalMercatorScales,
@@ -37,7 +38,9 @@ import {
     compareMapChanges,
     mergeMapConfigs,
     addRootParentGroup,
-    mapUpdated
+    mapUpdated,
+    getZoomFromResolution,
+    getResolutionObject
 } from '../MapUtils';
 
 const POINT = "Point";
@@ -71,6 +74,13 @@ describe('Test the MapUtils', () => {
     });
     it('getResolutions', () => {
         expect(getResolutions().length > 0).toBe(true);
+    });
+    it('getResolutions with projection', () => {
+        registerHook(RESOLUTIONS_HOOK, (projection) => {
+            if (projection === "EPSG:4326") return [1, 2, 3, 4];
+            return  getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
+        });
+        expect(getResolutions("EPSG:4326").length !== getResolutions("EPSG:3857").length).toBe(true);
     });
     it('getResolutionsForScales', () => {
         // generate test scales for resolutions
@@ -229,7 +239,15 @@ describe('Test the MapUtils', () => {
                     url: "",
                     visibility: true,
                     catalogURL: "url",
-                    origin: [100000, 100000]
+                    origin: [100000, 100000],
+                    extendedParams: {
+                        fromExtension1: {
+                            testBool: true
+                        },
+                        fromPlugin2: {
+                            name: "plugin"
+                        }
+                    }
                 }
             ];
 
@@ -287,7 +305,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -331,12 +348,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -380,12 +399,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: '1.3.0'
+                        version: '1.3.0',
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -429,12 +450,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -478,7 +501,18 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        extendedParams: {
+                            fromExtension1: {
+                                testBool: true
+                            },
+                            fromPlugin2: {
+                                name: "plugin"
+                            }
+                        },
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -648,7 +682,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -692,12 +725,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -741,12 +776,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -790,12 +827,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -839,12 +878,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -888,12 +929,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -937,7 +980,10 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1082,7 +1128,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1126,12 +1171,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         tileSize: undefined,
                         version: undefined,
-                        legendOptions: { legendWidth: "", legendHeight: 40}
+                        legendOptions: { legendWidth: "", legendHeight: 40},
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1175,12 +1222,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1224,7 +1273,10 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: "right",
                         tileSize: undefined,
                         version: undefined,
-                        legendOptions: { legendWidth: 20, legendHeight: 40}
+                        legendOptions: { legendWidth: 20, legendHeight: 40},
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     }],
                     mapOptions: {
                         view: {
@@ -1384,7 +1436,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1427,12 +1478,14 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tileSize: undefined,
                         version: undefined,
-                        tooltipPlacement: undefined, legendOptions: undefined
+                        tooltipPlacement: undefined, legendOptions: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1475,12 +1528,14 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tileSize: undefined,
                         version: undefined,
-                        tooltipPlacement: undefined, legendOptions: undefined
+                        tooltipPlacement: undefined, legendOptions: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1523,7 +1578,10 @@ describe('Test the MapUtils', () => {
                         tooltipOptions: undefined,
                         tileSize: undefined,
                         version: undefined,
-                        tooltipPlacement: undefined, legendOptions: undefined
+                        tooltipPlacement: undefined, legendOptions: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1678,7 +1736,6 @@ describe('Test the MapUtils', () => {
                         styles: undefined,
                         style: undefined,
                         styleName: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         title: 'annotations',
                         transparent: undefined,
@@ -1709,7 +1766,11 @@ describe('Test the MapUtils', () => {
                         tileSize: undefined,
                         version: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined,
-                        params: {} } ],
+                        params: {},
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
+                    } ],
                     groups: [ {
                         id: 'Default',
                         title: 'Default',
@@ -1819,7 +1880,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -1863,7 +1923,10 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1977,7 +2040,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2021,7 +2083,10 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -2175,7 +2240,6 @@ describe('Test the MapUtils', () => {
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2219,12 +2283,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2268,12 +2334,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2317,12 +2385,14 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     },
                     {
                         allowedSRS: {},
                         thumbURL: undefined,
-                        availableStyles: undefined,
                         layerFilter: undefined,
                         bbox: {},
                         requestEncoding: undefined,
@@ -2366,7 +2436,10 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined,
                         legendOptions: undefined,
                         tileSize: undefined,
-                        version: undefined
+                        version: undefined,
+                        minResolution: undefined,
+                        maxResolution: undefined,
+                        disableResolutionLimits: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -2654,6 +2727,13 @@ describe('Test the MapUtils', () => {
     });
 
     it('mergeMapConfigs', () => {
+        const testBackground = {
+            id: "layer4",
+            title: "layer4",
+            source: "osm",
+            name: "layer4",
+            group: "background"
+        };
         const cfg1 = {
             catalogServices: {
                 services: {
@@ -2691,7 +2771,7 @@ describe('Test the MapUtils', () => {
                     group: "group"
                 }, {
                     id: "annotations"
-                }],
+                }, testBackground],
                 projection: "EPSG:4326",
                 units: "m"
             },
@@ -2741,7 +2821,7 @@ describe('Test the MapUtils', () => {
                 }, {
                     id: "layer3",
                     group: undefined
-                }],
+                }, testBackground],
                 projection: "EPSG:900913",
                 units: "m"
             },
@@ -2832,21 +2912,24 @@ describe('Test the MapUtils', () => {
         expect(cfg.map.groups[0].id).toBe("Default");
         expect(cfg.map.groups[1].id).toBe("group");
         expect(cfg.map.groups[2].id).toBe("group2");
-        expect(cfg.map.layers.length).toBe(7);
+        expect(cfg.map.layers.length).toBe(8);
         expect(cfg.map.layers[0].id).toBe(cfg.map.backgrounds[0].id);
         expect(cfg.map.layers[0].group).toBe("background");
-        expect(cfg.map.layers[1].id).toNotBe("layer3");
-        expect(cfg.map.layers[1].id.length).toBe(36);
-        expect(cfg.map.layers[1].group).toBe("group2");
-        expect(cfg.map.layers[2].id).toNotBe("layer2");
+        expect(cfg.map.layers[1].id).toNotBe("layer4");
+        expect(cfg.map.layers[1].title).toBe("layer4");
+        expect(cfg.map.layers[1].group).toBe("background");
+        expect(cfg.map.layers[2].id).toNotBe("layer3");
         expect(cfg.map.layers[2].id.length).toBe(36);
-        expect(cfg.map.layers[3].id).toBe("layer1");
-        expect(cfg.map.layers[3].group).toNotExist();
-        expect(cfg.map.layers[4].id).toBe("layer2");
+        expect(cfg.map.layers[2].group).toBe("group2");
+        expect(cfg.map.layers[3].id).toNotBe("layer2");
+        expect(cfg.map.layers[3].id.length).toBe(36);
+        expect(cfg.map.layers[4].id).toBe("layer1");
         expect(cfg.map.layers[4].group).toNotExist();
-        expect(cfg.map.layers[5].id).toBe("layer3");
-        expect(cfg.map.layers[5].group).toBe("group");
-        expect(cfg.map.layers[6].id).toBe("annotations");
+        expect(cfg.map.layers[5].id).toBe("layer2");
+        expect(cfg.map.layers[5].group).toNotExist();
+        expect(cfg.map.layers[6].id).toBe("layer3");
+        expect(cfg.map.layers[6].group).toBe("group");
+        expect(cfg.map.layers[7].id).toBe("annotations");
         expect(cfg.map.projection).toBe(cfg1.map.projection);
         expect(cfg.map.units).toBe("m");
         expect(cfg.widgetsConfig).toExist();
@@ -2854,7 +2937,7 @@ describe('Test the MapUtils', () => {
         expect(cfg.widgetsConfig.widgets[0].id).toNotBe("widget1");
         expect(cfg.widgetsConfig.widgets[0].id.length).toBe(36);
         expect(cfg.widgetsConfig.widgets[0].layer).toExist();
-        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[1].id);
+        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[2].id);
         expect(cfg.widgetsConfig.widgets[0].layer.group).toBe("group2");
         expect(cfg.widgetsConfig.collapsed).toExist();
 
@@ -3014,5 +3097,20 @@ describe('Test the MapUtils', () => {
         expect(sortedLayers[4].group).toBe(sortedGroups[0].id);
         expect(sortedLayers[5].id).toBe('layer5');
         expect(sortedLayers[5].group).toBe(sortedGroups[0].id);
+    });
+    it('addRootParentGroup', () => {
+        const resolution = 1000; // ~zoom 7 in Web Mercator
+        expect(getZoomFromResolution(resolution)).toBe(7);
+    });
+    describe("getResolutionObject tests", () => {
+        const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
+        it('getResolutionObject for visibility limit type scale', ()=> {
+            expect(getResolutionObject(9028, 'scale', {projection: "EPSG:900913", resolutions}))
+                .toEqual({ resolution: 2.3886583333333333, scale: 9028, zoom: 7 });
+        });
+        it('getResolutionObject for visibility limit type other than scale', ()=> {
+            expect(getResolutionObject(9028, 'scale1', {projection: "EPSG:900913", resolutions}))
+                .toEqual({ resolution: 9028, scale: 34121574.80314961, zoom: 4 });
+        });
     });
 });

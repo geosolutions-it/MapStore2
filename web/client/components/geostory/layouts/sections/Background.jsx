@@ -51,7 +51,10 @@ class Background extends Component {
         theme: PropTypes.string,
         mediaViewer: PropTypes.func,
         contentToolbar: PropTypes.func,
-        inView: PropTypes.bool
+        inView: PropTypes.bool,
+        sections: PropTypes.array,
+        innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+        contentToolbarChildren: PropTypes.node
     };
 
     static defaultProps = {
@@ -83,7 +86,9 @@ class Background extends Component {
                     || this.props.sectionType === SectionTypes.BANNER && [...defaultTools, 'cover', 'remove']
                     || defaultTools
                 }
-            />
+            >
+                {this.props.contentToolbarChildren}
+            </ContentToolbar>
         );
 
         const id = `${this.props.sectionId || "ms"}-media-${(this.props.id || this.props.resourceId)}`;
@@ -95,6 +100,7 @@ class Background extends Component {
                 style={{ ...this.props.style }}>
                 <div
                     className={`ms-section-background-container${getClassNameFromProps(this.props)}`}
+                    ref={this.props.innerRef}
                     style={{
                         height: this.props.height,
                         ...theme,
@@ -109,7 +115,9 @@ class Background extends Component {
                         descriptionEnabled={false}
                         mediaViewer={this.props.mediaViewer}
                         containerInView={this.props.inView}
-                    />
+                    >
+                        {this.props.children}
+                    </Media>
                     { this.props.mode === Modes.EDIT && (
                         parentNode
                             ? (

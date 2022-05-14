@@ -7,6 +7,7 @@
  */
 
 const {getCurrentResolution} = require('../MapUtils');
+const isNil = require('lodash/isNil');
 
 module.exports = {
     buildRequest: (layer, props) => {
@@ -18,11 +19,14 @@ module.exports = {
             metadata: {
                 fields: layer.features?.[0]?.properties && Object.keys(layer.features[0].properties) || [],
                 title: layer.name,
-                resolution: props.map && props.map && props.map.zoom && getCurrentResolution(props.map.zoom, 0, 21, 96),
+                resolution: isNil(props?.map?.resolution)
+                    ? props?.map?.zoom && getCurrentResolution(props.map.zoom, 0, 21, 96)
+                    : props.map.resolution,
                 buffer: props.buffer || 2,
                 units: props.map && props.map.units,
                 rowViewer: layer.rowViewer,
-                viewer: layer.viewer
+                viewer: layer.viewer,
+                layerId: layer.id
             },
             url: ""
         };

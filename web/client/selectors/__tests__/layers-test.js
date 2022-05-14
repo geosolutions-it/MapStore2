@@ -9,6 +9,7 @@
 import expect from 'expect';
 
 import {
+    getSelectedLayers,
     getLayerFromName,
     getLayerFromId,
     layersSelector,
@@ -25,7 +26,7 @@ import {
     centerToMarkerSelector,
     getLayersWithDimension,
     elementSelector,
-    queryableSelectedLayersSelector
+    queryableSelectedLayersSelector, getAdditionalLayerFromId
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -786,5 +787,65 @@ describe('Test layers selectors', () => {
             }
         };
         expect(queryableSelectedLayersSelector(state)).toEqual(queryableSelectedLayers);
+    });
+    it('test getAdditionalLayerFromId selector', () => {
+        const state = {
+            additionallayers: [
+                {
+                    id: 'layer_001',
+                    options: {
+                        id: 'layer_001'
+                    }
+                }
+            ]
+        };
+        const props = getAdditionalLayerFromId(state, 'layer_001');
+        expect(props.id).toBe('layer_001');
+    });
+
+    it('test getSelectedLayers selector', () => {
+        const queryableSelectedLayers = [
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:states__7'
+            },
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:Types__6'
+            }
+        ];
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'mapnik__0',
+                        group: 'background',
+                        type: 'osm',
+                        visibility: true
+                    },
+                    {
+                        id: 'Night2012__1',
+                        group: 'background',
+                        type: 'tileprovider',
+                        visibility: false
+                    },
+                    {
+                        type: 'wms',
+                        visibility: true,
+                        id: 'mapstore:DE_USNG_UTM18__8'
+                    },
+                    ...queryableSelectedLayers
+                ],
+                selected: [
+                    'mapstore:states__7',
+                    'mapstore:Types__6',
+                    'mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal__5',
+                    'Default'
+                ]
+            }
+        };
+        expect(getSelectedLayers(state)).toEqual(queryableSelectedLayers);
     });
 });

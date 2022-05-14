@@ -26,6 +26,7 @@ function ClassificationSymbolizer({
     ruleBlock = {},
     symbolizerBlock = {},
     bands,
+    config,
     ...props
 }) {
 
@@ -35,8 +36,10 @@ function ClassificationSymbolizer({
         classification,
         attribute,
         intervals,
+        intervalsForUnique = config?.intervalsForUnique || 100,
         reverse,
-        continuous
+        continuous,
+        format
     } = props;
 
     // needed for slider
@@ -46,6 +49,7 @@ function ClassificationSymbolizer({
     state.current = {
         ruleId,
         intervals,
+        intervalsForUnique,
         method,
         attribute,
         reverse,
@@ -91,12 +95,14 @@ function ClassificationSymbolizer({
             />}>
             <Fields
                 properties={props}
+                format={format}
                 config={{
                     attributes,
                     methods,
                     getColors: handleColors,
                     bands,
-                    method
+                    method,
+                    methodEdit: props?.methodEdit
                 }}
                 params={mergedParams}
                 onChange={(values) => onUpdate({

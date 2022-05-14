@@ -17,10 +17,6 @@ import Message from "../I18N/Message";
 import AdvancedSettings from './editor/AdvancedSettings';
 import MainForm from './editor/MainForm';
 
-
-import 'react-select/dist/react-select.css';
-import 'react-quill/dist/quill.snow.css';
-
 export default ({
     service = {
         title: "",
@@ -46,10 +42,14 @@ export default ({
     onAddService = () => {},
     onDeleteService = () => {},
     onChangeCatalogMode = () => {},
+    onFormatOptionsFetch = () => {},
     selectedService,
     isLocalizedLayerStylesEnabled,
-    tileSizeOptions = [256],
-    layerOptions
+    tileSizeOptions = [256, 512],
+    formatsLoading,
+    layerOptions = {},
+    services,
+    autoSetVisibilityLimits = false
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -84,6 +84,9 @@ export default ({
                 tileSizeOptions={tileSizeOptions}
                 currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
                 selectedService={selectedService}
+                onFormatOptionsFetch={onFormatOptionsFetch}
+                formatsLoading={formatsLoading}
+                autoSetVisibilityLimits={autoSetVisibilityLimits}
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>
@@ -92,7 +95,7 @@ export default ({
                         <Message msgId="save" />
                     </Button>
                     {service && !service.isNew
-                        ? <Button style={buttonStyle} onClick={() => onDeleteService()} key="catalog_delete_service_button">
+                        ? <Button style={buttonStyle} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
                             <Message msgId="catalog.delete" />
                         </Button>
                         : null

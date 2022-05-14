@@ -26,7 +26,8 @@ class DecimalCoordinateEditor extends React.Component {
         coordinate: PropTypes.string,
         onChange: PropTypes.func,
         onKeyDown: PropTypes.func,
-        onSubmit: PropTypes.func
+        onSubmit: PropTypes.func,
+        disabled: PropTypes.bool
     };
     static defaultProps = {
         format: "decimal",
@@ -43,17 +44,19 @@ class DecimalCoordinateEditor extends React.Component {
                 }
             }
         },
-        onKeyDown: () => {}
+        onKeyDown: () => {},
+        disabled: false
     }
 
 
     render() {
-        const {coordinate, value, onChange} = this.props;
+        const {coordinate, value, onChange, disabled} = this.props;
         const validateNameFunc = "validateDecimal" + capitalize(coordinate);
         return (
             <FormGroup
                 validationState={this[validateNameFunc](value)}>
                 <IntlNumberFormControl
+                    disabled={disabled}
                     key={coordinate}
                     value={value}
                     placeholder={coordinate}
@@ -61,9 +64,10 @@ class DecimalCoordinateEditor extends React.Component {
                         // when inserting 4eee5 as number here it comes "" that makes the re-render fail
                         if (val === "") {
                             onChange("");
-                        }
-                        if (this[validateNameFunc](val) === null) {
+                        } else if (this[validateNameFunc](val) === null) {
                             onChange(val);
+                        } else {
+                            onChange(value);
                         }
                     }}
                     onKeyDown={this.verifyOnKeyDownEvent}
@@ -107,10 +111,8 @@ class DecimalCoordinateEditor extends React.Component {
         const lat = parseFloat(latitude);
         if (isNaN(lat) || lat < min || lat > max ) {
             return "error";
-            // return true;
         }
         return null; // "success"
-        // return false; // "success"
     }
 }
 

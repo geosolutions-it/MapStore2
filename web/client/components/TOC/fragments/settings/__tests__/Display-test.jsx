@@ -10,18 +10,22 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-
+import GET_CAP_RESPONSE from 'raw-loader!../../../../../test-resources/wms/GetCapabilities-1.1.1.xml';
 import Display from '../Display';
-
+import MockAdapter from "axios-mock-adapter";
+import axios from "../../../../../libs/ajax";
+let mockAxios;
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        mockAxios = new MockAdapter(axios);
         setTimeout(done);
     });
 
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        mockAxios.restore();
         setTimeout(done);
     });
 
@@ -44,7 +48,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(1);
+        expect(inputs.length).toBe(5);
         ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('100');
     });
@@ -70,11 +74,44 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(6);
-        ReactTestUtils.Simulate.focus(inputs[0]);
-        expect(inputs[0].value).toBe('70');
-        inputs[1].click();
+        expect(inputs.length).toBe(13);
+        ReactTestUtils.Simulate.focus(inputs[2]);
+        expect(inputs[2].value).toBe('70');
+        inputs[8].click();
         expect(spy.calls.length).toBe(1);
+    });
+    it('tests Display component for wms with format fetch', (done) => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'some url'
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        mockAxios.onGet().reply(() => {
+            return [200, GET_CAP_RESPONSE];
+        });
+        const handlers = {
+            onChange: (prop, value) =>{
+                try {
+                    expect(prop).toBe("imageFormats");
+                    expect(value).toBeTruthy();
+                    expect(value[0]).toEqual({"label": "image/png", "value": "image/png"});
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }
+        };
+
+        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const formatRefresh = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "format-refresh" );
+        ReactTestUtils.Simulate.click(formatRefresh[0]);
     });
 
     it('tests Display component for wms with localized layer styles enabled', () => {
@@ -92,6 +129,65 @@ describe('test Layer Properties Display module component', () => {
         ReactDOM.render(<Display isLocalizedLayerStylesEnabled element={l} settings={settings}/>, document.getElementById("container"));
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="display-lacalized-layer-styles-option"]');
         expect(isLocalizedLayerStylesOption).toExist();
+    });
+
+    it('tests Display component for wms with force proxy option displayed', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            forceProxy: true
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const isForceProxyOption = document.querySelector('[data-qa="display-forceProxy-option"]');
+        expect(isForceProxyOption).toBeTruthy();
+    });
+    it('tests Display component for wms with force proxy option in cesium map', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            forceProxy: true
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        ReactDOM.render(<Display isCesiumActive element={l} settings={settings}/>, document.getElementById("container"));
+        const isForceProxyOption = document.querySelector('[data-qa="display-forceProxy-option"]');
+        expect(isForceProxyOption).toBeFalsy();
+    });
+    it('tests Display component for wms with force proxy option onChange', () => {
+        const handlers = {
+            onChange() {}
+        };
+        const spyOn = expect.spyOn(handlers, 'onChange');
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            forceProxy: false
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const isForceProxyOption = document.querySelector('[data-qa="display-forceProxy-option"]');
+        expect(isForceProxyOption).toBeTruthy();
+        ReactTestUtils.Simulate.change(isForceProxyOption, { "target": { "checked": true }});
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'forceProxy', true ]);
     });
 
     it('tests Layer Properties Legend component', () => {
@@ -113,16 +209,16 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[4];
-        const legendHeight = inputs[5];
+        const legendWidth = inputs[11];
+        const legendHeight = inputs[12];
         // Default legend values
         expect(legendWidth.value).toBe('12');
         expect(legendHeight.value).toBe('12');
-        expect(labels.length).toBe(7);
-        expect(labels[3].innerText).toBe("layerProperties.legendOptions.title");
-        expect(labels[4].innerText).toBe("layerProperties.legendOptions.legendWidth");
-        expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendHeight");
-        expect(labels[6].innerText).toBe("layerProperties.legendOptions.legendPreview");
+        expect(labels.length).toBe(8);
+        expect(labels[4].innerText).toBe("layerProperties.legendOptions.title");
+        expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendWidth");
+        expect(labels[6].innerText).toBe("layerProperties.legendOptions.legendHeight");
+        expect(labels[7].innerText).toBe("layerProperties.legendOptions.legendPreview");
     });
 
     it('tests Layer Properties Legend component events', () => {
@@ -153,9 +249,9 @@ describe('test Layer Properties Display module component', () => {
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
         expect(legendPreview).toExist();
         expect(inputs).toExist();
-        expect(inputs.length).toBe(6);
-        let legendWidth = inputs[4];
-        let legendHeight = inputs[5];
+        expect(inputs.length).toBe(13);
+        let legendWidth = inputs[11];
+        let legendHeight = inputs[12];
         const img = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, 'img');
 
         // Check value in img src
@@ -220,8 +316,8 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(6);
-        expect(inputs[4].value).toBe("20");
-        expect(inputs[5].value).toBe("40");
+        expect(inputs.length).toBe(13);
+        expect(inputs[11].value).toBe("20");
+        expect(inputs[12].value).toBe("40");
     });
 });

@@ -32,13 +32,17 @@ import {
     openWebPageComponentCreator,
     editWebPageComponent,
     handlePendingGeoStoryChanges,
-    loadStoryOnHistoryPop
+    loadStoryOnHistoryPop,
+    scrollOnLoad,
+    hideCarouselItemsOnUpdateCurrentPage
 } from '../geostory';
 import {
     ADD,
     LOADING_GEOSTORY,
     loadGeostory,
     SET_CURRENT_STORY,
+    setCurrentStory,
+    GEOSTORY_SCROLLING,
     LOAD_GEOSTORY_ERROR,
     add,
     UPDATE,
@@ -57,7 +61,9 @@ import {
     editWebPage,
     setResource,
     SET_PENDING_CHANGES,
-    LOAD_GEOSTORY
+    LOAD_GEOSTORY,
+    update,
+    HIDE_CAROUSEL_ITEMS
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -66,7 +72,8 @@ import {
     hide,
     chooseMedia,
     editMedia,
-    SET_MEDIA_TYPE
+    SET_MEDIA_TYPE,
+    MEDIA_TYPE_DISABLE
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
@@ -76,7 +83,6 @@ import {
     show as mapEditorShow,
     save as saveMapEditor,
     HIDE as HIDE_MAP_EDITOR
-
 } from '../../actions/mapEditor';
 
 let mockAxios;
@@ -252,6 +258,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                             a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
+                            a.story.sections[4].id = get(TEST_STORY, 'sections[4].id');
                             expect(a.story).toEqual(TEST_STORY);
                         } else {
                             expect(a.story).toEqual({});
@@ -300,6 +307,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                             a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
+                            a.story.sections[4].id = get(TEST_STORY, 'sections[4].id');
                             expect(a.story).toEqual(TEST_STORY);
                         } else {
                             expect(a.story).toEqual({});
@@ -862,7 +870,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('update story with already existing image (geostory)', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
             chooseMedia({id: "resourceId"})
@@ -883,6 +891,67 @@ describe('Geostory Epics', () => {
                     break;
                 case SELECT_ITEM:
                     expect(a.id).toEqual("resourceId");
+                    break;
+                case MEDIA_TYPE_DISABLE:
+                    expect(a.mediaTypes).toEqual([]);
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resourceId",
+                        type: "image",
+                        data: {
+                            id: "resource_id"
+                        }
+                    }],
+                    sections: [{
+                        id: "section_id",
+                        contents: [{
+                            id: "content_id",
+                            resourceId: "resourceId"
+                        }]
+                    }]
+                }
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image",
+                    sourceId: "geostory"
+                }
+            }
+        });
+    });
+    it('set disabled media type when section type is carousel', (done) => {
+        const NUM_ACTIONS = 4;
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}, 'carousel'),
+            chooseMedia({id: "resourceId"})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case UPDATE:
+                    expect(a.element).toEqual({
+                        resourceId: "resourceId",
+                        type: "image"
+                    });
+                    expect(a.mode).toEqual("merge");
+                    expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
+                    break;
+                case SHOW:
+                    expect(a.owner).toEqual("geostore");
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toEqual("resourceId");
+                    break;
+                case MEDIA_TYPE_DISABLE:
+                    expect(a.mediaTypes).toEqual(['image', 'video']);
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -967,7 +1036,7 @@ describe('Geostory Epics', () => {
     });
 
     it('update story with a new map resource (geostore) from external service', (done) => {
-        const NUM_ACTIONS = 4;
+        const NUM_ACTIONS = 5;
         const mediaType = "map";
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
@@ -995,6 +1064,9 @@ describe('Geostory Epics', () => {
                     break;
                 case SELECT_ITEM:
                     expect(a.id).toEqual("resource_id");
+                    break;
+                case MEDIA_TYPE_DISABLE:
+                    expect(a.mediaTypes).toEqual([]);
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1025,8 +1097,8 @@ describe('Geostory Epics', () => {
             }
         });
     });
-    it('test removes mediaType when resousrce is empty', (done) => {
-        const NUM_ACTIONS = 3;
+    it('test removes mediaType when resource is empty', (done) => {
+        const NUM_ACTIONS = 4;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
             chooseMedia(undefined)
@@ -1042,6 +1114,8 @@ describe('Geostory Epics', () => {
                     break;
                 case REMOVE:
                     expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
+                    break;
+                case MEDIA_TYPE_DISABLE:
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1077,7 +1151,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('test restore background to the empty value when resource is empty', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
             editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`, owner: "geostore"}),
             chooseMedia(undefined)
@@ -1093,6 +1167,8 @@ describe('Geostory Epics', () => {
                     break;
                 case REMOVE:
                     expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`);
+                    break;
+                case MEDIA_TYPE_DISABLE:
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1134,7 +1210,7 @@ describe('Geostory Epics', () => {
         });
     });
     it('should use custom media editor settings if available with editMediaForBackgroundEpic', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         const mediaEditorSettings = {
             sourceId: 'geostory',
             mediaTypes: {
@@ -1172,6 +1248,8 @@ describe('Geostory Epics', () => {
                     expect(a.settings).toEqual(mediaEditorSettings);
                     break;
                 case SELECT_ITEM:
+                    break;
+                case MEDIA_TYPE_DISABLE:
                     break;
                 default: expect(true).toBe(false);
                     break;
@@ -1439,6 +1517,63 @@ describe('Geostory Epics', () => {
                 }
             });
         });
+        it('sortContentEpic sorting two items under carousel section', done => {
+            const source = `sections[{"id": "SECTION-CAROUSEL-1"}].contents[{"id":"b0c570d8-12e6-4b5d-be7f-67326e9f30de"}]`;
+            const target = `sections[{"id": "SECTION-CAROUSEL-1"}].contents`;
+            const position = 1;
+            const moveAction = move(
+                source,
+                target,
+                position
+            );
+            const NUM_ACTIONS = 2;
+            testEpic(sortContentEpic, NUM_ACTIONS, moveAction, (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.forEach(({type, ...a}) => {
+                    switch (type) {
+                    case ADD:
+                        expect(a.path).toBe(target);
+                        expect(a.position).toBe(position);
+                        break;
+                    case REMOVE:
+                        expect(a.path).toBe(source);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        sections: [
+                            {
+                                "id": "SECTION-PARAGRAPH-1",
+                                "type": "paragraph",
+                                "title": "Paragraph Section",
+                                "contents": [
+                                    {
+                                        "id": "b0c570d8-12e6-4b5d-be7f-67326e9f30de",
+                                        "type": "column",
+                                        "contents": [
+                                            {
+                                                "id": "0264c912-2814-47fa-8050-ea11cf11e833",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "id": "c5245e82-7dd8-403d-b7ae-781abfae6e81",
+                                                "type": "image"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            });
+        });
     });
     it('setFocusOnMapEditing when an update action withe editMap true is thrown', done => {
         const editMapAction = {
@@ -1629,11 +1764,21 @@ describe('Geostory Epics', () => {
             });
         });
     });
-
+    it('scrollOnLoad', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(scrollOnLoad, NUM_ACTIONS, {...setCurrentStory({}), delay: 0}, // replace default delay for testing
+            (actions) => {
+                expect(actions[0].type).toBe(GEOSTORY_SCROLLING);
+                expect(actions[0].status).toBe(true);
+                expect(actions[1].type).toBe(GEOSTORY_SCROLLING);
+                expect(actions[1].status).toBe(false);
+                done();
+            });
+    });
     describe('loadStoryOnHistoryPop', () => {
         it('loadStoryOnHistoryPop without shared', (done) => {
             const NUM_ACTIONS = 1;
-            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/12073/'} }}],
+            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/12073/'}, isFirstRendering: false }}],
                 (actions) => {
                     expect(actions[0].type).toBe(LOAD_GEOSTORY);
                     expect(actions[0].id).toBe('12073');
@@ -1643,12 +1788,73 @@ describe('Geostory Epics', () => {
 
         it('loadStoryOnHistoryPop with shared', (done) => {
             const NUM_ACTIONS = 1;
-            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/shared/344/'} }}],
+            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/shared/344/'}, isFirstRendering: false }}],
                 (actions) => {
                     expect(actions[0].type).toBe(LOAD_GEOSTORY);
                     expect(actions[0].id).toBe('344');
                     done();
                 });
+        });
+
+        it('loadStoryOnHistoryPop is not triggered on first rendering', (done) => {
+            testEpic(addTimeoutEpic(loadStoryOnHistoryPop, 600), 1, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/shared/344/'}, isFirstRendering: true }}],
+                (actions) => {
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
+                    done();
+                });
+        });
+    });
+    it('hideCarouselItemsOnUpdateCurrentPage, skip update other than carousel marker toggle', (done) => {
+        const NUM_ACTIONS = 1;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents[{"id": "ccol12"}].background.image';
+        testEpic(addTimeoutEpic(hideCarouselItemsOnUpdateCurrentPage, 10), NUM_ACTIONS, [
+            update(path, {layers: ["test"]})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case TEST_TIMEOUT:
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
+        });
+    });
+    it('hideCarouselItemsOnUpdateCurrentPage, on selection of an item hide other carousel items', (done) => {
+        const NUM_ACTIONS = 2;
+        const path = 'sections[{"id": "SomeID_carousel"}].contents[{"id": "ccol1"}].carouselToggle';
+        testEpic(hideCarouselItemsOnUpdateCurrentPage, NUM_ACTIONS, [
+            update(path, true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case HIDE_CAROUSEL_ITEMS:
+                    expect(a.sectionId).toBe('SomeID_carousel');
+                    expect(a.showContentId).toBe('ccol1');
+                    break;
+                case UPDATE:
+                    expect(a.element).toBeFalsy();
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    ...TEST_STORY
+                }
+            }
         });
     });
 });

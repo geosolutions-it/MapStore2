@@ -10,6 +10,7 @@ import React from 'react';
 import { Button, Tooltip, Glyphicon } from 'react-bootstrap';
 
 import Dialog from '../../misc/Dialog';
+import Portal from '../../misc/Portal';
 import ExportDataResults from './ExportDataResults';
 import InfoBubble from '../../misc/infobubble/InfoBubble';
 import DefaultInfoBubbleInner from '../../misc/infobubble/DefaultInnerComponent';
@@ -50,23 +51,27 @@ const ExportDataResultsComponent = ({
                     <DefaultInfoBubbleInner {...infoBubbleMessage} />
                 </InfoBubble>
             </div> : null}
-            <Dialog
-                id="mapstore-export-data-results"
-                style={{display: active ? "block" : "none"}}
-                draggable={false}
-                modal>
-                <span role="header">
-                    <span className="about-panel-title"><Message msgId="exportDataResults.title"/></span>
-                    <button onClick={() => onToggle()} className="settings-panel-close close"><Glyphicon glyph="1-close"/></button>
-                </span>
-                <div role="body">
-                    <ExportDataResults
-                        loading={checkingExportDataEntries}
-                        results={results}
-                        currentLocale={currentLocale}
-                        onRemoveResult={onRemoveResult}/>
-                </div>
-            </Dialog>
+            {/* Portal must be contained in a valid node tag not in <></> */}
+            <div>
+                {active && <Portal>
+                    <Dialog
+                        id="mapstore-export-data-results"
+                        draggable={false}
+                        modal>
+                        <span role="header">
+                            <span className="about-panel-title"><Message msgId="exportDataResults.title"/></span>
+                            <button onClick={() => onToggle()} className="settings-panel-close close"><Glyphicon glyph="1-close"/></button>
+                        </span>
+                        <div role="body">
+                            <ExportDataResults
+                                loading={checkingExportDataEntries}
+                                results={results}
+                                currentLocale={currentLocale}
+                                onRemoveResult={onRemoveResult}/>
+                        </div>
+                    </Dialog>
+                </Portal>}
+            </div>
         </>
     );
 };

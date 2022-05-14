@@ -26,7 +26,9 @@ const actions = {
     onSetAnnotationMeasurement: () => {},
     onDownload: () => {},
     onHideMeasureWarning: () => {},
-    onSelectFeature: () => {}
+    onSelectFeature: () => {},
+    onUnSelectFeature: () => {},
+    onValidateFeature: () => {}
 };
 describe("test the AnnotationsEditor Panel", () => {
     beforeEach((done) => {
@@ -142,7 +144,7 @@ describe("test the AnnotationsEditor Panel", () => {
 
     });
 
-    it('test click save', () => {
+    it('test click save annotation', () => {
         const feature = {
             id: "1",
             title: 'mytitle',
@@ -162,7 +164,10 @@ describe("test the AnnotationsEditor Panel", () => {
             selected={null}
             editing={{
                 properties: feature,
-                features: [{}]
+                features: [{ properties: {
+                    isValidFeature: true
+                } }],
+                visibility: true
             }}
             onSave={testHandlers.onSaveHandler}
             onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
@@ -173,14 +178,53 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(saveButton).toExist();
         TestUtils.Simulate.click(saveButton);
         expect(spySave.calls.length).toEqual(1);
+        expect(spySave.calls[0].arguments[0]).toEqual(1);
+        expect(spySave.calls[0].arguments[5]).toEqual({...feature, visibility: true});
         expect(spyCancel.calls.length).toEqual(0);
+    });
+
+    it('test click save annotation', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const testHandlers = {
+            onAddNewFeature: () => {}
+        };
+
+        const spySaveGeometry = expect.spyOn(testHandlers, 'onAddNewFeature');
+        const defaultStyles = {POINT: {
+            marker: ["Test marker"],
+            symbol: ["Test symbol"]
+        }};
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            selected={{features: [], properties: {isValidFeature: true}}}
+            editing={{
+                properties: feature,
+                features: [{ properties: {
+                    isValidFeature: true
+                } }]
+            }}
+            defaultStyles={defaultStyles}
+            onAddNewFeature={testHandlers.onAddNewFeature}
+        />, document.getElementById("container"));
+        expect(viewer).toExist();
+
+        let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[1]);
+
+        expect(saveButton).toExist();
+        TestUtils.Simulate.click(saveButton);
+        expect(spySaveGeometry).toHaveBeenCalled();
     });
 
     it('test click cancel', () => {
         const feature = {
             id: "1",
             title: 'mytitle',
-            description: '<span><i>desc</i></span>'
+            description: '<span><i>desc</i></span>',
+            visibility: false
         };
 
         const testHandlers = {
@@ -206,6 +250,10 @@ describe("test the AnnotationsEditor Panel", () => {
 
         expect(spySave.calls.length).toEqual(0);
         expect(spyCancel.calls.length).toEqual(1);
+        const properties = spyCancel.calls[0].arguments[0];
+        expect(Object.keys(properties).length > 0).toBe(true);
+        expect(spyCancel.calls[0].arguments[0].id).toBe('1');
+        expect(spyCancel.calls[0].arguments[0].visibility).toBe(false);
     });
 
     it('test click cancel trigger UnsavedChangesModal', () => {
@@ -255,7 +303,9 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
             properties: feature,
-            features: [{}]
+            features: [{ properties: {
+                isValidFeature: true
+            } }]
         }} onSave={testHandlers.onSaveHandler}
         onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
@@ -423,8 +473,11 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(spyOnSetAnnotationMeasurement.calls[0].arguments).toBeTruthy();
         expect(spyOnSetAnnotationMeasurement.calls[0].arguments.length).toBe(2);
         const features = spyOnSetAnnotationMeasurement.calls[0].arguments[0];
+        const properties = spyOnSetAnnotationMeasurement.calls[0].arguments[1];
         expect(features.length).toBe(1);
         expect(features[0].geometry.type).toBe('LineString');
+        expect(properties).toBeTruthy();
+        expect(Object.keys(properties).length > 0).toBe(true);
     });
 
     it('test Measurement geometry', () => {
@@ -483,7 +536,7 @@ describe("test the AnnotationsEditor Panel", () => {
         };
 
         const spyOnDownload = expect.spyOn(actions, 'onDownload');
-        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+        let viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
             onDownload={actions.onDownload}
             editing={{
                 features: [{id: "1"}],
@@ -492,20 +545,43 @@ describe("test the AnnotationsEditor Panel", () => {
             }}/>, document.getElementById("container"));
 
         expect(viewer).toExist();
-        const viewerNode = ReactDOM.findDOMNode(viewer);
+        let viewerNode = ReactDOM.findDOMNode(viewer);
         expect(viewerNode.className).toBe('mapstore-annotations-info-viewer');
 
-        const buttonsRow = viewerNode.querySelector('.mapstore-annotations-info-viewer-buttons .noTopMargin');
+        let buttonsRow = viewerNode.querySelector('.mapstore-annotations-info-viewer-buttons .noTopMargin');
         expect(buttonsRow).toBeTruthy();
 
-        const buttons = buttonsRow.querySelectorAll('button');
+        let buttons = buttonsRow.querySelectorAll('button');
         expect(buttons.length).toBe(4);
 
-        const downloadCurrentAnnotation = buttons[3];
-        expect(downloadCurrentAnnotation.disabled).toBe(false);
+        let downloadCurrentAnnotation = buttons[3];
+        expect(downloadCurrentAnnotation.classList.contains('disabled')).toBe(false);
 
         TestUtils.Simulate.click(downloadCurrentAnnotation);
         expect(spyOnDownload).toHaveBeenCalled();
         expect(spyOnDownload.calls[0].arguments[0]).toEqual({features: [{id: "1"}], properties: feature});
+    });
+    it('test onDownload when unsavedChanges', ()=>{
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            onDownload={actions.onDownload}
+            unsavedChanges
+            editing={{
+                features: [{id: "1"}],
+                properties: feature,
+                newFeature: true
+            }}/>, document.getElementById("container"));
+
+        expect(viewer).toExist();
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        const buttonsRow = viewerNode.querySelector('.mapstore-annotations-info-viewer-buttons .noTopMargin');
+        const buttons = buttonsRow.querySelectorAll('button');
+        const downloadCurrentAnnotation = buttons[3];
+        expect(downloadCurrentAnnotation.classList.contains('disabled')).toBe(true);
     });
 });

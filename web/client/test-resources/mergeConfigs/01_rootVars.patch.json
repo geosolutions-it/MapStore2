@@ -1,0 +1,26 @@
+[
+  {
+    "op": "replace", "jsonpath": "$.proxyUrl.useCORS",
+    "value": [
+      "http://demo.geo-solutions.it/geoserver",
+      "https://demo.geo-solutions.it:443/geoserver",
+      "https://demo.geo-solutions.it/geoserver",
+      "https://nominatim.openstreetmap.org"
+
+    ]
+  },
+  { "op": "remove", "jsonpath": "$.mailingList" },
+  { "op": "remove", "jsonpath": "$.defaultMapOptions.floatingIdentifyDelay" },
+  {
+    "op": "replace", "jsonpath": "$.authenticationRules",
+    "value": [{
+      "urlPattern": ".*geostore.*",
+      "method": "bearer"
+    }, {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }]
+  },
+  { "op": "remove", "jsonpath": "$.userSessions" }
+
+]

@@ -1,5 +1,5 @@
 # MapStore API usage
-You can include MapStore in your application and interact with it via its [JavaScript API](https://mapstore.geo-solutions.it/mapstore/docs/api/jsapi)
+You can include MapStore in your application and interact with it via its [JavaScript API](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/jsapi)
 
 ## How to use
 

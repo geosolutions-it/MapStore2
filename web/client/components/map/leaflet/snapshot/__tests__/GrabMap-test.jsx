@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+import expect from 'expect';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var GrabMap = require('../GrabMap');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import GrabMap from '../GrabMap';
 
 describe("test the Leaflet GrabMap component", () => {
 

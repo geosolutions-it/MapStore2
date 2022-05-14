@@ -14,8 +14,7 @@ import { isPluginInContext } from './context';
 import { currentLocaleSelector } from './locale';
 import {getValidator} from '../utils/MapInfoUtils';
 import { isCesium } from './maptype';
-import { isMouseMoveIdentifyActiveSelector as identifyFloatingTool } from '../selectors/map';
-import { pluginsSelectorCreator } from './localConfig';
+import {isIdentifyAvailable} from "./controls";
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -23,12 +22,10 @@ import { pluginsSelectorCreator } from './localConfig';
  * @static
  */
 
-export const isMapPopup =  createSelector(
-    (state) => pluginsSelectorCreator("desktop")(state) || {},
+export const isMapPopup = createSelector(
     isCesium,
-    (plugins, cesium) => {
-        return !cesium && !!((Object.values(plugins).filter(({name}) => name === "Identify").pop() || {}).cfg || {}).showInMapPopup;
-    }
+    state => !!state?.mapInfo?.showInMapPopup,
+    (cesium, showInMapPopup) => !cesium && showInMapPopup
 );
 /**
   * Get mapinfo requests from state
@@ -71,7 +68,9 @@ export const drawSupportActiveSelector = (state) => {
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
 export const annotationsEditingSelector = (state) => get(state, "annotations.editing");
-export const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
+export const mapInfoEnabledSelector = (state) => get(state, "mapInfo.enabled", false);
+export const mapInfoDisabledSelector = (state) => !mapInfoEnabledSelector(state);
+
 
 /**
  * selects stopGetFeatureInfo from state
@@ -84,7 +83,7 @@ export const stopGetFeatureInfoSelector = createSelector(
     measureActiveSelector,
     drawSupportActiveSelector,
     annotationsEditingSelector,
-    isPluginInContext('Identify'),
+    isIdentifyAvailable,
     (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, identifyPluginPresent) =>
         isMapInfoDisabled
         || !!isMeasureActive
@@ -121,14 +120,13 @@ export const validResponsesSelector = createSelector(
     requestsSelector,
     responsesSelector,
     generalInfoFormatSelector,
-    identifyFloatingTool,
-    (requests, responses, format, renderEmpty) => {
+    (requests, responses, format) => {
         const validatorFormat = getValidator(format);
-        return requests.length === responses.length && validatorFormat.getValidResponses(responses, renderEmpty);
+        return requests.length === responses.length && validatorFormat.getValidResponses(responses);
     });
 
 export const currentResponseSelector = createSelector(
-    validResponsesSelector, indexSelector,
+    responsesSelector, indexSelector,
     (responses = [], index = 0) => responses[index]
 );
 export const currentFeatureSelector = state => {
@@ -195,9 +193,6 @@ export const clickedPointWithFeaturesSelector = createSelector(
 
 export const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEditFeatureQuery;
 
-export const mapTriggerSelector = state => {
-    if (state.mapInfo?.configuration?.trigger === undefined) {
-        return 'click';
-    }
-    return state.mapInfo.configuration.trigger;
-};
+export const mapTriggerSelector = state => get(state, "mapInfo.configuration.trigger", "click");
+export const hoverEnabledSelector = state => isCesium(state) ? false : true;
+export const enableInfoForSelectedLayersSelector = state => get(state, "mapInfo.enableInfoForSelectedLayers", true);

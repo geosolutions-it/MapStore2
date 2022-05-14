@@ -8,7 +8,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import src from './attribution/geosolutions-brand-sm.png';
+import src from '../assets/img/mapstorelogo.png';
 import assign from 'object-assign';
 
 class Attribution extends React.Component {
@@ -38,7 +38,7 @@ class Attribution extends React.Component {
  * @class
  * @memberof plugins
  * @prop {string} [label='GeoSolutions'] the tooltip for the logo
- * @prop {string} [href='https://www.geo-solutions.it/'] the URL to redirect on click
+ * @prop {string} [href='https://www.geosolutionsgroup.com/'] the URL to redirect on click
  * @prop {string} [src] URL of the logo image. By default the GeoSolutions logo.
  */
 export default {
@@ -47,11 +47,10 @@ export default {
             tool: (props) => ({
                 position: 0,
                 label: props.label || 'GeoSolutions',
-                href: props.href || 'https://www.geo-solutions.it/',
+                href: props.href || 'https://www.geosolutionsgroup.com/',
                 img: props.src && <img className="customer-logo" src={props.src} height="30" /> || <img className="customer-logo" src={src} height="30" />,
                 logo: true
             })
         }
     })
 };
-

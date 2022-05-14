@@ -53,9 +53,10 @@ export default ({
     bubblingTextEditing = () => {},
     storyTheme,
     sections = [],
-    storyFonts
+    storyFonts,
+    innerRef
 }) =>
-    (<div className={className}>
+    (<div ref={innerRef} className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
             const content =
                 [(<ContentComponent

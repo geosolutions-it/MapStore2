@@ -108,7 +108,7 @@ describe("Test ShapefileUploadAndStyle component", () => {
                     expect(spyShapeLoading).toHaveBeenCalledWith(false);
                     expect(spyShapeLoading.calls.length).toBe(2);
                     done();
-                }, 100);
+                }, 1000);
             })
             .catch(() => {
                 expect(true).toBe(false);

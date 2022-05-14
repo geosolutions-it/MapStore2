@@ -46,7 +46,7 @@ describe("geostory media map component enhancers", () => {
         const spyUpdate = expect.spyOn(actions, 'update');
         const spyMapViewLocalChanges = expect.spyOn(actions, 'onMapViewLocalChanges');
 
-        const SinkUpdate = withMapEditingAndLocalMapState(createSink(props => {
+        let SinkUpdate = withMapEditingAndLocalMapState(createSink(props => {
             expect(props).toExist();
             expect(props.onMapViewLocalChanges).toExist();
             expect(props.update).toExist();
@@ -59,7 +59,7 @@ describe("geostory media map component enhancers", () => {
         ReactDOM.render(<SinkUpdate map={map} editMap update={actions.update} onMapViewLocalChanges={actions.onMapViewLocalChanges}/>, document.getElementById("container"));
         spyUpdate.reset();
         spyMapViewLocalChanges.reset();
-        const SinkLocalChanges = withMapEditingAndLocalMapState(createSink(props => {
+        let SinkLocalChanges = withMapEditingAndLocalMapState(createSink(props => {
             expect(props).toExist();
             expect(props.onMapViewLocalChanges).toExist();
             expect(props.update).toExist();
@@ -72,19 +72,31 @@ describe("geostory media map component enhancers", () => {
 
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         ReactDOM.render(<SinkLocalChanges map={map} update={actions.update} onMapViewLocalChanges={actions.onMapViewLocalChanges}/>, document.getElementById("container"));
+        spyUpdate.reset();
+        spyMapViewLocalChanges.reset();
 
+        SinkUpdate = withMapEditingAndLocalMapState(createSink(props => {
+            expect(props).toExist();
+            expect(props.onMapViewLocalChanges).toExist();
+            expect(props.update).toExist();
+            expect(props.onMapViewChanges).toExist();
+            props.onMapViewChanges({center: {x: 2, y: 2}});
+            expect(spyUpdate).toHaveBeenCalled();
+            expect(spyMapViewLocalChanges).toNotHaveBeenCalled();
+            done();
+        }));
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        ReactDOM.render(<SinkUpdate map={{...map, resetPanAndZoom: true}} editMap={false} update={actions.update} onMapViewLocalChanges={actions.onMapViewLocalChanges}/>, document.getElementById("container"));
 
     });
 
     it('withToolbar it correctly sets buttons', (done) => {
 
         const actions = {
-            toggleEditing: () => {},
             onReset: () => {},
             toggleAdvancedEditing: () => {}
         };
 
-        const SpyToggleEditing = expect.spyOn(actions, 'toggleEditing');
         const SpyOnReset = expect.spyOn(actions, 'onReset');
         const SpyToggleAdvancedEditing = expect.spyOn(actions, 'toggleAdvancedEditing');
 
@@ -94,7 +106,7 @@ describe("geostory media map component enhancers", () => {
 
         const buttons = document.querySelectorAll("button");
         expect(buttons).toExist();
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(2);
         for (let btn of buttons) {
             ReactTestUtils.Simulate.click(btn);
         }
@@ -102,7 +114,6 @@ describe("geostory media map component enhancers", () => {
         expect(confirmButtons).toExist();
         expect(confirmButtons.length).toBe(3);
         ReactTestUtils.Simulate.click(confirmButtons[1]);
-        expect(SpyToggleEditing).toHaveBeenCalled();
         expect(SpyOnReset).toHaveBeenCalled();
         expect(SpyToggleAdvancedEditing).toHaveBeenCalled();
         done();

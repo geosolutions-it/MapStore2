@@ -9,7 +9,10 @@ import expect from 'expect';
 
 import {
     newContextSelector,
-    creationStepSelector
+    creationStepSelector,
+    selectedThemeSelector,
+    customVariablesEnabledSelector,
+    isNewContext
 } from '../contextcreator';
 
 const testState = {
@@ -17,7 +20,9 @@ const testState = {
         newContext: {
             name: 'name'
         },
-        stepId: 'step'
+        stepId: 'step',
+        customVariablesEnabled: true,
+        contextId: 'new'
     }
 };
 
@@ -29,5 +34,27 @@ describe('contextcreator selectors', () => {
     });
     it('creationStepSelector', () => {
         expect(creationStepSelector(testState)).toBe('step');
+    });
+    it('customVariablesEnabledSelector', () => {
+        expect(customVariablesEnabledSelector(testState)).toBe(true);
+    });
+    it('selectedThemeSelector', () => {
+        const themeDark = {
+            id: 'dark',
+            label: 'Dark',
+            type: 'link',
+            href: 'dist/themes/dark.css'
+        };
+        expect(selectedThemeSelector(testState)).toBeFalsy();
+        expect(selectedThemeSelector({
+            ...testState,
+            contextcreator: {
+                ...testState.contextcreator,
+                selectedTheme: themeDark
+            }
+        })).toEqual(themeDark);
+    });
+    it('isNewContext', () => {
+        expect(isNewContext(testState)).toBe(true);
     });
 });

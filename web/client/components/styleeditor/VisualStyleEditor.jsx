@@ -21,7 +21,8 @@ import getBlocks from './config/blocks';
 
 import {
     parseJSONStyle,
-    formatJSONStyle
+    formatJSONStyle,
+    updateExternalGraphicNode
 } from '../../utils/StyleEditorUtils';
 
 import undoable from 'redux-undo';
@@ -60,6 +61,7 @@ const updateFunc = ({
     properties,
     rules,
     layer,
+    styleService,
     styleUpdateTypes = {}
 }) => {
 
@@ -80,7 +82,7 @@ const updateFunc = ({
     return new Promise((resolve) => {
         const request = properties.type && styleUpdateTypes[properties.type];
         return request
-            ? resolve(request({ values, properties, rules, layer }))
+            ? resolve(request({ values, properties, rules, layer, styleService }))
             : resolve(defaultUpdateRules());
     });
 };
@@ -90,7 +92,8 @@ function validateStyle(rules) {
     if (isStyleEmpty) {
         return {
             messageId: 'styleeditor.styleEmpty',
-            status: 400
+            status: 400,
+            isEmpty: true
         };
     }
     // find first rule with error
@@ -111,13 +114,13 @@ function validateStyle(rules) {
             status: 400
         };
     }
-    // if the image is missing in icon symbolizer is not possible to create the rule
-    const emptyImageIconSymbolizer = find(rules, ({ symbolizers = [] }) =>
-        find(symbolizers, ({ kind, image }) => kind === 'Icon' && (image === undefined || image === ''))
+    // check if the image of icons has some error
+    const imageIconSymbolizerError = find(rules, ({ symbolizers = [] }) =>
+        find(symbolizers, ({ kind, image }) => kind === 'Icon' && image?.errorId)
     );
-    if (emptyImageIconSymbolizer) {
+    if (imageIconSymbolizerError) {
         return {
-            messageId: 'styleeditor.emptyImageIconSymbolizer',
+            messageId: `styleeditor.${imageIconSymbolizerError?.symbolizers?.[0]?.image?.errorId}`,
             status: 400
         };
     }
@@ -144,6 +147,7 @@ function validateStyle(rules) {
  * @prop {object} error error object
  * @prop {function} getColors return colors for available ramps in classification
  * @prop {number} debounceTime debounce time for on change function, default 300
+ * @prop {object} styleService style service configuration object
  */
 function VisualStyleEditor({
     code,
@@ -164,7 +168,8 @@ function VisualStyleEditor({
     methods,
     getColors,
     styleUpdateTypes,
-    debounceTime
+    debounceTime,
+    styleService
 }) {
 
     const { symbolizerBlock, ruleBlock } = getBlocks(config);
@@ -179,39 +184,41 @@ function VisualStyleEditor({
     const init = useRef(false);
 
     const handleReadStyle = () => {
-        const parser = getStyleParser(format);
-        if (parser && code && defaultStyleJSON === null) {
-            return parser.readStyle(code)
-                .then((newStyle) => {
-                    dispatch({
-                        type: UPDATE_STYLE,
-                        payload: formatJSONStyle(newStyle)
-                    });
+        return getStyleParser(format)
+            .then(parser => {
+                if (parser && code && defaultStyleJSON === null) {
+                    return parser.readStyle(code)
+                        .then((newStyle) => {
+                            dispatch({
+                                type: UPDATE_STYLE,
+                                payload: formatJSONStyle(newStyle)
+                            });
+                            init.current = true;
+                        })
+                        .catch((err) => onError({
+                            ...err,
+                            status: 400
+                        }));
+                }
+                if (parser && code && defaultStyleJSON) {
                     init.current = true;
-                })
-                .catch((err) => onError({
-                    ...err,
-                    status: 400
-                }));
-        }
-        if (parser && code && defaultStyleJSON) {
-            init.current = true;
-            return dispatch({
-                type: UPDATE_STYLE,
-                payload: defaultStyleJSON
+                    return dispatch({
+                        type: UPDATE_STYLE,
+                        payload: defaultStyleJSON
+                    });
+                }
+                if (code && !parser) {
+                    return onError({
+                        messageId: 'styleeditor.formatNotSupported',
+                        status: 400
+                    });
+                }
+                return null;
             });
-        }
-        if (code && !parser) {
-            return onError({
-                messageId: 'styleeditor.formatNotSupported',
-                status: 400
-            });
-        }
-        return null;
     };
 
     useEffect(() => {
-        if (!init.current) {
+        if (!init.current || defaultStyleJSON === null) {
             handleReadStyle();
         }
     }, [code, format, defaultStyleJSON]);
@@ -240,20 +247,23 @@ function VisualStyleEditor({
             if (styleError) {
                 return onError(styleError);
             }
-            const parser = getStyleParser(options.format);
-            if (parser) {
-                return parser.writeStyle(parseJSONStyle(options.style))
-                    .then((newCode) => {
-                        onChange(newCode, options.style);
-                    })
-                    .catch((err) => {
-                        onError({
-                            ...err,
-                            status: 400
+            return getStyleParser(options.format)
+                .then(parser => {
+                    return parser.writeStyle(parseJSONStyle(options.style))
+                        .then((newCode) => {
+                            // This is a workaround for geostyler-sld-parser not able to identify and parse
+                            // the format of ExternalGraphic (IconSymbolizer) when image url doesn't mentions the format/extension explicitly.
+                            // An issue has been opened in library for native support of a similar feature. (Ref: https://github.com/geostyler/geostyler/issues/1453)
+                            const { parsedCode, errorObj } = updateExternalGraphicNode(options, newCode);
+                            errorObj ?  onError(errorObj) : onChange(parsedCode, options.style);
+                        })
+                        .catch((err) => {
+                            onError({
+                                ...err,
+                                status: 400
+                            });
                         });
-                    });
-            }
-            return null;
+                });
         }, debounceTime);
         return () => {
             update.current.cancel();
@@ -282,11 +292,11 @@ function VisualStyleEditor({
                         {
                             glyph: 'undo',
                             tooltipId: 'styleeditor.undoStyle',
-                            disabled: styleHistory?.past?.length === 0,
+                            disabled: (styleHistory?.past?.length || 0) === 0,
                             onClick: () => dispatch({ type: UNDO_STYLE })
                         },
                         {
-                            disabled: styleHistory?.future?.length === 0,
+                            disabled: (styleHistory?.future?.length || 0) === 0,
                             tooltipId: 'styleeditor.redoStyle',
                             glyph: 'redo',
                             onClick: () => dispatch({ type: REDO_STYLE })
@@ -342,7 +352,9 @@ function VisualStyleEditor({
                 bands,
                 attributes,
                 methods,
-                getColors
+                getColors,
+                format,
+                ...config
             }}
             // reverse rules order to show top rendered style
             // as first item of the list
@@ -358,6 +370,7 @@ function VisualStyleEditor({
                     properties,
                     layer,
                     rules: state.current.style.rules,
+                    styleService,
                     styleUpdateTypes
                 })
                     .then(newRules => handleUpdateStyle(newRules))

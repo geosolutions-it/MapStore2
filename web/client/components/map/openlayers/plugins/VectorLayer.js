@@ -29,7 +29,9 @@ Layers.registerType('vector', {
             visible: options.visibility !== false,
             zIndex: options.zIndex,
             style,
-            opacity: options.opacity
+            opacity: options.opacity,
+            minResolution: options.minResolution,
+            maxResolution: options.maxResolution
         });
     },
     update: (layer, newOptions, oldOptions) => {
@@ -43,6 +45,13 @@ Layers.registerType('vector', {
 
         if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
             layer.setStyle(getStyle(newOptions));
+        }
+
+        if (oldOptions.minResolution !== newOptions.minResolution) {
+            layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+        }
+        if (oldOptions.maxResolution !== newOptions.maxResolution) {
+            layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
     },
     render: () => {

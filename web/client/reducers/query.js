@@ -21,7 +21,7 @@ import {
     TOGGLE_SYNC_WMS,
     TOGGLE_LAYER_FILTER
 } from '../actions/wfsquery';
-
+import { SET_SYNC_TOOL } from '../actions/featuregrid';
 import { QUERY_FORM_RESET } from '../actions/queryform';
 import { RESET_CONTROLS } from '../actions/controls';
 import assign from 'object-assign';
@@ -136,6 +136,8 @@ function query(state = initialState, action) {
     }
     case TOGGLE_SYNC_WMS:
         return assign({}, state, {syncWmsFilter: !state.syncWmsFilter});
+    case SET_SYNC_TOOL:
+        return assign({}, state, {syncWmsFilter: action.syncWmsFilter});
     case TOGGLE_LAYER_FILTER:
         return assign({}, state, {isLayerFilter: !state.isLayerFilter});
     default:

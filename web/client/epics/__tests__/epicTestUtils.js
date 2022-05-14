@@ -83,7 +83,7 @@ export const testCombinedEpicStream = (
         onError = () => {},
         onComplete = () => {}
     } = {},
-    store = {getState: () => {}}, ) => {
+    store = {getState: () => {}} ) => {
     const actions = new Rx.Subject();
     const actions$ = new ActionsObservable(actions);
     return combineEpics(...epics)(actions$, store)

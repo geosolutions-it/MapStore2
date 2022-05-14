@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import {
-    activeSelector,
+    isActiveSelector,
     authkeyParamNameSelector,
     delayAutoSearchSelector,
     groupSelector,
@@ -27,11 +27,18 @@ import {
     selectedServiceTypeSelector,
     selectedServiceSelector,
     servicesSelector,
+    servicesSelectorWithBackgrounds,
     serviceListOpenSelector,
-    tileSizeOptionsSelector
+    tileSizeOptionsSelector,
+    formatsLoadingSelector,
+    getSupportedFormatsSelector,
+    getSupportedGFIFormatsSelector,
+    getFormatUrlUsedSelector
 } from '../catalog';
 
 import { set } from '../../utils/ImmutableUtils';
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../../api/WMS';
+
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
@@ -41,6 +48,16 @@ const state = {
         }
     },
     catalog: {
+        "default": {
+            staticServices: {
+                default_map_backgrounds: {
+                    "type": "backgrounds",
+                    "title": "Default Background",
+                    "titleMsgId": "defaultMapBackgroundsServiceTitle",
+                    "autoload": true
+                }
+            }
+        },
         selectedService: 'Basic WMS Service',
         services: {
             'Basic CSW Service': {
@@ -118,6 +135,17 @@ describe('Test catalog selectors', () => {
         expect(retVal).toExist();
         expect(Object.keys(retVal).length).toBe(3);
     });
+    it('test servicesSelectorWithBackgrounds', () => {
+        const retVal = servicesSelectorWithBackgrounds(state);
+        expect(retVal).toBeTruthy();
+        expect(Object.keys(retVal).length).toBe(4);
+        const bgService = retVal.default_map_backgrounds;
+        expect(bgService.readOnly).toBe(true);
+    });
+    it('test servicesSelectorWithBackgrounds with empty state', () => {
+        const retVal = servicesSelectorWithBackgrounds({});
+        expect(retVal).toBeFalsy();
+    });
     it('test newServiceTypeSelector', () => {
         const retVal = newServiceTypeSelector(state);
         expect(retVal).toExist();
@@ -189,8 +217,8 @@ describe('Test catalog selectors', () => {
         const retVal = layerErrorSelector(state);
         expect(retVal).toBe(null);
     });
-    it('test activeSelector', () => {
-        const retVal = activeSelector(state);
+    it('test isActiveSelector', () => {
+        const retVal = isActiveSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBeTruthy();
     });
@@ -244,5 +272,69 @@ describe('Test catalog selectors', () => {
         expect(tileSizes.length).toBe(2);
         expect(tileSizes[0]).toBe(256);
         expect(tileSizes[1]).toBe(512);
+    });
+    it('test formatsLoadingSelector with default value', () => {
+        const formatLoading = formatsLoadingSelector(state);
+        expect(formatLoading).toBe(false);
+    });
+    it('test formatsLoadingSelector', () => {
+        const formatLoading = formatsLoadingSelector({catalog: {formatsLoading: true}});
+        expect(formatLoading).toBe(true);
+    });
+    it('test getSupportedFormatsSelector with default value', () => {
+        const defaultImageFormats = getSupportedFormatsSelector(state);
+        expect(defaultImageFormats).toEqual(DEFAULT_FORMAT_WMS);
+    });
+    it('test getSupportedFormatsSelector ', () => {
+        const defaultImageFormats = getSupportedFormatsSelector({
+            catalog: {
+                newService: {
+                    supportedFormats: {
+                        imageFormats: ["image/png"]
+                    }
+                }
+            }
+        });
+        expect(defaultImageFormats).toEqual(["image/png"]);
+    });
+    it('test getSupportedGFIFormatsSelector with default value', () => {
+        const defaultInfoFormats = getSupportedGFIFormatsSelector(state);
+        expect(defaultInfoFormats).toEqual(getUniqueInfoFormats());
+    });
+    it('test getSupportedGFIFormatsSelector ', () => {
+        const defaultInfoFormats = getSupportedGFIFormatsSelector({
+            catalog: {
+                newService: {
+                    supportedFormats: {
+                        infoFormats: ["text/html"]
+                    }
+                }
+            }
+        });
+        expect(defaultInfoFormats).toEqual(["text/html"]);
+    });
+    it('test getFormatUrlUsedSelector with default value', () => {
+        const urlUsed = getFormatUrlUsedSelector(state);
+        expect(urlUsed).toBe('');
+    });
+    it('test getFormatUrlUsedSelector ', () => {
+        const urlUsed = getFormatUrlUsedSelector({
+            catalog: {
+                newService: {
+                    formatUrlUsed: url
+                }
+            }
+        });
+        expect(urlUsed).toBe(url);
+    });
+    it('test isActiveSelector ', () => {
+        const toolState = isActiveSelector({
+            controls: {
+                metadataexplorer: {
+                    enabled: true
+                }
+            }
+        });
+        expect(toolState).toBe(true);
     });
 });

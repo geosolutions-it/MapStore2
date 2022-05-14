@@ -85,11 +85,11 @@ export const startEndPolylineStyle = (startPointOptions = {}, endPointOptions = 
 };
 
 const getTextStyle = (tempStyle, valueText, highlight = false) => {
-
     return new Style({
         text: new Text({
-            offsetY: -( 4 * Math.sqrt(tempStyle.fontSize)), // TODO improve this for high font values > 100px
+            offsetY: tempStyle.offsetY !== undefined ? tempStyle.offsetY : -( 4 * Math.sqrt(tempStyle.fontSize)), // TODO improve this for high font values > 100px
             textAlign: tempStyle.textAlign || "center",
+            textBaseline: tempStyle.verticalAlign || 'middle',
             text: valueText || "",
             font: tempStyle.font,
             fill: new Fill({
@@ -97,10 +97,16 @@ const getTextStyle = (tempStyle, valueText, highlight = false) => {
                 color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1)
             }),
             // halo
-            stroke: highlight ? new Stroke({
+            stroke: tempStyle.labelOutlineColor ? (
+                new Stroke({
+                    color: colorToRgbaStr(tempStyle.labelOutlineColor, tempStyle.labelOutlineOpacity || 1.0),
+                    width: tempStyle.labelOutlineWidth || 1
+                })
+            ) : (highlight ? new Stroke({
                 color: [255, 255, 255, 1],
                 width: 2
-            }) : null
+            }) : null),
+            rotation: tempStyle.rotation ? tempStyle.rotation * Math.PI / 180.0 : 0
         }),
         image: highlight ?
             new Circle({
@@ -376,13 +382,13 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             }),
             new Style({
                 stroke: new Stroke( tempStyle.stroke ? tempStyle.stroke : {
-                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", isNil(tempStyle.opacity) ? 1 : tempStyle.opacity),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: tempStyle.weight || 1
                 }),
                 image: isDrawing ? image : null,
                 fill: new Fill(tempStyle.fill ? tempStyle.fill : {
-                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
+                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", isNil(tempStyle.fillOpacity) ? 1 : tempStyle.fillOpacity)
                 })
             })
         ];
@@ -446,7 +452,7 @@ export function getStyle(options, isDrawing = false, textValues = []) {
         style = {
             stroke: new Stroke( options.style.stroke ? options.style.stroke : {
                 color: colorToRgbaStr(options.style && options.style.color || "#0000FF", isNil(options.style.opacity) ? 1 : options.style.opacity),
-                lineDash: options.style.highlight ? [10] : [0],
+                lineDash: options.style.lineDash || (options.style.highlight ? [10] : [0]),
                 width: options.style.weight || 1
             }),
             fill: new Fill(options.style.fill ? options.style.fill : {
@@ -454,7 +460,7 @@ export function getStyle(options, isDrawing = false, textValues = []) {
             })
         };
 
-        if (geomType === "Point") {
+        if (geomType === "Point" || geomType === "MultiPoint") {
             style = {
                 image: new Circle(assign({}, style, {radius: options.style.radius || 5}))
             };

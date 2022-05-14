@@ -33,7 +33,9 @@ import {
     getWebPageComponentHeight,
     parseHashUrlScrollUpdate,
     createWebFontLoaderConfig,
-    extractFontNames
+    extractFontNames,
+    getVectorLayerFromContents,
+    getContentsFeatureStyle
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -108,6 +110,13 @@ describe("GeoStory Utils", () => {
             size: "medium"
         }); // with custom params
         expect(classes).toBe(" ms-dark ms-align-left ms-size-medium");
+
+        classes = getClassNameFromProps({
+            theme: "dark",
+            align: "left",
+            size: "h-medium,v-small"
+        }); // with custom params
+        expect(classes).toBe(" ms-dark ms-align-left ms-size-h-medium ms-size-v-small");
     });
 
     it('should not apply theme value if object', () => {
@@ -129,6 +138,7 @@ describe("GeoStory Utils", () => {
             TITLE: "title",
             PARAGRAPH: "paragraph",
             IMMERSIVE: "immersive",
+            CAROUSEL: "carousel",
             BANNER: 'banner'
         });
     });
@@ -519,5 +529,160 @@ describe("GeoStory Utils", () => {
             }
         ];
         expect(extractFontNames(fontFamilies)).toEqual(["fam1", "fam2"]);
+    });
+    it('getVectorLayerFromContents', () => {
+        const id = 'section-id';
+        const contents = [
+            {
+                id: 'content-1',
+                features: [{
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [0, 0] }
+                }]
+            }
+        ];
+
+        const layer = getVectorLayerFromContents({
+            id,
+            contents
+        });
+
+        expect(layer).toEqual({
+            visibility: true,
+            handleClickOnLayer: true,
+            id: 'geostory-vector-section-id',
+            name: 'geostory-vector-section-id',
+            type: 'vector',
+            features: [
+                {
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [ 0, 0 ] },
+                    contentRefId: 'content-1'
+                }
+            ]
+        });
+    });
+    it('getVectorLayerFromContents with featureStyle', () => {
+        const featureStyle = ({ content, feature }, idx) => ({
+            iconColor: 'cyan',
+            iconText: content.id + '-idx-' + idx,
+            iconShape: 'circle',
+            ...feature.style
+        });
+        const layer = getVectorLayerFromContents({
+            id: 'section-id',
+            contents: [
+                {
+                    id: 'content-1',
+                    features: [{
+                        properties: {},
+                        geometry: { type: 'Point', coordinates: [0, 0] },
+                        style: { iconColor: 'red' }
+                    }]
+                }
+            ],
+            featureStyle
+        });
+
+        expect(layer).toEqual({
+            visibility: true,
+            handleClickOnLayer: true,
+            id: 'geostory-vector-section-id',
+            name: 'geostory-vector-section-id',
+            type: 'vector',
+            features: [
+                {
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [ 0, 0 ] },
+                    contentRefId: 'content-1',
+                    style: {
+                        iconColor: 'red',
+                        iconText: 'content-1-idx-0',
+                        iconShape: 'circle'
+                    }
+                }
+            ]
+        });
+    });
+    it('getVectorLayerFromContents with layerOptions', () => {
+        const layerOptions = {
+            visibility: false
+        };
+        const layer = getVectorLayerFromContents({
+            id: 'section-id',
+            contents: [
+                {
+                    id: 'content-1',
+                    features: [{
+                        properties: {},
+                        geometry: { type: 'Point', coordinates: [0, 0] }
+                    }]
+                }
+            ],
+            layerOptions
+        });
+
+        expect(layer).toEqual({
+            visibility: false,
+            handleClickOnLayer: true,
+            id: 'geostory-vector-section-id',
+            name: 'geostory-vector-section-id',
+            type: 'vector',
+            features: [
+                {
+                    properties: {},
+                    geometry: { type: 'Point', coordinates: [ 0, 0 ] },
+                    contentRefId: 'content-1'
+                }
+            ]
+        });
+    });
+    it('getContentsFeatureStyle with defaultMarkerStyle', () => {
+        const defaultMarkerStyle = {
+            iconColor: 'cyan',
+            iconShape: 'circle'
+        };
+        const contents = [
+            {id: 'cd29a263-d36a-4459-8821-8dce4c761bcc'},
+            {id: 'ef332a5b-3405-4f33-b470-5673cc146fea'}
+        ];
+        const content = {id: 'ef332a5b-3405-4f33-b470-5673cc146fea'};
+        const contentId = '3513848d-07e4-41bc-a029-5f68802a663c';
+        const feature = {
+            type: 'Feature',
+            geometry: {},
+            properties: {}
+        };
+        const markerStyle = getContentsFeatureStyle(defaultMarkerStyle, contents, content, contentId, feature);
+        expect(markerStyle).toEqual({
+            iconColor: 'cyan',
+            iconShape: 'circle',
+            iconText: '2',
+            highlight: false
+        });
+    });
+    it('getContentsFeatureStyle with highlightedMarkerStyle', () => {
+        const defaultMarkerStyle = {
+            iconColor: 'green',
+            iconShape: 'circle'
+        };
+        const contents = [
+            {id: 'cd29a263-d36a-4459-8821-8dce4c761bcc'},
+            {id: 'ef332a5b-3405-4f33-b470-5673cc146fea'}
+        ];
+        const content = {id: 'cd29a263-d36a-4459-8821-8dce4c761bcc'};
+        const contentId = 'cd29a263-d36a-4459-8821-8dce4c761bcc';
+        const feature = {
+            type: 'Feature',
+            geometry: {},
+            properties: {}
+        };
+        const markerStyle = getContentsFeatureStyle(defaultMarkerStyle, contents, content, contentId, feature);
+        expect(markerStyle).toEqual({
+            iconColor: 'green',
+            iconShape: 'circle',
+            iconText: '1',
+            highlight: true
+        });
     });
 });

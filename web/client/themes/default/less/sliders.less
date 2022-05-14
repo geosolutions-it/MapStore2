@@ -1,9 +1,96 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .noUi-target {
+        .background-color-var(@theme-vars[primary]);
+
+        &.noUi-horizontal {
+            .noUi-base {
+                .noUi-origin {
+                    .background-color-var(@theme-vars[main-variant-bg]);
+
+                    .noUi-handle {
+                        .border-color-var(@theme-vars[primary-contrast]);
+                        .background-color-var(@theme-vars[primary]);
+
+                        &:hover {
+                            .background-color-var(@theme-vars[primary]);
+                        }
+
+                        &:before {
+                            .color-var(@theme-vars[primary-contrast]);
+                        }
+
+                        .noUi-tooltip {
+                            &:hover {
+                                .background-color-var(@theme-vars[primary]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .noUi-target[disabled="true"],
+    .mapstore-slider.with-tooltip .noUi-target[disabled="true"] {
+        &.noUi-horizontal {
+            .background-color-var(@theme-vars[main-variant-bg]);
+
+            .noUi-base {
+                .noUi-origin {
+                    .noUi-handle {
+                        .noUi-tooltip {
+                            .background-color-var(@theme-vars[main-variant-bg]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .mapstore-slider {
+        &.with-tooltip {
+            .noUi-target {
+                &.noUi-horizontal {
+                    .noUi-base {
+                        &:after {
+                            .background-color-var(@theme-vars[main-variant-bg]);
+                            .border-color-var(@theme-vars[main-border-color]);
+                        }
+
+                        .noUi-origin {
+                            .noUi-handle {
+                                .noUi-tooltip {
+                                    .color-var(@theme-vars[primary-contrast]);
+                                    .background-color-var(@theme-vars[primary]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 @import (less) "~react-nouislider/example/nouislider.css";
 
 .noUi-target {
     border-color: none;
     cursor: pointer;
-    background-color: lighten(@ms2-color-primary, 10%);
     &.noUi-horizontal {
         height: 4px;
         margin: 10px 0;
@@ -11,22 +98,18 @@
         border: none;
         .noUi-base {
             .noUi-origin {
-                background-color: @ms2-color-shade-lighter;
                 .noUi-handle {
                     border: none;
-                    border-top: 1px solid @ms2-color-background;
+                    border-top-width: 1px;
+                    border-top-style: solid;
                     width: 10px;
                     height: 15px;
                     left: -5px;
                     top: -8px;
                     .shadow;
-                    background-color: @ms2-color-primary;
                     cursor: pointer;
                     border-radius: @border-radius-base;
 
-                    &:hover {
-                        background-color: darken(@ms2-color-primary, 10%);
-                    }
                     &:before,
                     &:after {
                         height: @square-btn-small-size;
@@ -38,13 +121,9 @@
                     &:before {
                         font-family: 'mapstore2';
                         text-align: center;
-                        color: @ms2-color-text-primary;
                     }
                     .noUi-tooltip {
                         cursor: pointer;
-                        &:hover {
-                            background-color: darken(@ms2-color-primary, 10%);
-                        }
                     }
                 }
             }
@@ -113,7 +192,6 @@
                         right: -@ms-slider-margin;
                         /* hide primary color background */
                         width: @ms-slider-margin + 4;
-                        background-color: @ms2-color-shade-lighter;
                     }
                     .noUi-origin {
                         .noUi-handle {
@@ -132,8 +210,6 @@
                                 font-size: 10px;
                                 border: none;
                                 border-radius: @border-radius-base;
-                                background-color: @ms2-color-primary;
-                                color: @ms2-color-text-primary;
                                 height: 15px;
                                 width: 36px;
                                 display: flex;

@@ -135,6 +135,13 @@ export default compose(
                     }
                 },
                 {
+                    glyph: 'story-carousel-section',
+                    tooltipId: 'geostory.addGeocarouselSection',
+                    onClick: () => {
+                        add('sections', id, SectionTypes.CAROUSEL);
+                    }
+                },
+                {
                     glyph: 'story-media-section',
                     tooltipId: 'geostory.addMediaSection',
                     onClick: () => {

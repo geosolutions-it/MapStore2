@@ -87,7 +87,7 @@ class Manager extends React.Component {
         const expanded = styles.map((s, i) => i === 0 || s.filtering );
         const locked = styles.map((s, i) => i === 0 );
         this.setState({expanded, locked});
-        styles.forEach(style => {
+        styles.filter(({type}) => type === 'Point').forEach(style => {
             this.checkSymbolUrl({...this.props, style});
         });
     }

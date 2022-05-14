@@ -1,0 +1,37 @@
+@import '../../themes/default/ms-variables.less';
+
+#mapstore-sidebar-menu-container {
+    z-index: 1030;
+    position: absolute;
+    background: inherit;
+    right: 0;
+    top: 0;
+    width: @square-btn-size;
+    height: 100%;
+
+    #mapstore-sidebar-menu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: auto;
+        z-index: 10;
+
+        & > .btn-tray, & > .btn,
+        & > .btn-group .btn {
+            border-bottom: 0;
+            height: @square-btn-size;
+            width: @square-btn-size;
+
+            span:not(.glyphicon) {
+                display: none;
+            }
+        }
+
+        .snapshot-panel {
+            position: absolute;
+            right: @square-btn-size;
+            top: 60px;
+            background: #ffffffab;
+        }
+    }
+}

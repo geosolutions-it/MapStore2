@@ -1,7 +1,7 @@
 # Exploring Dashboards
 **********************
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
 
 1. Provide an overview to better visualize a specific data context
 
@@ -9,7 +9,7 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a *Dashboard* is a
 
 3. Perform analysis on involved data/layers
 
-In order to create a new dashboard, the **New Dashboard** button <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> appears in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) Homepage once logged as Administrator or Normal user. With a click on it, an empty dashboard workspace appears. This page is composed of a *Topbar*, a *Sidebar* and a *Viewer*:
+In order to create a new dashboard, the **New Dashboard** button <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> appears in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) Homepage once logged as Administrator or Normal user. With a click on it, an empty dashboard workspace appears. This page is composed of a *Topbar*, a *Sidebar* and a *Viewer*:
 
 <img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"/>
 
@@ -23,7 +23,7 @@ Through the *Topbar* it is possible to:
 
 <img src="../img/exploring-dashboards/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
-* Go back to the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) with the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
+* Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) with the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
 
 * Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing Users and Groups](managing-users-and-groups.md) section)
 

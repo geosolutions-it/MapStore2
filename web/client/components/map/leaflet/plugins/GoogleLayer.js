@@ -6,11 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/leaflet/Layers');
-const L = require('leaflet');
-require('leaflet.gridlayer.googlemutant');
-
+import Layers from '../../../../utils/leaflet/Layers';
+import L from 'leaflet';
+import 'leaflet.gridlayer.googlemutant';
+function getGMapsLib() {
+    return window?.google?.maps;
+}
 Layers.registerType('google', (options) => {
+    if (!getGMapsLib()) {
+        return null;
+    }
     return L.gridLayer.googleMutant({
         type: options.name.toLowerCase(),
         maxNativeZoom: options.maxNativeZoom || 18,

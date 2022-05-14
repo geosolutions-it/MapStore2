@@ -39,7 +39,7 @@ class About extends React.Component {
                 <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md"><I18N.Message msgId="about_a0"/></a> <I18N.Message msgId="about_p5-1"/></p>
                 <h3><I18N.Message msgId="about_h21"/></h3>
                 <p><I18N.Message msgId="about_p6"/></p>
-                <a href="http://www.geo-solutions.it/">
+                <a href="https://www.geosolutionsgroup.com/">
                     <img
                         src={gsLogo}
                         style={{

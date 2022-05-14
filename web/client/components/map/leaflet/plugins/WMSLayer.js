@@ -5,22 +5,21 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const Message = require('../../../../components/I18N/Message').default;
-const Layers = require('../../../../utils/leaflet/Layers');
-const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
+import React from 'react';
+import Message from '../../../../components/I18N/Message';
+import Layers from '../../../../utils/leaflet/Layers';
+import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
+import WMSUtils from '../../../../utils/leaflet/WMSUtils';
+import L from 'leaflet';
+import objectAssign from 'object-assign';
+import {isArray, isNil} from 'lodash';
+import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import { loadTile, getElevation } from '../../../../utils/ElevationUtils';
+import { creditsToAttribution } from '../../../../utils/LayersUtils';
 
-const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
-const L = require('leaflet');
-const objectAssign = require('object-assign');
-const {isArray, isNil} = require('lodash');
-const {addAuthenticationToSLD, addAuthenticationParameter} = require('../../../../utils/SecurityUtils');
-const { loadTile, getElevation } = require('../../../../utils/ElevationUtils');
-const { creditsToAttribution } = require('../../../../utils/LayersUtils');
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
-const { isVectorFormat } = require('../../../../utils/VectorTileUtils');
-
-require('leaflet.nontiledlayer');
+import 'leaflet.nontiledlayer';
 
 L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
     initialize: function(url, options) { // (String, Object)
@@ -111,9 +110,10 @@ L.tileLayer.multipleUrlWMS = function(urls, options) {
 
 
 L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
-    initialize: function(urls, options, nodata) {
+    initialize: function(urls, options, nodata, littleendian) {
         this._tiles = {};
         this._nodata = nodata;
+        this._littleendian = littleendian;
         L.TileLayer.MultipleUrlWMS.prototype.initialize.apply(this, arguments);
     },
     _addTile: function(coords) {
@@ -125,7 +125,8 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
         try {
             const tilePoint = this._getTileFromCoords(latLng);
             const elevation = getElevation(this._tileCoordsToKey(tilePoint),
-                this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x, this._nodata);
+                this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x,
+                this._nodata, this._littleendian);
             if (elevation.available) {
                 return elevation.value;
             }
@@ -147,8 +148,8 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
     _abortLoading: function() {}
 });
 
-L.tileLayer.elevationWMS = function(urls, options, nodata) {
-    return new L.TileLayer.ElevationWMS(urls, options, nodata);
+L.tileLayer.elevationWMS = function(urls, options, nodata, littleendian) {
+    return new L.TileLayer.ElevationWMS(urls, options, nodata, littleendian);
 };
 
 const removeNulls = (obj = {}) => {
@@ -193,7 +194,7 @@ Layers.registerType('wms', {
         const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
         urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.useForElevation) {
-            return L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999);
+            return L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999, options.littleendian || false);
         }
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);

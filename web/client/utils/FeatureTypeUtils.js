@@ -64,7 +64,8 @@ const types = {
     'xsd:double': 'number',
     // 'xsd:hexBinary': 'string',
     // 'xsd:NOTATION': 'string',
-    'xsd:float': 'number'
+    'xsd:float': 'number',
+    'xsd:array': 'array'
 };
 export const describeFeatureTypeToAttributes = (data) => get(data, "featureTypes[0].properties")
     .filter((attribute) => attribute.type.indexOf('gml:') !== 0 && types[attribute.type])

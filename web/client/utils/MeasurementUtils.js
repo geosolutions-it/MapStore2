@@ -66,6 +66,7 @@ const STYLE_TEXT_LABEL_BIGGER = {
 
 const convertGeometryToGeoJSON = (feature, uom, measureValueStyle) => {
     const actualMeasureValueStyle = measureValueStyle || STYLE_TEXT_LABEL_BIGGER;
+    const isBearing = !!feature.properties?.values?.find(val=>val.type === 'bearing');
     return [{
         type: 'Feature',
         geometry: {
@@ -76,15 +77,16 @@ const convertGeometryToGeoJSON = (feature, uom, measureValueStyle) => {
         properties: {
             id: uuidv1(),
             isValidFeature: true,
-            geometryGeodesic: feature.geometry.type === 'LineString' ? {type: "LineString", coordinates: transformLineToArcs(feature.geometry.coordinates)} : null,
-            useGeodesicLines: feature.geometry.type === 'LineString',
+            // Transform only the linestring of type not bearing
+            geometryGeodesic: feature.geometry.type === 'LineString' && !isBearing ? {type: "LineString", coordinates: transformLineToArcs(feature.geometry.coordinates)} : null,
+            useGeodesicLines: feature.geometry.type === 'LineString' && !isBearing,
             values: feature.properties?.values || []
         },
         style: [{
             ...DEFAULT_ANNOTATIONS_STYLES[feature.geometry.type],
             type: feature.geometry.type,
             id: uuidv1(),
-            geometry: feature.geometry.type === 'LineString' ? "lineToArc" : null,
+            geometry: feature.geometry.type === 'LineString' && !isBearing ? "lineToArc" : null,
             title: `${feature.geometry.type} Style`,
             filtering: true
         }].concat(feature.geometry.type === "LineString" ? getStartEndPointsForLinestring() : [])

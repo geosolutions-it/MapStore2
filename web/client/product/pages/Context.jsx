@@ -10,11 +10,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import { compose } from 'recompose';
+import { createStructuredSelector } from 'reselect';
+
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
 import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
-import { createStructuredSelector } from 'reselect';
-import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
+import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector, contextCustomVariablesEnabledSelector } from '../../selectors/context';
+import ContextTheme from '../../components/theme/ContextTheme';
+
+const ConnectedContextTheme = connect(
+    createStructuredSelector({
+        theme: contextThemeSelector,
+        customVariablesEnabled: contextCustomVariablesEnabledSelector
+    })
+)(ContextTheme);
+
 /**
   * @name Context
   * @memberof pages
@@ -44,7 +54,8 @@ import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } 
   * // localConfig configuration example
   * "plugins": {
   *  "importer": [
-  *         // ...
+  *   import { customVariablesEnabledSelector } from './../../selectors/contextcreator';
+      // ...
   *         {
   *             "name": "Importer",
   *            "cfg": {} // see plugin configuration
@@ -77,7 +88,7 @@ class Context extends React.Component {
         },
         wrappedContainer: MapViewerContainer
     };
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const params = this.props.match.params;
         this.oldTitle = document.title;
         this.props.loadContext(params);
@@ -99,7 +110,12 @@ class Context extends React.Component {
         this.props.reset();
     }
     render() {
-        return (<MapViewerCmp {...this.props} />);
+        return (
+            <>
+                <ConnectedContextTheme />
+                <MapViewerCmp {...this.props} />
+            </>
+        );
     }
 }
 

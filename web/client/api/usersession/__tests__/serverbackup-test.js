@@ -5,6 +5,7 @@ import {getSessionName} from "../browser";
 import axios from "../../../libs/ajax";
 import ConfigUtils from "../../../utils/ConfigUtils";
 import MockAdapter from "axios-mock-adapter";
+import { getApi } from '../../userPersistedStorage';
 
 describe('usersession API serverbackup implementation', () => {
     let mockAxios;
@@ -24,7 +25,7 @@ describe('usersession API serverbackup implementation', () => {
         });
     });
     it('get session by name', (done) => {
-        localStorage.setItem(getSessionName("myname"), JSON.stringify(saved));
+        getApi().setItem(getSessionName("myname"), JSON.stringify(saved));
         mockAxios.onGet("misc/category/name/USERSESSION/resource/name/myname/data").reply(200, saved);
         mockAxios.onGet().reply(200, {
             Resource: {

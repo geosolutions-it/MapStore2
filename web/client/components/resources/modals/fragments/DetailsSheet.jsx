@@ -25,16 +25,24 @@ export default ({
     onClose = () => {},
     onSave = () => {}
 }) => {
+    const viewer = (<DetailsViewer
+        className="ms-details-preview-container"
+        textContainerClassName="ms-details-preview"
+        loading={loading}
+        detailsText={detailsText}/>);
     return (
         <Portal>
             {readOnly ? (
-                <ResizableModal size="lg"
+                <ResizableModal
+                    size="lg"
+                    bodyClassName="details-viewer-modal"
                     showFullscreen
+                    fitContent
                     onClose={() => onClose()}
                     title={<Message msgId="map.details.title" msgParams={{ name: title }} />}
                     show={show}
                 >
-                    <DetailsViewer className="ms-detail-body" textContainerClassName="ql-editor" loading={loading} detailsText={detailsText}/>
+                    {viewer}
                 </ResizableModal>
             ) : (<ResizableModal
                 show={show}

@@ -20,7 +20,8 @@ import {
     UPDATE_RESULTS_STYLE,
     CHANGE_SEARCH_TOOL,
     CHANGE_FORMAT,
-    CHANGE_COORD
+    CHANGE_COORD,
+    HIDE_MARKER
 } from '../actions/search';
 
 import { RESET_CONTROLS } from '../actions/controls';
@@ -104,7 +105,8 @@ function search(state = null, action) {
     case TEXT_SEARCH_RESULTS_PURGE:
         return assign({}, state, { results: null, error: null});
     case TEXT_SEARCH_ADD_MARKER:
-        return assign({}, state, { markerPosition: action.markerPosition, markerLabel: action.markerLabel });
+        const latlng = action.markerPosition.latlng ? {latlng: action.markerPosition.latlng, lat: action.markerPosition.latlng.lat,  lng: action.markerPosition.latlng.lng} : action.markerPosition;
+        return assign({}, state, { markerPosition: latlng, markerLabel: action.markerLabel });
     case TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE:
         return assign({}, state, {highlightedFeature: action.highlightedFeature});
     case TEXT_SEARCH_RESET:
@@ -118,10 +120,10 @@ function search(state = null, action) {
             selectedItems: (state.selectedItems || []).concat(action.items)
         });
     case TEXT_SEARCH_CANCEL_ITEM:
-        return assign({}, {
+        return state ? assign({}, {
             selectedItems: state.selectedItems && state.selectedItems.filter(item => item !== action.item),
             searchText: state.searchText === "" && action.item && action.item.text ? action.item.text.substring(0, action.item.text.length) : state.searchText
-        });
+        }) : state;
     case UPDATE_RESULTS_STYLE:
         return assign({}, state, {style: action.style});
     case CHANGE_SEARCH_TOOL:
@@ -130,6 +132,8 @@ function search(state = null, action) {
         return {...state, format: action.format};
     case CHANGE_COORD:
         return {...state, coordinate: {...state.coordinate, [action.coord]: action.val}};
+    case HIDE_MARKER:
+        return assign({}, state, {markerPosition: state?.markerPosition?.latlng ? {} : state?.markerPosition});
     default:
         return state;
     }

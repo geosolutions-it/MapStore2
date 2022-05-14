@@ -9,14 +9,13 @@
 export default () => {
     require('../leaflet/plugins/index');
     return {
-        Map: require('../leaflet/Map'),
-        Layer: require('../leaflet/Layer'),
-        Feature: require('../leaflet/Feature'),
-        Locate: require('../leaflet/Locate').default,
-        MeasurementSupport: require('../leaflet/MeasurementSupport'),
+        Map: require('../leaflet/Map').default,
+        Layer: require('../leaflet/Layer').default,
+        Feature: require('../leaflet/Feature').default,
+        MeasurementSupport: require('../leaflet/MeasurementSupport').default,
         Overview: require('../leaflet/Overview'),
         ScaleBar: require('../leaflet/ScaleBar'),
-        DrawSupport: require('../leaflet/DrawSupport'),
+        DrawSupport: require('../leaflet/DrawSupport').default,
         PopupSupport: require('../leaflet/PopupSupport').default
     };
 };

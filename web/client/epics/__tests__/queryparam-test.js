@@ -8,11 +8,44 @@
 
 import expect from 'expect';
 import { addTimeoutEpic, testEpic, TEST_TIMEOUT } from './epicTestUtils';
-import {disableGFIForShareEpic, onMapClickForShareEpic, readQueryParamsOnMapEpic} from '../queryparams';
+import {
+    checkMapOrientation,
+    disableGFIForShareEpic,
+    onMapClickForShareEpic,
+    readQueryParamsOnMapEpic
+} from '../queryparams';
 import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../../actions/map';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
+import {layerLoad} from "../../actions/layers";
+import {ActionsObservable} from "redux-observable";
+import Rx from "rxjs";
+import {FEATURE_INFO_CLICK} from "../../actions/mapInfo";
+
+const center = {
+    x: -74.2,
+    y: 40.7,
+    crs: "EPSG:4326"
+};
+const zoom = 16;
+const bbox = {
+    bounds: {
+        minx: -180,
+        miny: -90,
+        maxx: 180,
+        maxy: 90
+    },
+    crs: "EPSG:4326",
+    rotation: 0
+};
+const size = {
+    height: 8717,
+    width: 8717
+};
+
+const mapStateSource = 'map';
+const projection = "EPSG:900913";
 
 describe('queryparam epics', () => {
     it('test readQueryParamsOnMapEpic without params in url search', (done) => {
@@ -59,7 +92,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -69,6 +102,7 @@ describe('queryparam epics', () => {
                     expect(Math.floor(actions[0].extent[2])).toBe(10);
                     expect(Math.floor(actions[0].extent[3])).toBe(46);
                     expect(actions[0].crs).toBe('EPSG:4326');
+                    expect(actions[0].options.nearest).toBe(true);
                 } catch (e) {
                     done(e);
                 }
@@ -99,9 +133,8 @@ describe('queryparam epics', () => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
                     expect(actions[0].type).toBe("TEXT_SEARCH_RESET");
-                    expect(actions[1].type).toBe("FEATURE_INFO_CLICK");
-                    expect(actions[1].point).toEqual({"latlng": {"lat": 39.01, "lng": -89.97}});
-                    expect(actions[1].layer).toBe("layer01");
+                    expect(actions[1].type).toBe("TEXT_SEARCH_ADD_MARKER");
+                    expect(actions[1].markerPosition).toEqual(point);
                 } catch (e) {
                     done(e);
                 }
@@ -122,6 +155,27 @@ describe('queryparam epics', () => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
                     expect(actions[0].type).toBe("TOGGLE_MAPINFO_STATE");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('test disableGFIForShareEpic, on share panel open with mapInfo enabled and mapInfo open', (done)=>{
+
+        const NUMBER_OF_ACTIONS = 2;
+        const state = {controls: {share: {enabled: true}}, mapInfo: {enabled: true, clickPoint: {latlng: {lat: 40, lng: -80}}, requests: ["test"]}};
+
+        testEpic(
+            addTimeoutEpic(disableGFIForShareEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                toggleControl('share', null)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe("TOGGLE_MAPINFO_STATE");
+                    expect(actions[1].type).toBe("TEXT_SEARCH_ADD_MARKER");
+                    expect(actions[1].markerPosition).toEqual({"latlng": {"lat": 40, "lng": -80}});
                 } catch (e) {
                     done(e);
                 }
@@ -163,7 +217,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -194,7 +248,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -231,7 +285,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -269,7 +323,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -300,7 +354,7 @@ describe('queryparam epics', () => {
             addTimeoutEpic(readQueryParamsOnMapEpic, 10),
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
-                changeMapView()
+                layerLoad()
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -311,5 +365,157 @@ describe('queryparam epics', () => {
                 }
                 done();
             }, state);
+    });
+
+    it('test readQueryParamsOnMapEpic with featureinfo and zoom in url search', (done) => {
+        const state = {
+            router: {
+                location: {
+                    search: '?featureinfo={%22lat%22:%200,%20%22lng%22:%200}&zoom=5'
+                }
+            },
+            map: {
+                size: {width: 100, height: 100},
+                projection: "EPSG:4326"
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                    expect(actions[0].point.latlng).toEqual({lat: 0, lng: 0});
+                    expect(actions[0].point.pixel).toBe(undefined);
+                    expect(actions[0].point.geometricFilter).toExist();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('test readQueryParamsOnMapEpic with featureinfo and zoom in sessionStorage', (done) => {
+        sessionStorage.setItem('queryParams', JSON.stringify({featureinfo: {lat: 0, lng: 0, filterNameList: []}}));
+        const state = {
+            router: {
+                location: {
+                    search: ''
+                }
+            },
+            map: {
+                size: {width: 100, height: 100},
+                projection: "EPSG:4326"
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                    expect(actions[0].point.latlng).toEqual({lat: 0, lng: 0});
+                    expect(actions[0].point.pixel).toBe(undefined);
+                    expect(actions[0].point.geometricFilter).toExist();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test actions dispatched on Change View', (done)=>{
+        const viewerOptions = {
+            orientation: {
+                heading: 0.1,
+                pitch: -0.7,
+                roll: 6.2
+            }
+        };
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(checkMapOrientation, 1000),
+            1, [
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(1);
+                try {
+                    expect(actions[0].type).toBe("MAP:ORIENTATION");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    //
+    it('changeMapView does not trigger orientateMap if map type is not cesium', (done)=>{
+        const viewerOptions = {
+            orientation: {
+                heading: 0.1,
+                pitch: -0.7,
+                roll: 6.2
+            }
+        };
+        const state = {
+            maptype: {
+                mapType: 'openlayer'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        const action = changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '');
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        checkMapOrientation(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+            .toArray()
+            .subscribe(checkActions);
+    });
+    it('changeMapView does not trigger orientateMap if any of the viewerOptions values is undefined', (done)=>{
+        const viewerOptions = {
+            orientation: {
+                pitch: -0.7,
+                roll: 6.2
+            }
+        };
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        const action = changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '');
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        checkMapOrientation(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
+            .toArray()
+            .subscribe(checkActions);
     });
 });

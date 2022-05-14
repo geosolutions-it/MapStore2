@@ -1,4 +1,27 @@
-@ms-story-bg: @ms2-color-background;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-mediaEditor {
+        .ms2-border-layout-body {
+            .ms-mediaSelector {
+                .background-color-var(@theme-vars[main-bg]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .media-editor-modal {
     z-index: 2900 !important;
 }
@@ -98,7 +121,6 @@
             z-index: 1;
             order: -1;
             width: 300px;
-            background-color: @ms-story-bg;
         }
     }
     // move service selector in top right corner

@@ -69,26 +69,40 @@ export const identifyLifecycle = compose(
         componentDidMount() {
             const {
                 enabled,
+                showInMapPopup,
                 changeMousePointer = () => {},
                 disableCenterToMarker,
-                onEnableCenterToMarker = () => {}
+                enableInfoForSelectedLayers = true,
+                onEnableCenterToMarker = () => {},
+                setShowInMapPopup = () => {},
+                checkIdentifyIsMounted = () => {},
+                onInitPlugin = () => {}
             } = this.props;
 
-            if (enabled) {
+            // Initialize plugin configuration
+            onInitPlugin({enableInfoForSelectedLayers});
+
+            if (enabled || showInMapPopup) {
                 changeMousePointer('pointer');
+                checkIdentifyIsMounted(true);
+            } else {
+                checkIdentifyIsMounted(false);
             }
 
             if (!disableCenterToMarker) {
                 onEnableCenterToMarker();
             }
+            setShowInMapPopup(showInMapPopup);
         },
         componentWillUnmount() {
             const {
                 hideMarker = () => { },
                 purgeResults = () => { },
-                changeMousePointer = () => { }
+                changeMousePointer = () => { },
+                checkIdentifyIsMounted = () => {}
             } = this.props;
             changeMousePointer('auto');
+            checkIdentifyIsMounted(false);
             hideMarker();
             purgeResults();
         },
@@ -105,6 +119,9 @@ export const identifyLifecycle = compose(
                 changeMousePointer('auto');
                 hideMarker();
                 purgeResults();
+            }
+            if (this.props.showInMapPopup !== newProps.showInMapPopup) {
+                newProps.setShowInMapPopup?.(newProps.showInMapPopup);
             }
         }
     })

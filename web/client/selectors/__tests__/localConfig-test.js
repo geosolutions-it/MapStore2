@@ -17,7 +17,7 @@ import localConfig from '../../reducers/localConfig';
 import {
     localConfigLoaded
 } from '../../actions/localConfig';
-import LOCAL_CONFIG from '../../localConfig';
+import LOCAL_CONFIG from '../../configs/localConfig';
 import {find, includes} from 'lodash';
 
 const stateMocker = createStateMocker({localConfig});
@@ -45,7 +45,7 @@ describe('localConfig selectors', () => {
         expect(includes(loadedConfig, 'DashboardSave')).toBe(true);
         expect(includes(loadedConfig, 'DashboardSaveAs')).toBe(true);
         expect(find(loadedConfig, { "name": "Share"})).toContain({ "name": "Share"});
-        expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "embedPanel": false});
+        expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "showAPI": false});
         expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "advancedSettings": false});
     });
 

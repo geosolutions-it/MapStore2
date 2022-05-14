@@ -17,15 +17,23 @@ import {
     changeFormat,
     changePage,
     toggleHighlightFeature,
-    setMapTrigger
+    setMapTrigger,
+    setShowInMapPopup,
+    onInitPlugin
 } from '../../actions/mapInfo';
+import {changeMapType} from '../../actions/maptype';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
 import assign from 'object-assign';
 import 'babel-polyfill';
 
 describe('Test the mapInfo reducer', () => {
-    let appState = {configuration: {infoFormat: 'text/plain'}, responses: [], requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
+    const appState = {
+        configuration: {
+            infoFormat: 'text/plain'
+        },
+        responses: [],
+        requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
 
     it('returns original state on unrecognized action', () => {
         let state = mapInfo(1, {type: 'UNKNOWN'});
@@ -114,7 +122,62 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].layerMetadata).toBe("meta");
         expect(state.index).toBe(1);
     });
+    it('creates a feature info data from successful request on showInMapPopup', () => {
+        let testAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: "data",
+            requestParams: "params",
+            layerMetadata: "meta",
+            reqId: 10
+        };
 
+        let state = mapInfo({...appState, showInMapPopup: true}, testAction);
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(2);
+        expect(state.responses[0].response).toBe("data");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
+        expect(state.index).toBe(0);
+
+        state = mapInfo(assign({}, appState, {responses: [], showInMapPopup: true}), testAction);
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(1);
+        expect(state.index).toBe(0);
+
+        state = mapInfo(assign({}, appState, {responses: ["test"], showInMapPopup: true}), {...testAction, reqId: 11});
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(2);
+        expect(state.responses[0]).toBeTruthy();
+        expect(state.index).toBe(0);
+    });
+    it('creates a feature info with empty data from successful request', () => {
+        let testAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: "",
+            requestParams: "params",
+            layerMetadata: "meta",
+            reqId: 10
+        };
+
+        let state = mapInfo(appState, testAction);
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(1);
+        expect(state.responses[0].response).toBe("");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
+        expect(state.index).toBe(undefined);
+        expect(state.loaded).toBe(undefined);
+
+        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(2);
+        expect(state.responses[0]).toBeTruthy();
+        expect(state.responses[1].response).toBe("");
+        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].layerMetadata).toBe("meta");
+        expect(state.index).toBe(undefined);
+        expect(state.loaded).toBe(true);
+    });
     it('creates a feature info data from vector info request', () => {
         let testAction = {
             type: 'GET_VECTOR_INFO',
@@ -263,8 +326,15 @@ describe('Test the mapInfo reducer', () => {
 
     it('should reset the state', () => {
         let state = mapInfo({showMarker: true}, {type: 'RESET_CONTROLS'});
-        expect(state).toExist();
-        expect(state.showMarker).toBe(false);
+        expect(state).toBeTruthy();
+        expect(state).toEqual({
+            showMarker: false,
+            responses: [],
+            requests: [],
+            configuration: {
+                trigger: "click"
+            }
+        });
     });
 
     it('should toggle mapinfo state', () => {
@@ -827,5 +897,27 @@ describe('Test the mapInfo reducer', () => {
         const action = setMapTrigger('hover');
         const state = mapInfo(undefined, action);
         expect(state.configuration.trigger).toBe('hover');
+    });
+    it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to cesium', () => {
+        const action = changeMapType('cesium');
+        const initialState = {configuration: {}};
+        const state = mapInfo(initialState, action);
+        expect(state.configuration.trigger).toBe("click");
+    });
+    it('test the result of changeMapType action - MAP_TYPE_CHANGED when passing to 2d maptype', () => {
+        const action = changeMapType('openlayers');
+        const initialState = {configuration: {trigger: "click"}};
+        const state = mapInfo(initialState, action);
+        expect(state.configuration.trigger).toBe("click");
+    });
+    it('setShowInMapPopup', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, setShowInMapPopup(true));
+        expect(state.showInMapPopup).toBeTruthy();
+    });
+    it('onInitPlugin', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, onInitPlugin({cfg1: "test"}));
+        expect(state.cfg1).toBe("test");
     });
 });

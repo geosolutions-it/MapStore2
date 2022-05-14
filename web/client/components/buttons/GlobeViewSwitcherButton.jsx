@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -9,6 +7,7 @@ import PropTypes from 'prop-types';
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ToggleButton from './ToggleButton';
 import { Tooltip } from 'react-bootstrap';

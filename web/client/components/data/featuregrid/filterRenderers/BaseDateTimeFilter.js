@@ -15,7 +15,6 @@ import {getMessageById} from '../../../../utils/LocaleUtils';
 import { getDateTimeFormat } from '../../../../utils/TimeUtils';
 import AttributeFilter from './AttributeFilter';
 import utcDateWrapper from '../../../misc/enhancers/utcDateWrapper';
-import 'react-widgets/lib/less/react-widgets.less';
 
 const UTCDateTimePicker = utcDateWrapper({
     dateProp: "value",
@@ -27,7 +26,7 @@ const UTCDateTimePicker = utcDateWrapper({
 class DateFilter extends AttributeFilter {
     static propTypes = {
         type: PropTypes.string,
-        disabled: PropTypes.boolean,
+        disabled: PropTypes.bool,
         onChange: PropTypes.func,
         intl: intlShape
     };
@@ -39,7 +38,8 @@ class DateFilter extends AttributeFilter {
         value: null,
         type: "date-time",
         column: {},
-        placeholderMsgId: "featuregrid.filter.placeholders.default"
+        placeholderMsgId: "featuregrid.filter.placeholders.default",
+        onChange: () => {}
     };
     renderInput = () => {
         if (this.props.column.filterable === false) {

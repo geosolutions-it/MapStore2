@@ -29,7 +29,7 @@ export const typesMap = {
  * @prop {string} type one of 'image' or 'map' (used when mediaType is equal to undefined)
  * @prop {number} debounceTime debounce time for lazy loading
  */
-export const Media = ({ debounceTime, mediaViewer, ...props }) => {
+export const Media = ({ debounceTime, mediaViewer, children, ...props }) => {
     // store all ids inside an immersive section
     // in this way every media is loaded only when in view
     const loadingId = `${props.id}${props.resourceId ? `-${props.resourceId}` : ''}`;
@@ -49,7 +49,9 @@ export const Media = ({ debounceTime, mediaViewer, ...props }) => {
             isLoading={isLoading}
             onLoad={onLoad}
             loadingId={loadingId}
-            {...props} />
+            {...props} >
+            {children}
+        </MediaType>
     );
 };
 

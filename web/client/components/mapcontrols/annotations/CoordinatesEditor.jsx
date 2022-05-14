@@ -80,7 +80,9 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: PropTypes.bool,
         isMouseLeaveEnabled: PropTypes.bool,
         showLengthAndBearingLabel: PropTypes.bool,
-        renderer: PropTypes.string
+        renderer: PropTypes.string,
+        style: PropTypes.object,
+        onValidateFeature: PropTypes.func
     };
 
     static contextTypes = {
@@ -97,6 +99,7 @@ class CoordinatesEditor extends React.Component {
         onChangeText: () => {},
         onChangeCurrentFeature: () => {},
         onSetInvalidSelected: () => {},
+        onValidateFeature: () => {},
         componentsValidation: {
             "Bearing": {min: 2, max: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
@@ -116,7 +119,8 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
         properties: {},
-        type: "Point"
+        type: "Point",
+        style: {display: 'flex', flexDirection: 'column', flex: 1}
     };
 
     getValidationStateRadius = (radius) => {
@@ -139,6 +143,7 @@ class CoordinatesEditor extends React.Component {
                         projection={this.props.mapProjection}
                         name="radius"
                         onChange={(radius, uom) => {
+                            this.props.onValidateFeature();
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray), uom);
                             } else if (radius !== "") {
@@ -206,6 +211,7 @@ class CoordinatesEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
+                disabled: type !== 'Bearing' ? this.props.properties.disabled : false,
                 visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
                 onClick: () => {
                     let tempComps = [...this.props.components];
@@ -215,11 +221,12 @@ class CoordinatesEditor extends React.Component {
             }
         ];
         return (
-            <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+            <div className="coordinates-editor" style={this.props.style}>
                 <div className={"measure-feature-selector"}>
                     <div>
                         {this.props.showFeatureSelector ? <Select
                             value={this.props.currentFeature}
+                            disabled={this.props.properties.disabled}
                             options={[
                                 ...this.props.features.map((f, i) => {
                                     const values = get(f, 'properties.values', []);
@@ -258,7 +265,7 @@ class CoordinatesEditor extends React.Component {
                         </div>
                     </div>
                 }
-                <div className={"coordinates-row-container"}>
+                <div className={`coordinates-row-container coordinates-row-type-${type}`}>
                     {this.props.components.map((component, idx) =><>
                         {this.props.showLengthAndBearingLabel && <div className={'label-texts'}>
                             <span>
@@ -271,9 +278,10 @@ class CoordinatesEditor extends React.Component {
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             sortId={idx}
                             key={idx + " key"}
+                            disabled={this.props.properties.disabled && validateCoords(component)}
                             renderer={this.props.renderer}
                             isDraggable={this.props.isDraggable}
-                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
+                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]() && !this.props.properties.disabled}
                             showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
                             formatVisible={false}
                             removeVisible={componentsValidation[type].remove}
@@ -323,7 +331,8 @@ class CoordinatesEditor extends React.Component {
                                 } else if (this.props.properties.isValidFeature) {
                                     this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
                                 }
-                            }}/>
+                            }}
+                            onValidateFeature={this.props.onValidateFeature}/>
                     </>
                     )}
                 </div>
@@ -367,7 +376,9 @@ class CoordinatesEditor extends React.Component {
     addCoordPolygon = (components) => {
         if (this.props.type === "Polygon") {
             const validComponents = components.filter(validateCoords);
-            return components.concat([validComponents.length ? validComponents[0] : {lat: "", lon: ""}]);
+            const coordinates = this.props.features[this.props.currentFeature]?.geometry?.coordinates?.[0] || [];
+            const invalidCoordinateIndex = coordinates !== undefined ? coordinates.findIndex(c=> !validateCoords({lon: c[0], lat: c[1]})) : -1;
+            return components.concat([validComponents.length && invalidCoordinateIndex !== 0 ? validComponents[0] : {lat: "", lon: ""}]);
         }
         return components;
     }

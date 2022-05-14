@@ -9,7 +9,7 @@ import expect from 'expect';
 
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
-const {extractTileMatrixSetFromLayers} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -1081,6 +1081,35 @@ describe('LayersUtils', () => {
                     expect(l.tooltipOptions).toExist();
                     expect(l.tooltipPlacement).toExist();
                 }
+            ],
+            [
+                {
+                    options: {
+                        attribution: "right"
+                    }
+                },
+                l => {
+                    expect(l.options).toExist();
+                    expect(l.options.attribution).toExist();
+                }
+            ],
+            // save heightOffset for 3dtiles
+            [
+                {
+                    heightOffset: 10
+                },
+                l => {
+                    expect(l.heightOffset).toBe(10);
+                }
+            ],
+            // save forceProxy if present
+            [
+                {
+                    forceProxy: true
+                },
+                l => {
+                    expect(l.forceProxy).toBeTruthy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
@@ -1148,5 +1177,158 @@ describe('LayersUtils', () => {
         expect(groupTitle).toExist();
         expect(groupTitle).toEqual('titleLayer001');
 
+    });
+
+    it('test isInsideResolutionsLimits', () => {
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        })).toBe(true);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        }, 500)).toBe(true);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100,
+            disableResolutionLimits: true
+        }, 2000)).toBe(true);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        }, 99)).toBe(false);
+        expect(LayersUtils.isInsideResolutionsLimits({
+            maxResolution: 1000,
+            minResolution: 100
+        }, 1000)).toBe(false);
+    });
+    describe('splitMapAndLayers', () => {
+        const localizedGroupMap = {
+            "map": {
+                "center": {
+                    "x": 17.360751857301523,
+                    "y": 40.51921950782912,
+                    "crs": "EPSG:4326"
+                },
+                "maxExtent": [
+                    -20037508.34,
+                    -20037508.34,
+                    20037508.34,
+                    20037508.34
+                ],
+                "projection": "EPSG:900913",
+                "units": "m",
+                "zoom": 6,
+                "mapOptions": {},
+                "backgrounds": [],
+                "bookmark_search_config": {},
+                "mapId": null,
+                "size": null,
+                "version": 2
+            },
+            "layers": [
+                {
+                    "id": "test:Linea_costa__5",
+                    "format": "image/png",
+                    "search": {
+                        "url": "https://test/geoserver/wfs",
+                        "type": "wfs"
+                    },
+                    "name": "test:Linea_costa",
+                    "opacity": 1,
+                    "description": "",
+                    "title": {
+                        "default": "Linea_costa",
+                        "it-IT": "test",
+                        "en-US": "test",
+                        "fr-FR": "test",
+                        "de-DE": "test",
+                        "es-ES": "test"
+                    },
+                    "type": "wms",
+                    "url": "https://test/geoserver/wms",
+
+
+                    "useForElevation": false,
+                    "hidden": false,
+                    "params": {}
+                }
+            ],
+            "groups": [
+                {
+                    "id": "Default",
+                    "title": {
+                        "default": "Default",
+                        "it-IT": "test ",
+                        "en-US": "test"
+                    },
+                    "expanded": true
+                }
+            ]
+        };
+        it('localized titles for default group', () => {
+            const {map, layers} = splitMapAndLayers(localizedGroupMap);
+            expect(map).toBeTruthy();
+            expect(layers).toBeTruthy();
+            expect(layers.groups[0].title).toEqual(localizedGroupMap.groups[0].title);
+        });
+
+        it('Display title of deep nested groups in an array', ()=>{
+            const groups = [
+                {id: 'default', title: 'Default', nodes: [{id: 'layer001', title: 'titleLayer001'}, {id: 'layer002', title: 'titleLayer002'}]}
+            ];
+            const id = 'layer001';
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            const groupTitle = LayersUtils.displayTitle(id, flattenedGroups);
+            expect(groupTitle).toExist();
+            expect(groupTitle).toEqual('titleLayer001');
+        });
+        it('Display title of deep nested groups not in an array', ()=>{
+            const groups = {
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            };
+            const id = 'layer001';
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            const groupTitle = LayersUtils.displayTitle(id, flattenedGroups);
+            expect(groupTitle).toExist();
+            expect(groupTitle).toEqual('Default');
+        });
+        it('Get the length of a an object with nodes', ()=>{
+            const groups = {
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            };
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            expect(flattenedGroups.length).toBe(1);
+        });
+        it('Get the length of the nested array', ()=>{
+            const groups = [{
+                id: 'default',
+                title: 'Default',
+                nodes: [
+                    {id: 'layer001', title: 'titleLayer001'},
+                    {id: 'layer002', title: 'titleLayer002'}
+                ]
+            }, {
+                id: 'default-1',
+                title: 'Default-1',
+                nodes: [
+                    {id: 'layer003', title: 'titleLayer003'},
+                    {id: 'layer004', title: 'titleLayer004'},
+                    {id: 'layer005', title: 'titleLayer005'}
+                ]
+            }];
+            const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
+            expect(flattenedGroups.length).toBe(7);
+        });
     });
 });

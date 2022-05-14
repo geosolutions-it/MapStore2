@@ -26,10 +26,8 @@ import { getFilterRenderer } from '../../../components/data/featuregrid/filterRe
 import FooterComp from '../../../components/data/featuregrid/Footer';
 import HeaderComp from '../../../components/data/featuregrid/Header';
 import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
-import { wfsDownloadAvailable, widgetBuilderAvailable } from '../../../selectors/controls';
 import {
-    chartDisabledSelector,
-    getAttributeFilter,
+    getAttributeFilter, getDockSize,
     getTitleSelector,
     hasChangesSelector,
     hasGeometrySelector,
@@ -49,7 +47,7 @@ import {
     timeSyncActive
 } from '../../../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
-import { isCesium } from '../../../selectors/maptype';
+import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
 import {
     featureCollectionResultSelector,
     featureLoadingSelector,
@@ -62,6 +60,12 @@ import {
 import { getFeatureTypeProperties, isGeometryType } from '../../../utils/ogc/WFS/base';
 import { pageEvents, toolbarEvents } from '../index';
 import settings from './AttributeSelector';
+import {
+    availableSnappingLayers,
+    isSnappingActive,
+    isSnappingLoading,
+    snappingConfig
+} from "../../../selectors/draw";
 
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
@@ -80,13 +84,10 @@ const Toolbar = connect(
             dockSize: mapLayoutValuesSelector(state, {dockSize: true}).dockSize + 3.2 + "%"
         }),
         isDrawing: isDrawingSelector,
-        showChartButton: state => !chartDisabledSelector(state) && widgetBuilderAvailable(state),
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar || !isDescribeLoaded(state, selectedLayerNameSelector(state)),
-        displayDownload: wfsDownloadAvailable,
-        disableDownload: state => (resultsSelector(state) || []).length === 0,
-        isDownloadOpen: state => state && state.controls && state.controls.layerdownload && state.controls.layerdownload.enabled,
+        results: resultsSelector,
         isSyncActive: isSyncWmsActive,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         disableZoomAll: (state) => state && state.featuregrid.virtualScroll || featureCollectionResultSelector(state).features.length === 0,
@@ -95,7 +96,13 @@ const Toolbar = connect(
         hasSupportedGeometry,
         isFilterActive,
         showTimeSyncButton: showTimeSync,
-        timeSync: timeSyncActive
+        timeSync: timeSyncActive,
+        snapping: isSnappingActive,
+        availableSnappingLayers,
+        isSnappingLoading,
+        snappingConfig,
+        mapType: mapTypeSelector,
+        editorHeight: getDockSize
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);
@@ -135,7 +142,7 @@ const ClearDialog = connect(
         onClose: () => toggleTool("clearConfirm", false),
         onConfirm: () => clearChangeConfirmed()
     })(ConfirmClearComp);
-const FeatureCloseDialog = connect(() => {}
+const FeatureCloseDialog = connect(() => ({})
     , {
         onClose: () => closeFeatureGridConfirmed(),
         onConfirm: () => closeFeatureGrid()
@@ -163,8 +170,8 @@ export const getPanels = (tools = {}) =>
             const Panel = panels[t];
             return <Panel key={t} {...(panelDefaultProperties[t] || {})} />;
         });
-export const getHeader = () => {
-    return <Header ><Toolbar /></Header>;
+export const getHeader = ({ hideCloseButton, hideLayerTitle, toolbarItems, pluginCfg }) => {
+    return <Header hideCloseButton={hideCloseButton} hideLayerTitle={hideLayerTitle} ><Toolbar pluginCfg={pluginCfg} toolbarItems={toolbarItems}/></Header>;
 };
 export const getFooter = (props) => {
     return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;

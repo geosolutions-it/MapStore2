@@ -36,7 +36,7 @@ describe('MapEditor Epics', () => {
                 case CLEAR_LAYERS:
                     break;
                 case LOAD_MAP_CONFIG:
-                    expect(a.configName).toBe('new.json');
+                    expect(a.configName).toBe('configs/new.json');
                     expect(a.mapId).toBe(null);
                     break;
                 default: expect(true).toEqual(false);

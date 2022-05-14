@@ -41,8 +41,8 @@ describe('SectionsPreview component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
-        expect(el.querySelectorAll('.items-list > div').length).toBe(4); // 4 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
-        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(4);
+        expect(el.querySelectorAll('.items-list > div').length).toBe(5); // 5 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
+        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(5);
     });
 
     it('SectionsPreview rendering with sections, preview disabled', () => {
@@ -53,7 +53,7 @@ describe('SectionsPreview component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
-        expect(el.querySelectorAll('.items-list > div').length).toBe(12); // one for each card in the side grid
-        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(12);
+        expect(el.querySelectorAll('.items-list > div').length).toBe(19); // one for each card in the side grid
+        expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(19);
     });
 });

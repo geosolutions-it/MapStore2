@@ -36,7 +36,8 @@ class DashboardPage extends React.Component {
         loadResource: PropTypes.func,
         checkLoggedUser: PropTypes.func,
         reset: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        name: PropTypes.string
     };
 
     static defaultProps = {
@@ -71,7 +72,7 @@ class DashboardPage extends React.Component {
     }
     render() {
         return (<Page
-            id="dashboard"
+            id={this.props.name}
             component={BorderLayout}
             includeCommon={false}
             plugins={this.props.plugins}

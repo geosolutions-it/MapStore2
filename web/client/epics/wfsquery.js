@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import Rx from 'rxjs';
 
 import axios from '../libs/ajax';
@@ -33,7 +32,6 @@ import {
 import { paginationInfo, isDescribeLoaded, layerDescribeSelector } from '../selectors/query';
 import { mapSelector } from '../selectors/map';
 import { authkeyParamNameSelector } from '../selectors/catalog';
-import { getSelectedLayer } from '../selectors/layers';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import { addTimeParameter } from '../utils/WFSTimeUtils';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -53,6 +51,10 @@ import { getLayerJSONFeature } from '../observables/wfs';
 import { describeFeatureTypeToAttributes } from '../utils/FeatureTypeUtils';
 import * as notifications from '../actions/notifications';
 import { find } from 'lodash';
+
+import {selectedLayerSelector, useLayerFilterSelector} from '../selectors/featuregrid';
+import {layerLoad} from '../actions/layers';
+
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
 
 const extractInfo = (data) => {
@@ -98,8 +100,41 @@ export const featureTypeSelectedEpic = (action$, store) =>
             if (isDescribeLoaded(state, action.typeName)) {
                 const info = extractInfo(layerDescribeSelector(state, action.typeName));
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
-                return Rx.Observable.of(changeSpatialAttribute(geometry));
+                return Rx.Observable.of(featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry), Rx.Scheduler.async); // async scheduler is needed to allow invokers of `FEATURE_TYPE_SELECTED` to intercept `FEATURE_TYPE_LOADED` action as response.
             }
+
+            const selectedLayer = selectedLayerSelector(state);
+            if (selectedLayer && selectedLayer.type === 'vector') {
+                return Rx.Observable.defer( () =>axios.get(action.url))
+                    .map((response) => {
+
+                        var originalData = {
+                            featureTypes: [response.data.featureTypes[0]]
+                        };
+                        var info = {
+                            geometry: originalData.featureTypes[0].properties
+                                .filter((attribute) => attribute.name.indexOf('geometry') === 0)
+                                .map((attribute) => attribute
+                                ),
+                            original: originalData,
+                            attributes: describeFeatureTypeToAttributes(originalData)
+                        };
+
+                        const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
+                        var changeSpatialAttributePromise = new Promise((resolve) => {
+                            resolve(changeSpatialAttribute(geometry));
+                        });
+                        var promiseFeatureType = changeSpatialAttributePromise.then(() => {
+                            return new Promise((resolve) => {
+                                resolve(featureTypeLoaded(action.typeName, info));
+                            });
+                        });
+                        return Rx.Observable.defer( () => promiseFeatureType);
+                    })
+                    .mergeAll();
+
+            }
+
             return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
@@ -136,28 +171,36 @@ export const featureTypeSelectedEpic = (action$, store) =>
 export const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
-            const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
+            const defaultSortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
+            const sortOptions = action?.filterObj?.sortOptions || defaultSortOptions;
             const totalFeatures = paginationInfo.totalFeatures(store.getState());
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             // getSelected Layer and merge layerFilter and cql_filter in params  with action filter
-            const layer = getSelectedLayer(store.getState()) || {};
-            const {layerFilter, params} = layer;
-            const cqlFilter = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
+            const layer = selectedLayerSelector(store.getState());
+            const useLayerFilter = useLayerFilterSelector(store.getState());
 
-            const ogcFilter = mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, action.filterObj);
+            const {layerFilter, params = {}} = layer ?? {};
+            const cqlFilter = params?.[find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter")];
+            // use original filter if the selected layer is vector type
+            const ogcFilter = layer?.type === "vector" ?
+                action.filterObj
+                : mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, useLayerFilter ? layerFilter : null, action.filterObj);
             const { url, options: queryOptions } = addTimeParameter(searchUrl, action.queryOptions || {}, store.getState());
             const options = {
                 ...action.filterObj.pagination,
                 totalFeatures,
                 sortOptions,
-                ...queryOptions
+                ...queryOptions,
+                layer
             };
+
+            // TODO refactor, the layer that should be used should be the used when the feature grid is opened from the toc, see #6430
             return Rx.Observable.merge(
-                getLayerJSONFeature({...layer, search: {...layer.search, url}}, ogcFilter, options)
+                getLayerJSONFeature({...layer, name: action.filterObj.featureTypeName || layer?.name, search: {...(layer?.search ?? {}), url}}, ogcFilter, options)
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions, action.reason))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
-                    .concat(Rx.Observable.of(featureLoading(false)))
+                    .concat(Rx.Observable.of(featureLoading(false)), Rx.Observable.of(layerLoad(layer?.id)))
             ).takeUntil(action$.ofType(UPDATE_QUERY));
         });
 

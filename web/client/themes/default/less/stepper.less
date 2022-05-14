@@ -1,9 +1,32 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    .ms2-stepper {
+        .footer-button-toolbar-div {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
 .ms2-stepper {
     .footer-button-toolbar-div {
         display: flex;
         padding: 8px;
-        border-top: 1px solid #ddd;
-
+        border-top-width: 1px;
+        border-top-style: solid;
         .footer-button-toolbar {
             flex: 1;
 

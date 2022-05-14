@@ -14,7 +14,7 @@
  */
 
 import expect from 'expect';
-
+import xml2js from 'xml2js';
 import {
     generateTemporaryStyleId,
     STYLE_ID_SEPARATOR,
@@ -26,7 +26,14 @@ import {
     getNameParts,
     stringifyNameParts,
     parseJSONStyle,
-    formatJSONStyle
+    formatJSONStyle,
+    validateImageSrc,
+    updateExternalGraphicNode,
+    detectStyleCodeChanges,
+    getVectorLayerAttributes,
+    getVectorLayerGeometryType,
+    getVectorDefaultStyle,
+    styleValidation
 } from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
@@ -50,54 +57,35 @@ describe('StyleEditorUtils test', () => {
             describeLayer: {
                 owsType: 'WFS'
             },
-            describeFeatureType: {
-                complexType: [{
-                    complexContent: {
-                        extension: {
-                            sequence: {
-                                element: [{
-                                    TYPE_NAME: "XSD_1_0.LocalElement",
-                                    maxOccurs: "1",
-                                    minOccurs: 0,
-                                    name: "RANK",
-                                    nillable: true,
-                                    otherAttributes: {},
-                                    type: {
-                                        key: "{http://www.w3.org/2001/XMLSchema}short",
-                                        localPart: "short",
-                                        namespaceURI: "http://www.w3.org/2001/XMLSchema",
-                                        prefix: "xsd",
-                                        string: "{http://www.w3.org/2001/XMLSchema}xsd:short"
-                                    }
-                                }, {
-                                    TYPE_NAME: "XSD_1_0.LocalElement",
-                                    maxOccurs: "1",
-                                    minOccurs: 0,
-                                    name: "geom",
-                                    nillable: true,
-                                    otherAttributes: {},
-                                    type: {
-                                        key: "{http://www.opengis.net/gml}PointPropertyType",
-                                        localPart: "PointPropertyType",
-                                        namespaceURI: "http://www.opengis.net/gml",
-                                        prefix: "gml",
-                                        string: "{http://www.opengis.net/gml}gml:PointPropertyType"
-                                    }
-                                }]
+            "describeFeatureType": {
+                "elementFormDefault": "qualified",
+                "targetPrefix": "gs",
+                "featureTypes": [
+                    {
+                        "typeName": "us_states",
+                        "properties": [
+                            {
+                                "name": "the_geom",
+                                "maxOccurs": 1,
+                                "minOccurs": 0,
+                                "nillable": true,
+                                "type": "gml:MultiPolygon",
+                                "localType": "MultiPolygon"
+                            },
+                            {
+                                "name": "STATE_NAME",
+                                "maxOccurs": 1,
+                                "minOccurs": 0,
+                                "nillable": true,
+                                "type": "xsd:string",
+                                "localType": "string"
                             }
-                        }
+                        ]
                     }
-                }]
+                ]
             }
         };
-        expect(extractFeatureProperties(layer)).toEqual({
-            geometryType: 'point',
-            properties: {
-                RANK: { localPart: 'short', prefix: 'xsd' },
-                geom: { localPart: 'PointPropertyType', prefix: 'gml' }
-            },
-            owsType: 'WFS'
-        });
+        expect(extractFeatureProperties(layer)).toEqual({ geometryType: 'polygon', properties: { the_geom: { localType: 'MultiPolygon', prefix: 'gml' }, STATE_NAME: { localType: 'string', prefix: 'xsd' } }, owsType: 'WFS' });
 
     });
     it('test getEditorMode', () => {
@@ -362,12 +350,12 @@ describe('StyleEditorUtils test', () => {
                     ramp: 'custom',
                     reverse: false,
                     continuous: true,
+                    colorMapType: 'ramp',
                     symbolizerKind: 'Raster',
                     name: 'raster'
                 }
             ]
         };
-
         expect(parseJSONStyle(style)).toEqual({
             name: 'Style',
             rules: [ {
@@ -393,7 +381,8 @@ describe('StyleEditorUtils test', () => {
                             opacity: 1,
                             label: '1840',
                             quantity: 1840
-                        }]
+                        }],
+                        type: 'ramp'
                     }
                 }]
             } ]
@@ -740,5 +729,467 @@ describe('StyleEditorUtils test', () => {
             kind: 'Fill',
             symbolizerId: 'id'
         });
+    });
+    it('test parseJSONStyle for unique interval method classification translation', () => {
+        const style = {
+            name: 'Style',
+            rules: [
+                {
+                    ruleId: 'rule1',
+                    kind: 'Classification',
+                    color: '#dddddd',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1,
+                    classification: [{
+                        title: 10164.3,
+                        color: '#FFF7EC',
+                        type: 'Polygon',
+                        unique: 10164.3
+                    },
+                    {
+                        title: 20310.5,
+                        color: '#FC8D59',
+                        type: 'Polygon',
+                        unique: 20310.5
+                    },
+                    {
+                        title: 30456.9,
+                        color: '#7F0000',
+                        type: 'Polygon',
+                        unique: 30456.9
+                    }],
+                    intervals: 3,
+                    method: 'uniqueInterval',
+                    ramp: 'orrd',
+                    reverse: false,
+                    symbolizerKind: 'Fill',
+                    attribute: 'WATER_KM'
+                }
+            ]
+        };
+        expect(parseJSONStyle(style)).toEqual({
+            name: 'Style',
+            rules: [{
+                name: 10164.3,
+                filter: [ '==', 'WATER_KM', 10164.3 ],
+                symbolizers: [{
+                    kind: 'Fill',
+                    color: '#FFF7EC',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1
+                }]
+            },
+            {
+                name: 20310.5,
+                filter: [ '==', 'WATER_KM', 20310.5 ],
+                symbolizers: [ {
+                    kind: 'Fill',
+                    color: '#FC8D59',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1
+                }]
+            },
+            {
+                name: 30456.9,
+                filter: [ '==', 'WATER_KM', 30456.9 ],
+                symbolizers: [{
+                    kind: 'Fill',
+                    color: '#7F0000',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1
+                }]
+            }]
+        });
+    });
+    it('should return an error with empty image src (validateImageSrc)', (done) => {
+        validateImageSrc('')
+            .then(() => {})
+            .catch((error) => {
+                expect(error.isBase64).toBe(false);
+                expect(error.messageId).toBe('imageSrcEmpty');
+                done();
+            });
+    });
+    it('should return an error with an invalid image (validateImageSrc)', (done) => {
+        const invalidSrc = 'image.png';
+        validateImageSrc(invalidSrc)
+            .then(() => {})
+            .catch((error) => {
+                expect(error.isBase64).toBe(false);
+                expect(error.messageId).toBe('imageSrcLoadError');
+                done();
+            });
+    });
+    it('should return an error with invalid base64 image (validateImageSrc)', (done) => {
+        const invalidBase64Src = 'data:image/png;base64,iVBOR';
+        validateImageSrc(invalidBase64Src)
+            .then(() => {})
+            .catch((error) => {
+                expect(error.isBase64).toBe(false);
+                expect(error.messageId).toBe('imageSrcInvalidBase64');
+                done();
+            });
+    });
+    it('should return an valid response with valid base64 image (validateImageSrc)', (done) => {
+        const validBase64Src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+        validateImageSrc(validBase64Src)
+            .then((response) => {
+                expect(response.isBase64).toBe(true);
+                expect(response.src).toBe(validBase64Src);
+                done();
+            });
+    });
+    describe('test updateExternalGraphicNode', ()=>{
+        it('should return an valid parsed SLD with format specified', () => {
+            const format = 'image/png';
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                format,
+                                image: "https://test.com/linktoImage",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const parsedSLD = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><StyledLayerDescriptor version=\"1.0.0\" xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" xmlns=\"http://www.opengis.net/sld\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>icon dev</Name><UserStyle><Name>icon dev</Name><Title>icon dev</Title><FeatureTypeStyle><Rule><Name/><PointSymbolizer><Graphic><ExternalGraphic><OnlineResource xlink:type=\"simple\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"https://www.pngix.com/pngfile/middle/92-926820_test-logo-png-transparent-png.png\"/></ExternalGraphic><Opacity>1</Opacity><Size>32</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>";
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'sld', style}, parsedSLD);
+            expect(errorObj).toBe(false);
+            expect(parsedCode).toBeTruthy();
+            expect(parsedCode).toContain(format);
+
+        });
+        it('should skip parsing when style format is css', () => {
+            const format = 'image/png';
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                format,
+                                image: "https://test.com/linktoImage",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const parsedSLD = "@mode 'Flat';\n" +
+                "@styleTitle 'Base CSS1';\n" +
+                "\n" +
+                "* {\n" +
+                "  mark: url('https://master.demo.geonode.org/documents/1623/link');\n" +
+                "  mark-opacity: 1;\n" +
+                "  mark-size: 32;\n" +
+                "  mark-rotation: 0;\n" +
+                "}";
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'css', style}, parsedSLD);
+            expect(errorObj).toBe(false);
+            expect(parsedCode).toBeTruthy();
+            expect(parsedCode).toEqual(parsedSLD);
+
+        });
+        it('should skip parsing when parsed SLD has format in external graphic of Icon symbolizer', () => {
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                image: "https://test.com/linktoImage.png",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const oldSLD = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><StyledLayerDescriptor version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><NamedLayer><Name>icon dev</Name><UserStyle><Name>icon dev</Name><Title>icon dev</Title><FeatureTypeStyle><Rule><Name/><PointSymbolizer><Graphic><ExternalGraphic><OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://www.pngix.com/pngfile/middle/92-926820_test-logo-png-transparent-png.png"/><Format>image/png</Format></ExternalGraphic><Opacity>1</Opacity><Size>32</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>`;
+            let oldSLDJSON;
+            xml2js.parseString(oldSLD, { explicitArray: false }, (_, res)=>{
+                oldSLDJSON = res;
+            });
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'sld', style}, oldSLD);
+            expect(errorObj).toBeFalsy();
+            expect(parsedCode).toBeTruthy();
+            let parsedCodeJSON;
+            xml2js.parseString(parsedCode, { explicitArray: false }, (_, res)=>{
+                parsedCodeJSON = res;
+            });
+            expect(parsedCodeJSON).toEqual(oldSLDJSON);
+        });
+        it('should return error when image and user specified format is not present', () => {
+            const style = {
+                name: "Base SLD1",
+                rules: [
+                    {
+                        name: "",
+                        ruleId: "1",
+                        symbolizers: [
+                            {
+                                kind: "Icon",
+                                image: "https://test.com/linktoImage",
+                                opacity: 1,
+                                size: 32,
+                                rotate: 0,
+                                symbolizerId: "2"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const parsedSLD = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><StyledLayerDescriptor version=\"1.0.0\" xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" xmlns=\"http://www.opengis.net/sld\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>icon dev</Name><UserStyle><Name>icon dev</Name><Title>icon dev</Title><FeatureTypeStyle><Rule><Name/><PointSymbolizer><Graphic><ExternalGraphic><OnlineResource xlink:type=\"simple\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"https://www.pngix.com/pngfile/middle/92-926820_test-logo-png-transparent-png.png\"/></ExternalGraphic><Opacity>1</Opacity><Size>32</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>";
+            const {parsedCode, errorObj} = updateExternalGraphicNode({format: 'sld', style}, parsedSLD);
+            expect(errorObj).toBeTruthy();
+            expect(errorObj.messageId).toEqual('styleeditor.imageFormatEmpty');
+            expect(errorObj.status).toEqual(400);
+            expect(parsedCode).toBeFalsy();
+        });
+    });
+
+    describe('test detectStyleCodeChanges', ()=>{
+        it('should not detect changes if msStyleJSON is not defined in metadata', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #ff0000;\n}\n',
+                format: 'css'
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+        it('should not detect changes if the parsed msStyleJSON has same hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #ff0000;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msStyleJSON: JSON.stringify({
+                        name: 'Style',
+                        rules: [ {
+                            name: 'Rule',
+                            symbolizers: [
+                                {
+                                    color: '#ff0000',
+                                    fillOpacity: 1,
+                                    kind: 'Fill'
+                                }
+                            ]
+                        }]
+                    })
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+        it('should detect changes if the parsed msStyleJSON has different hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #0000ff;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msStyleJSON: JSON.stringify({
+                        name: 'Style',
+                        rules: [ {
+                            name: 'Rule',
+                            symbolizers: [
+                                {
+                                    color: '#ff0000',
+                                    fillOpacity: 1,
+                                    kind: 'Fill'
+                                }
+                            ]
+                        }]
+                    })
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+
+        it('should detect changes if the msMD5Hash has different hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #ff0000;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msMD5Hash: 'fb84f642f11d431c0bc7801c4fd3b77c'
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+
+        it('should not detect changes if the msMD5Hash is equal to the hash of the code', (done) => {
+            const style = {
+                code: '@mode \'Flat\';\n@styleTitle \'Style\';\n\n/* @title Rule */\n* {\n  fill: #0000ff;\n  fill-opacity: 1;\n}\n',
+                format: 'css',
+                metadata: {
+                    msMD5Hash: 'fb84f642f11d431c0bc7801c4fd3b77c'
+                }
+            };
+            detectStyleCodeChanges(style)
+                .then((metadataNeedsReset) => {
+                    try {
+                        expect(metadataNeedsReset).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+    });
+
+    it('should return a list of attributes with getVectorLayerAttributes function given a 3d tiles layer config', () => {
+        const layer = {
+            type: '3dtiles',
+            properties: {
+                property1: {
+                    minimum: 0,
+                    maximum: 1
+                },
+                property2: {},
+                property3: {
+                    type: 'number'
+                }
+            }
+        };
+        const attributes = getVectorLayerAttributes(layer);
+        expect(attributes).toEqual([
+            {
+                attribute: 'property1',
+                label: 'property1',
+                type: 'number'
+            },
+            {
+                attribute: 'property2',
+                label: 'property2',
+                type: 'string'
+            },
+            {
+                attribute: 'property3',
+                label: 'property3',
+                type: 'number'
+            }
+        ]);
+    });
+    it('should return the geometry type with getVectorLayerGeometryType function given a 3d tiles layer config with format', () => {
+        expect(getVectorLayerGeometryType({ type: '3dtiles', format: 'pnts' })).toBe('pointcloud');
+        expect(getVectorLayerGeometryType({ type: '3dtiles' })).toBe('polyhedron');
+    });
+    it('should return the default style with getVectorDefaultStyle function given a 3d tiles layer config', () => {
+        expect(getVectorDefaultStyle({ type: '3dtiles' })).toEqual({
+            format: '3dtiles',
+            body: {},
+            metadata: {
+                editorType: 'visual'
+            }
+        });
+    });
+    it('should detect if a variable in the style is not supported', () => {
+        const body = {
+            show: "${Height} > 0 && ${Latitude}",
+            color: "${CustomColor}",
+            defines: {
+                CustomColor: "color('#ff0000')"
+            }
+        };
+        const options = {
+            properties: {
+                Height: {}
+            }
+        };
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.notSupportedVariable', messageParams: { key: '${Latitude}' } }
+        );
+    });
+    it('should detect if color is a valid type', () => {
+        const body = {
+            color: true
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'color', type: 'string' } }
+        );
+    });
+    it('should detect if color object contains a valid conditions array', () => {
+        const body = {
+            color: {
+                conditions: []
+            }
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'color', type: 'string' } }
+        );
+    });
+    it('should detect if pointSize is a valid type', () => {
+        const body = {
+            pointSize: true
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'pointSize', type: 'number' } }
+        );
+    });
+    it('should detect if pointSize object contains a valid conditions array', () => {
+        const body = {
+            pointSize: {
+                conditions: []
+            }
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'pointSize', type: 'number' } }
+        );
     });
 });

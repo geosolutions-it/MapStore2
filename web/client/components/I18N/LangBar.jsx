@@ -43,6 +43,7 @@ class LangBar extends React.Component {
                     id={this.props.id}
                     title={
                         <FlagButton
+                            componentAsButton={false}
                             key={currentLanguage}
                             code={this.props.currentLocale}
                             label={locales[currentLanguage] && locales[currentLanguage].description}
@@ -51,6 +52,7 @@ class LangBar extends React.Component {
                     {Object.keys(locales).filter(lang => locales[lang].code !== this.props.currentLocale).map(lang =>
                         <MenuItem key={lang} eventKey={lang} onClick={() => this.props.onLanguageChange(locales[lang].code)}>
                             <FlagButton
+                                componentAsButton={false}
                                 key={lang}
                                 code={locales[lang].code}
                                 label={locales[lang].description}

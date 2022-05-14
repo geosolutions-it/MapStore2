@@ -12,9 +12,7 @@ import {connect} from 'react-redux';
 import { compose, renameProps, branch, renderComponent} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
-
 import {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} from '../../actions/widgets';
-
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import chartLayerSelector from './enhancers/chartLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
@@ -26,6 +24,8 @@ import ChartWizard from '../../components/widgets/builder/wizard/ChartWizard';
 import LayerSelector from './LayerSelector';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
+import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
+
 
 const Builder = connect(
     wizardSelector,
@@ -67,6 +67,7 @@ const ChartToolbar = compose(
 const chooseLayerEnhancer = compose(
     connect(wizardSelector),
     viewportBuilderConnectMask,
+    catalogEditorEnhancer,
     branch(
         ({layer} = {}) => !layer,
         renderComponent(chartLayerSelector(LayerSelector))

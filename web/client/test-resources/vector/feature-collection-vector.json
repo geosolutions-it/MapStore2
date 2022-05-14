@@ -1,0 +1,107 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"id": "5ff4ab2e-ec04-40c3-88b2-1506bf0c6c14",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-1.6515197753906248,
+					48.11403313465588
+				]
+			},
+			"style": [
+				{
+					"iconColor": "orange",
+					"iconGlyph": "exclamation",
+					"iconShape": "square"
+				}
+			],
+			"properties": {
+				"contextDescriptionType": "THEMA",
+				"data": {},
+				"initiator": "testuser",
+				"description": "dddd",
+				"updatedDate": "2021-05-12T09:44:31.451+0000",
+				"creationDate": "2020-07-15T14:27:52.884+0000",
+				"uuid": "5ff4ab2e-ec04-40c3-88b2-1506bf0c6c14",
+				"contextDescriptionLabel": "Thema 1",
+				"contextDescriptionName": "thema1",
+				"id": "557512",
+				"assignee": "testuser",
+				"status": "PENDING",
+				"geographicType": "POINT"
+			}
+		},
+		{
+			"type": "Feature",
+			"id": "a00dd133-67fe-4c6d-b856-28ff7a10f961",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-1.680442265014597,
+					48.107918303366084
+				]
+			},
+			"style": [
+				{
+					"iconColor": "orange",
+					"iconGlyph": "exclamation",
+					"iconShape": "square"
+				}
+			],
+			"properties": {
+				"contextDescriptionType": "THEMA",
+				"data": {},
+				"initiator": "testuser",
+				"description": "erer",
+				"updatedDate": "2021-05-12T09:44:31.975+0000",
+				"creationDate": "2020-07-10T08:09:14.213+0000",
+				"uuid": "a00dd133-67fe-4c6d-b856-28ff7a10f961",
+				"contextDescriptionLabel": "Thema 1",
+				"contextDescriptionName": "thema1",
+				"id": "532536",
+				"assignee": "testuser",
+				"status": "PENDING",
+				"geographicType": "POINT"
+			}
+		},
+		{
+			"type": "Feature",
+			"id": "96b31f49-981e-41ab-909d-8c98e2ea8983",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-1.680564880371094,
+					48.10594104859259
+				]
+			},
+			"style": [
+				{
+					"iconColor": "orange",
+					"iconGlyph": "exclamation",
+					"iconShape": "square"
+				}
+			],
+			"properties": {
+				"contextDescriptionType": "THEMA",
+				"data": {},
+				"initiator": "testuser",
+				"description": "aaaa",
+				"updatedDate": "2021-05-12T09:44:32.408+0000",
+				"creationDate": "2020-07-09T13:37:05.998+0000",
+				"uuid": "96b31f49-981e-41ab-909d-8c98e2ea8983",
+				"contextDescriptionLabel": "Thema 1",
+				"contextDescriptionName": "thema1",
+				"id": "525012",
+				"assignee": "testuser",
+				"status": "PENDING",
+				"geographicType": "POINT"
+			}
+		}
+	],
+	"style": [
+		{}
+	]
+}

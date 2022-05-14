@@ -39,7 +39,8 @@ export const singleAttributeFilter = ({searchText = "", queriableAttributes = []
  * @return {external:Observable} the stream used for fetching data for the autocomplete editor
 */
 export const createPagedUniqueAutompleteStream = (props$) => props$
-    .distinctUntilChanged( ({value, currentPage}, newProps = {}) => !(newProps.value !== value || newProps.currentPage !== currentPage))
+    .distinctUntilChanged( ({value, currentPage, attribute}, newProps = {}) =>
+        !(newProps.value !== value || newProps.currentPage !== currentPage || newProps.attribute !== attribute))
     .throttle(props => Rx.Observable.timer(props.delayDebounce || 0))
     .merge(props$.debounce(props => Rx.Observable.timer(props.delayDebounce || 0))).distinctUntilChanged()
     .switchMap((p) => {

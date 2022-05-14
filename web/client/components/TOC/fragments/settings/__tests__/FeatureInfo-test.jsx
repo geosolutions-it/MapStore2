@@ -77,4 +77,10 @@ describe("test FeatureInfo", () => {
         expect(sideCards.length).toBe(4);
         TestUtils.Simulate.click(sideCards[0]);
     });
+
+    it('test rendering with supported infoFormats from layer props', () => {
+        ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "text/plain"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
+        const testComponent = document.getElementsByClassName('test-preview');
+        expect(testComponent.length).toBe(2);
+    });
 });

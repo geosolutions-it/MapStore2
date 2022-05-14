@@ -8,8 +8,9 @@
 
 import expect from 'expect';
 import { addTimeoutEpic, testEpic } from './epicTestUtils';
-import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic, closeMeasureEpics } from '../measurement';
+import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic, closeMeasureEpics, addCoordinatesEpic } from '../measurement';
 import {addAnnotation, addAsLayer, setAnnotationMeasurement} from '../../actions/measurement';
+import { clickOnMap } from '../../actions/map';
 import {setControlProperty, toggleControl} from '../../actions/controls';
 
 describe('measurement epics', () => {
@@ -35,14 +36,14 @@ describe('measurement epics', () => {
                     ],
                     "textLabels": [
                         {
-                            "text": "2,937,911.16 m | 061.17° T",
+                            "text": "2,937,911.16 m | 061.17°",
                             "position": [
                                 -127.53661546263791,
                                 46.54526898530547
                             ]
                         },
                         {
-                            "text": "1,837,281.12 m | 140.72° T",
+                            "text": "1,837,281.12 m | 140.72°",
                             "position": [
                                 -101.23884662739748,
                                 42.09680198161091
@@ -67,14 +68,14 @@ describe('measurement epics', () => {
         ],
         "textLabels": [
             {
-                "text": "2,937,911.16 m | 061.17° T",
+                "text": "2,937,911.16 m | 061.17°",
                 "position": [
                     -127.53661546263791,
                     46.54526898530547
                 ]
             },
             {
-                "text": "1,837,281.12 m | 140.72° T",
+                "text": "1,837,281.12 m | 140.72°",
                 "position": [
                     -101.23884662739748,
                     42.09680198161091
@@ -100,7 +101,7 @@ describe('measurement epics', () => {
         testEpic(
             addTimeoutEpic(addAnnotationFromMeasureEpic, 10),
             NUMBER_OF_ACTIONS, [
-                addAnnotation(features, textLabels, uom, false, 1)
+                addAnnotation(features, textLabels, uom, false, {id: 1})
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 expect(actions[0].type).toBe("TOGGLE_CONTROL");
@@ -115,6 +116,8 @@ describe('measurement epics', () => {
                 expect(actions[3].feature.features[1].geometry.type).toBe("Point");
                 expect(actions[3].feature.features[2].geometry.type).toBe("Point");
                 expect(actions[3].feature.features[3].geometry.type).toBe("Point");
+                expect(actions[3].feature.properties.id).toBe(1);
+                expect(actions[3].feature.visibility).toBe(true);
                 done();
             }, null);
     });
@@ -125,7 +128,7 @@ describe('measurement epics', () => {
         testEpic(
             addTimeoutEpic(addAnnotationFromMeasureEpic, 10),
             NUMBER_OF_ACTIONS, [
-                addAnnotation(features, textLabels, uom, true, 1)
+                addAnnotation(features, textLabels, uom, true, {id: 1, visibility: false})
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 const resultFeatures = actions[3].feature.features;
@@ -137,10 +140,11 @@ describe('measurement epics', () => {
                 expect(resultFeatures.length).toBe(4);
                 expect(resultFeatures[0].geometry).toExist();
                 expect(resultFeatures[0].geometry.textLabels).toExist();
-                expect(resultFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17° T");
-                expect(resultFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72° T");
+                expect(resultFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17°");
+                expect(resultFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72°");
                 expect(resultFeatures[0].properties).toExist();
                 expect(resultFeatures[0].properties.geometryGeodesic).toExist();
+                expect(actions[3].feature.visibility).toBe(false);
                 done();
             }, null);
     });
@@ -163,8 +167,8 @@ describe('measurement epics', () => {
                 expect(innerFeatures[0].geometry).toExist();
                 expect(innerFeatures[0].geometry.type).toBe('LineString');
                 expect(innerFeatures[0].geometry.textLabels).toExist();
-                expect(innerFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17° T");
-                expect(innerFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72° T");
+                expect(innerFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17°");
+                expect(innerFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72°");
                 done();
             }, null);
     });
@@ -187,6 +191,7 @@ describe('measurement epics', () => {
         const state = {
             controls: {
                 measure: {
+                    enabled: true,
                     showCoordinateEditor: true
                 }
             }
@@ -205,7 +210,7 @@ describe('measurement epics', () => {
             }, state);
     });
     it('test setMeasureStateFromAnnotationEpic', (done) => {
-        const NUMBER_OF_ACTIONS = 3;
+        const NUMBER_OF_ACTIONS = 4;
         const state = {
             controls: {
                 measure: {
@@ -228,11 +233,13 @@ describe('measurement epics', () => {
                 expect(actions[2].control).toBe("annotations");
                 expect(actions[2].property).toBe("enabled");
                 expect(actions[2].value).toBe(false);
+                expect(actions[3].type).toBe("ANNOTATIONS:VISIBILITY");
+                expect(actions[3].visibility).toBe(false);
                 done();
             }, state);
     });
     it('test closeMeasureEpics', (done) => {
-        const NUMBER_OF_ACTIONS = 2;
+        const NUMBER_OF_ACTIONS = 1;
         const state = {
             controls: {
                 measure: {
@@ -249,9 +256,37 @@ describe('measurement epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 expect(actions[0].type).toBe("ANNOTATIONS:CLEAN_HIGHLIGHT");
-                expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
-                expect(actions[1].newProperties).toEqual({"visibility": true});
-                expect(actions[1].layer).toBe("annotations");
+                done();
+            }, state);
+    });
+    it('test addCoordinatesEpic', (done) => {
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            controls: {
+                measure: {
+                    showCoordinateEditor: true,
+                    enabled: true
+                }
+            },
+            measurement: {
+                currentFeature: 0,
+                features: [{
+                    type: "Feature",
+                    geometry: {type: "LineString", coordinates: [[1, 2], [2, 3], ["", ""]], textLabels: [{text: "1m"}, {text: "0"}]},
+                    properties: {values: [{value: 1154.583, formattedValue: "10 m", position: [1, 2], type: "length"}]}
+                }],
+                geomType: "LineString"
+            }
+        };
+
+        testEpic(
+            addTimeoutEpic(addCoordinatesEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                clickOnMap({latlng: {lng: 3, lat: 4}})
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                expect(actions[0].type).toBe("MEASUREMENT:CHANGE_COORDINATES");
+                expect(actions[0].coordinates).toEqual([{"lon": 1, "lat": 2}, {"lon": 2, "lat": 3}, {"lon": 3, "lat": 4}]);
                 done();
             }, state);
     });

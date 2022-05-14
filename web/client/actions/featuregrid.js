@@ -51,6 +51,8 @@ export const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
 export const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
 export const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
 export const UPDATE_EDITORS_OPTIONS = 'FEATUREGRID:UPDATE_EDITORS_OPTIONS';
+export const LAUNCH_UPDATE_FILTER_FUNC = 'FEATUREGRID:LAUNCH_UPDATE_FILTER_FUNC';
+export const SET_SYNC_TOOL = 'FEATUREGRID:SET_SYNC_TOOL';
 
 export const MODES = {
     EDIT: "EDIT",
@@ -175,10 +177,19 @@ export function toggleSelection(features) {
         features
     };
 }
-export function setSelectionOptions({multiselect = false} = {}) {
+/**
+ * Changes the selection options for the feature grid. It allows to set independently the possibility
+ * to do multiple selection and to show/hide the checkboxes.
+ * @memberof actions.featuregrid
+ * @param {boolean} [options.multiselect] if true, allows multiple feature selection
+ * @param {boolean} [showCheckbox] allow to show/hide checkboxes.
+ * @returns
+ */
+export function setSelectionOptions({multiselect, showCheckbox} = {}) {
     return {
         type: SET_SELECTION_OPTIONS,
-        multiselect
+        multiselect,
+        showCheckbox
     };
 
 }
@@ -374,4 +385,17 @@ export const setTimeSync = value => ({
 export const setPagination = (size) => ({
     type: SET_PAGINATION,
     size
+});
+export const launchUpdateFilterFunc = (updateFilterAction) => ({
+    type: LAUNCH_UPDATE_FILTER_FUNC,
+    updateFilterAction
+});
+
+/**
+ * Enables/Disables wms sync tool for feature grid.
+ * @param {boolean} syncWmsFilter of wms sync tool to set
+ */
+export const setSyncTool = (syncWmsFilter) => ({
+    type: SET_SYNC_TOOL,
+    syncWmsFilter
 });

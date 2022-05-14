@@ -34,6 +34,24 @@ const getHighlightStyle = ({highlight, rotation = 0}, size) => (highlight ? [new
     })
 })] : []);
 
+const getText = (options, rotation) => {
+    let text = glyphs?.[options?.style?.iconGlyph];
+    let font = 'FontAwesome';
+    let offsetYMultiplier = 2;
+    if (options?.style?.iconText) { // iconText is used to specify number in place of glyph
+        text = options.style.iconText;
+        font = 'sans-serif';
+        offsetYMultiplier = 1.6;
+    }
+    return new Text({
+        rotation,
+        text,
+        font: `14px ${font}`,
+        offsetY: (-anchorYSize * offsetYMultiplier) / 3,
+        fill: new Fill({color: '#FFFFFF'})
+    });
+};
+
 export default {
     extra: {
         getIcon: (options = {}) => {
@@ -56,13 +74,7 @@ export default {
                     size: markers.size,
                     offset: [markers.colors.indexOf(options.style.iconColor || 'blue') * markers.size[0], markers.shapes.indexOf(options.style.iconShape || 'circle') * markers.size[1]]
                 }),
-                text: new Text({
-                    rotation,
-                    text: glyphs[options.style.iconGlyph],
-                    font: '14px FontAwesome',
-                    offsetY: -markers.size[1] * 2 / 3,
-                    fill: new Fill({color: '#FFFFFF'})
-                })
+                text: getText(options, rotation)
             })].concat(getHighlightStyle(options.style, (anchorYSize + 15) * 2));
         }
     },

@@ -27,9 +27,13 @@ describe('withPluginDefinition enhancer', () => {
         mockAxios.onGet().reply(() => [200, PLUGINS_CONFIG]);
         const Sink = withPluginDefinition()(createSink(({ pluginsConfig, extensions }) => {
             if (pluginsConfig) {
-                expect(extensions[0].title).toBe(PLUGINS_CONFIG.plugins[0].title);
-                expect(extensions[0].description).toBe(PLUGINS_CONFIG.plugins[0].description);
-                expect(extensions[0].glyph).toBe(PLUGINS_CONFIG.plugins[0].glyph);
+                try {
+                    expect(extensions[0].title).toBe(PLUGINS_CONFIG.plugins[0].title);
+                    expect(extensions[0].description).toBe(PLUGINS_CONFIG.plugins[0].description);
+                    expect(extensions[0].glyph).toBe(PLUGINS_CONFIG.plugins[0].glyph);
+                } catch (e) {
+                    done(e);
+                }
                 done();
             }
         }));

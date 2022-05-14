@@ -51,7 +51,9 @@ function tileXYZToOpenlayersOptions(options = {}) {
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility !== false,
         zIndex: options.zIndex,
-        source: source
+        source: source,
+        minResolution: options.minResolution,
+        maxResolution: options.maxResolution
     };
     return olOpt;
 }
@@ -59,6 +61,14 @@ function tileXYZToOpenlayersOptions(options = {}) {
 Layers.registerType('tms', {
     create: (options) => {
         return new TileLayer(tileXYZToOpenlayersOptions(options));
+    },
+    update: (layer, newOptions, oldOptions) => {
+        if (oldOptions.minResolution !== newOptions.minResolution) {
+            layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
+        }
+        if (oldOptions.maxResolution !== newOptions.maxResolution) {
+            layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
+        }
     }
 });
 

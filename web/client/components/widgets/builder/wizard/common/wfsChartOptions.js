@@ -8,22 +8,21 @@
 
 import {compose, withProps} from 'recompose';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
+import { getDefaultAggregationOperations } from '../../../../../utils/WidgetsUtils';
 import {find} from 'lodash';
 
 const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
     .map( ({name} = {}) => ({label: name, value: name}));
 
+/** custom color-coded charts currently support string and number types only */
+const propsToTypedOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
+    .map(({name, localType} = {}) => ({ label: name, value: name, type: localType }))
+    .filter(item => item.type === 'string' || item.type === 'number');
+
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});
     if (prop && (prop.localType === 'number' || prop.localType === 'int')) {
-        return [
-            {value: "Count", label: "widgets.operations.COUNT"},
-            { value: "Sum", label: "widgets.operations.SUM"},
-            { value: "Average", label: "widgets.operations.AVG"},
-            { value: "StdDev", label: "widgets.operations.STDDEV"},
-            { value: "Min", label: "widgets.operations.MIN"},
-            { value: "Max", label: "widgets.operations.MAX"}
-        ];
+        return getDefaultAggregationOperations();
     }
     return [{ value: "Count", label: "widgets.operations.COUNT"}];
 };
@@ -31,6 +30,7 @@ const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) 
 export default compose(
     withProps(({featureTypeProperties = [], data = {}} = {}) => ({
         options: propsToOptions(featureTypeProperties),
+        typedOptions: propsToTypedOptions(featureTypeProperties),
         aggregationOptions:
             (data?.widgetType !== "counter" ? [{ value: "None", label: "widgets.operations.NONE" }] : [])
                 .concat(getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties))

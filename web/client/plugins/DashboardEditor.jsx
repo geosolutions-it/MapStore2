@@ -89,6 +89,10 @@ const EditorToolbar = compose(
  * @name DashboardEditor
  * @class
  * @memberof plugins
+ * @prop {object} cfg.catalog **Deprecated** in favor of `cfg.services`. Can contain a catalog configuration
+ * @prop {object} cfg.services Object with the catalogs available to select layers for maps, charts and tables. The format is the same of the `Catalog` plugin.
+ * @prop {string} cfg.selectedService the key of service selected by default from the list of `cfg.services`
+ * @prop {boolean} cfg.disableEmptyMap disable empty map entry from the available maps of map widget
  */
 class DashboardEditorComponent extends React.Component {
     static propTypes = {
@@ -105,7 +109,10 @@ class DashboardEditorComponent extends React.Component {
         setEditing: PropTypes.func,
         dimMode: PropTypes.string,
         src: PropTypes.string,
-        style: PropTypes.object
+        style: PropTypes.object,
+        pluginCfg: PropTypes.object,
+        catalog: PropTypes.object,
+        disableEmptyMap: PropTypes.bool
     };
     static defaultProps = {
         id: "dashboard-editor",
@@ -129,8 +136,11 @@ class DashboardEditorComponent extends React.Component {
         this.props.onUnmount();
     }
     render() {
+        const defaultSelectedService = this.props.pluginCfg.selectedService || "";
+        const defaultServices = this.props.pluginCfg.services || {};
+
         return this.props.editing
-            ? <div className="dashboard-editor de-builder"><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
+            ? <div className="dashboard-editor de-builder"><Builder disableEmptyMap={this.props.disableEmptyMap} defaultSelectedService={defaultSelectedService} defaultServices={defaultServices} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
             : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
                 <EditorToolbar transitionProps={false} btnGroupProps={{ vertical: true }} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary' }} />
                 {this.props.loading ? <LoadingSpinner style={{ position: 'fixed', bottom: 0}} /> : null}
@@ -142,7 +152,7 @@ const Plugin = connect(
     createSelector(
         isDashboardEditing,
         isDashboardLoading,
-        (editing, loading) => ({ editing, loading }),
+        (editing, loading) => ({ editing, loading })
     ), {
         setEditing,
         onMount: () => setEditorAvailable(true),

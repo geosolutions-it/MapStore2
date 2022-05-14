@@ -10,7 +10,6 @@ import expect from 'expect';
 import * as API from '../WMS';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
-
 let mockAxios;
 
 describe('Test correctness of the WMS APIs', () => {
@@ -175,6 +174,18 @@ describe('Test correctness of the WMS APIs', () => {
             }
         });
     });
+
+    it('GetRecords transform SRS List to uppercase', (done) => {
+        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0-lowercase-espg.xml', 0, 2, '').then((result) => {
+            try {
+                expect(result.records[0].SRS).toEqual(['EPSG:3857', 'EPSG:4326', 'CRS:84']);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
     it('parseLayerCapabilities nested', () => {
         const capabilities = {
             capability: {

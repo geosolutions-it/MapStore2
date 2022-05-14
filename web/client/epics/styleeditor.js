@@ -8,7 +8,7 @@
 
 import Rx from 'rxjs';
 
-import { get, head, isArray, template } from 'lodash';
+import { get, head, isArray, template, uniqBy } from 'lodash';
 import { success, error } from '../actions/notifications';
 import { UPDATE_NODE, updateNode, updateSettingsParams } from '../actions/layers';
 import { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } from '../actions/additionallayers';
@@ -53,34 +53,51 @@ import {
     loadingStyleSelector,
     styleServiceSelector,
     getUpdatedLayer,
-    editorMetadataSelector,
-    selectedStyleMetadataSelector
+    editorMetadataSelector
 } from '../selectors/styleeditor';
 
 import { getSelectedLayer, layerSettingSelector } from '../selectors/layers';
-import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } from '../utils/StyleEditorUtils';
+import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts, detectStyleCodeChanges } from '../utils/StyleEditorUtils';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { updateStyleService } from '../api/StyleEditor';
+
 /*
  * Observable to get code of a style, it works only in edit status
  */
-const getStyleCodeObservable = ({status, styleName, baseUrl}) =>
+const getStyleCodeObservable = ({ status, styleName, baseUrl }) =>
     status === 'edit' ?
         Rx.Observable.defer(() =>
             StylesAPI.getStyleCodeByName({
                 baseUrl,
                 styleName
             })
+                .then(style =>
+                    detectStyleCodeChanges(style)
+                        .then(metadataNeedsReset => [style, metadataNeedsReset])
+                        .catch(() => [style, false])
+                )
         )
-            .switchMap(style => Rx.Observable.of(
-                selectStyleTemplate({
-                    languageVersion: style.languageVersion,
-                    code: style.code,
-                    templateId: '',
-                    format: style.format,
-                    init: true
-                })
-            ))
+            .switchMap(([style, metadataNeedsReset]) => {
+                return Rx.Observable.of(
+                    selectStyleTemplate({
+                        languageVersion: style.languageVersion,
+                        code: style.code,
+                        templateId: '',
+                        format: style.format,
+                        init: true
+                    }),
+                    updateEditorMetadata(metadataNeedsReset
+                        ? {
+                            editorType: 'textarea',
+                            styleJSON: null
+                        }
+                        : {
+                            editorType: style?.metadata?.msEditorType || 'textarea',
+                            styleJSON: style?.metadata?.msStyleJSON
+                        }
+                    )
+                );
+            })
             .catch(err => Rx.Observable.of(errorStyle('edit', err)))
         : Rx.Observable.empty();
 /*
@@ -174,6 +191,39 @@ const updateLayerSettingsObservable = (action$, store, filter = () => true, star
                 .takeUntil(action$.ofType(LOADED_STYLE))
         );
 
+
+function getAvailableStylesFromLayerCapabilities(layer, reset) {
+    if (!reset && layer.availableStyles) {
+        return Rx.Observable.of(
+            updateSettingsParams({ availableStyles: layer.availableStyles  }),
+            loadedStyle()
+        );
+    }
+    return getLayerCapabilities(layer)
+        .switchMap((capabilities) => {
+            const layerCapabilities = formatCapabitiliesOptions(capabilities);
+            if (!layerCapabilities.availableStyles) {
+                return Rx.Observable.of(
+                    errorStyle('availableStyles', { status: 401 }),
+                    loadedStyle()
+                );
+            }
+
+            return Rx.Observable.of(
+                updateSettingsParams({ availableStyles: layerCapabilities.availableStyles  }),
+                updateNode(layer.id, 'layer', { ...layerCapabilities }),
+                loadedStyle()
+            );
+
+        })
+        .catch((err) => {
+            const errorType = err.message.indexOf("could not be unmarshalled") !== -1 ? "parsingCapabilities" : "global";
+            return Rx.Observable.of(errorStyle(errorType, err), loadedStyle());
+        })
+        .startWith(loadingStyle('global'));
+}
+
+
 /**
  * Epics for Style Editor
  * @name epics.styleeditor
@@ -205,47 +255,88 @@ export const toggleStyleEditorEpic = (action$, store) =>
             if (!layer || layer && !layer.url) return Rx.Observable.empty();
 
             const geoserverName = findGeoServerName(layer);
-            if (!geoserverName) return Rx.Observable.empty();
+            if (!geoserverName) {
+                return getAvailableStylesFromLayerCapabilities(layer);
+            }
 
             const layerUrl = layer.url.split(geoserverName);
             const baseUrl = `${layerUrl[0]}${geoserverName}`;
             const lastStyleService = styleServiceSelector(state);
 
-            return Rx.Observable
-                .defer(() => updateStyleService({
+            return Rx.Observable.concat(
+                Rx.Observable.of(
+                    loadingStyle('global'),
+                    resetStyleEditor()
+                ),
+                Rx.Observable.defer(() => updateStyleService({
                     baseUrl,
                     styleService: lastStyleService
                 }))
-                .switchMap((styleService) => {
-                    const initialAction = [ initStyleService(styleService) ];
-                    return getLayerCapabilities(layer)
-                        .switchMap((capabilities) => {
-                            const layerCapabilities = formatCapabitiliesOptions(capabilities);
-                            if (!layerCapabilities.availableStyles) {
-                                return Rx.Observable.of(
-                                    errorStyle('availableStyles', { status: 401 }),
-                                    loadedStyle()
-                                );
-                            }
-                            const setAdditionalLayers = (availableStyles = []) =>
-                                Rx.Observable.of(
-                                    updateAdditionalLayer(layer.id, STYLE_OWNER_NAME, 'override', {}),
-                                    updateSettingsParams({ availableStyles }),
-                                    updateNode(layer.id, 'layer', {...layerCapabilities, availableStyles}),
-                                    loadedStyle()
-                                );
-                            return Rx.Observable.defer(() =>
-                                StylesAPI.getStylesInfo({
-                                    baseUrl,
-                                    styles: layerCapabilities && layerCapabilities.availableStyles || []
-                                })
+                    .switchMap((styleService) => {
+                        return Rx.Observable.concat(
+                            Rx.Observable.of(initStyleService(styleService)),
+                            Rx.Observable.defer(() =>
+                                // use rest API to get the correct name and workspace of the styles
+                                LayersAPI.getLayer(baseUrl + 'rest/', layer.name)
                             )
-                                .switchMap(availableStyles => setAdditionalLayers(availableStyles));
-                        })
-                        .startWith(...initialAction)
-                        .catch((err) => Rx.Observable.of(errorStyle('global', err), loadedStyle()));
-                })
-                .startWith(loadingStyle('global'));
+                                .switchMap((layerConfig) => {
+                                    const stylesConfig = layerConfig?.styles?.style || [];
+                                    const layerConfigAvailableStyles = uniqBy([
+                                        layerConfig.defaultStyle,
+                                        ...stylesConfig
+                                    ], 'name');
+                                    if (layerConfigAvailableStyles.length === 0) {
+                                        return Rx.Observable.of(
+                                            errorStyle('availableStyles', { status: 401 }),
+                                            loadedStyle()
+                                        );
+                                    }
+
+                                    return Rx.Observable.defer(() =>
+                                        Promise.all([
+                                            StylesAPI.getStylesInfo({
+                                                baseUrl,
+                                                styles: layerConfigAvailableStyles
+                                            }),
+                                            getLayerCapabilities(layer)
+                                                .toPromise()
+                                                .then(cap => cap)
+                                                .catch(() => null)
+                                        ])
+                                    )
+                                        .switchMap(([availableStylesRest, capabilities]) => {
+                                            const layerCapabilities = capabilities && formatCapabitiliesOptions(capabilities);
+                                            const availableStylesCap = (layerCapabilities?.availableStyles || [])
+                                                .map((style) => ({ ...style, ...getNameParts(style.name) }))
+                                                .filter(({ name } = {}) => name);
+
+                                            // get title information from capabilities
+                                            const availableStyles = availableStylesCap.length > 0
+                                                ? availableStylesRest.map(restStyle => {
+                                                    const parts = getNameParts(restStyle.name);
+                                                    const { name, workspace, ...capStyle} = availableStylesCap.find(style => style.name === parts.name) || {};
+                                                    if (capStyle) {
+                                                        return { ...capStyle, ...restStyle };
+                                                    }
+                                                    return restStyle;
+                                                })
+                                                : availableStylesRest;
+
+                                            return Rx.Observable.of(
+                                                updateAdditionalLayer(layer.id, STYLE_OWNER_NAME, 'override', {}),
+                                                updateSettingsParams({ availableStyles }),
+                                                updateNode(layer.id, 'layer', { availableStyles }),
+                                                loadedStyle()
+                                            );
+                                        });
+                                })
+                                .catch(() => {
+                                    // fallback to get capabilities to get list of styles
+                                    return getAvailableStylesFromLayerCapabilities(layer, true);
+                                })
+                        );
+                    })
+            );
         });
 /**
  * Gets every `UPDATE_STATUS` event.
@@ -269,7 +360,6 @@ export const updateLayerOnStatusChangeEpic = (action$, store) =>
             const selectedStyle = selectedStyleSelector(state);
             const styleName = selectedStyle || layer.availableStyles && layer.availableStyles[0] && layer.availableStyles[0].name;
 
-            const selectedStyleMetadata = selectedStyleMetadataSelector(state);
             const { baseUrl = '' } = styleServiceSelector(state);
 
             return describeAction && updateLayerSettingsObservable(action$, store,
@@ -286,26 +376,15 @@ export const updateLayerOnStatusChangeEpic = (action$, store) =>
                             setEditPermissionStyleEditor(!(updatedLayer
                                     && updatedLayer.describeLayer
                                     && updatedLayer.describeLayer.error === 401)),
-                            updateEditorMetadata({
-                                editorType: selectedStyleMetadata.msEditorType || 'textarea',
-                                styleJSON: selectedStyleMetadata.msStyleJSON
-                            }),
                             loadedStyle()
                         )
                     );
                 }
-            ) || Rx.Observable.concat(
-                getStyleCodeObservable({
-                    status: action.status,
-                    styleName,
-                    baseUrl
-                }),
-                Rx.Observable.of(
-                    updateEditorMetadata({
-                        editorType: selectedStyleMetadata.msEditorType || 'textarea',
-                        styleJSON: selectedStyleMetadata.msStyleJSON
-                    })
-                ));
+            ) || getStyleCodeObservable({
+                status: action.status,
+                styleName,
+                baseUrl
+            });
         });
 /**
  * Gets every `SELECT_STYLE_TEMPLATE`, `EDIT_STYLE_CODE` events.
@@ -419,6 +498,16 @@ export const updateTemporaryStyleEpic = (action$, store) =>
             || temporaryId && updateTmpCode(styleName)
             || createTmpCode(styleName);
         });
+
+// import the md5 dynamically
+// we need it only for the style body code
+function getMD5Metadata(code) {
+    return import('md5').then((mod) => {
+        const md5 = mod.default;
+        return md5(code);
+    });
+}
+
 /**
  * Gets every `CREATE_STYLE` event.
  * Create a new style.
@@ -451,15 +540,22 @@ export const createStyleEpic = (action$, store) =>
             };
 
             const status = '';
-
+            const newCode = template(code)({ styleTitle: title, styleAbstract: _abstract });
             return Rx.Observable.defer(() =>
-                StylesAPI.createStyle({
-                    baseUrl,
-                    code: template(code)({ styleTitle: title, styleAbstract: _abstract }),
-                    format,
-                    styleName,
-                    metadata
-                }))
+                getMD5Metadata(newCode)
+                    .then((msMD5Hash) =>
+                        StylesAPI.createStyle({
+                            baseUrl,
+                            code: newCode,
+                            format,
+                            styleName,
+                            metadata: {
+                                ...metadata,
+                                msMD5Hash
+                            }
+                        })
+                    )
+            )
                 .switchMap(() => Rx.Observable.of(
                     updateOptionsByOwner(STYLE_OWNER_NAME, [{}]),
                     updateSettingsParams({style: styleName || ''}, true),
@@ -517,15 +613,21 @@ export const updateStyleCodeEpic = (action$, store) =>
                 });
 
             return Rx.Observable.defer(() =>
-                StylesAPI.updateStyle({
-                    baseUrl,
-                    code,
-                    format,
-                    styleName,
-                    languageVersion,
-                    options: { params: { raw: true } },
-                    metadata
-                })
+                getMD5Metadata(code)
+                    .then((msMD5Hash) =>
+                        StylesAPI.updateStyle({
+                            baseUrl,
+                            code,
+                            format,
+                            styleName,
+                            languageVersion,
+                            options: { params: { raw: true } },
+                            metadata: {
+                                ...metadata,
+                                msMD5Hash
+                            }
+                        })
+                    )
             )
                 .switchMap(() => Rx.Observable.of(
                     loadedStyle(),
@@ -684,4 +786,3 @@ export default {
     deleteStyleEpic,
     setDefaultStyleEpic
 };
-

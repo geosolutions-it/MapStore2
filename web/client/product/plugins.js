@@ -14,13 +14,11 @@ export default {
         // product plugins
         AboutPlugin: require('./plugins/About').default,
         AttributionPlugin: require('./plugins/Attribution').default,
-        ExamplesPlugin: require('./plugins/Examples').default,
         FooterPlugin: require('./plugins/Footer'),
         ForkPlugin: require('./plugins/Fork').default,
         HeaderPlugin: require('./plugins/Header').default,
         HomeDescriptionPlugin: require('./plugins/HomeDescription').default,
         MadeWithLovePlugin: require('./plugins/MadeWithLove').default,
-        MailingListsPlugin: require('./plugins/MailingLists').default,
         MapTypePlugin: require('./plugins/MapType').default,
         NavMenu: require('./plugins/NavMenu').default,
         // framework plugins
@@ -34,11 +32,13 @@ export default {
         ContextPlugin: require('../plugins/Context').default,
         ContextCreatorPlugin: require('../plugins/ContextCreator').default,
         ContextManagerPlugin: require('../plugins/contextmanager/ContextManager').default,
+        ContextsPlugin: require('../plugins/Contexts').default,
         CookiePlugin: require('../plugins/Cookie').default,
         CreateNewMapPlugin: require('../plugins/CreateNewMap').default,
         Dashboard: require('../plugins/Dashboard').default,
         DashboardEditor: require('../plugins/DashboardEditor').default,
         DashboardsPlugin: require('../plugins/Dashboards').default,
+        DeleteMapPlugin: require('../plugins/DeleteMap').default,
         DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu').default,
         ExpanderPlugin: require('../plugins/Expander').default,
@@ -107,6 +107,7 @@ export default {
         SharePlugin: require('../plugins/Share'),
         SnapshotPlugin: require('../plugins/Snapshot').default,
         StyleEditorPlugin: require('../plugins/StyleEditor').default,
+        StreetView: require('../plugins/StreetView').default,
         SwipePlugin: require('../plugins/Swipe').default,
         TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings').default,
         TOCPlugin: require('../plugins/TOC').default,
@@ -125,7 +126,9 @@ export default {
         WidgetsTrayPlugin: require('../plugins/WidgetsTray').default,
         ZoomAllPlugin: require('../plugins/ZoomAll').default,
         ZoomInPlugin: require('../plugins/ZoomIn').default,
-        ZoomOutPlugin: require('../plugins/ZoomOut').default
+        ZoomOutPlugin: require('../plugins/ZoomOut').default,
+        SidebarMenuPlugin: require('../plugins/SidebarMenu').default
+
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

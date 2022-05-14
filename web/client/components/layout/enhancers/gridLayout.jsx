@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import ContainerDimensions from 'react-container-dimensions';
+import ReactResizeDetector  from 'react-resize-detector';
 import { compose, defaultProps, withStateHandlers } from 'recompose';
 
 import withResizeSpy from '../../misc/enhancers/withResizeSpy';
@@ -24,7 +24,7 @@ export const widthProvider = ({overrideWidthProvider} = {}) => compose(
     defaultProps({
         useDefaultWidthProvider: !overrideWidthProvider
     }),
-    C => props => <ContainerDimensions>{({ width } = {}) => <C width={width} {...props} />}</ContainerDimensions>
+    C => props => <ReactResizeDetector handleWidth >{({ width } = {}) => <C width={width} {...props} />}</ReactResizeDetector>
 
 );
 /**

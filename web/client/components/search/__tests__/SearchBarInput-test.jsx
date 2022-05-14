@@ -80,7 +80,7 @@ describe('SearchBarInput tests', () => {
         setTimeout(() => {
             expect(spyOnFocus.calls.length).toEqual(1);
             done();
-        }, 210);
+        }, 310);
     });
     it('test placeholderMsgId', () => {
         const comp = (

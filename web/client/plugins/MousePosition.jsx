@@ -46,7 +46,7 @@ const selector = createSelector([
     mapSelector,
     (state) => isMouseMoveCoordinatesActiveSelector(state),
     (state) => get(state, 'mousePosition.position') || {},
-    (state) => get(state, 'mousePosition.crs', 'EPSG:4326'),
+    (state) => get(state, 'mousePosition.crs') || 'EPSG:4326',
     (state) => state.mapInfo || {}
 ], (state, map, enabled, mousePosition, crs, mapInfo) => ({
     enabled,
@@ -82,7 +82,7 @@ class MousePosition extends React.Component {
     };
 
     getTemplate = (template) => {
-        return require('../components/mapcontrols/mouseposition/' + template).default;
+        return require('../components/mapcontrols/mouseposition/' + template + ".jsx").default;
     };
     render() {
         const { degreesTemplate, projectedTemplate, ...other} = this.props;

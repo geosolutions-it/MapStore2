@@ -10,12 +10,70 @@ import React from 'react';
 import assign from 'object-assign';
 import { omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
-import axios from '../libs/ajax';
 import url from 'url';
 import curry from 'lodash/curry';
 import { combineEpics as originalCombineEpics } from 'redux-observable';
 import { combineReducers as originalCombineReducers } from 'redux';
 import {wrapEpics} from "./EpicsUtils";
+
+/**
+ * Loads a script inside the current page.
+ * @param {string} src the URL where to load the script
+ */
+function loadScript(src) {
+    return new Promise(function(resolve, reject) {
+        const s = document.createElement('script');
+        let r = false;
+        s.type = 'text/javascript';
+        s.src = src;
+        s.async = true;
+        s.onerror = function(err) {
+            reject(err, s);
+        };
+        s.onload = s.onreadystatechange = function() {
+            // console.log(this.readyState); // uncomment this line to see which ready states are called.
+            if (!r && (!this.readyState || this.readyState === 'complete')) {
+                r = true;
+                resolve();
+            }
+        };
+        const t = document.getElementsByTagName('script')?.[0];
+        if (t) {
+            t.parentElement.insertBefore(s, t);
+        } else {
+            document.head.appendChild(s);
+        }
+
+    });
+}
+
+/**
+ * Allows to load a federate module dynamically.
+ * Typically published in this way:
+ * ```
+ * plugins: [new ModuleFederationPlugin({
+        name: 'Scope', // this is the scope
+        filename: "sampleExtension.js",
+        exposes: { // the keys of this object are the modules inside the scope "Scope"
+            './plugin': path.join(__dirname, "plugins", "SampleExtension")
+        },
+        shared
+    })],
+ * @param {sting} scope the scope
+ * @param {string} module the module
+ */
+/* eslint-disable */
+const dynamicFederation = (scope, module) => {
+    return (new Promise(resolve => resolve(__webpack_init_sharing__ && __webpack_init_sharing__("default")))).then(() => {
+        const container = window[scope];
+        return container.init(__webpack_share_scopes__.default);
+    }).then(() => {
+        return window[scope].get(module).then((factory) => {
+            const Module = factory();
+            return Module;
+        });
+    })
+};
 
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 
@@ -78,21 +136,28 @@ const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.subst
 
 const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
 
-export const getPluginConfiguration = (cfg, plugin) => {
+export const getPluginsConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
-    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName).map(cfgObj => isString(cfgObj) ? {
-        name: cfgObj
-    } : cfgObj)) || {};
+    return cfg
+        .filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName)
+        .map(cfgObj => isString(cfgObj) ? {
+            name: cfgObj
+        } : cfgObj);
+}
+
+export const getPluginConfiguration = (cfg, plugin) => {
+    const matches = getPluginsConfiguration(cfg, plugin);
+    return head(matches) || {}
 };
 
 /* eslint-disable */
 const parseExpression = (state = {}, context = {}, value) => {
     const searchExpression = /^\{(.*)\}$/;
     const expression = searchExpression.exec(value);
-    const request = url.parse(location.href, true);
-    const dispatch = (action) => {
-        return () => state("store").dispatch(action.apply(null, arguments));
+    const dispatch = (action, ...rest) => {
+        return () => state("store").dispatch(action.apply(null, [action, ...rest]));
     };
+    const request = url.parse(location.href, true);
     if (expression !== null) {
         return eval(expression[1]);
     }
@@ -153,31 +218,45 @@ const showIn = (state, requires, cfg = {}, name, id, isDefault) => {
     );
 };
 
-const includeLoaded = (name, loadedPlugins, plugin) => {
+export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype?.isReactComponent || impl.isMapStorePlugin;
+
+const getPluginImplementation = (impl, stateSelector) => {
+    return isMapStorePlugin(impl) ? impl : impl(stateSelector);
+};
+
+const includeLoaded = (name, loadedPlugins, plugin, stateSelector) => {
     if (loadedPlugins[name]) {
         const loaded = loadedPlugins[name];
-        const impl = loaded.component || loaded;
+        const impl = getPluginImplementation(loaded.component || loaded, stateSelector);
         return assign(impl, plugin, {loadPlugin: undefined}, {...loaded.containers});
     }
     return plugin;
 };
 
+const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
+    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
+    pluginImpl;
+
 const getPriority = (plugin, override = {}, container) => {
+    const pluginImpl = executeDeferredProp(plugin.impl, plugin.config, container);
     return (
         get(override, container + ".priority") ||
-        get(plugin, container + ".priority") ||
+        get(pluginImpl, container + ".priority") ||
         0
     );
 };
 
-export const getMorePrioritizedContainer = (pluginImpl, override = {}, plugins, priority) => {
+export const getMorePrioritizedContainer = (plugin, override = {}, plugins, priority) => {
+    const pluginImpl = plugin.impl;
     return plugins.reduce((previous, current) => {
         const containerName = current.name || current;
-        const pluginPriority = getPriority(pluginImpl, override, containerName);
+        const pluginPriority = getPriority(plugin, override, containerName);
         return pluginPriority > previous.priority ? {
             plugin: {
                 name: containerName,
-                impl: assign({}, pluginImpl[containerName], override[containerName])
+                impl: {
+                    ...(isFunction(pluginImpl[containerName]) ? pluginImpl[containerName](plugin.config) : pluginImpl[containerName]),
+                    ...(override[containerName] ?? {})}
             },
             priority: pluginPriority} : previous;
     }, {plugin: null, priority: priority});
@@ -200,8 +279,8 @@ const canContain = (container, plugin, override = {}) => {
     return plugin[container] || override[container] || false;
 };
 
-const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => {
-    return getMorePrioritizedContainer(pluginImpl,
+const isMorePrioritizedContainer = (plugin, override, plugins, priority) => {
+    return getMorePrioritizedContainer(plugin,
         override,
         plugins,
         priority).plugin === null;
@@ -211,16 +290,12 @@ const isValidConfiguration = (cfg) => {
     return cfg && isString(cfg) || (isObject(cfg) && cfg.name);
 };
 
-const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
-    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
-    pluginImpl;
-
-export const getPluginItems = (state, plugins, pluginsConfig, containerName, containerId, isDefault, loadedPlugins, filter) => {
+export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containerName, containerId, isDefault, loadedPlugins = {}, filter) => {
     return Object.keys(plugins)
-    // extract basic info for each plugins (name, implementation and config)
-        .map(pluginName => {
-            const config = getPluginConfiguration(pluginsConfig, pluginName);
-            return {
+        // extract basic info for each plugins (name, implementation and config)
+        .reduce((acc, pluginName) => {
+            const configs = getPluginsConfiguration(pluginsConfig, pluginName);
+            const configuredPlugins = configs.map(config => ({
                 name: pluginName,
                 impl: executeDeferredProp(
                     includeLoaded(getPluginSimpleName(pluginName), loadedPlugins, plugins[pluginName]),
@@ -228,43 +303,51 @@ export const getPluginItems = (state, plugins, pluginsConfig, containerName, con
                     containerName
                 ),
                 config
-            };
-        })
-    // include only plugins that are configured for the current mode
+            }));
+            return [...acc, ...configuredPlugins];
+        }, [])
+        // include only plugins that are configured for the current mode
         .filter((plugin) => isValidConfiguration(plugin.config))
-    // include only plugins that support container as a parent
+        // include only plugins that support container as a parent
         .filter((plugin) => canContain(containerName, plugin.impl, plugin.config.override))
-    // include only plugins that are configured to be shown in container (use showIn and hideFrom to customize the behaviour)
+        // include only plugins that are configured to be shown in container (use showIn and hideFrom to customize the behaviour)
         .filter((plugin) => {
             return showIn(state, plugins.requires, plugin.config, containerName, containerId, isDefault);
         })
+        // duplicate entries if container is an array
+        .reduce((acc, curr) => {
+            const containers = curr.impl?.[containerName];
+            if (isArray(containers)) {
+                return [...acc, ...containers.map((c) => ({
+                    ...curr,
+                    impl: {
+                        ...curr.impl,
+                        [containerName]: c
+                    }
+                }))];
+            }
+            return [...acc, curr];
+        }, [])
     // include only plugins for which container is the preferred container
-        .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
-            getPriority(plugin.impl, plugin.config.override, containerName)))
+        .filter((plugin) => isMorePrioritizedContainer(plugin, plugin.config.override, pluginsConfig,
+            getPriority(plugin, plugin.config.override, containerName)))
         .map((plugin) => {
             const pluginName = getPluginSimpleName(plugin.name);
             const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
-            const containerProperties = assign(
-                {},
-                get(pluginImpl, containerName + '.impl') || get(pluginImpl, containerName),
-                get(plugin.config, 'override.' + containerName)
-            );
-            return assign(
-                {
-                    name: pluginName
+            const containerProperties = {
+                ...(get(pluginImpl, containerName + '.impl') || get(pluginImpl, containerName) || {}),
+                ...(get(plugin.config, 'override.' + containerName) ?? {})
+            };
+            return {
+                name: pluginName,
+                ...containerProperties,
+                cfg: {
+                    ...(pluginImpl?.cfg ?? {}),
+                    ...(parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) ?? {})
                 },
-                containerProperties,
-                {
-                    cfg: assign(
-                        {},
-                        pluginImpl.cfg || {},
-                        parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) || undefined
-                    )
-                },
-                {
-                    plugin: pluginImpl,
-                    items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
-                });
+                plugin: pluginImpl,
+                items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
+            };
         })
     // filter disabled plugins
         .filter((item) => filterDisabledPlugins(item, state, plugins))
@@ -275,12 +358,6 @@ export const getPluginItems = (state, plugins, pluginsConfig, containerName, con
 const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     const {pluginCfg, ...otherProps} = ownProps;
     return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
-};
-
-export const isMapStorePlugin = (impl) => impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent || impl.isMapStorePlugin;
-
-const getPluginImplementation = (impl, stateSelector) => {
-    return isMapStorePlugin(impl) ? impl : impl(stateSelector);
 };
 
 /**
@@ -302,36 +379,8 @@ const getPluginImplementation = (impl, stateSelector) => {
  * @param {string} source plugin source code
  * @param {function} callback function called with the plugin implementation
  */
-export const importPlugin = (source, callback) => {
-    /* eslint-disable */
-    // save a reference to webpack require functionality (usable to load compiled bundles)
-    const r = __webpack_require__;
-    // evaluate compiled bundle(s) (this will append a new bundle definition in webpackJsonp)
-    eval(source);
-    // extract bundle(s) definiton
-    const lastLoaded = window.webpackJsonp[window.webpackJsonp.length - 1][1];
-
-    // for every bundle, we call the related definition code
-    Object.keys(lastLoaded).forEach(source => {
-        // exported will contain the bundle exported code
-        const exported = {};
-        lastLoaded[source](null, exported, r);
-        const pluginDef = exported.default || exported;
-        // return the plugin as a lazy loaded one
-        const plugin = {
-            loadPlugin: (loaded) => {
-                if (loaded) {
-                    loaded(pluginDef)
-                } else {
-                    return Promise.resolve(pluginDef)
-                }
-            }
-        }
-        callback(pluginDef.name, plugin);
-    });
-    // remove loaded bundle from the webpack list
-    window.webpackJsonp.pop();
-    /* eslint-enable */
+export const importPlugin = (pluginName) => {
+    return dynamicFederation(pluginName, "./plugin");
 };
 
 /**
@@ -404,7 +453,7 @@ export const getPluginDescriptor = (state, plugins, pluginsConfig, pluginDef, lo
     return {
         id: id || name,
         name,
-        impl: includeLoaded(name, loadedPlugins, getPluginImplementation(impl, stateSelector)),
+        impl: includeLoaded(name, loadedPlugins, getPluginImplementation(impl, stateSelector), stateSelector),
         cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
         items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
     };
@@ -416,7 +465,7 @@ export const getConfiguredPlugin = (pluginDef, loadedPlugins = {}, loaderCompone
             !pluginDef.plugin.loadPlugin && pluginDef.plugin;
         const id = isObject(pluginDef) ? pluginDef.id : null;
         const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
-        const Plugin = getPluginImplementation(impl, stateSelector);
+        const Plugin = getPluginImplementation(impl?.component || impl, stateSelector);
         const result = (props) => {
             return Plugin ? (<Plugin key={pluginDef.id}
                 {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg} items={pluginDef.items || []} />) : loaderComponent;
@@ -518,16 +567,19 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
     };
 };
 
+/* eslint-enable */
+
 /**
- * Loads a plugin compiled bundle from the given url.
+ * Loads a plugin compiled bundle from the given URL.
  *
- * Compiled plugin bundles can be created using the dynamic import syntax with the webChunkName comment.
+ * Compiled plugin bundles can be created using the module federation plugin. They require the
+ * main project also use Module federation plugin.
  *
  * @example named bundle plugin
  * import(&#47;* webpackChunkName: "extensions/dummy-extension" *&#47; './plugins/Extension')
  *
  * @example load and use an external plugin
- * loadPlugin("dist/plugins/myplugin").then(lazy => {
+ * loadPlugin("dist/plugins/myPlugin").then(lazy => {
  *      lazy.loadPlugin((plugin) => {
  *          const Comp = plugin.component;
  *          ReactDOM.render(Comp, document.getElementById('container'));
@@ -537,14 +589,11 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
  * @param {string} pluginUrl url (relative or absolute) of a plugin compiled bundle to load
  * @returns {Promise} a Promise that resolves to a lazy plugin object.
  */
-export const loadPlugin = (pluginUrl) => {
-    return new Promise((resolve, reject = () => { }) => {
-        axios.get(pluginUrl).then(response => {
-            importPlugin(response.data, (name, plugin) => resolve({ name, plugin }));
-        }).catch(e => {
-            reject(e);
-        });
-    });
+export const loadPlugin = (pluginUrl, pluginName) => {
+    return loadScript(pluginUrl)
+        .then(() =>importPlugin(pluginName))
+        .then((plugin) => ({ name: pluginName, plugin}));
+
 };
 
 /**

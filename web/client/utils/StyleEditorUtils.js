@@ -6,21 +6,31 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import head from 'lodash/head';
-import get from 'lodash/get';
-import isArray from 'lodash/isArray';
-import isString from 'lodash/isString';
-import flatten from 'lodash/flatten';
-import isNil from 'lodash/isNil';
-import omit from 'lodash/omit';
-import omitBy from 'lodash/omitBy';
-import isUndefined from 'lodash/isUndefined';
+import {
+    head,
+    get,
+    isArray,
+    isString,
+    flatten,
+    isNil,
+    isEmpty,
+    omit,
+    omitBy,
+    isUndefined,
+    set,
+    castArray,
+    isObject,
+    isNumber
+} from "lodash";
 import uuidv1 from 'uuid/v1';
 
 
 import url from 'url';
 
 import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
+import { getStyleParser } from './VectorStyleUtils';
+import xml2js from 'xml2js';
+const xmlBuilder = new xml2js.Builder();
 
 export const STYLE_ID_SEPARATOR = '___';
 export const STYLE_OWNER_NAME = 'styleeditor';
@@ -28,18 +38,20 @@ export const STYLE_OWNER_NAME = 'styleeditor';
 const StyleEditorCustomUtils = {};
 
 const EDITOR_MODES = {
-    css: 'geocss',
-    sld: 'xml'
+    'css': 'geocss',
+    'sld': 'xml',
+    '3dtiles': 'application/json'
 };
 
 const getGeometryType = (geomProperty = {}) => {
-    const localPart = geomProperty.type && geomProperty.type.localPart && geomProperty.type.localPart.toLowerCase() || '';
-    if (localPart.indexOf('polygon') !== -1
-        || localPart.indexOf('surface') !== -1) {
+    const localType = geomProperty.localType && geomProperty.localType.toLowerCase() || '';
+    if (localType.indexOf('polygon') !== -1
+        || localType.indexOf('surface') !== -1
+    ) {
         return 'polygon';
-    } else if (localPart.indexOf('linestring') !== -1) {
+    } else if (localType.indexOf('linestring') !== -1) {
         return 'linestring';
-    } else if (localPart.indexOf('point') !== -1) {
+    } else if (localType.indexOf('point') !== -1) {
         return 'point';
     }
     return 'vector';
@@ -68,17 +80,19 @@ export const generateStyleId = ({title = ''}) => `${title.toLowerCase().replace(
  */
 export const extractFeatureProperties = ({describeLayer = {}, describeFeatureType = {}} = {}) => {
 
-    const owsType = describeLayer && describeLayer.owsType || null;
-    const descProperties = get(describeFeatureType, 'complexType[0].complexContent.extension.sequence.element') || null;
-    const geomProperty = descProperties && head(descProperties.filter(({ type }) => type && type.prefix === 'gml'));
+    const owsType = describeLayer?.owsType || null;
+    const descProperties = get(describeFeatureType, 'featureTypes[0].properties') || null;
+    const geomProperty = descProperties && head(descProperties.filter(({ type, localType }) => {
+        return type && type.includes('gml') && localType;
+    }));
     const geometryType = owsType === 'WCS' && 'raster' || geomProperty && owsType === 'WFS' && getGeometryType(geomProperty) || null;
     const properties = geometryType === 'raster'
         ? describeLayer.bands
-        : descProperties && descProperties.reduce((props, { name, type = {} }) => ({
+        : descProperties && descProperties.reduce((props, { name, type = {}, localType }) => ({
             ...props,
             [name]: {
-                localPart: type.localPart,
-                prefix: type.prefix
+                localType: localType,
+                prefix: type.replace(`:${localType}`, '')
             }
         }), {});
     return {
@@ -310,23 +324,24 @@ export function parseJSONStyle(style) {
         rules: flatten(style.rules.map((rule) => {
             if (rule.kind === 'Classification') {
                 return (rule.classification || []).map((entry, idx) => {
-                    const lessThan = idx === rule.classification.length - 1
-                        ? '<='
-                        : '<';
-                    const minFilter = entry.min !== null ? [['>=', rule.attribute, entry.min]] : [];
-                    const maxFilter = entry.max !== null ? [[lessThan, rule.attribute, entry.max]] : [];
-                    const minLabel = entry.min !== null && '>= ' + entry.min;
-                    const maxLabel = entry.max !== null && lessThan + ' ' + entry.max;
+                    const lessThan = idx === rule.classification.length - 1 ? '<=' : '<';
+                    const isMin = !isNil(entry.min);
+                    const isMax = !isNil(entry.max);
+                    const isUnique = !isNil(entry.unique);
+                    const uniqueFilter = isUnique ? ['==', rule.attribute, entry.unique] : [];
+                    const minFilter = isMin ? [['>=', rule.attribute, entry.min]] : [];
+                    const maxFilter = isMax ? [[lessThan, rule.attribute, entry.max]] : [];
+                    const uniqueLabel = isUnique && entry.unique;
+                    const minLabel = isMin && '>= ' + entry.min;
+                    const maxLabel = isMax && lessThan + ' ' + entry.max;
+                    const name = uniqueLabel ? uniqueLabel
+                        : minLabel && maxLabel ? minLabel + ' and ' + maxLabel : minLabel || maxLabel;
+                    const filter = !isEmpty(uniqueFilter)
+                        ? uniqueFilter
+                        : !isEmpty(minFilter[0]) || !isEmpty(maxFilter[0]) ? ['&&', ...minFilter, ...maxFilter] : undefined;
                     return {
-                        name: minLabel && maxLabel
-                            ? minLabel + ' and ' + maxLabel
-                            : minLabel || maxLabel,
-                        filter: minFilter[0] || maxFilter[0]
-                            ? ['&&',
-                                ...minFilter,
-                                ...maxFilter
-                            ]
-                            : undefined,
+                        name,
+                        filter,
                         ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                         symbolizers: [
                             cleanJSONSymbolizer({
@@ -334,6 +349,7 @@ export function parseJSONStyle(style) {
                                     'ruleId',
                                     'classification',
                                     'intervals',
+                                    'intervalsForUnique',
                                     'method',
                                     'ramp',
                                     'reverse',
@@ -355,7 +371,8 @@ export function parseJSONStyle(style) {
                         quantity: entry.quantity,
                         color: entry.color,
                         opacity: entry.opacity
-                    }))
+                    })),
+                    type: rule.colorMapType
                 };
                 return {
                     name: rule.name || '',
@@ -371,7 +388,8 @@ export function parseJSONStyle(style) {
                                 'reverse',
                                 'continuous',
                                 'symbolizerKind',
-                                'name'
+                                'name',
+                                'colorMapType'
                             ]),
                             kind: 'Raster',
                             ...(colorMap && { colorMap })
@@ -411,9 +429,278 @@ export function formatJSONStyle(style) {
     };
 }
 
+function checkBase64(base64) {
+    try {
+        window.atob(base64);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Validate an image source by its src
+ * @param  {string} src symbolizer object
+ * @return  {promise} on then return valid response { src, isBase64 } on catch return error object { messageId, isBase64 }
+ */
+export function validateImageSrc(src) {
+    return new Promise((resolve, reject) => {
+        if (!src) {
+            reject({ messageId: 'imageSrcEmpty', isBase64: false });
+        }
+        let isBase64 = false;
+        if (src.indexOf('data:image') === 0) {
+            const splitBase64 = src.split('base64,');
+            isBase64 = checkBase64(splitBase64[splitBase64.length - 1]);
+            if (!isBase64) {
+                reject({ messageId: 'imageSrcInvalidBase64', isBase64 });
+            }
+        }
+        const img = new Image();
+        img.onload = () => {
+            resolve({ src, isBase64 });
+        };
+        img.onerror = () => {
+            reject({
+                messageId: isBase64
+                    ? 'imageSrcInvalidBase64'
+                    : 'imageSrcLoadError',
+                isBase64
+            });
+        };
+        img.src = src;
+    });
+}
+
+export const SUPPORTED_MIME_TYPES = [{
+    label: 'image/png',
+    value: 'image/png'
+}, {
+    label: 'image/jpeg',
+    value: 'image/jpeg'
+}, {
+    label: 'image/gif',
+    value: 'image/gif'
+}, {
+    label: 'image/svg+xml',
+    value: 'image/svg+xml'
+}];
+
+// Get format and graphic path for custom parsing of external graphic
+const getParseContent = (rulesArray, index) => {
+    const { kind, ...symbolizerObj } = rulesArray[index]?.symbolizers?.[0] || {};
+    switch (kind) {
+    case 'Icon':
+        return {
+            baseGraphicPath: 'PointSymbolizer',
+            imgFormat: symbolizerObj?.format
+        };
+    case 'Line':
+        return {
+            baseGraphicPath: 'LineSymbolizer.Stroke.GraphicStroke',
+            imgFormat: symbolizerObj?.graphicStroke?.format
+        };
+    case 'Fill':
+        return {
+            baseGraphicPath: 'PolygonSymbolizer.Fill.GraphicFill',
+            imgFormat: symbolizerObj?.graphicFill?.format
+        };
+    default: return {};
+    }
+};
+/**
+ * Update the external graphic node when Icon symbolizer has image prop with no format specified
+ * @param  {object} options visual styler props
+ * @param  {string} parsedSLD parsed SLD string
+ * @return  {object} returns the updated SLD string with error if any
+ */
+export const updateExternalGraphicNode = (options, parsedSLD) => {
+    let parsedCode = parsedSLD;
+    if (options.format === 'sld') {
+        xml2js.parseString(parsedSLD, { explicitArray: false }, (_, result) => {
+            const rulePath = 'StyledLayerDescriptor.NamedLayer.UserStyle.FeatureTypeStyle.Rule';
+            let rules = castArray(get(result, rulePath, []));
+            rules = flatten(rules.map((rule, i)=> {
+                const { baseGraphicPath, imgFormat } = getParseContent(options.style?.rules || [], i);
+                const externalGraphicPath = `${baseGraphicPath}.Graphic.ExternalGraphic`;
+                const isExternalGraphic = get(rule, externalGraphicPath);
+                const formatPath = `${externalGraphicPath}.Format`;
+                const isFormat = get(rule, formatPath);
+                if (isExternalGraphic && !isFormat && isEmpty(imgFormat)) return null;
+                return isExternalGraphic
+                    ? isFormat
+                        ? rule
+                        : set(rule, formatPath,  imgFormat)
+                    : rule;
+            }));
+            const formatInvalid = rules.some(rule=> rule === null);
+            if (formatInvalid) {
+                parsedCode = '';
+            } else {
+                parsedCode = xmlBuilder.buildObject(set(result, rulePath, rules));
+            }
+        });
+    }
+    const errorObj = isEmpty(parsedCode) ? { messageId: 'styleeditor.imageFormatEmpty', status: 400 } : false;
+    return { parsedCode, errorObj };
+};
+
+/**
+ * This function detects if the style code has been changed by external style editor
+ * by comparing the parsed JSON style with the style body code via md5 hash
+ * @param  {object} style a style returned from the style api including the code
+ * @param  {string} style.code the style body
+ * @param  {string} style.format format encoding of the style: css or sld
+ * @param  {object} style.metadata the parsed metadata of the style
+ * @param  {object} style.metadata.msMD5Hash latest stored hash of the style body code
+ * @param  {object} style.metadata.msStyleJSON the json representation of the style used by the visual style editor
+ * @return {promise} returns a true if the metadata needs a reset
+ */
+export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
+
+    return import('md5')
+        .then((mod) => {
+            const md5 = mod.default;
+            const { msStyleJSON, msMD5Hash } = metadata;
+
+            if (msMD5Hash && code) {
+                const hash = md5(code);
+                return hash !== msMD5Hash;
+            }
+
+            if (!msStyleJSON) {
+                return Promise.resolve(false);
+            }
+
+            let styleJSON;
+            try {
+                styleJSON = parseJSONStyle(JSON.parse(msStyleJSON));
+            } catch (e) {
+                return Promise.resolve(true);
+            }
+
+            return getStyleParser(format)
+                .then(parser =>
+                    parser
+                        .writeStyle(styleJSON)
+                        .then(parsedCode => {
+                            const hash = md5(code);
+                            const parsedHash = md5(parsedCode);
+                            return hash !== parsedHash;
+                        })
+                );
+        });
+}
+
+/**
+ * Return attributes from a vector layer object configuration
+ * @param  {object} layer layer object configuration
+ * @return {array|null} returns an array of attributes
+ */
+export function getVectorLayerAttributes(layer) {
+    if (layer?.properties) {
+        const propertiesKeys = Object.keys(layer.properties || {});
+        const attributes = propertiesKeys.map((key) => {
+            const { minimum, maximum, type } = layer.properties[key];
+            const minMaxType = (isNumber(minimum) || isNumber(maximum)) ? 'number' : 'string';
+            return {
+                attribute: key,
+                label: key,
+                type: type || minMaxType
+            };
+        });
+        return attributes;
+    }
+    return null;
+}
+
+/**
+ * Return geometry type from a vector layer
+ * @param  {object} layer layer object configuration
+ * @return {string} returns the geometry type
+ */
+export function getVectorLayerGeometryType(layer) {
+    if (layer.type === '3dtiles') {
+        return layer?.format === 'pnts' ? 'pointcloud' : 'polyhedron';
+    }
+    return 'vector';
+}
+
+/**
+ * Return a default style for a vector layer
+ * @param  {object} layer layer object configuration
+ * @return {object} returns a default empty style
+ */
+export function getVectorDefaultStyle(layer) {
+    if (layer.type === '3dtiles') {
+        return {
+            format: '3dtiles',
+            body: {},
+            metadata: {
+                editorType: 'visual'
+            }
+        };
+    }
+    return null;
+}
+
+export const styleValidation = {
+    '3dtiles': (body, options) => {
+
+        const { defines = {}, meta, ...style } = body;
+        const keysWithCondition = [{ key: 'color', type: 'string' }, { key: 'pointSize', type: 'number' }];
+        const keyError = keysWithCondition.find(({ key, type }) => {
+            if (type === 'string' && style[key]
+                && !isString(style[key]) && !isObject(style[key])
+            ) {
+                return true;
+            }
+            if (type === 'number' && style[key]
+                && !isString(style[key]) && !isNumber(style[key]) && !isObject(style[key])
+            ) {
+                return true;
+            }
+            if (isObject(style[key])) {
+                if ((style[key]?.conditions?.length || 0) === 0) {
+                    return true;
+                }
+                const invalidCondition = style[key].conditions.find(([filter, value]) => !value || !filter);
+                if (invalidCondition) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        if (keyError) {
+            return { messageId: 'styleeditor.invalidProperty', messageParams: keyError };
+        }
+
+        const variablesKeys = [
+            ...Object.keys(options?.properties || {}),
+            ...Object.keys(defines),
+            // default constant variable for point cloud
+            'POSITION',
+            'POSITION_ABSOLUTE',
+            'COLOR',
+            'NORMAL'
+        ].map((variable) => `\${${variable}}`);
+        const styleStr = JSON.stringify(style);
+        const usedVariables = styleStr.match(/\${(.*?)}/g);
+        if (usedVariables) {
+            const notSupported = usedVariables.find(usedVariable => !variablesKeys.includes(usedVariable));
+            if (notSupported) {
+                return { messageId: 'styleeditor.notSupportedVariable', messageParams: { key: notSupported } };
+            }
+        }
+        return false;
+    }
+};
+
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
+    SUPPORTED_MIME_TYPES,
     generateTemporaryStyleId,
     generateStyleId,
     extractFeatureProperties,
@@ -424,5 +711,12 @@ export default {
     getNameParts,
     stringifyNameParts,
     parseJSONStyle,
-    formatJSONStyle
+    formatJSONStyle,
+    validateImageSrc,
+    updateExternalGraphicNode,
+    detectStyleCodeChanges,
+    getVectorLayerAttributes,
+    getVectorLayerGeometryType,
+    getVectorDefaultStyle,
+    styleValidation
 };

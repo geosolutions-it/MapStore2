@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
-import {updatePages, gridUpdateToQueryUpdate} from '../FeatureGridUtils';
+import {updatePages, gridUpdateToQueryUpdate, getAttributesList} from '../FeatureGridUtils';
 
 
 describe('FeatureGridUtils', () => {
@@ -55,7 +55,7 @@ describe('FeatureGridUtils', () => {
         const gridUpdate1 = {
             type: "geometry",
             attribute: "ATTRIBUTE",
-            opeartor: "OPERATOR",
+            operator: "OPERATOR",
             value: {attribute: "ATTRIBUTE", method: "METHOD_1"},
             rawValue: "RAWVAL"
         };
@@ -72,5 +72,147 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter2.spatialField).toEqual(gridUpdate2.value);
         expect(queryUpdateFilter2.filterFields).toBe(undefined);
         expect(queryUpdateFilter2.spatialFieldOperator).toBe("OR");
+    });
+    it('gridUpdateToQueryUpdate with multiple strings', () => {
+        const gridUpdate1 = {
+            type: "string",
+            attribute: "ATTRIBUTE",
+            operator: "ilike",
+            value: "str1, str2",
+            rawValue: "str1, str2"
+        };
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(2);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("OR");
+        expect(queryUpdateFilter.filterFields[0].value).toBe("str1");
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("ilike");
+        expect(queryUpdateFilter.filterFields[1].value).toBe("str2");
+        expect(queryUpdateFilter.filterFields[1].operator).toBe("ilike");
+    });
+    it('gridUpdateToQueryUpdate with multiple numbers', () => {
+        const gridUpdate1 = {
+            type: "number",
+            attribute: "ATTRIBUTE",
+            operator: null,
+            value: "> 300, 69, < 10",
+            rawValue: "> 300, 69, < 10"
+        };
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(3);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("OR");
+        expect(queryUpdateFilter.filterFields[0].value).toBe(300);
+        expect(queryUpdateFilter.filterFields[0].operator).toBe(">");
+        expect(queryUpdateFilter.filterFields[1].value).toBe(69);
+        expect(queryUpdateFilter.filterFields[1].operator).toBe("=");
+        expect(queryUpdateFilter.filterFields[2].value).toBe(10);
+        expect(queryUpdateFilter.filterFields[2].operator).toBe("<");
+
+    });
+    it('gridUpdateToQueryUpdate with multiple numbers and multiple strings', () => {
+        const gridUpdate1 = {
+            type: "number",
+            attribute: "ATTR_2_NUMERIC",
+            operator: null,
+            value: "> 300, 69, < 10",
+            rawValue: "> 300, 69, < 10"
+        };
+
+        const oldFilterObject = {
+            "groupFields": [{"id": "ATTR_1_STRING", "logic": "OR", "groupId": 1, "index": 0}],
+            "filterFields": [
+                {
+                    "attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "cat"
+                },
+                {"attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "to"
+                }
+            ]};
+
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, oldFilterObject);
+        expect(queryUpdateFilter.filterFields.length).toBe(5);
+        expect(queryUpdateFilter.groupFields.length).toBe(2);
+        expect(queryUpdateFilter.groupFields[0].id).toBe("ATTR_1_STRING");
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("OR");
+        expect(queryUpdateFilter.groupFields[0].id).toBe("ATTR_1_STRING");
+        expect(queryUpdateFilter.groupFields[1].logic).toBe("OR");
+        expect(queryUpdateFilter.filterFields[0].value).toBe("cat");
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("ilike");
+        expect(queryUpdateFilter.filterFields[1].value).toBe("to");
+        expect(queryUpdateFilter.filterFields[1].operator).toBe("ilike");
+        expect(queryUpdateFilter.filterFields[2].value).toBe(300);
+        expect(queryUpdateFilter.filterFields[2].operator).toBe(">");
+        expect(queryUpdateFilter.filterFields[3].value).toBe(69);
+        expect(queryUpdateFilter.filterFields[3].operator).toBe("=");
+        expect(queryUpdateFilter.filterFields[4].value).toBe(10);
+        expect(queryUpdateFilter.filterFields[4].operator).toBe("<");
+    });
+    it('getAttributesList', () => {
+        const attributes = [
+            {
+                "label": "ATTR1",
+                "attribute": "ATTR1",
+                "type": "number",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            },
+            {
+                "label": "ATTR2",
+                "attribute": "ATTR2",
+                "type": "string",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            },
+            {
+                "label": "ATTR3",
+                "attribute": "ATTR3",
+                "type": "number",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            },
+            {
+                "label": "ATTR4",
+                "attribute": "ATTR4",
+                "type": "number",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            }
+        ];
+        const customAttributesSettings = {
+            ATTR2: {
+                hide: true
+            },
+            ATTR3: {
+                hide: false
+            },
+            ATTR4: {
+                hide: true
+            }
+        };
+
+        const customSettings = getAttributesList(attributes, customAttributesSettings);
+        const noSettings = getAttributesList(attributes, {});
+        const allDeselected = getAttributesList(attributes, attributes.reduce((prev, attr) => {
+            prev[attr.attribute] = {hide: true};
+            return prev;
+        }, {}));
+
+        expect(customSettings).toEqual(['ATTR1', 'ATTR3']);
+        expect(noSettings).toBe(undefined);
+        expect(allDeselected).toEqual([]);
     });
 });

@@ -21,12 +21,14 @@ import {
     isEqual,
     isEmpty,
     findIndex,
-    cloneDeep
+    cloneDeep,
+    minBy,
+    omit
 } from 'lodash';
 
 import uuidv1 from 'uuid/v1';
 
-import { getUnits } from './CoordinatesUtils';
+import { getExtentForProjection, getUnits, normalizeSRS, reproject } from './CoordinatesUtils';
 import { set } from './ImmutableUtils';
 import {
     saveLayer,
@@ -35,6 +37,8 @@ import {
     extractSourcesFromLayers
 } from './LayersUtils';
 import assign from 'object-assign';
+
+export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: {md: 548}, bottom: {sm: 30}};
 
 export const DEFAULT_SCREEN_DPI = 96;
 
@@ -50,6 +54,8 @@ export const GOOGLE_MERCATOR = {
     TILE_WIDTH: 256,
     ZOOM_FACTOR: 2
 };
+
+import proj4 from "proj4";
 
 export const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
 
@@ -67,6 +73,7 @@ export const RESOLUTION_HOOK = 'RESOLUTION_HOOK';
 export const COMPUTE_BBOX_HOOK = 'COMPUTE_BBOX_HOOK';
 export const GET_PIXEL_FROM_COORDINATES_HOOK = 'GET_PIXEL_FROM_COORDINATES_HOOK';
 export const GET_COORDINATES_FROM_PIXEL_HOOK = 'GET_COORDINATES_FROM_PIXEL_HOOK';
+export const CLICK_ON_MAP_HOOK = 'CLICK_ON_MAP_HOOK';
 
 let hooks = {};
 
@@ -193,16 +200,135 @@ export function getGoogleMercatorResolutions(minZoom, maxZoom, dpi) {
     return getResolutionsForScales(getGoogleMercatorScales(minZoom, maxZoom, dpi), "EPSG:3857", dpi);
 }
 
-export function getResolutions() {
-    if (getHook('RESOLUTIONS_HOOK')) {
-        return getHook('RESOLUTIONS_HOOK')();
+/**
+ * Calculates resolutions accordingly with default algorithm in GeoWebCache.
+ * See this: https://github.com/GeoWebCache/geowebcache/blob/5e913193ff50a61ef9dd63a87887189352fa6b21/geowebcache/core/src/main/java/org/geowebcache/grid/GridSetFactory.java#L196
+ * It allows to have the resolutions aligned to the default generated grid sets on server side.
+ * **NOTES**: this solution doesn't support:
+ * - custom grid sets with `alignTopLeft=true` (e.g. GlobalCRS84Pixel). Custom resolutions will need to be configured as `mapOptions.view.resolutions`
+ * - custom grid set with custom extent. You need to customize the projection definition extent to make it work.
+ * - custom grid set is partially supported by mapOptions.view.resolutions but this is not managed by projection change yet
+ * - custom tile sizes
+ *
+ */
+export function getResolutionsForProjection(srs, minRes, maxRes, minZ, maxZ, zoomF, ext) {
+    const tileWidth = 256; // TODO: pass as parameters
+    const tileHeight = 256; // TODO: pass as parameters - allow different from tileWidth
+
+    const defaultMaxZoom = 28;
+    const defaultZoomFactor = 2;
+
+    let minZoom = minZ ?? 0;
+
+    let maxZoom = maxZ ?? defaultMaxZoom;
+
+    let zoomFactor = zoomF ?? defaultZoomFactor;
+
+    const projection = proj4.defs(srs);
+
+    const extent = ext ?? getExtentForProjection(srs)?.extent;
+
+    const extentWidth = !extent ? 360 * METERS_PER_UNIT.degrees /
+        METERS_PER_UNIT[projection.getUnits()] :
+        extent[2] - extent[0];
+    const extentHeight = !extent ? 360 * METERS_PER_UNIT.degrees /
+        METERS_PER_UNIT[projection.getUnits()] :
+        extent[3] - extent[1];
+
+    let resX = extentWidth / tileWidth;
+    let resY = extentHeight / tileHeight;
+    let tilesWide;
+    let tilesHigh;
+    if (resX <= resY) {
+        // use one tile wide by N tiles high
+        tilesWide = 1;
+        tilesHigh = Math.round(resY / resX);
+        // previous resY was assuming 1 tile high, recompute with the actual number of tiles
+        // high
+        resY = resY / tilesHigh;
+    } else {
+        // use one tile high by N tiles wide
+        tilesHigh = 1;
+        tilesWide = Math.round(resX / resY);
+        // previous resX was assuming 1 tile wide, recompute with the actual number of tiles
+        // wide
+        resX = resX / tilesWide;
     }
-    return getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
+    // the maximum of resX and resY is the one that adjusts better
+    const res = Math.max(resX, resY);
+
+    /*
+        // TODO: this is how GWC creates the bbox adjusted.
+        // We should calculate it to have the correct extent for a grid set
+        const adjustedExtentWidth = tilesWide * tileWidth * res;
+        const adjustedExtentHeight = tilesHigh * tileHeight * res;
+        BoundingBox adjExtent = new BoundingBox(extent);
+        adjExtent.setMaxX(adjExtent.getMinX() + adjustedExtentWidth);
+        // Do we keep the top or the bottom fixed?
+        if (alignTopLeft) {
+            adjExtent.setMinY(adjExtent.getMaxY() - adjustedExtentHeight);
+        } else {
+            adjExtent.setMaxY(adjExtent.getMinY() + adjustedExtentHeight);
+
+     */
+
+    const defaultMaxResolution = res;
+
+    const defaultMinResolution = defaultMaxResolution / Math.pow(
+        defaultZoomFactor, defaultMaxZoom - 0);
+
+    // user provided maxResolution takes precedence
+    let maxResolution = maxRes;
+    if (maxResolution !== undefined) {
+        minZoom = 0;
+    } else {
+        maxResolution = defaultMaxResolution / Math.pow(zoomFactor, minZoom);
+    }
+
+    // user provided minResolution takes precedence
+    let minResolution = minRes;
+    if (minResolution === undefined) {
+        if (maxZoom !== undefined) {
+            if (maxRes !== undefined) {
+                minResolution = maxResolution / Math.pow(zoomFactor, maxZoom);
+            } else {
+                minResolution = defaultMaxResolution / Math.pow(zoomFactor, maxZoom);
+            }
+        } else {
+            minResolution = defaultMinResolution;
+        }
+    }
+
+    // given discrete zoom levels, minResolution may be different than provided
+    maxZoom = minZoom + Math.floor(
+        Math.log(maxResolution / minResolution) / Math.log(zoomFactor));
+    return Array.apply(0, Array(maxZoom - minZoom + 1)).map((x, y) => maxResolution / Math.pow(zoomFactor, y));
+}
+
+export function getResolutions(projection) {
+    if (getHook('RESOLUTIONS_HOOK')) {
+        return getHook('RESOLUTIONS_HOOK')(projection);
+    }
+    return projection && normalizeSRS(projection) !== "EPSG:3857" ? getResolutionsForProjection(projection) :
+        getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
 }
 
 export function getScales(projection, dpi) {
     const dpu = dpi2dpu(dpi, projection);
-    return getResolutions().map((resolution) => resolution * dpu);
+    return getResolutions(projection).map((resolution) => resolution * dpu);
+}
+/**
+ * Convert a resolution to the nearest zoom
+ * @param {number} targetResolution resolution to be converted in zoom
+ * @param {array} resolutions list of all available resolutions
+ */
+export function getZoomFromResolution(targetResolution, resolutions = getResolutions()) {
+    // compute the absolute difference for all resolutions
+    // and store the idx as zoom
+    const diffs = resolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - targetResolution), zoom }));
+    // the minimum difference represents the nearest zoom to the target resolution
+    const { zoom } = minBy(diffs, 'diff');
+    return zoom;
 }
 
 export function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
@@ -239,7 +365,7 @@ export function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
         return getHook("EXTENT_TO_ZOOM_HOOK")(extent, mapSize, minZoom, maxZoom, dpi);
     }
     const resolutions = getHook("RESOLUTIONS_HOOK") ?
-        getHook("RESOLUTIONS_HOOK")(extent, mapSize, minZoom, maxZoom, dpi, dpi2dpm(dpi || DEFAULT_SCREEN_DPI)) : null;
+        getHook("RESOLUTIONS_HOOK")() : null;
     return defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, resolutions);
 }
 
@@ -468,7 +594,10 @@ export const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
             ]
         }] : [])
     ];
-    const backgroundLayers = layers.filter(layer => layer.group === 'background');
+    const toleratedFields = ['id', 'visibility'];
+    const backgroundLayers = layers.filter(layer => layer.group === 'background')
+        // remove duplication by comparing all fields with some level of tolerance
+        .filter((l1, i, a) => findIndex(a, (l2) => isEqual(omit(l1, toleratedFields), omit(l2, toleratedFields))) === i);
     const firstVisible = findIndex(backgroundLayers, layer => layer.visibility);
 
     const sources1 = get(cfg1, 'map.sources', {});
@@ -687,6 +816,66 @@ export const createRegisterHooks = () => {
         }
     };
 };
+
+/**
+ * Detects if state has enabled Identify plugin for mapPopUps
+ * @param {object} state
+ * @returns {boolean}
+ */
+export const detectIdentifyInMapPopUp = (state)=>{
+    if (state.mapPopups?.popups) {
+        let hasIdentify = state.mapPopups.popups.filter(plugin =>plugin?.component?.toLowerCase() === 'identify');
+        return hasIdentify && hasIdentify.length > 0 ? true : false;
+    }
+    return false;
+};
+
+/**
+ * Derive resolution object with scale and zoom info
+ * based on visibility limit's type
+ * @param value {number} computed with dots per map unit to get resolution
+ * @param type {string} of visibility limit ex. scale
+ * @param projection {string} map projection
+ * @param resolutions {array} map resolutions
+ * @return {object} resolution object
+ */
+export const getResolutionObject = (value, type, {projection, resolutions} = {}) => {
+    const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
+    if (type === 'scale') {
+        const resolution = value / dpu;
+        return {
+            resolution: resolution,
+            scale: value,
+            zoom: getZoomFromResolution(resolution, resolutions)
+        };
+    }
+    return {
+        resolution: value,
+        scale: value * dpu,
+        zoom: getZoomFromResolution(value, resolutions)
+    };
+};
+
+export function calculateExtent(center = {x: 0, y: 0, crs: "EPSG:3857"}, resolution, size = {width: 100, height: 100}, projection = "EPSG:3857") {
+    const {x, y} = reproject(center, center.crs ?? projection, projection);
+    const dx = resolution * size.width / 2;
+    const dy = resolution * size.height / 2;
+    return [x - dx, y - dy, x + dx, y + dy];
+
+}
+
+
+export const reprojectZoom = (zoom, mapProjection, printProjection) => {
+    const multiplier = METERS_PER_UNIT[getUnits(mapProjection)] / METERS_PER_UNIT[getUnits(printProjection)];
+    const mapResolution = getResolutions(mapProjection)[zoom] * multiplier;
+    const printResolutions = getResolutions(printProjection);
+
+    const printResolution = printResolutions.reduce((nearest, current) => {
+        return Math.abs(current - mapResolution) < Math.abs(nearest - mapResolution) ? current : nearest;
+    }, printResolutions[0]);
+    return printResolutions.indexOf(printResolution);
+};
+
 export default {
     createRegisterHooks,
     EXTENT_TO_ZOOM_HOOK,
@@ -697,6 +886,7 @@ export default {
     GET_COORDINATES_FROM_PIXEL_HOOK,
     DEFAULT_SCREEN_DPI,
     ZOOM_TO_EXTENT_HOOK,
+    CLICK_ON_MAP_HOOK,
     registerHook,
     getHook,
     dpi2dpm,
@@ -726,5 +916,8 @@ export default {
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,
-    clearHooks
+    clearHooks,
+    getResolutionObject,
+    calculateExtent,
+    reprojectZoom
 };

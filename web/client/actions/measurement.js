@@ -24,14 +24,14 @@ export const SET_ANNOTATION_MEASUREMENT = 'MEASUREMENT:SET_ANNOTATION_MEASUREMEN
 /**
  * trigger the epic to add the measure feature into an annotation.
 */
-export function addAnnotation(features, textLabels, uom, save, id) {
+export function addAnnotation(features, textLabels, uom, save, properties) {
     return {
         type: ADD_MEASURE_AS_ANNOTATION,
         features,
         textLabels,
         uom,
         save,
-        id
+        properties
     };
 }
 
@@ -49,11 +49,11 @@ export function changeMeasurement(measurement) {
     };
 }
 
-export function setAnnotationMeasurement(features, id) {
+export function setAnnotationMeasurement(features, properties) {
     return {
         type: SET_ANNOTATION_MEASUREMENT,
         features,
-        id
+        properties
     };
 }
 

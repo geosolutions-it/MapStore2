@@ -12,6 +12,8 @@ import PropTypes from 'prop-types';
 import Accordion from '../../../misc/panels/Accordion';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
+import includes from 'lodash/includes';
+import isEmpty from 'lodash/isEmpty';
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info
@@ -57,7 +59,7 @@ export default class extends React.Component {
 
     render() {
         // the selected value if missing on that layer should be set to the general info format value and not the first one.
-        const data = this.getInfoFormat(this.props.defaultInfoFormat);
+        const data = this.getInfoFormat(this.supportedInfoFormats());
         return (
             <span>
                 <Accordion
@@ -74,5 +76,20 @@ export default class extends React.Component {
                     }}/>
             </span>
         );
+    }
+
+    /**
+     * Fetch the supported formats from the layer props if present
+     * else use the default info format
+     * @return {object} info formats
+     */
+    supportedInfoFormats = () => {
+        const availableInfoFormats =  this.props.element?.infoFormats || [];
+        const infoFormats = Object.assign({},
+            ...Object.entries(this.props.defaultInfoFormat)
+                .filter(([, value])=> includes(availableInfoFormats, value))
+                .map(([key, value])=> ({[key]: value}))
+        );
+        return isEmpty(infoFormats) ? this.props.defaultInfoFormat : infoFormats;
     }
 }

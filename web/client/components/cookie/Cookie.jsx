@@ -12,6 +12,8 @@ import { Glyphicon, Col } from 'react-bootstrap';
 import Button from '../misc/Button';
 import Message from '../../components/I18N/Message';
 import MoreDetails from './MoreDetails';
+import { getApi } from '../../api/userPersistedStorage';
+
 /**
   * Component used to show a panel with the information about cookies
   * @class Cookies
@@ -95,7 +97,7 @@ class Cookie extends React.Component {
         return this.props.show ? (
             <div className={this.props.seeMore ? "mapstore-cookie-panel see-more" : "mapstore-cookie-panel not-see-more"}>
                 <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
-                    {this.props.seeMore ? <Glyphicon glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
+                    {this.props.seeMore ? <Glyphicon className="cookie-close-btn" glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
                 </div>
                 <div role="body" className="cookie-body-container">
                     {!this.props.externalCookieUrl && this.props.seeMore ? (
@@ -128,7 +130,11 @@ class Cookie extends React.Component {
         this.props.onMoreDetails(!this.props.seeMore);
     }
     accept = () => {
-        localStorage.setItem("cookies-policy-approved", true);
+        try {
+            getApi().setItem("cookies-policy-approved", true);
+        } catch (e) {
+            console.error(e);
+        }
         this.props.onSetCookieVisibility(false);
     }
 }

@@ -8,75 +8,78 @@
 
 import assign from 'object-assign';
 
-import { transformLineToArcs } from '../utils/CoordinatesUtils';
+import {transformLineToArcs} from '../utils/CoordinatesUtils';
 import circle from '@turf/circle';
-import { PURGE_MAPINFO_RESULTS } from '../actions/mapInfo';
-import { TOGGLE_CONTROL } from '../actions/controls';
-import { FEATURES_SELECTED, DRAWING_FEATURE } from '../actions/draw';
+import {PURGE_MAPINFO_RESULTS} from '../actions/mapInfo';
+import {TOGGLE_CONTROL} from '../actions/controls';
+import {DRAWING_FEATURE, FEATURES_SELECTED} from '../actions/draw';
 
 import {
-    REMOVE_ANNOTATION,
-    CONFIRM_REMOVE_ANNOTATION,
-    CANCEL_REMOVE_ANNOTATION,
-    CLOSE_ANNOTATIONS,
-    CONFIRM_CLOSE_ANNOTATIONS,
-    CANCEL_CLOSE_ANNOTATIONS,
-    EDIT_ANNOTATION,
-    CANCEL_EDIT_ANNOTATION,
-    SAVE_ANNOTATION,
-    TOGGLE_ADD,
-    VALIDATION_ERROR,
-    REMOVE_ANNOTATION_GEOMETRY,
-    TOGGLE_STYLE,
-    SET_STYLE,
-    NEW_ANNOTATION,
-    SHOW_ANNOTATION,
-    CANCEL_SHOW_ANNOTATION,
-    FILTER_ANNOTATIONS,
-    UNSAVED_CHANGES,
-    TOGGLE_GEOMETRY_MODAL,
-    TOGGLE_CHANGES_MODAL,
-    CHANGED_PROPERTIES,
-    TOGGLE_STYLE_MODAL,
-    UNSAVED_STYLE,
+    ADD_NEW_FEATURE,
     ADD_TEXT,
-    CHANGED_SELECTED,
-    RESET_COORD_EDITOR,
+    CANCEL_CLOSE_ANNOTATIONS,
+    CANCEL_EDIT_ANNOTATION,
+    CANCEL_REMOVE_ANNOTATION,
+    CANCEL_SHOW_ANNOTATION,
+    CHANGE_FORMAT,
+    CHANGE_GEOMETRY_TITLE,
     CHANGE_RADIUS,
     CHANGE_TEXT,
-    ADD_NEW_FEATURE,
-    SET_EDITING_FEATURE,
-    SET_INVALID_SELECTED,
-    TOGGLE_DELETE_FT_MODAL,
+    CHANGED_PROPERTIES,
+    CHANGED_SELECTED,
+    CLOSE_ANNOTATIONS,
+    CONFIRM_CLOSE_ANNOTATIONS,
     CONFIRM_DELETE_FEATURE,
-    HIGHLIGHT_POINT,
-    CHANGE_FORMAT,
-    UPDATE_SYMBOLS,
+    CONFIRM_REMOVE_ANNOTATION,
+    EDIT_ANNOTATION,
     ERROR_SYMBOLS,
-    SET_DEFAULT_STYLE,
-    LOADING,
-    CHANGE_GEOMETRY_TITLE,
+    FILTER_ANNOTATIONS,
     FILTER_MARKER,
     HIDE_MEASURE_WARNING,
-    TOGGLE_SHOW_AGAIN,
+    HIGHLIGHT_POINT,
     INIT_PLUGIN,
-    UNSELECT_FEATURE
+    LOADING,
+    NEW_ANNOTATION,
+    REMOVE_ANNOTATION,
+    REMOVE_ANNOTATION_GEOMETRY,
+    RESET_COORD_EDITOR,
+    SAVE_ANNOTATION,
+    SET_DEFAULT_STYLE,
+    SET_EDITING_FEATURE,
+    SET_INVALID_SELECTED,
+    VALIDATE_FEATURE,
+    SET_STYLE,
+    SHOW_ANNOTATION,
+    START_DRAWING,
+    TOGGLE_ADD,
+    TOGGLE_CHANGES_MODAL,
+    TOGGLE_DELETE_FT_MODAL,
+    TOGGLE_GEOMETRY_MODAL,
+    TOGGLE_SHOW_AGAIN,
+    TOGGLE_STYLE,
+    TOGGLE_STYLE_MODAL,
+    UNSAVED_CHANGES,
+    UNSAVED_STYLE,
+    UNSELECT_FEATURE,
+    UPDATE_SYMBOLS,
+    VALIDATION_ERROR
 } from '../actions/annotations';
 
 import {
-    validateCoordsArray,
-    getAvailableStyler,
-    convertGeoJSONToInternalModel,
     addIds,
-    validateFeature,
-    getComponents,
+    convertGeoJSONToInternalModel,
+    getAvailableStyler,
+    getBaseCoord,
+    getComponents, getGeometryType,
     updateAllStyles,
-    getBaseCoord
+    validateCoordsArray,
+    validateFeature
 } from '../utils/AnnotationsUtils';
 
-import { set } from '../utils/ImmutableUtils';
-import { head, findIndex, isNil, slice, castArray, get } from 'lodash';
+import {set} from '../utils/ImmutableUtils';
+import {castArray, findIndex, get, head, isNil, slice} from 'lodash';
 import uuid from 'uuid';
+import {getApi} from '../api/userPersistedStorage';
 
 const fixCoordinates = (coords, type) => {
     switch (type) {
@@ -89,10 +92,15 @@ const fixCoordinates = (coords, type) => {
 function annotations(state = {validationErrors: {}}, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
-        return {
-            ...state,
-            showPopupWarning: localStorage && localStorage.getItem("showPopupWarning") !== null ? localStorage.getItem("showPopupWarning") === "true" : true
-        };
+        try {
+            return {
+                ...state,
+                showPopupWarning: getApi().getItem("showPopupWarning") !== null ? getApi().getItem("showPopupWarning") === "true" : true
+            };
+        } catch (e) {
+            console.error(e);
+            return state;
+        }
     }
     case CHANGED_SELECTED: {
         let newState = set(`unsavedGeometry`, true, state);
@@ -148,9 +156,11 @@ function annotations(state = {validationErrors: {}}, action) {
             if (validateCoordsArray(selected.properties.center)) {
                 center = selected.properties.center;
                 // turf/circle by default use km unit hence we divide by 1000 the radius(in meters)
+                // this try catch prevents the app from crashing when there is no radius maybe we can use a default value for radius incase action.radius === undefined
+                const circleRadius = action.radius ?? 0.0001;
                 c = circle(
                     center,
-                    action.crs === "EPSG:4326" ? action.radius : action.radius / 1000,
+                    action.crs === "EPSG:4326" ? circleRadius : circleRadius / 1000,
                     { steps: 100, units: action.crs === "EPSG:4326" ? "degrees" : "kilometers" }
                 ).geometry;
             } else {
@@ -204,7 +214,13 @@ function annotations(state = {validationErrors: {}}, action) {
         let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === selected.properties.id);
         let selectedGeoJSON = selected;
         if (selected && selected.properties && selected.properties.isCircle) {
-            selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+            if (selected.properties.polygonGeom ) {
+                selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+            } else {
+                selectedGeoJSON = set("geometry.coordinates", [], selectedGeoJSON);
+                selectedGeoJSON = set("geometry.type", 'Polygon', selectedGeoJSON);
+            }
+
         } else if (selected && selected.properties && selected.properties.isText) {
             selectedGeoJSON = set("geometry.type", "Point", selectedGeoJSON);
         }
@@ -221,6 +237,8 @@ function annotations(state = {validationErrors: {}}, action) {
             newState = set(`editing.features[${ftChangedIndex}]`, selectedGeoJSON, newState);
             selected = set("style", newState.editing.features[ftChangedIndex].style, selected);
         }
+
+
         return assign({}, newState, {
             selected,
             coordinateEditorEnabled: !!selected,
@@ -250,7 +268,13 @@ function annotations(state = {validationErrors: {}}, action) {
         let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === selected.properties.id);
         let selectedGeoJSON = selected;
         if (selected && selected.properties && selected.properties.isCircle) {
-            selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+            if (selected.properties.polygonGeom ) {
+                selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
+            } else {
+                selectedGeoJSON = set("geometry.coordinates", [], selectedGeoJSON);
+                selectedGeoJSON = set("geometry.type", 'Polygon', selectedGeoJSON);
+            }
+
         } else if (selected && selected.properties && selected.properties.isText) {
             selectedGeoJSON = set("geometry.type", "Point", selectedGeoJSON);
         }
@@ -275,13 +299,6 @@ function annotations(state = {validationErrors: {}}, action) {
     case CHANGE_RADIUS: {
         let newState;
         let selected = set("properties.radius", action.radius, state.selected);
-        if (action.components.length === 0 || action.radius === null) {
-            selected = set("properties.isValidFeature", false, selected);
-            return assign({}, state, {
-                selected,
-                unsavedChanges: true
-            });
-        }
         selected = set("properties.isValidFeature", validateFeature({
             properties: selected.properties,
             components: getComponents({coordinates: action.components[0] || [], type: "Circle"}),
@@ -314,7 +331,8 @@ function annotations(state = {validationErrors: {}}, action) {
         }
         return assign({}, newState, {
             selected,
-            unsavedChanges: true
+            unsavedChanges: true,
+            circleCoordinates: action.components[0]
         });
     }
     case CHANGE_TEXT: {
@@ -733,6 +751,21 @@ function annotations(state = {validationErrors: {}}, action) {
     case HIDE_MEASURE_WARNING: {
         return {...state, showPopupWarning: false};
     }
+    case START_DRAWING:
+        return {...state, config: {...state.config, geodesic: get(action.options, 'geodesic', false)}};
+    case VALIDATE_FEATURE:
+        let updatedFeatures = state.editing.features.map((f) => {
+            const isValidFeature = validateFeature({
+                properties: f.properties,
+                components: getComponents(f.geometry),
+                type: getGeometryType(f)
+            });
+            return set(`properties.isValidFeature`, isValidFeature, f);
+        });
+
+        return assign({}, state, {
+            editing: {...state.editing, features: updatedFeatures }
+        });
     default:
         return state;
 

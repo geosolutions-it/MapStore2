@@ -103,6 +103,18 @@ class StyleEditorPanel extends React.Component {
  * @prop {array} cfg.styleService.formats supported formats, could be one of [ 'sld' ] or [ 'sld', 'css' ]
  * @prop {array} cfg.editingAllowedRoles all roles with edit permission eg: [ 'ADMIN' ], if null all roles have edit permission
  * @prop {array} cfg.enableSetDefaultStyle enable set default style functionality
+ * @prop {object} cfg.editorConfig contains editor configurations
+ * @prop {object} cfg.editorConfig.classification configuration of the classification symbolizer
+ * For example adding default editor configuration to the classification
+ * ```
+ * "cfg": {
+ *    "editorConfig" : {
+ *       "classification": {
+ *           "intervalsForUnique": 100
+ *       },
+ *    }
+ *  }
+ * ```
  * @memberof plugins
  * @class StyleEditor
  */
@@ -132,7 +144,7 @@ const StyleEditorPlugin = compose(
                 isEditing: status === 'edit',
                 loading,
                 layer,
-                error: !!(error && error.availableStyles),
+                error,
                 userRole,
                 canEdit,
                 styleService
@@ -159,11 +171,15 @@ const StyleEditorPlugin = compose(
         }
     ),
     emptyState(
-        ({ error }) => error,
-        {
+        ({ error }) => !!(error?.availableStyles || error?.global || error?.parsingCapabilities),
+        ({ error }) => ({
             glyph: 'exclamation-mark',
-            title: <HTML msgId="styleeditor.missingAvailableStyles"/>,
-            description: <HTML msgId="styleeditor.missingAvailableStylesMessage"/>,
+            title: <HTML msgId="styleeditor.errorTitle"/>,
+            description: <HTML msgId={
+                error?.availableStyles && "styleeditor.missingAvailableStylesMessage" ||
+                error?.parsingCapabilities && "styleeditor.parsingCapabilitiesError" ||
+                error?.global && "styleeditor.globalError"
+            }/>,
             style: {
                 display: 'flex',
                 width: '100%',
@@ -174,7 +190,7 @@ const StyleEditorPlugin = compose(
                 margin: 'auto',
                 width: 300
             }
-        }
+        })
     ),
     loadingState(
         ({loading}) => loading === 'global',

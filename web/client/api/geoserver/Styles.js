@@ -223,8 +223,8 @@ export const getStylesInfo = ({baseUrl: geoserverBaseUrl, styles = []}) => {
         if (!styles || styles.length === 0) {
             resolve([]);
         } else {
-            styles.forEach(({name}, idx) =>
-                axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
+            styles.forEach(({ name, href }, idx) =>
+                axios.get(href || getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
                     .then(({data}) => {
                         responses[idx] = assign({}, styles[idx], data && data.style && {
                             ...data.style,
@@ -257,7 +257,12 @@ export const getStyleCodeByName = ({baseUrl: geoserverBaseUrl, styleName, option
     return axios.get(url, options)
         .then(response => {
             return response.data && response.data.style && response.data.style.name ?
-                axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) })).then(({data: code}) => ({...response.data.style, code}))
+                axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) }))
+                    .then(({data: code}) => ({
+                        ...response.data.style,
+                        ...(response?.data?.style?.metadata && { metadata: parseStyleMetadata(response.data.style.metadata) }),
+                        code
+                    }))
                 : null;
         });
 };

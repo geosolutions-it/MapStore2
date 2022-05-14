@@ -22,8 +22,8 @@ import { attributesSelector, describeSelector } from './query';
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
 export const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
-export const chartDisabledSelector = state => get(state, "featuregrid.chartDisabled", false);
 export const getCustomAttributeSettings = (state, att) => get(state, `featuregrid.attributes[${att.name || att.attribute}]`);
+export const customAttributesSettingsSelector = (state) => get(state, `featuregrid.attributes`);
 export const selectedFeaturesSelector = state => state && state.featuregrid && state.featuregrid.select;
 export const changesSelector = state => state && state.featuregrid && state.featuregrid.changes;
 export const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
@@ -185,3 +185,4 @@ export const isEditingAllowedSelector = state => {
     return (editingAllowedRoles.indexOf(role) !== -1 || canEdit) && !isCesium(state);
 };
 export const paginationSelector = state => get(state, "featuregrid.pagination");
+export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);

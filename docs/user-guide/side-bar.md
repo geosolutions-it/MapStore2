@@ -19,7 +19,7 @@ To disable the position the button needs to be duble clicked.
 Zooming tools
 -------------
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides several tools allows the user to:
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides several tools allows the user to:
 
 * **Increase** the map zoom by using the zoom in icon <img src="../img/button/zoom-in.jpg" class="ms-docbutton"/> 
 
@@ -35,9 +35,12 @@ Zooming tools
 
 3D Navigation
 -------------
-The *3D navigation* in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) is based on CesiumJS. If the 3D button <img src="../img/button/3D-icon.jpg" class="ms-docbutton"/> in the sidebar is clicked, the map switch in 3D mode so map contents are displayed on a 3D globe and it is possible to orbit around it through the compass place in the upper right corner of the map.
+The *3D navigation* in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is based on CesiumJS. If the 3D button <img src="../img/button/3D-icon.jpg" class="ms-docbutton"/> in the sidebar is clicked, the map switch in 3D mode so map contents are displayed on a 3D globe and it is possible to orbit around it through the compass place in the upper right corner of the map.
 
 <img src="../img/side-bar/3D-mode.jpg" class="ms-docimage"/>
+
+!!! note
+    The *3D mode* in MapStore support also the rendering **3D Tiles** layers once they are added through the *Catalog tool* as explained [here](catalog.md#3d-tiles-catalog).
 
 ## Identify Tool
 
@@ -107,7 +110,7 @@ In order to have information about one layer only the user can select the layer 
 
 ### Floating Identify Tool 
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the user can set the Identify tool in floating mode (**Floating Identify tool**) instead of having the default one available through a click on the map. In that case an identify popup will appears on the map as soon as the user hover over a layer in the map.
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the user can set the Identify tool in floating mode (**Floating Identify tool**) instead of having the default one available through a click on the map. In that case an identify popup will appears on the map as soon as the user hover over a layer in the map.
 
 In order to activate the *Floating Identify Tool* the user can select the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. Here he can select the **Hover** option through the *Trigger event for Identify* dropdown menu.
 

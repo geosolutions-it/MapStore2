@@ -231,10 +231,32 @@ describe('MapInfoUtils', () => {
         let layer1 = {
             type: "wmts",
             name: "layer",
-            url: "http://localhost"
+            url: "http://localhost",
+            allowedSRS: {
+                'EPSG:4326': true
+            },
+            tileMatrixSet: "EPSG:4326",
+            matrixIds: {
+                "EPSG:4326": [
+                    {
+                        identifier: "EPSG:4326:0",
+                        ranges: {
+                            cols: {
+                                max: "1",
+                                min: "1"
+                            },
+                            rows: {
+                                max: "0",
+                                min: "0"
+                            }
+                        }
+                    }
+                ]
+            }
         };
         let req1 = buildIdentifyRequest(layer1, props);
         expect(req1.request).toExist();
+        expect(req1.request.tilematrix).toBe('EPSG:4326:0');
         expect(req1.request.service).toBe('WMTS');
     });
 
@@ -282,6 +304,23 @@ describe('MapInfoUtils', () => {
         let req1 = buildIdentifyRequest(layer, props);
         expect(req1.request).toExist();
         expect(req1.request.lat).toBe(25);
+    });
+
+    it('buildIdentifyRequest works for 3d tiles', () => {
+        const layer = {
+            type: "3dtiles"
+        };
+        const req = buildIdentifyRequest(layer, {});
+        expect(req).toEqual({
+            request: {
+                features: [],
+                outputFormat: 'application/json'
+            },
+            metadata: {
+                title: layer.title
+            },
+            url: 'client'
+        });
     });
 
     it('getViewer and setViewer test', () => {
@@ -442,27 +481,20 @@ describe('MapInfoUtils', () => {
             },
             undefined
         ];
-        const floatingToolEnabled = true;
 
         let validator = getValidator();
         let validResponses = validator.getValidResponses(response);
-        let validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
-        expect(validResponses.length).toBe(2);
-        expect(validResponsesFloatingTool.length).toBe(1);
+        expect(validResponses.length).toBe(1);
 
         // Validate format 'PROPERTIES'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
         validResponses = validator.getValidResponses(response);
-        validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
-        expect(validResponses.length).toBe(2);
-        expect(validResponsesFloatingTool.length).toBe(1);
+        expect(validResponses.length).toBe(1);
 
         // Validate format 'JSON'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
         validResponses = validator.getValidResponses(response);
-        validResponsesFloatingTool = validator.getValidResponses(response, floatingToolEnabled);
-        expect(validResponses.length).toBe(2);
-        expect(validResponsesFloatingTool.length).toBe(1);
+        expect(validResponses.length).toBe(1);
     });
 
     it('getNoValidResponses for vector layer', ()=>{

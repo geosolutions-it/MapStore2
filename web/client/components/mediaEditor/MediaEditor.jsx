@@ -13,6 +13,7 @@ import BorderLayout from '../layout/BorderLayout';
 import localizedProps from '../misc/enhancers/localizedProps';
 import Toolbar from '../misc/toolbar/Toolbar';
 import MediaPreview from './MediaPreview';
+import includes from 'lodash/includes';
 const Select = localizedProps(["placeholder", "clearValueText", "noResultsText"])(ReactSelect);
 
 /**
@@ -35,7 +36,8 @@ export default ({
     }],
     setMediaType = () => { },
     setMediaService = () => { },
-    mediaSelector
+    mediaSelector,
+    disabledMediaType
 }) => (<BorderLayout
     className="ms-mediaEditor"
     header={
@@ -47,19 +49,19 @@ export default ({
                     active: mediaType === "image",
                     bsStyle: mediaType === "image" ? "primary" : "default",
                     onClick: () => { setMediaType("image"); },
-                    disabled: saveState && saveState.addingMedia
+                    disabled: (saveState && saveState.addingMedia) || includes(disabledMediaType, "image")
                 }, {
                     text: <Message msgId="mediaEditor.videos" />,
                     active: mediaType === "video",
                     bsStyle: mediaType === "video" ? "primary" : "default",
                     onClick: () => { setMediaType("video"); },
-                    disabled: saveState && saveState.addingMedia
+                    disabled: (saveState && saveState.addingMedia) || includes(disabledMediaType, "video")
                 }, {
                     text: <Message msgId="mediaEditor.maps" />,
                     active: mediaType === "map",
                     bsStyle: mediaType === "map" ? "primary" : "default",
                     onClick: () => { setMediaType("map"); },
-                    disabled: saveState && saveState.addingMedia
+                    disabled: (saveState && saveState.addingMedia) || includes(disabledMediaType, "map")
                 }]} />
             <div className="ms-mediaEditor-services">
                 <div className="ms-mediaEditor-label">

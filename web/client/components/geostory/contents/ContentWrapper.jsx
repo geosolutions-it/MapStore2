@@ -14,14 +14,14 @@ import { Modes, getClassNameFromProps, getThemeStyleFromProps } from "../../../u
  *  - center the content accordingly.
  *  - Add inViewRef property, to apply IntersectionObserver
  */
-export default ({ id, inViewRef, children, type, contentWrapperStyle, contentToolbar, mode, ...props }) => {
+export default ({ id, inViewRef, innerRef, children, type, contentWrapperStyle, contentToolbar, mode, ...props }) => {
     const ContentToolbar = contentToolbar || DefaultContentToolbar;
     return (<div
         id={id}
         ref={inViewRef}
-        style={contentWrapperStyle}
+        style={{...contentWrapperStyle, ...(props.hideContent && {display: 'none'})}}
         className={`ms-content ms-content-${type}${getClassNameFromProps(props)}`}>
-        <div className="ms-content-body" style={getThemeStyleFromProps(props)}>
+        <div className="ms-content-body" ref={innerRef} style={getThemeStyleFromProps(props)}>
             {mode === Modes.EDIT
                 && <ContentToolbar
                     {...props}/>}

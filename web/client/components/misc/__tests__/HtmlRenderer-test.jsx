@@ -26,16 +26,16 @@ describe("This test for HtmlRenderer component", () => {
 
     it('creates componet with defaults', () => {
         const cmp = ReactDOM.render(<HtmlRenderer/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node.id).toNotExist();
+        expect(node.id).toBeFalsy();
         expect(node.childNodes.length).toBe(0);
     });
 
     it('creates empty componet with id', () => {
         const cmp = ReactDOM.render(<HtmlRenderer id="testId"/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
         expect(node.id).toBe("testId");
@@ -45,7 +45,7 @@ describe("This test for HtmlRenderer component", () => {
     it('creates a filled componet', () => {
         const srcCode = '<p id="innerP"><span id="innerSPAN">text</span></p>';
         const cmp = ReactDOM.render(<HtmlRenderer html={srcCode}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
         expect(node.childNodes.length).toBe(1);
@@ -57,5 +57,13 @@ describe("This test for HtmlRenderer component", () => {
         const innerSPAN = innerP.childNodes[0];
         expect(innerSPAN.id).toBe("innerSPAN");
         expect(innerSPAN.innerHTML).toBe("text");
+    });
+    it('should change the style of the component', () => {
+        const cmp = ReactDOM.render(<HtmlRenderer style={{ color: 'rgb(255, 255, 255)' }}/>, document.getElementById("container"));
+        expect(cmp).toBeTruthy();
+
+        const node = ReactDOM.findDOMNode(cmp);
+        expect(node.id).toBeFalsy();
+        expect(node.style.color).toBe('rgb(255, 255, 255)');
     });
 });

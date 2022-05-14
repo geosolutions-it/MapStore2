@@ -145,13 +145,22 @@ const SimpleVectorStyleEditor = compose(
     emptyState(({ geometryType }) => !geometryType)
 )(({ geometryType, element = {}, onChange = () => { } }) => {
     const CMP = stylers[geometryType];
-    return (<React.Fragment>
-        <h4>&nbsp;&nbsp;&nbsp;&nbsp;<Message msgId="layerProperties.style"/></h4>
-        <CMP
-            styleName={element.styleName}
-            style={element.style}
-            onChange={onChange}
-        />
-    </React.Fragment>);
+    let editorComponent;
+    if (CMP) {
+        editorComponent = (<React.Fragment>
+            <h4>&nbsp;&nbsp;&nbsp;&nbsp;<Message msgId="layerProperties.style"/></h4>
+            <CMP
+                styleName={element.styleName}
+                style={element.style}
+                onChange={onChange}
+            />
+        </React.Fragment>);
+    } else {
+        // Fail gracefully if the geometry type is not supported for styling
+        editorComponent = (<div style={{padding: 20, color: "red"}}>
+            <Message msgId={'layerProperties.styleWarning'} msgParams={{geometryType}} />
+        </div>);
+    }
+    return editorComponent;
 });
 export default SimpleVectorStyleEditor;

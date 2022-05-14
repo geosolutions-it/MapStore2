@@ -28,3 +28,18 @@ export const getbsStyleForState = function(state) {
 
     }
 };
+
+/**
+ * @param {*} layer
+ * @returns {boolean}
+ */
+
+export const checkFeaturesStyle = (layer = {}) => {
+    return layer && layer.features.length ?
+        layer.features.reduce((hasCustomStyle, feature ) => {
+            const isCustomStylePresent = feature.style &&
+            (Array.isArray(feature.style) && feature.style.length ) ||
+            (Object.keys(feature.style || {}).length);
+            return hasCustomStyle || !!isCustomStylePresent;
+        }, false) : false;
+};

@@ -22,7 +22,7 @@ import {
     show,
     updateItem,
     loadingSelectedMedia,
-    loadingMediaList
+    loadingMediaList, disableMediaType
 } from '../../actions/mediaEditor';
 
 describe('Test the mediaEditor reducer', () => {
@@ -222,6 +222,12 @@ describe('Test the mediaEditor reducer', () => {
         const state = mediaEditor({}, loadingMediaList());
         expect(state).toEqual({
             loadingList: true
+        });
+    });
+    it('MEDIA_TYPE_DISABLE', () => {
+        const state = mediaEditor({}, disableMediaType(['image']));
+        expect(state).toEqual({
+            disabledMediaType: ['image']
         });
     });
 });

@@ -39,11 +39,12 @@ export default createPlugin('Save', {
         }))(SaveBaseDialog),
     containers: {
         BurgerMenu: {
-            name: 'save',
+            name: 'mapSave',
             position: 30,
             text: <Message msgId="save"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: toggleControl.bind(null, 'mapSave', null),
+            tooltip: "saveDialog.saveTooltip",
             // display the BurgerMenu button only if the map can be edited
             selector: createSelector(
                 isLoggedIn,
@@ -51,7 +52,28 @@ export default createPlugin('Save', {
                 (loggedIn, {canEdit, id} = {}) => ({
                     style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
                 })
-            )
+            ),
+            priority: 2,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'mapSave',
+            position: 30,
+            icon: <Glyphicon glyph="floppy-disk"/>,
+            text: <Message msgId="save"/>,
+            action: toggleControl.bind(null, 'mapSave', null),
+            toggle: true,
+            tooltip: "saveDialog.saveTooltip",
+            // display the button only if the map can be edited
+            selector: createSelector(
+                isLoggedIn,
+                mapInfoSelector,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                })
+            ),
+            priority: 1,
+            doNotHide: true
         }
     }
 });

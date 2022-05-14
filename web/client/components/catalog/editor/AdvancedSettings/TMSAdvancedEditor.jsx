@@ -23,6 +23,13 @@ const INITIAL_CODE_VALUE = {
 };
 /**
  * Advanced settings form, used by TMS
+ *
+ * - autoload: Option allows the automatic fetching of the results upon selecting the service from Service dropdown
+ * - hideThumbnail: Options allows to hide the thumbnail on the result
+ * - *forceDefaultTileGrid*: When `provider` is `tms`, the option allows to force the usage of global projection's tile grid rather than one provided by server.
+ *  Useful for TMS services that advertise wrong origin or resolutions
+ * - *customTMSConfiguration*: Allows user to configure the tile URL template manually. For more info [Custom TMS](https://mapstore.readthedocs.io/en/latest/user-guide/catalog/#custom-tms)
+ *
  * @prop {object} service the service to edit
  * @prop {function} onChangeServiceProperty handler (key, value) to change a property of service.
  */
@@ -58,11 +65,11 @@ export default ({
     return (<div>
         <FormGroup controlId="autoload" key="autoload">
             <Col xs={12}>
-                <Checkbox key="autoload" value="autoload"
+                {service.autoload !== undefined && <Checkbox key="autoload" value="autoload"
                     onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
                     checked={!isNil(service.autoload) ? service.autoload : false}>
                     <Message msgId="catalog.autoload" />
-                </Checkbox>
+                </Checkbox>}
                 <Checkbox key="thumbnail" value="thumbnail"
                     onChange={() => onToggleThumbnail()}
                     checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>

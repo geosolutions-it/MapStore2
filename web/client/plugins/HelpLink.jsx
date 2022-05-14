@@ -35,6 +35,7 @@ export default createPlugin('HelpLink', {
         BurgerMenu: {
             name: 'helplink',
             position: 1100,
+            tooltip: "docsTooltip",
             text: <Message msgId="docs"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),
@@ -43,6 +44,20 @@ export default createPlugin('HelpLink', {
                 return {href: docsUrl, target: 'blank'};
             },
             priority: 2,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'helplink',
+            position: 1100,
+            tooltip: "docsTooltip",
+            text: <Message msgId="docs"/>,
+            icon: <Glyphicon glyph="question-sign"/>,
+            action: () => ({type: ''}),
+            selector: (state, ownProps) => {
+                const docsUrl = get(ownProps, 'docsUrl', 'https://mapstore.readthedocs.io/en/latest/');
+                return { href: docsUrl, target: 'blank'};
+            },
+            priority: 1,
             doNotHide: true
         }
     }

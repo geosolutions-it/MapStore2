@@ -5,11 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const L = require('leaflet');
-const Layers = require('../../../../utils/leaflet/Layers');
-require('leaflet-plugins/layer/tile/Bing');
-const assign = require('object-assign');
-
+import L from 'leaflet';
+import Layers from '../../../../utils/leaflet/Layers';
+import 'leaflet-plugins/layer/tile/Bing';
+import assign from 'object-assign';
 
 L.BingLayer.prototype.loadMetadata = function() {
     if (this.metaRequested) {

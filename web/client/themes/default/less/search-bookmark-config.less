@@ -1,11 +1,36 @@
-#bookmark-tools button {
-    background-color: unset;
-    color: #078aa3;
-    &:hover {
-        background-color: #e6e6e6;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    #bookmark-tools button {
+        background-color: unset;
+        .color-var(@theme-vars[primary]);
+
+        &:hover {
+            .background-color-var(@theme-vars[main-variant-bg]);
+        }
+    }
+
+    .bookmark-card::-webkit-scrollbar {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .bookmark-card::-webkit-scrollbar-thumb {
+        .background-color-var(@theme-vars[main-variant-bg]);
     }
 }
 
+// **************
+// Layout
+// **************
 #bookmark-list {
     .search-bookmark-name {
         padding-top: 10px;
@@ -19,8 +44,7 @@
         padding: 5px;
     }
 }
-.bookmark-card::-webkit-scrollbar { width: 8px; background: #fff; }
-.bookmark-card::-webkit-scrollbar-thumb { background: #c5c5c5; }
+.bookmark-card::-webkit-scrollbar { width: 8px; }
 
 #add-new-bookmark {
     .form-control {

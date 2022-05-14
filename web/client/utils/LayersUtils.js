@@ -18,8 +18,9 @@ import isEmpty from 'lodash/isEmpty';
 import findIndex from 'lodash/findIndex';
 import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
-let LayersUtils;
 import {addAuthenticationParameter} from './SecurityUtils';
+
+let LayersUtils;
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -53,10 +54,10 @@ const initialReorderLayers = (groups, allLayers) => {
 const reorderLayers = (groups, allLayers) => {
     return initialReorderLayers(groups, allLayers);
 };
-const createGroup = (groupId, groupName, layers, addLayers) => {
+const createGroup = (groupId, groupTitle, groupName, layers, addLayers) => {
     return assign({}, {
         id: groupId,
-        title: (groupName || "").replace(/\${dot}/g, "."),
+        title: groupTitle ?? (groupName || "").replace(/\${dot}/g, "."),
         name: groupName,
         nodes: addLayers ? getLayersId(groupId, layers) : [],
         expanded: true
@@ -80,7 +81,8 @@ const addBaseParams = (url, params) => {
 };
 
 const isSupportedLayerFunc = (layer, maptype) => {
-    const Layers = require('./' + maptype + '/Layers');
+    const LayersUtil = require('./' + maptype + '/Layers');
+    const Layers = LayersUtil.default || LayersUtil;
     if (layer.type === "mapquest" || layer.type === "bing") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
@@ -150,10 +152,44 @@ export const getNestedGroupTitle = (id, groups = []) => {
         return nodeObj ? nodeObj.title : null;
     }));
 };
+
+/**
+ * Flatten nested groupDetails to a one-level groupDetails
+ * @param {(Object[]|Object)} groupDetails of objects
+ * @returns {Object[]} flattened groupDetails
+ */
+export const flattenArrayOfObjects = (groupDetails) => {
+    let result = [];
+    groupDetails && castArray(groupDetails).forEach((a) => {
+        result.push(a);
+        if (a.nodes && Array.isArray(groupDetails) && Array.isArray(a.nodes)) {
+            result = result.concat(flattenArrayOfObjects(a.nodes));
+        }
+    });
+    return result;
+};
+
+/**
+ * Gets group title by id
+ * @param {string} id of group
+ * @param {object[]} groups groups of map
+ * @returns {string} title of the group
+ */
+
+export const displayTitle = (id, groups) => {
+    if (groups && Array.isArray(groups)) {
+        for (let group of groups) {
+            if (group?.id === id) {
+                return group.title;
+            }
+        }
+    }
+    return 'Default';
+};
 /**
  * adds or update node property in a nested node
  * if propName is an object it overrides a whole group of options instead of one
-*/
+ */
 export const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.map((node) => {
@@ -176,12 +212,12 @@ export const deepChange = (nodes, findValue, propName, propValue) => {
  */
 export const getSourceId = (layer = {}) => layer.capabilitiesURL || head(castArray(layer.url));
 /**
-* It extracts tile matrix set from sources and add them to the layer
-*
-* @param sources {object} sources object from state or configuration
-* @param layer {object} layer to check
-* @return {object} new layers with tileMatrixSet and matrixIds (if needed)
-*/
+ * It extracts tile matrix set from sources and add them to the layer
+ *
+ * @param sources {object} sources object from state or configuration
+ * @param layer {object} layer to check
+ * @return {object} new layers with tileMatrixSet and matrixIds (if needed)
+ */
 export const  extractTileMatrixFromSources = (sources, layer) => {
     if (!sources || !layer) {
         return {};
@@ -199,12 +235,12 @@ export const  extractTileMatrixFromSources = (sources, layer) => {
 };
 
 /**
-* It extracts tile matrix set from layers and add them to sources map object
-*
-* @param  {object} sourcesFromLayers layers grouped by url
-* @param {object} [sources] current sources map object
-* @return {object} new sources object with data from layers
-*/
+ * It extracts tile matrix set from layers and add them to sources map object
+ *
+ * @param  {object} sourcesFromLayers layers grouped by url
+ * @param {object} [sources] current sources map object
+ * @return {object} new sources object with data from layers
+ */
 export const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) => {
     return sourcesFromLayers && Object.keys(sourcesFromLayers).reduce((src, url) => {
         const matrixIds = sourcesFromLayers[url].reduce((a, b) => {
@@ -248,11 +284,11 @@ export const extractSourcesFromLayers = layers => {
 };
 
 /**
-* It extracts data from configuration sources and add them to the layers
-*
-* @param mapState {object} state of map, must contains layers array
-* @return {object} new sources object with data from layers
-*/
+ * It extracts data from configuration sources and add them to the layers
+ *
+ * @param mapState {object} state of map, must contains layers array
+ * @return {object} new sources object with data from layers
+ */
 
 export const extractDataFromSources = mapState => {
     if (!mapState || !mapState.layers || !isArray(mapState.layers)) {
@@ -301,11 +337,10 @@ export const getDimension = (dimensions, dimension) => {
  * the layer id will returned will be something like `layerName__2` when 2 is the layer size (for retro compatibility, it should be removed in the future).
  * Otherwise a random string will be appended to the layer name.
  * @param {object} layer the layer
- * @param {array} [layers] an array to use to generate the id @deprecated
  * @returns {string} the id of the layer, or a generated one
  */
-export const getLayerId = (layerObj, layers) => {
-    return layerObj && layerObj.id || layerObj.name + "__" + (layers ? layers.length : Math.random().toString(36).substring(2, 15));
+export const getLayerId = (layerObj) => {
+    return layerObj && layerObj.id || `${layerObj.name ? `${layerObj.name}__` : ''}${uuidv1()}`;
 };
 /**
  * Normalizes the layer to assign missing Ids
@@ -322,7 +357,7 @@ export const normalizeMap = (rawMap = {}) =>
     [
         (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
         (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
-    // this is basically a compose
+        // this is basically a compose
     ].reduce((f, g) => (...args) => f(g(...args)))(rawMap);
 /**
  * @param gid
@@ -342,11 +377,18 @@ export const getLayersByGroup = (configLayers, configGroups) => {
             let group = getGroup(groupId, subGroups);
             const addLayers = idx === array.length - 1;
             if (!group) {
-                const groupTitle = getNestedGroupTitle(groupId, configGroups);
-                group = createGroup(groupId, groupTitle || groupName, mapLayers, addLayers);
+                const flattenGroups = flattenArrayOfObjects(configGroups);
+                const groupTitle = displayTitle(groupId, flattenGroups);
+                group = createGroup(groupId, groupTitle || groupName, groupName, mapLayers, addLayers);
                 subGroups.push(group);
             } else if (addLayers) {
-                group.nodes = group.nodes.concat(getLayersId(groupId, mapLayers));
+                group.nodes = getLayersId(groupId, mapLayers).concat(group.nodes)
+                    .reduce((arr, cur) => {
+                        isObject(cur)
+                            ? arr.push({node: cur, order: mapLayers.find((el) => el.group === cur.id)?.storeIndex})
+                            : arr.push({node: cur, order: mapLayers.find((el) => el.id === cur)?.storeIndex});
+                        return arr;
+                    }, []).sort((a, b) => b.order - a.order).map(e => e.node);
             }
             return group.nodes;
         }, groups);
@@ -446,7 +488,7 @@ export const splitMapAndLayers = (mapState) => {
  * @param {object} geoJSON object to put into features
  * @param {string} id layer id
  * @return {object} vector layer containing the geojson in features array
-*/
+ */
 export const geoJSONToLayer = (geoJSON, id) => {
     const bbox = toBbox(geoJSON);
     let features = [];
@@ -498,7 +540,6 @@ export const saveLayer = (layer) => {
         styles: layer.styles,
         style: layer.style,
         styleName: layer.styleName,
-        availableStyles: layer.availableStyles,
         layerFilter: layer.layerFilter,
         title: layer.title,
         transparent: layer.transparent,
@@ -515,6 +556,9 @@ export const saveLayer = (layer) => {
         dimensions: layer.dimensions || [],
         maxZoom: layer.maxZoom,
         maxNativeZoom: layer.maxNativeZoom,
+        maxResolution: layer.maxResolution,
+        minResolution: layer.minResolution,
+        disableResolutionLimits: layer.disableResolutionLimits,
         hideLoading: layer.hideLoading || false,
         handleClickOnLayer: layer.handleClickOnLayer || false,
         queryable: layer.queryable,
@@ -531,14 +575,19 @@ export const saveLayer = (layer) => {
         tileSize: layer.tileSize,
         version: layer.version
     },
+    layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},
     layer.credits ? { credits: layer.credits } : {},
-    layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {});
+    layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
+    layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {},
+    layer.options ? { options: layer.options } : {},
+    layer.credits ? { credits: layer.credits } : {},
+    !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {});
 };
 /**
-* default initial constant regex rule for searching for a /geoserver/ string in a url
-* useful for a reset to an initial state of the rule
-*/
+ * default initial constant regex rule for searching for a /geoserver/ string in a url
+ * useful for a reset to an initial state of the rule
+ */
 export const REG_GEOSERVER_RULE = regGeoServerRule;
 /**
  * Override default REG_GEOSERVER_RULE variable
@@ -552,12 +601,12 @@ export const setRegGeoserverRule = (regex) => {
  */
 export const getRegGeoserverRule = () => regGeoServerRule;
 /**
-* it tests if a url is matched by a regex,
-* if so it returns the matched string
-* otherwise returns null
-* @param object.regex the regex to use for parsing the url
-* @param object.url the url to test
-*/
+ * it tests if a url is matched by a regex,
+ * if so it returns the matched string
+ * otherwise returns null
+ * @param object.regex the regex to use for parsing the url
+ * @param object.url the url to test
+ */
 export const findGeoServerName = ({url, regexRule}) => {
     const regex = regexRule || LayersUtils.getRegGeoserverRule();
     const location = isArray(url) ? url[0] : url;
@@ -568,7 +617,7 @@ export const findGeoServerName = ({url, regexRule}) => {
  * This method search for a /geoserver/  string inside the url
  * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
  * otherwise it returns the default getCapabilitiesUrl
-*/
+ */
 export const getCapabilitiesUrl = (layer) => {
     const matchedGeoServerName = LayersUtils.findGeoServerName({url: layer.url});
     let reqUrl = getLayerUrl(layer);
@@ -601,7 +650,7 @@ export const invalidateUnsupportedLayer = (layer, maptype) => {
 /**
  * Establish if a layer is supported or not
  * @return {boolean} value
-*/
+ */
 export const isSupportedLayer = (layer, maptype) => {
     return !!isSupportedLayerFunc(layer, maptype);
 };
@@ -671,6 +720,48 @@ export const formatCapabitiliesOptions = function(capabilities) {
 };
 export const getLayerTitle = ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name;
 
+/**
+ * Check if a resolution is inside of the min and max resolution limits of a layer
+ * @param {object} layer layer object
+ * @param {number} resolution resolutions of the current view
+ */
+export const isInsideResolutionsLimits = (layer, resolution) => {
+    if (layer.disableResolutionLimits) {
+        return true;
+    }
+    const minResolution = layer.minResolution || -Infinity;
+    const maxResolution = layer.maxResolution || Infinity;
+    return resolution !== undefined
+        ? resolution < maxResolution && resolution >= minResolution
+        : true;
+};
+
+/**
+ * Filter array of layers to return layers with visibility key set to true
+ * @param {Array} layers
+ * @param {Array} timelineLayers
+ * @returns {Array}
+ */
+export const visibleTimelineLayers = (layers, timelineLayers) => {
+    return layers.filter(layer => {
+        let timelineLayer = timelineLayers?.find(item => item.id === layer.id);
+        return timelineLayer?.visibility ? layer : null;
+    });
+};
+
+/**
+ * Loop through array of timeline layers to determine if any of the layers is visible
+ * @param {Array} layers
+ * @returns {boolean}
+ */
+export const isTimelineVisible = (layers)=>{
+    for (let layer of layers) {
+        if (layer?.visibility) {
+            return true;
+        }
+    }
+    return false;
+};
 
 LayersUtils = {
     getGroupByName,
@@ -681,5 +772,7 @@ LayersUtils = {
     deepChange,
     reorder: reorderFunc,
     getRegGeoserverRule,
-    findGeoServerName
+    findGeoServerName,
+    isInsideResolutionsLimits,
+    visibleTimelineLayers
 };

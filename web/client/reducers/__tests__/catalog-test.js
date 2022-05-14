@@ -53,7 +53,9 @@ import {
     addCatalogService,
     changeText,
     changeServiceFormat,
-    setLoading
+    setLoading,
+    formatsLoading,
+    setSupportedFormats
 } from '../../actions/catalog';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
@@ -133,8 +135,12 @@ describe('Test the catalog reducer', () => {
     });
     it('CHANGE_SERVICE_PROPERTY', () => {
         let autoload = true;
-        const state = catalog({newService: {}}, {type: CHANGE_SERVICE_PROPERTY, property: "autoload", value: true});
+        let state = catalog({newService: {}}, {type: CHANGE_SERVICE_PROPERTY, property: "autoload", value: true});
         expect(state.newService.autoload).toBe(autoload);
+
+        // Path as property value
+        state = catalog({newService: {}}, {type: CHANGE_SERVICE_PROPERTY, property: "filter.staticFilter", value: "test"});
+        expect(state.newService.filter.staticFilter).toBe("test");
     });
     it('SAVING_SERVICE', () => {
         let saving = true;
@@ -323,5 +329,19 @@ describe('Test the catalog reducer', () => {
             newService: {}
         }, {type: CHANGE_METADATA_TEMPLATE, metadataTemplate: ""});
         expect(state.newService.metadataTemplate).toBe("");
+    });
+    it('FORMAT_OPTIONS_LOADING ', () => {
+        const state = catalog({
+            newService: {}
+        }, formatsLoading(false));
+        expect(state.formatsLoading).toBe(false);
+    });
+    it('SET_FORMAT_OPTIONS ', () => {
+        const formats = {imageFormats: ["image/png"], infoFormats: ["text/html"]};
+        const state = catalog({
+            newService: {}
+        }, setSupportedFormats(formats, url));
+        expect(state.newService.formatUrlUsed).toBe(url);
+        expect(state.newService.supportedFormats).toEqual(formats);
     });
 });

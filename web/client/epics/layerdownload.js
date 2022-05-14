@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import axios from 'axios';
 import Rx from 'rxjs';
-import { get, find, findIndex, pick, toPairs } from 'lodash';
+import { get, find, findIndex, pick, toPairs, castArray } from 'lodash';
 import { saveAs } from 'file-saver';
 import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
@@ -57,22 +56,24 @@ import { queryPanelSelector, wfsDownloadSelector } from '../selectors/controls';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapBboxSelector } from '../selectors/map';
+import { layerDescribeSelector } from "../selectors/query";
 import {
     isLoggedIn,
     userSelector
 } from '../selectors/security';
 
-import { getLayerWFSCapabilities } from '../observables/wfs';
+import { getLayerWFSCapabilities, getXMLFeature } from '../observables/wfs';
 import { describeProcess } from '../observables/wps/describe';
-import { download } from '../observables/wps/download';
+import { download, downloadWithAttributesFilter } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
-import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
-import { toOGCFilter, mergeFiltersToOGC } from '../utils/FilterUtils';
+import { mergeFiltersToOGC } from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
 import { getLayerTitle } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
+import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
+import {extractGeometryAttributeName} from "../utils/WFSLayerUtils";
 
 const DOWNLOAD_FORMATS_LOOKUP = {
     "gml3": "GML3.1",
@@ -94,6 +95,9 @@ const DOWNLOAD_FORMATS_LOOKUP = {
     "excel2007": "excel2007"
 };
 
+const { getFeature: getFilterFeature, query, sortBy, propertyName } = requestBuilder({ wfsVersion: "1.1.0" });
+
+
 const hasOutputFormat = (data) => {
     const operation = get(data, "WFS_Capabilities.OperationsMetadata.Operation");
     const getFeature = find(operation, function(o) { return o.name === 'GetFeature'; });
@@ -103,15 +107,18 @@ const hasOutputFormat = (data) => {
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
-const getWFSFeature = ({url, filterObj = {}, downloadOptions = {}} = {}) => {
-    const data = toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
-    return Rx.Observable.defer( () =>
-        axios.post(cleanDuplicatedQuestionMarks(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`), data, {
-            timeout: 60000,
-            responseType: 'arraybuffer',
-            headers: {'Content-Type': 'application/xml'}
-        }));
+const getWFSFeature = ({ url, filterObj = {}, layerFilter, downloadOptions = {}, options } = {}) => {
+    const { sortOptions, propertyNames } = options;
+
+    const data = mergeFiltersToOGC({ ogcVersion: '1.0.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj);
+
+    return getXMLFeature(url, getFilterFeature(query(
+        filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
+        { srsName: downloadOptions.selectedSrs })
+    ), options, downloadOptions.selectedFormat);
+
 };
+
 const getFileName = action => {
     const name = get(action, "filterObj.featureTypeName");
     const format = getByOutputFormat(get(action, "downloadOptions.selectedFormat"));
@@ -126,6 +133,7 @@ const getDefaultSortOptions = (attribute) => {
 const getFirstAttribute = (state)=> {
     return state.query && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes && state.query.featureTypes[state.query.typeName].attributes[0] && state.query.featureTypes[state.query.typeName].attributes[0].attribute || null;
 };
+
 const wpsExecuteErrorToMessage = e => {
     switch (e.code) {
     case 'ProcessFailed': {
@@ -227,51 +235,62 @@ export const fetchFormatsWFSDownload = (action$) =>
 export const startFeatureExportDownload = (action$, store) =>
     action$.ofType(DOWNLOAD_FEATURES).switchMap(action => {
         const state = store.getState();
-        const {virtualScroll = false} = state.featuregrid;
+        const {virtualScroll = false} = state.featuregrid || {};
         const service = serviceSelector(state);
         const layer = getSelectedLayer(state);
         const mapBbox = mapBboxSelector(state);
         const currentLocale = currentLocaleSelector(state);
+        const propertyNames = action.downloadOptions.propertyName ? [
+            extractGeometryAttributeName(layerDescribeSelector(state, layer.name)),
+            ...action.downloadOptions.propertyName
+        ] : null;
+
+        const { layerFilter } = layer;
 
         const wfsFlow = () => getWFSFeature({
             url: action.url,
             downloadOptions: action.downloadOptions,
-            filterObj: {
-                ...action.filterObj,
-                pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
+            filterObj: action.filterObj,
+            layerFilter,
+            options: {
+                pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
+                propertyNames
             }
         })
-            .do(({data, headers}) => {
+            .do(({ data, headers }) => {
                 if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
                     let xml = String.fromCharCode.apply(null, new Uint8Array(data));
-                    if (xml.indexOf("<ows:ExceptionReport") === 0 ) {
+                    if (xml.indexOf("<ows:ExceptionReport") === 0) {
                         throw xml;
                     }
                 }
             })
-            .catch( () => {
+            .catch(() => {
                 return getWFSFeature({
                     url: action.url,
                     downloadOptions: action.downloadOptions,
-                    filterObj: {
-                        ...action.filterObj,
+                    filterObj: action.filterObj,
+                    layerFilter,
+                    options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
-                        sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
+                        sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState())),
+                        propertyNames: action.downloadOptions.propertyName ? [...action.downloadOptions.propertyName,
+                            extractGeometryAttributeName(layerDescribeSelector(state, layer.name))] : null
                     }
-                }).do(({data, headers}) => {
+                }).do(({ data, headers }) => {
                     if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
                         let xml = String.fromCharCode.apply(null, new Uint8Array(data));
-                        if (xml.indexOf("<ows:ExceptionReport") === 0 ) {
+                        if (xml.indexOf("<ows:ExceptionReport") === 0) {
                             throw xml;
                         }
                     }
-                    saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
+                    saveAs(new Blob([data], { type: headers && headers["content-type"] }), getFileName(action));
                 });
-            }).do(({data, headers}) => {
-                saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
+            }).do(({ data, headers }) => {
+                saveAs(new Blob([data], { type: headers && headers["content-type"] }), getFileName(action));
             })
-            .map( () => onDownloadFinished() )
-            .catch( (e) => Rx.Observable.of(
+            .map(() => onDownloadFinished())
+            .catch((e) => Rx.Observable.of(
                 error({
                     error: e,
                     title: "layerdownload.error.title",
@@ -283,6 +302,7 @@ export const startFeatureExportDownload = (action$, store) =>
             );
 
         const wpsFlow = () => {
+            const isVectorLayer = !!layer.search?.url;
             const cropToROI = action.downloadOptions.cropDataSet && !!mapBbox && !!mapBbox.bounds;
             const wpsDownloadOptions = {
                 layerName: layer.name,
@@ -294,9 +314,9 @@ export const startFeatureExportDownload = (action$, store) =>
                 dataFilter: action.downloadOptions.downloadFilteredDataSet ? {
                     type: 'TEXT',
                     data: {
-                        mimeType: 'text/plain; subtype=filter/1.0',
+                        mimeType: 'text/xml; subtype=filter/1.1',
                         data: mergeFiltersToOGC({
-                            ogcVersion: '1.0.0',
+                            ogcVersion: '1.1.0',
                             addXmlnsToRoot: true,
                             xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
                         }, layer.layerFilter, action.filterObj)
@@ -318,7 +338,8 @@ export const startFeatureExportDownload = (action$, store) =>
                         ...(action.downloadOptions.quality ? {quality: action.downloadOptions.quality} : {})
                     } : {})
                 },
-                notifyDownloadEstimatorSuccess: true
+                notifyDownloadEstimatorSuccess: true,
+                attribute: propertyNames
             };
             const newResult = {
                 id: uuidv1(),
@@ -330,7 +351,9 @@ export const startFeatureExportDownload = (action$, store) =>
                 outputsExtractor: makeOutputsExtractor(referenceOutputExtractor)
             };
 
-            return download(action.url, wpsDownloadOptions, wpsExecuteOptions)
+            const executor = isVectorLayer && propertyNames ? downloadWithAttributesFilter : download;
+
+            return executor(action.url, wpsDownloadOptions, wpsExecuteOptions)
                 .takeUntil(action$.ofType(REMOVE_EXPORT_DATA_RESULT).filter(({id}) => id === newResult.id).take(1))
                 .flatMap((data) => {
                     if (data === 'DownloadEstimatorSuccess') {

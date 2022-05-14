@@ -51,11 +51,13 @@ import {
     DEACTIVATE_GEOMETRY_FILTER,
     SET_SELECTION_OPTIONS,
     SELECT_FEATURES,
-    SET_PAGINATION
+    SET_PAGINATION,
+    launchUpdateFilterFunc,
+    LAUNCH_UPDATE_FILTER_FUNC, setLayer
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
-import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
+import {CHANGE_DRAWING_STATUS, geometryChanged, SET_SNAPPING_LAYER, TOGGLE_SNAPPING} from '../../actions/draw';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
 import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
@@ -120,7 +122,11 @@ import {
     handleBoxSelectionDrawEnd,
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
-    deactivateSyncWmsFilterOnFeatureGridClose
+    deactivateSyncWmsFilterOnFeatureGridClose,
+    launchUpdateFilterEpic,
+    setDefaultSnappingLayerOnFeatureGridOpen,
+    resetSnappingLayerOnFeatureGridClosed,
+    toggleSnappingOffOnFeatureGridViewMode
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -794,6 +800,24 @@ describe('featuregrid Epics', () => {
         testEpic(triggerDrawSupportOnSelectionChange, 1, toggleEditMode(), epicResult, newState);
     });
 
+    it('launches update filter', () => {
+        const NUM_ACTIONS = 1;
+        testEpic(launchUpdateFilterEpic, NUM_ACTIONS, launchUpdateFilterFunc({}), (actions) => {
+            expect(actions.length).toBe(1);
+        }, {
+            featuregrid: {
+                pagination: {
+                    size: 20
+                },
+                selectedLayer: 'layer'
+            },
+            layers: [{
+                id: 'layer',
+                name: 'layer'
+            }]
+        });
+
+    });
     it('trigger draw support on multiple selection', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -894,20 +918,48 @@ describe('featuregrid Epics', () => {
                 case SET_CONTROL_PROPERTY: {
                     switch (i) {
                     case 0: {
-                        expect(action.control).toBe('metadataexplorer');
+                        expect(action.control).toBe('userExtensions');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
                         break;
                     }
                     case 1: {
-                        expect(action.control).toBe('annotations');
+                        expect(action.control).toBe('details');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
                         break;
                     }
                     case 2: {
+                        expect(action.control).toBe('mapTemplates');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 3: {
+                        expect(action.control).toBe('mapCatalog');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 4: {
+                        expect(action.control).toBe('metadataexplorer');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 5: {
+                        expect(action.control).toBe('annotations');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 6: {
                         expect(action.control).toBe('details');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
@@ -2144,7 +2196,7 @@ describe('featuregrid Epics', () => {
             enabled: true,
             value: {}
         }), closeFeatureGrid()];
-        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, resetPaginationAction, updateFilterAction, updateQuery]) => {
+        testEpic(featureGridUpdateGeometryFilter, 6, startActions, ([setPaginationAction, selectFeaturesAction, updateQueryAction, resetPaginationAction, updateFilterAction, launchUpdateFilterAction]) => {
             expect(setPaginationAction.type).toBe(SET_PAGINATION); // disable virtual scroll
             expect(setPaginationAction.size).toBe(100000);
             expect(updateQueryAction.type).toBe(UPDATE_QUERY);
@@ -2157,7 +2209,7 @@ describe('featuregrid Epics', () => {
             expect(updateFilterAction.type).toBe(UPDATE_FILTER);
             expect(updateFilterAction.update.enabled).toBe(false);
             expect(updateFilterAction.update.attribute).toBe("geometry");
-            expect(updateQuery.type).toBe(UPDATE_QUERY); // ensure that also the query is updated at all.
+            expect(launchUpdateFilterAction.type).toBe(LAUNCH_UPDATE_FILTER_FUNC);
         }, {
             featuregrid: {
                 pagination: {
@@ -2307,5 +2359,31 @@ describe('featuregrid Epics', () => {
                 syncWmsFilter: true
             }
         }, done);
+    });
+    it('setDefaultSnappingLayerOnFeatureGridOpen', (done) => {
+        const startActions = [setLayer('some_layer')];
+        testEpic(setDefaultSnappingLayerOnFeatureGridOpen, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
+        }, {}, done);
+    });
+    it('resetSnappingLayerOnFeatureGridClosed', (done) => {
+        const startActions = [closeFeatureGrid()];
+        testEpic(resetSnappingLayerOnFeatureGridClosed, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
+        }, {draw: { snapping: false }}, done);
+        testEpic(resetSnappingLayerOnFeatureGridClosed, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
+            expect(actions[1].type).toBe(TOGGLE_SNAPPING);
+        }, {draw: { snapping: true }}, done);
+    });
+    it('toggleSnappingOffOnFeatureGridViewMode', (done) => {
+        const startActions = [toggleViewMode()];
+        testEpic(toggleSnappingOffOnFeatureGridViewMode, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TOGGLE_SNAPPING);
+        }, {draw: { snapping: true }}, done);
     });
 });

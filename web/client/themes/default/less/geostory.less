@@ -1,13 +1,189 @@
-@ms-story-bg: @ms2-color-background;
-@ms-story-bg-grey: @ms2-color-shade-lighter;
-@ms-story-highlight: lighten(@ms2-color-primary, 20%);
-@ms-story-text: @ms2-color-text;
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-geostory-builder {
+        .ms-geostory-builder-header {
+            .border-bottom-color-var(@theme-vars[main-variant-bg]);
+        }
+
+        .msSideGrid {
+            .mapstore-side-card.ms-highlight {
+                .outline-color-var(@theme-vars[focus-color]);
+            }
+
+            .ms-over:not(.ms-dragging) {
+                &.ms-above {
+                    &>div {
+                        .border-bottom-color-var(@theme-vars[primary]);
+                    }
+                }
+
+                &.ms-below {
+                    &>div {
+                        .border-top-color-var(@theme-vars[primary]);
+                    }
+                }
+            }
+        }
+
+        .ms-section-preview {
+            .ms-section-preview-icon {
+                .border-top-color-var(@theme-vars[main-variant-bg]);
+            }
+        }
+    }
+
+    .ms-geostory-map-editor {
+        .ms-geostory-map-editor-header {
+            .border-bottom-color-var(@theme-vars[main-border-color]);
+        }
+    }
+
+    .ms-cascade-story {
+        .background-color-var(@theme-vars[main-bg]);
+
+        .ms-sections-container {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        .ms-section {
+
+            .ms-section-contents {
+                .ms-column-contents {
+                    .add-bar {
+                        .color-var(@theme-vars[main-color]);
+                        .background-color-var(@theme-vars[main-bg]);
+
+                        button {
+                            .color-var(@theme-vars[main-color]);
+                        }
+                    }
+                }
+            }
+
+            .ms-geo-carousel {
+                .background-color-var(@theme-vars[main-bg]);
+                .ms-geo-carousel-item {
+                    .background-color-var(@theme-vars[main-bg]);
+                    .border-color-var(@theme-vars[main-border-color]);
+                    .color-var(@theme-vars[main-color]);
+                }
+                .ms-geo-carousel-item-inner {
+                    .background-color-var(@theme-vars[main-bg]);
+                }
+                .ms-geo-carousel-item-inner-index {
+                    .background-color-var(@theme-vars[main-bg]);
+                    .color-var(@theme-vars[main-color]);
+                }
+                .ms-geo-carousel-item-selected {
+                    .border-color-var(@theme-vars[primary]);
+                }
+                .ms-carousel-slider {
+                    .background-color-var(@theme-vars[main-bg]);
+                }
+            }
+
+            .ms-carousel-map-info,
+            .ms-carousel-add-info,
+            .ms-carousel-marker-info {
+                .color-var(@theme-vars[primary]);
+                .background-color-var(@theme-vars[main-bg]);
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+
+            .add-bar {
+                .background-color-var(@theme-vars[main-bg]);
+                .border-top-color-var(@theme-vars[main-variant-bg]);
+                .border-right-color-var(@theme-vars[main-variant-bg]);
+                .border-left-color-var(@theme-vars[main-variant-bg]);
+            }
+        }
+
+        // style for active button in toolbar
+        .ms-content-toolbar>.btn-group>span>.btn.active {
+            .color-var(@theme-vars[success-contrast]);
+            .background-color-var(@theme-vars[success]);
+        }
+
+        .ms-content {
+            &.ms-content-text {
+                .ms-content-body {
+                    .ms-text-editor-toolbar {
+                        .color-var(@theme-vars[main-color]);
+                        .background-color-var(@theme-vars[main-bg]);
+
+                        .rdw-option-active {
+                            .outline-color-var(@theme-vars[focus-color]);
+                        }
+
+                        .rdw-colorpicker-modal-style-label-active {
+                            .border-bottom-color-var(@theme-vars[focus-color]);
+                        }
+                    }
+                }
+            }
+        }
+
+        .ms-media-caption {
+            .border-left-color-var(@theme-vars[main-variant-bg]);
+        }
+    }
+
+    .ms-expanded-media-container {
+        &>*:not(button) {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+
+    .ms-custom-theme-picker-field {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-custom-theme-picker-popover {
+        .glyphicon {
+            .color-var(@theme-vars[danger]);
+        }
+    }
+
+    .ms-custom-theme-picker-menuitem-header {
+        .color-var(@theme-vars[main-color]);
+    }
+
+    .ms-custom-theme-picker-menuitem {
+        .border-color-var(@theme-vars[main-variant-bg]);
+    }
+
+    .ms-geostory-carousel-viewer {
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+
+// **************
+// Layout
+// **************
+@ms-story-bg: @ms-main-bg;
+@ms-story-bg-grey: @ms-main-border-color;
+@ms-story-highlight: lighten(@ms-primary, 20%);
+@ms-story-text: @ms-main-color;
 @ms-story-loader: lighten(@ms-story-text, 20%);
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
-@ms-story-active-button-text: @ms2-color-text-primary;
-@ms-story-active-button-bg: lighten(@ms2-color-success, 15%);
+@ms-story-active-button-text: @ms-success-contrast;
+@ms-story-active-button-bg: lighten(@ms-success, 15%);
 
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
@@ -19,6 +195,7 @@
 @ms-story-font-size-h5: @ms-story-font-size-base;
 @ms-story-font-size-h6: floor((@ms-story-font-size-base * 0.85));
 @ms-story-font-size-li: floor((@ms-story-font-size-base * 0.66));
+@ms-story-font-size-normal: ceil((@ms-story-font-size-base * 0.66));
 @ms-story-font-size-caption: 11px;
 @ms-story-size-full: 100%;
 @ms-story-size-large: 85%;
@@ -78,7 +255,8 @@
     }
     .ms-cascade-story.ms-edit {
         .ms-section-title,
-        .ms-section-immersive {
+        .ms-section-immersive
+        .ms-section-carousel {
             .ms-text-editor-active {
                 pointer-events: all;
             }
@@ -198,13 +376,13 @@
             &.ms-above {
                 & > div {
                     padding-bottom: @square-btn-medium-size;
-                    border-bottom: 2px solid @ms2-color-primary;
+                    border-bottom: 2px solid @ms-primary;
                 }
             }
             &.ms-below {
                 & > div {
                     padding-top: @square-btn-medium-size;
-                    border-top: 2px solid @ms2-color-primary;
+                    border-top: 2px solid @ms-primary;
                 }
             }
         }
@@ -250,7 +428,7 @@
 }
 
 .ms-sections-container-small-screen {
-    @ms-story-padding-small-screen: @square-btn-medium-size / 2 + 8px;
+    @ms-story-padding-small-screen: (@square-btn-medium-size / 2 + 8px);
     .ms-section .ms-section-background .ms-section-background-container .ms-media {
         /* alignment of content */
         .ms-story-align-center();
@@ -277,15 +455,19 @@
             }
         }
     }
-    .ms-section-paragraph {
+    .ms-section-paragraph .ms-content-column .ms-column-contents .ms-content {
         padding-left: @ms-story-padding-small-screen;
         padding-right: @ms-story-padding-small-screen;
     }
-    .ms-section-immersive {
+    .ms-section-immersive,
+    .ms-section-carousel {
         .ms-content-column {
             padding-left: @ms-story-padding-small-screen;
             padding-right: @ms-story-padding-small-screen;
             min-width: auto;
+        }
+        .ms-geo-carousel {
+            margin: 0 8px;
         }
     }
     .ms-content {
@@ -296,25 +478,26 @@
         &.ms-content-text {
             .ms-content-body {
                 /* font size for all the main classes in text content */
-                p { font-size: @ms-story-font-size-base * 0.75; }
-                h1 { font-size: @ms-story-font-size-h1 * 0.75; }
-                h2 { font-size: @ms-story-font-size-h2 * 0.75; }
-                h3 { font-size: @ms-story-font-size-h3 * 0.75; }
-                h4 { font-size: @ms-story-font-size-h4 * 0.75; }
-                h5 { font-size: @ms-story-font-size-h5 * 0.75; }
-                h6 { font-size: @ms-story-font-size-h6 * 0.75; }
+                p { font-size: (@ms-story-font-size-base * 0.75); }
+                h1 { font-size: (@ms-story-font-size-h1 * 0.75); }
+                h2 { font-size: (@ms-story-font-size-h2 * 0.75); }
+                h3 { font-size: (@ms-story-font-size-h3 * 0.75); }
+                h4 { font-size: (@ms-story-font-size-h4 * 0.75); }
+                h5 { font-size: (@ms-story-font-size-h5 * 0.75); }
+                h6 { font-size: (@ms-story-font-size-h6 * 0.75); }
             }
         }
     }
     .ms-section.ms-expandable-background {
         &.ms-section-title .ms-content-text,
-        &.ms-section-immersive .ms-content-column {
-            padding-right: @square-btn-medium-size + 8px;
+        &.ms-section-immersive .ms-content-column,
+        &.ms-section-carousel .ms-content-column {
+            padding-right: (@square-btn-medium-size + 8px);
         }
     }
 }
 .ms-sections-container-medium-screen {
-    @ms-story-padding-medium-screen: @square-btn-medium-size * 1.5;
+    @ms-story-padding-medium-screen: (@square-btn-medium-size * 1.5);
     .ms-section .ms-section-background .ms-section-background-container {
         /* size of content */
         &.ms-size-full .ms-media { width: @ms-story-size-full; }
@@ -329,20 +512,20 @@
         &.ms-align-left .ms-content-body { margin-left: 0; margin-right: auto; }
         &.ms-align-right .ms-content-body { margin-left: auto; margin-right: 0; }
     }
-    .ms-section-paragraph {
+    .ms-section-paragraph .ms-content-column .ms-column-contents .ms-content {
         padding-left: @ms-story-padding-medium-screen;
         padding-right: @ms-story-padding-medium-screen;
     }
     .ms-content {
         &.ms-content-text {
             .ms-content-body {
-                p { font-size: @ms-story-font-size-base * 0.80; }
-                h1 { font-size: @ms-story-font-size-h1 * 0.80; }
-                h2 { font-size: @ms-story-font-size-h2 * 0.80; }
-                h3 { font-size: @ms-story-font-size-h3 * 0.80; }
-                h4 { font-size: @ms-story-font-size-h4 * 0.80; }
-                h5 { font-size: @ms-story-font-size-h5 * 0.80; }
-                h6 { font-size: @ms-story-font-size-h6 * 0.80; }
+                p { font-size: (@ms-story-font-size-base * 0.80); }
+                h1 { font-size: (@ms-story-font-size-h1 * 0.80); }
+                h2 { font-size: (@ms-story-font-size-h2 * 0.80); }
+                h3 { font-size: (@ms-story-font-size-h3 * 0.80); }
+                h4 { font-size: (@ms-story-font-size-h4 * 0.80); }
+                h5 { font-size: (@ms-story-font-size-h5 * 0.80); }
+                h6 { font-size: (@ms-story-font-size-h6 * 0.80); }
             }
         }
         /* size of content */
@@ -482,7 +665,7 @@
                 .ms-content-toolbar {
                     display: flex;
                     padding: 0 16px;
-                    padding-top: @square-btn-medium-size / 2;
+                    padding-top: (@square-btn-medium-size / 2);
                     .btn-group {
                         margin-right: 0;
                         margin-left: auto;
@@ -490,22 +673,173 @@
                 }
             }
         }
+        .ms-carousel-map-info {
+            padding: 10px;
+            width: 450px;
+            height: 50px;
+            position: absolute;
+            top: -6px;
+            left: 60px;
+            .shadow-far();
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            &:before {
+                content: "";
+                position: absolute;
+                height: 0;
+                width: 0;
+                top: 8px;
+                left: -30px;
+                border-width: 15px;
+                border-color: transparent #fff transparent transparent;
+                border-style: solid;
+            }
+        }
+        .ms-carousel-add-info {
+            padding: 10px;
+            position: absolute;
+            .shadow-far();
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 550px;
+            height: 50px;
+            bottom: 220px;
+            left: -(@square-btn-medium-size / 2);
+            font-weight: bold;
+            &:before {
+                content: "";
+                position: absolute;
+                height: 0;
+                width: 0;
+                top: 49px;
+                left: 3px;
+                border-width: 15px;
+                border-color: transparent #fff transparent transparent;
+                border-style: solid;
+                transform: rotate(270deg);
+            }
+        }
+        .ms-carousel-marker-info {
+            padding: 10px;
+            position: absolute;
+            .shadow-far();
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 450px;
+            height: 50px;
+            bottom: 235px;
+            left: 15px;
+            font-weight: bold;
+        }
+        .ms-geo-carousel {
+            padding: 0;
+            margin: 0 40px;
+            margin-bottom: 32px;
+            position: sticky;
+            z-index: 2;
+            bottom: 0;
+            height: 160px;
+            .shadow-soft();
+            .ms-horizontal-menu {
+                display: flex;
+                align-items: center;
+            }
+            .ms-geo-carousel-item {
+                cursor: pointer;
+                height: 120px;
+                width: 120px;
+                .shadow-soft();
+                outline: 0;
+                margin: 8px;
+            }
+            .ms-geo-carousel-item:hover {
+                .shadow();
+            }
+            .ms-geo-carousel-item-selected {
+                border-width: 4px;
+                border-style: solid;
+            }
+            .disable-event {
+                pointer-events: none;
+            }
+            .ms-geo-carousel-item-inner-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+            }
+            .ms-geo-carousel-item-inner {
+                position: absolute;
+                width: 100%;
+                text-align: center;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 8px;
+            }
+
+            .ms-geo-carousel-item-inner-index {
+                position: absolute;
+                bottom: 2px;
+                left: 2px;
+                padding: 2px 4px;
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                text-align: center;
+                font-weight: bold;
+            }
+            .ms-geo-carousel-item-wrapper {
+                position: relative;
+            }
+            .ms-geo-carousel-control {
+                height: 100%;
+            }
+        }
+        .ms-carousel-slider {
+            position: absolute;
+            top: calc(50% - 10px);
+            bottom: 2px;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            border-color: transparent;
+            &.left-arrow {
+                left: 4px;
+            }
+            &.right-arrow {
+                right: 4px;
+            }
+        }
 
         .add-bar {
             position: relative;
+            z-index: 5;
             background-color: @ms-story-bg;
             text-align: center;
             border-top: 1px solid @ms-story-bg-grey;
             border-right: 1px solid @ms-story-bg-grey;
             border-left: 1px solid @ms-story-bg-grey;
-            width: @square-btn-medium-size + 2;
+            width: (@square-btn-medium-size + 2);
             border-top-left-radius: 50%;
             margin-left: 50%;
             transform: translateX(-50%);
             border-top-right-radius: 50%;
             .btn {
                 /* override default style of bootstrap */
-                .square-button-md();
+                height: @square-btn-medium-size;
+                width: @square-btn-medium-size;
+                padding: 0;
+                outline: 0;
                 .no-border();
                 background: transparent;
                 cursor: pointer;
@@ -550,8 +884,8 @@
                 /* render the toolbar has a floating container at top left corner of title container */
                 .ms-content-toolbar {
                     position: absolute;
-                    margin-left: -@square-btn-medium-size / 2;
-                    margin-top: -@square-btn-medium-size * 0.6;
+                    margin-left: (-@square-btn-medium-size / 2);
+                    margin-top: (-@square-btn-medium-size * 0.6);
                     padding: 0;
                     z-index: 2;
                     .shadow-soft();
@@ -563,8 +897,8 @@
                 where the alignment effect is not visible without this improvement
                 */
                 &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
-                &.ms-align-left .ms-content-body { margin-left: @square-btn-medium-size + 8px; margin-right: auto; }
-                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: @square-btn-medium-size + 8px; }
+                &.ms-align-left .ms-content-body { margin-left: (@square-btn-medium-size + 8px); margin-right: auto; }
+                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: (@square-btn-medium-size + 8px); }
                 /* text on full size should fill all the width of container */
                 &.ms-size-full {
                     width: 100%;
@@ -609,7 +943,6 @@
         }
 
         &.ms-section-paragraph {
-            padding: 0 15%;
             background-color: inherit;
             /*
             overrides for themes of text content
@@ -654,15 +987,29 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
-                .ms-content.ms-content-webPage {
-                    width: 100%;
-                    height: @ms-web-page-size-height-small;
-                    &.ms-size-large { height: @ms-web-page-size-height-large; }
-                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
-                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                .ms-column-contents {
+                    .ms-content {
+                        padding: 0 15%;
+                        &:not(.ms-content-text) {
+                            padding-bottom: 16px;
+                            padding-top: 16px;
+                        }
+                        &.ms-content-webPage {
+                            padding: 16px 0;
+                            width: 100%;
+                            height: @ms-web-page-size-height-small;
+                            &.ms-size-h-large { width: @ms-story-size-large; }
+                            &.ms-size-h-medium { width: @ms-story-size-medium; }
+                            &.ms-size-h-small {width: @ms-story-size-small;}
+                            &.ms-size-h-full {width: @ms-story-size-full;}
+                            &.ms-size-v-large {height: @ms-web-page-size-height-large;}
+                            &.ms-size-v-medium {height: @ms-web-page-size-height-medium;}
+                            &.ms-size-v-small {height: @ms-web-page-size-height-small;}
+                        }
+                    }
                 }
                 .ms-content.ms-content-video {
                     width: 100%;
@@ -675,7 +1022,7 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
                 .ms-content-toolbar {
@@ -685,7 +1032,8 @@
             }
         }
         // overrides and specific styles for immersive section layout
-        &.ms-section-immersive {
+        &.ms-section-immersive,
+        &.ms-section-carousel {
             /* floating add section button */
             & > .add-bar {
                 position: absolute;
@@ -697,7 +1045,7 @@
                 min-width: 500px;
                     display: flex; // align vertically the content
                     pointer-events: none; // pass pointer events to background (this div takes full width and height)
-                    padding: 64px @square-btn-medium-size + 6px;
+                    padding: 64px (@square-btn-size + 8px);
                     padding-top: 164px;
                 &>.ms-content-body {
                     // override background of paragraph (or title) content.
@@ -707,8 +1055,8 @@
                     &>.ms-content-toolbar {
                         position: absolute;
                         z-index: 2;
-                        margin-left: -@square-btn-medium-size / 2;
-                        margin-top: -@square-btn-medium-size * 0.6;
+                        margin-left: (-@square-btn-medium-size / 2);
+                        margin-top: (-@square-btn-medium-size * 0.6);
                         padding: 0;
                         .shadow-soft();
                     }
@@ -791,16 +1139,20 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
 
                 .ms-content.ms-content-webPage {
                     width: 100%;
                     height: @ms-web-page-size-height-small;
-                    &.ms-size-large { height: @ms-web-page-size-height-large; }
-                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
-                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                    &.ms-size-h-large { width: @ms-story-size-large; }
+                    &.ms-size-h-medium { width: @ms-story-size-medium; }
+                    &.ms-size-h-small { width: @ms-story-size-small; }
+                    &.ms-size-h-full { width: @ms-story-size-full; }
+                    &.ms-size-v-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-v-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-v-small { height: @ms-web-page-size-height-small; }
                 }
                 .ms-content.ms-content-video {
                     width: 100%;
@@ -813,9 +1165,15 @@
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
-                        } 
+                        }
                     }
                 }
+            }
+        }
+        &.ms-section-carousel {
+            /* floating add section button */
+            & > .add-bar {
+                position: sticky;
             }
         }
     }
@@ -1196,6 +1554,28 @@
                     padding-bottom: 120px;
                 }
             }
+            &.ms-section-immersive,
+            &.ms-section-carousel {
+                .ms-geo-carousel {
+                    height: 180px;
+                    .ms-content-toolbar {
+                        position: absolute;
+                        margin-left: (-@square-btn-medium-size / 2);
+                        margin-top: (-@square-btn-medium-size * 0.6);
+                        padding: 0;
+                        z-index: 2;
+                        border-top: none;
+                        .shadow-soft();
+                    }
+                    .ms-geo-carousel-item-wrapper .ms-content-toolbar {
+                        bottom: 0;
+                        right: 0;
+                        left: auto;
+                        top: auto;
+                        margin: 0;
+                    }
+                }
+            }
         }
     }
 
@@ -1210,7 +1590,7 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-            } 
+            }
         }
     }
     /////////////////////
@@ -1231,7 +1611,8 @@
             left: 6px;
             margin: 0;
         }
-        .ms-section.ms-section-immersive .ms-content-column {
+        .ms-section.ms-section-immersive .ms-content-column,
+        .ms-section.ms-section-carousel .ms-content-column {
             padding-top: 64px;
         }
     }
@@ -1272,7 +1653,10 @@
 }
 
 .ms-expand-media-button {
-    .square-button-md();
+    height: @square-btn-medium-size;
+    width: @square-btn-medium-size;
+    padding: 0;
+    outline: 0;
     .shadow-soft();
     .no-border();
     position: absolute;
@@ -1320,7 +1704,7 @@
         font-size: @font-size-small;
     }
     .glyphicon {
-        color: @ms2-color-danger;
+        color: @ms-danger;
     }
 }
 // override font size of the geostory for paragraph in popover
@@ -1337,7 +1721,7 @@
 .ms-custom-theme-picker-menuitem-header {
     display: flex;
     align-items: center;
-    color: @ms2-color-text;
+    color: @ms-main-color;
     padding: 8px 8px 0 8px;
     > div {
         flex: 1;
@@ -1349,7 +1733,7 @@
 }
 .ms-custom-theme-picker-menuitem {
     padding: 4px 12px;
-    border: 1px solid @ms2-color-shade-lighter;
+    border: 1px solid @ms-main-border-color;
     margin: 8px;
     min-width: 300px;
 }
@@ -1405,3 +1789,16 @@
         padding: 0 4px;
     }
 }
+
+.ms-geostory-carousel-viewer {
+    min-width: 100px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: @ms-story-font-size-normal;
+    max-width: 200px;
+    max-height: 200px;
+    padding: 10px;
+}
+

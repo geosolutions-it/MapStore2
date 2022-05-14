@@ -13,7 +13,7 @@ import OverlayTrigger from '../misc/OverlayTrigger';
 import { getSupportedLocales } from '../../utils/LocaleUtils';
 import Button from '../misc/Button';
 
-class LangBar extends React.Component {
+class FlagButton extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         lang: PropTypes.string,
@@ -22,10 +22,12 @@ class LangBar extends React.Component {
         label: PropTypes.string,
         description: PropTypes.string,
         onFlagSelected: PropTypes.func,
-        tooltipPlacement: PropTypes.string
+        tooltipPlacement: PropTypes.string,
+        componentAsButton: PropTypes.bool
     };
 
     static defaultProps = {
+        componentAsButton: true,
         locales: getSupportedLocales(),
         code: 'en-US',
         onLanguageChange: function() {},
@@ -41,14 +43,17 @@ class LangBar extends React.Component {
         } catch (e) {
             imgSrc = null;
         }
-
         return imgSrc ? (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip} placement={this.props.tooltipPlacement}>
-            <Button
-                key={this.props.code}
-                onClick={this.launchFlagAction.bind(this, this.props.code)}
-                active={this.props.active}>
-                <img src={imgSrc} alt={this.props.label}/>
-            </Button>
+            {
+                this.props.componentAsButton ?
+                    <Button
+                        key={this.props.code}
+                        onClick={this.launchFlagAction.bind(this, this.props.code)}
+                        active={this.props.active}>
+                        <img src={imgSrc} alt={this.props.label}/>
+                    </Button> : <span className= "lang-button">
+                        <img src={imgSrc} alt={this.props.label}/>
+                    </span>}
         </OverlayTrigger>) : null;
     }
 
@@ -57,4 +62,4 @@ class LangBar extends React.Component {
     };
 }
 
-export default LangBar;
+export default FlagButton;

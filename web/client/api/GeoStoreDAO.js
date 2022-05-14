@@ -15,6 +15,8 @@ const xmlBuilder = new xml2js.Builder();
 import axios from '../libs/ajax';
 import ConfigUtils from '../utils/ConfigUtils';
 import { registerErrorParser } from '../utils/LocaleUtils';
+import { encodeUTF8 } from '../utils/EncodeUtils';
+
 
 const generateMetadata = (name = "", description = "") =>
     "<description><![CDATA[" + description + "]]></description>"
@@ -154,14 +156,14 @@ const Api = {
         let authData;
         return axios.post(url, null, this.addBaseUrl(merge((username && password) ? {
             auth: {
-                username: username,
-                password: password
+                username: encodeUTF8(username),
+                password: password // password is already encoded by axios
             }
         } : {}, options))).then((response) => {
-            authData = response.data;
+            authData = response.data?.sessionToken ?? response.data;
             return axios.get("users/user/details", this.addBaseUrl(merge({
                 headers: {
-                    'Authorization': 'Bearer ' + response.data.access_token
+                    'Authorization': 'Bearer ' + authData?.access_token
                 },
                 params: {
                     includeattributes: true
@@ -173,10 +175,14 @@ const Api = {
     },
     changePassword: function(user, newPassword, options) {
         return axios.put(
-            "users/user/" + user.id, "<User><newPassword>" + newPassword + "</newPassword></User>",
+            "users/user/" + user.id, {
+                User: {
+                    newPassword
+                }
+            },
             this.addBaseUrl(merge({
                 headers: {
-                    'Content-Type': "application/xml"
+                    'Content-Type': "application/json"
                 }
             }, options)));
     },
@@ -448,7 +454,7 @@ const Api = {
         // accessToken is actually the sessionID
         const url = "session/refresh/" + accessToken + "/" + refreshToken;
         return axios.post(url, null, this.addBaseUrl(parseOptions(options))).then(function(response) {
-            return response.data;
+            return response.data?.sessionToken ?? response.data;
         });
     },
     /**

@@ -5,30 +5,30 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const PropTypes = require('prop-types');
-const React = require('react');
-const {last: _last, isNil} = require('lodash');
-const L = require('leaflet');
+import PropTypes from 'prop-types';
+import React from 'react';
+import {last, isNil } from 'lodash';
+import L from 'leaflet';
 
-require('leaflet-draw');
+import 'leaflet-draw';
 
 L.Draw.Polygon.prototype._calculateFinishDistance = function(t) {
     if (this._markers.length > 0) {
-        const first = this._map.latLngToContainerPoint(this._markers[0].getLatLng());
-        const last = this._map.latLngToContainerPoint(this._markers[this._markers.length - 1].getLatLng());
+        const firstPoint = this._map.latLngToContainerPoint(this._markers[0].getLatLng());
+        const lastPoint = this._map.latLngToContainerPoint(this._markers[this._markers.length - 1].getLatLng());
 
         const clickedMarker = new L.Marker(t, {
             icon: this.options.icon,
             zIndexOffset: 2 * this.options.zIndexOffset
         });
         const clicked = this._map.latLngToContainerPoint(clickedMarker.getLatLng());
-        return Math.min(first.distanceTo(clicked), last.distanceTo(clicked));
+        return Math.min(firstPoint.distanceTo(clicked), lastPoint.distanceTo(clicked));
     }
     return 1 / 0;
 };
 
-const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {boundsToOLExtent} = require('../../../utils/leaflet/DrawSupportUtils');
+import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
+import {boundsToOLExtent} from '../../../utils/leaflet/DrawSupportUtils';
 const assign = require('object-assign');
 
 const {reproject, reprojectBbox, calculateCircleCoordinates, reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
@@ -340,7 +340,7 @@ class DrawSupport extends React.Component {
 
     endDrawing = (newProps) => {
         this.replaceFeatures(newProps);
-        const geometry = _last(newProps.features);
+        const geometry = last(newProps.features);
         if (this.props.drawMethod === "Circle" && geometry && !isNil(geometry.center) && !isNil(geometry.radius)) {
             this.props.onEndDrawing({...geometry, coordinates: calculateCircleCoordinates(geometry.center, geometry.radius, 100)}, this.props.drawOwner);
         } else if (geometry) {
@@ -707,4 +707,4 @@ class DrawSupport extends React.Component {
 }
 
 
-module.exports = DrawSupport;
+export default DrawSupport;
