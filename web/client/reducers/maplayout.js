@@ -19,7 +19,7 @@ const DEFAULT_LEFT_DOCK_PANELS = [];
  *
  * @memberof reducers
  */
-function mapLayout(state = { layout: {}, boundingMapRect: {}, boundingSidebarRect: {}, dockPanels: { left: leftDockPanels, right: rightDockPanels } }, action) {
+function mapLayout(state = { layout: {}, boundingMapRect: {}, boundingSidebarRect: {}, dockPanels: { left: DEFAULT_LEFT_DOCK_PANELS, right: DEFAULT_RIGHT_DOCK_PANELS } }, action) {
     switch (action.type) {
     case UPDATE_MAP_LAYOUT: {
         const {boundingMapRect = {}, boundingSidebarRect = {}, ...layout} = action.layout;
