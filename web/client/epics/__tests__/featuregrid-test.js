@@ -142,7 +142,6 @@ import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
 import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
 import { isEmpty, isNil } from 'lodash';
-import {DEFAULT_RIGHT_DOCK_PANELS} from "../../reducers/maplayout";
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
@@ -961,7 +960,7 @@ describe('featuregrid Epics', () => {
         }, {
             maplayout: {
                 dockPanels: {
-                    right: DEFAULT_RIGHT_DOCK_PANELS
+                    right: ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details']
                 }
             },
             controls: {
