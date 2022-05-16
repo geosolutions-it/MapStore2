@@ -648,79 +648,89 @@
             "declineUrl" : "http://www.google.com"
           }
         }],
-        "dashboard": [{
-            "name": "OmniBar",
+        "dashboard": [
+          "BurgerMenu",
+          "Dashboard",
+          "Notifications",
+          "Login",
+          "Language",
+          "NavMenu",
+          "DashboardSave",
+          "DashboardSaveAs",
+          "Attribution",
+          "Home",
+          { "name": "DeleteDashboard" },
+          { "name": "OmniBar",
             "cfg": {
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
-          "name": "Share",
-          "cfg": {
-            "showAPI": false,
-            "advancedSettings": false,
-            "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
-            "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
-            "embedOptions": {
-              "showTOCToggle": false,
-              "showConnectionsParamToggle": true,
-              "allowFullScreen": false,
-              "sizeOptions": {
-                "Small": { "width": 600, "height": 500 },
-                "Medium": { "width": 800, "height": 600},
-                "Large": { "width": 1000, "height": 800},
-                "Custom": {"width": 0, "height": 0}
-            },
-            "selectedOption": "Small"
-            }
-          }
-        },
-          {
-          "name": "DashboardEditor",
-          "cfg": {
-            "selectedService": "GeoSolutions GeoServer CSW",
-            "services": {
-              "GeoSolutions GeoServer CSW": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
-                "type": "csw",
-                "title": "GeoSolutions GeoServer CSW"
+          },
+          { "name": "Share",
+            "cfg": {
+              "showAPI": false,
+              "advancedSettings": false,
+              "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+              "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+              "embedOptions": {
+                "showTOCToggle": false,
+                "showConnectionsParamToggle": true,
+                "allowFullScreen": false,
+                "sizeOptions": {
+                  "Small": { "width": 600, "height": 500 },
+                  "Medium": { "width": 800, "height": 600},
+                  "Large": { "width": 1000, "height": 800},
+                  "Custom": {"width": 0, "height": 0}
               },
-              "GeoSolutions GeoServer WMS": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
-                "type": "wms",
-                "title": "GeoSolutions GeoServer WMS"
-              },
-              "GeoSolutions GeoServer WMTS": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
-                "type": "wmts",
-                "title": "GeoSolutions GeoServer WMTS"
+              "selectedOption": "Small"
               }
-            },
-            "containerPosition": "columns"
-          }
-        }, {
-          "name": "QueryPanel",
-          "cfg": {
-            "toolsOptions": {
-              "hideCrossLayer": true,
-              "hideSpatialFilter": true
-            },
-            "containerPosition": "columns"
-          }
-        }, "BurgerMenu", "Dashboard", "Notifications", {
-            "name": "Tutorial",
+            }
+          },
+          {"name": "DashboardEditor",
+            "cfg": {
+              "selectedService": "GeoSolutions GeoServer CSW",
+              "services": {
+                "GeoSolutions GeoServer CSW": {
+                  "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
+                  "type": "csw",
+                  "title": "GeoSolutions GeoServer CSW"
+                },
+                "GeoSolutions GeoServer WMS": {
+                  "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                  "type": "wms",
+                  "title": "GeoSolutions GeoServer WMS"
+                },
+                "GeoSolutions GeoServer WMTS": {
+                  "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+                  "type": "wmts",
+                  "title": "GeoSolutions GeoServer WMTS"
+                }
+              },
+              "containerPosition": "columns"
+            }
+          },
+          { "name": "QueryPanel",
+            "cfg": {
+              "toolsOptions": {
+                "hideCrossLayer": true,
+                "hideSpatialFilter": true
+              },
+              "containerPosition": "columns"
+            }
+          },
+          { "name": "Tutorial",
             "cfg": {
                 "allowClicksThruHole": false,
                 "containerPosition": "header",
                 "preset": "dashboard_tutorial"
             }
-        },
-        {
-            "name": "FeedbackMask",
+          },
+          { "name": "FeedbackMask",
             "cfg": {
                 "containerPosition": "header"
             }
-        }],
+          }
+        ],
       "geostory-embedded": [
         "GeoStory",
         {
@@ -770,6 +780,7 @@
           {
             "name": "GeoStory"
           },
+          { "name": "DeleteGeoStory" },
           "GeoStorySave",
           "GeoStorySaveAs",
           "MapEditor",

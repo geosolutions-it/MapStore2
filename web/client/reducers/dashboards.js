@@ -9,7 +9,7 @@
 import { MAPS_LIST_LOADING } from '../actions/maps';
 
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE, LOADING } from '../actions/dashboards';
+import { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE, LOADING, SET_CONTROL } from '../actions/dashboards';
 import { set } from '../utils/ImmutableUtils';
 import { castArray } from 'lodash';
 
@@ -50,6 +50,10 @@ function dashboards(state = {
         return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
             "loading", action.value, state
         ));
+    }
+    case SET_CONTROL: {
+        const { control, value } = action;
+        return set(`controls.${control}`, value, state);
     }
     default:
         return state;
