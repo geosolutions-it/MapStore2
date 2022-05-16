@@ -9,17 +9,8 @@
 import {UPDATE_DOCK_PANELS, UPDATE_MAP_LAYOUT} from '../actions/maplayout';
 
 import assign from 'object-assign';
-import ConfigUtils from "../utils/ConfigUtils";
-import {get} from "lodash";
-
-export const DEFAULT_RIGHT_DOCK_PANELS = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details'];
-export const DEFAULT_LEFT_DOCK_PANELS = [];
-
-const customRightPanels = get(ConfigUtils.getConfigProp('miscSettings'), 'exclusiveDockPanels.right', []);
-const customLeftPanels = get(ConfigUtils.getConfigProp('miscSettings'), 'exclusiveDockPanels.left', []);
-
-const rightDockPanels = DEFAULT_RIGHT_DOCK_PANELS.concat(...(Array.isArray(customRightPanels) ? customRightPanels : []));
-const leftDockPanels = DEFAULT_LEFT_DOCK_PANELS.concat(...(Array.isArray(customLeftPanels) ? customLeftPanels : []));
+const DEFAULT_RIGHT_DOCK_PANELS = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details'];
+const DEFAULT_LEFT_DOCK_PANELS = [];
 
 /**
  * Manages the map layout state. Determines and manages the placement of the components on the screen
