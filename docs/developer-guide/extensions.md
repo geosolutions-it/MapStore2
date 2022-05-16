@@ -172,3 +172,38 @@ ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset");
 ```
 
 Assets are loaded using a different service, `/rest/config/loadasset`.
+
+
+## Managing Drawing interactions conflict in extension
+
+Extension could implement drawing interactions, and it's necessary to prevent a situation when multiple tools from different plugins or extensions have active drawing, otherwise it could end up in an unpredicted or buggy behavior.
+
+There are two ways how drawing interaction can be implemented in plugin or extension:
+- Using DrawSupport (e.g. Annotations plugin)
+- By intercepting click on the map interactions (e.g. Measure plugin)
+
+### Making another plugins aware of your extension starts drawing
+
+If your extension using DrawSupport - you're on the safe side.
+Extension will dispatch `CHANGE_DRAWING_STATUS` action.
+This action can be traced by another plugins or extensions, and they can control their tools accordingly.
+
+If your extension is using `CLICK_ON_MAP` action and intercepts it perform any manipulations on click - you need to make sure that your extension also dispatch `REGISTER_EVENT_LISTENER` action (see `Measure` plugin as an example) when your extension activates drawing.
+
+It should also dispatch `UNREGISTER_EVENT_LISTENER` once drawing interaction stops.
+
+### Making your extension aware of another plugin drawing
+
+There is a helper utility named `shutdownToolOnAnotherToolDrawing`. This is a wrapper for a common approach to dispatch actions that will toggle off drawing interactions of your extension whenever another plugin or extension starts drawing.
+
+extensionEpics.js:
+
+```js
+export const toggleToolOffOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'yourToolName');
+```
+
+with this code located in extension's epics your tool `yourToolName` will be closed whenever: 
+- feature editor is open
+- another plugin or extension starts drawing. 
+
+"shutdownToolOnAnotherToolDrawing" supports passing custom callback to determine whether your tool is active (to prevent garbage action dispatching if it's already off) and custom callback to list actions to be dispatched.
