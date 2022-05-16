@@ -16,7 +16,7 @@ import StandardRouter from '../components/app/StandardRouter';
 import { loadVersion } from '../actions/version';
 import { themeLoaded } from '../actions/theme';
 
-import { updateMapLayoutEpic } from '../epics/maplayout';
+import { updateMapLayoutEpic, updateActiveDockEpic } from '../epics/maplayout';
 import { setSupportedLocales } from '../epics/localconfig';
 import { readQueryParamsOnMapEpic } from '../epics/queryparams';
 
@@ -83,6 +83,7 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
             ? baseEpics
             : {
                 updateMapLayoutEpic,
+                updateActiveDockEpic,
                 setSupportedLocales,
                 readQueryParamsOnMapEpic,
                 ...configAppEpics

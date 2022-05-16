@@ -11,21 +11,34 @@ import uuidv1 from 'uuid/v1';
 
 import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
 import {validateCoord} from '../utils/MeasureUtils';
-import {ADD_MEASURE_AS_ANNOTATION, ADD_AS_LAYER, SET_ANNOTATION_MEASUREMENT, setMeasurementConfig, changeMeasurement, changeCoordinates} from '../actions/measurement';
+import {
+    ADD_MEASURE_AS_ANNOTATION,
+    ADD_AS_LAYER,
+    SET_ANNOTATION_MEASUREMENT,
+    setMeasurementConfig,
+    changeMeasurement,
+    changeCoordinates
+} from '../actions/measurement';
 import {addLayer} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
-import {toggleControl, setControlProperty, SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from '../actions/controls';
-import {closeFeatureGrid} from '../actions/featuregrid';
+import {
+    toggleControl,
+    setControlProperty,
+    SET_CONTROL_PROPERTY,
+    TOGGLE_CONTROL
+} from '../actions/controls';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
 import {measureSelector} from '../selectors/controls';
 import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
-import { CLICK_ON_MAP } from '../actions/map';
+import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../actions/map';
 import {
     newAnnotation,
     setEditingFeature,
     cleanHighlight,
     toggleVisibilityAnnotation
 } from '../actions/annotations';
+import {updateDockPanelsList} from "../actions/maplayout";
+import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 
 export const addAnnotationFromMeasureEpic = (action$) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
@@ -68,14 +81,36 @@ export const openMeasureEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter((action) => action.control === "measure" && isActiveSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), setControlProperty('annotations', 'enabled', false));
+            const actions = [purgeMapInfoResults(), hideMapinfoMarker(),
+                registerEventListener('click', 'measure')];
+            const {showCoordinateEditor} = store.getState()?.controls?.measure || {};
+            if (showCoordinateEditor) {
+                actions.push(updateDockPanelsList('measure', 'add', 'right'));
+            }
+            return Rx.Observable.from(actions);
         });
 
 export const closeMeasureEpics = (action$, store) =>
-    action$.ofType(TOGGLE_CONTROL)
+    action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter(action => action.control === "measure" && !measureSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(cleanHighlight());
+            const newMeasureState = {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false,
+                geomType: null,
+                // reset old measurements
+                len: 0,
+                area: 0,
+                bearing: 0
+            };
+            const actions = [changeMeasurement(newMeasureState), cleanHighlight(), unRegisterEventListener('click', 'measure')];
+
+            const {showCoordinateEditor} = store.getState()?.controls?.measure || {};
+            if (showCoordinateEditor) {
+                actions.push(updateDockPanelsList('measure', 'remove', 'right'));
+            }
+            return Rx.Observable.from(actions);
         });
 
 export const setMeasureStateFromAnnotationEpic = (action$, store) =>
@@ -108,11 +143,20 @@ export const addCoordinatesEpic = (action$, {getState = () => {}}) =>
             return Rx.Observable.empty();
         });
 
+/**
+ * Closes measurement tool when one of the drawing tools takes control
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
+export const tearDownMeasureOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'measure');
+
 export default {
     addAnnotationFromMeasureEpic,
     addAsLayerEpic,
     openMeasureEpic,
     closeMeasureEpics,
     setMeasureStateFromAnnotationEpic,
-    addCoordinatesEpic
+    addCoordinatesEpic,
+    tearDownMeasureOnDrawToolActive
 };
