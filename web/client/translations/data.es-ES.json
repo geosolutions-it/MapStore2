@@ -2029,7 +2029,8 @@
                 "showConnections": "Mostrar conexiones",
                 "hideConnections": "Ocultar conexiones"
             },
-            "emptyTitle": "El panel de control está vacío"
+            "emptyTitle": "El panel de control está vacío",
+            "delete": "Eliminar panel de control"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Cargando panel de control",
@@ -2487,6 +2488,7 @@
             "zoomToContent": "Zoom al contenido",
             "addWebPageContent": "Agregar contenido de página web",
             "emptyTitle": "Esta historia esta vacia",
+            "delete": "Eliminar geostory",
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
             "closeFullscreenMap": "Cerrar mapa a pantalla completa",
             "showFullscreenMap": "Ver mapa en pantalla completa",

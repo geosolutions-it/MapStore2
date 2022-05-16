@@ -8,6 +8,7 @@
 import expect from 'expect';
 
 import {
+    getDashboardId,
     isDashboardAvailable,
     isDashboardEditing,
     showConnectionsSelector,
@@ -114,6 +115,12 @@ describe('dashboard selectors', () => {
 
     it("test dashboardSaveServiceSelector", () => {
         expect(dashboardSaveServiceSelector({dashboard: {saveServiceLoading: true}})).toBe(true);
+    });
+    it("getDashboardId should return dashboard id in case it exists", () => {
+        expect(getDashboardId({dashboard: {resource: {id: '1234'}}})).toBe('1234');
+    });
+    it("getDashboardId should return undefined in case resource does not exists", () => {
+        expect(getDashboardId({dashboard: {resource: {}}})).toBe(undefined);
     });
 
 });

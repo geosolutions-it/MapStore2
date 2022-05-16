@@ -39,6 +39,8 @@ export default {
         DashboardEditor: require('../plugins/DashboardEditor').default,
         DashboardsPlugin: require('../plugins/Dashboards').default,
         DeleteMapPlugin: require('../plugins/DeleteMap').default,
+        DeleteGeoStoryPlugin: require('../plugins/DeleteGeoStory').default,
+        DeleteDashboardPlugin: require('../plugins/DeleteDashboard').default,
         DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu').default,
         ExpanderPlugin: require('../plugins/Expander').default,
