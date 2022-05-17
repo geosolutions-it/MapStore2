@@ -388,6 +388,7 @@ export default {
             ]);
         }),
     purgeMapInfoEpic: (action$, store) => action$.ofType( PURGE_MAPINFO_RESULTS)
+        .filter(() => get(store.getState(), 'draw.drawOwner', '') === ANNOTATIONS)
         .switchMap(() => {
             return Rx.Observable.from([
                 changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {})
