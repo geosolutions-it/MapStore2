@@ -137,7 +137,6 @@ export default (state = {
                 endValuesSupport: action?.config?.timelineData?.endValuesSupport
             }
         };
-        return newState;
     }
     default:
         return state;
