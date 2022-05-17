@@ -81,6 +81,100 @@ describe('timeline Epics', () => {
             }
         });
     });
+    it('setTimelineCurrentTime with selected layer (with time in range) - time as intervals - snap to start', done => {
+        const t = "2021-10-07T00:00:00.000Z";
+        testEpic(setTimelineCurrentTime, 3, selectTime(t, "TEST_LAYER"), ([action1, action2, action3]) => {
+            const { type: loadingStartType } = action1;
+            const { time, type } = action2;
+            const { type: loadingEndType } = action3;
+            expect(loadingStartType).toBe(LOADING);
+            expect(loadingEndType).toBe(LOADING);
+            // this time the current time will be set snapping to the data from DomainValues request
+            expect(time).toBe("2021-09-08T22:00:00.000Z");
+            expect(type).toBe(SET_CURRENT_TIME);
+            done();
+        }, {
+            timeline: {
+                selectedLayer: "TEST_LAYER",
+                settings: {
+                    snapType: "start",
+                    endValuesSupport: true
+                },
+                range: {
+                    start: "2000-01-01T00:00:00.000Z",
+                    end: "2023-12-31T00:00:00.000Z"
+                }
+            },
+            layers: {
+                flat: [{
+                    id: 'TEST_LAYER',
+                    name: 'TEST_LAYER',
+                    type: 'wms',
+                    url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml',
+                    dimensions: [
+                        {
+                            source: {
+                                type: 'multidim-extension',
+                                // this forces to load fixed values from the test file, ignoring parameters
+                                url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml'
+                            },
+                            name: 'time'
+                        }
+                    ],
+                    params: {
+                        time: '2000-06-08T00:00:00.000Z'
+                    }
+                }]
+            }
+        });
+    });
+    it('setTimelineCurrentTime with selected layer (with time in range) - time as intervals - snap to end', done => {
+        const t = "2021-10-07T00:00:00.000Z";
+        testEpic(setTimelineCurrentTime, 3, selectTime(t, "TEST_LAYER"), ([action1, action2, action3]) => {
+            const { type: loadingStartType } = action1;
+            const { time, type } = action2;
+            const { type: loadingEndType } = action3;
+            expect(loadingStartType).toBe(LOADING);
+            expect(loadingEndType).toBe(LOADING);
+            // this time the current time will be set snapping to the data from DomainValues request
+            expect(time).toBe("2021-10-21T22:00:00.000Z");
+            expect(type).toBe(SET_CURRENT_TIME);
+            done();
+        }, {
+            timeline: {
+                selectedLayer: "TEST_LAYER",
+                settings: {
+                    snapType: "end",
+                    endValuesSupport: true
+                },
+                range: {
+                    start: "2000-01-01T00:00:00.000Z",
+                    end: "2023-12-31T00:00:00.000Z"
+                }
+            },
+            layers: {
+                flat: [{
+                    id: 'TEST_LAYER',
+                    name: 'TEST_LAYER',
+                    type: 'wms',
+                    url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml',
+                    dimensions: [
+                        {
+                            source: {
+                                type: 'multidim-extension',
+                                // this forces to load fixed values from the test file, ignoring parameters
+                                url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml'
+                            },
+                            name: 'time'
+                        }
+                    ],
+                    params: {
+                        time: '2000-06-08T00:00:00.000Z'
+                    }
+                }]
+            }
+        });
+    });
     it('setTimelineCurrentTime with selected layer time out of range', done => {
         const t = "2001-01-01T00:00:00.000Z";
         const EXPECTED_TIME_DOMAIN = "2016-09-01T00:00:00.000Z";

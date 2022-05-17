@@ -2357,8 +2357,12 @@
         "timeline": {
             "settings": {
                 "title": "Paramètres de la timeline",
+                "snapType": "Point d'accrochage de l'intervalle de temps",
+                "snapTypeTooltip": "Lorsque l'alignement sur la couche guide est actif et que les données temporelles sont prolongées, le curseur s'aligne sur les bords respectifs de l'intervalle de temps (début/fin)",
                 "snapToGuideLayer": "Aligner sur la couche guide",
-                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données de la couche sélectionnée. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
+                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données de la couche sélectionnée. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation",
+                "snapToEnd": "Début",
+                "snapToStart": "Fin"
             },
             "hide": "Masquer la timeline",
             "show": "Afficher la timeline",

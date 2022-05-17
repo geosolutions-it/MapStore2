@@ -65,6 +65,10 @@ export default ({
     playbackRange = {
 
     },
+    snapTypes = [],
+    currentSnapType = "start",
+    endValuesSupport,
+    onChangeSnapType = () => { },
     setPlaybackRange = () => { },
     playbackButtons,
     dateSelectorStyle = {
@@ -77,13 +81,43 @@ export default ({
 }) => (<div className="ms-playback-settings" style={style}>
     <h4><Message msgId="timeline.settings.title" /></h4>
     <FormGroup controlId="timelineSettings">
-        <Form componentClass="fieldset" inline>
+        <Form componentClass="fieldset" inline className="snap-guide-form">
             <ControlLabel>
                 <Message msgId="timeline.settings.snapToGuideLayer" />&nbsp;
                 <InfoPopover text={<Message msgId="timeline.settings.snapToGuideLayerTooltip" />} />
             </ControlLabel>
             <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
         </Form>
+        {!fixedStep && endValuesSupport && (
+            <Form componentClass="fieldset" inline className="snap-type-form">
+                <div className="snap-type-form-title">
+                    <ControlLabel>
+                        <Message msgId="timeline.settings.snapType" />&nbsp;
+                        <InfoPopover text={<Message msgId="timeline.settings.snapTypeTooltip" />} />
+                    </ControlLabel>
+                </div>
+                <div className="snap-type-container">
+                    {snapTypes.map(snapType => (
+                        <div className="snap-type-item">
+                            <input
+                                type="radio"
+                                className="snap-type-radio-btn"
+                                value={snapType.value}
+                                name="snapType"
+                                checked={currentSnapType === snapType.value}
+                                onChange={ e => {
+                                    const { value } = e.target;
+                                    onChangeSnapType(value);
+                                }}
+                            />
+                            <div className="snap-type-radio-btn-label">
+                                <Message msgId={snapType.label}/>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </Form>
+        )}
     </FormGroup>
     <h4><Message msgId="playback.settings.title" /></h4>
     <FormGroup controlId="frameDuration" >

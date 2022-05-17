@@ -36,6 +36,7 @@ describe('Test the timeline reducer', () => {
         const state = timeline(initialState, selectLayer('layer1'));
         expect(state).toExist();
         expect(state.selectedLayer).toBe('layer1');
+        expect(state.settings.snapType).toBe('start');
     });
     it('initialize select a layer', () => {
         const initialState = {
@@ -135,8 +136,46 @@ describe('Test the timeline reducer', () => {
         expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
         expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
     });
-    it('initTimeline', () => {
-        const state = timeline({}, initTimeline(true));
+    it('initTimeline with undefined endValuesSupport set as undefined', () => {
+        const state = timeline({}, initTimeline(true, 20, 'start'));
         expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(undefined);
+    });
+    it('initTimeline with endValuesSupport set as false', () => {
+        const state = timeline({}, initTimeline(true, 20, 'start', false));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(false);
+    });
+    it('initTimeline with undefined endValuesSupport set as true', () => {
+        const state = timeline({}, initTimeline(true, 20, 'start', true));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(true);
+    });
+    it('mapConfigLoaded', () => {
+        const initialState = {
+            selectedLayer: 'layer3',
+            settings: {
+                autoSelect: true,
+                collapsed: false,
+                snapType: "start",
+                endValuesSupport: false
+            }
+        };
+        const action = {
+            type: 'MAP_CONFIG_LOADED',
+            config: {
+                timelineData: {
+                    endValuesSupport: true
+                }
+            }
+        };
+        const state = timeline(initialState, action);
+        expect(state.settings.endValuesSupport).toBe(true);
     });
 });

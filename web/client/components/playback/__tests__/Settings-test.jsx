@@ -32,10 +32,50 @@ describe('Timeline/Playback Settings component', () => {
         expect(document.querySelector('select#formPlaybackStep').value).toBe('days');
     });
     it('test guide layer switch value', () => {
-        ReactDOM.render(<Settings fixedStep={false} />, document.getElementById("container"));
+        const snapTypes = [{
+            id: 'start',
+            value: 'start',
+            label: 'timeline.settings.snapToStart'
+        }, {
+            id: 'end',
+            value: 'end',
+            label: 'timeline.settings.snapToEnd'
+        }];
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
         expect(document.querySelectorAll('input[type=checkbox]')[0].checked).toBe(true);
+        let radioButtonInputs = document.getElementsByClassName('snap-type-radio-btn');
+        expect(radioButtonInputs).toExist();
+        expect(radioButtonInputs.length).toBe(2);
+        const snapToStartBtn = radioButtonInputs[0];
+        const snapToEndBtn = radioButtonInputs[1];
+        expect(snapToStartBtn.checked).toBe(true);
+        expect(snapToEndBtn.checked).toBe(false);
         ReactDOM.render(<Settings fixedStep />, document.getElementById("container"));
         expect(document.querySelectorAll('input[type=checkbox]')[0].checked).toBe(false);
+        radioButtonInputs = document.getElementsByClassName('snap-type-radio-btn');
+        expect(radioButtonInputs.length).toBe(0);
+    });
+    it('test toggle snap moment radio button', () => {
+        const snapTypes = [{
+            id: 'start',
+            value: 'start',
+            label: 'timeline.settings.snapToStart'
+        }, {
+            id: 'end',
+            value: 'end',
+            label: 'timeline.settings.snapToEnd'
+        }];
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
+        const radioButtonInputs = document.querySelectorAll('input[type=radio]');
+        expect(radioButtonInputs).toExist();
+        expect(radioButtonInputs.length).toBe(2);
+        const snapToStartBtn = radioButtonInputs[0];
+        const snapToEndBtn = radioButtonInputs[1];
+        expect(snapToStartBtn.checked).toBe(true);
+        expect(snapToEndBtn.checked).toBe(false);
+        snapToEndBtn.checked = true;
+        expect(snapToStartBtn.checked).toBe(false);
+        expect(snapToEndBtn.checked).toBe(true);
     });
     it('Test toggleAnimationMode', () => {
         const actions = {
