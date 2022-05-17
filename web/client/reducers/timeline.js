@@ -130,13 +130,7 @@ export default (state = {
         }, state);
     }
     case MAP_CONFIG_LOADED: {
-        const newState = {
-            ...state,
-            settings: {
-                ...state.settings,
-                endValuesSupport: action?.config?.timelineData?.endValuesSupport
-            }
-        };
+        return set('settings.endValuesSupport', action?.config?.timelineData?.endValuesSupport, state);
     }
     default:
         return state;
