@@ -164,8 +164,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         new CopyWebpackPlugin([
             { from: path.join(getCesiumPath({ paths, prod }), 'Workers'), to: path.join(paths.dist, 'cesium', 'Workers') },
             { from: path.join(getCesiumPath({ paths, prod }), 'Assets'), to: path.join(paths.dist, 'cesium', 'Assets') },
-            { from: path.join(getCesiumPath({ paths, prod }), 'Widgets'), to: path.join(paths.dist, 'cesium', 'Widgets') },
-            { from: path.join(getCesiumPath({ paths, prod }), 'ThirdParty'), to: path.join(paths.dist, 'cesium', 'ThirdParty') }
+            { from: path.join(getCesiumPath({ paths, prod }), 'Widgets'), to: path.join(paths.dist, 'cesium', 'Widgets') }
         ]),
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
