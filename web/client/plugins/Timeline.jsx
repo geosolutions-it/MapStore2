@@ -190,6 +190,7 @@ const TimelinePlugin = compose(
         layers
     }) => {
         useEffect(()=>{
+            // update state with configs coming from configuration file like localConfig.json so that can be used as props initializer
             onInit(showHiddenLayers, expandLimit, snapType, endValuesSupport);
         }, [onInit]);
 

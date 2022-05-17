@@ -23,6 +23,7 @@ import { assign, pickBy, has } from 'lodash';
  *         autoSelect: true // true by defaults, if set the first layer available will be selected on startup
  *         showHiddenLayers: true // false by default. If set to false, the guide layers will be in sync with time layer's visibility in TOC and automatically switches to the next available guide layer (if snap to guide layer is enabled)
  *         snapType: "start" // start by default. If set to "end" the timeline cursor will snap to the end of the interval when changed
+ *         endValuesSupport: undefined // undefined by default. If set to true the snap to (start/end) radio button will appear, both snapping are supported
  *     },
  *     range: {
  *         start: // start date of the current range
@@ -97,14 +98,12 @@ export default (state = {
         return action.layerId ? set(`loading[${action.layerId}]`, action.loading, state) : set(`loading.timeline`, action.loading, state);
     }
     case SELECT_LAYER: {
-        const newState = {
-            ...state,
-            selectedLayer: action.layerId,
-            settings: {
-                ...state.settings,
-                snapType: "start"
-            }
-        };
+        let newState = state;
+        newState = set(`selectedLayer`, action.layerId, newState);
+        newState = set(`settings`, {
+            ...newState.settings,
+            snapType: "start"
+        }, newState);
         return newState;
     }
     case INIT_SELECT_LAYER: {

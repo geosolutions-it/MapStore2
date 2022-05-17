@@ -196,9 +196,6 @@
         }
     
         .vis-timeline {
-            .vis-item.interval {
-                height: 10px;
-            }
             .background-color-var(@theme-vars[main-bg]);
             .vis-item {
                 .color-var(@theme-vars[main-color]);
@@ -248,8 +245,6 @@
                                 &.interval {
                                     .background-color-var(@theme-vars[timeline-histogram-border-color]);
                                     .border-color-var(@theme-vars[main-bg]);
-                                    border-style: solid 5px;
-                                    border-radius: 5px;
                                 }
                                 &.histogram-item {
                                     .vis-item-content {
@@ -740,6 +735,12 @@
                     }
 
                     .vis-item {
+                        &.vis-range {
+                            &.interval {
+                                border-style: solid 5px;
+                                border-radius: 5px;
+                            }
+                        }
                         &.vis-dot {
                             border-color: fade(@ms-primary, 50%);
                         }
@@ -830,6 +831,13 @@
         }
 
 
+    }
+
+    .vis-item.interval {
+        height: 10px;
+
+        border-style: solid 5px;
+        border-radius: 5px;
     }
 
     .vis-item.vis-background.ms-current-range {

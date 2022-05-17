@@ -67,7 +67,7 @@ export default ({
     },
     snapTypes = [],
     currentSnapType = "start",
-    endValuesSupport = undefined,
+    endValuesSupport,
     onChangeSnapType = () => { },
     setPlaybackRange = () => { },
     playbackButtons,

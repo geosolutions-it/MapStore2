@@ -136,12 +136,26 @@ describe('Test the timeline reducer', () => {
         expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
         expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
     });
-    it('initTimeline', () => {
+    it('initTimeline with undefined endValuesSupport set as undefined', () => {
         const state = timeline({}, initTimeline(true, 20, 'start'));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(undefined);
+    });
+    it('initTimeline with endValuesSupport set as false', () => {
+        const state = timeline({}, initTimeline(true, 20, 'start', false));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(false);
+    });
+    it('initTimeline with undefined endValuesSupport set as true', () => {
+        const state = timeline({}, initTimeline(true, 20, 'start', true));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(true);
     });
     it('mapConfigLoaded', () => {
         const initialState = {
