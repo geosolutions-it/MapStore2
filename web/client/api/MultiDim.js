@@ -93,7 +93,8 @@ export const getDomainValues = (url, layer, domain, {
     time,
     fromValue,
     sort = "asc",
-    limit = 20
+    limit = 20,
+    fromEnd = false
 } = {}, {
     bbox,
     tileMatrixSet = "EPSG:4326",
@@ -113,6 +114,7 @@ export const getDomainValues = (url, layer, domain, {
         fromValue,
         sort,
         limit,
+        fromEnd,
         time
     })
 }))

@@ -111,4 +111,26 @@ describe('Test dimension selectors', () => {
         expect(layerDim.length).toBe(1);
         expect(layerDim[0]).toBe('2016-09-01T00:00:00.000Z');
     });
+    it('layerTimeRangeSelector with start/end,start/end format domains', () => {
+        const state = {
+            dimension: {
+                data: {
+                    time: {
+                        'TEST_LAYER': {
+                            source: { // describes the source of dimension
+                                type: 'multidim-extension',
+                                url: 'http://domain.com:80/geoserver/wms'
+                            },
+                            name: 'time',
+                            domain: '2014-09-01T00:00:00.000Z/2017-04-11T00:00:00.000Z,2013-09-10T00:00:00.000Z/2016-02-11T00:00:00.000Z'
+                        }
+                    }
+                }
+            }
+        };
+        const layerDim = layerDimensionRangeSelector(state, "TEST_LAYER");
+        expect(Object.keys(layerDim).length).toBe(2);
+        expect(layerDim.start).toBe('2013-09-10T00:00:00.000Z');
+        expect(layerDim.end).toBe('2017-04-11T00:00:00.000Z');
+    });
 });

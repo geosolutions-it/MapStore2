@@ -2358,8 +2358,12 @@
         "timeline": {
             "settings": {
                 "title": "Timeline Settings",
+                "snapType": "Time interval snap point",
+                "snapTypeTooltip": "When Snap to Guide Layer is active and time data is protracted the cursor will snap to the respective edges of the time interval (start/end)",
                 "snapToGuideLayer": "Snap to guide layer",
-                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step",
+                "snapToEnd": "End",
+                "snapToStart": "Start"
             },
             "hide": "Hide timeline",
             "show": "Show timeline",

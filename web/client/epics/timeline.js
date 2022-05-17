@@ -24,11 +24,13 @@ import { error } from '../actions/notifications';
 import { getLayerFromId } from '../selectors/layers';
 
 import {
+    expandLimitSelector,
     rangeSelector,
     selectedLayerName,
     selectedLayerUrl,
     isAutoSelectEnabled,
     selectedLayerSelector,
+    snapTypeSelector,
     timelineLayersSelector,
     multidimOptionsSelectorCreator,
     isMapSync
@@ -46,7 +48,7 @@ import { getHistogram, describeDomains, getDomainValues } from '../api/MultiDim'
 
 const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
-const MAX_ITEMS_PER_LAYER = 20;
+// const MAX_ITEMS_PER_LAYER = 20;
 const MAX_HISTOGRAM = 20;
 
 /**
@@ -59,9 +61,11 @@ const domainArgs = (state, paginationOptions = {}) => {
     const layerName = selectedLayerName(state);
     const layerUrl = selectedLayerUrl(state);
     const bboxOptions = multidimOptionsSelectorCreator(id)(state);
+    const fromEnd = snapTypeSelector(state) === 'end';
     return [layerUrl, layerName, "time", {
         limit: 1,
-        ...paginationOptions
+        ...paginationOptions,
+        fromEnd
     }, bboxOptions];
 };
 /**
@@ -71,18 +75,19 @@ const snapTime = (state, group, time) => {
     // TODO: evaluate to snap to clicked layer instead of current selected layer, and change layer selection
     // TODO: support local list of values for no multidim-extension.
     if (selectedLayerName(state)) {
+        const snapType = snapTypeSelector(state);
         // do parallel request and return and observable that emit the correct value/ time as it is by default
         return Rx.Observable.forkJoin(
             // TODO: find out a way to optimize and do only one request
-            getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))
+            getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
-            getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time }))
+            getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
         )
             .map(values =>
-                getNearestDate(values.filter(v => !!v), time) || time
+                getNearestDate(values.filter(v => !!v), time, snapType) || time
             );
 
 
@@ -114,6 +119,7 @@ const loadRangeData = (id, timeData, getState) => {
 
     const {range, resolution} = roundRangeResolution( initialRange, MAX_HISTOGRAM);
     const layerName = getLayerFromId(getState(), id).name;
+    const expandLimit = expandLimitSelector(getState());
     const filter = {
         [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
     };
@@ -134,7 +140,7 @@ const loadRangeData = (id, timeData, getState) => {
                 filter,
                 {
                     ...multidimOptionsSelectorCreator(id)(getState()),
-                    expandLimit: MAX_ITEMS_PER_LAYER
+                    expandLimit
                 }
             )
         )

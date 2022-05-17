@@ -2351,7 +2351,11 @@
             "settings": {
                 "title": "Impostazione linea di tempo",
                 "snapToGuideLayer": "Aggancia al livello guida",
-                "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione"
+                "snapType": "Punto d'aggancio per intervalli temporali",
+                "snapTypeTooltip": "Quando l'aggancio al livello guida è attivo e i dati temporali sono protratti, il cursore si aggancia ai rispettivi limiti dell'intervallo di tempo (inizio/fine)",
+                "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione",
+                "snapToEnd": "Fine",
+                "snapToStart": "Inizio"
             },
             "hide": "Nascondi timeline",
             "show": "Mostra timeline",

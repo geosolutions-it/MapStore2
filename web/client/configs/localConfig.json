@@ -476,7 +476,12 @@
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
             "WidgetsTray",
-            "Timeline",
+            {
+              "name": "Timeline",
+              "cfg": {
+                "expandLimit": 20
+              }
+            },
             "Playback",
             "FeedbackMask",
             "StyleEditor",

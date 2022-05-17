@@ -12,10 +12,20 @@ import {
     getUTCTimePart,
     getUTCDatePart,
     roundResolution,
-    domainsToDimensionsObject
+    domainsToDimensionsObject,
+    filterDateArray,
+    getNearestDate,
+    getDatesInRange,
+    getLowestAndHighestDates
 } from '../TimeUtils';
 
 import { describeDomains } from '../../api/MultiDim';
+
+const DATES_INTERVAL_ARRAY = ['2021-11-02T23:00:00.000Z/2021-12-29T23:00:00.000Z', '2021-11-08T23:00:00.000Z/2021-12-21T23:00:00.000Z'];
+const DATES_ARRAY = ['2021-10-01T22:00:00.000Z', '2021-10-21T22:00:00.000Z', '2021-10-29T22:00:00.000Z', '2021-11-21T23:00:00.000Z', '2021-11-21T23:00:00.000Z', '2021-11-29T23:00:00.000Z', '2021-11-29T23:00:00.000Z', '2021-12-21T23:00:00.000Z', '2021-12-29T23:00:00.000Z', '2021-12-29T23:00:00.000Z'];
+const REF_RANGE_START_DATE = '2021-10-16T04:58:00.267Z';
+const REF_RANGE_END_DATE = '2021-12-28T23:57:21.571Z';
+const DATES_IN_RANGE_ARRAY = ['2021-10-21T22:00:00.000Z', '2021-10-29T22:00:00.000Z', '2021-11-21T23:00:00.000Z', '2021-11-21T23:00:00.000Z', '2021-11-29T23:00:00.000Z', '2021-11-29T23:00:00.000Z', '2021-12-21T23:00:00.000Z'];
 
 describe('TimeUtils', () => {
     it('roundResolution', () => {
@@ -78,5 +88,25 @@ describe('TimeUtils', () => {
             () => done()
             );
     });
-
+    it('filterDateArray snap to start', () => {
+        expect(filterDateArray(DATES_INTERVAL_ARRAY, 'start')[0]).toBe('2021-11-02T23:00:00.000Z');
+        expect(filterDateArray(DATES_INTERVAL_ARRAY, 'start')[1]).toBe('2021-11-08T23:00:00.000Z');
+    });
+    it('filterDateArray snap to end', () => {
+        expect(filterDateArray(DATES_INTERVAL_ARRAY, 'end')[0]).toBe('2021-12-29T23:00:00.000Z');
+        expect(filterDateArray(DATES_INTERVAL_ARRAY, 'end')[1]).toBe('2021-12-21T23:00:00.000Z');
+    });
+    it('getNearestDate snap to start', () => {
+        expect(getNearestDate(DATES_INTERVAL_ARRAY, '2021-11-02T23:00:00.000Z', 'start')).toBe('2021-11-02T23:00:00.000Z');
+    });
+    it('getNearestDate snap to end', () => {
+        expect(getNearestDate(DATES_INTERVAL_ARRAY, '2021-12-28T23:00:00.000Z', 'end')).toBe('2021-12-29T23:00:00.000Z');
+    });
+    it('getDates in range', () => {
+        expect(getDatesInRange(DATES_ARRAY, REF_RANGE_START_DATE, REF_RANGE_END_DATE)).toEqual(DATES_IN_RANGE_ARRAY);
+    });
+    it('getLowestAndHighestDates', () => {
+        expect(getLowestAndHighestDates([...DATES_ARRAY, DATES_INTERVAL_ARRAY])[0]).toBe('2021-10-01T22:00:00.000Z');
+        expect(getLowestAndHighestDates([...DATES_ARRAY, DATES_INTERVAL_ARRAY])[1]).toBe('2021-12-29T23:00:00.000Z');
+    });
 });
