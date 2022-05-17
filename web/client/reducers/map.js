@@ -133,7 +133,7 @@ function mapConfig(state = {eventListeners: {}}, action) {
     case UNREGISTER_EVENT_LISTENER: {
         let data = state;
         if (state?.eventListeners) {
-            const filteredEventNameTools = state.eventListeners[action.eventName].filter(tool => tool !== action.toolName) || [];
+            const filteredEventNameTools = (state.eventListeners && state.eventListeners[action.eventName] || []).filter(tool => tool !== action.toolName) || [];
             data = assign({}, state,
                 {eventListeners: assign({}, state.eventListeners,
                     {[action.eventName]: filteredEventNameTools})});
