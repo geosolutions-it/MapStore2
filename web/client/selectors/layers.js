@@ -158,3 +158,10 @@ export const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(stat
  * @return {array} the queriable selected layers
  */
 export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter((layer) => isLayerQueryable(state, layer));
+
+/**
+ * Return a layer's CQL filter
+ * @param {object} state the state
+ * @returns {string} the CQL filter in string format
+ */
+export const getLayerCQLFilter = (state) => state.layers && state.layers.cqlFilter || '';

@@ -36,6 +36,7 @@ export const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
 export const SHOW_LAYER_METADATA = 'LAYERS:SHOW_LAYER_METADATA';
 export const HIDE_LAYER_METADATA = 'LAYERS:HIDE_LAYER_METADATA';
 export const UPDATE_SETTINGS_PARAMS = 'LAYERS:UPDATE_SETTINGS_PARAMS';
+export const SET_LAYER_FILTERS = 'LAYERS:SET_LAYER_FILTERS';
 
 export function showSettings(node, nodeType, options) {
     return {
@@ -299,5 +300,12 @@ export function updateSettingsParams(newParams, update) {
         type: UPDATE_SETTINGS_PARAMS,
         newParams,
         update
+    };
+}
+
+export function setLayerFilters(filters) {
+    return {
+        type: SET_LAYER_FILTERS,
+        filters
     };
 }

@@ -9,26 +9,27 @@
 import Rx from 'rxjs';
 
 import Api from '../api/WMS';
-
 import {
     REFRESH_LAYERS,
     UPDATE_LAYERS_DIMENSION,
     UPDATE_SETTINGS_PARAMS,
     LAYER_LOAD,
+    DOWNLOAD,
     layersRefreshed,
     updateNode,
     updateSettings,
     layersRefreshError,
-    changeLayerParams
+    changeLayerParams,
+    setLayerFilters
 } from '../actions/layers';
 
-import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '../selectors/layers';
+import { getLayersWithDimension, layerSettingSelector, getLayerFromId, getSelectedLayers } from '../selectors/layers';
 import { setControlProperty } from '../actions/controls';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { basicError } from '../utils/NotificationUtils';
-import { getCapabilitiesUrl, getLayerTitleTranslations} from '../utils/LayersUtils';
+import {getCapabilitiesUrl, getLayerTitleTranslations, createUniqueLayerFilter} from '../utils/LayersUtils';
 import assign from 'object-assign';
-import { isArray, head } from 'lodash';
+import { isArray, head, first } from 'lodash';
 
 export const getUpdates = (updates, options) => {
     return Object.keys(options).filter((opt) => options[opt]).reduce((previous, current) => {
@@ -168,8 +169,23 @@ export const updateSettingsParamsEpic = (action$, store) =>
                 Rx.Observable.empty());
         });
 
+/**
+ * Get a CQL fiilter for a selected layer
+ * @param action$
+ * @param store
+ * @returns {external:Observable}
+ */
+export const layerExportEpic = (action$, store) =>
+    action$.ofType(DOWNLOAD).switchMap((action)=>{
+        const layers = getSelectedLayers(store.getState());
+        const layer = first(layers);
+        const getFilter = createUniqueLayerFilter(layer, action.filterObj);
+        return layer ? Rx.Observable.of(setLayerFilters(getFilter)) : Rx.Observable.empty();
+    });
+
 export default {
     refresh,
     updateDimension,
-    updateSettingsParamsEpic
+    updateSettingsParamsEpic,
+    layerExportEpic
 };

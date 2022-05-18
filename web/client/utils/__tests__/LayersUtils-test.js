@@ -9,7 +9,7 @@ import expect from 'expect';
 
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
-const { extractTileMatrixSetFromLayers, splitMapAndLayers} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, createUniqueLayerFilter} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -1309,6 +1309,25 @@ describe('LayersUtils', () => {
             }];
             const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
             expect(flattenedGroups.length).toBe(7);
+        });
+        it('Test output of createUniqueLayerFilter function', ()=>{
+            const sampleLayer = {
+                params: {
+                    CQL_FILTER: "SECTION = 'SECTION1' OR SECTION = 'SECTION2' OR SECTION = 'SECTION3'"
+                }
+            };
+            const parser = new DOMParser();
+            const res = createUniqueLayerFilter(sampleLayer, []);
+            const xmlResponse = parser.parseFromString(res, "text/xml");
+            const filterTag = xmlResponse.getElementsByTagName("ogc:Filter");
+            const categoryTag = xmlResponse.getElementsByTagName("ogc:PropertyName");
+            const literalTag = xmlResponse.getElementsByTagName("ogc:Literal");
+            expect(Object.keys(filterTag).length).toBe(1); // NUMBER OF FILTERS PASSED
+            expect(Object.keys(categoryTag).length).toBe(3); // NUMBER OF PROPERTIES
+            expect(categoryTag[0].textContent).toBe('SECTION');
+            expect(literalTag[0].textContent).toBe('SECTION1');
+            expect(literalTag[1].textContent).toBe('SECTION2');
+            expect(literalTag[2].textContent).toBe('SECTION3');
         });
     });
 });
