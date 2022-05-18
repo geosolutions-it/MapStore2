@@ -53,7 +53,7 @@ import {
 } from '../../actions/annotations';
 
 import { toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
-import { STYLE_POINT_MARKER } from '../../utils/AnnotationsUtils';
+import {ANNOTATIONS, STYLE_POINT_MARKER} from '../../utils/AnnotationsUtils';
 import annotationsEpics from '../annotations';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import {registerEventListener} from "../../actions/map";
@@ -275,7 +275,10 @@ describe('annotations Epics', () => {
                 }]
             }]
         },
-        controls: {annotations: {enabled: true}}
+        controls: {annotations: {enabled: true}},
+        draw: {
+            drawOwner: ANNOTATIONS
+        }
     };
     beforeEach(() => {
         store = mockStore(defaultState);
