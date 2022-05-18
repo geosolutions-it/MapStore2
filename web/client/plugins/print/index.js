@@ -141,6 +141,13 @@ export const standardItems = {
         plugin: Description,
         cfg: {},
         position: 2
+    }, {
+        id: "overlayLayers",
+        plugin: AdditionalLayers,
+        cfg: {
+            enabled: false
+        },
+        position: 5
     }],
     "left-panel-accordion": [{
         id: "layout",
@@ -156,13 +163,6 @@ export const standardItems = {
             "title": "print.legendoptions"
         },
         position: 2
-    }, {
-        id: "overlayLayers",
-        plugin: AdditionalLayers,
-        cfg: {
-            enabled: false
-        },
-        position: 5
     }],
     "right-panel": [{
         id: "resolution",
