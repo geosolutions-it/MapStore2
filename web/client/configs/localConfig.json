@@ -666,6 +666,7 @@
           "Attribution",
           "Home",
           { "name": "DeleteDashboard" },
+          { "name": "DashboardExport" },
           { "name": "OmniBar",
             "cfg": {
                 "containerPosition": "header",

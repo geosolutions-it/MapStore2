@@ -333,6 +333,20 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                 pathRewrite: {'/docs': '/mapstore/docs'}
             }
         }
+        // proxy: proxy || {
+        //     '/rest': {
+        //         target: "http://localhost:8080/mapstore"
+        //     },
+        //     '/pdf': {
+        //         target: "http://localhost:8080/mapstore"
+        //     },
+        //     '/mapstore/pdf': {
+        //         target: "http://localhost:8080"
+        //     },
+        //     '/proxy': {
+        //         target: "http://localhost:8080/mapstore"
+        //     }
+        // }
     },
 
     devtool: !prod ? 'eval' : undefined

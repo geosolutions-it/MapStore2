@@ -317,6 +317,15 @@
       ]
     },
     {
+      "name": "DashboardExport",
+      "glyph": "download",
+      "title": "plugins.MapExport.title",
+      "description": "plugins.MapExport.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
       "name": "Settings",
       "glyph": "cog",
       "title": "plugins.Settings.title",
