@@ -374,7 +374,8 @@ export default {
                         const {validations, ...options } = opts;
                         const Comp = item.component ?? item.plugin;
                         const {style, ...other} = this.props;
-                        return <Comp role="body" {...other} {...item.cfg} {...options} validation={validations?.[item.id ?? item.name]}/>;
+                        const itemOptions = this.props[item.id + "Options"];
+                        return <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
                     };
                     renderItems = (target, options) => {
                         return this.getItems(target)
