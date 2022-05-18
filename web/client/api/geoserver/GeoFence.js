@@ -41,7 +41,7 @@ const LAYER_SERVICES = {
         }
     }),
     rest: ({ addBaseUrlGS }) => ({
-        getLayers: (page = 0, size = 10, parentsFilter = {}) => {
+        getLayers: (_layerFilter, page = 0, size = 10, parentsFilter = {}) => {
             const { workspace = "" } = parentsFilter;
             return axios.get('/rest/layers.json', addBaseUrlGS({
                 'headers': {
