@@ -19,6 +19,7 @@ import {
     loadDashboard,
     dashboardSaveError,
     SAVE_DASHBOARD,
+    DASHBOARD_EXPORT,
     LOAD_DASHBOARD,
     dashboardLoadError
 } from '../actions/dashboard';
@@ -32,6 +33,7 @@ import { isDashboardEditing, isDashboardAvailable } from '../selectors/dashboard
 import { isLoggedIn } from '../selectors/security';
 import { getEditingWidgetLayer, getEditingWidgetFilter } from '../selectors/widgets';
 import { pathnameSelector } from '../selectors/router';
+import { download } from '../utils/FileUtils';
 import { createResource, updateResource, getResource } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
@@ -180,6 +182,13 @@ export const saveDashboard = action$ => action$
             )
     );
 
+export const exportDashboard = action$ => action$
+    .ofType(DASHBOARD_EXPORT)
+    .switchMap(({originalData, resource}) => (
+        Rx.Observable.of([JSON.stringify({originalData, resource}), 'dashboard.json', 'application/json'])
+            .do((downloadArgs) => download(...downloadArgs))
+    ));
+
 export default {
     openDashboardWidgetEditor,
     closeDashboardWidgetEditorOnFinish,
@@ -189,5 +198,6 @@ export default {
     filterAnonymousUsersForDashboard,
     loadDashboardStream,
     reloadDashboardOnLoginLogout,
-    saveDashboard
+    saveDashboard,
+    exportDashboard
 };
