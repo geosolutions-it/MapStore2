@@ -34,8 +34,8 @@ const InnerContainer = ({children, ...props}) => (
     </div>
 );
 
-const AnchorElement = ({children, href, onClick}) => (
-    <a href={href} onClick={onClick}>{children}</a>
+const AnchorElement = ({children, href, target, onClick}) => (
+    <a href={href} target={target} onClick={onClick}>{children}</a>
 );
 
 import ToolsContainer from './containers/ToolsContainer';
