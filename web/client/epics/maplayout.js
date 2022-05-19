@@ -172,13 +172,13 @@ export const updateActiveDockEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL, UPDATE_DOCK_PANELS)
         .filter(({
             control, property, properties = [],
-            type}) => {
+            type, action}) => {
             let assertion = false;
             const state = store.getState();
             const controlState = state?.controls[control]?.enabled;
             switch (type) {
             case UPDATE_DOCK_PANELS:
-                return true;
+                return action === 'add';
             case SET_CONTROL_PROPERTY:
             case TOGGLE_CONTROL:
                 assertion = (property === 'enabled' || !property) && controlState;
