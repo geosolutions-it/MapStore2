@@ -31,8 +31,7 @@ import {
     SELECT_NODE,
     FILTER_LAYERS,
     SHOW_LAYER_METADATA,
-    HIDE_LAYER_METADATA,
-    SET_LAYER_FILTERS
+    HIDE_LAYER_METADATA
 } from '../actions/layers';
 
 import { TOGGLE_CONTROL } from '../actions/controls';
@@ -505,11 +504,6 @@ function layers(state = { flat: [] }, action) {
         });
         return assign({}, state, {
             layerMetadata
-        });
-    }
-    case SET_LAYER_FILTERS: {
-        return assign({}, state, {
-            cqlFilter: action.filters || ''
         });
     }
     default:

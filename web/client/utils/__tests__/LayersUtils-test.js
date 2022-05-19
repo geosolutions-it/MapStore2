@@ -1310,7 +1310,7 @@ describe('LayersUtils', () => {
             const flattenedGroups = LayersUtils.flattenArrayOfObjects(groups);
             expect(flattenedGroups.length).toBe(7);
         });
-        it('Test output of createUniqueLayerFilter function', ()=>{
+        it('Test output of createUniqueLayerFilter function with CQL Filter', ()=>{
             const sampleLayer = {
                 params: {
                     CQL_FILTER: "SECTION = 'SECTION1' OR SECTION = 'SECTION2' OR SECTION = 'SECTION3'"
@@ -1328,6 +1328,71 @@ describe('LayersUtils', () => {
             expect(literalTag[0].textContent).toBe('SECTION1');
             expect(literalTag[1].textContent).toBe('SECTION2');
             expect(literalTag[2].textContent).toBe('SECTION3');
+        });
+
+        it('Test output of createUniqueLayerFilter function with NO CQL Filter', ()=>{
+            const sampleLayer = {
+                params: {}
+            };
+            const parser = new DOMParser();
+            const res = createUniqueLayerFilter(sampleLayer, []);
+            const xmlResponse = parser.parseFromString(res, "text/xml");
+            const filterTag = xmlResponse.getElementsByTagName("ogc:Filter");
+            const categoryTag = xmlResponse.getElementsByTagName("ogc:PropertyName");
+            const literalTag = xmlResponse.getElementsByTagName("ogc:Literal");
+            expect(Object.keys(filterTag).length).toBe(1); // NUMBER OF FILTERS PASSED
+            expect(Object.keys(categoryTag).length).toBe(0); // NUMBER OF PROPERTIES
+            expect(Object.keys(literalTag).length).toBe(0);
+        });
+
+        it('Test output of createUniqueLayerFilter function with a LAYER FILTER', ()=>{
+            const sampleLayer = {
+                layerFilter: {
+                    "crossLayerFilter": {
+                        "attribute": "the_geom",
+                        "collectGeometries": {
+                            "queryCollection": {
+                                "typeName": "gs:us_states",
+                                "filterFields": [
+                                    {
+                                        "rowId": 1652967063639,
+                                        "groupId": 1,
+                                        "attribute": "STATE_NAME",
+                                        "operator": "=",
+                                        "value": "Alabama",
+                                        "type": "string",
+                                        "fieldOptions": {
+                                            "valuesCount": 0,
+                                            "currentPage": 1
+                                        },
+                                        "options": {
+                                            "STATE_NAME": []
+                                        }
+                                    }
+                                ],
+                                "geometryName": "the_geom",
+                                "groupFields": [
+                                    {
+                                        "id": 1,
+                                        "index": 0,
+                                        "logic": "OR"
+                                    }
+                                ]
+                            }
+                        },
+                        "operation": "WITHIN"
+                    }
+                }
+            };
+            const parser = new DOMParser();
+            const res = createUniqueLayerFilter(sampleLayer, []);
+            const xmlResponse = parser.parseFromString(res, "text/xml");
+            const propertyTag = xmlResponse.getElementsByTagName("ogc:PropertyName");
+            const literalTag = xmlResponse.getElementsByTagName("ogc:Literal");
+            expect(propertyTag[0].textContent).toBe('the_geom');
+            expect(literalTag[0].textContent).toBe('gs:us_states');
+            expect(literalTag[1].textContent).toBe('the_geom');
+            expect(literalTag[2].textContent).toBe('("STATE_NAME"=\'Alabama\')');
         });
     });
 });

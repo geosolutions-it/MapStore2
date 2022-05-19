@@ -763,13 +763,54 @@ export const isTimelineVisible = (layers)=>{
 };
 
 /**
- * This function creates a unique filter mergin CQL FILTER, internal layer filter and passed optional filters
+ * This function creates a unique filter merging CQL FILTER, internal layer filter and passed optional filters
  * @param layer
  * @param filters
  * @returns {*|string}
  */
 export const createUniqueLayerFilter = (layer, ...filters) => {
     const {layerFilter, params = {}} = layer ?? {};
+    const type = {
+        "crossLayerFilter": {
+            "attribute": "the_geom",
+            "collectGeometries": {
+                "queryCollection": {
+                    "typeName": "gs:us_states",
+                    "filterFields": [
+                        {
+                            "rowId": 1652967063639,
+                            "groupId": 1,
+                            "attribute": "STATE_NAME",
+                            "operator": "=",
+                            "value": "Alabama",
+                            "type": "string",
+                            "fieldOptions": {
+                                "valuesCount": 0,
+                                "currentPage": 1
+                            },
+                            "exception": null,
+                            "loading": false,
+                            "openAutocompleteMenu": false,
+                            "options": {
+                                "STATE_NAME": []
+                            }
+                        }
+                    ],
+                    "geometryName": "the_geom",
+                    "groupFields": [
+                        {
+                            "id": 1,
+                            "index": 0,
+                            "logic": "OR"
+                        }
+                    ]
+                }
+            },
+            "operation": "WITHIN"
+        },
+        "autocompleteEnabled": true
+
+    };
     const cqlFilter = params[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
     return layer?.type === "vector" ?
         filters
