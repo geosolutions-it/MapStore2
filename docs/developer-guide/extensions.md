@@ -211,8 +211,8 @@ with this code located in extension's epics your tool `yourToolName` will be clo
 
 ## Using "ResponsiveContainer" for dock panels
 
-Recent MapStore version (2022.01.xx) introduced layout improvements that apart from the other changes brings new sidebar menu 
-to be used instead of the burger menu.
+Starting with MapStore v2022.02.00, layout improvements have been introduced which, in addition to other changes,
+introduce a new sidebar menu to be used instead of the burger menu.
 
 All extensions using `DockPanel` or `DockablePanel` components have to be updated
 if their dock panel is rendered on the right side of the screen, next to the new sidebar menu.
