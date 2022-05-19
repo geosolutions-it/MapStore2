@@ -589,7 +589,16 @@ export default {
                     pdfUrl,
                     error,
                     map,
-                    layers: [...layers.filter(l => !l.loadingError), ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(l => !l.loadingError) : [])],
+                    layers: [
+                        ...layers.filter(l => !l.loadingError),
+                        ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(
+                            l => {
+                                const isVector = l.type === 'vector';
+                                const hasFeatures = Array.isArray(l.features) && l.features.length > 0;
+                                return !l.loadingError && (!isVector || (isVector && hasFeatures));
+                            }
+                        ) : [])
+                    ],
                     scales,
                     usePreview,
                     currentLocale,
