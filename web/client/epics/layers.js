@@ -14,7 +14,6 @@ import {
     UPDATE_LAYERS_DIMENSION,
     UPDATE_SETTINGS_PARAMS,
     LAYER_LOAD,
-    DOWNLOAD,
     layersRefreshed,
     updateNode,
     updateSettings,

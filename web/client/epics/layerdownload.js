@@ -67,7 +67,6 @@ import { describeProcess } from '../observables/wps/describe';
 import { download, downloadWithAttributesFilter } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
-import { mergeFiltersToOGC } from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
 import {createUniqueLayerFilter, getLayerTitle} from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
