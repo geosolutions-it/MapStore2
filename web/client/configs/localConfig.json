@@ -667,6 +667,7 @@
           "Home",
           { "name": "DeleteDashboard" },
           { "name": "DashboardExport" },
+          { "name": "DashboardImport" },
           { "name": "OmniBar",
             "cfg": {
                 "containerPosition": "header",

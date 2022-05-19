@@ -37,6 +37,8 @@ export default {
         CreateNewMapPlugin: require('../plugins/CreateNewMap').default,
         Dashboard: require('../plugins/Dashboard').default,
         DashboardEditor: require('../plugins/DashboardEditor').default,
+        DashboardExport: require('../plugins/DashboardExport').default,
+        DashboardImport: require('../plugins/DashboardImport').default,
         DashboardsPlugin: require('../plugins/Dashboards').default,
         DeleteMapPlugin: require('../plugins/DeleteMap').default,
         DeleteGeoStoryPlugin: require('../plugins/DeleteGeoStory').default,
