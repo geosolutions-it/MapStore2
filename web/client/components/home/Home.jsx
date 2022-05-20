@@ -21,7 +21,7 @@ export const getPath = () => {
 };
 class Home extends React.Component {
     static propTypes = {
-        icon: PropTypes.node,
+        icon: PropTypes.string,
         onCheckMapChanges: PropTypes.func,
         onCloseUnsavedDialog: PropTypes.func,
         displayUnsavedDialog: PropTypes.bool,
@@ -37,7 +37,7 @@ class Home extends React.Component {
     };
 
     static defaultProps = {
-        icon: <Glyphicon glyph="home"/>,
+        icon: "home",
         onCheckMapChanges: () => {},
         onCloseUnsavedDialog: () => {},
         renderUnsavedMapChangesDialog: true,
@@ -59,7 +59,7 @@ class Home extends React.Component {
                         onClick={this.checkUnsavedChanges}
                         tooltip={tooltip}
                         {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children', 'icon', 'bsStyle', 'className'])}
-                    >{this.props.icon}</Button>
+                    ><Glyphicon glyph={this.props.icon}/></Button>
                 </OverlayTrigger>
                 <ConfirmModal
                     ref="unsavedMapModal"
