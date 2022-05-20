@@ -172,3 +172,126 @@ ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset");
 ```
 
 Assets are loaded using a different service, `/rest/config/loadasset`.
+
+
+## Managing drawing interactions conflict in extension
+
+Extension could implement drawing interactions, and it's necessary to prevent a situation when multiple tools from different plugins or extensions have active drawing, otherwise it could end up in an unpredicted or buggy behavior.
+
+There are two ways how drawing interaction can be implemented in plugin or extension:
+- Using DrawSupport (e.g. Annotations plugin)
+- By intercepting click on the map interactions (e.g. Measure plugin)
+
+### Making another plugins aware of your extension starts drawing
+
+If your extension using DrawSupport - you're on the safe side.
+Extension will dispatch `CHANGE_DRAWING_STATUS` action.
+This action can be traced by another plugins or extensions, and they can control their tools accordingly.
+
+If your extension is using `CLICK_ON_MAP` action and intercepts it perform any manipulations on click - you need to make sure that your extension also dispatch `REGISTER_EVENT_LISTENER` action (see `Measure` plugin as an example) when your extension activates drawing.
+
+It should also dispatch `UNREGISTER_EVENT_LISTENER` once drawing interaction stops.
+
+### Making your extension aware of another plugin drawing
+
+There is a helper utility named `shutdownToolOnAnotherToolDrawing`. This is a wrapper for a common approach to dispatch actions that will toggle off drawing interactions of your extension whenever another plugin or extension starts drawing.
+
+extensionEpics.js:
+
+```js
+export const toggleToolOffOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'yourToolName');
+```
+
+with this code located in extension's epics your tool `yourToolName` will be closed whenever: 
+- feature editor is open
+- another plugin or extension starts drawing. 
+
+"shutdownToolOnAnotherToolDrawing" supports passing custom callback to determine whether your tool is active (to prevent garbage action dispatching if it's already off) and custom callback to list actions to be dispatched.
+
+
+## Using "ResponsiveContainer" for dock panels
+
+Starting with MapStore v2022.02.00, layout improvements have been introduced which, in addition to other changes,
+introduce a new sidebar menu to be used instead of the burger menu.
+
+All extensions using `DockPanel` or `DockablePanel` components have to be updated
+if their dock panel is rendered on the right side of the screen, next to the new sidebar menu.
+
+Following changes should be applied (`MapTemplates` plugin can be a reference for the changes needs to be applied):
+1. Make your extension aware of the map layout changes by getting corresponding state value using following selector:
+
+```js
+createSelector(
+    ...
+    state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
+    ...
+    (dockStyle) => ({
+        dockStyle
+    })
+)
+```
+
+It will get offset from the right and the bottom that needs to be applied to the `ResponsiveContainer`
+
+2. Replace `DockPanel`, `DockablePanel`, `ContainerDimensions` (if used) with the `ResponsiveContainer` and make sure
+that dock content is a child of `ResponsiveContainer`:
+
+was:
+```js
+return (
+    <DockPanel
+        open={props.active}
+        position="right"
+        size={props.size}
+        bsStyle="primary"
+        title={<Message msgId="mapTemplates.title"/>}
+        style={{ height: 'calc(100% - 30px)' }}
+        onClose={props.onToggleControl}>
+        {!props.templatesLoaded && <div className="map-templates-loader"><Loader size={352}/></div>}
+        {props.templatesLoaded && <MapTemplatesPanel
+            templates={props.templates}
+            onMergeTemplate={props.onMergeTemplate}
+            onReplaceTemplate={props.onReplaceTemplate}
+            onToggleFavourite={props.onToggleFavourite}/>}
+    </DockPanel>
+)
+```
+
+become:
+```js
+return (
+    <ResponsivePanel
+        containerStyle={props.dockStyle}
+        style={props.dockStyle}
+        containerId="map-templates-container"
+        containerClassName="dock-container"
+        className="map-templates-dock-panel"
+        open={props.active}
+        position="right"
+        size={props.size}
+        bsStyle="primary"
+        title={<Message msgId="mapTemplates.title"/>}
+        onClose={props.onToggleControl}
+    >
+        {!props.templatesLoaded && <div className="map-templates-loader"><Loader size={352}/></div>}
+        {props.templatesLoaded && <MapTemplatesPanel
+            templates={props.templates}
+            onMergeTemplate={props.onMergeTemplate}
+            onReplaceTemplate={props.onReplaceTemplate}
+            onToggleFavourite={props.onToggleFavourite}/>}
+    </ResponsivePanel>
+);
+```
+
+With the applied changes dock will be rendered properly both for layout with `BurgerMenu` and `SidebarMenu`.
+
+## Making other dock panels closed automatically when extension panel is open
+
+All the dock panels open next to the sidebar should be mutually excluded. Active dock panel should be closed whenever another panel is open.
+
+Array at `state.maplayout.dockPanels.right` contains list of panels that can be extended or modified by extension by dispatching
+`updateDockPanelsList` action.
+
+Please note that adding dock into the list will automatically close previously active panel, so it's a good idea to
+dispatch the action on app initializing or when dock panel is open. Measurement plugin can be used as a reference of
+implementation, see `openMeasureEpic` & `closeMeasureEpic` in `epics/measurement.js`.
