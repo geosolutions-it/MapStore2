@@ -128,4 +128,58 @@ describe('Test Catalog panel', () => {
         expect(inputField.innerText).toBe("defaultMapBackgroundsServiceTitle");
         expect(item).toExist();
     });
+    it('test the search of records with new service added', () => {
+        const SERVICE = {
+            type: "csw",
+            url: "url",
+            title: "csw"
+        };
+        const actions = { setNewServiceStatus: () => {} };
+        const spyOnNewService = expect.spyOn(actions, 'setNewServiceStatus');
+        const item = ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            isNewServiceAdded
+            setNewServiceStatus={actions.setNewServiceStatus}
+            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
+        />, document.getElementById("container"));
+        expect(item).toExist();
+        const catalogPagination = document.getElementsByClassName('catalog-pagination');
+        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(item, "button");
+        expect(buttons.length).toBe(1);
+        const searchButton = buttons[0];
+        TestUtils.Simulate.click(searchButton);
+        expect(spyOnNewService).toHaveBeenCalled();
+        expect(spyOnNewService.calls[0].arguments[0]).toBeFalsy();
+        expect(catalogPagination.length).toBe(0); // Pagination is hidden
+    });
+    it('test the search of records with no new service added', () => {
+        const SERVICE = {
+            type: "csw",
+            url: "url",
+            title: "csw"
+        };
+        const actions = { onSearch: () => {}, setNewServiceStatus: () => {} };
+        const spyOnNewService = expect.spyOn(actions, 'setNewServiceStatus');
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        const item = ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            selectedService="csw"
+            isNewServiceAdded={false}
+            onSearch={actions.onSearch}
+            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
+            searchOptions={{startPosition: 1}}
+            setNewServiceStatus={actions.setNewServiceStatus}
+        />, document.getElementById("container"));
+        expect(item).toExist();
+        const catalogPagination = document.getElementsByClassName('catalog-pagination');
+        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(item, "button");
+        expect(buttons.length).toBe(1);
+        const searchButton = buttons[0];
+        TestUtils.Simulate.click(searchButton);
+        expect(spyOnNewService).toNotHaveBeenCalled();
+        expect(spyOnSearch).toHaveBeenCalled();
+        expect(spyOnSearch.calls[0].arguments[0]).toEqual({ format: 'csw', url: 'url', startPosition: 1, maxRecords: 4, text: '', options: {service: SERVICE} });
+        expect(catalogPagination.length).toBe(1); // Pagination is displayed
+    });
 });
