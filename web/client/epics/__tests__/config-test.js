@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import {head} from 'lodash';
-import { loadMapConfigAndConfigureMap, loadMapInfoEpic } from '../config';
+import {calculateBboxOnConfigureMap, loadMapConfigAndConfigureMap, loadMapInfoEpic} from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,
@@ -17,8 +17,10 @@ import {
     LOAD_MAP_INFO,
     MAP_INFO_LOADED,
     MAP_INFO_LOAD_START,
-    loadMapInfo
+    loadMapInfo,
+    configureMap
 } from '../../actions/config';
+import {CHANGE_MAP_VIEW} from "../../actions/map";
 
 import { testEpic } from './epicTestUtils';
 import Persistence from '../../api/persistence';
@@ -276,6 +278,37 @@ describe('config epics', () => {
             testEpic(loadMapInfoEpic,
                 2,
                 loadMapInfo(1234),
+                checkActions
+            );
+        });
+    });
+
+    describe('calculateBboxOnConfigureMap', () => {
+        Persistence.addApi("testConfig", api);
+        beforeEach(() => {
+            Persistence.setApi("testConfig");
+        });
+        afterEach(() => {
+            Persistence.setApi("geostore");
+        });
+
+        it('calculate bbox on map config loaded', (done) => {
+            const config = {
+                map: {
+                    center: { x: 0, y: 0, crs: "EPSG:4326" },
+                    zoom: 8,
+                    projection: 'EPSG:900913'
+                }
+            };
+
+            const checkActions = ([a]) => {
+                expect(a).toExist();
+                expect(a.type).toBe(CHANGE_MAP_VIEW);
+                done();
+            };
+            testEpic(calculateBboxOnConfigureMap,
+                1,
+                configureMap(config, 1, false),
                 checkActions
             );
         });
