@@ -535,6 +535,7 @@
             "filterIconDisabled": "Activer le filtre de couche",
             "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
             "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
+            "notVisibleSwitchTo3D": "Passer en mode carte 3D pour voir cette couche",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
