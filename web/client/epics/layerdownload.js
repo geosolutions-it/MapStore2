@@ -67,9 +67,8 @@ import { describeProcess } from '../observables/wps/describe';
 import { download, downloadWithAttributesFilter } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
-import { mergeFiltersToOGC } from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
-import { getLayerTitle } from '../utils/LayersUtils';
+import {createUniqueLayerFilter, getLayerTitle} from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -107,11 +106,9 @@ const hasOutputFormat = (data) => {
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
-const getWFSFeature = ({ url, filterObj = {}, layerFilter, downloadOptions = {}, options } = {}) => {
+const getWFSFeature = ({ url, filterObj = {}, downloadOptions = {}, options, layer } = {}) => {
     const { sortOptions, propertyNames } = options;
-
-    const data = mergeFiltersToOGC({ ogcVersion: '1.0.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj);
-
+    const data = createUniqueLayerFilter(layer, filterObj);
     return getXMLFeature(url, getFilterFeature(query(
         filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
         { srsName: downloadOptions.selectedSrs })
@@ -246,12 +243,12 @@ export const startFeatureExportDownload = (action$, store) =>
         ] : null;
 
         const { layerFilter } = layer;
-
         const wfsFlow = () => getWFSFeature({
             url: action.url,
             downloadOptions: action.downloadOptions,
             filterObj: action.filterObj,
             layerFilter,
+            layer,
             options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                 propertyNames
@@ -268,6 +265,7 @@ export const startFeatureExportDownload = (action$, store) =>
             .catch(() => {
                 return getWFSFeature({
                     url: action.url,
+                    layer,
                     downloadOptions: action.downloadOptions,
                     filterObj: action.filterObj,
                     layerFilter,
@@ -315,11 +313,7 @@ export const startFeatureExportDownload = (action$, store) =>
                     type: 'TEXT',
                     data: {
                         mimeType: 'text/xml; subtype=filter/1.1',
-                        data: mergeFiltersToOGC({
-                            ogcVersion: '1.1.0',
-                            addXmlnsToRoot: true,
-                            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
-                        }, layer.layerFilter, action.filterObj)
+                        data: createUniqueLayerFilter(layer, action?.filterObj)
                     }
                 } : undefined,
                 ROI: cropToROI ? {

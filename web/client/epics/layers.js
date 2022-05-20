@@ -9,7 +9,6 @@
 import Rx from 'rxjs';
 
 import Api from '../api/WMS';
-
 import {
     REFRESH_LAYERS,
     UPDATE_LAYERS_DIMENSION,
@@ -26,7 +25,7 @@ import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '..
 import { setControlProperty } from '../actions/controls';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { basicError } from '../utils/NotificationUtils';
-import { getCapabilitiesUrl, getLayerTitleTranslations} from '../utils/LayersUtils';
+import {getCapabilitiesUrl, getLayerTitleTranslations} from '../utils/LayersUtils';
 import assign from 'object-assign';
 import { isArray, head } from 'lodash';
 
@@ -167,6 +166,7 @@ export const updateSettingsParamsEpic = (action$, store) =>
                     Rx.Observable.empty()) :
                 Rx.Observable.empty());
         });
+
 
 export default {
     refresh,
