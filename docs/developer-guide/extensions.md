@@ -284,3 +284,14 @@ return (
 ```
 
 With the applied changes dock will be rendered properly both for layout with `BurgerMenu` and `SidebarMenu`.
+
+## Making other dock panels closed automatically when extension panel is open
+
+All the dock panels open next to the sidebar should be mutually excluded. Active dock panel should be closed whenever another panel is open.
+
+Array at `state.maplayout.dockPanels.right` contains list of panels that can be extended or modified by extension by dispatching
+`updateDockPanelsList` action.
+
+Please note that adding dock into the list will automatically close previously active panel, so it's a good idea to
+dispatch the action on app initializing or when dock panel is open. Measurement plugin can be used as a reference of
+implementation, see `openMeasureEpic` & `closeMeasureEpic` in `epics/measurement.js`.
