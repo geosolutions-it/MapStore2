@@ -824,6 +824,7 @@ export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
  */
 export const onFeatureGridGeometryEditing = (action$, store) => action$.ofType(GEOMETRY_CHANGED)
     .filter(a => a.owner === "featureGrid")
+    .delay(500) // delay to avoid race condition in draw interactions
     .switchMap( (a) => {
         const state = store.getState();
         const defaultFeatureProj = getDefaultFeatureProjection();
