@@ -42,7 +42,7 @@ describe('globeswitcher Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case MAP_TYPE_CHANGED:
-                    expect(action.mapType).toBe("leaflet");
+                    expect(action.mapType).toBe("openlayers");
                     break;
                 default:
                     expect(true).toBe(false);
@@ -51,7 +51,7 @@ describe('globeswitcher Epics', () => {
             });
             done();
         }, {
-            globeswitcher: { last2dMapType: "leaflet" }
+            mapType: { last2dMapType: null }
         });
     });
 });

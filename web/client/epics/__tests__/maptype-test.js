@@ -61,6 +61,20 @@ describe('maptype epics', () => {
             done();
         }, STATE_3D);
     });
+    it('restore default last2d cesium when changing location from a 3d mode', (done) => {
+        const STATE_3D = {
+            maptype: {
+                mapType: "cesium",
+                last2dMapType: null
+            }
+        };
+        testEpic(restore2DMapTypeOnLocationChange, NUM_ACTIONS, onLocationChanged({pathname: "/"}, "PUSH" ), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            expect(actions[0].type).toEqual(MAP_TYPE_CHANGED);
+            expect(actions[0].mapType).toEqual("openlayers");
+            done();
+        }, STATE_3D);
+    });
     it('update location when map type changes', (done) => {
         const STATE = {
             maptype: {
