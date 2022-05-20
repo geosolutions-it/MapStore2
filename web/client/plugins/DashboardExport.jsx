@@ -50,8 +50,9 @@ const Component = ({
     return (
         <ExportPanel
             show={show}
-            onExport={handleExport}
             onClose={onClose}
+            onExport={handleExport}
+            // exportPanelTitle={<Message msgId="dashboard.exportDialog.heading"/>}
         />
     );
 };

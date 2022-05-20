@@ -195,7 +195,10 @@ export const importDashboard = (action$, {getState = () => {}}) => action$
     .ofType(DASHBOARD_IMPORT)
     .switchMap(({file}) => (
         Rx.Observable.defer(() => readJson(file[0]).then((data) => data))
-            .switchMap((dashboard) => Rx.Observable.of(dashboardLoaded(getState().resource, dashboard.originalData)))
+            .switchMap((dashboard) => Rx.Observable.of(
+                dashboardLoaded(getState().resource, dashboard.originalData),
+                toggleControl('import')
+            ))
             .catch((e) => Rx.Observable.of(
                 error({ title: "dashboard.errors.loading.title" }),
                 dashboardLoadError({...e})

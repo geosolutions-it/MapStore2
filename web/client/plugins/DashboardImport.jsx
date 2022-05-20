@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -14,39 +14,58 @@ import { createSelector } from 'reselect';
 import DragZone from '../components/import/dragZone/DragZone';
 import {createPlugin} from "../utils/PluginsUtils";
 import { createControlEnabledSelector } from '../selectors/controls';
-import { originalDataSelector, dashboardResource } from '../selectors/dashboard';
-import { dashboardExport } from '../actions/dashboard';
+import { dashboardImport } from '../actions/dashboard';
 
 import { toggleControl } from '../actions/controls';
 import Message from '../components/I18N/Message';
+import HTML from '../components/I18N/HTML';
+import Button from '../components/misc/Button';
+
 const isEnabled = createControlEnabledSelector('import');
+
+const mapStateToProps = createSelector(
+    isEnabled,
+    (show) => ( {show })
+);
+
+const actions = {
+    onClose: () => toggleControl('import'),
+    onDrop: dashboardImport
+};
 
 const Component = ({
     show,
+    onDrop,
     onClose
-}) => (
-    <DragZone
-        style={!show ? {display: 'none'} : {}}
-        onClose={onClose}
-        onDrop={(file) => {
-            console.log('ONDROP', file[0])
-        }}
-    >
-        HOLAAAAAAA
-    </DragZone >
-);
+}) => {
+    const dropZoneRef = useRef();
+    return (
+        <DragZone
+            onRef={dropZoneRef}
+            style={!show ? {display: 'none'} : {}}
+            onClose={onClose}
+            onDrop={onDrop}
+        >
+            <div>
+                <Glyphicon
+                    glyph="upload"
+                    style={{ fontSize: 80}}
+                />
+                <br />
+                <HTML msgId="dashboard.importDialog.heading" />
+                <br />
+                <br />
+                <Button bsStyle="primary" onClick={() => {dropZoneRef.current.open();}}>
+                    <Message msgId="dashboard.importDialog.selectFiles" />
+                </Button>
+                <hr />
+                <HTML msgId="dashboard.importDialog.note" />
+            </div>
+        </DragZone >
+    );
+};
 
-const ConnectedComponent = connect(
-    createSelector(
-        isEnabled,
-        dashboardResource,
-        originalDataSelector,
-        (show) => ({
-            show
-        })), {
-        onClose: () => toggleControl('import')
-    }
-)(Component);
+const ConnectedComponent = connect(mapStateToProps, actions)(Component);
 
 const DashboardImportPlugin = createPlugin('DashboardImport', {
     component: ConnectedComponent,
@@ -56,7 +75,7 @@ const DashboardImportPlugin = createPlugin('DashboardImport', {
                 name: "import",
                 position: 4,
                 text: <Message msgId="mapImport.title" />,
-                icon: <Glyphicon glyph="download" />,
+                icon: <Glyphicon glyph="upload" />,
                 action: () => toggleControl('import'),
                 priority: 2,
                 toggle: true,
