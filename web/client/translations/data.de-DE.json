@@ -2059,7 +2059,8 @@
                 "showConnections": "Verbindungen anzeigen",
                 "hideConnections": "Verbindungen ausblenden"
             },
-            "emptyTitle": "Das Dashboard ist leer"
+            "emptyTitle": "Das Dashboard ist leer",
+            "delete": "Dashboard löschen"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Dashboard wird geladen",
@@ -2516,7 +2517,8 @@
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
             "addWebPageContent": "Webseitenabschnitt hinzufügen",
-            "emptyTitle": "Diese Geschichte ist leer",
+            "emptyTitle": "Diese GeoStory ist leer",
+            "delete": "Löschen geostory",
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "closeFullscreenMap": "Schließen Vollbild-Karte",
             "showFullscreenMap": "Vollbild-Anzeige Karte",
