@@ -32,7 +32,11 @@ import {
     textSearch,
     changeSelectedService,
     formatsLoading,
-    setSupportedFormats, ADD_LAYER_AND_DESCRIBE, describeError, addLayer
+    setSupportedFormats,
+    ADD_LAYER_AND_DESCRIBE,
+    describeError,
+    addLayer,
+    setNewServiceStatus
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
 import { error, success } from '../actions/notifications';
@@ -69,6 +73,20 @@ import { wrapStartStop } from '../observables/epics';
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
 
+const onErrorRecordSearch = (isNewService, errObj) => {
+    if (isNewService) {
+        return Rx.Observable.of(
+            error({
+                title: "notification.warning",
+                message: "catalog.notification.errorServiceUrl",
+                autoDismiss: 6,
+                position: "tc"
+            }),
+            savingService(false)
+        );
+    }
+    return Rx.Observable.of(recordsLoadError(errObj));
+};
 /**
     * Epics for CATALOG
     * @name epics.catalog
@@ -85,24 +103,39 @@ export default (API) => ({
         action$.ofType(TEXT_SEARCH)
             .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
                 const filter = get(options, 'service.filter') || get(options, 'filter');
+                const isNewService = get(options, 'isNewService', false);
                 return Rx.Observable.defer(() =>
                     API[format].textSearch(url, startPosition, maxRecords, text, { options, filter, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
-                            return Rx.Observable.of(recordsLoadError(result));
+                            return onErrorRecordSearch(isNewService, result);
                         }
-                        return Rx.Observable.of(recordsLoaded({
+                        let $observable = Rx.Observable.empty();
+                        if (isNewService) {
+                            $observable = Rx.Observable.from([
+                                // The records are saved to catalog state on successful saving of the service.
+                                // The flag is used to show/hide records on load in Catalog
+                                setNewServiceStatus(true),
+                                addCatalogService(options.service),
+                                success({
+                                    title: "notification.success",
+                                    message: "catalog.notification.addCatalogService",
+                                    autoDismiss: 6,
+                                    position: "tc"
+                                }),
+                                savingService(false)
+                            ]);
+                        }
+                        return $observable.concat([recordsLoaded({
                             url,
                             startPosition,
                             maxRecords,
                             text
-                        }, result));
+                        }, result)]);
                     })
-                    .startWith(setLoading(true))
-                    .catch((e) => {
-                        return Rx.Observable.of(recordsLoadError(e));
-                    });
+                    .startWith(isNewService ? savingService(true) : setLoading(true))
+                    .catch((e) => onErrorRecordSearch(isNewService, e));
             }),
 
     /**
@@ -238,23 +271,25 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
+                const maxRecords = pageSizeSelector(state);
                 return Rx.Observable.of(newService)
                     // validate
                     .switchMap((service) => API[service.type]?.preprocess?.(service) ?? ( Rx.Observable.of(service)))
                     .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
-                    .switchMap((service) => API[service.type]?.testService?.(service) ?? (Rx.Observable.of(service)))
-                    .switchMap(() => {
+                    .switchMap((service) => {
+                        // Dispatch action to test service and add records to catalog after successful saving of the service,
+                        // this prevents duplicate calls being fired for all the services
                         return Rx.Observable.of(
-                            addCatalogService(newService),
-                            success({
-                                title: "notification.success",
-                                message: "catalog.notification.addCatalogService",
-                                autoDismiss: 6,
-                                position: "tc"
+                            textSearch({
+                                format: service.type,
+                                url: service.url,
+                                startPosition: 1,
+                                maxRecords,
+                                text: "",
+                                options: {service, isNewService: true}
                             })
                         );
                     })
-                    .startWith(savingService(true))
                     .catch((e) => {
                         return Rx.Observable.of(error({
                             exception: e,
@@ -263,8 +298,7 @@ export default (API) => ({
                             autoDismiss: 6,
                             position: "tc"
                         }));
-                    })
-                    .concat(Rx.Observable.of(savingService(false)));
+                    });
             }),
     deleteCatalogServiceEpic: (action$, store) =>
         action$.ofType(DELETE_SERVICE)

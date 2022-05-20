@@ -59,3 +59,4 @@ export const formatsLoadingSelector = (state) => get(state, "catalog.formatsLoad
 export const getSupportedFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.imageFormats", DEFAULT_FORMAT_WMS);
 export const getSupportedGFIFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.infoFormats", getUniqueInfoFormats());
 export const getFormatUrlUsedSelector = (state) => get(state, "catalog.newService.formatUrlUsed", '');
+export const getNewServiceStatusSelector = (state) => get(state, "catalog.isNewServiceAdded", false);

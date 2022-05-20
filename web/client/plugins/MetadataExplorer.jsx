@@ -38,7 +38,8 @@ import {
     textSearch,
     toggleAdvancedSettings,
     toggleTemplate,
-    toggleThumbnail
+    toggleThumbnail,
+    setNewServiceStatus
 } from '../actions/catalog';
 import { setControlProperty, toggleControl } from '../actions/controls';
 import { changeLayerProperties } from '../actions/layers';
@@ -71,7 +72,8 @@ import {
     tileSizeOptionsSelector,
     formatsLoadingSelector,
     getSupportedFormatsSelector,
-    getSupportedGFIFormatsSelector
+    getSupportedGFIFormatsSelector,
+    getNewServiceStatusSelector
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
@@ -117,7 +119,8 @@ const metadataExplorerSelector = createStructuredSelector({
     isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector,
     formatsLoading: formatsLoadingSelector,
     formatOptions: getSupportedFormatsSelector,
-    infoFormatOptions: getSupportedGFIFormatsSelector
+    infoFormatOptions: getSupportedGFIFormatsSelector,
+    isNewServiceAdded: getNewServiceStatusSelector
 });
 
 
@@ -267,7 +270,8 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onFormatOptionsFetch: formatOptionsFetch,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
-    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
+    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
+    setNewServiceStatus
 })(MetadataExplorerComponent);
 
 /**
