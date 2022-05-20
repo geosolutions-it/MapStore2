@@ -21,10 +21,11 @@ import {
     SAVE_DASHBOARD,
     DASHBOARD_EXPORT,
     LOAD_DASHBOARD,
+    DASHBOARD_IMPORT,
     dashboardLoadError
 } from '../actions/dashboard';
 
-import { setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
+import { setControlProperty, TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { featureTypeSelected } from '../actions/wfsquery';
 import { show, error } from '../actions/notifications';
 import { loadFilter, QUERY_FORM_SEARCH } from '../actions/queryform';
@@ -33,7 +34,7 @@ import { isDashboardEditing, isDashboardAvailable } from '../selectors/dashboard
 import { isLoggedIn } from '../selectors/security';
 import { getEditingWidgetLayer, getEditingWidgetFilter } from '../selectors/widgets';
 import { pathnameSelector } from '../selectors/router';
-import { download } from '../utils/FileUtils';
+import { download, readJson } from '../utils/FileUtils';
 import { createResource, updateResource, getResource } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
@@ -184,9 +185,21 @@ export const saveDashboard = action$ => action$
 
 export const exportDashboard = action$ => action$
     .ofType(DASHBOARD_EXPORT)
-    .switchMap(({originalData, resource}) => (
-        Rx.Observable.of([JSON.stringify({originalData, resource}), 'dashboard.json', 'application/json'])
+    .switchMap(({originalData, resource, services}) =>
+        Rx.Observable.of([JSON.stringify({originalData, resource, services}), 'dashboard.json', 'application/json'])
             .do((downloadArgs) => download(...downloadArgs))
+            .map(() => toggleControl('export'))
+    );
+
+export const importDashboard = (action$, {getState = () => {}}) => action$
+    .ofType(DASHBOARD_IMPORT)
+    .switchMap(({file}) => (
+        Rx.Observable.defer(() => readJson(file[0]).then((data) => data))
+            .switchMap((dashboard) => Rx.Observable.of(dashboardLoaded(getState().resource, dashboard.originalData)))
+            .catch((e) => Rx.Observable.of(
+                error({ title: "dashboard.errors.loading.title" }),
+                dashboardLoadError({...e})
+            ))
     ));
 
 export default {
@@ -199,5 +212,6 @@ export default {
     loadDashboardStream,
     reloadDashboardOnLoginLogout,
     saveDashboard,
-    exportDashboard
+    exportDashboard,
+    importDashboard
 };
