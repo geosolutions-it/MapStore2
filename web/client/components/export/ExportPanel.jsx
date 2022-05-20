@@ -19,6 +19,7 @@ export default ({
     formats = {},
     selectedFormat,
     exportButtonLabel = <Message msgId="mapExport.exportPanel.exportButtonLabel"/>,
+    exportPanelTitle = <HTML msgId="mapExport.exportPanel.title"/>,
     onSelect = () => {},
     onExport = () => {},
     onClose = () => {}
@@ -46,8 +47,9 @@ export default ({
                     <Glyphicon glyph="upload"/>
                 </div>
                 <div>
-                    <HTML msgId="mapExport.exportPanel.title"/>
+                    {exportPanelTitle}
                 </div>
+                <br/>
                 <div className="export-panel-formats-container">
                     {toPairs(formats).map(([format, {label, glyph}]) =>
                         <Button
@@ -62,6 +64,7 @@ export default ({
                         </Button>
                     )}
                 </div>
+                <br/>
                 <Button bsStyle="primary" onClick={() => onExport(selectedFormat)}>{exportButtonLabel}</Button>
                 <br/>
                 <br/>

@@ -52,7 +52,7 @@ const Component = ({
             show={show}
             onClose={onClose}
             onExport={handleExport}
-            // exportPanelTitle={<Message msgId="dashboard.exportDialog.heading"/>}
+            exportPanelTitle={<Message msgId="dashboard.exportDialog.heading"/>}
         />
     );
 };
