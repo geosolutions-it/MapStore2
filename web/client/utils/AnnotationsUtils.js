@@ -128,7 +128,7 @@ export const hasOutline = (style) => {
 
 export const annStyleToOlStyle = (type, tempStyle, label = "") => {
     let style = tempStyle && tempStyle[type] ? tempStyle[type] : tempStyle;
-    const s = style;
+    const s = style ?? {};
     const dashArray = s.dashArray ? getDashArrayFromStyle(s.dashArray) : "solid";
     switch (type) {
     case "MultiPolygon":
