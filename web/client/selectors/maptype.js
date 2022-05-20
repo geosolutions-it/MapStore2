@@ -34,4 +34,4 @@ export const isCesium = state => mapTypeSelector(state) === "cesium";
 export const isLeaflet = state => mapTypeSelector(state) === "leaflet";
 export const isOpenlayers = state => mapTypeSelector(state) === "openlayers";
 
-export const last2dMapTypeSelector = state => get(state, "maptype.last2dMapType") || 'leaflet';
+export const last2dMapTypeSelector = state => get(state, "maptype.last2dMapType") || 'openlayers';
