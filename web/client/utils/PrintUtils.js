@@ -579,8 +579,7 @@ export const specCreators = {
             },
             geoJson: reprojectGeoJson({
                 type: "FeatureCollection",
-                features: isAnnotationLayer(layer) && annotationsToPrint(layer.features) ||
-                                layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
+                features: annotationsToPrint(layer.features)
             },
             "EPSG:4326",
             spec.projection)
