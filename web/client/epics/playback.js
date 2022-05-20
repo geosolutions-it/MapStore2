@@ -355,13 +355,15 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
                 getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
-            ).map(([next, previous]) =>
-                updateMetadata({
+            ).map(([next, previous]) => {
+                const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
+                return updateMetadata({
                     forTime: time,
                     next,
-                    previous
-                })
-            );
+                    previous,
+                    timeIntervalData: isTimeIntervalData
+                });
+            });
         });
 /**
  * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
