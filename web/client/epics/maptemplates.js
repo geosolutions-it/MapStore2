@@ -25,7 +25,6 @@ import {SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL} from '../actio
 import { configureMap } from '../actions/config';
 import { wrapStartStop } from '../observables/epics';
 import { toMapConfig } from '../utils/ogc/WMC';
-import {closeFeatureGrid} from "../actions/featuregrid";
 import {hideMapinfoMarker, purgeMapInfoResults} from "../actions/mapInfo";
 
 const errorToMessageId = (e = {}, getState = () => {}) => {
@@ -181,5 +180,5 @@ export const openMapTemplatesEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter((action) => action.control === "mapTemplates" && isActiveSelector(store.getState()))
         .switchMap(() => {
-            return Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
+            return Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
         });

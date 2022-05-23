@@ -18,7 +18,6 @@ import {
     openDetailsPanel
 } from '../actions/details';
 import { MAP_INFO_LOADED } from '../actions/config';
-import { closeFeatureGrid } from '../actions/featuregrid';
 import { toggleControl, setControlProperty } from '../actions/controls';
 
 import {
@@ -41,7 +40,6 @@ export const fetchDataForDetailsPanel = (action$, store) =>
                 .then(data => data))
                 .switchMap((details) => {
                     return Rx.Observable.of(
-                        closeFeatureGrid(),
                         updateDetails(details)
                     );
                 }).startWith(toggleControl("details", "enabled"))

@@ -95,6 +95,12 @@ import {additionalLayersSelector} from "../selectors/additionallayers";
  * @prop {boolean} cfg.mapPreviewOptions.enableScalebox if true a combobox to select the printing scale is shown over the preview
  * this is particularly useful if useFixedScales is also true, to show the real printing scales
  * @prop {boolean} cfg.mapPreviewOptions.enableRefresh true by default, if false the preview is not updated if the user pans or zooms the main map
+ * @prop {object} cfg.outputFormatOptions options for the output formats
+ * @prop {object[]} cfg.outputFormatOptions.allowedFormats array of allowed formats, e.g. [{"name": "PDF", "value": "pdf"}]
+ * @prop {object} cfg.projectionOptions options for the projections
+ * @prop {object[]} cfg.projectionOptions.projections array of available projections, e.g. [{"name": "EPSG:3857", "value": "EPSG:3857"}]
+ * @prop {object} cfg.overlayLayersOptions options for overlay layers
+ * @prop {boolean} cfg.overlayLayersOptions.enabled if true a checkbox will be shown to exclude or include overlay layers to the print
  *
  * @example
  * // printing in geodetic mode
@@ -624,7 +630,16 @@ export default {
                     pdfUrl,
                     error,
                     map,
-                    layers: [...layers.filter(l => !l.loadingError), ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(l => !l.loadingError) : [])],
+                    layers: [
+                        ...layers.filter(l => !l.loadingError),
+                        ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(
+                            l => {
+                                const isVector = l.type === 'vector';
+                                const hasFeatures = Array.isArray(l.features) && l.features.length > 0;
+                                return !l.loadingError && (!isVector || (isVector && hasFeatures));
+                            }
+                        ) : [])
+                    ],
                     scales,
                     usePreview,
                     currentLocale,

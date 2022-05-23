@@ -18,7 +18,6 @@ import { TOGGLE_CONTROL, toggleControl, setControlProperty } from '../actions/co
 import { addLayer, updateNode, removeLayer, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES } from '../actions/layers';
 import { changeMeasurement } from '../actions/measurement';
 import { error } from '../actions/notifications';
-import { closeFeatureGrid } from '../actions/featuregrid';
 import { hideMapinfoMarker, purgeMapInfoResults, closeIdentify, PURGE_MAPINFO_RESULTS } from '../actions/mapInfo';
 import {
     updateAnnotationGeometry,
@@ -79,15 +78,13 @@ import {
 import { MEASURE_TYPE } from '../utils/MeasurementUtils';
 import { createSvgUrl } from '../utils/VectorStyleUtils';
 
-import { isFeatureGridOpen } from '../selectors/featuregrid';
-import { queryPanelSelector } from '../selectors/controls';
 import { annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector, editingSelector } from '../selectors/annotations';
 import { mapNameSelector } from '../selectors/map';
 import { groupsSelector } from '../selectors/layers';
 
 
 import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
-import {isActiveSelector} from "../selectors/measurement";
+import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 /**
     * Epics for annotations
     * @name epics.annotations
@@ -391,6 +388,7 @@ export default {
             ]);
         }),
     purgeMapInfoEpic: (action$, store) => action$.ofType( PURGE_MAPINFO_RESULTS)
+        .filter(() => get(store.getState(), 'draw.drawOwner', '') === ANNOTATIONS)
         .switchMap(() => {
             return Rx.Observable.from([
                 changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {})
@@ -525,24 +523,10 @@ export default {
             return Rx.Observable.empty();
         }),
     /**
-        this epic closes the measure tool becasue can conflict with the draw interaction in others
+        this epic closes annotation once other tools takes control over drawing
         */
-    closeMeasureToolEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
-        .filter((action) => action.control === ANNOTATIONS && store.getState().controls.annotations.enabled)
-        .switchMap(() => {
-            const state = store.getState();
-            let actions = [];
-            if (queryPanelSelector(state)) { // if query panel is open, close it
-                actions.push(setControlProperty('queryPanel', "enabled", false));
-            }
-            if (isFeatureGridOpen(state)) { // if FeatureGrid is open, close it
-                actions.push(closeFeatureGrid());
-            }
-            if (isActiveSelector(state)) { // if measure is open, close it
-                actions.push(setControlProperty('measure', "enabled", false));
-            }
-            return actions.length ? Rx.Observable.from(actions) : Rx.Observable.empty();
-        }),
+    tearDownByDrawingToolsEpic: (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'annotations',
+        () => Rx.Observable.of(purgeMapInfoResults())),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === ANNOTATIONS && !store.getState().controls.annotations.enabled)
         .switchMap(() => {

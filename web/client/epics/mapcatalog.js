@@ -19,7 +19,6 @@ import {
 } from '../actions/mapcatalog';
 import {SET_CONTROL_PROPERTY, TOGGLE_CONTROL} from "../actions/controls";
 import {isActiveSelector} from "../selectors/mapcatalog";
-import {closeFeatureGrid} from "../actions/featuregrid";
 import {hideMapinfoMarker, purgeMapInfoResults} from "../actions/mapInfo";
 
 // the delay in epics below is needed to temporarily mitigate georchestra backend issues
@@ -62,6 +61,6 @@ export const openMapCatalogEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter((action) => action.control === "mapCatalog" && isActiveSelector(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
+            return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
         });
 

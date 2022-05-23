@@ -14,7 +14,12 @@ import { find } from 'lodash';
 import configureMockStore from 'redux-mock-store';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { ADD_LAYER, UPDATE_NODE, changeLayerProperties, changeGroupProperties } from '../../actions/layers';
-import { CHANGE_DRAWING_STATUS, drawingFeatures, DRAWING_FEATURE, selectFeatures } from '../../actions/draw';
+import {
+    CHANGE_DRAWING_STATUS,
+    drawingFeatures,
+    DRAWING_FEATURE,
+    selectFeatures
+} from '../../actions/draw';
 import { set } from '../../utils/ImmutableUtils';
 import { CLOSE_IDENTIFY, HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInfoResults } from '../../actions/mapInfo';
 import { configureMap } from '../../actions/config';
@@ -48,23 +53,24 @@ import {
 } from '../../actions/annotations';
 
 import { toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
-import { STYLE_POINT_MARKER } from '../../utils/AnnotationsUtils';
+import {ANNOTATIONS, STYLE_POINT_MARKER} from '../../utils/AnnotationsUtils';
 import annotationsEpics from '../annotations';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import {registerEventListener} from "../../actions/map";
 
 const {
     addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, setEditingFeatureEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlightAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, hideAnnotationGroupEpic, highlightGeometryEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, tearDownByDrawingToolsEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, hideAnnotationGroupEpic, highlightGeometryEpic
 } = annotationsEpics;
 
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, setEditingFeatureEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlightAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, hideAnnotationGroupEpic, highlightGeometryEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, tearDownByDrawingToolsEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic, hideAnnotationGroupEpic, highlightGeometryEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -269,7 +275,10 @@ describe('annotations Epics', () => {
                 }]
             }]
         },
-        controls: {annotations: {enabled: true}}
+        controls: {annotations: {enabled: true}},
+        draw: {
+            drawOwner: ANNOTATIONS
+        }
     };
     beforeEach(() => {
         store = mockStore(defaultState);
@@ -755,6 +764,23 @@ describe('annotations Epics', () => {
             done();
         }, state);
     });
+    it('test on close annotations panel by another drawing tool', (done) => {
+        const state = {
+            controls: {annotations: {enabled: true}}
+        };
+        testEpic(addTimeoutEpic(tearDownByDrawingToolsEpic, 100), 1, registerEventListener("click", "anotherPlugin"), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                case PURGE_MAPINFO_RESULTS:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
+    });
     it('save annotation', (done) => {
         const state = {
             annotations: {featureType: "Point"},
@@ -1139,29 +1165,6 @@ describe('annotations Epics', () => {
             }
         });
         const action = changeSelected(polygonCoords, 200, undefined);
-        store.dispatch(action);
-    });
-    it('opening annotations closing measure tool', (done) => {
-        store = mockStore({
-            controls: {
-                annotations: {
-                    enabled: true
-                },
-                measure: {
-                    enabled: true
-                }
-            }
-        });
-
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[1].control).toBe("measure");
-                done();
-            }
-        });
-        const action = toggleControl("annotations");
         store.dispatch(action);
     });
 

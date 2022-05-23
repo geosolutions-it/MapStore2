@@ -21,7 +21,6 @@ import tooltip from "../components/misc/enhancers/tooltip";
 import {setControlProperty} from "../actions/controls";
 import {createPlugin} from "../utils/PluginsUtils";
 import sidebarMenuReducer from "../reducers/sidebarmenu";
-import sidebarMenuEpics from "../epics/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
@@ -117,8 +116,8 @@ class SidebarMenu extends React.Component {
     }
 
     getStyle = (style) => {
-        const hasBottomOffset = parseInt(style?.bottom, 10) !== 0;
-        return { ...style, height: hasBottomOffset ? 'auto' : '100%', maxHeight: style?.height ?? null, bottom: hasBottomOffset ? `calc(${style.bottom} + 30px)` : null };
+        const hasBottomOffset = style?.dockSize > 0;
+        return { ...style, height: hasBottomOffset ? 'auto' : '100%', maxHeight: style?.height ?? null, bottom: hasBottomOffset ? `calc(${style.dockSize}vh + 30px)` : null };
     };
 
     getPanels = () => {
@@ -269,7 +268,7 @@ class SidebarMenu extends React.Component {
 const sidebarMenuSelector = createSelector([
     state => state,
     state => lastActiveToolSelector(state),
-    state => mapLayoutValuesSelector(state, {bottom: true, height: true}),
+    state => mapLayoutValuesSelector(state, {dockSize: true, bottom: true, height: true}),
     sidebarIsActiveSelector
 ], (state, lastActiveTool, style, isActive) => ({
     style,
@@ -295,7 +294,6 @@ export default createPlugin(
             onDetach: setControlProperty.bind(null, 'sidebarMenu', 'enabled', false),
             setLastActiveItem
         })(SidebarMenu),
-        epics: sidebarMenuEpics,
         reducers: {
             sidebarmenu: sidebarMenuReducer
         }

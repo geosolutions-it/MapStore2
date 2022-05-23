@@ -16,7 +16,7 @@ import {
     closeDetailsPanelEpic,
     storeDetailsInfoEpic,
     fetchDataForDetailsPanel
-} from '../../epics/details';
+} from '../details';
 
 import {
     CLOSE_DETAILS_PANEL,
@@ -25,7 +25,6 @@ import {
     UPDATE_DETAILS,
     DETAILS_LOADED
 } from '../../actions/details';
-import { CLOSE_FEATURE_GRID } from '../../actions/featuregrid';
 import { mapInfoLoaded } from '../../actions/config';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
@@ -117,16 +116,13 @@ describe('details epics tests', () => {
     });
     it('test fetchDataForDetailsPanel', (done) => {
         map1.details = encodeURIComponent(detailsUri);
-        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 3, openDetailsPanel(), actions => {
-            expect(actions.length).toBe(3);
+        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 2, openDetailsPanel(), actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                 case TOGGLE_CONTROL:
                     expect(action.control).toBe("details");
                     expect(action.property).toBe("enabled");
-                    break;
-                case CLOSE_FEATURE_GRID:
-                    expect(action.type).toBe(CLOSE_FEATURE_GRID);
                     break;
                 case UPDATE_DETAILS:
                     expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);

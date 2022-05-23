@@ -11,7 +11,12 @@ import expect from 'expect';
 import assign from 'object-assign';
 import { set } from '../../utils/ImmutableUtils';
 import CoordinatesUtils from '../../utils/CoordinatesUtils';
-import { CLOSE_IDENTIFY, hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER } from '../../actions/mapInfo';
+import {
+    CLOSE_IDENTIFY,
+    hideMapinfoMarker,
+    featureInfoClick,
+    HIDE_MAPINFO_MARKER
+} from '../../actions/mapInfo';
 
 import {
     toggleEditMode,
@@ -59,8 +64,13 @@ import {
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
 import {CHANGE_DRAWING_STATUS, geometryChanged, SET_SNAPPING_LAYER, TOGGLE_SNAPPING} from '../../actions/draw';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
-import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
+import {
+    TOGGLE_CONTROL,
+    RESET_CONTROLS,
+    SET_CONTROL_PROPERTY,
+    toggleControl
+} from '../../actions/controls';
+import {ZOOM_TO_EXTENT, clickOnMap, registerEventListener} from '../../actions/map';
 import { boxEnd, CHANGE_BOX_SELECTION_STATUS } from '../../actions/box';
 import { CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData } from '../../actions/layers';
 
@@ -126,7 +136,7 @@ import {
     launchUpdateFilterEpic,
     setDefaultSnappingLayerOnFeatureGridOpen,
     resetSnappingLayerOnFeatureGridClosed,
-    toggleSnappingOffOnFeatureGridViewMode
+    toggleSnappingOffOnFeatureGridViewMode, closeFeatureGridOnDrawingToolOpen
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -918,49 +928,21 @@ describe('featuregrid Epics', () => {
                 case SET_CONTROL_PROPERTY: {
                     switch (i) {
                     case 0: {
-                        expect(action.control).toBe('userExtensions');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    case 1: {
-                        expect(action.control).toBe('details');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    case 2: {
-                        expect(action.control).toBe('mapTemplates');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    case 3: {
                         expect(action.control).toBe('mapCatalog');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
                         break;
                     }
-                    case 4: {
+                    case 1: {
+                        expect(action.control).toBe('mapTemplates');
+                        expect(action.property).toBe('enabled');
+                        expect(action.value).toBe(false);
+                        expect(action.toggle).toBe(undefined);
+                        break;
+                    }
+                    case 2: {
                         expect(action.control).toBe('metadataexplorer');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    case 5: {
-                        expect(action.control).toBe('annotations');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    case 6: {
-                        expect(action.control).toBe('details');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
@@ -975,7 +957,33 @@ describe('featuregrid Epics', () => {
                 }
             });
             done();
-        }, {});
+        }, {
+            maplayout: {
+                dockPanels: {
+                    right: ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details']
+                }
+            },
+            controls: {
+                metadataexplorer: { enabled: true},
+                mapCatalog: { enabled: true},
+                mapTemplates: { enabled: true}
+            }
+        });
+    });
+
+    it('test closeFeatureGridOnDrawingToolOpen', (done) => {
+        testEpic(addTimeoutEpic(closeFeatureGridOnDrawingToolOpen, 100), 1, registerEventListener("click", "anotherPlugin"), actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CLOSE_FEATURE_GRID);
+            done();
+        }, {
+            featuregrid: {
+                open: true
+            },
+            controls: {
+                measure: { enabled: true}
+            }
+        });
     });
 
     it('test deleteGeometryFeature', (done) => {

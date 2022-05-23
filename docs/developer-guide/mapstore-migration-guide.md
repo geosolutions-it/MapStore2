@@ -167,6 +167,9 @@ Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new 
 }
 ```
 
+### Updating extensions
+Please refer to the [extensions](../extensions/#managing-drawing-interactions-conflict-in-extension) documentation to know how to update your extensions.
+
 
 ## Migration from 2022.01.00 to 2022.01.01
 
