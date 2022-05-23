@@ -43,7 +43,7 @@ import {
     currentTimeSelector
 } from '../selectors/dimension';
 
-import { getNearestDate, roundRangeResolution, isTimeDomainInterval } from '../utils/TimeUtils';
+import { getNearestDate, roundRangeResolution, isTimeDomainInterval, getBufferedTime } from '../utils/TimeUtils';
 import { getHistogram, describeDomains, getDomainValues } from '../api/MultiDim';
 
 const TIME_DIMENSION = "time";
@@ -80,9 +80,11 @@ const snapTime = (state, group, time) => {
         return Rx.Observable.forkJoin(
             // TODO: find out a way to optimize and do only one request
             getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
+            // getDomainValues(...domainArgs(state, { sort: "asc", fromValue: getBufferedTime(time, 0.0001, 'remove'), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
             getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
+            // getDomainValues(...domainArgs(state, { sort: "desc", fromValue: getBufferedTime(time, 0.0001, 'add'), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
         )

@@ -62,7 +62,7 @@ import {
     multidimOptionsSelectorCreator
 } from '../selectors/timeline';
 
-import { getDatesInRange } from '../utils/TimeUtils';
+import { getDatesInRange, getBufferedTime } from '../utils/TimeUtils';
 import pausable from '../observables/pausable';
 import { wrapStartStop } from '../observables/epics';
 import { getDomainValues } from '../api/MultiDim';
@@ -349,10 +349,10 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
             return Rx.Observable.forkJoin(
                 // TODO: find out a way to optimize and do only one request
                 // TODO: support for local list of values (in case of missing multidim-extension)
-                getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
+                getDomainValues(...domainArgs(getState, { sort: "asc", fromValue: getBufferedTime(time, 0.0001, 'remove'), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
-                getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
+                getDomainValues(...domainArgs(getState, { sort: "asc", fromValue: getBufferedTime(time, 0.0001, 'add'), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
             ).map(([next, previous]) => {

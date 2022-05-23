@@ -320,3 +320,17 @@ export const getLowestAndHighestDates = (datesArray) =>  {
     }, []).sort();
     return [sortedDatesArray[0], sortedDatesArray[sortedDatesArray.length - 1]];
 };
+
+/**
+ * Given a datetime applies a buffer (either adding or removing time) and
+ * returns the buffered datetime as string (ISO 8061 format)
+ * @param {string} timeString the reference datetime to apply the buffer
+ * @param {number} timeBuffer the buffer amount time (expressed in seconds)
+ * @param {string} bufferType the type of buffer (add or removed secs from ref time)
+ * @returns {string} the buffered reference time with the amount of seconds specified
+ */
+export const getBufferedTime = (timeString, timeBuffer, bufferType) => {
+    const refDate = moment(timeString);
+    const bufferedDate = bufferType === 'add' ? refDate.add(timeBuffer, 'seconds') : refDate.subtract(timeBuffer, 'seconds');
+    return bufferedDate.toISOString();
+};
