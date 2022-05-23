@@ -2015,7 +2015,7 @@
                 "note": "The data in the imported file will replace the data in the current dashboard"
             },
             "exportDialog": {
-              "heading": "Export dashboard as a .json file",
+              "heading": "Export dashboard as a .json file"
             },
             "errors":{
                 "loading": {
