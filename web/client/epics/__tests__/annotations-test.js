@@ -51,6 +51,7 @@ import { toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
 import { STYLE_POINT_MARKER } from '../../utils/AnnotationsUtils';
 import annotationsEpics from '../annotations';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import config from '../../components/geostory/contents/texteditor/getLinkDecorator';
 
 const {
     addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, setEditingFeatureEpic, newAnnotationEpic, addAnnotationEpic,
@@ -284,10 +285,20 @@ describe('annotations Epics', () => {
     it('set style', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
+            const state = {
+                annotations: {
+                    config: {
+                        geodesic: true
+                    },
+
+                },
+
+            };
             if (actions.length >= 2) {
                 expect(actions[0].type).toBe(SET_STYLE);
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
                 expect(actions[1].status).toBe("updateStyle");
+                expect(state.annotations.config.geodesic).toBe(true)
                 done();
             }
         });

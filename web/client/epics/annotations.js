@@ -122,8 +122,8 @@ const validateFeatureCollection = (feature) => {
  * @param drawMethod
  * @return {boolean}
  */
-const getGeodesicProperty = (state, drawMethod = "Circle") => {
-    return drawMethod === "Circle" && get(state.annotations, "config.geodesic", false);
+const getGeodesicProperty = (state) => {
+    return get(state.annotations, "config.geodesic");
 };
 
 const getSelectDrawStatus = (state) => {
@@ -137,7 +137,7 @@ const getSelectDrawStatus = (state) => {
         drawEnabled: false,
         translateEnabled: false,
         transformToFeatureCollection: true,
-        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
+        geodesic: getGeodesicProperty(state)
     };
 
     feature = validateFeatureCollection(feature);
