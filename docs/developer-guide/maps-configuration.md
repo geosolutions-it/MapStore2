@@ -782,7 +782,7 @@ This layer differs from the "vector" because all the loading/filtering/querying 
 
 #### Vector Style
 
-The `vector` and `wfs` layer types are rendered client as GeoJSON features and it possible to apply specific symbolizer using the `style` property available in the layer options. The style object is composed by these properties
+The `vector` and `wfs` layer types are rendered by the client as GeoJSON features and it possible to apply specific symbolizer using the `style` property available in the layer options. The style object is composed by these properties
 
 - `format` the format encoding used by style body
 - `body` the actual style rules and symbolizers
