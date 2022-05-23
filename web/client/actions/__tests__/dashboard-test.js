@@ -31,7 +31,11 @@ import {
     dashboardLoading,
     DASHBOARD_LOADING,
     dashboardLoadError,
-    DASHBOARD_LOAD_ERROR
+    DASHBOARD_LOAD_ERROR,
+    DASHBOARD_EXPORT,
+    DASHBOARD_IMPORT,
+    dashboardExport,
+    dashboardImport
 } from '../dashboard';
 
 describe('Test correctness of the dashboard actions', () => {
@@ -116,5 +120,23 @@ describe('Test correctness of the dashboard actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(DASHBOARD_LOAD_ERROR);
         expect(retval.error).toBe(error);
+    });
+    it('dashboardExport', () => {
+        const originalData = {TEST: 'TEST'};
+        const resource = {TEST: 'TEST'};
+        const services = {TEST: 'TEST'};
+        const retval = dashboardExport(originalData, resource, services);
+        expect(retval).toExist();
+        expect(retval.type).toBe(DASHBOARD_EXPORT);
+        expect(retval.originalData).toBe(originalData);
+        expect(retval.resource).toBe(resource);
+        expect(retval.services).toBe(services);
+    });
+    it('dashboardImport ', () => {
+        const file = JSON.stringify({TEST: "TEST"});
+        const retval = dashboardImport(file);
+        expect(retval).toExist();
+        expect(retval.type).toBe(DASHBOARD_IMPORT);
+        expect(retval.file).toBe(file);
     });
 });
