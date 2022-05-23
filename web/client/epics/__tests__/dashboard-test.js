@@ -17,7 +17,8 @@ import  {
     TRIGGER_SAVE_MODAL,
     LOAD_DASHBOARD,
     SAVE_ERROR,
-    saveDashboard
+    saveDashboard,
+    dashboardExport as dashboardExportAction
 } from '../../actions/dashboard';
 import {
     handleDashboardWidgetsFilterPanel,
@@ -25,7 +26,8 @@ import {
     initDashboardEditorOnNew,
     closeDashboardWidgetEditorOnFinish,
     filterAnonymousUsersForDashboard,
-    saveDashboard as saveDashboardMethod
+    saveDashboard as saveDashboardMethod,
+    exportDashboard as exportDashboardEpic
 } from '../dashboard';
 
 import {
@@ -43,7 +45,8 @@ import { LOAD_FILTER, search } from '../../actions/queryform';
 import {
     CHANGE_DRAWING_STATUS
 } from '../../actions/draw';
-import { SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../../actions/controls';
+// import it from "react-intl/locale-data/it";
 
 const BASE_STATE = {
     controls: {
@@ -366,5 +369,28 @@ describe('saveDashboard', () => {
             expect(actions[2].type).toBe(DASHBOARD_LOADING);
             expect(actions[2].value).toBe(false);
         }, BASE_STATE, done);
+    });
+});
+
+
+describe('Dashboard Export Epic', () => {
+    it('export dashboard', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(TOGGLE_CONTROL);
+            expect(action.control).toBe('export');
+            done();
+        };
+        const state = {
+            originalData: {
+                widgets: [],
+                layouts: {
+                    md: []
+                }
+            },
+            resource: { }
+        };
+        testEpic(exportDashboardEpic, 1, dashboardExportAction(), epicResult, state, done);
     });
 });
