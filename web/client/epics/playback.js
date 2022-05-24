@@ -23,7 +23,8 @@ import {
     appendFrames,
     setCurrentFrame,
     framesLoading,
-    updateMetadata
+    updateMetadata,
+    setIntervalData
 } from '../actions/playback';
 
 import { moveTime, SET_CURRENT_TIME, MOVE_TIME } from '../actions/dimension';
@@ -62,9 +63,10 @@ import {
     multidimOptionsSelectorCreator
 } from '../selectors/timeline';
 
-import { getDatesInRange, getBufferedTime } from '../utils/TimeUtils';
+import { getDatesInRange } from '../utils/TimeUtils';
 import pausable from '../observables/pausable';
 import { wrapStartStop } from '../observables/epics';
+import { getTimeDomainsObservable } from '../observables/multidim';
 import { getDomainValues } from '../api/MultiDim';
 import Rx from 'rxjs';
 
@@ -346,25 +348,33 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
             // get current time in case of SELECT_LAYER
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
-            return Rx.Observable.forkJoin(
-                // TODO: find out a way to optimize and do only one request
-                // TODO: support for local list of values (in case of missing multidim-extension)
-                getDomainValues(...domainArgs(getState, { sort: "asc", fromValue: getBufferedTime(time, 0.0001, 'remove'), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
-                    .map(res => res.DomainValues.Domain.split(","))
-                    .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
-                getDomainValues(...domainArgs(getState, { sort: "asc", fromValue: getBufferedTime(time, 0.0001, 'add'), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
-                    .map(res => res.DomainValues.Domain.split(","))
-                    .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
-            ).map(([next, previous]) => {
-                const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
+            return getTimeDomainsObservable(domainArgs, false, getState, snapType, time).map(([next, previous]) => {
                 return updateMetadata({
                     forTime: time,
                     next,
-                    previous,
-                    timeIntervalData: isTimeIntervalData
+                    previous
                 });
             });
         });
+
+/**
+ * Get domains with a slight buffer to detect whether the layer consists of
+ * instants/point or intervals/bars time value. The results is used to
+ * disable/enable the radio buttons to snap to start/end of time interval
+ */
+export const setIsIntervalData = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(SELECT_LAYER, SET_CURRENT_TIME)
+        .filter(({type, layerId}) => (type === SELECT_LAYER && layerId))
+        .switchMap(({time: actionTime}) => {
+            const time = actionTime || currentTimeSelector(getState());
+            const snapType = snapTypeSelector(getState());
+            return getTimeDomainsObservable(domainArgs, true, getState, snapType, time)
+                .map(([next, previous]) => {
+                    const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
+                    return setIntervalData(isTimeIntervalData);
+                });
+        });
+
 /**
  * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
  * current start-end values
@@ -409,5 +419,6 @@ export default {
     playbackMoveStep,
     playbackCacheNextPreviousTimes,
     playbackFollowCursor,
-    playbackStopWhenDeleteLayer
+    playbackStopWhenDeleteLayer,
+    setIsIntervalData
 };
