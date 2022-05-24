@@ -325,7 +325,7 @@ export const getStyle = (options, isDrawing = false, textValues = []) => {
     }
     if (options.style && options.style.format === 'geostyler') {
         return getStyleParser('openlayers')
-            .then((olStyleParser) => olStyleParser.writeStyle(options.style.styleObj));
+            .then((olStyleParser) => olStyleParser.writeStyle(options.style.styleObj || options.style.body));
     }
     const style = getStyleLegacy(options, isDrawing, textValues);
     if (options.asPromise) {

@@ -32,7 +32,6 @@ import LoadingView from '../../components/misc/LoadingView';
 import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
 import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
 import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
-import SimpleVectorStyleEditor from './SimpleVectorStyleEditor';
 import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
 import { mapSelector } from '../../selectors/map';
 
@@ -148,15 +147,9 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
 
-    if (element?.type === '3dtiles') {
-        return {
-            Component: VectorStyleEditor
-        };
-    }
-
     if (isVectorStylableLayer({element})) {
         return {
-            Component: SimpleVectorStyleEditor
+            Component: VectorStyleEditor
         };
     }
     // get Higher priority plugin that satisfies requirements.

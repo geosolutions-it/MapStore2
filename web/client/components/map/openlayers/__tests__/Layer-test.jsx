@@ -490,7 +490,8 @@ describe('Openlayers layer', () => {
                 expect(style.getStroke().getColor()).toBe('#FF0000');
                 // currently SLD parser use fillOpacity instead of opacity
                 // and probably this cause wrong parsing of opacity
-                expect(style.getFill().getColor()).toBe('#FFFF00');
+                // added a wrapper to the openlayers parser to manage the issue related to opacity
+                expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
             } catch (e) {
                 done(e);
             }

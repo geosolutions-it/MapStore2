@@ -32,7 +32,13 @@ import {
     createStylesAsync,
     setSymbolsStyles,
     getSymbolsStyles,
-    getStyleParser
+    getStyleParser,
+    getImageIdFromSymbolizer,
+    flattenFeatures,
+    drawIcons,
+    geoStylerStyleFilter,
+    layerToGeoStylerStyle,
+    applyDefaultStyleToLayer
 } from '../VectorStyleUtils';
 
 const LENGTH_OF_OBJECT_DATA_URL = "blob:http://localhost:9876/87844744-f879-4f5b-90bc-2cc6e70ba3cd".length;
@@ -436,4 +442,348 @@ describe("VectorStyleUtils ", () => {
                 done();
             });
     });
+
+
+    it('should create an image id based on Icon or Mark symbolizers', () => {
+
+        expect(getImageIdFromSymbolizer({
+            kind: 'Mark',
+            wellKnownName: 'Circle',
+            color: '#ff0000',
+            fillOpacity: 0.5,
+            strokeColor: '#00ff00',
+            strokeOpacity: 0.25,
+            strokeWidth: 3,
+            radius: 16,
+            rotate: 90
+        })).toBe('Circle:#ff0000:0.5:#00ff00:0.25:3:16');
+
+        expect(getImageIdFromSymbolizer({
+            kind: 'Icon',
+            image: 'path/to/image',
+            opacity: 0.5,
+            size: 32,
+            rotate: 90
+        })).toBe('path/to/image');
+
+    });
+
+    it('should flatten features collection array in a single list of features', () => {
+        const features = [
+            {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        properties: { name: 'A' },
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [7, 41]
+                        }
+                    }
+                ]
+            },
+            {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        properties: { name: 'B' },
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [6, 40]
+                        }
+                    }
+                ]
+            }
+        ];
+        expect(flattenFeatures(features)).toEqual([
+            {
+                type: 'Feature',
+                properties: { name: 'A' },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [7, 41]
+                }
+            },
+            {
+                type: 'Feature',
+                properties: { name: 'B' },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [6, 40]
+                }
+            }
+        ]);
+    });
+
+    it('should preload images and marker from a style', (done) => {
+        const geoStylerStyle = {
+            name: '',
+            rules: [
+                {
+                    filter: undefined,
+                    name: '',
+                    symbolizers: [
+                        {
+                            kind: 'Mark',
+                            wellKnownName: 'Circle',
+                            color: '#ff0000',
+                            fillOpacity: 0.5,
+                            strokeColor: '#00ff00',
+                            strokeOpacity: 0.25,
+                            strokeWidth: 3,
+                            radius: 16,
+                            rotate: 90
+                        }
+                    ]
+                },
+                {
+                    filter: undefined,
+                    name: '',
+                    symbolizers: [
+                        {
+                            kind: 'Icon',
+                            image: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+                            opacity: 0.5,
+                            size: 32,
+                            rotate: 90
+                        }
+                    ]
+                }
+            ]
+        };
+        drawIcons(geoStylerStyle)
+            .then((images) => {
+                try {
+                    expect(images[0].id).toEqual('Circle:#ff0000:0.5:#00ff00:0.25:3:16');
+                    expect(images[1].id).toEqual('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+    });
+
+    it('should read filter expression applied to a feature properties using geoStylerStyleFilter', () => {
+        const feature = { properties: { count: 10, name: 'Abc' } };
+        expect(geoStylerStyleFilter(feature, ['==', 'count', 10])).toBe(true);
+        expect(geoStylerStyleFilter(feature, ['!=', 'count', 10])).toBe(false);
+        expect(geoStylerStyleFilter(feature, ['>=', 'count', 10])).toBe(true);
+        expect(geoStylerStyleFilter(feature, ['<=', 'count', 10])).toBe(true);
+        expect(geoStylerStyleFilter(feature, ['<', 'count', 10])).toBe(false);
+        expect(geoStylerStyleFilter(feature, ['>', 'count', 10])).toBe(false);
+        expect(geoStylerStyleFilter(feature, ['*=', 'name', 'A'])).toBe(true);
+        expect(geoStylerStyleFilter(feature, ['*=', 'name', 'd'])).toBe(false);
+
+        expect(geoStylerStyleFilter(feature, ['||', ['*=', 'name', 'd'], ['<', 'count', 10]])).toBe(false);
+        expect(geoStylerStyleFilter(feature, ['||', ['*=', 'name', 'd'], ['<=', 'count', 10]])).toBe(true);
+
+        expect(geoStylerStyleFilter(feature, ['&&', ['*=', 'name', 'd'], ['<=', 'count', 10]])).toBe(false);
+        expect(geoStylerStyleFilter(feature, ['&&', ['*=', 'name', 'A'], ['<=', 'count', 10]])).toBe(true);
+    });
+
+    it('should parse mapstore annotation style to geostyler style with layerToGeoStylerStyle', (done) => {
+
+        const layer = {
+            type: 'vector',
+            features: [
+                {
+                    type: 'FeatureCollection',
+                    features: [
+                        {
+                            type: 'Feature',
+                            properties: {
+                                id: 'annotation-id'
+                            },
+                            geometry: {
+                                type: 'Polygon',
+                                coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                            },
+                            style: {
+                                fillColor: '#ff0000',
+                                fillOpacity: 0.5,
+                                color: '#00ff00',
+                                opacity: 0.25,
+                                weight: 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        layerToGeoStylerStyle(layer)
+            .then((style) => {
+                try {
+                    expect(style).toEqual({
+                        format: 'geostyler',
+                        body: {
+                            name: '',
+                            rules: [
+                                {
+                                    name: '',
+                                    filter: [ '==', 'id', 'annotation-id' ],
+                                    symbolizers: [
+                                        {
+                                            kind: 'Fill',
+                                            color: '#ff0000',
+                                            opacity: 0.5,
+                                            fillOpacity: 0.5,
+                                            outlineColor: '#00ff00',
+                                            outlineOpacity: 0.25,
+                                            outlineWidth: 2
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        metadata: {
+                            editorType: 'visual'
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+    });
+
+    it('should parse mapstore simple style to geostyler style with layerToGeoStylerStyle', (done) => {
+        const layer = {
+            type: 'vector',
+            features: [],
+            style: {
+                fillColor: '#ff0000',
+                fillOpacity: 0.5,
+                color: '#00ff00',
+                opacity: 0.25,
+                weight: 2
+            }
+        };
+
+        layerToGeoStylerStyle(layer)
+            .then((style) => {
+                try {
+
+                    expect(style).toEqual({
+                        format: 'geostyler',
+                        body: {
+                            name: '',
+                            rules: [
+                                {
+                                    name: '',
+                                    symbolizers: [
+                                        {
+                                            kind: 'Line',
+                                            color: '#00ff00',
+                                            opacity: 0.25,
+                                            width: 2
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: '',
+                                    symbolizers: [
+                                        {
+                                            kind: 'Fill',
+                                            color: '#ff0000',
+                                            opacity: 0.5,
+                                            fillOpacity: 0.5,
+                                            outlineColor: '#00ff00',
+                                            outlineOpacity: 0.25,
+                                            outlineWidth: 2
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        metadata: {
+                            editorType: 'visual'
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+    });
+
+    it('should not parse style if geostyler style already', (done) => {
+        const layer = {
+            type: 'vector',
+            features: [],
+            style: {
+                format: 'geostyler',
+                body: {
+                    name: '',
+                    rules: []
+                }
+            }
+        };
+
+        layerToGeoStylerStyle(layer)
+            .then((style) => {
+                try {
+                    expect(style).toEqual(layer.style);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            });
+    });
+
+    it('should add default style if the layer id providing an empty style object with applyDefaultStyleToLayer', () => {
+        const layer = {};
+        const newLayerWithStyle = applyDefaultStyleToLayer(layer);
+        expect(newLayerWithStyle.style).toEqual({
+            format: 'geostyler',
+            body: {
+                name: 'Default Style',
+                rules: [
+                    {
+                        name: 'Default Point Style',
+                        symbolizers: [
+                            {
+                                kind: 'Mark',
+                                color: '#f2f2f2',
+                                fillOpacity: 0.3,
+                                opacity: 0.5,
+                                strokeColor: '#3075e9',
+                                strokeOpacity: 1,
+                                strokeWidth: 2,
+                                wellKnownName: 'Circle',
+                                radius: 10
+                            }
+                        ]
+                    },
+                    {
+                        name: 'Default Line Style',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                color: '#3075e9',
+                                opacity: 1,
+                                width: 2
+                            }
+                        ]
+                    },
+                    {
+                        name: 'Default Polygon Style',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#f2f2f2',
+                                fillOpacity: 0.3,
+                                outlineColor: '#3075e9',
+                                outlineOpacity: 1,
+                                outlineWidth: 2
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+    });
+
 });
