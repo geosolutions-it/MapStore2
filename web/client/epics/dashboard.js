@@ -185,18 +185,20 @@ export const saveDashboard = action$ => action$
 
 export const exportDashboard = action$ => action$
     .ofType(DASHBOARD_EXPORT)
-    .switchMap(({originalData, resource, services}) =>
-        Rx.Observable.of([JSON.stringify({originalData, resource, services}), 'dashboard.json', 'application/json'])
+    .switchMap(({data, fileName}) =>
+        Rx.Observable.of([JSON.stringify({data}), fileName, 'application/json'])
             .do((downloadArgs) => download(...downloadArgs))
             .map(() => toggleControl('export'))
     );
 
-export const importDashboard = (action$, {getState = () => {}}) => action$
+export const importDashboard = action$ => action$
     .ofType(DASHBOARD_IMPORT)
     .switchMap(({file}) => (
         Rx.Observable.defer(() => readJson(file[0]).then((data) => data))
             .switchMap((dashboard) => Rx.Observable.of(
-                dashboardLoaded(getState().resource, dashboard.originalData),
+                // undefined resource as first param
+                // since resource data will be newly created on save
+                dashboardLoaded(undefined, dashboard.data),
                 toggleControl('import')
             ))
             .catch((e) => Rx.Observable.of(

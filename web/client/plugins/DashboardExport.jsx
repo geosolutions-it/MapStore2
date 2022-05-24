@@ -14,7 +14,7 @@ import { createSelector } from 'reselect';
 import ExportPanel from '../components/export/ExportPanel';
 import {createPlugin} from "../utils/PluginsUtils";
 import { createControlEnabledSelector } from '../selectors/controls';
-import { originalDataSelector, dashboardResource, dashboardServicesSelector } from '../selectors/dashboard';
+import { originalDataSelector, dashboardResource } from '../selectors/dashboard';
 import { dashboardExport } from '../actions/dashboard';
 
 import { toggleControl } from '../actions/controls';
@@ -25,12 +25,10 @@ const mapStateToProps = createSelector(
     isEnabled,
     dashboardResource,
     originalDataSelector,
-    dashboardServicesSelector,
-    (show, resource, originalData, services) => ({
+    (show, resource, data) => ({
         show,
         resource,
-        originalData,
-        services
+        data
     }));
 
 const actions = {
@@ -42,11 +40,11 @@ const Component = ({
     show,
     onClose,
     onExport,
-    originalData,
-    resource,
-    services
+    data,
+    resource
 }) => {
-    const handleExport = () => onExport(originalData, resource, services);
+    const fileName = resource?.name ? `${resource.name}-dashboard.json` : 'dashboard.json';
+    const handleExport = () => onExport(data, fileName);
     return (
         <ExportPanel
             show={show}

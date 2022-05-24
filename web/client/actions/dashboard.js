@@ -41,7 +41,7 @@ export const dashboardSaved = id => ({type: DASHBOARD_SAVED, id});
 export const loadDashboard = id => ({ type: LOAD_DASHBOARD, id});
 export const resetDashboard = () => ({ type: DASHBOARD_RESET});
 export const dashboardLoaded = (resource, data) => ({ type: DASHBOARD_LOADED, resource, data});
-export const dashboardExport = (originalData, resource, services) => ({ type: DASHBOARD_EXPORT, originalData, resource, services});
+export const dashboardExport = (data, fileName) => ({ type: DASHBOARD_EXPORT, data, fileName});
 export const dashboardImport = (file) => ({ type: DASHBOARD_IMPORT, file});
 /**
  * @param {boolean} value the value of the flag
