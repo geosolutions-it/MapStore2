@@ -40,10 +40,11 @@ const StyleEditorCustomUtils = {};
 const EDITOR_MODES = {
     'css': 'geocss',
     'sld': 'xml',
-    '3dtiles': 'application/json'
+    '3dtiles': 'application/json',
+    'geostyler': 'application/json'
 };
 
-const getGeometryType = (geomProperty = {}) => {
+export const getGeometryType = (geomProperty = {}) => {
     const localType = geomProperty.localType && geomProperty.localType.toLowerCase() || '';
     if (localType.indexOf('polygon') !== -1
         || localType.indexOf('surface') !== -1
@@ -592,13 +593,35 @@ export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
         });
 }
 
+export function getAttributes(properties) {
+    const stringTypeToCheck = [ 'string'];
+    const numberTypeToCheck = ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal', 'number', 'int'];
+    return Object.keys(properties)
+        .filter((key) => [...stringTypeToCheck, ...numberTypeToCheck]
+            .indexOf(properties[key].localType.toLowerCase()) !== -1)
+        .map((key) => {
+            const { localType } = properties[key];
+            return {
+                attribute: key,
+                label: key,
+                type: numberTypeToCheck
+                    .indexOf(localType.toLowerCase()) !== -1
+                    ? 'number'
+                    : 'string'
+            };
+        });
+}
+
 /**
  * Return attributes from a vector layer object configuration
  * @param  {object} layer layer object configuration
  * @return {array|null} returns an array of attributes
  */
 export function getVectorLayerAttributes(layer) {
-    if (layer?.properties) {
+    if (!layer?.properties) {
+        return null;
+    }
+    if (layer?.type === '3dtiles') {
         const propertiesKeys = Object.keys(layer.properties || {});
         const attributes = propertiesKeys.map((key) => {
             const { minimum, maximum, type } = layer.properties[key];
@@ -609,6 +632,23 @@ export function getVectorLayerAttributes(layer) {
                 type: type || minMaxType
             };
         });
+        return attributes;
+    }
+    if (layer?.type === 'wfs') {
+        return getAttributes(layer.properties);
+    }
+    if (layer?.type === 'vector') {
+        const propertiesKeys = Object.keys(layer.properties || {});
+        const attributes = propertiesKeys
+            .filter(key => isNumber(layer.properties[key]) || isString(layer.properties[key]))
+            .map((key) => {
+                const type = isNumber(layer.properties[key]) ? 'number' : 'string';
+                return {
+                    attribute: key,
+                    label: key,
+                    type: type
+                };
+            });
         return attributes;
     }
     return null;
@@ -623,7 +663,7 @@ export function getVectorLayerGeometryType(layer) {
     if (layer.type === '3dtiles') {
         return layer?.format === 'pnts' ? 'pointcloud' : 'polyhedron';
     }
-    return 'vector';
+    return layer?.geometryType || 'vector';
 }
 
 /**
@@ -641,7 +681,13 @@ export function getVectorDefaultStyle(layer) {
             }
         };
     }
-    return null;
+    return {
+        format: 'geostyler',
+        body: {},
+        metadata: {
+            editorType: 'visual'
+        }
+    };
 }
 
 export const styleValidation = {

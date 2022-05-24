@@ -64,6 +64,7 @@ function EmptyRules() {
  * @prop {array} config.fonts list of fonts available for the style (eg ['monospace', 'serif'])
  * @prop {array} config.methods classification methods
  * @prop {function} config.getColors get color ramp available for ramp selector
+ * @prop {bool} config.simple hide the symbolizer option for advanced style (eg patterns, classification)
  * @prop {object} ruleBlock describe all the properties and related configuration of special rules (eg: classification)
  * @prop {object} symbolizerBlock describe all the properties and related configuration of symbolizers
  * @prop {func} onUpdate return changes that needs an async update, argument contains property of the rule to update
@@ -90,7 +91,8 @@ const RulesEditor = forwardRef(({
         methods,
         getColors,
         classification,
-        format
+        format,
+        simple
     } = config;
 
     // needed for slider
@@ -363,7 +365,7 @@ const RulesEditor = forwardRef(({
                                             draggable
                                             glyph={glyph}
                                             tools={
-                                                <SymbolizerMenu
+                                                (!simple && <SymbolizerMenu
                                                     hide={hideMenu}
                                                     symbolizerKind={kind}
                                                     ruleBlock={ruleBlock}
@@ -372,7 +374,7 @@ const RulesEditor = forwardRef(({
                                                     onSelect={handleReplaceRule}
                                                     graphic={properties.graphicFill || properties.graphicStroke}
                                                     channelSelection={properties.channelSelection}
-                                                />
+                                                />)
                                             }>
                                             <Fields
                                                 properties={properties}

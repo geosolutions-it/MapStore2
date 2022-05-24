@@ -761,7 +761,157 @@ This is the typical fields of a vector layer
 - `styleName`: name of a style to use (e.g. "marker").
 - `hideLoading`: boolean. if true, the loading will not be taken into account.
 
+#### WFS Layer
+
+A vector layer, whose data source is a WFS service. The configuration has properties in common with both WMS and vector layers. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
+
+This layer differs from the "vector" because all the loading/filtering/querying operations are applied directly using the WFS service, without storing anything locally.
+
+```json
+{
+    "type":"wfs",
+    "search":{
+        "url":"https://myserver.org/geoserver/wfs",
+        "type":"wfs"
+    },
+    "name":"workspace:layer",
+    "styleName":"marker",
+    "url":"https://myserver.org/geoserver/wfs"
+}
+```
+
 #### Vector Style
+
+The `vector` and `wfs` layer types are rendered by the client as GeoJSON features and it possible to apply specific symbolizer using the `style` property available in the layer options. The style object is composed by these properties
+
+- `format` the format encoding used by style body
+- `body` the actual style rules and symbolizers
+
+example:
+```json
+{
+  "type": "vector",
+  "features": [],
+  "style": {
+    "format": "geostyler",
+    "body": {
+      "name": "My Style",
+      "rules": [
+        {
+          "name": "My Rule",
+          "symbolizers": [
+            {
+              "kind": "Line",
+              "color": "#3075e9",
+              "opacity": 1,
+              "width": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+The default format used by MapStore is "geostyler" that is an encoding based on the [geostyler-style](https://github.com/geostyler/geostyler-style) specification that could include some variations or limitations related to the map libraries used by MapStore app.
+We suggest to refer to following doc for the rule/symbolizer properties available in MapStore.
+
+Ths style `body` is composed by following properties:
+
+- `name` style name
+- `rules` list of rule object that describe the style
+
+A `rule` object is composed by following properties:
+
+- `name` rule name that could be used to generate a legend
+- `filter` filter expression
+- `symbolizers` list of symbolizer object that describe the rule (usually one per rule)
+
+The `filter` expression define with features should be rendered with the symbolizers listed in the rule
+
+example:
+```js
+// simple comparison condition structure
+// [operator, property key, value]
+{
+  "filter": ["==", "count", 10]
+}
+
+// mulitple condition with logical operato
+// [logical operator, [condition], [condition]]
+{
+  "filter": [
+    "||",
+    [">", "height", 10],
+    ["==", "category", "building"]
+  ]
+}
+```
+
+Available logical operators:
+
+- `||` OR operator
+- `&&` AND operator
+
+Available comparison operators:
+
+- `==` equal to
+- `*=` like (for string type)
+- `!=` is not
+- `<` less than
+- `<=` less and equal than
+- `>` grater than
+- `>=` grater and equal than
+
+The `symbolizer` could be of following `kinds`:
+
+- `Mark` symbolizer properties
+  - `kind` must be equal to `Mark`
+  - `color` fill color of the mark
+  - `fillOpacity` fill opacity of the mark
+  - `strokeColor` stroke color of the mark
+  - `strokeOpacity` stroke opacity of the mark
+  - `strokeWidth` stroke width of the mark
+  - `radius` radius size in px of the mark
+  - `wellKnownName` rendered shape, one of Circle, Square, Triangle, Star, Cross, X, shape://vertline, shape://horline, shape://slash, shape://backslash, shape://dot, shape://plus, shape://times, shape://oarrow or shape://carrow
+
+- `Icon` symbolizer properties
+  - `kind` must be equal to `Icon`
+  - `image` url of the image to use as icon
+  - `size` size of the icon
+  - `opacity` opacity of the icon
+  - `rotate` rotation of the icon
+
+- `Line` symbolizer properties
+  - `kind` must be equal to `Line`
+  - `color` stroke color of the line
+  - `opacity` stroke opacity of the line
+  - `width` stroke width of the line
+  - `dasharray` array that represent the dashed line intervals
+
+- `Fill` symbolizer properties
+  - `kind` must be equal to `Fill`
+  - `color` fill color of the polygon
+  - `fillOpacity` fill opacity of the polygon
+  - `outlineColor` outline color of the polygon
+  - `outlineOpacity` outline opacity of the polygon
+  - `outlineWidth` outline width of the polygon
+
+- `Text` symbolizer properties
+  - `kind` must be equal to `Text`
+  - `label` text to show in the label, the {{propertyKey}} notetion allow to access feature properties (eg. 'feature name is {{name}}')
+  - `font` array of font family names
+  - `size` font size of the label
+  - `fontStyle` font style of the label: normal or italic
+  - `fontWeight` font style of the label: normal or bold
+  - `color` font color of the label
+  - `haloColor` halo color of the label
+  - `haloWidth` halo width of the label
+  - `offset` array of x and y values offset of the label
+
+
+#### Legacy Vector Style (deprecated)
 
 The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style to the local data on the map.
 
@@ -776,14 +926,14 @@ The `style` or `styleName` properties of vector layers (wfs, vector...) allow to
 
 In case of `vector` layer, style can be added also to the specific features. Other ways of defining the style for a vector layer have to be documented.
 
-#### Advanced Vector Styles
+#### Advanced Vector Styles (deprecated)
 
 To support advanced styles (like multiple rules, symbols, dashed lines, start point, end point) the style can be configured also in a different format, as an array of objects and you can define them feature by feature, adding a "style" property.
 
 !!!warning
     This advanced style functionality has been implemented to support annotations, at the moment this kind of advanced style options is supported **only** as a property of the single feature object, not as global style.
 
-##### SVG Symbol
+##### SVG Symbol (deprecated)
 
 The following options are available for a SVG symbol.
 
@@ -794,7 +944,7 @@ The following options are available for a SVG symbol.
   - `size`: the size in pixel of the square that contains the symbol to draw. The size is used to center and to cut the original svg, so it must fit the svg.
 - `dashArray`: Array of line, space size, in pixels. ["6","6"] Will draw the border of the symbol dashed. It is applied also to a generic line or polygon geometry.
 
-##### Markers and glyphs
+##### Markers and glyphs (deprecated)
 
 These are the available options for makers. These are specific of annotations for now, so allowed values have to be documented.
 
@@ -803,14 +953,14 @@ These are the available options for makers. These are specific of annotations fo
 - `iconColor`: e.g. "red"
 - `iconAnchor`: [0.5,0.5]
 
-##### Multiple rules and filtering
+##### Multiple rules and filtering (deprecated)
 
 In order to support start point and end point symbols, you could find in the style these entries:
 
 - `geometry`: "endPoint"|"startPoint", identify how to get the geometry from
 - `filtering`: if true, the geometry filter is applied.
 
-#### Example
+#### Example (deprecated)
 
 Here an example of a layer with:
 
@@ -913,25 +1063,6 @@ Here an example of a layer with:
 *Result:*
 
 <img src="../img/vector-style-annotations.jpg" class="ms-docimage"  style="max-width:600px;"/>
-
-#### WFS Layer
-
-A vector layer, whose data source is a WFS service. The configuration has properties in common with both WMS and vector layers. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
-
-This layer differs from the "vector" because all the loading/filtering/querying operations are applied directly using the WFS service, without storing anything locally.
-
-```json
-{
-    "type":"wfs",
-    "search":{
-        "url":"https://myserver.org/geoserver/wfs",
-        "type":"wfs"
-    },
-    "name":"workspace:layer",
-    "styleName":"marker",
-    "url":"https://myserver.org/geoserver/wfs"
-}
-```
 
 #### Graticule
 

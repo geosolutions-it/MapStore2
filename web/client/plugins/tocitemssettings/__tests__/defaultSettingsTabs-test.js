@@ -14,7 +14,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from "react-dom/test-utils";
 
-import SimpleVectorStyleEditor from "../SimpleVectorStyleEditor";
+import VectorStyleEditor from "../../styleeditor/VectorStyleEditor";
 
 const BASE_STYLE_TEST_DATA = {
     settings: {},
@@ -159,7 +159,7 @@ describe('TOCItemsSettings - getStyleTabPlugin rendered items', () => {
     });
 });
 
-describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
+describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
 
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -177,7 +177,7 @@ describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
         setTimeout(done);
     });
 
-    it("SimpleVectorStyleEditor displays an error message if the geometry is type GEOMETRY and the layer is wfs", (done) => {
+    it("VectorStyleEditor displays an error message if the geometry is type GEOMETRY and the layer is wfs", (done) => {
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -191,17 +191,17 @@ describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("Geometry");
 
         act(async() => {
-            ReactDOM.render(<SimpleVectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if an error message is rendered
             const messageComponent = document.querySelector("#container");
-            expect(messageComponent.innerHTML).toContain("layerProperties.styleWarning");
+            expect(messageComponent.innerHTML).toContain("styleeditor.emptyRuleEditorTitle");
         }, done);
 
     });
 
-    it("SimpleVectorStyleEditor renders editor if the geometry is not of type GEOMETRY and the layer is wfs", (done) => {
+    it("VectorStyleEditor renders editor if the geometry is not of type GEOMETRY and the layer is wfs", (done) => {
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -215,16 +215,16 @@ describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("MultiPolygon");
 
         act(async() => {
-            ReactDOM.render(<SimpleVectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if the editor is rendered
             const messageComponent = document.querySelector("#container");
-            expect(messageComponent.innerHTML).toContain("layerProperties.style");
+            expect(messageComponent.innerHTML).toContain("styleeditor.emptyRuleEditorTitle");
         }, done);
     });
 
-    it("SimpleVectorStyleEditor renders editor if the geometry is of type GeometryCollection and the layer is wfs", (done) => {
+    it("VectorStyleEditor renders editor if the geometry is of type GeometryCollection and the layer is wfs", (done) => {
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -238,16 +238,16 @@ describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("GeometryCollection");
 
         act(async() => {
-            ReactDOM.render(<SimpleVectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if the editor is rendered
             const messageComponent = document.querySelector("#container");
-            expect(messageComponent.innerHTML).toContain("layerProperties.style");
+            expect(messageComponent.innerHTML).toContain("styleeditor.emptyRuleEditorTitle");
         }, done);
     });
 
-    it("SimpleVectorStyleEditor renders an empty component if the geometry is not defined and the layer is wfs", (done) => {
+    it("VectorStyleEditor renders an empty component if the geometry is not defined and the layer is wfs", (done) => {
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -261,72 +261,13 @@ describe('TOCItemsSettings - SimpleVectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("");
 
         act(async() => {
-            ReactDOM.render(<SimpleVectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if an empty container has been rendered
-            const messageComponent = document.querySelector(".empty-state-container");
-            expect(messageComponent).toBeTruthy();
-        }, done);
-    });
-
-    it("SimpleVectorStyleEditor displays an error message if the geometry is type GEOMETRY and the layer is not wfs", (done) => {
-        const PROPS = {
-            ...BASE_STYLE_TEST_DATA,
-            element: {
-                features: [
-                    {geometry: {
-                        type: "Geometry"
-                    }}
-                ]
-            }
-        };
-
-        act(async() => {
-            ReactDOM.render(<SimpleVectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
-        });
-        asyncValidation(()=>{
-            // Check if an error message is rendered
             const messageComponent = document.querySelector("#container");
-            expect(messageComponent.innerHTML).toContain("layerProperties.styleWarning");
+            expect(messageComponent.innerHTML).toContain("styleeditor.emptyRuleEditorTitle");
         }, done);
     });
 
-    it("SimpleVectorStyleEditor renders editor if the geometry is not of type GEOMETRY and the layer is not wfs", (done) => {
-        const PROPS = {
-            ...BASE_STYLE_TEST_DATA,
-            element: {
-                features: [
-                    {geometry: {
-                        type: "MultiPolygon"
-                    }}
-                ]
-            }
-        };
-
-        act(async() => {
-            ReactDOM.render(<SimpleVectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
-        });
-        asyncValidation(()=>{
-            // Check if the editor is rendered
-            const messageComponent = document.querySelector("#container");
-            expect(messageComponent.innerHTML).toContain("layerProperties.style");
-        }, done);
-    });
-
-    it("SimpleVectorStyleEditor renders an empty component if the geometry is not set and the layer is not wfs", (done) => {
-        const PROPS = {
-            ...BASE_STYLE_TEST_DATA
-        };
-
-        act(async() => {
-            ReactDOM.render(<SimpleVectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
-        });
-        asyncValidation(()=>{
-            // Check if an empty container has been rendered
-            const messageComponent = document.querySelector(".empty-state-container");
-            expect(messageComponent).toBeTruthy();
-        }, done);
-
-    });
 });

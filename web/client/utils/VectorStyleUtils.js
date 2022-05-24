@@ -6,22 +6,379 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isNil } from 'lodash';
+import { isNil, flatten, isEmpty, castArray, max, isArray } from 'lodash';
 
 import { set } from './ImmutableUtils';
 import { colorToRgbaStr } from './ColorUtils';
 import axios from 'axios';
+import tinycolor from 'tinycolor2';
+import MarkerUtils from './MarkerUtils';
 
-function initParserLib(mod) {
+let imagesCache = {};
+
+export function getImageIdFromSymbolizer({
+    image,
+    color,
+    fillOpacity,
+    strokeColor,
+    strokeOpacity,
+    strokeWidth,
+    radius,
+    wellKnownName
+}) {
+    if (image) {
+        return image;
+    }
+    return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, strokeWidth, radius].join(':');
+}
+
+export const flattenFeatures = (features, mapFunc = feature => feature) => {
+    // check if features is a collection object or an array of features/feature collection
+    const parsedFeatures = isArray(features) ? features : features?.features;
+    return flatten( (parsedFeatures || []).map((feature) => {
+        if (feature.type === 'FeatureCollection') {
+            return feature.features || [];
+        }
+        return [feature];
+    })).map(mapFunc);
+};
+
+function getImageFromSymbolizer(symbolizer) {
+    const src = symbolizer.image;
+    const id = getImageIdFromSymbolizer(symbolizer);
+    if (imagesCache[id]) {
+        return Promise.resolve(imagesCache[id]);
+    }
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            imagesCache[id] = { id, image: img, src, width: img.naturalWidth, height: img.naturalHeight };
+            resolve(imagesCache[id]);
+        };
+        img.onerror = () => {
+            reject(id);
+        };
+        img.src = src;
+    });
+}
+
+// http://jsfiddle.net/m1erickson/8j6kdf4o/
+const paintStar = (ctx, cx, cy, spikes = 5, outerRadius, innerRadius) => {
+    let rot = Math.PI / 2 * 3;
+    let x = cx;
+    let y = cy;
+    const step = Math.PI / spikes;
+    ctx.moveTo(cx, cy - outerRadius);
+    for (let i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+    }
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+};
+
+const paintCross = (ctx, cx, cy, r, p) => {
+    const w = r * p;
+    const wm = w / 2;
+    const rm = r / 2;
+    ctx.moveTo(cx - wm, cy - rm);
+    ctx.lineTo(cx + wm, cy - rm);
+    ctx.lineTo(cx + wm, cy - wm);
+    ctx.lineTo(cx + rm, cy - wm);
+    ctx.lineTo(cx + rm, cy + wm);
+    ctx.lineTo(cx + wm, cy + wm);
+    ctx.lineTo(cx + wm, cy + rm);
+    ctx.lineTo(cx - wm, cy + rm);
+    ctx.lineTo(cx - wm, cy + wm);
+    ctx.lineTo(cx - rm, cy + wm);
+    ctx.lineTo(cx - rm, cy - wm);
+    ctx.lineTo(cx - wm, cy - wm);
+    ctx.closePath();
+};
+
+function getWellKnownNameImageFromSymbolizer(symbolizer) {
+    const id = getImageIdFromSymbolizer(symbolizer);
+    if (imagesCache[id]) {
+        return Promise.resolve(imagesCache[id]);
+    }
+    return new Promise((resolve, reject) => {
+        if (!document?.createElement) {
+            reject(id);
+        }
+        const hasStroke = !!symbolizer?.strokeWidth
+            && !!symbolizer?.strokeOpacity;
+        const hasFill = !!symbolizer?.fillOpacity
+            && !symbolizer.wellKnownName.includes('shape://');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const radius = symbolizer.radius;
+        const strokePadding = hasStroke ? symbolizer.strokeWidth / 2 : 4;
+        const x = strokePadding;
+        const y = strokePadding;
+        const cx = radius + strokePadding;
+        const cy = radius + strokePadding;
+        const width = symbolizer.radius * 2;
+        const height = symbolizer.radius * 2;
+        canvas.setAttribute('width', width + strokePadding * 2);
+        canvas.setAttribute('height', height + strokePadding * 2);
+
+        if (hasFill) {
+            const fill = tinycolor(symbolizer.color);
+            fill.setAlpha(symbolizer.fillOpacity);
+            ctx.fillStyle = fill.toRgbString();
+        }
+        if (hasStroke) {
+            const stroke = tinycolor(symbolizer.strokeColor);
+            stroke.setAlpha(symbolizer.strokeOpacity);
+            ctx.strokeStyle = stroke.toRgbString();
+            ctx.lineWidth = symbolizer.strokeWidth;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+        }
+
+        switch (symbolizer.wellKnownName) {
+        case 'Circle': {
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            break;
+        }
+        case 'Square': {
+            ctx.rect(x, y, width, height);
+            break;
+        }
+        case 'Triangle': {
+            const h = Math.sqrt(3) * radius;
+            const bc = h / 3;
+            const marginY = (height - h) / 2;
+            ctx.moveTo(cx, cy + marginY - 2 * bc);
+            ctx.lineTo(cx + radius, cy + marginY + bc);
+            ctx.lineTo(cx - radius, cy + marginY + bc);
+            ctx.closePath();
+            break;
+        }
+        case 'Star': {
+            paintStar(ctx, cx, cy, 5, radius, radius / 2);
+            break;
+        }
+        case 'Cross': {
+            paintCross(ctx, cx, cy, radius * 2, 0.2);
+            break;
+        }
+        case 'X': {
+            ctx.translate(cx, cy);
+            ctx.rotate(45 * Math.PI / 180);
+            ctx.translate(-cx, -cy);
+            paintCross(ctx, cx, cy, radius * 2, 0.2);
+            break;
+        }
+        case 'shape://vertline': {
+            ctx.moveTo(cx, y);
+            ctx.lineTo(cx, height);
+            ctx.closePath();
+            break;
+        }
+        case 'shape://horline': {
+            ctx.moveTo(x, cy);
+            ctx.lineTo(width, cy);
+            ctx.closePath();
+            break;
+        }
+        case 'shape://slash': {
+            ctx.translate(cx, cy);
+            ctx.rotate(45 * Math.PI / 180);
+            ctx.translate(-cx, -cy);
+            ctx.moveTo(cx, y);
+            ctx.lineTo(cx, height);
+            ctx.closePath();
+            break;
+        }
+        case 'shape://backslash': {
+            ctx.translate(cx, cy);
+            ctx.rotate(-45 * Math.PI / 180);
+            ctx.translate(-cx, -cy);
+            ctx.moveTo(cx, y);
+            ctx.lineTo(cx, height);
+            break;
+        }
+        case 'shape://dot': {
+            ctx.moveTo(cx - 1, cy - 1);
+            ctx.lineTo(cx + 1, cy + 1);
+            ctx.closePath();
+            break;
+        }
+        case 'shape://plus': {
+            ctx.moveTo(cx, y);
+            ctx.lineTo(cx, height);
+            ctx.moveTo(x, cy);
+            ctx.lineTo(width, cy);
+            ctx.closePath();
+            break;
+        }
+        case 'shape://times': {
+            ctx.translate(cx, cy);
+            ctx.rotate(45 * Math.PI / 180);
+            ctx.translate(-cx, -cy);
+            ctx.moveTo(cx, y);
+            ctx.lineTo(cx, height);
+            ctx.moveTo(x, cy);
+            ctx.lineTo(width, cy);
+            ctx.closePath();
+            break;
+        }
+        case 'shape://oarrow': {
+            ctx.moveTo(x, y);
+            ctx.lineTo(width, cy);
+            ctx.lineTo(x, height);
+            break;
+        }
+        case 'shape://carrow': {
+            ctx.moveTo(x, y);
+            ctx.lineTo(width, cy);
+            ctx.lineTo(x, height);
+            ctx.closePath();
+            break;
+        }
+        default:
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+        }
+        if (hasFill) {
+            ctx.fill();
+        }
+        if (hasStroke) {
+            ctx.stroke();
+        }
+        imagesCache[id] = { id, image: canvas, src: canvas.toDataURL(), width, height };
+        resolve(imagesCache[id]);
+    });
+}
+
+export function drawIcons(geoStylerStyle) {
+    const { rules = [] } = geoStylerStyle || {};
+    const symbolizers = flatten(rules.map(rule => rule.symbolizers));
+    const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
+    const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
+    return new Promise((resolve) => {
+        if (marks.length > 0 || icons.length > 0) {
+            Promise.all([
+                ...marks.map(getWellKnownNameImageFromSymbolizer),
+                ...icons.map(getImageFromSymbolizer)
+            ]).then((images) => {
+                resolve(images);
+            });
+        } else {
+            resolve(null);
+        }
+    });
+}
+
+// function extracted from the geostyler-openlayers-parser library
+// https://github.com/geostyler/geostyler-openlayers-parser/blob/v3.0.2/src/OlStyleParser.ts#L694-L776
+export const geoStylerStyleFilter = (feature, filter) => {
+    const operatorMapping = {
+        '&&': true,
+        '||': true,
+        '!': true
+    };
+
+    const operator = filter[0];
+    let matchesFilter = true;
+    let isNestedFilter = false;
+    let intermediate;
+    let restFilter;
+    if (operatorMapping[operator]) {
+        isNestedFilter = true;
+    }
+    try {
+        if (isNestedFilter) {
+            switch (filter[0]) {
+            case '&&':
+                intermediate = true;
+                restFilter = filter.slice(1);
+                restFilter.forEach((f) => {
+                    if (!geoStylerStyleFilter(feature, f)) {
+                        intermediate = false;
+                    }
+                });
+                matchesFilter = intermediate;
+                break;
+            case '||':
+                intermediate = false;
+                restFilter = filter.slice(1);
+                restFilter.forEach((f) => {
+                    if (geoStylerStyleFilter(feature, f)) {
+                        intermediate = true;
+                    }
+                });
+                matchesFilter = intermediate;
+                break;
+            case '!':
+                matchesFilter = !geoStylerStyleFilter(feature, filter[1]);
+                break;
+            default:
+                throw new Error('Cannot parse Filter. Unknown combination or negation operator.');
+            }
+        } else {
+            const prop = feature?.properties?.[filter[1]];
+            switch (filter[0]) {
+            case '==':
+                matchesFilter = ('' + prop) === ('' + filter[2]);
+                break;
+            case '*=':
+                // inspired by
+                // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/String/includes#Polyfill
+                if (typeof filter[2] === 'string' && typeof prop === 'string') {
+                    if (filter[2].length > prop.length) {
+                        matchesFilter = false;
+                    } else {
+                        matchesFilter = prop.indexOf(filter[2]) !== -1;
+                    }
+                }
+                break;
+            case '!=':
+                matchesFilter = ('' + prop) !== ('' + filter[2]);
+                break;
+            case '<':
+                matchesFilter = parseFloat(prop) < Number(filter[2]);
+                break;
+            case '<=':
+                matchesFilter = parseFloat(prop) <= Number(filter[2]);
+                break;
+            case '>':
+                matchesFilter = parseFloat(prop) > Number(filter[2]);
+                break;
+            case '>=':
+                matchesFilter = parseFloat(prop) >= Number(filter[2]);
+                break;
+            default:
+                throw new Error('Cannot parse Filter. Unknown comparison operator.');
+            }
+        }
+    } catch (e) {
+        throw new Error('Cannot parse Filter. Invalid structure.');
+    }
+    return matchesFilter;
+};
+
+function initParserLib(mod, options = {}) {
     const Parser = mod.default;
-    return new Parser();
+    return new Parser(options);
 }
 
 const StyleParsers = {
     'sld': () => import('@geosolutions/geostyler-sld-parser').then(initParserLib),
     'css': () => import('@geosolutions/geostyler-geocss-parser').then(initParserLib),
-    'openlayers': () =>  import('geostyler-openlayers-parser').then(initParserLib),
-    '3dtiles': () => import('./styleparser/ThreeDTilesStyleParser').then(initParserLib)
+    'openlayers': () =>  import('./styleparser/OLStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter })),
+    '3dtiles': () => import('./styleparser/ThreeDTilesStyleParser').then(initParserLib),
+    'cesium': () => import('./styleparser/CesiumStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter })),
+    'leaflet': () => import('./styleparser/LeafletStyleParser').then((mod) => initParserLib(mod, { drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter })),
+    'geostyler': () => import('./styleparser/GeoStylerStyleParser').then(initParserLib)
 };
 
 /**
@@ -351,3 +708,298 @@ export const getStyleParser = (format = 'sld') => {
     // import parser libraries dynamically
     return StyleParsers[format]();
 };
+
+function msStyleToSymbolizer(style, feature) {
+    if (isTextStyle(style) && feature?.properties?.valueText) {
+        const fontParts = (style.font || '').split(' ');
+        return Promise.resolve({
+            kind: 'Text',
+            label: feature.properties.valueText,
+            font: [fontParts[fontParts.length - 1]],
+            size: parseFloat(style.fontSize),
+            fontStyle: style.fontStyle,
+            fontWeight: style.fontWeight,
+            color: style.fillColor,
+            haloColor: style.color,
+            haloWidth: 1
+        });
+    }
+    if (style.symbolizerKind === 'Mark') {
+        return Promise.resolve({
+            kind: 'Mark',
+            color: style.fillColor,
+            fillOpacity: style.fillOpacity,
+            strokeColor: style.color,
+            strokeOpacity: style.opacity,
+            strokeWidth: style.weight,
+            radius: style.radius ?? 10,
+            wellKnownName: 'Circle'
+        });
+    }
+    if (isAttrPresent(style, ['iconUrl']) && !style.iconGlyph && !style.iconShape) {
+        return Promise.resolve({
+            kind: 'Icon',
+            image: style.iconUrl,
+            size: max(style.iconSize || [32]),
+            opacity: 1,
+            rotate: 0
+        });
+    }
+    if (isMarkerStyle(style)) {
+        return Promise.resolve({
+            kind: 'Icon',
+            image: MarkerUtils.extraMarkers.markerToDataUrl(style),
+            size: 45,
+            opacity: 1,
+            rotate: 0
+        });
+    }
+    if (isSymbolStyle(style)) {
+        const cachedSymbol = fetchStyle(hashAndStringify(style));
+        return (
+            cachedSymbol?.symbolUrlCustomized
+                ? Promise.resolve(cachedSymbol?.symbolUrlCustomized)
+                : createSvgUrl(style, style.symbolUrl || style.symbolUrlCustomized)
+        )
+            .then((symbolUrlCustomized) => {
+                return {
+                    kind: 'Icon',
+                    image: symbolUrlCustomized,
+                    size: style.size,
+                    opacity: 1,
+                    rotate: 0
+                };
+            })
+            .catch(() => ({}));
+    }
+    if (isCircleStyle(style) || style.title === "Circle Style") {
+        return Promise.resolve({
+            kind: 'Fill',
+            color: style.fillColor,
+            opacity: style.fillOpacity,
+            fillOpacity: style.fillOpacity,
+            outlineColor: style.color,
+            outlineOpacity: style.opacity,
+            outlineWidth: style.weight
+        });
+    }
+    if (isFillStyle(style) ) {
+        return Promise.resolve({
+            kind: 'Fill',
+            color: style.fillColor,
+            opacity: style.fillOpacity,
+            fillOpacity: style.fillOpacity,
+            outlineColor: style.color,
+            outlineOpacity: style.opacity,
+            outlineWidth: style.weight
+        });
+    }
+    if (isStrokeStyle(style) ) {
+        return Promise.resolve({
+            kind: 'Line',
+            color: style.color,
+            opacity: style.opacity,
+            width: style.weight,
+            ...(style?.dashArray && { dasharray: style.dashArray.map((value) => parseFloat(value)) })
+        });
+    }
+    return Promise.resolve({});
+}
+
+function splitStyles(styles) {
+    return flatten(styles.map(style => {
+        return [
+            ...(isAttrPresent(style, ['iconUrl'])
+                ? [
+                    {
+
+                        iconAnchor: style.iconAnchor,
+                        iconSize: style.iconSize,
+                        iconUrl: style.iconUrl,
+                        popupAnchor: style.popupAnchor,
+                        shadowSize: style.shadowSize,
+                        shadowUrl: style.shadowUrl
+                    }
+                ]
+                : []),
+
+            ...(isFillStyle(style) && style.radius
+                ? [
+                    {
+                        symbolizerKind: 'Mark',
+                        fillColor: style.fillColor,
+                        fillOpacity: style.fillOpacity ?? 1,
+                        color: style.color,
+                        opacity: style.opacity ?? 1,
+                        weight: style.weight ?? 1,
+                        radius: style.radius ?? 10
+                    }
+                ]
+                : []),
+            ...(isStrokeStyle(style)
+                ? [
+                    {
+                        color: style.color,
+                        opacity: style.opacity ?? 1,
+                        weight: style.weight ?? 1,
+                        dashArray: style.dashArray
+                    }
+                ]
+                : []),
+            ...(isFillStyle(style)
+                ? [
+                    {
+                        fillColor: style.fillColor,
+                        fillOpacity: style.fillOpacity ?? 1,
+                        color: style.color,
+                        opacity: style.opacity ?? 1,
+                        weight: style.weight ?? 1
+                    }
+                ]
+                : [])
+        ];
+    }));
+}
+
+export function layerToGeoStylerStyle(layer) {
+    const features = flattenFeatures(layer?.features || []);
+    const hasFeatureStyle = features.find(feature => !isEmpty(feature?.style || {}) && feature?.properties?.id);
+    if (hasFeatureStyle) {
+        const filteredFeatures = features.filter(feature => feature?.style && feature?.properties?.id);
+        return Promise.all(
+            flatten(filteredFeatures.map((feature) => {
+                const styles = castArray(feature.style);
+                return styles.map((style) =>
+                    msStyleToSymbolizer(style, feature)
+                        .then((symbolizer) => ({ symbolizer, filter: ['==', 'id', feature.properties.id] }))
+                );
+            }))
+        ).then((symbolizers) => {
+            return {
+                format: 'geostyler',
+                body: {
+                    name: '',
+                    rules: symbolizers.map(({ filter, symbolizer }) => ({
+                        name: '',
+                        filter,
+                        symbolizers: [symbolizer]
+                    }))
+                },
+                metadata: {
+                    editorType: 'visual'
+                }
+            };
+        });
+    }
+    if (!isEmpty(layer.style) && !layer?.style?.format && !layer?.style?.body) {
+        return Promise.all(
+            splitStyles(castArray(layer.style)).map((style) => msStyleToSymbolizer(style))
+        )
+            .then((symbolizers) => {
+                const geometryTypeToKind = {
+                    'point': ['Mark', 'Icon', 'Text'],
+                    'linestring': ['Line'],
+                    'polygon': ['Fill']
+                };
+                return {
+                    format: 'geostyler',
+                    body: {
+                        name: '',
+                        rules: symbolizers
+                            .filter(({ kind }) => !geometryTypeToKind[layer.geometryType] || geometryTypeToKind[layer.geometryType].includes(kind))
+                            .map(symbolizer => ({
+                                name: '',
+                                symbolizers: [symbolizer]
+                            }))
+                    },
+                    metadata: {
+                        editorType: 'visual'
+                    }
+                };
+            });
+    }
+    return Promise.resolve(layer.style);
+}
+
+export function getStyle({ style }, parserFormat) {
+    const { format = 'geostyler', body } = style || {};
+    if (!format || !body) {
+        return Promise.resolve(null);
+    }
+    if (format === 'geostyler') {
+        return getStyleParser(parserFormat)
+            .then((parser) => parser.writeStyle(body));
+    }
+    return Promise.all([
+        getStyleParser(format),
+        getStyleParser(parserFormat)
+    ])
+        .then(([inParser, outParser]) =>
+            inParser
+                .readStyle(body)
+                .then(parsedStyle => outParser.writeStyle(parsedStyle))
+        );
+}
+
+
+export function applyDefaultStyleToLayer(layer) {
+    const features = flattenFeatures(layer?.features || []);
+    const hasFeatureStyle = features.find(feature => !isEmpty(feature?.style || {}) && feature?.properties?.id);
+    if (hasFeatureStyle
+    || layer?.style?.format && !isEmpty(layer?.style?.body)
+    || !layer?.style?.format && !isEmpty(layer.style)) {
+        return layer;
+    }
+
+    return {
+        ...layer,
+        style: {
+            format: 'geostyler',
+            body: {
+                name: 'Default Style',
+                rules: [
+                    {
+                        name: 'Default Point Style',
+                        symbolizers: [
+                            {
+                                kind: 'Mark',
+                                color: '#f2f2f2',
+                                fillOpacity: 0.3,
+                                opacity: 0.5,
+                                strokeColor: '#3075e9',
+                                strokeOpacity: 1,
+                                strokeWidth: 2,
+                                wellKnownName: 'Circle',
+                                radius: 10
+                            }
+                        ]
+                    },
+                    {
+                        name: 'Default Line Style',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                color: '#3075e9',
+                                opacity: 1,
+                                width: 2
+                            }
+                        ]
+                    },
+                    {
+                        name: 'Default Polygon Style',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#f2f2f2',
+                                fillOpacity: 0.3,
+                                outlineColor: '#3075e9',
+                                outlineOpacity: 1,
+                                outlineWidth: 2
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    };
+}

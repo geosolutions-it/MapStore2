@@ -148,6 +148,7 @@ function validateStyle(rules) {
  * @prop {function} getColors return colors for available ramps in classification
  * @prop {number} debounceTime debounce time for on change function, default 300
  * @prop {object} styleService style service configuration object
+ * @prop {boolean} exactMatchGeometrySymbol show symbolizer that support exactly the selected features geometries
  */
 function VisualStyleEditor({
     code,
@@ -169,10 +170,11 @@ function VisualStyleEditor({
     getColors,
     styleUpdateTypes,
     debounceTime,
-    styleService
+    styleService,
+    exactMatchGeometrySymbol
 }) {
 
-    const { symbolizerBlock, ruleBlock } = getBlocks(config);
+    const { symbolizerBlock, ruleBlock } = getBlocks({ exactMatchGeometrySymbol });
     const [updating, setUpdating] = useState(false);
     const [styleHistory, dispatch] = useReducer(historyVisualStyleReducer, {});
     const style = styleHistory?.present || DEFAULT_STYLE;

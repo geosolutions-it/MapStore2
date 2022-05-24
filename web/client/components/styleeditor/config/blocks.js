@@ -12,14 +12,18 @@ import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
-const getBlocks = (/* config = {} */) => {
+const getBlocks = ({
+    exactMatchGeometrySymbol
+} = {}) => {
     const symbolizerBlock = {
         Mark: {
             kind: 'Mark',
             glyph: '1-point',
             glyphAdd: '1-point-add',
             tooltipAddId: 'styleeditor.addMarkRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['point', 'vector']
+                : ['point', 'linestring', 'polygon', 'vector'],
             params: {
                 wellKnownName: property.shape({
                     label: 'styleeditor.shape'
@@ -64,7 +68,9 @@ const getBlocks = (/* config = {} */) => {
             glyph: 'point',
             glyphAdd: 'point-plus',
             tooltipAddId: 'styleeditor.addIconRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['point', 'vector']
+                : ['point', 'linestring', 'polygon', 'vector'],
             hideMenu: true,
             params: {
                 image: property.image({
@@ -105,7 +111,9 @@ const getBlocks = (/* config = {} */) => {
             glyph: 'line',
             glyphAdd: 'line-plus',
             tooltipAddId: 'styleeditor.addLineRule',
-            supportedTypes: ['linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['linestring', 'vector']
+                : ['linestring', 'polygon', 'vector'],
             params: {
                 color: property.color({
                     label: 'styleeditor.strokeColor',
@@ -264,7 +272,9 @@ const getBlocks = (/* config = {} */) => {
             kind: 'Text',
             glyph: 'font',
             tooltipAddId: 'styleeditor.addTextRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['point', 'vector']
+                : ['point', 'linestring', 'polygon', 'vector'],
             params: {
                 label: property.select({
                     key: 'label',

@@ -159,7 +159,7 @@ class CesiumMap extends React.Component {
         scene.globe.showGroundAtmosphere = this.props.mapOptions?.showGroundAtmosphere ?? false;
 
         // this is needed to display correctly intersection between terrain and primitives
-        scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? true;
+        scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? false;
 
         this.forceUpdate();
     }
