@@ -186,7 +186,7 @@ export const saveDashboard = action$ => action$
 export const exportDashboard = action$ => action$
     .ofType(DASHBOARD_EXPORT)
     .switchMap(({data, fileName}) =>
-        Rx.Observable.of([JSON.stringify({data}), fileName, 'application/json'])
+        Rx.Observable.of([JSON.stringify({...data}), fileName, 'application/json'])
             .do((downloadArgs) => download(...downloadArgs))
             .map(() => toggleControl('export'))
     );
@@ -198,7 +198,7 @@ export const importDashboard = action$ => action$
             .switchMap((dashboard) => Rx.Observable.of(
                 // undefined resource as first param
                 // since resource data will be newly created on save
-                dashboardLoaded(undefined, dashboard.data),
+                dashboardLoaded(undefined, dashboard),
                 toggleControl('import')
             ))
             .catch((e) => Rx.Observable.of(

@@ -14,7 +14,8 @@ import { createSelector } from 'reselect';
 import ExportPanel from '../components/export/ExportPanel';
 import {createPlugin} from "../utils/PluginsUtils";
 import { createControlEnabledSelector } from '../selectors/controls';
-import { originalDataSelector, dashboardResource } from '../selectors/dashboard';
+import { dashboardResource } from '../selectors/dashboard';
+import { widgetsConfig } from '../selectors/widgets';
 import { dashboardExport } from '../actions/dashboard';
 
 import { toggleControl } from '../actions/controls';
@@ -24,7 +25,7 @@ const isEnabled = createControlEnabledSelector('export');
 const mapStateToProps = createSelector(
     isEnabled,
     dashboardResource,
-    originalDataSelector,
+    widgetsConfig,
     (show, resource, data) => ({
         show,
         resource,
