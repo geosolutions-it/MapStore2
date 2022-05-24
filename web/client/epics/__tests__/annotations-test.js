@@ -288,16 +288,14 @@ describe('annotations Epics', () => {
                 annotations: {
                     config: {
                         geodesic: true
-                    },
-
-                },
-
+                    }
+                }
             };
             if (actions.length >= 2) {
                 expect(actions[0].type).toBe(SET_STYLE);
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
                 expect(actions[1].status).toBe("updateStyle");
-                expect(state.annotations.config.geodesic).toBe(true)
+                expect(state.annotations.config.geodesic).toBe(true);
                 done();
             }
         });
