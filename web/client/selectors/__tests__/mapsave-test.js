@@ -31,7 +31,8 @@ const state = {
     timeline: {
         selectedLayer: "timelineTestLayer",
         settings: {
-            endValuesSupport: true
+            endValuesSupport: true,
+            snapRadioButtonEnabled: true
         }
     }
 };
@@ -51,6 +52,7 @@ describe('Test mapsave selectors', () => {
         expect(retVal.timelineData).toExist();
         expect(retVal.timelineData.endValuesSupport).toBe(true);
         expect(retVal.timelineData.selectedLayer).toBe("timelineTestLayer");
+        expect(retVal.timelineData.snapRadioButtonEnabled).toBe(true);
     });
     it('check custom save handlers', () => {
         registerCustomSaveHandler('custom', (s) => s.custom);

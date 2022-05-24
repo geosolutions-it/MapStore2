@@ -136,7 +136,7 @@ describe('Test the timeline reducer', () => {
         expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
         expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
     });
-    it('initTimeline with undefined endValuesSupport set as undefined', () => {
+    it('initTimeline with endValuesSupport set as undefined', () => {
         const state = timeline({}, initTimeline(true, 20, 'start'));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
@@ -150,12 +150,36 @@ describe('Test the timeline reducer', () => {
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(false);
     });
-    it('initTimeline with undefined endValuesSupport set as true', () => {
+    it('initTimeline with endValuesSupport set as true', () => {
         const state = timeline({}, initTimeline(true, 20, 'start', true));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(true);
+    });
+    it('initTimeline with snapRadioButtonEnabled set as true', () => {
+        const state = timeline({
+            settings: {
+                snapRadioButtonEnabled: true
+            }
+        }, initTimeline(true, 20, 'start', true));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(true);
+        expect(state.settings.snapRadioButtonEnabled).toBe(true);
+    });
+    it('initTimeline with snapRadioButtonEnabled set as false', () => {
+        const state = timeline({
+            settings: {
+                snapRadioButtonEnabled: false
+            }
+        }, initTimeline(true, 20, 'start', true));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(true);
+        expect(state.settings.snapRadioButtonEnabled).toBe(false);
     });
     it('mapConfigLoaded', () => {
         const initialState = {
