@@ -122,15 +122,13 @@ describe('Test correctness of the dashboard actions', () => {
         expect(retval.error).toBe(error);
     });
     it('dashboardExport', () => {
-        const originalData = {TEST: 'TEST'};
-        const resource = {TEST: 'TEST'};
-        const services = {TEST: 'TEST'};
-        const retval = dashboardExport(originalData, resource, services);
+        const data = {TEST: 'TEST'};
+        const fileName = 'dashboard.json';
+        const retval = dashboardExport(data, fileName);
         expect(retval).toExist();
         expect(retval.type).toBe(DASHBOARD_EXPORT);
-        expect(retval.originalData).toBe(originalData);
-        expect(retval.resource).toBe(resource);
-        expect(retval.services).toBe(services);
+        expect(retval.data).toBe(data);
+        expect(retval.fileName).toBe(fileName);
     });
     it('dashboardImport ', () => {
         const file = JSON.stringify({TEST: "TEST"});
