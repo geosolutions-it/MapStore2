@@ -51,7 +51,6 @@ import { toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
 import { STYLE_POINT_MARKER } from '../../utils/AnnotationsUtils';
 import annotationsEpics from '../annotations';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
-import config from '../../components/geostory/contents/texteditor/getLinkDecorator';
 
 const {
     addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, setEditingFeatureEpic, newAnnotationEpic, addAnnotationEpic,
