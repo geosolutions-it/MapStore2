@@ -7,24 +7,15 @@
 */
 
 import expect from 'expect';
-
-// import { testEpic, addTimeoutEpic } from './epicTestUtils';
-import { testEpic } from './epicTestUtils';
-// import { UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES, SET_INTERVAL_DATA } from '../../actions/playback';
-import { UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES } from '../../actions/playback';
+import {testEpic} from './epicTestUtils';
+import {UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES, SET_INTERVAL_DATA} from '../../actions/playback';
 
 import {
     retrieveFramesForPlayback,
     playbackStopWhenDeleteLayer,
-    playbackCacheNextPreviousTimes
+    playbackCacheNextPreviousTimes,
+    setIsIntervalData
 } from '../playback';
-
-// import {
-//     retrieveFramesForPlayback,
-//     playbackStopWhenDeleteLayer,
-//     playbackCacheNextPreviousTimes,
-//     setIsIntervalData
-// } from '../playback';
 
 import DOMAIN_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainValues.xml';
 import DOMAIN_INTERVAL_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainIntervalValues.xml';
@@ -299,17 +290,17 @@ describe('playback Epics', () => {
             }
         });
     });
-    // it.only('setIsIntervalData', done => {
-    //     testEpic(addTimeoutEpic(setIsIntervalData, 88), 1, selectLayer("testLayerId"), ([action]) => {
-    //         mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_INTERVAL_VALUES_RESPONSE);
-    //         try {
-    //             const { type, timeIntervalData } = action;
-    //             expect(type).toBe(SET_INTERVAL_DATA);
-    //             expect(timeIntervalData).toBe(true);
-    //             done();
-    //         } catch (e) {
-    //             done(e);
-    //         }
-    //     }, ANIMATION_MOCK_STATE);
-    // });
+    it('setIsIntervalData', done => {
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_INTERVAL_VALUES_RESPONSE);
+        testEpic(setIsIntervalData, 1, selectLayer("playback:selected_layer"), ([action]) => {
+            try {
+                const { type, timeIntervalData } = action;
+                expect(type).toBe(SET_INTERVAL_DATA);
+                expect(timeIntervalData).toBe(true);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
 });

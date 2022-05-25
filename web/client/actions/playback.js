@@ -80,6 +80,10 @@ export const updateMetadata = ({next, previous, forTime}) => ({
     previous
 });
 
+/**
+ * @param {boolean} timeIntervalData
+ * @returns {{timeIntervalData: boolean, type: string}}
+ */
 export const setIntervalData = (timeIntervalData) => ({
     type: SET_INTERVAL_DATA,
     timeIntervalData
