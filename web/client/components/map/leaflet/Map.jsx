@@ -33,6 +33,7 @@ class LeafletMap extends React.Component {
         document: PropTypes.object,
         center: ConfigUtils.PropTypes.center,
         zoom: PropTypes.number.isRequired,
+        viewerOptions: PropTypes.object,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
         style: PropTypes.object,
         projection: PropTypes.string,
@@ -430,6 +431,7 @@ class LeafletMap extends React.Component {
         };
         const center = this.map.getCenter();
         const zoom = this.map.getZoom();
+        const viewerOptions = this.props.viewerOptions;
         this.props.onMapViewChanges(
             {
                 x: center.lng,
@@ -450,7 +452,7 @@ class LeafletMap extends React.Component {
             size,
             this.props.id,
             this.props.projection,
-            undefined, // viewerOptions
+            viewerOptions, // viewerOptions
             this.getResolutions()[zoom] // resolution
         );
     };

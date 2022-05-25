@@ -15,6 +15,7 @@ import {
     readQueryParamsOnMapEpic
 } from '../queryparams';
 import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../../actions/map';
+import { MAP_TYPE_CHANGED } from '../../actions/maptype';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
@@ -426,6 +427,45 @@ describe('queryparam epics', () => {
                     expect(actions[0].point.latlng).toEqual({lat: 0, lng: 0});
                     expect(actions[0].point.pixel).toBe(undefined);
                     expect(actions[0].point.geometricFilter).toExist();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('test readQueryParamsOnMapEpic with cesium (3d map) params', (done) => {
+
+        const state = {
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            },
+            mode: "embedded",
+            mapType: "leaflet"
+        };
+
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                done();
+                try {
+                    expect(actions[0].type).toBe(MAP_TYPE_CHANGED);
+                    expect(actions[0].mapType).toBe('cesium');
+                    expect(actions[1].mapType).toBe(CHANGE_MAP_VIEW);
+                    expect(actions[1].center).toExist();
+                    expect(actions[1].center.x).toBe(-74.2);
+                    expect(actions[1].center.y).toBe(40.7);
+                    expect(actions[1].zoom).toBe(16.5);
+                    expect(actions[1].heading).toBe(0.1);
+                    expect(actions[1].pitch).toBe(0.7);
+                    expect(actions[1].roll).toBe(6.2);
+                    done();
                 } catch (e) {
                     done(e);
                 }
