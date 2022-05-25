@@ -104,7 +104,7 @@ describe('measurement epics', () => {
                 addAnnotation(features, textLabels, uom, false, {id: 1})
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[0].type).toBe("TOGGLE_CONTROL");
+                expect(actions[0].type).toBe("SET_CONTROL_PROPERTY");
                 expect(actions[1].type).toBe("ANNOTATIONS:NEW");
                 expect(actions[2].type).toBe("MEASUREMENT:SET_MEASUREMENT_CONFIG");
                 expect(actions[2].property).toBe("exportToAnnotation");
