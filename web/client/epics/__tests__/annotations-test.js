@@ -284,18 +284,10 @@ describe('annotations Epics', () => {
     it('set style', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
-            const state = {
-                annotations: {
-                    config: {
-                        geodesic: true
-                    }
-                }
-            };
             if (actions.length >= 2) {
                 expect(actions[0].type).toBe(SET_STYLE);
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
                 expect(actions[1].status).toBe("updateStyle");
-                expect(state.annotations.config.geodesic).toBe(true);
                 done();
             }
         });
@@ -1050,6 +1042,45 @@ describe('annotations Epics', () => {
         const action = selectFeatures([ft]);
         store.dispatch(action);
 
+    });
+    it('clicked on map selecting a Circle ', (done) => {
+        store = mockStore( {
+            ...defaultState,
+            annotations: {
+                ...defaultState.annotations,
+                config: {
+                    geodesic: true
+                },
+                editing: {
+                    ...defaultState.annotations.editing,
+                    features: [{
+                        type: "Feature",
+                        geometry: {
+                            type: "Polygon",
+                            coordinates: [[[1, 2], [1, 3], [1, undefined], [1, 5], [1, 2]]]
+                        },
+                        properties: {
+                            id: "is a circle",
+                            isCircle: true
+                        }
+                    }
+                    ]
+
+                }
+            }
+        } );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 3) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[2].options.geodesic).toBe(true);
+                done();
+            }
+        });
+        const action = selectFeatures([ft]);
+        store.dispatch(action);
     });
     it('changed the radius from the coordinate editor ', (done) => {
         store = mockStore( defaultState );

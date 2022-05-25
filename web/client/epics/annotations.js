@@ -123,7 +123,7 @@ const validateFeatureCollection = (feature) => {
  * @return {boolean}
  */
 const getGeodesicProperty = (state) => {
-    return get(state.annotations, "config.geodesic");
+    return get(state.annotations, "config.geodesic", false);
 };
 
 const getSelectDrawStatus = (state) => {
@@ -154,7 +154,7 @@ const getReadOnlyDrawStatus = (state) => {
         translateEnabled: false,
         drawEnabled: false,
         transformToFeatureCollection: true,
-        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
+        geodesic: getGeodesicProperty(state)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, ANNOTATIONS, [feature], drawOptions, feature.style);
@@ -173,7 +173,7 @@ const getEditingGeomDrawStatus = (state) => {
         addClickCallback: true,
         useSelectedStyle: true,
         transformToFeatureCollection: true,
-        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
+        geodesic: getGeodesicProperty(state)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, ANNOTATIONS, [feature], drawOptions, feature.style);
@@ -264,7 +264,7 @@ export default {
                 selectEnabled: true,
                 drawEnabled: false,
                 transformToFeatureCollection: true,
-                geodesic: getGeodesicProperty(state, type)
+                geodesic: getGeodesicProperty(state)
             };
             const isMeasureType = feature.properties?.type === MEASURE_TYPE || false;
             let actions = [
@@ -327,7 +327,7 @@ export default {
                     useSelectedStyle: true,
                     transformToFeatureCollection: true,
                     addClickCallback: true,
-                    geodesic: getGeodesicProperty(state, type)
+                    geodesic: getGeodesicProperty(state)
                 };
 
                 return Rx.Observable.from([
@@ -414,7 +414,7 @@ export default {
                 defaultTextAnnotation,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic: getGeodesicProperty(state, type)
+                geodesic: getGeodesicProperty(state)
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, ANNOTATIONS, [feature], drawOptions, assign({}, feature.style, {highlight: false})));
         }),
@@ -615,7 +615,7 @@ export default {
                 drawEnabled: false,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic: getGeodesicProperty(state, method)
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -740,7 +740,7 @@ export default {
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic: getGeodesicProperty(state, method)
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
