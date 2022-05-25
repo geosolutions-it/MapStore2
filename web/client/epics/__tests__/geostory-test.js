@@ -34,7 +34,8 @@ import {
     handlePendingGeoStoryChanges,
     loadStoryOnHistoryPop,
     scrollOnLoad,
-    hideCarouselItemsOnUpdateCurrentPage
+    hideCarouselItemsOnUpdateCurrentPage,
+    exportGeostory
 } from '../geostory';
 import {
     ADD,
@@ -63,7 +64,8 @@ import {
     SET_PENDING_CHANGES,
     LOAD_GEOSTORY,
     update,
-    HIDE_CAROUSEL_ITEMS
+    HIDE_CAROUSEL_ITEMS,
+    geostoryExport
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -1855,6 +1857,19 @@ describe('Geostory Epics', () => {
                     ...TEST_STORY
                 }
             }
+        });
+    });
+    describe('Geostory export/import flow', () => {
+        it('export geostory epic', (done) => {
+            const epicResult = actions => {
+                expect(actions.length).toBe(1);
+                const action = actions[0];
+                expect(action.type).toBe(SET_CONTROL);
+                expect(action.control).toBe('export');
+                done();
+            };
+            const startActions = [geostoryExport({data: TEST_STORY, fileName: 'test.json'})];
+            testEpic(exportGeostory, 1, startActions, epicResult, TEST_STORY, done);
         });
     });
 });

@@ -60,7 +60,8 @@ import {
     SET_CURRENT_STORY,
     geostoryScrolling,
     GEOSTORY_SCROLLING,
-    hideCarouselItems
+    hideCarouselItems,
+    EXPORT
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -112,7 +113,7 @@ import {
     SectionTypes,
     getIdFromPath
 } from '../utils/GeoStoryUtils';
-
+import { download } from '../utils/FileUtils';
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
@@ -664,3 +665,16 @@ export const scrollSideBar = (action$, {getState}) =>
                 .do(scroll => window.requestAnimationFrame(scroll))
                 .ignoreElements();
         });
+
+
+/**
+ * Handle the creation of a .json file from geostory data
+ * @param {Observable} action$ stream of actions
+ */
+export const exportGeostory = action$ => action$
+    .ofType(EXPORT)
+    .switchMap(({data, fileName}) =>
+        Observable.of([JSON.stringify({...data}), fileName, 'application/json'])
+            .do((downloadArgs) => download(...downloadArgs))
+            .map(() => setControl('export', false))
+);
