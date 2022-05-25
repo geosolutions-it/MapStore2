@@ -132,9 +132,11 @@ describe('Test correctness of the dashboard actions', () => {
     });
     it('dashboardImport ', () => {
         const file = JSON.stringify({TEST: "TEST"});
-        const retval = dashboardImport(file);
+        const resource = {id: '123'};
+        const retval = dashboardImport(file, resource);
         expect(retval).toExist();
         expect(retval.type).toBe(DASHBOARD_IMPORT);
         expect(retval.file).toBe(file);
+        expect(retval.resource).toBe(resource);
     });
 });

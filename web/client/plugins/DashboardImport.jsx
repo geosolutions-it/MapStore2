@@ -14,6 +14,7 @@ import { createSelector } from 'reselect';
 import DragZone from '../components/import/dragZone/DragZone';
 import {createPlugin} from "../utils/PluginsUtils";
 import { createControlEnabledSelector } from '../selectors/controls';
+import { dashboardResource } from '../selectors/dashboard';
 import { dashboardImport } from '../actions/dashboard';
 
 import { toggleControl } from '../actions/controls';
@@ -25,18 +26,20 @@ const isEnabled = createControlEnabledSelector('import');
 
 const mapStateToProps = createSelector(
     isEnabled,
-    (show) => ( {show })
+    dashboardResource,
+    (show, resource) => ( {show, resource })
 );
 
 const actions = {
     onClose: () => toggleControl('import'),
-    onDrop: dashboardImport
+    handleDrop: (file, resource) => dashboardImport(file, resource)
 };
 
 const Component = ({
     show,
-    onDrop,
-    onClose
+    onClose,
+    resource,
+    handleDrop
 }) => {
     const dropZoneRef = useRef();
     return (
@@ -44,7 +47,7 @@ const Component = ({
             onRef={dropZoneRef}
             style={!show ? {display: 'none'} : {}}
             onClose={onClose}
-            onDrop={onDrop}
+            onDrop={(file) => handleDrop(file, resource)}
         >
             <div>
                 <Glyphicon

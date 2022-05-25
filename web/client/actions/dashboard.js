@@ -42,7 +42,7 @@ export const loadDashboard = id => ({ type: LOAD_DASHBOARD, id});
 export const resetDashboard = () => ({ type: DASHBOARD_RESET});
 export const dashboardLoaded = (resource, data) => ({ type: DASHBOARD_LOADED, resource, data});
 export const dashboardExport = (data, fileName) => ({ type: DASHBOARD_EXPORT, data, fileName});
-export const dashboardImport = (file) => ({ type: DASHBOARD_IMPORT, file});
+export const dashboardImport = (file, resource) => ({ type: DASHBOARD_IMPORT, file, resource});
 /**
  * @param {boolean} value the value of the flag
  * @param {string} [name] the name of the flag to set. loading is anyway always triggered
