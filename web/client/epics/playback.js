@@ -364,7 +364,7 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
  */
 export const setIsIntervalData = (action$, { getState = () => { } } = {}) =>
     action$.ofType(SELECT_LAYER, SET_CURRENT_TIME)
-        .filter(({type, layerId}) => (type === SELECT_LAYER && layerId))
+      .filter(({type, layerId}) => (type === SET_CURRENT_TIME || (type === SELECT_LAYER && layerId)))
         .switchMap(({time: actionTime}) => {
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
