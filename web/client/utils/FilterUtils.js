@@ -34,9 +34,8 @@ const wrapValueWithWildcard = (value, condition) => {
     return condition(value) ? '*' + value + '*' : value;
 };
 
-const wrapIfNoWildcards = (value) => {
-    const wildcards = value.match(/(?<!!)[*.]/);
-    return !wildcards?.length;
+export const wrapIfNoWildcards = (value) => {
+    return !/(^|[^!])[*.]/.test(value);
 };
 
 export const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
