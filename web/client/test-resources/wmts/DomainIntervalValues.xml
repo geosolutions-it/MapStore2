@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DomainValues xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1" version="1.1">
+    <ows:Identifier>time</ows:Identifier>
+    <Limit>4</Limit>
+    <Sort>asc</Sort>
+    <Domain>2021-09-08T22:00:00.000Z/2021-10-21T22:00:00.000Z,2021-10-02T22:00:00.000Z/2021-10-29T22:00:00.000Z,2021-10-08T22:00:00.000Z/2021-10-21T22:00:00.000Z,2021-10-08T22:00:00.000Z/2021-11-21T23:00:00.000Z</Domain>
+    <Size>4</Size>
+</DomainValues>

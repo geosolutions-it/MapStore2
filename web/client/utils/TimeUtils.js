@@ -14,6 +14,29 @@ const toTime = date => {
     }
     return date;
 };
+
+/**
+ * Filters the result of the describeDomain response which may get to the client as [start/end, start/end] i.e.
+ * when time occurrences are expressed as intervals, the filter keeps only the reference point in the interval
+ * (start or end) set by the customer
+ * @param {string[]} dateArray array containing the domains expressed in [start/end, start/end] dates for a given interval
+ * @param {string} snapType if snap to layer data is active - snaps to start or end point of the interval
+ * @returns {string[]} array containing the domains expressed as [start, end] filtered by snapping instant points
+ */
+export const filterDateArray = (dateArray, snapType) => {
+    if (snapType) {
+        return dateArray.map(rawDate => {
+            const [start, end] = rawDate.split("/");
+            const snapMapping = {
+                "start": start,
+                "end": end
+            };
+            return snapMapping[snapType];
+        });
+    }
+    return dateArray;
+};
+
 const getNearestDateIndex = (dates, rawTarget) => {
     const target = toTime(rawTarget);
 
@@ -133,7 +156,10 @@ export const roundRangeResolution = ({start, end} = {}, max) => {
     };
 };
 
-export const getNearestDate = (dates = [], target) => dates[getNearestDateIndex(dates, target)];
+export const getNearestDate = (dates = [], target, snapType) => {
+    const filteredDates = filterDateArray(dates, snapType);
+    return filteredDates[getNearestDateIndex(filteredDates, target)];
+};
 
 export const isTimeDomainInterval = values => values && values.indexOf && values.indexOf("--") > 0;
 
@@ -253,3 +279,44 @@ export const domainsToDimensionsObject = ({ Domains = {} } = {}, url) => {
     }));
 };
 
+/**
+ * Given an start and end date "03-01-2000" "20-12-2020"
+ * and a date intervals array ["02-01-2000", "04-02-2000", "24-12-2020"]
+ * filters dates array for dates falling within the start/end date range ["04-01-2000"]
+ * this function is used when dealing with intervals that sometimes start or end
+ * outside the specifed animation dates range
+ * @param {string[]} datesArray the date intervals array
+ * @param {string} startRawDate the reference start date used for filtering
+ * @param {string} endRawDate the reference end date used for filtering
+ */
+export const getDatesInRange = (datesArray, startRawDate, endRawDate) => {
+    const startRefDate = toTime(startRawDate);
+    const endRefDate = toTime(endRawDate);
+    const filteredDatesArray = datesArray.reduce((acc, cur) => {
+        const refDate = toTime(cur);
+        if (toTime(startRefDate) < refDate && toTime(endRefDate) > refDate) {
+            return [...acc, cur];
+        }
+        return [...acc];
+    }, []);
+    return filteredDatesArray;
+};
+
+/**
+ * Given an array of dates or dates intervals in strings
+ * example ["2016-02-23T06:00:00.000Z", "2016-02-23T06:00:00.000Z/2017-02-23T06:00:00.000Z"]
+ * sorts date in ascending order and return the two extremes [high, low] of the dates
+ * @param {string[]} datesArray the date intervals array
+ * @param {string} startRawDate the reference start date used for filtering
+ * @param {string} endRawDate the reference end date used for filtering
+ */
+export const getLowestAndHighestDates = (datesArray) =>  {
+    const sortedDatesArray = datesArray.reduce((acc, cur) => {
+        if (cur.indexOf('/') !== -1) {
+            const [startIntervalDate, endIntervalDate] = cur.split('/');
+            return [...acc, startIntervalDate, endIntervalDate];
+        }
+        return [...acc, cur];
+    }, []).sort();
+    return [sortedDatesArray[0], sortedDatesArray[sortedDatesArray.length - 1]];
+};

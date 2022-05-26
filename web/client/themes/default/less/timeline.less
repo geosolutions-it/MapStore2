@@ -242,6 +242,10 @@
                                 .border-color-var(@theme-vars[timeline-histogram-border-color]);
                             }
                             &.vis-range {
+                                &.interval {
+                                    .background-color-var(@theme-vars[timeline-histogram-border-color]);
+                                    .border-color-var(@theme-vars[main-bg]);
+                                }
                                 &.histogram-item {
                                     .vis-item-content {
                                         .background-color-var(@theme-vars[timeline-histogram-bg]);
@@ -731,6 +735,12 @@
                     }
 
                     .vis-item {
+                        &.vis-range {
+                            &.interval {
+                                border-style: solid 5px;
+                                border-radius: 5px;
+                            }
+                        }
                         &.vis-dot {
                             border-color: fade(@ms-primary, 50%);
                         }
@@ -821,6 +831,13 @@
         }
 
 
+    }
+
+    .vis-item.interval {
+        height: 10px;
+
+        border-style: solid 5px;
+        border-radius: 5px;
     }
 
     .vis-item.vis-background.ms-current-range {
@@ -962,6 +979,7 @@
         transform: ~"translateY(-100%)";
         padding: 8px;
         background-color: @ms-main-bg;
+        max-height: 466px;
         max-width: 400px;
         min-width: 300px;
         .shadow-far;
@@ -978,14 +996,45 @@
             margin-left: 0;
             border-bottom: 1px solid @ms-main-border-color;
         }
-        .form-inline .react-numeric-input{
-            display: inline-block !important;
+        .form-inline {
+            &:not(:last-child) {
+                padding-bottom: 20px;
+            }
+            .react-numeric-input{
+                display: inline-block !important;
+            }
         }
         .react-numeric-input{
             #intl-numeric{
                 font-family: inherit;
                 float: unset;
             }
+        }
+        .snap-type-form {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0px;
+        }
+        .snap-type-form-title {
+            padding-bottom: 5px;
+        }
+        .snap-type-container {
+            display: flex;
+            margin-left: 1px;
+        }
+        .snap-type-item {
+            display: flex;
+            align-items: center;
+            &:first-child {
+                margin-right: 64px;
+            }
+        }
+        .snap-type-radio-btn {
+            cursor: pointer;
+            margin-top: 0;
+        }
+        .snap-type-radio-btn-label {
+            margin-left: 5px;
         }
     }
 }

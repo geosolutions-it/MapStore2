@@ -2386,8 +2386,12 @@
         "timeline": {
             "settings": {
                 "title": "Zeitleisten-Einstellungen",
+                "snapType": "Fangpunkt Zeitintervall",
+                "snapTypeTooltip": "Wenn das Einrasten an Führungsebene aktiv ist und Zeitdaten verlängert werden, rastet der Cursor an den jeweiligen Rändern des Zeitintervalls (Start/Ende) ein.",
                 "snapToGuideLayer": "Auf Führungsebene ausrichten",
-                "snapToGuideLayerTooltip": "Zwingt den Zeitcursor, sich an den Daten der ausgewählten Ebene zu fangen. Deaktivieren Sie diese Option, um die Zeitcursor zu entsperren und die Anpassung des Animationsschritts zu aktivieren."
+                "snapToGuideLayerTooltip": "Zwingt den Zeitcursor, sich an den Daten der ausgewählten Ebene zu fangen. Deaktivieren Sie diese Option, um die Zeitcursor zu entsperren und die Anpassung des Animationsschritts zu aktivieren.",
+                "snapToEnd": "Ende",
+                "snapToStart": "Start"
             },
             "hide": "Zeitleiste ausblenden",
             "show": "Zeitleiste anzeigen",

@@ -2348,8 +2348,12 @@
         "timeline": {
             "settings": {
                 "title": "Configuración de la línea de tiempo",
+                "snapType": "Punto de ajuste de intervalo de tiempo",
+                "snapTypeTooltip": "Cuando el ajuste a la capa guía está activo y los datos de tiempo se prolongan, el cursor se ajustará a los bordes respectivos del intervalo de tiempo (inicio/fin)",
                 "snapToGuideLayer": "Ajustar a capa de guía",
-                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
+                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación",
+                "snapToEnd": "Fin",
+                "snapToStart": "Inicio"
             },
             "hide": "Esconder la línea de tiempo",
             "show": "Mostrar la línea de tiempo",
