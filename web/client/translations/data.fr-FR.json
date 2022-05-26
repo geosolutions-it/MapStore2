@@ -2010,6 +2010,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Chargement du tableau de bord",
+            "importDialog": {
+                "heading": "Supprimer un fichier.json de tableau de bord précédemment exporté",
+                "selectFiles": "Sélectionner un fichier",
+                "note": "Les données du fichier importé remplaceront les données du tableau de bord actuel"
+            },
+            "exportDialog": {
+              "heading": "Exporter le tableau de bord sous forme de fichier .json"
+            },
             "errors": {
                 "loading": {
                     "title": "Erreur lors du chargement du tableau de bord",

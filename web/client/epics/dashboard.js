@@ -19,11 +19,13 @@ import {
     loadDashboard,
     dashboardSaveError,
     SAVE_DASHBOARD,
+    DASHBOARD_EXPORT,
     LOAD_DASHBOARD,
+    DASHBOARD_IMPORT,
     dashboardLoadError
 } from '../actions/dashboard';
 
-import { setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
+import { setControlProperty, TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { featureTypeSelected } from '../actions/wfsquery';
 import { show, error } from '../actions/notifications';
 import { loadFilter, QUERY_FORM_SEARCH } from '../actions/queryform';
@@ -32,6 +34,7 @@ import { isDashboardEditing, isDashboardAvailable } from '../selectors/dashboard
 import { isLoggedIn } from '../selectors/security';
 import { getEditingWidgetLayer, getEditingWidgetFilter } from '../selectors/widgets';
 import { pathnameSelector } from '../selectors/router';
+import { download, readJson } from '../utils/FileUtils';
 import { createResource, updateResource, getResource } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
@@ -180,6 +183,28 @@ export const saveDashboard = action$ => action$
             )
     );
 
+export const exportDashboard = action$ => action$
+    .ofType(DASHBOARD_EXPORT)
+    .switchMap(({data, fileName}) =>
+        Rx.Observable.of([JSON.stringify({...data}), fileName, 'application/json'])
+            .do((downloadArgs) => download(...downloadArgs))
+            .map(() => toggleControl('export'))
+    );
+
+export const importDashboard = action$ => action$
+    .ofType(DASHBOARD_IMPORT)
+    .switchMap(({file, resource}) => (
+        Rx.Observable.defer(() => readJson(file[0]).then((data) => data))
+            .switchMap((dashboard) => Rx.Observable.of(
+                dashboardLoaded(resource, dashboard),
+                toggleControl('import')
+            ))
+            .catch((e) => Rx.Observable.of(
+                error({ title: "dashboard.errors.loading.title" }),
+                dashboardLoadError({...e})
+            ))
+    ));
+
 export default {
     openDashboardWidgetEditor,
     closeDashboardWidgetEditorOnFinish,
@@ -189,5 +214,7 @@ export default {
     filterAnonymousUsersForDashboard,
     loadDashboardStream,
     reloadDashboardOnLoginLogout,
-    saveDashboard
+    saveDashboard,
+    exportDashboard,
+    importDashboard
 };

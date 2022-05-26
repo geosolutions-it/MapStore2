@@ -2009,6 +2009,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Cargando panel de control",
+            "importDialog": {
+              "selectFiles": "Selecciona un archivo",
+              "heading": "Suelta un archivo .json previamente exportado de un dashboard",
+              "note": "Los datos del archivo importado sustituirán a los del dashboard actual"
+            },
+            "exportDialog": {
+              "heading": "Exporta el panel de control como archivo .json"
+            },
             "errors":{
                 "loading": {
                     "title": "Error al cargar el panel de control",
