@@ -788,6 +788,7 @@
           },
           { "name": "DeleteGeoStory" },
           { "name": "GeoStoryExport" },
+          { "name": "GeoStoryImport" },
           "GeoStorySave",
           "GeoStorySaveAs",
           "MapEditor",

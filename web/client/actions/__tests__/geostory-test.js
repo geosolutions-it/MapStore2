@@ -14,7 +14,8 @@ import {
     CHANGE_MODE,
     CLEAR_SAVE_ERROR,
     EDIT_RESOURCE,
-    EXPORT,
+    GEOSTORY_EXPORT,
+    GEOSTORY_IMPORT,
     LOADING_GEOSTORY,
     LOAD_GEOSTORY,
     LOAD_GEOSTORY_ERROR,
@@ -35,6 +36,7 @@ import {
     clearSaveError,
     editResource,
     geostoryExport,
+    geostoryImport,
     loadGeostory,
     loadGeostoryError,
     loadingGeostory,
@@ -277,8 +279,14 @@ describe('test geostory action creators', () => {
         const data = {TEST: 'TEST'};
         const fileName = 'filename.json';
         const action = geostoryExport(data, fileName);
-        expect(action.type).toBe(EXPORT);
+        expect(action.type).toBe(GEOSTORY_EXPORT);
         expect(action.data).toEqual(data);
         expect(action.fileName).toEqual(fileName);
+    });
+    it('geostoryImport', () => {
+        const file = JSON.stringify({TEST: "TEST"});
+        const action = geostoryImport(file);
+        expect(action.type).toBe(GEOSTORY_IMPORT);
+        expect(action.file).toEqual(file);
     });
 });

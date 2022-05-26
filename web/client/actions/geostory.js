@@ -44,7 +44,8 @@ export const SET_UPDATE_URL_SCROLL = "GEOSTORY:SET_UPDATE_URL_SCROLL";
 export const UPDATE_MEDIA_EDITOR_SETTINGS = "GEOSTORY:UPDATE_MEDIA_EDITOR_SETTINGS";
 export const HIDE_CAROUSEL_ITEMS = "GEOSTORY:HIDE_CAROUSEL_ITEMS";
 export const ENABLE_DRAW = "GEOSTORY:ENABLE_DRAW";
-export const EXPORT = "GEOSTORY:EXPORT";
+export const GEOSTORY_EXPORT = "GEOSTORY:EXPORT";
+export const GEOSTORY_IMPORT = "GEOSTORY:IMPORT";
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
  *
@@ -264,4 +265,5 @@ export const enableDraw = (drawOptions) => ({
     drawOptions
 });
 
-export const geostoryExport = (data, fileName) => ({type: EXPORT, data, fileName});
+export const geostoryExport = (data, fileName) => ({type: GEOSTORY_EXPORT, data, fileName});
+export const geostoryImport = (file) => ({type: GEOSTORY_IMPORT, file});

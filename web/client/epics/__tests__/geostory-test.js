@@ -35,7 +35,8 @@ import {
     loadStoryOnHistoryPop,
     scrollOnLoad,
     hideCarouselItemsOnUpdateCurrentPage,
-    exportGeostory
+    exportGeostory,
+    importGeostory
 } from '../geostory';
 import {
     ADD,
@@ -65,7 +66,8 @@ import {
     LOAD_GEOSTORY,
     update,
     HIDE_CAROUSEL_ITEMS,
-    geostoryExport
+    geostoryExport,
+    geostoryImport
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -1870,6 +1872,33 @@ describe('Geostory Epics', () => {
             };
             const startActions = [geostoryExport({data: TEST_STORY, fileName: 'test.json'})];
             testEpic(exportGeostory, 1, startActions, epicResult, TEST_STORY, done);
+        });
+
+        it('import geostory epic with file data', (done) => {
+            const jsonFile = new File(["[]"], "file.json", {
+                type: "application/json"
+            });
+            const startActions = [geostoryImport([jsonFile])];
+            const epicResult = actions => {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(SET_CURRENT_STORY);
+                expect(actions[1].type).toBe(SET_CONTROL);
+                expect(actions[1].control).toBe('import');
+                done();
+            };
+            testEpic(importGeostory, 2, startActions, epicResult, TEST_STORY, done);
+        });
+
+        it('import geostory epic throws if no file data is provided', (done) => {
+            const startActions = [geostoryImport(null)];
+            const epicResult = actions => {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+                expect(typeof(actions[0].title) === 'string').toBeTruthy();
+                expect(actions[1].type).toBe(LOAD_GEOSTORY_ERROR);
+                done();
+            };
+            testEpic(importGeostory, 2, startActions, epicResult, TEST_STORY, done);
         });
     });
 });
