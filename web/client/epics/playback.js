@@ -24,12 +24,13 @@ import {
     setCurrentFrame,
     framesLoading,
     updateMetadata,
-    setIntervalData
+    setIntervalData,
+    toggleAnimationMode
 } from '../actions/playback';
 
 import { moveTime, SET_CURRENT_TIME, MOVE_TIME } from '../actions/dimension';
 import { selectLayer, onRangeChanged, timeDataLoading, SELECT_LAYER, SET_MAP_SYNC, SET_SNAP_TYPE } from '../actions/timeline';
-import { changeLayerProperties, REMOVE_NODE } from '../actions/layers';
+import { changeLayerProperties, CHANGE_LAYER_PROPERTIES, REMOVE_NODE } from '../actions/layers';
 import { error } from '../actions/notifications';
 
 import {
@@ -364,7 +365,7 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
  */
 export const setIsIntervalData = (action$, { getState = () => { } } = {}) =>
     action$.ofType(SELECT_LAYER, SET_CURRENT_TIME)
-      .filter(({type, layerId}) => (type === SET_CURRENT_TIME || (type === SELECT_LAYER && layerId)))
+        .filter(({type, layerId}) => (type === SET_CURRENT_TIME || (type === SELECT_LAYER && layerId)))
         .switchMap(({time: actionTime}) => {
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
@@ -374,6 +375,20 @@ export const setIsIntervalData = (action$, { getState = () => { } } = {}) =>
                     return setIntervalData(isTimeIntervalData);
                 });
         });
+
+/**
+ * In case a layer in the timeline is unselected from the TOC the timeline
+ * settings for snapping for layers are toggled off, this is to avoid persistence
+ * of selection of a non-visible layer on the timeline state, causing inconsistencies
+ * in case of mixed (point/interval) time based layers
+ */
+export const switchOffSnapToLayer = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(CHANGE_LAYER_PROPERTIES)
+        .filter(({newProperties, layer}) => {
+            const selectedLayer = selectedLayerSelector(getState());
+            return (newProperties?.visibility !== undefined && !newProperties.visibility && selectedLayer === layer);
+        })
+        .switchMap(() => Rx.Observable.of(toggleAnimationMode()));
 
 /**
  * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
@@ -420,5 +435,6 @@ export default {
     playbackCacheNextPreviousTimes,
     playbackFollowCursor,
     playbackStopWhenDeleteLayer,
-    setIsIntervalData
+    setIsIntervalData,
+    switchOffSnapToLayer
 };

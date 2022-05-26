@@ -8,18 +8,19 @@
 
 import expect from 'expect';
 import {testEpic} from './epicTestUtils';
-import {UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES, SET_INTERVAL_DATA} from '../../actions/playback';
+import {UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES, SET_INTERVAL_DATA, TOGGLE_ANIMATION_MODE} from '../../actions/playback';
 
 import {
     retrieveFramesForPlayback,
     playbackStopWhenDeleteLayer,
     playbackCacheNextPreviousTimes,
-    setIsIntervalData
+    setIsIntervalData,
+    switchOffSnapToLayer
 } from '../playback';
 
 import DOMAIN_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainValues.xml';
 import DOMAIN_INTERVAL_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainIntervalValues.xml';
-import { removeNode, CHANGE_LAYER_PROPERTIES } from '../../actions/layers';
+import { removeNode, CHANGE_LAYER_PROPERTIES, changeLayerProperties } from '../../actions/layers';
 import { setCurrentTime, moveTime } from '../../actions/dimension';
 import { selectLayer, LOADING, setMapSync } from '../../actions/timeline';
 import axios from '../../libs/ajax';
@@ -297,6 +298,17 @@ describe('playback Epics', () => {
                 const { type, timeIntervalData } = action;
                 expect(type).toBe(SET_INTERVAL_DATA);
                 expect(timeIntervalData).toBe(true);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
+    it('switchOffSnapToLayer', done => {
+        testEpic(switchOffSnapToLayer, 1, changeLayerProperties("playback:selected_layer", {visibility: false}), ([action]) => {
+            try {
+                const {type} = action;
+                expect(type).toBe(TOGGLE_ANIMATION_MODE);
                 done();
             } catch (e) {
                 done(e);
