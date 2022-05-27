@@ -2011,6 +2011,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Caricamento Dashboard",
+            "importDialog": {
+                "selectFiles": "Seleziona un file",
+                "heading": "Rilasciare un file.json del dashboard esportato in precedenza",
+                "note": "I dati nel file importato sostituiranno i dati nel dashboard corrente"
+            },
+            "exportDialog": {
+              "heading": "Esportare il dashboard come file .json"
+            },
             "errors":{
                 "loading": {
                     "title": "Errore di caricamento della dashboard",

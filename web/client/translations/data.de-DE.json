@@ -2047,6 +2047,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Dashboard wird geladen",
+            "importDialog": {
+                "selectFiles": "Wählen Sie eine Datei aus",
+                "heading": "Löschen einer zuvor exportierten JSON-Dashboarddatei",
+                "note": "Die Daten in der importierten Datei ersetzen die Daten im aktuellen Dashboard"
+            },
+            "exportDialog": {
+              "heading": "Dashboard als JSON-Datei exportieren"
+            },
             "errors":{
                 "loading": {
                     "title": "Fehler beim Laden des Dashboards",

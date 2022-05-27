@@ -49,6 +49,7 @@ export default ({
                 <div>
                     {exportPanelTitle}
                 </div>
+                <br/>
                 <div className="export-panel-formats-container">
                     {toPairs(formats).map(([format, {label, glyph}]) =>
                         <Button

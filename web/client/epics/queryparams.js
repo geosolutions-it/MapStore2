@@ -27,6 +27,7 @@ import {mapSelector} from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
+import { changeMapType } from '../actions/maptype';
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import {mapProjectionSelector} from "../utils/PrintUtils";
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
@@ -58,17 +59,21 @@ const paramActions = {
     },
     center: (parameters, state) => {
         const map = mapSelector(state);
+        const { heading, pitch, roll = 0 } = parameters;
+        const validViewerOptions = [heading, pitch].map(val => typeof(val) !== 'undefined');
         const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
         const zoom = toNumber(parameters.zoom);
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const viewerOptions = map.viewerOptions;
+        const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map.viewerOptions;
         const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
-
-        if (isValid) {
+        if (isValid && !viewerOptions) {
             return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
+        }
+        if (isValid && viewerOptions) {
+            return [changeMapType('cesium'), changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
         }
         return [
             warning({
@@ -113,6 +118,9 @@ const paramActions = {
         return [];
     },
     zoom: () => {},
+    heading: () => {},
+    pitch: () => {},
+    roll: () => {}, // roll is currently not supported, we return standard 0 roll
     actions: (parameters) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,

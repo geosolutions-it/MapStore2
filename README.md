@@ -173,7 +173,7 @@ Here below is a small list of organizations using MapStore either directly or th
 * [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
 * City of Bozen - Italy
 * City of Florence - Italy
-* City of Minuch - Germany
+* City of Munich - Germany
 * Rennes Metropole - France
 * [CRAIG - France](https://ids.craig.fr/mapstore/#/)
 * Compagnie Nationale du Rhone - France
@@ -183,8 +183,8 @@ Here below is a small list of organizations using MapStore either directly or th
 * [Whanganui District Council - New Zealand](https://data.whanganui.govt.nz/mapstore2-whanganuidc/#/)
 * [Otorohanga District Council - New Zealand](https://maps.otodc.govt.nz)
 * [Wairoa District Council - New Zealand](https://maps.wairoadc.govt.nz/#/)
-* Cleveland Metroparks - USA
-* Minerva - Canada
+* [Cleveland Metroparks - USA](https://mapstore.cmparks.net/)
+* [Minerva - Canada](https://cczis.minervaintelligence.com/)
 * [Moldova National GeoPortal](http://www.moldova-map.md/)
 * [Region of Tuscany, Hydrologic Service - Italy](https://webgis.sir.toscana.it/mapstore/#/)
 * Neftex Halliburton - UK
