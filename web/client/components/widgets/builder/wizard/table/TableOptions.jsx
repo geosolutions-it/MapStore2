@@ -30,6 +30,11 @@ const AttributeSelector = compose(
         ({ attributes = [], options = {}} = {}) => ({ // TODO manage hide condition
             attributes: attributes
                 .filter(a => !isGeometryType(a))
+                .concat(
+                    (options?.propertyName || [])
+                        .filter((item) => attributes.findIndex(e => e.name === item) < 0)
+                        .map(i => ({ name: i, error: true }))
+                )
                 .map( a => ({
                     ...a,
                     label: a.name,
@@ -38,14 +43,19 @@ const AttributeSelector = compose(
                 })
                 )
         })),
-    noAttributes(({ attributes = []}) => attributes.length === 0),
+    noAttributes(({ attributes = []}) => attributes.filter(a => !a.error).length === 0),
     withHandlers({
-        onChange: ({ onChange = () => {}, options = {}}) => (name, hide) => onChange("options.propertyName", updatePropertyName(options && options.propertyName || [], name, hide))
+        onChange: ({ onChange = () => {}, options = {}, attributes = {}, sortOptions = null}) => (name, hide) => {
+            onChange("options.propertyName", updatePropertyName(options && options.propertyName || [], name, hide));
+            if (!attributes.find(a => a.name === name) && sortOptions?.sortBy === name[0] && hide) {
+                onChange('sortOptions', undefined);
+            }
+        }
     })
 )(AttributeTable);
 
 
-export default ({ data = { options: {} }, onChange = () => { }, featureTypeProperties, sampleChart}) => (<Row>
+export default ({ data = { options: {}, sortOptions: null }, onChange = () => { }, featureTypeProperties, sampleChart}) => (<Row>
     <StepHeader title={<Message msgId={`widgets.builder.wizard.configureTableOptions`} />} />
     <Col xs={12}>
         <div >
@@ -57,7 +67,9 @@ export default ({ data = { options: {} }, onChange = () => { }, featureTypePrope
             <AttributeSelector
                 options={data.options}
                 onChange={onChange}
-                attributes={featureTypeProperties}/>
+                attributes={featureTypeProperties}
+                sortOptions={data.sortOptions}
+            />
             {data.options && data.options.columnSettings
                 ? <Button style={{"float": "right"}} onClick={() => onChange("options.columnSettings", undefined)}><Message msgId="widgets.builder.wizard.resetColumnsSizes" /></Button>
                 : null

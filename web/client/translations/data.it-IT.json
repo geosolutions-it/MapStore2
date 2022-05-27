@@ -1824,6 +1824,7 @@
                     "connectToTheMap": "Collegati alla mappa",
                     "selectMapToConnect": "Seleziona il widget da connettere",
                     "clearConnection": "Disconnetti",
+                    "attributeIsNotAvailable": "L'attributo non è disponibile",
                     "classAttributes": {
                         "classColor": "Colore della Classe",
                         "classLabel": "Etichetta della Classe",

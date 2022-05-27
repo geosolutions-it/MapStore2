@@ -6,10 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, {forwardRef} from 'react';
 
 import ReactDataGrid from 'react-data-grid';
 import Message from '../../I18N/Message';
+import withHint from "./enhancers/withHint";
+import {Glyphicon} from "react-bootstrap";
+
+const TooltipSpan = withHint(forwardRef(({glyph, className = "attribute error", children, ...props }, ref) => {
+    return (<span ref={ref} {...props} className={className}><s>{children}</s><Glyphicon glyph={glyph} /></span>);
+}));
 
 export default ({
     style = {},
@@ -23,7 +29,12 @@ export default ({
             rowKey="id"
             columns={[{
                 name: '',
-                key: 'attribute'
+                key: 'attribute',
+                formatter(props) {
+                    return props?.row?.error
+                        ? <TooltipSpan glyph="alert" tooltipId="widgets.builder.wizard.attributeIsNotAvailable">{props.row.name}</TooltipSpan>
+                        : (props.row.name ?? null);
+                }
             }]}
             rowGetter={idx => attributes[idx]}
             rowsCount={attributes.length}
@@ -35,6 +46,7 @@ export default ({
                 selectBy: {
                     indexes: attributes.reduce( (acc, a, idx) => [...acc, ...(a.hide ? [] : [idx] )], [])
                 }
-            }} />
+            }}
+        />
     </div>
 );
