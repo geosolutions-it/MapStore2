@@ -57,6 +57,8 @@ export default {
         GeoStoryEditorPlugin: require('../plugins/GeoStoryEditor').default,
         GeoStorySavePlugin: require('../plugins/GeoStorySave').GeoStorySave,
         GeoStorySaveAsPlugin: require('../plugins/GeoStorySave').GeoStorySaveAs,
+        GeoStoryExport: require('../plugins/GeoStoryExport').default,
+        GeoStoryImport: require('../plugins/GeoStoryImport').default,
         DashboardSavePlugin: require('../plugins/DashboardSave').DashboardSave,
         DashboardSaveAsPlugin: require('../plugins/DashboardSave').DashboardSaveAs,
         GeoStoryNavigationPlugin: require('../plugins/GeoStoryNavigation').default,
