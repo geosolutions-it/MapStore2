@@ -2597,6 +2597,14 @@
                     "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }
             },
+            "importDialog": {
+                "selectFiles": "Selecciona un archivo",
+                "heading": "Suelta un archivo .json previamente exportado de una historia",
+                "note": "Los datos del archivo importado sustituirán a los de la historia actual"
+            },
+              "exportDialog": {
+                "heading": "Exporta la historia como archivo .json"
+            },
             "errors": {
                 "loading": {
                     "notFound": "Geografía no encontrada",
