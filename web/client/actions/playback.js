@@ -14,6 +14,7 @@ export const APPEND_FRAMES = "PLAYBACK:APPEND_FRAMES";
 export const FRAMES_LOADING = "PLAYBACK:FRAMES_LOADING";
 export const SET_CURRENT_FRAME = "PLAYBACK:SET_CURRENT_FRAME";
 export const SELECT_PLAYBACK_RANGE = "PLAYBACK:SELECT_PLAYBACK_RANGE";
+export const SET_INTERVAL_DATA = "PLAYBACK:SET_INTERVAL_DATA";
 
 export const CHANGE_SETTING = "PLAYBACK:SETTINGS_CHANGE";
 export const TOGGLE_ANIMATION_MODE = "PLAYBACK:TOGGLE_ANIMATION_MODE";
@@ -77,4 +78,13 @@ export const updateMetadata = ({next, previous, forTime}) => ({
     forTime,
     next,
     previous
+});
+
+/**
+ * @param {boolean} timeIntervalData
+ * @returns {{timeIntervalData: boolean, type: string}}
+ */
+export const setIntervalData = (timeIntervalData) => ({
+    type: SET_INTERVAL_DATA,
+    timeIntervalData
 });

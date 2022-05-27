@@ -65,7 +65,7 @@ describe('Timeline/Playback Settings component', () => {
             value: 'end',
             label: 'timeline.settings.snapToEnd'
         }];
-        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport snapRadioButtonEnabled/>, document.getElementById("container"));
         const radioButtonInputs = document.querySelectorAll('input[type=radio]');
         expect(radioButtonInputs).toExist();
         expect(radioButtonInputs.length).toBe(2);
@@ -76,6 +76,25 @@ describe('Timeline/Playback Settings component', () => {
         snapToEndBtn.checked = true;
         expect(snapToStartBtn.checked).toBe(false);
         expect(snapToEndBtn.checked).toBe(true);
+    });
+    it('test snap type radio button disabled', () => {
+        const snapTypes = [{
+            id: 'start',
+            value: 'start',
+            label: 'timeline.settings.snapToStart'
+        }, {
+            id: 'end',
+            value: 'end',
+            label: 'timeline.settings.snapToEnd'
+        }];
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
+        const radioButtonInputs = document.querySelectorAll('input[type=radio]');
+        expect(radioButtonInputs).toExist();
+        expect(radioButtonInputs.length).toBe(2);
+        const snapToStartBtn = radioButtonInputs[0];
+        const snapToEndBtn = radioButtonInputs[1];
+        expect(snapToStartBtn.classList.contains('disabled')).toBe(true);
+        expect(snapToEndBtn.classList.contains('disabled')).toBe(true);
     });
     it('Test toggleAnimationMode', () => {
         const actions = {

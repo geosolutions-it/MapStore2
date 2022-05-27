@@ -1030,7 +1030,9 @@
             }
         }
         .snap-type-radio-btn {
-            cursor: pointer;
+            &:not(.disabled) {
+                cursor: pointer;
+            }
             margin-top: 0;
         }
         .snap-type-radio-btn-label {

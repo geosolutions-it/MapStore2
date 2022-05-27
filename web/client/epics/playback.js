@@ -23,12 +23,14 @@ import {
     appendFrames,
     setCurrentFrame,
     framesLoading,
-    updateMetadata
+    updateMetadata,
+    setIntervalData,
+    toggleAnimationMode
 } from '../actions/playback';
 
 import { moveTime, SET_CURRENT_TIME, MOVE_TIME } from '../actions/dimension';
 import { selectLayer, onRangeChanged, timeDataLoading, SELECT_LAYER, SET_MAP_SYNC, SET_SNAP_TYPE } from '../actions/timeline';
-import { changeLayerProperties, REMOVE_NODE } from '../actions/layers';
+import { changeLayerProperties, CHANGE_LAYER_PROPERTIES, REMOVE_NODE } from '../actions/layers';
 import { error } from '../actions/notifications';
 
 import {
@@ -65,6 +67,7 @@ import {
 import { getDatesInRange } from '../utils/TimeUtils';
 import pausable from '../observables/pausable';
 import { wrapStartStop } from '../observables/epics';
+import { getTimeDomainsObservable } from '../observables/multidim';
 import { getDomainValues } from '../api/MultiDim';
 import Rx from 'rxjs';
 
@@ -346,23 +349,47 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
             // get current time in case of SELECT_LAYER
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
-            return Rx.Observable.forkJoin(
-                // TODO: find out a way to optimize and do only one request
-                // TODO: support for local list of values (in case of missing multidim-extension)
-                getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
-                    .map(res => res.DomainValues.Domain.split(","))
-                    .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
-                getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
-                    .map(res => res.DomainValues.Domain.split(","))
-                    .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
-            ).map(([next, previous]) =>
-                updateMetadata({
+            return getTimeDomainsObservable(domainArgs, false, getState, snapType, time).map(([next, previous]) => {
+                return updateMetadata({
                     forTime: time,
                     next,
                     previous
-                })
-            );
+                });
+            });
         });
+
+/**
+ * Get domains with a slight buffer to detect whether the layer consists of
+ * instants/point or intervals/bars time value. The results is used to
+ * disable/enable the radio buttons to snap to start/end of time interval
+ */
+export const setIsIntervalData = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(SELECT_LAYER, SET_CURRENT_TIME)
+        .filter(({type, layerId}) => (type === SET_CURRENT_TIME || (type === SELECT_LAYER && layerId)))
+        .switchMap(({time: actionTime}) => {
+            const time = actionTime || currentTimeSelector(getState());
+            const snapType = snapTypeSelector(getState());
+            return getTimeDomainsObservable(domainArgs, true, getState, snapType, time)
+                .map(([next, previous]) => {
+                    const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
+                    return setIntervalData(isTimeIntervalData);
+                });
+        });
+
+/**
+ * In case a layer in the timeline is unselected from the TOC the timeline
+ * settings for snapping for layers are toggled off, this is to avoid persistence
+ * of selection of a non-visible layer on the timeline state, causing inconsistencies
+ * in case of mixed (point/interval) time based layers
+ */
+export const switchOffSnapToLayer = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(CHANGE_LAYER_PROPERTIES)
+        .filter(({newProperties, layer}) => {
+            const selectedLayer = selectedLayerSelector(getState());
+            return ( !newProperties.visibility && selectedLayer === layer);
+        })
+        .switchMap(() => Rx.Observable.of(toggleAnimationMode()));
+
 /**
  * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
  * current start-end values
@@ -407,5 +434,7 @@ export default {
     playbackMoveStep,
     playbackCacheNextPreviousTimes,
     playbackFollowCursor,
-    playbackStopWhenDeleteLayer
+    playbackStopWhenDeleteLayer,
+    setIsIntervalData,
+    switchOffSnapToLayer
 };
