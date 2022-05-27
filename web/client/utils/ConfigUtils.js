@@ -169,6 +169,10 @@ export const setApiKeys = function(layer) {
     if (layer.type === 'mapquest') {
         layer.apiKey = defaultConfig.mapquestApiKey;
     }
+    if (layer.type === 'tileprovider' && ['MapBoxStyle', 'MapBox'].includes(layer.provider)) {
+        // include an empty string if missing to avoid errors in the layer url template
+        layer.accessToken = defaultConfig.mapboxAccessToken || '';
+    }
     return layer;
 };
 
