@@ -386,7 +386,7 @@ export const switchOffSnapToLayer = (action$, { getState = () => { } } = {}) =>
     action$.ofType(CHANGE_LAYER_PROPERTIES)
         .filter(({newProperties, layer}) => {
             const selectedLayer = selectedLayerSelector(getState());
-            return (newProperties?.visibility !== undefined && !newProperties.visibility && selectedLayer === layer);
+            return ( !newProperties.visibility && selectedLayer === layer);
         })
         .switchMap(() => Rx.Observable.of(toggleAnimationMode()));
 
