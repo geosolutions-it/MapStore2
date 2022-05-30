@@ -11,7 +11,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {get, head, isNaN, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
 import url from 'url';
 
-import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap} from '../actions/map';
+import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap, INIT_MAP} from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '../actions/search';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
@@ -67,13 +67,13 @@ const paramActions = {
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map.viewerOptions;
+        const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map && map.viewerOptions;
         const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
         if (isValid && !viewerOptions) {
             return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
         }
         if (isValid && viewerOptions) {
-            return [changeMapType('cesium'), changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
         }
         return [
             warning({
@@ -169,6 +169,15 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
                 })
         );
 
+export const readQueryParamsOnMapInitEpic = (action$, store) =>
+    action$.ofType(LOCATION_CHANGE)
+        .switchMap(() =>
+            action$.ofType(INIT_MAP)
+                .switchMap(() => {
+                    return Rx.Observable.of(changeMapType('cesium'));
+                })
+        );
+
 /**
  * Intercept on `CLICK_ON_MAP` to get point and layer information to allow featureInfoClick.
  * @param {external:Observable} action$ manages `CLICK_ON_MAP`
@@ -246,5 +255,6 @@ export default {
     readQueryParamsOnMapEpic,
     onMapClickForShareEpic,
     disableGFIForShareEpic,
-    checkMapOrientation
+    checkMapOrientation,
+    readQueryParamsOnMapInitEpic
 };

@@ -7,7 +7,7 @@
 */
 
 import {updateActiveDockEpic, updateMapLayoutEpic} from '../epics/maplayout';
-import {readQueryParamsOnMapEpic} from '../epics/queryparams';
+import {readQueryParamsOnMapEpic, readQueryParamsOnMapInitEpic} from '../epics/queryparams';
 import maplayout from '../reducers/maplayout';
 import searchconfig from '../reducers/searchconfig';
 import version from '../reducers/version';
@@ -57,7 +57,8 @@ export default {
     baseEpics: {
         updateMapLayoutEpic,
         updateActiveDockEpic,
-        readQueryParamsOnMapEpic
+        readQueryParamsOnMapEpic,
+        readQueryParamsOnMapInitEpic
     },
     storeOpts: {
         persist: {
