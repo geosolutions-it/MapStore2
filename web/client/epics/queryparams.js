@@ -59,22 +59,14 @@ const paramActions = {
     },
     center: (parameters, state) => {
         const map = mapSelector(state);
-        const { heading, pitch, roll = 0 } = parameters;
-        const validViewerOptions = [heading, pitch].map(val => typeof(val) !== 'undefined');
         const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
         const zoom = toNumber(parameters.zoom);
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map && map.viewerOptions;
-        const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
-        if (isValid && !viewerOptions) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
-        }
-        if (isValid && viewerOptions) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
-        }
+        return [changeMapView(center, zoom, bbox, mapSize, null, projection)];
+
         return [
             warning({
                 title: "share.wrongCenterAndZoomParamTitle",
@@ -173,8 +165,24 @@ export const readQueryParamsOnMapInitEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(() =>
             action$.ofType(INIT_MAP)
+                .take(1)
                 .switchMap(() => {
-                    return Rx.Observable.of(changeMapType('cesium'));
+                    const state = store.getState();
+                    const map = mapSelector(state);
+                    const parameters = Object.keys(paramActions)
+                        .reduce((params, parameter) => {
+                            const value = getRequestParameterValue(parameter, state);
+                            return {
+                                ...params,
+                                ...(value ? { [parameter]: value } : {})
+                            };
+                        }, {});
+                    const { heading, pitch, roll = 0 } = parameters;
+                    const validViewerOptions = [heading, pitch].map(val => typeof(val) !== 'undefined');
+                    const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map && map.viewerOptions;
+                    if (viewerOptions) {
+                        return Rx.Observable.of(changeMapType('cesium'));
+                    }
                 })
         );
 
