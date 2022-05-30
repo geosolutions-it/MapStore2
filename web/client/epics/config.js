@@ -29,6 +29,7 @@ import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapCon
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import {getBbox} from "../utils/MapUtils";
+import {mapTypeSelector} from "../selectors/maptype";
 
 
 const prepareMapConfiguration = (data, override, state) => {
@@ -160,12 +161,16 @@ export const zoomToMaxExtentOnConfigureMap = action$ =>
         .delay(300) // without the delay the map zoom will not change
         .map(({config, zoomToExtent: extent}) => zoomToExtent(extent.bounds, extent.crs || get(config, 'map.projection')));
 
-export const calculateBboxOnConfigureMap = action$ =>
+export const calculateBboxOnConfigureMap = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED)
-        .map(({config}) => {
-            const { center, zoom, size, mapStateSource, projection, viewerOptions, resolution } = (config?.map ?? {});
-            const bbox = getBbox(center, zoom);
-            return changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, resolution);
+        .switchMap(({config}) => {
+            const mapType = mapTypeSelector(store.getState());
+            if (mapType !== 'cesium') {
+                const { center, zoom, size, mapStateSource, projection, viewerOptions, resolution } = (config?.map ?? {});
+                const bbox = getBbox(center, zoom);
+                return Observable.of(changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, resolution));
+            }
+            return Observable.empty();
         });
 
 export const loadMapInfoEpic = action$ =>

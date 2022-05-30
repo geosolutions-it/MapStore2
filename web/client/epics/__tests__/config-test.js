@@ -312,6 +312,34 @@ describe('config epics', () => {
                 checkActions
             );
         });
+
+        it('calculate bbox on map config loaded - cesium viewer', (done) => {
+            const config = {
+                map: {
+                    center: { x: 0, y: 0, crs: "EPSG:4326" },
+                    zoom: 8,
+                    projection: 'EPSG:900913'
+                }
+            };
+
+            const checkActions = ([a]) => {
+                expect(a).toExist();
+                expect(a.type).toBe('EPIC_COMPLETED');
+                done();
+            };
+            testEpic(calculateBboxOnConfigureMap,
+                0,
+                configureMap(config, 1, false),
+                checkActions,
+                {
+                    maptype: {
+                        mapType: 'cesium'
+                    }
+                },
+                false,
+                true
+            );
+        });
     });
 });
 
