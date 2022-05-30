@@ -2009,6 +2009,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Loading Dashboard",
+            "importDialog": {
+                "selectFiles": "Select a file",
+                "heading": "Drop a previously exported dashboard .json file",
+                "note": "The data in the imported file will replace the data in the current dashboard"
+            },
+            "exportDialog": {
+              "heading": "Export dashboard as a .json file"
+            },
             "errors":{
                 "loading": {
                     "title": "Error loading dashboard",
@@ -2614,6 +2622,14 @@
                     "overlay": "Overlay",
                     "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }
+            },
+            "importDialog": {
+              "selectFiles": "Select a file",
+              "heading": "Drop a previously exported geostory .json file",
+              "note": "The data in the imported file will replace the data in the current geostory"
+            },
+            "exportDialog": {
+              "heading": "Export geostory as a .json file"
             },
             "errors": {
                 "loading": {

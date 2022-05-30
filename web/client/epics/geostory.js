@@ -60,7 +60,9 @@ import {
     SET_CURRENT_STORY,
     geostoryScrolling,
     GEOSTORY_SCROLLING,
-    hideCarouselItems
+    hideCarouselItems,
+    GEOSTORY_EXPORT,
+    GEOSTORY_IMPORT
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -112,7 +114,7 @@ import {
     SectionTypes,
     getIdFromPath
 } from '../utils/GeoStoryUtils';
-
+import { download, readJson } from '../utils/FileUtils';
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
@@ -664,3 +666,36 @@ export const scrollSideBar = (action$, {getState}) =>
                 .do(scroll => window.requestAnimationFrame(scroll))
                 .ignoreElements();
         });
+
+
+/**
+ * Handle the creation of a .json file from geostory data
+ * @param {Observable} action$ stream of actions
+ */
+export const exportGeostory = action$ => action$
+    .ofType(GEOSTORY_EXPORT)
+    .switchMap(({data, fileName}) =>
+        Observable.of([JSON.stringify({...data}), fileName, 'application/json'])
+            .do((downloadArgs) => download(...downloadArgs))
+            .map(() => setControl('export', false))
+);
+
+
+/**
+ * Handles the loading of a geostory from a .json file
+ * @param {Observable} action$ stream of actions
+ */
+ export const importGeostory = action$ => action$
+    .ofType(GEOSTORY_IMPORT)
+    .switchMap(({file}) => (
+        Observable.defer(() => readJson(file[0]).then((data) => data))
+            .switchMap((geostory) => Observable.of(
+                setCurrentStory(geostory),
+                setControl('import', false))
+            ))
+            .catch((e) => Observable.of(
+                error({ title: "dashboard.errors.loading.title" }),
+                loadGeostoryError({...e})
+            ))
+    );
+

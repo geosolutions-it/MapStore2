@@ -1398,7 +1398,7 @@
                 }
             },
         "mapExport": {
-            "title": "Karte exportieren",
+            "title": "Exportieren",
             "tooltip": "Exportieren Sie die aktuelle Karte",
             "exportPanel": {
                 "title": "<p><h4>Wählen Sie ein Format</h4></p>",
@@ -2047,6 +2047,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Dashboard wird geladen",
+            "importDialog": {
+                "selectFiles": "Wählen Sie eine Datei aus",
+                "heading": "Löschen einer zuvor exportierten JSON-Dashboarddatei",
+                "note": "Die Daten in der importierten Datei ersetzen die Daten im aktuellen Dashboard"
+            },
+            "exportDialog": {
+              "heading": "Dashboard als JSON-Datei exportieren"
+            },
             "errors":{
                 "loading": {
                     "title": "Fehler beim Laden des Dashboards",
@@ -2642,6 +2650,14 @@
                     "overlay": "Überlagerung",
                     "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }
+            },
+            "importDialog": {
+                "selectFiles": "Wählen Sie eine Datei aus",
+                "heading": "Löschen einer zuvor exportierten JSON-Geostory-Datei",
+                "note": "Die Daten in der importierten Datei ersetzen die Daten in der aktuellen Geostory"
+            },
+            "exportDialog": {
+              "heading": "Geostory als JSON-Datei exportieren"
             },
             "errors": {
                 "loading": {

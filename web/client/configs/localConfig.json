@@ -666,6 +666,8 @@
           "Attribution",
           "Home",
           { "name": "DeleteDashboard" },
+          { "name": "DashboardExport" },
+          { "name": "DashboardImport" },
           { "name": "OmniBar",
             "cfg": {
                 "containerPosition": "header",
@@ -787,6 +789,8 @@
             "name": "GeoStory"
           },
           { "name": "DeleteGeoStory" },
+          { "name": "GeoStoryExport" },
+          { "name": "GeoStoryImport" },
           "GeoStorySave",
           "GeoStorySaveAs",
           "MapEditor",

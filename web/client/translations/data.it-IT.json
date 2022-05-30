@@ -2011,6 +2011,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Caricamento Dashboard",
+            "importDialog": {
+                "selectFiles": "Seleziona un file",
+                "heading": "Rilasciare un file.json del dashboard esportato in precedenza",
+                "note": "I dati nel file importato sostituiranno i dati nel dashboard corrente"
+            },
+            "exportDialog": {
+              "heading": "Esportare il dashboard come file .json"
+            },
             "errors":{
                 "loading": {
                     "title": "Errore di caricamento della dashboard",
@@ -2606,6 +2614,14 @@
                     "overlay": "Copertura",
                     "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }
+            },
+            "importDialog": {
+                "selectFiles": "Seleziona un file",
+                "heading": "Rilasciare un file.json della storia esportato in precedenza",
+                "note": "I dati nel file importato sostituiranno i dati nella storia corrente"
+            },
+            "exportDialog": {
+              "heading": "Esportare la storia come file .json"
             },
             "errors": {
                 "loading": {

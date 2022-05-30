@@ -2010,6 +2010,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Chargement du tableau de bord",
+            "importDialog": {
+                "heading": "Supprimer un fichier.json de tableau de bord précédemment exporté",
+                "selectFiles": "Sélectionner un fichier",
+                "note": "Les données du fichier importé remplaceront les données du tableau de bord actuel"
+            },
+            "exportDialog": {
+              "heading": "Exporter le tableau de bord sous forme de fichier .json"
+            },
             "errors": {
                 "loading": {
                     "title": "Erreur lors du chargement du tableau de bord",
@@ -2605,6 +2613,14 @@
                     "overlay": "Recouvrir",
                     "templateTooltip":"Ce paramètre vous permet d'activer la fonction Identifier sur la carte en définissant un format générique pour toutes les couches. Il est possible de configurer un format différent pour chaque niveau à l'aide de l'éditeur de carte avancé (icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guide de l'utilisateur </a>. Si une couche a défini son propre format d'identification, elle sera utilisée à la place du format générique défini au niveau de la carte."
                 }
+            },
+            "importDialog": {
+                "heading": "Supprimer un fichier.json de story précédemment exporté",
+                "selectFiles": "Sélectionner un fichier",
+                "note": "Les données du fichier importé remplaceront les données du story actuel"
+            },
+            "exportDialog": {
+              "heading": "Exporter le story sous forme de fichier .json"
             },
             "errors": {
                 "loading": {
