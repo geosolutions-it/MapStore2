@@ -83,6 +83,21 @@ const ANIMATION_MOCK_STATE_WITH_END_SNAPPING = {
     }
 };
 
+const ANIMATION_MOCK_STATE_NO_LAYERS_SELECTED = {
+    ...ANIMATION_MOCK_STATE,
+    timeline: {
+        layers: {
+            flat: []
+        },
+        selectedLayer: 'playback:selected_layer',
+        settings: {
+            collapsed: true,
+            snapType: "end",
+            endValuesSupport: true
+        }
+    }
+};
+
 describe('playback Epics', () => {
     let mock;
     beforeEach(() => {
@@ -304,7 +319,18 @@ describe('playback Epics', () => {
             }
         }, ANIMATION_MOCK_STATE);
     });
-    it('switchOffSnapToLayer', done => {
+    it('switchOffSnapToLayer - layer selected visibility false', done => {
+        testEpic(switchOffSnapToLayer, 1, changeLayerProperties("playback:selected_layer", {visibility: false}), ([action]) => {
+            try {
+                const {type} = action;
+                expect(type).toBe(TOGGLE_ANIMATION_MODE);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
+    it('switchOffSnapToLayer - layer selected visibility false', done => {
         testEpic(switchOffSnapToLayer, 1, changeLayerProperties("playback:selected_layer", {visibility: false}), ([action]) => {
             try {
                 const {type} = action;
