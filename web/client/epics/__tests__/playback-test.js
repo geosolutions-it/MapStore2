@@ -304,7 +304,7 @@ describe('playback Epics', () => {
             }
         }, ANIMATION_MOCK_STATE);
     });
-    it('switchOffSnapToLayer', done => {
+    it('switchOffSnapToLayer - layer selected visibility false', done => {
         testEpic(switchOffSnapToLayer, 1, changeLayerProperties("playback:selected_layer", {visibility: false}), ([action]) => {
             try {
                 const {type} = action;
