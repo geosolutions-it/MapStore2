@@ -7,7 +7,7 @@
 */
 
 import expect from 'expect';
-import {testEpic} from './epicTestUtils';
+import {addTimeoutEpic, TEST_TIMEOUT, testEpic} from './epicTestUtils';
 import {UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES, SET_INTERVAL_DATA, TOGGLE_ANIMATION_MODE} from '../../actions/playback';
 
 import {
@@ -314,5 +314,25 @@ describe('playback Epics', () => {
                 done(e);
             }
         }, ANIMATION_MOCK_STATE);
+    });
+
+    it('switchOffSnapToLayer - skip toggle animation mode when timeline is not visible (collapsed)', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            timeline: {
+                selectedLayer: 'playback:selected_layer',
+                settings: {
+                    collapsed: true
+                }
+            }};
+        testEpic(addTimeoutEpic(switchOffSnapToLayer, 1000), 1, changeLayerProperties("playback:selected_layer", {visibility: false}), (actions) => {
+            try {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                expect(actions[1].type).toBe('EPIC_COMPLETED');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state, false, true);
     });
 });
