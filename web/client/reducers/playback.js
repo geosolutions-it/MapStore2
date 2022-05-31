@@ -9,7 +9,8 @@ import {
     SET_CURRENT_FRAME,
     SELECT_PLAYBACK_RANGE,
     CHANGE_SETTING,
-    UPDATE_METADATA
+    UPDATE_METADATA,
+    SET_INTERVAL_DATA
 } from '../actions/playback';
 
 import { RESET_CONTROLS } from '../actions/controls';
@@ -60,6 +61,9 @@ export default (state = { status: STATUS.STOP, currentFrame: -1, settings: DEFAU
     }
     case UPDATE_METADATA: {
         return set('metadata', { next: action.next, previous: action.previous, forTime: action.forTime}, state);
+    }
+    case SET_INTERVAL_DATA: {
+        return set('metadata', {...state.metadata, timeIntervalData: action.timeIntervalData}, state);
     }
     case RESET_CONTROLS: {
         return set('metadata', undefined, set('framesLoading', undefined, set('playbackRange', undefined, set('frames', undefined,

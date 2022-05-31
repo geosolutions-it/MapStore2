@@ -7,19 +7,20 @@
 */
 
 import expect from 'expect';
-
-import { testEpic } from './epicTestUtils';
-import { UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES } from '../../actions/playback';
+import {addTimeoutEpic, TEST_TIMEOUT, testEpic} from './epicTestUtils';
+import {UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES, SET_INTERVAL_DATA, TOGGLE_ANIMATION_MODE} from '../../actions/playback';
 
 import {
     retrieveFramesForPlayback,
     playbackStopWhenDeleteLayer,
-    playbackCacheNextPreviousTimes
+    playbackCacheNextPreviousTimes,
+    setIsIntervalData,
+    switchOffSnapToLayer
 } from '../playback';
 
 import DOMAIN_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainValues.xml';
 import DOMAIN_INTERVAL_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainIntervalValues.xml';
-import { removeNode, CHANGE_LAYER_PROPERTIES } from '../../actions/layers';
+import { removeNode, CHANGE_LAYER_PROPERTIES, changeLayerProperties } from '../../actions/layers';
 import { setCurrentTime, moveTime } from '../../actions/dimension';
 import { selectLayer, LOADING, setMapSync } from '../../actions/timeline';
 import axios from '../../libs/ajax';
@@ -289,5 +290,153 @@ describe('playback Epics', () => {
                 status: 'PLAY'
             }
         });
+    });
+    it('setIsIntervalData', done => {
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_INTERVAL_VALUES_RESPONSE);
+        testEpic(setIsIntervalData, 1, selectLayer("playback:selected_layer"), ([action]) => {
+            try {
+                const { type, timeIntervalData } = action;
+                expect(type).toBe(SET_INTERVAL_DATA);
+                expect(timeIntervalData).toBe(true);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
+    it('switchOffSnapToLayer - layer selected visibility false', done => {
+        testEpic(switchOffSnapToLayer, 1, changeLayerProperties("playback:selected_layer", {visibility: false}), ([action]) => {
+            try {
+                const {type} = action;
+                expect(type).toBe(TOGGLE_ANIMATION_MODE);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
+
+    it('switchOffSnapToLayer - skip toggle animation mode when timeline is not visible (collapsed)', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            timeline: {
+                selectedLayer: 'playback:selected_layer',
+                settings: {
+                    collapsed: true
+                }
+            }};
+        testEpic(addTimeoutEpic(switchOffSnapToLayer, 1000), 1, changeLayerProperties("playback:selected_layer", {visibility: false}), (actions) => {
+            try {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                expect(actions[1].type).toBe('EPIC_COMPLETED');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state, false, true);
+    });
+
+    it('switchOffSnapToLayer - skip toggle animation / different layer / visible timeline', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            layers: {
+                flat: [
+                    {
+                        id: 'playback:selected_layer',
+                        name: 'playback_layer',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    },
+                    {
+                        id: 'playback:not_selected_layer',
+                        name: 'playback_layer_not_selected',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    }
+                ]
+            },
+            timeline: {
+                selectedLayer: 'playback:selected_layer',
+                settings: {
+                    collapsed: false
+                }
+            }};
+        testEpic(addTimeoutEpic(switchOffSnapToLayer, 1000), 1, changeLayerProperties("playback:not_selected_layer", {filterObj: undefined}), (actions) => {
+            try {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                expect(actions[1].type).toBe('EPIC_COMPLETED');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state, false, true);
+    });
+
+    it('switchOffSnapToLayer - skip toggle animation / different layer / collapsed timeline', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            layers: {
+                flat: [
+                    {
+                        id: 'playback:selected_layer',
+                        name: 'playback_layer',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    },
+                    {
+                        id: 'playback:not_selected_layer',
+                        name: 'playback_layer_not_selected',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    }
+                ]
+            },
+            timeline: {
+                selectedLayer: 'playback:selected_layer',
+                settings: {
+                    collapsed: true
+                }
+            }};
+        testEpic(addTimeoutEpic(switchOffSnapToLayer, 1000), 1, changeLayerProperties("playback:not_selected_layer", {filterObj: undefined}), (actions) => {
+            try {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                expect(actions[1].type).toBe('EPIC_COMPLETED');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state, false, true);
     });
 });
