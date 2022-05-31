@@ -335,4 +335,108 @@ describe('playback Epics', () => {
             }
         }, state, false, true);
     });
+
+    it('switchOffSnapToLayer - skip toggle animation / different layer / visible timeline', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            layers: {
+                flat: [
+                    {
+                        id: 'playback:selected_layer',
+                        name: 'playback_layer',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    },
+                    {
+                        id: 'playback:not_selected_layer',
+                        name: 'playback_layer_not_selected',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    }
+                ]
+            },
+            timeline: {
+                selectedLayer: 'playback:selected_layer',
+                settings: {
+                    collapsed: false
+                }
+            }};
+        testEpic(addTimeoutEpic(switchOffSnapToLayer, 1000), 1, changeLayerProperties("playback:not_selected_layer", {filterObj: undefined}), (actions) => {
+            try {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                expect(actions[1].type).toBe('EPIC_COMPLETED');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state, false, true);
+    });
+
+    it('switchOffSnapToLayer - skip toggle animation / different layer / collapsed timeline', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            layers: {
+                flat: [
+                    {
+                        id: 'playback:selected_layer',
+                        name: 'playback_layer',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    },
+                    {
+                        id: 'playback:not_selected_layer',
+                        name: 'playback_layer_not_selected',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    }
+                ]
+            },
+            timeline: {
+                selectedLayer: 'playback:selected_layer',
+                settings: {
+                    collapsed: false
+                }
+            }};
+        testEpic(addTimeoutEpic(switchOffSnapToLayer, 1000), 1, changeLayerProperties("playback:not_selected_layer", {filterObj: undefined}), (actions) => {
+            try {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                expect(actions[1].type).toBe('EPIC_COMPLETED');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state, false, true);
+    });
 });
