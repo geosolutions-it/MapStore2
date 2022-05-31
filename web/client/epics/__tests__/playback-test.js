@@ -425,7 +425,7 @@ describe('playback Epics', () => {
             timeline: {
                 selectedLayer: 'playback:selected_layer',
                 settings: {
-                    collapsed: false
+                    collapsed: true
                 }
             }};
         testEpic(addTimeoutEpic(switchOffSnapToLayer, 1000), 1, changeLayerProperties("playback:not_selected_layer", {filterObj: undefined}), (actions) => {
