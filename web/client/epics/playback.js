@@ -61,7 +61,8 @@ import {
     rangeSelector,
     snapTypeSelector,
     timelineLayersSelector,
-    multidimOptionsSelectorCreator
+    multidimOptionsSelectorCreator,
+    isVisible
 } from '../selectors/timeline';
 
 import { getDatesInRange } from '../utils/TimeUtils';
@@ -386,7 +387,10 @@ export const switchOffSnapToLayer = (action$, { getState = () => { } } = {}) =>
     action$.ofType(CHANGE_LAYER_PROPERTIES)
         .filter(({newProperties, layer}) => {
             const selectedLayer = selectedLayerSelector(getState());
-            return ( !newProperties.visibility && selectedLayer === layer);
+            return (newProperties?.visibility !== undefined &&
+                    selectedLayer === layer &&
+                    // check if timeline component is visible
+                    isVisible(getState()));
         })
         .switchMap(() => Rx.Observable.of(toggleAnimationMode()));
 
