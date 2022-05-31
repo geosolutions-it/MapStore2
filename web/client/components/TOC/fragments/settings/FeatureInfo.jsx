@@ -14,6 +14,7 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import { keys } from 'lodash';
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info
@@ -42,8 +43,10 @@ export default class extends React.Component {
     };
 
     getInfoFormat = (infoFormats) => {
+        console.log(infoFormats, 'infoFormats')
         return Object.keys(infoFormats).map((infoFormat) => {
             const Body = this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].body;
+            console.log(this.props.formatCards, 'formatCardsformatCardsformatCardsformatCards')
             return {
                 id: infoFormat,
                 head: {
@@ -84,12 +87,15 @@ export default class extends React.Component {
      * @return {object} info formats
      */
     supportedInfoFormats = () => {
+        const excludedFormatsWfs = ['TEXT','HTML']
         const availableInfoFormats =  this.props.element?.infoFormats || [];
+        const supportedWfsFormats = Object.fromEntries(Object.entries(this.props.defaultInfoFormat).filter(([key, value]) => !excludedFormatsWfs.includes(key)))
+        const formats = this.props.element.type === 'wfs'?supportedWfsFormats:this.props.defaultInfoFormat
         const infoFormats = Object.assign({},
-            ...Object.entries(this.props.defaultInfoFormat)
+            ...Object.entries(formats)
                 .filter(([, value])=> includes(availableInfoFormats, value))
                 .map(([key, value])=> ({[key]: value}))
         );
-        return isEmpty(infoFormats) ? this.props.defaultInfoFormat : infoFormats;
+        return isEmpty(infoFormats) ? formats : infoFormats;
     }
 }
