@@ -77,7 +77,6 @@ describe("test FeatureInfo", () => {
         expect(sideCards.length).toBe(4);
         TestUtils.Simulate.click(sideCards[0]);
     });
-
     it('test rendering with supported infoFormats from layer props', () => {
         ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "text/plain"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
         const testComponent = document.getElementsByClassName('test-preview');
@@ -85,13 +84,26 @@ describe("test FeatureInfo", () => {
     });
     it('test rendering supported infoFormats for wfs layer', () => {
         ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "application/json"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
-        const testComponent = document.getElementsByClassName('test-preview');
-        expect(testComponent.length).toBe(3);
+        const testComponents = document.getElementsByClassName('test-preview');
+        expect(testComponents.length).toBe(3);
+        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
+        expect(sideCards.length).toBe(3)
+        expect(sideCards[0].textContent).toBe('layerProperties.htmlFormatTitle')
+        expect(sideCards[1].textContent).toBe('layerProperties.propertiesFormatTitle')
+        expect(sideCards[2].textContent).toBe('layerProperties.templateFormatTitle')
+
+
     });
 
     it('test rendering supported infoFormats for wms layer', () => {
         ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "text/plain", "application/json"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
         const testComponent = document.getElementsByClassName('test-preview');
         expect(testComponent.length).toBe(4);
+        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
+        expect(sideCards.length).toBe(4)
+        expect(sideCards[0].textContent).toBe('layerProperties.textFormatTitle')
+        expect(sideCards[1].textContent).toBe('layerProperties.htmlFormatTitle')
+        expect(sideCards[2].textContent).toBe('layerProperties.propertiesFormatTitle')
+        expect(sideCards[3].textContent).toBe('layerProperties.templateFormatTitle')
     });
 });
