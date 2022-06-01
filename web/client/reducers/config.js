@@ -30,6 +30,9 @@ function mapConfig(state = null, action) {
     switch (action.type) {
     case MAP_CONFIG_LOADED:
         let size = state && state.map && state.map.present && state.map.present.size || state && state.map && state.map.size;
+        // bbox is taken from the state to keep widgets having correct dataset after map is saved or saved as.
+        // bbox is not getting written to the map configuration on backend
+        let bbox = state && state.map && state.map.present && state.map.present.bbox || state && state.map && state.map.bbox;
 
         let hasVersion = action.config && action.config.version >= 2;
         // we get from the configuration what will be used as the initial state
@@ -72,7 +75,7 @@ function mapConfig(state = null, action) {
         // if map is loaded from an already saved map keep the same id
         let mapId = state?.map?.mapId || state?.map?.present?.mapId;
         mapId = action.config?.fileName && mapId ? mapId : action.mapId;
-        newMapState.map = assign({}, newMapState.map, {mapId, size, version: hasVersion ? action.config.version : 1});
+        newMapState.map = assign({}, newMapState.map, {mapId, size, bbox, version: hasVersion ? action.config.version : 1});
         // we store the map initial state for future usage
         return assign({}, newMapState, {mapInitialConfig: {...newMapState.map, mapId: action.mapId}});
     case MAP_CONFIG_LOAD_ERROR:
