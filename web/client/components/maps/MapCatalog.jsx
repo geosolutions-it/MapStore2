@@ -60,7 +60,7 @@ export default ({
                     ? { ...i, selected: true }
                     : i)}
             loading={loading}
-            onItemClick={({ map } = {}, props, event) =>  onSelected(map)} />
+            onItemClick={({ map } = {}) =>  onSelected(map)} />
     </BorderLayout>);
 };
 

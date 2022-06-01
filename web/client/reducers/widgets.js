@@ -145,10 +145,10 @@ function widgetsReducer(state = emptyState, action) {
             }, state);
     case UPDATE_LAYER: {
         if (action.layer) {
-            const widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
-            if (widgets) {
+            const _widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
+            if (_widgets) {
                 return set(`containers[${DEFAULT_TARGET}].widgets`,
-                    widgets.map(w => get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w), state);
+                    _widgets.map(w => get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w), state);
             }
         }
         return state;

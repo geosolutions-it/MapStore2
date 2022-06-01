@@ -43,9 +43,6 @@ import { updateDependenciesMapOfMapList } from "../utils/WidgetsUtils";
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
     const mapDependencies = ["layers", "viewport", "zoom", "center"];
-    console.log("dependenciesMap", dependenciesMap);
-    console.log("mappings", mappings);
-    console.log("targetId", targetId);
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 

@@ -45,7 +45,7 @@ export default compose(
                 onClick: () => setEditNode(false)
             }]
         })),
-        withProps(({ selectedNodes = [], epsgSupported = false, onRemoveSelected = () => { }, setEditNode = () => { }, zoomTo = () => {}, ...props }) => ({
+        withProps(({ selectedNodes = [], epsgSupported = false, onRemoveSelected = () => { }, setEditNode = () => { }, zoomTo = () => {} }) => ({
             tocButtons: [{
                 visible: selectedNodes.length > 0,
                 glyph: "zoom-to",
