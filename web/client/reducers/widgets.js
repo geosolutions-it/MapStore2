@@ -326,10 +326,10 @@ function widgetsReducer(state = emptyState, action) {
     }
     case TOGGLE_COLLAPSE_ALL: {
         // get widgets excluding static widgets
-        const widgets = get(state, `containers[${action.target}].widgets`, [])
+        const widgetsStatic = get(state, `containers[${action.target}].widgets`, [])
             .filter( w => !w.dataGrid || !w.dataGrid.static );
-        const collapsedWidgets = widgets.filter(w => get(state, `containers[${action.target}].collapsed[${w.id}]`));
-        const expandedWidgets = widgets.filter(w => !get(state, `containers[${action.target}].collapsed[${w.id}]`));
+        const collapsedWidgets = widgetsStatic.filter(w => get(state, `containers[${action.target}].collapsed[${w.id}]`));
+        const expandedWidgets = widgetsStatic.filter(w => !get(state, `containers[${action.target}].collapsed[${w.id}]`));
         const shouldExpandAll = expandedWidgets.length === 0;
         if (shouldExpandAll) {
             return collapsedWidgets.reduce((acc, w) => widgetsReducer(
