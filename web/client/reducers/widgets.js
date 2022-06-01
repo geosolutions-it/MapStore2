@@ -26,14 +26,16 @@ import {
     TOGGLE_MAXIMIZE,
     TOGGLE_COLLAPSE_ALL,
     TOGGLE_TRAY,
-    toggleCollapse
+    toggleCollapse,
+    MAPS_REGEX,
+    REPLACE
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
 import assign from 'object-assign';
 import set from 'lodash/fp/set';
-import { get, find, omit, mapValues, castArray } from 'lodash';
+import { get, find, omit, mapValues, castArray, isNil } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
 
 const emptyState = {
@@ -94,6 +96,15 @@ function widgetsReducer(state = emptyState, action) {
             , state));
     }
     case EDITOR_CHANGE: {
+        if (action.key.includes('maps') && !isNil(action.value)) {
+            let value = action.value;
+            const [, id, pathToUpdate] = MAPS_REGEX.exec(action.key) || [];
+            if (id) {
+                const maps = get(state, "builder.editor.maps", []);
+                value = set(pathToUpdate, action.value, maps.find(m => m.mapId === id));
+            }
+            return arrayUpsert('builder.editor.maps', value, {mapId: id || action.value?.mapId}, state);
+        }
         return set(`builder.editor.${action.key}`, action.value, state);
     }
     case INSERT:
@@ -106,6 +117,13 @@ function widgetsReducer(state = emptyState, action) {
         }, state);
 
         return tempState;
+    case REPLACE:
+        const widgetsPath = `containers[${action.target}].widgets`;
+        const widgets = get(state, widgetsPath);
+        if (widgets) {
+            return set(widgetsPath, action.widgets, state);
+        }
+        return state;
     case UPDATE_PROPERTY:
         // if "merge" update map by merging a partial map object coming from
         // onMapViewChanges handler for MapWidget
@@ -116,7 +134,11 @@ function widgetsReducer(state = emptyState, action) {
         return arrayUpsert(`containers[${action.target}].widgets`,
             set(
                 action.key,
-                action.mode === "merge" ? assign({}, oldWidget[action.key], action.value) : action.value,
+                action.mode === "merge"
+                    ? action.key === "maps"
+                        ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
+                        : assign({}, oldWidget[action.key], action.value)
+                    : action.value,
                 oldWidget
             ), {
                 id: action.id

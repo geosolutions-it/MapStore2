@@ -14,7 +14,7 @@ import BuilderHeader from '../../BuilderHeader';
 
 import mcEnhancer from '../../../../maps/enhancers/mapCatalogWithEmptyMap';
 import Message from '../../../../I18N/Message';
-import MapCatalogComp from '../../../../maps/MapCatalog';
+import MapCatalogComp from './MapCatalog';
 import handleMapSelect from './enhancers/handleMapSelect';
 
 const MapCatalog = mcEnhancer(MapCatalogComp);
@@ -32,7 +32,7 @@ export default handleMapSelect(({ onClose = () => { }, setSelected = () => { }, 
                     bsSize: "sm"
                 }}
                 buttons={[...stepButtons, {
-                    tooltipId: "widgets.builder.wizard.useThisMap",
+                    tooltipId: `widgets.builder.wizard.${selected?.length > 1 ? "useTheseMap" : "useThisMap"}`,
                     onClick: () => onMapChoice(selected),
                     visible: true,
                     disabled: !selected,

@@ -1774,7 +1774,8 @@
                 },
                 "emptyMap": {
                     "title": "Mappa vuota",
-                    "description": "Inizia da una mappa vuota"
+                    "description": "Inizia da una mappa vuota",
+                    "noNameDescription": "La selezione ha una mappa vuota. Aggiungi un nome alla mappa vuota per procedere con la configurazione della mappa"
                 }
             },
             "title": "Titolo",
@@ -1803,7 +1804,7 @@
                     "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "selectALayer": "Seleziona un livello",
-                    "selectAMap": "Seleziona una mappa",
+                    "selectAMap": "Seleziona una o più mappe",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
                      "backToTableOptions": "Torna alle opzioni della tabella",
@@ -1814,6 +1815,7 @@
                     "titlePlaceholder": "Inserisci il titolo...",
                     "textPlaceholder": "Inserisci il testo...",
                     "useThisMap": "Usa questa mappa",
+                    "useTheseMap": "Usa queste mappe",
                     "configureMapOptions": "Configura opzioni mappa",
                     "enableIdentifyTool": "Attiva lo strumento di identificazione",
                     "disableIdentifyTool": "Disabilita lo strumento di identificazione",
@@ -1879,6 +1881,11 @@
                     "unhide": "Mostra",
                     "unhideDescription": "Mostra il widget ad altri utenti"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "Nessuna mappa trovata",
+                "placeholder": "Inserisci il nome della mappa",
+                "selectLabel": "Seleziona una mappa"
             },
             "chartType": {
                 "bar": {

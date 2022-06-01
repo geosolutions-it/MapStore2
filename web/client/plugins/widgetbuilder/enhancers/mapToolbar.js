@@ -17,7 +17,12 @@ import { wizardSelector, wizardStateToProps } from '../commons';
 import mapBuilderConnect from './connection/mapBuilderConnect';
 import withConnectButton from './connection/withConnectButton';
 import withExitButton from './withExitButton';
+import isEmpty from "lodash/isEmpty";
 
+const showCondition = ({step, editorData}) => {
+    const containsEmptyMap = editorData?.maps?.some(map => isEmpty(map.name));
+    return step === 0 && !containsEmptyMap;
+};
 export default compose(
     connect(wizardSelector, {
         setPage,
@@ -40,7 +45,7 @@ export default compose(
                 onClick: () => setEditNode(false)
             }]
         })),
-        withProps(({ selectedNodes = [], epsgSupported = false, onRemoveSelected = () => { }, setEditNode = () => { }, zoomTo = () => {} }) => ({
+        withProps(({ selectedNodes = [], epsgSupported = false, onRemoveSelected = () => { }, setEditNode = () => { }, zoomTo = () => {}, ...props }) => ({
             tocButtons: [{
                 visible: selectedNodes.length > 0,
                 glyph: "zoom-to",
@@ -64,6 +69,5 @@ export default compose(
     withExitButton(undefined, {
         tooltipId: "widgets.builder.wizard.backToMapSelection"
     }),
-    withConnectButton(({step}) => step === 0)
-
+    withConnectButton(showCondition)
 );

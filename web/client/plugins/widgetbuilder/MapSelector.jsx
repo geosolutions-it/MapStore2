@@ -9,14 +9,12 @@ import { compose, withProps } from 'recompose';
 
 import { connect } from 'react-redux';
 import { onEditorChange } from '../../actions/widgets';
-import { normalizeMap } from '../../utils/LayersUtils';
 import MapSelector from '../../components/widgets/builder/wizard/map/MapSelector';
 
 export default compose(
     connect(
         () => ({}), {
-            onMapSelected: ({ map }) => onEditorChange("map", normalizeMap(map)),
-            onSetIdentifyTrue: () => onEditorChange("map.mapInfoControl", true),
+            onMapSelected: ({ maps }) => onEditorChange("maps", maps),
             onResetChange: onEditorChange
 
         }),
@@ -27,7 +25,8 @@ export default compose(
             tooltipId: 'widgets.builder.wizard.backToWidgetTypeSelection',
             onClick: () => {
                 // options will not be valid anymore in case of layer change
-                onResetChange("map", undefined);
+                onResetChange("maps", undefined);
+                onResetChange("selectedMapId", undefined);
                 onResetChange("widgetType", undefined);
             }
         }]

@@ -14,16 +14,19 @@ import BorderLayout from '../../layout/BorderLayout';
 import LoadingSpinner from '../../misc/LoadingSpinner';
 import MapViewComp from './MapView';
 import WidgetContainer from './WidgetContainer';
+import MapSwitcher from "../builder/wizard/map/MapSwitcher";
 
 const MapView = withHandlers({
-    onMapViewChanges: ({ updateProperty = () => { } }) => ({layers, ...map}) => updateProperty('map', map, "merge" )
+    onMapViewChanges: ({ updateProperty = () => { }, id }) => ({layers, ...map}) => updateProperty(id, 'maps', map, "merge")
 })(MapViewComp);
 
 export default ({
     updateProperty = () => { },
     toggleDeleteConfirm = () => { },
     id, title,
-    map,
+    map = {},
+    maps = [],
+    selectedMapId,
     icons,
     hookRegister,
     mapStateSource,
@@ -33,13 +36,23 @@ export default ({
     dataGrid = {},
     onDelete = () => {},
     headerStyle,
-    env
+    env,
+    selectionActive
 } = {}) => {
-    const { size: {height: mapHeight, width: mapWidth}, mapInfoControl } = map;
+    const { size: {height: mapHeight, width: mapWidth} = {}, mapInfoControl } = map;
     const enablePopupTools = mapHeight > 400 && mapWidth > 400 && mapInfoControl;
     return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
-        topRightItems={topRightItems}
+        topRightItems={[
+            <MapSwitcher
+                className={'map-switcher'}
+                maps={maps}
+                onChange={(...args) => updateProperty(id, ...args)}
+                value={selectedMapId}
+                disabled={selectionActive}
+            />,
+            ...topRightItems]
+        }
         isDraggable={dataGrid.isDraggable}
     >
         <BorderLayout

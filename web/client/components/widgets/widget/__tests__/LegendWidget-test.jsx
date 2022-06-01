@@ -72,9 +72,9 @@ describe('LegendWidget component', () => {
         ];
         ReactDOM.render(<LegendWidget dependencies={{layers: LAYERS}} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.mapstore-widget-card');
-        expect(el).toExist();
-        expect(container.querySelector('.compact-legend-grid')).toExist();
+        const el = container.querySelector('.legend-widget');
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.widget-legend-toc')).toBeTruthy();
     });
     it('LegendWidget rendering with layers specified in dependenciesMap', () => {
         const layers = [
@@ -106,11 +106,11 @@ describe('LegendWidget component', () => {
             }
         ];
         ReactDOM.render(<LegendWidget
-            dependencies={{"widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].map.layers": layers}}
-            dependenciesMap={{layers: "widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].map.layers" }} />, document.getElementById("container"));
+            dependencies={{"widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].maps[213].layers": layers}}
+            dependenciesMap={{layers: "widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].maps[213].layers" }} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.mapstore-widget-card');
-        expect(el).toExist();
-        expect(container.querySelector('.compact-legend-grid')).toExist();
+        const el = container.querySelector('.legend-widget');
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.widget-legend-toc')).toBeTruthy();
     });
 });

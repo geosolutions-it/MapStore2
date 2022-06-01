@@ -88,7 +88,8 @@ describe('handleMapSelect enhancer', () => {
         mockAxios.onGet().reply(200, mapData);
 
         const actions = {
-            onMapSelected: ({map}) => {
+            onMapSelected: ({maps}) => {
+                const [map] = maps;
                 expect(map.sources).toExist();
                 expect(isEmpty(map.sources)).toBe(false);
                 expect(map.layers).toExist();
@@ -116,7 +117,8 @@ describe('handleMapSelect enhancer', () => {
         mockAxios.onGet().reply(200, mapDataWithoutSource);
 
         const actions = {
-            onMapSelected: ({map}) => {
+            onMapSelected: ({maps}) => {
+                const [map] = maps;
                 expect(map.sources).toNotExist();
                 expect(map.layers).toExist();
                 expect(map.layers.length > 0).toBe(true);
@@ -140,7 +142,8 @@ describe('handleMapSelect enhancer', () => {
         const locale = 'it-IT';
 
         const actions = {
-            onMapSelected: ({map}) => {
+            onMapSelected: ({maps}) => {
+                const [map] = maps;
                 expect(map.sources).toExist();
                 expect(map.layers).toExist();
                 expect(map.groups).toExist();

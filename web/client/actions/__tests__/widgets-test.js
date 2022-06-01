@@ -47,7 +47,9 @@ import {
     setupDependencySelector,
     toggleDependencySelector,
     toggleTray,
-    toggleMaximize
+    toggleMaximize,
+    replaceWidgets,
+    REPLACE
 } from '../widgets';
 
 describe('Test correctness of the widgets actions', () => {
@@ -211,5 +213,11 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval.widget).toBe('widget');
         expect(retval.target).toBe('target');
     });
-
+    it('replaceWidgets', () => {
+        const retval = replaceWidgets([{id: "widget_id"}], 'target');
+        expect(retval).toExist();
+        expect(retval.type).toBe(REPLACE);
+        expect(retval.widgets).toEqual([{id: "widget_id"}]);
+        expect(retval.target).toBe('target');
+    });
 });
