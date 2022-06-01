@@ -83,4 +83,15 @@ describe("test FeatureInfo", () => {
         const testComponent = document.getElementsByClassName('test-preview');
         expect(testComponent.length).toBe(2);
     });
+    it('test rendering supported infoFormats for wfs layer', () => {
+        ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "application/json"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
+        const testComponent = document.getElementsByClassName('test-preview');
+        expect(testComponent.length).toBe(3);
+    });
+
+    it('test rendering supported infoFormats for wms layer', () => {
+        ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "text/plain", "application/json"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
+        const testComponent = document.getElementsByClassName('test-preview');
+        expect(testComponent.length).toBe(4);
+    });
 });
