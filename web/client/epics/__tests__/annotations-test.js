@@ -1057,7 +1057,7 @@ describe('annotations Epics', () => {
                         type: "Feature",
                         geometry: {
                             type: "Polygon",
-                            coordinates: [[[1, 2], [1, 3], [1, undefined], [1, 5], [1, 2]]]
+                            coordinates: [[[1, 2], [1, 3], [1, 1], [1, 5], [1, 2]]]
                         },
                         properties: {
                             id: "is a circle",
