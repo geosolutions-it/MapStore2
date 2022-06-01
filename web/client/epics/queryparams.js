@@ -28,7 +28,7 @@ import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../se
 import { shareSelector } from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
 import { changeMapType } from '../actions/maptype';
-import {getRequestParameterValue} from "../utils/QueryParamsUtils";
+import {getCesiumViewerOptions, getParametersValues, getQueryActions} from "../utils/QueryParamsUtils";
 import {mapProjectionSelector} from "../utils/PrintUtils";
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 
@@ -65,8 +65,11 @@ const paramActions = {
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        return [changeMapView(center, zoom, bbox, mapSize, null, projection)];
-
+        const viewerOptions = getCesiumViewerOptions(parameters, map);
+        const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
+        if (isValid) {
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
+        }
         return [
             warning({
                 title: "share.wrongCenterAndZoomParamTitle",
@@ -140,28 +143,21 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
                 .take(1)
                 .switchMap(() => {
                     const state = store.getState();
-                    const parameters = Object.keys(paramActions)
-                        .reduce((params, parameter) => {
-                            const value = getRequestParameterValue(parameter, state);
-                            return {
-                                ...params,
-                                ...(value ? { [parameter]: value } : {})
-                            };
-                        }, {});
-                    const queryActions = Object.keys(parameters)
-                        .reduce((actions, param) => {
-                            return [
-                                ...actions,
-                                ...(paramActions[param](parameters, state) || [])
-                            ];
-                        }, []);
+                    const parameters = getParametersValues(paramActions, state);
+                    const queryActions = getQueryActions(parameters, paramActions, state);
                     return head(queryActions)
                         ? Rx.Observable.of(...queryActions)
                         : Rx.Observable.empty();
                 })
         );
 
-export const readQueryParamsOnMapInitEpic = (action$, store) =>
+/**
+ * 
+ * @param {*} action$ 
+ * @param {*} store 
+ * @returns 
+ */
+export const switchMapType = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(() =>
             action$.ofType(INIT_MAP)
@@ -169,20 +165,12 @@ export const readQueryParamsOnMapInitEpic = (action$, store) =>
                 .switchMap(() => {
                     const state = store.getState();
                     const map = mapSelector(state);
-                    const parameters = Object.keys(paramActions)
-                        .reduce((params, parameter) => {
-                            const value = getRequestParameterValue(parameter, state);
-                            return {
-                                ...params,
-                                ...(value ? { [parameter]: value } : {})
-                            };
-                        }, {});
-                    const { heading, pitch, roll = 0 } = parameters;
-                    const validViewerOptions = [heading, pitch].map(val => typeof(val) !== 'undefined');
-                    const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map && map.viewerOptions;
+                    const parameters = getParametersValues(paramActions, state);
+                    const viewerOptions = getCesiumViewerOptions(parameters, map);
                     if (viewerOptions) {
                         return Rx.Observable.of(changeMapType('cesium'));
                     }
+                    return Rx.Observable.empty();
                 })
         );
 
@@ -240,7 +228,10 @@ export const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
         });
 
 export const checkMapOrientation = (action$, store) =>
-    action$.ofType(CHANGE_MAP_VIEW).
+    // TODO: this epic should be triggered not just upon location change
+    // but also on page refresh
+    action$.ofType(CHANGE_MAP_VIEW)
+        .take(1).
         switchMap(() => {
             const state = store.getState();
             const mapType = get(state, 'maptype.mapType') || '';
@@ -264,5 +255,5 @@ export default {
     onMapClickForShareEpic,
     disableGFIForShareEpic,
     checkMapOrientation,
-    readQueryParamsOnMapInitEpic
+    switchMapType
 };

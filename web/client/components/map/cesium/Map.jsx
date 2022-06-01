@@ -166,10 +166,6 @@ class CesiumMap extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        // console.log("this props orientate is ");
-        // console.dir(newProps.orientate);
-        // console.log("prevProps is ");
-        // console.dir(this.props.orientate);
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }

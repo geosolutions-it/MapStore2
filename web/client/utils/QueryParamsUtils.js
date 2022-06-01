@@ -83,3 +83,55 @@ export const postRequestLoadValue = (name, storage = sessionStorage) => {
 export const getRequestParameterValue = (name, state, storage = sessionStorage) => {
     return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, storage);
 };
+
+
+/**
+ * Map a set of URL querystrings to a KVP object
+ * where each is single key is the parameter and the value is the parameter value
+ * mapping is based on an object that maps each query string param to a redux action
+ * @param {object} paramActions objects that maps each parameter to its respective action to trigger
+ * @param {object} state the application state
+ * @returns {object} { param: value } KVP object
+ */
+export const getParametersValues = (paramActions, state) => (
+    Object.keys(paramActions)
+        .reduce((params, parameter) => {
+            const value = getRequestParameterValue(parameter, state);
+            return {
+                ...params,
+                ...(value ? { [parameter]: value } : {})
+            };
+        }, {})
+);
+
+/**
+ * On a basis of a {param: action} object
+ * map a KVP object in the form of {param: value}
+ * to an array actions, each one corresponding to a param
+ * @param {object} parameters objects that maps each parameter to its respective value
+ * @param {object} paramActions objects that maps each parameter to its respective action to trigger
+ * @param {object} state the application state
+ * @returns {Function[]} array containing the functions to be triggered
+ */
+export const getQueryActions = (parameters, paramActions, state) => (
+    Object.keys(parameters)
+        .reduce((actions, param) => {
+            return [
+                ...actions,
+                ...(paramActions[param](parameters, state) || [])
+            ];
+        }, [])
+);
+
+/**
+ * 
+ * @param {*} parameters 
+ * @param {*} map 
+ * @returns 
+ */
+export const getCesiumViewerOptions = (parameters, map) => {
+    const { heading, pitch, roll = 0 } = parameters;
+    const validViewerOptions = [heading, pitch].map(val => typeof(val) !== 'undefined');
+    const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map && map.viewerOptions;
+    return viewerOptions;
+};
