@@ -36,3 +36,16 @@ export const NLS_CUSTOM_URL = {
     previousLoadingError: false,
     loadingError: false
 };
+
+export const LINZ_CUSTOM_URL = {
+    type: 'tileprovider',
+    visibility: true,
+    url: 'https://basemaps.linz.govt.nz/v1/tiles/aerial/EPSG:3857/{z}/{x}/{y}.png?api=myapikey',
+    title: 'LINZ',
+    provider: 'custom',
+    name: 'custom',
+    id: 'custom__7',
+    loading: false,
+    previousLoadingError: false,
+    loadingError: false
+};
