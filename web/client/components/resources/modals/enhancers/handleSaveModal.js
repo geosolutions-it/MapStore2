@@ -9,6 +9,7 @@ import handleResourceData from './handleResourceData';
 import handlePermission from './handlePermission';
 import handleErrors from './handleErrors';
 import handleDetailsDownload from './handleDetailsDownload';
+import handleDetailsCopy from './handleDetailsCopy';
 
 import { compose, branch, renderNothing } from 'recompose';
 
@@ -32,6 +33,12 @@ export default compose(
                 handleModal
             )
         ),
-        handleModal
+        compose(
+            handleDetailsCopy,
+            branch(
+                ({ resource }) => !resource?.id,
+                handleModal
+            )
+        )
     )
 );
