@@ -422,6 +422,13 @@
             "renderingErrorTitle": "Erreur de rendu",
             "renderingErrorMessage": "<p>Le rendu de la carte s'est arrêté et cela peut être dû à différentes raisons : </p><ul><li>Le style appliqué contient des règles ou des variables non prises en charge par les fonctionnalités</li>< li>Le calque n'est pas correctement configuré</li></ul><p>Vous pouvez appliquer des modifications au style de calque, puis cliquer sur le bouton 'Recharger la carte'. <br/> Consultez le message ci-dessous pour plus d'informations :< /p>",
             "reloadMap": "Recharger la carte",
+            "settings": {
+              "title": "Paramètres de la carte",
+              "skyAtmosphere": "Afficher l'atmosphère du ciel",
+              "groundAtmosphere": "Montrer l'atmosphère du terrain",
+              "fog": "Afficher le brouillard",
+              "depthTest": "Activer le depthTest sur le terrain"
+            },
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
