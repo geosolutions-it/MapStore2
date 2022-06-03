@@ -31,6 +31,7 @@ export const MOUSE_OUT = 'MOUSE_OUT';
 export const MAP_PLUGIN_LOAD = 'MAP:MAP_PLUGIN_LOAD';
 export const ORIENTATION = 'MAP:ORIENTATION';
 export const UPDATE_MAP_VIEW = 'MAP:UPDATE_MAP_VIEW';
+export const UPDATE_SCENE_CONFIG = 'MAP:UPDATE_SCENE_CONFIG';
 
 
 /**
@@ -252,6 +253,11 @@ export const orientateMap = (orientation) => ({
 export const updateMapView = (data) => ({
     type: UPDATE_MAP_VIEW,
     data
+});
+
+export const updateSceneConfig = (configUpdate) => ({
+    type: UPDATE_SCENE_CONFIG,
+    configUpdate
 });
 
 /**
