@@ -28,7 +28,8 @@ import {
     TOGGLE_TRAY,
     toggleCollapse,
     MAPS_REGEX,
-    REPLACE
+    REPLACE,
+    WIDGETS_REGEX
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -108,7 +109,7 @@ function widgetsReducer(state = emptyState, action) {
         return set(`builder.editor.${action.key}`, action.value, state);
     }
     case INSERT:
-        let tempState = arrayUpsert(`containers[${action.target}].widgets`, {
+        return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...action.widget,
             dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
@@ -116,7 +117,6 @@ function widgetsReducer(state = emptyState, action) {
             id: action.widget.id || action.id
         }, state);
 
-        return tempState;
     case REPLACE:
         const widgetsPath = `containers[${action.target}].widgets`;
         const widgets = get(state, widgetsPath);
@@ -131,18 +131,16 @@ function widgetsReducer(state = emptyState, action) {
         const oldWidget = find(get(state, `containers[${action.target}].widgets`), {
             id: action.id
         });
+        let uValue = action.value;
+        if (action.mode === "merge") {
+            uValue = action.key === "maps"
+                ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
+                : assign({}, oldWidget[action.key], action.value);
+        }
         return arrayUpsert(`containers[${action.target}].widgets`,
-            set(
-                action.key,
-                action.mode === "merge"
-                    ? action.key === "maps"
-                        ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
-                        : assign({}, oldWidget[action.key], action.value)
-                    : action.value,
-                oldWidget
-            ), {
-                id: action.id
-            }, state);
+            set(action.key, uValue, oldWidget), { id: action.id },
+            state
+        );
     case UPDATE_LAYER: {
         if (action.layer) {
             const _widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
@@ -154,9 +152,22 @@ function widgetsReducer(state = emptyState, action) {
         return state;
     }
     case DELETE:
-        return arrayDelete(`containers[${action.target}].widgets`, {
+        const path = `containers[${DEFAULT_TARGET}].widgets`;
+        const updatedState = arrayDelete(`containers[${action.target}].widgets`, {
             id: action.widget.id
         }, state);
+        const allWidgets = get(updatedState, path, []);
+        return set(path, allWidgets.map(m => {
+            if (m.dependenciesMap) {
+                const [, dependentWidgetId] = WIDGETS_REGEX.exec((Object.values(m.dependenciesMap) || [])[0]);
+                if (dependentWidgetId) {
+                    if (action.widget.id === dependentWidgetId) {
+                        return {...omit(m, "dependenciesMap"), mapSync: false};
+                    }
+                }
+            }
+            return m;
+        }), state);
     case DASHBOARD_LOADED:
         const { data } = action;
         return set(`containers[${DEFAULT_TARGET}]`, {

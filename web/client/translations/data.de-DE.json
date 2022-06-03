@@ -1921,7 +1921,8 @@
             "mapSwitcher": {
                 "noResults": "Keine Karte gefunden",
                 "placeholder": "Kartennamen eingeben",
-                "selectLabel": "Wählen Sie eine Karte aus"
+                "selectLabel": "Wählen Sie eine Karte aus",
+                "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen"
             },
             "chartType": {
                 "bar": {

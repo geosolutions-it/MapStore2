@@ -11,7 +11,7 @@ import { get } from 'lodash';
 import deleteWidget from './deleteWidget';
 import { editableWidget, defaultIcons, withHeaderTools } from './tools';
 import { getScales } from '../../../utils/MapUtils';
-import { WIDGETS_REGEX } from "../../../actions/widgets";
+import { WIDGETS_MAPS_REGEX } from "../../../actions/widgets";
 
 /**
  * map dependencies to layers, scales and current zoom level to show legend items for current zoom.
@@ -36,9 +36,14 @@ export default compose(
         })
     ),
     withHandlers({
-        updateProperty: ({updateProperty, dependencyMapPath}) => (...args) => {
-            const [, widgetId] = WIDGETS_REGEX.exec(dependencyMapPath) || [];
-            updateProperty(widgetId, ...args);
+        updateProperty: ({updateProperty, dependencyMapPath, allLayers = []}) => (lProp, value, lId) => {
+            if (dependencyMapPath) {
+                const [, widgetId, mapId] = WIDGETS_MAPS_REGEX.exec(dependencyMapPath) || [];
+                if (mapId) {
+                    const _layers = allLayers.map((l) => l.id === lId ? {...l, [lProp]: value} : l);
+                    updateProperty(widgetId, "maps", {mapId, layers: _layers}, 'merge');
+                }
+            }
         }
     }),
     deleteWidget,

@@ -17,10 +17,10 @@ import { wizardSelector, wizardStateToProps } from '../commons';
 import mapBuilderConnect from './connection/mapBuilderConnect';
 import withConnectButton from './connection/withConnectButton';
 import withExitButton from './withExitButton';
-import isEmpty from "lodash/isEmpty";
+import { EMPTY_MAP } from "../../../utils/MapUtils";
 
 const showCondition = ({step, editorData}) => {
-    const containsEmptyMap = editorData?.maps?.some(map => isEmpty(map.name));
+    const containsEmptyMap = editorData?.maps?.some(map => map.name === EMPTY_MAP);
     return step === 0 && !containsEmptyMap;
 };
 export default compose(

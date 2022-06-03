@@ -10,13 +10,15 @@ import ReactSelect from "react-select";
 import { FormControl as FC, Glyphicon } from "react-bootstrap";
 import isEmpty from "lodash/isEmpty";
 import get from "lodash/get";
+import tooltip from "../../../../misc/enhancers/tooltip";
 
 import localizedProps from "../../../../misc/enhancers/localizedProps";
 import Message from "../../../../I18N/Message";
-import Button from "../../../../misc/Button";
+import ButtonRB from "../../../../misc/Button";
 import { EMPTY_MAP } from "../../../../../utils/MapUtils";
 const FormControl = localizedProps("placeholder")(FC);
 const Select = localizedProps(["noResultsText"])(ReactSelect);
+const Button = tooltip(ButtonRB);
 
 /**
  * Map switcher component
@@ -37,6 +39,16 @@ export default ({
     const renderMapSwitchSelector = (options) => {
         if (options.length === 1) {
             return null;
+        }
+        const { size } = options.find(o => o.mapId === value) || {};
+        if (!withContainer && size?.width < 800) {
+            // Show info icon when widget width cannot contain Map Switcher
+            return (<Button
+                tooltipId="widgets.mapSwitcher.infoOnHide"
+                className="square-button-md no-border"
+                key="info-sign">
+                <Glyphicon glyph="info-sign" />
+            </Button>);
         }
         return (<Select
             style={{width: 200}}

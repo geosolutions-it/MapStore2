@@ -196,6 +196,7 @@ describe('LegendView component', () => {
         const actions = { updateProperty: () => {} };
         const spy = expect.spyOn(actions, 'updateProperty');
         const LAYERS = [{
+            id: 'L1',
             name: 'layer:00',
             title: 'Layer',
             visibility: true,
@@ -220,9 +221,9 @@ describe('LegendView component', () => {
         TestUtils.Simulate.click(visibility);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[0].arguments.length).toBe(3);
-        expect(spy.calls[0].arguments[0]).toBe('maps');
-        expect(spy.calls[0].arguments[1].layers[0].visibility).toBeFalsy();
-        expect(spy.calls[0].arguments[2]).toBe('merge');
+        expect(spy.calls[0].arguments[0]).toBe('visibility');
+        expect(spy.calls[0].arguments[1]).toBeFalsy();
+        expect(spy.calls[0].arguments[2]).toBe('L1');
 
         // On change layer expand/collapse
         let collapseIcon = container.querySelector('.toc-legend-icon.expanded');
@@ -230,8 +231,8 @@ describe('LegendView component', () => {
         TestUtils.Simulate.click(collapseIcon);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[1].arguments.length).toBe(3);
-        expect(spy.calls[1].arguments[0]).toBe('maps');
-        expect(spy.calls[1].arguments[1].layers[0].expanded).toBeFalsy();
-        expect(spy.calls[1].arguments[2]).toBe('merge');
+        expect(spy.calls[1].arguments[0]).toBe('expanded');
+        expect(spy.calls[1].arguments[1]).toBeFalsy();
+        expect(spy.calls[1].arguments[2]).toBe('L1');
     });
 });

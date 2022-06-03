@@ -19,6 +19,7 @@ import castArray from 'lodash/castArray';
 
 const handleMapSelect = compose(
     withState('selected', "setSelected", null),
+    withState('mapLoading', "setMapLoading", false),
     withHandlers({
         onMapChoice: ({ onMapSelected = () => { }, selectedSource = {}, includeMapId = false } = {}) => (maps = []) => {
             return axios.all(

@@ -1885,7 +1885,8 @@
             "mapSwitcher": {
                 "noResults": "Nessuna mappa trovata",
                 "placeholder": "Inserisci il nome della mappa",
-                "selectLabel": "Seleziona una mappa"
+                "selectLabel": "Seleziona una mappa",
+                "infoOnHide": "Espandi il widget per vedere il selettore della mappa"
             },
             "chartType": {
                 "bar": {

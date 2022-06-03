@@ -1883,7 +1883,8 @@
             "mapSwitcher": {
                 "noResults": "No se encontró ningún mapa",
                 "placeholder": "Ingrese el nombre del mapa",
-                "selectLabel": "Seleccione un mapa"
+                "selectLabel": "Seleccione un mapa",
+                "infoOnHide": "Expanda el widget para ver el selector de mapas"
             },
             "chartType": {
                 "bar": {

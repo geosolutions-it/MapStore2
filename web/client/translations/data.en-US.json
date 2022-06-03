@@ -1883,7 +1883,8 @@
             "mapSwitcher": {
                 "noResults": "No map found",
                 "placeholder": "Enter map name",
-                "selectLabel": "Select a map"
+                "selectLabel": "Select a map",
+                "infoOnHide": "Expand widget to see map switcher"
             },
             "chartType": {
                 "bar": {

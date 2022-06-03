@@ -12,11 +12,9 @@ import WMSLegend from '../../TOC/fragments/WMSLegend';
 import OpacitySlider from "../../TOC/fragments/OpacitySlider";
 import Title from "../../TOC/fragments/Title";
 import LayersTool from "../../TOC/fragments/LayersTool";
-import { WIDGETS_MAPS_REGEX } from "../../../actions/widgets";
 
 export default ({
     layers = [],
-    allLayers = [],
     updateProperty = () => {},
     legendProps = {},
     currentZoomLvl,
@@ -25,19 +23,8 @@ export default ({
     legendExpanded = false,
     scales,
     language,
-    currentLocale,
-    dependencyMapPath
+    currentLocale
 }) => {
-
-    const onUpdateProperty = (lProp, value, lId) => {
-        if (dependencyMapPath) {
-            const [,, mapId] = WIDGETS_MAPS_REGEX.exec(dependencyMapPath) || [];
-            if (mapId) {
-                const _layers = allLayers.map((l) => l.id === lId ? {...l, [lProp]: value} : l);
-                updateProperty("maps", {mapId, layers: _layers}, 'merge');
-            }
-        }
-    };
 
     const renderOpacitySlider = (layer) => (
         !disableOpacitySlider && layer?.type !== '3dtiles' && <div
@@ -47,7 +34,7 @@ export default ({
                 opacity={layer.opacity}
                 disabled={!layer.visibility}
                 hideTooltip={false}
-                onChange={opacity => onUpdateProperty('opacity', opacity, layer.id)}/>
+                onChange={opacity => updateProperty('opacity', opacity, layer.id)}/>
         </div>
     );
 
@@ -59,7 +46,7 @@ export default ({
                     className={"visibility-check" + (layer.visibility ? " checked" : "")}
                     data-position={layer.storeIndex}
                     glyph={layer.visibility ? "eye-open" : "eye-close"}
-                    onClick={()=> onUpdateProperty('visibility', !layer.visibility, layer.id)}
+                    onClick={()=> updateProperty('visibility', !layer.visibility, layer.id)}
                 />}
                 <Title node={layer} currentLocale={currentLocale}/>
                 {!legendExpanded && <LayersTool
@@ -68,7 +55,7 @@ export default ({
                     key="toollegend"
                     className={`toc-legend-icon ${layer.expanded ? 'expanded' : ''}`}
                     glyph="chevron-left"
-                    onClick={()=> onUpdateProperty('expanded', !layer.expanded, layer.id)} />}
+                    onClick={()=> updateProperty('expanded', !layer.expanded, layer.id)} />}
                 {!layer.expanded && renderOpacitySlider(layer)}
             </div>
             {(layer.expanded || legendExpanded) ? <div key="legend" className="expanded-legend-view">
