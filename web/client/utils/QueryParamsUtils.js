@@ -124,10 +124,11 @@ export const getQueryActions = (parameters, paramActions, state) => (
 );
 
 /**
- * 
- * @param {*} parameters 
- * @param {*} map 
- * @returns 
+ * From querystring params gets the specific cesium maps params (heading, pitch, roll)
+ * and output and object with the param as key and the param value as object value
+ * @param {String} parameters the querystring params from the URL request
+ * @param {Object} map the slice of state having information about the current map
+ * @returns {Object} the specific cesium map params in form of KVP object
  */
 export const getCesiumViewerOptions = (parameters, map) => {
     const { heading, pitch, roll = 0 } = parameters;

@@ -36,7 +36,7 @@ import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 it maps params key to function.
 functions must return an array of actions or and empty array
 */
-const paramActions = {
+export const paramActions = {
     bbox: (parameters) => {
         const extent = parameters.bbox.split(',')
             .map(val => parseFloat(val))
@@ -152,10 +152,12 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
         );
 
 /**
- * 
- * @param {*} action$ 
- * @param {*} store 
- * @returns 
+ * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
+ * If speficic maps viewer options are found (atm just cesium) fire an action to change
+ * the map type to the appropriate one
+ * @param {*} action$ manages `LOCATION_CHANGE`
+ * @memberof epics.share
+ * @return {external:Observable}
  */
 export const switchMapType = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
@@ -166,8 +168,8 @@ export const switchMapType = (action$, store) =>
                     const state = store.getState();
                     const map = mapSelector(state);
                     const parameters = getParametersValues(paramActions, state);
-                    const viewerOptions = getCesiumViewerOptions(parameters, map);
-                    if (viewerOptions) {
+                    const cesiumViewerOptions = getCesiumViewerOptions(parameters, map);
+                    if (cesiumViewerOptions) {
                         return Rx.Observable.of(changeMapType('cesium'));
                     }
                     return Rx.Observable.empty();
