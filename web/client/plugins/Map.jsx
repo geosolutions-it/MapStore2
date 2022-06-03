@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect, createPlugin } from '../utils/PluginsUtils';
 import { loadFont } from '../utils/AgentUtils';
-import assign from 'object-assign';
 import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
@@ -18,6 +17,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import { setMapResolutions, mapPluginLoad } from '../actions/map';
 import { isString } from 'lodash';
 import selector from './map/selector';
+import MapSettings from './map/mapsettings/MapSettings';
 import mapReducer from "../reducers/map";
 import layersReducer from "../reducers/layers";
 import drawReducer from "../reducers/draw";
@@ -326,9 +326,9 @@ class MapPlugin extends React.Component {
         return tool[this.props.mapType] || tool;
     };
 
-    getMapOptions = () => {
+    getConfigMapOptions = () => {
         return this.props.mapOptions && this.props.mapOptions[this.props.mapType] ||
-            ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[this.props.mapType];
+            ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[this.props.mapType] || {};
     };
 
     renderLayers = () => {
@@ -404,7 +404,7 @@ class MapPlugin extends React.Component {
                     {...this.props.options}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
-                    mapOptions={assign({}, mapOptions, this.getMapOptions())}
+                    mapOptions={{...this.getConfigMapOptions(), ...mapOptions}}
                     zoomControl={this.props.zoomControl}
                     onResolutionsChange={this.props.onResolutionsChange}
                     errorPanel={ErrorPanel}
@@ -471,5 +471,11 @@ export default createPlugin('Map', {
         maptype: mapTypeReducer,
         additionallayers: additionalLayersReducer
     },
-    epics: mapEpics
+    epics: mapEpics,
+    containers: {
+        Settings: () => ({
+            tool: <MapSettings />,
+            position: 2
+        })
+    }
 });
