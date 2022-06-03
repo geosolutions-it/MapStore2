@@ -1885,7 +1885,8 @@
                 "noResults": "Aucune carte trouvée",
                 "placeholder": "Entrez le nom de la carte",
                 "selectLabel": "Sélectionnez une carte",
-                "infoOnHide": "Développer le widget pour voir le sélecteur de carte"
+                "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
+                "subTitle": "(CTRL + Clic)"
             },
             "chartType": {
                 "bar": {

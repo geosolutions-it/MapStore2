@@ -1886,7 +1886,8 @@
                 "noResults": "Nessuna mappa trovata",
                 "placeholder": "Inserisci il nome della mappa",
                 "selectLabel": "Seleziona una mappa",
-                "infoOnHide": "Espandi il widget per vedere il selettore della mappa"
+                "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
+                "subTitle": "(CTRL + clic)"
             },
             "chartType": {
                 "bar": {

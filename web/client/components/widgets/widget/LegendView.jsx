@@ -49,7 +49,7 @@ export default ({
                     onClick={()=> updateProperty('visibility', !layer.visibility, layer.id)}
                 />}
                 <Title node={layer} currentLocale={currentLocale}/>
-                {!legendExpanded && <LayersTool
+                {!legendExpanded && layer.type === "wms" && <LayersTool
                     node={layer}
                     tooltip="toc.displayLegendAndTools"
                     key="toollegend"

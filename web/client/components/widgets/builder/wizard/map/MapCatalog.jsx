@@ -29,6 +29,10 @@ const SideGrid = compose(
 
 )(SideGridCard);
 
+const SubTitle = (<div style={{textAlign: "center", fontStyle: "italic", margin: "-5px 0 10px"}}>
+    <Message msgId={"widgets.mapSwitcher.subTitle"} />
+</div>);
+
 const MapCatalog = ({
     setSearchText = () => { },
     selected,
@@ -44,7 +48,11 @@ const MapCatalog = ({
 }) => {
     return (<BorderLayout
         className="map-catalog"
-        header={header || <MapCatalogForm title={title} searchText={searchText} onSearchTextChange={setSearchText} />}
+        header={header || <MapCatalogForm title={title}
+            subTitle={SubTitle}
+            searchText={searchText}
+            onSearchTextChange={setSearchText}
+        />}
         footer={<div className="catalog-footer">
             {loading && items.length > 0 ? <LoadingSpinner /> : null}
             {!isNil(total) ?
