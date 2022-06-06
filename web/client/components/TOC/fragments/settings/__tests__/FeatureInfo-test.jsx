@@ -18,6 +18,12 @@ const defaultInfoFormat = getAvailableInfoFormat();
 
 
 const formatCards = {
+    HIDDEN: {
+        titleId: 'layerProperties.hideFormatTitle',
+        descId: 'layerProperties.hideFormatDescription',
+        glyph: 'hide-marker',
+        body: () => <div className="test-preview"/>
+    },
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
         descId: 'layerProperties.textFormatDescription',
@@ -77,10 +83,42 @@ describe("test FeatureInfo", () => {
         expect(sideCards.length).toBe(4);
         TestUtils.Simulate.click(sideCards[0]);
     });
-
     it('test rendering with supported infoFormats from layer props', () => {
         ReactDOM.render(<FeatureInfo element={{infoFormats: ["text/html", "text/plain"]}} formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
         const testComponent = document.getElementsByClassName('test-preview');
         expect(testComponent.length).toBe(2);
+    });
+    it('test rendering supported infoFormats for wfs layer', () => {
+        ReactDOM.render(<FeatureInfo element={{type: "wfs"}}
+            formatCards={formatCards}
+            defaultInfoFormat={{
+                HIDDEN: "text/html",
+                ...defaultInfoFormat
+            }} />, document.getElementById("container"));
+        const testComponents = document.getElementsByClassName('test-preview');
+        expect(testComponents.length).toBe(3);
+        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
+        expect(sideCards.length).toBe(3);
+        expect(sideCards[0].textContent).toBe('layerProperties.hideFormatTitle');
+        expect(sideCards[1].textContent).toBe('layerProperties.propertiesFormatTitle');
+        expect(sideCards[2].textContent).toBe('layerProperties.templateFormatTitle');
+    });
+
+    it('test rendering supported infoFormats for wms layer', () => {
+        ReactDOM.render(<FeatureInfo  element={{type: "wms"}}
+            formatCards={formatCards}
+            defaultInfoFormat={{
+                HIDDEN: "text/html",
+                ...defaultInfoFormat
+            }} />, document.getElementById("container"));
+        const testComponent = document.getElementsByClassName('test-preview');
+        expect(testComponent.length).toBe(5);
+        const sideCards = document.querySelectorAll('.mapstore-side-card-title span span');
+        expect(sideCards.length).toBe(5);
+        expect(sideCards[0].textContent).toBe('layerProperties.hideFormatTitle');
+        expect(sideCards[1].textContent).toBe('layerProperties.textFormatTitle');
+        expect(sideCards[2].textContent).toBe('layerProperties.htmlFormatTitle');
+        expect(sideCards[3].textContent).toBe('layerProperties.propertiesFormatTitle');
+        expect(sideCards[4].textContent).toBe('layerProperties.templateFormatTitle');
     });
 });
