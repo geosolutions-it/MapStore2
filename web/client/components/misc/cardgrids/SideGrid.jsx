@@ -50,7 +50,7 @@ class SideGrid extends React.Component {
                 {items.map((item, i) =>
                     (<Col key={item.id || i} {...colProps}>
                         <Card
-                            onClick={() => onItemClick(item)}
+                            onClick={(...args) => onItemClick(item, ...args)}
                             size={size}
                             {...item}
                         />

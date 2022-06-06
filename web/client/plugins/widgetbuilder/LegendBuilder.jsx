@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { compose, mapPropsStream, renameProps, withProps } from 'recompose';
 import { createSelector } from 'reselect';
 
-import { insertWidget, onEditorChange, openFilterEditor, setPage } from '../../actions/widgets';
+import { insertWidget, onEditorChange, openFilterEditor, setPage, updateWidgetProperty } from '../../actions/widgets';
 import Message from '../../components/I18N/Message';
 import BorderLayout from '../../components/layout/BorderLayout';
 import ToolbarComp from '../../components/widgets/builder/wizard/legend/Toolbar';
@@ -43,7 +43,8 @@ const Builder = compose(
         {
             setPage,
             onEditorChange,
-            insertWidget
+            insertWidget,
+            updateWidgetProperty
         },
         wizardStateToProps
     ),
@@ -51,7 +52,8 @@ const Builder = compose(
     withValidMap,
     renameProps({
         editorData: "data",
-        onEditorChange: "onChange"
+        onEditorChange: "onChange",
+        updateWidgetProperty: "updateProperty"
     })
 
 )(LegendWizard);
@@ -101,7 +103,7 @@ const builderEnhancer = compose(
                 .filter(({ editorData = {} }) => !editorData.mapSync)
                 .take(1)
                 .distinctUntilChanged()
-                .do(({ toggleConnection = () => { }, availableDependencies }) => toggleConnection(availableDependencies))
+                .do(({ toggleConnection = () => { }, availableDependencies, widgets }) => toggleConnection(availableDependencies, widgets))
                 .ignoreElements()
         )
     )

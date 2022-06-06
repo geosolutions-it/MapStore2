@@ -22,7 +22,7 @@ export default (showCondition = () => true) => compose(
         ...props
     }) => ({
         stepButtons: [...stepButtons, {
-            onClick: () => toggleConnection(availableDependencies),
+            onClick: () => toggleConnection(availableDependencies, props.widgets),
             disabled: disableMultiDependencySupport,
             visible: !!showCondition(props) && !!canConnect && availableDependencies.length > 0,
             bsStyle: connected ? "success" : "primary",
