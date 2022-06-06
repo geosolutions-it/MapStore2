@@ -1765,7 +1765,8 @@
                 },
                 "emptyMap": {
                     "title": "Empty Map",
-                    "description": "Start from an empty map"
+                    "description": "Start from an empty map",
+                    "noNameDescription": "The selection has an empty map. Add a name to the empty map to proceed with map configuration"
                 }
             },
             "title": "Title",
@@ -1795,7 +1796,7 @@
                     "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
                     "selectALayer": "Select a layer",
-                    "selectAMap": "Select a map",
+                    "selectAMap": "Select one or more maps",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
                     "backToTableOptions": "Back to table options",
@@ -1806,6 +1807,7 @@
                     "titlePlaceholder": "Insert title...",
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
+                    "useTheseMap": "Use these maps",
                     "configureMapOptions": "Configure map options",
                     "enableIdentifyTool": "Enable identify tool",
                     "disableIdentifyTool": "Disable identify tool",
@@ -1869,6 +1871,13 @@
                     "unhide": "Unhide",
                     "unhideDescription": "Unhide the widget to other users"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "No map found",
+                "placeholder": "Enter map name",
+                "selectLabel": "Select a map",
+                "infoOnHide": "Expand widget to see map switcher",
+                "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
             },
             "chartType": {
                 "bar": {

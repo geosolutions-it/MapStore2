@@ -78,8 +78,9 @@ describe('TableWidget component', () => {
             "localType": "number"
         }]}]};
         ReactTestUtils.act(()=>{
-            ReactDOM.render(<TableWidget enableColumnFilters updateProperty={(path, attribute)=>{
+            ReactDOM.render(<TableWidget enableColumnFilters id={1} updateProperty={(id, path, attribute)=>{
                 try {
+                    expect(id).toBe(1);
                     expect(path).toBe("quickFilters.FLOAT");
                     expect(attribute.value).toBe(12);
                     expect(attribute.rawValue).toBe('> 12');

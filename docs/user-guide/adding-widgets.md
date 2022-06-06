@@ -39,11 +39,15 @@ Here the user can:
 
 * Search for a map by writing its title
 
-* Select a map from the list of maps (mandatory in order to move forward)
+* Select one or more maps from the list of maps (mandatory in order to move forward)
 
 * Move forward to the next step through the <img src="../img/button/next.jpg" class="ms-docbutton"/> button
 
-Once a map has been selected, a panel opens and the layers present in the map are displayed in the preview and listed in the layer list:
+Once a map has been selected, the panel display the layers present in the map in the preview and lists the layer associated with the map.
+
+!!!note
+    If user has selected more than one map, the map wizard displays the _map switcher_ dropdown allowing user to select and configure the map.
+    
 
 <img src="../img/adding-widgets/wid-layers-list.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -51,6 +55,10 @@ Once a map has been selected, a panel opens and the layers present in the map ar
     If the **Empty Map** has been selected the user can:
 
     * Create a map widget using an empty map
+
+    * If the map selection has an empty map, then the user is prompted with an option to enter map name
+
+    * Upon adding the name, the map wizard displays the map switcher allowing user to select and configure the map
 
     * Add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button, as follows: <img src="../img/adding-widgets/wid-add-layer.gif" class="ms-docimage"  style="max-width:400px;"/>
 

@@ -12,10 +12,10 @@ import debounce from 'lodash/debounce';
 import deleteWidget from './deleteWidget';
 import { defaultIcons, editableWidget, withHeaderTools } from './tools';
 
-const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => { } } = {}) => ({
+const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => { }, id } = {}) => ({
     gridEvents: {
         ...gridEvents,
-        onGridSort: (sortBy, sortOrder) => updateProperty("sortOptions", { sortBy, sortOrder })
+        onGridSort: (sortBy, sortOrder) => updateProperty(id, "sortOptions", { sortBy, sortOrder })
     }
 }));
 /**
@@ -23,15 +23,15 @@ const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, 
  * Moreover enhances it to allow delete.
 */
 export default compose(
-    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => {} } = {}) => {
+    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => {}, id } = {}) => {
         const _debounceOnAddFilter = debounce((...args) => updateProperty(...args), 500);
         return {
             gridEvents: {
                 ...gridEvents,
-                onAddFilter: (widgetFilter) => _debounceOnAddFilter(`quickFilters.${widgetFilter.attribute}`, widgetFilter),
+                onAddFilter: (widgetFilter) => _debounceOnAddFilter(id, `quickFilters.${widgetFilter.attribute}`, widgetFilter),
                 onColumnResize:
                 (colIdx, width, rg, d, a, columns) =>
-                    updateProperty(`options.columnSettings["${get(columns.filter(c => !c.hide)[colIdx], "name")}"].width`, width)
+                    updateProperty(id, `options.columnSettings["${get(columns.filter(c => !c.hide)[colIdx], "name")}"].width`, width)
             }
         };
     }),

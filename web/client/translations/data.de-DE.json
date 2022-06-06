@@ -1804,7 +1804,8 @@
                  },
                  "emptyMap": {
                     "title": "Leere Karte",
-                    "description": "Mit leerer Karte beginnen"
+                    "description": "Mit leerer Karte beginnen",
+                    "noNameDescription": "Die Auswahl hat eine leere Karte. Fügen Sie der leeren Karte einen Namen hinzu, um mit der Kartenkonfiguration fortzufahren"
                 }
             },
             "title": "Titel",
@@ -1833,7 +1834,7 @@
                     "backToPreview": "Zurück zur Vorschau",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "selectALayer": "Wähle eine Ebene",
-                    "selectAMap": "Wählen Sie eine Karte",
+                    "selectAMap": "Wählen Sie eine oder mehrere Karten aus",
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
                     "backToTableOptions": "Zurück zu den Tabellenoptionen",
@@ -1843,7 +1844,8 @@
                     "addTheWidget": "Hinzufügen des Widget",
                     "titlePlaceholder": "Gib den Titel ein...",
                     "textPlaceholder": "Text eingeben...",
-                    "useThisMap": "Benutze diese Karte",
+                    "useThisMap": "Verwenden Sie diese Karte",
+                    "useTheseMap": "Verwenden Sie diese Karten",
                     "configureMapOptions": "Kartenoptionen konfigurieren",
                     "enableIdentifyTool": "Identifizierungswerkzeug aktivieren",
                     "disableIdentifyTool": "Identifizierungswerkzeug deaktivieren",
@@ -1907,6 +1909,13 @@
                     "unhide": "Einblenden",
                     "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "Keine Karte gefunden",
+                "placeholder": "Kartennamen eingeben",
+                "selectLabel": "Wählen Sie eine Karte aus",
+                "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
+                "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
             },
             "chartType": {
                 "bar": {

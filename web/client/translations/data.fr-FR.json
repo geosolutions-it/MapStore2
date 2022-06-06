@@ -1767,7 +1767,8 @@
                 },
                 "emptyMap": {
                     "title": "Carte vide",
-                    "description": "Démarrer à partir d'une carte vide"
+                    "description": "Démarrer à partir d'une carte vide",
+                    "noNameDescription": "La sélection a une carte vide. Ajoutez un nom à la carte vide pour procéder à la configuration de la carte"
                 }
             },
             "title": "Titre",
@@ -1796,7 +1797,7 @@
                     "backToPreview": "Retour à l'aperçu",
                     "backToChartOptions": "Retour aux options de graphique",
                     "selectALayer": "Sélectionner une couche",
-                    "selectAMap": "Sélectionner une carte",
+                    "selectAMap": "Sélectionnez une ou plusieurs cartes",
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "backToTableOptions": "Retour à l'option de table",
@@ -1807,6 +1808,7 @@
                     "titlePlaceholder": "Entrez le titre...",
                     "textPlaceholder": "Entrez le texte...",
                     "useThisMap": "Utiliser cette carte",
+                    "useTheseMap": "Utilisez ces cartes",
                     "configureMapOptions": "Configurer les options de la carte",
                     "enableIdentifyTool": "Activer l'outil d'identification",
                     "disableIdentifyTool": "Désactiver l'outil d'identification",
@@ -1870,6 +1872,13 @@
                     "unhide": "Afficher",
                     "unhideDescription": "Afficher le widget pour les autres utilisateurs"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "Aucune carte trouvée",
+                "placeholder": "Entrez le nom de la carte",
+                "selectLabel": "Sélectionnez une carte",
+                "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
+                "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
             },
             "chartType": {
                 "bar": {
