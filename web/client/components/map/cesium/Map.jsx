@@ -229,7 +229,8 @@ class CesiumMap extends React.Component {
                         lng: longitude
                     },
                     crs: "EPSG:4326",
-                    intersectedFeatures
+                    intersectedFeatures,
+                    resolution: getResolutions()[Math.round(this.props.zoom)]
                 });
             }
         }
