@@ -112,7 +112,7 @@ class Toolbar extends React.Component {
 
     render() {
         const Container = this.props.disableAnimation ? NormalContainer : AnimatedContainer;
-        return (<ToolsContainer id={this.props.id} className={`${this.props.layout==="vertical"? 'mapToolbar': 'mapToolbarHorizontal' } btn-group-` + this.props.layout}
+        return (<ToolsContainer id={this.props.id} className={`${this.props.layout === "vertical" ? 'mapToolbar' : 'mapToolbarHorizontal' } btn-group-` + this.props.layout}
             toolCfg={this.props.btnConfig}
             container={Container}
             mapType={this.props.mapType}
