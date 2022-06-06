@@ -51,6 +51,8 @@ const ConnectedDisplay = connect(
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
 const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "3dtiles" || element.type === "vector" && element.id !== "annotations";
 const isWMS = ({element = {}} = {}) => element.type === "wms";
+const isWFS = ({element = {}} = {}) => element.type === "wfs";
+
 const isStylableLayer = (props) =>
     isLayerNode(props)
     && (isWMS(props) || isVectorStylableLayer(props));
@@ -244,7 +246,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.featureInfo',
             tooltipId: 'layerProperties.featureInfo',
             glyph: 'map-marker',
-            visible: showFeatureInfoTab && isLayerNode(props) && isWMS(props) && !(props.element.featureInfo && props.element.featureInfo.viewer),
+            visible: showFeatureInfoTab && isLayerNode(props) && (isWMS(props) || isWFS(props)) && !(props.element.featureInfo && props.element.featureInfo.viewer),
             Component: FeatureInfo,
             toolbar: [
                 {
