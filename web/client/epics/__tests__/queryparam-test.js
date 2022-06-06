@@ -12,9 +12,11 @@ import {
     checkMapOrientation,
     disableGFIForShareEpic,
     onMapClickForShareEpic,
-    readQueryParamsOnMapEpic
+    readQueryParamsOnMapEpic,
+    switchMapType
 } from '../queryparams';
-import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../../actions/map';
+import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap, initMap } from '../../actions/map';
+import { MAP_TYPE_CHANGED } from '../../actions/maptype';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
@@ -432,6 +434,40 @@ describe('queryparam epics', () => {
                 done();
             }, state);
     });
+    it('test readQueryParamsOnMapEpic with cesium (3d map) params', (done) => {
+        const state = {
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            },
+            mode: "embedded",
+            mapType: "leaflet"
+        };
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(CHANGE_MAP_VIEW);
+                    expect(actions[0].center).toExist();
+                    expect(actions[0].center.x).toBe(-74.2);
+                    expect(actions[0].center.y).toBe(40.7);
+                    expect(actions[0].zoom).toBe(16.5);
+                    expect(actions[0].viewerOptions.heading).toBe(0.1);
+                    expect(actions[0].viewerOptions.pitch).toBe(-0.7);
+                    expect(actions[0].viewerOptions.roll).toBe(6.2);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
     it('Test actions dispatched on Change View', (done)=>{
         const viewerOptions = {
             orientation: {
@@ -517,5 +553,56 @@ describe('queryparam epics', () => {
         checkMapOrientation(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
             .toArray()
             .subscribe(checkActions);
+    });
+    it('switch map type to cesium if cesium viewer options are found', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(addTimeoutEpic(switchMapType, 10), NUMBER_OF_ACTIONS, [
+            onLocationChanged({}),
+            initMap(true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                expect(actions[0].type).toBe(MAP_TYPE_CHANGED);
+                expect(actions[0].mapType).toBe('cesium');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
+    });
+    it('do nothing if cesium viewer options are not found', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5&pitch=-0.7"
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+        testEpic(addTimeoutEpic(switchMapType, 10), NUMBER_OF_ACTIONS, [
+            onLocationChanged({}),
+            initMap(true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
     });
 });

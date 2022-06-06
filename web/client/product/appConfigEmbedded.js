@@ -7,7 +7,7 @@
 */
 
 import {updateMapLayoutEpic} from '../epics/maplayout';
-import {readQueryParamsOnMapEpic} from '../epics/queryparams';
+import {readQueryParamsOnMapEpic, switchMapType, checkMapOrientation} from '../epics/queryparams';
 import maplayout from '../reducers/maplayout';
 import searchconfig from '../reducers/searchconfig';
 import version from '../reducers/version';
@@ -56,7 +56,9 @@ export default {
     },
     baseEpics: {
         updateMapLayoutEpic,
-        readQueryParamsOnMapEpic
+        readQueryParamsOnMapEpic,
+        switchMapType,
+        checkMapOrientation
     },
     storeOpts: {
         persist: {

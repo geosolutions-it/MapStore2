@@ -11,7 +11,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {get, head, isNaN, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
 import url from 'url';
 
-import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap} from '../actions/map';
+import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap, INIT_MAP} from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '../actions/search';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
@@ -27,7 +27,8 @@ import {mapSelector} from '../selectors/map';
 import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
 import { shareSelector } from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
-import {getRequestParameterValue} from "../utils/QueryParamsUtils";
+import { changeMapType } from '../actions/maptype';
+import {getCesiumViewerOptions, getParametersValues, getQueryActions} from "../utils/QueryParamsUtils";
 import {mapProjectionSelector} from "../utils/PrintUtils";
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 
@@ -35,7 +36,7 @@ import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 it maps params key to function.
 functions must return an array of actions or and empty array
 */
-const paramActions = {
+export const paramActions = {
     bbox: (parameters) => {
         const extent = parameters.bbox.split(',')
             .map(val => parseFloat(val))
@@ -64,9 +65,8 @@ const paramActions = {
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const viewerOptions = map.viewerOptions;
+        const viewerOptions = getCesiumViewerOptions(parameters, map);
         const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
-
         if (isValid) {
             return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
         }
@@ -140,24 +140,36 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
                 .take(1)
                 .switchMap(() => {
                     const state = store.getState();
-                    const parameters = Object.keys(paramActions)
-                        .reduce((params, parameter) => {
-                            const value = getRequestParameterValue(parameter, state);
-                            return {
-                                ...params,
-                                ...(value ? { [parameter]: value } : {})
-                            };
-                        }, {});
-                    const queryActions = Object.keys(parameters)
-                        .reduce((actions, param) => {
-                            return [
-                                ...actions,
-                                ...(paramActions[param](parameters, state) || [])
-                            ];
-                        }, []);
+                    const parameters = getParametersValues(paramActions, state);
+                    const queryActions = getQueryActions(parameters, paramActions, state);
                     return head(queryActions)
                         ? Rx.Observable.of(...queryActions)
                         : Rx.Observable.empty();
+                })
+        );
+
+/**
+ * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
+ * If speficic maps viewer options are found (atm just cesium) fire an action to change
+ * the map type to the appropriate one
+ * @param {*} action$ manages `LOCATION_CHANGE`
+ * @memberof epics.share
+ * @return {external:Observable}
+ */
+export const switchMapType = (action$, store) =>
+    action$.ofType(LOCATION_CHANGE)
+        .switchMap(() =>
+            action$.ofType(INIT_MAP)
+                .take(1)
+                .switchMap(() => {
+                    const state = store.getState();
+                    const map = mapSelector(state);
+                    const parameters = getParametersValues(paramActions, state);
+                    const cesiumViewerOptions = getCesiumViewerOptions(parameters, map);
+                    if (cesiumViewerOptions) {
+                        return Rx.Observable.of(changeMapType('cesium'));
+                    }
+                    return Rx.Observable.empty();
                 })
         );
 
@@ -215,7 +227,10 @@ export const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
         });
 
 export const checkMapOrientation = (action$, store) =>
-    action$.ofType(CHANGE_MAP_VIEW).
+    // TODO: this epic should be triggered not just upon location change
+    // but also on page refresh
+    action$.ofType(CHANGE_MAP_VIEW)
+        .take(1).
         switchMap(() => {
             const state = store.getState();
             const mapType = get(state, 'maptype.mapType') || '';
@@ -238,5 +253,6 @@ export default {
     readQueryParamsOnMapEpic,
     onMapClickForShareEpic,
     disableGFIForShareEpic,
-    checkMapOrientation
+    checkMapOrientation,
+    switchMapType
 };

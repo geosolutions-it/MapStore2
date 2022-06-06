@@ -70,6 +70,7 @@ class CesiumMap extends React.Component {
         hookRegister: {
             registerHook
         },
+        orientate: undefined,
         viewerOptions: {
             orientation: {
                 heading: 0,

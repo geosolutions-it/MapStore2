@@ -7,7 +7,9 @@
  */
 import expect from 'expect';
 
-import {getRequestLoadValue, getRequestParameterValue, postRequestLoadValue} from "../QueryParamsUtils";
+import { paramActions } from '../../epics/queryparams';
+import { CHANGE_MAP_VIEW } from '../../actions/map';
+import { getRequestLoadValue, getRequestParameterValue, postRequestLoadValue, getParametersValues, getQueryActions } from "../QueryParamsUtils";
 
 describe('QueryParamsUtils', () => {
     it('test getRequestLoadValue', () => {
@@ -74,6 +76,39 @@ describe('QueryParamsUtils', () => {
         expect(featureinfo.filterNameList).toBe(undefined);
         expect(zoom).toBe(5);
         expect(center).toBe("41,0");
+    });
+    it('test getParametersValues', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?center=11.558466796428766,41.415232026624764&zoom=12.344643329999036&heading=6.158556550454258&pitch=-0.2123635014967287&roll=0.000010414279262072055'
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const { center, zoom, heading, pitch, roll } = parameters;
+        expect(center).toBe('11.558466796428766,41.415232026624764');
+        expect(zoom).toBe(12.344643329999036);
+        expect(heading).toBe(6.158556550454258);
+        expect(pitch).toBe(-0.2123635014967287);
+        expect(roll).toBe(0.000010414279262072055);
+    });
+    it('test getQueryActions with center querystring parameter', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?center=11.558466796428766,41.415232026624764&zoom=12.344643329999036&heading=6.158556550454258&pitch=-0.2123635014967287&roll=0.000010414279262072055'
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const queryActions = getQueryActions(parameters, paramActions, state);
+        expect(queryActions.length).toBe(1);
+        const changeMapViewAction = queryActions[0];
+        expect(changeMapViewAction.type).toBe(CHANGE_MAP_VIEW);
+        expect(changeMapViewAction.center).toEqual({x: 11.558466796428766, y: 41.415232026624764, crs: 'EPSG:4326'});
+        expect(changeMapViewAction.viewerOptions).toEqual({heading: 6.158556550454258, pitch: -0.2123635014967287, roll: 0.000010414279262072055});
+        expect(changeMapViewAction.zoom).toBe(12.344643329999036);
     });
 });
 
