@@ -1885,7 +1885,7 @@
                 "placeholder": "Ingrese el nombre del mapa",
                 "selectLabel": "Seleccione un mapa",
                 "infoOnHide": "Expanda el widget para ver el selector de mapas",
-                "subTitle": "(CTRL + clic)"
+                "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
             "chartType": {
                 "bar": {

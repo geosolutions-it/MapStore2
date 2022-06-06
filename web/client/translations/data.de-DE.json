@@ -1923,7 +1923,7 @@
                 "placeholder": "Kartennamen eingeben",
                 "selectLabel": "Wählen Sie eine Karte aus",
                 "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
-                "subTitle": "(STRG + Klick)"
+                "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
             },
             "chartType": {
                 "bar": {

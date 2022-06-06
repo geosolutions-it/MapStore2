@@ -9,14 +9,19 @@
 import { isNil, castArray, isEmpty } from 'lodash';
 import React from 'react';
 import { compose } from 'recompose';
+import { Glyphicon } from "react-bootstrap";
 
 import Message from '../../../../I18N/Message';
+import HTML from '../../../../I18N/HTML';
 import BorderLayout from '../../../../layout/BorderLayout';
 import emptyState from '../../../../misc/enhancers/emptyState';
 import loadingState from '../../../../misc/enhancers/loadingState';
 import LoadingSpinner from '../../../../misc/LoadingSpinner';
 import MapCatalogForm from '../../../../maps/MapCatalogForm';
 import SideGridCard from '../../../../misc/cardgrids/SideGrid';
+import ButtonRB from "../../../../misc/Button";
+import tooltip from "../../../../misc/enhancers/tooltip";
+const Button = tooltip(ButtonRB);
 
 const SideGrid = compose(
     loadingState(({ loading, items = [] }) => items.length === 0 && loading),
@@ -29,9 +34,16 @@ const SideGrid = compose(
 
 )(SideGridCard);
 
-const SubTitle = (<div style={{textAlign: "center", fontStyle: "italic", margin: "-5px 0 10px"}}>
-    <Message msgId={"widgets.mapSwitcher.subTitle"} />
-</div>);
+const Title = ({title = ''}) => (<>{title}
+    <Button
+        style={{marginLeft: 4}}
+        tooltipPosition={"right"}
+        tooltip={<HTML msgId="widgets.mapSwitcher.subTitle" />}
+        className="maps-subtitle square-button-md no-border"
+        key="info-sign">
+        <Glyphicon glyph="info-sign" />
+    </Button></>
+);
 
 const MapCatalog = ({
     setSearchText = () => { },
@@ -48,8 +60,7 @@ const MapCatalog = ({
 }) => {
     return (<BorderLayout
         className="map-catalog"
-        header={header || <MapCatalogForm title={title}
-            subTitle={SubTitle}
+        header={header || <MapCatalogForm title={<Title title={title}/>}
             searchText={searchText}
             onSearchTextChange={setSearchText}
         />}
