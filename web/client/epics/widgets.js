@@ -270,13 +270,16 @@ export const updateLayerOnLoadingErrorChange = (action$, store) =>
 
 export const updateDependenciesMapOnMapSwitch = (action$, store) =>
     action$.ofType(UPDATE_PROPERTY)
-        .filter(({key, mode}) => key === "selectedMapId" && mode === "replace")
-        .switchMap(({id: widgetId, value: selectedMapId}) => {
-            const widgets = getFloatingWidgets(store.getState());
-            const updatedWidgets = updateDependenciesMapOfMapList(widgets, widgetId, selectedMapId);
+        .filter(({key}) => includes(["maps", "selectedMapId"], key))
+        .switchMap(({id: widgetId, value}) => {
             let observable$ = Rx.Observable.empty();
-            if (!isEqual(widgets, updatedWidgets)) {
-                observable$ = Rx.Observable.of(replaceWidgets(updatedWidgets));
+            const selectedMapId = typeof value === "string" ? value : value?.mapId;
+            if (selectedMapId) {
+                const widgets = getFloatingWidgets(store.getState());
+                const updatedWidgets = updateDependenciesMapOfMapList(widgets, widgetId, selectedMapId);
+                if (!isEqual(widgets, updatedWidgets)) {
+                    observable$ = Rx.Observable.of(replaceWidgets(updatedWidgets));
+                }
             }
             return observable$;
         });

@@ -500,7 +500,7 @@ describe('widgets Epics', () => {
             .subscribe(checkActions);
     });
 
-    it('updateDependenciesMapOnMapSwitch', (done) => {
+    it('updateDependenciesMapOnMapSwitch on mode="replace"', (done) => {
         const checkActions = actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(REPLACE);
@@ -531,6 +531,55 @@ describe('widgets Epics', () => {
                                 maps: [
                                     {center: {x: 0, y: 0, crs: 'EPSG:4236'}, zoom: 4, mapId: 'm1', layers: ['layer_1']},
                                     {center: {x: 1, y: 1, crs: 'EPSG:4236'}, zoom: 5, mapId: 'm2', layers: ['layer_2']}
+                                ]
+                            },
+                            {
+                                id: 'w2',
+                                widgetType: 'legend',
+                                dependenciesMap: {
+                                    zoom: "widgets[w1].maps[m1].zoom",
+                                    layers: "widgets[w1].maps[m1].layers",
+                                    viewport: "widgets[w1].maps[m1].bbox",
+                                    dependenciesMap: "widgets[w1].dependenciesMap",
+                                    mapSync: "widgets[w1].mapSync"
+                                }
+                            }]
+                        }
+                    }
+                }
+            });
+    });
+    it('updateDependenciesMapOnMapSwitch on mode="merge"', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(REPLACE);
+            expect(actions[0].widgets.length).toBe(2);
+            expect(actions[0].widgets[1].dependenciesMap.layers).toBe("widgets[w1].maps[m2].layers");
+            expect(actions[0].widgets[1].dependenciesMap.zoom).toBe("widgets[w1].maps[m2].zoom");
+            expect(actions[0].widgets[1].dependenciesMap.viewport).toBe("widgets[w1].maps[m2].bbox");
+            expect(actions[0].widgets[1].dependenciesMap.dependenciesMap).toBe("widgets[w1].dependenciesMap");
+            expect(actions[0].widgets[1].dependenciesMap.mapSync).toBe("widgets[w1].mapSync");
+            done();
+        };
+        testEpic(updateDependenciesMapOnMapSwitch,
+            1,
+            [updateWidgetProperty(
+                "w1",
+                "maps",
+                {center: {x: 1, y: 1, crs: 'EPSG:4236'}, zoom: 8, mapId: 'm2', layers: ['layer_2']},
+                "merge"
+            )],
+            checkActions,
+            {
+                widgets: {
+                    containers: {
+                        floating: {
+                            widgets: [{
+                                id: 'w1',
+                                selectedMapId: 'm1',
+                                widgetType: 'map',
+                                maps: [
+                                    {center: {x: 0, y: 0, crs: 'EPSG:4236'}, zoom: 4, mapId: 'm1', layers: ['layer_1']}
                                 ]
                             },
                             {

@@ -41,7 +41,7 @@ export default ({
             return null;
         }
         const { size } = options.find(o => o.mapId === value) || {};
-        if (!withContainer && size?.width < 800) {
+        if (!withContainer && size?.width <= 400) {
             // Show info icon when widget width cannot contain Map Switcher
             return (<Button
                 tooltipId="widgets.mapSwitcher.infoOnHide"
