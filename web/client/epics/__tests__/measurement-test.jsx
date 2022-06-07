@@ -187,7 +187,7 @@ describe('measurement epics', () => {
             }, null);
     });
     it('test openMeasureEpic', (done) => {
-        const NUMBER_OF_ACTIONS = 4;
+        const NUMBER_OF_ACTIONS = 3;
         const state = {
             controls: {
                 measure: {
@@ -203,10 +203,9 @@ describe('measurement epics', () => {
                 setControlProperty("measure", "enabled", true)
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[0].type).toBe("PURGE_MAPINFO_RESULTS");
-                expect(actions[1].type).toBe("HIDE_MAPINFO_MARKER");
-                expect(actions[2].type).toBe("REGISTER_EVENT_LISTENER");
-                expect(actions[3].type).toBe("MAP_LAYOUT:UPDATE_DOCK_PANELS");
+                expect(actions[0].type).toBe("HIDE_MAPINFO_MARKER");
+                expect(actions[1].type).toBe("REGISTER_EVENT_LISTENER");
+                expect(actions[2].type).toBe("MAP_LAYOUT:UPDATE_DOCK_PANELS");
                 done();
             }, state);
     });

@@ -56,7 +56,7 @@ import {
     LOAD_DEFAULT_STYLES,
     GEOMETRY_HIGHLIGHT,
     UNSELECT_FEATURE,
-    toggleVisibilityAnnotation
+    toggleVisibilityAnnotation, unSelectFeature
 } from '../actions/annotations';
 import { FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE, changeDrawingStatus } from '../actions/draw';
 
@@ -526,7 +526,7 @@ export default {
         this epic closes annotation once other tools takes control over drawing
         */
     tearDownByDrawingToolsEpic: (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'annotations',
-        () => Rx.Observable.of(purgeMapInfoResults())),
+        () => Rx.Observable.of(unSelectFeature())),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === ANNOTATIONS && !store.getState().controls.annotations.enabled)
         .switchMap(() => {

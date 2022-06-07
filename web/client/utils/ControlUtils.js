@@ -28,7 +28,7 @@ export const shutdownToolOnAnotherToolDrawing = (action$, store, toolName,
     isActiveCallback = (state, name) => createControlEnabledSelector(name)(state)
 ) =>
     action$.ofType(START_DRAWING, CHANGE_DRAWING_STATUS, REGISTER_EVENT_LISTENER, OPEN_FEATURE_GRID)
-        .filter(({type, status, owner, eventName, toolName: name}) => {
+        .filter(({type, status, method, owner, eventName, toolName: name}) => {
             const isActive = isActiveCallback(store.getState(), toolName);
             switch (type) {
             case OPEN_FEATURE_GRID:
@@ -37,7 +37,7 @@ export const shutdownToolOnAnotherToolDrawing = (action$, store, toolName,
                 return isActive && eventName === 'click' && name !== toolName;
             case CHANGE_DRAWING_STATUS:
                 return isActive &&
-                    (status === 'drawOrEdit' || status === 'start') && owner !== toolName;
+                    ((status === 'drawOrEdit' && method && method !== '') || status === 'start') && owner !== toolName;
             case START_DRAWING:
             default:
                 return isActive && toolName !== 'annotations';

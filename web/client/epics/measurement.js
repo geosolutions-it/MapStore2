@@ -26,7 +26,7 @@ import {
     SET_CONTROL_PROPERTY,
     TOGGLE_CONTROL
 } from '../actions/controls';
-import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
+import {hideMapinfoMarker} from '../actions/mapInfo';
 import {createControlEnabledSelector, measureSelector} from '../selectors/controls';
 import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
 import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../actions/map';
@@ -80,7 +80,7 @@ export const openMeasureEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
         .filter((action) => action.control === "measure" && isActiveSelector(store.getState()))
         .switchMap(() => {
-            const actions = [purgeMapInfoResults(), hideMapinfoMarker(),
+            const actions = [hideMapinfoMarker(),
                 registerEventListener('click', 'measure')];
             const {showCoordinateEditor} = store.getState()?.controls?.measure || {};
             if (showCoordinateEditor) {

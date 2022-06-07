@@ -49,7 +49,7 @@ import {
     toggleVisibilityAnnotation,
     geometryHighlight, EDIT_ANNOTATION, CLEAN_HIGHLIGHT, TOGGLE_ANNOTATION_VISIBILITY,
     addNewFeature,
-    setEditingFeature
+    setEditingFeature, UNSELECT_FEATURE
 } from '../../actions/annotations';
 
 import { toggleControl, SET_CONTROL_PROPERTY } from '../../actions/controls';
@@ -772,7 +772,7 @@ describe('annotations Epics', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                case PURGE_MAPINFO_RESULTS:
+                case UNSELECT_FEATURE:
                     break;
                 default:
                     expect(false).toBe(true);
