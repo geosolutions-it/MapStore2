@@ -7,7 +7,7 @@
  */
 
 import Rx from 'rxjs';
-import { head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined, get } from 'lodash';
+import {head, findIndex, castArray, isArray, find, values, isEmpty, isUndefined, get, isNil} from 'lodash';
 import assign from 'object-assign';
 import axios from 'axios';
 import uuidv1 from 'uuid/v1';
@@ -78,7 +78,13 @@ import {
 import { MEASURE_TYPE } from '../utils/MeasurementUtils';
 import { createSvgUrl } from '../utils/VectorStyleUtils';
 
-import { annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector, editingSelector } from '../selectors/annotations';
+import {
+    annotationsLayerSelector,
+    multiGeometrySelector,
+    symbolErrorsSelector,
+    editingSelector,
+    selectedSelector
+} from '../selectors/annotations';
 import { mapNameSelector } from '../selectors/map';
 import { groupsSelector } from '../selectors/layers';
 
@@ -526,7 +532,8 @@ export default {
         this epic closes annotation once other tools takes control over drawing
         */
     tearDownByDrawingToolsEpic: (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'annotations',
-        () => Rx.Observable.of(unSelectFeature())),
+        () => Rx.Observable.of(unSelectFeature()),
+        (state) => !isNil(selectedSelector(state))),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === ANNOTATIONS && !store.getState().controls.annotations.enabled)
         .switchMap(() => {
