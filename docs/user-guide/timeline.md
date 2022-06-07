@@ -89,7 +89,7 @@ By default, the **Snap to guide layer** is enabled. It allows to force the time 
 
 <img src="../img/timeline/snap-to-guide-layer.jpg" class="ms-docimage"/>
 
-If the animation is done with a *time interval layer*, this means that the time dimension of each individual feature will be handled as a time range, the user can choose the **Time interval snap point** from the options `Start` or `End`. An example of snapping from the `End` point for a *time interval layer* could be the following:
+If the time dimension of the layer has time ranges defined (start/end time) instead of time instants, the user can choose the **Time interval snap point** by selecting the option `Start` or `End`. An example of snapping to the `End` point could be the following:
 
 <img src="../img/timeline/time-interval-snap-point.gif" class="ms-docimage"/>
 
