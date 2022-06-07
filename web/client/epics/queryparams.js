@@ -113,6 +113,9 @@ export const paramActions = {
         return [];
     },
     zoom: () => {},
+    heading: () => {},
+    pitch: () => {},
+    roll: () => {}, // roll is currently not supported, we return standard 0 roll
     actions: (parameters) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
