@@ -114,3 +114,115 @@ Replacing:
 - [ ] Close the related milestone **vYYYY.XX.mm**
 
 ```
+```  
+    
+    
+    
+    
+## DevOps procedures ##
+
+
+a new structure, it is noncomplex and easy on the eye.
+    
+![171855405-229dadd8-eef6-4b5d-917b-3999ca5ba3e8](https://user-images.githubusercontent.com/106270940/172356737-a461d0c2-56f3-4f97-a8ae-400c634c53b2.png)
+
+We have just 3 jobs which are -> BUILD _> ENDPOINTSTESTS _> DEPLOY for all environments
+you can execute jobs under environment views, such as Stable - > 
+    
+
+If you are execute BUILD job for both dev and qa, it will be triggering respectively ENDPOINTSTEST,then DEPLOY.
+    
+But, If you are execute BUILD job for stable, it will be triggering just only ENDPOINTSTEST, then you have to execute DEPLOY job manuelly.
+    
+![image](https://user-images.githubusercontent.com/106270940/172356541-dc2bdc42-c28e-44ba-aa2b-9cede830bc46.png)
+    
+    
+Name Formats:
+
+Dev:
+    
+```
+MapStore2-Dev-Build
+MapStore2-Dev-EndpointsTests
+MapStore2-Dev-Deploy
+```
+    
+QA:
+```
+MapStore2-QA-Build
+MapStore2-QA-EndpointsTests
+MapStore2-QA-Deploy
+```
+Stable:
+```
+MapStore2-Stable-Build
+MapStore2-Stable-EndpointsTests
+MapStore2-Stable-Deploy
+```
+
+Docker.io image formats:
+    
+   
+
+> ${branch}-env
+
+Dev:
+```
+master-dev
+```
+Qa:
+```
+${branch}-qa -> exp: 2022.01.xx-qa
+```
+Stable:
+```
+${branch}-stable -> exp: 2022.01.xx-stable
+```
+<img width="334" alt="Screen Shot 2022-06-07 at 13 19 04" src="https://user-images.githubusercontent.com/106270940/172356813-d6eb3571-da58-4fa5-b85c-0afc5b66a65d.png">
+
+    
+Jenkins Jobs:
+
+`DEV` Environment:
+    
+**Dev View**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20DEV/
+    
+**Build**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20DEV/job/MapStore2-Dev-Build/
+    
+**EndpointsTests**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20DEV/job/MapStore2-Dev-EndPointTests/
+    
+**Deploy**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20DEV/job/MapStore2-Dev-Deploy/
+
+
+`QA` Environment:
+
+**QA View**    
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/
+    
+**Build**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/
+    
+**EndpointsTests**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-EndPointsTests/
+    
+**Deploy**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Deploy/
+
+`STABLE` Environment:
+
+**Stable View**    
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/
+    
+**Build**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/
+    
+**EndpointsTests**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-EndPointTests/
+    
+**Deploy**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/
+    
