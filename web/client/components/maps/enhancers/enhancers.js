@@ -16,6 +16,7 @@ import Message from '../../I18N/Message';
 import withVirtualScrollEnhancer from '../../misc/enhancers/infiniteScroll/withInfiniteScroll';
 import withControllableState from '../../misc/enhancers/withControllableState';
 import Icon from '../../misc/FitIcon';
+import { EMPTY_MAP } from "../../../utils/MapUtils";
 
 const defaultPreview = <Icon glyph="geoserver" padding={20} />;
 
@@ -65,7 +66,7 @@ const emptyMap = fn => (opts, page) => {
             ...props,
             total,
             items: [{
-                id: "EMPTY_MAP",
+                id: EMPTY_MAP,
                 title: <Message msgId="widgets.selectMap.emptyMap.title" />,
                 description: <Message msgId="widgets.selectMap.emptyMap.description" />,
                 preview: defaultPreview,
@@ -90,7 +91,7 @@ export const withEmptyMapVirtualScrollProperties = ({ loadPage: lp, scrollSpyOpt
     },
     loadPage: emptyMap(lp),
     hasMore: ({total, items}) => {
-        if (items && items.length >= 1 && items[0].id === "EMPTY_MAP") {
+        if (items && items.length >= 1 && items[0].id === EMPTY_MAP) {
             return total > (items.length - 1);
         }
         return total > items.length;
@@ -103,7 +104,7 @@ export const withEmptyMapVirtualScrollProperties = ({ loadPage: lp, scrollSpyOpt
  */
 export const withEmptyMapVirtualScroll = compose(
     withVirtualScrollEnhancer(withEmptyMapVirtualScrollProperties({ loadPage: loadPage, scrollSpyOptions, hasMore: ({ total, items = [] } = {}) => total > items.length })),
-    withProps(({ items }) => ({ skip: items && items[0] && items[0].id === "EMPTY_MAP" ? 1 : 0}))
+    withProps(({ items }) => ({ skip: items && items[0] && items[0].id === EMPTY_MAP ? 1 : 0}))
 );
 
 // manage local search text

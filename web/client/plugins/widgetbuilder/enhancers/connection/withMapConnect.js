@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { withHandlers } from 'recompose';
+import { WIDGETS_MAPS_REGEX } from "../../../../actions/widgets";
 
 /**
  * Adapter that transforms toggleConnection callback arguments into the toggleConnection action arguments
@@ -14,9 +15,18 @@ import { withHandlers } from 'recompose';
  */
 export default (mappings) => withHandlers({
     toggleConnection: ({ toggleConnection = () => { }, editorData = {}}) =>
-        (available = []) => toggleConnection(!editorData.mapSync, available, {
-            dependenciesMap: editorData.dependenciesMap,
-            mappings,
-            sourceWidgetType: editorData.widgetType
-        })
+        (available = [], widgets = []) => {
+            const availableDeps = available.filter(deps => {
+                const [, widgetId, mapId] = WIDGETS_MAPS_REGEX.exec(deps) || [];
+                if (widgetId && mapId) {
+                    return widgets.some(w=> w.id === widgetId && w.selectedMapId === mapId);
+                }
+                return deps;
+            });
+            return toggleConnection(!editorData.mapSync, availableDeps, {
+                dependenciesMap: editorData.dependenciesMap,
+                mappings,
+                sourceWidgetType: editorData.widgetType
+            });
+        }
 });

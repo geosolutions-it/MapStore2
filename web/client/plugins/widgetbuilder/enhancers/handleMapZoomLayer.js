@@ -48,11 +48,11 @@ const toBoundsArray = extent => {
 
 const enhancer = compose(
     connect(() => ({}), {
-        setMap: map => onEditorChange('map', map)
+        setMap: map => onEditorChange('maps', map)
     }),
     withHandlers({
         isEpsgSupported: ({ editorData = {}, selectedNodes = [] }) => () => {
-            const layers = editorData.map.layers;
+            const layers = editorData.maps?.find(m => m.mapId === editorData.selectedMapId)?.layers || [];
             const selectedLayers = selectedNodes.map(nodeId => layers.find(layer => layer.id === nodeId)).filter(l => l);
             const layersBbox = selectedLayers.filter(l => l.bbox).map(l => l.bbox);
             const uniqueCRS = layersBbox.length > 0 ? layersBbox.reduce((a, b) => a.crs === b.crs ? a : { crs: 'differentCRS' }) : { crs: 'differentCRS' };
@@ -60,8 +60,8 @@ const enhancer = compose(
             return currentEPSG && Proj4js.defs(currentEPSG);
         },
         zoomTo: ({ editorData = {}, setMap = () => {} }) => (selectedNodes) => {
-            const map = editorData.map;
-            const layers = editorData.map.layers;
+            const map = editorData.maps?.find(m => m.mapId === editorData.selectedMapId) || {};
+            const layers = map.layers || [];
             const selectedLayers = selectedNodes.map(nodeId => layers.find(layer => layer.id === nodeId)).filter(l => l);
             const layersBbox = selectedLayers.filter(l => l.bbox).map(l => l.bbox);
             const bbox = layersBbox.length > 1 ? layersBbox.reduce((a, b) => {
@@ -95,7 +95,7 @@ const enhancer = compose(
                 let newBbox = { ...map.bbox, bounds: newBounds };
 
                 setMap({
-                    ...editorData.map,
+                    ...map,
                     center,
                     zoom,
                     bbox: newBbox,

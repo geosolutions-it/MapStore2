@@ -15,13 +15,14 @@ import {belongsToGroup} from '../../../../../../utils/LayersUtils';
 /**
  * Add to the TOC or the Node editor some handlers for TOC nodes
  * add to the wrapped component the following methods:
- *  - changeLayerProperty (id, key, value) - calls onChange on map.layers[index].key
+ *  - changeLayerProperty (id, key, value) - calls onChange on map.layers[index].key|maps[mapId].layers[index].key
  *  - changeLayerPropertyGroup (gid, key, value) - calls multiple times onChange
- *  - changeGroupProperty(gid, key, value) - calls onChange on map.groups[index].key
+ *  - changeGroupProperty(gid, key, value) - calls onChange on map.groups[index].key|maps[mapId].groups[index].key
  *  - updateMapEntries(object) - calls multiple times onChange
  * These method will call the method `onChange` from props mapping accordingly
- * @prop {function} onChange callback with arguments : (path, value) -> path will be something like: `map.layers[2].title` or `map.groups[1].title`, `map[somethingElse]`
+ * @prop {function} onChange callback with arguments : (path, value) -> path will be something like: `map.layers[2].title`|`maps[mapId].layers[2].title` or `map.groups[1].title`/`maps[mapId].groups[1].title`, `map[somethingElse]`|maps[mapId][somethingElse]
  */
+const getMapPath = (map) => `${map.mapId ? `maps[${map.mapId}]` : 'map'}`;
 export default withHandlers({
     /**
      * Changes the layer property
@@ -32,7 +33,7 @@ export default withHandlers({
                 const index = findIndex(map.layers || [], {
                     id
                 });
-                onChange(`map.layers[${index}].${key}`, value);
+                onChange(`${getMapPath(map)}.layers[${index}].${key}`, value);
             },
     /**
      * Change layer properties by group
@@ -45,12 +46,12 @@ export default withHandlers({
                     .filter(belongsToGroup(gid))
                     .map(({ id } = {}) => findIndex(map.layers || [], { id }))
                     .filter(i => i >= 0)
-                    .map(index => onChange(`map.layers[${index}].${key}`, value)),
+                    .map(index => onChange(`${getMapPath(map)}.layers[${index}].${key}`, value)),
     /**
      * Change group properties (expanded...)
      */
     changeGroupProperty:
-        ({ onChange = () => { }, map = [] }) =>
+        ({ onChange = () => { }, map = {} }) =>
             (id, key, value) => {
 
                 const EXPANDED = 'expanded';
@@ -61,9 +62,9 @@ export default withHandlers({
 
                 if (key === EXPANDED && !groups?.[correctGroupIndex]?.id) {
                     // add id if missing
-                    onChange(`map.groups[${correctGroupIndex}].id`, id);
+                    onChange(`${getMapPath(map)}.groups[${correctGroupIndex}].id`, id);
                 }
-                onChange(`map.groups[${correctGroupIndex}].${key}`, value);
+                onChange(`${getMapPath(map)}.groups[${correctGroupIndex}].${key}`, value);
             },
-    updateMapEntries: ({ onChange = () => { } }) => (obj = {}) => Object.keys(obj).map(k => onChange(`map[${k}]`, obj[k]))
+    updateMapEntries: ({ onChange = () => { }, map = {} }) => (obj = {}) => Object.keys(obj).map(k => onChange(`${getMapPath(map)}[${k}]`, obj[k]))
 });

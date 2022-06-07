@@ -53,6 +53,8 @@ export const GOOGLE_MERCATOR = {
     ZOOM_FACTOR: 2
 };
 
+export const EMPTY_MAP = 'EMPTY_MAP';
+
 import proj4 from "proj4";
 
 export const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
@@ -874,6 +876,7 @@ export const reprojectZoom = (zoom, mapProjection, printProjection) => {
     return printResolutions.indexOf(printResolution);
 };
 
+
 export default {
     createRegisterHooks,
     EXTENT_TO_ZOOM_HOOK,
@@ -885,6 +888,7 @@ export default {
     DEFAULT_SCREEN_DPI,
     ZOOM_TO_EXTENT_HOOK,
     CLICK_ON_MAP_HOOK,
+    EMPTY_MAP,
     registerHook,
     getHook,
     dpi2dpm,
