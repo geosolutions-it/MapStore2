@@ -766,7 +766,10 @@ describe('annotations Epics', () => {
     });
     it('test on close annotations panel by another drawing tool', (done) => {
         const state = {
-            controls: {annotations: {enabled: true}}
+            controls: {annotations: {enabled: true}},
+            annotations: {
+                selected: {}
+            }
         };
         testEpic(addTimeoutEpic(tearDownByDrawingToolsEpic, 100), 1, registerEventListener("click", "anotherPlugin"), actions => {
             expect(actions.length).toBe(1);
@@ -781,6 +784,27 @@ describe('annotations Epics', () => {
             done();
         }, state);
     });
+    it('test on close annotations panel by another drawing tool - no feature selected', (done) => {
+        const state = {
+            controls: {annotations: {enabled: true}},
+            annotations: {
+                selected: null
+            }
+        };
+        testEpic(addTimeoutEpic(tearDownByDrawingToolsEpic, 100), 1, registerEventListener("click", "anotherPlugin"), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
+    });
+
     it('save annotation', (done) => {
         const state = {
             annotations: {featureType: "Point"},
