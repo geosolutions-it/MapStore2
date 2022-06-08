@@ -4,7 +4,7 @@
   <parent>
     <groupId>it.geosolutions.__PROJECTNAME__</groupId>
     <artifactId>__PROJECTNAME__-root</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   <artifactId>__PROJECTNAME__-web</artifactId>
   <packaging>war</packaging>
