@@ -161,7 +161,7 @@ const Api = {
     getUserDetails: function({access_token: accessToken}) {
         const url = "users/user/details";
         return axios.get(url, {
-            baseURL: "/rest/geostore",
+            baseURL: "rest/geostore",
             headers: {
                 Authorization: `Bearer ${accessToken}`
             },
