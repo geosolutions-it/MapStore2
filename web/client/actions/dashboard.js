@@ -26,6 +26,8 @@ export const DASHBOARD_ADD_NEW_SERVICE = "DASHBOARD:ADD_NEW_SERVICE";
 export const DASHBOARD_CATALOG_MODE = "DASHBOARD:CATALOG_MODE";
 export const DASHBOARD_DELETE_SERVICE = "DASHBOARD:DELETE_SERVICE";
 export const DASHBOARD_SAVE_SERVICE_LOADING = "DASHBOARD:SAVE_SERVICE_LOADING";
+export const DASHBOARD_EXPORT = "DASHBOARD:EXPORT";
+export const DASHBOARD_IMPORT = "DASHBOARD:IMPORT";
 
 export const setEditing = (editing) => ({type: SET_EDITING, editing });
 
@@ -39,7 +41,8 @@ export const dashboardSaved = id => ({type: DASHBOARD_SAVED, id});
 export const loadDashboard = id => ({ type: LOAD_DASHBOARD, id});
 export const resetDashboard = () => ({ type: DASHBOARD_RESET});
 export const dashboardLoaded = (resource, data) => ({ type: DASHBOARD_LOADED, resource, data});
-
+export const dashboardExport = (data, fileName) => ({ type: DASHBOARD_EXPORT, data, fileName});
+export const dashboardImport = (file, resource) => ({ type: DASHBOARD_IMPORT, file, resource});
 /**
  * @param {boolean} value the value of the flag
  * @param {string} [name] the name of the flag to set. loading is anyway always triggered

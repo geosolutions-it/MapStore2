@@ -27,10 +27,18 @@ export const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
 // items
 const MAX_ITEMS = 50;
+export const expandLimitSelector = state => get(state, 'timeline.settings.expandLimit');
 
 export const isCollapsed = state => get(state, 'timeline.settings.collapsed');
 
 export const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
+
+export const snapTypeSelector = state => get(state, "timeline.settings.snapType") || "start";
+
+export const snapRadioButtonEnabledSelector = state => get(state, "timeline.settings.snapRadioButtonEnabled") || false;
+
+// detects Geoserver version if fromEnd querystring parameter is supported
+export const endValuesSupportSelector = state => get(state, "timeline.settings.endValuesSupport");
 
 /**
  * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
@@ -70,7 +78,8 @@ export const timeStampToItems = (ISOString, viewRange) => {
         return [{
             start: new Date(start),
             end: new Date(end || start),
-            type: end ? 'range' : 'point'
+            type: end ? 'range' : 'point',
+            ...(end && { className: 'interval'})
         }];
     }
     return null;
@@ -193,7 +202,7 @@ export const multidimOptionsSelectorCreator = layerId => state => {
     if (!bounds || !isMapSync(state)) { // TODO: optional filtering
         return {};
     }
-    if (sourceVersion !== "1.1") {
+    if (sourceVersion !== "1.2") {
         const spaceDimension = layerDimensionDataSelectorCreator(layerId, "space")(state);
         const crs = get(spaceDimension, 'domain.CRS');
 

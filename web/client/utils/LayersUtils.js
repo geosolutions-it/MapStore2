@@ -81,7 +81,8 @@ const addBaseParams = (url, params) => {
 };
 
 const isSupportedLayerFunc = (layer, maptype) => {
-    const Layers = require('./' + maptype + '/Layers');
+    const LayersUtil = require('./' + maptype + '/Layers');
+    const Layers = LayersUtil.default || LayersUtil;
     if (layer.type === "mapquest" || layer.type === "bing") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
@@ -336,11 +337,10 @@ export const getDimension = (dimensions, dimension) => {
  * the layer id will returned will be something like `layerName__2` when 2 is the layer size (for retro compatibility, it should be removed in the future).
  * Otherwise a random string will be appended to the layer name.
  * @param {object} layer the layer
- * @param {array} [layers] an array to use to generate the id @deprecated
  * @returns {string} the id of the layer, or a generated one
  */
-export const getLayerId = (layerObj, layers) => {
-    return layerObj && layerObj.id || layerObj.name + "__" + (layers ? layers.length : Math.random().toString(36).substring(2, 15));
+export const getLayerId = (layerObj) => {
+    return layerObj && layerObj.id || `${layerObj.name ? `${layerObj.name}__` : ''}${uuidv1()}`;
 };
 /**
  * Normalizes the layer to assign missing Ids
@@ -575,10 +575,14 @@ export const saveLayer = (layer) => {
         tileSize: layer.tileSize,
         version: layer.version
     },
+    layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},
     layer.credits ? { credits: layer.credits } : {},
     layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
-    layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {});
+    layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {},
+    layer.options ? { options: layer.options } : {},
+    layer.credits ? { credits: layer.credits } : {},
+    !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {});
 };
 /**
  * default initial constant regex rule for searching for a /geoserver/ string in a url

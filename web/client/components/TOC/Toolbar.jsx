@@ -23,6 +23,7 @@ class Toolbar extends React.Component {
     static propTypes = {
         groups: PropTypes.array,
         items: PropTypes.array,
+        layers: PropTypes.array,
         selectedLayers: PropTypes.array,
         generalInfoFormat: PropTypes.string,
         selectedGroups: PropTypes.array,
@@ -41,6 +42,7 @@ class Toolbar extends React.Component {
     static defaultProps = {
         groups: [],
         items: [],
+        layers: [],
         selectedLayers: [],
         selectedGroups: [],
         onToolsActions: {

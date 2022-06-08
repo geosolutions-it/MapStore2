@@ -87,10 +87,6 @@ export const handleToolbar = withHandlers({
         update(focusedContent.path + ".editMap", !editMap),
     onReset: ({update, focusedContent: {path = ""} = {}}) => () => {
         update(path + `.map`, undefined);
-    },
-    discardAndClose: ({update, focusedContent = {}}) => (contentMap) => {
-        update(focusedContent.path + `.map`, contentMap);
-        update(focusedContent.path + ".editMap", false);
     }
 });
 /**
@@ -107,13 +103,8 @@ const ResetButton = (props) => (<ConfirmButton
 />);
 
 export const withToolbar = compose(
-    withProps(({pendingChanges, toggleEditing, disableReset, onReset, toggleAdvancedEditing = () => {}}) => ({
+    withProps(({disableReset, onReset, toggleAdvancedEditing = () => {}}) => ({
         buttons: [{
-            glyph: "floppy-disk",
-            disabled: !pendingChanges,
-            tooltipId: "geostory.contentToolbar.saveChanges",
-            onClick: toggleEditing
-        }, {
             renderButton: <ResetButton disabled={disableReset} onClick={onReset}/>
         },
         {
@@ -163,18 +154,7 @@ export const withConfirmClose = compose(
     withProps(({toggleEditing})  => ({
         CloseBtn: (props) => (
             <ToolbarButton  onClick={toggleEditing} {...props} />)
-    })),
-    branch(
-        ({pendingChanges}) => pendingChanges,
-        withProps(({discardAndClose, contentMap}) => ({
-            CloseBtn: (props) => (
-                <ConfirmButton
-                    onClick={ () =>discardAndClose(contentMap)}
-                    confirmTitle={<Message msgId="geostory.contentToolbar.confirmCloseMapEditing" />}
-                    confirmContent={<Message msgId="geostory.contentToolbar.pendingChangesDiscardConfirm" />}
-                    {...props}/>)
-        }))
-    )
+    }))
 );
 
 /**

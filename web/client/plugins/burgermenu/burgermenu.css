@@ -8,7 +8,7 @@
     display: none;
     position: absolute;
     left: -160px;
-    top: 0px;
+    top: 0;
     width: 160px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }

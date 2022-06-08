@@ -46,7 +46,10 @@ import {
     styleServiceSelector
 } from '../../selectors/styleeditor';
 import { createShallowSelector } from '../../utils/ReselectUtils';
-import { getEditorMode } from '../../utils/StyleEditorUtils';
+import {
+    getEditorMode,
+    getAttributes
+} from '../../utils/StyleEditorUtils';
 import inlineWidgets from './inlineWidgets';
 
 const styleUpdateTypes = {
@@ -57,24 +60,10 @@ const styleUpdateTypes = {
     'classification-raster': classificationRaster
 };
 
-function getAttributes(hintProperties, geometryType) {
-    const stringTypeToCheck = [ 'string'];
-    const numberTypeToCheck = ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal', 'number', 'int'];
-
-    return hintProperties && geometryType !== 'raster' && Object.keys(hintProperties)
-        .filter((key) => [...stringTypeToCheck, ...numberTypeToCheck]
-            .indexOf(hintProperties[key].localType.toLowerCase()) !== -1)
-        .map((key) => {
-            const { localType } = hintProperties[key];
-            return {
-                attribute: key,
-                label: key,
-                type: numberTypeToCheck
-                    .indexOf(localType.toLowerCase()) !== -1
-                    ? 'number'
-                    : 'string'
-            };
-        }) || [];
+function getAttributesFromHintProperties(hintProperties, geometryType) {
+    return hintProperties && geometryType !== 'raster'
+        ? getAttributes(hintProperties)
+        : [];
 }
 
 const ConnectedVisualStyleEditor = connect(
@@ -95,7 +84,7 @@ const ConnectedVisualStyleEditor = connect(
             code,
             mode: getEditorMode(format),
             bands: isArray(hintProperties) && geometryType === 'raster' && hintProperties || [],
-            attributes: getAttributes(hintProperties, geometryType),
+            attributes: getAttributesFromHintProperties(hintProperties, geometryType),
             error: error.edit || null,
             loading,
             format,
@@ -151,6 +140,7 @@ export function StyleEditor({
     onChange,
     loading,
     header,
+    editors: editorsProp = [],
     ...props
 }) {
 
@@ -193,7 +183,7 @@ export function StyleEditor({
             </div>);
     }
 
-    const EditorComponent = editors[editorType] || editors.textarea;
+    const EditorComponent = editorsProp[editorType] || editors[editorType] || editors.textarea;
 
     return (
         <BorderLayout
@@ -229,6 +219,8 @@ export function StyleEditor({
             }>
             {EditorComponent && <EditorComponent
                 {...props}
+                code={code}
+                error={error}
                 onChange={(newCode, style) => {
                     onChange(newCode);
                     if (isObject(style)) {

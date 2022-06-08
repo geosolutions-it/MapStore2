@@ -20,6 +20,7 @@ import ChartAdvancedOptions from './ChartAdvancedOptions';
 import ColorClassModal from '../chart/ColorClassModal';
 import { defaultColorGenerator } from '../../../../charts/WidgetChart';
 import classNames from 'classnames';
+import uuid from 'uuid';
 
 const DEFAULT_CUSTOM_COLOR_OPTIONS = {
     base: 190,
@@ -62,7 +63,8 @@ const COLORS = [{
     custom: true
 }];
 
-const CLASSIFIED_COLORS = [{title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}];
+const CLASSIFIED_COLORS = [{id: uuid.v1(), title: '', color: generateRandomHexColor(), type: 'Polygon', unique: ''}];
+const CLASSIFIED_RANGE_COLORS = [{id: uuid.v1(), title: '', color: generateRandomHexColor(), type: 'Polygon', min: 0, max: 0}];
 
 const getConfirmModal = (show, onClose, onConfirm) => (
     <ConfirmModal show={show} onClose={onClose} onConfirm={onConfirm}>
@@ -79,17 +81,24 @@ const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type ||
 const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
 
 /** Backup to class value (unique) if label (title) is not provided */
-const formatAutoColorOptions = (classification) => (
-    classification.reduce((acc, curr) => ([
-        ...acc,
+const formatAutoColorOptions = (classification, attributeType) => (
+    classification.map( classItem => (
         {
-            ...( {title: curr.title ?? curr.unique }),
-            color: curr.color,
-            value: curr.unique,
-            unique: curr.unique
+            id: classItem.id || uuid.v1(),
+            ...( {title: classItem.title ?? classItem.unique }),
+            color: classItem.color,
+            // if attribute is a string set value and label
+            ...(attributeType === 'string' && {
+                value: classItem.unique,
+                unique: classItem.unique
+            }),
+            // if attribute is a number set min/max in range
+            ...(attributeType === 'number' && {
+                max: classItem.max ?? 0,
+                min: classItem.min ?? 0
+            })
         }
-    ]
-    ), [])
+    ))
 );
 
 export default ({
@@ -97,6 +106,7 @@ export default ({
     data = { options: {}, autoColorOptions: {} },
     onChange = () => { },
     options = [],
+    typedOptions = [],
     formOptions = {
         showGroupBy: true,
         showUom: false,
@@ -112,11 +122,32 @@ export default ({
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const customColor = data.autoColorOptions?.name === 'global.colors.custom';
     const { classificationAttribute = undefined } = data?.options || {};
+    const { classificationAttributeType = undefined } = data?.options || {};
     const { classification = CLASSIFIED_COLORS } = data?.autoColorOptions || {};
+    const { rangeClassification = CLASSIFIED_RANGE_COLORS } = data?.autoColorOptions || {};
+    /** we keep the two classification types separated in state but color ramp only gets the selected type one */
+    const currentClassificationType = classificationAttributeType === 'number' ? rangeClassification : classification;
     const { defaultClassLabel = '' } = data?.autoColorOptions || {};
     const defaultCustomColor = data?.autoColorOptions?.defaultCustomColor || defaultColorGenerator(1, DEFAULT_CUSTOM_COLOR_OPTIONS)[0] || '#0888A1';
     const discardEmptyClasses = (classifications) => {
         return [classifications.filter(item => !item.unique && !item.value), classifications.filter(item => item.unique && item.value)];
+    };
+    const discardEmptyRangeClasses = (classifications) => {
+        return [classifications.filter(item => !item.title.trim()), classifications.filter(item => item.title)];
+    };
+    const resetEmptyClasses = (emptyClasses, nonEmptyClasses, classifications, classType, currentClassType) => {
+        const stateSlice = classType === 'number' ? 'autoColorOptions.rangeClassification' : 'autoColorOptions.classification';
+        const resetClass = classType === 'number' ? CLASSIFIED_RANGE_COLORS : CLASSIFIED_COLORS;
+        if (emptyClasses.length === classifications.length) {
+            onChange(stateSlice, resetClass);
+            if (currentClassType === classType) {
+                // resets attribute class selection only if current type is selected
+                onChange("options.classificationAttribute", undefined);
+                onChange("options.classificationAttributeType", undefined);
+            }
+        } else {
+            onChange(stateSlice, nonEmptyClasses || []);
+        }
     };
 
     /** line charts do not support custom colors ATM and blue is preselected */
@@ -217,18 +248,20 @@ export default ({
                                     )}
                                     <Col xs={customColor ? 10 : 12} className={classNames({ 'custom-color': customColor })}>
                                         <ColorRamp
-                                            items={getColorRangeItems(data.type, classification, classificationAttribute, defaultCustomColor)}
-                                            value={head(getColorRangeItems(data.type, classification, classificationAttribute, defaultCustomColor).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
+                                            items={getColorRangeItems(data.type, currentClassificationType, classificationAttribute, defaultCustomColor)}
+                                            value={head(getColorRangeItems(data.type, currentClassificationType, classificationAttribute, defaultCustomColor).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                             samples={data.type === "pie" ? 5 : 1}
                                             onChange={v => {
                                                 onChange("autoColorOptions", {
                                                     ...v.options,
                                                     name: v.name,
-                                                    ...(classification ? { classification: formatAutoColorOptions(classification) } : {} ),
+                                                    ...(classification ? { classification: formatAutoColorOptions(classification, 'string') } : {} ),
+                                                    ...(rangeClassification ? { rangeClassification: formatAutoColorOptions(rangeClassification, 'number') } : {} ),
                                                     defaultCustomColor: defaultCustomColor ?? '#0888A1'
                                                 });
                                                 if (!v.custom) {
                                                     onChange("options.classificationAttribute", undefined);
+                                                    onChange("options.classificationAttributeType", undefined);
                                                 }
                                             }}/>
                                     </Col>
@@ -241,7 +274,10 @@ export default ({
                         show={showModal}
                         onClose={() => {
                             const unfinishedClasses = classification.filter(item => !item.unique || !item.value);
-                            if (unfinishedClasses.length > 0 && classificationAttribute) {
+                            const unfinishedRangeClasses = rangeClassification.filter(item => !item.title);
+                            /** only shows confirm modal if current classification type is empty */
+                            if (((unfinishedClasses.length > 0 && classificationAttributeType === 'string') ||
+                                (unfinishedRangeClasses.length > 0 && classificationAttributeType === 'number')) && classificationAttribute) {
                                 setShowConfirmModal(true);
                             } else {
                                 setShowModal(false);
@@ -251,24 +287,33 @@ export default ({
                             setShowModal(false);
                             onChange("autoColorOptions.defaultCustomColor", defaultCustomColor);
                             onChange("options.classificationAttribute", classificationAttribute);
+                            onChange("options.classificationAttributeType", classificationAttributeType);
                             if (classificationAttribute) {
                                 onChange("autoColorOptions", {
                                     ...data.autoColorOptions,
                                     defaultClassLabel: (defaultClassLabel || ''),
-                                    classification: (classification ? formatAutoColorOptions(classification) : [])
+                                    classification: (classification ? formatAutoColorOptions(classification, 'string') : []),
+                                    rangeClassification: (rangeClassification ? formatAutoColorOptions(rangeClassification, 'number') : [])
                                 });
                             }
                         }}
-                        onChangeClassAttribute={(value) => {
+                        onChangeClassAttribute={(value, type) => {
                             onChange("options.classificationAttribute", value);
+                            onChange("options.classificationAttributeType", type);
                         }}
                         classificationAttribute={classificationAttribute}
-                        onUpdateClasses={(newClassification) => {
-                            onChange("autoColorOptions.classification", formatAutoColorOptions(newClassification) || []);
+                        classificationAttributeType={classificationAttributeType}
+                        onUpdateClasses={(newClassification, attributeType) => {
+                            if (attributeType === 'number') {
+                                onChange("autoColorOptions.rangeClassification", formatAutoColorOptions(newClassification, attributeType) || []);
+                            } else {
+                                onChange("autoColorOptions.classification", formatAutoColorOptions(newClassification, attributeType) || []);
+                            }
                         }}
-                        options={options}
+                        options={typedOptions}
                         placeHolder={placeHolder}
                         classification={classification}
+                        rangeClassification={rangeClassification}
                         defaultCustomColor={defaultCustomColor}
                         onChangeColor={(color) => onChange("autoColorOptions.defaultCustomColor", color)}
                         defaultClassLabel={defaultClassLabel}
@@ -281,12 +326,10 @@ export default ({
                         () => {setShowConfirmModal(false);},
                         () => {
                             const [emptyClasses, nonEmptyClasses] = discardEmptyClasses(classification);
-                            if (emptyClasses.length === classification.length) {
-                                onChange("options.classificationAttribute", undefined);
-                                onChange("autoColorOptions.classification", CLASSIFIED_COLORS);
-                            } else {
-                                onChange("autoColorOptions.classification", nonEmptyClasses || []);
-                            }
+                            const [emptyRangeClasses, nonEmptyRangeClasses] = discardEmptyRangeClasses(rangeClassification);
+                            /** in case only one unfinished row is left, reset the class attribute selection */
+                            resetEmptyClasses(emptyClasses, nonEmptyClasses, classification, 'string', classificationAttributeType);
+                            resetEmptyClasses(emptyRangeClasses, nonEmptyRangeClasses, rangeClassification, 'number', classificationAttributeType);
                             setShowConfirmModal(false);
                             setShowModal(false);
                         })}

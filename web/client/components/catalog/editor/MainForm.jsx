@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState } from 'react';
-import {get, find} from 'lodash';
+import React, { useState, useEffect } from 'react';
+import {get, find, isEmpty} from 'lodash';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
 
@@ -129,11 +129,14 @@ export default ({
     function handleProtocolValidity(url) {
         onChangeUrl(url);
         if (url) {
-            const isInvalidProtocol = !isValidURL(url);
+            const isInvalidProtocol = !isValidURL(url, null, service?.allowUnsecureLayers);
             setInvalidProtocol(isInvalidProtocol);
             setValid(!isInvalidProtocol);
         }
     }
+    useEffect(() => {
+        !isEmpty(service.url) && handleProtocolValidity(service.url);
+    }, [service?.allowUnsecureLayers]);
     const URLEditor = service.type === "tms" ? TmsURLEditor : DefaultURLEditor;
     return (
         <Form horizontal >

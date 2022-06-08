@@ -19,7 +19,6 @@ export default {
         HeaderPlugin: require('./plugins/Header').default,
         HomeDescriptionPlugin: require('./plugins/HomeDescription').default,
         MadeWithLovePlugin: require('./plugins/MadeWithLove').default,
-        MailingListsPlugin: require('./plugins/MailingLists').default,
         MapTypePlugin: require('./plugins/MapType').default,
         NavMenu: require('./plugins/NavMenu').default,
         // framework plugins
@@ -38,7 +37,12 @@ export default {
         CreateNewMapPlugin: require('../plugins/CreateNewMap').default,
         Dashboard: require('../plugins/Dashboard').default,
         DashboardEditor: require('../plugins/DashboardEditor').default,
+        DashboardExport: require('../plugins/DashboardExport').default,
+        DashboardImport: require('../plugins/DashboardImport').default,
         DashboardsPlugin: require('../plugins/Dashboards').default,
+        DeleteMapPlugin: require('../plugins/DeleteMap').default,
+        DeleteGeoStoryPlugin: require('../plugins/DeleteGeoStory').default,
+        DeleteDashboardPlugin: require('../plugins/DeleteDashboard').default,
         DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu').default,
         ExpanderPlugin: require('../plugins/Expander').default,
@@ -53,6 +57,8 @@ export default {
         GeoStoryEditorPlugin: require('../plugins/GeoStoryEditor').default,
         GeoStorySavePlugin: require('../plugins/GeoStorySave').GeoStorySave,
         GeoStorySaveAsPlugin: require('../plugins/GeoStorySave').GeoStorySaveAs,
+        GeoStoryExport: require('../plugins/GeoStoryExport').default,
+        GeoStoryImport: require('../plugins/GeoStoryImport').default,
         DashboardSavePlugin: require('../plugins/DashboardSave').DashboardSave,
         DashboardSaveAsPlugin: require('../plugins/DashboardSave').DashboardSaveAs,
         GeoStoryNavigationPlugin: require('../plugins/GeoStoryNavigation').default,
@@ -126,7 +132,9 @@ export default {
         WidgetsTrayPlugin: require('../plugins/WidgetsTray').default,
         ZoomAllPlugin: require('../plugins/ZoomAll').default,
         ZoomInPlugin: require('../plugins/ZoomIn').default,
-        ZoomOutPlugin: require('../plugins/ZoomOut').default
+        ZoomOutPlugin: require('../plugins/ZoomOut').default,
+        SidebarMenuPlugin: require('../plugins/SidebarMenu').default
+
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

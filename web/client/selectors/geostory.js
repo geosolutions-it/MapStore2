@@ -49,6 +49,13 @@ export const controlSelectorCreator = control => state => get(state, `geostory.c
 export const saveDialogSelector = state => controlSelectorCreator(Controls.SHOW_SAVE)(state);
 
 /**
+ * Gets the state of the delete dialog
+ * @param {object} state the application state
+ * @returns the status of the delete dialog (if true the dialog is visible)
+ * */
+export const deleteDialogSelector = state => controlSelectorCreator(Controls.SHOW_DELETE)(state);
+
+/**
  * Gets the resource for geostory (contains authorization and other useful information)
  * **NOTE** don't confuse this with the story resources. This is the single resource
  * of the whole geostory, containing permissions, id, and so on (e.g. the GeoStore resource)

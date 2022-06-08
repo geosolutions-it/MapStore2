@@ -9,7 +9,7 @@
 import { reproject, getUnits, reprojectGeoJson, normalizeSRS } from './CoordinatesUtils';
 
 import {addAuthenticationParameter} from './SecurityUtils';
-import { getGoogleMercatorScales } from './MapUtils';
+import { calculateExtent, getGoogleMercatorScales, getResolutionsForProjection, getScales, reprojectZoom } from './MapUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
 import { annotationsToPrint } from './AnnotationsUtils';
 import { colorToHexStr } from './ColorUtils';
@@ -18,7 +18,7 @@ import { extractValidBaseURL } from './TileProviderUtils';
 import { getTileMatrix } from './WMTSUtils';
 import { guessFormat } from './TMSUtils';
 import { get as getProjection } from 'ol/proj';
-import { isArray, filter, find, isEmpty, toNumber, castArray } from 'lodash';
+import { isArray, filter, find, isEmpty, toNumber, castArray, reverse } from 'lodash';
 import { getFeature } from '../api/WFS';
 import { generateEnvString } from './LayerLocalizationUtils';
 import url from 'url';
@@ -29,6 +29,9 @@ import { currentLocaleLanguageSelector } from '../selectors/locale';
 import { printSpecificationSelector } from "../selectors/print";
 import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
+import head from "lodash/head";
+
+import { getGridGeoJson } from "./grids/MapGridsUtils";
 
 const defaultScales = getGoogleMercatorScales(0, 21);
 let PrintUtils;
@@ -220,36 +223,50 @@ export const getMapSize = (layout, maxWidth) => {
     };
 };
 
+export const mapProjectionSelector = (state) => state?.print?.map?.projection ?? "EPSG:3857";
+
 /**
  * Creates the mapfish print specification from the current configuration
  * @param  {object} spec the current configuration
  * @returns {object}      the mapfish print configuration to send to the server
  * @memberof utils.PrintUtils
  */
-export const getMapfishPrintSpecification = (spec) => {
+export const getMapfishPrintSpecification = (rawSpec, state) => {
+    const {params, ...baseSpec} = rawSpec;
+    const spec = {...baseSpec, ...params};
+    const mapProjection = mapProjectionSelector(state);
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
+    const projectedZoom = Math.round(reprojectZoom(spec.scaleZoom, mapProjection, spec.projection));
+    const scales = spec.scales || getScales(spec.projection);
+    const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
+
+    const projectedSpec = {
+        ...spec,
+        center: projectedCenter,
+        scaleZoom: projectedZoom
+    };
     return {
         "units": getUnits(spec.projection),
         "srs": normalizeSRS(spec.projection || 'EPSG:3857'),
-        "layout": PrintUtils.getLayoutName(spec),
+        "layout": PrintUtils.getLayoutName(projectedSpec),
         "dpi": parseInt(spec.resolution, 10),
         "outputFilename": "mapstore-print",
         "geodetic": false,
         "mapTitle": spec.name || '',
         "comment": spec.description || '',
-        "layers": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'map'),
+        "layers": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'map'),
         "pages": [
             {
                 "center": [
                     projectedCenter.x,
                     projectedCenter.y
                 ],
-                "scale": spec.scale || defaultScales[Math.round(spec.scaleZoom)],
+                "scale": reprojectedScale,
                 "rotation": 0
             }
         ],
-        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend'),
-        ...spec.params
+        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'legend'),
+        ...params
     };
 };
 
@@ -265,7 +282,7 @@ export const localizationFilter = (state, spec) => {
     return Promise.resolve(localizedSpec);
 };
 export const wfsPreloaderFilter = (state, spec) => preloadData(spec);
-export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec));
+export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec, state));
 
 const defaultPrintingServiceTransformerChain = [
     {name: "localization", transformer: localizationFilter},
@@ -425,12 +442,12 @@ export function addValidator(id, name, validator) {
  */
 export const getDefaultPrintingService = () => {
     return {
-        print: (layers) => {
+        print: (extra) => {
             const state = getStore().getState();
             const printSpec = printSpecificationSelector(state);
-            const intialSpec = layers ? {
+            const intialSpec = extra ? {
                 ...printSpec,
-                layers
+                ...extra
             } : printSpec;
             return getSpecTransformerChain().map(t => t.transformer).reduce((previous, f) => {
                 return previous.then(spec=> f(state, spec));
@@ -460,6 +477,25 @@ export const getDefaultPrintingService = () => {
 };
 
 /**
+ * Default screen DPI (96) to Print DPI (72). Used to calculate correct resolution for
+ * screen preview and printed map.
+ * @memberof utils.PrintUtils
+ */
+export const DEFAULT_PRINT_RATIO = 96.0 / 72.0;
+
+/**
+ * Returns the correct multiplier to sync the screen resolution and the printed map resolution.
+ * @param {number} printSize printed map size (in print points (1/72"))
+ * @param {number} screenSize screen preview size (in pixels)
+ * @param {number} dpiRatio ratio screen_dpi / printed_dpi
+ * @return {number} the resolution multiplier to apply to the screen preview
+ * @memberof utils.PrintUtils
+ */
+export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAULT_PRINT_RATIO) {
+    return printSize / screenSize * dpiRatio;
+}
+
+/**
  * Generate the layers (or legend) specification for print.
  * @param  {array} layers  the layers configurations
  * @param  {spec} spec    the print configurations
@@ -467,9 +503,9 @@ export const getDefaultPrintingService = () => {
  * @returns {array}         the configuration array for layers (or legend) to send to the print service.
  * @memberof utils.PrintUtils
  */
-export const getMapfishLayersSpecification = (layers, spec, purpose) => {
+export const getMapfishLayersSpecification = (layers, spec, state, purpose) => {
     return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
-        .map((layer) => PrintUtils.specCreators[layer.type][purpose](layer, spec));
+        .map((layer) => PrintUtils.specCreators[layer.type][purpose](layer, spec, state));
 };
 export const specCreators = {
     wms: {
@@ -543,13 +579,46 @@ export const specCreators = {
             },
             geoJson: reprojectGeoJson({
                 type: "FeatureCollection",
-                features: isAnnotationLayer(layer) && annotationsToPrint(layer.features) ||
-                                layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
+                features: (isAnnotationLayer(layer) || !layer.style) ? annotationsToPrint(layer.features)
+                    : layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
             },
             "EPSG:4326",
             spec.projection)
         }
         )
+    },
+    graticule: {
+        map: (layer, spec, state) => {
+            const layout = head(state?.print?.capabilities.layouts.filter((l) => l.name === getLayoutName(spec)));
+            const ratio = getResolutionMultiplier(layout?.map?.width, spec.size?.width ?? 370) ?? 1;
+            const resolutions = getResolutionsForProjection(spec.projection).map(r => r * ratio);
+            const resolution = resolutions[spec.scaleZoom];
+            return {
+                type: 'Vector',
+                name: layer.name || "graticule",
+                "opacity": getOpacity(layer),
+                styleProperty: "ms_style",
+                styles: {
+                    "lines": PrintUtils.toOpenLayers2Style(layer, layer.style, "GraticuleLines"),
+                    "xlabels": PrintUtils.toOpenLayers2TextStyle(layer, layer.labelXStyle, "GraticuleXLabels"),
+                    "ylabels": PrintUtils.toOpenLayers2TextStyle(layer, layer.labelYStyle, "GraticuleYLabels"),
+                    "frame": PrintUtils.toOpenLayers2Style(layer, layer.frameStyle, "GraticuleFrame")
+                },
+                geoJson: getGridGeoJson({
+                    resolutions,
+                    mapProjection: spec.projection,
+                    gridProjection: layer.srs || spec.projection,
+                    extent: calculateExtent(spec.center, resolution, spec.size, spec.projection),
+                    zoom: spec.scaleZoom,
+                    withLabels: true,
+                    xLabelFormatter: layer.xLabelFormatter,
+                    yLabelFormatter: layer.yLabelFormatter,
+                    xLabelStyle: PrintUtils.toOpenLayers2TextStyle(layer, layer.labelXStyle, "GraticuleXLabels"),
+                    yLabelStyle: PrintUtils.toOpenLayers2TextStyle(layer, layer.labelYStyle, "GraticuleYLabels"),
+                    frameSize: layer.frameRatio
+                })
+            };
+        }
     },
     wfs: {
         map: (layer) => ({
@@ -802,6 +871,65 @@ export const rgbaTorgb = (rgba = "") => {
     return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
 };
 
+function getLabelAlign(horizontal, vertical) {
+    const hAlign = horizontal === "start" ? "l" : (horizontal === "end" ? "r" : "c");
+    const vAlign = vertical === "top" ? "t" : (vertical === "bottom" ? "b" : "m");
+    return [hAlign, vAlign].join("");
+}
+
+/**
+ *
+ * @param {*} layer
+ * @param {*} style
+ * @param {*} styleType
+ * @memberof utils.PrintUtils
+ */
+export const toOpenLayers2TextStyle = function(layer, style, styleType) {
+    if (!style) {
+        return PrintUtils.getOlDefaultStyle(layer, styleType);
+    }
+    switch (styleType) {
+    case 'GraticuleXLabels': {
+        return {
+            "fontColor": style.color || "#000000",
+            "fontFamily": style.font || "12px Calibri,sans-serif",
+            "fontWeight": style.fontWeight || "bold",
+            "fontSize": style.fontSize || "14",
+            "label": "{properties.valueText}",
+            "labelAlign": getLabelAlign(style.textAlign || "center", style.verticalAlign || "bottom"),
+            "labelOutlineColor": style.labelOutlineColor || "#FFFFFF",
+            "labelOutlineWidth": style.labelOutlineWidth / 4.0 || 0.5,
+            "rotation": style.rotation ? -style.rotation : 0
+        };
+    }
+    case 'GraticuleYLabels': {
+        return {
+            "fontColor": style.color || "#000000",
+            "fontFamily": style.font || "12px Calibri,sans-serif",
+            "fontWeight": style.fontWeight || "bold",
+            "fontSize": style.fontSize || "14",
+            "label": "{properties.valueText}",
+            "labelAlign": getLabelAlign(style.textAlign || "end", style.verticalAlign || "middle"),
+            "labelOutlineColor": style.labelOutlineColor || "#FFFFFF",
+            "labelOutlineWidth": style.labelOutlineWidth / 4.0 || 0.5,
+            "rotation": style.rotation ? -style.rotation : 0
+        };
+    }
+    default: {
+        return {
+            "fontColor": "#000000",
+            "fontFamily": "12px Calibri,sans-serif",
+            "fontWeight": "bold",
+            "fontSize": "14",
+            "label": "{properties.valueText}",
+            "labelAlign": "cb",
+            "labelOutlineColor": "#FFFFFF",
+            "labelOutlineWidth": 0.5
+        };
+    }
+    }
+};
+
 /**
  * Useful for print (Or generic Openlayers 2 conversion style)
  * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
@@ -811,6 +939,7 @@ export const toOpenLayers2Style = function(layer, style, styleType) {
     if (!style || layer.styleName === "marker") {
         return PrintUtils.getOlDefaultStyle(layer, styleType);
     }
+    // TODO: add support for grid labels (x and y)
     // commented the available options.
     return {
         "fillColor": colorToHexStr(style.fillColor),
@@ -822,7 +951,8 @@ export const toOpenLayers2Style = function(layer, style, styleType) {
         "pointRadius": style.radius,
         "strokeColor": colorToHexStr(style.color),
         "strokeOpacity": style.opacity,
-        "strokeWidth": style.weight
+        "strokeWidth": style.weight,
+        "strokeDashstyle": style.lineDash ? reverse(style.lineDash).join(" ") : undefined
         // "strokeLinecap": "round",
         // "strokeDashstyle": "dot",
         // "fontColor": "#000000",
@@ -883,6 +1013,47 @@ export const getOlDefaultStyle = (layer, styleType) => {
             "strokeWidth": 1
         };
     }
+    case 'GraticuleLines': {
+        return {
+            "strokeColor": '#ff7800',
+            "strokeOpacity": 0.9,
+            "strokeWidth": 2,
+            "strokeDashstyle": "4 0.5"
+        };
+    }
+    case 'GraticuleFrame': {
+        return {
+            "strokeColor": '#000000',
+            "strokeOpacity": 1.0,
+            "strokeWidth": 1,
+            "fillColor": "#FFFFFF",
+            "fillOpacity": 1.0
+        };
+    }
+    case 'GraticuleXLabels': {
+        return {
+            "fontColor": "#000000",
+            "fontFamily": "12px Calibri,sans-serif",
+            "fontWeight": "bold",
+            "fontSize": "14",
+            "label": "{properties.valueText}",
+            "labelAlign": "cb",
+            "labelOutlineColor": "#FFFFFF",
+            "labelOutlineWidth": 0.5
+        };
+    }
+    case 'GraticuleYLabels': {
+        return {
+            "fontColor": "#000000",
+            "fontFamily": "12px Calibri,sans-serif",
+            "fontWeight": "bold",
+            "fontSize": "14",
+            "label": "{properties.valueText}",
+            "labelAlign": "rm",
+            "labelOutlineColor": "#FFFFFF",
+            "labelOutlineWidth": 0.5
+        };
+    }
     default: {
         return {
             "fillColor": "#0000FF",
@@ -904,6 +1075,7 @@ PrintUtils = {
     specCreators,
     normalizeUrl,
     toOpenLayers2Style,
+    toOpenLayers2TextStyle,
     getWMTSMatrixIds,
     getOlDefaultStyle
 };

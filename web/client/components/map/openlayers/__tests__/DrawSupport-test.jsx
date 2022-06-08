@@ -16,6 +16,7 @@ import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/fe
 import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
+import VectorSource from "ol/source/Vector";
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -2458,4 +2459,112 @@ describe('Test DrawSupport', () => {
 
         done();
     });
+    it('test snapping interaction creation', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            }),
+            getLayers: () => ({
+                getArray: () => [{
+                    get: () => 'snap_layer_1',
+                    getSource: () => new VectorSource(),
+                    type: 'VECTOR'
+                }]
+            })
+        };
+
+        let support = renderDrawSupport({ map: fakeMap});
+        support = renderDrawSupport({
+            map: fakeMap,
+            snapping: true,
+            options: {geodesic: true},
+            snappingLayerInstance: { id: 'snap_layer_1' },
+            snapConfig: { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'},
+            features: []
+        });
+        const snappingInteraction = !!support?.snapInteraction;
+        expect(snappingInteraction).toBe(true);
+    });
+    it('test drawend with editEnabled', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
+                ]]
+            },
+            properties: {
+                'name': "some name"
+            }
+        };
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChange = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon"
+                options={{drawEnabled: true, editEnabled: false, stopAfterDrawing: true}}
+                onEndDrawing={testHandlers.onEndDrawing}
+                onChangeDrawingStatus={testHandlers.onStatusChange}
+                onGeometryChanged={testHandlers.onGeometryChanged}
+            />, document.getElementById("container")
+        );
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new Polygon([[[12, 43], [15, 43], [15, 44], [12, 44]]]),
+                name: 'Poly1'
+            })
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+        expect(spyChange.calls.length).toBe(1);
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon"
+                options={{drawEnabled: false, editEnabled: true, stopAfterDrawing: false}}
+                onEndDrawing={testHandlers.onEndDrawing}
+                onChangeDrawingStatus={testHandlers.onStatusChange}
+                onGeometryChanged={testHandlers.onGeometryChanged}
+            />, document.getElementById("container")
+        );
+        expect(support.drawInteraction).toBeFalsy();
+    });
 });
+

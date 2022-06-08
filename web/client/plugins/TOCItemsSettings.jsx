@@ -28,6 +28,7 @@ import {
 } from '../utils/LayersUtils';
 import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
+import { isCesium } from '../selectors/maptype';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -41,8 +42,9 @@ const tocItemsSettingsSelector = createSelector([
     originalSettingsSelector,
     activeTabSettingsSelector,
     elementSelector,
-    isLocalizedLayerStylesEnabledSelector
-], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled) => ({
+    isLocalizedLayerStylesEnabledSelector,
+    isCesium
+], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive) => ({
     settings,
     element,
     groups,
@@ -53,7 +55,8 @@ const tocItemsSettingsSelector = createSelector([
     initialSettings,
     originalSettings,
     activeTab,
-    isLocalizedLayerStylesEnabled
+    isLocalizedLayerStylesEnabled,
+    isCesiumActive
 }));
 
 /**

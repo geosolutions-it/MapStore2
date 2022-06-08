@@ -7,7 +7,7 @@
  */
 import Rx from 'rxjs';
 
-import { get, head, isEmpty, find, castArray, includes, reduce } from 'lodash';
+import {get, head, isEmpty, find, castArray, includes, reduce} from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import axios from '../libs/ajax';
 import bbox from '@turf/bbox';
@@ -15,7 +15,13 @@ import { fidFilter } from '../utils/ogc/Filter/filter';
 import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
 
 import assign from 'object-assign';
-import { changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset } from '../actions/draw';
+import {
+    changeDrawingStatus,
+    GEOMETRY_CHANGED,
+    drawSupportReset,
+    setSnappingLayer,
+    toggleSnapping
+} from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
 import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
@@ -99,19 +105,23 @@ import {
     ACTIVATE_TEMPORARY_CHANGES,
     disableToolbar,
     FEATURES_MODIFIED,
-    deactivateGeometryFilter as  deactivateGeometryFilterAction,
+    deactivateGeometryFilter as deactivateGeometryFilterAction,
     setSelectionOptions,
     setPagination,
     launchUpdateFilterFunc,
-    LAUNCH_UPDATE_FILTER_FUNC
+    LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER
 } from '../actions/featuregrid';
 
-import { TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl } from '../actions/controls';
+import {
+    TOGGLE_CONTROL,
+    resetControls,
+    setControlProperty,
+    toggleControl
+} from '../actions/controls';
 
 import {
     queryPanelSelector,
-    showCoordinateEditorSelector,
-    drawerEnabledControlSelector
+    drawerEnabledControlSelector, createControlEnabledSelector
 } from '../selectors/controls';
 
 import { setHighlightFeaturesPath as setHighlightFeaturesPathAction } from '../actions/highlight';
@@ -150,9 +160,12 @@ import {
 
 import { interceptOGCError } from '../utils/ObservableUtils';
 import { queryFormUiStateSelector, spatialFieldSelector } from '../selectors/queryform';
+import {isSnappingActive} from "../selectors/draw";
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
+import {dockPanelsSelector} from "../selectors/maplayout";
+import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -797,19 +810,36 @@ export const resetEditingOnFeatureGridClose = (action$, store) => action$.ofType
 
 );
 
+/**
+ * close all dock panels at the right whenever feature editor is open
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
 export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID)
         .switchMap( () => {
-            let actions = [
-                setControlProperty('metadataexplorer', 'enabled', false),
-                setControlProperty('annotations', 'enabled', false),
-                setControlProperty('details', 'enabled', false)
-            ];
-            if (showCoordinateEditorSelector(store.getState())) {
-                actions.push(setControlProperty('measure', 'enabled', false));
-            }
+            const actions = [];
+            const state = store.getState();
+            const rightPanels = dockPanelsSelector(state).right;
+            rightPanels.forEach(panel => {
+                if (createControlEnabledSelector(panel)(state)) actions.push(setControlProperty(panel, 'enabled', false));
+            });
             return Rx.Observable.from(actions);
         });
+
+/**
+ * closes feature editor once another drawing tool is open
+ * @param action$
+ * @param store
+ * @returns {Observable<*>}
+ */
+export const closeFeatureGridOnDrawingToolOpen = (action$, store) =>
+    shutdownToolOnAnotherToolDrawing(action$, store, 'featureGrid',
+        () => Rx.Observable.from([closeFeatureGrid()]),
+        (state) => isFeatureGridOpen(state)
+    );
+
 /**
  * intercept geometry changed events in draw support to update current
  * modified geometry in featuregrid
@@ -817,6 +847,7 @@ export const closeRightPanelOnFeatureGridOpen = (action$, store) =>
  */
 export const onFeatureGridGeometryEditing = (action$, store) => action$.ofType(GEOMETRY_CHANGED)
     .filter(a => a.owner === "featureGrid")
+    .delay(500) // delay to avoid race condition in draw interactions
     .switchMap( (a) => {
         const state = store.getState();
         const defaultFeatureProj = getDefaultFeatureProjection();
@@ -1184,3 +1215,30 @@ export const hideDrawerOnFeatureGridOpenMobile = (action$, { getState } = {}) =>
             && drawerEnabledControlSelector(getState())
         )
         .mapTo(toggleControl('drawer', 'enabled'));
+
+export const setDefaultSnappingLayerOnFeatureGridOpen = (action$, { getState } = {}) =>
+    action$
+        .ofType(SET_LAYER)
+        .switchMap(() => {
+            const selectedLayerId = selectedLayerSelector(getState())?.id;
+            return Rx.Observable.of(setSnappingLayer(selectedLayerId));
+        });
+
+export const resetSnappingLayerOnFeatureGridClosed = (action$, { getState } = {}) =>
+    action$
+        .ofType(CLOSE_FEATURE_GRID)
+        .switchMap(() => {
+            const actions = [setSnappingLayer(false)];
+            isSnappingActive(getState()) && actions.push(toggleSnapping());
+            return Rx.Observable.from(actions);
+        });
+
+export const toggleSnappingOffOnFeatureGridViewMode = (action$, { getState } = {}) =>
+    action$
+        .ofType(TOGGLE_MODE)
+        .filter((a) => a.mode === "VIEW")
+        .switchMap(() => {
+            const actions = [];
+            isSnappingActive(getState()) && actions.push(toggleSnapping());
+            return Rx.Observable.from(actions);
+        });

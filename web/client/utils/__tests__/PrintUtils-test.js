@@ -32,6 +32,7 @@ import { KVP1, REST1 } from '../../test-resources/layers/wmts';
 import { poi as TMS110_1 } from '../../test-resources/layers/tms';
 import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
 import { setStore } from '../StateUtils';
+import { getGoogleMercatorScales } from '../MapUtils';
 
 const layer = {
     url: "http://mygeoserver",
@@ -165,6 +166,15 @@ const vectorLayer = {
         "color": "rgb(0, 0, 255)",
         "fillColor": "rgb(0, 0, 255)"
     }
+};
+
+const graticuleLayer = {
+    "type": "graticule",
+    "visibility": true,
+    "group": "graticules",
+    "id": "graticule__0",
+    "name": "graticule",
+    "style": {}
 };
 
 const annotationsVectorLayer = {
@@ -316,32 +326,32 @@ describe('PrintUtils', () => {
 
     it('custom params are applied to wms layers', () => {
 
-        const specs = getMapfishLayersSpecification([layer], {}, 'map');
+        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.myparam).toExist();
         expect(specs[0].customParams.myparam).toBe("myvalue");
     });
     it('vector layer generation for print', () => {
-        const specs = getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
     it('vector layer from annotations are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('vector layer from measurements are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, 'map');
+        const specs = getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('wms layer generation for legend', () => {
-        const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, 'legend');
+        const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
     });
@@ -385,7 +395,7 @@ describe('PrintUtils', () => {
             }
         ]);
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        const specs = getMapfishLayersSpecification([layer], {}, 'map');
+        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.authkey).toExist();
@@ -396,7 +406,7 @@ describe('PrintUtils', () => {
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso,
             filterObj: filterObjSottoPasso
-        }], {}, 'map');
+        }], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.CQL_FILTER).toExist();
@@ -406,7 +416,7 @@ describe('PrintUtils', () => {
         const specs = getMapfishLayersSpecification([{
             ...layerSottoPasso,
             filterObj: filterObjSottoPasso
-        }], {}, 'map');
+        }], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.CQL_FILTER).toExist();
@@ -416,14 +426,14 @@ describe('PrintUtils', () => {
         const specs = getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso
-        }], {}, 'map');
+        }], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.CQL_FILTER).toExist();
         expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
     });
     it('wms layer generation for legend includes scale', () => {
-        const specs = getMapfishLayersSpecification([layer], testSpec, 'legend');
+        const specs = getMapfishLayersSpecification([layer], testSpec, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].classes.length).toBe(1);
@@ -487,6 +497,23 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.custom).toBe("customvalue");
     });
+    it('getMapfishPrintSpecification with fixed scales', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2000000, 1000000, 500000, 100000, 50000]
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(100000);
+    });
+    it('getMapfishPrintSpecification with standard scales', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(getGoogleMercatorScales(0, 21)[3]);
+    });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();
@@ -498,6 +525,7 @@ describe('PrintUtils', () => {
                 wms: layer,
                 wmts: KVP1,
                 vector: vectorLayer,
+                graticule: graticuleLayer,
                 tms: TMS110_1,
                 tileprovider: BasemapAT,
                 osm: {

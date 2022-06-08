@@ -233,22 +233,30 @@ const includeLoaded = (name, loadedPlugins, plugin, stateSelector) => {
     return plugin;
 };
 
+const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
+    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
+    pluginImpl;
+
 const getPriority = (plugin, override = {}, container) => {
+    const pluginImpl = executeDeferredProp(plugin.impl, plugin.config, container);
     return (
         get(override, container + ".priority") ||
-        get(plugin, container + ".priority") ||
+        get(pluginImpl, container + ".priority") ||
         0
     );
 };
 
-export const getMorePrioritizedContainer = (pluginImpl, override = {}, plugins, priority) => {
+export const getMorePrioritizedContainer = (plugin, override = {}, plugins, priority) => {
+    const pluginImpl = plugin.impl;
     return plugins.reduce((previous, current) => {
         const containerName = current.name || current;
-        const pluginPriority = getPriority(pluginImpl, override, containerName);
+        const pluginPriority = getPriority(plugin, override, containerName);
         return pluginPriority > previous.priority ? {
             plugin: {
                 name: containerName,
-                impl: assign({}, pluginImpl[containerName], override[containerName])
+                impl: {
+                    ...(isFunction(pluginImpl[containerName]) ? pluginImpl[containerName](plugin.config) : pluginImpl[containerName]),
+                    ...(override[containerName] ?? {})}
             },
             priority: pluginPriority} : previous;
     }, {plugin: null, priority: priority});
@@ -271,8 +279,8 @@ const canContain = (container, plugin, override = {}) => {
     return plugin[container] || override[container] || false;
 };
 
-const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => {
-    return getMorePrioritizedContainer(pluginImpl,
+const isMorePrioritizedContainer = (plugin, override, plugins, priority) => {
+    return getMorePrioritizedContainer(plugin,
         override,
         plugins,
         priority).plugin === null;
@@ -281,10 +289,6 @@ const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => 
 const isValidConfiguration = (cfg) => {
     return cfg && isString(cfg) || (isObject(cfg) && cfg.name);
 };
-
-const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
-    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
-    pluginImpl;
 
 export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containerName, containerId, isDefault, loadedPlugins = {}, filter) => {
     return Object.keys(plugins)
@@ -325,8 +329,8 @@ export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containe
             return [...acc, curr];
         }, [])
     // include only plugins for which container is the preferred container
-        .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
-            getPriority(plugin.impl, plugin.config.override, containerName)))
+        .filter((plugin) => isMorePrioritizedContainer(plugin, plugin.config.override, pluginsConfig,
+            getPriority(plugin, plugin.config.override, containerName)))
         .map((plugin) => {
             const pluginName = getPluginSimpleName(plugin.name);
             const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);

@@ -17,9 +17,6 @@ div.record-grid .record-item .panel-body{
 #mapstore-catalog-panel .record-item {
     min-height: 150px;
 }
-#catalog-root {
-    position: static!important;
-}
 
 /*
 !important is needed because the library we used

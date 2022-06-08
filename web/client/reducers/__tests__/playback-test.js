@@ -18,7 +18,8 @@ import {
     changeSetting,
     selectPlaybackRange,
     framesLoading,
-    STATUS
+    STATUS,
+    setIntervalData
 } from '../../actions/playback';
 
 import playback from '../playback';
@@ -121,5 +122,17 @@ describe('playback reducer', () => {
         const state = playback( undefined, action);
         expect(state).toExist();
         expect(state.framesLoading).toBe(true);
+    });
+    it('set interval data to true', () => {
+        const action = setIntervalData(true);
+        const state = playback(undefined, action);
+        expect(state).toExist();
+        expect(state.metadata.timeIntervalData).toBe(true);
+    });
+    it('set interval data to false', () => {
+        const action = setIntervalData(false);
+        const state = playback(undefined, action);
+        expect(state).toExist();
+        expect(state.metadata.timeIntervalData).toBe(false);
     });
 });

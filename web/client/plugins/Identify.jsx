@@ -89,7 +89,7 @@ const selector = createStructuredSelector({
     reverseGeocodeData: (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     warning: (state) => state.mapInfo && state.mapInfo.warning,
     currentLocale: currentLocaleSelector,
-    dockStyle: state => mapLayoutValuesSelector(state, { height: true }),
+    dockStyle: (state) => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp('defaultCoordinateFormat'),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
@@ -104,7 +104,7 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, isLoadedResponseSelector, (state) => state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
+        createSelector(indexSelector, isLoadedResponseSelector, (state) => state.browser && state.browser.mobile,  (index, loaded, isMobile) => ({ index, loaded, isMobile })),
         {
             setIndex: changePage
         }
@@ -164,7 +164,7 @@ const identifyDefaultProps = defaultProps({
     showMoreInfo: true,
     showEdit: false,
     position: 'right',
-    size: 660,
+    size: 550,
     getToolButtons,
     getFeatureButtons,
     showFullscreen: false,

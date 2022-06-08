@@ -161,6 +161,21 @@ describe('BaseMap', () => {
             }}
         />, document.getElementById("container"));
     });
+    it('test cesium map', (done) => {
+        const map = ReactDOM.render(<TestMap
+            mapType="cesium"
+            id="myMap"
+            layers={SAMPLE_LAYERS_1}
+            onMapTypeLoaded={() => {
+                expect(map).toBeTruthy();
+                const el = ReactDOM.findDOMNode(map);
+                expect(el).toBeTruthy();
+                expect(el.id).toBe("myMap");
+                expect(el.querySelector('canvas')).toBeTruthy();
+                done();
+            }}
+        />, document.getElementById("container"));
+    });
     it('should allow children as tools', (done) => {
         function MapTool({ map }) {
             return map ? <div id="map-tool"></div> : null;

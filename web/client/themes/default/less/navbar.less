@@ -59,4 +59,21 @@ ol {
 
 #mapstore-navbar-container {
     height: @square-btn-size;
+
+    .nav {
+        &.pull-left {
+            display: flex;
+            flex: 1;
+
+            >li {
+                >a {
+                    display: flex;
+                    align-items: center;
+                    height: @square-btn-size;
+                    padding: 0 15px;
+                }
+            }
+        }
+    }
+
 }

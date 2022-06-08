@@ -11,9 +11,10 @@ import { Col, FormGroup, FormControl, Grid, Row } from 'react-bootstrap';
 import localizeProps from '../misc/enhancers/localizedProps';
 const SearchInput = localizeProps("placeholder")(FormControl);
 
-export default ({ onSearchTextChange = () => { }, searchText, title }) =>
+export default ({ onSearchTextChange = () => { }, searchText, title, subTitle = null }) =>
     (<Grid className="catalog-form" fluid><Row><Col xs={12}>
         {title && (<h4 className="text-center">{title}</h4>)}
+        {subTitle}
         <FormGroup controlId="catalog-form">
             <SearchInput type="text" placeholder="catalog.textSearchPlaceholder" value={searchText} onChange={(e) => onSearchTextChange(e.currentTarget.value)} />
         </FormGroup>

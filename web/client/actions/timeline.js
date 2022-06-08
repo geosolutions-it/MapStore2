@@ -72,13 +72,36 @@ export const AUTOSELECT = "TIMELINE:AUTOSELECT";
  */
 export const autoselect = () => ({ type: AUTOSELECT });
 
+export const SET_SNAP_TYPE = "TIMELINE:SET_SNAP_TYPE";
+/**
+ * Set snap to type (start, end) for dimensions with interval values
+ * @param {string} snapType "start" or "end" where in time the interval snapping should happen
+ */
+export const setTimelineSnapType = snapType => ({type: SET_SNAP_TYPE, snapType});
+
+export const SET_END_VALUES_SUPPORT = "TIMELINE:SET_END_VALUES_SUPPORT";
+/**
+ * Set the state of the end values support, if snap to end interval is supported by the backend
+ * @param {Boolean} endValuesSupport true false or undefined, if end values support is supported or initial state undefined
+ */
+export const setEndValuesSupport = endValuesSupport =>  ({type: SET_END_VALUES_SUPPORT, endValuesSupport});
+
 export const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
 export const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
 export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
 export const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
 
 export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
-export const initTimeline = (showHiddenLayers) => ({type: INIT_TIMELINE, showHiddenLayers});
+/**
+ * Action that is called upon Timeline plugin initialization,
+ * the action sets up the component plugin with the default settings values
+ * @param {Boolean} showHiddenLayers default false switch to show/hide layers on the timeline even if not visible on the TOC
+ * @param {Number} expandLimit default 20 the number of occurences (instants or start/end points)
+ * after which the visualisation of such time occurrences changes from histogram to points/bars and viceversa
+ * @param {String} snapType default "start" where in time the interval snapping should happen (start or end)
+ * @param {Boolean} endValuesSupport default undefined if time line plugin supports or not interval end snapping
+ */
+export const initTimeline = (showHiddenLayers, expandLimit, snapType, endValuesSupport) => ({type: INIT_TIMELINE, showHiddenLayers, expandLimit, snapType, endValuesSupport});
 /**
  * Actions for timeline
  * @module actions.timeline

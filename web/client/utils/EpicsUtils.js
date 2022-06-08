@@ -35,3 +35,4 @@ const defaultEpicWrapper = (epic, k = "--unknown--") => (...args) =>
  */
 export const wrapEpics = (epics, wrapper = defaultEpicWrapper) =>
     Object.keys(epics).map(k => wrapper(epics[k], k));
+

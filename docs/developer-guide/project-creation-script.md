@@ -33,9 +33,8 @@ node ./createProject.js <projectType> <projectName> <projectVersion> <projectDes
 Note that projectName and outputFolder are mandatory:
 
 * **projectName**: short project name that will be used as the repository name on github, webapp path and name in package.json
-* **projectType**: type of project to create, currently two types of projects are supported:
+* **projectType**: type of project to create, currently one type of projects is supported:
   * **standard**: is a copy of the standard MapStore project, ready to be used and customized
-  * **custom**: is a simple (skeleton) project, useful if you want to build a custom application using the SDK
 * **projectVersion**: project version in package.json (X.Y.Z)
 * **projectDescription**: project description, used in sample index page and as description in package.json
 * **gitRepositoryUrl**: full url to the github repository where the project will be published
@@ -44,8 +43,6 @@ Note that projectName and outputFolder are mandatory:
 At the end of the script execution, the given outputFolder will be populated by all the configuration files needed to start working on the project. Moreover, the local git repository will be initialized and the MapStore sub-module added and downloaded.
 
 If you create a *standard* project, you can customize it editing **js/app.jsx**: look at the comments for hints and the MapStore documentation for more details.
-
-If you create a *custom* project, you will find a simple application in the **js** folder (app.jsx is the entry point) with two pages (home and main).
 
 The following steps are:
 
@@ -56,7 +53,7 @@ The following steps are:
 
 ## Create a new project type
 
-If you are not happy with the available project types (*standard* and *custom*), you can extend them adding a new folder in **project**.
+If you are not happy with the available project types (*standard*), you can extend them adding a new folder in **project**.
 
 The folder will contain two sub-folders:
 

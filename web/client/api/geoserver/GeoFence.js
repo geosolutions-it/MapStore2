@@ -12,6 +12,8 @@ import assign from 'object-assign';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import CatalogAPI from '../CSW';
+import gsRuleService from './geofence/RuleService';
+import gsUserService from './geofence/UserService';
 import RuleService from '../geofence/RuleService';
 import UserService from '../geofence/UserService';
 
@@ -20,12 +22,12 @@ import UserService from '../geofence/UserService';
  */
 const USER_SERVICES = {
     geofence: UserService,
-    geoserve: UserService
+    geoserver: gsUserService
 };
 
 const RULE_SERVICES = {
     geofence: RuleService,
-    geoserver: RuleService
+    geoserver: gsRuleService
 };
 
 const LAYER_SERVICES = {
@@ -39,7 +41,7 @@ const LAYER_SERVICES = {
         }
     }),
     rest: ({ addBaseUrlGS }) => ({
-        getLayers: (page = 0, size = 10, parentsFilter = {}) => {
+        getLayers: (_layerFilter, page = 0, size = 10, parentsFilter = {}) => {
             const { workspace = "" } = parentsFilter;
             return axios.get('/rest/layers.json', addBaseUrlGS({
                 'headers': {

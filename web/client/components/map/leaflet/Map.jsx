@@ -33,6 +33,7 @@ class LeafletMap extends React.Component {
         document: PropTypes.object,
         center: ConfigUtils.PropTypes.center,
         zoom: PropTypes.number.isRequired,
+        viewerOptions: PropTypes.object,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
         style: PropTypes.object,
         projection: PropTypes.string,
@@ -55,7 +56,8 @@ class LeafletMap extends React.Component {
         resolutions: PropTypes.array,
         hookRegister: PropTypes.object,
         onCreationError: PropTypes.func,
-        onMouseOut: PropTypes.func
+        onMouseOut: PropTypes.func,
+        onResolutionsChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -83,7 +85,8 @@ class LeafletMap extends React.Component {
         style: {},
         interactive: true,
         resolutions: getGoogleMercatorResolutions(0, 23),
-        onMouseOut: () => {}
+        onMouseOut: () => {},
+        onResolutionsChange: () => {}
     };
 
     state = { };
@@ -148,6 +151,7 @@ class LeafletMap extends React.Component {
         // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
         this.map.on('singleclick', (event) => {
             if (this.props.onClick) {
+                const intersectedFeatures = this.getIntersectedFeatures(map, event.latlng);
                 this.props.onClick({
                     pixel: {
                         x: event.containerPoint.x,
@@ -164,7 +168,8 @@ class LeafletMap extends React.Component {
                         ctrl: event.originalEvent.ctrlKey,
                         metaKey: event.originalEvent.metaKey, // MAC OS
                         shift: event.originalEvent.shiftKey
-                    }
+                    },
+                    intersectedFeatures
                 });
             }
         });
@@ -186,7 +191,7 @@ class LeafletMap extends React.Component {
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
-
+        this.props.onResolutionsChange(this.getResolutions());
         this.map.on('layeradd', (event) => {
             // we want to run init code only the first time a layer is added to the map
             if (event.layer._ms2Added) {
@@ -290,6 +295,7 @@ class LeafletMap extends React.Component {
             if (limits.minZoom !== (oldLimits && oldLimits.minZoom)) {
                 this.map.setMinZoom(limits.minZoom);
             }
+            this.props.onResolutionsChange(this.getResolutions());
         }
         return false;
     }
@@ -323,6 +329,34 @@ class LeafletMap extends React.Component {
     getResolutions = () => {
         return this.props.resolutions;
     };
+
+    getIntersectedFeatures = (map, latlng) => {
+        let groupIntersectedFeatures = {};
+        const clickBounds = L.latLngBounds(latlng, latlng);
+        map.eachLayer((layer) => {
+            if (layer?.layerId && layer?.eachLayer) {
+                layer.eachLayer(feature => {
+
+                    const centerBounds = feature?.getLatLng
+                        ? L.latLngBounds(feature.getLatLng(), feature.getLatLng())
+                        : null;
+                    const bounds = feature?.getBounds
+                        ? feature.getBounds()
+                        : centerBounds;
+
+                    if (bounds && feature?.toGeoJSON) {
+                        if (bounds && clickBounds.intersects(bounds)) {
+                            const geoJSONFeature = feature.toGeoJSON();
+                            groupIntersectedFeatures[layer.layerId] = groupIntersectedFeatures[layer.layerId]
+                                ? [ ...groupIntersectedFeatures[layer.layerId], geoJSONFeature ]
+                                : [ geoJSONFeature ];
+                        }
+                    }
+                });
+            }
+        });
+        return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+    }
 
     render() {
         const map = this.map;
@@ -397,6 +431,7 @@ class LeafletMap extends React.Component {
         };
         const center = this.map.getCenter();
         const zoom = this.map.getZoom();
+        const viewerOptions = this.props.viewerOptions;
         this.props.onMapViewChanges(
             {
                 x: center.lng,
@@ -417,7 +452,7 @@ class LeafletMap extends React.Component {
             size,
             this.props.id,
             this.props.projection,
-            undefined, // viewerOptions
+            viewerOptions, // viewerOptions
             this.getResolutions()[zoom] // resolution
         );
     };

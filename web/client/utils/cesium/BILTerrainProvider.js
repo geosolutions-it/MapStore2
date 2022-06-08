@@ -190,7 +190,7 @@ const createBilTerrainProvider = function(Cesium) {
 			if (Cesium.defined(resource.proxy)) {
 				urlGetCapabilities = resource.proxy.getURL(urlGetCapabilities);
 			}
-			resultat=Cesium.when(Cesium.loadXML(urlGetCapabilities), function(xml) {
+			resultat=Cesium.when(Cesium.Resource.fetchXML(urlGetCapabilities), function(xml) {
 				return OGCHelper.WMSParser.getMetaDatafromXML(xml, description);
 			});
 		} else if (Cesium.defined(description.xml)) {
@@ -821,7 +821,7 @@ const createBilTerrainProvider = function(Cesium) {
 
 		this.ready=false;
 
-		Cesium.defineProperties(this, {
+		Object.defineProperties(this, {
 			errorEvent : {
 				get : function() {
 					return errorEvent;
@@ -953,7 +953,13 @@ const createBilTerrainProvider = function(Cesium) {
 							var limitations={highest:resultat.highest,lowest:resultat.lowest,offset:resultat.offset};
                             var proxy = resultat.proxy || { getURL: v => v } ;
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
-                            var promise = Cesium.throttleRequestByServer(proxy.getURL(url),Cesium.loadImage);
+                            var promise = Cesium.Resource.fetchImage({
+								url: proxy.getURL(url),
+								request: new Cesium.Request({
+									throttleByServer: true
+								})
+							});
+							
 							if (Cesium.defined(promise)) {
 								retour = Cesium.when(promise,function(image){
 											return GeoserverTerrainProvider.imageToHeightmapTerrainData(image,limitations,
@@ -984,7 +990,13 @@ const createBilTerrainProvider = function(Cesium) {
 							var limitations={highest:resultat.highest,lowest:resultat.lowest,offset:resultat.offset};
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
                             var proxy = resultat.proxy || { getURL: v => v };
-                            var promise = Cesium.throttleRequestByServer(proxy.getURL(urlArray),Cesium.loadArrayBuffer);
+							
+                            var promise = Cesium.Resource.fetchArrayBuffer({
+								url: proxy.getURL(urlArray),
+								request: new Cesium.Request({
+									throttleByServer: true
+								})
+							});
 					        if (Cesium.defined(promise)) {
 								retour = Cesium.when(promise,
 													function(arrayBuffer) {
@@ -1030,7 +1042,7 @@ const createBilTerrainProvider = function(Cesium) {
 					return retour;
 				}
 
-				Cesium.defineProperties(provider, {
+				Object.defineProperties(provider, {
 					tilingScheme : {
 						get : function() {
 							return resultat.tilingScheme ;

@@ -104,6 +104,7 @@
             "styleWarning": "El editor de estilo de capa para el tipo de geometría '{geometryType}' no es compatible.",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
+            "heightOffset": "Desplazamiento de altura (m)",
             "visibilityLimits": {
                 "title": "Límites de visibilidad",
                 "serverValuesUpdateUndefined": "El servidor no proporcionó límites de visibilidad de escala para esta capa",
@@ -159,7 +160,8 @@
                     "title": "Error",
                     "message": "No se pudo recuperar el formato"
                 }
-            }
+            },
+            "forceProxy": "Forzar proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -291,15 +293,7 @@
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-            "ml": {
-                "title": "Esté informado a la última sobre los cambios en el desrrollo via listas de correo",
-                "subscribe_users": "Suscribirse a las listas de correo de usuarios",
-                "subscribe_devel": "Suscribirse a las listas de correo de desarrolladores",
-                "visit_group": "Visite este grupo",
-                "subscribe": "Suscribir",
-                "email": "Correo:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "Este sitio usa cookies",
@@ -416,6 +410,7 @@
             "saveTitle": "Guardar el mapa",
             "saveText": "¿Guardar el mapa actual",
             "thumbnail": "Miniatura",
+            "mapDelete": "Eliminar el mapa",
             "message": "Soltar o pinchar para importar un imagen",
             "suggestion": "(mejor 300px X 180px, max 500kb)",
             "errorFormat": "Formatos soportados: png/jpg",
@@ -424,6 +419,9 @@
             "error": "La imagen proporcionada no es válida",
             "savedMapTitle": "Mapa guardado",
             "savedMapMessage": "El mapa se ha guardado correctamente",
+            "renderingErrorTitle": "Error de procesamiento",
+            "renderingErrorMessage": "<p>La representación del mapa se detuvo y esto podría deberse a diferentes razones: </p><ul><li>El estilo aplicado contiene algunas reglas o variables que no son compatibles con las características</li>< li>La capa no está configurada correctamente</li></ul><p>Puede aplicar cambios al estilo de la capa y luego hacer clic en el botón 'Recargar mapa'. <br/> Consulte el mensaje a continuación para obtener información adicional:< /p>",
+            "reloadMap": "Recargar mapa",
             "thumbnailError": {
                 "error403": "Error al modificar la miniatura",
                 "error404": "Error al crear la miniatura",
@@ -489,6 +487,8 @@
             "toggleGroupVisibility": "Alternar la visibilidad del grupo",
             "displayLegendAndTools": "Mostrar la leyenda",
             "zoomToLayerExtent": "Zoom a la extensión de la capa",
+            "addAnnotations": "Agregar anotaciones",
+            "editAnnotations": "Editar anotaciones",
             "addLayer": "Añadir capa",
             "addLayerToGroup": "Añadir capa al grupo seleccionado",
             "addGroup": "Añadir grupo",
@@ -538,6 +538,7 @@
             "filterIconDisabled": "Habilitar filtro de capa",
             "notVisibleZoomIn": "La capa no es visible porque está fuera de los límites de resolución. Acercar para mostrar la capa",
             "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
+            "notVisibleSwitchTo3D": "Cambie al modo de mapa 3D para ver esta capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -655,7 +656,9 @@
             "outputFormat": "Formato",
             "previewFormatUnsupported": "Formato no compatible para la vista previa",
             "projection": "Sistema de coordenadas",
-            "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla"
+            "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla",
+            "graticule": "agregar cuadrícula con etiquetas",
+            "additionalLayers": "Incluir superposiciones"
         },
         "backgroundSwitcher":{
             "tooltip": "Selección del fondo"
@@ -1006,6 +1009,7 @@
                 "attribute_filter_header": "Filtro por atributo",
                 "tooltipTextField": "utiliza <b>*</b> para cualquier carácter</br>utiliza . para un solo carácter</br>utiliza <b>!</b> para caracteres especiales (* y .)</br>",
                 "tooltipTextFieldCSS": "utiliza <b>%</b> para cualquier carácter</br>utiliza <b>_</b> para un solo carácter</br>utiliza <b>\\</b> para caracteres especiales (% y _)</br>",
+                "tooltipTextField3DTiles": "use un valor compatible con la función <strong>regExp</strong> de la especificación de estilo de 3D tiles 1.0",
                 "groupField": {
                     "any": "alguna",
                     "all": "todas",
@@ -1290,8 +1294,14 @@
             "coordinate": "Coordinar",
             "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
             "zoomToolTip": "Min: 1 y Max: 35",
+            "headingToolTip": "Min: 0° y Max: 360°",
+            "rollToolTip": "Min: 0° y Max: 360°",
+            "pitchToolTip": "Min: -90° y Max: 90°",
             "showSectionId": "Incluir posición de desplazamiento",
             "showConnections": "Mostrar conexiones",
+            "heading": "Ángulo de rumbo",
+            "roll": "Ángulo de inclinación",
+            "pitch": "Ángulo de paso",
             "sizeOptions": {
                 "width": "ancho",
                 "height": "altura"
@@ -1459,12 +1469,16 @@
                 "label": "Establecer límite de visibilidad",
                 "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
             },
-          "domainAliases": {
-            "title": "Alias de dominio",
-            "helpTooltip": "Esta opción se utiliza para dividir el contenido en varios subdominios",
-            "addAliasTooltip": "Agregar alias",
-            "removeAliasTooltip": "Eliminar alias"
-          }
+            "domainAliases": {
+              "title": "Alias de dominio",
+              "helpTooltip": "Esta opción se utiliza para dividir el contenido en varios subdominios",
+              "addAliasTooltip": "Agregar alias",
+              "removeAliasTooltip": "Eliminar alias"
+            },
+            "allowUnsecureLayers": {
+              "label": "Permitir capas no seguras",
+              "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
+            }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -1671,7 +1685,17 @@
                 "syncOnMap": "Sincronizar mapa con filtro",
                 "enableTimeSync": "Sincronizar con el tiempo o el intervalo de tiempo seleccionado",
                 "disableTimeSync": "No sincronizar con el tiempo o el intervalo de tiempo seleccionado",
-                "createNewChart": "Crea un gráfico para la capa seleccionada"
+                "createNewChart": "Crea un gráfico para la capa seleccionada",
+                "enableSnapping": "Activar ajuste",
+                "disableSnapping": "Desactivar ajuste",
+                "snapToLayer": "Ajustar a la capa",
+                "snappingSettings": {
+                    "header": "Configuración",
+                    "vertex": "Vértice",
+                    "edge": "Borde",
+                    "pixelTolerance": "Tolerancia (píxel)",
+                    "loadingStrategy": "Estrategia de carga"
+                  }
             }
         },
         "layerdownload": {
@@ -1750,7 +1774,8 @@
                 },
                 "emptyMap": {
                     "title": "Mapa vacío",
-                    "description": "Comience desde un mapa vacío"
+                    "description": "Comience desde un mapa vacío",
+                    "noNameDescription": "La selección tiene un mapa vacío. Agregue un nombre al mapa vacío para continuar con la configuración del mapa"
                  }
             },
             "title": "Título",
@@ -1779,7 +1804,7 @@
                     "backToPreview": "Volver a vista previa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "selectALayer": "Seleccionar una capa",
-                    "selectAMap": "Seleccionar un mapa",
+                    "selectAMap": "Seleccione uno o más mapas",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
                     "backToTableOptions": "Volver a las opciones de tabla",
@@ -1790,6 +1815,7 @@
                     "titlePlaceholder": "Introduzca el título...",
                     "textPlaceholder": "Introduzca texto...",
                     "useThisMap": "Usar este mapa",
+                    "useTheseMap": "Usa estos mapas",
                     "configureMapOptions": "Configurar opciones de mapa",
                     "enableIdentifyTool": "Habilitar herramienta de identificación",
                     "disableIdentifyTool": "Deshabilitar la herramienta de identificación",
@@ -1810,11 +1836,17 @@
                         "customLabels": "Etiquetas personalizadas",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p></p><h5>Ejemplo</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Etiqueta de clase:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> se puede utilizar como marcador de posición para el atributo 'Agrupar por'.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Ejemplo</h5><dl><dt><b>Atributo 'Agrupar por':</b></dt><dd>POPULATION</dd><dt><b>Etiqueta de clase:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> se puede utilizar como marcador de posición para el atributo 'Agrupar por'.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Ejemplo</h5><dl><dt><b>Atributo 'Agrupar por':</b></dt><dd>POPULATION</dd><dt><b>Clase:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> se puede utilizar como marcador de posición para el atributo 'Agrupar por'.</p><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p><code>${minValue}</code>se puede utilizar como marcador de posición para el valor de clase mínimo.</p><p><code>${maxValue}</code>se puede utilizar como marcador de posición para el valor máximo de la clase.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Ejemplo</h5><dl><dt><b>atributo 'Agrupar por'.</b></dt><dd>POPULATION</dd><dt><b>atributo Y:</b></dt><dd>LAND_KM</dd><dt><b>Valor máximo de clase:</b></dt><dd>0</dd><dt><b>Valor mínimo de clase:</b></dt><dd>10000</dd><dt><b>Clase:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Resultado:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p></p><h5>Ejemplo</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Clase:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>se puede utilizar como marcador de posición para el valor de clase mínimo.</p><p><code>${maxValue}</code>se puede utilizar como marcador de posición para el valor máximo de la clase.</p><p><code>${legendValue}</code> se puede utilizar como marcador de posición para el atributo Y.</p><p>los elementos de la leyenda con el mismo contenido de texto se agruparán en el gráfico.</p><h5>Example</h5><dl><dt><b>Atributo:</b></dt><dd>POPULATION</dd><dt><b>Clase:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Resultado:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "defaultClassLabel": "Etiqueta de Clase Predeterminada",
                         "defaultColorRamp": "Rampa de Color Predeterminada",
                         "defaultColor": "Color Predeterminado",
                         "defaultCustomLabel": "Etiqueta predeterminada",
                         "editCustomColors": "Editar Colores Personalizados",
+                        "maxValue": "Valor máximo",
+                        "minValue": "Valor mínimo",
                         "title": "Configuración de Colores Personalizados"
                     }
                 },
@@ -1847,6 +1879,13 @@
                     "unhide": "Ocultar",
                     "unhideDescription": "Mostrar el widget a otros usuarios"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "No se encontró ningún mapa",
+                "placeholder": "Ingrese el nombre del mapa",
+                "selectLabel": "Seleccione un mapa",
+                "infoOnHide": "Expanda el widget para ver el selector de mapas",
+                "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
             "chartType": {
                 "bar": {
@@ -1979,6 +2018,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Cargando panel de control",
+            "importDialog": {
+              "selectFiles": "Selecciona un archivo",
+              "heading": "Suelta un archivo .json previamente exportado de un dashboard",
+              "note": "Los datos del archivo importado sustituirán a los del dashboard actual"
+            },
+            "exportDialog": {
+              "heading": "Exporta el panel de control como archivo .json"
+            },
             "errors":{
                 "loading": {
                     "title": "Error al cargar el panel de control",
@@ -1999,7 +2046,8 @@
                 "showConnections": "Mostrar conexiones",
                 "hideConnections": "Ocultar conexiones"
             },
-            "emptyTitle": "El panel de control está vacío"
+            "emptyTitle": "El panel de control está vacío",
+            "delete": "Eliminar panel de control"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Cargando panel de control",
@@ -2281,7 +2329,9 @@
             "imageSrcNotSupportedBase64Image": "Algunos procesadores de estilo no admiten imágenes en base64 incluso si la fuente actual es válida",
             "imageFormatEmpty": "No se puede identificar el formato de la imagen. Seleccione el formato de imagen de los disponibles en el menú desplegable 'Formato'",
             "warningTextOrderTitle": "Advertencia",
-            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
+            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas",
+            "invalidProperty": "El tipo de propiedad { key } no es válido",
+            "notSupportedVariable": "La variable { key } no es compatible con el conjunto de fichas"
         },
         "playback": {
             "settings": {
@@ -2323,8 +2373,12 @@
         "timeline": {
             "settings": {
                 "title": "Configuración de la línea de tiempo",
+                "snapType": "Punto de ajuste de intervalo de tiempo",
+                "snapTypeTooltip": "Cuando el ajuste a la capa guía está activo y los datos de tiempo se prolongan, el cursor se ajustará a los bordes respectivos del intervalo de tiempo (inicio/fin)",
                 "snapToGuideLayer": "Ajustar a capa de guía",
-                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
+                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación",
+                "snapToEnd": "Fin",
+                "snapToStart": "Inicio"
             },
             "hide": "Esconder la línea de tiempo",
             "show": "Mostrar la línea de tiempo",
@@ -2455,6 +2509,7 @@
             "zoomToContent": "Zoom al contenido",
             "addWebPageContent": "Agregar contenido de página web",
             "emptyTitle": "Esta historia esta vacia",
+            "delete": "Eliminar geostory",
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
             "closeFullscreenMap": "Cerrar mapa a pantalla completa",
             "showFullscreenMap": "Ver mapa en pantalla completa",
@@ -2566,6 +2621,14 @@
                     "overlay": "Cubrir",
                     "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }
+            },
+            "importDialog": {
+                "selectFiles": "Selecciona un archivo",
+                "heading": "Suelta un archivo .json previamente exportado de una historia",
+                "note": "Los datos del archivo importado sustituirán a los de la historia actual"
+            },
+              "exportDialog": {
+                "heading": "Exporta la historia como archivo .json"
             },
             "errors": {
                 "loading": {
@@ -2710,6 +2773,8 @@
         "backgroundDialog": {
             "addTitle": "Agregar nuevo fondo",
             "editTitle": "Editar fondo actual",
+            "editAttribution": "Atribución",
+            "editAttributionPlaceholder": "Introduce el texto de la atribución",
             "title": "Título",
             "titlePlaceholder": "Ingrese el nombre que se muestra",
             "add": "Añadir",
@@ -2767,6 +2832,10 @@
           "CRSSelector": {
             "description": "Permite cambiar la proyección del mapa",
             "title": "Selector de CRS"
+          },
+          "DeleteMap": {
+            "description": "Permite eliminar un recurso de mapa y todos sus recursos asociados",
+            "title": "Eliminar mapa"
           },
           "Details": {
             "description": "Permitir mostrar tarjeta de detalle para un mapa, si hay",
@@ -3433,6 +3502,9 @@
             "noDataForPosition": "no hay datos de Street View para esta",
             "unknownError": "error desconocido, ver consola"
           }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Mostrar más elementos"
         }
     }
 }

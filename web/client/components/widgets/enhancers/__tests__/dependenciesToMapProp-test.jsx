@@ -29,7 +29,7 @@ describe('dependenciesToMapProp enhancer', () => {
             expect(props.map.center.y).toBe(1);
             done();
         }));
-        ReactDOM.render(<Sink map={{center: {x: 1, y: 1}}} dependencies={{center: {x: 2, y: 2}}}/>, document.getElementById("container"));
+        ReactDOM.render(<Sink selectedMapId={'MAP_ID'} maps={[{center: {x: 1, y: 1}, mapId: 'MAP_ID'}]} dependencies={{center: {x: 2, y: 2}}}/>, document.getElementById("container"));
     });
     it('dependenciesToMapProp rendering with mapSync', (done) => {
         const Sink = dependenciesToMapProp('center')(createSink(props => {
@@ -37,6 +37,6 @@ describe('dependenciesToMapProp enhancer', () => {
             expect(props.map.center.y).toBe(2);
             done();
         }));
-        ReactDOM.render(<Sink mapSync map={{ center: { x: 1, y: 1 } }} dependencies={{ center: { x: 2, y: 2 } }} />, document.getElementById("container"));
+        ReactDOM.render(<Sink mapSync selectedMapId={'MAP_ID'} maps={[{center: {x: 1, y: 1}, mapId: 'MAP_ID'}]} dependencies={{ center: { x: 2, y: 2 } }} />, document.getElementById("container"));
     });
 });

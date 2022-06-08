@@ -12,7 +12,6 @@ import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
-import ContainerDimensions from 'react-container-dimensions';
 import { connect } from 'react-redux';
 import { branch, compose, defaultProps, renderComponent, withProps } from 'recompose';
 import { createStructuredSelector } from 'reselect';
@@ -39,7 +38,8 @@ import {
     textSearch,
     toggleAdvancedSettings,
     toggleTemplate,
-    toggleThumbnail
+    toggleThumbnail,
+    setNewServiceStatus
 } from '../actions/catalog';
 import { setControlProperty, toggleControl } from '../actions/controls';
 import { changeLayerProperties } from '../actions/layers';
@@ -47,10 +47,9 @@ import API from '../api/catalog';
 import CatalogComp from '../components/catalog/Catalog';
 import CatalogServiceEditor from '../components/catalog/CatalogServiceEditor';
 import Message from '../components/I18N/Message';
-import DockPanel from '../components/misc/panels/DockPanel';
 import { metadataSourceSelector, modalParamsSelector } from '../selectors/backgroundselector';
 import {
-    activeSelector,
+    isActiveSelector,
     authkeyParamNameSelector,
     groupSelector,
     layerErrorSelector,
@@ -73,14 +72,17 @@ import {
     tileSizeOptionsSelector,
     formatsLoadingSelector,
     getSupportedFormatsSelector,
-    getSupportedGFIFormatsSelector
+    getSupportedGFIFormatsSelector,
+    getNewServiceStatusSelector
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
+import {burgerMenuSelector} from "../selectors/controls";
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
-import {DEFAULT_FORMAT_WMS, getCatalogRecords} from '../utils/CatalogUtils';
+import { DEFAULT_FORMAT_WMS } from '../api/WMS';
+import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -93,8 +95,8 @@ const metadataExplorerSelector = createStructuredSelector({
     services: servicesSelector,
     servicesWithBackgrounds: servicesSelectorWithBackgrounds,
     layerError: layerErrorSelector,
-    active: activeSelector,
-    dockStyle: state => mapLayoutValuesSelector(state, { height: true }),
+    active: isActiveSelector,
+    dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     searchText: searchTextSelector,
     group: groupSelector,
     source: metadataSourceSelector,
@@ -117,13 +119,14 @@ const metadataExplorerSelector = createStructuredSelector({
     isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector,
     formatsLoading: formatsLoadingSelector,
     formatOptions: getSupportedFormatsSelector,
-    infoFormatOptions: getSupportedGFIFormatsSelector
+    infoFormatOptions: getSupportedGFIFormatsSelector,
+    isNewServiceAdded: getNewServiceStatusSelector
 });
 
 
 const Catalog = compose(
     withProps(({ result, selectedFormat, options, layerOptions, services, selectedService, locales}) => ({
-        records: result && getCatalogRecords(selectedFormat, result, { ...options, layerOptions, service: services[selectedService] }, locales) || []
+        records: result && API[selectedFormat].getCatalogRecords(result, { ...options, layerOptions, service: services[selectedService] }, locales) || []
     })),
     defaultProps({
         buttonStyle: {
@@ -175,7 +178,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }],
         active: false,
         wrap: false,
         modal: true,
@@ -191,7 +194,7 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: true,
 
         // side panel properties
-        width: 660,
+        width: 550,
         dockProps: {
             dimMode: "none",
             fluid: false,
@@ -217,24 +220,23 @@ class MetadataExplorerComponent extends React.Component {
             />
         );
         return (
-            <div id="catalog-root" className={this.props.active ? 'catalog-active' : ''} style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
-                <ContainerDimensions>
-                    {({ width }) => (<DockPanel
-                        open={this.props.active}
-                        size={this.props.width / width > 1 ? width : this.props.width}
-                        position="right"
-                        bsStyle="primary"
-                        title={<Message msgId="catalog.title"/>}
-                        onClose={() => this.props.closeCatalog()}
-                        glyph="folder-open"
-                        zIndex={1031}
-                        style={this.props.dockStyle}>
-                        <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {panel}
-                        </Panel>
-                    </DockPanel>)}
-                </ContainerDimensions>
-            </div>
+            <ResponsivePanel
+                containerStyle={this.props.dockStyle}
+                containerId="catalog-root"
+                containerClassName={this.props.active ? 'catalog-active' : ''}
+                open={this.props.active}
+                size={this.props.width}
+                position="right"
+                bsStyle="primary"
+                title={<Message msgId="catalog.title"/>}
+                onClose={() => this.props.closeCatalog()}
+                glyph="folder-open"
+                style={this.props.dockStyle}
+            >
+                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    {panel}
+                </Panel>
+            </ResponsivePanel>
         );
     }
 }
@@ -268,7 +270,8 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onFormatOptionsFetch: formatOptionsFetch,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
-    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
+    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
+    setNewServiceStatus
 })(MetadataExplorerComponent);
 
 /**
@@ -297,15 +300,32 @@ export default {
             tooltip: "catalog.tooltip",
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
-            doNotHide: true
+            doNotHide: true,
+            priority: 1
         },
         BackgroundSelector: {
             name: 'MetadataExplorer',
-            doNotHide: true
+            doNotHide: true,
+            priority: 1
         },
         TOC: {
             name: 'MetadataExplorer',
-            doNotHide: true
+            doNotHide: true,
+            priority: 1
+        },
+        SidebarMenu: {
+            name: 'metadataexplorer',
+            position: 5,
+            text: <Message msgId="catalog.title"/>,
+            tooltip: "catalog.tooltip",
+            icon: <Glyphicon glyph="folder-open"/>,
+            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+            selector: (state) => ({
+                style: { display: burgerMenuSelector(state) ? 'none' : null }
+            }),
+            toggle: true,
+            doNotHide: true,
+            priority: 1
         }
     }),
     reducers: {catalog: require('../reducers/catalog').default},

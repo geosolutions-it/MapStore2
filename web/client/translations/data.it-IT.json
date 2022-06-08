@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "id della feature è <span style='white-space:nowrap'>${ properties.id }</span> o <span style='white-space:nowrap'>${ properties['dato-valore'] }</span>",
             "templateError": "Si è verificato un errore durante l'applicazione del template alle informazioni restituite dal server, controllare il template.",
             "templatePreview": "Anteprima template",
+            "heightOffset": "Spostamento in altezza (m)",
             "visibilityLimits": {
                 "title": "Limiti di visibilità",
                 "serverValuesUpdateUndefined": "Il server non ha fornito limiti di visibilità di scala per questo livello",
@@ -159,7 +160,8 @@
                     "title": "Errore",
                     "message": "Impossibile recuperare il formato"
                 }
-            }
+            },
+            "forceProxy": "Forza proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -291,15 +293,7 @@
             "Examples": "Esempi",
             "LinkedinGroup": "Gruppo Linkedin Mapstore",
             "scrollTop": "Torna all'inizio della pagina",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-            "ml": {
-                "title": "Resta in contatto e tieniti aggiornato con le mailing list",
-                "subscribe_users": "Sottoscrivi la mailing list degli utenti",
-                "subscribe_devel": "Sottoscrivi la mailing list degli sviluppatori",
-                "visit_group": "Visita il gruppo",
-                "subscribe": "Sottoscrivi",
-                "email": "Email:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "Questo sito utilizza cookies",
@@ -416,6 +410,7 @@
             "saveTitle": "Salva mappa",
             "saveText": "Salvare la mappa corrente?",
             "thumbnail": "Thumbnail",
+            "mapDelete": "Cancella la mappa",
             "message": "Clicca o trascina un'immagine",
             "suggestion": "(best 300 px X 180 px, max 500 kb)",
             "errorFormat": "Formati supportati: png/jpg",
@@ -424,6 +419,9 @@
             "error": "L'immagine fornita non è valida",
             "savedMapTitle": "Mappa Salvata",
             "savedMapMessage": "La mappa è stata salvata correttamente",
+            "renderingErrorTitle": "Errore di rendering",
+            "renderingErrorMessage": "<p>Il rendering della mappa si è interrotto e ciò potrebbe essere dovuto a diversi motivi: </p><ul><li>Lo stile applicato contiene alcune regole o variabili non supportate dalle features</li>< li>Il livello non è configurato correttamente</li></ul><p>Puoi applicare le modifiche allo stile del layer e poi prenere il pulsante 'Ricarica mappa'. <br/> Per ulteriori informazioni:< /p>",
+            "reloadMap": "Ricarica mappa",
             "thumbnailError": {
                 "error403": "Non disponi dei permessi per aggiornare la thumbnail",
                 "error404": "Non è stato possibile creare la thumbnail sul server",
@@ -489,6 +487,8 @@
             "toggleGroupVisibility": "Attiva o disattiva la visibilità del gruppo",
             "displayLegendAndTools": "Visualizza legenda",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
+            "addAnnotations": "Aggiungi annotazioni",
+            "editAnnotations": "Modifica annotazioni",
             "addLayer": "Aggiungi Livello",
             "addLayerToGroup": "Aggiungi livello al gruppo selezionato",
             "addGroup": "Aggiungi Gruppo",
@@ -538,6 +538,7 @@
             "filterIconDisabled": "Attiva il filtro",
             "notVisibleZoomIn": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom in per mostrare il layer",
             "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
+            "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -655,7 +656,9 @@
             "outputFormat": "Formato",
             "previewFormatUnsupported": "Formato non supportato per la preview",
             "projection": "Sistema di coordinate",
-            "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo"
+            "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo",
+            "graticule": "aggiungi griglia con label",
+            "additionalLayers": "Includi sovrapposizioni"
         },
         "backgroundSwitcher":{
             "tooltip": "Scegli lo sfondo"
@@ -1006,6 +1009,7 @@
                 "attribute_filter_header": "Filtro Attributi",
                 "tooltipTextField": "usa <b>*</b> per qualsiasi carattere</br>usa . un solo carattere</br>usa <b>!</b> per i caratteri speciali (* e .)</br>",
                 "tooltipTextFieldCSS": "usa <b>%</b> per qualsiasi carattere</br>usa <b>_</b> un solo carattere</br>usa <b>\\</b> per i caratteri speciali (% e _)</br>",
+                "tooltipTextField3DTiles": "usa un valore supportato dalla funzione <strong>regExp</strong> della specifica 1.0 dello stile dei 3d tiles",
                 "groupField": {
                     "any": "almeno una delle",
                     "all": "tutte le",
@@ -1290,8 +1294,14 @@
             "coordinate": "Coordinate",
             "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
             "zoomToolTip": "Min: 1 e Max: 35",
+            "headingToolTip": "Min: 0° e Max: 360°",
+            "rollToolTip": "Min: 0° e Max: 360°",
+            "pitchToolTip": "Min: -90° e Max: 90°",
             "showSectionId": "Includi posizione di scorrimento",
             "showConnections": "Mostra connessioni",
+            "heading": "Angolo di rotta",
+            "roll": "Angolo di rollio",
+            "pitch": "Angolo di inclinazione",
             "sizeOptions": {
                 "width": "larghezza",
                 "height": "altezza"
@@ -1464,6 +1474,10 @@
               "helpTooltip": "Questa opzione viene utilizzata per suddividere il contenuto in più sottodomini",
               "addAliasTooltip": "Aggiungi alias",
               "removeAliasTooltip": "Rimuovi alias"
+            },
+            "allowUnsecureLayers": {
+              "label": "Consenti livelli non sicuri",
+              "tooltip": "L'aggiunta di un livello da mappare con questa opzione abilitata, costringe l'applicazione ad applicare il proxy"
             }
         },
         "uploader": {
@@ -1671,7 +1685,17 @@
                 "syncOnMap": "Sincronizza la mappa con i filtri",
                 "enableTimeSync": "Sincronizza con l'istante o l'intervallo temporale selezionato",
                 "disableTimeSync": "Non sincronizzare con l'istante o l'intervallo temporale selezionato",
-                "createNewChart": "crea un grafico per il livello selezionato"
+                "createNewChart": "crea un grafico per il livello selezionato",
+                "enableSnapping": "Attiva snapping",
+                "disableSnapping": "Disattiva snapping",
+                "snapToLayer": "Aggancia al livello",
+                "snappingSettings": {
+                    "header": "Impostazioni",
+                    "vertex": "Vertice",
+                    "edge": "Bordo",
+                    "pixelTolerance": "Tolleranza (pixel)",
+                    "loadingStrategy": "Strategia di caricamento"
+                  }
             }
         },
         "layerdownload": {
@@ -1750,7 +1774,8 @@
                 },
                 "emptyMap": {
                     "title": "Mappa vuota",
-                    "description": "Inizia da una mappa vuota"
+                    "description": "Inizia da una mappa vuota",
+                    "noNameDescription": "La selezione ha una mappa vuota. Aggiungi un nome alla mappa vuota per procedere con la configurazione della mappa"
                 }
             },
             "title": "Titolo",
@@ -1779,7 +1804,7 @@
                     "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "selectALayer": "Seleziona un livello",
-                    "selectAMap": "Seleziona una mappa",
+                    "selectAMap": "Seleziona una o più mappe",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
                      "backToTableOptions": "Torna alle opzioni della tabella",
@@ -1790,6 +1815,7 @@
                     "titlePlaceholder": "Inserisci il titolo...",
                     "textPlaceholder": "Inserisci il testo...",
                     "useThisMap": "Usa questa mappa",
+                    "useTheseMap": "Usa queste mappe",
                     "configureMapOptions": "Configura opzioni mappa",
                     "enableIdentifyTool": "Attiva lo strumento di identificazione",
                     "disableIdentifyTool": "Disabilita lo strumento di identificazione",
@@ -1810,11 +1836,19 @@
                         "customLabels": "Etichette personalizzate",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Attributo Y:</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per':</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per:'</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>attributo 'Raggruppa per'.</b></dt><dd>POPULATION</dd><dt><b>attributo Y:</b></dt><dd>LAND_KM</dd><dt><b>Valore massimo della Classe:</b></dt><dd>0</dd><dt><b>Valore minimo della Classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Risultato:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Example</h5><dl><dt><b>Attributo:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
+
                         "defaultClassLabel": "Etichetta della Classe di Default",
                         "defaultColorRamp": "Rampa di Colori di Default",
                         "defaultColor": "Colore di Default",
                         "defaultCustomLabel": "Etichetta di Default",
                         "editCustomColors": "Modifica Colori Personalizzati",
+                        "maxValue": "Valore Massimo",
+                        "minValue": "Valore Minimo",
                         "title": "Impostazioni dei Colori Personalizzati"
                     }
                 },
@@ -1847,6 +1881,13 @@
                     "unhide": "Mostra",
                     "unhideDescription": "Mostra il widget ad altri utenti"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "Nessuna mappa trovata",
+                "placeholder": "Inserisci il nome della mappa",
+                "selectLabel": "Seleziona una mappa",
+                "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
+                "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
             },
             "chartType": {
                 "bar": {
@@ -1979,6 +2020,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Caricamento Dashboard",
+            "importDialog": {
+                "selectFiles": "Seleziona un file",
+                "heading": "Rilasciare un file.json del dashboard esportato in precedenza",
+                "note": "I dati nel file importato sostituiranno i dati nel dashboard corrente"
+            },
+            "exportDialog": {
+              "heading": "Esportare il dashboard come file .json"
+            },
             "errors":{
                 "loading": {
                     "title": "Errore di caricamento della dashboard",
@@ -1999,7 +2048,8 @@
                 "showConnections": "Mostra connessioni",
                 "hideConnections": "Nascondi connessioni"
             },
-            "emptyTitle": "La dashboard è vuota"
+            "emptyTitle": "La dashboard è vuota",
+            "delete": "Cancellare la dashboard"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Caricamento Dashboard",
@@ -2281,7 +2331,9 @@
             "imageSrcNotSupportedBase64Image": "Alcuni renderer di stili non supportano le immagini base64 anche se la risorsa è valida",
             "imageFormatEmpty": "Non è possibile identificare il formato dell'immagine. Seleziona il formato dell'immagine fra quelli disponibili nel campo 'Formato'",
             "warningTextOrderTitle": "Attenzione",
-            "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole"
+            "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole",
+            "invalidProperty": "Il tipo della proprietà { key } non è valido",
+            "notSupportedVariable": "La variabile { key } non è supportata dal tileset"
         },
         "playback": {
             "settings": {
@@ -2324,7 +2376,11 @@
             "settings": {
                 "title": "Impostazione linea di tempo",
                 "snapToGuideLayer": "Aggancia al livello guida",
-                "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione"
+                "snapType": "Punto d'aggancio per intervalli temporali",
+                "snapTypeTooltip": "Quando l'aggancio al livello guida è attivo e i dati temporali sono protratti, il cursore si aggancia ai rispettivi limiti dell'intervallo di tempo (inizio/fine)",
+                "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione",
+                "snapToEnd": "Fine",
+                "snapToStart": "Inizio"
             },
             "hide": "Nascondi timeline",
             "show": "Mostra timeline",
@@ -2455,6 +2511,7 @@
             "zoomToContent": "Zoom al contenuto",
             "addWebPageContent": "Aggiungi contenuto alla pagina Web",
             "emptyTitle": "Questa storia è vuota",
+            "delete": "Cancellare geostory",
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "closeFullscreenMap": "Chiudi mappa",
             "showFullscreenMap": "Visualizza mappa a pieno schermo",
@@ -2566,6 +2623,14 @@
                     "overlay": "Copertura",
                     "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }
+            },
+            "importDialog": {
+                "selectFiles": "Seleziona un file",
+                "heading": "Rilasciare un file.json della storia esportato in precedenza",
+                "note": "I dati nel file importato sostituiranno i dati nella storia corrente"
+            },
+            "exportDialog": {
+              "heading": "Esportare la storia come file .json"
             },
             "errors": {
                 "loading": {
@@ -2710,6 +2775,8 @@
         "backgroundDialog": {
             "addTitle": "Aggiungi nuovo sfondo",
             "editTitle": "Modifica sfondo corrente",
+            "editAttribution": "Attribuzione",
+            "editAttributionPlaceholder": "Immettere il testo di attribuzione",
             "title": "Titolo",
             "titlePlaceholder": "Inserisci il nome visualizzato",
             "add": "Inserisci",
@@ -2767,6 +2834,10 @@
           "CRSSelector": {
             "description": "Permette di cambiare la proiezione della mappa",
             "title": "Selettore CRS"
+          },
+          "DeleteMap": {
+            "description": "Consente di eliminare una risorsa mappa e tutte le risorse associate",
+            "title": "Elimina mappa"
           },
           "Details": {
             "description": "Consentire di mostrare la scheda dettagli per una mappa, se presente",
@@ -3432,6 +3503,9 @@
             "noDataForPosition": "Non ci sono dati Street View per questa posizione",
             "unknownError": "Errore sconosciuto"
           }
-      }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Mostra più elementi"
+        }
     }
 }

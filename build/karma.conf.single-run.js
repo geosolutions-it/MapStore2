@@ -11,7 +11,7 @@ module.exports = function karmaConfig(config) {
             { pattern: './web/client/translations/**/*', included: false }
         ],
         path: path.join(__dirname, "..", "web", "client"),
-        basePath: "..",
+        basePath: path.join(__dirname, ".."),
         testFile: 'build/tests-travis.webpack.js',
         singleRun: true
     });

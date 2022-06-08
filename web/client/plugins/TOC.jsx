@@ -64,7 +64,7 @@ import { isObject, head, find, round } from 'lodash';
 import { setControlProperties, setControlProperty } from '../actions/controls';
 import { createWidget } from '../actions/widgets';
 import { getMetadataRecordById } from '../actions/catalog';
-import { activeSelector } from '../selectors/catalog';
+import { isActiveSelector } from '../selectors/catalog';
 import { isCesium } from '../selectors/maptype';
 
 const addFilteredAttributesGroups = (nodes, filters) => {
@@ -106,7 +106,7 @@ const tocSelector = createSelector(
         layerFilterSelector,
         layersSelector,
         mapNameSelector,
-        activeSelector,
+        isActiveSelector,
         widgetBuilderAvailable,
         generalInfoFormatSelector,
         isCesium,
@@ -129,6 +129,7 @@ const tocSelector = createSelector(
         selectedNodes,
         filterText,
         generalInfoFormat,
+        layers,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         updatableLayersCount: layers.filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length,
@@ -154,6 +155,10 @@ const tocSelector = createSelector(
             {
                 options: { showComponent: false },
                 func: (node) => node.id === "annotations" && isCesiumActive
+            },
+            {
+                options: { exclusiveMapType: true },
+                func: (node) => node.type === "3dtiles" && !isCesiumActive
             }
         ]),
         catalogActive,
@@ -174,6 +179,7 @@ class LayerTree extends React.Component {
     static propTypes = {
         id: PropTypes.number,
         items: PropTypes.array,
+        layers: PropTypes.array,
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
@@ -268,6 +274,7 @@ class LayerTree extends React.Component {
 
     static defaultProps = {
         items: [],
+        layers: [],
         groupPropertiesChangeHandler: () => {},
         layerPropertiesChangeHandler: () => {},
         retrieveLayerData: () => {},
@@ -415,6 +422,7 @@ class LayerTree extends React.Component {
                         <Toolbar
                             items={this.props.items.filter(({ target }) => target === "toolbar")}
                             groups={this.props.groups}
+                            layers={this.props.layers}
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}

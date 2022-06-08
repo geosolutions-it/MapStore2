@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-product</artifactId>
   <packaging>war</packaging>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.4-SNAPSHOT</version>
   <name>MapStore Product Web Application</name>
 
   <properties>
@@ -17,7 +16,7 @@
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
       <artifactId>mapstore-webapp</artifactId>
-      <version>1.3-SNAPSHOT</version>
+      <version>1.4-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -167,7 +166,6 @@
                                 <excludes>
                                     <exclude>node_modules/*</exclude>
                                     <exclude>node_modules/**/*</exclude>
-                                    <exclude>**/libs/Cesium/**/*</exclude>
                                     <exclude>**/test-resources/*</exclude>
                                 </excludes>
                             </resource>
@@ -221,22 +219,6 @@
                         <resources>
                             <resource>
                                 <directory>${basedir}/../web/docs</directory>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>CesiumJS-navigation</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
                             </resource>
                         </resources>
                     </configuration>
@@ -340,11 +322,23 @@
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>geosolutions-2.0-SNAPSHOT</version>
+            <version>geosolutions-2.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>

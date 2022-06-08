@@ -77,7 +77,7 @@ export const LoginNav = connect((state) => ({
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
     renderButtonText: false,
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
-    bsStyle: "primary",
+
     className: "square-button",
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state)

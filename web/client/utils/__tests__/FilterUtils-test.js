@@ -23,7 +23,8 @@ import {
     cqlArrayField,
     processOGCFilterFields,
     processOGCSimpleFilterField,
-    processCQLFilterFields
+    processCQLFilterFields,
+    wrapIfNoWildcards
 } from '../FilterUtils';
 
 
@@ -1198,6 +1199,18 @@ describe('FilterUtils', () => {
         expect(cqlStringField("attribute_1", "ilike", "A")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
         // test LIKE
         expect(cqlStringField("attribute_1", "like", "A")).toBe("\"attribute_1\" LIKE '%A%'");
+        // test ilike with wildcard at the beginning
+        expect(cqlStringField("attribute_1", "ilike", "*A")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a'");
+        // test LIKE with wildcard at the beginning
+        expect(cqlStringField("attribute_1", "like", "*A")).toBe("\"attribute_1\" LIKE '%A'");
+        // test ilike with wildcard at the end
+        expect(cqlStringField("attribute_1", "ilike", "A*")).toBe("strToLowerCase(\"attribute_1\") LIKE 'a%'");
+        // test LIKE with wildcard at the end
+        expect(cqlStringField("attribute_1", "like", "A*")).toBe("\"attribute_1\" LIKE 'A%'");
+        // test ilike wrapped with wildcard
+        expect(cqlStringField("attribute_1", "ilike", "*A*")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
+        // test LIKE wrapped with wildcard
+        expect(cqlStringField("attribute_1", "like", "*A*")).toBe("\"attribute_1\" LIKE '%A%'");
     });
     it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
         // testing operators
@@ -1249,7 +1262,7 @@ describe('FilterUtils', () => {
                     groupId: 1,
                     attribute: "attribute3",
                     exception: null,
-                    operator: "LIKE",
+                    operator: "like",
                     rowId: "3",
                     type: "string",
                     value: "val"
@@ -1412,7 +1425,7 @@ describe('FilterUtils', () => {
                             groupId: 1,
                             attribute: "attribute3",
                             exception: null,
-                            operator: "LIKE",
+                            operator: "like",
                             rowId: "3",
                             type: "string",
                             value: "val"
@@ -1926,5 +1939,23 @@ describe('FilterUtils', () => {
         };
         filter = processCQLFilterFields(group, objFilter);
         expect(filter).toEqual("");
+    });
+
+    it('wrapIfNoWildcards', () => {
+        const testCases = [
+            // True if no unescaped wildcards
+            ["testString", true],
+            ["*testString", false],
+            ["!*testString", true],
+            ["!*test.String", false],
+            ["!te*st!.String", false],
+            ["!te!*st!.String*", false],
+            ["!te!*st!.String!*", true],
+            ["*!te!*st!.String!*", false],
+            ["!*!te!**st!.String!*", false]
+        ];
+        testCases.forEach(([value, expected]) => {
+            expect(wrapIfNoWildcards(value)).toBe(expected);
+        });
     });
 });

@@ -17,9 +17,10 @@ import Home, {getPath} from '../components/home/Home';
 import { connect } from 'react-redux';
 import { checkPendingChanges } from '../actions/pendingChanges';
 import { setControlProperty } from '../actions/controls';
-import { unsavedMapSelector, unsavedMapSourceSelector } from '../selectors/controls';
+import {burgerMenuSelector, unsavedMapSelector, unsavedMapSourceSelector} from '../selectors/controls';
 import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import ConfigUtils from '../utils/ConfigUtils';
+import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {
@@ -70,7 +71,24 @@ export default {
         OmniBar: {
             name: 'home',
             position: 4,
-            tool: true,
+            tool: connect((state) => ({
+                hidden: sidebarIsActiveSelector(state),
+                bsStyle: 'primary',
+                tooltipPosition: 'bottom'
+            }))(HomeConnected),
+            priority: 3
+        },
+        SidebarMenu: {
+            name: 'home',
+            position: 1,
+            tool: connect(() => ({
+                bsStyle: 'tray',
+                tooltipPosition: 'left',
+                text: <Message msgId="gohome"/>
+            }))(HomeConnected),
+            selector: (state) => ({
+                style: { display: burgerMenuSelector(state) ? 'none' : null }
+            }),
             priority: 3
         }
     }),

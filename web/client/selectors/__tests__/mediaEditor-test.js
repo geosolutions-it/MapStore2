@@ -182,6 +182,71 @@ describe('mediaEditor selectors', () => {
             }
         })).toEqual({id: "id"});
     });
+    it('selectedItemSelector - include tileMatrix in WMTS layers for "map" media resource', () => {
+        const selectedMapMedia = selectedItemSelector({
+            mediaEditor: {
+                selected: "id",
+                settings: {mediaType: "map", sourceId: "id"},
+                data: {
+                    map: {
+                        id: {
+                            resultData: {
+                                resources: [{
+                                    id: "id",
+                                    type: "map",
+                                    data: {
+                                        type: "map",
+                                        id: "mapId",
+                                        sources: {
+                                            "http://localhost/geoserver/gwc/service/wmts": {
+                                                tileMatrixSet: {
+                                                    'EPSG:4326': {
+                                                        tileMatrixSet: {
+                                                            "ows:Identifier": "EPSG:4326",
+                                                            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::4326"
+                                                        },
+                                                        TileMatrix: []
+                                                    },
+                                                    "EPSG:900913": {
+                                                        tileMatrixSet: {
+                                                            'ows:Identifier': 'EPSG:900913',
+                                                            'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                                                        },
+                                                        TileMatrix: []
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        layers: [{
+                                            id: "workspace:layer__1",
+                                            format: "image/png",
+                                            name: 'workspace:layer',
+                                            type: "wmts",
+                                            url: "http://localhost/geoserver/gwc/service/wmts",
+                                            allowedSRS: {
+                                                "EPSG:4326": true,
+                                                "EPSG:900913": true
+                                            },
+                                            matrixIds: [
+                                                "EPSG:4326",
+                                                "EPSG:900913"
+                                            ],
+                                            tileMatrixSet: true
+                                        }]
+                                    }
+                                }]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        expect(selectedMapMedia.id).toBe("id");
+        expect(selectedMapMedia.data.layers[0].tileMatrixSet).toExist();
+        expect(selectedMapMedia.data.layers[0].tileMatrixSet.length).toBe(2);
+        expect(selectedMapMedia.data.layers[0].tileMatrixSet[0].tileMatrixSet['ows:Identifier']).toBe("EPSG:4326");
+        expect(selectedMapMedia.data.layers[0].tileMatrixSet[1].tileMatrixSet['ows:Identifier']).toBe("EPSG:900913");
+    });
     it('getCurrentMediaResourcesParams', () => {
         const params = { page: 1 };
         expect(getCurrentMediaResourcesParams({

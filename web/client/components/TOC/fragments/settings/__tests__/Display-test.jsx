@@ -74,7 +74,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(12);
+        expect(inputs.length).toBe(13);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -131,6 +131,65 @@ describe('test Layer Properties Display module component', () => {
         expect(isLocalizedLayerStylesOption).toExist();
     });
 
+    it('tests Display component for wms with force proxy option displayed', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            forceProxy: true
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const isForceProxyOption = document.querySelector('[data-qa="display-forceProxy-option"]');
+        expect(isForceProxyOption).toBeTruthy();
+    });
+    it('tests Display component for wms with force proxy option in cesium map', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            forceProxy: true
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        ReactDOM.render(<Display isCesiumActive element={l} settings={settings}/>, document.getElementById("container"));
+        const isForceProxyOption = document.querySelector('[data-qa="display-forceProxy-option"]');
+        expect(isForceProxyOption).toBeFalsy();
+    });
+    it('tests Display component for wms with force proxy option onChange', () => {
+        const handlers = {
+            onChange() {}
+        };
+        const spyOn = expect.spyOn(handlers, 'onChange');
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            forceProxy: false
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const isForceProxyOption = document.querySelector('[data-qa="display-forceProxy-option"]');
+        expect(isForceProxyOption).toBeTruthy();
+        ReactTestUtils.Simulate.change(isForceProxyOption, { "target": { "checked": true }});
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'forceProxy', true ]);
+    });
+
     it('tests Layer Properties Legend component', () => {
         const l = {
             name: 'layer00',
@@ -150,8 +209,8 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[10];
-        const legendHeight = inputs[11];
+        const legendWidth = inputs[11];
+        const legendHeight = inputs[12];
         // Default legend values
         expect(legendWidth.value).toBe('12');
         expect(legendHeight.value).toBe('12');
@@ -190,9 +249,9 @@ describe('test Layer Properties Display module component', () => {
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
         expect(legendPreview).toExist();
         expect(inputs).toExist();
-        expect(inputs.length).toBe(12);
-        let legendWidth = inputs[10];
-        let legendHeight = inputs[11];
+        expect(inputs.length).toBe(13);
+        let legendWidth = inputs[11];
+        let legendHeight = inputs[12];
         const img = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, 'img');
 
         // Check value in img src
@@ -257,8 +316,8 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(12);
-        expect(inputs[10].value).toBe("20");
-        expect(inputs[11].value).toBe("40");
+        expect(inputs.length).toBe(13);
+        expect(inputs[11].value).toBe("20");
+        expect(inputs[12].value).toBe("40");
     });
 });

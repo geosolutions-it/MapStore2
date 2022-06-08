@@ -14,7 +14,7 @@ import BuilderHeader from '../../BuilderHeader';
 
 import mcEnhancer from '../../../../maps/enhancers/mapCatalogWithEmptyMap';
 import Message from '../../../../I18N/Message';
-import MapCatalogComp from '../../../../maps/MapCatalog';
+import MapCatalogComp from './MapCatalog';
 import handleMapSelect from './enhancers/handleMapSelect';
 
 const MapCatalog = mcEnhancer(MapCatalogComp);
@@ -22,7 +22,7 @@ const MapCatalog = mcEnhancer(MapCatalogComp);
 /**
  * Builder page that allows layer's selection
  */
-export default handleMapSelect(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, stepButtons = [], selected, disableEmptyMap } = {}) =>
+export default handleMapSelect(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, stepButtons = [], selected, disableEmptyMap, mapLoading, setMapLoading = () => {} } = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -32,13 +32,24 @@ export default handleMapSelect(({ onClose = () => { }, setSelected = () => { }, 
                     bsSize: "sm"
                 }}
                 buttons={[...stepButtons, {
-                    tooltipId: "widgets.builder.wizard.useThisMap",
-                    onClick: () => onMapChoice(selected),
+                    tooltipId: `widgets.builder.wizard.${selected?.length > 1 ? "useTheseMap" : "useThisMap"}`,
+                    onClick: () => {
+                        onMapChoice(selected);
+                        setMapLoading(true);
+                    },
                     visible: true,
-                    disabled: !selected,
+                    disabled: !selected || mapLoading,
                     glyph: "arrow-right"
                 }]} />
         </BuilderHeader>}
     >
-        <MapCatalog title={<Message msgId="widgets.builder.wizard.selectAMap" />} selected={selected} onSelected={r => setSelected(r)} disableEmptyMap={disableEmptyMap}/>
+        <MapCatalog
+            title={<Message msgId="widgets.builder.wizard.selectAMap" />}
+            selected={selected}
+            onSelected={r => {
+                setSelected(r);
+                setMapLoading(false);
+            }}
+            disableEmptyMap={disableEmptyMap}
+        />
     </BorderLayout>));

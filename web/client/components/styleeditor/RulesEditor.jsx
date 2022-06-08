@@ -64,6 +64,7 @@ function EmptyRules() {
  * @prop {array} config.fonts list of fonts available for the style (eg ['monospace', 'serif'])
  * @prop {array} config.methods classification methods
  * @prop {function} config.getColors get color ramp available for ramp selector
+ * @prop {bool} config.simple hide the symbolizer option for advanced style (eg patterns, classification)
  * @prop {object} ruleBlock describe all the properties and related configuration of special rules (eg: classification)
  * @prop {object} symbolizerBlock describe all the properties and related configuration of symbolizers
  * @prop {func} onUpdate return changes that needs an async update, argument contains property of the rule to update
@@ -90,7 +91,8 @@ const RulesEditor = forwardRef(({
         methods,
         getColors,
         classification,
-        format
+        format,
+        simple
     } = config;
 
     // needed for slider
@@ -182,6 +184,13 @@ const RulesEditor = forwardRef(({
         // some renderer engine draws the labels always on top of the other rules
         // so we add a warning to explain that the rule order could not match the rendering order
         return isTextSymbolizer && index > 0;
+    }
+
+    function getSymbolizerInfo(kind) {
+        const symbolizerKey = Object.keys(symbolizerBlock)
+            .filter((key) => symbolizerBlock[key].supportedTypes.includes(geometryType))
+            .find(key => symbolizerBlock[key]?.kind === kind);
+        return symbolizerBlock[symbolizerKey] || symbolizerBlock[kind] || {};
     }
 
     return (
@@ -303,13 +312,13 @@ const RulesEditor = forwardRef(({
                                         format={format}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />
-                                    <ScaleDenominatorPopover
+                                    {scales && <ScaleDenominatorPopover
                                         hide={hideScaleDenominator}
                                         value={scaleDenominator}
                                         scales={scales}
                                         zoom={zoom}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
-                                    />
+                                    />}
                                     <Button
                                         className="square-button-md no-border"
                                         tooltipId="styleeditor.removeRule"
@@ -348,7 +357,7 @@ const RulesEditor = forwardRef(({
                                     format={format}
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
-                                    const { params, glyph } = symbolizerBlock[kind] || {};
+                                    const { params, glyph, hideMenu } = getSymbolizerInfo(kind);
                                     return params &&
                                         <Symbolizer
                                             key={symbolizerId}
@@ -356,8 +365,8 @@ const RulesEditor = forwardRef(({
                                             draggable
                                             glyph={glyph}
                                             tools={
-                                                <SymbolizerMenu
-                                                    hide={kind === 'Icon'}
+                                                (!simple && <SymbolizerMenu
+                                                    hide={hideMenu}
                                                     symbolizerKind={kind}
                                                     ruleBlock={ruleBlock}
                                                     symbolizerBlock={symbolizerBlock}
@@ -365,7 +374,7 @@ const RulesEditor = forwardRef(({
                                                     onSelect={handleReplaceRule}
                                                     graphic={properties.graphicFill || properties.graphicStroke}
                                                     channelSelection={properties.channelSelection}
-                                                />
+                                                />)
                                             }>
                                             <Fields
                                                 properties={properties}

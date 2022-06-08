@@ -39,7 +39,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     it('dependenciesToLayers default', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
             expect(props).toExist();
-            expect(props.map).toEqual(inputMapDefault);
+            expect(props.maps).toEqual(inputMapDefault);
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -47,60 +47,65 @@ describe('widgets dependenciesToLayers enhancer', () => {
     it('dependenciesToLayers with no layer in common with dependencies', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
             expect(props).toExist();
-            expect(props.map).toEqual(resultMapStatesNoCQL);
+            expect(props.maps).toEqual(resultMapStatesNoCQL);
             done();
         }));
         ReactDOM.render(<Sink
-            map={inputMapStatesCenterChanged}
+            maps={inputMapStatesCenterChanged}
             mapSync
+            selectedMapId={"MAP_ID"}
         />, document.getElementById("container"));
     });
     it('dependenciesToLayers with layer in common with dependencies, with quickFilters', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
             expect(props).toExist();
-            expect(props.map).toEqual(resultMapStatesCQL);
+            expect(props.maps).toEqual(resultMapStatesCQL);
             done();
         }));
         ReactDOM.render(<Sink
-            map={inputMapStatesCenterChanged}
+            maps={inputMapStatesCenterChanged}
             dependencies={inputDependenciesQuickFilters}
             mapSync
+            selectedMapId={"MAP_ID"}
         />, document.getElementById("container"));
     });
     it('dependenciesToLayers with layer in common with dependencies, with quickFilters updated once', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
             expect(props).toExist();
-            expect(props.map).toEqual(resultMapStatesCQLAndOriginalCql);
+            expect(props.maps).toEqual(resultMapStatesCQLAndOriginalCql);
             done();
         }));
         ReactDOM.render(<Sink
-            map={inputMapStatesCenterChangedAndQuickFilters}
+            maps={inputMapStatesCenterChangedAndQuickFilters}
             dependencies={inputDependenciesQuickFilters}
             mapSync
+            selectedMapId={"MAP_ID"}
         />, document.getElementById("container"));
     });
     it('dependenciesToLayers with layer in common with dependencies, with quickFilters and filter', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
             expect(props).toExist();
-            expect(props.map).toEqual(resultMapStatesCQLQuickFiltersAndFilter);
+            expect(props.maps).toEqual(resultMapStatesCQLQuickFiltersAndFilter);
             done();
         }));
         ReactDOM.render(<Sink
-            map={inputMapStatesCenterChanged}
+            maps={inputMapStatesCenterChanged}
             dependencies={inputDependenciesQuickFiltersAndFilter}
             mapSync
+            selectedMapId={"MAP_ID"}
         />, document.getElementById("container"));
     });
     it('dependenciesToLayers, map with cql, with layer in common with dependencies, with quickFilters and filter', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
             expect(props).toExist();
-            expect(props.map).toEqual(resultMapWithCqlStatesCQLQuickFiltersAndFilter);
+            expect(props.maps).toEqual(resultMapWithCqlStatesCQLQuickFiltersAndFilter);
             done();
         }));
         ReactDOM.render(<Sink
-            map={inputMapStatesWithCQL}
+            maps={inputMapStatesWithCQL}
             dependencies={inputDependenciesQuickFiltersAndFilter}
             mapSync
+            selectedMapId={"MAP_ID"}
         />, document.getElementById("container"));
     });
 

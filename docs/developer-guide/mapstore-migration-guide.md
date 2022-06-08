@@ -20,8 +20,165 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2022.01.00 to 2022.02.00
 
-## Migration from 2021.02.00 to 2022.01.00
+### Upgrading the printing engine
+The mapfish-print based printing engine has been upgraded to align to the latest official 2.1.5 in term of functionalities.
+
+An update to the MapStore printing engine context file (`applicationContext-print.xml`) is needed for all projects built with the printing profile enabled. The following sections should be added to the file:
+
+```diff
+<bean id="configFactory" class="org.mapfish.print.config.ConfigFactory"></bean>
++<bean id="threadResources" class="org.mapfish.print.ThreadResources">
++    <property name="connectionTimeout" value="30000"/>
++    <property name="socketTimeout" value="30000" />
++    <property name="globalParallelFetches" value="200"/>
++    <property name="perHostParallelFetches" value="30" />
++</bean>
+
+<bean id="pdfOutputFactory" class="org.mapfish.print.output.PdfOutputFactory"/>
++
++<bean id="metricRegistry" class="com.codahale.metrics.MetricRegistry" lazy-init="false"/>
++<bean id="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry" lazy-init="false"/>
++<bean id="loggingMetricsConfigurator" class="org.mapfish.print.metrics.LoggingMetricsConfigurator"  lazy-init="false"/>
++<bean id="jvmMetricsConfigurator" class="org.mapfish.print.metrics.JvmMetricsConfigurator" lazy-init="false"/>
++<bean id="jmlMetricsReporter" class="org.mapfish.print.metrics.JmxMetricsReporter" lazy-init="false"/>
+```
+
+Also, remember to update your project pom.xml with the updated dependency:
+
+ - locate the print-lib dependency in the pom.xml file
+ - replace the dependency with the following snippet
+
+```xml
+<dependency>
+    <groupId>org.mapfish.print</groupId>
+    <artifactId>print-lib</artifactId>
+    <version>geosolutions-2.1-SNAPSHOT</version>
+    <exclusions>
+        <exclusion>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+Finally, to enable printing in different formats than PDF, you should add the following to your `config.yml` file (at the top level):
+
+```yml
+formats:
+  - '*'
+```
+
+### Replacing BurgerMenu with SidebarMenu
+There were several changes applied to the application layout, one of them is the Sidebar Menu that comes to replace Burger menu on map viewer and in contexts.
+Following actions need to be applied to make a switch:
+- Update localConfig.json and add "SidebarMenu" entry to the "desktop" section:
+```json
+{
+    "desktop": [
+        ...
+        "SidebarMenu",
+        ...
+    ]
+}
+```
+- Remove "BurgerMenu" entry from "desktop" section.
+
+#### Updating contexts to use Sidebar Menu
+
+Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "SidebarMenu" in contexts.
+
+- Find "BurgerMenu" plugin confuguration in `pluginsConfig.json` and remove `"hidden": true` line from it:
+
+```json
+    {
+    "name": "BurgerMenu",
+    "glyph": "menu-hamburger",
+    "title": "plugins.BurgerMenu.title",
+    "description": "plugins.BurgerMenu.description",
+    "dependencies": [
+        "OmniBar"
+    ]
+}
+```
+
+- Add `SidebarMenu` entry to the "plugins" array:
+
+```json
+{
+    "plugins": [
+        ...
+        {
+            "name": "SidebarMenu",
+            "hidden": true
+        }
+        ...
+    ]
+}
+```
+
+- Go through all plugins definitions and replace `BurgerMenu` dependency with `SidebarMenu`, e.g.:
+
+```json
+    {
+      "name": "MapExport",
+      "glyph": "download",
+      "title": "plugins.MapExport.title",
+      "description": "plugins.MapExport.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+    }
+```
+
+- Also the `StreetView` plugin needs to depend from `SidebarMenu`.
+
+```json
+{
+      "name": "StreetView",
+      "glyph": "road",
+      "title": "plugins.StreetView.title",
+      "description": "plugins.StreetView.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+}
+```
+
+### Updating extensions
+Please refer to the [extensions](../extensions/#managing-drawing-interactions-conflict-in-extension) documentation to know how to update your extensions.
+
+
+## Migration from 2022.01.00 to 2022.01.01
+
+### MailingLists plugin has been removed
+
+`MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
+
+
+## Migration from 2021.02.02 to 2022.01.00
 
 This release includes several libraries upgrade on the backend side,
 in particular the following have been migrated to the latest available versions:
@@ -35,26 +192,24 @@ in particular the following have been migrated to the latest available versions:
 | JPA| 1.0        |2.1|
 | hibernate-generic-dao| 0.5.1        |1.3.0-SNAPSHOT|
 | h2| 1.3.168        |1.3.175|
-| servlet-api| 2.5        |3.1|
+| javax-servlet-api | 2.5        |3.1.0|
 
-This requires also an upgrade of Tomcat to at least version 8.5.x
+This requires also the **upgrade of Tomcat to at least version 8.5.x**.
 
 ### Updating projects configuration
 
 Projects need the following to update to this MapStore release:
 
- - update dependencies (in web/pom.xml) copying those in MapStore2/java/web/pom.xml, in particular:
+- update dependencies (in `web/pom.xml`) copying those in `MapStore2/java/web/pom.xml`, in particular (where present):
 
 | Dependency      | Version| Notes |
 | ----------- | ----------- |---|
-| mapstore-services| 1.3-SNAPSHOT| Replaces mapstore-backend|
-| geostore-webapp| 1.8-SNAPSHOT| |
-| javax.servlet-api| 3.0.1        | Tomcat 8.5 required|
+| mapstore-services| 1.3.0 | Replaces mapstore-backend|
+| geostore-webapp| 1.8.0 | |
 
+- update packagingExcludes in `web/pom.xml` to this list:
 
- - update packagingExcludes in web/pom.xml to this list:
-
-```
+```text
 WEB-INF/lib/commons-codec-1.2.jar,
 WEB-INF/lib/commons-io-1.1.jar,
 WEB-INF/lib/commons-logging-1.0.4.jar,
@@ -64,8 +219,8 @@ WEB-INF/lib/slf4j-log4j12-1.5*.jar,
 WEB-INF/lib/spring-tx-5.2.15*.jar
 ```
 
- - upgrade Tomcat to 8.5 or greater
- - update your geostore-spring-security.xml file to add the following setting, needed to disable CSRF validation, that MapStore services do not implement yet:
+- upgrade **Tomcat to 8.5** or greater
+- update your `geostore-spring-security.xml` file to add the following setting, needed to disable CSRF validation, that MapStore services do not implement yet:
 
 ```xml
 <security:http ... >
@@ -75,7 +230,7 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
 </security:http>
 ```
 
- - remove the spring log4j listener from web.xml
+- remove the spring log4j listener from `web.xml`
 
 ```xml
  <!-- spring context loader
@@ -84,8 +239,82 @@ WEB-INF/lib/spring-tx-5.2.15*.jar
     </listener>-->
 ```
 
+- If one of the libraries updated is used in your project, you should align the version with the newer one to avoid jar duplications
+- Some old project may define versions of spring and/or jackson in maven properties. You can remove these definition and the dependency from main `pom.xml` since they should be inherited from spring.
+In particular you may need to remove these properties :
+
+```diff
+-        <jackson.version>1.9.10</jackson.version>
+-        <jackson.databind-version>2.2.3</jackson.databind-version>
+-        <jackson.annotations-version>2.5.3</jackson.annotations-version>
+```
+
 ### Upgrading CesiumJS
-CesiumJS has been upgraded to version 1.42 (from 1.17), with no breaking changes, so you should replace all the instances of  `https://cesium.com/downloads/cesiumjs/releases/1.17` in your projects HTML files with `https://cesium.com/downloads/cesiumjs/releases/1.42`. The new release is needed to implement Bearer based authentication to WMS services.
+
+CesiumJS has been upgraded to version 1.90 (from 1.17) and included directly in the mapstore bundle as async import.
+
+Downstream project should update following configurations:
+
+- remove all executions related to the cesium library from the pom.xml
+
+```diff
+<execution>
+    <id>html, configuration files and images</id>
+    <phase>process-classes</phase>
+    <goals>
+        <goal>copy-resources</goal>
+    </goals>
+    <configuration>
+        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
+        <encoding>UTF-8</encoding>
+        <resources>
+            <resource>
+                <directory>${basedir}/../web/client</directory>
+                <includes>
+                    <include>**/*.html</include>
+                    <include>**/*.json</include>
+                    <include>**/img/*</include>
+                    <include>product/assets/symbols/*</include>
+                    <include>**/*.less</include>
+                </includes>
+                <excludes>
+                    <exclude>node_modules/*</exclude>
+                    <exclude>node_modules/**/*</exclude>
+-                    <exclude>**/libs/Cesium/**/*</exclude>
+                    <exclude>**/test-resources/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </configuration>
+</execution>
+-<execution>
+-    <id>CesiumJS-navigation</id>
+-    <phase>process-classes</phase>
+-    <goals>
+-        <goal>copy-resources</goal>
+-    </goals>
+-    <configuration>
+-        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
+-        <encoding>UTF-8</encoding>
+-        <resources>
+-            <resource>
+-                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
+-            </resource>
+-        </resources>
+-    </configuration>
+-</execution>
+```
+
+- remove all the external script and css related to cesium and cesium-navigation now included as packages
+
+```diff
+-<script src="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Cesium.js"></script>
+-<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.42/Build/Cesium/Widgets/widgets.css" />
+-<script src="libs/cesium-navigation/cesium-navigation.js"></script>
+-<link rel="stylesheet" href="libs/cesium-navigation/cesium-navigation.css" />
+```
+
+- This step is needed only for custom project with a specific `publicPath` different from the default one. In this case you may need to specify what folder deliver the  cesium build ( by default `dist/cesium`). To do that, you can add the  `cesiumBaseUrl` parameter in the webpack dev and prod configs to the correct location of the cesium static assets, widgets and workers folder.
 
 ## Migration from 2021.02.01 to 2021.02.02
 ### Style parsers dynamic import
@@ -390,7 +619,7 @@ Here the changes in `pom.xml` and `web/pom.xml to update:
     <groupId>proxy</groupId>
     <artifactId>http_proxy</artifactId>
 -      <version>1.1.0</version>
-+      <version>1.2-SNAPSHOT</version>
++      <version>1.1-SNAPSHOT</version>
     <type>war</type>
     <scope>runtime</scope>
     </dependency>

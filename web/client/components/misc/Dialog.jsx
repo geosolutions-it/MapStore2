@@ -76,7 +76,7 @@ class Dialog extends React.Component {
     };
 
     render() {
-        const body = (<div id={this.props.id} style={{zIndex: 3, ...this.props.style}} className={`${this.props.draggable ? 'modal-dialog-draggable' : ''} ${this.props.className} modal-dialog-container`}>
+        const body = (<div id={this.props.id} style={{ ...this.props.style}} className={`${this.props.draggable ? 'modal-dialog-draggable' : ''} ${this.props.className} modal-dialog-container`}>
             <div className={this.props.headerClassName + " draggable-header"}>
                 {this.renderRole('header')}
             </div>

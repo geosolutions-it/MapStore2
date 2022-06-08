@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Message from '../I18N/Message';
 import { Panel } from 'react-bootstrap';
 import BorderLayout from '../layout/BorderLayout';
-import DockPanel from "../misc/panels/DockPanel";
+import ResponsivePanel from "../misc/panels/ResponsivePanel";
 
 class DetailsPanel extends React.Component {
     static propTypes = {
@@ -21,7 +21,8 @@ class DetailsPanel extends React.Component {
         dockStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         style: PropTypes.object,
-        onClose: PropTypes.func
+        onClose: PropTypes.func,
+        width: PropTypes.number
     };
 
     static contextTypes = {
@@ -39,14 +40,18 @@ class DetailsPanel extends React.Component {
         onClose: () => {
         },
         active: false,
-        panelClassName: "details-panel"
+        panelClassName: "details-panel",
+        width: 550
     };
 
     render() {
         return (
-            <DockPanel
+            <ResponsivePanel
+                containerId="details-container"
+                containerClassName="dock-container"
+                containerStyle={this.props.dockStyle}
                 open={this.props.active}
-                size={660}
+                size={this.props.width}
                 position="right"
                 bsStyle="primary"
                 title={<Message msgId="details.title"/>}
@@ -59,7 +64,7 @@ class DetailsPanel extends React.Component {
                         {this.props.children}
                     </BorderLayout>
                 </Panel>
-            </DockPanel>
+            </ResponsivePanel>
         );
     }
 }

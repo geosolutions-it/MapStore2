@@ -92,6 +92,7 @@
       "templateFormatInfoAlert2": "Käytä ${ attribute } kääriäksesi näytettävät ominaisuudet",
       "templateFormatInfoAlertExample": "Kohteen ID on ${ properties }",
       "templatePreview": "Mallin esikatselu",
+      "heightOffset": "Height offset (m)",
       "tooltip": {
         "label": "Työkaluvinkkejä",
         "title": "Otsikko",
@@ -194,15 +195,7 @@
       "Examples": "Esimerkit",
       "LinkedinGroup": "Mapstore Linkedin Group",
       "scrollTop": "Vieritä sivun yläosaan",
-      "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-      "ml": {
-        "title": "Ota yhteyttä ja pysy ajan tasalla postituslistojen avulla",
-        "subscribe_users": "Liity käyttäjien postituslistalle",
-        "subscribe_devel": "Liity kehittäjien postituslistalle",
-        "visit_group": "Vieraile ryhmässä",
-        "subscribe": "Liity",
-        "email": "Sähköposti:"
-      },
+      "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
       "examples": {
         "viewer": {
           "html": "<h3>Viewer</h3><p>Simple Viewer</p>"
@@ -1085,7 +1078,15 @@
       "addBboxParam": "Lisää bbox-parametrit jakamislinkkiin",
       "wrongBboxParamTitle": "virheellinen bbox-parametri",
       "wrongBboxParamMessage": "bbox-parametrien on oltava EPSG: 4326: ssa ja kirjoitettu bbox = minx, miny, maxx, maxy",
-      "showHomeButton": "Linkki MapStoren sivuille"
+      "showHomeButton": "Linkki MapStoren sivuille",
+      "zoom": "Zoomaus",
+      "heading": "Suuntakulma",
+      "roll": "Rullauskulma",
+      "pitch": "Nousukulma",
+      "zoomToolTip": "Min: 0 ja Max: 35",
+      "headingToolTip": "Min: 0° ja Max: 360°",
+      "rollToolTip": "Min: -90° ja Max: 90°",
+      "pitchToolTip": "Min: -90° ja Max: 90°"
     },
     "snapshot": {
       "title": "Kuvan esikatselu",

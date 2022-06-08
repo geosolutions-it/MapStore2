@@ -107,6 +107,7 @@
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est <span style='white-space:nowrap'>${ properties.ID }</span> ou <span style='white-space:nowrap'>${ properties['données-valeur'] }</span>",
             "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
+            "heightOffset": "Décalage en hauteur (m)",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
                 "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
@@ -159,7 +160,8 @@
                     "title": "Erreur",
                     "message": "Échec de la récupération du format"
                 }
-            }
+            },
+            "forceProxy": "Forcer le proxy"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -291,15 +293,7 @@
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-            "ml": {
-                "title": "Restez au courant des derniers développements via les mailing lists",
-                "subscribe_users": "Souscrire à la liste de diffusion utilisateurs",
-                "subscribe_devel": "Souscrire à la liste de diffusion développeurs",
-                "visit_group": "Aller à ce groupe",
-                "subscribe": "Souscrire",
-                "email": "Courriel:"
-            }
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "Ce site utilise des cookies",
@@ -416,6 +410,7 @@
             "saveTitle": "Sauver la carte",
             "saveText": "Sauver la carte courante ?",
             "thumbnail": "Vignette",
+            "mapDelete": "Supprimer la carte",
             "message": "Déposez ou cliquez pour importer une image",
             "suggestion": "(conseillé : 300 px X 180 px, 500 kb max)",
             "errorFormat": "Formats supportés: png/jpg",
@@ -424,6 +419,9 @@
             "error": "L'image fournie n'est pas valide",
             "savedMapTitle": "Carte sauvegardée",
             "savedMapMessage": "La carte a été enregistrée correctement.",
+            "renderingErrorTitle": "Erreur de rendu",
+            "renderingErrorMessage": "<p>Le rendu de la carte s'est arrêté et cela peut être dû à différentes raisons : </p><ul><li>Le style appliqué contient des règles ou des variables non prises en charge par les fonctionnalités</li>< li>Le calque n'est pas correctement configuré</li></ul><p>Vous pouvez appliquer des modifications au style de calque, puis cliquer sur le bouton 'Recharger la carte'. <br/> Consultez le message ci-dessous pour plus d'informations :< /p>",
+            "reloadMap": "Recharger la carte",
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
@@ -489,6 +487,8 @@
             "toggleGroupVisibility": "Changer la visibilité du groupe",
             "displayLegendAndTools": "Afficher la légende",
             "zoomToLayerExtent": "Zoomer sur l'étendue de la couche",
+            "addAnnotations": "Ajouter des annotations",
+            "editAnnotations": "Modifier les annotations",
             "addLayer": "Ajouter une couche",
             "addLayerToGroup": "Ajouter une couche au groupe sélectionné",
             "addGroup": "Ajouter un groupe",
@@ -538,6 +538,7 @@
             "filterIconDisabled": "Activer le filtre de couche",
             "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
             "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
+            "notVisibleSwitchTo3D": "Passer en mode carte 3D pour voir cette couche",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -655,7 +656,9 @@
             "outputFormat": "Format",
             "previewFormatUnsupported": "Format non pris en charge pour l'aperçu",
             "projection": "Système de coordonnées",
-            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran"
+            "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
+            "graticule": "ajouter une grille avec des étiquettes",
+            "additionalLayers": "Inclure les superpositions"
         },
         "backgroundSwitcher": {
             "tooltip": "Sélection du fond de plan"
@@ -1006,6 +1009,7 @@
                 "attribute_filter_header": "Attribut filtre",
                 "tooltipTextField": "utilise <b>*</b> pour tout caractère</br>utilise . pour un seul caractère</br>utilise <b>!</b> pour les caractères spéciaux (* et .)</br>",
                 "tooltipTextFieldCSS": "utilise <b>%</b> pour tout caractère</br>utilise <b>_</b> pour un seul caractère</br>utilise <b>\\</b> pour les caractères spéciaux (% et _)</br>",
+                "tooltipTextField3DTiles": "utilisez une valeur prise en charge par la fonction <strong>regExp</strong> de la spécification de style de tuiles 3d 1.0",
                 "groupField": {
                     "any": "certain",
                     "all": "tous",
@@ -1288,11 +1292,17 @@
             "coordinate": "Coordonner",
             "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées",
             "zoomToolTip": "Min: 1 et Max: 35",
+            "headingToolTip": "Min: 0° et Max: 360°",
+            "rollToolTip": "Min: 0° et Max: 360°",
+            "pitchToolTip": "Min: -90° et Max: 90°",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
             "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
             "showSectionId": "Inclure la position de défilement",
             "showConnections": "Afficher les connexions",
+            "heading": "Angle de cap",
+            "roll": "Angle de roulis",
+            "pitch": "Angle d'inclinaison",
             "sizeOptions": {
                 "width": "largeur",
                 "height": "la taille"
@@ -1460,12 +1470,16 @@
                 "label": "Définir la limite de visibilité",
                 "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             },
-          "domainAliases": {
-            "title": "Alias de domaine",
-            "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
-            "addAliasTooltip": "Ajouter un alias",
-            "removeAliasTooltip": "Supprimer l'alias"
-          }
+            "domainAliases": {
+              "title": "Alias de domaine",
+              "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
+              "addAliasTooltip": "Ajouter un alias",
+              "removeAliasTooltip": "Supprimer l'alias"
+            },
+            "allowUnsecureLayers": {
+              "label": "Autoriser les couches non sécurisées",
+              "tooltip": "L'ajout d'une couche à la carte avec cette option activée force l'application à appliquer un proxy"
+            }
         },
         "uploader": {
             "filename": "Nom du fichier",
@@ -1672,7 +1686,17 @@
                 "syncOnMap": "Synchroniser la carte avec un filtre",
                 "enableTimeSync": "Synchroniser avec l'heure ou l'intervalle de temps sélectionné",
                 "disableTimeSync": "Ne pas synchroniser avec l'heure ou l'intervalle sélectionné",
-                "createNewChart": "Créer un graphique pour le calque sélectionné"
+                "createNewChart": "Créer un graphique pour le calque sélectionné",
+                "enableSnapping": "Activer l'accrochage",
+                "disableSnapping": "Désactiver l'accrochage",
+              "snapToLayer": "Accrocher au calque",
+              "snappingSettings": {
+                  "header": "Paramètres",
+                  "vertex": "Vertex",
+                  "edge": "Bord",
+                  "pixelTolerance": "Tolérance (pixel)",
+                  "loadingStrategy": "Stratégie de chargement"
+              }
             }
         },
         "layerdownload": {
@@ -1751,7 +1775,8 @@
                 },
                 "emptyMap": {
                     "title": "Carte vide",
-                    "description": "Démarrer à partir d'une carte vide"
+                    "description": "Démarrer à partir d'une carte vide",
+                    "noNameDescription": "La sélection a une carte vide. Ajoutez un nom à la carte vide pour procéder à la configuration de la carte"
                 }
             },
             "title": "Titre",
@@ -1780,7 +1805,7 @@
                     "backToPreview": "Retour à l'aperçu",
                     "backToChartOptions": "Retour aux options de graphique",
                     "selectALayer": "Sélectionner une couche",
-                    "selectAMap": "Sélectionner une carte",
+                    "selectAMap": "Sélectionnez une ou plusieurs cartes",
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "backToTableOptions": "Retour à l'option de table",
@@ -1791,6 +1816,7 @@
                     "titlePlaceholder": "Entrez le titre...",
                     "textPlaceholder": "Entrez le texte...",
                     "useThisMap": "Utiliser cette carte",
+                    "useTheseMap": "Utilisez ces cartes",
                     "configureMapOptions": "Configurer les options de la carte",
                     "enableIdentifyTool": "Activer l'outil d'identification",
                     "disableIdentifyTool": "Désactiver l'outil d'identification",
@@ -1811,11 +1837,17 @@
                         "customLabels": "Étiquettes personnalisées",
                         "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p></p><h5>Exemple</h5><dl><dt><b>Attribut Y:</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>Attribut 'Grouper par':</b></dt><dd>POPULATION</dd><dt><b>Étiquette de classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>Attribut 'Grouper par':</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> peut être utilisé comme espace réservé pour l'attribut 'Grouper par'.</p><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p><code>${minValue}</code>peut être utilisé comme espace réservé pour la valeur minimale de la classe.</p><p><code>${maxValue}</code> peut être utilisé comme espace réservé pour la valeur maximale de la classe.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Exemple</h5><dl><dt><b>attribut 'Grouper par'.</b></dt><dd>POPULATION</dd><dt><b>attribut Y:</b></dt><dd>LAND_KM</dd><dt><b>Valeur maximale de la classe:</b></dt><dd>0</dd><dt><b>Valeur minimale de la classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Résultat:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
+                        "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p></p><h5>Exemple</h5><dl><dt><b>Y Attribut:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
+                        "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>peut être utilisé comme espace réservé pour la valeur minimale de la classe.</p><p><code>${maxValue}</code> peut être utilisé comme espace réservé pour la valeur maximale de la classe.</p><p><code>${legendValue}</code> peut être utilisé comme espace réservé pour l'attribut Y.</p><p>les éléments de légende avec le même contenu textuel seront regroupés dans le graphique.</p><h5>Example</h5><dl><dt><b>Attribut:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Résultat:</b></dt><dd>POPULATION California</dd></dl></div>",
                         "defaultClassLabel": "Étiquette de Classe par Défaut",
                         "defaultColorRamp": "Rampe de Couleur par Défaut",
                         "defaultColor": "Couleur par Défaut",
                         "defaultCustomLabel": "Étiquette par défaut",
                         "editCustomColors": "Modifie Couleurs Personnalisées",
+                        "maxValue": "Valeur maximum",
+                        "minValue": "Valeur minimum",
                         "title": "Paramètres de Couleurs Personnalisées"
                     }
                 },
@@ -1848,6 +1880,13 @@
                     "unhide": "Afficher",
                     "unhideDescription": "Afficher le widget pour les autres utilisateurs"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "Aucune carte trouvée",
+                "placeholder": "Entrez le nom de la carte",
+                "selectLabel": "Sélectionnez une carte",
+                "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
+                "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
             },
             "chartType": {
                 "bar": {
@@ -1980,6 +2019,14 @@
         },
         "dashboard": {
             "loadingSpinner": "Chargement du tableau de bord",
+            "importDialog": {
+                "heading": "Supprimer un fichier.json de tableau de bord précédemment exporté",
+                "selectFiles": "Sélectionner un fichier",
+                "note": "Les données du fichier importé remplaceront les données du tableau de bord actuel"
+            },
+            "exportDialog": {
+              "heading": "Exporter le tableau de bord sous forme de fichier .json"
+            },
             "errors": {
                 "loading": {
                     "title": "Erreur lors du chargement du tableau de bord",
@@ -2000,7 +2047,8 @@
                 "showConnections": "Afficher les connexions",
                 "hideConnections": "Masquer les connexions"
             },
-            "emptyTitle": "Le tableau de bord est vide"
+            "emptyTitle": "Le tableau de bord est vide",
+            "delete": "Supprimer le tableau"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Chargement du tableau de bord",
@@ -2282,7 +2330,9 @@
             "imageSrcNotSupportedBase64Image": "Certains rendus de style ne prennent pas en charge les images base64 même si la source actuelle est valide",
             "imageFormatEmpty": "Le format d'image ne peut pas être identifié. Veuillez sélectionner le format d'image parmi ceux disponibles dans la liste déroulante 'Format'",
             "warningTextOrderTitle": "Avertissement",
-            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
+            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles",
+            "invalidProperty": "Le type de propriété { key } n'est pas valide",
+            "notSupportedVariable": "La variable { key } n'est pas prise en charge par le jeu de tuiles"
         },
         "playback": {
             "settings": {
@@ -2324,8 +2374,12 @@
         "timeline": {
             "settings": {
                 "title": "Paramètres de la timeline",
+                "snapType": "Point d'accrochage de l'intervalle de temps",
+                "snapTypeTooltip": "Lorsque l'alignement sur la couche guide est actif et que les données temporelles sont prolongées, le curseur s'aligne sur les bords respectifs de l'intervalle de temps (début/fin)",
                 "snapToGuideLayer": "Aligner sur la couche guide",
-                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données de la couche sélectionnée. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
+                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données de la couche sélectionnée. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation",
+                "snapToEnd": "Début",
+                "snapToStart": "Fin"
             },
             "hide": "Masquer la timeline",
             "show": "Afficher la timeline",
@@ -2456,6 +2510,7 @@
             "zoomToContent": "Zoom sur le contenu",
             "addWebPageContent": "Ajouter du contenu de page web",
             "emptyTitle": "Cette story est vide",
+            "delete": "Supprimer geostory",
             "emptyDescription": "Commencer une story géniale en ajoutant du nouveau contenu",
             "closeFullscreenMap": "Fermer la carte plein écran",
             "showFullscreenMap": "Montrer la carte en plein écran",
@@ -2567,6 +2622,14 @@
                     "overlay": "Recouvrir",
                     "templateTooltip":"Ce paramètre vous permet d'activer la fonction Identifier sur la carte en définissant un format générique pour toutes les couches. Il est possible de configurer un format différent pour chaque niveau à l'aide de l'éditeur de carte avancé (icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guide de l'utilisateur </a>. Si une couche a défini son propre format d'identification, elle sera utilisée à la place du format générique défini au niveau de la carte."
                 }
+            },
+            "importDialog": {
+                "heading": "Supprimer un fichier.json de story précédemment exporté",
+                "selectFiles": "Sélectionner un fichier",
+                "note": "Les données du fichier importé remplaceront les données du story actuel"
+            },
+            "exportDialog": {
+              "heading": "Exporter le story sous forme de fichier .json"
             },
             "errors": {
                 "loading": {
@@ -2712,6 +2775,8 @@
         "backgroundDialog": {
             "addTitle": "Ajouter un nouveau fond",
             "editTitle": "Modifier le fond actuel",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Saisir le texte d'attribution",
             "title": "Titre",
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",
@@ -2769,6 +2834,10 @@
           "CRSSelector": {
             "description": "Permet de changer de projection cartographique",
             "title": "Sélecteur CRS"
+          },
+          "DeleteMap": {
+            "description": "Permet de supprimer une ressource cartographique et toutes ses ressources associées",
+            "title": "Supprimer la carte"
           },
           "Details": {
             "description": "Permet d'afficher les détails d'une carte, le cas échéant",
@@ -3434,6 +3503,9 @@
             "noDataForPosition": "pas de données Street View pour cette position",
             "unknownError": "erreur inconnue, voir console"
           }
+        },
+        "sidebarMenu": {
+          "showMoreItems": "Afficher plus d'éléments"
         }
     }
 }

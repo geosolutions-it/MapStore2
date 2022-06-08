@@ -8,7 +8,7 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-import { isString, isObject, differenceBy, isNil } from 'lodash';
+import { isString, isObject, differenceBy, isNil, some } from 'lodash';
 import { currentTimeSelector } from '../../selectors/dimension';
 import { selectTime, selectLayer, onRangeChanged } from '../../actions/timeline';
 
@@ -197,6 +197,16 @@ const enhance = compose(
     withPropsOnChange(['status'], ({ status }) => ({
         readOnly: status === "PLAY"
     })),
+    // make timeline items layout stacked if we have at least one interval range item
+    withPropsOnChange(['items'], ({ items, options }) => {
+        const hasIntervalValues = some(items, {className: "interval"});
+        return {
+            options: {
+                ...options,
+                ...(hasIntervalValues && { stack: true })
+            }
+        };
+    }),
     customTimesEnhancer,
     withMask(
         ({loading}) => loading && loading.timeline,

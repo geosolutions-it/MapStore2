@@ -32,6 +32,7 @@ import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { has, includes } from 'lodash';
+import {additionalLayersSelector} from "../selectors/additionallayers";
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -50,6 +51,8 @@ import { has, includes } from 'lodash';
  * with a custom one. They are (in order, from left to right and top to bottom in the UI):
  *  - `name` (`left-panel`, `position`: `1`)
  *  - `description` (`left-panel`, `position`: `2`)
+ *  - `outputFormat` (`left-panel`, `position`: `3`)
+ *  - `projection` (`left-panel`, `position`: `4`)
  *  - `layout` (`left-panel-accordion`, `position`: `1`)
  *  - `legend-options` (`left-panel-accordion`, `position`: `2`)
  *  - `resolution` (`right-panel`, `position`: `1`)
@@ -61,8 +64,12 @@ import { has, includes } from 'lodash';
  * To remove a widget, you have to include a Null plugin with the desired target.
  * You can use the position to sort existing and custom items.
  *
+ * Standard widgets can be configured by providing an options object as a configuration property
+ * of this (Print) plugin. The options object of a widget is named `<widget_id>Options`
+ * (e.g. `outputFormatOptions`).
+ *
  * You can customize Print plugin by creating one custom plugin (or more) that modifies the existing
- * components with your ones. You can configure this plugin in localConfig.json as usual.
+ * components with your own ones. You can configure this plugin in `localConfig.json` as usual.
  *
  * It delegates to a printingService the creation of the final print. The default printingService
  * implements a mapfish-print v2 compatible workflow. It is possible to override the printingService to
@@ -88,6 +95,12 @@ import { has, includes } from 'lodash';
  * @prop {boolean} cfg.mapPreviewOptions.enableScalebox if true a combobox to select the printing scale is shown over the preview
  * this is particularly useful if useFixedScales is also true, to show the real printing scales
  * @prop {boolean} cfg.mapPreviewOptions.enableRefresh true by default, if false the preview is not updated if the user pans or zooms the main map
+ * @prop {object} cfg.outputFormatOptions options for the output formats
+ * @prop {object[]} cfg.outputFormatOptions.allowedFormats array of allowed formats, e.g. [{"name": "PDF", "value": "pdf"}]
+ * @prop {object} cfg.projectionOptions options for the projections
+ * @prop {object[]} cfg.projectionOptions.projections array of available projections, e.g. [{"name": "EPSG:3857", "value": "EPSG:3857"}]
+ * @prop {object} cfg.overlayLayersOptions options for overlay layers
+ * @prop {boolean} cfg.overlayLayersOptions.enabled if true a checkbox will be shown to exclude or include overlay layers to the print
  *
  * @example
  * // printing in geodetic mode
@@ -109,6 +122,35 @@ import { has, includes } from 'lodash';
  *       "useFixedScales": true,
  *       "mapPreviewOptions": {
  *          "enableScalebox": true
+ *       }
+ *    }
+ * }
+ *
+ * @example
+ * // restrict allowed output formats
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *       "outputFormatOptions": {
+ *          "allowedFormats": [{"name": "PDF", "value": "pdf"}, {"name": "PNG", "value": "png"}]
+ *       }
+ *    }
+ * }
+ *
+ * @example
+ * // enable custom projections for printing
+ * "projectionDefs": [{
+ *    "code": "EPSG:23032",
+ *    "def": "+proj=utm +zone=32 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs",
+ *    "extent": [-1206118.71, 4021309.92, 1295389.0, 8051813.28],
+ *    "worldExtent": [-9.56, 34.88, 31.59, 71.21]
+ * }]
+ * ...
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *       "projectionOptions": {
+ *          "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
  *       }
  *    }
  * }
@@ -302,7 +344,10 @@ export default {
                     UNSAFE_componentWillReceiveProps(nextProps) {
                         const hasBeenOpened = nextProps.open && !this.props.open;
                         const mapHasChanged = this.props.open && this.props.syncMapPreview && mapUpdated(this.props.map, nextProps.map);
-                        const specHasChanged = nextProps.printSpec.defaultBackground !== this.props.printSpec.defaultBackground;
+                        const specHasChanged = (
+                            nextProps.printSpec.defaultBackground !== this.props.printSpec.defaultBackground ||
+                                nextProps.printSpec.additionalLayers !== this.props.printSpec.additionalLayers
+                        );
                         if (hasBeenOpened || mapHasChanged || specHasChanged) {
                             this.configurePrintMap(nextProps);
                         }
@@ -370,7 +415,8 @@ export default {
                         const {validations, ...options } = opts;
                         const Comp = item.component ?? item.plugin;
                         const {style, ...other} = this.props;
-                        return <Comp role="body" {...other} {...item.cfg} {...options} validation={validations?.[item.id ?? item.name]}/>;
+                        const itemOptions = this.props[item.id + "Options"];
+                        return <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
                     };
                     renderItems = (target, options) => {
                         return this.getItems(target)
@@ -460,7 +506,7 @@ export default {
                                         {this.renderBody()}
                                     </Panel>);
                                 }
-                                return (<Dialog id="mapstore-print-panel" style={{ left: "17%", top: "50px", zIndex: 1990, ...this.props.style}}>
+                                return (<Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
                                     <span role="header"><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                                     {this.renderBody()}
                                 </Dialog>);
@@ -477,6 +523,7 @@ export default {
                             "wms",
                             "wfs",
                             "vector",
+                            "graticule",
                             "empty"
                         ], layer.type) || layer.type === "wmts" && has(layer.allowedSRS, projection);
                     };
@@ -550,7 +597,10 @@ export default {
                     print = () => {
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.printingService.print(this.getMapConfiguration()?.layers)
+                        this.props.printingService.print({
+                            layers: this.getMapConfiguration()?.layers,
+                            scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined
+                        })
                             .then((spec) =>
                                 this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions })
                             )
@@ -568,18 +618,28 @@ export default {
                     (state) => state.print && state.print.error,
                     mapSelector,
                     layersSelector,
+                    additionalLayersSelector,
                     scalesSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
                     mapTypeSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, mapType) => ({
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, additionalLayers, scales, usePreview, currentLocale, mapType) => ({
                     open,
                     capabilities,
                     printSpec,
                     pdfUrl,
                     error,
                     map,
-                    layers: layers.filter(l => !l.loadingError),
+                    layers: [
+                        ...layers.filter(l => !l.loadingError),
+                        ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(
+                            l => {
+                                const isVector = l.type === 'vector';
+                                const hasFeatures = Array.isArray(l.features) && l.features.length > 0;
+                                return !l.loadingError && (!isVector || (isVector && hasFeatures));
+                            }
+                        ) : [])
+                    ],
                     scales,
                     usePreview,
                     currentLocale,
@@ -619,8 +679,19 @@ export default {
             text: <Message msgId="printbutton"/>,
             icon: <Glyphicon glyph="print"/>,
             action: toggleControl.bind(null, 'print', null),
-            priority: 2,
+            priority: 3,
             doNotHide: true
+        },
+        SidebarMenu: {
+            name: "print",
+            position: 3,
+            tooltip: "printbutton",
+            text: <Message msgId="printbutton"/>,
+            icon: <Glyphicon glyph="print"/>,
+            action: toggleControl.bind(null, 'print', null),
+            doNotHide: true,
+            toggle: true,
+            priority: 2
         }
     }),
     reducers: {print: printReducers}

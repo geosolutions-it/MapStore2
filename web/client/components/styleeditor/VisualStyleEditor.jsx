@@ -92,7 +92,8 @@ function validateStyle(rules) {
     if (isStyleEmpty) {
         return {
             messageId: 'styleeditor.styleEmpty',
-            status: 400
+            status: 400,
+            isEmpty: true
         };
     }
     // find first rule with error
@@ -147,6 +148,7 @@ function validateStyle(rules) {
  * @prop {function} getColors return colors for available ramps in classification
  * @prop {number} debounceTime debounce time for on change function, default 300
  * @prop {object} styleService style service configuration object
+ * @prop {boolean} exactMatchGeometrySymbol show symbolizer that support exactly the selected features geometries
  */
 function VisualStyleEditor({
     code,
@@ -168,10 +170,11 @@ function VisualStyleEditor({
     getColors,
     styleUpdateTypes,
     debounceTime,
-    styleService
+    styleService,
+    exactMatchGeometrySymbol
 }) {
 
-    const { symbolizerBlock, ruleBlock } = getBlocks(config);
+    const { symbolizerBlock, ruleBlock } = getBlocks({ exactMatchGeometrySymbol });
     const [updating, setUpdating] = useState(false);
     const [styleHistory, dispatch] = useReducer(historyVisualStyleReducer, {});
     const style = styleHistory?.present || DEFAULT_STYLE;
@@ -291,11 +294,11 @@ function VisualStyleEditor({
                         {
                             glyph: 'undo',
                             tooltipId: 'styleeditor.undoStyle',
-                            disabled: styleHistory?.past?.length === 0,
+                            disabled: (styleHistory?.past?.length || 0) === 0,
                             onClick: () => dispatch({ type: UNDO_STYLE })
                         },
                         {
-                            disabled: styleHistory?.future?.length === 0,
+                            disabled: (styleHistory?.future?.length || 0) === 0,
                             tooltipId: 'styleeditor.redoStyle',
                             glyph: 'redo',
                             onClick: () => dispatch({ type: REDO_STYLE })
