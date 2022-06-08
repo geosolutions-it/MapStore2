@@ -535,6 +535,7 @@
             "filterIconDisabled": "Enable layer filter",
             "notVisibleZoomIn": "The layer is not visible because it is outside the resolution limits. Zoom in to show the layer",
             "notVisibleZoomOut": "The layer is not visible because it is outside the resolution limits. Zoom out to show the layer",
+            "notVisibleSwitchTo3D": "Switch to 3D map mode in order to see this layer",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -2020,7 +2021,8 @@
                 "showConnections": "Show connections",
                 "hideConnections": "HideConnections"
             },
-            "emptyTitle": "The dashboard is empty"
+            "emptyTitle": "The dashboard is empty",
+            "delete": "Delete dashboard"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Loading Dashboard",
@@ -2356,8 +2358,12 @@
         "timeline": {
             "settings": {
                 "title": "Timeline Settings",
+                "snapType": "Time interval snap point",
+                "snapTypeTooltip": "When Snap to Guide Layer is active and time data is protracted the cursor will snap to the respective edges of the time interval (start/end)",
                 "snapToGuideLayer": "Snap to guide layer",
-                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step",
+                "snapToEnd": "End",
+                "snapToStart": "Start"
             },
             "hide": "Hide timeline",
             "show": "Show timeline",
@@ -2487,6 +2493,7 @@
             "addMediaContent": "Add Media Content",
             "addWebPageContent": "Add Web Page Content",
             "zoomToContent": "Zoom to content",
+            "delete": "Delete geostory",
             "emptyTitle": "This story is empty",
             "emptyDescription": "Start creating an awesome geostory by adding new content",
             "closeFullscreenMap": "Close fullscreen map",

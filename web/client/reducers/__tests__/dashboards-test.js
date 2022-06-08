@@ -8,7 +8,7 @@
 import expect from 'expect';
 
 import dashboards from '../dashboards';
-import { setDashboardsAvailable, dashboardListLoaded, dashboardsLoading } from '../../actions/dashboards';
+import { setDashboardsAvailable, dashboardListLoaded, dashboardsLoading, setControl } from '../../actions/dashboards';
 
 
 describe('Test the dashboards reducer', () => {
@@ -41,5 +41,12 @@ describe('Test the dashboards reducer', () => {
         expect(state).toExist();
         expect(state.loading).toBe(true);
         expect(state.loadFlags.saving).toBe(true);
+    });
+    it('dashboards setControl', () => {
+        const action = setControl('delete.show', true);
+        const state = dashboards(undefined, action);
+        expect(state).toExist();
+        expect(state.controls).toExist();
+        expect(state.controls.delete.show).toBe(true);
     });
 });

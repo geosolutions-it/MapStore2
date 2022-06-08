@@ -23,7 +23,8 @@ import {
     cqlArrayField,
     processOGCFilterFields,
     processOGCSimpleFilterField,
-    processCQLFilterFields
+    processCQLFilterFields,
+    wrapIfNoWildcards
 } from '../FilterUtils';
 
 
@@ -1938,5 +1939,23 @@ describe('FilterUtils', () => {
         };
         filter = processCQLFilterFields(group, objFilter);
         expect(filter).toEqual("");
+    });
+
+    it('wrapIfNoWildcards', () => {
+        const testCases = [
+            // True if no unescaped wildcards
+            ["testString", true],
+            ["*testString", false],
+            ["!*testString", true],
+            ["!*test.String", false],
+            ["!te*st!.String", false],
+            ["!te!*st!.String*", false],
+            ["!te!*st!.String!*", true],
+            ["*!te!*st!.String!*", false],
+            ["!*!te!**st!.String!*", false]
+        ];
+        testCases.forEach(([value, expected]) => {
+            expect(wrapIfNoWildcards(value)).toBe(expected);
+        });
     });
 });

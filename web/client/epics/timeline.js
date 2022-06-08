@@ -24,11 +24,13 @@ import { error } from '../actions/notifications';
 import { getLayerFromId } from '../selectors/layers';
 
 import {
+    expandLimitSelector,
     rangeSelector,
     selectedLayerName,
     selectedLayerUrl,
     isAutoSelectEnabled,
     selectedLayerSelector,
+    snapTypeSelector,
     timelineLayersSelector,
     multidimOptionsSelectorCreator,
     isMapSync
@@ -42,11 +44,12 @@ import {
 } from '../selectors/dimension';
 
 import { getNearestDate, roundRangeResolution, isTimeDomainInterval } from '../utils/TimeUtils';
-import { getHistogram, describeDomains, getDomainValues } from '../api/MultiDim';
+import { getHistogram, describeDomains } from '../api/MultiDim';
+import { getTimeDomainsObservable } from '../observables/multidim';
 
 const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
-const MAX_ITEMS_PER_LAYER = 20;
+// const MAX_ITEMS_PER_LAYER = 20;
 const MAX_HISTOGRAM = 20;
 
 /**
@@ -54,38 +57,31 @@ const MAX_HISTOGRAM = 20;
  * @param {object} state application state
  * @param {object} paginationOptions
  */
-const domainArgs = (state, paginationOptions = {}) => {
-    const id = selectedLayerSelector(state);
-    const layerName = selectedLayerName(state);
-    const layerUrl = selectedLayerUrl(state);
-    const bboxOptions = multidimOptionsSelectorCreator(id)(state);
+// TODO: there is another function called with the same name in epics/p
+const domainArgs = (getState, paginationOptions = {}) => {
+    const id = selectedLayerSelector(getState());
+    const layerName = selectedLayerName(getState());
+    const layerUrl = selectedLayerUrl(getState());
+    const bboxOptions = multidimOptionsSelectorCreator(id)(getState());
+    const fromEnd = snapTypeSelector(getState()) === 'end';
     return [layerUrl, layerName, "time", {
         limit: 1,
-        ...paginationOptions
+        ...paginationOptions,
+        fromEnd
     }, bboxOptions];
 };
 /**
  * creates an observable that emit a time that snap the values of the selected layer to the current time
  */
-const snapTime = (state, group, time) => {
+const snapTime = (getState, group, time) => {
     // TODO: evaluate to snap to clicked layer instead of current selected layer, and change layer selection
     // TODO: support local list of values for no multidim-extension.
+    const state = getState();
     if (selectedLayerName(state)) {
-        // do parallel request and return and observable that emit the correct value/ time as it is by default
-        return Rx.Observable.forkJoin(
-            // TODO: find out a way to optimize and do only one request
-            getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))
-                .map(res => res.DomainValues.Domain.split(","))
-                .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
-            getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time }))
-                .map(res => res.DomainValues.Domain.split(","))
-                .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
-        )
-            .map(values =>
-                getNearestDate(values.filter(v => !!v), time) || time
-            );
-
-
+        const snapType = snapTypeSelector(state);
+        return getTimeDomainsObservable(domainArgs, false, getState, snapType, time).map(values => {
+            return getNearestDate(values.filter(v => !!v), time, snapType) || time;
+        });
     }
 
     const timeValues = layerTimeSequenceSelectorCreator(getLayerFromId(state, group))(state);
@@ -114,6 +110,7 @@ const loadRangeData = (id, timeData, getState) => {
 
     const {range, resolution} = roundRangeResolution( initialRange, MAX_HISTOGRAM);
     const layerName = getLayerFromId(getState(), id).name;
+    const expandLimit = expandLimitSelector(getState());
     const filter = {
         [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
     };
@@ -134,7 +131,7 @@ const loadRangeData = (id, timeData, getState) => {
                 filter,
                 {
                     ...multidimOptionsSelectorCreator(id)(getState()),
-                    expandLimit: MAX_ITEMS_PER_LAYER
+                    expandLimit
                 }
             )
         )
@@ -192,7 +189,7 @@ export const setTimelineCurrentTime = (action$, {getState = () => {}} = {}) =>
             const state = getState();
 
             if (snap && group) {
-                return snapTime(state, group, time)
+                return snapTime(getState, group, time)
                     .switchMap( t => {
                         const currentViewRange = rangeSelector(state);
                         const {
@@ -250,7 +247,7 @@ export const syncTimelineGuideLayer = (action$, { getState = () => { } } = {}) =
 export const snapTimeGuideLayer = (action$, { getState = () => { } } = {}) =>
     action$.ofType(SELECT_LAYER)
         .filter((action)=> action?.layerId && isAutoSelectEnabled(getState()))
-        .switchMap(({layerId}) => snapTime(getState(), layerId, currentTimeSelector(getState()) || new Date().toISOString())
+        .switchMap(({layerId}) => snapTime(getState, layerId, currentTimeSelector(getState()) || new Date().toISOString())
             .filter(v => v)
             .map(time => setCurrentTime(time))
         );

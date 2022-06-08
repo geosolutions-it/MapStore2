@@ -90,10 +90,18 @@ export const rawGroupsSelector = (state) => state.layers && state.layers.flat &&
 export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 export const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
+
+/**
+* Layers selected by the user on the TOC
+* @param {object} state the state
+* @return {array} array with the selected layers data obects
+*/
 export const getSelectedLayers = state => {
     const selectedIds = selectedNodesSelector(state);
-    return selectedIds.map((id) => find(layersSelector(state), {id}));
+    // We need to exclude undefined values from the result
+    return selectedIds.map((id) => find(layersSelector(state), {id})).filter(l => l !== undefined);
 };
+
 export const getSelectedLayer = state => {
     const selected = getSelectedLayers(state) || [];
     return selected && selected[0];

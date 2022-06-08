@@ -535,6 +535,7 @@
             "filterIconDisabled": "Attiva il filtro",
             "notVisibleZoomIn": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom in per mostrare il layer",
             "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
+            "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -2022,7 +2023,8 @@
                 "showConnections": "Mostra connessioni",
                 "hideConnections": "Nascondi connessioni"
             },
-            "emptyTitle": "La dashboard è vuota"
+            "emptyTitle": "La dashboard è vuota",
+            "delete": "Cancellare la dashboard"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Caricamento Dashboard",
@@ -2349,7 +2351,11 @@
             "settings": {
                 "title": "Impostazione linea di tempo",
                 "snapToGuideLayer": "Aggancia al livello guida",
-                "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione"
+                "snapType": "Punto d'aggancio per intervalli temporali",
+                "snapTypeTooltip": "Quando l'aggancio al livello guida è attivo e i dati temporali sono protratti, il cursore si aggancia ai rispettivi limiti dell'intervallo di tempo (inizio/fine)",
+                "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione",
+                "snapToEnd": "Fine",
+                "snapToStart": "Inizio"
             },
             "hide": "Nascondi timeline",
             "show": "Mostra timeline",
@@ -2480,6 +2486,7 @@
             "zoomToContent": "Zoom al contenuto",
             "addWebPageContent": "Aggiungi contenuto alla pagina Web",
             "emptyTitle": "Questa storia è vuota",
+            "delete": "Cancellare geostory",
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
             "closeFullscreenMap": "Chiudi mappa",
             "showFullscreenMap": "Visualizza mappa a pieno schermo",

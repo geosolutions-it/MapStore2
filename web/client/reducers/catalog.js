@@ -30,7 +30,8 @@ import {
     TOGGLE_TEMPLATE,
     TOGGLE_ADVANCED_SETTINGS,
     FORMAT_OPTIONS_LOADING,
-    SET_FORMAT_OPTIONS
+    SET_FORMAT_OPTIONS,
+    NEW_SERVICE_STATUS
 } from '../actions/catalog';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -212,6 +213,9 @@ function catalog(state = {
     }
     case SET_FORMAT_OPTIONS: {
         return set("newService.supportedFormats", action.formats, set("newService.formatUrlUsed", action.url, state));
+    }
+    case NEW_SERVICE_STATUS: {
+        return set("isNewServiceAdded", action.status, state);
     }
     default:
         return state;

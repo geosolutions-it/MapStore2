@@ -535,6 +535,7 @@
             "filterIconDisabled": "Activer le filtre de couche",
             "notVisibleZoomIn": "Le calque n'est pas visible car il est en dehors des limites de résolution. Zoomez pour afficher le calque",
             "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
+            "notVisibleSwitchTo3D": "Passer en mode carte 3D pour voir cette couche",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -2021,7 +2022,8 @@
                 "showConnections": "Afficher les connexions",
                 "hideConnections": "Masquer les connexions"
             },
-            "emptyTitle": "Le tableau de bord est vide"
+            "emptyTitle": "Le tableau de bord est vide",
+            "delete": "Supprimer le tableau"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Chargement du tableau de bord",
@@ -2347,8 +2349,12 @@
         "timeline": {
             "settings": {
                 "title": "Paramètres de la timeline",
+                "snapType": "Point d'accrochage de l'intervalle de temps",
+                "snapTypeTooltip": "Lorsque l'alignement sur la couche guide est actif et que les données temporelles sont prolongées, le curseur s'aligne sur les bords respectifs de l'intervalle de temps (début/fin)",
                 "snapToGuideLayer": "Aligner sur la couche guide",
-                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données de la couche sélectionnée. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
+                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données de la couche sélectionnée. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation",
+                "snapToEnd": "Début",
+                "snapToStart": "Fin"
             },
             "hide": "Masquer la timeline",
             "show": "Afficher la timeline",
@@ -2479,6 +2485,7 @@
             "zoomToContent": "Zoom sur le contenu",
             "addWebPageContent": "Ajouter du contenu de page web",
             "emptyTitle": "Cette story est vide",
+            "delete": "Supprimer geostory",
             "emptyDescription": "Commencer une story géniale en ajoutant du nouveau contenu",
             "closeFullscreenMap": "Fermer la carte plein écran",
             "showFullscreenMap": "Montrer la carte en plein écran",

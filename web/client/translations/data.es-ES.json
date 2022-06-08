@@ -535,6 +535,7 @@
             "filterIconDisabled": "Habilitar filtro de capa",
             "notVisibleZoomIn": "La capa no es visible porque está fuera de los límites de resolución. Acercar para mostrar la capa",
             "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
+            "notVisibleSwitchTo3D": "Cambie al modo de mapa 3D para ver esta capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -2020,7 +2021,8 @@
                 "showConnections": "Mostrar conexiones",
                 "hideConnections": "Ocultar conexiones"
             },
-            "emptyTitle": "El panel de control está vacío"
+            "emptyTitle": "El panel de control está vacío",
+            "delete": "Eliminar panel de control"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Cargando panel de control",
@@ -2346,8 +2348,12 @@
         "timeline": {
             "settings": {
                 "title": "Configuración de la línea de tiempo",
+                "snapType": "Punto de ajuste de intervalo de tiempo",
+                "snapTypeTooltip": "Cuando el ajuste a la capa guía está activo y los datos de tiempo se prolongan, el cursor se ajustará a los bordes respectivos del intervalo de tiempo (inicio/fin)",
                 "snapToGuideLayer": "Ajustar a capa de guía",
-                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
+                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación",
+                "snapToEnd": "Fin",
+                "snapToStart": "Inicio"
             },
             "hide": "Esconder la línea de tiempo",
             "show": "Mostrar la línea de tiempo",
@@ -2478,6 +2484,7 @@
             "zoomToContent": "Zoom al contenido",
             "addWebPageContent": "Agregar contenido de página web",
             "emptyTitle": "Esta historia esta vacia",
+            "delete": "Eliminar geostory",
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
             "closeFullscreenMap": "Cerrar mapa a pantalla completa",
             "showFullscreenMap": "Ver mapa en pantalla completa",

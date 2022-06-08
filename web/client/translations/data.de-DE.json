@@ -574,6 +574,7 @@
             "filterIconDisabled": "Ebenenfilter aktivieren",
             "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
             "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
+            "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -2058,7 +2059,8 @@
                 "showConnections": "Verbindungen anzeigen",
                 "hideConnections": "Verbindungen ausblenden"
             },
-            "emptyTitle": "Das Dashboard ist leer"
+            "emptyTitle": "Das Dashboard ist leer",
+            "delete": "Dashboard löschen"
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Dashboard wird geladen",
@@ -2384,8 +2386,12 @@
         "timeline": {
             "settings": {
                 "title": "Zeitleisten-Einstellungen",
+                "snapType": "Fangpunkt Zeitintervall",
+                "snapTypeTooltip": "Wenn das Einrasten an Führungsebene aktiv ist und Zeitdaten verlängert werden, rastet der Cursor an den jeweiligen Rändern des Zeitintervalls (Start/Ende) ein.",
                 "snapToGuideLayer": "Auf Führungsebene ausrichten",
-                "snapToGuideLayerTooltip": "Zwingt den Zeitcursor, sich an den Daten der ausgewählten Ebene zu fangen. Deaktivieren Sie diese Option, um die Zeitcursor zu entsperren und die Anpassung des Animationsschritts zu aktivieren."
+                "snapToGuideLayerTooltip": "Zwingt den Zeitcursor, sich an den Daten der ausgewählten Ebene zu fangen. Deaktivieren Sie diese Option, um die Zeitcursor zu entsperren und die Anpassung des Animationsschritts zu aktivieren.",
+                "snapToEnd": "Ende",
+                "snapToStart": "Start"
             },
             "hide": "Zeitleiste ausblenden",
             "show": "Zeitleiste anzeigen",
@@ -2515,7 +2521,8 @@
             "addMediaContent": "Medieninhalt hinzufügen",
             "zoomToContent": "Zum Inhalt zoomen",
             "addWebPageContent": "Webseitenabschnitt hinzufügen",
-            "emptyTitle": "Diese Geschichte ist leer",
+            "emptyTitle": "Diese GeoStory ist leer",
+            "delete": "Löschen geostory",
             "emptyDescription": "Erstellen Sie eine fantastische Geostory, indem Sie neuen Inhalt hinzufügen",
             "closeFullscreenMap": "Schließen Vollbild-Karte",
             "showFullscreenMap": "Vollbild-Anzeige Karte",

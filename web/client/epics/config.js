@@ -21,7 +21,7 @@ import {
     loadMapConfig,
     loadMapInfo
 } from '../actions/config';
-import { zoomToExtent } from '../actions/map';
+import {zoomToExtent} from '../actions/map';
 import Persistence from '../api/persistence';
 import { isLoggedIn, userSelector } from '../selectors/security';
 import { projectionDefsSelector } from '../selectors/map';

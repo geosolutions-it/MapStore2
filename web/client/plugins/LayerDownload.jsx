@@ -35,17 +35,18 @@ import {
     infoBubbleMessageSelector,
     checkingExportDataEntriesSelector
 } from '../selectors/layerdownload';
-import { wfsURL } from '../selectors/query';
+import {attributesSelector, wfsURL} from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
+import { customAttributesSettingsSelector } from "../selectors/featuregrid";
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
 import ExportDataResultsComponent from '../components/data/download/ExportDataResultsComponent';
+
 import FeatureEditorButton from '../components/data/download/FeatureEditorButton';
-
 import * as epics from '../epics/layerdownload';
-import layerdownload from '../reducers/layerdownload';
 
+import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
@@ -110,7 +111,9 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         layer: getSelectedLayer,
         service: serviceSelector,
         checkingWPSAvailability: checkingWPSAvailabilitySelector,
-        virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll
+        virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll,
+        customAttributeSettings: customAttributesSettingsSelector,
+        attributes: attributesSelector
     }), {
         onExport: downloadFeatures,
         onDownloadOptionChange,

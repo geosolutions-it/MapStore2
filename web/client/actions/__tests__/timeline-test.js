@@ -23,12 +23,16 @@ import {
     setCollapsed,
     SET_MAP_SYNC,
     setMapSync,
+    setTimelineSnapType,
+    setEndValuesSupport,
+    SET_SNAP_TYPE,
     INIT_TIMELINE,
     initTimeline,
     SELECT_LAYER,
     selectLayer,
     INIT_SELECT_LAYER,
-    initializeSelectLayer
+    initializeSelectLayer,
+    SET_END_VALUES_SUPPORT
 } from '../timeline';
 
 describe('timeline actions', () => {
@@ -80,10 +84,24 @@ describe('timeline actions', () => {
         expect(retval.type).toBe(SET_MAP_SYNC);
         expect(retval.mapSync).toBe(true);
     });
+    it('setTimelineSnapType', () => {
+        const retval = setTimelineSnapType("start");
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_SNAP_TYPE);
+        expect(retval.snapType).toBe("start");
+    });
+    it('setEndValuesSupport', () => {
+        const retval = setEndValuesSupport(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_END_VALUES_SUPPORT);
+        expect(retval.endValuesSupport).toBe(true);
+    });
     it('initTimeline', () => {
-        const retval = initTimeline(true);
+        const retval = initTimeline(true, 20, "end");
         expect(retval).toExist();
         expect(retval.type).toBe(INIT_TIMELINE);
         expect(retval.showHiddenLayers).toBe(true);
+        expect(retval.expandLimit).toBe(20);
+        expect(retval.snapType).toBe("end");
     });
 });
