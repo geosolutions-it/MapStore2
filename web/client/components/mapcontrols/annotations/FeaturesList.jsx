@@ -39,11 +39,10 @@ const FeaturesList = (props) => {
         defaultStyles,
         defaultPointType,
         onValidateFeature,
-        validateFeatures
+        selected
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);
-    const areAllFeaturesValid = validateFeatures();
 
     const onClickGeometry = (type, style) => {
         onStyleGeometry(false);
@@ -139,7 +138,7 @@ const FeaturesList = (props) => {
             {features && features.length === 0 && <div style={{ textAlign: 'center' }}><Message msgId="annotations.addGeometry"/></div>}
             {features?.map((feature, key) => {
                 return (
-                    <FeatureCard disabled={!areAllFeaturesValid} onValidateFeature={onValidateFeature} feature={feature} key={key} {...props}/>
+                    <FeatureCard disabled={!isValidFeature && selected?.properties?.id} onValidateFeature={onValidateFeature} feature={feature} key={key} {...props}/>
                 );
             })}
         </>
@@ -210,6 +209,16 @@ const FeatureCard = ({
                     className: 'square-button-md no-border'
                 }}
                 buttons={[
+                    {
+                        Element: () =>
+                            isValidFeature
+                                ? (<Glyphicon glyph={"ok-sign"} className={"text-success"}/>)
+                                : (
+                                    <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="annotations.geometryError"/></Tooltip>}>
+                                        <Glyphicon glyph={"exclamation-mark"} className={"text-danger"}/>
+                                    </OverlayTrigger>
+                                )
+                    },
                     {
                         glyph: 'zoom-to',
                         visible: isValidFeature,

@@ -714,12 +714,15 @@ export default {
             const selected = state.annotations.selected;
             const multiGeometry = multiGeometrySelector(state);
             const style = feature.style;
-            let method = selected.geometry.type;
+            let method = selected?.geometry?.type;
             if (selected.properties.isCircle) {
                 method = "Circle";
             }
             if (selected.properties.isText) {
                 method = "Text";
+            }
+            if (selected.properties.isPoint) {
+                method = "Point";
             }
             const action = changeDrawingStatus("drawOrEdit", method, ANNOTATIONS, [feature], {
                 featureProjection: "EPSG:4326",

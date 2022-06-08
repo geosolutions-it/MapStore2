@@ -1171,7 +1171,7 @@
                 "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)",
                 "newFeature": "Nuevo"
             },
-            "geometryError": "La configuración de geometría no es válida",
+            "geometryError": "La geometría no es válida",
             "annotationSaveGeometryError": "El guardado está deshabilitado debido a una geometría no válida, corríjalo para guardar la anotación",
             "resolveAllErrors": "Corrija los errores de validación antes de editar otras geometrías"
         },

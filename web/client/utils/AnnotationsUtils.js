@@ -366,6 +366,9 @@ export const getGeometryType = (feature) => {
     if (feature?.properties?.isText) {
         return 'Text';
     }
+    if (feature?.properties?.isPoint) {
+        return 'Point';
+    }
     return feature?.geometry?.type;
 };
 /**

@@ -1171,7 +1171,7 @@
                 "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)",
                 "newFeature": "New"
             },
-            "geometryError": "Geometry configuration is invalid",
+            "geometryError": "Geometry is invalid",
             "annotationSaveGeometryError": "Saving is disabled due to invalid geometry, please fix it to save the annotation",
             "resolveAllErrors": "Please fix any validation errors before editing other geometries"
         },
