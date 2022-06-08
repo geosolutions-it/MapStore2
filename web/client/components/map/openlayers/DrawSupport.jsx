@@ -1573,7 +1573,7 @@ export default class DrawSupport extends React.Component {
     */
     replaceCirclesWithPolygonsInFeatureColl = (features) => {
         return features.map(f => {
-            if (f.getGeometry().getType() !== "Circle") {
+            if (f.getGeometry()?.getType() !== "Circle") {
                 return f;
             }
             return this.replaceCircleWithPolygon(f);
