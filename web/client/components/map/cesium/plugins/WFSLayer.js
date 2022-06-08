@@ -9,8 +9,7 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
-import axios from '../../../../libs/ajax';
-import { getFeature } from '../../../../api/WFS';
+import { getFeature } from '../../../../workers/WFS';
 import { needsReload } from '../../../../utils/WFSLayerUtils';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import {
@@ -19,14 +18,12 @@ import {
     applyDefaultStyleToLayer
 } from '../../../../utils/VectorStyleUtils';
 
-const requestFeatures = (options, params, cancelToken) => {
+const requestFeatures = (options, params) => {
     return getFeature(options.url, options.name, {
         // ...(!params?.CQL_FILTER && { bbox: [minx, miny, maxx, maxy, projection].join(',') }),
         outputFormat: 'application/json',
         srsname: 'EPSG:4326',
         ...params
-    }, {
-        cancelToken
     });
 };
 
@@ -36,10 +33,7 @@ const createLayer = (options, map) => {
 
     const params = optionsToVendorParams(options);
 
-    const cancelToken = axios.CancelToken;
-    const source = cancelToken.source();
-
-    requestFeatures(options, params, source.token)
+    requestFeatures(options, params)
         .then(({ data: collection }) => {
             dataSource.load(collection).then(() => {
                 map.dataSources.add(dataSource);
@@ -65,9 +59,6 @@ const createLayer = (options, map) => {
         detached: true,
         dataSource,
         remove: () => {
-            if (source?.cancel) {
-                source.cancel();
-            }
             if (dataSource && map) {
                 map.dataSources.remove(dataSource);
                 dataSource = undefined;

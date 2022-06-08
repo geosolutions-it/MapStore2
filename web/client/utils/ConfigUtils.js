@@ -22,8 +22,6 @@ const centerPropType = PropTypes.shape({
     crs: PropTypes.string
 });
 
-const urlQuery = url.parse(window.location.href, true).query;
-
 let localConfigFile = 'configs/localConfig.json';
 
 let defaultConfig = {
@@ -221,6 +219,7 @@ export const normalizeConfig = function(config) {
 };
 
 export const getUserConfiguration = function(defaultName, extension, geoStoreBase) {
+    const urlQuery = url.parse(window.location.href, true).query;
     return getConfigurationOptions(urlQuery, defaultName, extension, geoStoreBase);
 };
 
