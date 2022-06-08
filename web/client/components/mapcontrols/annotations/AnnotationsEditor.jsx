@@ -550,7 +550,9 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onToggleUnsavedGeometryModal}
-                onConfirm={() => { this.props.onResetCoordEditor(); }}
+                onConfirm={() => { this.props.onResetCoordEditor();
+                    this.props.onCancelEdit(this.props.editing?.properties);
+                 }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 title={<Message msgId="annotations.titleUndoGeom" />}
