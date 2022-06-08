@@ -125,6 +125,7 @@ class CesiumLayer extends React.Component {
                         this.props.map.imageryLayers[diff > 0 ? 'raise' : 'lower'](this.provider);
                     });
             }
+            this.props.map.scene.requestRender();
         }
     };
 
@@ -142,6 +143,7 @@ class CesiumLayer extends React.Component {
                     this.removeLayer();
                 }
             }
+            newProps.map.scene.requestRender();
         }
     };
 
@@ -172,6 +174,7 @@ class CesiumLayer extends React.Component {
         var oldOpacity = this.props.options && this.props.options.opacity !== undefined ? this.props.options.opacity : 1.0;
         if (opacity !== oldOpacity && this.layer && this.provider) {
             this.provider.alpha = opacity;
+            this.props.map.scene.requestRender();
         }
     };
 
@@ -187,7 +190,7 @@ class CesiumLayer extends React.Component {
             if (this.layer === null) {
                 this.props.onCreationError(options);
             }
-
+            this.props.map.scene.requestRender();
         }
     };
 
@@ -200,6 +203,7 @@ class CesiumLayer extends React.Component {
                 this.addLayer(newProps);
             }
         }
+        newProps.map.scene.requestRender();
     };
 
     addLayerInternal = (newProps) => {
@@ -212,6 +216,7 @@ class CesiumLayer extends React.Component {
                 this.provider.alpha = newProps.options.opacity;
             }
         }
+        newProps.map.scene.requestRender();
     };
 
     addLayer = (newProps) => {
@@ -226,6 +231,7 @@ class CesiumLayer extends React.Component {
                     this.removeLayer();
                     this.layer = newLayer;
                     this.addLayerInternal(newProps);
+                    this.props.map.scene.requestRender();
                 }, this.props.options.refresh);
             }
         }
@@ -241,6 +247,7 @@ class CesiumLayer extends React.Component {
         if (this.layer?.detached && this.layer?.remove) {
             this.layer.remove();
         }
+        this.props.map.scene.requestRender();
     };
 }
 
