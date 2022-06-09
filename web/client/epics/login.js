@@ -149,5 +149,6 @@ export default {
     reloadMapConfig,
     promptLoginOnMapError,
     initCatalogOnLoginOutEpic,
+    verifyOpenIdSessionCookie,
     redirectOnLogout
 };
