@@ -133,11 +133,6 @@
     <!-- OAuth2 beans -->
     <context:annotation-config/>
 
-    <bean id="googleSessionServiceDelegate"
-          class="it.geosolutions.geostore.services.rest.security.oauth2.google.GoogleSessionServiceDelegate">
-        <constructor-arg ref="restSessionService"/>
-    </bean>
-
     <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
 
     <!-- END OAuth2 beans-->
