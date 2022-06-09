@@ -153,7 +153,7 @@ export const readQueryParamsOnMapEpic = (action$, store) =>
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
- * If speficic maps viewer options are found (atm just cesium) fire an action to change
+ * If specific map viewer options are found (atm just cesium) fire an action to change
  * the map type to the appropriate one
  * @param {*} action$ manages `LOCATION_CHANGE`
  * @memberof epics.share
@@ -167,7 +167,7 @@ export const switchMapType = (action$, store) =>
                 .switchMap(() => {
                     const state = store.getState();
                     const map = mapSelector(state);
-                    const parameters = getParametersValues(paramActions, state);
+                    const parameters = getParametersValues(paramActions, state, true);
                     const cesiumViewerOptions = getCesiumViewerOptions(parameters, map);
                     if (cesiumViewerOptions) {
                         return Rx.Observable.of(changeMapType('cesium'));

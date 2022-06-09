@@ -47,14 +47,15 @@ export const getRequestLoadValue = (name, state) => {
  * </pre>
  * @param {string} name - name of the parameter to get
  * @param {Storage} storage - sessionStorage or localStorage
+ * @param {boolean} preserve - variable won't be removed from the storage after reading if true
  */
-export const postRequestLoadValue = (name, storage = sessionStorage) => {
+export const postRequestLoadValue = (name, storage = sessionStorage, preserve = false) => {
     const queryParams = storage.getItem('queryParams') ?? null;
     if (queryParams) {
         try {
             const params = JSON.parse(queryParams);
             const { [name]: item, ...rest } = params;
-            if (item && typeof params === 'object') {
+            if (item && typeof params === 'object' && !preserve) {
                 const { length } = Object.keys(params);
                 length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
                 length === 1 && storage.removeItem('queryParams');
@@ -80,8 +81,8 @@ export const postRequestLoadValue = (name, storage = sessionStorage) => {
  * @param {*} state - app state
  * @param {Storage} storage - sessionStorage or localStorage
  */
-export const getRequestParameterValue = (name, state, storage = sessionStorage) => {
-    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, storage);
+export const getRequestParameterValue = (name, state, storage = sessionStorage, preserve = false) => {
+    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, storage, preserve);
 };
 
 
@@ -91,12 +92,13 @@ export const getRequestParameterValue = (name, state, storage = sessionStorage) 
  * mapping is based on an object that maps each query string param to a redux action
  * @param {object} paramActions objects that maps each parameter to its respective action to trigger
  * @param {object} state the application state
+ * @param {boolean} preserve - by default parameter values obtained from storage will be removed after reading. This flag allows to preserve variable in storage upon reading
  * @returns {object} { param: value } KVP object
  */
-export const getParametersValues = (paramActions, state) => (
+export const getParametersValues = (paramActions, state, preserve = false) => (
     Object.keys(paramActions)
         .reduce((params, parameter) => {
-            const value = getRequestParameterValue(parameter, state);
+            const value = getRequestParameterValue(parameter, state, sessionStorage, preserve);
             return {
                 ...params,
                 ...(value ? { [parameter]: value } : {})

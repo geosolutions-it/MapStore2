@@ -59,6 +59,18 @@ describe('QueryParamsUtils', () => {
         expect(zoom).toBe(5);
         expect(center).toBe("41,0");
     });
+    it('test postRequestLoadValue preserving variable in storage', () => {
+        sessionStorage.setItem('queryParams', JSON.stringify({featureinfo: {lat: 38.72, lng: -95.625, filterNameList: []}, zoom: 5, center: "41,0"}));
+        let featureinfo = postRequestLoadValue('featureinfo', sessionStorage, true);
+        expect(featureinfo.lat).toBe(38.72);
+        expect(featureinfo.lng).toBe(-95.625);
+        expect(featureinfo.filterNameList).toEqual([]);
+
+        featureinfo = postRequestLoadValue('featureinfo', sessionStorage);
+        expect(featureinfo).toNotBe(undefined);
+        featureinfo = postRequestLoadValue('featureinfo', sessionStorage);
+        expect(featureinfo).toBe(undefined);
+    });
     it('test getRequestParameterValue', () => {
         const state = {
             router: {
