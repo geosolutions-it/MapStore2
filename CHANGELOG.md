@@ -1,6 +1,6 @@
 # Change Log
 
-## [2022.01.02](https://github.com/geosolutions-it/MapStore2/tree/v2022.01.02) (2022-06-08)
+## [2022.01.02](https://github.com/geosolutions-it/MapStore2/tree/v2022.01.02) (2022-06-09)
 
  - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2022.01.01...v2022.01.02)**
 
