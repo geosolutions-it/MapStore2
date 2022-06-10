@@ -15,10 +15,8 @@ import {
     inputLayerFilterSTATENAME
 } from './dependenciesToFiltersData';
 
-export const inputMapDefault = {
-    layers: []
-};
-export const inputMapStatesWithCQL = {
+export const inputMapDefault = [];
+export const inputMapStatesWithCQL = [{
     layers: [
         {
             name: "topp:states",
@@ -26,9 +24,10 @@ export const inputMapStatesWithCQL = {
                 CQL_FILTER: '(strToLowerCase("state_abbr") LIKE \'%a%\')'
             }
         }
-    ]
-};
-export const inputMapStatesCenterChanged = {
+    ],
+    mapId: 'MAP_ID'
+}];
+export const inputMapStatesCenterChanged = [{
     layers: [
         {
             name: "topp:states"
@@ -36,9 +35,10 @@ export const inputMapStatesCenterChanged = {
     ],
     center: {
 
-    }
-};
-export const inputMapStatesCenterChangedAndQuickFilters = {
+    },
+    mapId: 'MAP_ID'
+}];
+export const inputMapStatesCenterChangedAndQuickFilters = [{
     layers: [
         {
             name: "topp:states",
@@ -49,8 +49,9 @@ export const inputMapStatesCenterChangedAndQuickFilters = {
     ],
     center: {
 
-    }
-};
+    },
+    mapId: 'MAP_ID'
+}];
 export const inputDependenciesQuickFilters = {
     layer: {
         name: "topp:states"
@@ -76,8 +77,8 @@ export const inputDependenciesQuickFiltersAndFilter = {
  * output data for filters
  */
 
-export const resultMapStatesNoCQL = { layers: [ { name: 'topp:states', params: { CQL_FILTER: undefined } } ], center: {} };
-export const resultMapStatesCQL = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '((strToLowerCase("state_abbr") LIKE \'%i%\'))' } } ], center: {} };
-export const resultMapStatesCQLAndOriginalCql = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '(((strToLowerCase("state_abbr") LIKE \'%i%\'))) AND ((strToLowerCase("state_abbr") LIKE \'%calif%\'))' } } ], center: {} };
-export const resultMapStatesCQLQuickFiltersAndFilter = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '(((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))' } } ], center: {} };
-export const resultMapWithCqlStatesCQLQuickFiltersAndFilter = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '((((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))) AND ((strToLowerCase("state_abbr") LIKE \'%a%\'))' } } ] };
+export const resultMapStatesNoCQL = [{ mapId: 'MAP_ID', layers: [ { name: 'topp:states', params: { CQL_FILTER: undefined } } ], center: {} }];
+export const resultMapStatesCQL = [{ mapId: 'MAP_ID', layers: [ { name: 'topp:states', params: { CQL_FILTER: '((strToLowerCase("state_abbr") LIKE \'%i%\'))' } } ], center: {} }];
+export const resultMapStatesCQLAndOriginalCql = [{ mapId: 'MAP_ID', layers: [ { name: 'topp:states', params: { CQL_FILTER: '(((strToLowerCase("state_abbr") LIKE \'%i%\'))) AND ((strToLowerCase("state_abbr") LIKE \'%calif%\'))' } } ], center: {} }];
+export const resultMapStatesCQLQuickFiltersAndFilter = [{ mapId: 'MAP_ID', layers: [ { name: 'topp:states', params: { CQL_FILTER: '(((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))' } } ], center: {} }];
+export const resultMapWithCqlStatesCQLQuickFiltersAndFilter = [{ mapId: 'MAP_ID', layers: [ { name: 'topp:states', params: { CQL_FILTER: '((((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))) AND ((strToLowerCase("state_abbr") LIKE \'%a%\'))' } } ] }];

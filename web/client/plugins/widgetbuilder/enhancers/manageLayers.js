@@ -17,15 +17,16 @@ import { onEditorChange } from '../../../actions/widgets';
  */
 export default compose(
     withProps(({ editorData = {} }) => ({
-        layers: editorData.map && editorData.map.layers
+        layers: editorData.maps && editorData.maps.find(m=> m.mapId === editorData.selectedMapId)?.layers || [],
+        selectedMapId: editorData.selectedMapId
     })),
     connect(() => ({}), {
-        setLayers: layers => onEditorChange('map.layers', layers)
+        setLayers: (layers, selectedMapId) => onEditorChange(`maps[${selectedMapId}].layers`, layers)
     }),
     withHandlers({
-        addLayer: ({ layers = [], setLayers = () => { }, catalog = {}}) => layer => catalog.localizedLayerStyles ?
-            setLayers([...layers, normalizeLayer({...layer, localizedLayerStyles: catalog.localizedLayerStyles})])
-            : setLayers([...layers, normalizeLayer(layer)]),
-        removeLayersById: ({ layers = [], setLayers = () => { } }) => (ids = []) => setLayers(layers.filter(l => !find(castArray(ids), id => id === l.id)))
+        addLayer: ({ layers = [], setLayers = () => { }, catalog = {}, selectedMapId}) => layer => catalog.localizedLayerStyles ?
+            setLayers([...layers, normalizeLayer({...layer, localizedLayerStyles: catalog.localizedLayerStyles})], selectedMapId)
+            : setLayers([...layers, normalizeLayer(layer)], selectedMapId),
+        removeLayersById: ({ layers = [], setLayers = () => { }, selectedMapId }) => (ids = []) => setLayers(layers.filter(l => !find(castArray(ids), id => id === l.id)), selectedMapId)
     })
 );

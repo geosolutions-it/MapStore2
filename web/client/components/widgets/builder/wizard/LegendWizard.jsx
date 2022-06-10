@@ -42,7 +42,8 @@ export default ({
     valid,
     data = {},
     currentLocale,
-    language
+    language,
+    updateProperty = () => {}
 } = {}) => (
     <Wizard
         step={step}
@@ -58,9 +59,12 @@ export default ({
                         dependencies={dependencies}
                         dependenciesMap={data.dependenciesMap}
                         key="widget-options"
-                        onChange={onChange}
                         currentLocale={currentLocale}
                         language={language}
+                        updateProperty={updateProperty}
+                        disableVisibility
+                        disableOpacitySlider
+                        legendExpanded
                     />
                 </div>
             </Col>

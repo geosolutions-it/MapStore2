@@ -70,6 +70,7 @@ class CesiumMap extends React.Component {
         hookRegister: {
             registerHook
         },
+        orientate: undefined,
         viewerOptions: {
             orientation: {
                 heading: 0,
@@ -227,7 +228,8 @@ class CesiumMap extends React.Component {
                         lng: longitude
                     },
                     crs: "EPSG:4326",
-                    intersectedFeatures
+                    intersectedFeatures,
+                    resolution: getResolutions()[Math.round(this.props.zoom)]
                 });
             }
         }

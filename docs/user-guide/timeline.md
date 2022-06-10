@@ -84,7 +84,16 @@ The animation behavior can be customized through the **Settings** button <img sr
 
 <img src="../img/timeline/timeline-animation-settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-By default, the **Snap to guide layer** is enabled. It allows to force the time cursor to snap to the selected layer's data. The user can disable *Snap to guide level* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one: 
+
+By default, the **Snap to guide layer** is enabled. It allows to force the time cursor to snap to the selected layer's data. 
+
+<img src="../img/timeline/snap-to-guide-layer.jpg" class="ms-docimage"/>
+
+If the time dimension of the layer has time ranges defined (start/end time) instead of time instants, the user can choose the **Time interval snap point** by selecting the option `Start` or `End`. An example of snapping to the `End` point could be the following:
+
+<img src="../img/timeline/time-interval-snap-point.gif" class="ms-docimage"/>
+
+The user can disable *Snap to guide layer* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one: 
 
 <img src="../img/timeline/animation-passage.jpg" class="ms-docimage"/>
 

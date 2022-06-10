@@ -112,7 +112,7 @@ export default pure(({
                 dependencies={dependencies}
                 enableColumnFilters={getEnableColumnFilters(w)}
                 canEdit={canEdit}
-                updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
+                updateProperty={(...args) => updateWidgetProperty(...args)}
                 toggleCollapse={() => toggleCollapse(w)}
                 toggleMaximize={() => toggleMaximize(w)}
                 onDelete={() => deleteWidget(w)}

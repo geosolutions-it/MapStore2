@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import { find, get, castArray, isArray } from 'lodash';
+import { find, get, castArray, isArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
 import { getSelectedLayer } from './layers';
@@ -74,8 +74,8 @@ export const availableDependenciesSelector = createSelector(
     pathnameSelector,
     (ws = [], tableWidgets = [], map = [], pathname) => ({
         availableDependencies:
-            ws
-                .map(({id}) => `widgets[${id}].map`)
+            flatten(ws
+                .map(({id, maps = []}) => maps.map(({mapId} = {})=> `widgets[${id}].maps[${mapId}].map`)))
                 .concat(castArray(map).map(() => "map"))
                 .concat(castArray(tableWidgets).filter(() => pathname.indexOf("viewer") === -1).map(({id}) => `widgets[${id}]`))
     })
@@ -94,8 +94,8 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
         const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
         return {
             availableDependencies:
-                ws
-                    .map(({id}) => `widgets[${id}].map`)
+                flatten(ws
+                    .map(({id, maps = []}) => maps.map(({mapId} = {})=> `widgets[${id}].maps[${mapId}].map`)))
                     .concat(castArray(map).map(() => map ? "map" : null))
                     .filter(w => w)
                     .concat(
@@ -151,7 +151,7 @@ export const dependenciesSelector = createShallowSelector(
         k.indexOf("map.") === 0
             ? get(mapSelector(state), k.slice(4))
             : k.match(WIDGETS_REGEX)
-                ? getWidgetDependency(k, getFloatingWidgets(state))
+                ? getWidgetDependency(k, getFloatingWidgets(state), getMapWidgets(state))
                 : get(state, k) ),
     // iterate the dependencies keys to set the dependencies values in a map
     (map, keys, values) => keys.reduce((acc, k, i) => ({

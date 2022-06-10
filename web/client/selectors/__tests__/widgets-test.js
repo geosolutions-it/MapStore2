@@ -124,6 +124,7 @@ describe('widgets selectors', () => {
                     [DEFAULT_TARGET]: {
                         widgets: [{
                             id: "WIDGET",
+                            maps: [{mapId: "MAPS"}],
                             widgetType: "map"
                         }, {
 
@@ -135,7 +136,7 @@ describe('widgets selectors', () => {
             }
         };
         expect(availableDependenciesSelector(state)).toExist();
-        expect(availableDependenciesSelector(state).availableDependencies[0]).toBe('widgets[WIDGET].map');
+        expect(availableDependenciesSelector(state).availableDependencies[0]).toBe('widgets[WIDGET].maps[MAPS].map');
         expect(availableDependenciesSelector(state).availableDependencies[1]).toBe('map');
     });
     it('availableDependenciesForEditingWidgetSelector for map', () => {
@@ -196,7 +197,8 @@ describe('widgets selectors', () => {
                         },
                         {
                             widgetType: "map",
-                            id: "mapId",
+                            id: "WIDGET",
+                            maps: [{mapId: "MAPS"}],
                             layer: {
                                 name: "layername"
                             }
@@ -218,7 +220,7 @@ describe('widgets selectors', () => {
         const availableDeps = state.availableDependencies;
         expect(availableDeps).toExist();
         expect(availableDeps.length).toBe(2);
-        expect(availableDeps[0]).toBe('widgets[mapId].map');
+        expect(availableDeps[0]).toBe('widgets[WIDGET].maps[MAPS].map');
         expect(availableDeps[1]).toBe('widgets[tableId]');
     });
     it('dependenciesSelector', () => {
@@ -228,7 +230,9 @@ describe('widgets selectors', () => {
                     [DEFAULT_TARGET]: {
                         widgets: [{
                             id: "WIDGET_ID",
-                            map: {
+                            widgetType: "map",
+                            maps: [{
+                                mapId: "MAP_ID",
                                 center: {
                                     x: -4.866943359375001,
                                     y: 43.96119063892024,
@@ -242,7 +246,7 @@ describe('widgets selectors', () => {
                                         maxy: 5792092.255337515
                                     }
                                 }
-                            }
+                            }]
                         }]
                     }
                 },
@@ -252,8 +256,8 @@ describe('widgets selectors', () => {
                     // special map path
                     c: "map.abc",
                     // special widgets path
-                    d: "widgets[\"WIDGET_ID\"].map.center",
-                    e: "widgets[WIDGET_ID].map.center",
+                    d: "widgets[\"WIDGET_ID\"].maps[\"MAP_ID\"].center",
+                    e: "widgets[WIDGET_ID].maps[MAP_ID].center",
                     f: "widgets[NO_ID].map.center",
                     g: "widgets.otherStateSlice"
                 },
@@ -273,8 +277,8 @@ describe('widgets selectors', () => {
         expect(dependencies.a).toBe("A");
         expect(dependencies.b).toBe("B");
         expect(dependencies.c).toBe("ABC");
-        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
-        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
+        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].maps[0].center);
+        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].maps[0].center);
         expect(dependencies.f).toBeFalsy();
         expect(dependencies.g).toBe(state.widgets.otherStateSlice);
     });

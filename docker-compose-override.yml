@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    volumes:
+      - ./tests/01-init-testenv.sh:/docker-entrypoint-initdb.d/01-init-user.sh:rw
+      - ./tests/003_dmpdatabase.sql:/code/003_dmpdatabase.sql:rw
+    profiles:
+      - base
+
+  mapstore:
+    build:
+      args:
+        MAPSTORE_WEBAPP_SRC: mapstore.war
+    environment:
+      JAVA_OPTS: -Ddatadir.location=/mapstore/datadir
+    volumes:
+      - ./tests/geostore-datasource-ovr.properties:/mapstore/datadir/geostore-datasource-ovr.properties:rw
+      - ./tests/plugin.json:/mapstore/datadir/configs/localConfig.json.patch:rw
+    profiles:
+      - base
+
+  proxy:
+    profiles:
+      - donotstart
+
+  sut:
+    build:
+      context: ./tests/
+      dockerfile: Dockerfile
+    command: >
+      sh -c "dockerize -wait tcp://postgres:5432 -wait tcp://mapstore:8080 -timeout 300s
+      && sleep 5
+      && python3 tests.py"
+    container_name: eptsut
+    env_file:
+      - ./tests/test-variables.env
+    profiles:
+      - test
+    networks:
+      - mapstore-network
