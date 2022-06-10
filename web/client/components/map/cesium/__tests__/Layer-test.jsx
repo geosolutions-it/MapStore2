@@ -25,6 +25,7 @@ import '../plugins/MarkerLayer';
 import '../plugins/ThreeDTilesLayer';
 import '../plugins/VectorLayer';
 import '../plugins/WFSLayer';
+import '../plugins/TerrainLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1406,5 +1407,49 @@ describe('Cesium layer', () => {
         expect(cmp.layer.dataSource).toBeTruthy();
         expect(cmp.layer.dataSource.entities.values.length).toBe(0);
         expect(cmp.layer.detached).toBe(true);
+    });
+
+    it('should create a bil terrain provider', () => {
+        const options = {
+            type: "terrain",
+            title: "terrain testing",
+            terrainProvider: "bil",
+            url: "https://gs-stable.geo-solutions.it/geoserver/wms",
+            format: "application/bil16",
+            name: "sf:sfdem",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.layerName).toBe(options.name);
+    });
+
+    it('should create a cesium terrain provider', () => {
+        const options = {
+            type: "terrain",
+            title: "terrain testing",
+            terrainProvider: "cesium",
+            url: "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key=p0RAMNXsKFv7ZJlpj1sb",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.terrainProvider).toBeTruthy();
     });
 });
