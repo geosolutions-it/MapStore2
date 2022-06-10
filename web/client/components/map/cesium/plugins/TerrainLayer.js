@@ -60,13 +60,13 @@ function wmsOptionsMapping(config) {
 }
 
 function cesiumOptionsMapping(config) {
-    const { requestVertexNormals, requestWaterMask, requestMetadata, ellipsoid, attribution } = config.options;
+    const { requestVertexNormals, requestWaterMask, requestMetadata, ellipsoid, credit } = config.options;
     return {
         url: config.url,
+        credit,
         ellipsoid,
         requestMetadata,
         requestWaterMask,
-        credit: attribution,
         requestVertexNormals
     };
 }
