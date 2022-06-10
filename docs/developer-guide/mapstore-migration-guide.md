@@ -170,6 +170,26 @@ Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new 
 ### Updating extensions
 Please refer to the [extensions](../extensions/#managing-drawing-interactions-conflict-in-extension) documentation to know how to update your extensions.
 
+### Using `terrain` layer type to define 3D map elevation profile
+A new `terrain` layer type has been created in order to provide more options and versatility when defining an elevation profile for the 3D map terrain. 
+This `terrain` layer will substitute the former `wms` layer (with `useForElevation` attribute) used to define the elevation profile.
+
+The `additionalLayers` object on the `localConfig.json` file should adhere now to the [terrain layer configuration](../maps-configuration/#terrain).
+Serve the following code as an example: 
+
+```json
+{
+    "name": "Map",
+    "cfg": {
+        "additionalLayers": [{
+            "type": "terrain",
+            "provider": "wms",
+            "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+            "name": "sf:sfdem", // name of the geoserver resource
+        }]
+    }
+}
+```
 
 ## Migration from 2022.01.00 to 2022.01.01
 
