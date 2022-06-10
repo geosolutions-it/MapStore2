@@ -187,6 +187,7 @@ title: {
 - `graticule`: Vector layer that shows a coordinates grid over the map, with optional labels
 - `empty`: special type for empty background
 - `3dtiles`: 3d tiles layers
+- `terrain`: layers that define the elevation profile of the terrain
 
 #### WMS
 
@@ -257,7 +258,10 @@ Some other feature will break, for example the layer properties will stop workin
 },
 ```
 
-##### special case - The Elevation layer
+##### special case - The Elevation layer (deprecated)
+
+!!! note
+    See the `terrain` layer section for a more versatile way of handling elevation.
 
 WMS layers can be configured to be used as a source for elevation related functions.
 
@@ -1132,6 +1136,64 @@ i.e.
 ```
 
 The style body object for the format 3dtiles accepts rules described in the 3d tiles styling specification version 1.0 available [here](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling).
+
+#### Terrain
+
+`terrain` layer allows the customization of the elevation profile of the globe mesh in the Cesium 3d viewer. Currently Mapstore supports three different types of [terrain providers](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html). If no `terrain` layer is defined the default elevation profile for the globe would be the [ellipsoid](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html) that provides a rather flat profile.
+
+The other two available terrain providers are the `bil` (that supports `DDL/BIL` types of assets) and the `cesium` (that support resources compliant with the Cesium terrain format).
+
+In order to create a `bil` based mesh there are some requirements that need to be fulfilled:
+
+- a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
+- A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
+
+The layer configuration needs to point to the geoserver resource and define the type of layer and the type of terrainProvider:
+
+```json
+{ 
+"type": "terrain",
+"title": "bil terrain test",
+"terrainProvider": "bil",
+"url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+"format": "application/bil16",
+"name": "sf:sfdem", // name of the geoserver resource
+"littleendian": false,
+"visibility": true
+}
+```
+
+The `terrain` layer of `cesium` type allows using Cesium terrain format compliant services (like Cesium Ion resources or [MapTiler meshes](https://cloud.maptiler.com/tiles/terrain-quantized-mesh-v2/)).
+
+```json
+{
+    "type": "terrain",
+    "title": "terrain cesium",
+    "terrainProvider": "cesium",
+    "url": "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key={yourApiKey}",
+    "littleendian": false,
+    "visibility": true
+}
+```
+
+In order to use these layers they need to be added to the `additionalLayers` in `localConfig.json`. The globe only accepts one terrain provider so in case of adding more than one the last one will take precedence and be used to create the elevation profile.
+
+```json
+{
+    "name": "Map",
+    "cfg": {
+        "additionalLayers": [{
+            "type": "terrain",
+            "title": "terrain cesium",
+            "terrainProvider": "cesium",
+            "url": "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key={yourApiKey}",
+            "littleendian": false,
+            "visibility": true
+        }]
+    }
+}
+```
+
 
 ## Layer groups
 
