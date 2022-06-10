@@ -1141,38 +1141,34 @@ The style body object for the format 3dtiles accepts rules described in the 3d t
 
 `terrain` layer allows the customization of the elevation profile of the globe mesh in the Cesium 3d viewer. Currently Mapstore supports three different types of [terrain providers](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html). If no `terrain` layer is defined the default elevation profile for the globe would be the [ellipsoid](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html) that provides a rather flat profile.
 
-The other two available terrain providers are the `bil` (that supports `DDL/BIL` types of assets) and the `cesium` (that support resources compliant with the Cesium terrain format).
+The other two available terrain providers are the `wms` (that supports `DDL/BIL` types of assets) and the `cesium` (that support resources compliant with the Cesium terrain format).
 
-In order to create a `bil` based mesh there are some requirements that need to be fulfilled:
+In order to create a `wms` based mesh there are some requirements that need to be fulfilled:
 
 - a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
 - A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
 
-The layer configuration needs to point to the geoserver resource and define the type of layer and the type of terrainProvider:
+The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider:
 
 ```json
 { 
-"type": "terrain",
-"title": "bil terrain test",
-"terrainProvider": "bil",
-"url": "https://gs-stable.geo-solutions.it/geoserver/wms",
-"format": "application/bil16",
-"name": "sf:sfdem", // name of the geoserver resource
-"littleendian": false,
-"visibility": true
+  "type": "terrain",
+  "provider": "wms",
+  "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+  "name": "sf:sfdem", // name of the geoserver resource
 }
 ```
 
-The `terrain` layer of `cesium` type allows using Cesium terrain format compliant services (like Cesium Ion resources or [MapTiler meshes](https://cloud.maptiler.com/tiles/terrain-quantized-mesh-v2/)).
+The `terrain` layer of `cesium` type allows using Cesium terrain format compliant services (like Cesium Ion resources or [MapTiler meshes](https://cloud.maptiler.com/tiles/terrain-quantized-mesh-v2/)). The options attributte allows for further customization of the terrain properties (see available options on the Cesium documentation for the [cesium terrain provider](https://cesium.com/learn/cesiumjs/ref-doc/CesiumTerrainProvider.html))
 
 ```json
 {
-    "type": "terrain",
-    "title": "terrain cesium",
-    "terrainProvider": "cesium",
-    "url": "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key={yourApiKey}",
-    "littleendian": false,
-    "visibility": true
+  "type": "terrain",
+  "provider": "cesium",
+  "url": "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key={yourApiKey}",
+  "options": {
+    // requestVertexNormals, requestWatermask, credit...
+  }
 }
 ```
 
@@ -1184,11 +1180,11 @@ In order to use these layers they need to be added to the `additionalLayers` in 
     "cfg": {
         "additionalLayers": [{
             "type": "terrain",
-            "title": "terrain cesium",
             "terrainProvider": "cesium",
             "url": "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key={yourApiKey}",
-            "littleendian": false,
-            "visibility": true
+            "options": {
+                "requestVertexNormals": true 
+            }
         }]
     }
 }
