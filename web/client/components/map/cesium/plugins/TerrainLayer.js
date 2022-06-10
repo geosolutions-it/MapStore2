@@ -46,30 +46,41 @@ function getProxy(options) {
     return proxy ? new WMSProxy(proxyUrl) : new Cesium.DefaultProxy(getProxyUrl());
 }
 
-function wmsToCesiumOptionsBIL(options) {
-    let url = options.url;
-    const headers = getAuthenticationHeaders(url, options.securityToken);
+function wmsOptionsMapping(config) {
+    let url = config.url;
+    const headers = getAuthenticationHeaders(url, config.securityToken);
     return {
         url: new Cesium.Resource({
             url,
             headers,
-            proxy: getProxy(options)
+            proxy: getProxy(config)
         }),
-        littleEndian: options.littleendian || false,
-        layerName: options.name
+        layerName: config.name
     };
 }
 
-const createLayer = (options, map) => {
+function cesiumOptionsMapping(config) {
+    const { requestVertexNormals, requestWaterMask, requestMetadata, ellipsoid, attribution } = config.options;
+    return {
+        url: config.url,
+        ellipsoid,
+        requestMetadata,
+        requestWaterMask,
+        credit: attribution,
+        requestVertexNormals
+    };
+}
+
+const createLayer = (config, map) => {
     map.terrainProvider = undefined;
     let terrainProvider;
-    switch (options.terrainProvider) {
-    case 'bil': {
-        terrainProvider = new BILTerrainProvider(wmsToCesiumOptionsBIL(options));
+    switch (config.provider) {
+    case 'wms': {
+        terrainProvider = new BILTerrainProvider(wmsOptionsMapping(config));
         break;
     }
     case 'cesium': {
-        terrainProvider = new Cesium.CesiumTerrainProvider(options);
+        terrainProvider = new Cesium.CesiumTerrainProvider(cesiumOptionsMapping(config));
         break;
     }
     case 'ellipsoid': {
