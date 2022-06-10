@@ -16,6 +16,7 @@ import {
     SNAPPING_IS_LOADING,
     SET_SNAPPING_CONFIG
 } from '../actions/draw';
+import  { normalizeLng } from '../../client/utils/CoordinatesUtils'
 
 import assign from 'object-assign';
 
@@ -49,7 +50,10 @@ function draw(state = initialState, action) {
             currentStyle: action.currentStyle
         });
     case GEOMETRY_CHANGED:
-        return assign({}, state, {tempFeatures: action.features});
+       let newData = action.features
+        const normalizedData = newData[0].geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])))
+        newData[0].geometry.coordinates = normalizedData
+        return assign({}, state, {tempFeatures: newData});
     case DRAW_SUPPORT_STOPPED:
         return assign({}, state, {tempFeatures: []});
     case TOGGLE_SNAPPING:
