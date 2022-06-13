@@ -1437,8 +1437,11 @@ describe('Cesium layer', () => {
             type: "terrain",
             title: "terrain testing",
             provider: "cesium",
-            url: "https://terrain-provider-service-url/?key={apiKey}",
-            visibility: true
+            url: "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key=p0RAMNXsKFv7ZJlpj1sb",
+            visibility: true.valueOf,
+            options: {
+                credit: '<p>credits</p>'
+            }
         };
         // create layers
         const cmp = ReactDOM.render(
