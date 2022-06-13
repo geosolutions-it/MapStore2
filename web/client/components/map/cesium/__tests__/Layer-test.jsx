@@ -1413,7 +1413,7 @@ describe('Cesium layer', () => {
         const options = {
             type: "terrain",
             title: "terrain testing",
-            terrainProvider: "bil",
+            provider: "wms",
             url: "https://gs-stable.geo-solutions.it/geoserver/wms",
             format: "application/bil16",
             name: "sf:sfdem",
