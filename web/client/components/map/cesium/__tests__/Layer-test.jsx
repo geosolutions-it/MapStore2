@@ -1437,7 +1437,7 @@ describe('Cesium layer', () => {
             type: "terrain",
             title: "terrain testing",
             terrainProvider: "cesium",
-            url: "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key=p0RAMNXsKFv7ZJlpj1sb",
+            url: "https://terrain-provider-service-url/?key={apiKey}",
             littleendian: false,
             visibility: true
         };
