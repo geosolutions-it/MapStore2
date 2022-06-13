@@ -184,8 +184,11 @@ Serve the following code as an example:
         "additionalLayers": [{
             "type": "terrain",
             "provider": "wms",
-            "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
-            "name": "sf:sfdem", // name of the geoserver resource
+            "url": "https://host-sample/geoserver/wms",
+            "name": "workspace:layername",  // name of the geoserver resource
+            "format": "application/bil16",
+            "littleendian": false,
+            "visibility": true
         }]
     }
 }
