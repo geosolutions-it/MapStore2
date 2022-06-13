@@ -1165,7 +1165,8 @@ The `terrain` layer of `cesium` type allows using Cesium terrain format complian
 {
   "type": "terrain",
   "provider": "cesium",
-  "url": "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key={yourApiKey}",
+  "url": "https://terrain-provider-service-url/?key={yourApiKey}",
+  "visibility": true,
   "options": {
     // requestVertexNormals, requestWatermask, credit...
   }
