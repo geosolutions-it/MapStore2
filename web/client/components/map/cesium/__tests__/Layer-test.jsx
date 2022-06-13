@@ -1414,7 +1414,7 @@ describe('Cesium layer', () => {
             type: "terrain",
             title: "terrain testing",
             provider: "wms",
-            url: "https://gs-stable.geo-solutions.it/geoserver/wms",
+            url: "https://host-sample/geoserver/wms",
             format: "application/bil16",
             name: "sf:sfdem",
             littleendian: false,
