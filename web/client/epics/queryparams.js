@@ -9,7 +9,6 @@
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {get, head, isNaN, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
-import url from 'url';
 
 import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap, INIT_MAP} from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
@@ -31,6 +30,21 @@ import { changeMapType } from '../actions/maptype';
 import {getCesiumViewerOptions, getParametersValues, getQueryActions} from "../utils/QueryParamsUtils";
 import {mapProjectionSelector} from "../utils/PrintUtils";
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
+
+/**
+ * Semaphore function to skip epic processing under specific conditions
+ * @param sem$
+ * @param start
+ * @param condition
+ * @return {external:Observable}
+ * */
+const semaphore = (sem$, start = true, condition = c=>c) =>
+    stream$ =>
+        stream$.withLatestFrom(
+            sem$.startWith(start)
+        )
+            .filter(([, s]) => condition(s))
+            .map(([e]) => e);
 
 /*
 it maps params key to function.
@@ -131,50 +145,64 @@ export const paramActions = {
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
- * It needs to wait the first `LAYER_LOAD` to ensure that width and height of map are in the state as well as the final bbox bounds data.
+ * - It waits for the first `LAYER_LOAD` to ensure that width and height of map are in the state as well as the final bbox bounds data.
+ * - If specific map viewer options are found (atm just cesium) fire an action to change map type to the appropriate one
+ * - Orientates map if cesium viewer is active and query parameters contains necessary value
  * @param {external:Observable} action$ manages `LOCATION_CHANGE` and `LAYER_LOAD`
- * @memberof epics.share
+ * @memberof epics.queryparams
  * @return {external:Observable}
  */
-export const readQueryParamsOnMapEpic = (action$, store) =>
-    action$.ofType(LOCATION_CHANGE)
-        .switchMap(() =>
-            action$.ofType(LAYER_LOAD)
-                .take(1)
-                .switchMap(() => {
-                    const state = store.getState();
-                    const parameters = getParametersValues(paramActions, state);
-                    const queryActions = getQueryActions(parameters, paramActions, state);
-                    return head(queryActions)
-                        ? Rx.Observable.of(...queryActions)
-                        : Rx.Observable.empty();
-                })
-        );
+export const readQueryParamsOnMapEpic = (action$, store) => {
+    let skipProcessing = false;
+    return action$.ofType(LOCATION_CHANGE)
+        .let(semaphore(
+            action$.ofType(LOCATION_CHANGE)
+                .map(() => !skipProcessing)
+                .startWith(true)
+                .do(() => {skipProcessing = false;})
+        ))
+        .switchMap(() => {
+            const state = store.getState();
+            const map = mapSelector(state);
+            const parameters = getParametersValues(paramActions, state);
+            const queryActions = getQueryActions(parameters, paramActions, state);
+            const cesiumViewerOptions = getCesiumViewerOptions(parameters, map);
 
-/**
- * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
- * If specific map viewer options are found (atm just cesium) fire an action to change
- * the map type to the appropriate one
- * @param {*} action$ manages `LOCATION_CHANGE`
- * @memberof epics.share
- * @return {external:Observable}
- */
-export const switchMapType = (action$, store) =>
-    action$.ofType(LOCATION_CHANGE)
-        .switchMap(() =>
-            action$.ofType(INIT_MAP)
-                .take(1)
-                .switchMap(() => {
-                    const state = store.getState();
-                    const map = mapSelector(state);
-                    const parameters = getParametersValues(paramActions, state, true);
-                    const cesiumViewerOptions = getCesiumViewerOptions(parameters, map);
-                    if (cesiumViewerOptions) {
-                        return Rx.Observable.of(changeMapType('cesium'));
-                    }
-                    return Rx.Observable.empty();
-                })
-        );
+            return Rx.Observable.merge(
+                action$.ofType(INIT_MAP)
+                    .take(1)
+                    .switchMap(() => {
+                        if (cesiumViewerOptions) {
+                            skipProcessing = true;
+                            return Rx.Observable.of(changeMapType('cesium'));
+                        }
+                        return Rx.Observable.empty();
+                    }),
+                action$.ofType(LAYER_LOAD)
+                    .take(1)
+                    .switchMap(() => {
+                        return head(queryActions)
+                            ? Rx.Observable.of(...queryActions)
+                            : Rx.Observable.empty();
+                    }),
+                action$.ofType(CHANGE_MAP_VIEW)
+                    .take(1).switchMap(() => {
+                        const mapType = get(store.getState(), 'maptype.mapType') || '';
+                        if (mapType === 'cesium') {
+                            if (!parameters?.bbox) {
+                                if (!isEmpty(parameters)) {
+                                    const requiredKeys = ['center', 'zoom', 'heading', 'pitch', 'roll'];
+                                    if (every(requiredKeys, partial(has, parameters))) {
+                                        return Rx.Observable.of(orientateMap(parameters));
+                                    }
+                                }
+                            }
+                        }
+                        return Rx.Observable.empty();
+                    })
+            );
+        });
+};
 
 /**
  * Intercept on `CLICK_ON_MAP` to get point and layer information to allow featureInfoClick.
@@ -229,33 +257,8 @@ export const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
             );
         });
 
-export const checkMapOrientation = (action$, store) =>
-    // TODO: this epic should be triggered not just upon location change
-    // but also on page refresh
-    action$.ofType(CHANGE_MAP_VIEW)
-        .take(1).
-        switchMap(() => {
-            const state = store.getState();
-            const mapType = get(state, 'maptype.mapType') || '';
-            if (mapType === 'cesium') {
-                const search = get(state, 'router.location.search') || '';
-                const {query = {}} = url.parse(search, true) || {};
-                if (!search.includes('bbox')) {
-                    if (!isEmpty(query)) {
-                        const requiredKeys = ['center', 'zoom', 'heading', 'pitch', 'roll'];
-                        if (every(requiredKeys, partial(has, query))) {
-                            return  Rx.Observable.of(orientateMap(query));
-                        }
-                    }
-                }
-            }
-            return Rx.Observable.empty();
-        });
-
 export default {
     readQueryParamsOnMapEpic,
     onMapClickForShareEpic,
-    disableGFIForShareEpic,
-    checkMapOrientation,
-    switchMapType
+    disableGFIForShareEpic
 };
