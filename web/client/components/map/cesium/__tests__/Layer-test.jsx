@@ -25,6 +25,7 @@ import '../plugins/MarkerLayer';
 import '../plugins/ThreeDTilesLayer';
 import '../plugins/VectorLayer';
 import '../plugins/WFSLayer';
+import '../plugins/TerrainLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1406,5 +1407,49 @@ describe('Cesium layer', () => {
         expect(cmp.layer.dataSource).toBeTruthy();
         expect(cmp.layer.dataSource.entities.values.length).toBe(0);
         expect(cmp.layer.detached).toBe(true);
+    });
+
+    it('should create a bil terrain provider', () => {
+        const options = {
+            type: "terrain",
+            provider: "wms",
+            url: "https://host-sample/geoserver/wms",
+            format: "application/bil16",
+            name: "workspace:layername",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.layerName).toBe(options.name);
+    });
+
+    it('should create a cesium terrain provider', () => {
+        const options = {
+            type: "terrain",
+            provider: "cesium",
+            url: "https://terrain-provider-service-url/?key={apiKey}",
+            visibility: true,
+            options: {
+                credit: '<p>credits</p>'
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.terrainProvider).toBeTruthy();
     });
 });
