@@ -1438,7 +1438,6 @@ describe('Cesium layer', () => {
             title: "terrain testing",
             provider: "cesium",
             url: "https://terrain-provider-service-url/?key={apiKey}",
-            littleendian: false,
             visibility: true
         };
         // create layers
