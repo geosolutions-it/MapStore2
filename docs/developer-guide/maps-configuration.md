@@ -1154,8 +1154,11 @@ The layer configuration needs to point to the geoserver resource and define the 
 { 
   "type": "terrain",
   "provider": "wms",
-  "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
-  "name": "sf:sfdem", // name of the geoserver resource
+  "url": "https://host-sample/geoserver/wms",
+  "name": "workspace:layername", // name of the geoserver resource
+  "format": "application/bil16",
+  "littleendian": false,
+  "visibility": true
 }
 ```
 
@@ -1165,7 +1168,7 @@ The `terrain` layer of `cesium` type allows using Cesium terrain format complian
 {
   "type": "terrain",
   "provider": "cesium",
-  "url": "https://terrain-provider-service-url/?key={yourApiKey}",
+  "url": "https://terrain-provider-service-url/?key={apiKey}",
   "visibility": true,
   "options": {
     // requestVertexNormals, requestWatermask, credit...

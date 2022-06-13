@@ -1412,11 +1412,10 @@ describe('Cesium layer', () => {
     it('should create a bil terrain provider', () => {
         const options = {
             type: "terrain",
-            title: "terrain testing",
             provider: "wms",
             url: "https://host-sample/geoserver/wms",
             format: "application/bil16",
-            name: "sf:sfdem",
+            name: "workspace:layername",
             littleendian: false,
             visibility: true
         };
@@ -1435,10 +1434,9 @@ describe('Cesium layer', () => {
     it('should create a cesium terrain provider', () => {
         const options = {
             type: "terrain",
-            title: "terrain testing",
             provider: "cesium",
-            url: "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key=p0RAMNXsKFv7ZJlpj1sb",
-            visibility: true.valueOf,
+            url: "https://terrain-provider-service-url/?key={apiKey}",
+            visibility: true,
             options: {
                 credit: '<p>credits</p>'
             }
