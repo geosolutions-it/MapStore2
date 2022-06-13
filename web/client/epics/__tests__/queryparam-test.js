@@ -497,6 +497,47 @@ describe('queryparam epics', () => {
                 done();
             }, state);
     });
+    it('Test readQueryParamsOnMapEpic / actions dispatched on Change View with POST parameters', (done)=>{
+        const viewerOptions = {
+            orientation: {
+                heading: 0.1,
+                pitch: -0.7,
+                roll: 6.2
+            }
+        };
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: ""
+                }
+            }
+        };
+        sessionStorage.setItem('queryParams', JSON.stringify({
+            center: '-74.2,40.7',
+            zoom: '16.5',
+            heading: '0.1',
+            pitch: '-0.7',
+            roll: '6.2'
+        }));
+
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 1000),
+            1, [
+                onLocationChanged({}),
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(1);
+                try {
+                    expect(actions[0].type).toBe("MAP:ORIENTATION");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
     //
     it('Test readQueryParamsOnMapEpic / changeMapView does not trigger orientateMap if map type is not cesium', (done)=>{
         const viewerOptions = {
@@ -577,6 +618,39 @@ describe('queryparam epics', () => {
                 }
             }
         };
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
+            onLocationChanged({}),
+            initMap(true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                expect(actions[0].type).toBe(MAP_TYPE_CHANGED);
+                expect(actions[0].mapType).toBe('cesium');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
+    });
+    it('switch map type to cesium if cesium viewer options are found in sessionStorage', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: ""
+                }
+            }
+        };
+        sessionStorage.setItem('queryParams', JSON.stringify({
+            center: '-74.2,40.7',
+            zoom: '16.5',
+            heading: '0.1',
+            pitch: '-0.7',
+            roll: '6.2'
+        }));
         const NUMBER_OF_ACTIONS = 2;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
