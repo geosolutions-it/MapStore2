@@ -155,7 +155,7 @@ export const paramActions = {
 export const readQueryParamsOnMapEpic = (action$, store) => {
     let skipProcessing = false;
     return action$.ofType(LOCATION_CHANGE)
-        // this stop / start listening for une LOCATION_CHANGE event if `skipProcessing` is true, useful when this action is triggered by switching map-type
+        // this stop / start listening for one LOCATION_CHANGE event if `skipProcessing` is true, useful when this action is triggered by switching map-type
         .let(semaphore(
             action$.ofType(LOCATION_CHANGE)
                 .map(() => !skipProcessing)
