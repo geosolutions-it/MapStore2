@@ -1436,7 +1436,7 @@ describe('Cesium layer', () => {
         const options = {
             type: "terrain",
             title: "terrain testing",
-            terrainProvider: "cesium",
+            provider: "cesium",
             url: "https://terrain-provider-service-url/?key={apiKey}",
             littleendian: false,
             visibility: true
