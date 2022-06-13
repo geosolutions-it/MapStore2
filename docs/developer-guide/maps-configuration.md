@@ -1181,11 +1181,12 @@ In order to use these layers they need to be added to the `additionalLayers` in 
     "cfg": {
         "additionalLayers": [{
             "type": "terrain",
-            "terrainProvider": "cesium",
-            "url": "https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/?key={yourApiKey}",
-            "options": {
-                "requestVertexNormals": true 
-            }
+            "provider": "wms",
+            "url": "https://host-sample/geoserver/wms",
+            "name": "workspace:layername",  // name of the geoserver resource
+            "format": "application/bil16",
+            "littleendian": false,
+            "visibility": true
         }]
     }
 }
