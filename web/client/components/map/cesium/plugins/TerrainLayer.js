@@ -55,6 +55,7 @@ function wmsOptionsMapping(config) {
             headers,
             proxy: getProxy(config)
         }),
+        littleEndian: config.littleendian || false,
         layerName: config.name
     };
 }
