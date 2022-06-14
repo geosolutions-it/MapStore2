@@ -16,29 +16,6 @@ import {
     TOGGLE_SNAPPING
 } from '../../actions/draw';
 
-// let feature2 = {
-//     type: "Feature",
-//     geometry: {
-//         type: "Point",
-//         coordinates: [1, 2]
-//     },
-//     id: idFt2,
-//     properties: {
-//         someProp: "someValue"
-//     }
-// };
-// let newfeature3 = {
-//     type: "Feature",
-//     geometry: {
-//         type: "Point",
-//         coordinates: [1, 2]
-//     },
-//     _new: true,
-//     id: idFt2,
-//     properties: {
-//         someProp: "someValue"
-//     }
-// };
 describe('Test the draw reducer', () => {
 
     it('returns the initial state on unrecognized action', () => {
@@ -126,14 +103,14 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue"
             }
         };
-      let testAction = {
-          type: GEOMETRY_CHANGED,
-          features: [feature1]
-      }
-      let state = draw({}, testAction)
-      expect(state.tempFeatures).toExist()
-      expect(state.tempFeatures[0]).toBe(feature1)
-      expect(state.tempFeatures.length).toBe(1)
+        let testAction = {
+            type: GEOMETRY_CHANGED,
+            features: [feature1]
+        };
+        let state = draw({}, testAction);
+        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures[0]).toBe(feature1);
+        expect(state.tempFeatures.length).toBe(1);
     });
     it('Point GEOMETRY_CHANGED', () => {
         let feature2 = {
@@ -147,14 +124,14 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue2"
             }
         };
-      let testAction = {
-          type: GEOMETRY_CHANGED,
-          features: [feature2]
-      }
-      let state = draw({}, testAction)
-      expect(state.tempFeatures).toExist()
-      expect(state.tempFeatures[0]).toBe(feature2)
-      expect(state.tempFeatures.length).toBe(1)
+        let testAction = {
+            type: GEOMETRY_CHANGED,
+            features: [feature2]
+        };
+        let state = draw({}, testAction);
+        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures[0]).toBe(feature2);
+        expect(state.tempFeatures.length).toBe(1);
     });
     it('MultiPolygon GEOMETRY_CHANGED', () => {
         let feature3 = {
@@ -176,14 +153,14 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue3"
             }
         };
-      let testAction = {
-          type: GEOMETRY_CHANGED,
-          features: [feature3]
-      }
-      let state = draw({}, testAction)
-      expect(state.tempFeatures).toExist()
-      expect(state.tempFeatures[0]).toBe(feature3)
-      expect(state.tempFeatures.length).toBe(1)
+        let testAction = {
+            type: GEOMETRY_CHANGED,
+            features: [feature3]
+        };
+        let state = draw({}, testAction);
+        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures[0]).toBe(feature3);
+        expect(state.tempFeatures.length).toBe(1);
     });
     it('MultiLineString GEOMETRY_CHANGED', () => {
         let feature4 = {
@@ -200,14 +177,14 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue4"
             }
         };
-      let testAction = {
-          type: GEOMETRY_CHANGED,
-          features: [feature4]
-      }
-      let state = draw({}, testAction)
-      expect(state.tempFeatures).toExist()
-      expect(state.tempFeatures[0]).toBe(feature4)
-      expect(state.tempFeatures.length).toBe(1)
+        let testAction = {
+            type: GEOMETRY_CHANGED,
+            features: [feature4]
+        };
+        let state = draw({}, testAction);
+        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures[0]).toBe(feature4);
+        expect(state.tempFeatures.length).toBe(1);
     });
 
     it('MultiPoint GEOMETRY_CHANGED', () => {
@@ -222,14 +199,14 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue5"
             }
         };
-      let testAction = {
-          type: GEOMETRY_CHANGED,
-          features: [feature5]
-      }
-      let state = draw({}, testAction)
-      expect(state.tempFeatures).toExist()
-      expect(state.tempFeatures[0]).toBe(feature5)
-      expect(state.tempFeatures.length).toBe(1)
+        let testAction = {
+            type: GEOMETRY_CHANGED,
+            features: [feature5]
+        };
+        let state = draw({}, testAction);
+        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures[0]).toBe(feature5);
+        expect(state.tempFeatures.length).toBe(1);
     });
 
     it('LineString GEOMETRY_CHANGED', () => {
@@ -244,14 +221,14 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue6"
             }
         };
-      let testAction = {
-          type: GEOMETRY_CHANGED,
-          features: [feature6]
-      }
-      let state = draw({}, testAction)
-      expect(state.tempFeatures).toExist()
-      expect(state.tempFeatures[0]).toBe(feature6)
-      expect(state.tempFeatures.length).toBe(1)
+        let testAction = {
+            type: GEOMETRY_CHANGED,
+            features: [feature6]
+        };
+        let state = draw({}, testAction);
+        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures[0]).toBe(feature6);
+        expect(state.tempFeatures.length).toBe(1);
     });
 
 
