@@ -16,7 +16,29 @@ import {
     TOGGLE_SNAPPING
 } from '../../actions/draw';
 
-
+// let feature2 = {
+//     type: "Feature",
+//     geometry: {
+//         type: "Point",
+//         coordinates: [1, 2]
+//     },
+//     id: idFt2,
+//     properties: {
+//         someProp: "someValue"
+//     }
+// };
+// let newfeature3 = {
+//     type: "Feature",
+//     geometry: {
+//         type: "Point",
+//         coordinates: [1, 2]
+//     },
+//     _new: true,
+//     id: idFt2,
+//     properties: {
+//         someProp: "someValue"
+//     }
+// };
 describe('Test the draw reducer', () => {
 
     it('returns the initial state on unrecognized action', () => {
@@ -86,6 +108,153 @@ describe('Test the draw reducer', () => {
         expect(state.tempFeatures).toExist();
         expect(state.tempFeatures[0]).toBe(feature);
     });
+
+    it('POLYGON GEOMETRY_CHANGED', () => {
+        let feature1 = {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [[
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
+                ]]
+            },
+            id: 'idFt1',
+            properties: {
+                someProp: "someValue"
+            }
+        };
+      let testAction = {
+          type: GEOMETRY_CHANGED,
+          features: [feature1]
+      }
+      let state = draw({}, testAction)
+      expect(state.tempFeatures).toExist()
+      expect(state.tempFeatures[0]).toBe(feature1)
+      expect(state.tempFeatures.length).toBe(1)
+    });
+    it('Point GEOMETRY_CHANGED', () => {
+        let feature2 = {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [[[1, 2]]]
+            },
+            id: 'idFt2',
+            properties: {
+                someProp: "someValue2"
+            }
+        };
+      let testAction = {
+          type: GEOMETRY_CHANGED,
+          features: [feature2]
+      }
+      let state = draw({}, testAction)
+      expect(state.tempFeatures).toExist()
+      expect(state.tempFeatures[0]).toBe(feature2)
+      expect(state.tempFeatures.length).toBe(1)
+    });
+    it('MultiPolygon GEOMETRY_CHANGED', () => {
+        let feature3 = {
+            type: "Feature",
+            geometry: {
+                type: "MultiPolygon",
+                coordinates: [
+                    [
+                        [ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]
+                    ],
+                    [
+                        [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],
+                        [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]
+                    ]
+                ]
+            },
+            id: 'idFt3',
+            properties: {
+                someProp: "someValue3"
+            }
+        };
+      let testAction = {
+          type: GEOMETRY_CHANGED,
+          features: [feature3]
+      }
+      let state = draw({}, testAction)
+      expect(state.tempFeatures).toExist()
+      expect(state.tempFeatures[0]).toBe(feature3)
+      expect(state.tempFeatures.length).toBe(1)
+    });
+    it('MultiLineString GEOMETRY_CHANGED', () => {
+        let feature4 = {
+            type: "Feature",
+            geometry: {
+                type: "MultiLineString",
+                coordinates: [
+                    [ [100.0, 0.0], [101.0, 1.0] ],
+                    [ [102.0, 2.0], [103.0, 3.0] ]
+                ]
+            },
+            id: 'idFt4',
+            properties: {
+                someProp: "someValue4"
+            }
+        };
+      let testAction = {
+          type: GEOMETRY_CHANGED,
+          features: [feature4]
+      }
+      let state = draw({}, testAction)
+      expect(state.tempFeatures).toExist()
+      expect(state.tempFeatures[0]).toBe(feature4)
+      expect(state.tempFeatures.length).toBe(1)
+    });
+
+    it('MultiPoint GEOMETRY_CHANGED', () => {
+        let feature5 = {
+            type: "Feature",
+            geometry: {
+                type: "MultiPoint",
+                coordinates: [[ [100.0, 0.0], [101.0, 1.0] ]]
+            },
+            id: 'idFt5',
+            properties: {
+                someProp: "someValue5"
+            }
+        };
+      let testAction = {
+          type: GEOMETRY_CHANGED,
+          features: [feature5]
+      }
+      let state = draw({}, testAction)
+      expect(state.tempFeatures).toExist()
+      expect(state.tempFeatures[0]).toBe(feature5)
+      expect(state.tempFeatures.length).toBe(1)
+    });
+
+    it('LineString GEOMETRY_CHANGED', () => {
+        let feature6 = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[ [101.0, 0.0], [102.0, 1.0] ]]
+            },
+            id: 'idFt6',
+            properties: {
+                someProp: "someValue6"
+            }
+        };
+      let testAction = {
+          type: GEOMETRY_CHANGED,
+          features: [feature6]
+      }
+      let state = draw({}, testAction)
+      expect(state.tempFeatures).toExist()
+      expect(state.tempFeatures[0]).toBe(feature6)
+      expect(state.tempFeatures.length).toBe(1)
+    });
+
+
     it('Snapping tool TOGGLE_SNAPPING', () => {
         let testAction = {
             type: TOGGLE_SNAPPING

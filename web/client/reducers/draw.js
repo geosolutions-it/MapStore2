@@ -51,8 +51,11 @@ function draw(state = initialState, action) {
         });
     case GEOMETRY_CHANGED:
         let newData = action.features;
-        const normalizedData = newData[0].geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])));
-        newData[0].geometry.coordinates = normalizedData;
+        const polygonList = ['MultiLineString','MultiPolygon', 'MultiPoint', 'Polygon', 'LineString','Point' ]
+        if (polygonList.includes(newData[0].geometry.type)){
+            const normalizedData = newData[0].geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])));
+            newData[0].geometry.coordinates = normalizedData;
+        }
         return assign({}, state, {tempFeatures: newData});
     case DRAW_SUPPORT_STOPPED:
         return assign({}, state, {tempFeatures: []});
