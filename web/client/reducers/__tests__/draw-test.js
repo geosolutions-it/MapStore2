@@ -131,7 +131,7 @@ describe('Test the draw reducer', () => {
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
         expect(state.tempFeatures[0]).toBe(feature2);
-        expect(state.tempFeatures.length).toBe(1);
+        expect(state.tempFeatures.length).toEqual(1);
     });
     it('MultiPolygon GEOMETRY_CHANGED', () => {
         let feature3 = {
@@ -160,7 +160,7 @@ describe('Test the draw reducer', () => {
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
         expect(state.tempFeatures[0]).toBe(feature3);
-        expect(state.tempFeatures.length).toBe(1);
+        expect(state.tempFeatures.length).toEqual(1);
     });
     it('MultiLineString GEOMETRY_CHANGED', () => {
         let feature4 = {
@@ -184,7 +184,7 @@ describe('Test the draw reducer', () => {
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
         expect(state.tempFeatures[0]).toBe(feature4);
-        expect(state.tempFeatures.length).toBe(1);
+        expect(state.tempFeatures.length).toEqual(1);
     });
 
     it('MultiPoint GEOMETRY_CHANGED', () => {
@@ -208,7 +208,7 @@ describe('Test the draw reducer', () => {
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
         expect(state.tempFeatures[0]).toBe(feature5);
-        expect(state.tempFeatures.length).toBe(1);
+        expect(state.tempFeatures.length).toEqual(1);
     });
 
     it('LineString GEOMETRY_CHANGED', () => {
@@ -230,7 +230,7 @@ describe('Test the draw reducer', () => {
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
         expect(state.tempFeatures[0]).toBe(feature6);
-        expect(state.tempFeatures.length).toBe(1);
+        expect(state.tempFeatures.length).toEqual(1);
     });
 
 
