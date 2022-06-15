@@ -91,12 +91,11 @@ describe('Test the draw reducer', () => {
             type: "Feature",
             geometry: {
                 type: "Polygon",
-                coordinates: [[
-                    [13, 43],
-                    [15, 43],
-                    [15, 44],
-                    [13, 44]
-                ]]
+                coordinates: [
+                    [[35.0, 10.0], [45.0, 45.0], [15.0, 40.0], [10.0, 20.0], [35.0, 10.0]],
+                    [[20.0, 30.0], [35.0, 35.0], [30.0, 20.0], [20.0, 30.0]]
+                ]
+
             },
             id: 'idFt1',
             properties: {
@@ -110,14 +109,15 @@ describe('Test the draw reducer', () => {
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
         expect(state.tempFeatures[0]).toBe(feature1);
-        expect(state.tempFeatures.length).toBe(1);
+        expect(state.tempFeatures.length).toEqual(1);
     });
     it('Point GEOMETRY_CHANGED', () => {
         let feature2 = {
+
             type: "Feature",
             geometry: {
-                type: "Polygon",
-                coordinates: [[[1, 2]]]
+                type: "Point",
+                coordinates: [1, 2]
             },
             id: 'idFt2',
             properties: {
@@ -143,8 +143,8 @@ describe('Test the draw reducer', () => {
                         [ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]
                     ],
                     [
-                        [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],
-                        [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]
+                        [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ]
+
                     ]
                 ]
             },
@@ -192,7 +192,9 @@ describe('Test the draw reducer', () => {
             type: "Feature",
             geometry: {
                 type: "MultiPoint",
-                coordinates: [[ [100.0, 0.0], [101.0, 1.0] ]]
+                coordinates: [
+                    [10.0, 40.0], [40.0, 30.0], [20.0, 20.0], [30.0, 10.0]
+                ]
             },
             id: 'idFt5',
             properties: {
@@ -214,7 +216,7 @@ describe('Test the draw reducer', () => {
             type: "Feature",
             geometry: {
                 type: "LineString",
-                coordinates: [[ [101.0, 0.0], [102.0, 1.0] ]]
+                coordinates: [[101.0, 0.0], [102.0, 1.0], [103.0, 1.0]]
             },
             id: 'idFt6',
             properties: {

@@ -51,8 +51,16 @@ function draw(state = initialState, action) {
         });
     case GEOMETRY_CHANGED:
         let newData = action.features;
-        const polygonList = ['MultiLineString', 'MultiPolygon', 'MultiPoint', 'Polygon', 'LineString', 'Point' ];
-        if (polygonList.includes(newData[0].geometry.type)) {
+        if (newData[0].geometry.type === 'Point') {
+            const normalizedPoint = [normalizeLng(newData[0].geometry.coordinates[0]), newData[0].geometry.coordinates[1]];
+            newData[0].geometry.coordinates = normalizedPoint;
+        } else if (newData[0].geometry.type === 'LineString') {
+            const normalizedLineString =  newData[0].geometry.coordinates.map((item) => [normalizeLng(item[0]), item[1]]);
+            newData[0].geometry.coordinates = normalizedLineString;
+        } else if (newData[0].geometry.type === 'MultiPoint') {
+            const normalizedMultiPoint =  newData[0].geometry.coordinates.map((item) => [normalizeLng(item[0]), item[1]]);
+            newData[0].geometry.coordinates = normalizedMultiPoint;
+        } else {
             const normalizedData = newData[0].geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])));
             newData[0].geometry.coordinates = normalizedData;
         }
