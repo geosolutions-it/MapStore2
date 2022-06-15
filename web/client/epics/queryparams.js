@@ -166,7 +166,6 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
             const state = store.getState();
             const map = mapSelector(state);
             const parameters = getParametersValues(paramActions, state);
-            const queryActions = getQueryActions(parameters, paramActions, state);
             const cesiumViewerOptions = getCesiumViewerOptions(parameters, map);
 
             return Rx.Observable.merge(
@@ -182,6 +181,7 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                 action$.ofType(LAYER_LOAD)
                     .take(1)
                     .switchMap(() => {
+                        const queryActions = getQueryActions(parameters, paramActions, store.getState());
                         return head(queryActions)
                             ? Rx.Observable.of(...queryActions)
                             : Rx.Observable.empty();
