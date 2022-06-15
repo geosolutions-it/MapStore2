@@ -163,15 +163,12 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                 .do(() => {skipProcessing = false;})
         ))
         .switchMap(() => {
-            const state = store.getState();
-            const map = mapSelector(state);
-            const parameters = getParametersValues(paramActions, state);
-            const cesiumViewerOptions = getCesiumViewerOptions(parameters, map);
-
+            const parameters = getParametersValues(paramActions, store.getState());
             return Rx.Observable.merge(
                 action$.ofType(INIT_MAP)
                     .take(1)
                     .switchMap(() => {
+                        const cesiumViewerOptions = getCesiumViewerOptions(parameters, mapSelector(store.getState()));
                         if (cesiumViewerOptions) {
                             skipProcessing = true;
                             return Rx.Observable.of(changeMapType('cesium'));
