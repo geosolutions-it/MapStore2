@@ -39,25 +39,35 @@ const createLayer = (options, map) => {
     const cancelToken = axios.CancelToken;
     const source = cancelToken.source();
 
-    requestFeatures(options, params, source.token)
-        .then(({ data: collection }) => {
-            dataSource.load(collection).then(() => {
-                map.dataSources.add(dataSource);
-                layerToGeoStylerStyle(options)
-                    .then((style) => {
-                        getStyle(applyDefaultStyleToLayer({ ...options, style }), 'cesium')
-                            .then((styleFunc) => {
-                                if (styleFunc) {
-                                    styleFunc({
-                                        entities: dataSource?.entities?.values,
-                                        map,
-                                        opacity: options.opacity ?? 1
-                                    });
-                                }
-                            });
-                    });
+    if (options.visibility) {
+        requestFeatures(options, params, source.token)
+            .then(({ data: collection }) => {
+                dataSource.load(collection, {
+                    // ensure default style is not applied
+                    stroke: new Cesium.Color(0, 0, 0, 0),
+                    fill: new Cesium.Color(0, 0, 0, 0),
+                    markerColor: new Cesium.Color(0, 0, 0, 0),
+                    strokeWidth: 0,
+                    markerSize: 0
+                }).then(() => {
+                    map.dataSources.add(dataSource);
+                    layerToGeoStylerStyle(options)
+                        .then((style) => {
+                            getStyle(applyDefaultStyleToLayer({ ...options, style }), 'cesium')
+                                .then((styleFunc) => {
+                                    if (styleFunc) {
+                                        styleFunc({
+                                            entities: dataSource?.entities?.values,
+                                            map,
+                                            opacity: options.opacity ?? 1
+                                        });
+                                        map.scene.requestRender();
+                                    }
+                                });
+                        });
+                });
             });
-        });
+    }
 
     dataSource.show = !!options.visibility;
 
@@ -73,9 +83,7 @@ const createLayer = (options, map) => {
                 dataSource = undefined;
             }
         },
-        setVisible: (show) => {
-            dataSource.show = !!show;
-        }
+        setVisible: () => {}
     };
 };
 
@@ -83,11 +91,8 @@ Layers.registerType('wfs', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
         if (needsReload(oldOptions, newOptions)
-        || !isEqual(newOptions.features, oldOptions.features)) {
+        || newOptions.visibility !== oldOptions.visibility) {
             return createLayer(newOptions, map);
-        }
-        if (newOptions.visibility !== oldOptions.visibility) {
-            layer.setVisible(newOptions.visibility);
         }
         if (layer?.dataSource?.entities?.values
             && (
@@ -105,6 +110,7 @@ Layers.registerType('wfs', {
                                     map,
                                     opacity: newOptions.opacity ?? 1
                                 });
+                                map.scene.requestRender();
                             }
                         });
                 });

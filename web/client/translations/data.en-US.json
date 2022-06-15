@@ -1780,7 +1780,8 @@
                 },
                 "emptyMap": {
                     "title": "Empty Map",
-                    "description": "Start from an empty map"
+                    "description": "Start from an empty map",
+                    "noNameDescription": "The selection has an empty map. Add a name to the empty map to proceed with map configuration"
                 }
             },
             "title": "Title",
@@ -1810,7 +1811,7 @@
                     "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
                     "selectALayer": "Select a layer",
-                    "selectAMap": "Select a map",
+                    "selectAMap": "Select one or more maps",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
                     "backToTableOptions": "Back to table options",
@@ -1821,6 +1822,7 @@
                     "titlePlaceholder": "Insert title...",
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
+                    "useTheseMap": "Use these maps",
                     "configureMapOptions": "Configure map options",
                     "enableIdentifyTool": "Enable identify tool",
                     "disableIdentifyTool": "Disable identify tool",
@@ -1884,6 +1886,13 @@
                     "unhide": "Unhide",
                     "unhideDescription": "Unhide the widget to other users"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "No map found",
+                "placeholder": "Enter map name",
+                "selectLabel": "Select a map",
+                "infoOnHide": "Expand widget to see map switcher",
+                "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
             },
             "chartType": {
                 "bar": {
@@ -2629,6 +2638,14 @@
                     "overlay": "Overlay",
                     "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }
+            },
+            "importDialog": {
+              "selectFiles": "Select a file",
+              "heading": "Drop a previously exported geostory .json file",
+              "note": "The data in the imported file will replace the data in the current geostory"
+            },
+            "exportDialog": {
+              "heading": "Export geostory as a .json file"
             },
             "errors": {
                 "loading": {

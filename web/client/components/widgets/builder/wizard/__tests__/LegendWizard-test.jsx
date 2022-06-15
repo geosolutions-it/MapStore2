@@ -49,7 +49,7 @@ describe('LegendWizard component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
         expect(el).toExist();
-        expect(container.querySelector('.compact-legend-grid')).toExist();
+        expect(container.querySelector('.legend-widget')).toExist();
     });
     it('LegendWizard rendering options', () => {
         ReactDOM.render(<LegendWizard step={1} />, document.getElementById("container"));

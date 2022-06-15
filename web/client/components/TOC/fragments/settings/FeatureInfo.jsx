@@ -84,12 +84,15 @@ export default class extends React.Component {
      * @return {object} info formats
      */
     supportedInfoFormats = () => {
+        const excludedFormatsWfs = ['TEXT', 'HTML'];
         const availableInfoFormats =  this.props.element?.infoFormats || [];
+        const supportedWfsFormats = Object.fromEntries(Object.entries(this.props.defaultInfoFormat).filter(([key]) => !excludedFormatsWfs.includes(key)));
+        const formats = this.props.element.type === 'wfs' ? supportedWfsFormats : this.props.defaultInfoFormat;
         const infoFormats = Object.assign({},
-            ...Object.entries(this.props.defaultInfoFormat)
+            ...Object.entries(formats)
                 .filter(([, value])=> includes(availableInfoFormats, value))
                 .map(([key, value])=> ({[key]: value}))
         );
-        return isEmpty(infoFormats) ? this.props.defaultInfoFormat : infoFormats;
+        return isEmpty(infoFormats) ? formats : infoFormats;
     }
 }

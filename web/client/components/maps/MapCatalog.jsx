@@ -60,7 +60,7 @@ export default ({
                     ? { ...i, selected: true }
                     : i)}
             loading={loading}
-            onItemClick={({ map } = {}) => onSelected(map)} />
+            onItemClick={({ map } = {}) =>  onSelected(map)} />
     </BorderLayout>);
 };
 

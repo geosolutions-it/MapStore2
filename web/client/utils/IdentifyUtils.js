@@ -45,12 +45,13 @@ export const updatePointWithGeometricFilter = (point, projection) => {
         pixel = point.pixel;
     }
     const hook = getHook(GET_COORDINATES_FROM_PIXEL_HOOK);
-    const radius = calculateCircleRadiusFromPixel(
+    const PIXEL_RADIUS = 5;
+    const radius = hook ? calculateCircleRadiusFromPixel(
         hook,
         pixel,
         pos,
-        5
-    );
+        PIXEL_RADIUS
+    ) : point.resolution * PIXEL_RADIUS;
     // emulation of feature info filter to query WFS services (edit and/or WFS layer)
     const geometricFilter = {
         type: 'geometry',

@@ -28,6 +28,7 @@ import { addMarker, hideMarker } from '../actions/search';
 import { updateMapView } from '../actions/map';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
 import { shareSelector } from "../selectors/controls";
+import {mapTypeSelector} from "../selectors/maptype";
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedIn)
@@ -65,19 +66,21 @@ const Share = connect(createSelector([
     shareSelector,
     versionSelector,
     mapSelector,
+    mapTypeSelector,
     currentContextSelector,
     state => get(state, 'controls.share.settings', {}),
     (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     state => state.search && state.search.markerPosition || {},
     updateUrlOnScrollSelector,
     state => get(state, 'map.present.viewerOptions')
-], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition, viewerOptions) => ({
+], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: getApiUrl(location.href),
     shareConfigUrl: getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
     viewerOptions,
+    mapType,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
     center: map && map.center && ConfigUtils.getCenter(map.center),
     zoom: map && map.zoom,

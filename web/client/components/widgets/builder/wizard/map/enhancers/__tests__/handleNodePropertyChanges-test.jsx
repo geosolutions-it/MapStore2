@@ -65,6 +65,38 @@ describe('handleNodePropertyChanges enhancer', () => {
         expect(spyCallbacks.calls[4].arguments[1]).toBe("b");
     });
 
+    it('Test handleNodePropertyChange onChange calls with mapId', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyCallbacks = expect.spyOn(actions, 'onChange');
+        const Sink = handleNodePropertyChanges(createSink(props => {
+            expect(props).toExist();
+            props.changeGroupProperty("GGG", "title", "TEST");
+            props.changeLayerProperty("LAYER", "name", "TEST");
+            props.changeLayerPropertyByGroup("GGG", "title", "TEST");
+            props.updateMapEntries({
+                a: "a",
+                b: "b"
+            });
+
+        }));
+        ReactDOM.render(<Sink
+            map={{ mapId: 'MAP_ID', groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
+            onChange={actions.onChange} />, document.getElementById("container"));
+        expect(spyCallbacks.calls.length).toBe(5);
+        expect(spyCallbacks.calls[0].arguments[0]).toBe("maps[MAP_ID].groups[0].title");
+        expect(spyCallbacks.calls[0].arguments[1]).toBe("TEST");
+        expect(spyCallbacks.calls[1].arguments[0]).toBe("maps[MAP_ID].layers[0].name");
+        expect(spyCallbacks.calls[1].arguments[1]).toBe("TEST");
+        expect(spyCallbacks.calls[2].arguments[0]).toBe("maps[MAP_ID].layers[0].title");
+        expect(spyCallbacks.calls[2].arguments[1]).toBe("TEST");
+        expect(spyCallbacks.calls[3].arguments[0]).toBe("maps[MAP_ID][a]");
+        expect(spyCallbacks.calls[3].arguments[1]).toBe("a");
+        expect(spyCallbacks.calls[4].arguments[0]).toBe("maps[MAP_ID][b]");
+        expect(spyCallbacks.calls[4].arguments[1]).toBe("b");
+    });
+
     it('Test handleNodePropertyChange onChangeGroupProperty Expanded calls', () => {
         const actions = {
             onChange: () => {}
@@ -79,6 +111,23 @@ describe('handleNodePropertyChanges enhancer', () => {
             onChange={actions.onChange} />, document.getElementById("container"));
         expect(spyCallbacks.calls.length).toBe(1);
         expect(spyCallbacks.calls[0].arguments[0]).toBe("map.groups[0].expanded");
+        expect(spyCallbacks.calls[0].arguments[1]).toBe(true);
+    });
+
+    it('Test handleNodePropertyChange onChangeGroupProperty Expanded calls with mapId', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyCallbacks = expect.spyOn(actions, 'onChange');
+        const Sink = handleNodePropertyChanges(createSink(props => {
+            expect(props).toExist();
+            props.changeGroupProperty("GGG", "expanded", true);
+        }));
+        ReactDOM.render(<Sink
+            map={{mapId: 'MAP_ID', groups: [{id: "GGG", expanded: false}], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
+            onChange={actions.onChange} />, document.getElementById("container"));
+        expect(spyCallbacks.calls.length).toBe(1);
+        expect(spyCallbacks.calls[0].arguments[0]).toBe("maps[MAP_ID].groups[0].expanded");
         expect(spyCallbacks.calls[0].arguments[1]).toBe(true);
     });
 
@@ -101,6 +150,27 @@ describe('handleNodePropertyChanges enhancer', () => {
         expect(spyCallbacks.calls[1].arguments[0]).toBe("map.groups[1].expanded");
         expect(spyCallbacks.calls[1].arguments[1]).toBe(true);
     });
+
+    it('Test handleNodePropertyChange onChangeGroupProperty Expanded calls with mapId and if groups is not array and it has no id', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyCallbacks = expect.spyOn(actions, 'onChange');
+        const Sink = handleNodePropertyChanges(createSink(props => {
+            expect(props).toExist();
+            props.changeGroupProperty("GGG", "expanded", true);
+        }));
+        ReactDOM.render(<Sink
+            map={{mapId: 'MAP_ID', groups: { name: 'GGG' }, layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
+            onChange={actions.onChange} />, document.getElementById("container"));
+
+        expect(spyCallbacks.calls.length).toBe(2);
+        expect(spyCallbacks.calls[0].arguments[0]).toBe("maps[MAP_ID].groups[1].id");
+        expect(spyCallbacks.calls[0].arguments[1]).toEqual("GGG");
+        expect(spyCallbacks.calls[1].arguments[0]).toBe("maps[MAP_ID].groups[1].expanded");
+        expect(spyCallbacks.calls[1].arguments[1]).toBe(true);
+    });
+
     it('Test handleNodePropertyChange onChangeGroupProperty Expanded calls if groups is not array', () => {
         const actions = {
             onChange: () => {}
@@ -116,6 +186,24 @@ describe('handleNodePropertyChanges enhancer', () => {
 
         expect(spyCallbacks.calls.length).toBe(1);
         expect(spyCallbacks.calls[0].arguments[0]).toBe("map.groups[0].expanded");
+        expect(spyCallbacks.calls[0].arguments[1]).toBe(true);
+    });
+
+    it('Test handleNodePropertyChange onChangeGroupProperty Expanded calls with mapId and if groups is not array', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyCallbacks = expect.spyOn(actions, 'onChange');
+        const Sink = handleNodePropertyChanges(createSink(props => {
+            expect(props).toExist();
+            props.changeGroupProperty("GGG", "expanded", true);
+        }));
+        ReactDOM.render(<Sink
+            map={{mapId: 'MAP_ID', groups: { id: 'GGG' }, layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
+            onChange={actions.onChange} />, document.getElementById("container"));
+
+        expect(spyCallbacks.calls.length).toBe(1);
+        expect(spyCallbacks.calls[0].arguments[0]).toBe("maps[MAP_ID].groups[0].expanded");
         expect(spyCallbacks.calls[0].arguments[1]).toBe(true);
     });
 
@@ -136,6 +224,26 @@ describe('handleNodePropertyChanges enhancer', () => {
         expect(spyCallbacks.calls[0].arguments[0]).toBe("map.groups[0].id");
         expect(spyCallbacks.calls[0].arguments[1]).toBe('GGG');
         expect(spyCallbacks.calls[1].arguments[0]).toBe("map.groups[0].expanded");
+        expect(spyCallbacks.calls[1].arguments[1]).toBe(true);
+    });
+
+    it('Test handleNodePropertyChange onChangeGroupProperty Expanded calls if id is not present in groups with mapId', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyCallbacks = expect.spyOn(actions, 'onChange');
+        const Sink = handleNodePropertyChanges(createSink(props => {
+            expect(props).toExist();
+            props.changeGroupProperty("GGG", "expanded", true);
+        }));
+        ReactDOM.render(<Sink
+            map={{mapId: 'MAP_ID', groups: [], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
+            onChange={actions.onChange} />, document.getElementById("container"));
+
+        expect(spyCallbacks.calls.length).toBe(2);
+        expect(spyCallbacks.calls[0].arguments[0]).toBe("maps[MAP_ID].groups[0].id");
+        expect(spyCallbacks.calls[0].arguments[1]).toBe('GGG');
+        expect(spyCallbacks.calls[1].arguments[0]).toBe("maps[MAP_ID].groups[0].expanded");
         expect(spyCallbacks.calls[1].arguments[1]).toBe(true);
     });
 });

@@ -70,6 +70,7 @@ class CesiumMap extends React.Component {
         hookRegister: {
             registerHook
         },
+        orientate: undefined,
         viewerOptions: {
             orientation: {
                 heading: 0,
@@ -113,7 +114,10 @@ class CesiumMap extends React.Component {
             // to avoid error on mount
             creditContainer: creditContainer
                 ? creditContainer
-                : undefined
+                : undefined,
+            requestRenderMode: true,
+            maximumRenderTimeChange: Infinity,
+            skyBox: false
         }, this.getMapOptions(this.props.mapOptions)));
 
         if (this.props.errorPanel) {
@@ -162,6 +166,7 @@ class CesiumMap extends React.Component {
         scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? false;
 
         this.forceUpdate();
+        map.scene.requestRender();
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -240,7 +245,8 @@ class CesiumMap extends React.Component {
                         lng: longitude
                     },
                     crs: "EPSG:4326",
-                    intersectedFeatures
+                    intersectedFeatures,
+                    resolution: getResolutions()[Math.round(this.props.zoom)]
                 });
             }
         }

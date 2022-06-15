@@ -14,7 +14,10 @@ import {
     loadDependencies,
     toggleDependencySelector,
     DEPENDENCY_SELECTOR_KEY,
-    WIDGETS_REGEX
+    WIDGETS_REGEX,
+    UPDATE_PROPERTY,
+    replaceWidgets,
+    WIDGETS_MAPS_REGEX
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -22,7 +25,7 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import {
     availableDependenciesSelector,
     isWidgetSelectionActive,
-    getDependencySelectorConfig
+    getDependencySelectorConfig, getFloatingWidgets
 } from '../selectors/widgets';
 
 import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } from '../actions/layers';
@@ -35,10 +38,11 @@ import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
 import converter from 'json-2-csv';
 import canvg from 'canvg-browser';
+import { updateDependenciesMapOfMapList } from "../utils/WidgetsUtils";
+
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
     const mapDependencies = ["layers", "viewport", "zoom", "center"];
-
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
@@ -54,19 +58,19 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
             if (includes(mapDependencies, k)) {
                 return {
                     ...ov,
-                    [k]: targetId === "map" ? mappings[k] : `${targetId}.${mappings[k]}`
+                    [k]: targetId === "map" ? mappings[k] : `${targetId.replace(/.map$/, "")}.${mappings[k]}`
                 };
             }
             return {
                 ...ov,
-                [k]: `${targetId.replace(".map", "")}.${mappings[k]}`
+                [k]: `${targetId.replace(/.map$/, "")}.${mappings[k]}`
             };
         }
         return ov;
     }, {});
-
+    const depToTheWidget = targetId.split(".maps")[0];
     return active
-        ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${targetId.replace(".map", "")}.dependenciesMap`, ["mapSync"]: `${targetId.replace(".map", "")}.mapSync`}
+        ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${depToTheWidget}.dependenciesMap`, ["mapSync"]: `${depToTheWidget}.mapSync`}
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);
 };
 
@@ -127,7 +131,8 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
     // add dependencies for all map widgets (for the moment the only ones that shares dependencies)
     // and for main "map" dependency, the "viewport" and "center"
         .map((maps = []) => loadDependencies(maps.reduce( (deps, m) => {
-            const depToTheWidget = m.replace(".map", "");
+            const depToTheWidget = m.split(".maps")[0];
+            const depToTheMap = m.replace(/.map$/, "");
             if (!endsWith(m, "map")) {
                 return {
                     ...deps,
@@ -143,10 +148,10 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                 ...deps,
                 [`${depToTheWidget}.dependenciesMap`]: `${depToTheWidget}.dependenciesMap`,
                 [`${depToTheWidget}.mapSync`]: `${depToTheWidget}.mapSync`,
-                [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
-                [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
-                [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
-                [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
+                [m === "map" ? "viewport" : `${depToTheMap}.viewport`]: `${depToTheMap}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].maps[ID_M].viewport": "widgets[ID_W].maps[ID_M].bbox"}
+                [m === "map" ? "center" : `${depToTheMap}.center`]: `${depToTheMap}.center`, // {center: "map.center"} or {"widgets[ID_W].maps[ID_M].center": "widgets[ID_W].maps[ID_M].center"}
+                [m === "map" ? "zoom" : `${depToTheMap}.zoom`]: `${depToTheMap}.zoom`,
+                [m === "map" ? "layers" : `${depToTheMap}.layers`]: m === "map" ? `layers.flat` : `${depToTheMap}.layers`
             };
         }, {}))
         );
@@ -172,7 +177,10 @@ export const toggleWidgetConnectFlow = (action$, {getState = () => {}} = {}) =>
                         .filter(() => isWidgetSelectionActive(getState()))
                         .switchMap(({ widget }) => {
                             const ad = get(getDependencySelectorConfig(getState()), 'availableDependencies');
-                            const deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
+                            let deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
+                            if (widget.widgetType === 'map') {
+                                deps = deps.filter(d => (WIDGETS_MAPS_REGEX.exec(d) || [])[2] === widget.selectedMapId);
+                            }
                             return configureDependency(active, deps[0], options, widget.dependeciesMap).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
                         }).takeUntil(
                             action$.ofType(LOCATION_CHANGE)
@@ -260,6 +268,21 @@ export const updateLayerOnLoadingErrorChange = (action$, store) =>
             })
         ).mergeAll();
 
+export const updateDependenciesMapOnMapSwitch = (action$, store) =>
+    action$.ofType(UPDATE_PROPERTY)
+        .filter(({key}) => includes(["maps", "selectedMapId"], key))
+        .switchMap(({id: widgetId, value}) => {
+            let observable$ = Rx.Observable.empty();
+            const selectedMapId = typeof value === "string" ? value : value?.mapId;
+            if (selectedMapId) {
+                const widgets = getFloatingWidgets(store.getState());
+                const updatedWidgets = updateDependenciesMapOfMapList(widgets, widgetId, selectedMapId);
+                if (!isEqual(widgets, updatedWidgets)) {
+                    observable$ = Rx.Observable.of(replaceWidgets(updatedWidgets));
+                }
+            }
+            return observable$;
+        });
 
 export default {
     exportWidgetData,
@@ -268,5 +291,6 @@ export default {
     clearWidgetsOnLocationChange,
     exportWidgetImage,
     updateLayerOnLayerPropertiesChange,
-    updateLayerOnLoadingErrorChange
+    updateLayerOnLoadingErrorChange,
+    updateDependenciesMapOnMapSwitch
 };

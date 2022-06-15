@@ -1781,7 +1781,8 @@
                 },
                 "emptyMap": {
                     "title": "Mapa vacío",
-                    "description": "Comience desde un mapa vacío"
+                    "description": "Comience desde un mapa vacío",
+                    "noNameDescription": "La selección tiene un mapa vacío. Agregue un nombre al mapa vacío para continuar con la configuración del mapa"
                  }
             },
             "title": "Título",
@@ -1810,7 +1811,7 @@
                     "backToPreview": "Volver a vista previa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "selectALayer": "Seleccionar una capa",
-                    "selectAMap": "Seleccionar un mapa",
+                    "selectAMap": "Seleccione uno o más mapas",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
                     "backToTableOptions": "Volver a las opciones de tabla",
@@ -1821,6 +1822,7 @@
                     "titlePlaceholder": "Introduzca el título...",
                     "textPlaceholder": "Introduzca texto...",
                     "useThisMap": "Usar este mapa",
+                    "useTheseMap": "Usa estos mapas",
                     "configureMapOptions": "Configurar opciones de mapa",
                     "enableIdentifyTool": "Habilitar herramienta de identificación",
                     "disableIdentifyTool": "Deshabilitar la herramienta de identificación",
@@ -1884,6 +1886,13 @@
                     "unhide": "Ocultar",
                     "unhideDescription": "Mostrar el widget a otros usuarios"
                 }
+            },
+            "mapSwitcher": {
+                "noResults": "No se encontró ningún mapa",
+                "placeholder": "Ingrese el nombre del mapa",
+                "selectLabel": "Seleccione un mapa",
+                "infoOnHide": "Expanda el widget para ver el selector de mapas",
+                "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
             "chartType": {
                 "bar": {
@@ -2619,6 +2628,14 @@
                     "overlay": "Cubrir",
                     "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }
+            },
+            "importDialog": {
+                "selectFiles": "Selecciona un archivo",
+                "heading": "Suelta un archivo .json previamente exportado de una historia",
+                "note": "Los datos del archivo importado sustituirán a los de la historia actual"
+            },
+              "exportDialog": {
+                "heading": "Exporta la historia como archivo .json"
             },
             "errors": {
                 "loading": {

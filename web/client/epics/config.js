@@ -21,14 +21,13 @@ import {
     loadMapConfig,
     loadMapInfo
 } from '../actions/config';
-import {changeMapView, zoomToExtent} from '../actions/map';
+import {zoomToExtent} from '../actions/map';
 import Persistence from '../api/persistence';
 import { isLoggedIn, userSelector } from '../selectors/security';
 import { projectionDefsSelector } from '../selectors/map';
 import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapConfig} from '../actions/usersession';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
-import {getBbox} from "../utils/MapUtils";
 
 
 const prepareMapConfiguration = (data, override, state) => {
@@ -159,14 +158,6 @@ export const zoomToMaxExtentOnConfigureMap = action$ =>
         .filter(action => !!action.zoomToExtent)
         .delay(300) // without the delay the map zoom will not change
         .map(({config, zoomToExtent: extent}) => zoomToExtent(extent.bounds, extent.crs || get(config, 'map.projection')));
-
-export const calculateBboxOnConfigureMap = action$ =>
-    action$.ofType(MAP_CONFIG_LOADED)
-        .map(({config}) => {
-            const { center, zoom, size, mapStateSource, projection, viewerOptions, resolution } = (config?.map ?? {});
-            const bbox = getBbox(center, zoom);
-            return changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, resolution);
-        });
 
 export const loadMapInfoEpic = action$ =>
     action$.ofType(LOAD_MAP_INFO)
