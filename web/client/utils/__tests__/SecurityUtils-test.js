@@ -71,6 +71,7 @@ const securityInfoToken = {
 const authenticationRules = [
     {
         "urlPattern": ".*geoserver.*",
+        "pathPattern": "/some-path/*",
         "method": "authkey"
     },
     {
@@ -183,6 +184,9 @@ describe('Test security utils methods', () => {
         expect(authenticationMethod).toBe('basic');
         // authkey authentication should be found
         authenticationMethod = SecurityUtils.getAuthenticationMethod('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
+        expect(authenticationMethod).toBe('authkey');
+        // authkey authentication should be found. Rule matched by rule.pathPattern property
+        authenticationMethod = SecurityUtils.getAuthenticationMethod('http://www.random-domain.com/some-path/test?parameter1=value1&parameter2=value2');
         expect(authenticationMethod).toBe('authkey');
         // not-supported authentication should be found
         authenticationMethod = SecurityUtils.getAuthenticationMethod('http://www.not-supported.com/?parameter1=value1&parameter2=value2');

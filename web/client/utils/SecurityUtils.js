@@ -15,6 +15,7 @@ import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
+import {urlParts} from "./URLUtils";
 
 /**
  * Stores the logged user security information.
@@ -123,7 +124,11 @@ export function isAuthenticationActivated() {
  */
 export function getAuthenticationMethod(url) {
     const foundRule = head(getAuthenticationRules().filter(
-        rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
+        rule =>
+            rule && (
+                (rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))) ||
+                (rule.pathPattern && (urlParts(url).rootPath).match(new RegExp(rule.pathPattern, "i")))
+            )));
     return foundRule?.method;
 }
 
@@ -134,7 +139,11 @@ export function getAuthenticationMethod(url) {
  */
 export function getAuthenticationRule(url) {
     return head(getAuthenticationRules().filter(
-        rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
+        rule =>
+            rule && (
+                (rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))) ||
+                (rule.pathPattern && (urlParts(url).rootPath).match(new RegExp(rule.pathPattern, "i")))
+            )));
 }
 
 export function getAuthKeyParameter(url) {
