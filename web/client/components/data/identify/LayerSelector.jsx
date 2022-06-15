@@ -31,7 +31,7 @@ const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, e
     }, [responses]);
 
     useEffect(()=>{
-        const validResponses = validator(format)?.getValidResponses(responses);
+        const validResponses = validator(format)?.getValidResponses(responses) ?? [];
         loaded && setTitle(validResponses[index]?.layerMetadata?.title || "");
     }, [responses, index, loaded]);
 

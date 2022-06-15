@@ -50,11 +50,8 @@ describe("LayerSelector component", () => {
             TestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
         });
         const options = select.querySelectorAll(".Select-option");
-        // Invalid response - first option is hidden
-        expect(options[0].style.display).toBe('none');
-
-        // Valid response - second option is displayed
-        expect(options[1].style.display).toBe('block');
+        expect(options.length).toBe(1);
+        expect(options[0].style.display).toBe('block');
     });
     it('test LayerSelector with value and setIndex', (done) => {
 
@@ -62,7 +59,9 @@ describe("LayerSelector component", () => {
             responses: [
                 {layerMetadata: {title: "Layer 1"}, response: "GetFeatureInfo results1"},
                 {layerMetadata: {title: "Layer 2"}, response: "GetFeatureInfo results2"}],
-            index: 0
+            index: 0,
+            validator: getValidator,
+            format: "text/plain"
         };
 
         TestUtils.act(() => {

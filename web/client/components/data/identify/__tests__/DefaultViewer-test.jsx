@@ -127,7 +127,7 @@ describe('DefaultViewer', () => {
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
-        expect(dom.getElementsByClassName("panel").length).toBe(2);
+        expect(dom.getElementsByClassName("panel").length).toBe(1);
 
         // Desktop view
         const gfiViewer = document.querySelector('.mapstore-identify-viewer');
