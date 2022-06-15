@@ -96,7 +96,7 @@ export const getRequestParameterValue = (name, state, storage = sessionStorage) 
 export const getParametersValues = (paramActions, state) => (
     Object.keys(paramActions)
         .reduce((params, parameter) => {
-            const value = getRequestParameterValue(parameter, state);
+            const value = getRequestParameterValue(parameter, state, sessionStorage);
             return {
                 ...params,
                 ...(value ? { [parameter]: value } : {})
