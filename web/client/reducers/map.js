@@ -24,7 +24,7 @@ import {
     UNREGISTER_EVENT_LISTENER,
     ORIENTATION,
     UPDATE_MAP_VIEW,
-    UPDATE_SCENE_CONFIG
+    UPDATE_MAP_OPTIONS
 } from '../actions/map';
 
 import assign from 'object-assign';
@@ -170,7 +170,7 @@ function mapConfig(state = {eventListeners: {}}, action) {
                 }
             }
         };
-    case UPDATE_SCENE_CONFIG:
+    case UPDATE_MAP_OPTIONS:
         return {
             ...state,
             mapOptions: {

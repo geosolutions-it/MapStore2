@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { FormGroup, Checkbox, ControlLabel } from 'react-bootstrap';
 import Message from '../../../components/I18N/Message';
 import { createSelector } from 'reselect';
-import { updateSceneConfig } from '../../../actions/map';
+import { updateMapOptions } from '../../../actions/map';
 import ConfigUtils from '../../../utils/ConfigUtils';
 
 import { mapSelector } from '../../../selectors/map';
@@ -25,7 +25,7 @@ const mapStateToProps = createSelector(
 );
 
 const actions = {
-    updateConfigAction: updateSceneConfig
+    updateConfigAction: updateMapOptions
 };
 
 const Component = ({
