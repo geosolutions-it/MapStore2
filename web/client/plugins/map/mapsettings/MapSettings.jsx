@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { FormGroup, Checkbox, ControlLabel } from 'react-bootstrap';
 import Message from '../../../components/I18N/Message';
@@ -32,18 +32,15 @@ const Component = ({
     map,
     mapType,
     isCesium,
-    updateConfigAction
+    updateConfigAction,
+    mapOptions: defaultMapOptions
 }) => {
-    const [mapOptions, setMapOptions] = useState({});
 
-    useEffect(() => {
-        if (map) {
-            setMapOptions({
-                ...ConfigUtils.getConfigProp("defaultMapOptions")[mapType],
-                ...map.mapOptions
-            });
-        }
-    }, [map]);
+    const mapOptions = {
+        ...ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[mapType] || {},
+        ...map?.mapOptions,
+        ...defaultMapOptions && defaultMapOptions[mapType] || {}
+    };
 
     const handleConfigUpdate = (options, key) => {
         updateConfigAction({[key]: !options[key]});
