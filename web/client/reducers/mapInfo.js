@@ -39,7 +39,7 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import { RESET_CONTROLS } from '../actions/controls';
 import assign from 'object-assign';
 import { findIndex, isUndefined, isEmpty } from 'lodash';
-import { MAP_TYPE_CHANGED } from './../actions/maptype';
+import { MAP_TYPE_CHANGED } from '../actions/maptype';
 
 import { getValidator } from '../utils/MapInfoUtils';
 
@@ -108,7 +108,7 @@ function receiveResponse(state, action, type) {
         if (isHover) {
             indexObj = {loaded: true, index: 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
-            indexObj = {loaded: true, index: requestIndex};
+            indexObj = {loaded: true, index: 0};
         } else if (responses.length === requests.length && !indexObj?.loaded) {
             // if all responses are empty hence valid but with no valid index
             // then set loaded to true

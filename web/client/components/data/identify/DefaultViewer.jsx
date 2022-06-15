@@ -77,7 +77,7 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = this.props.renderValidOnly ? validator.getValidResponses(responses) : responses;
+        const validResponses = validator.getValidResponses(responses);
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -143,6 +143,7 @@ class DefaultViewer extends React.Component {
 
     renderPages = () => {
         const {validResponses: responses} = this.getResponseProperties();
+
         return responses.map((res, i) => {
             const {response, layerMetadata} = res;
             const format = getFormatForResponse(res, this.props);
@@ -151,8 +152,10 @@ class DefaultViewer extends React.Component {
             if (layerMetadata?.viewer?.type) {
                 customViewer = getViewer(layerMetadata.viewer.type);
             }
+            const validator = this.props.validator(this.props.format);
+            const validResponse = !!validator.getValidResponses([res]).length;
             const size = responses.filter(resp => !startsWith(resp.response, "no features were found")).length;
-            return (<Panel
+            return validResponse ? (<Panel
                 eventKey={i}
                 key={i}
                 collapsible={this.props.collapsible}
@@ -170,8 +173,8 @@ class DefaultViewer extends React.Component {
                     format={format}
                     viewers={customViewer || this.props.viewers}
                     layer={layerMetadata}/>
-            </Panel>);
-        });
+            </Panel>) : false;
+        }).filter(Boolean);
     };
 
     render() {
