@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { versionSelector } from '../selectors/version';
 import Message from '../components/I18N/Message';
+import Button from '../../client/components/misc/Button';
 
 /**
   * Version Plugin. Shows current MapStore2 version in settings panel
@@ -33,7 +34,27 @@ const Version = connect((state) => ({
     };
 
     render() {
-        return <span className="application-version"><span className="application-version-label"><Message msgId="version.label"/></span>: {this.props.version}</span>;
+        const githubUrl = "https://github.com/geosolutions-it/MapStore/tree/" + __COMMITHASH__;
+        return (
+            <ul>
+                <li>
+                <span className="application-version"><span className="application-version-label"><Message msgId="version.label"/></span>: Hello</span>;
+                </li>
+                <li>
+                <span className="value-git commit-data" dangerouslySetInnerHTML={{ __html: __COMMIT_DATA__
+                    .replace("Message:", "<strong>Message:</strong>")
+                    .replace("Author:", "<br/><strong>Author:</strong>")
+                    .replace("Date:", "<br/><strong>Date:</strong>")
+                    .replace("Commit:", "<br/><strong>Commit:</strong>")
+                }}>
+                    </span>
+
+                </li>
+                <li>
+                    <span><a href={githubUrl} target="_blank" ><Button> Open github tree in a new tab </Button></a></span>
+                </li>
+            </ul>
+        )
     }
     });
 
