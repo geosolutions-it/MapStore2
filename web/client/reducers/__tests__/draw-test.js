@@ -83,7 +83,7 @@ describe('Test the draw reducer', () => {
         };
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toBe(feature);
+        expect(state.tempFeatures[0]).toEqual(feature);
     });
 
     it('POLYGON GEOMETRY_CHANGED', () => {
@@ -92,8 +92,8 @@ describe('Test the draw reducer', () => {
             geometry: {
                 type: "Polygon",
                 coordinates: [
-                    [[35.0, 10.0], [45.0, 45.0], [15.0, 40.0], [10.0, 20.0], [35.0, 10.0]],
-                    [[20.0, 30.0], [35.0, 35.0], [30.0, 20.0], [20.0, 30.0]]
+                    [[-190.0, 10.0], [-192.0, 45.0], [196.0, 40.0], [-198.0, 20.0], [-200.0, 10.0]],
+                    [[200.0, 30.0], [210.0, 35.0], [-220.0, 20.0], [230.0, 30.0]]
                 ]
 
             },
@@ -102,14 +102,16 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue"
             }
         };
+        let expectedPolygon = [ [ [ 170, 10 ], [ 168, 45 ], [ -164.00000000000003, 40 ], [ 161.99999999999997, 20 ], [ 160, 10 ] ], [ [ -160, 30 ], [ -150, 35 ], [ 139.99999999999997, 20 ], [ -130.00000000000003, 30 ] ] ];
         let testAction = {
             type: GEOMETRY_CHANGED,
             features: [feature1]
         };
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toBe(feature1);
-        expect(state.tempFeatures.length).toEqual(1);
+        expect(state.tempFeatures[0]).toEqual(feature1);
+        expect(state.tempFeatures[0].geometry.coordinates).toEqual(expectedPolygon);
+        expect(state.tempFeatures[0].geometry.coordinates.length).toEqual(2);
     });
     it('Point GEOMETRY_CHANGED', () => {
         let feature2 = {
@@ -117,21 +119,23 @@ describe('Test the draw reducer', () => {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [1, 2]
+                coordinates: [-267, 2]
             },
             id: 'idFt2',
             properties: {
                 someProp: "someValue2"
             }
         };
+        const expectPoint = [93, 2];
         let testAction = {
             type: GEOMETRY_CHANGED,
             features: [feature2]
         };
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toBe(feature2);
-        expect(state.tempFeatures.length).toEqual(1);
+        expect(state.tempFeatures[0]).toEqual(feature2);
+        expect(state.tempFeatures[0].geometry.coordinates).toEqual(expectPoint);
+        expect(state.tempFeatures[0].geometry.coordinates.length).toEqual(2);
     });
     it('MultiPolygon GEOMETRY_CHANGED', () => {
         let feature3 = {
@@ -139,11 +143,13 @@ describe('Test the draw reducer', () => {
             geometry: {
                 type: "MultiPolygon",
                 coordinates: [
+
                     [
-                        [ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]
+                        [ [190.0, 2.0], [191.0, 2.0], [192.0, 3.0], [194.0, 3.0], [196.0, 2.0] ]
                     ],
                     [
-                        [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ]
+                        [ [-200.0, 0.0], [-202.0, 0.0], [203.0, 1.0], [-204.0, 1.0], [-208.0, 0.0] ],
+                        [[-300.0, 20.0], [-310.0, 15.0], [-320.0, 25.0], [330.0, 20.0]]
 
                     ]
                 ]
@@ -153,14 +159,17 @@ describe('Test the draw reducer', () => {
                 someProp: "someValue3"
             }
         };
+
+        const expectedMultiPolygon = [ [ [ [ -170, 2 ], [ -169, 2 ], [ -168, 3 ], [ -166, 3 ], [ -164.00000000000003, 2 ] ] ], [ [ [ 160, 0 ], [ 158, 0 ], [ -157, 1 ], [ 156, 1 ], [ 152.00000000000003, 0 ] ], [ [ 60, 20 ], [ 50, 15 ], [ 40, 25 ], [ -30, 20 ] ] ] ];
         let testAction = {
             type: GEOMETRY_CHANGED,
             features: [feature3]
         };
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toBe(feature3);
-        expect(state.tempFeatures.length).toEqual(1);
+        expect(state.tempFeatures[0]).toEqual(feature3);
+        expect(state.tempFeatures[0].geometry.coordinates).toEqual(expectedMultiPolygon);
+        expect(state.tempFeatures[0].geometry.coordinates.length).toEqual(2);
     });
     it('MultiLineString GEOMETRY_CHANGED', () => {
         let feature4 = {
@@ -168,8 +177,8 @@ describe('Test the draw reducer', () => {
             geometry: {
                 type: "MultiLineString",
                 coordinates: [
-                    [ [100.0, 0.0], [101.0, 1.0] ],
-                    [ [102.0, 2.0], [103.0, 3.0] ]
+                    [ [-190.0, 0.0], [-192.0, 1.0] ],
+                    [ [200.0, 2.0], [202.0, 3.0] ]
                 ]
             },
             id: 'idFt4',
@@ -181,10 +190,13 @@ describe('Test the draw reducer', () => {
             type: GEOMETRY_CHANGED,
             features: [feature4]
         };
+
+        let expectedData = [ [ [ 170, 0 ], [ 168, 1 ] ], [ [ -160, 2 ], [ -158, 3 ] ] ];
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toBe(feature4);
-        expect(state.tempFeatures.length).toEqual(1);
+        expect(state.tempFeatures[0]).toEqual(feature4);
+        expect(state.tempFeatures[0].geometry.coordinates).toEqual(expectedData);
+        expect(state.tempFeatures[0].geometry.coordinates.length).toEqual(2);
     });
 
     it('MultiPoint GEOMETRY_CHANGED', () => {
@@ -193,7 +205,7 @@ describe('Test the draw reducer', () => {
             geometry: {
                 type: "MultiPoint",
                 coordinates: [
-                    [10.0, 40.0], [40.0, 30.0], [20.0, 20.0], [30.0, 10.0]
+                    [-189.0, 40.0], [192.0, 30.0], [196.0, 20.0], [200.0, 10.0]
                 ]
             },
             id: 'idFt5',
@@ -205,10 +217,12 @@ describe('Test the draw reducer', () => {
             type: GEOMETRY_CHANGED,
             features: [feature5]
         };
+        let expectedMultipoint = [ [ 171, 40 ], [ -168, 30 ], [ -164.00000000000003, 20 ], [ -160, 10 ] ];
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toBe(feature5);
-        expect(state.tempFeatures.length).toEqual(1);
+        expect(state.tempFeatures[0]).toEqual(feature5);
+        expect(state.tempFeatures[0].geometry.coordinates).toEqual(expectedMultipoint);
+        expect(state.tempFeatures[0].geometry.coordinates.length).toEqual(4);
     });
 
     it('LineString GEOMETRY_CHANGED', () => {
@@ -216,7 +230,7 @@ describe('Test the draw reducer', () => {
             type: "Feature",
             geometry: {
                 type: "LineString",
-                coordinates: [[101.0, 0.0], [102.0, 1.0], [103.0, 1.0]]
+                coordinates: [[-303.0, 0.0], [-304.0, 1.0], [-305.0, 1.0]]
             },
             id: 'idFt6',
             properties: {
@@ -227,10 +241,12 @@ describe('Test the draw reducer', () => {
             type: GEOMETRY_CHANGED,
             features: [feature6]
         };
+        let expectedLineString = [ [ 57, 0 ], [ 56, 1 ], [ 55, 1 ] ];
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toBe(feature6);
-        expect(state.tempFeatures.length).toEqual(1);
+        expect(state.tempFeatures[0]).toEqual(feature6);
+        expect(state.tempFeatures[0].geometry.coordinates).toEqual(expectedLineString);
+        expect(state.tempFeatures[0].geometry.coordinates.length).toEqual(3);
     });
 
 
