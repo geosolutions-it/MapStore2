@@ -67,10 +67,8 @@ function draw(state = initialState, action) {
             const normalizedData = newData[0].geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])));
             newData[0].geometry.coordinates = normalizedData;
             return assign({}, state, {tempFeatures: newData});
-        } else {
-            return assign({}, state, {tempFeatures: []});
-
         }
+        return assign({}, state, {tempFeatures: []});
 
     case DRAW_SUPPORT_STOPPED:
         return assign({}, state, {tempFeatures: []});
