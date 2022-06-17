@@ -114,7 +114,10 @@ class CesiumMap extends React.Component {
             // to avoid error on mount
             creditContainer: creditContainer
                 ? creditContainer
-                : undefined
+                : undefined,
+            requestRenderMode: true,
+            maximumRenderTimeChange: Infinity,
+            skyBox: false
         }, this.getMapOptions(this.props.mapOptions)));
 
         if (this.props.errorPanel) {
@@ -163,6 +166,7 @@ class CesiumMap extends React.Component {
         scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? false;
 
         this.forceUpdate();
+        map.scene.requestRender();
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {

@@ -18,7 +18,7 @@ import { themeLoaded } from '../actions/theme';
 
 import { updateMapLayoutEpic, updateActiveDockEpic } from '../epics/maplayout';
 import { setSupportedLocales } from '../epics/localconfig';
-import { readQueryParamsOnMapEpic, switchMapType } from '../epics/queryparams';
+import { readQueryParamsOnMapEpic } from '../epics/queryparams';
 
 import maptype from '../reducers/maptype';
 import maps from '../reducers/maps';
@@ -86,7 +86,6 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 updateActiveDockEpic,
                 setSupportedLocales,
                 readQueryParamsOnMapEpic,
-                switchMapType,
                 ...configAppEpics
             }),
 

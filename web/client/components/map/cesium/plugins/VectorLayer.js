@@ -26,22 +26,32 @@ const createLayer = (options, map) => {
         features
     };
 
-    dataSource.load(collection).then(() => {
-        map.dataSources.add(dataSource);
-        layerToGeoStylerStyle(options)
-            .then((style) => {
-                getStyle(applyDefaultStyleToLayer({ ...options, style }), 'cesium')
-                    .then((styleFunc) => {
-                        if (styleFunc) {
-                            styleFunc({
-                                entities: dataSource?.entities?.values,
-                                map,
-                                opacity: options.opacity ?? 1
-                            });
-                        }
-                    });
-            });
-    });
+    if (options.visibility) {
+        dataSource.load(collection, {
+            // ensure default style is not applied
+            stroke: new Cesium.Color(0, 0, 0, 0),
+            fill: new Cesium.Color(0, 0, 0, 0),
+            markerColor: new Cesium.Color(0, 0, 0, 0),
+            strokeWidth: 0,
+            markerSize: 0
+        }).then(() => {
+            map.dataSources.add(dataSource);
+            layerToGeoStylerStyle(options)
+                .then((style) => {
+                    getStyle(applyDefaultStyleToLayer({ ...options, style }), 'cesium')
+                        .then((styleFunc) => {
+                            if (styleFunc) {
+                                styleFunc({
+                                    entities: dataSource?.entities?.values,
+                                    map,
+                                    opacity: options.opacity ?? 1
+                                });
+                                map.scene.requestRender();
+                            }
+                        });
+                });
+        });
+    }
 
     dataSource.show = !!options.visibility;
 
@@ -54,21 +64,18 @@ const createLayer = (options, map) => {
                 dataSource = undefined;
             }
         },
-        setVisible: (show) => {
-            dataSource.show = !!show;
-        }
+        setVisible: () => {}
     };
 };
 
 Layers.registerType('vector', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (!isEqual(newOptions.features, oldOptions.features)) {
+        if (!isEqual(newOptions.features, oldOptions.features)
+        || newOptions.visibility !== oldOptions.visibility) {
             return createLayer(newOptions, map);
         }
-        if (newOptions.visibility !== oldOptions.visibility) {
-            layer.setVisible(newOptions.visibility);
-        }
+
         if (layer?.dataSource?.entities?.values
             && (
                 !isEqual(newOptions.style, oldOptions.style)
@@ -85,6 +92,7 @@ Layers.registerType('vector', {
                                     map,
                                     opacity: newOptions.opacity ?? 1
                                 });
+                                map.scene.requestRender();
                             }
                         });
                 });
