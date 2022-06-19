@@ -19,6 +19,7 @@ let feature1 = {
         someProp: "someValue"
     }
 };
+
 let feature2 = {
     type: "Feature",
     geometry: {
@@ -82,6 +83,7 @@ import {
     setUp,
     setTimeSync,
     setPagination
+
 } from '../../actions/featuregrid';
 
 import { paginationSelector, useLayerFilterSelector } from '../../selectors/featuregrid';
@@ -315,6 +317,138 @@ describe('Test the featuregrid reducer', () => {
         expect(state.changes.length).toBe(2);
 
     });
+    it('POLYGON GEOMETRY_CHANGED', () => {
+        let feature4 = {
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [
+                    [[-190.0, 10.0], [-192.0, 45.0], [196.0, 40.0], [-198.0, 20.0], [-200.0, 10.0]],
+                    [[200.0, 30.0], [210.0, 35.0], [-220.0, 20.0], [230.0, 30.0]]
+                ]
+            },
+            id: idFt1,
+            properties: {
+                someProp: "someValue"
+            }
+        };
+
+        let expectedPolygon = { geometry: { type: 'Polygon', coordinates: [ [ [ 170, 10 ], [ 168, 45 ], [ -164.00000000000003, 40 ], [ 161.99999999999997, 20 ], [ 160, 10 ] ], [ [ -160, 30 ], [ -150, 35 ], [ 139.99999999999997, 20 ], [ -130.00000000000003, 30 ] ] ] } };
+
+        let state = featuregrid({}, geometryChanged([feature4]));
+        expect(state).toExist();
+        expect(state.changes[0].updated).toEqual(expectedPolygon);
+        expect(state.changes[0].updated.geometry.coordinates.length).toEqual(2);
+    });
+    it('Point GEOMETRY_CHANGED', () => {
+        let feature5 = {
+
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [-267, 2]
+            },
+            id: 'idFt2',
+            properties: {
+                someProp: "someValue2"
+            }
+        };
+        const expectPoint = { geometry: { type: 'Point', coordinates: [ 93, 2 ] } };
+        let state = featuregrid({}, geometryChanged([feature5]));
+        expect(state.changes).toExist();
+        expect(state.changes[0].updated).toEqual(expectPoint);
+        expect(state.changes[0].updated.geometry.coordinates.length).toEqual(2);
+    });
+    it('MultiPolygon GEOMETRY_CHANGED', () => {
+        let feature6 = {
+            type: "Feature",
+            geometry: {
+                type: "MultiPolygon",
+                coordinates: [
+
+                    [
+                        [ [190.0, 2.0], [191.0, 2.0], [192.0, 3.0], [194.0, 3.0], [196.0, 2.0] ]
+                    ],
+                    [
+                        [ [-200.0, 0.0], [-202.0, 0.0], [203.0, 1.0], [-204.0, 1.0], [-208.0, 0.0] ]
+                    ]
+                ]
+            },
+            id: 'idFt3',
+            properties: {
+                someProp: "someValue3"
+            }
+        };
+
+        const expectedMultiPolygon = [ [ [ [ -170, 2 ], [ -169, 2 ], [ -168, 3 ], [ -166, 3 ], [ -164.00000000000003, 2 ] ] ], [ [ [ 160, 0 ], [ 158, 0 ], [ -157, 1 ], [ 156, 1 ], [ 152.00000000000003, 0 ] ] ] ];
+
+        let state = featuregrid({}, geometryChanged([feature6]));
+        expect(state.changes).toExist();
+        expect(state.changes[0].updated.geometry.coordinates).toEqual(expectedMultiPolygon);
+        expect(state.changes[0].updated.geometry.coordinates.length).toEqual(2);
+    });
+    it('MultiLineString GEOMETRY_CHANGED', () => {
+        let feature7 = {
+            type: "Feature",
+            geometry: {
+                type: "MultiLineString",
+                coordinates: [
+                    [ [-190.0, 0.0], [-192.0, 1.0] ],
+                    [ [200.0, 2.0], [202.0, 3.0] ]
+                ]
+            },
+            id: 'idFt4',
+            properties: {
+                someProp: "someValue4"
+            }
+        };
+        let expectedData = { geometry: { type: 'MultiLineString', coordinates: [ [ [ 170, 0 ], [ 168, 1 ] ], [ [ -160, 2 ], [ -158, 3 ] ] ] } };
+        let state = featuregrid({}, geometryChanged([feature7]));
+        expect(state.changes).toExist();
+        expect(state.changes[0].updated).toEqual(expectedData);
+        expect(state.changes[0].updated.geometry.coordinates.length).toEqual(2);
+    });
+
+    it('MultiPoint GEOMETRY_CHANGED', () => {
+        let feature8 = {
+            type: "Feature",
+            geometry: {
+                type: "MultiPoint",
+                coordinates: [
+                    [-189.0, 40.0], [192.0, 30.0], [196.0, 20.0], [200.0, 10.0]
+                ]
+            },
+            id: 'idFt5',
+            properties: {
+                someProp: "someValue5"
+            }
+        };
+        let expectedMultipoint = { geometry: { type: 'MultiPoint', coordinates: [ [ 171, 40 ], [ -168, 30 ], [ -164.00000000000003, 20 ], [ -160, 10 ] ] } };
+        let state = featuregrid({}, geometryChanged([feature8]));
+        expect(state.changes).toExist();
+        expect(state.changes[0].updated).toEqual(expectedMultipoint);
+        expect(state.changes[0].updated.geometry.coordinates.length).toEqual(4);
+    });
+
+    it('LineString GEOMETRY_CHANGED', () => {
+        let feature9 = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[-303.0, 0.0], [-304.0, 1.0], [-305.0, 1.0]]
+            },
+            id: 'idFt6',
+            properties: {
+                someProp: "someValue6"
+            }
+        };
+        let expectedLineString = { geometry: { type: 'LineString', coordinates: [ [ 57, 0 ], [ 56, 1 ], [ 55, 1 ] ] } };
+        let state = featuregrid({}, geometryChanged([feature9]));
+        expect(state.changes).toExist();
+        expect(state.changes[0].updated).toEqual(expectedLineString);
+        expect(state.changes[0].updated.geometry.coordinates.length).toEqual(3);
+    });
+
     it('DISABLE_TOOLBAR', () => {
         let state = featuregrid({}, {type: "UNKNOWN"});
         expect(state.disableToolbar).toBeFalsy();

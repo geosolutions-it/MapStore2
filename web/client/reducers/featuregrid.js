@@ -54,6 +54,7 @@ import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsq
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
 import uuid from 'uuid';
 import { getApi } from '../api/userPersistedStorage';
+import  { normalizeLng } from '../../client/utils/CoordinatesUtils';
 
 const emptyResultsState = {
     advancedFilters: {},
@@ -293,6 +294,21 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case GEOMETRY_CHANGED: {
         const newFeaturesChanges = action.features.filter(f => f._new) || [];
+        let newCoords = [];
+        if (action.features[0].geometry.type === 'Point') {
+            newCoords = [normalizeLng(action.features[0].geometry.coordinates[0]), action.features[0].geometry.coordinates[1]];
+
+        } else if (action.features[0].geometry.type === 'LineString' || action.features[0].geometry.type === 'MultiPoint') {
+            newCoords = action.features[0].geometry.coordinates.map((item) => [normalizeLng(item[0]), item[1]]);
+
+        } else if (action.features[0].geometry.type === 'Polygon' || action.features[0].geometry.type === 'MultiLineString' ) {
+            newCoords = action.features[0].geometry.coordinates.map(x => x.map((item) => [normalizeLng(item[0]), item[1]]));
+
+        } else if (action.features[0].geometry.type === 'MultiPolygon') {
+            newCoords = action.features[0].geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])));
+
+        }
+        action.features[0].geometry.coordinates = newCoords;
         return assign({}, state, {
             newFeatures: newFeaturesChanges.length > 0 ? applyNewChanges(state.newFeatures, newFeaturesChanges, null, {geometry: {...head(newFeaturesChanges).geometry} }) : state.newFeatures,
             changes: action.features.filter(f => !f._new).map((f, index) => ({
