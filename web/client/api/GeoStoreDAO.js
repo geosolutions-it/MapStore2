@@ -156,7 +156,7 @@ const Api = {
      * Can be used to finalize access with openID after redirect, using the token passed by the service to retrieve the
      * remaining information.
      * @param {object} params contains access_token to pass in the bearer header
-     * @returns
+     * @returns {object} user details
      */
     getUserDetails: function({access_token: accessToken}) {
         const url = "users/user/details";
