@@ -21,6 +21,7 @@ export const SET_SNAPPING_CONFIG = 'DRAW:SET_SNAPPING_CONFIG';
 import  { normalizeLng } from '../../client/utils/CoordinatesUtils';
 
 export function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
+
     let newCoords = [];
     if (features[0].geometry.type === 'Point') {
         newCoords = [normalizeLng(features[0].geometry.coordinates[0]), features[0].geometry.coordinates[1]];

@@ -93,6 +93,28 @@ describe('Test correctness of the draw actions', () => {
         expect(retval.enableEdit).toBe(enableEdit);
         expect(retval.textChanged).toBe(textChanged);
     });
+    it('Test geometryChanged  for point', () => {
+        const features = [{
+            geometry: {
+                type: "Point",
+                coordinates: [-210, 2]
+            }
+        }];
+        const owner = "featureGrid";
+        const enableEdit = true;
+        const textChanged = false;
+        const retval = geometryChanged(features, owner, enableEdit, textChanged);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+        expect(retval.owner).toBe(owner);
+        expect(retval.features[0].geometry.type).toBe('Point');
+        expect(retval.features[0].geometry.coordinates).toEqual([ 150, 2 ]);
+        expect(retval.enableEdit).toBe(enableEdit);
+        expect(retval.textChanged).toBe(textChanged);
+    });
     it('Test geometryChanged for polygon', () => {
         const features = [{
             geometry: {
@@ -113,6 +135,110 @@ describe('Test correctness of the draw actions', () => {
         expect(retval.features).toExist();
         expect(retval.features).toBe(features);
         expect(retval.features[0].geometry.type).toBe('Polygon');
+        expect(retval.features[0].geometry.coordinates).toEqual([ [ [ 170, 10 ], [ 168, 45 ], [ -164.00000000000003, 40 ], [ 161.99999999999997, 20 ], [ 160, 10 ] ], [ [ -160, 30 ], [ -150, 35 ], [ 139.99999999999997, 20 ], [ -130.00000000000003, 30 ] ] ]);
+        expect(retval.owner).toBe(owner);
+        expect(retval.enableEdit).toBe(enableEdit);
+        expect(retval.textChanged).toBe(textChanged);
+    });
+    it('Test geometryChanged for MultiPolygon', () => {
+        const features = [{
+            geometry: {
+                type: "MultiPolygon",
+                coordinates: [
+                    [
+                        [[230.0, 20.0], [545.0, 40.0], [-210.0, 40.0], [330.0, 20.0]]
+                    ],
+                    [
+                        [[-215.0, 5.0], [240.0, 10.0], [310.0, 20.0], [-205.0, 10.0], [215.0, 5.0]]
+                    ]
+                ]
+            }
+        }];
+        const owner = "featureGrid";
+        const enableEdit = true;
+        const textChanged = false;
+        const retval = geometryChanged(features, owner, enableEdit, textChanged);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+        expect(retval.features[0].geometry.type).toBe('MultiPolygon');
+        expect(retval.features[0].geometry.coordinates).toEqual( [ [ [ [ -130.00000000000003, 20 ], [ -175.00000000000003, 40 ], [ 150, 40 ], [ -30, 20 ] ] ], [ [ [ 145, 5 ], [ -120, 10 ], [ -50, 20 ], [ 155, 10 ], [ -145, 5 ] ] ] ]);
+        expect(retval.owner).toBe(owner);
+        expect(retval.enableEdit).toBe(enableEdit);
+        expect(retval.textChanged).toBe(textChanged);
+    });
+
+    it('Test geometryChanged for MultiLineString ', () => {
+        const features = [{
+            geometry: {
+                type: "MultiLineString",
+                coordinates: [
+                    [[-210.0, 10.0], [-220.0, 20.0], [-210.0, 40.0]],
+                    [[-189.0, 40.0], [-230.0, 30.0], [-240.0, 20.0], [230.0, 10.0]]
+                ]
+            }
+        }];
+        const owner = "featureGrid";
+        const enableEdit = true;
+        const textChanged = false;
+        const retval = geometryChanged(features, owner, enableEdit, textChanged);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+        expect(retval.features[0].geometry.type).toBe('MultiLineString');
+        expect(retval.features[0].geometry.coordinates).toEqual([ [ [ 150, 10 ], [ 139.99999999999997, 20 ], [ 150, 40 ] ], [ [ 171, 40 ], [ 130.00000000000003, 30 ], [ 120, 20 ], [ -130.00000000000003, 10 ] ] ]);
+        expect(retval.owner).toBe(owner);
+        expect(retval.enableEdit).toBe(enableEdit);
+        expect(retval.textChanged).toBe(textChanged);
+    });
+    it('Test geometryChanged for MultiPoint ', () => {
+        const features = [{
+            geometry: {
+                type: "MultiPoint",
+                coordinates: [
+                    [-210.0, 40.0], [-140.0, 30.0], [-220.0, 20.0], [-230.0, 10.0]
+                ]
+            }
+        }];
+        const owner = "featureGrid";
+        const enableEdit = true;
+        const textChanged = false;
+        const retval = geometryChanged(features, owner, enableEdit, textChanged);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+        expect(retval.features[0].geometry.type).toBe('MultiPoint');
+        expect(retval.features[0].geometry.coordinates).toEqual([ [ 150, 40 ], [ -140, 30 ], [ 139.99999999999997, 20 ], [ 130.00000000000003, 10 ] ]);
+        expect(retval.owner).toBe(owner);
+        expect(retval.enableEdit).toBe(enableEdit);
+        expect(retval.textChanged).toBe(textChanged);
+    });
+    it('Test geometryChanged for LineString ', () => {
+        const features = [{
+            geometry: {
+                type: "LineString",
+                "coordinates": [
+                    [-230.0, 10.0], [-210.0, 30.0], [-240.0, 40.0]
+                ]
+            }
+        }];
+        const owner = "featureGrid";
+        const enableEdit = true;
+        const textChanged = false;
+        const retval = geometryChanged(features, owner, enableEdit, textChanged);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+        expect(retval.features[0].geometry.type).toBe('LineString');
+        expect(retval.features[0].geometry.coordinates).toEqual([ [ 130.00000000000003, 10 ], [ 150, 30 ], [ 120, 40 ] ]);
         expect(retval.owner).toBe(owner);
         expect(retval.enableEdit).toBe(enableEdit);
         expect(retval.textChanged).toBe(textChanged);
