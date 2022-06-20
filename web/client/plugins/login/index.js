@@ -93,15 +93,14 @@ export const LoginNav = connect((state) => ({
 
 }, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
     const {currentProvider, providers = []} = stateProps;
-    const {type} = (providers ?? []).filter(({provider: provider}) => provider === currentProvider)?.[0] ?? {};
+    const {type, showAccountInfo = false, showPasswordChange = false} = (providers ?? []).filter(({provider: provider}) => provider === currentProvider)?.[0] ?? {};
     const isOpenID = type === "openID";
     return {
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        showAccountInfo: !isOpenID && ownProps.showAccountInfo,
-        showPasswordChange: !isOpenID && ownProps.showPasswordChange
-
+        showAccountInfo: isOpenID ? showAccountInfo : ownProps.showAccountInfo,
+        showPasswordChange: isOpenID ? showPasswordChange : ownProps.showPasswordChange
     };
 })(UserMenuComp);
 
