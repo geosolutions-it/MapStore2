@@ -14,21 +14,7 @@ export function setCookie(name, value, validity) {
     }
     document.cookie = name + "=" + (value || "")  + expires + "; path=/";
 }
-/**
- * Gets a cookie valueby name
- * @param {string} name name of the cookie
- * @returns the value of the cookie, if eny
- */
-export function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
+
 /**
  * remove a cookie.
  * @param {string} name name of the cookie
