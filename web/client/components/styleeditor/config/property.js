@@ -276,6 +276,25 @@ const property = {
             };
         }
     }),
+    bringToFront: ({ key = 'bringToFront', label = 'Arrange' }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.boolTrue',
+                value: true
+            }, {
+                labelId: 'styleeditor.boolFalse',
+                value: false
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value
+            };
+        },
+        setValue: (value) => !!value
+    }),
     shape: ({ label, key = 'wellKnownName' }) => ({
         type: 'mark',
         label,
