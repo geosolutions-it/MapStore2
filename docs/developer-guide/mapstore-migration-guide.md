@@ -76,7 +76,7 @@ MapStore introduced support for OpenID. In order to have this functionalities an
     <filter>
 ```
 
-- `applicationContext.xml` for consistency, we added `mapstore-ovr.properties` files to be searched in class-path and in the data-dir, as for for the other properties files:
+- `applicationContext.xml` for consistency, we added `mapstore-ovr.properties` files to be searched in class-path and in the data-dir, as for the other properties files:
 
 ```diff
 @@ -49,6 +49,7 @@
