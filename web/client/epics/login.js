@@ -117,7 +117,7 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
         const accessToken = getCookieValue('access_token');
         const refreshToken = getCookieValue('refresh_token');
         const expires = getCookieValue('expires') ?? 5 * 60 * 1000;
-        const authProvider = getCookieValue('authProvider'); // This is set by login tool. TODO: it can came from userDetails
+        const authProvider = getCookieValue('authProvider'); // This is set by login tool.
         if (!accessToken) {
             return Rx.Observable.empty();
         }
@@ -129,7 +129,8 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
                 return Rx.Observable.of(logout(null));
             })
             .concat(Rx.Observable.of(1).switchMap(() => {
-                // TODO: clean up the cookie
+                // clean up the cookie
+
                 eraseCookie('access_token');
                 eraseCookie('refresh_token');
                 eraseCookie('authProvider');
