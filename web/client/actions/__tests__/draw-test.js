@@ -93,6 +93,30 @@ describe('Test correctness of the draw actions', () => {
         expect(retval.enableEdit).toBe(enableEdit);
         expect(retval.textChanged).toBe(textChanged);
     });
+    it('Test geometryChanged for polygon', () => {
+        const features = [{
+            geometry: {
+                type: "Polygon",
+                coordinates: [
+                    [[-190.0, 10.0], [-192.0, 45.0], [196.0, 40.0], [-198.0, 20.0], [-200.0, 10.0]],
+                    [[200.0, 30.0], [210.0, 35.0], [-220.0, 20.0], [230.0, 30.0]]
+                ]
+            }
+        }];
+        const owner = "featureGrid";
+        const enableEdit = true;
+        const textChanged = false;
+        const retval = geometryChanged(features, owner, enableEdit, textChanged);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+        expect(retval.features[0].geometry.type).toBe('Polygon');
+        expect(retval.owner).toBe(owner);
+        expect(retval.enableEdit).toBe(enableEdit);
+        expect(retval.textChanged).toBe(textChanged);
+    });
     it('Test drawStopped action creator', () => {
         const retval = drawStopped();
         expect(retval).toExist();

@@ -18,8 +18,25 @@ export const SNAPPING_IS_LOADING = 'DRAW:SNAPPING_IS_LOADING';
 export const TOGGLE_SNAPPING = 'DRAW:TOGGLE_SNAPPING';
 export const SET_SNAPPING_CONFIG = 'DRAW:SET_SNAPPING_CONFIG';
 
+import  { normalizeLng } from '../../client/utils/CoordinatesUtils';
 
 export function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
+    let newCoords = [];
+    if (features[0].geometry.type === 'Point') {
+        newCoords = [normalizeLng(features[0].geometry.coordinates[0]), features[0].geometry.coordinates[1]];
+
+    } else if (features[0].geometry.type === 'LineString' || features[0].geometry.type === 'MultiPoint') {
+        newCoords = features[0].geometry.coordinates.map((item) => [normalizeLng(item[0]), item[1]]);
+
+    } else if (features[0].geometry.type === 'Polygon' || features[0].geometry.type === 'MultiLineString' ) {
+        newCoords = features[0].geometry.coordinates.map(x => x.map((item) => [normalizeLng(item[0]), item[1]]));
+
+    } else if (features[0].geometry.type === 'MultiPolygon') {
+        newCoords = features[0].geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])));
+
+    }
+    features[0].geometry.coordinates = newCoords;
+
     return {
         type: GEOMETRY_CHANGED,
         features,

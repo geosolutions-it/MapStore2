@@ -16,6 +16,7 @@ import {
     SNAPPING_IS_LOADING,
     SET_SNAPPING_CONFIG
 } from '../actions/draw';
+
 import assign from 'object-assign';
 
 const initialState = {

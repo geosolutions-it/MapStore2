@@ -12,7 +12,6 @@ import setFP from 'lodash/fp/set';
 import unsetFP from 'lodash/fp/unset';
 import composeFP from 'lodash/fp/compose';
 
-
 export const set = setFP;
 export const unset = unsetFP;
 export const compose = composeFP;

@@ -16,6 +16,7 @@ import {
     TOGGLE_SNAPPING
 } from '../../actions/draw';
 
+
 describe('Test the draw reducer', () => {
 
     it('returns the initial state on unrecognized action', () => {
@@ -83,9 +84,8 @@ describe('Test the draw reducer', () => {
         };
         let state = draw({}, testAction);
         expect(state.tempFeatures).toExist();
-        expect(state.tempFeatures[0]).toEqual(feature);
+        expect(state.tempFeatures[0]).toBe(feature);
     });
-
     it('Snapping tool TOGGLE_SNAPPING', () => {
         let testAction = {
             type: TOGGLE_SNAPPING
