@@ -5,7 +5,7 @@ MapStore allows to integrate with the following OpenID providers.
 - Google
 - Keycloak (to be implemented)
 
-For each of these service you will have to configure the back-end and modify `localConfig.json` adding a proper entry to the `authenticationProvider`.
+For each of these service you will have to configure the back-end and modify `localConfig.json` adding a proper entry to the `authenticationProviders`.
 By default, if `authenticationProvider` is not set, it will use classic `{"type": "basic", "provider": "geostore"}`, that represents the standard login on mapstore with username and password.
 
 For details about the configuration for a specific service, please refer to the specific section below. For details about `authenticationProvider` optional values, refer to the documentation of the login plugin.
