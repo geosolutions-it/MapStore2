@@ -15,7 +15,7 @@ For details about the configuration for a specific service, please refer to the 
 
 ## Google
 
-In order to setup a the openID connect you have to setup a project in Google API Console to obtain Oauth 2.0 credentials and configure them. Please follow the [Google documentation](https://developers.google.com/identity/protocols/oauth2/openid-connect) for this.
+In order to setup the openID connection you have to setup a project in Google API Console to obtain Oauth 2.0 credentials and configure them. Please follow the [Google documentation](https://developers.google.com/identity/protocols/oauth2/openid-connect) for this.
 
 After the setup, you will have to:
 
