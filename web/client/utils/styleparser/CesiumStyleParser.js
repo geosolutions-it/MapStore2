@@ -109,7 +109,6 @@ function getStyleFuncFromRules({
                 entities.forEach((entity) => {
                     const properties = entity?.properties?.getValue(Cesium.JulianDate.now()) || {};
                     if (!rule.filter || geoStylerStyleFilter({ properties: properties || {}}, rule.filter)) {
-
                         if (symbolizer.kind === 'Mark' && entity.position) {
                             const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
                             if (image) {
@@ -119,6 +118,7 @@ function getStyleFuncFromRules({
                                     image,
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
+                                    disableDepthTestDistance: symbolizer.bringToFront ? Number.POSITIVE_INFINITY : 0,
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: 1 * globalOpacity
@@ -135,6 +135,7 @@ function getStyleFuncFromRules({
                                     image,
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
+                                    disableDepthTestDistance: symbolizer.bringToFront ? Number.POSITIVE_INFINITY : 0,
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: symbolizer.opacity * globalOpacity
