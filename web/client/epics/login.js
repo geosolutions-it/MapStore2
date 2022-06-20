@@ -117,7 +117,7 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
         const accessToken = getCookieValue('access_token');
         const refreshToken = getCookieValue('refresh_token');
         const expires = getCookieValue('expires') ?? 5 * 60 * 1000;
-        const authProvider = getCookieValue('authProvider'); // This is set by login tool. TODO: it can came from userDetails
+        const authProvider = getCookieValue('authProvider'); // This is set by login tool.
         if (!accessToken) {
             return Rx.Observable.empty();
         }
