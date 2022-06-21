@@ -8,8 +8,6 @@
 
 import React, { useEffect, useRef, useState }  from 'react';
 import uniq from 'lodash/uniq';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import { StyleEditor } from './StyleCodeEditor';
 import TextareaEditor from '../../components/styleeditor/Editor';
 import VisualStyleEditor from '../../components/styleeditor/VisualStyleEditor';
@@ -28,14 +26,6 @@ import {
 } from '../../utils/VectorStyleUtils';
 import { getCapabilities } from '../../api/ThreeDTiles';
 import { describeFeatureType } from '../../api/WFS';
-import { isCesium } from '../../selectors/maptype';
-
-const mapStateToProps = createSelector(
-    isCesium,
-    (enable3dStyleOptions) => ({
-        enable3dStyleOptions
-    })
-);
 
 const editors = {
     visual: VisualStyleEditor,
@@ -220,4 +210,4 @@ function VectorStyleEditor({
         />
     );
 }
-export default connect(mapStateToProps, null)(VectorStyleEditor);
+export default VectorStyleEditor;

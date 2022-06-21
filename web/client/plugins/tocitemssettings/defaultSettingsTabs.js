@@ -19,6 +19,7 @@ import HTMLViewer from '../../components/data/identify/viewers/HTMLViewer';
 import TextViewer from '../../components/data/identify/viewers/TextViewer';
 import JSONViewer from '../../components/data/identify/viewers/JSONViewer';
 import HtmlRenderer from '../../components/misc/HtmlRenderer';
+import { isCesium } from '../../selectors/maptype';
 
 import {getAvailableInfoFormat} from '../../utils/MapInfoUtils';
 import {getConfiguredPlugin as getConfiguredPluginUtil } from '../../utils/PluginsUtils';
@@ -150,8 +151,11 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
 
     if (isVectorStylableLayer({element})) {
+        const ConnectedVectorStyleEditor = connect(
+            createSelector([isCesium], ({ enable3dStyleOptions }) => ({ enable3dStyleOptions }))
+        )(VectorStyleEditor);
         return {
-            Component: VectorStyleEditor
+            Component: ConnectedVectorStyleEditor
         };
     }
     // get Higher priority plugin that satisfies requirements.
