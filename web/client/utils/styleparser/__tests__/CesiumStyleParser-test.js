@@ -176,7 +176,8 @@ describe('CesiumStyleParser', () => {
                                 strokeOpacity: 0.25,
                                 strokeWidth: 3,
                                 radius: 16,
-                                rotate: 90
+                                rotate: 90,
+                                bringToFront: true
                             }
                         ]
                     }
@@ -208,6 +209,7 @@ describe('CesiumStyleParser', () => {
                             expect(entities[0].billboard.image.getValue()).toBe(canvas);
                             expect(entities[0].billboard.scale.getValue()).toBe(1);
                             expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
+                            expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
                         } catch (e) {
                             done(e);
                         }
@@ -229,7 +231,8 @@ describe('CesiumStyleParser', () => {
                                 image: 'path/to/image',
                                 opacity: 0.5,
                                 size: 32,
-                                rotate: 90
+                                rotate: 90,
+                                bringToFront: true
                             }
                         ]
                     }
@@ -262,6 +265,7 @@ describe('CesiumStyleParser', () => {
                             expect({ ...entities[0].billboard.color.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 0.5 });
                             expect(entities[0].billboard.scale.getValue()).toBe(0.125);
                             expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
+                            expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
                         } catch (e) {
                             done(e);
                         }
