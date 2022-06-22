@@ -83,7 +83,6 @@ export default {
             resolve(ImportPlugin);
         });
     }, enabler: (state) => state.mapimport && state.mapimport.enabled || state.toolbar && state.toolbar.active === 'import'}, {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
             name: 'import',
             position: 4,
