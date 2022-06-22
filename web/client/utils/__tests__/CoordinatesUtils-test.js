@@ -39,6 +39,7 @@ import {
     getProjections,
     getExtentForProjection,
     checkIfLayerFitsExtentForProjection,
+    normalizeGeometry,
     getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian
 } from '../CoordinatesUtils';
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
@@ -163,7 +164,6 @@ describe('CoordinatesUtils', () => {
         expect(reprojectedTestPoint.features[0].geometry.coordinates[0].toFixed(4)).toBe((-12523490.492568726).toFixed(4));
         expect(reprojectedTestPoint.features[0].geometry.coordinates[1].toFixed(4)).toBe((5195238.005360028).toFixed(4));
     });
-
     it('test geojson extent', () => {
         let geojsonPoint = {
             "type": "Feature",
@@ -961,4 +961,107 @@ describe('CoordinatesUtils', () => {
         const val = valueIsApproximatelyEqual(rad, 100);
         expect(val).toBe(true);
     });
+
+    describe('normalizeGeometry tests', ()=> {
+        it('Test geometryChanged normalization for Point', () => {
+            const geometry = {
+                type: "Point",
+                coordinates: [-210, 2]
+            };
+            const newGeom = normalizeGeometry(geometry);
+            expect(newGeom).toBeTruthy();
+            expect(newGeom).toNotEqual(geometry);
+            expect(newGeom).toEqual({
+                type: "Point",
+                coordinates: [ 150, 2 ]
+            });
+        });
+        it('Test geometryChanged normalization for LineString ', () => {
+            const geometry = {
+                type: "LineString",
+                "coordinates": [
+                    [-230.0, 10.0], [-210.0, 30.0], [-240.0, 40.0]
+                ]
+            };
+            const newGeom = normalizeGeometry(geometry);
+            expect(newGeom).toBeTruthy();
+            expect(newGeom).toNotEqual(geometry);
+            expect(newGeom).toEqual({
+                type: "LineString",
+                coordinates: [ [ 130.00000000000003, 10 ], [ 150, 30 ], [ 120, 40 ] ]
+            });
+        });
+        it('Test geometryChanged normalization for Polygon', () => {
+            const geometry = {
+                type: "Polygon",
+                coordinates: [
+                    [[-190.0, 10.0], [-192.0, 45.0], [196.0, 40.0], [-198.0, 20.0], [-200.0, 10.0]],
+                    [[200.0, 30.0], [210.0, 35.0], [-220.0, 20.0], [230.0, 30.0]]
+                ]
+            };
+            const newGeom = normalizeGeometry(geometry);
+            expect(newGeom).toBeTruthy();
+            expect(newGeom).toNotEqual(geometry);
+            expect(newGeom).toEqual({
+                type: "Polygon",
+                coordinates: [ [ [ 170, 10 ], [ 168, 45 ], [ -164.00000000000003, 40 ], [ 161.99999999999997, 20 ], [ 160, 10 ] ], [ [ -160, 30 ], [ -150, 35 ], [ 139.99999999999997, 20 ], [ -130.00000000000003, 30 ] ] ]
+            });
+        });
+
+        it('Test geometryChanged normalization for MultiPoint ', () => {
+            const geometry = {
+                type: "MultiPoint",
+                coordinates: [
+                    [-210.0, 40.0], [-140.0, 30.0], [-220.0, 20.0], [-230.0, 10.0]
+                ]
+            };
+            const newGeom = normalizeGeometry(geometry);
+            expect(newGeom).toBeTruthy();
+            expect(newGeom).toNotEqual(geometry);
+            expect(newGeom).toEqual({
+                type: "MultiPoint",
+                coordinates: [ [ 150, 40 ], [ -140, 30 ], [ 139.99999999999997, 20 ], [ 130.00000000000003, 10 ] ]
+            });
+        });
+
+        it('Test geometryChanged normalization for MultiLineString ', () => {
+            const geometry = {
+                type: "MultiLineString",
+                coordinates: [
+                    [[-210.0, 10.0], [-220.0, 20.0], [-210.0, 40.0]],
+                    [[-189.0, 40.0], [-230.0, 30.0], [-240.0, 20.0], [230.0, 10.0]]
+                ]
+            };
+            const newGeom = normalizeGeometry(geometry);
+            expect(newGeom).toBeTruthy();
+            expect(newGeom).toNotEqual(geometry);
+            expect(newGeom).toEqual({
+                type: "MultiLineString",
+                coordinates: [ [ [ 150, 10 ], [ 139.99999999999997, 20 ], [ 150, 40 ] ],
+                    [ [ 171, 40 ], [ 130.00000000000003, 30 ], [ 120, 20 ], [ -130.00000000000003, 10 ] ] ]
+            });
+        });
+
+        it('Test geometryChanged normalization for MultiPolygon', () => {
+            const geometry = {
+                type: "MultiPolygon",
+                coordinates: [
+                    [
+                        [[230.0, 20.0], [545.0, 40.0], [-210.0, 40.0], [330.0, 20.0]]
+                    ],
+                    [
+                        [[-215.0, 5.0], [240.0, 10.0], [310.0, 20.0], [-205.0, 10.0], [215.0, 5.0]]
+                    ]
+                ]
+            };
+            const newGeom = normalizeGeometry(geometry);
+            expect(newGeom).toBeTruthy();
+            expect(newGeom).toNotEqual(geometry);
+            expect(newGeom).toEqual({
+                type: "MultiPolygon",
+                coordinates: [ [ [ [ -130.00000000000003, 20 ], [ -175.00000000000003, 40 ], [ 150, 40 ], [ -30, 20 ] ] ], [ [ [ 145, 5 ], [ -120, 10 ], [ -50, 20 ], [ 155, 10 ], [ -145, 5 ] ] ] ]
+            });
+        });
+    });
+
 });
