@@ -15,6 +15,7 @@ import TestUtils from 'react-dom/test-utils';
 
 import Login from '../Login';
 import OmniBar from '../OmniBar';
+import SidebarMenu from '../SidebarMenu';
 
 import { getPluginForTest } from './pluginsTestUtils';
 import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
@@ -25,6 +26,8 @@ import security from '../../reducers/security';
 import {loginSuccess, LOGOUT} from '../../actions/security';
 
 import { toggleControl, setControlProperty, SET_CONTROL_PROPERTY } from '../../actions/controls';
+
+import ConfigUtils from '../../utils/ConfigUtils';
 
 describe('Login Plugin', () => {
     const stateMocker = createStateMocker({ controls, security });
@@ -124,6 +127,75 @@ describe('Login Plugin', () => {
             expect(buttons[1]).toBeTruthy();
             // click on confirm button
             TestUtils.Simulate.click(buttons[1]);
+        });
+    });
+    describe('OmniBar menu entries', () => {
+        afterEach(() => {
+            ConfigUtils.setConfigProp("authenticationProviders", undefined);
+        });
+        it('default', () => {
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, storeState, { LoginPlugin: Login });
+            ReactDOM.render(<OmniBarPlugin items={[{ ...Login.LoginPlugin.OmniBar, plugin: Plugin.LoginPlugin}]} />, document.getElementById("container"));
+            expect(document.querySelector('#mapstore-navbar-container .glyphicon-user')).toBeTruthy();
+            const entries = document.querySelectorAll("#mapstore-navbar-container ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(3); // user.info, user.changePwd, user.logout
+        });
+        it('openID', () => {
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google"}]);
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, storeState, { LoginPlugin: Login });
+            ReactDOM.render(<OmniBarPlugin items={[{ ...Login.LoginPlugin.OmniBar, plugin: Plugin.LoginPlugin}]} />, document.getElementById("container"));
+            expect(document.querySelector('#mapstore-navbar-container .glyphicon-user')).toBeTruthy();
+            const entries = document.querySelectorAll("#mapstore-navbar-container ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(1); // only user.logout
+        });
+        it('openID with userInfo configured', () => {
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google", showAccountInfo: true}]);
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, storeState, { LoginPlugin: Login });
+            ReactDOM.render(<OmniBarPlugin items={[{ ...Login.LoginPlugin.OmniBar, plugin: Plugin.LoginPlugin}]} />, document.getElementById("container"));
+            expect(document.querySelector('#mapstore-navbar-container .glyphicon-user')).toBeTruthy();
+            const entries = document.querySelectorAll("#mapstore-navbar-container ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(2); // user.info and user.logout
+        });
+    });
+    describe('SidebarMenu menu entries', () => {
+        afterEach(() => {
+            ConfigUtils.setConfigProp("authenticationProviders", undefined);
+
+        });
+        it('default', () => {
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            const { Plugin: SidebarMenuPlugin } = getPluginForTest(SidebarMenu, storeState, { LoginPlugin: Login });
+            // is set in order to avoid a problem with extraItems of SidebarMenu and LoginMenu
+            ReactDOM.render(<div style={{position: "relative", height: 500}} ><SidebarMenuPlugin items={[{ ...Login.LoginPlugin.SidebarMenu, plugin: Plugin.LoginPlugin}]} /></div>, document.getElementById("container"));
+            const entries = document.querySelectorAll("#mapstore-sidebar-menu ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(3); // user.info, user.changePwd, user.logout
+        });
+        it('openID', () => {
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google"}]);
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            const { Plugin: SidebarMenuPlugin } = getPluginForTest(SidebarMenu, storeState, { LoginPlugin: Login });
+            // is set in order to avoid a problem with extraItems of SidebarMenu and LoginMenu
+            ReactDOM.render(<div style={{position: "relative", height: 500}} ><SidebarMenuPlugin items={[{ ...Login.LoginPlugin.SidebarMenu, plugin: Plugin.LoginPlugin}]} /></div>, document.getElementById("container"));
+            const entries = document.querySelectorAll("#mapstore-sidebar-menu ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(1); // only user.logout
+        });
+        it('openID with userInfo configured', () => {
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google", showAccountInfo: true}]);
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            const { Plugin: SidebarMenuPlugin } = getPluginForTest(SidebarMenu, storeState, { LoginPlugin: Login });
+            // is set in order to avoid a problem with extraItems of SidebarMenu and LoginMenu
+            ReactDOM.render(<div style={{position: "relative", height: 500}} ><SidebarMenuPlugin items={[{ ...Login.LoginPlugin.SidebarMenu, plugin: Plugin.LoginPlugin}]} /></div>, document.getElementById("container"));
+            const entries = document.querySelectorAll("#mapstore-sidebar-menu ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(2); // user.info and user.logout
         });
     });
 

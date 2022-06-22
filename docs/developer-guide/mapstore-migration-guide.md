@@ -20,9 +20,77 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2022.01.00 to 2022.02.00
+## Migration from 2022.01.02 to 2022.02.00
+
+### Support for OpenID
+
+MapStore introduced support for OpenID. In order to have this functionalities and to be aligned with the latest version of MapStore you have to update the following files in your projects:
+
+- `geostore-spring-security.xml` (your custom spring security context) have to be updated adding the beans and the `security:custom-filter` entry in the `<security:http>` entry, as here below:
+
+```diff
+        <security:csrf disabled="true"/>
+        <security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
+        <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
++        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+        <security:anonymous />
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
+    </security:authentication-manager>
++
++
++    <bean id="preauthenticatedAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
++    </bean>
++
++    <!-- OAuth2 beans -->
++    <context:annotation-config/>
++
++    <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
++
++    <!-- END OAuth2 beans-->
+</beans>
+
+```
+
+- `web.xml`: add the following content to the file:
+
+```diff
+@@ -34,6 +34,17 @@
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
++    <!-- Allow to use RequestContextHolder -->
++    <filter>
++        <filter-name>springRequestContextFilter</filter-name>
++        <filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
++    </filter>
++    <filter-mapping>
++        <filter-name>springRequestContextFilter</filter-name>
++        <url-pattern>/*</url-pattern>
++    </filter-mapping>
++
++
+    <!-- Spring Security Servlet -->
+    <filter>
+```
+
+- `applicationContext.xml` for consistency, we added `mapstore-ovr.properties` files to be searched in class-path and in the data-dir, as for the other properties files:
+
+```diff
+@@ -49,6 +49,7 @@
+         <property name="order" value="10"/>
+         <property name="locations">
+             <list>
++                 <value>classpath:mapstore-ovr.properties</value>
+                 <value>file:${datadir.location:}/geostore-datasource-ovr.properties</value>
+                 <value>file:${datadir.location:}/mapstore-ovr.properties</value>
+             </list>
+```
 
 ### Upgrading the printing engine
+
 The mapfish-print based printing engine has been upgraded to align to the latest official 2.1.5 in term of functionalities.
 
 An update to the MapStore printing engine context file (`applicationContext-print.xml`) is needed for all projects built with the printing profile enabled. The following sections should be added to the file:
@@ -47,8 +115,8 @@ An update to the MapStore printing engine context file (`applicationContext-prin
 
 Also, remember to update your project pom.xml with the updated dependency:
 
- - locate the print-lib dependency in the pom.xml file
- - replace the dependency with the following snippet
+- locate the print-lib dependency in the pom.xml file
+- replace the dependency with the following snippet
 
 ```xml
 <dependency>
@@ -92,9 +160,12 @@ formats:
 ```
 
 ### Replacing BurgerMenu with SidebarMenu
+
 There were several changes applied to the application layout, one of them is the Sidebar Menu that comes to replace Burger menu on map viewer and in contexts.
 Following actions need to be applied to make a switch:
+
 - Update localConfig.json and add "SidebarMenu" entry to the "desktop" section:
+
 ```json
 {
     "desktop": [
@@ -104,6 +175,7 @@ Following actions need to be applied to make a switch:
     ]
 }
 ```
+
 - Remove "BurgerMenu" entry from "desktop" section.
 
 #### Updating contexts to use Sidebar Menu
@@ -168,6 +240,7 @@ Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new 
 ```
 
 ### Updating extensions
+
 Please refer to the [extensions](../extensions/#managing-drawing-interactions-conflict-in-extension) documentation to know how to update your extensions.
 
 ### Using `terrain` layer type to define 3D map elevation profile

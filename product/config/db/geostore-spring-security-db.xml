@@ -25,6 +25,7 @@
         <security:csrf disabled="true"/>
 		<security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
 		<security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
+        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
 		<security:anonymous />
 	</security:http>
 
@@ -49,4 +50,15 @@
 	<security:authentication-manager>
 		<security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
 	</security:authentication-manager>
+
+
+    <bean id="preauthenticatedAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
+    </bean>
+
+    <!-- OAuth2 beans -->
+    <context:annotation-config/>
+
+    <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
+
+    <!-- END OAuth2 beans-->
 </beans>
