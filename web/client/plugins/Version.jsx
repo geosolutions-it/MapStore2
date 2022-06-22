@@ -12,7 +12,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import { versionSelector } from '../selectors/version';
-// import Message from '../components/I18N/Message';
+import Message from '../components/I18N/Message';
 import VersionDialog from '../components/Version/VersionDialog';
 // import Button from '../../client/components/misc/Button';
 
@@ -34,8 +34,10 @@ const onShow = (value) => {
 
 const Version = connect((state) => ({
     version: versionSelector(state),
-    onClose: toggleControl.bind(null, 'version', null),
-    show
+    closeModal: onShow,
+    show,
+    onClose: toggleControl.bind(null, 'version', null)
+
 }
 ))(
     VersionDialog
@@ -45,14 +47,24 @@ export default {
     VersionPlugin: assign(Version, {
         SidebarMenu: {
             name: 'version',
-            position: 7,
+            position: 2,
             priority: 1,
             doNotHide: true,
             tooltip: "version.label",
-            text: "",
-            icon: <Glyphicon glyph="share-alt" onClick={() => onShow(true)} />,
+            text: <Message msgId="version.label"/>,
+            icon: <Glyphicon glyph="info-sign" onClick={() => onShow(true)} />,
             action: toggleControl.bind(null, 'version', null),
             toggle: true
+        },
+        BurgerMenu: {
+            name: 'version',
+            position: 1000,
+            priority: 2,
+            doNotHide: true,
+            text: <Message msgId="version.label"/>,
+            tooltip: "version.label",
+            icon: <Glyphicon glyph="info-sign" onClick={() => onShow(true)}/>,
+            action: toggleControl.bind(null, 'version', null)
         }
     }),
     reducers: {
