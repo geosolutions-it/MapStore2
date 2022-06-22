@@ -66,5 +66,4 @@
     <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
 
     <!-- END OAuth2 beans-->
-
 </beans>

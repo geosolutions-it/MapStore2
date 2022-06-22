@@ -24,6 +24,20 @@ import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
   * It renders a menu in {@link #plugins.OmniBar|OmniBar} plugin.
+  * If `localConfig.json` `authenticationProviders` property in the root contains only one value, the login will use that provider by default.
+  * `authenticationProviders` members are object with
+  * - `type` (`<openID|basic>`): indicates the type of authentication to use.
+  * - `provider` (`<geostore|google|...>`). In case of `type=openID`, the provider indicates the path to query in GeoStore.
+  * - `url` optional URL to redirect in case of `openID`. By default it will use the standard convention to `rest/geostore/{provider}/login`.
+  * - `imageURL` optional URL for the image to use in the link of the login form. (certain pre-defined services like `google` may have their own default logo)
+  * - `title` a text to show in the link to the login page of the provider, if logo is present, this text is used as `alt` text in for the image.
+  * Example of configuration.
+  * ```json
+  * {
+  *  "authenticationProviders": [{"type": "openID", "provider": "google"}, {"type": "basic", "provider": "geostore"}]
+  * }
+  * ```
+  * By default, if not set, it will use classic `{"type": "basic", "provider": "geostore"}` setup for GeoStore.
   * @class Login
   * @memberof plugins
   * @static
