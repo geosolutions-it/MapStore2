@@ -7,6 +7,14 @@ MapStore allows to integrate and login using some common [OpenID connect](https:
 
 For details about the configuration for a specific service, please refer to the specific section below. For details about `authenticationProviders` optional values (e.g. to customize icon and/or text to show), refer to the documentation of the LoginPlugin.
 
+By default `authenticationProviders` is `{"type": "basic", "provider": "geostore"}`, that represents the standard login on mapstore with username and password. With the default configuration, when the user try to login MapStore will show the classical login form.
+
+Tou can add other providers to the list (e.g. `openid`) and they will be added as options to the login window.
+You can remove the `geostore` entry from `authenticationProviders` list to remove the login form from the possible login systems.
+
+!!! note
+    If only one openID entry is present in `authenticationProviders` (and no `geostore` entry), clicking on login in the login menu will not show any intermediate window and you will be redirected directly to the only openID provider configured. If more than one entry is present in `authenticationProviders` list, the user will have to choose which one is ok.
+
 ## Supported OpenID services
 
 MapStore allows to integrate with the following OpenID providers.
@@ -18,7 +26,6 @@ For each of service you want to add you have to:
 
 - properly configure the backend
 - modify `localConfig.json` adding a proper entry to the `authenticationProviders`.
-By default, if `authenticationProviders` is not set, it will use classic `{"type": "basic", "provider": "geostore"}`, that represents the standard login on mapstore with username and password.
 
 !!! note
     For the moment we can configure only one authentication per service.
