@@ -1194,6 +1194,8 @@
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
+            "signInWith": "Accedi con",
+            "orSignInWith": "O accedi con",
             "loginFail":"Login Fallito",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Per favore, Inserisci username e password",
