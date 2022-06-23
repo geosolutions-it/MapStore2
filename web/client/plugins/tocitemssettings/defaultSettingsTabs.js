@@ -45,9 +45,14 @@ const responses = {
 import { StyleSelector } from '../styleeditor/index';
 
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
+
 const ConnectedDisplay = connect(
     createSelector([mapSelector], ({ zoom, projection }) => ({ zoom, projection }))
 )(Display);
+
+const ConnectedVectorStyleEditor = connect(
+    createSelector([isCesium], ({ enable3dStyleOptions }) => ({ enable3dStyleOptions }))
+)(VectorStyleEditor);
 
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
 const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "3dtiles" || element.type === "vector" && element.id !== "annotations";
@@ -151,12 +156,7 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
 
     if (isVectorStylableLayer({element})) {
-        const ConnectedVectorStyleEditor = connect(
-            createSelector([isCesium], ({ enable3dStyleOptions }) => ({ enable3dStyleOptions }))
-        )(VectorStyleEditor);
-        return {
-            Component: ConnectedVectorStyleEditor
-        };
+        return { Component: ConnectedVectorStyleEditor };
     }
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =
