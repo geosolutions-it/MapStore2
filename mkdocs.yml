@@ -138,7 +138,7 @@ nav:
       - users:
         - GeoServer: 'developer-guide/integrations/users/geoserver.md'
         - LDAP: 'developer-guide/integrations/users/ldap.md'
-        - OpenId Connect/Oauth2: 'developer-guide/integrations/users/openId.md'
+        - OpenId Connect: 'developer-guide/integrations/users/openId.md'
     - Projects:
       - MapStore Projects: 'developer-guide/mapstore-projects.md'
       - Project Creation Script: 'developer-guide/project-creation-script.md'

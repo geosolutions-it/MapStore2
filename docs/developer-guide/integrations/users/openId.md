@@ -34,7 +34,19 @@ For each of service you want to add you have to:
 
 #### Create Oauth 2.0 credentials on Google Console
 
-In order to setup the openID connection you have to setup a project in Google API Console to obtain Oauth 2.0 credentials and configure them. Please follow the [Google documentation](https://developers.google.com/identity/protocols/oauth2/openid-connect) for this.
+In order to setup the openID connection you have to setup a project in Google API Console to obtain Oauth 2.0 credentials and configure them.
+
+- Open Google developer console and, from credentials section, create a new credential of type **Oauth client ID**
+
+<img src="../img/google-create-credentials.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+- Set the **Application Type** to **Web Application**, name it as you prefer and configure the root of the application as an authorized redirect URI. Then click on **Create**
+
+<img src="../img/google-create-oauth2.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+- After creation you will obtain **ClientID** and **Client Secret** to use to configure MapStore.
+
+Please follow the [Google documentation](https://developers.google.com/identity/protocols/oauth2/openid-connect) for any detail or additional configuration.
 
 #### Configure MapStore back-end for Google OpenID
 
@@ -88,32 +100,48 @@ googleOAuth2Config.discoveryUrl=https://accounts.google.com/.well-known/openid-c
 [Keycloak](https://www.keycloak.org/) is an open source identity and access management application widely used. MapStore has the ability to integrate with keycloak:
 
 - Using the standard OpenID protocol
-- Supporting  (not yet implemented)
+- Supporting SSO (not yet implemented)
 - Integrating with users and roles, as well as for ldap. (not yet implemented)
 
 In this section you can see how to configure keycloak as a standard OpenID provider
 
 #### Configure keycloak Client
 
-Configure a client in your keycloak instance with the following settings:
+Create a new Client on keycloak. In this guide we will name it `mapstore-server` (because if you need to configure SSO, we may need another key to call `mapstore-client`)
+
+<img src="../img/kc-create-client.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/kc-create-mapstore-server.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+- Configure it as `Confidential` setting the Redirect-URL with your MapStore base root, with a `*` at the end (e.g. `https://my.mapstore.site.com/mapstore/*`)
+
+<img src="../img/kc-configure-mapstore-server.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+- Click on Save button, then open the *Installation* tab, select the `Keycloak OIDC JSON` format, and copy the JSON displayed below.
+
+<img src="../img/kc-copy-config-server.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
 ### Configure MapStore back-end for Keycloak OpenID
 
-- create/edit `mapstore-ovr.properties` file (in data-dir or class path) to configure the google provider this way:
+- create/edit `mapstore-ovr.properties` file (in data-dir or class path) to configure the keycloak provider this way:
+  - `keycloakOAuth2Config.jsonConfig`: insert the JSON copied, removing all the spaces
+  - `keycloakOAuth2Config.redirectUri`: need to be configured to point to your application at the path `<base-app-url>/rest/geostore/openid/keycloak/callback`, e.g. `https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback`
+  - `keycloakOAuth2Config.internalRedirectUri` can be set to your application root, e.g. `https://my.mapstore.site.com/mapstore/`
+  - `keycloakOAuth2Config.autoCreateUser`: true if you want to create user on DB on login (if you are not using any other user integration e.g. `ldap`, `keycloak`)
 
 ```properties
-# enables the google OpenID Connect filter for keycloak
+# enables the keycloak OpenID Connect filter
 keycloakOAuth2Config.enabled=false
 
 # Configuration
-keycloakOAuth2Config.jsonConfig=<copy-here-the-json-config-from-keycloak>
+keycloakOAuth2Config.jsonConfig=<copy-here-the-json-config-from-keycloak-removing-all-the-spaces>
 
 
 # Redirect URLs
 # - Redirect URL: need to be configured to point to your application at the path <base-app-url>/rest/geostore/openid/keycloak/callback
-keycloakOAuth2Config.redirectUri=http://localhost:9191/mapstore/rest/geostore/openid/keycloak/callback
+# e.g. `https://my.mapstore.site.com/mapstore/mapstore/rest/geostore/openid/keycloak/callback`
+keycloakOAuth2Config.redirectUri=https://localhost:9191/mapstore/rest/geostore/openid/keycloak/callback
 # - Internal redirect URL when logged in (typically the home page of MapStore, can be relative)
-keycloakOAuth2Config.internalRedirectUri=../../../
+keycloakOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
 
 # Create user (if you are using local database, this should be set to true)
 keycloakOAuth2Config.autoCreateUser=true
