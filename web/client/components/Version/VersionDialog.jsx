@@ -8,26 +8,27 @@ import PropTypes from 'prop-types';
 class  VersionDialog extends React.Component {
 
     static propTypes = {
-        visible: PropTypes.bool,
-        toggleControl: PropTypes.func,
         closeGlyph: PropTypes.string,
         show: PropTypes.bool,
-        closeModal: PropTypes.func,
+        onClose: PropTypes.func,
         version: PropTypes.string
     }
     static defaultProps = {
-        visible: false,
         toggleControl: () => {},
-        closeGlyph: "1-close"
+        closeGlyph: "1-close",
+        onClose: () => {}
+    };
+    onClose = () => {
+        this.props.onClose(false);
     };
     render() {
         const githubUrl = "https://github.com/geosolutions-it/MapStore/tree/" + __COMMITHASH__;
         return (
-            <div key={this.props.show} style={{ background: 'gba(0, 0, 0, 0.5)'}}>
-                {this.props.show  && <Dialog id="mapstore-about" style={{position: 'absolute', top: '90px'}}>
+            <div  style={{ background: 'gba(0, 0, 0, 0.5)'}}>
+                {this.props.show && <Dialog id="mapstore-about" style={{position: 'absolute', top: '90px'}}>
                     <div key="header" role="header">
                         <Message key="title" msgId="version.label"/>
-                        <button key="close" onClick={this.props.toggleControl} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+                        <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
                     </div>
                     <div key="body" role="body">
                         <ul style={{listStyleType: 'none'}}>

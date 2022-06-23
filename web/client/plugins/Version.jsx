@@ -12,6 +12,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
 import { versionSelector } from '../selectors/version';
+import { infoSelector } from '../selectors/controls';
 import Message from '../components/I18N/Message';
 import VersionDialog from '../components/Version/VersionDialog';
 // import Button from '../../client/components/misc/Button';
@@ -27,44 +28,36 @@ import { toggleControl } from '../actions/controls';
   * @static
   *
   */
-let show = false;
-const onShow = (value) => {
-    show = value;
-};
-
 const Version = connect((state) => ({
     version: versionSelector(state),
-    closeModal: onShow,
-    show,
-    onClose: toggleControl.bind(null, 'version', null)
-
+    show: infoSelector(state)
 }
-))(
+), {onClose: toggleControl.bind(null, 'info', null)})(
     VersionDialog
 );
 
 export default {
     VersionPlugin: assign(Version, {
         SidebarMenu: {
-            name: 'version',
+            name: 'info',
             position: 2,
             priority: 1,
             doNotHide: true,
             tooltip: "version.label",
             text: <Message msgId="version.label"/>,
-            icon: <Glyphicon glyph="info-sign" onClick={() => onShow(true)} />,
-            action: toggleControl.bind(null, 'version', null),
+            icon: <Glyphicon glyph="info-sign"/>,
+            action: toggleControl.bind(null, 'info', null),
             toggle: true
         },
         BurgerMenu: {
-            name: 'version',
+            name: 'info',
             position: 1000,
             priority: 2,
             doNotHide: true,
             text: <Message msgId="version.label"/>,
             tooltip: "version.label",
-            icon: <Glyphicon glyph="info-sign" onClick={() => onShow(true)}/>,
-            action: toggleControl.bind(null, 'version', null)
+            icon: <Glyphicon glyph="info-sign" />,
+            action: toggleControl.bind(null, 'info', null)
         }
     }),
     reducers: {
