@@ -216,6 +216,9 @@ http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA
 
 **Stable View**    
 http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/
+
+**Releaser**
+http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Release/job/MapStore2-Stable-Releaser/    
     
 **Build**
 http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/
