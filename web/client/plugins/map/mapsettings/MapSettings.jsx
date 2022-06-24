@@ -37,9 +37,9 @@ const Component = ({
 }) => {
 
     const mapOptions = {
-        ...ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[mapType] || {},
-        ...map?.mapOptions,
-        ...defaultMapOptions && defaultMapOptions[mapType] || {}
+        ...(defaultMapOptions && defaultMapOptions[mapType]
+            || ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[mapType] || {}),
+        ...map?.mapOptions
     };
 
     const handleConfigUpdate = (options, key) => {
