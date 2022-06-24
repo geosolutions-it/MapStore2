@@ -95,7 +95,7 @@ class  VersionDialog extends React.Component {
 
                             </li>
                             <li style={{marginTop: '22px', marginLeft: '86px'}}>
-                                <span><a href={githubUrl} target="_blank" ><Button> Open github tree in a new tab </Button></a></span>
+                                <span><a href={githubUrl} target="_blank" ><Button className="btn"> Open github tree in a new tab </Button></a></span>
                             </li>
                         </ul>
                     </div>
