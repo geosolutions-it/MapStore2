@@ -32,7 +32,7 @@ MapStore introduced support for OpenID for google and keycloak. In order to have
         <security:csrf disabled="true"/>
         <security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-+        <security:custom-filter ref="keycloakFilter" after="BASIC_AUTH_FILTER"/>
++        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
 +        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
         <security:anonymous />
     </security:http>
