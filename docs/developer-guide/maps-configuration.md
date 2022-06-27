@@ -887,7 +887,7 @@ The `symbolizer` could be of following `kinds`:
   - `size` size of the icon
   - `opacity` opacity of the icon
   - `rotate` rotation of the icon
-  - `bringToFront` this boolean will allow setting the `disableDepthTestDistance` value for the feature. This would only apply on Cesium maps.
+  - `msBringToFront` this boolean will allow setting the `disableDepthTestDistance` value for the feature. This would only apply on Cesium maps.
 
 - `Line` symbolizer properties
   - `kind` must be equal to `Line`
