@@ -177,7 +177,7 @@ describe('CesiumStyleParser', () => {
                                 strokeWidth: 3,
                                 radius: 16,
                                 rotate: 90,
-                                bringToFront: true
+                                msBringToFront: true
                             }
                         ]
                     }
