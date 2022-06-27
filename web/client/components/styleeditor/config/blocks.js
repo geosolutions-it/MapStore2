@@ -13,7 +13,7 @@ import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const billboard3dStyleOptions = {
-    bringToFront: property.bringToFront({
+    msBringToFront: property.msBringToFront({
         label: 'Bring to front'
     })
 };
