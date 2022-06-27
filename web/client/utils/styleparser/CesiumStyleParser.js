@@ -135,7 +135,7 @@ function getStyleFuncFromRules({
                                     image,
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
-                                    disableDepthTestDistance: symbolizer.bringToFront ? Number.POSITIVE_INFINITY : 0,
+                                    disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: symbolizer.opacity * globalOpacity
