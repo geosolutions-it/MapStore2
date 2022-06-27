@@ -276,7 +276,7 @@ const property = {
             };
         }
     }),
-    bringToFront: ({ key = 'bringToFront', label = 'Arrange' }) => ({
+    msBringToFront: ({ key = 'msBringToFront', label = 'Arrange' }) => ({
         type: 'toolbar',
         label,
         config: {
