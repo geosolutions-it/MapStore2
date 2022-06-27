@@ -22,7 +22,7 @@ import { hasMapAccessLoadingError } from '../selectors/mapInitialConfig';
 import { initCatalog } from '../actions/catalog';
 import { setControlProperty, SET_CONTROL_PROPERTY } from '../actions/controls';
 import { pathnameSelector } from '../selectors/router';
-import { isLoggedIn } from '../selectors/security';
+import { isLoggedIn, authProviderSelector } from '../selectors/security';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCookieValue, eraseCookie} from '../utils/CookieUtils';
 import AuthenticationAPI from '../api/GeoStoreDAO';
@@ -30,6 +30,7 @@ import Rx from 'rxjs';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import url from 'url';
 import { get } from 'lodash';
+import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
 
 /**
  * Refresh the access_token every 5 minutes
@@ -140,12 +141,96 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
     });
 };
 
+const dynamicImportScript = (scriptURL) => {
+    return new Promise((resolve, reject) => {
+        var script = document.createElement('script');
+        script.onload = function() {
+            resolve(window.Keycloak);
+        };
+        script.onerror = function(e) {
+            reject(new Error(`Error loading script at URL ${scriptURL}`, {cause: e}));
+        };
+        script.src = scriptURL;
+
+        document.head.appendChild(script);
+    });
+};
+
+const monitorKeycloak = (Keycloak) => (ssoProvider, store) => {
+    const {sso} = ssoProvider;
+    const keycloak = new Keycloak({
+        ...sso.config,
+        // the JS API requires `clientId` and `url` while JSON contains `resource`
+        url: sso?.config?.["auth-server-url"],
+        clientId: sso?.config?.resource
+    });
+    const subject = new Rx.Subject();
+    keycloak.init({
+        onLoad: 'check-sso',
+        adapter: {
+            login() {
+                // check if is not logged in or if is logging in via openid
+                if (!isLoggedIn(store.getState()) && !getCookieValue('access_token') ) {
+                    // subject.next(openIDLogin(ssoProvider));
+                }
+                return new Promise(res => res());
+            },
+            logout() {
+                // logout only if you are logged in
+                if (isLoggedIn(store.getState() && authProviderSelector(store.getState) === ssoProvider.provider)) {
+                    subject.next(logout());
+                }
+                return new Promise(res => res());
+            }
+        }
+    });
+    /*
+    keycloak.onAuthSuccess = () => {
+        // subject.next(tokenLogin({accessToken: keycloak.token, refreshToken: keycloak.refreshToken, authProvider: provider}));
+
+    };
+    */
+    keycloak.onAuthLogout = () => {
+        subject.next(logout());
+    };
+
+    return subject.asObservable();
+};
+
+// returns a stream that emits actions for login/logout monitoring the given SSO.
+function monitorSSO(ssoProvider, store) {
+    const {sso} = ssoProvider;
+    // only keycloak implementation is supported
+    if (sso.type !== "keycloak") {
+        return Rx.empty();
+    }
+    return Rx.Observable.defer(
+        () => dynamicImportScript(/* webpackIgnore: true */ sso.jsURL ?? sso.config["auth-server-url"] ? `${sso.config["auth-server-url"]}js/keycloak.js`  :  "/js/keycloak.js"))
+        .catch(e => {
+            console.error("Cannot load keycloak JS API for Single sign on support", e);
+            return Rx.Observable.empty(); // TODO: notification
+        }).switchMap(Keycloak => monitorKeycloak(Keycloak)(ssoProvider, store));
+}
+
+export const checkSSO = ( action$, store ) => {
+    return action$.ofType(LOCAL_CONFIG_LOADED).take(1).switchMap(() => {
+        const providers = ConfigUtils.getConfigProp("authenticationProviders");
+        // get the first SSO system configured (only one supported)
+        const ssoProvider = (providers ?? []).filter(({sso: s}) => s)?.[0] ?? {};
+        if (ssoProvider) {
+            return monitorSSO(ssoProvider, store);
+        }
+        return Rx.Observable.empty();
+    });
+};
+
 /**
  * Epics for login functionality
  * @name epics.login
  * @type {Object}
  */
 export default {
+    checkSSO,
     refreshTokenEpic,
     reloadMapConfig,
     promptLoginOnMapError,
