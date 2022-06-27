@@ -1201,6 +1201,8 @@
             "passwordChanged": "Password changed",
             "passwordError": "Error changing password",
             "signIn":"Sign-in",
+            "signInWith": "Sign in with",
+            "orSignInWith": "Or sign in with",
             "loginFail":"Login Fail",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Please insert username and password",

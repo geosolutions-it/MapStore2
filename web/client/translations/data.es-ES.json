@@ -1201,6 +1201,8 @@
             "passwordChanged": "Clave actualizada",
             "passwordError": "Error en el cambio de clave",
             "signIn":"Login",
+            "signInWith": "Iniciar sesión con",
+            "orSignInWith": "O iniciar sesión con",
             "loginFail":"Error de autenticación",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Por favor, introduzca su clave y contraseña",
