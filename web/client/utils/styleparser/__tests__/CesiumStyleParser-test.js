@@ -232,7 +232,7 @@ describe('CesiumStyleParser', () => {
                                 opacity: 0.5,
                                 size: 32,
                                 rotate: 90,
-                                bringToFront: true
+                                msBringToFront: true
                             }
                         ]
                     }
