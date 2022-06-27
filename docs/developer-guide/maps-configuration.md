@@ -878,7 +878,7 @@ The `symbolizer` could be of following `kinds`:
   - `strokeOpacity` stroke opacity of the mark
   - `strokeWidth` stroke width of the mark
   - `radius` radius size in px of the mark
-  - `bringToFront` this boolean will allow setting the `disableDepthTestDistance` value for the feature. This would only apply on Cesium maps.
+  - `msBringToFront` this boolean will allow setting the `disableDepthTestDistance` value for the feature. This would only apply on Cesium maps.
   - `wellKnownName` rendered shape, one of Circle, Square, Triangle, Star, Cross, X, shape://vertline, shape://horline, shape://slash, shape://backslash, shape://dot, shape://plus, shape://times, shape://oarrow or shape://carrow
 
 - `Icon` symbolizer properties
