@@ -460,6 +460,13 @@
             "renderingErrorTitle": "Renderfehler",
             "renderingErrorMessage": "<p>Das Rendern der Karte wurde gestoppt und dies kann verschiedene Gründe haben: </p><ul><li>Der angewendete Stil enthält einige Regeln oder Variablen, die von den Funktionen nicht unterstützt werden</li>< li>Die Ebene ist nicht richtig konfiguriert</li></ul><p>Sie können Änderungen am Ebenenstil vornehmen und dann auf die Schaltfläche 'Karte neu laden' klicken. <br/> Weitere Informationen finden Sie in der folgenden Meldung:< /p>",
             "reloadMap": "Karte neu laden",
+            "settings": {
+              "title": "Karteneinstellungen",
+              "skyAtmosphere": "Himmelsatmosphäre zeigen",
+              "groundAtmosphere": "Atmosphäre auf dem Gelände anzeigen",
+              "fog": "Nebel anzeigen",
+              "depthTest": "Tiefentest gegen Gelände aktivieren"
+            },
             "thumbnailError": {
                 "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
                 "error404": "Es gab einen Fehler während der Erstellung der Miniaturansicht",

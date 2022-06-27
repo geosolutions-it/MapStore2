@@ -422,6 +422,13 @@
             "renderingErrorTitle": "Error de procesamiento",
             "renderingErrorMessage": "<p>La representación del mapa se detuvo y esto podría deberse a diferentes razones: </p><ul><li>El estilo aplicado contiene algunas reglas o variables que no son compatibles con las características</li>< li>La capa no está configurada correctamente</li></ul><p>Puede aplicar cambios al estilo de la capa y luego hacer clic en el botón 'Recargar mapa'. <br/> Consulte el mensaje a continuación para obtener información adicional:< /p>",
             "reloadMap": "Recargar mapa",
+            "settings": {
+              "title": "Configuración del mapa",
+              "skyAtmosphere": "Mostrar la atmósfera del cielo",
+              "groundAtmosphere": "Mostrar la atmósfera de la superficie",
+              "fog": "Mostrar niebla",
+              "depthTest": "Activar depthTest contra el terreno"
+            },
             "thumbnailError": {
                 "error403": "Error al modificar la miniatura",
                 "error404": "Error al crear la miniatura",

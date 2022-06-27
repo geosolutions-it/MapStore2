@@ -50,7 +50,9 @@ import {
     mapPluginLoad,
     MAP_PLUGIN_LOAD,
     orientateMap,
-    ORIENTATION
+    ORIENTATION,
+    updateMapOptions,
+    UPDATE_MAP_OPTIONS
 } from '../map';
 
 
@@ -248,5 +250,12 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toEqual(ORIENTATION);
         expect(retval.orientation).toEqual(orientation);
+    });
+    it('Update config map action', () => {
+        const configUpdate = { skyAtmosphere: false };
+        const retval = updateMapOptions(configUpdate);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(UPDATE_MAP_OPTIONS);
+        expect(retval.configUpdate).toEqual(configUpdate);
     });
 });
