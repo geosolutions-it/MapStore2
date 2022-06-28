@@ -130,6 +130,7 @@ export default (state = {
         const endValuesSupport = state?.settings?.endValuesSupport;
         const snapRadioButtonEnabled = state?.settings?.snapRadioButtonEnabled;
         return set(`settings`, {
+            ...state.settings,
             showHiddenLayers: action.showHiddenLayers,
             expandLimit: action.expandLimit,
             snapType: action.snapType,
