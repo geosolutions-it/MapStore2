@@ -7,29 +7,21 @@
 */
 
 import * as Rx from 'rxjs';
-import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, includes, toNumber, isEmpty, isObject, isUndefined, inRange, every, has, partial} from 'lodash';
+import {LOCATION_CHANGE} from 'connected-react-router';
+import {every, get, has, head, isEmpty, isUndefined, partial} from 'lodash';
 
-import {zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView, CHANGE_MAP_VIEW, orientateMap, INIT_MAP} from '../actions/map';
-import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
-import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch, hideMarker } from '../actions/search';
-import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
-import { warning } from '../actions/notifications';
+import {CHANGE_MAP_VIEW, CLICK_ON_MAP, INIT_MAP, orientateMap} from '../actions/map';
+import {addMarker, hideMarker, resetSearch} from '../actions/search';
+import {setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 
-import {getLonLatFromPoint, isValidExtent} from '../utils/CoordinatesUtils';
-import { getConfigProp, getCenter } from '../utils/ConfigUtils';
-import {featureInfoClick, hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
-import {
-    getBbox
-} from "../utils/MapUtils";
+import {getLonLatFromPoint} from '../utils/CoordinatesUtils';
+import {hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
 import {mapSelector} from '../selectors/map';
-import { clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector } from '../selectors/mapInfo';
-import { shareSelector } from "../selectors/controls";
+import {clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector} from '../selectors/mapInfo';
+import {shareSelector} from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
-import { changeMapType } from '../actions/maptype';
-import {getCesiumViewerOptions, getParametersValues, getQueryActions} from "../utils/QueryParamsUtils";
-import {mapProjectionSelector} from "../utils/PrintUtils";
-import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
+import {changeMapType} from '../actions/maptype';
+import {getCesiumViewerOptions, getParametersValues, getQueryActions, paramActions} from "../utils/QueryParamsUtils";
 
 /**
  * Semaphore function to skip epic processing under specific conditions
@@ -45,103 +37,6 @@ const semaphore = (sem$, start = true, condition = c=>c) =>
         )
             .filter(([, s]) => condition(s))
             .map(([e]) => e);
-
-/*
-it maps params key to function.
-functions must return an array of actions or and empty array
-*/
-export const paramActions = {
-    bbox: (parameters) => {
-        const extent = parameters.bbox.split(',')
-            .map(val => parseFloat(val))
-            .filter((val, idx) => idx % 2 === 0
-                ? val > -180.5 && val < 180.5
-                : val >= -90 && val <= 90)
-            .filter(val => !isNaN(val));
-        if (extent && extent.length === 4 && isValidExtent(extent)) {
-            return [
-                zoomToExtent(extent, 'EPSG:4326', undefined,  {nearest: true})
-            ];
-        }
-        return [
-            warning({
-                title: "share.wrongBboxParamTitle",
-                message: "share.wrongBboxParamMessage",
-                position: "tc"
-            })
-        ];
-    },
-    center: (parameters, state) => {
-        const map = mapSelector(state);
-        const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
-        const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
-        const zoom = toNumber(parameters.zoom);
-        const bbox =  getBbox(center, zoom);
-        const mapSize = map && map.size;
-        const projection = map && map.projection;
-        const viewerOptions = getCesiumViewerOptions(parameters, map);
-        const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
-        if (isValid) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
-        }
-        return [
-            warning({
-                title: "share.wrongCenterAndZoomParamTitle",
-                message: "share.wrongCenterAndZoomParamMessage",
-                position: "tc"
-            })
-        ];
-    },
-    marker: (parameters, state) => {
-        const map = mapSelector(state);
-        const marker = !isEmpty(parameters.marker) && parameters.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
-        const center = marker && marker.length === 2 && marker.indexOf(false) === -1 && getCenter(marker);
-        const zoom = toNumber(parameters.zoom);
-        const bbox =  getBbox(center, zoom);
-        const lng = marker && marker[0];
-        const lat = marker && marker[1];
-        const mapSize = map && map.size;
-        const projection = map && map.projection;
-        const isValid = center && marker && isObject(marker) && (inRange(lat, -90, 91) && inRange(lng, -180, 181)) && inRange(zoom, 1, 36);
-
-        if (isValid) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection),
-                addMarker({lat, lng})
-            ];
-        }
-        return [
-            warning({
-                title: "share.wrongMarkerAndZoomParamTitle",
-                message: "share.wrongMarkerAndZoomParamMessage",
-                position: "tc"
-            })
-        ];
-    },
-    featureinfo: (parameters, state) => {
-        const value = parameters.featureinfo;
-        const { lat, lng, filterNameList } = value;
-        if (typeof lat !== 'undefined' && typeof lng !== 'undefined') {
-            const projection = mapProjectionSelector(state);
-            return [featureInfoClick(updatePointWithGeometricFilter({latlng: {lat, lng}}, projection), false, filterNameList ?? [])];
-        }
-        return [];
-    },
-    zoom: () => {},
-    heading: () => {},
-    pitch: () => {},
-    roll: () => {}, // roll is currently not supported, we return standard 0 roll
-    actions: (parameters) => {
-        const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
-            SEARCH_LAYER_WITH_FILTER,
-            ZOOM_TO_EXTENT,
-            ADD_LAYERS_FROM_CATALOGS
-        ]);
-        if (parameters.actions) {
-            return parameters.actions.filter(a => includes(whiteList, a.type));
-        }
-        return [];
-    }
-};
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
