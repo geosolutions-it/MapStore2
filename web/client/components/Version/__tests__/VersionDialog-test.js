@@ -32,18 +32,22 @@ describe("The VersionDialog component", () => {
 
     it('is created with defaults', () => {
         const cmp = ReactDOM.render(<VersionDialog/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('should be visible', () => {
         const versionDialog = ReactDOM.render(<VersionDialog onClose={()=>{}} show version={'version'} />, document.getElementById("container"));
-        expect(versionDialog).toExist();
+        expect(versionDialog).toBeTruthy();
         const versionDialogDOM = ReactDOM.findDOMNode(versionDialog);
-        expect(versionDialogDOM).toExist();
+        expect(versionDialogDOM).toBeTruthy();
         const innerModalDom = versionDialogDOM.children[0];
-        expect(innerModalDom).toExist();
+        expect(innerModalDom).toBeTruthy();
         const innerModalDomBody = innerModalDom.children[0];
-        expect(innerModalDomBody).toExist();
+        expect(innerModalDomBody).toBeTruthy();
+        const infoclass = versionDialogDOM.querySelectorAll('version-info, info-label');
+        expect(infoclass).toBeTruthy();
+        const versionClass = versionDialogDOM.querySelector('.application-version-label');
+        expect(versionClass).toBeTruthy();
     });
 
     it('test close button', () => {
@@ -52,21 +56,25 @@ describe("The VersionDialog component", () => {
         };
         let spy = expect.spyOn(handlers, "onClose");
         const vd = ReactDOM.render(<VersionDialog onClose={handlers.onClose} show version={'version'} />, document.getElementById("container"));
-        expect(vd).toExist();
+        expect(vd).toBeTruthy();
         const dom = ReactDOM.findDOMNode(vd);
         const closeBtn = dom.getElementsByClassName('close')[0];
-        expect(closeBtn).toExist();
+        expect(closeBtn).toBeTruthy();
         ReactTestUtils.Simulate.click(closeBtn);
         expect(spy.calls.length).toBe(1);
     });
     it('test the modal output', () => {
-        const vd = ReactDOM.render(<VersionDialog onClose={()=>{}} show version={'version'} />, document.getElementById("container"));
-        expect(vd).toExist();
-        expect('#7934 refactor code and resolve eslint error').toBeTruthy();
-        expect('01046133761de880aebce08a7bf11dd858117837').toBeTruthy();
-        expect('Thu, 23 Jun 2022 20').toBeTruthy();
-        expect('sam rubarema').toBeTruthy();
-        expect(':${mapstore2.version}').toBeTruthy();
+        const version = '$MapStore2';
+        const vd = ReactDOM.render(<VersionDialog onClose={()=>{}} show version={version} />, document.getElementById("container"));
+        expect(vd).toBeTruthy();
+        const versionclass = document.querySelector(".version-info");
+        expect(versionclass.textContent).toBe('version.label:$MapStore2');
+        const commit = document.querySelector('#commit');
+        expect(commit.textContent.trim()).toBe('01046133761de880aebce08a7bf11dd858117837');
+        const date = document.querySelector('#date');
+        expect(date.textContent.trim()).toBe('Thu, 23 Jun 2022 20');
+        const author = document.querySelector('#author');
+        expect(author.textContent.trim()).toBe('sam rubarema');
 
     });
 

@@ -12,7 +12,7 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../I18N/Message';
 import Button from '../misc/Button';
 import PropTypes from 'prop-types';
-import './Version.css';
+import '../../themes/default/less/version.less';
 
 class  VersionDialog extends React.Component {
 
@@ -41,21 +41,23 @@ class  VersionDialog extends React.Component {
 
         return (
             <div  style={{ background: 'gba(0, 0, 0, 0.5)'}}>
-                {this.props.show && <Dialog id="mapstore-about" style={{position: 'absolute', top: '90px'}}>
+                {this.props.show && <Dialog id="mapstore-about" style={{position: 'absolute', top: '90px'}} draggable={false} modal>
                     <div key="header" role="header">
                         <Message key="title" msgId="version.label"/>
                         <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
                     </div>
-                    <div key="body" role="body">
+                    <div key="body" role="body" className="version-panel">
                         <ul style={{listStyleType: 'none'}}>
                             <li>
-                                <span className="version-info"><span className="application-version-label"><Message msgId="version.label"/></span>:{this.props.version}</span>
+                                <span className="version-info">
+                                    <span className="application-version-label"><Message msgId="version.label"/>
+                                    </span>:{this.props.version}
+                                </span>
                             </li>
                             <li>
                                 <div className="version-info">
                                     <div className="info-label">
-                                        Message
-
+                                        <Message msgId="version.message"/>
                                     </div>
                                     <div>
                                         {message}
@@ -64,30 +66,30 @@ class  VersionDialog extends React.Component {
                                 </div>
                                 <div className="version-info">
                                     <div className="info-label">
-                                    Commit
+                                        <Message msgId="version.commit"/>
 
                                     </div>
-                                    <div>
+                                    <div id="commit">
                                         {commit}
 
                                     </div>
                                 </div>
                                 <div className="version-info">
                                     <div className="info-label">
-                                     Date
+                                        <Message msgId="version.date"/>
 
                                     </div>
-                                    <div>
+                                    <div id="date">
                                         {date}
 
                                     </div>
                                 </div>
                                 <div className="version-info">
                                     <div className="info-label">
-                                    Author
+                                        <Message msgId="version.author"/>
 
                                     </div>
-                                    <div>
+                                    <div id="author">
                                         {author}
 
                                     </div>
@@ -95,7 +97,7 @@ class  VersionDialog extends React.Component {
 
                             </li>
                             <li style={{marginTop: '22px', marginLeft: '86px'}}>
-                                <span><a href={githubUrl} target="_blank" ><Button className="btn"> Open github tree in a new tab </Button></a></span>
+                                <span><a href={githubUrl} target="_blank" ><Button className="btn"><Message msgId="version.githuburl"/></Button></a></span>
                             </li>
                         </ul>
                     </div>

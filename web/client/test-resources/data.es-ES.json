@@ -22,7 +22,12 @@
         "layers": "Capas",
         "warning": "Atención",
         "version": {
-            "label": "Versión"
+            "label": "Versión",
+            "message": "Mensaje",
+            "commit": "Comprometerse",
+            "date": "Fecha",
+            "author": "Autor",
+            "githuburl": "Abra el árbol de github en una nueva pestaña"
         },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",

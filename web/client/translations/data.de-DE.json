@@ -35,7 +35,12 @@
         },
         "expand": "Ausklappen",
         "version": {
-            "label": "Version"
+            "label": "Version",
+            "message": "Botschaft",
+            "commit": "Verpflichten",
+            "date": "Datum",
+            "author": "Autor",
+            "githuburl": "Öffnen Sie den Github-Baum in einem neuen Tab"
         },
         "errorPage": {
             "title":"Ups, etwas ist schief gelaufen...",
