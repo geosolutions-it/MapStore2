@@ -22,13 +22,12 @@ import {
 import {addLayer} from '../actions/layers';
 import {STYLE_TEXT} from '../utils/AnnotationsUtils';
 import {
-    toggleControl,
     setControlProperty,
     SET_CONTROL_PROPERTY,
     TOGGLE_CONTROL
 } from '../actions/controls';
 import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
-import {measureSelector} from '../selectors/controls';
+import {createControlEnabledSelector, measureSelector} from '../selectors/controls';
 import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
 import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../actions/map';
 import {
@@ -40,7 +39,7 @@ import {
 import {updateDockPanelsList} from "../actions/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 
-export const addAnnotationFromMeasureEpic = (action$) =>
+export const addAnnotationFromMeasureEpic = (action$, store) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
         .switchMap((a) => {
             // transform measure feature into geometry collection
@@ -53,12 +52,12 @@ export const addAnnotationFromMeasureEpic = (action$) =>
                 visibility
             };
 
-            return Rx.Observable.of(
-                toggleControl('annotations', null),
+            return Rx.Observable.from([
+                ...(createControlEnabledSelector('annotations')(store.getState()) ? [] : [setControlProperty('annotations', 'enabled', true)]),
                 newAnnotation(),
                 setMeasurementConfig("exportToAnnotation", false),
                 setEditingFeature(newFeature)
-            );
+            ]);
         });
 
 export const addAsLayerEpic = (action$) =>
