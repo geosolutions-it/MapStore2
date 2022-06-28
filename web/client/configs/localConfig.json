@@ -406,11 +406,8 @@
                 "cfg": {
                     "wrap": true
                 }
-            }, {
-              "name": "About",
-              "showIn": ["BurgerMenu"]
-            }
-            , {
+            }, "About",
+            {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,
