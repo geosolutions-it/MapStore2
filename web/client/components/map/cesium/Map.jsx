@@ -195,6 +195,19 @@ class CesiumMap extends React.Component {
             };
             this.setView(position);
         }
+
+        if (prevProps && (this.props.mapOptions.showSkyAtmosphere !== prevProps?.mapOptions?.showSkyAtmosphere)) {
+            this.map.scene.skyAtmosphere.show = this.props.mapOptions.showSkyAtmosphere;
+        }
+        if (prevProps && (this.props.mapOptions.showGroundAtmosphere !== prevProps?.mapOptions?.showGroundAtmosphere)) {
+            this.map.scene.globe.showGroundAtmosphere = this.props.mapOptions.showGroundAtmosphere;
+        }
+        if (prevProps && (this.props.mapOptions.enableFog !== prevProps?.mapOptions?.enableFog)) {
+            this.map.scene.fog.enabled = this.props.mapOptions.enableFog;
+        }
+        if (prevProps && (this.props.mapOptions.depthTestAgainstTerrain !== prevProps?.mapOptions?.depthTestAgainstTerrain)) {
+            this.map.scene.globe.depthTestAgainstTerrain = this.props.mapOptions.depthTestAgainstTerrain;
+        }
     }
 
     componentWillUnmount() {

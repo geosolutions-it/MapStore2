@@ -52,6 +52,7 @@ function security(state = {user: null, errorCause: null}, action) {
             refresh_token: (action.userDetails && action.userDetails.refresh_token),
             expires: (action.userDetails && action.userDetails.expires) ? timestamp + action.userDetails.expires : timestamp + 48 * 60 * 60,
             authHeader: action.authHeader,
+            authProvider: action.userDetails?.authProvider,
             loginError: null
         });
     }
@@ -79,6 +80,7 @@ function security(state = {user: null, errorCause: null}, action) {
             refresh_token: null,
             expires: null,
             authHeader: null,
+            authProvider: null,
             loginError: null
         });
     case CHANGE_PASSWORD:

@@ -150,11 +150,7 @@ const tocSelector = createSelector(
             },
             {
                 options: { showComponent: false },
-                func: (node) => head((node.nodes || []).filter(l => l.hidden || l.id === "annotations" && isCesiumActive)) && node.nodes.length === 1
-            },
-            {
-                options: { showComponent: false },
-                func: (node) => node.id === "annotations" && isCesiumActive
+                func: (node) => head((node.nodes || []).filter(l => l.hidden)) && node.nodes.length === 1
             },
             {
                 options: { exclusiveMapType: true },

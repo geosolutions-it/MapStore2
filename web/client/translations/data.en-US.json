@@ -428,6 +428,13 @@
             "renderingErrorTitle": "Rendering error",
             "renderingErrorMessage": "<p>The map rendering has stopped and this could be due for different reasons: </p><ul><li>The applied style contains some rules or variables not supported by the features</li><li>The layer is not properly configured</li></ul><p>You can apply changes to the layer style and then click on 'Reload map' button. <br/> See the message below for addition information:</p>",
             "reloadMap": "Reload map",
+            "settings": {
+              "title": "Map settings",
+              "skyAtmosphere": "Show sky atmosphere",
+              "groundAtmosphere": "Show ground atmosphere",
+              "fog": "Show fog",
+              "depthTest": "Enable depth test against terrain"
+            },
             "thumbnailError": {
                 "error403": "You are not allowed to update the thumbnail",
                 "error404": "An error occurred while creating the thumbnail",
@@ -1200,6 +1207,8 @@
             "passwordChanged": "Password changed",
             "passwordError": "Error changing password",
             "signIn":"Sign-in",
+            "signInWith": "Sign in with",
+            "orSignInWith": "Or sign in with",
             "loginFail":"Login Fail",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Please insert username and password",

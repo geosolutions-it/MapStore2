@@ -1,38 +1,44 @@
 {
-  "proxyUrl": {
-      "url": "proxy/?url=",
-      "useCORS": [
-        "http://demo.geo-solutions.it/geoserver",
-        "https://demo.geo-solutions.it:443/geoserver",
-        "https://demo.geo-solutions.it/geoserver",
-        "https://nominatim.openstreetmap.org",
-        "http://cloudsdi.geo-solutions.it",
-        "https://gs-stable.geo-solutions.it/geoserver",
-        "https://gs-stable.geo-solutions.it:443/geoserver",
-        "http://gs-stable.geo-solutions.it/geoserver",
-        "http://gs-stable.geo-solutions.it:443/geoserver"
-      ]
-  },
-  "geoStoreUrl": "rest/geostore/",
-  "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
-  "printUrl": "pdf/info.json",
-  "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
-  "mapquestApiKey": "__API_KEY_MAPQUEST__",
-  "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
-  "initialMapFilter": "",
-  "ignoreMobileCss": false,
-  "useAuthenticationRules": true,
-  "loadAfterTheme": true,
-  "defaultMapOptions": {
-    "cesium": {
-        "flyTo": true,
-        "navigationTools": true,
-        "terrainProvider": {
-            "type": "ellipsoid"
-        }
+    "proxyUrl": {
+        "url": "proxy/?url=",
+        "useCORS": [
+          "http://demo.geo-solutions.it/geoserver",
+          "https://demo.geo-solutions.it:443/geoserver",
+          "https://demo.geo-solutions.it/geoserver",
+          "https://nominatim.openstreetmap.org",
+          "http://cloudsdi.geo-solutions.it",
+          "https://gs-stable.geo-solutions.it/geoserver",
+          "https://gs-stable.geo-solutions.it:443/geoserver",
+          "http://gs-stable.geo-solutions.it/geoserver",
+          "http://gs-stable.geo-solutions.it:443/geoserver"
+        ]
+    },
+    "geoStoreUrl": "rest/geostore/",
+    "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
+    "printUrl": "pdf/info.json",
+    "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
+    "mapquestApiKey": "__API_KEY_MAPQUEST__",
+    "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
+    "initialMapFilter": "",
+    "ignoreMobileCss": false,
+    "useAuthenticationRules": true,
+    "loadAfterTheme": true,
+    "defaultMapOptions": {
+      "cesium": {
+          "flyTo": true,
+          "navigationTools": true,
+          "showSkyAtmosphere": true,
+          "showGroundAtmosphere": false,
+          "enableFog": false,
+          "depthTestAgainstTerrain": false,
+          "terrainProvider": {
+              "type": "ellipsoid"
+          }
+      },
+      "floatingIdentifyDelay": 1000
     },
     "floatingIdentifyDelay": 1000
-  },
+  ,
   "localizedLayerStyles": {
     "name": "mapstore_language"
   },
@@ -234,7 +240,47 @@
                   "activateQueryTool": false
               }
           }, "AddGroup", {
-              "name": "TOCItemsSettings",
+              "name": "TOCItemsSettings"
+            }, {
+                "name": "TOC",
+                "cfg": {
+                    "activateMetedataTool": false,
+                    "layerOptions": {
+                      "legendOptions": {
+                        "WMSLegendOptions": "forceLabels:on",
+                        "scaleDependent": true,
+                        "legendWidth": 12,
+                        "legendHeight": 12
+                      }
+                    }
+                }
+            },
+          "SidebarMenu",
+            "FilterLayer",
+            "AddGroup",
+            "TOCItemsSettings",
+            "Tutorial", "MapFooter", {
+                "name": "Measure",
+                "cfg": {
+                  "defaultOptions": {
+                    "showAddAsAnnotation": true
+                  }
+                }
+            }, "Print", "MapImport", {
+                "name": "MapExport"
+            }, {
+                "name": "Settings",
+                "cfg": {
+                    "wrap": true
+                }
+            }, {
+                "name": "MetadataExplorer",
+                "cfg": {
+                    "wrap": true
+                }
+            }, "About",
+            {
+              "name": "MousePosition",
               "cfg": {
                   "width": 300
               }

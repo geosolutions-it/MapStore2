@@ -6,21 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { LOCATION_CHANGE } from 'connected-react-router';
 import expect from 'expect';
 
+import axios from '../../libs/ajax';
 
 import { MAP_CONFIG_LOAD_ERROR } from '../../actions/config';
 import { SET_CONTROL_PROPERTY, setControlProperty } from '../../actions/controls';
-import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED } from '../../actions/security';
+import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED, LOGIN_SUCCESS } from '../../actions/security';
+import { setCookie, eraseCookie } from '../../utils/CookieUtils';
+
+import MockAdapter from 'axios-mock-adapter';
 
 import {
     initCatalogOnLoginOutEpic,
     promptLoginOnMapError,
     reloadMapConfig,
-    redirectOnLogout
+    redirectOnLogout,
+    verifyOpenIdSessionCookie
 } from '../login';
 
-import { testEpic } from './epicTestUtils';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 
 describe('login Epics', () => {
     describe('reloadMapConfig', () => {
@@ -133,6 +139,61 @@ describe('login Epics', () => {
         });
         testEpic(redirectOnLogout, 1, logout(), (actions) => {
             expect(actions.length).toBe(0);
+        });
+    });
+    describe('verifyOpenIdSessionCookie', () => {
+        let mockAxios;
+        const testUserDetails = {
+            "User": {
+                "attribute": [
+                    {
+                        "name": "UUID",
+                        "value": "test"
+                    }
+                ],
+                "enabled": true,
+                "groups": {},
+                "id": 6,
+                "name": "secured",
+                "role": "USER"
+            },
+            "access_token": "1234567890",
+            "expires": 86400,
+            "refresh_token": "abcdef"
+        };
+        beforeEach(() => {
+            eraseCookie('access_token');
+            eraseCookie('refresh_token');
+            eraseCookie('authProvider');
+            mockAxios = new MockAdapter(axios);
+        });
+        afterEach(() => {
+            eraseCookie('access_token');
+            eraseCookie('refresh_token');
+            eraseCookie('authProvider');
+            mockAxios.restore();
+        });
+        it('no cookie, no action', (done) => {
+            testEpic(addTimeoutEpic(verifyOpenIdSessionCookie, 20), 1, {type: LOCATION_CHANGE}, ([action]) => {
+                expect(action.type).toEqual(TEST_TIMEOUT);
+                done();
+            });
+        });
+        it('use cookie to test userDetails and trigger login', (done) => {
+            setCookie('access_token', "TEST_TOKEN");
+            setCookie('refresh_token', "TEST_REFRESH_TOKEN");
+            setCookie('authProvider', "TEST_PROVIDER");
+            mockAxios.onGet().reply(config => {
+                expect(config.url).toEqual(`users/user/details`);
+                return [200, testUserDetails];
+            });
+            testEpic(verifyOpenIdSessionCookie, 1, {type: LOCATION_CHANGE}, ([action]) => {
+                expect(action.type).toEqual(LOGIN_SUCCESS);
+                expect(action.userDetails.access_token).toEqual("TEST_TOKEN");
+                expect(action.userDetails.authProvider).toEqual("TEST_PROVIDER");
+                expect(action.userDetails.refresh_token).toEqual("TEST_REFRESH_TOKEN");
+                done();
+            });
         });
     });
 });

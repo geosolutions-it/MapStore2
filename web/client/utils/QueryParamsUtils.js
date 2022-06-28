@@ -1,5 +1,17 @@
 import url from "url";
-import {get} from "lodash";
+import {get, includes, inRange, isEmpty, isNaN, isObject, toNumber} from "lodash";
+
+import {getBbox} from "./MapUtils";
+import {isValidExtent} from "./CoordinatesUtils";
+import {getCenter, getConfigProp} from "./ConfigUtils";
+import {updatePointWithGeometricFilter} from "./IdentifyUtils";
+import {mapProjectionSelector} from "./PrintUtils";
+import {ADD_LAYERS_FROM_CATALOGS} from "../actions/catalog";
+import {changeMapView, ZOOM_TO_EXTENT, zoomToExtent} from "../actions/map";
+import {mapSelector} from "../selectors/map";
+import {featureInfoClick} from "../actions/mapInfo";
+import {warning} from "../actions/notifications";
+import {addMarker, SEARCH_LAYER_WITH_FILTER} from "../actions/search";
 
 /**
  * Copyright 2022, GeoSolutions Sas.
@@ -96,7 +108,7 @@ export const getRequestParameterValue = (name, state, storage = sessionStorage) 
 export const getParametersValues = (paramActions, state) => (
     Object.keys(paramActions)
         .reduce((params, parameter) => {
-            const value = getRequestParameterValue(parameter, state);
+            const value = getRequestParameterValue(parameter, state, sessionStorage);
             return {
                 ...params,
                 ...(value ? { [parameter]: value } : {})
@@ -133,6 +145,111 @@ export const getQueryActions = (parameters, paramActions, state) => (
 export const getCesiumViewerOptions = (parameters, map) => {
     const { heading, pitch, roll = 0 } = parameters;
     const validViewerOptions = [heading, pitch].map(val => typeof(val) !== 'undefined');
-    const viewerOptions = validViewerOptions && validViewerOptions.indexOf(false) === -1 ? { heading, pitch, roll } : map && map.viewerOptions;
-    return viewerOptions;
+    return validViewerOptions && validViewerOptions.indexOf(false) === -1 ? {heading, pitch, roll} : map && map.viewerOptions;
+};
+
+/*
+it maps params key to function.
+functions must return an array of actions or and empty array
+*/
+export const paramActions = {
+    bbox: (parameters) => {
+        const extent = parameters.bbox.split(',')
+            .map(val => parseFloat(val))
+            .filter((val, idx) => idx % 2 === 0
+                ? val > -180.5 && val < 180.5
+                : val >= -90 && val <= 90)
+            .filter(val => !isNaN(val));
+        if (extent && extent.length === 4 && isValidExtent(extent)) {
+            return [
+                zoomToExtent(extent, 'EPSG:4326', undefined, {nearest: true})
+            ];
+        }
+        return [
+            warning({
+                title: "share.wrongBboxParamTitle",
+                message: "share.wrongBboxParamMessage",
+                position: "tc"
+            })
+        ];
+    },
+    center: (parameters, state) => {
+        const map = mapSelector(state);
+        const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
+        const zoom = toNumber(parameters.zoom);
+        const bbox = getBbox(center, zoom);
+        const mapSize = map && map.size;
+        const projection = map && map.projection;
+        const viewerOptions = getCesiumViewerOptions(parameters, map);
+        const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
+        if (isValid) {
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection, viewerOptions)];
+        }
+        return [
+            warning({
+                title: "share.wrongCenterAndZoomParamTitle",
+                message: "share.wrongCenterAndZoomParamMessage",
+                position: "tc"
+            })
+        ];
+    },
+    marker: (parameters, state) => {
+        const map = mapSelector(state);
+        const marker = !isEmpty(parameters.marker) && parameters.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const center = marker && marker.length === 2 && marker.indexOf(false) === -1 && getCenter(marker);
+        const zoom = toNumber(parameters.zoom);
+        const bbox = getBbox(center, zoom);
+        const lng = marker && marker[0];
+        const lat = marker && marker[1];
+        const mapSize = map && map.size;
+        const projection = map && map.projection;
+        const isValid = center && marker && isObject(marker) && (inRange(lat, -90, 91) && inRange(lng, -180, 181)) && inRange(zoom, 1, 36);
+
+        if (isValid) {
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection),
+                addMarker({lat, lng})
+            ];
+        }
+        return [
+            warning({
+                title: "share.wrongMarkerAndZoomParamTitle",
+                message: "share.wrongMarkerAndZoomParamMessage",
+                position: "tc"
+            })
+        ];
+    },
+    featureinfo: (parameters, state) => {
+        const value = parameters.featureinfo;
+        const {lat, lng, filterNameList} = value;
+        if (typeof lat !== 'undefined' && typeof lng !== 'undefined') {
+            const projection = mapProjectionSelector(state);
+            return [featureInfoClick(updatePointWithGeometricFilter({
+                latlng: {
+                    lat,
+                    lng
+                }
+            }, projection), false, filterNameList ?? [])];
+        }
+        return [];
+    },
+    zoom: () => {
+    },
+    heading: () => {
+    },
+    pitch: () => {
+    },
+    roll: () => {
+    }, // roll is currently not supported, we return standard 0 roll
+    actions: (parameters) => {
+        const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
+            SEARCH_LAYER_WITH_FILTER,
+            ZOOM_TO_EXTENT,
+            ADD_LAYERS_FROM_CATALOGS
+        ]);
+        if (parameters.actions) {
+            return parameters.actions.filter(a => includes(whiteList, a.type));
+        }
+        return [];
+    }
 };

@@ -23,7 +23,8 @@ import {
     REGISTER_EVENT_LISTENER,
     UNREGISTER_EVENT_LISTENER,
     ORIENTATION,
-    UPDATE_MAP_VIEW
+    UPDATE_MAP_VIEW,
+    UPDATE_MAP_OPTIONS
 } from '../actions/map';
 
 import assign from 'object-assign';
@@ -167,6 +168,14 @@ function mapConfig(state = {eventListeners: {}}, action) {
                 orientation: {
                     heading, pitch, roll
                 }
+            }
+        };
+    case UPDATE_MAP_OPTIONS:
+        return {
+            ...state,
+            mapOptions: {
+                ...state.mapOptions,
+                ...action.configUpdate
             }
         };
     default:

@@ -11,8 +11,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { DropdownButton, MenuItem, NavDropdown, Glyphicon } from 'react-bootstrap';
-import Message from '../../components/I18N/Message';
-import ConfirmModal from '../../components/misc/ResizableModal';
+import Message from '../I18N/Message';
+import ConfirmModal from '../misc/ResizableModal';
 import tooltip from "../misc/enhancers/tooltip";
 
 const TNavDropdown = tooltip(NavDropdown);
@@ -26,6 +26,7 @@ class UserMenu extends React.Component {
         // PROPS
         user: PropTypes.object,
         displayName: PropTypes.string,
+        providers: PropTypes.array,
         showAccountInfo: PropTypes.bool,
         showPasswordChange: PropTypes.bool,
         showLogout: PropTypes.bool,
@@ -109,7 +110,7 @@ class UserMenu extends React.Component {
                 tooltipId="user.login"
                 tooltipPosition={this.props.tooltipPosition}
                 {...this.props.menuProps}>
-                <MenuItem onClick={this.props.onShowLogin}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
+                <MenuItem onClick={() => this.props.onShowLogin(this.props.providers)}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
             </DropDown>);
     };
 
