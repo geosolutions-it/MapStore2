@@ -16,9 +16,22 @@ import { getMessageById } from '../../../utils/LocaleUtils';
 import '../css/security.css';
 import Button from '../../misc/Button';
 import google from './assets/google.svg';
+import keycloak from './assets/keycloak.svg';
+import withTooltip from '../../misc/enhancers/tooltip';
+
+
 const logos = {
-    google
+    google,
+    keycloak
 };
+
+const Separator = ({children}) => <div style={{width: "100%", textAlign: "center", padding: 10}}>{children}</div>;
+const LoginItem = withTooltip(({provider, openIDLogin}) => {
+    const {title, provider: providerName, imageURL} = provider;
+    const logo = imageURL ?? logos[providerName];
+    const text = title;
+    return <a style={{margin: 20}} onClick={() => openIDLogin(provider)}>{logo ? <img src={logo} alt={text} style={{minHeight: 50}} /> : text ?? providerName}</a>;
+});
 /**
  * A Modal window to show password reset form
  */
@@ -62,8 +75,8 @@ class LoginModal extends React.Component {
     };
 
     getForm = () => {
-        const providers = this.props.providers.filter(({type}) => type === "basic");
-        if (providers.length > 0) {
+        const formProviders = this.props.providers.filter(({type}) => type === "basic");
+        if (formProviders.length > 0) {
             return (<LoginForm
                 role="body"
                 ref="loginForm"
@@ -79,17 +92,13 @@ class LoginModal extends React.Component {
     }
 
     getOpenIDProviders = () => {
-        const providers = this.props.providers.filter(({type}) => type === "openID");
-        if (providers.length > 0) {
+        const formProviders = this.props.providers.filter(({type}) => type === "basic");
+        const openIdProviders = this.props.providers.filter(({type}) => type === "openID");
+        if (openIdProviders.length > 0) {
             return <>
-                <hr/>
-                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
-                    {providers.map((provider) => {
-                        const {title, provider: providerName, imageURL} = provider;
-                        const logo = imageURL ?? logos[providerName];
-                        const text = title;
-                        return <a onClick={() => this.props.openIDLogin(provider)}>{logo ? <img src={logo} alt={text} /> : text ?? providerName}</a>;
-                    })}
+                <Separator><Message msgId={formProviders.length > 0 ? "user.orSignInWith" : "user.signInWith"}/></Separator>
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
+                    {openIdProviders.map((provider) => <LoginItem provider={provider} tooltip={provider?.tooltip ?? provider?.provider} openIDLogin={this.props.openIDLogin} />)}
                 </div>
             </>;
         }
