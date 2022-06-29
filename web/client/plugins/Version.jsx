@@ -49,7 +49,7 @@ export default {
         },
         BurgerMenu: {
             name: 'version',
-            position: 1000,
+            position: 4,
             priority: 2,
             doNotHide: true,
             text: <Message msgId="version.label"/>,
