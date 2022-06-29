@@ -58,37 +58,6 @@ describe('TOCPlugin Plugin', () => {
         expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(1);
     });
 
-    it('TOCPlugin hides annotations layer and empty group in cesium mapType', () => {
-        const { Plugin } = getPluginForTest(TOCPlugin, {
-            layers: {
-                groups: [{ id: 'default', title: 'Default', nodes: ['annotations'] }],
-                flat: [{ id: 'annotations', title: 'Annotations' }]
-            },
-            maptype: {
-                mapType: 'cesium'
-            }
-        });
-        const WrappedPlugin = dndContext(Plugin);
-        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
-        expect(document.querySelectorAll('.toc-title').length).toBe(0);
-        expect(document.querySelectorAll('.toc-group-title').length).toBe(0);
-    });
-
-    it('TOCPlugin hides annotations layer but not its group if not empty in cesium mapType', () => {
-        const { Plugin } = getPluginForTest(TOCPlugin, {
-            layers: {
-                groups: [{ id: 'default', title: 'Default', nodes: ['annotations', 'other'] }],
-                flat: [{ id: 'annotations', title: 'Annotations' }, { id: 'other', title: 'Other'}]
-            },
-            maptype: {
-                mapType: 'cesium'
-            }
-        });
-        const WrappedPlugin = dndContext(Plugin);
-        ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
-        expect(document.querySelectorAll('.toc-title').length).toBe(1);
-        expect(document.querySelectorAll('.toc-group-title').length).toBe(1);
-    });
     it('TOCPlugin hides filter layer if no groups and no layers are present', () => {
         const { Plugin } = getPluginForTest(TOCPlugin, {
             layers: {

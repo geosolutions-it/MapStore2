@@ -422,6 +422,13 @@
             "renderingErrorTitle": "Errore di rendering",
             "renderingErrorMessage": "<p>Il rendering della mappa si è interrotto e ciò potrebbe essere dovuto a diversi motivi: </p><ul><li>Lo stile applicato contiene alcune regole o variabili non supportate dalle features</li>< li>Il livello non è configurato correttamente</li></ul><p>Puoi applicare le modifiche allo stile del layer e poi prenere il pulsante 'Ricarica mappa'. <br/> Per ulteriori informazioni:< /p>",
             "reloadMap": "Ricarica mappa",
+            "settings": {
+              "title": "Impostazioni della mappa",
+              "skyAtmosphere": "Mostra l'atmosfera del cielo",
+              "groundAtmosphere": "Mostra l'atmosfera del terreno",
+              "fog": "Mostra nebbia",
+              "depthTest": "Abilita il depthTest sul terreno"
+            },
             "thumbnailError": {
                 "error403": "Non disponi dei permessi per aggiornare la thumbnail",
                 "error404": "Non è stato possibile creare la thumbnail sul server",
@@ -1194,6 +1201,8 @@
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
+            "signInWith": "Accedi con",
+            "orSignInWith": "O accedi con",
             "loginFail":"Login Fallito",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Per favore, Inserisci username e password",

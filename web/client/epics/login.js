@@ -8,6 +8,7 @@
 import {
     refreshAccessToken,
     sessionValid,
+    loginSuccess,
     logout,
     loginPromptClosed,
     LOGIN_SUCCESS,
@@ -23,6 +24,7 @@ import { setControlProperty, SET_CONTROL_PROPERTY } from '../actions/controls';
 import { pathnameSelector } from '../selectors/router';
 import { isLoggedIn } from '../selectors/security';
 import ConfigUtils from '../utils/ConfigUtils';
+import {getCookieValue, eraseCookie} from '../utils/CookieUtils';
 import AuthenticationAPI from '../api/GeoStoreDAO';
 import Rx from 'rxjs';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
@@ -102,6 +104,43 @@ export const redirectOnLogout = action$ =>
         .switchMap(({ redirectUrl }) => Rx.Observable.of(push(redirectUrl)));
 
 /**
+ * Verifies the session from the cookie.
+ * This is present if login has been done using OpenID.
+ * @memberof epics.login
+ * @return {external:Observable} emitting login success or logout events if the cookie is valid.
+ */
+export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
+    return action$.ofType(LOCATION_CHANGE).take(1).switchMap( () => {
+        if (isLoggedIn(getState())) {
+            return Rx.Observable.empty();
+        }
+        const accessToken = getCookieValue('access_token');
+        const refreshToken = getCookieValue('refresh_token');
+        const expires = getCookieValue('expires') ?? 5 * 60 * 1000;
+        const authProvider = getCookieValue('authProvider'); // This is set by login tool.
+        if (!accessToken) {
+            return Rx.Observable.empty();
+        }
+        return Rx.Observable.defer(() => AuthenticationAPI.getUserDetails({access_token: accessToken}))
+            .switchMap( userDetails => { // check user detail to confirm login success
+                return Rx.Observable.of(loginSuccess({...userDetails, access_token: accessToken, refresh_token: refreshToken, expires: expires, authProvider}));
+            })
+            .catch(() => { // call failure means that the session expired, so logout at all
+                return Rx.Observable.of(logout(null));
+            })
+            .concat(Rx.Observable.of(1).switchMap(() => {
+                // clean up the cookie
+
+                eraseCookie('access_token');
+                eraseCookie('refresh_token');
+                eraseCookie('authProvider');
+                return Rx.Observable.empty();
+            }));
+
+    });
+};
+
+/**
  * Epics for login functionality
  * @name epics.login
  * @type {Object}
@@ -111,5 +150,6 @@ export default {
     reloadMapConfig,
     promptLoginOnMapError,
     initCatalogOnLoginOutEpic,
+    verifyOpenIdSessionCookie,
     redirectOnLogout
 };

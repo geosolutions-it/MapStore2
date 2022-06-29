@@ -88,9 +88,6 @@ const MapExport = enhanceExport(
  */
 const MapExportPlugin = createPlugin('MapExport', {
     component: MapExport,
-    options: {
-        disablePluginIf: "{state('mapType') === 'cesium'}"
-    },
     containers: {
         SidebarMenu: config => {
             const enabledFormats = get(config, 'cfg.enabledFormats', DEFAULTS);
