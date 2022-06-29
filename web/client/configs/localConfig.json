@@ -659,9 +659,9 @@
       "dashboard": [
         "BurgerMenu",
         "Dashboard",
+        "Version",
         "Notifications",
         "Login",
-        "Version",
         "Language",
         "NavMenu",
         "DashboardSave",
