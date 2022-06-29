@@ -137,13 +137,9 @@ function wmsToCesiumOptionsBIL(options) {
     if (proxyUrl) {
         proxy = options.noCors || needProxy(url);
     }
-    const headers = getAuthenticationHeaders(url, options.securityToken);
     return assign({
-        url: new Cesium.Resource({
-            url,
-            headers,
-            proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy()
-        }),
+        url,
+        proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy(),
         littleEndian: options.littleendian || false,
         layerName: options.name
     });

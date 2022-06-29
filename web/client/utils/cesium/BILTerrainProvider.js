@@ -183,12 +183,15 @@ const createBilTerrainProvider = function(Cesium) {
 		description = Cesium.defaultValue(description,
 				Cesium.defaultValue.EMPTY_OBJECT);
 		if (Cesium.defined(description.url)) {
-            var resource = description.url;
-			var urlofServer=resource._url;
+            var urlofServer=description.url;
+			var index=urlofServer.lastIndexOf("?");
+			if(index>-1){
+				urlofServer=urlofServer.substring(0,index);
+			}
 			var urlGetCapabilities = urlofServer
 					+ '?SERVICE=WMS&REQUEST=GetCapabilities&tiled=true';
-			if (Cesium.defined(resource.proxy)) {
-				urlGetCapabilities = resource.proxy.getURL(urlGetCapabilities);
+			if (Cesium.defined(description.proxy)) {
+				urlGetCapabilities = description.proxy.getURL(urlGetCapabilities);
 			}
 			resultat=Cesium.when(Cesium.Resource.fetchXML(urlGetCapabilities), function(xml) {
 				return OGCHelper.WMSParser.getMetaDatafromXML(xml, description);
