@@ -37,8 +37,6 @@
       },
       "floatingIdentifyDelay": 1000
     },
-    "floatingIdentifyDelay": 1000
-  ,
   "localizedLayerStyles": {
     "name": "mapstore_language"
   },
@@ -240,47 +238,7 @@
                   "activateQueryTool": false
               }
           }, "AddGroup", {
-              "name": "TOCItemsSettings"
-            }, {
-                "name": "TOC",
-                "cfg": {
-                    "activateMetedataTool": false,
-                    "layerOptions": {
-                      "legendOptions": {
-                        "WMSLegendOptions": "forceLabels:on",
-                        "scaleDependent": true,
-                        "legendWidth": 12,
-                        "legendHeight": 12
-                      }
-                    }
-                }
-            },
-          "SidebarMenu",
-            "FilterLayer",
-            "AddGroup",
-            "TOCItemsSettings",
-            "Tutorial", "MapFooter", {
-                "name": "Measure",
-                "cfg": {
-                  "defaultOptions": {
-                    "showAddAsAnnotation": true
-                  }
-                }
-            }, "Print", "MapImport", {
-                "name": "MapExport"
-            }, {
-                "name": "Settings",
-                "cfg": {
-                    "wrap": true
-                }
-            }, {
-                "name": "MetadataExplorer",
-                "cfg": {
-                    "wrap": true
-                }
-            }, "About",
-            {
-              "name": "MousePosition",
+              "name": "TOCItemsSettings",
               "cfg": {
                   "width": 300
               }
@@ -448,11 +406,8 @@
               "cfg": {
                   "wrap": true
               }
-          }, {
-            "name": "About",
-            "showIn": ["BurgerMenu"]
-          }
-          , {
+          }, "About",
+          {
             "name": "MousePosition",
             "cfg": {
               "editCRS": true,
