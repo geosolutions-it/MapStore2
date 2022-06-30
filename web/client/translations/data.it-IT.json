@@ -36,11 +36,11 @@
         },
         "version": {
             "label": "Versione",
-            "message": "Messaggio",
-            "commit": "commettere",
+            "message": "Testo",
+            "commit": "Commit",
             "date": "Data",
-            "author": "autore",
-            "githuburl": "Apri l'albero di github in una nuova scheda"
+            "author": "Autore",
+            "githuburl": "Apri Github in una nuova scheda"
         },
         "errorPage": {
             "title":"Ops, qualcosa è andato storto...",

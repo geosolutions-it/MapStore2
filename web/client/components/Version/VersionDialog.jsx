@@ -12,7 +12,6 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../I18N/Message';
 import Button from '../misc/Button';
 import PropTypes from 'prop-types';
-import '../../themes/default/less/version.less';
 
 class  VersionDialog extends React.Component {
 

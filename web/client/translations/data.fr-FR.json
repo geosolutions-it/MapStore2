@@ -37,9 +37,9 @@
         "version": {
             "label": "Version",
             "message": "Message",
-            "commit": "commettre",
+            "commit": "Commit",
             "date": "Date",
-            "author": "auteur",
+            "author": "Auteur",
             "githuburl": "Ouvrir l'arborescence github dans un nouvel onglet"
         },
         "errorPage": {

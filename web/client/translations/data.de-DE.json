@@ -37,7 +37,7 @@
         "version": {
             "label": "Version",
             "message": "Botschaft",
-            "commit": "Verpflichten",
+            "commit": "Commit",
             "date": "Datum",
             "author": "Autor",
             "githuburl": "Öffnen Sie den Github-Baum in einem neuen Tab"
