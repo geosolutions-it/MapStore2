@@ -482,7 +482,8 @@
             {
               "name": "Timeline",
               "cfg": {
-                "expandLimit": 20
+                "expandLimit": 20,
+                "collapsed": true
               }
             },
             "Playback",

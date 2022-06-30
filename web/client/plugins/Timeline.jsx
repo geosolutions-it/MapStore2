@@ -103,7 +103,9 @@ const TimelinePlugin = compose(
             onInit: initTimeline
         }),
     branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
-    withState('options', 'setOptions', {collapsed: true}),
+    withState('options', 'setOptions', ({pluginCfg = {}}) => {
+        return { collapsed: pluginCfg.collapsed };
+    }),
     // add mapSync button handler and value
     connect(
         createSelector(isMapSync, mapSync => ({mapSync})),
