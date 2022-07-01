@@ -35,7 +35,12 @@
             "message": "La capa no se pudo recargar con un nombre cambiado"
         },
         "version": {
-            "label": "Versión"
+            "label": "Versión",
+            "message": "Mensaje",
+            "commit": "Commit",
+            "date": "Fecha",
+            "author": "Autor",
+            "githuburl": "Abre el árbol de github en una nueva pestaña"
         },
         "errorPage": {
             "title":"Vaya, algo salió mal...",

@@ -8,10 +8,16 @@
 
 import React from 'react';
 
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Glyphicon } from 'react-bootstrap';
 import { versionSelector } from '../selectors/version';
+import { versionInfoSelector } from '../selectors/controls';
 import Message from '../components/I18N/Message';
+import VersionDialog from '../components/Version/VersionDialog';
+
+
+import assign from 'object-assign';
+import { toggleControl } from '../actions/controls';
 
 /**
   * Version Plugin. Shows current MapStore2 version in settings panel
@@ -21,35 +27,35 @@ import Message from '../components/I18N/Message';
   *
   */
 const Version = connect((state) => ({
-    version: versionSelector(state)
-}))(
-    class extends React.Component {
-    static propTypes = {
-        version: PropTypes.string
-    };
-
-    static defaultProps = {
-        version: 'DEV'
-    };
-
-    render() {
-        return <span className="application-version"><span className="application-version-label"><Message msgId="version.label"/></span>: {this.props.version}</span>;
-    }
-    });
-
-import assign from 'object-assign';
-
-class Empty extends React.Component {
-    render() {
-        return null;
-    }
+    version: versionSelector(state),
+    show: versionInfoSelector(state)
 }
+), {onClose: toggleControl.bind(null, 'version', null)})(
+    VersionDialog
+);
 
 export default {
-    VersionPlugin: assign(Empty, {
-        Settings: {
-            tool: <Version key="version"/>,
-            position: 4
+    VersionPlugin: assign(Version, {
+        SidebarMenu: {
+            name: 'version',
+            position: 2,
+            priority: 1,
+            doNotHide: true,
+            tooltip: "version.label",
+            text: <Message msgId="version.label"/>,
+            icon: <Glyphicon glyph="info-sign"/>,
+            action: toggleControl.bind(null, 'version', null),
+            toggle: true
+        },
+        BurgerMenu: {
+            name: 'version',
+            position: 4,
+            priority: 2,
+            doNotHide: true,
+            text: <Message msgId="version.label"/>,
+            tooltip: "version.label",
+            icon: <Glyphicon glyph="info-sign" />,
+            action: toggleControl.bind(null, 'version', null)
         }
     }),
     reducers: {

@@ -14,7 +14,9 @@
       }
     },
     "globals": {
-      "__MAPSTORE_PROJECT_CONFIG__": false
+      "__MAPSTORE_PROJECT_CONFIG__": false,
+      "__COMMITHASH__": false,
+      "__COMMIT_DATA__": false
     }
   },
   "eslintIgnore": [
@@ -174,6 +176,7 @@
     "filtrex": "2.1.0",
     "fs-extra": "3.0.1",
     "geostyler-openlayers-parser": "2.0.1",
+    "git-revision-webpack-plugin": "5.0.0",
     "history": "4.6.1",
     "html-to-draftjs": "npm:@geosolutions/html-to-draftjs@1.5.1",
     "html2canvas": "0.5.0-beta4",

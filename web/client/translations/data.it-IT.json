@@ -35,7 +35,12 @@
             "message": "Il livello non è stato ricaricato con un nome modificato"
         },
         "version": {
-            "label": "Versione"
+            "label": "Versione",
+            "message": "Testo",
+            "commit": "Commit",
+            "date": "Data",
+            "author": "Autore",
+            "githuburl": "Apri Github in una nuova scheda"
         },
         "errorPage": {
             "title":"Ops, qualcosa è andato storto...",
