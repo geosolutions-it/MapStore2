@@ -183,12 +183,15 @@ const createBilTerrainProvider = function(Cesium) {
 		description = Cesium.defaultValue(description,
 				Cesium.defaultValue.EMPTY_OBJECT);
 		if (Cesium.defined(description.url)) {
-            var resource = description.url;
-			var urlofServer=resource._url;
+            var urlofServer=description.url;
+			var index=urlofServer.lastIndexOf("?");
+			if(index>-1){
+				urlofServer=urlofServer.substring(0,index);
+			}
 			var urlGetCapabilities = urlofServer
 					+ '?SERVICE=WMS&REQUEST=GetCapabilities&tiled=true';
-			if (Cesium.defined(resource.proxy)) {
-				urlGetCapabilities = resource.proxy.getURL(urlGetCapabilities);
+			if (Cesium.defined(description.proxy)) {
+				urlGetCapabilities = description.proxy.getURL(urlGetCapabilities);
 			}
 			resultat=Cesium.when(Cesium.Resource.fetchXML(urlGetCapabilities), function(xml) {
 				return OGCHelper.WMSParser.getMetaDatafromXML(xml, description);
@@ -805,6 +808,8 @@ const createBilTerrainProvider = function(Cesium) {
 	 *            [description.service] type of service to use (WMS, TMS or WMTS)
 	 * @param {String}
 	 *            [description.xml] the xml after requesting "getCapabilities".
+	 * @param {String}
+	 *            [description.headers] headers for tiles request
 	 * @see TerrainProvider
 	 */
 	var GeoserverTerrainProvider = function GeoserverTerrainProvider(
@@ -839,7 +844,7 @@ const createBilTerrainProvider = function(Cesium) {
 	        }
 		});
 		var promise=OGCHelper.parser(description);
-		TerrainParser(promise,this);
+		TerrainParser(promise,this, description);
 	};
 	/**
 	*
@@ -939,7 +944,7 @@ const createBilTerrainProvider = function(Cesium) {
 		return new Cesium.HeightmapTerrainData(optionsHeihtmapTerrainData);
 	};
 
-	function TerrainParser(promise,provider){
+	function TerrainParser(promise, provider, description){
 		Cesium.when(promise,function(resultat){
 			if(Cesium.defined(resultat)&&(resultat.ready)){
 				resultat.levelZeroMaximumGeometricError = Cesium.TerrainProvider.getEstimatedLevelZeroGeometricErrorForAHeightmap(
@@ -955,6 +960,7 @@ const createBilTerrainProvider = function(Cesium) {
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
                             var promise = Cesium.Resource.fetchImage({
 								url: proxy.getURL(url),
+								headers: description.headers,
 								request: new Cesium.Request({
 									throttleByServer: true
 								})
@@ -993,6 +999,7 @@ const createBilTerrainProvider = function(Cesium) {
 							
                             var promise = Cesium.Resource.fetchArrayBuffer({
 								url: proxy.getURL(urlArray),
+								headers: description.headers,
 								request: new Cesium.Request({
 									throttleByServer: true
 								})
