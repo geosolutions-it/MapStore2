@@ -354,6 +354,16 @@ export default createPlugin('Annotations', {
                 }
                 return false;
             })
+        },
+        BurgerMenu: {
+            name: 'annotations',
+            position: 40,
+            text: <Message msgId="annotationsbutton"/>,
+            tooltip: "annotations.tooltip",
+            icon: <Glyphicon glyph="comment"/>,
+            action: conditionalToggle,
+            priority: 2,
+            doNotHide: true
         }
     },
     reducers: {
