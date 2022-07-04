@@ -171,10 +171,10 @@ function VisualStyleEditor({
     styleUpdateTypes,
     debounceTime,
     styleService,
-    exactMatchGeometrySymbol
+    exactMatchGeometrySymbol,
+    enable3dStyleOptions
 }) {
-
-    const { symbolizerBlock, ruleBlock } = getBlocks({ exactMatchGeometrySymbol });
+    const { symbolizerBlock, ruleBlock } = getBlocks({ exactMatchGeometrySymbol, enable3dStyleOptions });
     const [updating, setUpdating] = useState(false);
     const [styleHistory, dispatch] = useReducer(historyVisualStyleReducer, {});
     const style = styleHistory?.present || DEFAULT_STYLE;
