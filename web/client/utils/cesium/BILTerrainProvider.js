@@ -825,6 +825,7 @@ const createBilTerrainProvider = function(Cesium) {
 		}
 
 		this.ready=false;
+		this._headers = description.headers || {};
 
 		Object.defineProperties(this, {
 			errorEvent : {
@@ -844,7 +845,7 @@ const createBilTerrainProvider = function(Cesium) {
 	        }
 		});
 		var promise=OGCHelper.parser(description);
-		TerrainParser(promise,this, description);
+		TerrainParser(promise,this);
 	};
 	/**
 	*
@@ -944,7 +945,7 @@ const createBilTerrainProvider = function(Cesium) {
 		return new Cesium.HeightmapTerrainData(optionsHeihtmapTerrainData);
 	};
 
-	function TerrainParser(promise, provider, description){
+	function TerrainParser(promise, provider){
 		Cesium.when(promise,function(resultat){
 			if(Cesium.defined(resultat)&&(resultat.ready)){
 				resultat.levelZeroMaximumGeometricError = Cesium.TerrainProvider.getEstimatedLevelZeroGeometricErrorForAHeightmap(
@@ -960,7 +961,7 @@ const createBilTerrainProvider = function(Cesium) {
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
                             var promise = Cesium.Resource.fetchImage({
 								url: proxy.getURL(url),
-								headers: description.headers,
+								headers: provider._headers,
 								request: new Cesium.Request({
 									throttleByServer: true
 								})
@@ -999,7 +1000,7 @@ const createBilTerrainProvider = function(Cesium) {
 							
                             var promise = Cesium.Resource.fetchArrayBuffer({
 								url: proxy.getURL(urlArray),
-								headers: description.headers,
+								headers: provider._headers,
 								request: new Cesium.Request({
 									throttleByServer: true
 								})
