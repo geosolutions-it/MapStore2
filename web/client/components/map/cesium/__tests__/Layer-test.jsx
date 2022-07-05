@@ -1345,4 +1345,49 @@ describe('Cesium layer', () => {
             ]
         );
     });
+    it('should create a bil terrain provider from wms layer (deprecated)', () => {
+        const options = {
+            type: "wms",
+            useForElevation: true,
+            url: "https://host-sample/geoserver/wms",
+            format: "application/bil16",
+            name: "workspace:layername",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer._options.url).toEqual('https://host-sample/geoserver/wms');
+        expect(cmp.layer._options.proxy.proxy).toBeTruthy();
+    });
+
+    it('should create a bil terrain provider from wms layer with no proxy (deprecated)', () => {
+        const options = {
+            type: "wms",
+            useForElevation: true,
+            url: "/geoserver/wms",
+            format: "application/bil16",
+            name: "workspace:layername",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer._options.url).toEqual('/geoserver/wms');
+        expect(cmp.layer._options.proxy.proxy).toBeFalsy();
+    });
 });
