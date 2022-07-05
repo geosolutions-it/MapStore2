@@ -48,6 +48,7 @@ import ButtonRB from '../components/misc/Button';
 import {isTimelineVisible} from "../utils/LayersUtils";
 const Button = tooltip(ButtonRB);
 
+
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
 const getPercent = (val) => parseInt(val, 10) / 100;
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
@@ -59,6 +60,7 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
   * @class  Timeline
   * @memberof plugins
   * @static
+  * @prop cfg.expandedPanel {boolean} false by default
   * @prop cfg.showHiddenLayers {boolean} false by default, when *false* the layers in timeline gets in sync with time layer's visibility (TOC)
   * i.e when a time layer is hidden or removed, the timeline will not show the respective guide layer.
   * Furthermore, the timeline automatically selects the next available guide layer, if the **Snap to guide layer** option is enabled in the Timeline settings.
@@ -68,7 +70,8 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
   * {
   *   "name": "TimeLine",
   *   "cfg": {
-  *       "showHiddenLayers": false
+  *       "showHiddenLayers": false,
+  *       "expandedPanel": true
   *    }
   * }
   *
@@ -103,8 +106,8 @@ const TimelinePlugin = compose(
             onInit: initTimeline
         }),
     branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
-    withState('options', 'setOptions', ({pluginCfg = {}}) => {
-        return { collapsed: pluginCfg.collapsed };
+    withState('options', 'setOptions', ({expandedPanel}) => {
+        return { collapsed: !expandedPanel };
     }),
     // add mapSync button handler and value
     connect(
@@ -230,12 +233,12 @@ const TimelinePlugin = compose(
                 }
             }
         };
+
         return (<div
             style={{
                 position: "absolute",
                 marginBottom: 35,
                 marginLeft: 100,
-                background: "transparent",
                 ...style,
                 right: collapsed ? 'auto' : (style.right || 0)
             }}
