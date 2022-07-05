@@ -22,7 +22,7 @@ import AuthorizationAPI from '../api/GeoStoreDAO';
  * @returns {function} the think to execute. It doesn't dispatch any action, but sets a cookie to remember the authProvider used.
  * @memberof actions.login
  */
-export function openIDLogin(entry, goToPage = (page) => {window.location.replace(page); }) {
+export function openIDLogin(entry, goToPage = (page) => {window.location.href = page; }) {
     return () => {
         setCookie("authProvider", entry?.provider, 1000 * 60 * 5); // expires in 5 minutes
         goToPage(entry?.url ?? `${ ConfigUtils.getConfigProp("geoStoreUrl")}openid/${entry?.provider}/login`);

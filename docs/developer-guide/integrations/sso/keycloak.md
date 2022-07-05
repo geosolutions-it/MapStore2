@@ -46,7 +46,7 @@ e.g.
         "provider": "keycloak",
         "config": {
           "realm": "master",
-          "auth-server-url": "http://localhost:8080",
+          "auth-server-url": "http://localhost:8080/",
           "ssl-required": "external",
           "resource": "mapstore-client",
           "public-client": true,

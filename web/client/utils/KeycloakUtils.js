@@ -13,7 +13,8 @@ import { LOGIN_SUCCESS, LOGOUT, refreshAccessToken, REFRESH_SUCCESS } from '../a
  */
 export const dynamicImportScript = (scriptURL) => {
     return new Promise((resolve, reject) => {
-        var script = document.createElement('script');
+        const script = document.createElement('script');
+        script.setAttribute('id', 'keycloak-script');
         script.onload = function() {
             resolve(window.Keycloak);
         };
@@ -36,7 +37,7 @@ const clearKeycloakSession = (keycloak) => {
     }
 };
 // cache client for reuse
-const clients = {};
+let clients = {};
 
 /**
  *
@@ -58,6 +59,12 @@ export const getKeycloakClient = (provider) => {
     }
     return Promise.resolve(clients[provider.provider]);
 };
+export const clearClients = function() {
+    clients = {};
+};
+export const getClient = function(provider) {
+    return clients[provider.provider];
+}
 
 /**
  * A function that initializes a Keycloak instance and returns an observable that emits
