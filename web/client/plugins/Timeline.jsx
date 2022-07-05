@@ -106,6 +106,7 @@ const TimelinePlugin = compose(
             onInit: initTimeline
         }),
     branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
+
     withState('options', 'setOptions', ({expandedPanel}) => {
         return { collapsed: !expandedPanel };
     }),
