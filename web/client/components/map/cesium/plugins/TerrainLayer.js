@@ -36,6 +36,13 @@ WMSProxy.prototype.getURL = function(resource) {
     return getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
+function NoProxy() {}
+
+NoProxy.prototype.getURL = function(resource) {
+    const { url, queryString } = splitUrl(resource);
+    return url + queryString;
+};
+
 // Check and apply proxy to source url
 function getProxy(options) {
     let proxyUrl = ConfigUtils.getProxyUrl({});
@@ -43,20 +50,18 @@ function getProxy(options) {
     if (proxyUrl) {
         proxy = options.noCors || needProxy(options.url);
     }
-    return proxy ? new WMSProxy(proxyUrl) : new Cesium.DefaultProxy(getProxyUrl());
+    return proxy ? new WMSProxy(proxyUrl) : new NoProxy();
 }
 
-function wmsOptionsMapping(config) {
-    let url = config.url;
-    const headers = getAuthenticationHeaders(url, config.securityToken);
+function wmsOptionsMapping(options) {
+    let url = options.url;
+    const headers = getAuthenticationHeaders(url, options.securityToken);
     return {
-        url: new Cesium.Resource({
-            url,
-            headers,
-            proxy: getProxy(config)
-        }),
-        littleEndian: config.littleendian || false,
-        layerName: config.name
+        url,
+        headers,
+        proxy: getProxy(options),
+        littleEndian: options.littleendian || false,
+        layerName: options.name
     };
 }
 

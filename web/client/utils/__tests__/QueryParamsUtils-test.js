@@ -7,9 +7,15 @@
  */
 import expect from 'expect';
 
-import { paramActions } from '../../epics/queryparams';
 import { CHANGE_MAP_VIEW } from '../../actions/map';
-import { getRequestLoadValue, getRequestParameterValue, postRequestLoadValue, getParametersValues, getQueryActions } from "../QueryParamsUtils";
+import {
+    getRequestLoadValue,
+    getRequestParameterValue,
+    postRequestLoadValue,
+    getParametersValues,
+    getQueryActions,
+    paramActions
+} from "../QueryParamsUtils";
 
 describe('QueryParamsUtils', () => {
     it('test getRequestLoadValue', () => {

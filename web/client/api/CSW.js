@@ -297,7 +297,7 @@ const Api = {
                     'Content-Type': 'application/xml'
                 }}).then(
                     (response) => {
-                        if (response ) {
+                        if (response) {
                             let json = unmarshaller.unmarshalString(response.data);
                             if (json && json.name && json.name.localPart === "GetRecordsResponse" && json.value && json.value.searchResults) {
                                 let rawResult = json.value;
@@ -357,6 +357,7 @@ const Api = {
                                                 crs: 'EPSG:4326'
                                             };
                                         }
+                                        // dcElement is an array of objects, each item is a dc tag in the XML
                                         let dcElement = rawRec.dcElement;
                                         if (dcElement) {
                                             let dc = {
@@ -364,6 +365,7 @@ const Api = {
                                             };
                                             for (let j = 0; j < dcElement.length; j++) {
                                                 let dcel = dcElement[j];
+                                                // here the element name is taken (i.e. "URI", "title", "description", etc)
                                                 let elName = dcel.name.localPart;
                                                 let finalEl = {};
                                                 /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
@@ -379,6 +381,10 @@ const Api = {
                                                 } else {
                                                     finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
                                                 }
+                                                /**
+                                                    grouping all tags with same property together (i.e <dc:subject>mobilità</dc:subject> <dc:subject>traffico</dc:subject>)
+                                                    will become { subject: ["mobilità", "traffico"] }
+                                                **/
                                                 if (dc[elName] && Array.isArray(dc[elName])) {
                                                     dc[elName].push(finalEl);
                                                 } else if (dc[elName]) {
@@ -387,7 +393,7 @@ const Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
-                                            const URIs = dc.references.length > 0 ? dc.references : dc.URI;
+                                            const URIs = castArray(dc.references.length > 0 ? dc.references : dc.URI);
                                             if (!_dcRef) {
                                                 _dcRef = URIs;
                                             } else {

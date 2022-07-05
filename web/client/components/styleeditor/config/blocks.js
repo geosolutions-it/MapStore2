@@ -12,8 +12,15 @@ import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
+const billboard3dStyleOptions = {
+    msBringToFront: property.msBringToFront({
+        label: 'Bring to front'
+    })
+};
+
 const getBlocks = ({
-    exactMatchGeometrySymbol
+    exactMatchGeometrySymbol,
+    enable3dStyleOptions
 } = {}) => {
     const symbolizerBlock = {
         Mark: {
@@ -49,7 +56,8 @@ const getBlocks = ({
                 }),
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
-                })
+                }),
+                ...(enable3dStyleOptions ? billboard3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Mark',
@@ -96,7 +104,8 @@ const getBlocks = ({
                 }),
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
-                })
+                }),
+                ...(enable3dStyleOptions ? billboard3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Icon',
