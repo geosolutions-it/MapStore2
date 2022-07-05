@@ -45,7 +45,9 @@ import {
 import Timeline from './timeline/Timeline';
 import TimelineToggle from './timeline/TimelineToggle';
 import ButtonRB from '../components/misc/Button';
-import {isTimelineVisible} from "../utils/LayersUtils";
+import { isTimelineVisible } from "../utils/LayersUtils";
+import Loader from '../components/misc/Loader';
+
 const Button = tooltip(ButtonRB);
 
 
@@ -87,7 +89,8 @@ const TimelinePlugin = compose(
             playbackRangeSelector,
             statusSelector,
             rangeSelector,
-            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange) => ({
+            (state) => state.timeline?.loader !== undefined,
+            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady) => ({
                 visible,
                 layers,
                 currentTime,
@@ -95,7 +98,8 @@ const TimelinePlugin = compose(
                 offsetEnabled,
                 playbackRange,
                 status,
-                viewRange
+                viewRange,
+                timelineIsReady
             })
         ), {
             setCurrentTime: selectTime,
@@ -193,7 +197,8 @@ const TimelinePlugin = compose(
         snapType,
         endValuesSupport,
         onInit = () => {},
-        layers
+        layers,
+        timelineIsReady
     }) => {
         useEffect(()=>{
             // update state with configs coming from configuration file like localConfig.json so that can be used as props initializer
@@ -334,6 +339,9 @@ const TimelinePlugin = compose(
                 </Button>
 
             </div>
+            {!timelineIsReady && <div className="timeline-loader">
+                <Loader size={50} />
+            </div>}
             {!collapsed &&
                 <Timeline
                     offsetEnabled={offsetEnabled}
