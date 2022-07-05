@@ -1,15 +1,17 @@
 import Rx from 'rxjs';
-import { openIDLogin, logout } from '../actions/login';
+import { openIDLogin, onLogout } from '../actions/login';
+import {getToken, getRefreshToken} from '../utils/SecurityUtils';
 
 import { isLoggedIn, authProviderSelector } from '../selectors/security';
 import { getCookieValue } from './CookieUtils';
+import { LOGIN_SUCCESS, LOGOUT, refreshAccessToken, REFRESH_SUCCESS } from '../actions/security';
 
 /**
  * Imports the script and add it to the document.
  * @param {string} scriptURL the URL of the script to import
  * @return {Promise} a promise that resolves when the script is loaded
  */
-const dynamicImportScript = (scriptURL) => {
+export const dynamicImportScript = (scriptURL) => {
     return new Promise((resolve, reject) => {
         var script = document.createElement('script');
         script.onload = function() {
@@ -24,54 +26,200 @@ const dynamicImportScript = (scriptURL) => {
     });
 };
 
+const clearKeycloakSession = (keycloak) => {
+    // The retry system implemented in the keycloak library is not working well.
+    // in particular, when I re-init the client, the session is not properly cleared
+    // forcing keycloak.sessionId="" avoids the "check-sso" to trigger a login and allows the login/logout monitoring to work.
+    keycloak.clearToken();
+    if (keycloak.sessionId) {
+        keycloak.sessionId = "";
+    }
+};
+// cache client for reuse
+const clients = {};
 
-const keycloakSSO = (Keycloak) => (ssoProvider, store) => {
-    const {sso} = ssoProvider;
-    const keycloak = new Keycloak({
-        ...sso.config,
-        // the JS API requires `clientId` and `url` while JSON contains `resource`
-        url: sso?.config?.["auth-server-url"],
-        clientId: sso?.config?.resource
-    });
-    const subject = new Rx.Subject();
+/**
+ *
+ * @param {object} provider the SSO provider object (e.g. {provider: "keycloak", url: "http://localhost:8080/auth"})
+ * @returns {Promise <object>} a promise that resolves with the keycloak instance
+ */
+export const getKeycloakClient = (provider) => {
+    if (!clients[provider.provider]) {
+        return dynamicImportScript(provider.jsURL ?? provider.config["auth-server-url"] ? `${provider.config["auth-server-url"]}js/keycloak.js`  :  "/js/keycloak.js")
+            .then((Keycloak) => {
+                clients[provider.provider] = new Keycloak({
+                    ...provider.config,
+                    // the JS API requires `clientId` and `url` while JSON contains `resource`
+                    url: provider?.config?.["auth-server-url"],
+                    clientId: provider?.config?.resource
+                });
+                return clients[provider.provider];
+            });
+    }
+    return Promise.resolve(clients[provider.provider]);
+};
+
+/**
+ * A function that initializes a Keycloak instance and returns an observable that emits
+ * when keycloak lib notifies that the user is logged in or logged out.
+ * @param {object} keycloak the keycloak instance
+ * @returns {Observable} an observable that emits the commands for "login", "logout", "syncToken", "noSessionFound", "scheduleRefresh":
+ *  - login: toggles the login for MapStore
+ *  - logout: toggles the logout for MapStore
+ *  - syncToken: forces re-init the keycloak client to reload token (on first login)
+ *  - noSessionFound: No client session found
+ *  - scheduleRefresh: there is a session with expire token, so we need to schedule a refresh before it expires
+ */
+const initKeycloakSSO = (keycloak) => (ssoProvider, store) => {
+    const commandSubject = new Rx.Subject();
+    const token = getToken();
+    const refreshToken = getRefreshToken();
+    const isLoggingIn = () => getCookieValue('access_token'); // temporary token is set here when logging in with OpenID via GeoStore.
+    const isLoggedInWithSSOProvider = () => isLoggedIn(store.getState()) && authProviderSelector(store.getState()) === ssoProvider.provider;
     keycloak.init({
+        token,
+        refreshToken,
         onLoad: 'check-sso',
+        // Adapter for GeoStore.
         adapter: {
             login() {
                 // check if is not logged in or if is logging in via openid
-                if (!isLoggedIn(store.getState()) && !getCookieValue('access_token') ) {
-                    subject.next(openIDLogin(ssoProvider));
+                if (!isLoggedIn(store.getState()) && !isLoggingIn()) {
+                    commandSubject.next("login");
+                // token for keycloak is not initialized. Reinit the client to set the token.
+                } else if (!keycloak.authenticated && isLoggedInWithSSOProvider() ) {
+                    commandSubject.next("syncToken"); // TODO: this should be triggered only once, or find a different way.
                 }
-                return new Promise(res => res());
+                return Promise.resolve();
             },
             logout() {
                 // logout only if you are logged in
-                if (isLoggedIn(store.getState() && authProviderSelector(store.getState) === ssoProvider.provider)) {
-                    subject.next(logout());
+                if (isLoggedInWithSSOProvider()) {
+                    clearKeycloakSession(keycloak);
+                    commandSubject.next("logout");
+
                 }
-                return new Promise(res => res());
+                return Promise.resolve();
+            },
+            redirectUri(options) {
+                if (options && options.redirectUri) {
+                    return options.redirectUri;
+                } else if (keycloak.redirectUri) {
+                    return keycloak.redirectUri;
+                }
+                return location.href;
             }
         }
-    });
+    }).then(() => {
+        if (keycloak.authenticated) {
+            if (isLoggedInWithSSOProvider() && keycloak?.tokenParsed?.exp && keycloak?.refreshTokenParsed?.exp) {
+                commandSubject.next("scheduleRefresh");
+            }
+        // not logged in keycloak or in MapStore session, schedule login monitoring.
+        } else if (!keycloak.authenticated && !isLoggedIn(store.getState())) {
+            commandSubject.next("noSessionFound");
+        }
+    })
+        .catch((e) => {
+            console.error("Error initializing keycloak SSO", e);
+            clearKeycloakSession(keycloak);
+            commandSubject.next("logout");
+        });
 
-    keycloak.onAuthSuccess = () => {
-        // subject.next(tokenLogin({accessToken: keycloak.token, refreshToken: keycloak.refreshToken, authProvider: provider}));
 
-    };
     keycloak.onAuthLogout = () => {
-        subject.next(logout());
+        clearKeycloakSession(keycloak);
+        commandSubject.next("logout");
     };
-
-    return subject.asObservable();
+    return commandSubject.asObservable();
 };
 
-
-export function monitorKeycloak(ssoProvider, store) {
-    const {sso} = ssoProvider;
-    return Rx.Observable.defer(
-        () => dynamicImportScript(/* webpackIgnore: true */ sso.jsURL ?? sso.config["auth-server-url"] ? `${sso.config["auth-server-url"]}js/keycloak.js`  :  "/js/keycloak.js"))
-        .catch(e => {
-            console.error("Cannot load keycloak JS API for Single sign on support", e);
-            return Rx.Observable.empty(); // TODO: notification
-        }).switchMap(Keycloak => keycloakSSO(Keycloak)(ssoProvider, store));
-}
+/**
+ * Monitors the SSO login status of the user using the Keycloak library.
+ * @param {object} ssoProvider the sso provider
+ * @param {object} store the redux store
+ * @returns {Observable} the observable that emits the login/logout redux actions
+ */
+export const monitorKeycloak = (ssoProvider) => (action$, store) => {
+    const initSubject = new Rx.Subject(); // commands emitted here are "retry" and "syncToken"
+    return Rx.Observable.of(ssoProvider)
+        // re-init on login success to set up the token
+        .merge(
+            action$.ofType(LOGIN_SUCCESS)
+                .filter(({authProvider}) => authProvider === ssoProvider.provider)
+        )
+        .merge(
+            action$.ofType(REFRESH_SUCCESS)
+            // .filter(({authProvider}) => authProvider === ssoProvider.provider) // refresh auth provider is geostore. so can not filter.
+        )
+        .merge(
+            initSubject
+                .asObservable()
+                .filter(command =>
+                    // flags to skip the retry / authoSync in case of problems.
+                    command === "retry" && (ssoProvider?.sso?.autoRetry ?? true) // allow disable retry TODO: document
+                    || command === "syncToken" && (ssoProvider?.sso?.autoSyncToken ?? true) // allow disable syncToken TODO: document
+                )
+        )
+        .mapTo(ssoProvider)
+        .combineLatest(
+            // Initial preload of Keycloak client lib
+            Rx.Observable.defer(
+                () => getKeycloakClient(ssoProvider)
+            ).catch(e => {
+                console.error("Cannot load keycloak JS API for Single sign on support", e);
+                return Rx.Observable.empty(); // TODO: notification
+            }),
+            (provider, keycloak) => ({provider, keycloak})
+        )
+        .switchMap(({provider, keycloak}) =>
+            initKeycloakSSO(keycloak)(provider, store)
+                .switchMap((command) => {
+                    switch (command) {
+                    case "login":
+                        return Rx.Observable.of(openIDLogin(ssoProvider));
+                    case "logout":
+                        // on logout schedule, toggle logout and schedule a retry after a while
+                        // to restart to monitor login events.
+                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).subscribe(() => { initSubject.next("retry"); });
+                        return Rx.Observable.of(onLogout());
+                    case "syncToken":
+                        // When logged in but token was not applied on init, re-init the keycloak client
+                        initSubject.next("syncToken");
+                        return Rx.Observable.empty();
+                    case "noSessionFound":
+                        // scheduling a re-init to emulate login monitoring.
+                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).subscribe(() => { initSubject.next("retry"); });
+                        return Rx.Observable.empty();
+                    case "scheduleRefresh":
+                        // schedule refresh token from normal epic
+                        const exp = new Date(keycloak.tokenParsed.exp * 1000);
+                        const now = new Date();
+                        const refreshExp = new Date(keycloak.refreshTokenParsed.exp * 1000);
+                        if (refreshExp > now) {
+                            if (exp < now) {
+                                return Rx.Observable.of(refreshAccessToken());
+                            }
+                            return Rx.Observable.timer(Math.max(((exp - now) / 2))).mapTo(refreshAccessToken())
+                                .takeUntil(action$.ofType(LOGOUT));
+                        }
+                        return Rx.Observable.empty();
+                    default:
+                        console.error("Unknown command", command);
+                        return Rx.Observable.empty();
+                    }
+                }).merge(
+                    // this IFRAME creation forces on logout the keycloak session update, to prevent
+                    // login on next page reload because of keycloak js api find session cookie changed.
+                    action$.ofType(LOGOUT).do(() => {
+                        var iframe = document.createElement("iframe");
+                        var src = keycloak.createLoginUrl({prompt: 'none', redirectUri: keycloak.silentCheckSsoRedirectUri});
+                        iframe.setAttribute("src", src);
+                        iframe.style.display = "none";
+                        document.body.appendChild(iframe);
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                        }, 5000);
+                    }).ignoreElements())
+        );
+};

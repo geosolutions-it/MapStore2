@@ -43,6 +43,16 @@ markdown_extensions:
   - markdown.extensions.attr_list
   - codehilite:
       linenums: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+
+extra_css:
+  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.css
+extra_javascript:
+  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js
 nav:
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
@@ -139,6 +149,8 @@ nav:
         - GeoServer: 'developer-guide/integrations/users/geoserver.md'
         - LDAP: 'developer-guide/integrations/users/ldap.md'
         - OpenId Connect: 'developer-guide/integrations/users/openId.md'
+      - Single Sign On:
+        - Keycloak: 'developer-guide/integrations/sso/keycloak.md'
     - Projects:
       - MapStore Projects: 'developer-guide/mapstore-projects.md'
       - Project Creation Script: 'developer-guide/project-creation-script.md'

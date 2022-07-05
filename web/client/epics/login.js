@@ -48,10 +48,11 @@ export const refreshTokenEpic = (action$, store) =>
                 .map(
                     (response) => sessionValid(response, AuthenticationAPI.authProviderName)
                 )
-                .catch(() => Rx.Observable.of(logout(null))) : Rx.Observable.empty()
+                // try to refresh the token if the session is still valid
+                .catch(() => Rx.Observable.of(refreshAccessToken())) : Rx.Observable.empty()
         )
             .merge(Rx.Observable
-                .interval(300000 /* ms */)
+                .interval(ConfigUtils.getConfigProp("tokenRefreshInterval") ?? 30000 /* ms */)
                 .filter(() => get(store.getState(), "security.user"))
                 .mapTo(refreshAccessToken()))
         );
@@ -155,7 +156,8 @@ export const checkSSO = ( action$, store ) => {
             if (sso.type !== "keycloak") {
                 return Rx.Observable.empty();
             }
-            return monitorKeycloak(ssoProvider, store);
+
+            return monitorKeycloak(ssoProvider)(action$, store);
         }
         return Rx.Observable.empty();
     });
