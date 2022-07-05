@@ -242,8 +242,15 @@ describe("getLayerReferenceFromDc", () => {
         expect(layerRef.type).toBe('OGC:WMS');
         expect(layerRef.url).toBe('catalog_url/wmsurl?SERVICE=WMS&VERSION=1.3.0');
     });
-    it("test layer reference with dc.URI of scheme OGC:WMS", () => {
+    it("test layer reference with multiple dc.URI of scheme OGC:WMS", () => {
         const dc = {URI: [{value: "http://wmsurl", protocol: 'OGC:WMS', name: 'some_layer'}, {value: "wfsurl", protocol: 'OGC:WFS'}]};
+        const layerRef = getLayerReferenceFromDc(dc);
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WMS');
+        expect(layerRef.url).toBe('http://wmsurl');
+    });
+    it("test layer reference with single dc.URI of scheme OGC:WMS", () => {
+        const dc = {URI: {value: "http://wmsurl", protocol: 'OGC:WMS', name: 'some_layer'}};
         const layerRef = getLayerReferenceFromDc(dc);
         expect(layerRef.params.name).toBe('some_layer');
         expect(layerRef.type).toBe('OGC:WMS');
