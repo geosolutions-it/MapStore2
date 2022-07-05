@@ -825,7 +825,7 @@ const createBilTerrainProvider = function(Cesium) {
 		}
 
 		this.ready=false;
-		this._headers = description.headers || {};
+		this._options = description || {};
 
 		Object.defineProperties(this, {
 			errorEvent : {
@@ -961,7 +961,7 @@ const createBilTerrainProvider = function(Cesium) {
 							var hasChildren = terrainChildrenMask(x, y, level,provider);
                             var promise = Cesium.Resource.fetchImage({
 								url: proxy.getURL(url),
-								headers: provider._headers,
+								headers: provider._options.headers,
 								request: new Cesium.Request({
 									throttleByServer: true
 								})
@@ -1000,7 +1000,7 @@ const createBilTerrainProvider = function(Cesium) {
 							
                             var promise = Cesium.Resource.fetchArrayBuffer({
 								url: proxy.getURL(urlArray),
-								headers: provider._headers,
+								headers: provider._options.headers,
 								request: new Cesium.Request({
 									throttleByServer: true
 								})
