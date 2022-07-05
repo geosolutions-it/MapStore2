@@ -136,6 +136,17 @@ describe('Test the timeline reducer', () => {
         expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
         expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
     });
+    it('initTimeline with defaults', () => {
+        const state = timeline(
+            {settings: {autoLoad: true, collapsed: false}},
+            initTimeline(true, 20, 'start')
+        );
+        expect(state.settings.autoLoad).toBeTruthy();
+        expect(state.settings.collapsed).toBeFalsy();
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+    });
     it('initTimeline with endValuesSupport set as undefined', () => {
         const state = timeline({}, initTimeline(true, 20, 'start'));
         expect(state.settings.showHiddenLayers).toBe(true);
