@@ -33,7 +33,6 @@ graph LR
     Adapter.login --> InitResolve
 ```
 
-
 MapStore can:
 
 - Re-run `init`
