@@ -1409,7 +1409,53 @@ describe('Cesium layer', () => {
         expect(cmp.layer.detached).toBe(true);
     });
 
-    it('should create a bil terrain provider', () => {
+    it('should create a bil terrain provider from wms layer (deprecated)', () => {
+        const options = {
+            type: "wms",
+            useForElevation: true,
+            url: "https://host-sample/geoserver/wms",
+            format: "application/bil16",
+            name: "workspace:layername",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer._options.url).toEqual('https://host-sample/geoserver/wms');
+        expect(cmp.layer._options.proxy.proxy).toBeTruthy();
+    });
+
+    it('should create a bil terrain provider from wms layer with no proxy (deprecated)', () => {
+        const options = {
+            type: "wms",
+            useForElevation: true,
+            url: "/geoserver/wms",
+            format: "application/bil16",
+            name: "workspace:layername",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer._options.url).toEqual('/geoserver/wms');
+        expect(cmp.layer._options.proxy.proxy).toBeFalsy();
+    });
+
+    it('should create a bil terrain provider with wms config', () => {
         const options = {
             type: "terrain",
             provider: "wms",
@@ -1429,6 +1475,32 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.layerName).toBe(options.name);
+        expect(cmp.layer.terrainProvider._options.url).toEqual('https://host-sample/geoserver/wms');
+        expect(cmp.layer.terrainProvider._options.proxy.proxy).toBeTruthy();
+    });
+
+    it('should create a bil terrain provider with wms config (no proxy url)', () => {
+        const options = {
+            type: "terrain",
+            provider: "wms",
+            url: "/geoserver/wms",
+            format: "application/bil16",
+            name: "workspace:layername",
+            littleendian: false,
+            visibility: true
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.layerName).toBe(options.name);
+        expect(cmp.layer.terrainProvider._options.url).toEqual('/geoserver/wms');
+        expect(cmp.layer.terrainProvider._options.proxy.proxy).toBeFalsy();
     });
 
     it('should create a cesium terrain provider', () => {
