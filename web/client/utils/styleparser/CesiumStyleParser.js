@@ -158,7 +158,7 @@ function getStyleFuncFromRules({
                                 width: symbolizer.width,
                                 positions: entity._msStoredCoordinates.polyline,
                                 // by default the line will try to follow the terrain/3d tiles profile
-                                clampToGround: symbolizer.clampToGround
+                                clampToGround: symbolizer.clampToGround || true
                             });
                         }
                         if (symbolizer.kind === 'Fill' && entity._msStoredCoordinates.polygon) {
@@ -185,7 +185,7 @@ function getStyleFuncFromRules({
                                     width: symbolizer.outlineWidth,
                                     positions: entity._msStoredCoordinates.polygon.getValue().positions,
                                     // by default the line will try to follow the terrain/3d tiles profile
-                                    clampToGround: symbolizer.clampToGround
+                                    clampToGround: symbolizer.clampToGround || true
                                 });
                             }
                         }
