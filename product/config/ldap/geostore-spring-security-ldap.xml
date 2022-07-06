@@ -25,7 +25,7 @@
         <security:csrf disabled="true"/>
 		<security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
 		<security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-        <!-- <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/> -->
+        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
         <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
 		<security:anonymous />
 	</security:http>
@@ -138,7 +138,7 @@
 
     <!-- Keycloak -->
 
-    <!-- <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/> -->
+    <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
 
     <!-- END OAuth2 beans-->
 </beans>

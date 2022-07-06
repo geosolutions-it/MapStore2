@@ -58,6 +58,7 @@ const capabilitiesRequest = {
 
 function VectorStyleEditor({
     element: layer,
+    enable3dStyleOptions,
     fonts = [
         'Arial',
         'Verdana',
@@ -201,6 +202,7 @@ function VectorStyleEditor({
             onChange={handleUpdateStyle}
             onError={handleError}
             exactMatchGeometrySymbol
+            enable3dStyleOptions={enable3dStyleOptions}
             config={{
                 simple: true,
                 fonts

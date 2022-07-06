@@ -291,7 +291,7 @@ describe('playback Epics', () => {
             }
         });
     });
-    it('setIsIntervalData', done => {
+    it('setIsIntervalData on layer select', done => {
         mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_INTERVAL_VALUES_RESPONSE);
         testEpic(setIsIntervalData, 1, selectLayer("playback:selected_layer"), ([action]) => {
             try {
@@ -303,6 +303,29 @@ describe('playback Epics', () => {
                 done(e);
             }
         }, ANIMATION_MOCK_STATE);
+    });
+    it('setIsIntervalData on current time', done => {
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_INTERVAL_VALUES_RESPONSE);
+        testEpic(setIsIntervalData, 1, setCurrentTime("2016-09-04T00:00:00.000Z"), ([action]) => {
+            try {
+                const { type, timeIntervalData } = action;
+                expect(type).toBe(SET_INTERVAL_DATA);
+                expect(timeIntervalData).toBe(true);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
+    it('setIsIntervalData when no time layer selected', done => {
+        testEpic(addTimeoutEpic(setIsIntervalData, 100), 1, setCurrentTime("2016-09-04T00:00:00.000Z"), ([action]) => {
+            try {
+                expect(action.type).toBe(TEST_TIMEOUT);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, {dimension: ANIMATION_MOCK_STATE.dimension, layers: ANIMATION_MOCK_STATE.layers});
     });
     it('switchOffSnapToLayer - layer selected visibility false', done => {
         testEpic(switchOffSnapToLayer, 1, changeLayerProperties("playback:selected_layer", {visibility: false}), ([action]) => {

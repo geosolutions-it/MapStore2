@@ -18,6 +18,12 @@ const vector3dStyleOptions = {
     })
 };
 
+const billboard3dStyleOptions = {
+    msBringToFront: property.msBringToFront({
+        label: 'Bring to front'
+    })
+};
+
 const getBlocks = ({
     exactMatchGeometrySymbol,
     enable3dStyleOptions
@@ -56,7 +62,8 @@ const getBlocks = ({
                 }),
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
-                })
+                }),
+                ...(enable3dStyleOptions ? billboard3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Mark',
@@ -103,7 +110,8 @@ const getBlocks = ({
                 }),
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
-                })
+                }),
+                ...(enable3dStyleOptions ? billboard3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Icon',

@@ -11,6 +11,7 @@
 // **************
 #ms-components-theme(@theme-vars) {
     .timeline-plugin {
+        .background-color-var(@theme-vars[main-bg]);
         @ms-none-transparent: --ms-none, transparent;
         @ms-none-unset: --ms-none, unset;
         /* local mixin to highlight handlers on timeline, used on active and over */
@@ -38,9 +39,9 @@
                 .color-var(@a-color);
             }
         }
-    
+
         .vis-custom-time {
-    
+
             &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
                 .background-color-var(@theme-vars[main-color]);
                 & > div {
@@ -78,7 +79,7 @@
                     }
                 }
             }
-    
+
             &.startPlaybackTime {
                 .background-color-var(@theme-vars[success]);
                 /* play icon */
@@ -104,7 +105,7 @@
                     }
                 }
             }
-    
+
             &.currentTime {
                 .background-color-var(@theme-vars[main-color]);
                 /* generate a triangle on top of the handler */
@@ -115,7 +116,7 @@
                 &:after, &::after {
                     .border-bottom-color-var(@theme-vars[main-color]);
                 }
-    
+
                 &:hover {
                     /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active-with-css-variables(
@@ -136,7 +137,7 @@
                 }
             }
         }
-    
+
         &.with-time-offset {
             .vis-custom-time {
                 &.currentTime {
@@ -159,7 +160,7 @@
                         );
                     }
                 }
-    
+
                 &.offsetTime {
                     /* generate a smaller tiangle on bottom of the handler */
                     &:before, &::before {
@@ -169,7 +170,7 @@
                     &:after, &::after {
                         .border-right-color-var(@theme-vars[main-color]);
                     }
-    
+
                     &:hover, &:active {
                         /* mixin hightlight handler, change background and triangles colors */
                         .ms-time-color-active-with-css-variables(
@@ -194,7 +195,7 @@
                 }
             }
         }
-    
+
         .vis-timeline {
             .background-color-var(@theme-vars[main-bg]);
             .vis-item {
@@ -236,7 +237,7 @@
                                 }
                             }
                         }
-    
+
                         .vis-item {
                             &.vis-dot {
                                 .border-color-var(@theme-vars[timeline-histogram-border-color]);
@@ -321,7 +322,7 @@
                     &.offsetTime {
                         .background-color-var(@theme-vars[main-color]);
                     }
-    
+
                     &.endPlaybackTime {
                         .background-color-var(@theme-vars[danger]);
                     }
@@ -331,14 +332,14 @@
                 }
             }
         }
-    
+
     }
-    
+
     .ms-inline-datetime {
         .border-right-color-var(@theme-vars[main-border-color]);
         .background-color-var(@theme-vars[main-bg]);
     }
-    
+
     .playback-plugin {
         .ms-playback-settings {
             .background-color-var(@theme-vars[main-bg]);
@@ -918,7 +919,16 @@
             }
         }
     }
-
+    .timeline-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .ms-inline-datetime {

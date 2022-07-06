@@ -136,15 +136,12 @@ function wmsToCesiumOptions(options) {
 }
 
 function wmsToCesiumOptionsBIL(options) {
-
     let url = options.url;
     const headers = getAuthenticationHeaders(url, options.securityToken);
     return assign({
-        url: new Cesium.Resource({
-            url,
-            headers,
-            proxy: getProxy(options)
-        }),
+        url,
+        headers,
+        proxy: getProxy(options),
         littleEndian: options.littleendian || false,
         layerName: options.name
     });
