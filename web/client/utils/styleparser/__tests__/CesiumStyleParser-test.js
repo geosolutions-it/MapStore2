@@ -47,7 +47,8 @@ describe('CesiumStyleParser', () => {
                                 fillOpacity: 0.5,
                                 outlineColor: '#00ff00',
                                 outlineOpacity: 0.25,
-                                outlineWidth: 2
+                                outlineWidth: 2,
+                                clampToGround: true
                             }
                         ]
                     }
@@ -69,6 +70,7 @@ describe('CesiumStyleParser', () => {
                             expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
                             expect(entities[0].polyline.width.getValue()).toBe(2);
                             expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
+                            expect(entities[0].polyline.clampToGround.getValue()).toBe(true);
                         } catch (e) {
                             done(e);
                         }
@@ -88,7 +90,8 @@ describe('CesiumStyleParser', () => {
                                 kind: 'Line',
                                 color: '#ff0000',
                                 opacity: 0.5,
-                                width: 2
+                                width: 2,
+                                clampToGround: true
                             }
                         ]
                     }
@@ -109,6 +112,7 @@ describe('CesiumStyleParser', () => {
                             styleFunc({ entities });
                             expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
                             expect(entities[0].polyline.width.getValue()).toBe(2);
+                            expect(entities[0].polyline.clampToGround.getValue()).toBe(true);
                         } catch (e) {
                             done(e);
                         }
