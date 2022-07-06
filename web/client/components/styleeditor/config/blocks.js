@@ -12,8 +12,15 @@ import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
+const vector3dStyleOptions = {
+    clampToGround: property.clampToGround({
+        label: 'Clamp to ground'
+    })
+};
+
 const getBlocks = ({
-    exactMatchGeometrySymbol
+    exactMatchGeometrySymbol,
+    enable3dStyleOptions
 } = {}) => {
     const symbolizerBlock = {
         Mark: {
@@ -148,7 +155,8 @@ const getBlocks = ({
                 join: property.join({
                     label: 'styleeditor.lineJoin',
                     key: 'join'
-                })
+                }),
+                ...(enable3dStyleOptions ? vector3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Line',
