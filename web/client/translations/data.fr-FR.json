@@ -2210,6 +2210,8 @@
             "addMarkRule": "Ajouter une règle de marque",
             "shape": "Forme",
             "fill": "Fill color",
+            "clampToGround": "S'adapter au terrain",
+            "msBringToFront": "Mettre en avant",
             "strokeColor": "Couleur de ligne",
             "strokeWidth": "Largeur de ligne",
             "radius": "Rayon",

@@ -2247,6 +2247,8 @@
             "addMarkRule": "Markerregel hinzufügen",
             "shape": "Form",
             "fill": "Füllfarbe",
+            "clampToGround": "Klemme an Masse",
+            "msBringToFront": "In den Vordergrund bringen",
             "strokeColor": "Linienfarbe",
             "strokeWidth": "Linienbreite",
             "radius": "Radius",
