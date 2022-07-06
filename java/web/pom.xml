@@ -41,7 +41,7 @@
     <dependency>
       <groupId>it.geosolutions.geostore</groupId>
       <artifactId>geostore-webapp</artifactId>
-      <version>1.8.1</version>
+      <version>1.8-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
