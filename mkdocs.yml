@@ -43,7 +43,7 @@ markdown_extensions:
   - markdown.extensions.attr_list
   - codehilite:
       linenums: true
-pages:
+nav:
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
     - Managing Users and Groups:
