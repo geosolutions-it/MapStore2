@@ -138,7 +138,7 @@ keycloakOAuth2Config.jsonConfig=<copy-here-the-json-config-from-keycloak-removin
 # Redirect URLs
 # - Redirect URL: need to be configured to point to your application at the path <base-app-url>/rest/geostore/openid/keycloak/callback
 # e.g. `https://my.mapstore.site.com/mapstore/mapstore/rest/geostore/openid/keycloak/callback`
-keycloakOAuth2Config.redirectUri=https://localhost:9191/mapstore/rest/geostore/openid/keycloak/callback
+keycloakOAuth2Config.redirectUri=https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback
 # - Internal redirect URL when logged in (typically the home page of MapStore, can be relative)
 keycloakOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
 
