@@ -264,13 +264,14 @@ Serve the following code as an example:
             "provider": "wms",
             "url": "https://host-sample/geoserver/wms",
             "name": "workspace:layername",  // name of the geoserver resource
-            "format": "application/bil16",
             "littleendian": false,
             "visibility": true
         }]
     }
 }
 ```
+!!! note
+    When using `terrain` layer with `wms` provider, the format option in layer configuration is not needed anymore as Mapstore supports only `image/bil` format and is used by default
 
 ## Migration from 2022.01.00 to 2022.01.01
 

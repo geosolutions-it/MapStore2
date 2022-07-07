@@ -70,7 +70,7 @@ export const wmsToCesiumOptionsBIL = (options) => {
         fixedHeight: options.fixedHeight,
         fixedWidth: options.fixedWidth,
         crs: options.crs, // Support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
-        format: options.format // MapStore only supports WMS "image/bil"
+        format: "image/bil" // MapStore only supports "image/bil" format for WMS provider
     };
 };
 
