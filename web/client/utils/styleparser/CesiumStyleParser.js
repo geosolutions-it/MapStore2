@@ -119,6 +119,7 @@ function getStyleFuncFromRules({
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
+                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: 1 * globalOpacity
@@ -136,6 +137,7 @@ function getStyleFuncFromRules({
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
+                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: symbolizer.opacity * globalOpacity
@@ -199,6 +201,7 @@ function getStyleFuncFromRules({
                                     color: symbolizer.color,
                                     opacity: 1 * globalOpacity
                                 }),
+                                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                                 pixelOffset: new Cesium.Cartesian2(symbolizer?.offset?.[0] ?? 0, symbolizer?.offset?.[1] ?? 0),
                                 // outline is not working
                                 // rotation is not available as property
