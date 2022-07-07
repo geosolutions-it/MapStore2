@@ -6,6 +6,7 @@ import { isLoggedIn, authProviderSelector } from '../selectors/security';
 import { getCookieValue } from './CookieUtils';
 import { LOGIN_SUCCESS, LOGOUT, refreshAccessToken, REFRESH_SUCCESS } from '../actions/security';
 
+export const CLOSE_KEYCLOAK_MONITOR = "__CLOSE_KEYCLOAK_MONITOR__";
 /**
  * Imports the script and add it to the document.
  * @param {string} scriptURL the URL of the script to import
@@ -62,9 +63,6 @@ export const getKeycloakClient = (provider) => {
 export const clearClients = function() {
     clients = {};
 };
-export const getClient = function(provider) {
-    return clients[provider.provider];
-}
 
 /**
  * A function that initializes a Keycloak instance and returns an observable that emits
@@ -184,11 +182,11 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                 .switchMap((command) => {
                     switch (command) {
                     case "login":
-                        return Rx.Observable.of(openIDLogin(ssoProvider));
+                        return Rx.Observable.of(openIDLogin(ssoProvider, ssoProvider.goToPage)); // loginOpts are useful for mock testing
                     case "logout":
                         // on logout schedule, toggle logout and schedule a retry after a while
                         // to restart to monitor login events.
-                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).subscribe(() => { initSubject.next("retry"); });
+                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).takeUntil(action$.ofType(LOGIN_SUCCESS, REFRESH_SUCCESS)).subscribe(() => { initSubject.next("retry"); });
                         return Rx.Observable.of(onLogout());
                     case "syncToken":
                         // When logged in but token was not applied on init, re-init the keycloak client
@@ -196,7 +194,7 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                         return Rx.Observable.empty();
                     case "noSessionFound":
                         // scheduling a re-init to emulate login monitoring.
-                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).subscribe(() => { initSubject.next("retry"); });
+                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).takeUntil(action$.ofType(LOGIN_SUCCESS, REFRESH_SUCCESS)).subscribe(() => { initSubject.next("retry"); });
                         return Rx.Observable.empty();
                     case "scheduleRefresh":
                         // schedule refresh token from normal epic
@@ -207,9 +205,11 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                             if (exp < now) {
                                 return Rx.Observable.of(refreshAccessToken());
                             }
-                            return Rx.Observable.timer(Math.max(((exp - now) / 2))).mapTo(refreshAccessToken())
+                            // refreshInterval is useful for testing
+                            return Rx.Observable.timer( ssoProvider.refreshInterval ?? Math.max(((exp - now) / 2), 10)).mapTo(refreshAccessToken())
                                 .takeUntil(action$.ofType(LOGOUT));
                         }
+                        // if also refresh token is expired (logout not necessary, because it is already done by MapStore)
                         return Rx.Observable.empty();
                     default:
                         console.error("Unknown command", command);
@@ -227,6 +227,12 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                         setTimeout(() => {
                             document.body.removeChild(iframe);
                         }, 5000);
-                    }).ignoreElements())
+                    }).ignoreElements()
+                // this is necessary to close it in the test environment.
+                ).takeUntil(
+                    action$.ofType(CLOSE_KEYCLOAK_MONITOR).do(() => {
+                        initSubject.complete();
+                    })
+                )
         );
 };

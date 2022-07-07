@@ -1,4 +1,9 @@
-/** mock of keycloak API for tests */
+/** mock of keycloak API for tests
+ * @class Keycloak
+ * you can set the following methods:
+ * - afterInit: called after init promise has been resolved
+ * - afterLogin: called after login promise has been resolved
+*/
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define('keycloak', factory) :
@@ -23,16 +28,29 @@
 	    var adapter;
 	    kc.init = function (initOptions) {
             adapter = initOptions.adapter;
-            return Promise.resolve();
+
+            return Promise.resolve().then(res => {
+                if (kc.afterInit) {
+                    setTimeout(kc.afterInit(res), 0);
+                }
+                return res;
+            });
 	    };
 
 	    kc.login = function (options) {
-	        return adapter.login(options);
+	        return adapter.login(options).then(res => {
+                if (kc.afterLogin) {
+                    setTimeout(kc.afterLogin(res), 0);
+                }
+                return res;
+            });
 	    };
         kc.clearToken = function() {
-
         }
         kc.mock = true;
+        kc.logout = function () {
+            return adapter.logout();
+        }
 	}
     return Keycloak;
 }));

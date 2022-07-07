@@ -11,7 +11,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import { setControlProperty } from './controls';
 import { logoutWithReload, resetError } from './security';
 import { setCookie } from '../utils/CookieUtils';
-import AuthorizationAPI from '../api/GeoStoreDAO';
+import AuthenticationAPI from '../api/GeoStoreDAO';
 
 /**
  * Thunk with side effects to trigger set the proper temp cookie and redirect to openID login provider URL.
@@ -83,13 +83,13 @@ export function onShowLogin(providers = [{type: "basic", provider: "geostore"}])
 
 /**
  * Execute the logout operations
- * @returns {function} calls authorizationAPI logout and then dispatch the logout actions.
+ * @returns {function} calls AuthenticationAPI logout and then dispatch the logout actions.
  * @memberof actions.login
  */
 export function onLogout() {
     return (dispatch) => {
 
-        AuthorizationAPI.logout()
+        AuthenticationAPI.logout()
             .then(() => dispatch(logoutWithReload()))
             .catch(() => dispatch(logoutWithReload()));
 
