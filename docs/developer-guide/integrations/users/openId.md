@@ -126,6 +126,7 @@ Create a new Client on keycloak. In this guide we will name it `mapstore-server`
   - `keycloakOAuth2Config.redirectUri`: need to be configured to point to your application at the path `<base-app-url>/rest/geostore/openid/keycloak/callback`, e.g. `https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback`
   - `keycloakOAuth2Config.internalRedirectUri` can be set to your application root, e.g. `https://my.mapstore.site.com/mapstore/`
   - `keycloakOAuth2Config.autoCreateUser`: true if you want to create user on DB on login (if you are not using any other user integration e.g. `ldap`, `keycloak`)
+  - `keycloakOAuth2Config.forceConfiguredRedirectURI`: optional, if `true`, forces the redirect URI for callback to be equal to teh redirect URI. This is useful if you have problems logging in behind a proxy, or in dev mode.
 
 ```properties
 # enables the keycloak OpenID Connect filter
@@ -144,7 +145,7 @@ keycloakOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
 
 # Create user (if you are using local database, this should be set to true)
 keycloakOAuth2Config.autoCreateUser=true
-
+#
 ```
 
 #### Configure MapStore front-end for Keycloak OpenID
@@ -165,3 +166,4 @@ keycloakOAuth2Config.autoCreateUser=true
     ]
 }
 ```
+

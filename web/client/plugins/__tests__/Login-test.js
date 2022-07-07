@@ -172,7 +172,7 @@ describe('Login Plugin', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             const { Plugin: SidebarMenuPlugin } = getPluginForTest(SidebarMenu, storeState, { LoginPlugin: Login });
-            // is set in order to avoid a problem with extraItems of SidebarMenu and LoginMenu
+            // container div is set to force the login items to render in the sidebar, not using the extra space
             ReactDOM.render(<div style={{position: "relative", height: 500}} ><SidebarMenuPlugin items={[{ ...Login.LoginPlugin.SidebarMenu, plugin: Plugin.LoginPlugin}]} /></div>, document.getElementById("container"));
             const entries = document.querySelectorAll("#mapstore-sidebar-menu ul li[role=\"presentation\"]");
             expect(entries.length).toEqual(3); // user.info, user.changePwd, user.logout
@@ -182,7 +182,7 @@ describe('Login Plugin', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             const { Plugin: SidebarMenuPlugin } = getPluginForTest(SidebarMenu, storeState, { LoginPlugin: Login });
-            // is set in order to avoid a problem with extraItems of SidebarMenu and LoginMenu
+            // container div is set to force the login items to render in the sidebar, not using the extra space
             ReactDOM.render(<div style={{position: "relative", height: 500}} ><SidebarMenuPlugin items={[{ ...Login.LoginPlugin.SidebarMenu, plugin: Plugin.LoginPlugin}]} /></div>, document.getElementById("container"));
             const entries = document.querySelectorAll("#mapstore-sidebar-menu ul li[role=\"presentation\"]");
             expect(entries.length).toEqual(1); // only user.logout
@@ -192,7 +192,7 @@ describe('Login Plugin', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             const { Plugin: SidebarMenuPlugin } = getPluginForTest(SidebarMenu, storeState, { LoginPlugin: Login });
-            // is set in order to avoid a problem with extraItems of SidebarMenu and LoginMenu
+            // container div is set to force the login items to render in the sidebar, not using the extra space
             ReactDOM.render(<div style={{position: "relative", height: 500}} ><SidebarMenuPlugin items={[{ ...Login.LoginPlugin.SidebarMenu, plugin: Plugin.LoginPlugin}]} /></div>, document.getElementById("container"));
             const entries = document.querySelectorAll("#mapstore-sidebar-menu ul li[role=\"presentation\"]");
             expect(entries.length).toEqual(2); // user.info and user.logout

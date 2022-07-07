@@ -26,11 +26,11 @@ const logos = {
 };
 
 const Separator = ({children}) => <div style={{width: "100%", textAlign: "center", padding: 10}}>{children}</div>;
-const LoginItem = withTooltip(({provider, openIDLogin}) => {
+const LoginItem = withTooltip(({provider, onLogin}) => {
     const {title, provider: providerName, imageURL} = provider;
     const logo = imageURL ?? logos[providerName];
     const text = title;
-    return <a style={{margin: 20}} onClick={() => openIDLogin(provider)}>{logo ? <img src={logo} alt={text} style={{minHeight: 50}} /> : text ?? providerName}</a>;
+    return <a style={{margin: 20}} onClick={() => onLogin(provider)}>{logo ? <img src={logo} alt={text} style={{minHeight: 50}} /> : text ?? providerName}</a>;
 });
 /**
  * A Modal window to show password reset form
@@ -98,7 +98,7 @@ class LoginModal extends React.Component {
             return <>
                 <Separator><Message msgId={formProviders.length > 0 ? "user.orSignInWith" : "user.signInWith"}/></Separator>
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
-                    {openIdProviders.map((provider) => <LoginItem provider={provider} tooltip={provider?.tooltip ?? provider?.provider} openIDLogin={this.props.openIDLogin} />)}
+                    {openIdProviders.map((provider) => <LoginItem key={provider.provider} provider={provider} tooltip={provider?.tooltip ?? provider?.provider} onLogin={this.props.openIDLogin} />)}
                 </div>
             </>;
         }

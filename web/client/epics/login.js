@@ -21,6 +21,8 @@ import { mapIdSelector } from '../selectors/map';
 import { hasMapAccessLoadingError } from '../selectors/mapInitialConfig';
 import { initCatalog } from '../actions/catalog';
 import { setControlProperty, SET_CONTROL_PROPERTY } from '../actions/controls';
+import { monitorKeycloak } from '../utils/KeycloakUtils';
+
 import { pathnameSelector } from '../selectors/router';
 import { isLoggedIn } from '../selectors/security';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -30,6 +32,7 @@ import Rx from 'rxjs';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import url from 'url';
 import { get } from 'lodash';
+import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
 
 /**
  * Refresh the access_token every 5 minutes
@@ -45,10 +48,11 @@ export const refreshTokenEpic = (action$, store) =>
                 .map(
                     (response) => sessionValid(response, AuthenticationAPI.authProviderName)
                 )
-                .catch(() => Rx.Observable.of(logout(null))) : Rx.Observable.empty()
+                // try to refresh the token if the session is still valid
+                .catch(() => Rx.Observable.of(refreshAccessToken())) : Rx.Observable.empty()
         )
             .merge(Rx.Observable
-                .interval(300000 /* ms */)
+                .interval(ConfigUtils.getConfigProp("tokenRefreshInterval") ?? 30000 /* ms */)
                 .filter(() => get(store.getState(), "security.user"))
                 .mapTo(refreshAccessToken()))
         );
@@ -140,12 +144,32 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
     });
 };
 
+export const checkSSO = ( action$, store ) => {
+    return action$.ofType(LOCAL_CONFIG_LOADED).take(1).switchMap(() => {
+        const providers = ConfigUtils.getConfigProp("authenticationProviders");
+        // get the first SSO system configured (only one supported)
+        const ssoProvider = (providers ?? []).filter(({sso}) => sso)?.[0];
+        if (ssoProvider) {
+            // monitor SSO
+            const {sso} = ssoProvider;
+            // only keycloak implementation is supported
+            if (sso.type !== "keycloak") {
+                return Rx.Observable.empty();
+            }
+
+            return monitorKeycloak(ssoProvider)(action$, store);
+        }
+        return Rx.Observable.empty();
+    });
+};
+
 /**
  * Epics for login functionality
  * @name epics.login
  * @type {Object}
  */
 export default {
+    checkSSO,
     refreshTokenEpic,
     reloadMapConfig,
     promptLoginOnMapError,

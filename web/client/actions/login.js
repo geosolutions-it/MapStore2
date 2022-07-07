@@ -7,10 +7,11 @@
 */
 
 import ConfigUtils from '../utils/ConfigUtils';
+
 import { setControlProperty } from './controls';
 import { logoutWithReload, resetError } from './security';
 import { setCookie } from '../utils/CookieUtils';
-import AuthorizationAPI from '../api/GeoStoreDAO';
+import AuthenticationAPI from '../api/GeoStoreDAO';
 
 /**
  * Thunk with side effects to trigger set the proper temp cookie and redirect to openID login provider URL.
@@ -21,10 +22,10 @@ import AuthorizationAPI from '../api/GeoStoreDAO';
  * @returns {function} the think to execute. It doesn't dispatch any action, but sets a cookie to remember the authProvider used.
  * @memberof actions.login
  */
-export function openIDLogin({provider, url} = {}, goToPage = (page) => {location.href = page;}) {
+export function openIDLogin(entry, goToPage = (page) => {window.location.href = page; }) {
     return () => {
-        setCookie("authProvider", provider, 1000 * 60 * 5); // expires in 5 minutes
-        goToPage(url ?? `${ ConfigUtils.getConfigProp("geoStoreUrl")}openid/${provider}/login`);
+        setCookie("authProvider", entry?.provider, 1000 * 60 * 5); // expires in 5 minutes
+        goToPage(entry?.url ?? `${ ConfigUtils.getConfigProp("geoStoreUrl")}openid/${entry?.provider}/login`);
     };
 }
 /**
@@ -82,13 +83,13 @@ export function onShowLogin(providers = [{type: "basic", provider: "geostore"}])
 
 /**
  * Execute the logout operations
- * @returns {function} calls authorizationAPI logout and then dispatch the logout actions.
+ * @returns {function} calls AuthenticationAPI logout and then dispatch the logout actions.
  * @memberof actions.login
  */
 export function onLogout() {
     return (dispatch) => {
 
-        AuthorizationAPI.logout()
+        AuthenticationAPI.logout()
             .then(() => dispatch(logoutWithReload()))
             .catch(() => dispatch(logoutWithReload()));
 
