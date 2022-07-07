@@ -154,8 +154,7 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                 .filter(({authProvider}) => authProvider === ssoProvider.provider)
         )
         .merge(
-            action$.ofType(REFRESH_SUCCESS)
-            // .filter(({authProvider}) => authProvider === ssoProvider.provider) // refresh auth provider is geostore. so can not filter.
+            action$.ofType(REFRESH_SUCCESS) // refresh auth provider is geostore. So we don't filter by provider
         )
         .merge(
             initSubject
