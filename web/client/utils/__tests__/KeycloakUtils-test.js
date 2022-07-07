@@ -48,7 +48,6 @@ describe('KeycloakUtils', () => {
 
     });
     describe('monitorKeycloak', () => {
-        // TODO: !!! fails because stream doesn't close and no session found schedules continuously a refresh !!!
         const setAuthenticated = (kc, {token = TOKEN, tokenParsed = TOKEN_PARSED, refreshToken = REFRESH_TOKEN, refreshTokenParsed = REFRESH_TOKEN_PARSED} = {}) => {
             kc.authenticated = true;
             kc.token = token;
