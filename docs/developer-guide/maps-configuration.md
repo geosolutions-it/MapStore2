@@ -1149,18 +1149,55 @@ In order to create a `wms` based mesh there are some requirements that need to b
 
 - a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
 - A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
+  - BILTerrainProvider is used to parse `wms` based mesh. Supports three ways in parsing the metadata of the layer
+    1. Layer configuration with **sufficient metadata** of the layer. This prevents a call to `getCapabilities` eventually improving performance of the parsing of the layer.
+        Mandatory fields are `url`, `name`, `version`, `crs`.
+    ```json
+    {
+      "type": "terrain",
+      "provider": "wms",
+      "url": "http://hot-sample/geoserver/wms",
+      "name": "workspace:layername", 
+      "littleendian": false,
+      "visibility": true,
+      "version": "1.3.0",
+      "fixedHeight": null, // Map height. Max value is < 65
+      "fixedWidth": null, // Map width. Max value is < 65
+      "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
+    }
+    ```
+    2. Layer configuration of `geoserver` layer with layer name _prefixed with workspace_, then the `getCapabilities` is requested only for that layer
+    ```json
+    {
+    "type": "terrain",
+    "provider": "wms",
+    "url": "https://host-sample/geoserver/wms", // 'geoserver' url
+    "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
+    "littleendian": false
+    }
+    ```
+    3. Layer configuration of geoserver layer with layer name _not prefixed with workspace_ then `getCapabilities` is requested in global scope.
+    ```json
+    { 
+      "type": "terrain",
+      "provider": "wms",
+      "url": "https://host-sample/geoserver/wms",
+      "name": "layername",
+      "littleendian": false
+    }
+    ```
+!!! note
+With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
 
+Generic layer configuration of type `terrain` and provide `wms` is as follows. 
 The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider:
-
 ```json
 { 
   "type": "terrain",
   "provider": "wms",
   "url": "https://host-sample/geoserver/wms",
   "name": "workspace:layername", // name of the geoserver resource
-  "format": "application/bil16",
-  "littleendian": false,
-  "visibility": true
+  "littleendian": false
 }
 ```
 
