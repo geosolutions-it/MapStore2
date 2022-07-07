@@ -312,23 +312,7 @@
                 "scalebar": {
                   "container" : "#footer-scalebar-container"
                 }
-              },
-              "additionalLayers": [{
-                "type": "terrain",
-                "provider": "wms",
-                "url": "http://gs-stable.geo-solutions.it/geoserver/wms",
-                "name": "austrocontrol:DTM250_Austria_EPSG3857_LZW",
-                "format": "image/bil",
-                "littleendian": false,
-                "visibility": true,
-                "version": "1.3.0",
-                "fixedHeight": null,
-                "fixedWidth": null,
-                "tilesetHeight": 65,
-                "tilesetWidth": 65,
-                "CRS1": "CRS:84",
-                "styleName": null
-              }]
+              }
             }
           }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
