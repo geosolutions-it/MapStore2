@@ -276,7 +276,7 @@ const property = {
             };
         }
     }),
-    clampToGround: ({ key = 'clampToGround', label = 'Clamp to ground' }) => ({
+    msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground' }) => ({
         type: 'toolbar',
         label,
         config: {
