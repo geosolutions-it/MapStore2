@@ -183,7 +183,7 @@ function getStyleFuncFromRules({
                                     }),
                                     width: symbolizer.outlineWidth,
                                     positions: entity._msStoredCoordinates.polygon.getValue().positions,
-                                    clampToGround: symbolizer.clampToGround
+                                    clampToGround: symbolizer.msClampToGround
                                 });
                             }
                         }
