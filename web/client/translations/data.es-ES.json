@@ -2179,6 +2179,8 @@
             "addMarkRule": "Agregar regla de marca",
             "shape": "Forma",
             "fill": "Color de relleno",
+            "clampToGround": "Adaptar al terreno",
+            "msBringToFront": "Traer al frente",
             "strokeColor": "Color de línea",
             "strokeWidth": "Ancho de línea",
             "radius": "Radio",

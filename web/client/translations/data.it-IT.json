@@ -2181,6 +2181,8 @@
             "addMarkRule": "Aggiungi regola marker",
             "shape": "Forma",
             "fill": "Colore riempimento",
+            "clampToGround": "Adattarsi al terreno",
+            "msBringToFront": "Portare in primo piano",
             "strokeColor": "Colore linea",
             "strokeWidth": "Spessore linea",
             "radius": "Raggio",
