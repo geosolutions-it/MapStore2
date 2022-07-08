@@ -222,7 +222,7 @@ const getBlocks = ({
                 fillOpacity: 1,
                 outlineColor: '#777777',
                 outlineWidth: 1,
-                clampToGround: true
+                msClampToGround: true
             }
         },
         PointCloud: {
