@@ -157,7 +157,7 @@ function getStyleFuncFromRules({
                                     }),
                                 width: symbolizer.width,
                                 positions: entity._msStoredCoordinates.polyline,
-                                clampToGround: symbolizer.clampToGround
+                                clampToGround: symbolizer.msClampToGround
                             });
                         }
                         if (symbolizer.kind === 'Fill' && entity._msStoredCoordinates.polygon) {
