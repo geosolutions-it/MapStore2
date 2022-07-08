@@ -175,7 +175,7 @@ const getBlocks = ({
                 opacity: 1,
                 cap: 'round',
                 join: 'round',
-                clampToGround: true
+                msClampToGround: true
             }
         },
         Fill: {
