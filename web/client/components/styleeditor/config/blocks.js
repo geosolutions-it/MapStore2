@@ -13,7 +13,7 @@ import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const vector3dStyleOptions = {
-    clampToGround: property.clampToGround({
+    msClampToGround: property.msClampToGround({
         label: 'styleeditor.clampToGround'
     })
 };
