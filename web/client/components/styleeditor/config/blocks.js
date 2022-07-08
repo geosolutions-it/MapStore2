@@ -18,6 +18,12 @@ const billboard3dStyleOptions = {
     })
 };
 
+const polygon3dStyleOptions = {
+    msClassificationType: property.msClassificationType({
+        label: 'styleeditor.classificationtype'
+    })
+};
+
 const getBlocks = ({
     exactMatchGeometrySymbol,
     enable3dStyleOptions
@@ -203,14 +209,16 @@ const getBlocks = ({
                 outlineWidth: property.width({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
-                })
+                }),
+                ...(enable3dStyleOptions ? polygon3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Fill',
                 color: '#dddddd',
                 fillOpacity: 1,
                 outlineColor: '#777777',
-                outlineWidth: 1
+                outlineWidth: 1,
+                msClassificationType: 'both'
             }
         },
         PointCloud: {
