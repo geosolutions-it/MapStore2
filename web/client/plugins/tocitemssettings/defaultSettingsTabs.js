@@ -51,7 +51,7 @@ const ConnectedDisplay = connect(
 )(Display);
 
 const ConnectedVectorStyleEditor = connect(
-    createSelector([isCesium], ({ enable3dStyleOptions }) => ({ enable3dStyleOptions }))
+    createSelector([isCesium], (enable3dStyleOptions) => ({ enable3dStyleOptions }))
 )(VectorStyleEditor);
 
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
