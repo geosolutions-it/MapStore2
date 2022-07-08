@@ -904,7 +904,7 @@ The `symbolizer` could be of following `kinds`:
   - `outlineColor` outline color of the polygon
   - `outlineOpacity` outline opacity of the polygon
   - `outlineWidth` outline width of the polygon
-  - `clampToGround` this boolean will allow setting the `clampToGround` value for the feature. This would only apply on Cesium maps.
+  - `msClampToGround` this boolean will allow setting the `clampToGround` value for the feature. This would only apply on Cesium maps.
 
 - `Text` symbolizer properties
   - `kind` must be equal to `Text`
