@@ -895,6 +895,7 @@ The `symbolizer` could be of following `kinds`:
   - `opacity` stroke opacity of the line
   - `width` stroke width of the line
   - `dasharray` array that represent the dashed line intervals
+  - `msClampToGround` this boolean will allow setting the `clampToGround` value for the feature. This would only apply on Cesium maps.
 
 - `Fill` symbolizer properties
   - `kind` must be equal to `Fill`
@@ -904,6 +905,7 @@ The `symbolizer` could be of following `kinds`:
   - `outlineOpacity` outline opacity of the polygon
   - `outlineWidth` outline width of the polygon
   - `msClassificationType` allow setting `classificationType` value for the feature. This would only apply on polygon graphics in Cesium maps.
+  - `msClampToGround` this boolean will allow setting the `clampToGround` value for the feature. This would only apply on Cesium maps.
 
 - `Text` symbolizer properties
   - `kind` must be equal to `Text`
