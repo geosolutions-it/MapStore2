@@ -47,7 +47,8 @@ describe('CesiumStyleParser', () => {
                                 fillOpacity: 0.5,
                                 outlineColor: '#00ff00',
                                 outlineOpacity: 0.25,
-                                outlineWidth: 2
+                                outlineWidth: 2,
+                                msClassificationType: 'terrain'
                             }
                         ]
                     }
@@ -67,6 +68,7 @@ describe('CesiumStyleParser', () => {
                             const entities = dataSource?.entities?.values;
                             styleFunc({ entities });
                             expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
+                            expect(entities[0].polygon.classificationType.getValue()).toEqual(Cesium.ClassificationType.TERRAIN);
                             expect(entities[0].polyline.width.getValue()).toBe(2);
                             expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
                         } catch (e) {
