@@ -48,7 +48,7 @@ describe('CesiumStyleParser', () => {
                                 outlineColor: '#00ff00',
                                 outlineOpacity: 0.25,
                                 outlineWidth: 2,
-                                clampToGround: true
+                                msClampToGround: true
                             }
                         ]
                     }
