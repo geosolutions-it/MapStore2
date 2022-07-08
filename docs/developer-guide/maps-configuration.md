@@ -903,6 +903,7 @@ The `symbolizer` could be of following `kinds`:
   - `outlineColor` outline color of the polygon
   - `outlineOpacity` outline opacity of the polygon
   - `outlineWidth` outline width of the polygon
+  - `msClassificationType` allow setting `classificationType` value for the feature. This would only apply on polygon graphics in Cesium maps.
 
 - `Text` symbolizer properties
   - `kind` must be equal to `Text`
