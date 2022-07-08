@@ -91,7 +91,7 @@ describe('CesiumStyleParser', () => {
                                 color: '#ff0000',
                                 opacity: 0.5,
                                 width: 2,
-                                clampToGround: true
+                                msClampToGround: true
                             }
                         ]
                     }
