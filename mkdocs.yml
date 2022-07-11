@@ -33,7 +33,6 @@ extra_javascript:
   - 'https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'
 extra_css:
   - 'theme/css/extra.css'
-  - 'https://unpkg.com/mermaid@7.1.2/dist/mermaid.css'
 repo_name: 'geosolutions-it/MapStore2'
 repo_url: 'https://github.com/geosolutions-it/MapStore2/'
 repo_issues: 'https://github.com/geosolutions-it/MapStore2/issues'
