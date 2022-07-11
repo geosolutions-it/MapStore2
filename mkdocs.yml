@@ -30,8 +30,10 @@ extra:
       link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
 extra_javascript:
   - 'https://code.jquery.com/jquery-3.3.1.min.js'
+  - 'https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'
 extra_css:
   - 'theme/css/extra.css'
+  - 'https://unpkg.com/mermaid@7.1.2/dist/mermaid.css'
 repo_name: 'geosolutions-it/MapStore2'
 repo_url: 'https://github.com/geosolutions-it/MapStore2/'
 repo_issues: 'https://github.com/geosolutions-it/MapStore2/issues'
@@ -48,11 +50,6 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_div_format
-
-extra_css:
-  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.css
-extra_javascript:
-  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js
 nav:
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
