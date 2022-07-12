@@ -108,7 +108,7 @@ const hasOutputFormat = (data) => {
 const getWFSFeature = ({ url, filterObj = {}, layerFilter, downloadOptions = {}, options } = {}) => {
     const { sortOptions, propertyName: pn } = options;
 
-    const data = mergeFiltersToOGC({ ogcVersion: '1.0.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj);
+    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj);
 
     return getXMLFeature(url, getFilterFeature(query(
         filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(pn ? [propertyName(pn)] : []), ...(data ? castArray(data) : [])],
