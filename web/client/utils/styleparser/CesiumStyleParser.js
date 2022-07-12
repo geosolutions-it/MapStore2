@@ -171,7 +171,11 @@ function getStyleFuncFromRules({
                                 hierarchy: entity._msStoredCoordinates.polygon,
                                 // height should be introduced with concept of extrusion
                                 // height: 0,
-                                classificationType: Cesium.ClassificationType.BOTH
+                                classificationType: symbolizer.msClassificationType === 'terrain' ?
+                                    Cesium.ClassificationType.TERRAIN :
+                                    symbolizer.msClassificationType === '3d' ?
+                                        Cesium.ClassificationType.CESIUM_3D_TILE :
+                                        Cesium.ClassificationType.BOTH
                             });
 
                             // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
