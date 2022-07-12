@@ -83,7 +83,7 @@ li.md-tabs__item:hover{
     font-size: 70%;
 
 }
-.ms-docbutton {
+.ms-docbutton, .md-typeset .ms-docbutton {
     vertical-align: middle;
     height: 30px;
 }
