@@ -9,8 +9,7 @@ import expect from 'expect';
 import { wmsToCesiumOptionsBIL } from '../WMSUtils';
 
 const testLayerConfig = {
-    "type": "terrain",
-    "provider": "wms",
+    "type": "wms",
     "url": "http://sample.com/geoserver/wms",
     "name": "workspace:layername",
     "format": "image/bil",
@@ -20,7 +19,8 @@ const testLayerConfig = {
     "fixedHeight": null,
     "fixedWidth": null,
     "crs": "CRS:84",
-    "styleName": null
+    "styleName": null,
+    "useForElevation": true
 };
 
 describe('Test the WMSUtil for Cesium', () => {
