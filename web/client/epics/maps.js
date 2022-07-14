@@ -78,7 +78,7 @@ export const loadMapsEpic = (action$) =>
         });
 
 export const reloadMapsEpic = (action$, { getState = () => { } }) =>
-    action$.ofType(MAP_DELETED, MAP_SAVED, RELOAD_MAPS, ATTRIBUTE_UPDATED, DASHBOARD_DELETED)
+    action$.ofType(MAP_DELETED, MAP_SAVED, RELOAD_MAPS, ATTRIBUTE_UPDATED, DASHBOARD_DELETED, LOGIN_SUCCESS, LOGOUT)
         .delay(1000)
         .switchMap(() => Rx.Observable.of(loadMaps(false,
             searchTextSelector(getState()),

@@ -9,6 +9,8 @@ import Rx from 'rxjs';
 
 import { MAPS_LIST_LOADING, ATTRIBUTE_UPDATED, MAP_DELETED } from '../actions/maps';
 import { DASHBOARD_SAVED } from '../actions/dashboard';
+import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
+
 
 import {
     SEARCH_DASHBOARDS,
@@ -84,7 +86,7 @@ export const deleteDashboard = action$ => action$
         }))
     ));
 export const reloadOnDashboards = (action$, { getState = () => { } }) =>
-    action$.ofType(DASHBOARD_DELETED, MAP_DELETED, RELOAD, ATTRIBUTE_UPDATED, DASHBOARD_SAVED)
+    action$.ofType(DASHBOARD_DELETED, MAP_DELETED, RELOAD, ATTRIBUTE_UPDATED, DASHBOARD_SAVED, LOGIN_SUCCESS, LOGOUT)
         .delay(1000) // delay as a workaround for geostore issue #178
         .switchMap( () => Rx.Observable.of(searchDashboardsAction(
             searchTextSelector(getState()),

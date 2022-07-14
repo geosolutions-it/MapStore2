@@ -183,7 +183,7 @@ describe('login Epics', () => {
             setCookie('tokens_key', "ID");
             mockAxios.onGet("openid/TEST_PROVIDER/tokens").reply(config => {
                 expect(config.params.identifier).toEqual("ID");
-                return [200, {access_token: TOKEN, expires: 86400, refresh_token: TEST_REFRESH_TOKEN}];
+                return [200, { sessionToken: {access_token: TOKEN, expires: 86400, refresh_token: TEST_REFRESH_TOKEN}}];
             });
             mockAxios.onGet("users/user/details").reply(config => {
                 expect(config.url).toEqual(`users/user/details`);
