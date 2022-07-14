@@ -101,7 +101,7 @@ googleOAuth2Config.discoveryUrl=https://accounts.google.com/.well-known/openid-c
 - Supporting Single Sign On (SSO) with other applications.
 - Mapping keycloak roles to MapStore groups, as well as for ldap.
 
-In this section you can see how to configure keycloak as a standard OpenID provider. For the other advanced functionalities, you can see the [dedicated section of the documentation](../keycloak)
+In this section you can see how to configure keycloak as a standard OpenID provider. For other advanced functionalities, you can see the [dedicated section of the documentation](../keycloak)
 
 #### Configure keycloak Client
 
