@@ -10,7 +10,7 @@ MapStore supports various Keycloak integration features:
 
 ## OpenID
 
-**Keycloak OpenID support** allows to use a keycloak instance as Identity Provider (IdP) via OpenID Connect (OIDC), so the user can login to MapStore using an existing account in keycloak.
+**Keycloak OpenID support** allows to use a keycloak instance as Identity Provider (IdP) via OpenID Connect (OIDC), so that the user can login to MapStore using an existing account in keycloak.
 
 You can find details about how to configure it in the dedicated [**"OpenID Connect" page section dedicated to keycloak**](../openId/#keycloak)
 
