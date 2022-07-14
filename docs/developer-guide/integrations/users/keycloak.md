@@ -81,7 +81,7 @@ Here implementation details about [keycloak login workflow](../keycloak-sso-impl
 
 By default MapStore can integrate openID login with Keycloak and also supports integration with Keycloak SSO.
 
-By default users that do the login with Keycloak are created on the database.
+By default users that login with Keycloak are created on the database.
 Anyway MapStore can interact with Keycloak REST API to provide a direct integration without persisting anything on the database.
 This provides a more strict integration between the applications, allowing to assign roles and groups directly from keycloak, and avoiding any synchronization issue.
 
