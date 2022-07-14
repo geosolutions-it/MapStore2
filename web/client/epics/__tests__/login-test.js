@@ -188,6 +188,7 @@ describe('login Epics', () => {
             });
             mockAxios.onGet("users/user/details").reply(config => {
                 expect(config.url).toEqual(`users/user/details`);
+                // this check fails on github actions. Maybe a security policy.
                 // expect(config.headers.Authorization).toEqual(`Bearer ${TOKEN}`);
                 return [200, testUserDetails];
             });
