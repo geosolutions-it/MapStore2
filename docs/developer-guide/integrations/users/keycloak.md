@@ -96,7 +96,7 @@ In this scenario the integration MapStore replaces the user and user-group datab
 
 ### Configure direct integration with keycloak
 
-In order to apply the direct integration with keycloak you will have to:
+To enable the direct integration with keycloak you will have to:
 
 1. Create a dedicated client for keycloak.
 2. Configure `mapstore-ovr.properties`
