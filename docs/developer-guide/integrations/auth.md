@@ -1,6 +1,6 @@
 # MapStore Authentication - Implementation Details
 
-In this section you can ee the implementation details about the login / logout workflow implemented by MapStore.
+In this section you can see the implementation details about the login / logout workflow implemented by MapStore.
 
 ## Standard MapStore login
 
