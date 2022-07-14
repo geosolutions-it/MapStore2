@@ -131,8 +131,9 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
                     return Rx.Observable.of(loginSuccess({...userDetails, access_token: accessToken, refresh_token: refreshToken, expires: expires, authProvider}));
                 });
         })
-            .catch(() => { // call failure means that the session expired, so logout at all
-                return Rx.Observable.of(logout(null));
+            .catch((e) => { // call failure means that the session expired, so logout at all
+                console.error(e);
+                return Rx.Observable.of(logout(e.message));
             })
             .concat(Rx.Observable.of(1).switchMap(() => {
                 // clean up the cookie
