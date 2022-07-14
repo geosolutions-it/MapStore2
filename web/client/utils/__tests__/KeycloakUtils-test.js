@@ -8,7 +8,7 @@ const TEST_RESOURCES_BASE = 'base/web/client/test-resources/';
 const MOCK_URL = `${TEST_RESOURCES_BASE}js/keycloak.js`;
 import { TOKEN, TOKEN_PARSED, REFRESH_TOKEN, REFRESH_TOKEN_PARSED } from '../../test-resources/jwtSampleTokens';
 
-
+const PROVIDER = {provider: "keycloak", config: { "auth-server-url": TEST_RESOURCES_BASE, resource: "mapstore-client" }, debounceTime: 0};
 describe('KeycloakUtils', () => {
 
     describe('dynamicImportScript', () => {
@@ -38,7 +38,7 @@ describe('KeycloakUtils', () => {
             expect(document.querySelector('#keycloak-script')).toBeFalsy();
         });
         it('getKeycloakClient', (done) => {
-            getKeycloakClient({provider: "keycloak", config: { "auth-server-url": TEST_RESOURCES_BASE, resource: "mapstore-client" }}).then((kc) => {
+            getKeycloakClient(PROVIDER).then((kc) => {
                 expect(kc).toBeTruthy();
                 expect(kc.init).toBeTruthy();
                 expect(kc.mock).toBeTruthy();
@@ -55,7 +55,6 @@ describe('KeycloakUtils', () => {
             kc.refreshToken = refreshToken;
             kc.refreshTokenParsed = refreshTokenParsed;
         };
-        const PROVIDER = {provider: "keycloak", config: { "auth-server-url": TEST_RESOURCES_BASE, resource: "mapstore-client" }};
         // Using cache influences the spy behavior, so we need to clear it
         const MOCK_STATE_LOGGED_IN = {security: {user: {some: "data"}, access_token: TOKEN, refresh_token: REFRESH_TOKEN, authProvider: PROVIDER.provider}};
         const MOCK_STATE_LOGGED_OUT = {security: {}};
@@ -65,7 +64,7 @@ describe('KeycloakUtils', () => {
         });
         it('init', (done) => {
             const provider = PROVIDER;
-            getKeycloakClient(provider ).then((kc) => {
+            getKeycloakClient(provider).then((kc) => {
                 const epic = monitorKeycloak(provider);
                 const initSpy = expect.spyOn(kc, "init").andCallThrough();
                 const loginSpy = expect.spyOn(kc, "login").andCallThrough();
@@ -117,7 +116,7 @@ describe('KeycloakUtils', () => {
         });
         it('keycloak login', (done) => {
             const provider = {...PROVIDER, goToPage: () => {}};
-            getKeycloakClient(provider ).then((kc) => {
+            getKeycloakClient(provider).then((kc) => {
                 const epic = monitorKeycloak(provider);
                 const initSpy = expect.spyOn(kc, "init").andCallThrough();
                 const loginSpy = expect.spyOn(kc, "login").andCallThrough();
@@ -127,6 +126,9 @@ describe('KeycloakUtils', () => {
                 const action$ = actionSubject.asObservable();
                 action$.ofType = (a) => action$.filter(action => action.type === a); // Fake ofType method.
                 const store = {getState: () => (MOCK_STATE_LOGGED_OUT)};
+                kc.afterInit = () => {
+                    kc.login();
+                };
                 epic(action$, store).subscribe( action => {
                     expect(action).toBeTruthy();
                     expect(initSpy).toHaveBeenCalled(); // called twice, because of token sync
@@ -140,7 +142,6 @@ describe('KeycloakUtils', () => {
                     actionSubject.next({type: CLOSE_KEYCLOAK_MONITOR}); // avoid infinite loop
                     done();
                 });
-                setTimeout(() => kc.login(), 0);
             });
         });
         it('login from MapStore', (done) => {
@@ -166,7 +167,7 @@ describe('KeycloakUtils', () => {
                 const store = {getState: () => (MOCK_STATE_LOGGED_IN)};
                 epic(action$, store).subscribe( () => {});
                 // emulate login.
-                setTimeout(() => actionSubject.next(loginSuccess({}, "us", "pass", provider.provider)), 0);
+                setTimeout(() => actionSubject.next(loginSuccess({}, "us", "pass", provider.provider)), 10);
             });
         });
         it('MapStore refresh token re-init lib', (done) => {
@@ -184,6 +185,7 @@ describe('KeycloakUtils', () => {
                     expect(initSpy).toHaveBeenCalled();
                     if (initSpy.calls.length === 1) {
                         expect(loginSpy).toNotHaveBeenCalled();
+                        actionSubject.next(refreshSuccess({}, "geostore"));
                     }
                     if (initSpy.calls.length === 2) { // refresh
                         actionSubject.next({type: CLOSE_KEYCLOAK_MONITOR}); // avoid infinite loop
@@ -193,7 +195,7 @@ describe('KeycloakUtils', () => {
                 const store = {getState: () => (MOCK_STATE_LOGGED_IN)};
                 epic(action$, store).subscribe( () => {});
                 // emulate refresh success.
-                setTimeout(() => actionSubject.next(refreshSuccess({}, "geostore")), 0); // geostore, because of openID managed by geostore
+
             });
         });
         it('refresh because access_token expired', (done) => {
@@ -207,6 +209,9 @@ describe('KeycloakUtils', () => {
                 action$.ofType = (a) => action$.filter(action => action.type === a); // Fake ofType method.
                 const store = {getState: () => (MOCK_STATE_LOGGED_IN)};
                 setAuthenticated(kc, {refreshTokenParsed: {exp: 1000000000000}});
+                kc.afterInit = () => {
+                    kc.login();
+                };
                 epic(action$, store).subscribe( action => {
                     expect(action).toBeTruthy();
                     expect(initSpy).toHaveBeenCalled();
@@ -214,7 +219,7 @@ describe('KeycloakUtils', () => {
                     actionSubject.next({type: CLOSE_KEYCLOAK_MONITOR}); // avoid infinite loop
                     done();
                 });
-                setTimeout(() => kc.login(), 0);
+
             });
         });
         it('schedule refresh before the expiring of the access_token', (done) => {
@@ -253,6 +258,9 @@ describe('KeycloakUtils', () => {
                 const action$ = actionSubject.asObservable();
                 action$.ofType = (a) => action$.filter(action => action.type === a); // Fake ofType method.
                 const store = {getState: () => (MOCK_STATE_LOGGED_IN)};
+                kc.afterInit = () => {
+                    kc.logout();
+                };
                 setAuthenticated(kc);
                 epic(action$, store).subscribe( action => {
                     expect(action).toBeTruthy();
@@ -265,7 +273,6 @@ describe('KeycloakUtils', () => {
                     actionSubject.next({type: CLOSE_KEYCLOAK_MONITOR}); // avoid infinite loop
                     done();
                 });
-                setTimeout(() => kc.logout(), 0);
             });
         });
     });

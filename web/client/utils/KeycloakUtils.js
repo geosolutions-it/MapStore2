@@ -188,7 +188,8 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
             }),
             (provider, keycloak) => ({provider, keycloak})
         )
-        .debounceTime(2000) // prevent refresh bombing that may cause logout, because of kc lib bugs.
+        // prevent refresh bombing that may cause logout, because of kc lib bugs.
+        .debounceTime(ssoProvider.debounceTime ?? 1000) // useful for testing
         .switchMap(({provider, keycloak}) =>
             initKeycloakSSO(keycloak)(provider, store)
                 .switchMap((command) => {
