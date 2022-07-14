@@ -1,5 +1,5 @@
 import url from "url";
-import {get, includes, inRange, isEmpty, isNaN, isObject, toNumber} from "lodash";
+import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, toNumber} from "lodash";
 
 import {getBbox} from "./MapUtils";
 import {isValidExtent} from "./CoordinatesUtils";
@@ -111,7 +111,7 @@ export const getParametersValues = (paramActions, state) => (
             const value = getRequestParameterValue(parameter, state, sessionStorage);
             return {
                 ...params,
-                ...(value ? { [parameter]: value } : {})
+                ...(!isNil(value) ? { [parameter]: value } : {})
             };
         }, {})
 );

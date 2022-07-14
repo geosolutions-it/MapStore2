@@ -96,12 +96,29 @@ describe('Test correctness of the CSW APIs', () => {
             }
         });
     });
-    it('getRecords update capabilities', (done) => {
+});
+
+describe('Test capabilities data in CSW records', () => {
+    const options = {options: {service: {autoSetVisibilityLimits: true}}};
+    it('getRecords update capabilities when autoSetVisibilityLimits is true', (done) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 1, null, options)
+            .then((result) => {
+                try {
+                    expect(result).toBeTruthy();
+                    expect(result.records).toBeTruthy();
+                    expect(result.records[0].capabilities).toBeTruthy();
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            });
+    });
+    it('getRecords skip capabilities update', (done) => {
         API.getRecords('base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 1).then((result) => {
             try {
                 expect(result).toBeTruthy();
                 expect(result.records).toBeTruthy();
-                expect(result.records[0].capabilities).toBeTruthy();
+                expect(result.records[0].capabilities).toBeFalsy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -110,7 +127,7 @@ describe('Test correctness of the CSW APIs', () => {
     });
 
     it('does not include capabilities when no parsedUrl in getRecords', (done) => {
-        API.getRecords('base/web/client/test-resources/csw/getRecordsNoWMS.xml', 1, 1).then((result) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsNoWMS.xml', 1, 1, null, options).then((result) => {
             try {
                 expect(result).toBeTruthy();
                 expect(result.records[0].capabilities).toBeFalsy();
@@ -120,28 +137,29 @@ describe('Test correctness of the CSW APIs', () => {
             }
         });
     });
-
     it('obtains parsedUrl from dc:uri and gets capabilities', (done) => {
-        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 1).then((result) => {
-            try {
-                expect(result).toBeTruthy();
-                expect(result.records[0].capabilities).toBeTruthy();
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 1, null, options)
+            .then((result) => {
+                try {
+                    expect(result).toBeTruthy();
+                    expect(result.records[0].capabilities).toBeTruthy();
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            });
     });
     it("dc:uri do not add capabilities when layer name doesn't match", (done) => {
-        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 2).then((result) => {
-            try {
-                expect(result).toBeTruthy();
-                expect(result.records[1].capabilities).toBeFalsy();
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+        API.getRecords('base/web/client/test-resources/csw/getRecordsWithDcURI.xml', 1, 2, null, options)
+            .then((result) => {
+                try {
+                    expect(result).toBeTruthy();
+                    expect(result.records[1].capabilities).toBeFalsy();
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            });
     });
 });
 

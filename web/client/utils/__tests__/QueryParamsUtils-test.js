@@ -99,6 +99,19 @@ describe('QueryParamsUtils', () => {
         expect(pitch).toBe(-0.2123635014967287);
         expect(roll).toBe(0.000010414279262072055);
     });
+    it('test getParametersValues - check that numeric zero values are processed properly', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?center=11.558466796428766,41.415232026624764&zoom=12.344643329999036&heading=6.158556550454258&pitch=0&roll=0'
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const { pitch, roll } = parameters;
+        expect(pitch).toBe(0);
+        expect(roll).toBe(0);
+    });
     it('test getQueryActions with center querystring parameter', () => {
         const state = {
             router: {

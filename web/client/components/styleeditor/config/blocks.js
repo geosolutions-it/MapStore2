@@ -24,6 +24,12 @@ const billboard3dStyleOptions = {
     })
 };
 
+const polygon3dStyleOptions = {
+    msClassificationType: property.msClassificationType({
+        label: 'styleeditor.classificationtype'
+    })
+};
+
 const getBlocks = ({
     exactMatchGeometrySymbol,
     enable3dStyleOptions
@@ -214,7 +220,7 @@ const getBlocks = ({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
                 }),
-                ...(enable3dStyleOptions ? vector3dStyleOptions : {})
+                ...(enable3dStyleOptions ? {...polygon3dStyleOptions, ...vector3dStyleOptions} : {})
             },
             defaultProperties: {
                 kind: 'Fill',
@@ -222,6 +228,7 @@ const getBlocks = ({
                 fillOpacity: 1,
                 outlineColor: '#777777',
                 outlineWidth: 1,
+                msClassificationType: 'both',
                 msClampToGround: true
             }
         },
