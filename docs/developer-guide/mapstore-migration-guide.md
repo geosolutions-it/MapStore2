@@ -55,6 +55,10 @@ MapStore introduced support for OpenID for google and keycloak. In order to have
 +   <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
 +
 +    <!-- END OAuth2 beans-->
++
++    <!--  security integration inclusions  -->
++    <import resource="classpath*:security-integration-${security.integration:default}.xml"/>
+
 </beans>
 
 ```
