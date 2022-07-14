@@ -189,7 +189,7 @@ describe('login Epics', () => {
             mockAxios.onGet("users/user/details").reply(config => {
                 expect(config.url).toEqual(`users/user/details`);
                 expect(config.headers.Authorization).toEqual(`Bearer ${TOKEN}`);
-                done("USER DETAILS CALLED")
+                done("USER DETAILS CALLED");
                 return [200, testUserDetails];
             });
             testEpic(verifyOpenIdSessionCookie, 1, {type: LOCATION_CHANGE}, ([action]) => {
