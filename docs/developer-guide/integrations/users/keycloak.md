@@ -2,7 +2,7 @@
 
 ## General
 
-MapStore supports various functionalities to integrate with Keycloak:
+MapStore supports various Keycloak integration features:
 
 - [**OpenID support**](../openId/#keycloak): Allows to login to MapStore using a keycloak account.
 - [**Single sign on**](#single-sign-on-integration): Enhances the OpenID support by detecting a session in the keycloak realm and automatically login/logout from MapStore
