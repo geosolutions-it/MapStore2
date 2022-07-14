@@ -256,8 +256,8 @@ describe('KeycloakUtils', () => {
                 setAuthenticated(kc);
                 epic(action$, store).subscribe( action => {
                     expect(action).toBeTruthy();
-                    expect(initSpy).toHaveBeenCalled(); // called twice, because of token sync
-                    expect(initSpy.calls.length).toBe(1); // twice, because of the refresh
+                    expect(initSpy).toHaveBeenCalled();
+                    expect(initSpy.calls.length).toBe(1);
                     expect(loginSpy).toNotHaveBeenCalled();
                     // check action is openID login
                     expect(typeof action).toEqual("function");

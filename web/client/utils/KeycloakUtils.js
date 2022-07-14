@@ -41,6 +41,15 @@ const clearKeycloakSession = (keycloak) => {
 let clients = {};
 
 /**
+ * Debug log utility function.
+ * @param  {...any} args args to pass to console.log
+ */
+const logger = (/* ...args */) => {
+    /** uncomment to enable logging */
+    // console.log(...args); // eslint-disable-line
+};
+
+/**
  *
  * @param {object} provider the SSO provider object (e.g. {provider: "keycloak", url: "http://localhost:8080/auth"})
  * @returns {Promise <object>} a promise that resolves with the keycloak instance
@@ -63,6 +72,8 @@ export const getKeycloakClient = (provider) => {
 export const clearClients = function() {
     clients = {};
 };
+const isLoggingIn = () => !!getCookieValue('authProvider'); // temporary token is set here when logging in with OpenID via GeoStore.
+const isLoggedInWithSSOProvider = (store, ssoProvider) => isLoggedIn(store.getState()) && authProviderSelector(store.getState()) === ssoProvider.provider;
 
 /**
  * A function that initializes a Keycloak instance and returns an observable that emits
@@ -79,8 +90,8 @@ const initKeycloakSSO = (keycloak) => (ssoProvider, store) => {
     const commandSubject = new Rx.Subject();
     const token = getToken();
     const refreshToken = getRefreshToken();
-    const isLoggingIn = () => getCookieValue('access_token'); // temporary token is set here when logging in with OpenID via GeoStore.
-    const isLoggedInWithSSOProvider = () => isLoggedIn(store.getState()) && authProviderSelector(store.getState()) === ssoProvider.provider;
+    logger("initializing keycloak sso, cause", ssoProvider.cause?.type ?? ssoProvider.cause.toString());
+
     keycloak.init({
         token,
         refreshToken,
@@ -92,14 +103,14 @@ const initKeycloakSSO = (keycloak) => (ssoProvider, store) => {
                 if (!isLoggedIn(store.getState()) && !isLoggingIn()) {
                     commandSubject.next("login");
                 // token for keycloak is not initialized. Reinit the client to set the token.
-                } else if (!keycloak.authenticated && isLoggedInWithSSOProvider() ) {
+                } else if (!keycloak.authenticated && isLoggedInWithSSOProvider(store, ssoProvider) ) {
                     commandSubject.next("syncToken"); // TODO: this should be triggered only once, or find a different way.
                 }
                 return Promise.resolve();
             },
             logout() {
                 // logout only if you are logged in
-                if (isLoggedInWithSSOProvider()) {
+                if (isLoggedInWithSSOProvider(store, ssoProvider)) {
                     clearKeycloakSession(keycloak);
                     commandSubject.next("logout");
 
@@ -117,7 +128,8 @@ const initKeycloakSSO = (keycloak) => (ssoProvider, store) => {
         }
     }).then(() => {
         if (keycloak.authenticated) {
-            if (isLoggedInWithSSOProvider() && keycloak?.tokenParsed?.exp && keycloak?.refreshTokenParsed?.exp) {
+            if (isLoggedInWithSSOProvider(store, ssoProvider) && keycloak?.tokenParsed?.exp && keycloak?.refreshTokenParsed?.exp) {
+                logger("[Keycloak] Scheduling refresh token");
                 commandSubject.next("scheduleRefresh");
             }
         // not logged in keycloak or in MapStore session, schedule login monitoring.
@@ -165,7 +177,7 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                     || command === "syncToken" && (ssoProvider?.sso?.autoSyncToken ?? true) // allow disable syncToken TODO: document
                 )
         )
-        .mapTo(ssoProvider)
+        .map( cause => ({...ssoProvider, cause}))
         .combineLatest(
             // Initial preload of Keycloak client lib
             Rx.Observable.defer(
@@ -176,6 +188,7 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
             }),
             (provider, keycloak) => ({provider, keycloak})
         )
+        .debounceTime(2000) // prevent refresh bombing that may cause logout, because of kc lib bugs.
         .switchMap(({provider, keycloak}) =>
             initKeycloakSSO(keycloak)(provider, store)
                 .switchMap((command) => {
@@ -185,15 +198,18 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                     case "logout":
                         // on logout schedule, toggle logout and schedule a retry after a while
                         // to restart to monitor login events.
-                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).takeUntil(action$.ofType(LOGIN_SUCCESS, REFRESH_SUCCESS)).subscribe(() => { initSubject.next("retry"); });
-                        return Rx.Observable.of(onLogout());
+                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).takeUntil(action$.ofType(LOGIN_SUCCESS, REFRESH_SUCCESS, LOGOUT)).subscribe(() => { initSubject.next("retry"); });
+                        if (isLoggedInWithSSOProvider(store, ssoProvider)) {
+                            return Rx.Observable.of(onLogout(ssoProvider));
+                        }
+                        return Rx.Observable.empty();
                     case "syncToken":
                         // When logged in but token was not applied on init, re-init the keycloak client
                         initSubject.next("syncToken");
                         return Rx.Observable.empty();
                     case "noSessionFound":
                         // scheduling a re-init to emulate login monitoring.
-                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).takeUntil(action$.ofType(LOGIN_SUCCESS, REFRESH_SUCCESS)).subscribe(() => { initSubject.next("retry"); });
+                        Rx.Observable.timer(keycloak.messageReceiveTimeout ?? 10000).takeUntil(action$.ofType(LOGIN_SUCCESS, REFRESH_SUCCESS, LOGOUT)).subscribe(() => { initSubject.next("retry"); });
                         return Rx.Observable.empty();
                     case "scheduleRefresh":
                         // schedule refresh token from normal epic
@@ -202,11 +218,15 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                         const refreshExp = new Date(keycloak.refreshTokenParsed.exp * 1000);
                         if (refreshExp > now) {
                             if (exp < now) {
+                                logger("Token expired, scheduling refresh");
                                 return Rx.Observable.of(refreshAccessToken());
                             }
                             // refreshInterval is useful for testing
-                            return Rx.Observable.timer( ssoProvider.refreshInterval ?? Math.max(((exp - now) / 2), 10)).mapTo(refreshAccessToken())
-                                .takeUntil(action$.ofType(LOGOUT));
+                            const nextRefreshTime = ssoProvider.refreshInterval ?? Math.max(((exp - now) / 2), 10);
+                            logger("Token will expire in", (exp - now) / 1000, "seconds, scheduling refresh in", nextRefreshTime / 1000, "seconds");
+                            return Rx.Observable.timer(nextRefreshTime).takeUntil(action$.ofType(LOGIN_SUCCESS, REFRESH_SUCCESS, LOGOUT)).mapTo(refreshAccessToken()).do(() => {
+                                logger("refreshing token");
+                            });
                         }
                         // if also refresh token is expired (logout not necessary, because it is already done by MapStore)
                         return Rx.Observable.empty();
@@ -219,7 +239,7 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                     // login on next page reload because of keycloak js api find session cookie changed.
                     action$.ofType(LOGOUT).do(() => {
                         var iframe = document.createElement("iframe");
-                        var src = keycloak.createLoginUrl({prompt: 'none', redirectUri: keycloak.silentCheckSsoRedirectUri});
+                        var src = keycloak.createLoginUrl({prompt: 'none'});
                         iframe.setAttribute("src", src);
                         iframe.style.display = "none";
                         document.body.appendChild(iframe);

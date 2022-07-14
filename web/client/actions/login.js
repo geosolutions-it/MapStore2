@@ -10,7 +10,6 @@ import ConfigUtils from '../utils/ConfigUtils';
 
 import { setControlProperty } from './controls';
 import { logoutWithReload, resetError } from './security';
-import { setCookie } from '../utils/CookieUtils';
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 /**
@@ -24,7 +23,6 @@ import AuthenticationAPI from '../api/GeoStoreDAO';
  */
 export function openIDLogin(entry, goToPage = (page) => {window.location.href = page; }) {
     return () => {
-        setCookie("authProvider", entry?.provider, 1000 * 60 * 5); // expires in 5 minutes
         goToPage(entry?.url ?? `${ ConfigUtils.getConfigProp("geoStoreUrl")}openid/${entry?.provider}/login`);
     };
 }

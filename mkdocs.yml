@@ -145,9 +145,8 @@ nav:
       - users:
         - GeoServer: 'developer-guide/integrations/users/geoserver.md'
         - LDAP: 'developer-guide/integrations/users/ldap.md'
-        - OpenId Connect: 'developer-guide/integrations/users/openId.md'
-      - Single Sign On:
-        - Keycloak: 'developer-guide/integrations/sso/keycloak.md'
+        - OpenID Connect: 'developer-guide/integrations/users/openId.md'
+        - Keycloak: 'developer-guide/integrations/users/keycloak.md'
     - Projects:
       - MapStore Projects: 'developer-guide/mapstore-projects.md'
       - Project Creation Script: 'developer-guide/project-creation-script.md'

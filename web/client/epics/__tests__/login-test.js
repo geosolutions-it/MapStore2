@@ -162,14 +162,10 @@ describe('login Epics', () => {
             "refresh_token": "abcdef"
         };
         beforeEach(() => {
-            eraseCookie('access_token');
-            eraseCookie('refresh_token');
             eraseCookie('authProvider');
             mockAxios = new MockAdapter(axios);
         });
         afterEach(() => {
-            eraseCookie('access_token');
-            eraseCookie('refresh_token');
             eraseCookie('authProvider');
             mockAxios.restore();
         });
@@ -180,18 +176,25 @@ describe('login Epics', () => {
             });
         });
         it('use cookie to test userDetails and trigger login', (done) => {
-            setCookie('access_token', "TEST_TOKEN");
-            setCookie('refresh_token', "TEST_REFRESH_TOKEN");
-            setCookie('authProvider', "TEST_PROVIDER");
-            mockAxios.onGet().reply(config => {
+            const TOKEN = "123456789";
+            const TEST_REFRESH_TOKEN = "abcdef";
+            const PROVIDER = "TEST_PROVIDER";
+            setCookie('authProvider', PROVIDER);
+            setCookie('tokens_key', "ID");
+            mockAxios.onGet("openid/TEST_PROVIDER/tokens").reply(config => {
+                expect(config.params.identifier).toEqual("ID");
+                return [200, {access_token: TOKEN, expires: 86400, refresh_token: TEST_REFRESH_TOKEN}];
+            });
+            mockAxios.onGet("users/user/details").reply(config => {
                 expect(config.url).toEqual(`users/user/details`);
+                expect(config.headers.Authorization).toEqual(`Bearer ${TOKEN}`);
                 return [200, testUserDetails];
             });
             testEpic(verifyOpenIdSessionCookie, 1, {type: LOCATION_CHANGE}, ([action]) => {
                 expect(action.type).toEqual(LOGIN_SUCCESS);
-                expect(action.userDetails.access_token).toEqual("TEST_TOKEN");
-                expect(action.userDetails.authProvider).toEqual("TEST_PROVIDER");
-                expect(action.userDetails.refresh_token).toEqual("TEST_REFRESH_TOKEN");
+                expect(action.userDetails.access_token).toEqual(TOKEN);
+                expect(action.userDetails.authProvider).toEqual(PROVIDER);
+                expect(action.userDetails.refresh_token).toEqual(TEST_REFRESH_TOKEN);
                 done();
             });
         });

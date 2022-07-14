@@ -118,25 +118,25 @@ export const verifyOpenIdSessionCookie = (action$, {getState = () => {}}) => {
         if (isLoggedIn(getState())) {
             return Rx.Observable.empty();
         }
-        const accessToken = getCookieValue('access_token');
-        const refreshToken = getCookieValue('refresh_token');
-        const expires = getCookieValue('expires') ?? 5 * 60 * 1000;
+        const tokensKey = getCookieValue("tokens_key");
         const authProvider = getCookieValue('authProvider'); // This is set by login tool.
-        if (!accessToken) {
+        if (!tokensKey || !authProvider) {
             return Rx.Observable.empty();
         }
-        return Rx.Observable.defer(() => AuthenticationAPI.getUserDetails({access_token: accessToken}))
-            .switchMap( userDetails => { // check user detail to confirm login success
-                return Rx.Observable.of(loginSuccess({...userDetails, access_token: accessToken, refresh_token: refreshToken, expires: expires, authProvider}));
-            })
+        return Rx.Observable.defer(() => {
+            return AuthenticationAPI.getTokens(authProvider, tokensKey);
+        }).switchMap(({access_token: accessToken, refresh_token: refreshToken, expires: expires }) => {
+            return Rx.Observable.defer(() => AuthenticationAPI.getUserDetails({access_token: accessToken}))
+                .switchMap( userDetails => { // check user detail to confirm login success
+                    return Rx.Observable.of(loginSuccess({...userDetails, access_token: accessToken, refresh_token: refreshToken, expires: expires, authProvider}));
+                });
+        })
             .catch(() => { // call failure means that the session expired, so logout at all
                 return Rx.Observable.of(logout(null));
             })
             .concat(Rx.Observable.of(1).switchMap(() => {
                 // clean up the cookie
-
-                eraseCookie('access_token');
-                eraseCookie('refresh_token');
+                eraseCookie('tokens_key');
                 eraseCookie('authProvider');
                 return Rx.Observable.empty();
             }));
