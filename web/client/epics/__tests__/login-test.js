@@ -162,11 +162,12 @@ describe('login Epics', () => {
             "refresh_token": "abcdef"
         };
         beforeEach(() => {
-            eraseCookie('authProvider');
             mockAxios = new MockAdapter(axios);
         });
         afterEach(() => {
             eraseCookie('authProvider');
+            eraseCookie('tokens_key');
+
             mockAxios.restore();
         });
         it('no cookie, no action', (done) => {
