@@ -90,7 +90,7 @@ This is actually the only way to map keycloak roles to MapStore groups.
 In this scenario the integration MapStore replaces the user and user-group database tables with the keycloak REST API.
 
 !!! note
-    This integration denies the possibility to write the user database also any writing operation using the REST API is not supported yet.
+    This integration disables reading and writing to the users' and groups' database and replaces it with the Keycloak REST API, with read-only support.
     For this reason we suggest to disable the `UserManager`, `GroupManager` plugins, and remove the `authenticationProviders` entry of type `geostore`, if any, because the standard login with username and password is not allowed for the db users.
     In case of integration with GeoServer, also GeoServer should be connected to Keycloak for users, and not to the MapStore database.
 
