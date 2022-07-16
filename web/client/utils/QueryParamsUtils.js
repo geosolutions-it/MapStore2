@@ -1,5 +1,5 @@
 import url from "url";
-import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, toNumber} from "lodash";
+import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, omit, toNumber} from "lodash";
 
 import {getBbox} from "./MapUtils";
 import {isValidExtent} from "./CoordinatesUtils";
@@ -58,18 +58,29 @@ export const getRequestLoadValue = (name, state) => {
  * }
  * </pre>
  * @param {string} name - name of the parameter to get
+ * @param queryParamsID - unique identifier of the request
  * @param {Storage} storage - sessionStorage or localStorage
  */
-export const postRequestLoadValue = (name, storage = sessionStorage) => {
+export const postRequestLoadValue = (name, queryParamsID, storage = sessionStorage) => {
     const queryParams = storage.getItem('queryParams') ?? null;
     if (queryParams) {
         try {
-            const params = JSON.parse(queryParams);
+            const paramsObject = JSON.parse(queryParams) ?? {};
+            let params = paramsObject;
+            if (queryParamsID) {
+                params = paramsObject[queryParamsID] ?? {};
+            }
             const { [name]: item, ...rest } = params;
             if (item && typeof params === 'object') {
                 const { length } = Object.keys(params);
-                length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
-                length === 1 && storage.removeItem('queryParams');
+                let values;
+                if (queryParamsID) {
+                    values = length > 1 ? { ...paramsObject, [queryParamsID]: rest} : omit(paramsObject, [queryParamsID]);
+                    storage.setItem('queryParams', JSON.stringify(values));
+                } else {
+                    length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
+                    length === 1 && storage.removeItem('queryParams');
+                }
             }
             return item;
         } catch (e) {
@@ -93,7 +104,8 @@ export const postRequestLoadValue = (name, storage = sessionStorage) => {
  * @param {Storage} storage - sessionStorage or localStorage
  */
 export const getRequestParameterValue = (name, state, storage = sessionStorage) => {
-    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, storage);
+    // Check if `queryParamsID` passed in query parameters. If so, use it as a key to retrieve data for POST method
+    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, getRequestLoadValue('queryParamsID', state), storage);
 };
 
 
