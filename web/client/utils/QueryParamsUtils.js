@@ -1,5 +1,5 @@
 import url from "url";
-import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, omit, toNumber} from "lodash";
+import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, toNumber} from "lodash";
 
 import {getBbox} from "./MapUtils";
 import {isValidExtent} from "./CoordinatesUtils";
@@ -62,25 +62,16 @@ export const getRequestLoadValue = (name, state) => {
  * @param {Storage} storage - sessionStorage or localStorage
  */
 export const postRequestLoadValue = (name, queryParamsID, storage = sessionStorage) => {
-    const queryParams = storage.getItem('queryParams') ?? null;
+    const itemName = queryParamsID ? `queryParams-${queryParamsID}` : 'queryParams';
+    const queryParams = storage.getItem(itemName) ?? null;
     if (queryParams) {
         try {
-            const paramsObject = JSON.parse(queryParams) ?? {};
-            let params = paramsObject;
-            if (queryParamsID) {
-                params = paramsObject[queryParamsID] ?? {};
-            }
+            const params = JSON.parse(queryParams);
             const { [name]: item, ...rest } = params;
             if (item && typeof params === 'object') {
                 const { length } = Object.keys(params);
-                let values;
-                if (queryParamsID) {
-                    values = length > 1 ? { ...paramsObject, [queryParamsID]: rest} : omit(paramsObject, [queryParamsID]);
-                    storage.setItem('queryParams', JSON.stringify(values));
-                } else {
-                    length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
-                    length === 1 && storage.removeItem('queryParams');
-                }
+                length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
+                length === 1 && storage.removeItem('queryParams');
             }
             return item;
         } catch (e) {

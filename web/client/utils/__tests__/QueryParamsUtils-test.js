@@ -51,7 +51,7 @@ describe('QueryParamsUtils', () => {
     });
     it('test postRequestLoadValue', () => {
         const uuid = '8158d9c3-155d-44c0-834a-5274161c241e';
-        sessionStorage.setItem('queryParams', JSON.stringify({[uuid]: {featureinfo: {lat: 38.72, lng: -95.625, filterNameList: []}, zoom: 5, center: "41,0"}}));
+        sessionStorage.setItem(`queryParams-${uuid}`, JSON.stringify({featureinfo: {lat: 38.72, lng: -95.625, filterNameList: []}, zoom: 5, center: "41,0"}));
         let featureinfo = postRequestLoadValue('featureinfo', uuid, sessionStorage);
         expect(featureinfo.lat).toBe(38.72);
         expect(featureinfo.lng).toBe(-95.625);
