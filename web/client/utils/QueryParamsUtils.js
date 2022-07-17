@@ -1,3 +1,11 @@
+/**
+ * Copyright 2022, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import url from "url";
 import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, toNumber} from "lodash";
 
@@ -12,14 +20,6 @@ import {mapSelector} from "../selectors/map";
 import {featureInfoClick} from "../actions/mapInfo";
 import {warning} from "../actions/notifications";
 import {addMarker, SEARCH_LAYER_WITH_FILTER} from "../actions/search";
-
-/**
- * Copyright 2022, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
 
 /**
  * Retrieves parameters from hash "query string" of react router
