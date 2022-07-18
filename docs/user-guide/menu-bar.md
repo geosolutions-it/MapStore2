@@ -172,6 +172,21 @@ In particular, with these options it is possible to:
 
 <img src="../img/menu-bar/settings.jpg" class="ms-docimage" style="max-width:400px;"/>
 
+!!!Note
+    When the [3D navigation](side-bar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*. 
+    <img src="../img/menu-bar/cesium-settings.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+    In particular, from the *Map Settings* it is possible to:
+
+    * Enable the **Show sky atmosphere** to see the atmosphere around the globe
+
+    * Enable the **Show ground atmosphere** to view the ground atmosphere on the globe when viewed from a distance
+
+    * Enable the **Show fog** to allow additional performance by rendering less geometry and dispatching less terrain requests
+
+    * Enable the **Depth test against terrain** if polylines, labels, etc. should be depth-tested against the terrain surface
+
+
 * See the **About this map** panel, when [Details](resources-properties.md#details) are present
 
 * [Share](share.md) the map
