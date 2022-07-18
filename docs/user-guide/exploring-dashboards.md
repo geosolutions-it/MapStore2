@@ -27,7 +27,23 @@ Through the *Topbar* it is possible to:
 
 * Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing Users and Groups](managing-users-and-groups.md) section)
 
-* Open the *Options* <img src="../img/button/burger.jpg" class="ms-docbutton"/> panel which allows you to start the *Tutorial* and [Save/Save as](resources-properties.md) the dashboard
+### Options Menu
+
+From the *Topbar* the **Options** <img src="../img/button/burger.jpg" class="ms-docbutton"/> drop-down menu opens allowing the editor to:
+
+<img src="../img/exploring-dashboards/options-menu.jpg" class="ms-docimage"  style="max-width:150px;"/>
+
+* **Export** dashboard in `json` format
+
+* **Import** dashboard in `json` format
+
+* See the information about the deployed **Version** of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+
+<img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
+
+* [Save/Save as](resources-properties.md) the dashboard
+
+* Start the **Tutorial**
 
 ## Sidebar
 

@@ -13,7 +13,7 @@ The user can approach a story in two different ways:
 ## Edit Mode
 
 The *Edit Mode* allows the user to edit a story by adding, removing or modifying the elements inside it. This mode and its tools are used both to edit an existing story and to create a new one. <br>
-In order to create a new story, the user can click on the **New GeoStory** button <img src="../img/button/new_story_button.jpg" class="ms-docbutton"/> on [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) home page. As soon as the user clicks on that button in home page the story editor opens, it is composed of two main elements: the *Builder* and the *Sections Container* (later simply called *Container*).
+In order to create a new story, the user can click on the **New GeoStory** button <img src="../img/button/new_story_button.jpg" class="ms-docbutton"/> on [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) home page. As soon as the user clicks on that button in home page the story editor opens, it is composed of three main elements: the [Topbar](exploring-dashboards.md#topbar), the *Builder* and the *Sections Container* (later simply called *Container*).
 
 <img src="../img/exploring-stories/story-workspace.jpg" class="ms-docimage"/>
 
