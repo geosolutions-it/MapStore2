@@ -250,7 +250,11 @@ The style editor can configure the *Icon* as explained [here](layer-settings.md#
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
-### Create a style for 3D Tiles
+### Styling on the 3D navigation 
+
+Thanks to the new improvements made to the *Visual Style Editor* editor, when [3D Navigation](side-bar.md#3d-navigation) is enabled, the editor has the ability to customize the style of **3D Tiles** and **vector layers**.
+
+#### Styling of 3D Tiles layer 
 
 With [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to customize the style of a [3D Tiles layer](catalog.md#3d-tiles-catalog) client side. The MapStore support is working in respect of the [3D Tiles Specification 1.0](http://docs.opengeospatial.org/cs/18-053r2/18-053r2.html) and on top of the [Cesium Styling capabilities](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling). Below is an example of how the Style Editor of a 3D Tiles layer is appearing in the MapStore UI.
 
@@ -275,6 +279,33 @@ The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Styl
 <img src="../img/layer-settings/point_3dtiles_text.jpg" class="ms-docimage">
 
 <img src="../img/layer-settings/point_3dtiles_visual.jpg" class="ms-docimage">
+
+
+#### Styling of Vector layer
+
+In [3D Navigation](side-bar.md#3d-navigation), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* with the same characteristics of the [Visual Style Editor](layer-settings.md#visual-editor-style) as described in the previous chapter.
+
+!!!Warning
+    For the Vector layer, the *Cesium Style Editor* have some limitations:
+
+    * It's possible to apply only one type of symbolizer at the time, so if the rule editor shows multiple rule with the same filter, only the first one is used.
+    
+    * For the *Line symbolizers*: the *Line cap* and *Line join* options are not available as properties in Cesium
+
+Furthermore, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds some customization options, for **WFS layers**, in the *Cesium Style Editor* which are:
+
+* **Bring to front** to bring the Mark or the Icon in front of the **3d Tiles** layer (This option is available for Icon and Mark symbolizers).
+
+<img src="../img/layer-settings/bring-to-front.jpg" class="ms-docimage">
+
+* **Polygon type** to choose whether the classification should affect `3D`, `Terrain` or `Both`. (This option is available for File symbolizers)
+
+<img src="../img/layer-settings/polygon-type.jpg" class="ms-docimage">
+
+* **Clap to ground** to enable/disable the boolean Property specifying whether the polyline should be clamped to the ground (This option is available for Line and File symbolizers).
+
+<img src="../img/layer-settings/clamp-to-ground.jpg" class="ms-docimage">
+
 
 ## Feature Info Form
 
