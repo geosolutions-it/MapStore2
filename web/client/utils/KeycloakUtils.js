@@ -239,8 +239,8 @@ export const monitorKeycloak = (ssoProvider) => (action$, store) => {
                     // this IFRAME creation forces on logout the keycloak session update, to prevent
                     // login on next page reload because of keycloak js api find session cookie changed.
                     action$.ofType(LOGOUT).do(() => {
-                        var iframe = document.createElement("iframe");
-                        var src = keycloak.createLoginUrl({prompt: 'none'});
+                        const iframe = document.createElement("iframe");
+                        const src = keycloak.createLoginUrl({prompt: 'none'});
                         iframe.setAttribute("src", src);
                         iframe.style.display = "none";
                         document.body.appendChild(iframe);
