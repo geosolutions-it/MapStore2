@@ -24,7 +24,7 @@ sequenceDiagram
 ```
 
 !!! note
-    **UserGroup Service/Role Service** can be *MapStore database*, *LDAP* or *LDAP*, depending on the setup you prefer.
+    **UserGroup Service/Role Service** can be *MapStore database* or *LDAP* depending on the setup you prefer.
 
 With the suggested implementation the MapStore database will be also a UserGroupService and a RoleService for GeoServer.
 This means that every user of MapStore will be also a user in GeoServer, with the same attributes, the same roles (ADMIN, USER) and the same user groups.
