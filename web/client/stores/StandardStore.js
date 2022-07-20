@@ -7,18 +7,18 @@
  */
 
 import DebugUtils from '../utils/DebugUtils';
-import { combineEpics, combineReducers } from '../utils/PluginsUtils';
+import {combineEpics, getReducers} from '../utils/PluginsUtils';
 import { createEpicMiddleware } from 'redux-observable';
 import ListenerEnhancer from '@carnesen/redux-add-action-listener-enhancer';
 import { routerMiddleware, connectRouter } from 'connected-react-router';
-import { persistMiddleware, persistEpic } from '../utils/StateUtils';
+import {persistMiddleware, persistEpic, createReducerManager} from '../utils/StateUtils';
 import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
 import { getApi } from '../api/userPersistedStorage';
 import url from "url";
-import { findMapType } from './../utils/MapTypeUtils';
-import { set } from './../utils/ImmutableUtils';
+import { findMapType } from '../utils/MapTypeUtils';
+import { set } from '../utils/ImmutableUtils';
 const standardEpics = {};
 
 const appStore = (
@@ -36,7 +36,7 @@ const appStore = (
 ) => {
 
     const history = storeOpts.noRouter ? null : require('./History').default;
-    const allReducers = combineReducers(plugins, {
+    const reducerManager = createReducerManager({
         ...appReducers,
         localConfig,
         locale,
@@ -45,6 +45,10 @@ const appStore = (
         // TODO: missing locale default reducer
         ...(!storeOpts.noRouter && { router: connectRouter(history) })
     });
+    const pluginsReducers = getReducers(plugins);
+    Object.keys(pluginsReducers).forEach(key => reducerManager.add(key, pluginsReducers[key]));
+
+    const allReducers = reducerManager.reduce;
     const rootEpic = persistEpic(combineEpics(plugins, { ...standardEpics, ...appEpics }));
     const optsState = storeOpts.initialState || { defaultState: {}, mobile: {} };
     let defaultState = { ...initialState.defaultState, ...optsState.defaultState };
@@ -93,6 +97,7 @@ const appStore = (
     }
 
     store = DebugUtils.createDebugStore(rootReducer, defaultState, middlewares, enhancer);
+    store.reducerManager = reducerManager;
     if (storeOpts && storeOpts.persist) {
         const persisted = {};
         store.subscribe(() => {
