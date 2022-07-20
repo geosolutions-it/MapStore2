@@ -9,6 +9,7 @@ import Rx from 'rxjs';
 
 import { MAPS_LIST_LOADING, ATTRIBUTE_UPDATED } from '../actions/maps';
 import { SAVED as GEOSTORY_SAVED } from '../actions/geostory';
+import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 import {
     SEARCH_GEOSTORIES,
@@ -83,7 +84,7 @@ export const deleteGeostory = action$ => action$
         }))
     ));
 export const reloadOnGeostories = (action$, { getState = () => { } }) =>
-    action$.ofType(GEOSTORY_DELETED, RELOAD, ATTRIBUTE_UPDATED, GEOSTORY_SAVED)
+    action$.ofType(GEOSTORY_DELETED, RELOAD, ATTRIBUTE_UPDATED, GEOSTORY_SAVED, LOGIN_SUCCESS, LOGOUT)
         .delay(1000) // delay as a workaround for geostore issue #178
         .switchMap( () => Rx.Observable.of(searchGeostoriesAction(
             searchTextSelector(getState()),

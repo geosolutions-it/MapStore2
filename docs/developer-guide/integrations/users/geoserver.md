@@ -7,7 +7,24 @@ MapStore can share users, groups an roles with GeoServer. This type of integrati
 This guide explains how to share users, groups and roles between MapStore and GeoServer.
 Applying this configurations will allow users logged in MapStore to be recognized by GeoServer. So security rules about restrictions on services, layers and so on can be correctly applied to MapStore users (also using [GeoFence](https://docs.geoserver.org/latest/en/user/extensions/geofence-server/index.html)).
 
-![diagram](https://docs.google.com/drawings/d/e/2PACX-1vR2FEp6iXMPotq5OY1DcCcMvMjq3jQG-aJh5lhp7yCW-tsBINugLE7Cff8O-eXprgOQoiqGKcF4Gq98/pub?w=651&amp;h=429)
+```mermaid
+sequenceDiagram
+    actor User
+    participant GeoServer
+    participant MapStore
+    participant UserGroup Service/Role Service
+    User ->>+ GeoServer:  OGC Request <br />(w/authkey)
+    GeoServer ->>+ MapStore: authkey
+    MapStore ->>- GeoServer: username
+    GeoServer ->>+ UserGroup Service/Role Service: username
+    UserGroup Service/Role Service ->>- GeoServer: User(groups, roles)
+    Note over GeoServer: Filter/Allow/Deny data access <br /> by Resource Access Manager
+    GeoServer ->>- User: data
+
+```
+
+!!! note
+    **UserGroup Service/Role Service** can be *MapStore database*, *LDAP* or *LDAP*, depending on the setup you prefer.
 
 With the suggested implementation the MapStore database will be also a UserGroupService and a RoleService for GeoServer.
 This means that every user of MapStore will be also a user in GeoServer, with the same attributes, the same roles (ADMIN, USER) and the same user groups.
@@ -40,8 +57,8 @@ I am assuming this is a new installation, so no existing user or map will be pre
 
 ### Default user password couples are
 
- - admin:admin
- - user:user
+- admin:admin
+- user:user
 
 ## GeoServer Setup
 
@@ -205,3 +222,4 @@ The advanced Download, activated when GeoServer provides the WPS service above, 
 - [Query Layer Plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module): This plugin allows the possibility to do cross-layer filtering. Cross layer filtering is the mechanism of Filtering a layer using geometries coming from another layer. The plugin allows this filtering to be performed on the server side in an efficient way.
 
 - [DDS/BIL Plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html): this plugin add to geoserver the possibility to publish raster data in DDS/BIL format (World Wind). This particular plugin is useful if we want to use a raster data as elevation model for MapStore. This elevation model will be used in 3D mode or with the mouse coordinates plugin (displaying the elevation of a point on the map, together with the coordinates).
+

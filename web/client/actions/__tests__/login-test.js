@@ -10,19 +10,14 @@ import { RESET_ERROR } from '../security';
 
 import { SET_CONTROL_PROPERTY } from '../controls';
 import {isFunction} from 'lodash';
-import { getCookieValue, eraseCookie } from '../../utils/CookieUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 
 describe('login actions', () => {
     describe('openIDLogin', () => {
-        afterEach(() => {
-            eraseCookie("authProvider");
-        });
         it('default with provider', () => {
             let page;
             const PROVIDER = "google";
             openIDLogin({provider: PROVIDER}, (p) => {page = p;} )();
-            expect(getCookieValue("authProvider")).toEqual(PROVIDER);
             const geostore = ConfigUtils.getConfigProp("geoStoreUrl");
             expect(page).toEqual(`${geostore}openid/${PROVIDER}/login`);
         });
@@ -31,7 +26,6 @@ describe('login actions', () => {
             const PROVIDER = "google";
             const TEST_URL = "/test/path";
             openIDLogin({provider: PROVIDER, url: TEST_URL}, (p) => {page = p;} )();
-            expect(getCookieValue("authProvider")).toEqual(PROVIDER);
             expect(page).toEqual(TEST_URL);
         });
     });
@@ -60,9 +54,6 @@ describe('login actions', () => {
         expect(actions[1].type).toEqual(RESET_ERROR);
     });
     describe('onShowLogin', () => {
-        afterEach(() => {
-            eraseCookie("authProvider");
-        });
         it('default', () => {
             const {type, control, property, value } = onShowLogin();
             expect(type).toEqual(SET_CONTROL_PROPERTY);
