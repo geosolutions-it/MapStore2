@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.node.ValueNode;
 import it.geosolutions.mapstore.controllers.BaseConfigController;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
@@ -33,9 +34,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * This controller exposes a service to read a JSON body holding parameters and a redirect page,
@@ -49,7 +53,11 @@ public class SetParamsController extends BaseConfigController {
     private static final String QUERY_PARAMS="queryParams";
     private static final String DEF_PAGE="../../#viewer/openlayers/config";
 
+    private SetParamsUUIDStrategy uuidStrategy;
 
+    public SetParamsController() {
+        this.uuidStrategy=new DefUUIDGenerationStrategy();
+    }
 
     /**
      * Write an HTML output with a script to redirect to the page url
@@ -66,14 +74,42 @@ public class SetParamsController extends BaseConfigController {
         else node=toJSON(request);
         String jsString= StringEscapeUtils.escapeJavaScript(node.toString());
         response.setContentType("text/html");
+        String uuid= getUUID();
+        String itemName=QUERY_PARAMS.concat("-").concat(uuid);
         java.io.PrintWriter out = response.getWriter();
         out.write("<html><head>");
         out.write("<meta charset=\"UTF-8\">");
         out.write("<script>");
         out.write("let params=".concat("'").concat(jsString).concat("'; "));
-        out.write("sessionStorage.setItem(\"".concat(QUERY_PARAMS).concat("\",params); "));
-        out.write("location.href=\"".concat(getPage(node)).concat("\"; "));
+        out.write("sessionStorage.setItem(\"".concat(itemName).concat("\",params); "));
+        String location=buildRedirectUrl(node, uuid);
+        out.write("location.href=\"".concat(location).concat("\"; "));
         out.write("</script></head><body></body></html>");
+    }
+
+
+    private String buildRedirectUrl(JsonNode node, String uuid){
+        String page=getPage(node);
+        StringBuilder location=new StringBuilder(page);
+        if (!containsQueryString(page))
+            location.append("?");
+        else
+            location.append("&");
+        location.append("queryParamsID=").append(uuid);
+        return location.toString();
+    }
+
+    private boolean containsQueryString(String page){
+        try {
+            URI url = new URI(page);
+            String queryString = url.getQuery();
+            if (StringUtils.isBlank(queryString))
+                return false;
+            else return true;
+        } catch (URISyntaxException e){
+            // we try to be lenient and simply log the exception returning false.
+            return false;
+        }
     }
 
     private String getPage(JsonNode node){
@@ -149,6 +185,27 @@ public class SetParamsController extends BaseConfigController {
                 headers.put(name, Collections.list(request.getHeaders(name)));
             }
             return headers;
+        }
+    }
+
+
+    private String getUUID(){
+        return uuidStrategy.generateUUID();
+    }
+
+    // test purpose.
+    void setUuidStrategy(SetParamsUUIDStrategy uuidStrategy) {
+        this.uuidStrategy = uuidStrategy;
+    }
+
+    /**
+     * Class for Def UUID generation strategy. Generates a random UUID.
+     */
+    private class DefUUIDGenerationStrategy implements SetParamsUUIDStrategy{
+
+        @Override
+        public String generateUUID() {
+            return UUID.randomUUID().toString();
         }
     }
 
