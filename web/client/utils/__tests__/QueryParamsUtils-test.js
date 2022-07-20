@@ -57,7 +57,7 @@ describe('QueryParamsUtils', () => {
         expect(featureinfo.lng).toBe(-95.625);
         expect(featureinfo.filterNameList).toEqual([]);
 
-        const storageItem = sessionStorage.getItem('queryParams');
+        const storageItem = sessionStorage.getItem(`queryParams-${uuid}`);
         featureinfo = JSON.parse(storageItem)[uuid]?.featureinfo;
         expect(featureinfo).toBe(undefined);
 
