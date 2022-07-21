@@ -42,18 +42,19 @@ describe('QueryParamsUtils', () => {
         expect(center).toBe(null);
     });
     it('test postRequestLoadValue', () => {
-        sessionStorage.setItem('queryParams', JSON.stringify({featureinfo: {lat: 38.72, lng: -95.625, filterNameList: []}, zoom: 5, center: "41,0"}));
-        let featureinfo = postRequestLoadValue('featureinfo', sessionStorage);
+        const uuid = '8158d9c3-155d-44c0-834a-5274161c241e';
+        sessionStorage.setItem(`queryParams-${uuid}`, JSON.stringify({featureinfo: {lat: 38.72, lng: -95.625, filterNameList: []}, zoom: 5, center: "41,0"}));
+        let featureinfo = postRequestLoadValue('featureinfo', uuid, sessionStorage);
         expect(featureinfo.lat).toBe(38.72);
         expect(featureinfo.lng).toBe(-95.625);
         expect(featureinfo.filterNameList).toEqual([]);
 
-        const storageItem = sessionStorage.getItem('queryParams');
-        featureinfo = JSON.parse(storageItem)?.featureinfo;
+        const storageItem = sessionStorage.getItem(`queryParams-${uuid}`);
+        featureinfo = JSON.parse(storageItem)[uuid]?.featureinfo;
         expect(featureinfo).toBe(undefined);
 
-        const zoom = postRequestLoadValue('zoom', sessionStorage);
-        const center = postRequestLoadValue('center', sessionStorage);
+        const zoom = postRequestLoadValue('zoom', uuid, sessionStorage);
+        const center = postRequestLoadValue('center', uuid, sessionStorage);
         expect(zoom).toBe(5);
         expect(center).toBe("41,0");
     });
