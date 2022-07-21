@@ -22,7 +22,9 @@ Example:
 ### POST Request
 
 Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with an entire map, or complex data. To overcome this kind of situations, an adhoc `POST` service available at `<mapstore-base-path>/rest/config/setParams` allows to pass the parameters in the request payload `application/x-www-form-urlencoded`.
-The parameters will be then passed to the client (using a temporary `queryParams` variable in `sessionStorage`). Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/openlayers/config`.
+The parameters will be then passed to the client (using a temporary `queryParams-{random-UUID}` variable in `sessionStorage`). 
+Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/openlayers/config`. 
+The UUID used in the `queryParams-{random-UUID}` variable name is being added to the redirect URL in a query parameter named `queryParamsID=`. Assuming to use the default redirect value, the url will then look like the following: `#/viewer/openlayers/config?queryParamsID={random-UUID}`.
 
 Example `application/x-www-form-urlencoded` request payload (URL encoded):
 
