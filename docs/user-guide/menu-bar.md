@@ -1,15 +1,11 @@
 # Menu Bar
 **********
 
-The *Menu Bar* consist of four different parts:
+The *Menu Bar* is composed of various tools that are used by the user to interact on the map viewer. In particular, it consists of two parts:
 
 * The **Search bar**
 
-* The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
-
-* The **Login** button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
-
-* The **Burger Menu** button <img src="../img/button/burger.jpg" class="ms-docbutton"/>
+* The **Options Menu**
 
 <img src="../img/menu-bar/menu-bar.jpg" class="ms-docimage"/>
 
@@ -142,47 +138,51 @@ When all the properties have been set, selecting the <img src="../img/button/sav
 
 Once a bookmark has been created, it is always possible to *Edit* it <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> or *Remove* it <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> from the list.
 
-## Burger Menu
+## Options Bar
 
-The *Burger Menu* is an important tools container that allows the user to perform different operations and take a look at several information:
+The *Options Bar* is an important tools bar, positioned on the right side of the map viewer, that allows the user to perform different operations and take a look at several information:
 
-<img src="../img/menu-bar/burger-menu.jpg" class="ms-docimage" style="max-width:300px;"/>
+<img src="../img/menu-bar/options-menu.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 In particular, with these options it is possible to:
 
-* [Print](print.md) the map
+* Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/homepage.jpg" class="ms-docbutton"/> button
 
-* **Export map** in `json` format
+* **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section) 
 
-* [Import](import.md) files from your machine
+* Open the **Version** panel to see the information about the deployed version of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/version.jpg" class="ms-docbutton"/> button
 
-* Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map
+* [Print](print.md) the map by clicking the <img src="../img/button/print2.jpg" class="ms-docbutton"/> button
 
-* Perform a [Measure](measure.md) on the map
+* **Export map** in `json` format by clicking the <img src="../img/button/export2.jpg" class="ms-docbutton"/> button
 
-* **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
+* [Import](import.md) files from your machine by clicking the <img src="../img/button/import2.jpg" class="ms-docbutton"/> button
 
-* **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
+* Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map by clicking the <img src="../img/button/catalog2.jpg" class="ms-docbutton"/> button
 
-* **Delete Map** in order to delete the current map. 
+* Perform a [Measure](measure.md) on the map by clicking the <img src="../img/button/measurament.jpg" class="ms-docbutton"/> button
 
-* Create [Annotations](annotations.md) and add them to the map
+* **Save** the map by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button, in order to apply the changes made in an existing map. Selecting this option, the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
 
-* Access the map **Settings** where the user can change the current *Language*, select the *Identify response format* (*Text*, *html* or *Properties*) and see the application *Version* (more information about the *Identify response format* can be found in the [Identify tool](side-bar.md#identify-tool) section)
+* **Save as** when the user needs to save a copy of a map or save one for the first time by clicking the <img src="../img/button/saveas2.jpg" class="ms-docbutton"/> button. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
 
-<img src="../img/menu-bar/settings.jpg" class="ms-docimage" style="max-width:400px;"/>
+* **Delete Map** in order to delete the current map by clicking the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button
 
-* See the **About this map** panel, when [Details](resources-properties.md#details) are present
+* Access the map **Settings** by clicking the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, where the user can change the current **Language** and select the [Identify](side-bar.md#identify-tool) options
 
-* [Share](share.md) the map
+<img src="../img/menu-bar/settings-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-* Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/)
+* See the **About this map** panel by clicking the <img src="../img/button/details2.jpg" class="ms-docbutton"/> button, when [Details](resources-properties.md#details) are present
 
-* Start the **Tutorial** 
+* [Share](share.md) the map by clicking the <img src="../img/button/share2.jpg" class="ms-docbutton"/> button
 
-* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+* Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/) by clicking the <img src="../img/button/doc2.jpg" class="ms-docbutton"/> button
+
+* Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
+
+* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
 
 <img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!!warning
-    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Burger Menu* only when the map has already been saved once.
+    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Options Menu* only when the map has already been saved once.
