@@ -34,6 +34,7 @@ import Feature from 'ol/Feature';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Draw from 'ol/interaction/Draw';
+import DrawHole from './hole/DrawHole';
 import { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import {Style, Stroke, Fill, Text} from 'ol/style';
@@ -737,9 +738,59 @@ export default class DrawSupport extends React.Component {
         });
 
         this.props.map.addInteraction(this.drawInteraction);
+        this.addDrawHoleInteraction(drawMethod, maxPoints, newProps);
         this.setDoubleClickZoomEnabled(false);
     };
+    addDrawHoleInteraction = (drawMethod, maxPoints, newProps) => {
+        this.drawHoleInteraction = new DrawHole(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, newProps));
+        if (newProps?.options?.hole) {
+            this.drawInteraction.setActive(false);
+            this.drawHoleInteraction.setActive(true);
+        } else {
+            this.drawInteraction.setActive(true);
+            this.drawHoleInteraction.setActive(false);
+        }
 
+        this.drawHoleInteraction.on('modifyend', event => {
+            if (this.drawInteraction) {
+                this.drawInteraction.setActive(true);
+            }
+            this.drawHoleInteraction.setActive(false); // disable the drawHoleInteraction end
+            const vectorSource = new VectorSource({
+                features: event.features
+            });
+            this.drawLayer.setSource(vectorSource);
+            let features = [];
+            vectorSource.forEachFeature(feature => { features.push((new GeoJSON()).writeFeatureObject(feature)); });
+
+            this.props.onGeometryChanged(features, this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
+            this.props.onEndDrawing(features, this.props.drawOwner);
+            features = features.map(feature => reprojectGeoJson(feature, this.getMapCrs(), "EPSG:4326"));
+            if (this.props.options.stopAfterDrawing) {
+                this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, features);
+            } else {
+                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
+                    features.map((f) => reprojectGeoJson(f, "EPSG:4326", this.getMapCrs())),
+                    assign({}, this.props.options, { featureProjection: this.getMapCrs()}));
+            }
+            if (this.selectInteraction) {
+                // TODO update also the selected features
+                this.addSelectInteraction();
+                this.selectInteraction.setActive(true);
+            }
+
+
+
+
+            // restore select interaction if it was disabled
+            if (this.selectInteraction) {
+                // TODO update also the selected features
+                this.addSelectInteraction();
+                this.selectInteraction.setActive(true);
+            }
+        });
+        this.props.map.addInteraction(this.drawHoleInteraction);
+    };
     drawPropertiesForGeometryType = (geometryType, maxPoints, source, newProps = {}) => {
         let drawBaseProps = {
             source: this.drawSource || source,
