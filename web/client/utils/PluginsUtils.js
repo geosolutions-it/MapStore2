@@ -8,7 +8,7 @@
 
 import React from 'react';
 import assign from 'object-assign';
-import { omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith } from 'lodash';
+import {omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith, size} from 'lodash';
 import {connect as originalConnect} from 'react-redux';
 import url from 'url';
 import curry from 'lodash/curry';
@@ -80,9 +80,14 @@ const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name
 export const getFromPlugins = curry((selector, plugins) => Object.keys(plugins).map((name) => plugins[name][selector])
     .reduce((previous, current) => ({ ...previous, ...current }), {}));
 
+export const getGroupedFromPlugins = curry((selector, plugins) => Object.keys(plugins)
+    .reduce((previous, current) => ({ ...previous, ...(plugins[current][selector] && size(plugins[current][selector]) ? {[current]: plugins[current][selector]} : {}) }), {}));
+
 export const getReducers = getFromPlugins('reducers');
 
 export const getEpics = getFromPlugins('epics');
+
+export const getGroupedEpics = getGroupedFromPlugins('epics');
 
 /**
 * Produces the reducers from the plugins, combined with other plugins

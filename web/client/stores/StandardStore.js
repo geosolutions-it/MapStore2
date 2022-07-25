@@ -7,11 +7,11 @@
  */
 
 import DebugUtils from '../utils/DebugUtils';
-import {combineEpics, getReducers} from '../utils/PluginsUtils';
+import { getGroupedEpics, getReducers} from '../utils/PluginsUtils';
 import { createEpicMiddleware } from 'redux-observable';
 import ListenerEnhancer from '@carnesen/redux-add-action-listener-enhancer';
 import { routerMiddleware, connectRouter } from 'connected-react-router';
-import {persistMiddleware, persistEpic, createReducerManager} from '../utils/StateUtils';
+import {persistMiddleware, createStoreManager} from '../utils/StateUtils';
 import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
@@ -36,20 +36,22 @@ const appStore = (
 ) => {
 
     const history = storeOpts.noRouter ? null : require('./History').default;
-    const reducerManager = createReducerManager({
-        ...appReducers,
-        localConfig,
-        locale,
-        locales: () => null,
-        browser,
-        // TODO: missing locale default reducer
-        ...(!storeOpts.noRouter && { router: connectRouter(history) })
-    });
+    const storeManager = createStoreManager(
+        {
+            ...appReducers,
+            localConfig,
+            locale,
+            locales: () => null,
+            browser,
+            // TODO: missing locale default reducer
+            ...(!storeOpts.noRouter && { router: connectRouter(history) })
+        },
+        { ...standardEpics, ...appEpics });
+    const epicMiddleware = persistMiddleware(createEpicMiddleware(storeManager.rootEpic));
     const pluginsReducers = getReducers(plugins);
-    Object.keys(pluginsReducers).forEach(key => reducerManager.add(key, pluginsReducers[key]));
+    Object.keys(pluginsReducers).forEach(key => storeManager.addReducer(key, pluginsReducers[key]));
 
-    const allReducers = reducerManager.reduce;
-    const rootEpic = persistEpic(combineEpics(plugins, { ...standardEpics, ...appEpics }));
+    const allReducers = storeManager.reduce;
     const optsState = storeOpts.initialState || { defaultState: {}, mobile: {} };
     let defaultState = { ...initialState.defaultState, ...optsState.defaultState };
     const urlData = url.parse(window.location.href, true);
@@ -59,7 +61,6 @@ const appStore = (
     }
 
     const mobileOverride = { ...initialState.mobile, ...optsState.mobile };
-    const epicMiddleware = persistMiddleware(createEpicMiddleware(rootEpic));
     const rootReducer = (state, action) => {
         return rootReducerFunc({
             state,
@@ -97,7 +98,11 @@ const appStore = (
     }
 
     store = DebugUtils.createDebugStore(rootReducer, defaultState, middlewares, enhancer);
-    store.reducerManager = reducerManager;
+    store.storeManager = storeManager;
+
+    const pluginsEpics = getGroupedEpics(plugins);
+    Object.keys(pluginsEpics).forEach(key => store.storeManager.addEpics(key, pluginsEpics[key]));
+
     if (storeOpts && storeOpts.persist) {
         const persisted = {};
         store.subscribe(() => {

@@ -9,10 +9,10 @@ import {applyMiddleware, combineReducers, compose, createStore as createReduxSto
 import thunkMiddleware from 'redux-thunk';
 import logger from 'redux-logger';
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
-import {wrapEpics} from "./EpicsUtils";
+import {semaphore, wrapEpics} from "./EpicsUtils";
 import ConfigUtils from './ConfigUtils';
 import isEmpty from 'lodash/isEmpty';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
@@ -104,11 +104,8 @@ export const persistReducer = (reducer, storeName = PERSISTED_STORE_NAME, name =
 export const persistEpic = (epic, storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
     const epic$ = new BehaviorSubject(epic);
     ConfigUtils.setConfigProp(storeName + '.' + name, epic$);
-    return (action$, ...rest) =>
-        epic$.mergeMap(e =>
-            e(action$, ...rest).takeUntil(action$.ofType('EPIC_END'))
-        )
-    ;
+    return (...args) =>
+        epic$.mergeMap(e => e(...args));
 };
 
 /**
@@ -129,16 +126,28 @@ export const getState = (name) => {
     return !isEmpty(getStore(name)) && getStore(name)?.getState() || {};
 };
 
+const isolateEpics = (epics, muteState$) => {
+    const isolateEpic = (epic) => (action$, store) => epic(action$.let(semaphore(muteState$.startWith(true))), store).let(semaphore(
+        muteState$.startWith(true)
+    ));
+    return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic) }), {});
+};
 
-export const createReducerManager = initialReducers => {
+
+export const createStoreManager = (initialReducers, initialEpics) => {
     // Create an object which maps keys to reducers
     const reducers = {...initialReducers};
+    const epics = {...initialEpics};
 
     // Create the initial combinedReducer
     let combinedReducer = combineReducers(reducers);
 
+    const epic$ = new BehaviorSubject(combineEpics(...wrapEpics(epics)));
+
     // An array which is used to delete state keys when reducers are removed
     let keysToRemove = [];
+
+    let muteState = {};
 
     return {
         getReducerMap: () => reducers,
@@ -161,7 +170,7 @@ export const createReducerManager = initialReducers => {
         },
 
         // Adds a new reducer with the specified key
-        add: (key, reducer) => {
+        addReducer: (key, reducer) => {
             if (!key || reducers[key]) {
                 return;
             }
@@ -174,7 +183,7 @@ export const createReducerManager = initialReducers => {
         },
 
         // Removes a reducer with the specified key
-        remove: key => {
+        removeReducer: key => {
             if (!key || !reducers[key]) {
                 return;
             }
@@ -187,7 +196,26 @@ export const createReducerManager = initialReducers => {
 
             // Generate a new combined reducer
             combinedReducer = combineReducers(reducers);
-        }
+        },
+        // Adds a new epics set, mutable by the specified key
+        addEpics: (key, epicsList) => {
+            muteState[key] = new Subject();
+            const isolatedEpics = isolateEpics(epicsList, muteState[key].asObservable());
+            // wrapEpics(isolateEpics(epicsList, muteState[key].asObservable())).forEach(epic => epic$.next(epic));
+            wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
+        },
+        // Mute epics set with a specified key
+        muteEpics: (key) => {
+            if (typeof muteState[`${key}Plugin`] !== 'undefined') {
+                muteState[`${key}Plugin`].next(false);
+            }
+        },
+        unmuteEpics: (key) => {
+            if (typeof muteState[`${key}Plugin`] !== 'undefined') {
+                muteState[`${key}Plugin`].next(true);
+            }
+        },
+        rootEpic: (...args) => epic$.mergeMap(e => e(...args))
     };
 };
 
@@ -260,7 +288,7 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
 export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     const persistedStore = store || getStore();
     Object.keys(reducers).forEach((key) => {
-        persistedStore.reducerManager.add(key, reducers[key]);
+        persistedStore.storeManager.addReducer(key, reducers[key]);
     });
 
     const rootEpic = fetchEpic();
