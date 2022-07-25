@@ -17,6 +17,7 @@ import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
 import VectorSource from "ol/source/Vector";
+import Vector from "ol/layer/Vector";
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -1140,7 +1141,8 @@ describe('Test DrawSupport', () => {
                 drawEnabled: true}}
             />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
-        expect(spyAddInteraction.calls.length).toBe(1);
+        expect(spyAddInteraction.calls.length).toBe(2); // draw and hole are added
+        expect(support.drawHoleInteraction.getActive()).toBe(false);
     });
 
     it('draw or edit, both', () => {
@@ -1191,7 +1193,8 @@ describe('Test DrawSupport', () => {
             }}
             />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
-        expect(spyAddInteraction.calls.length).toBe(3);
+        expect(spyAddInteraction.calls.length).toBe(4); // draw, draw hole and other interactions are added
+        expect(support.drawHoleInteraction.getActive()).toBe(false);
     });
 
     it('draw or edit, endevent', () => {
@@ -2498,5 +2501,115 @@ describe('Test DrawSupport', () => {
         const snappingInteraction = !!support?.snapInteraction;
         expect(snappingInteraction).toBe(true);
     });
+
+    it('Draw Hole support with polygon', () => {
+        const POLYGON_COORDINATES_OUTER_RING = [[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]];
+        const feature = { "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [POLYGON_COORDINATES_OUTER_RING] }, "properties": { "id": "1", "isValidFeature": false, "canEdit": true, "isCircle": true, "isDrawing": true } };
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+        document.getElementById('map').style.width = '100px';
+        document.getElementById('map').style.height = '100px';
+        const olFeature = new Feature({geometry: new Polygon([POLYGON_COORDINATES_OUTER_RING])});
+        olMap.forEachFeatureAtPixel = (opts, callback) => {
+            callback.call(null, olFeature);
+        };
+        renderDrawSupport({features: [feature], drawStatus: "drawOrEdit", drawMethod: "Polygon"});
+        const support = renderDrawSupport({
+
+            features: [feature],
+            drawStatus: "drawOrEdit",
+            drawMethod: "Polygon",
+            options: {
+                stopAfterDrawing: true, // needed for append workflow or support returns a not valid geometry
+                editEnabled: false,
+                drawEnabled: true,
+                featureProjection: 'EPSG:4326',
+                hole: true // enables draw hole interaction
+            },
+            onEndDrawing: testHandlers.onEndDrawing,
+            onChangeDrawingStatus: testHandlers.onStatusChange
+        });
+        expect(support.drawHoleInteraction.getActive()).toBe(true);
+        const HOLE_COORDINATES = [[2, 2], [2, 3], [3, 3], [3, 2], [2, 2]];
+        const olHoleFeature = new Feature({
+            geometry: new Polygon([HOLE_COORDINATES])
+        });
+        expect(support).toExist();
+        // emulate events triggered by map when active
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        const resultFeatures = spyEnd.calls[0].arguments[0];
+        const resultGeometry = resultFeatures[0].geometry;
+        expect(resultGeometry.type).toBe("Polygon");
+        expect(resultGeometry.coordinates).toEqual([POLYGON_COORDINATES_OUTER_RING, HOLE_COORDINATES]);
+        expect(spyChangeStatus.calls.length).toBe(1);
+
+    });
+    it('Draw hole support with multipolygon', () => {
+        const POLYGON_COORDINATES_OUTER_RING = [[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]];
+        const SECOND_POLYGON_OUTER_RING = [[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]];
+        const featureMulti = { "type": "Feature", "geometry": { "type": "MultiPolygon", "coordinates": [[[POLYGON_COORDINATES_OUTER_RING]]] }, "properties": { "id": "1", "isValidFeature": false, "canEdit": true, "isCircle": true, "isDrawing": true } };
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+        document.getElementById('map').style.width = '100px';
+        document.getElementById('map').style.height = '100px';
+        const olFeature = new Feature({ geometry: new MultiPolygon([[POLYGON_COORDINATES_OUTER_RING], [SECOND_POLYGON_OUTER_RING]]) });
+        olMap.forEachFeatureAtPixel = (opts, callback) => {
+            callback.call(null, olFeature);
+        };
+        renderDrawSupport({ features: [featureMulti], drawStatus: "drawOrEdit", drawMethod: "Polygon" });
+        const support = renderDrawSupport({
+
+            features: [featureMulti],
+            drawStatus: "drawOrEdit",
+            drawMethod: "Polygon",
+            options: {
+                stopAfterDrawing: true, // needed for append workflow or support returns a not valid geometry
+                editEnabled: false,
+                drawEnabled: true,
+                featureProjection: 'EPSG:4326',
+                hole: true // activates the interaction
+
+            },
+            onEndDrawing: testHandlers.onEndDrawing,
+            onChangeDrawingStatus: testHandlers.onStatusChange
+        });
+        expect(support.drawHoleInteraction.getActive()).toBe(true);
+        const HOLE_COORDINATES = [[2, 2], [2, 3], [3, 3], [3, 2], [2, 2]];
+        const olHoleFeature = new Feature({
+            geometry: new Polygon([HOLE_COORDINATES])
+        });
+        expect(support).toExist();
+        // emulate events triggered by map when active
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        const resultFeatures = spyEnd.calls[0].arguments[0];
+        const resultGeometry = resultFeatures[0].geometry;
+        expect(resultGeometry.type).toBe("MultiPolygon");
+        expect(resultGeometry.coordinates).toEqual([[POLYGON_COORDINATES_OUTER_RING, HOLE_COORDINATES], [SECOND_POLYGON_OUTER_RING]]);
+        expect(spyChangeStatus.calls.length).toBe(1);
+
+    });
+
 });
 

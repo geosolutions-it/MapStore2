@@ -1,6 +1,7 @@
 /*
-  Originally from ol-ext but modified to work with MapStore2.
-  https://github.com/Viglino/ol-ext
+ * Inspired from ol-ext and modified to work with MapStore2.
+ * https://github.com/Viglino/ol-ext
+ * all rights reserved
 */
 import inherits from './ext';
 import Polygon from 'ol/geom/Polygon';
@@ -182,8 +183,9 @@ DrawHole.prototype._finishDrawing = function(e) {
     this.dispatchEvent({ type: 'modifystart', features: [this._current] });
     // Create the hole
     const c = e.hole.getGeometry().getCoordinates()[0];
-    // NOTE: changed to >= from > because of an unknown bug.
+    // NOTE: changed to >= from > because of an unknown bug, from original implementation to MapStore porting.
     // On ol-ext it works, but here 3 vertex polygon is not closed with forth coordinate.
+    // with this fix works also with triangles.
     if (c.length >= 3) {
         if (this._polygonIndex !== false) {
             const geom = e.feature.getGeometry();

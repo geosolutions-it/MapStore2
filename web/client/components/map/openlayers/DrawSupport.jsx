@@ -117,18 +117,28 @@ export default class DrawSupport extends React.Component {
         onEndDrawing: () => {}
     };
 
-    /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
- * @function UNSAFE_componentWillReceiveProps
- * Here is the list of all status
- * create allows to create features
- * start allows to start drawing features
- * drawOrEdit allows to start drawing or editing the passed features or both
- * stop allows to stop drawing features
- * replace allows to replace all the features drawn by Drawsupport with new ones
- * clean it cleans the drawn features and stop the drawsupport
- * cleanAndContinueDrawing it cleares the drawn features and allows to continue drawing features
- * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
-*/
+    /**
+     * Inside this lifecycle method the `drawStatus` is checked to manipulate the behavior of the DrawSupport
+     * Here is the list of all status:
+     * - `create` allows to create features
+     * - `start` allows to start drawing features
+     * - `drawOrEdit` allows to start drawing or editing the passed features or both
+     * - `stop` allows to stop drawing features
+     * - `replace` allows to replace all the features drawn by DrawSupport with new ones
+     * - `clean` it cleans the drawn features and stop the DrawSupport
+     * - `endDrawing` as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
+     *
+     * Moreover `options` define the behavior of the DrawSupport, expecially in `drawOrEdit` status.
+     * - `drawEnabled` in `drawOrEdit` status allows to enable the draw interaction
+     * - `editEnabled` in `drawOrEdit` status allows to enable the modify interaction
+     * - `stopAfterDrawing` trigger a change `stop` status after a feature is drawn
+     * - `hole`: if the geometry is a `Polygon` or a `MultiPolygon`, this option allows to draw holes in them, instead of creating new polygons
+     * - `featureProjection`: define the projection of the feature passed. It is used also to convert the coordinates of the drawn features.
+     * - `style`: define the style of the drawn features
+     *
+     * @memberof components.map.DrawSupport
+     * @function UNSAFE_componentWillReceiveProps
+    */
     UNSAFE_componentWillReceiveProps(newProps) {
         if (this.drawLayer) {
             this.updateFeatureStyles(newProps.features);
@@ -773,15 +783,6 @@ export default class DrawSupport extends React.Component {
                     features.map((f) => reprojectGeoJson(f, "EPSG:4326", this.getMapCrs())),
                     assign({}, this.props.options, { featureProjection: this.getMapCrs()}));
             }
-            if (this.selectInteraction) {
-                // TODO update also the selected features
-                this.addSelectInteraction();
-                this.selectInteraction.setActive(true);
-            }
-
-
-
-
             // restore select interaction if it was disabled
             if (this.selectInteraction) {
                 // TODO update also the selected features
