@@ -17,7 +17,6 @@ import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
 import VectorSource from "ol/source/Vector";
-import Vector from "ol/layer/Vector";
 
 const viewOptions = {
     projection: 'EPSG:3857',
