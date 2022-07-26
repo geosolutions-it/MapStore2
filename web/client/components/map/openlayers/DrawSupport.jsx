@@ -34,6 +34,7 @@ import Feature from 'ol/Feature';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Draw from 'ol/interaction/Draw';
+import DrawHole from './hole/DrawHole';
 import { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import {Style, Stroke, Fill, Text} from 'ol/style';
@@ -116,18 +117,28 @@ export default class DrawSupport extends React.Component {
         onEndDrawing: () => {}
     };
 
-    /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
- * @function UNSAFE_componentWillReceiveProps
- * Here is the list of all status
- * create allows to create features
- * start allows to start drawing features
- * drawOrEdit allows to start drawing or editing the passed features or both
- * stop allows to stop drawing features
- * replace allows to replace all the features drawn by Drawsupport with new ones
- * clean it cleans the drawn features and stop the drawsupport
- * cleanAndContinueDrawing it cleares the drawn features and allows to continue drawing features
- * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
-*/
+    /**
+     * Inside this lifecycle method the `drawStatus` is checked to manipulate the behavior of the DrawSupport
+     * Here is the list of all status:
+     * - `create` allows to create features
+     * - `start` allows to start drawing features
+     * - `drawOrEdit` allows to start drawing or editing the passed features or both
+     * - `stop` allows to stop drawing features
+     * - `replace` allows to replace all the features drawn by DrawSupport with new ones
+     * - `clean` it cleans the drawn features and stop the DrawSupport
+     * - `endDrawing` as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
+     *
+     * Moreover `options` define the behavior of the DrawSupport, expecially in `drawOrEdit` status.
+     * - `drawEnabled` in `drawOrEdit` status allows to enable the draw interaction
+     * - `editEnabled` in `drawOrEdit` status allows to enable the modify interaction
+     * - `stopAfterDrawing` trigger a change `stop` status after a feature is drawn
+     * - `hole`: if the geometry is a `Polygon` or a `MultiPolygon`, this option allows to draw holes in them, instead of creating new polygons
+     * - `featureProjection`: define the projection of the feature passed. It is used also to convert the coordinates of the drawn features.
+     * - `style`: define the style of the drawn features
+     *
+     * @memberof components.map.DrawSupport
+     * @function UNSAFE_componentWillReceiveProps
+    */
     UNSAFE_componentWillReceiveProps(newProps) {
         if (this.drawLayer) {
             this.updateFeatureStyles(newProps.features);
@@ -737,9 +748,50 @@ export default class DrawSupport extends React.Component {
         });
 
         this.props.map.addInteraction(this.drawInteraction);
+        this.addDrawHoleInteraction(drawMethod, maxPoints, newProps);
         this.setDoubleClickZoomEnabled(false);
     };
+    addDrawHoleInteraction = (drawMethod, maxPoints, newProps) => {
+        this.drawHoleInteraction = new DrawHole(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, newProps));
+        if (newProps?.options?.hole) {
+            this.drawInteraction.setActive(false);
+            this.drawHoleInteraction.setActive(true);
+        } else {
+            this.drawInteraction.setActive(true);
+            this.drawHoleInteraction.setActive(false);
+        }
 
+        this.drawHoleInteraction.on('modifyend', event => {
+            if (this.drawInteraction) {
+                this.drawInteraction.setActive(true);
+            }
+            this.drawHoleInteraction.setActive(false); // disable the drawHoleInteraction end
+            const vectorSource = new VectorSource({
+                features: event.features
+            });
+            this.drawLayer.setSource(vectorSource);
+            let features = [];
+            vectorSource.forEachFeature(feature => { features.push((new GeoJSON()).writeFeatureObject(feature)); });
+
+            this.props.onGeometryChanged(features, this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
+            this.props.onEndDrawing(features, this.props.drawOwner);
+            features = features.map(feature => reprojectGeoJson(feature, this.getMapCrs(), "EPSG:4326"));
+            if (this.props.options.stopAfterDrawing) {
+                this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, features);
+            } else {
+                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
+                    features.map((f) => reprojectGeoJson(f, "EPSG:4326", this.getMapCrs())),
+                    assign({}, this.props.options, { featureProjection: this.getMapCrs()}));
+            }
+            // restore select interaction if it was disabled
+            if (this.selectInteraction) {
+                // TODO update also the selected features
+                this.addSelectInteraction();
+                this.selectInteraction.setActive(true);
+            }
+        });
+        this.props.map.addInteraction(this.drawHoleInteraction);
+    };
     drawPropertiesForGeometryType = (geometryType, maxPoints, source, newProps = {}) => {
         let drawBaseProps = {
             source: this.drawSource || source,
