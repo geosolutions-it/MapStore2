@@ -2179,6 +2179,8 @@
             "addMarkRule": "Add mark rule",
             "shape": "Shape",
             "fill": "Fill color",
+            "clampToGround": "Clamp to ground",
+            "msBringToFront": "Bring to front",
             "strokeColor": "Stroke color",
             "strokeWidth": "Stroke width",
             "radius": "Radius",

@@ -12,9 +12,15 @@ import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
+const vector3dStyleOptions = {
+    msClampToGround: property.msClampToGround({
+        label: 'styleeditor.clampToGround'
+    })
+};
+
 const billboard3dStyleOptions = {
     msBringToFront: property.msBringToFront({
-        label: 'Bring to front'
+        label: 'styleeditor.msBringToFront'
     })
 };
 
@@ -68,7 +74,8 @@ const getBlocks = ({
                 strokeOpacity: 1,
                 strokeWidth: 1,
                 radius: 16,
-                rotate: 0
+                rotate: 0,
+                msBringToFront: false
             }
         },
         Icon: {
@@ -112,7 +119,8 @@ const getBlocks = ({
                 image: '',
                 opacity: 1,
                 size: 32,
-                rotate: 0
+                rotate: 0,
+                msBringToFront: false
             }
         },
         Line: {
@@ -157,7 +165,8 @@ const getBlocks = ({
                 join: property.join({
                     label: 'styleeditor.lineJoin',
                     key: 'join'
-                })
+                }),
+                ...(enable3dStyleOptions ? vector3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Line',
@@ -165,7 +174,8 @@ const getBlocks = ({
                 width: 1,
                 opacity: 1,
                 cap: 'round',
-                join: 'round'
+                join: 'round',
+                msClampToGround: true
             }
         },
         Fill: {
@@ -203,14 +213,16 @@ const getBlocks = ({
                 outlineWidth: property.width({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
-                })
+                }),
+                ...(enable3dStyleOptions ? vector3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Fill',
                 color: '#dddddd',
                 fillOpacity: 1,
                 outlineColor: '#777777',
-                outlineWidth: 1
+                outlineWidth: 1,
+                msClampToGround: true
             }
         },
         PointCloud: {
