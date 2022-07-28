@@ -44,8 +44,9 @@ Replacing:
 
 ### Release procedure
 
+```
 - [ ] Create an issue with this checklist in the release milestone.
-- [ ] Verify if it is needed to release a new version of http_proxy or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process)
+- [ ] Verify if it is needed to release a new version of http_proxy, mapfish print or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process) and MapFish Print [here](https://github.com/geosolutions-it/mapfish-print/wiki/How-to-Release)
   - [ ] for geostore, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
   - [ ] for http_proxy, check if [here](https://mvnrepository.com/artifact/proxy/http_proxy) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
 - [ ] If major release (YYYY.XX.00), create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
