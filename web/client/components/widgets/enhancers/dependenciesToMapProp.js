@@ -18,11 +18,13 @@ export default (prop) => withPropsOnChange(
         newDependencies && shallowEqual(dependencies[prop], newDependencies[prop])
             || mapSync === newMapSync
         || selectedMapId === newSelectedMapId,
-    ({ maps, mapSync, dependencies = {}, selectedMapId }) => {
+    ({ maps = [], mapSync, dependencies = {}, selectedMapId }) => {
         const map = find(maps, {mapId: selectedMapId}) || {};
+        const updatedMap = dependencies[prop] && mapSync ? set(prop, dependencies[prop], map) : map;
         return {
             mapStateSource: "__dependency_system__",
-            map: dependencies[prop] && mapSync ? set(prop, dependencies[prop], map) : map
+            maps: maps.map((m)=> m.mapId === updatedMap.mapId ? updatedMap : m),
+            map: updatedMap
         };
     }
 );
