@@ -267,7 +267,7 @@ Before going with one of the approaches, please make sure that changes to `plugi
 
 **To update all contexts at once:**
 
-Execute following query on your MapStore DB:
+This is a sample SQL query that can be executed against the MapStore DB to replace the Burger Menu with the new Sidebar for existing application contexts previously created:
 ```sql
 UPDATE geostore.gs_stored_data SET stored_data = regexp_replace(gs_stored_data.stored_data,'{"name":"BurgerMenu"},','{"name":"SidebarMenu"},')
 FROM geostore.gs_resource
