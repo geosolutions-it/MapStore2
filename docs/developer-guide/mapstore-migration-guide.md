@@ -187,11 +187,12 @@ Following actions need to be applied to make a switch:
 
 - Remove "BurgerMenu" entry from "desktop" section.
 
-#### Updating contexts to use Sidebar Menu
+#### Using Sidebar Menu in new contexts
 
-Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "SidebarMenu" in contexts.
+Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "SidebarMenu" in new contexts.
+Existing contexts need to be updated separately, please refer to the next chapter for instructions.
 
-- Find "BurgerMenu" plugin confuguration in `pluginsConfig.json` and remove `"hidden": true` line from it:
+- Find "BurgerMenu" plugin configuration in `pluginsConfig.json` and remove `"hidden": true` line from it:
 
 ```json
     {
@@ -247,6 +248,35 @@ Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new 
       ]
 }
 ```
+
+#### Updating existing contexts to use Sidebar Menu
+
+Contexts created in previous versions of MapStore will maintain old Burger Menu. There are two options allowing to replace it with the new Sidebar Menu:
+- Using manual update.
+- Using SQL query to update all contexts at once.
+
+Before going with one of the approaches, please make sure that changes to `pluginsConfig.json` from previous chapter are applied.
+
+**To update context manually:**
+1. Go to the context manager (#/context-manager) and edit context you want to update.
+2. Move to the step 3: Configure Plugins.
+3. Find "Burger Menu" on the right side (enabled plugins) and move it to the left column.
+4. Save context
+
+**Note:** "Burger Menu" has higher priority over the "Sidebar Menu", so it will always be used if it's added to the list of enabled plugins of the context.
+
+**To update all contexts at once:**
+
+Execute following query on your MapStore DB:
+```sql
+UPDATE geostore.gs_stored_data SET stored_data = regexp_replace(gs_stored_data.stored_data,'{"name":"BurgerMenu"},','{"name":"SidebarMenu"},')
+FROM geostore.gs_resource
+WHERE gs_stored_data.resource_id = gs_resource.id AND
+        gs_resource.category_id = (SELECT id FROM geostore.gs_category WHERE name = 'CONTEXT') AND
+        gs_stored_data.stored_data ~ '.*{"name":"BurgerMenu"},.*';
+```
+
+**Note:** Schema name could vary depending on your installation configuration.
 
 ### Updating extensions
 
