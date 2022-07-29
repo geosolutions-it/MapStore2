@@ -36,7 +36,8 @@ class MapsPage extends React.Component {
         match: PropTypes.object,
         reset: PropTypes.func,
         loadMaps: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        lazyPlugins: PropTypes.object
     };
 
     static defaultProps = {
@@ -58,6 +59,7 @@ class MapsPage extends React.Component {
             id="maps"
             onMount={this.props.loadMaps}
             plugins={this.props.plugins}
+            lazyPlugins={this.props.lazyPlugins}
             params={this.props.match.params}
         />);
     }

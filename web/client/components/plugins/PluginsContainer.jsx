@@ -35,6 +35,7 @@ class PluginsContainer extends React.Component {
         mode: PropTypes.string,
         params: PropTypes.object,
         plugins: PropTypes.object,
+        lazyPlugins: PropTypes.object,
         pluginsConfig: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
         id: PropTypes.string,
         className: PropTypes.string,

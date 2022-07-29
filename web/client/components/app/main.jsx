@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import {ensureIntl} from '../../utils/LocaleUtils';
 import StandardStore from '../../stores/StandardStore';
 import StandardApp from './StandardApp';
+import {createPluginManager} from "../../utils/PluginsUtils";
 /**
  * main entry point of application.
  * This function provide basic functionality to initialize an application in the MapStore framework.
@@ -49,10 +50,12 @@ const main = (config = {}, Component) => {
             rootReducerFunc
         });
 
+        const pluginManager = createPluginManager();
+
         const App = Component ? Component : StandardApp;
 
         ReactDOM.render(
-            <App { ...config } appStore={appStore}/>,
+            <App { ...config } appStore={appStore} pluginManager={pluginManager} />,
             document.getElementById(targetId)
         );
     };

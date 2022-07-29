@@ -28,6 +28,7 @@ class Page extends React.Component {
         params: PropTypes.object,
         onMount: PropTypes.func,
         plugins: PropTypes.object,
+        lazyPlugins: PropTypes.object,
         component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         includeCommon: PropTypes.bool
     };
@@ -65,6 +66,7 @@ class Page extends React.Component {
         return (<PluginsContainer key={this.props.id} id={"page-" + this.props.id} component={this.props.component} className={"page page-" + this.props.id + " " + this.props.className}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
+            lazyPlugins={this.props.lazyPlugins}
             params={this.props.params}
         />);
     }

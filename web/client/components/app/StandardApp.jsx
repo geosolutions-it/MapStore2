@@ -54,6 +54,7 @@ const DefaultAppLoaderComponent = () => (
 class StandardApp extends React.Component {
     static propTypes = {
         appStore: PropTypes.func,
+        pluginManager: PropTypes.object,
         pluginsDef: PropTypes.object,
         storeOpts: PropTypes.object,
         initialActions: PropTypes.array,
@@ -67,6 +68,7 @@ class StandardApp extends React.Component {
     };
 
     static defaultProps = {
+        pluginManager: { loadPlugin: () => {} },
         pluginsDef: {plugins: {}, requires: {}},
         initialActions: [],
         appStore: () => ({dispatch: () => {}, getState: () => ({}), subscribe: () => {}}),
@@ -136,7 +138,7 @@ class StandardApp extends React.Component {
     }
 
     render() {
-        const {plugins, requires} = this.props.pluginsDef;
+        const {plugins, lazyPlugins, requires} = this.props.pluginsDef;
         const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
         const Loader = this.props.loaderComponent;
@@ -145,6 +147,7 @@ class StandardApp extends React.Component {
                 <App
                     {...other}
                     plugins={{ ...PluginsUtils.getPlugins(plugins), requires }}
+                    lazyPlugins={lazyPlugins}
                 />
             </Provider>
             : <Loader />;

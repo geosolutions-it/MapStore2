@@ -77,6 +77,8 @@ const dynamicFederation = (scope, module) => {
 
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 
+const pluginsCache = {};
+
 export const getFromPlugins = curry((selector, plugins) => Object.keys(plugins).map((name) => plugins[name][selector])
     .reduce((previous, current) => ({ ...previous, ...current }), {}));
 
@@ -599,6 +601,15 @@ export const loadPlugin = (pluginUrl, pluginName) => {
         .then(() =>importPlugin(pluginName))
         .then((plugin) => ({ name: pluginName, plugin}));
 
+};
+
+export const createPluginManager = () => {
+
+
+    return {
+        // eslint-disable-next-line no-unused-vars
+        loadPlugin: (pluginDef) => {}
+    };
 };
 
 /**
