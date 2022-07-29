@@ -11,8 +11,8 @@
           "https://gs-stable.geo-solutions.it:443/geoserver",
           "http://gs-stable.geo-solutions.it/geoserver",
           "http://gs-stable.geo-solutions.it:443/geoserver",
-          "https://gs-stable.geo-solutions.it/geoserver",
-          "https://gs-stable.geo-solutions.it:443/geoserver",
+          "https://gs-stable.geosolutionsgroup.com/geoserver",
+          "https://gs-stable.geosolutionsgroup.com:443/geoserver",
           "http://gs-stable.geosolutionsgroup.com/geoserver",
           "http://gs-stable.geosolutionsgroup.com:443/geoserver"
         ]
