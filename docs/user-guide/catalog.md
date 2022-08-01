@@ -17,7 +17,7 @@ Once the Remote Service is set, it is possible to search the desired layer by ty
 
 <img src="../img/catalog/catalog_search.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/> button, the layer is finally added to the [TOC](toc.md) and rendered to the map viewer:
+By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/> button, the layer is finally added to the [TOC](toc.md#table-of-contents) and rendered to the map viewer:
 
 <img src="../img/catalog/added_layer.jpg" class="ms-docimage"/>
 

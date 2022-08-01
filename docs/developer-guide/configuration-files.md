@@ -31,7 +31,7 @@ Depending on the chosen profile a different file will be copied from the `produc
 
 Specific configuration files are available to configure connection details for the chosen profile.
 
-For example, if using LDAP, look at [LDAP integration](integrations/users/ldap.md).
+For example, if using LDAP, look at [LDAP integration](integrations/users/ldap.md#ldap-integration-with-mapstore).
 
 ## Front-end Configurations Files
 
@@ -41,7 +41,7 @@ Several configuration files (at development and / or run time) are available to 
 
 * `localConfig.json`: Dedicated to the application configuration. Defines all general settings of the front-end part, with all the plugins for all the pages. See [Application Configuration](../local-config) for more information.
 * `new.json` Can be customized to set-up the initial new map, setting the backgrounds, initial position .. See [Maps configuration](../maps-configuration) for more information.
-* `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config.md) for more information.
+* `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager) for more information.
 
 ## Externalize Configurations
 

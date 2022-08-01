@@ -1,19 +1,19 @@
 # GeoCarousel Section
 **********************
 
-The GeoCarousel section allows another kind of immersive experience than the [Immersive Section](immersive-section.md). The story editor can define a list of carousel cards to be presented with an accompanying descriptive content and a geographic location. In edit mode it is composed of three elements: the background  map, the descriptive panel and the carousel panel where the editor can manage carousel items.
+The GeoCarousel section allows another kind of immersive experience than the [Immersive Section](immersive-section.md#immersive-section). The story editor can define a list of carousel cards to be presented with an accompanying descriptive content and a geographic location. In edit mode it is composed of three elements: the background  map, the descriptive panel and the carousel panel where the editor can manage carousel items.
 
 <img src="../img/geocarousel-section/geocarousel-section-fd.jpg" class="ms-docimage"/>
 
 ## Background
 
-The background editing toolbar allows to add a map as a background of the section, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor](media-editor-window.md) as usual.
+The background editing toolbar allows to add a map as a background of the section, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor](media-editor-window.md#media-editor-window) as usual.
 
 <img src="../img/immersive-section/bck-toolbar.jpg" class="ms-docimage" width="550px"/>
 
 !!! note
     
-    In the *GeoCarousel Section* the story editor, unlike the [Immersive Section](immersive-section.md) and the [Title Section](title-section.md), can only add a **map** as a background.
+    In the *GeoCarousel Section* the story editor, unlike the [Immersive Section](immersive-section.md#immersive-section) and the [Title Section](title-section.md#title-section), can only add a **map** as a background.
 
 Once a *map* is selected for the background, the editing toolbar appears in the upper left corner of the section allowing the story editor to manage the background content.
 
@@ -23,15 +23,15 @@ The **Background editing toolbar** allows the following actions:
 
 <img src="../img/geocarousel-section/geomap-toolbar.jpg" class="ms-docimage" style="width:300px"/>
 
-* **Change media source** <img src="../img/button/change-media.jpg" class="ms-docbutton"/> allows to select the media content to use for the section, clicking on this button the [Media Editor](media-editor-window.md) opens.
+* **Change media source** <img src="../img/button/change-media.jpg" class="ms-docbutton"/> allows to select the media content to use for the section, clicking on this button the [Media Editor](media-editor-window.md#media-editor-window) opens.
 
-* The **Edit map configuration** allows to [Configure the Map](configure-map.md)
+* The **Edit map configuration** allows to [Configure the Map](configure-map.md#configure-the-map)
 
 * **Change size** <img src="../img/button/change-size3.jpg" class="ms-docbutton"/> of the section between *Small*, *Medium*, *Large* or *Full*
 
 * **Align content** <img src="../img/button/align3.jpg" class="ms-docbutton"/> on the *Left*, *Center* or *Right*
 
-* **Change the background theme** <img src="../img/button/change-field-theme.jpg" class="ms-docbutton"/> to set the colour of the empty background between *Default* (same default theme settings of the story, see [Story Settings](story-setting.md)), *Bright*, *Dark* or *Custom* (allows to customize the color of the background).
+* **Change the background theme** <img src="../img/button/change-field-theme.jpg" class="ms-docbutton"/> to set the colour of the empty background between *Default* (same default theme settings of the story, see [Story Settings](story-setting.md#story-settings)), *Bright*, *Dark* or *Custom* (allows to customize the color of the background).
 
 !!! warning
     The *Align content* and the *Change field theme* buttons are disabled if the map size is full screen.

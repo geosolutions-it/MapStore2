@@ -17,13 +17,13 @@ In particular, it is possible to choose between:
 
 * **Map**
 
-Creating *Chart*, *Text*, *Table* and *Counter* widgets the procedure is almost the same as that described for [create widgets in maps](widgets.md). The only minor differences are the following:
+Creating *Chart*, *Text*, *Table* and *Counter* widgets the procedure is almost the same as that described for [create widgets in maps](widgets.md#widgets). The only minor differences are the following:
 
 * In dashboards as soon as the user selects the widget type, a panel appears to select the layer from which the widget will be created. [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to choose between CSW, WMS and WMTS GeoSolutions Services, present by default, or by accessing WMS, WFS, CSW, WMTS and TMS Remote Services as explained in the [Managing Remote Services](catalog.md#managing-remote-services) section
 
 <img src="../img/adding-widgets/default-services.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* In dashboards the possibility to connect/disconnect widgets to the map is replaced with the possibility to connect/disconnect the Map widgets together or with other widget types (this point will be better explained in [Connecting Widgets](connecting-widgets.md) section)
+* In dashboards the possibility to connect/disconnect widgets to the map is replaced with the possibility to connect/disconnect the Map widgets together or with other widget types (this point will be better explained in [Connecting Widgets](connecting-widgets.md#connecting-widgets) section)
 
 Creating Map type widgets, otherwise, is a functionality present only in dashboards.
 
@@ -70,7 +70,7 @@ Here, the user is allowed to:
 
 * **Zoom** to layers though the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button
 
-* Access [Layer Settings](layer-settings.md) through the <img src="../img/button/properties.jpg" class="ms-docbutton"/> button
+* Access [Layer Settings](layer-settings.md#layer-settings) through the <img src="../img/button/properties.jpg" class="ms-docbutton"/> button
 
 * **Remove** layers through the <img src="../img/button/delete.jpg" class="ms-docbutton"/> button
 
@@ -102,7 +102,7 @@ Once a Map widget is connected, the preview panel is similar to the following:
 <img src="../img/adding-widgets/legend-preview.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 Here the user can go back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget types section, connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/connection-icon.jpg" class="ms-docbutton"/>the legend to a map and move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to widget options. <br>
-If the last option is selected, a configuration panel similar to the [Map widgets](adding-widgets.md#map-widget) one gives the possibility, before save, to set the *Title* and the *Description* for the Legend widget. <br>
+If the last option is selected, a configuration panel similar to the [Map widgets](#map-widget) one gives the possibility, before save, to set the *Title* and the *Description* for the Legend widget. <br>
 An example of a Map widgets and a Legend widget is the following:
 
 <img src="../img/adding-widgets/legend-ex.jpg" class="ms-docimage"/>

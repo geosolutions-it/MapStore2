@@ -85,7 +85,7 @@ In particular:
 
 ## Including the printing engine in your build
 
-The [printing module](printing-module.md) is not included in official builds by default.
+The [printing module](printing-module.md#printing-module) is not included in official builds by default.
 
 To build your own version of MapStore with the this module, you can use the **printing** profile running the build script:
 
@@ -93,4 +93,4 @@ To build your own version of MapStore with the this module, you can use the **pr
 ./build.sh [version_identifier] printing
 ```
 
-For more information or troubleshooting about the printing module you can see the [dedicated section](printing-module.md)
+For more information or troubleshooting about the printing module you can see the [dedicated section](printing-module.md#printing-module)
