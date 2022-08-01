@@ -475,11 +475,11 @@ export default class DrawSupport extends React.Component {
 
         this.removeSnapInteraction();
         if (mapLayerInstance) {
-            switch (mapLayerInstance.type) {
-            case "VECTOR":
+            switch (true) {
+            case (mapLayerInstance.type === "VECTOR"):
                 this.snapInteraction = new Snap({...snapConfig, source: mapLayerInstance.getSource()});
                 break;
-            case "TILE":
+            case (mapLayerInstance.type === "TILE" || mapLayerInstance.type === "IMAGE"):
                 if (layerType === 'wms') {
                     const source = this.getWMSSnapSource(snappingLayerInstance, snapConfig);
                     this.snapLayer = new VectorLayer({
