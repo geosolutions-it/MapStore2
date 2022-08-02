@@ -12,7 +12,7 @@ import assign from 'object-assign';
 import DrawSupport from '../DrawSupport';
 import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
-
+import {IMAGE} from '../../../../utils/openlayers/DrawSupportUtils';
 import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
@@ -2589,7 +2589,7 @@ describe('Test DrawSupport', () => {
                 getArray: () => [{
                     get: () => 'snap_layer_1',
                     getSource: () => new VectorSource(),
-                    type: 'IMAGE'
+                    type: IMAGE
                 }]
             })
         };
