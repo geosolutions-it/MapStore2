@@ -113,9 +113,9 @@ export const persistEpic = (epic, storeName = PERSISTED_STORE_NAME, name = 'root
  * @param {string} storeName optional store name the epic is used by
  * @param {string} name optional name (if you want to persist more than one epic)
  */
-const fetchEpic = (storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
-    return ConfigUtils.getConfigProp(storeName + '.' + name) || {};
-};
+// const fetchEpic = (storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
+//     return ConfigUtils.getConfigProp(storeName + '.' + name) || {};
+// };
 
 /**
  * Returns state from a persisted store.
@@ -290,10 +290,6 @@ export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     Object.keys(reducers).forEach((key) => {
         persistedStore.storeManager.addReducer(key, reducers[key]);
     });
-
-    const rootEpic = fetchEpic();
-
-    wrapEpics(epics).forEach((epic) => {
-        rootEpic.next(epic);
-    });
+    persistedStore.dispatch({type: 'REDUCERS_LOADED'});
+    persistedStore.storeManager.addEpics('notMutable', wrapEpics(epics));
 };

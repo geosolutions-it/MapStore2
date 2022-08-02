@@ -7,8 +7,7 @@
  */
 
 import React from 'react';
-import { connect } from '../utils/PluginsUtils';
-import assign from 'object-assign';
+import {connect, createPlugin} from '../utils/PluginsUtils';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
@@ -104,7 +103,8 @@ const Share = connect(createSelector([
     addMarker: addMarker
 })(SharePanel);
 
-export const SharePlugin = assign(Share, {
+const SharePlugin = createPlugin('Share', {
+    component: Share,
     disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}",
     BurgerMenu: {
         name: 'share',
@@ -141,3 +141,4 @@ export const SharePlugin = assign(Share, {
 
 export const reducers = { controls };
 export const epics = shareEpics;
+export default SharePlugin;

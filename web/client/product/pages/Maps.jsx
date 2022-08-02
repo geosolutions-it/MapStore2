@@ -37,6 +37,7 @@ class MapsPage extends React.Component {
         reset: PropTypes.func,
         loadMaps: PropTypes.func,
         plugins: PropTypes.object,
+        loaderComponent: PropTypes.func,
         lazyPlugins: PropTypes.object
     };
 
@@ -61,6 +62,7 @@ class MapsPage extends React.Component {
             plugins={this.props.plugins}
             lazyPlugins={this.props.lazyPlugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }

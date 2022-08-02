@@ -29,7 +29,9 @@ class Manager extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         reset: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        loaderComponent: PropTypes.func,
+        lazyPlugins: PropTypes.object
     };
 
     static contextTypes = {
@@ -50,7 +52,9 @@ class Manager extends React.Component {
             id="manager"
             className="manager"
             plugins={this.props.plugins}
+            lazyPlugins={this.props.lazyPlugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }

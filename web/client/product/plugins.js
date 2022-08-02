@@ -9,6 +9,7 @@
 import isFunction from 'lodash/isFunction';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import {createPluginManager} from "../utils/PluginsUtils";
 
 function cleanEpics(epics, excludedNames = []) {
     const containsExcludedEpic = !!excludedNames.find((epicName) => epics[epicName]);
@@ -59,6 +60,7 @@ function toLazyPlugin(name, implementationFunction, overrides, exportedName) {
 }
 
 function splitLazyAndStaticPlugins(pluginsDefinition) {
+    const pluginManager = createPluginManager();
     const { plugins: allPlugins = {}, ...definition } = pluginsDefinition;
     const plugins = Object.keys(allPlugins)
         .filter((name) => !allPlugins[name].isLazyWrapper)
@@ -72,6 +74,7 @@ function splitLazyAndStaticPlugins(pluginsDefinition) {
             ...acc,
             [name]: allPlugins[name]
         }), {});
+    pluginManager.registerPlugins(lazyPlugins);
     return {
         ...definition,
         plugins,
@@ -84,16 +87,16 @@ function splitLazyAndStaticPlugins(pluginsDefinition) {
  */
 export const plugins = {
     // product plugins
-    AboutPlugin: require('./plugins/About').default,
-    // AboutPlugin: toLazyPlugin('About', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/About')),
-    AttributionPlugin: toLazyPlugin('Attribution', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/Attribution')),
-    FooterPlugin: toLazyPlugin('Footer', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/Footer')),
-    ForkPlugin: toLazyPlugin('Fork', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/Fork')),
-    HeaderPlugin: toLazyPlugin('Header', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/Header')),
-    HomeDescriptionPlugin: toLazyPlugin('HomeDescription', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/HomeDescription')),
-    MadeWithLovePlugin: toLazyPlugin('MadeWithLove', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/MadeWithLove')),
-    MapTypePlugin: toLazyPlugin('MapType', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/MapType')),
-    NavMenu: toLazyPlugin('NavMenu', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/NavMenu')),
+    // AboutPlugin: require('./plugins/About').default,
+    AboutPlugin: toLazyPlugin('About', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/About')),
+    AttributionPlugin: toLazyPlugin('Attribution', () => import(/* webpackChunkName: 'plugins/attribution' */ './plugins/Attribution')),
+    FooterPlugin: toLazyPlugin('Footer', () => import(/* webpackChunkName: 'plugins/footer' */ './plugins/Footer'), {}, 'FooterPlugin'),
+    ForkPlugin: toLazyPlugin('Fork', () => import(/* webpackChunkName: 'plugins/fork' */ './plugins/Fork')),
+    HeaderPlugin: toLazyPlugin('Header', () => import(/* webpackChunkName: 'plugins/header' */ './plugins/Header')),
+    HomeDescriptionPlugin: toLazyPlugin('HomeDescription', () => import(/* webpackChunkName: 'plugins/HomeDescription' */ './plugins/HomeDescription')),
+    MadeWithLovePlugin: toLazyPlugin('MadeWithLove', () => import(/* webpackChunkName: 'plugins/madeWithLove' */ './plugins/MadeWithLove')),
+    MapTypePlugin: toLazyPlugin('MapType', () => import(/* webpackChunkName: 'plugins/mapType' */ './plugins/MapType')),
+    NavMenuPlugin: toLazyPlugin('NavMenu', () => import(/* webpackChunkName: 'plugins/navMenu' */ './plugins/NavMenu')),
     // framework plugins
     AddGroupPlugin: toLazyPlugin('AddGroup', () => import(/* webpackChunkName: 'plugins/about' */'../plugins/AddGroup')),
     AnnotationsPlugin: toLazyPlugin('Annotations', () => import(/* webpackChunkName: 'plugins/annotations' */ '../plugins/Annotations')),
@@ -147,7 +150,7 @@ export const plugins = {
     LayerDownload: toLazyPlugin('LayerDownload', () => import(/* webpackChunkName: 'plugins/layerDownload' */ '../plugins/LayerDownload')),
     LayerInfoPlugin: toLazyPlugin('LayerInfo', () => import(/* webpackChunkName: 'plugins/layerInfo' */ '../plugins/LayerInfo')),
     LocatePlugin: toLazyPlugin('Locate', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Locate')),
-    LoginPlugin: toLazyPlugin('Login', () => import(/* webpackChunkName: 'plugins/login' */ '../plugins/Login')),
+    LoginPlugin: require('../plugins/Login').default,
     ManagerMenuPlugin: toLazyPlugin('ManagerMenu', () => import(/* webpackChunkName: 'plugins/managerMenu' */ '../plugins/manager/ManagerMenu')),
     ManagerPlugin: toLazyPlugin('Manager', () => import(/* webpackChunkName: 'plugins/gridContainer' */ '../plugins/GridContainer')),
     MapEditorPlugin: toLazyPlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),
@@ -155,7 +158,7 @@ export const plugins = {
     MapFooterPlugin: toLazyPlugin('MapFooter', () => import(/* webpackChunkName: 'plugins/mapFooter' */ '../plugins/MapFooter')),
     MapImportPlugin: toLazyPlugin('MapImport', () => import(/* webpackChunkName: 'plugins/mapImport' */ '../plugins/MapImport')),
     MapLoadingPlugin: toLazyPlugin('MapLoading', () => import(/* webpackChunkName: 'plugins/mapLoading' */ '../plugins/MapLoading')),
-    MapPlugin: toLazyPlugin('Map', () => import(/* webpackChunkName: 'plugins/gridContainer' */ '../plugins/GridContainer')),
+    MapPlugin: toLazyPlugin('Map', () => import(/* webpackChunkName: 'plugins/map' */ '../plugins/Map')),
     MapSearchPlugin: toLazyPlugin('MapSearch', () => import(/* webpackChunkName: 'plugins/mapSearch' */ '../plugins/MapSearch')),
     MapsPlugin: toLazyPlugin('Maps', () => import(/* webpackChunkName: 'plugins/maps' */ '../plugins/Maps')),
     MapCatalogPlugin: toLazyPlugin('MapCatalog', () => import(/* webpackChunkName: 'plugins/mapCatalog' */ '../plugins/MapCatalog')),
@@ -184,7 +187,7 @@ export const plugins = {
     SearchByBookmarkPlugin: toLazyPlugin('SearchByBookmark', () => import(/* webpackChunkName: 'plugins/searchByBookmark' */ '../plugins/SearchByBookmark')),
     SettingsPlugin: toLazyPlugin('Settings', () => import(/* webpackChunkName: 'plugins/settings' */ '../plugins/Settings')),
     SidebarMenuPlugin: toLazyPlugin('SidebarMenu', () => import(/* webpackChunkName: 'plugins/sidebarMenu' */ '../plugins/SidebarMenu')),
-    SharePlugin: toLazyPlugin('Share', () => import(/* webpackChunkName: 'plugins/share' */ '../plugins/Share')),
+    SharePlugin: toLazyPlugin('Share', () => import(/* webpackChunkName: 'plugins/share' */ '../plugins/Share'), {}, 'SharePlugin'),
     SnapshotPlugin: toLazyPlugin('Snapshot', () => import(/* webpackChunkName: 'plugins/snapshot' */ '../plugins/Snapshot')),
     StyleEditorPlugin: toLazyPlugin('StyleEditor', () => import(/* webpackChunkName: 'plugins/styleEditor' */ '../plugins/StyleEditor')),
     StreetView: toLazyPlugin('StreetView', () => import(/* webpackChunkName: 'plugins/streetView' */ '../plugins/StreetView')),
@@ -201,7 +204,7 @@ export const plugins = {
     UserExtensionsPlugin: toLazyPlugin('UserExtensions', () => import(/* webpackChunkName: 'plugins/userExtensions' */ '../plugins/UserExtensions')),
     UserSessionPlugin: toLazyPlugin('UserSession', () => import(/* webpackChunkName: 'plugins/userSession' */ '../plugins/UserSession')),
     VersionPlugin: toLazyPlugin('Version', () => import(/* webpackChunkName: 'plugins/version' */ '../plugins/Version')),
-    WidgetsBuilderPlugin: toLazyPlugin('WidgetsBuilder', () => import(/* webpackChunkName: 'plugins/styleEditor' */ '../plugins/StyleEditor')),
+    WidgetsBuilderPlugin: toLazyPlugin('WidgetsBuilder', () => import(/* webpackChunkName: 'plugins/widgetsBuilder' */ '../plugins/WidgetsBuilder')),
     WidgetsPlugin: toLazyPlugin('Widgets', () => import(/* webpackChunkName: 'plugins/widgets' */ '../plugins/Widgets')),
     WidgetsTrayPlugin: toLazyPlugin('WidgetsTray', () => import(/* webpackChunkName: 'plugins/widgetsTray' */ '../plugins/WidgetsTray')),
     ZoomAllPlugin: toLazyPlugin('ZoomAll', () => import(/* webpackChunkName: 'plugins/zoomAll' */ '../plugins/ZoomAll')),

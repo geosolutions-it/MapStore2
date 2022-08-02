@@ -11,13 +11,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
+import PluginsContainerComponent from "../components/plugins/PluginsContainer";
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ConfigUtils from '../utils/ConfigUtils';
+import withLazyPlugins from "../components/plugins/enhancers/withLazyPlugins";
+import {compose} from "redux";
 
-const PluginsContainer = connect((state) => ({
-    mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
-    monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer').default);
+const PluginsContainer = compose(
+    connect((state) => ({
+        mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
+        monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
+    })),
+    withLazyPlugins()
+)(PluginsContainerComponent);
 
 class Page extends React.Component {
     static propTypes = {
@@ -29,6 +35,7 @@ class Page extends React.Component {
         onMount: PropTypes.func,
         plugins: PropTypes.object,
         lazyPlugins: PropTypes.object,
+        loaderComponent: PropTypes.func,
         component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         includeCommon: PropTypes.bool
     };
@@ -68,6 +75,7 @@ class Page extends React.Component {
             plugins={this.props.plugins}
             lazyPlugins={this.props.lazyPlugins}
             params={this.props.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }

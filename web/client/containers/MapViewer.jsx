@@ -15,15 +15,21 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 import ConfigUtils from '../utils/ConfigUtils';
 import { getMonitoredState } from '../utils/PluginsUtils';
+import {compose} from "redux";
+import withLazyPlugins from "../components/plugins/enhancers/withLazyPlugins";
+import PluginsContainerComponent from "../components/plugins/PluginsContainer";
 
-const PluginsContainer = connect((state) => ({
-    statePluginsConfig: state.plugins,
-    mode: urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
-    pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
-        layerSettings: state.layers.settings
-    }),
-    monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer').default);
+const PluginsContainer = compose(
+    connect((state) => ({
+        statePluginsConfig: state.plugins,
+        mode: urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
+        pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
+            layerSettings: state.layers.settings
+        }),
+        monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
+    })),
+    withLazyPlugins()
+)(PluginsContainerComponent);
 
 class MapViewer extends React.Component {
     static propTypes = {
@@ -32,7 +38,9 @@ class MapViewer extends React.Component {
         statePluginsConfig: PropTypes.object,
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        lazyPlugins: PropTypes.object,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -50,6 +58,8 @@ class MapViewer extends React.Component {
             pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
             plugins={this.props.plugins}
             params={this.props.params}
+            lazyPlugins={this.props.lazyPlugins}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }
