@@ -1,6 +1,6 @@
 # Printing a Map
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to print a map by selecting the <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> option from [Burger Menu](menu-bar.md#burger-menu). The print process is composed by two main steps:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to print a map by selecting the **Print** <img src="../img/button/print2.jpg" class="ms-docbutton"  style="max-height:20px;"/> button from [Options Bar](menu-bar.md#options-bar). The print process is composed by two main steps:
 
 * *Print Settings* definition
 
@@ -8,7 +8,7 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
 
 ## Print settings
 
-As soon as the <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> option is chosen, the following window opens:
+As soon as the *Print* <img src="../img/button/print2.jpg" class="ms-docbutton"  style="max-height:20px;"/> button is chosen, the following window opens:
 
 <img src="../img/print/print-page.jpg" class="ms-docimage"/>
 

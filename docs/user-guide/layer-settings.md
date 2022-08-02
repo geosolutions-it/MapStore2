@@ -295,7 +295,7 @@ In particular, the user can choose between:
 * **Template**
 
 !!!note
-    Without selecting any format here, the [Identify Tool](side-bar.md#identify-tool) will return the layers information with the format chosen in Map Settings (a [Burger Menu](menu-bar.md#burger-menu) option). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
+    Without selecting any format here, the [Identify Tool](side-bar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Options Bar](menu-bar.md#options-bar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
 
 ### Text
 

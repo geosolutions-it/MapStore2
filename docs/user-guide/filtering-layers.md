@@ -29,7 +29,7 @@ This filter is applicable from the **Filter layer** button <img src="../img/butt
 
 <img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage"/>
 
-* Opening the map next time (you need to Save the map from [Burger Menu](menu-bar.md#burger-menu) after applying a filter)
+* Opening the map next time (you need to Save the map from [Options Bar](menu-bar.md#options-bar) after applying a filter)
 
 Once a *Layer filter* is set, it is possible to enable/disable it simply by clicking on the button that will appear near the layer name in [TOC](toc.md):
 

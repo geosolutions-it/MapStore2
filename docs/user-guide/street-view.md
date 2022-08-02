@@ -1,7 +1,7 @@
 # Street View
 *******************
 
-The **Street View** tool allows the user to browse [Google Street View](https://www.google.com/streetview/) contents in MapStore. Through the <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button available in the *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, the tool can be activated so that it is possible to navigate the map with [Google Street View](https://www.google.com/streetview/). 
+The **Street View** tool allows the user to browse [Google Street View](https://www.google.com/streetview/) contents in MapStore. Through the <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button available in the [Options Bar](menu-bar.md#options-bar), the tool can be activated so that it is possible to navigate the map with [Google Street View](https://www.google.com/streetview/). 
 
 <img src="../img/street-view/streetview-popup.jpg" class="ms-docimage" width="500px"/>
 
