@@ -25,7 +25,7 @@ import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
-import {transformPolygonToCircle} from '../../../utils/openlayers/DrawSupportUtils';
+import {transformPolygonToCircle, VECTOR, TILE, IMAGE} from '../../../utils/openlayers/DrawSupportUtils';
 import {isCompletePolygon} from '../../../utils/AnnotationsUtils';
 import { parseStyles, getStyle, defaultStyles, getMarkerStyle, getMarkerStyleLegacy } from './VectorStyle';
 
@@ -475,11 +475,11 @@ export default class DrawSupport extends React.Component {
 
         this.removeSnapInteraction();
         if (mapLayerInstance) {
-            switch (true) {
-            case (mapLayerInstance.type === "VECTOR"):
+            switch (mapLayerInstance?.type) {
+            case VECTOR:
                 this.snapInteraction = new Snap({...snapConfig, source: mapLayerInstance.getSource()});
                 break;
-            case (mapLayerInstance.type === "TILE" || mapLayerInstance.type === "IMAGE"):
+            case TILE: case IMAGE:
                 if (layerType === 'wms') {
                     const source = this.getWMSSnapSource(snappingLayerInstance, snapConfig);
                     this.snapLayer = new VectorLayer({
