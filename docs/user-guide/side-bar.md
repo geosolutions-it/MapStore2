@@ -49,7 +49,7 @@ The tool is active by default (the button is green). Therefore if the user click
 
 <img src="../img/side-bar/identify-tool.jpg" class="ms-docimage"/>
 
-The layers information are reported in plain text by default. It is possible to change the format by selecting the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) where the user can select, through the *Identify response format* menu, three different formats like: **TEXT**, **HTML** and **PROPERTIES**.
+The layers information are reported in plain text by default. It is possible to change the format by selecting the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button in [Options Bar](menu-bar.md#options-bar) where the user can select, through the *Identify response format* menu, three different formats like: **TEXT**, **HTML** and **PROPERTIES**.
 
 <img src="../img/side-bar/format-options.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -112,7 +112,7 @@ In order to have information about one layer only the user can select the layer 
 
 In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the user can set the Identify tool in floating mode (**Floating Identify tool**) instead of having the default one available through a click on the map. In that case an identify popup will appears on the map as soon as the user hover over a layer in the map.
 
-In order to activate the *Floating Identify Tool* the user can select the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. Here he can select the **Hover** option through the *Trigger event for Identify* dropdown menu.
+In order to activate the *Floating Identify Tool* the user can select the  <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button in [Options Bar](menu-bar.md#options-bar). Here he can select the **Hover** option through the *Trigger event for Identify* dropdown menu.
 
 <img src="../img/side-bar/setting-hover.jpg" class="ms-docimage"/>
 

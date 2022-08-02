@@ -1,4 +1,5 @@
 # Exploring Maps
+
 ****************
 
 In cartography, a map is any two-dimensional graphic representation of the spatial relationships of the whole or a part of the earth. In digital cartography as in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a map consists in overlaying various layers of geographic data and their styles in data frames, and it contains various map elements such as a legend and a scale bar.
@@ -19,7 +20,7 @@ In particular:
 
 * The [Table of Contents (TOC)](toc.md#table-of-contents) shows the layers and the layers groups on the map and allows to remove or edit them, and add some new ones
 
-* The [Menu Bar](menu-bar.md#menu-bar) includes the [Search bar](menu-bar.md#search-bar), the connection to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/), the login window and the [Burger Menu](menu-bar.md#burger-menu), an important list of options that contains several functions and information
+* The [Menu Bar](menu-bar.md) includes the [Search Bar](menu-bar.md#search-bar) and the [Options Bar](menu-bar.md#options-bar), an important list of options that contains several functions and information
 
 * The [Sidebar](side-bar.md#sidebar) that is mainly a navigation panel
 
