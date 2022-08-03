@@ -1,9 +1,3 @@
-// import React, { useEffect, useState, useMemo } from 'react';
-// import {createPluginManager} from "../../../utils/PluginsUtils";
-// import isArray from "lodash/isArray";
-// import isObject from "lodash/isObject";
-// import {getStore} from "../../../utils/StateUtils";
-
 import React, { useMemo } from 'react';
 import useLazyPlugins from "../../../hooks/useLazyPlugins";
 

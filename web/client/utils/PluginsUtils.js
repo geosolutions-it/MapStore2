@@ -77,8 +77,6 @@ const dynamicFederation = (scope, module) => {
 
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 
-const pluginManagerState = { pending: true, pluginsCache: {}, pluginsRegistry: {}, lazyPluginsRegistry: {}, onPluginsLoaded: () => {}};
-
 export const getFromPlugins = curry((selector, plugins) => Object.keys(plugins).map((name) => plugins[name][selector])
     .reduce((previous, current) => ({ ...previous, ...current }), {}));
 

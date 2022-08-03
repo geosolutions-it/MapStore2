@@ -27,7 +27,6 @@ const ThemeProvider = connect((state) => ({
 
 class StandardRouter extends React.Component {
     static propTypes = {
-        pluginManager: PropTypes.object,
         plugins: PropTypes.object,
         locale: PropTypes.object,
         pages: PropTypes.array,
@@ -41,7 +40,6 @@ class StandardRouter extends React.Component {
     };
 
     static defaultProps = {
-        pluginManager: { loadPlugin: () => {}},
         plugins: {},
         locale: {messages: {}, current: 'en-US'},
         pages: [],
@@ -57,7 +55,6 @@ class StandardRouter extends React.Component {
         return this.props.pages.map((page, i) => {
             const pageConfig = page.pageConfig || {};
             const Component = connect(() => ({
-                pluginManager: this.props.pluginManager,
                 plugins: this.props.plugins,
                 lazyPlugins: this.props.lazyPlugins,
                 loaderComponent: this.props.loaderComponent,

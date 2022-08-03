@@ -54,7 +54,6 @@ const DefaultAppLoaderComponent = () => (
 class StandardApp extends React.Component {
     static propTypes = {
         appStore: PropTypes.func,
-        pluginManager: PropTypes.object,
         pluginsDef: PropTypes.object,
         storeOpts: PropTypes.object,
         initialActions: PropTypes.array,
@@ -68,7 +67,6 @@ class StandardApp extends React.Component {
     };
 
     static defaultProps = {
-        pluginManager: { loadPlugin: () => {} },
         pluginsDef: {plugins: {}, requires: {}},
         initialActions: [],
         appStore: () => ({dispatch: () => {}, getState: () => ({}), subscribe: () => {}}),
