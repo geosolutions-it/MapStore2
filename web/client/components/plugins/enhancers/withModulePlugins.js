@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import useModulePlugins from "../../../hooks/useModulePlugins";
 import {getPlugins} from "../../../utils/ModulePluginsUtils";
 
@@ -14,7 +14,7 @@ const getPluginsConfig = ({pluginsConfig: config, mode, defaultMode}) => {
     return [];
 };
 
-export default () => (Component) => ({ pluginsConfig, plugins, ...props }) => {
+export default () => (Component) => ({ pluginsConfig, plugins, onInit, ...props }) => {
     const config = getPluginsConfig({pluginsConfig, ...props});
     const { plugins: loadedPlugins, pending } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
@@ -25,5 +25,8 @@ export default () => (Component) => ({ pluginsConfig, plugins, ...props }) => {
 
     const Loader = props.loaderComponent;
 
+    useEffect(() => {
+        if (onInit && !loading) onInit();
+    }, [onInit]);
     return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
 };

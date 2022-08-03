@@ -37,10 +37,18 @@ class MapViewerComponent extends React.Component {
             params: {}
         }
     };
+
+    state = {
+        initMap: null
+    };
+
     UNSAFE_componentWillMount() {
         const id = this.props.match.params.mapId || '0';
         const contextId = this.props.match.params.contextId;
-        this.updateMap(id, contextId);
+        this.setState({ initMap: () => {
+            this.updateMap(id, contextId);
+            this.setState({initMap: null});
+        }});
     }
     componentDidUpdate(oldProps) {
         const id = this.props.match.params.mapId || '0';
@@ -48,13 +56,17 @@ class MapViewerComponent extends React.Component {
         const contextId = this.props.match.params.contextId;
         const oldContextId = oldProps.match.params.contextId;
         if (id !== oldId || contextId  !== oldContextId) {
-            this.updateMap(id, contextId);
+            this.setState({ initMap: () => {
+                this.updateMap(id, contextId);
+                this.setState({initMap: false});
+            }});
         }
     }
 
     render() {
         const WrappedContainer = this.props.wrappedContainer;
         return (<WrappedContainer
+            onInit={this.state.initMap}
             pluginsConfig={this.props.pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}
