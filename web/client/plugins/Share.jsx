@@ -103,39 +103,44 @@ const Share = connect(createSelector([
     addMarker: addMarker
 })(SharePanel);
 
+
 const SharePlugin = createPlugin('Share', {
     component: Share,
-    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}",
-    BurgerMenu: {
-        name: 'share',
-        position: 1000,
-        priority: 2,
-        doNotHide: true,
-        text: <Message msgId="share.title"/>,
-        tooltip: "share.tooltip",
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
+    options: {
+        disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}"
     },
-    SidebarMenu: {
-        name: 'share',
-        position: 1000,
-        priority: 1,
-        doNotHide: true,
-        tooltip: "share.tooltip",
-        text: <Message msgId="share.title"/>,
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null),
-        toggle: true
-    },
-    Toolbar: {
-        name: 'share',
-        alwaysVisible: true,
-        position: 2,
-        priority: 0,
-        doNotHide: true,
-        tooltip: "share.title",
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
+    containers: {
+        BurgerMenu: {
+            name: 'share',
+            position: 1000,
+            priority: 2,
+            doNotHide: true,
+            text: <Message msgId="share.title"/>,
+            tooltip: "share.tooltip",
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null)
+        },
+        SidebarMenu: {
+            name: 'share',
+            position: 1000,
+            priority: 1,
+            doNotHide: true,
+            tooltip: "share.tooltip",
+            text: <Message msgId="share.title"/>,
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null),
+            toggle: true
+        },
+        Toolbar: {
+            name: 'share',
+            alwaysVisible: true,
+            position: 2,
+            priority: 0,
+            doNotHide: true,
+            tooltip: "share.title",
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null)
+        }
     }
 });
 
