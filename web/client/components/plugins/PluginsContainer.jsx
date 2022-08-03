@@ -49,7 +49,8 @@ class PluginsContainer extends React.Component {
         monitoredState: PropTypes.object,
         defaultMode: PropTypes.string,
         onPluginLoaded: PropTypes.func,
-        onPluginsLoaded: PropTypes.func
+        onPluginsLoaded: PropTypes.func,
+        onMount: PropTypes.func
     };
 
     static contextTypes = {
@@ -77,7 +78,8 @@ class PluginsContainer extends React.Component {
         pluginsState: {},
         monitoredState: {},
         onPluginLoaded: () => {},
-        onPluginsLoaded: () => {}
+        onPluginsLoaded: () => {},
+        onMount: () => {}
     };
 
     state = {
@@ -94,6 +96,7 @@ class PluginsContainer extends React.Component {
 
     UNSAFE_componentWillMount() {
         this.loadPlugins(this.props.pluginsState, this.props);
+        this.props.onMount();
     }
 
     shouldComponentUpdate(nextProps, nextState) {

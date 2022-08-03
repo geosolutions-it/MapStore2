@@ -37,13 +37,15 @@ class MapViewer extends React.Component {
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
         plugins: PropTypes.object,
-        loaderComponent: PropTypes.func
+        loaderComponent: PropTypes.func,
+        onInit: PropTypes.oneOfType([PropTypes.func, PropTypes.bool])
     };
 
     static defaultProps = {
         mode: 'desktop',
         className: 'viewer',
-        loadMapConfig: () => {}
+        loadMapConfig: () => {},
+        onInit: () => {}
     };
 
     UNSAFE_componentWillMount() {
@@ -52,6 +54,7 @@ class MapViewer extends React.Component {
 
     render() {
         return (<PluginsContainer key="viewer" id="viewer" className={this.props.className}
+            onInit={this.props.onInit}
             pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
             plugins={this.props.plugins}
             params={this.props.params}

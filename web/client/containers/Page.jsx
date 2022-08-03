@@ -31,6 +31,7 @@ class Page extends React.Component {
         pluginsConfig: PropTypes.object,
         params: PropTypes.object,
         onMount: PropTypes.func,
+        onPluginsRendered: PropTypes.func,
         plugins: PropTypes.object,
         loaderComponent: PropTypes.func,
         component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -40,6 +41,7 @@ class Page extends React.Component {
     static defaultProps = {
         mode: 'desktop',
         onMount: () => {},
+        onPluginsRendered: () => {},
         className: '',
         includeCommon: true
     };
@@ -68,6 +70,7 @@ class Page extends React.Component {
             mobile: [...commonPluginsConfig.mobile, ...specificPluginsConfig.mobile]
         };
         return (<PluginsContainer key={this.props.id} id={"page-" + this.props.id} component={this.props.component} className={"page page-" + this.props.id + " " + this.props.className}
+            onMount={this.props.onPluginsRendered}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.params}
