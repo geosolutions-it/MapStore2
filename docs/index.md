@@ -21,11 +21,11 @@ The mapping engines currently supported by [MapStore](https://mapstore.geosoluti
 
 **MapStore  is based on OpenLayers, Leaflet and ReactJS, and is licensed under the Simplified BSD license.**
 
-##Supported Browsers
+## Supported Browsers
 
 The browsers supported by [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) are *Google Chrome*, *Microsoft Edge*, *Mozilla Firefox* and *Safari*. Ensure to have the latest version installed. 
 
-##Quick Start
+## Quick Start
 
 You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore. See the [Quick Start](quick-start/) documentation for more details.
 
