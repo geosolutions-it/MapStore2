@@ -9,7 +9,6 @@
 import isFunction from 'lodash/isFunction';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
-import {createPluginManager} from "../utils/PluginsUtils";
 
 function cleanEpics(epics, excludedNames = []) {
     const containsExcludedEpic = !!excludedNames.find((epicName) => epics[epicName]);
@@ -60,7 +59,6 @@ function toLazyPlugin(name, implementationFunction, overrides, exportedName) {
 }
 
 function splitLazyAndStaticPlugins(pluginsDefinition) {
-    const pluginManager = createPluginManager();
     const { plugins: allPlugins = {}, ...definition } = pluginsDefinition;
     const plugins = Object.keys(allPlugins)
         .filter((name) => !allPlugins[name].isLazyWrapper)
@@ -74,7 +72,6 @@ function splitLazyAndStaticPlugins(pluginsDefinition) {
             ...acc,
             [name]: allPlugins[name]
         }), {});
-    pluginManager.registerPlugins(lazyPlugins);
     return {
         ...definition,
         plugins,

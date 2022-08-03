@@ -15,7 +15,6 @@ import curry from 'lodash/curry';
 import {combineEpics as originalCombineEpics} from 'redux-observable';
 import {combineReducers as originalCombineReducers} from 'redux';
 import {wrapEpics} from "./EpicsUtils";
-import {getStore} from "./StateUtils";
 
 /**
  * Loads a script inside the current page.
@@ -602,93 +601,6 @@ export const loadPlugin = (pluginUrl, pluginName) => {
         .then(() =>importPlugin(pluginName))
         .then((plugin) => ({ name: pluginName, plugin}));
 
-};
-
-export const createPluginManager = () => {
-    let onLoaded = () => {};
-    const cachedPlugins = pluginManagerState.pluginsCache;
-    let pluginsRegistry = pluginManagerState.pluginsRegistry;
-    let registeredPlugins = pluginManagerState.lazyPluginsRegistry;
-    let pending = pluginManagerState.pending;
-    const store = getStore();
-    return {
-        isPending: () => pending,
-        getRegistry: () => pluginsRegistry,
-        onPluginsLoaded: (func) => {
-            onLoaded = func;
-        },
-        loadPlugins: (plugins) => {
-            let pluginsKeys = [];
-            if (Array.isArray(plugins)) {
-                pluginsKeys = plugins.reduce((prev, curr) => [...prev, curr?.name ?? curr], []).map((name) => name + 'Plugin');
-            } else if (typeof plugins === 'object') {
-                pluginsKeys = Object.keys(plugins).reduce((prev, curr) => [...prev, curr?.name ?? curr], []).map((name) => name + 'Plugin');
-            }
-            const filteredPluginsKeys = pluginsKeys
-                .filter((pluginName) => !cachedPlugins[pluginName])
-                .filter((pluginName) => !!registeredPlugins[pluginName]);
-            if (filteredPluginsKeys.length > 0) {
-                pending = true;
-                const loadPlugins = filteredPluginsKeys
-                    .map(pluginName => {
-                        return registeredPlugins[pluginName]().then((mod) => {
-                            return mod.default;
-                        });
-                    });
-                Promise.all(loadPlugins)
-                    .then((impls) => {
-                        impls.forEach(impl => {
-                            if (size(impl.reducers)) {
-                                Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
-                            }
-                            if (size(impl.epics)) {
-                                store.storeManager.addEpics(impl.name, impl.epics);
-                            }
-                        });
-                        store.dispatch({type: 'REDUCERS_LOADED'});
-                        return getPlugins(impls.map(impl => {
-                            if (!isMapStorePlugin(impl?.component)) {
-                                // plugin similar to Toolbar implement a selector function
-                                // so need to be parsed separately
-                                return {
-                                    [impl.name + 'Plugin']: impl.component
-                                };
-                            }
-                            return createPlugin(impl.name, impl);
-                        }));
-                    })
-                    .then((newPlugins) => {
-                        Object.keys(newPlugins).forEach(pluginName => {
-                            cachedPlugins[pluginName] = true;
-                            pluginsRegistry[pluginName] = newPlugins[pluginName];
-                        });
-                        pending = false;
-                        onLoaded(pluginsRegistry);
-                    })
-                    .catch((e) => {
-                        // eslint-disable-next-line no-console
-                        console.log(e);
-                        pluginsRegistry = {};
-                        pending = false;
-                    });
-            } else {
-                pending = false;
-                onLoaded(pluginsRegistry);
-            }
-            // const muteEpics = Object.keys(cachedPlugins).filter((pluginName) => !Object.keys(plugins).includes(pluginName));
-            // muteEpics.forEach(name => store.storeManager.muteEpics(name));
-
-        },
-        registerPlugins: (plugins) => {
-            Object.keys(plugins).forEach((plugin) => {
-                const name = plugin.endsWith('Plugin') ? plugin : `${plugin}Plugin`;
-                const registeredKeys = Object.keys(registeredPlugins);
-                if (!registeredKeys.includes(name)) {
-                    registeredPlugins[name] = plugins[plugin];
-                }
-            });
-        }
-    };
 };
 
 /**
