@@ -28,6 +28,6 @@ But in order to build it locally, there are certain steps that needs to be follo
 4. The documentation can be launched using `index.html` in `site` folder
 
 !!! Note
-    When creating a link to internal document (.md) files, make sure to use full link instead of a relative path to the file. As using relative path will not work in exported PDF document
-    *Example*
+    When creating a link to internal document (.md) files, make sure to use full link instead of a relative path to the file. As using relative path will not work in exported PDF document.
+    ***Example***:
     Instead of creating a link `[FAQ]('../dev-faq/')`, use `[FAQ]('../dev-faq/#faq')` or `[FAQ]('../dev-faq.md#faq')` or `[FAQ]('dev-faq.md#faq')`
