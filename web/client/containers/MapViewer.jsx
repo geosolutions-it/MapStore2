@@ -16,7 +16,6 @@ const urlQuery = url.parse(window.location.href, true).query;
 import ConfigUtils from '../utils/ConfigUtils';
 import { getMonitoredState } from '../utils/PluginsUtils';
 import {compose} from "redux";
-import withLazyPlugins from "../components/plugins/enhancers/withLazyPlugins";
 import PluginsContainerComponent from "../components/plugins/PluginsContainer";
 
 const PluginsContainer = compose(
@@ -27,8 +26,7 @@ const PluginsContainer = compose(
             layerSettings: state.layers.settings
         }),
         monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-    })),
-    withLazyPlugins()
+    }))
 )(PluginsContainerComponent);
 
 class MapViewer extends React.Component {
@@ -39,7 +37,6 @@ class MapViewer extends React.Component {
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
         plugins: PropTypes.object,
-        lazyPlugins: PropTypes.object,
         loaderComponent: PropTypes.func
     };
 
@@ -58,7 +55,6 @@ class MapViewer extends React.Component {
             pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
             plugins={this.props.plugins}
             params={this.props.params}
-            lazyPlugins={this.props.lazyPlugins}
             loaderComponent={this.props.loaderComponent}
         />);
     }

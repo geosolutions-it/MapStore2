@@ -33,8 +33,7 @@ class ContextCreator extends React.Component {
         loadContext: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object,
-        loaderComponent: PropTypes.func,
-        lazyPlugins: PropTypes.object
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -66,7 +65,6 @@ class ContextCreator extends React.Component {
             component={BorderLayout}
             includeCommon={false}
             plugins={this.props.plugins}
-            lazyPlugins={this.props.lazyPlugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
         />);

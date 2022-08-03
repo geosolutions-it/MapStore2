@@ -19,6 +19,7 @@ import { getApi } from '../api/userPersistedStorage';
 import url from "url";
 import { findMapType } from '../utils/MapTypeUtils';
 import { set } from '../utils/ImmutableUtils';
+import {getPlugins} from "../utils/ModulePluginsUtils";
 const standardEpics = {};
 
 const appStore = (
@@ -34,7 +35,7 @@ const appStore = (
     plugins = {},
     storeOpts = {}
 ) => {
-
+    const staticPlugins = getPlugins(plugins);
     const history = storeOpts.noRouter ? null : require('./History').default;
     const storeManager = createStoreManager(
         {
@@ -48,7 +49,7 @@ const appStore = (
         },
         { ...standardEpics, ...appEpics });
     const epicMiddleware = persistMiddleware(createEpicMiddleware(storeManager.rootEpic));
-    const pluginsReducers = getReducers(plugins);
+    const pluginsReducers = getReducers(staticPlugins);
     Object.keys(pluginsReducers).forEach(key => storeManager.addReducer(key, pluginsReducers[key]));
 
     const allReducers = storeManager.reduce;
@@ -100,7 +101,7 @@ const appStore = (
     store = DebugUtils.createDebugStore(rootReducer, defaultState, middlewares, enhancer);
     store.storeManager = storeManager;
 
-    const pluginsEpics = getGroupedEpics(plugins);
+    const pluginsEpics = getGroupedEpics(staticPlugins);
     Object.keys(pluginsEpics).forEach(key => store.storeManager.addEpics(key, pluginsEpics[key]));
 
     if (storeOpts && storeOpts.persist) {

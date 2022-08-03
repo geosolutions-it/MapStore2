@@ -14,15 +14,13 @@ const urlQuery = url.parse(window.location.href, true).query;
 import PluginsContainerComponent from "../components/plugins/PluginsContainer";
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ConfigUtils from '../utils/ConfigUtils';
-import withLazyPlugins from "../components/plugins/enhancers/withLazyPlugins";
 import {compose} from "redux";
 
 const PluginsContainer = compose(
     connect((state) => ({
         mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
         monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-    })),
-    withLazyPlugins()
+    }))
 )(PluginsContainerComponent);
 
 class Page extends React.Component {
@@ -34,7 +32,6 @@ class Page extends React.Component {
         params: PropTypes.object,
         onMount: PropTypes.func,
         plugins: PropTypes.object,
-        lazyPlugins: PropTypes.object,
         loaderComponent: PropTypes.func,
         component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         includeCommon: PropTypes.bool
@@ -73,7 +70,6 @@ class Page extends React.Component {
         return (<PluginsContainer key={this.props.id} id={"page-" + this.props.id} component={this.props.component} className={"page page-" + this.props.id + " " + this.props.className}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
-            lazyPlugins={this.props.lazyPlugins}
             params={this.props.params}
             loaderComponent={this.props.loaderComponent}
         />);

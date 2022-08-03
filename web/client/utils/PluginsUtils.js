@@ -419,8 +419,11 @@ export const mapPluginsPosition = (pluginsConfig = []) =>
         };
     }, {});
 
-export const getPlugins = (plugins) => Object.keys(plugins).map((name) => plugins[name])
-    .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {});
+export const getPlugins = (plugins) => Object.keys(plugins)
+    .reduce((previous, current) => ({
+        ...previous,
+        ...(isFunction(plugins[current]) ? {[current]: plugins[current]} : omit(plugins[current], 'reducers', 'epics'))
+    }), {});
 
 /**
  * provide the pluginDescriptor for a given plugin, with a state and a configuration

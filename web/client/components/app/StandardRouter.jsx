@@ -56,7 +56,6 @@ class StandardRouter extends React.Component {
             const pageConfig = page.pageConfig || {};
             const Component = connect(() => ({
                 plugins: this.props.plugins,
-                lazyPlugins: this.props.lazyPlugins,
                 loaderComponent: this.props.loaderComponent,
                 ...pageConfig
             }))(page.component);

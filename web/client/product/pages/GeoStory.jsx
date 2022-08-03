@@ -41,7 +41,6 @@ class GeoStoryPage extends React.Component {
         reset: PropTypes.func,
         plugins: PropTypes.object,
         loaderComponent: PropTypes.func,
-        lazyPlugins: PropTypes.object,
         canEdit: PropTypes.bool,
         location: PropTypes.object,
         history: PropTypes.object,
@@ -90,7 +89,6 @@ class GeoStoryPage extends React.Component {
             component={BorderLayout}
             includeCommon={false}
             plugins={this.props.plugins}
-            lazyPlugins={this.props.lazyPlugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
         />);

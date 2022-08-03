@@ -23,7 +23,6 @@ class MapViewerComponent extends React.Component {
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         loaderComponent: PropTypes.func,
-        lazyPlugins: PropTypes.object,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object,
         className: PropTypes.string
@@ -60,7 +59,6 @@ class MapViewerComponent extends React.Component {
             plugins={this.props.plugins}
             params={this.props.match.params}
             className={this.props.className}
-            lazyPlugins={this.props.lazyPlugins}
             loaderComponent={this.props.loaderComponent}
         />);
     }

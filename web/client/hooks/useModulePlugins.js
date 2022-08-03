@@ -27,7 +27,7 @@ function filterRemoved(registry, removed = []) {
 let storedPlugins = {};
 const pluginsCache = {};
 
-function useLazyPlugins({
+function useModulePlugins({
     pluginsEntries = {},
     pluginsConfig = [],
     removed = []
@@ -65,12 +65,12 @@ function useLazyPlugins({
                     impls.forEach(impl => {
                         if (size(impl.reducers)) {
                             Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
+                            store.dispatch({type: 'REDUCERS_LOADED'});
                         }
                         if (size(impl.epics)) {
                             store.storeManager.addEpics(impl.name, impl.epics);
                         }
                     });
-                    store.dispatch({type: 'REDUCERS_LOADED'});
                     return getPlugins({
                         ...filterRemoved(impls.map(impl => {
                             if (!isMapStorePlugin(impl?.component)) {
@@ -119,4 +119,4 @@ function useLazyPlugins({
     return { plugins, pending };
 }
 
-export default useLazyPlugins;
+export default useModulePlugins;

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import useLazyPlugins from "../../../hooks/useLazyPlugins";
+import useModulePlugins from "../../../hooks/useModulePlugins";
+import {getPlugins} from "../../../utils/ModulePluginsUtils";
 
 const getPluginsConfig = ({pluginsConfig: config, mode, defaultMode}) => {
     if (config) {
@@ -13,13 +14,13 @@ const getPluginsConfig = ({pluginsConfig: config, mode, defaultMode}) => {
     return [];
 };
 
-export default () => (Component) => ({ lazyPlugins, pluginsConfig, plugins, ...props }) => {
+export default () => (Component) => ({ pluginsConfig, plugins, ...props }) => {
     const config = getPluginsConfig({pluginsConfig, ...props});
-    const { plugins: loadedPlugins, pending } = useLazyPlugins({
-        pluginsEntries: lazyPlugins,
+    const { plugins: loadedPlugins, pending } = useModulePlugins({
+        pluginsEntries: getPlugins(plugins, 'module'),
         pluginsConfig: config
     });
-    const parsedPlugins = useMemo(() => ({ ...loadedPlugins, ...plugins }), [loadedPlugins]);
+    const parsedPlugins = useMemo(() => ({ ...loadedPlugins, ...getPlugins(plugins) }), [loadedPlugins]);
     const loading = pending;
 
     const Loader = props.loaderComponent;

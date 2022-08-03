@@ -6,78 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import isFunction from 'lodash/isFunction';
-import merge from 'lodash/merge';
-import omit from 'lodash/omit';
-
-function cleanEpics(epics, excludedNames = []) {
-    const containsExcludedEpic = !!excludedNames.find((epicName) => epics[epicName]);
-    if (containsExcludedEpic) {
-        return omit(epics, excludedNames);
-    }
-    return epics;
-}
-
-function toLazyPlugin(name, implementationFunction, overrides, exportedName) {
-    const getLazyPlugin = () => {
-        return implementationFunction().then((mod) => {
-            const impl = exportedName && mod[exportedName] ? mod[exportedName] : mod.default;
-            const pluginName = name + 'Plugin';
-            if (!isFunction(impl[pluginName])) {
-                const {
-                    enabler,
-                    loadPlugin,
-                    disablePluginIf,
-                    ...containers
-                } = impl[pluginName];
-                return {
-                    'default': merge({
-                        name,
-                        component: impl[pluginName],
-                        reducers: impl.reducers || {},
-                        epics: cleanEpics(impl.epics || {}),
-                        containers,
-                        disablePluginIf,
-                        enabler,
-                        loadPlugin
-                    }, overrides)
-                };
-            }
-            return {
-                'default': merge({
-                    name,
-                    component: impl[pluginName],
-                    reducers: impl.reducers || {},
-                    epics: cleanEpics(impl.epics || {}),
-                    containers: impl.containers || {}
-                }, overrides)
-            };
-        });
-    };
-    getLazyPlugin.isLazyWrapper = true;
-    return getLazyPlugin;
-}
-
-function splitLazyAndStaticPlugins(pluginsDefinition) {
-    const { plugins: allPlugins = {}, ...definition } = pluginsDefinition;
-    const plugins = Object.keys(allPlugins)
-        .filter((name) => !allPlugins[name].isLazyWrapper)
-        .reduce((acc, name) => ({
-            ...acc,
-            [name]: allPlugins[name]
-        }), {});
-    const lazyPlugins = Object.keys(allPlugins)
-        .filter((name) => allPlugins[name].isLazyWrapper)
-        .reduce((acc, name) => ({
-            ...acc,
-            [name]: allPlugins[name]
-        }), {});
-    return {
-        ...definition,
-        plugins,
-        lazyPlugins
-    };
-}
+import {toLazyPlugin} from "../utils/ModulePluginsUtils";
 
 /**
   * Please, keep them sorted alphabetically
@@ -121,7 +50,7 @@ export const plugins = {
     ExpanderPlugin: toLazyPlugin('Expander', () => import(/* webpackChunkName: 'plugins/expander' */ '../plugins/Expander')),
     FeatureEditorPlugin: toLazyPlugin('FeatureEditor', () => import(/* webpackChunkName: 'plugins/featureEditor' */ '../plugins/FeatureEditor')),
     FeaturedMaps: toLazyPlugin('FeaturedMaps', () => import(/* webpackChunkName: 'plugins/featuredMaps' */ '../plugins/FeaturedMaps')),
-    FeedbackMaskPlugin: require('../plugins/FeedbackMask').default,
+    FeedbackMaskPlugin: toLazyPlugin('FeedbackMask', () => import(/* webpackChunkName: 'plugins/feedbackMask' */ '../plugins/FeedbackMask')),
     FilterLayerPlugin: require('../plugins/FilterLayer').default,
     FloatingLegendPlugin: require('../plugins/FloatingLegend').default,
     FullScreenPlugin: toLazyPlugin('FullScreen', () => import(/* webpackChunkName: 'plugins/fullScreen' */ '../plugins/FullScreen')),
@@ -217,4 +146,4 @@ const pluginsDefinition = {
     }
 };
 
-export default splitLazyAndStaticPlugins(pluginsDefinition);
+export default pluginsDefinition;
