@@ -27,8 +27,8 @@ The browsers supported by [MapStore](https://mapstore.geosolutionsgroup.com/maps
 
 ## Quick Start
 
-You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore. See the [Quick Start](quick-start/) documentation for more details.
+You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore. See the [Quick Start](quick-start.md#quick-start) documentation for more details.
 
 ## Documentation
- * [Users Guide](user-guide/home-page/)
- * [Developers Guide](developer-guide/)
+ * [Users Guide](user-guide/home-page.md#home-page)
+ * [Developers Guide](developer-guide/index.md#quick-setup-and-run)

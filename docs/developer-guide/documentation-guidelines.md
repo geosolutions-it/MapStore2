@@ -26,3 +26,8 @@ But in order to build it locally, there are certain steps that needs to be follo
 
 3. Finally, build the docs using the command `mkdocs build`. This will build the documentation and puts the built files into `site` folder and the pdf generated into `site\pdf\mapstore_documentation.pdf`
 4. The documentation can be launched using `index.html` in `site` folder
+
+!!! Note
+    When creating a link to internal document (.md) files, make sure to use full link instead of a relative path to the file. As using relative path will not work in exported PDF document
+    *Example*
+    Instead of creating a link `[FAQ]('../dev-faq/')`, use `[FAQ]('../dev-faq/#faq')` or `[FAQ]('../dev-faq.md#faq')` or `[FAQ]('dev-faq.md#faq')`

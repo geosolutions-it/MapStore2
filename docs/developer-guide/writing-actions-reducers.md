@@ -186,4 +186,4 @@ in order to point to the reducers folder and then running
 Actions are not only used by redux to update the store (through the reducers),
 but also for triggering side effects workflows managed by epics
 
-For more details see [Writing epics](../writing-epics)
+For more details see [Writing epics](../writing-epics/#writing-epics)

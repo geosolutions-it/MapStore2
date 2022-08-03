@@ -75,7 +75,7 @@ e.g.
 }
 ```
 
-Here implementation details about [keycloak login workflow](../keycloak-sso-impl/).
+Here implementation details about [keycloak login workflow](keycloak-sso-impl.md#sso-workflow-in-keycloak).
 
 ## Direct user integration
 

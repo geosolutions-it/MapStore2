@@ -1,11 +1,11 @@
 # Creating a MapStore2 plugin
-The MapStore2 [plugins architecture](../plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
+The MapStore2 [plugins architecture](plugins-architecture.md#plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Creating a plugin is like assembling and connecting several pieces together into an atomic module. This happens by writing a plugin module, a ReactJS JSX file exporting the plugin descriptor.
 
 ## Introduction
 During this tutorial, you will learn how to create and configure plugins in a MapStore project.
-If you don't know how to work with MapStore projects, please read the [Projects Guide](../mapstore-projects). 
+If you don't know how to work with MapStore projects, please read the [Projects Guide](mapstore-projects.md#mapstore-projects). 
 For this tutorial, a "standard project" is used. 
 
 ## A plugin example
@@ -57,7 +57,7 @@ require('@mapstore/product/main')(appConfig, allPlugins);
 
 ```
 
-Then you have to configure it properly so that is enabled in one or more [application modes](../application-modes) / [pages](../application-pages):
+Then you have to configure it properly so that is enabled in one or more application modes / pages:
 
 ### localConfig.json
 ```javascript
@@ -229,7 +229,7 @@ export const reducers = {sample};
 Side effects should be limited as much as possible, but there are cases where a side effect cannot be avoided.
 In particular all asynchronous operations are side effects in Redux, but we obviously need to handle them, in particular we need to asynchronously load the data that we need from ore or more web services.
 
-To handle data fetching a plugin can define Epics. To have more detail about epics look at the [Epics developers guide](../writing-epics) section of this documentation.
+To handle data fetching a plugin can define Epics. To have more detail about epics look at the [Epics developers guide](../writing-epics/#writing-epics) section of this documentation.
 
 ### js/actions/sample.js
 ```javascript

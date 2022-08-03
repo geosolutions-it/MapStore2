@@ -1,9 +1,9 @@
 # Working with Extensions
 
-The MapStore2 [plugins architecture](../plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
+The MapStore2 [plugins architecture](plugins-architecture.md#plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Extensions are plugins that can be distributed as a separate package (a zip file), and be installed, activated and used at runtime.
-Creating an extension is similar to creating a plugin. If you are not familiar with plugins, please, read the [Plugins HowTo page](../plugins-howto) first.
+Creating an extension is similar to creating a plugin. If you are not familiar with plugins, please, read the [Plugins HowTo page](plugins-howto.md#creating-a-mapstore2-plugin) first.
 
 ## Developing an extension
 
