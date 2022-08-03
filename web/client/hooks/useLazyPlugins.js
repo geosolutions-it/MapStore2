@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useEffect, useState, useMemo } from 'react';
-import isEmpty from 'lodash/isEmpty';
-import { getPlugins, createPlugin, isMapStorePlugin } from '../utils/PluginsUtils';
-import { augmentStore } from '../utils/StateUtils';
+import {useEffect, useMemo, useState} from 'react';
+import {createPlugin, getPlugins, isMapStorePlugin} from '../utils/PluginsUtils';
+import {getStore} from '../utils/StateUtils';
 import join from 'lodash/join';
+import {size} from "lodash";
 
 function filterRemoved(registry, removed = []) {
     return Object.keys(registry).reduce((acc, p) => {
@@ -25,12 +25,7 @@ function filterRemoved(registry, removed = []) {
 }
 
 let storedPlugins = {};
-let epicsCache = {};
 const pluginsCache = {};
-const reducersCache = {};
-
-const getEpicCache = (name) => epicsCache[name];
-const setEpicCache = (name) => { epicsCache[name] = true; };
 
 function useLazyPlugins({
     pluginsEntries = {},
@@ -38,7 +33,7 @@ function useLazyPlugins({
     removed = []
 }) {
 
-    const [plugins, setPlugins] = useState({});
+    const [plugins, setPlugins] = useState(storedPlugins);
     const [pending, setPending] = useState(true);
 
     const pluginsKeys = useMemo(() => pluginsConfig.reduce((prev, curr) => {
@@ -61,62 +56,21 @@ function useLazyPlugins({
             const loadPlugins = filteredPluginsKeys
                 .map(pluginName => {
                     return pluginsEntries[pluginName]().then((mod) => {
-                        const impl = mod.default;
-                        return impl;
+                        return mod.default;
                     });
                 });
             Promise.all(loadPlugins)
                 .then((impls) => {
-                    const { reducers, epics } = filteredPluginsKeys.reduce((acc, pluginName, idx) => {
-                        const impl = impls[idx];
-                        return {
-                            reducers: {
-                                ...acc.reducers,
-                                ...impl.reducers
-                            },
-                            epics: {
-                                ...acc.epics,
-                                ...impl.epics
-                            }
-                        };
-                    }, {
-                        reducers: {},
-                        epics: {}
+                    const store = getStore();
+                    impls.forEach(impl => {
+                        if (size(impl.reducers)) {
+                            Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
+                        }
+                        if (size(impl.epics)) {
+                            store.storeManager.addEpics(impl.name, impl.epics);
+                        }
                     });
-
-                    // the epics and reducers once included in the store cannot be overridden
-                    // so we need to filter out the one previously added and include only new one
-                    const filterOutExistingEpics = Object.keys(epics)
-                        .reduce((acc, key) => {
-                            if (getEpicCache(key)) {
-                                return acc;
-                            }
-                            setEpicCache(key);
-                            return {
-                                ...acc,
-                                [key]: epics[key]
-                            };
-                        }, {});
-
-
-                    const filterOutExistingReducers = Object.keys(reducers)
-                        .reduce((acc, key) => {
-                            if (reducersCache[key]) {
-                                return acc;
-                            }
-                            reducersCache[key] = true;
-                            return {
-                                ...acc,
-                                [key]: reducers[key]
-                            };
-                        }, {});
-
-                    if (!(isEmpty(filterOutExistingReducers) && isEmpty(filterOutExistingEpics))) {
-                        augmentStore({
-                            reducers: filterOutExistingReducers,
-                            epics: filterOutExistingEpics
-                        });
-                    }
+                    store.dispatch({type: 'REDUCERS_LOADED'});
                     return getPlugins({
                         ...filterRemoved(impls.map(impl => {
                             if (!isMapStorePlugin(impl?.component)) {
@@ -150,6 +104,17 @@ function useLazyPlugins({
             setPending(false);
         }
     }, [ pluginsString ]);
+
+    useEffect(() => {
+        const store = getStore();
+        Object.keys(pluginsCache).forEach((plugin) => {
+            if (!pluginsKeys.includes(plugin)) {
+                store.storeManager.muteEpics(plugin);
+            } else {
+                store.storeManager.unmuteEpics(plugin);
+            }
+        });
+    }, [pluginsString]);
 
     return { plugins, pending };
 }

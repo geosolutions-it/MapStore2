@@ -152,7 +152,7 @@ export const plugins = {
     LocatePlugin: toLazyPlugin('Locate', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Locate')),
     LoginPlugin: require('../plugins/Login').default,
     ManagerMenuPlugin: toLazyPlugin('ManagerMenu', () => import(/* webpackChunkName: 'plugins/managerMenu' */ '../plugins/manager/ManagerMenu')),
-    ManagerPlugin: toLazyPlugin('Manager', () => import(/* webpackChunkName: 'plugins/gridContainer' */ '../plugins/GridContainer')),
+    ManagerPlugin: toLazyPlugin('Manager', () => import(/* webpackChunkName: 'plugins/manager' */ '../plugins/manager/Manager')),
     MapEditorPlugin: toLazyPlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),
     MapExportPlugin: toLazyPlugin('MapExport', () => import(/* webpackChunkName: 'plugins/mapExport' */ '../plugins/MapExport')),
     MapFooterPlugin: toLazyPlugin('MapFooter', () => import(/* webpackChunkName: 'plugins/mapFooter' */ '../plugins/MapFooter')),
