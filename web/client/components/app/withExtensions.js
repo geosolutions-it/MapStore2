@@ -101,10 +101,10 @@ function withExtensions(AppComponent) {
         };
 
         render() {
-            const { plugins, ...rest } = this.props.pluginsDef;
+            const { plugins, requires } = this.props.pluginsDef;
             const pluginsDef = {
                 plugins: {...plugins, ...this.filterRemoved(this.state.pluginsRegistry, this.state.removedPlugins)},
-                ...rest
+                requires
             };
             return (
                 <AppComponent

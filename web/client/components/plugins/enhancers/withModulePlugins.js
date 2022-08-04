@@ -1,6 +1,13 @@
 import React, { useMemo } from 'react';
+import url from 'url';
 import useModulePlugins from "../../../hooks/useModulePlugins";
 import {getPlugins} from "../../../utils/ModulePluginsUtils";
+import {compose} from "redux";
+import {connect} from "react-redux";
+import {getMonitoredState} from "../../../utils/PluginsUtils";
+import ConfigUtils from "../../../utils/ConfigUtils";
+
+const urlQuery = url.parse(window.location.href, true).query;
 
 const getPluginsConfig = ({pluginsConfig: config, mode, defaultMode}) => {
     if (config) {
@@ -14,7 +21,7 @@ const getPluginsConfig = ({pluginsConfig: config, mode, defaultMode}) => {
     return [];
 };
 
-export default () => (Component) => ({ pluginsConfig, plugins, ...props }) => {
+const withModulePlugins = (Component) => ({ pluginsConfig, plugins, ...props }) => {
     const config = getPluginsConfig({pluginsConfig, ...props});
     const { plugins: loadedPlugins, pending } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
@@ -27,3 +34,11 @@ export default () => (Component) => ({ pluginsConfig, plugins, ...props }) => {
 
     return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
 };
+
+export default compose(
+    connect((state) => ({
+        mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
+        monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
+    })),
+    withModulePlugins
+);

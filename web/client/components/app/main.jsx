@@ -52,7 +52,7 @@ const main = (config = {}, Component) => {
         const App = Component ? Component : StandardApp;
 
         ReactDOM.render(
-            <App { ...config } appStore={appStore} />,
+            <App { ...config } appStore={appStore}/>,
             document.getElementById(targetId)
         );
     };

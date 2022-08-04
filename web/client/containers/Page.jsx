@@ -8,20 +8,8 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import url from 'url';
-const urlQuery = url.parse(window.location.href, true).query;
-import PluginsContainerComponent from "../components/plugins/PluginsContainer";
-import { getMonitoredState } from '../utils/PluginsUtils';
+import PluginsContainer from "../components/plugins/PluginsContainer";
 import ConfigUtils from '../utils/ConfigUtils';
-import {compose} from "redux";
-
-const PluginsContainer = compose(
-    connect((state) => ({
-        mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
-        monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-    }))
-)(PluginsContainerComponent);
 
 class Page extends React.Component {
     static propTypes = {

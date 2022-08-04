@@ -7,10 +7,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import url from 'url';
-import {compose} from "redux";
 import withModulePlugins from "./enhancers/withModulePlugins";
-import {connect} from "react-redux";
 import PluginsUtils from '../../utils/PluginsUtils';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
@@ -18,7 +15,6 @@ import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 import { componentFromProp } from 'recompose';
 
-const urlQuery = url.parse(window.location.href, true).query;
 const Component = componentFromProp('component');
 
 /**
@@ -213,9 +209,4 @@ class PluginsContainer extends React.Component {
     };
 }
 
-export default compose(
-    connect((state) => ({
-        mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop')
-    })),
-    withModulePlugins()
-)(PluginsContainer);
+export default withModulePlugins(PluginsContainer);
