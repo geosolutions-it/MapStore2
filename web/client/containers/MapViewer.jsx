@@ -12,17 +12,14 @@ import { connect } from 'react-redux';
 import assign from 'object-assign';
 
 import ConfigUtils from '../utils/ConfigUtils';
-import {compose} from "redux";
 import PluginsContainerComponent from "../components/plugins/PluginsContainer";
 
-const PluginsContainer = compose(
-    connect((state) => ({
-        statePluginsConfig: state.plugins,
-        pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
-            layerSettings: state.layers.settings
-        })
-    }))
-)(PluginsContainerComponent);
+const PluginsContainer = connect((state) => ({
+    statePluginsConfig: state.plugins,
+    pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
+        layerSettings: state.layers.settings
+    })
+}))(PluginsContainerComponent);
 
 class MapViewer extends React.Component {
     static propTypes = {
