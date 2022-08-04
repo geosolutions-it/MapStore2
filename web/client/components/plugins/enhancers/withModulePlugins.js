@@ -27,6 +27,6 @@ export default () => (Component) => ({ pluginsConfig, plugins, onInit, ...props 
 
     useEffect(() => {
         if (onInit && !loading) onInit();
-    }, [onInit]);
+    }, [onInit, loading]);
     return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
 };
