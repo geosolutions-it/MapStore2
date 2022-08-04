@@ -10,8 +10,8 @@ function cleanEpics(epics, excludedNames = []) {
     return epics;
 }
 
-export function toLazyPlugin(name, implementationFunction, overrides, exportedName) {
-    const getLazyPlugin = () => {
+export function toModulePlugin(name, implementationFunction, overrides, exportedName) {
+    const getModulePlugin = () => {
         return implementationFunction().then((mod) => {
             const impl = exportedName && mod[exportedName] ? mod[exportedName] : mod.default;
             const pluginName = name + 'Plugin';
@@ -46,8 +46,8 @@ export function toLazyPlugin(name, implementationFunction, overrides, exportedNa
             };
         });
     };
-    getLazyPlugin.isModulePlugin = true;
-    return getLazyPlugin;
+    getModulePlugin.isModulePlugin = true;
+    return getModulePlugin;
 }
 
 export function getPlugins(plugins, type = 'static') {

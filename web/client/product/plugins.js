@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {toLazyPlugin} from "../utils/ModulePluginsUtils";
+import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
 /**
   * Please, keep them sorted alphabetically
