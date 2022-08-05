@@ -6,16 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import assign from 'object-assign';
+import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
+import { connect } from 'react-redux';
+
+import url from 'url';
+const urlQuery = url.parse(window.location.href, true).query;
+import { getMonitoredState } from '../utils/PluginsUtils';
+import ConfigUtils from '../utils/ConfigUtils';
 
 const PluginsContainer = connect((state) => ({
+    mode: urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
         layerSettings: state.layers.settings
-    })
-}))(require('../components/plugins/PluginsContainer').default);
+    }),
+    monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
+}))(ModulePluginsContainer);
 
 class Embedded extends React.Component {
     static propTypes = {

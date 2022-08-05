@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import withModulePlugins from "./enhancers/withModulePlugins";
 import PluginsUtils from '../../utils/PluginsUtils';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
@@ -209,4 +208,4 @@ class PluginsContainer extends React.Component {
     };
 }
 
-export default withModulePlugins(PluginsContainer);
+export default PluginsContainer;
