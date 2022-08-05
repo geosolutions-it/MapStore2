@@ -11,10 +11,10 @@ import {toModulePlugin} from "../utils/ModulePluginsUtils";
 import Context from "../plugins/Context";
 import Dashboard from "../plugins/Dashboard";
 import Dashboards from "../plugins/Dashboards";
+import FeedbackMask from '../plugins/FeedbackMask';
 import GeoStory from "../plugins/GeoStory";
 import GeoStories from "../plugins/GeoStories";
 import Maps from "../plugins/Maps";
-import MetadataExplorer from "../plugins/MetadataExplorer";
 import RulesDataGrid from "../plugins/RulesDataGrid";
 import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
@@ -31,11 +31,11 @@ export const plugins = {
     ContextPlugin: Context,
     Dashboard: Dashboard,
     DashboardsPlugin: Dashboards,
+    FeedbackMaskPlugin: FeedbackMask,
     GeoStoryPlugin: GeoStory,
     GeoStoriesPlugin: GeoStories,
     MapsPlugin: Maps,
     PrintPlugin: Print,
-    MetadataExplorerPlugin: MetadataExplorer,
     RulesDataGridPlugin: RulesDataGrid,
     RulesEditorPlugin: RulesEditor,
     RulesManagerFooter: RulesManagerFooter,
@@ -78,7 +78,6 @@ export const plugins = {
     ExpanderPlugin: toModulePlugin('Expander', () => import(/* webpackChunkName: 'plugins/expander' */ '../plugins/Expander')),
     FeatureEditorPlugin: toModulePlugin('FeatureEditor', () => import(/* webpackChunkName: 'plugins/featureEditor' */ '../plugins/FeatureEditor')),
     FeaturedMaps: toModulePlugin('FeaturedMaps', () => import(/* webpackChunkName: 'plugins/featuredMaps' */ '../plugins/FeaturedMaps')),
-    FeedbackMaskPlugin: toModulePlugin('FeedbackMask', () => import(/* webpackChunkName: 'plugins/feedbackMask' */ '../plugins/FeedbackMask')),
     FilterLayerPlugin: toModulePlugin('FilterLayer', () => import(/* webpackChunkName: 'plugins/filterLayer' */ '../plugins/FilterLayer')),
     FloatingLegendPlugin: toModulePlugin('FloatingLegend', () => import(/* webpackChunkName: 'plugins/floatingLegend' */ '../plugins/FloatingLegend')),
     FullScreenPlugin: toModulePlugin('FullScreen', () => import(/* webpackChunkName: 'plugins/fullScreen' */ '../plugins/FullScreen')),
@@ -116,6 +115,7 @@ export const plugins = {
     MapTemplatesPlugin: toModulePlugin('MapTemplates', () => import(/* webpackChunkName: 'plugins/measure' */ '../plugins/MapTemplates')),
     MeasurePlugin: toModulePlugin('Measure', () => import(/* webpackChunkName: 'plugins/gridContainer' */ '../plugins/Measure')),
     MediaEditorPlugin: toModulePlugin('MediaEditor', () => import(/* webpackChunkName: 'plugins/mediaEditor' */ '../plugins/MediaEditor')),
+    MetadataExplorerPlugin: toModulePlugin('MetadataExplorer', () => import(/* webpackChunkName: 'plugins/metadataExplorer' */ '../plugins/MetadataExplorer')),
     MousePositionPlugin: toModulePlugin('MousePosition', () => import(/* webpackChunkName: 'plugins/mousePosition' */ '../plugins/MousePosition')),
     NotificationsPlugin: toModulePlugin('Notifications', () => import(/* webpackChunkName: 'plugins/notifications' */ '../plugins/Notifications')),
     OmniBarPlugin: toModulePlugin('OmniBar', () => import(/* webpackChunkName: 'plugins/omniBar' */ '../plugins/OmniBar')),
