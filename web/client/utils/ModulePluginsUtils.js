@@ -32,7 +32,7 @@ export function toModulePlugin(name, implementationFunction, options = {override
                         disablePluginIf,
                         enabler,
                         loadPlugin
-                    }, options.overrides)
+                    }, (options?.overrides ?? {}))
                 };
             }
             return {
@@ -42,7 +42,7 @@ export function toModulePlugin(name, implementationFunction, options = {override
                     reducers: impl.reducers || {},
                     epics: cleanEpics(impl.epics || {}),
                     containers: impl.containers || {}
-                }, options.overrides)
+                }, (options?.overrides ?? {}))
             };
         });
     };
