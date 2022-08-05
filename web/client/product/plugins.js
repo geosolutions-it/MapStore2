@@ -13,8 +13,6 @@ import Dashboard from "../plugins/Dashboard";
 import Dashboards from "../plugins/Dashboards";
 import GeoStory from "../plugins/GeoStory";
 import GeoStories from "../plugins/GeoStories";
-import GroupManager from "../plugins/manager/GroupManager";
-import Login from "../plugins/Login";
 import Maps from "../plugins/Maps";
 import MetadataExplorer from "../plugins/MetadataExplorer";
 import RulesDataGrid from "../plugins/RulesDataGrid";
@@ -22,7 +20,6 @@ import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
 import StyleEditor from "../plugins/StyleEditor";
 import ThematicLayer from "../plugins/ThematicLayer";
-import UserManager from "../plugins/manager/UserManager";
 import Print from "../plugins/Print";
 import UserSession from "../plugins/UserSession";
 
@@ -36,8 +33,6 @@ export const plugins = {
     DashboardsPlugin: Dashboards,
     GeoStoryPlugin: GeoStory,
     GeoStoriesPlugin: GeoStories,
-    GroupManagerPlugin: GroupManager,
-    LoginPlugin: Login,
     MapsPlugin: Maps,
     PrintPlugin: Print,
     MetadataExplorerPlugin: MetadataExplorer,
@@ -46,7 +41,6 @@ export const plugins = {
     RulesManagerFooter: RulesManagerFooter,
     StyleEditorPlugin: StyleEditor,
     ThematicLayerPlugin: ThematicLayer,
-    UserManagerPlugin: UserManager,
     UserSessionPlugin: UserSession,
 
     // ### DYNAMIC PLUGINS ### //
@@ -96,6 +90,7 @@ export const plugins = {
     DashboardSavePlugin: toModulePlugin('DashboardSave', () => import(/* webpackChunkName: 'plugins/dashboardSave' */ '../plugins/DashboardSave'), { exportedName: 'DashboardSave'}),
     DashboardSaveAsPlugin: toModulePlugin('DashboardSaveAs', () => import(/* webpackChunkName: 'plugins/dashboardSave' */ '../plugins/DashboardSave'), { exportedName: 'DashboardSaveAs'}),
     GeoStoryNavigationPlugin: toModulePlugin('GeoStoryNavigation', () => import(/* webpackChunkName: 'plugins/geoStoryNavigation' */ '../plugins/GeoStoryNavigation')),
+    GroupManagerPlugin: toModulePlugin('GroupManager', () => import(/* webpackChunkName: 'plugins/groupManager' */ '../plugins/manager/GroupManager')),
     GlobeViewSwitcherPlugin: toModulePlugin('GlobeViewSwitcher', () => import(/* webpackChunkName: 'plugins/globeViewSwitcher' */ '../plugins/GlobeViewSwitcher')),
     GoFull: toModulePlugin('GoFull', () => import(/* webpackChunkName: 'plugins/goFull' */ '../plugins/GoFull')),
     GridContainerPlugin: toModulePlugin('GridContainer', () => import(/* webpackChunkName: 'plugins/gridContainer' */ '../plugins/GridContainer')),
@@ -107,6 +102,7 @@ export const plugins = {
     LayerDownload: toModulePlugin('LayerDownload', () => import(/* webpackChunkName: 'plugins/layerDownload' */ '../plugins/LayerDownload')),
     LayerInfoPlugin: toModulePlugin('LayerInfo', () => import(/* webpackChunkName: 'plugins/layerInfo' */ '../plugins/LayerInfo')),
     LocatePlugin: toModulePlugin('Locate', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Locate')),
+    LoginPlugin: toModulePlugin('Login', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Login')),
     ManagerMenuPlugin: toModulePlugin('ManagerMenu', () => import(/* webpackChunkName: 'plugins/managerMenu' */ '../plugins/manager/ManagerMenu')),
     ManagerPlugin: toModulePlugin('Manager', () => import(/* webpackChunkName: 'plugins/manager' */ '../plugins/manager/Manager')),
     MapEditorPlugin: toModulePlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),
@@ -149,6 +145,7 @@ export const plugins = {
     TutorialPlugin: toModulePlugin('Tutorial', () => import(/* webpackChunkName: 'plugins/tutorial' */ '../plugins/Tutorial')),
     UndoPlugin: toModulePlugin('Undo', () => import(/* webpackChunkName: 'plugins/history' */ '../plugins/History')),
     UserExtensionsPlugin: toModulePlugin('UserExtensions', () => import(/* webpackChunkName: 'plugins/userExtensions' */ '../plugins/UserExtensions')),
+    UserManagerPlugin: toModulePlugin('UserManager', () => import(/* webpackChunkName: 'plugins/userManager' */ '../plugins/manager/UserManager')),
     VersionPlugin: toModulePlugin('Version', () => import(/* webpackChunkName: 'plugins/version' */ '../plugins/Version')),
     WidgetsBuilderPlugin: toModulePlugin('WidgetsBuilder', () => import(/* webpackChunkName: 'plugins/widgetsBuilder' */ '../plugins/WidgetsBuilder')),
     WidgetsPlugin: toModulePlugin('Widgets', () => import(/* webpackChunkName: 'plugins/widgets' */ '../plugins/Widgets')),
