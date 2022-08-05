@@ -21,7 +21,7 @@ const getPluginsConfig = ({pluginsConfig: config, mode, defaultMode}) => {
     return [];
 };
 
-const withModulePlugins = (Component) => ({ pluginsConfig, plugins, ...props }) => {
+const withModulePlugins = (Component) => ({ pluginsConfig, plugins = {}, loaderComponent = () => null, ...props }) => {
     const config = getPluginsConfig({pluginsConfig, ...props});
     const { plugins: loadedPlugins, pending } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
@@ -30,7 +30,7 @@ const withModulePlugins = (Component) => ({ pluginsConfig, plugins, ...props }) 
     const parsedPlugins = useMemo(() => ({ ...loadedPlugins, ...getPlugins(plugins) }), [loadedPlugins]);
     const loading = pending;
 
-    const Loader = props.loaderComponent;
+    const Loader = loaderComponent;
 
     return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
 };

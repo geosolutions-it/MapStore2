@@ -109,15 +109,6 @@ export const persistEpic = (epic, storeName = PERSISTED_STORE_NAME, name = 'root
 };
 
 /**
- * Returns a stored root epic
- * @param {string} storeName optional store name the epic is used by
- * @param {string} name optional name (if you want to persist more than one epic)
- */
-// const fetchEpic = (storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
-//     return ConfigUtils.getConfigProp(storeName + '.' + name) || {};
-// };
-
-/**
  * Returns state from a persisted store.
  *
  * @param {string} name optional name (if you want to persist more than one store)
@@ -199,10 +190,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
         },
         // Adds a new epics set, mutable by the specified key
         addEpics: (key, epicsList) => {
-            muteState[key] = new Subject();
-            const isolatedEpics = isolateEpics(epicsList, muteState[key].asObservable());
-            // wrapEpics(isolateEpics(epicsList, muteState[key].asObservable())).forEach(epic => epic$.next(epic));
-            wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
+            if (Object.keys(epicsList).length) {
+                muteState[key] = new Subject();
+                const isolatedEpics = isolateEpics(epicsList, muteState[key].asObservable());
+                wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
+            }
         },
         // Mute epics set with a specified key
         muteEpics: (key) => {
@@ -257,7 +249,7 @@ export const createStore = ({
 /**
  * Updates a Redux store with new reducers and epics.
  *
- * This method needs a new COMPLETE set of reducers / epics. If you want to add reducers / epics to existing ones, use augmentStore instead.
+ * This method needs a new COMPLETE set of reducers / epics. If you want to add reducers / epics to existing ones, use storeManager methods instead.
  *
  * @param {object} options options to update
  * @param {function} options.rootReducer optional root (combined) reducer for the store, if not specified it is built using the reducers.
@@ -272,24 +264,4 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
     (store || getStore()).replaceReducer(reducer);
     const epic = rootEpic || combineEpics(...wrapEpics(epics));
     (epicMiddleware || fetchMiddleware()).replaceEpic(epic);
-};
-
-/**
- * Updates a Redux store with new reducers and epics.
- * Needed by the dynamic plugins loading system, to update the application store with new reducers and epics exported by the plugins.
- *
- * If you want to add replace current reducers / epics with new ones, use updateStore instead.
- *
- * @param {object} options options to update
- * @param {object} options.reducers list of reducers to add.
- * @param {object} options.epics list of epics to add.
- * @param {object} store the store to update, if not specified, the persisted one will be used
- */
-export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
-    const persistedStore = store || getStore();
-    Object.keys(reducers).forEach((key) => {
-        persistedStore.storeManager.addReducer(key, reducers[key]);
-    });
-    persistedStore.dispatch({type: 'REDUCERS_LOADED'});
-    persistedStore.storeManager.addEpics('notMutable', wrapEpics(epics));
 };

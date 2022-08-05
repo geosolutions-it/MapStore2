@@ -35,7 +35,8 @@ class MapViewerComponent extends React.Component {
         loadMapConfig: () => {},
         match: {
             params: {}
-        }
+        },
+        loaderComponent: () => null
     };
     UNSAFE_componentWillMount() {
         const id = this.props.match.params.mapId || '0';

@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import url from 'url';
 import { join, toNumber } from 'lodash';
-import * as SharePlugin from '../Share';
+import SharePlugin from '../Share';
 import { getPluginForTest } from './pluginsTestUtils';
 import ReactTestUtils from 'react-dom/test-utils';
 import { TOGGLE_CONTROL } from '../../actions/controls';

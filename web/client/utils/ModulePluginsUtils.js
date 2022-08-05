@@ -10,10 +10,10 @@ function cleanEpics(epics, excludedNames = []) {
     return epics;
 }
 
-export function toModulePlugin(name, implementationFunction, overrides, exportedName) {
+export function toModulePlugin(name, implementationFunction, options = {overrides: {}, exportedName: 'default'}) {
     const getModulePlugin = () => {
         return implementationFunction().then((mod) => {
-            const impl = exportedName && mod[exportedName] ? mod[exportedName] : mod.default;
+            const impl = options.exportedName && mod[options.exportedName] ? mod[options.exportedName] : mod.default;
             const pluginName = name + 'Plugin';
             if (!isFunction(impl[pluginName])) {
                 const {
@@ -32,7 +32,7 @@ export function toModulePlugin(name, implementationFunction, overrides, exported
                         disablePluginIf,
                         enabler,
                         loadPlugin
-                    }, overrides)
+                    }, options.overrides)
                 };
             }
             return {
@@ -42,7 +42,7 @@ export function toModulePlugin(name, implementationFunction, overrides, exported
                     reducers: impl.reducers || {},
                     epics: cleanEpics(impl.epics || {}),
                     containers: impl.containers || {}
-                }, overrides)
+                }, options.overrides)
             };
         });
     };

@@ -141,9 +141,9 @@ const SharePlugin = createPlugin('Share', {
             icon: <Glyphicon glyph="share-alt"/>,
             action: toggleControl.bind(null, 'share', null)
         }
-    }
+    },
+    epics: shareEpics,
+    reducers: { controls }
 });
 
-export const reducers = { controls };
-export const epics = shareEpics;
 export default SharePlugin;
