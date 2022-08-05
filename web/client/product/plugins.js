@@ -8,27 +8,44 @@
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
+import Context from "../plugins/Context";
+import Dashboard from "../plugins/Dashboard";
+import Dashboards from "../plugins/Dashboards";
+import GeoStory from "../plugins/GeoStory";
+import GeoStories from "../plugins/GeoStories";
+import GroupManager from "../plugins/manager/GroupManager";
+import Login from "../plugins/Login";
+import Maps from "../plugins/Maps";
+import MetadataExplorer from "../plugins/MetadataExplorer";
+import RulesDataGrid from "../plugins/RulesDataGrid";
+import RulesEditor from "../plugins/RulesEditor";
+import RulesManagerFooter from "../plugins/RulesManagerFooter";
+import StyleEditor from "../plugins/StyleEditor";
+import ThematicLayer from "../plugins/ThematicLayer";
+import UserManager from "../plugins/manager/UserManager";
+import Print from "../plugins/Print";
+
 /**
   * Please, keep them sorted alphabetically
  */
 export const plugins = {
     // ### STATIC PLUGINS ### //
-    ContextPlugin: require('../plugins/Context').default,
-    Dashboard: require('../plugins/Dashboard').default,
-    DashboardsPlugin: require('../plugins/Dashboards').default,
-    GeoStoryPlugin: require('../plugins/GeoStory').default,
-    GeoStoriesPlugin: require('../plugins/GeoStories').default,
-    GroupManagerPlugin: require('../plugins/manager/GroupManager').default,
-    LoginPlugin: require('../plugins/Login').default,
-    MapsPlugin: require('../plugins/Maps').default,
-    PrintPlugin: require('../plugins/Print').default,
-    MetadataExplorerPlugin: require('../plugins/MetadataExplorer').default,
-    RulesDataGridPlugin: require('../plugins/RulesDataGrid').default,
-    RulesEditorPlugin: require('../plugins/RulesEditor').default,
-    RulesManagerFooter: require('../plugins/RulesManagerFooter').default,
-    StyleEditorPlugin: require('../plugins/StyleEditor').default,
-    ThematicLayerPlugin: require('../plugins/ThematicLayer').default,
-    UserManagerPlugin: require('../plugins/manager/UserManager').default,
+    ContextPlugin: Context,
+    Dashboard: Dashboard,
+    DashboardsPlugin: Dashboards,
+    GeoStoryPlugin: GeoStory,
+    GeoStoriesPlugin: GeoStories,
+    GroupManagerPlugin: GroupManager,
+    LoginPlugin: Login,
+    MapsPlugin: Maps,
+    PrintPlugin: Print,
+    MetadataExplorerPlugin: MetadataExplorer,
+    RulesDataGridPlugin: RulesDataGrid,
+    RulesEditorPlugin: RulesEditor,
+    RulesManagerFooter: RulesManagerFooter,
+    StyleEditorPlugin: StyleEditor,
+    ThematicLayerPlugin: ThematicLayer,
+    UserManagerPlugin: UserManager,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
