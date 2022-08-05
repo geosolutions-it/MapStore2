@@ -24,6 +24,7 @@ import StyleEditor from "../plugins/StyleEditor";
 import ThematicLayer from "../plugins/ThematicLayer";
 import UserManager from "../plugins/manager/UserManager";
 import Print from "../plugins/Print";
+import UserSession from "../plugins/UserSession";
 
 /**
   * Please, keep them sorted alphabetically
@@ -46,6 +47,7 @@ export const plugins = {
     StyleEditorPlugin: StyleEditor,
     ThematicLayerPlugin: ThematicLayer,
     UserManagerPlugin: UserManager,
+    UserSessionPlugin: UserSession,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -147,7 +149,6 @@ export const plugins = {
     TutorialPlugin: toModulePlugin('Tutorial', () => import(/* webpackChunkName: 'plugins/tutorial' */ '../plugins/Tutorial')),
     UndoPlugin: toModulePlugin('Undo', () => import(/* webpackChunkName: 'plugins/history' */ '../plugins/History')),
     UserExtensionsPlugin: toModulePlugin('UserExtensions', () => import(/* webpackChunkName: 'plugins/userExtensions' */ '../plugins/UserExtensions')),
-    UserSessionPlugin: toModulePlugin('UserSession', () => import(/* webpackChunkName: 'plugins/userSession' */ '../plugins/UserSession')),
     VersionPlugin: toModulePlugin('Version', () => import(/* webpackChunkName: 'plugins/version' */ '../plugins/Version')),
     WidgetsBuilderPlugin: toModulePlugin('WidgetsBuilder', () => import(/* webpackChunkName: 'plugins/widgetsBuilder' */ '../plugins/WidgetsBuilder')),
     WidgetsPlugin: toModulePlugin('Widgets', () => import(/* webpackChunkName: 'plugins/widgets' */ '../plugins/Widgets')),
