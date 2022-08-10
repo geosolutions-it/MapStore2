@@ -18,7 +18,6 @@ import Maps from "../plugins/Maps";
 import RulesDataGrid from "../plugins/RulesDataGrid";
 import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
-import StyleEditor from "../plugins/StyleEditor";
 import Print from "../plugins/Print";
 import UserSession from "../plugins/UserSession";
 
@@ -38,7 +37,6 @@ export const plugins = {
     RulesDataGridPlugin: RulesDataGrid,
     RulesEditorPlugin: RulesEditor,
     RulesManagerFooter: RulesManagerFooter,
-    StyleEditorPlugin: StyleEditor,
     UserSessionPlugin: UserSession,
 
     // ### DYNAMIC PLUGINS ### //
@@ -134,6 +132,7 @@ export const plugins = {
     SharePlugin: toModulePlugin('Share', () => import(/* webpackChunkName: 'plugins/share' */ '../plugins/Share')),
     SnapshotPlugin: toModulePlugin('Snapshot', () => import(/* webpackChunkName: 'plugins/snapshot' */ '../plugins/Snapshot')),
     StreetView: toModulePlugin('StreetView', () => import(/* webpackChunkName: 'plugins/streetView' */ '../plugins/StreetView')),
+    StyleEditor: toModulePlugin('StyleEditor', () => import(/* webpackChunkName: 'plugins/styleEditor' */ '../plugins/StyleEditor')),
     SwipePlugin: toModulePlugin('Swipe', () => import(/* webpackChunkName: 'plugins/swipe' */ '../plugins/Swipe')),
     TOCItemsSettingsPlugin: toModulePlugin('TOCItemsSettings', () => import(/* webpackChunkName: 'plugins/TOCItemsSettings' */ '../plugins/TOCItemsSettings')),
     TOCPlugin: toModulePlugin('TOC', () => import(/* webpackChunkName: 'plugins/TOC' */ '../plugins/TOC')),
