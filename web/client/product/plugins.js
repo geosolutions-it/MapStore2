@@ -19,7 +19,6 @@ import RulesDataGrid from "../plugins/RulesDataGrid";
 import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
 import StyleEditor from "../plugins/StyleEditor";
-import ThematicLayer from "../plugins/ThematicLayer";
 import Print from "../plugins/Print";
 import UserSession from "../plugins/UserSession";
 
@@ -40,7 +39,6 @@ export const plugins = {
     RulesEditorPlugin: RulesEditor,
     RulesManagerFooter: RulesManagerFooter,
     StyleEditorPlugin: StyleEditor,
-    ThematicLayerPlugin: ThematicLayer,
     UserSessionPlugin: UserSession,
 
     // ### DYNAMIC PLUGINS ### //
@@ -139,6 +137,7 @@ export const plugins = {
     SwipePlugin: toModulePlugin('Swipe', () => import(/* webpackChunkName: 'plugins/swipe' */ '../plugins/Swipe')),
     TOCItemsSettingsPlugin: toModulePlugin('TOCItemsSettings', () => import(/* webpackChunkName: 'plugins/TOCItemsSettings' */ '../plugins/TOCItemsSettings')),
     TOCPlugin: toModulePlugin('TOC', () => import(/* webpackChunkName: 'plugins/TOC' */ '../plugins/TOC')),
+    ThematicLayerPlugin: toModulePlugin('ThematicLayer', () => import(/* webpackChunkName: 'plugins/thematicLayer' */ '../plugins/ThematicLayer')),
     ThemeSwitcherPlugin: toModulePlugin('ThemeSwitcher', () => import(/* webpackChunkName: 'plugins/themeSwitcher' */ '../plugins/ThemeSwitcher')),
     TimelinePlugin: toModulePlugin('Timeline', () => import(/* webpackChunkName: 'plugins/timeline' */ '../plugins/Timeline')),
     ToolbarPlugin: toModulePlugin('Toolbar', () => import(/* webpackChunkName: 'plugins/toolbar' */ '../plugins/Toolbar')),
