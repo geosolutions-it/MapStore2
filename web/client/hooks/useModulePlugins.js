@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, GeoSolutions Sas.
+ * Copyright 2022, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -27,12 +27,18 @@ function filterRemoved(registry, removed = []) {
 let storedPlugins = {};
 const pluginsCache = {};
 
+/**
+ * hook to perform loading, caching and fetching previously loaded module plugins based on passed configuration
+ * @param {object} pluginsEntries - object containing complete set of module plugins registered in app.
+ * @param {array} pluginsConfig - list of the plugins should be loaded or fetched from cache
+ * @param {array} removed - list of removed plugins
+ * @returns {{plugins: {}, pending: boolean}}
+ */
 function useModulePlugins({
     pluginsEntries = {},
     pluginsConfig = [],
     removed = []
 }) {
-
     const [plugins, setPlugins] = useState(storedPlugins);
     const [pending, setPending] = useState(true);
 

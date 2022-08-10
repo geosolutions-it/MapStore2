@@ -13,6 +13,7 @@ import {semaphore, wrapEpics} from "./EpicsUtils";
 import ConfigUtils from './ConfigUtils';
 import isEmpty from 'lodash/isEmpty';
 import {BehaviorSubject, Subject} from 'rxjs';
+import {normalizeName} from "./PluginsUtils";
 
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
@@ -191,20 +192,21 @@ export const createStoreManager = (initialReducers, initialEpics) => {
         // Adds a new epics set, mutable by the specified key
         addEpics: (key, epicsList) => {
             if (Object.keys(epicsList).length) {
-                muteState[key] = new Subject();
-                const isolatedEpics = isolateEpics(epicsList, muteState[key].asObservable());
+                const normalizedName = normalizeName(key);
+                muteState[normalizedName] = new Subject();
+                const isolatedEpics = isolateEpics(epicsList, muteState[normalizedName].asObservable());
                 wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
             }
         },
         // Mute epics set with a specified key
         muteEpics: (key) => {
-            if (typeof muteState[`${key}Plugin`] !== 'undefined') {
-                muteState[`${key}Plugin`].next(false);
+            if (typeof muteState[key] !== 'undefined') {
+                muteState[key].next(false);
             }
         },
         unmuteEpics: (key) => {
-            if (typeof muteState[`${key}Plugin`] !== 'undefined') {
-                muteState[`${key}Plugin`].next(true);
+            if (typeof muteState[key] !== 'undefined') {
+                muteState[key].next(true);
             }
         },
         rootEpic: (...args) => epic$.mergeMap(e => e(...args))

@@ -59,7 +59,7 @@ function loadScript(src) {
         },
         shared
     })],
- * @param {sting} scope the scope
+ * @param {string} scope the scope
  * @param {string} module the module
  */
 /* eslint-disable */
@@ -139,7 +139,7 @@ export const filterState = memoize((state, monitor) => {
 
 const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.substring(0, plugin.length - 6) || plugin;
 
-const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
+export const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
 
 export const getPluginsConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
