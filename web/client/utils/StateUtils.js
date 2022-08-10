@@ -134,7 +134,10 @@ export const createStoreManager = (initialReducers, initialEpics) => {
     // Create the initial combinedReducer
     let combinedReducer = combineReducers(reducers);
 
-    const epic$ = new BehaviorSubject(combineEpics(...wrapEpics(epics)));
+    const subject = new Subject();
+    subject.next(true);
+    const isolated = isolateEpics(epics, subject.asObservable());
+    const epic$ = new BehaviorSubject(combineEpics(...wrapEpics(isolated)));
 
     // An array which is used to delete state keys when reducers are removed
     let keysToRemove = [];
