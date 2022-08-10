@@ -119,7 +119,7 @@ export const getState = (name) => {
 };
 
 const isolateEpics = (epics, muteState$) => {
-    const isolateEpic = (epic) => (action$, store) => epic(action$.let(semaphore(muteState$.startWith(true))), store).let(semaphore(
+    const isolateEpic = (epic) => (action$, store) => epic(action$.let(semaphore(muteState$.startWith(true))), store, muteState$).let(semaphore(
         muteState$.startWith(true)
     ));
     return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic) }), {});
