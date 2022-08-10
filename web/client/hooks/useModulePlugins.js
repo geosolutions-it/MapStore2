@@ -113,13 +113,15 @@ function useModulePlugins({
 
     useEffect(() => {
         const store = getStore();
-        Object.keys(pluginsCache).forEach((plugin) => {
-            if (!pluginsKeys.includes(plugin)) {
-                store.storeManager.muteEpics(plugin);
-            } else {
-                store.storeManager.unmuteEpics(plugin);
-            }
-        });
+        if (store.storeManager) {
+            Object.keys(pluginsCache).forEach((plugin) => {
+                if (!pluginsKeys.includes(plugin)) {
+                    store.storeManager.muteEpics(plugin);
+                } else {
+                    store.storeManager.unmuteEpics(plugin);
+                }
+            });
+        }
     }, [pluginsString]);
 
     return { plugins, pending };

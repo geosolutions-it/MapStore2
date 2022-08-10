@@ -11,31 +11,47 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {toModulePlugin} from "../../utils/ModulePluginsUtils";
 import useModulePlugins from "../useModulePlugins";
-
-const pluginConfig = [
-    'ExamplePlugin'
-];
-
-const pluginEntries = {
-    ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy'))
-};
-
-const Component = ({onLoaded}) => {
-    const { plugins: loadedPlugins, pending } = useModulePlugins({
-        pluginsEntries: pluginEntries,
-        pluginsConfig: pluginConfig
-    });
-    if (!pending) onLoaded(loadedPlugins);
-    return false;
-};
-
+import {getStore, setStore} from "../../utils/StateUtils";
 
 describe('useModulePlugins hook', () => {
+    const originalStore = getStore();
+    const store = {
+        dispatch() { },
+        getState: () => {
+            return {};
+        },
+        subscribe() {
+        },
+        replaceReducer: () => { },
+        storeManager: {
+            reduce: () => {},
+            addReducer: () => {},
+            removeReducer: () => {},
+            addEpics: () => {},
+            muteEpics: () => {},
+            unmuteEpics: () => {},
+            rootEpic: () => {}
+        }
+    };
+    const Component = ({onLoaded}) => {
+        const { plugins: loadedPlugins, pending } = useModulePlugins({
+            pluginsEntries: {
+                ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy'))
+            },
+            pluginsConfig: [
+                'ExamplePlugin'
+            ]
+        });
+        if (!pending) onLoaded(loadedPlugins);
+        return false;
+    };
     beforeEach((done) => {
+        setStore(store);
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
     afterEach((done) => {
+        setStore(originalStore);
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);

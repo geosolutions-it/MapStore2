@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
 import withModulePlugins from '../withModulePlugins';
 import {toModulePlugin} from "../../../../utils/ModulePluginsUtils";
-import {setStore} from "../../../../utils/StateUtils";
+import {setStore, getStore} from "../../../../utils/StateUtils";
 
 const pluginConfig = [
     'ExamplePlugin'
@@ -36,6 +36,7 @@ const wrapWithStore = (Component, store) => {
 };
 
 describe('withModulePlugins enhancer', () => {
+    const originalStore = getStore();
     let registeredEpics = {};
     let registeredReducers = {};
 
@@ -61,14 +62,15 @@ describe('withModulePlugins enhancer', () => {
             rootEpic: () => {}
         }
     };
-    setStore(store);
     beforeEach((done) => {
+        setStore(store);
         document.body.innerHTML = '<div id="container"></div>';
         registeredEpics = {};
         registeredReducers = {};
         setTimeout(done);
     });
     afterEach((done) => {
+        setStore(originalStore);
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
