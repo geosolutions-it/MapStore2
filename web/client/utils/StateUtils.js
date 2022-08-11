@@ -203,13 +203,15 @@ export const createStoreManager = (initialReducers, initialEpics) => {
         },
         // Mute epics set with a specified key
         muteEpics: (key) => {
-            if (typeof muteState[key] !== 'undefined') {
-                muteState[key].next(false);
+            const normalizedName = normalizeName(key);
+            if (typeof muteState[normalizedName] !== 'undefined') {
+                muteState[normalizedName].next(false);
             }
         },
         unmuteEpics: (key) => {
-            if (typeof muteState[key] !== 'undefined') {
-                muteState[key].next(true);
+            const normalizedName = normalizeName(key);
+            if (typeof muteState[normalizedName] !== 'undefined') {
+                muteState[normalizedName].next(true);
             }
         },
         rootEpic: (...args) => epic$.mergeMap(e => e(...args))
