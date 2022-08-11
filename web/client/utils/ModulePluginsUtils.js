@@ -22,6 +22,16 @@ export function toModulePlugin(name, implementationFunction, options = {override
         return implementationFunction().then((mod) => {
             const impl = options.exportedName && mod[options.exportedName] ? mod[options.exportedName] : mod.default;
             const pluginName = normalizeName(name);
+
+            // This is needed for compatibility with syntax used by extensions
+            // createPlugin utility is not used there, but exported object has no property called PluginNamePlugin
+            // instead of it, it looks exactly just like object built by createPlugin
+            if (!impl[pluginName] && impl.component) {
+                return {
+                    'default': impl
+                };
+            }
+
             if (!isFunction(impl[pluginName])) {
                 const {
                     enabler,
