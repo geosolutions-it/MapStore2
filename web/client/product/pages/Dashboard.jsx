@@ -37,7 +37,8 @@ class DashboardPage extends React.Component {
         checkLoggedUser: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object,
-        name: PropTypes.string
+        name: PropTypes.string,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -77,6 +78,7 @@ class DashboardPage extends React.Component {
             includeCommon={false}
             plugins={this.props.plugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }

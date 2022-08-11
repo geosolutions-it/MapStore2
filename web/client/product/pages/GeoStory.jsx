@@ -40,6 +40,7 @@ class GeoStoryPage extends React.Component {
         loadResource: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object,
+        loaderComponent: PropTypes.func,
         canEdit: PropTypes.bool,
         location: PropTypes.object,
         history: PropTypes.object,
@@ -89,6 +90,7 @@ class GeoStoryPage extends React.Component {
             includeCommon={false}
             plugins={this.props.plugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 

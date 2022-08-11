@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import assign from 'object-assign';
+import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
+import { connect } from 'react-redux';
+
 import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 import { getMonitoredState } from '../utils/PluginsUtils';
@@ -21,7 +22,7 @@ const PluginsContainer = connect((state) => ({
         layerSettings: state.layers.settings
     }),
     monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer').default);
+}))(ModulePluginsContainer);
 
 class Embedded extends React.Component {
     static propTypes = {
