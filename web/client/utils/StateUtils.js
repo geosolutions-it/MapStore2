@@ -270,3 +270,24 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
     const epic = rootEpic || combineEpics(...wrapEpics(epics));
     (epicMiddleware || fetchMiddleware()).replaceEpic(epic);
 };
+
+/**
+ * Updates a Redux store with new reducers and epics.
+ * Needed by the dynamic plugins loading system, to update the application store with new reducers and epics exported by the plugins.
+ *
+ * If you want to add replace current reducers / epics with new ones, use updateStore instead.
+ *
+ * @param {object} options options to update
+ * @param {object} options.reducers list of reducers to add.
+ * @param {object} options.epics list of epics to add.
+ * @param {object} store the store to update, if not specified, the persisted one will be used
+ * @deprecated in favor of store.storeManager.addReducer & store.storeManager.addEpics
+ */
+export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
+    const persistedStore = store || getStore();
+    Object.keys(reducers).forEach((key) => {
+        persistedStore.storeManager.addReducer(key, reducers[key]);
+    });
+    persistedStore.dispatch({type: 'REDUCERS_LOADED'});
+    persistedStore.storeManager.addEpics('notMutable', wrapEpics(epics));
+};
