@@ -162,6 +162,11 @@ The Upload Service is responsible for unzipping the bundle, storing javascript a
 * `extensions.json` (the extensions registry)
 * `pluginsConfig.json.patch` (the context creator plugins catalog patch file)
 
+### Updating Extensions
+
+Please refer to the [How to update extensions](../../user-guide/application-context/#how-to-update-extensions) section of user guide to get more information about extensions update workflow.
+
+
 ### Extensions and datadir
 
 Extensions work better if you use a [datadir](externalized-configuration.md#externalized-configuration), because when a datadir is configured,
