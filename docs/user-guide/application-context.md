@@ -123,6 +123,35 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 * The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins) in another page.
 
 
+### How to update extensions
+
+Extension can be updated using two steps:
+
+- Old extension removal.
+
+- Uploading and installation of the new version of extension.
+
+As previously stated, extension can be removed on "Configure Plugins" step of wizard using **Delete** button <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>.
+
+<img src="../img/application-context/upload_plugin2.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+At this point extension will be removed from application completely. Save context after extension removal only if you want
+to be sure that extension will not be activated for the context if it's reinstalled at some point.
+
+Do not save context and upload new version of extension right away after old version removal. Context don't need to be saved after new version installation.
+
+With all stated above, complete workflow is:
+
+- Open context editing and jump to the "Configure Plugins" step of the wizard.
+
+- Delete old version of extension using **Delete** button <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>.
+
+- Upload and install new version of extension using the **Add extension to MapStore** button <img src="../img/button/upload-button.jpg" class="ms-docbutton"/>
+
+- Do not save context, close wizard.
+
+Existing configuration of extension (default or customized) will be preserved for all the contexts using extension.
+
 ## Configure Theme
 
 The last wizard steps allows to configure the theme to use for a context. A dropdown allows to select one of the available themes (see the [Styling and Theming](../developer-guide/customize-theme.md) section of the online documentation to know how to create and include additional themes to MapStore). By default in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) a **default** and a **dark** themes are available.
