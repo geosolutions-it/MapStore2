@@ -88,32 +88,40 @@ class Context extends React.Component {
         },
         wrappedContainer: MapViewerContainer
     };
-    UNSAFE_componentWillMount() {
-        const params = this.props.match.params;
-        this.oldTitle = document.title;
-        this.props.loadContext(params);
-    }
+
+    state = {};
+
     componentDidUpdate(oldProps) {
-        const paramsChanged = !isEqual(this.props.match.params, oldProps.match.params);
-        const newParams = this.props.match.params;
+        if (!this.state.loading) {
+            const paramsChanged = !isEqual(this.props.match.params, oldProps.match.params);
+            const newParams = this.props.match.params;
 
-        if (paramsChanged) {
-            this.props.loadContext(newParams);
-        }
+            if (paramsChanged) {
+                this.props.loadContext(newParams);
+            }
 
-        if (this.props.windowTitle) {
-            document.title = this.props.windowTitle;
+            if (this.props.windowTitle) {
+                document.title = this.props.windowTitle;
+            }
         }
     }
     componentWillUnmount() {
         document.title = this.oldTitle;
         this.props.reset();
     }
+    getConfig = (loading) => {
+        if (!loading) {
+            const params = this.props.match.params;
+            this.oldTitle = document.title;
+            this.props.loadContext(params);
+        }
+        this.setState({ loading });
+    }
     render() {
         return (
             <>
                 <ConnectedContextTheme />
-                <MapViewerCmp {...this.props} />
+                <MapViewerCmp {...this.props} onLoading={this.getConfig}/>
             </>
         );
     }

@@ -31,7 +31,8 @@ class Page extends React.Component {
         plugins: PropTypes.object,
         loaderComponent: PropTypes.func,
         component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        includeCommon: PropTypes.bool
+        includeCommon: PropTypes.bool,
+        onLoading: PropTypes.func
     };
 
     static defaultProps = {
@@ -69,6 +70,7 @@ class Page extends React.Component {
             plugins={this.props.plugins}
             params={this.props.params}
             loaderComponent={this.props.loaderComponent}
+            onLoading={this.props.onLoading}
         />);
     }
 }

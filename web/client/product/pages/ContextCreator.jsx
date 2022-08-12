@@ -43,22 +43,27 @@ class ContextCreator extends React.Component {
         reset: () => {}
     };
 
-    UNSAFE_componentWillMount() {
-        const contextId = get(this.props, "match.params.contextId");
-        this.props.reset();
-        this.props.loadContext(contextId);
-    }
     componentDidUpdate(oldProps) {
-        const contextId = get(this.props, "match.params.contextId");
-        const oldContextId = get(oldProps, "match.params.contextId");
-        if (contextId !== oldContextId) {
-            this.props.reset();
-            this.props.loadContext(contextId);
+        if (!this.state.loading) {
+            const contextId = get(this.props, "match.params.contextId");
+            const oldContextId = get(oldProps, "match.params.contextId");
+            if (contextId !== oldContextId) {
+                this.props.reset();
+                this.props.loadContext(contextId);
+            }
         }
     }
     componentWillUnmount() {
         this.props.reset();
     }
+    getConfig = (loading) => {
+        if (!loading) {
+            const contextId = get(this.props, "match.params.contextId");
+            this.props.reset();
+            this.props.loadContext(contextId);
+        }
+        this.setState({ loading });
+    };
     render() {
         return (<Page
             id="context-creator"
@@ -67,6 +72,7 @@ class ContextCreator extends React.Component {
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
+            onLoading={this.getConfig}
         />);
     }
 }

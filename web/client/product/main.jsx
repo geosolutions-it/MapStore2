@@ -29,7 +29,7 @@ import catalog from '../reducers/catalog';
 import security from '../reducers/security';
 import mousePosition from "../reducers/mousePosition";
 import annotations from "../reducers/annotations";
-
+import print from "../reducers/print";
 
 import { versionSelector } from '../selectors/version';
 import { loadAfterThemeSelector } from '../selectors/config';
@@ -81,6 +81,7 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 security,
                 mousePosition,
                 annotations,
+                print,
                 ...configAppReducers
             }),
 

@@ -57,7 +57,7 @@ class MapsPage extends React.Component {
     render() {
         return (<Page
             id="maps"
-            onMount={this.props.loadMaps}
+            onLoading={loading => !loading && this.props.loadMaps()}
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
