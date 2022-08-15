@@ -17,7 +17,7 @@ function cleanEpics(epics, excludedNames = []) {
  * @param {function(): Promise} implementationFunction - implementation function performing import of the plugin component
  * @param {{}|{overrides: {}, exportedName: string}} options
  */
-export function toModulePlugin(name, implementationFunction, options = {overrides: {}, exportedName: 'default'}) {
+export function toModulePlugin(name, implementationFunction, options = {overrides: {}, exportedName: 'default', priority: 10}) {
     const getModulePlugin = () => {
         return implementationFunction().then((mod) => {
             const impl = options.exportedName && mod[options.exportedName] ? mod[options.exportedName] : mod.default;
@@ -64,6 +64,7 @@ export function toModulePlugin(name, implementationFunction, options = {override
         });
     };
     getModulePlugin.isModulePlugin = true;
+    getModulePlugin.priority = options.priority ?? 10;
     return getModulePlugin;
 }
 

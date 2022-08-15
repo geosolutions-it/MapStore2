@@ -28,7 +28,7 @@ const getPluginsConfig = ({pluginsConfig: config, mode = 'desktop', defaultMode}
  */
 const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Component) => ({ onLoading = () => {}, pluginsConfig, plugins = {}, loaderComponent = () => null, ...props }) => {
     const config = getPluginsConfigCallback({pluginsConfig, ...props});
-    const { plugins: loadedPlugins, pending } = useModulePlugins({
+    const { plugins: loadedPlugins, pending, loadedPriorities } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
         pluginsConfig: config
     });
@@ -38,10 +38,10 @@ const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Comp
     const Loader = loaderComponent;
 
     useEffect(() => {
-        onLoading(loading);
-    }, [loading]);
+        onLoading(loadedPriorities.length === 0);
+    }, [loading, loadedPriorities]);
 
-    return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
+    return !loadedPriorities.length ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
 };
 
 

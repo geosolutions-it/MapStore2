@@ -7,10 +7,10 @@
  */
 
 import {useEffect, useMemo, useState} from 'react';
-import {createPlugin, getPlugins, isMapStorePlugin} from '../utils/PluginsUtils';
+import {createPlugin, getPlugins, isMapStorePlugin, normalizeName} from '../utils/PluginsUtils';
 import {getStore} from '../utils/StateUtils';
 import join from 'lodash/join';
-import {size} from "lodash";
+import {omit, size, toInteger} from "lodash";
 
 function filterRemoved(registry, removed = []) {
     return Object.keys(registry).reduce((acc, p) => {
@@ -41,6 +41,8 @@ function useModulePlugins({
 }) {
     const [plugins, setPlugins] = useState(storedPlugins);
     const [pending, setPending] = useState(true);
+    const [loadedPriorities, setLoadedPriorities] = useState([]);
+    const [prioritisedItems, setPrioritisedItems] = useState({});
 
     const pluginsKeys = useMemo(() => pluginsConfig.reduce((prev, curr) => {
         const key = curr?.name ?? curr;
@@ -52,6 +54,14 @@ function useModulePlugins({
         return prev;
     }, []),
     [pluginsConfig]);
+    const configPriorities = useMemo(() => pluginsConfig.reduce((prev, curr) => {
+        const key = curr?.name;
+        if (key && curr?.loadPriority) {
+            return {...prev, [normalizeName(key)]: curr?.loadPriority};
+        }
+        return prev;
+    }, {}),
+    [pluginsConfig]);
     const pluginsString = join(pluginsKeys, ',');
 
     useEffect(() => {
@@ -59,13 +69,39 @@ function useModulePlugins({
             .filter((pluginName) => !pluginsCache[pluginName]);
         if (filteredPluginsKeys.length > 0) {
             setPending(true);
-            const loadPlugins = filteredPluginsKeys
-                .map(pluginName => {
-                    return pluginsEntries[pluginName]().then((mod) => {
+            const prioritizedItems = filteredPluginsKeys
+                .reduce((prev, pluginName) => {
+                    const priority = configPriorities[pluginName] ?? pluginsEntries[pluginName].priority;
+                    return {...prev, [priority]: [...(prev[priority] ?? []), () => pluginsEntries[pluginName]().then((mod) => {
                         return mod.default;
-                    });
-                });
-            Promise.all(loadPlugins)
+                    })]};
+                }, {});
+            setLoadedPriorities([]);
+            setPrioritisedItems(prioritizedItems);
+        } else {
+            setPlugins(storedPlugins);
+            setPending(false);
+        }
+    }, [ pluginsString ]);
+
+    useEffect(() => {
+        const store = getStore();
+        if (store.storeManager) {
+            Object.keys(pluginsCache).forEach((plugin) => {
+                if (!pluginsKeys.includes(plugin)) {
+                    store.storeManager.muteEpics(plugin);
+                } else {
+                    store.storeManager.unmuteEpics(plugin);
+                }
+            });
+        }
+    }, [pluginsString]);
+
+    useEffect(() => {
+        const keys = Object.keys(prioritisedItems).map(el => toInteger(el));
+        if (keys.length) {
+            const keyToLoad = Math.min(...keys);
+            Promise.all(prioritisedItems[keyToLoad].map(el => el()))
                 .then((impls) => {
                     const store = getStore();
                     impls.forEach(impl => {
@@ -99,32 +135,20 @@ function useModulePlugins({
                         ...newPlugins
                     };
                     setPlugins(storedPlugins);
-                    setPending(false);
+                    if (keys.length === 1) {
+                        setPending(false);
+                    }
+                    setLoadedPriorities([...loadedPriorities, keyToLoad]);
+                    setPrioritisedItems(omit(prioritisedItems, keyToLoad));
                 })
                 .catch(() => {
                     setPlugins({});
                     setPending(false);
                 });
-        } else {
-            setPlugins(storedPlugins);
-            setPending(false);
         }
-    }, [ pluginsString ]);
+    }, [prioritisedItems]);
 
-    useEffect(() => {
-        const store = getStore();
-        if (store.storeManager) {
-            Object.keys(pluginsCache).forEach((plugin) => {
-                if (!pluginsKeys.includes(plugin)) {
-                    store.storeManager.muteEpics(plugin);
-                } else {
-                    store.storeManager.unmuteEpics(plugin);
-                }
-            });
-        }
-    }, [pluginsString]);
-
-    return { plugins, pending };
+    return { plugins, pending, loadedPriorities };
 }
 
 export default useModulePlugins;
