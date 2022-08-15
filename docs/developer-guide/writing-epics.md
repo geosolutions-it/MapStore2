@@ -197,7 +197,7 @@ const fetchDataEpic = (action$, store) => action$
     );
 ```
 
-### Muted epics: how to mute internal streams
+## Muted epics: how to mute internal streams
 
 MapStore will mute all the epics whenever corresponding plugin or extension is not rendered on the page.
 Though, it might be the case that one of your epics will return internal stream, like in example below:
