@@ -52,7 +52,9 @@ export const generalInfoFormatSelector = (state) => get(state, "mapInfo.configur
 export const showEmptyMessageGFISelector = (state) => get(state, "mapInfo.configuration.showEmptyMessageGFI", true);
 export const mapInfoConfigurationSelector = (state) => get(state, "mapInfo.configuration", {});
 
-export const measureActiveSelector = (state) => get(state, "controls.measure.enabled") && (get(state, "measurement.lineMeasureEnabled") || get(state, "measurement.areaMeasureEnabled") || get(state, "measurement.bearingMeasureEnabled"));
+export const measureActiveSelector = (state) =>
+    !!(isCesium(state) && get(state, "controls.measure.enabled") && get(state, "measurement.geomType"))
+    || get(state, "controls.measure.enabled") && (get(state, "measurement.lineMeasureEnabled") || get(state, "measurement.areaMeasureEnabled") || get(state, "measurement.bearingMeasureEnabled"));
 /**
  * Clicked point of mapInfo
  * @param {object} state the state

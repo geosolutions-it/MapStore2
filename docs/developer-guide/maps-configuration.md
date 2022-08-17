@@ -1154,18 +1154,15 @@ In order to create a `wms` based mesh there are some requirements that need to b
 - A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
   - BILTerrainProvider is used to parse `wms` based mesh. Supports three ways in parsing the metadata of the layer
     1. Layer configuration with **sufficient metadata** of the layer. This prevents a call to `getCapabilities` eventually improving performance of the parsing of the layer.
-        Mandatory fields are `url`, `name`, `version`, `crs`.
+        Mandatory fields are `url`, `name`, `crs`.
     ```json
     {
       "type": "terrain",
       "provider": "wms",
       "url": "http://hot-sample/geoserver/wms",
       "name": "workspace:layername", 
-      "littleendian": false,
+      "littleEndian": false,
       "visibility": true,
-      "version": "1.3.0",
-      "fixedHeight": null, // Map height. Max value is < 65
-      "fixedWidth": null, // Map width. Max value is < 65
       "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
     }
     ```
@@ -1176,7 +1173,7 @@ In order to create a `wms` based mesh there are some requirements that need to b
     "provider": "wms",
     "url": "https://host-sample/geoserver/wms", // 'geoserver' url
     "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
-    "littleendian": false
+    "littleEndian": false
     }
     ```
     3. Layer configuration of geoserver layer with layer name _not prefixed with workspace_ then `getCapabilities` is requested in global scope.
@@ -1186,21 +1183,33 @@ In order to create a `wms` based mesh there are some requirements that need to b
       "provider": "wms",
       "url": "https://host-sample/geoserver/wms",
       "name": "layername",
-      "littleendian": false
+      "littleEndian": false
     }
     ```
 !!! note
 With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
 
-Generic layer configuration of type `terrain` and provide `wms` is as follows. 
-The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider:
+Generic layer configuration of type `terrain` and provide `wms` as follows. 
+The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider, here all available properties:
 ```json
 { 
   "type": "terrain",
   "provider": "wms",
   "url": "https://host-sample/geoserver/wms",
   "name": "workspace:layername", // name of the geoserver resource
-  "littleendian": false
+  "littleEndian": false, // defines whether buffer is in little or big endian
+  "visibility": true,
+  // optional properties
+  "crs": "CRS:84", // projection of the layer, support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
+  "version": "1.3.0", // version used for the WMS request
+  "heightMapWidth": 65, // width  of a tile in pixels, default value 65
+  "heightMapHeight": 65, // height of a tile in pixels, default value 65
+  "waterMask": false,
+  "offset": 0, // offset of the tiles (in meters)
+  "highest": 12000, // highest altitude in the tiles (in meters)
+  "lowest": -500, // lowest altitude in the tiles
+  "sampleTerrainZoomLevel": 18 // zoom level used to perform sampleTerrain and get the height value given a point, used by measure components
+  
 }
 ```
 
@@ -1229,9 +1238,9 @@ In order to use these layers they need to be added to the `additionalLayers` in 
             "provider": "wms",
             "url": "https://host-sample/geoserver/wms",
             "name": "workspace:layername",  // name of the geoserver resource
-            "format": "application/bil16",
-            "littleendian": false,
-            "visibility": true
+            "littleEndian": false,
+            "visibility": true,
+            "crs": "CRS:84"
         }]
     }
 }

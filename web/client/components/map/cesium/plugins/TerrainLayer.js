@@ -8,9 +8,8 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
-import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
+import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTerrainProvider';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
-const BILTerrainProvider = createBILTerrainProvider(Cesium);
 
 function cesiumOptionsMapping(config) {
     return {
@@ -28,7 +27,7 @@ const createLayer = (config, map) => {
     let terrainProvider;
     switch (config.provider) {
     case 'wms': {
-        terrainProvider = new BILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(config));
+        terrainProvider = new GeoServerBILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(config));
         break;
     }
     case 'cesium': {

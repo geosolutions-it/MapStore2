@@ -109,3 +109,50 @@
         }
     }
 }
+
+.ms-measure-toolbar {
+    position: absolute;
+    z-index: 100;
+    right: 46px;
+    margin: 0;
+    top: 48px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    .shadow();
+    .ms-measure-icon {
+        padding: 0 6px;
+        font-size: 15px;
+    }
+}
+
+.ms-measure-info {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    .rw-dropdownlist {
+        width: 80px;
+        .rw-input {
+            line-height: 30px;
+            height: 30px;
+        }
+    }
+    .measure-value {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+}
+
+#measure-container {
+    .ms-measure-icon {
+        display: none;
+    }
+    .ms-measure-toolbar {
+        box-shadow: none;
+        position: static;
+        padding-left: 18px;
+    }
+}

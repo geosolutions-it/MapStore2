@@ -8,6 +8,78 @@
 
 import { isArray, head, isNaN } from 'lodash';
 
+export const MeasureTypes = {
+    LENGTH: 'length',
+    AREA: 'area',
+    POINT_COORDINATES: 'POINT_COORDINATES',
+    HEIGHT_FROM_TERRAIN: 'HEIGHT_FROM_TERRAIN',
+    POLYLINE_DISTANCE_3D: 'POLYLINE_DISTANCE_3D',
+    AREA_3D: 'AREA_3D',
+    SLOPE: 'SLOPE',
+    ANGLE_3D: 'ANGLE_3D'
+};
+
+export const defaultUnitOfMeasure = {
+    [MeasureTypes.LENGTH]: { unit: 'm', label: 'm', value: 'm' },
+    [MeasureTypes.AREA]: { unit: 'sqm', label: 'm²', value: 'sqm' },
+    [MeasureTypes.POLYLINE_DISTANCE_3D]: { unit: 'm', label: 'm', value: 'm' },
+    [MeasureTypes.AREA_3D]: { unit: 'sqm', label: 'm²', value: 'sqm' },
+    [MeasureTypes.POINT_COORDINATES]: { unit: 'm', label: 'm', value: 'm' },
+    [MeasureTypes.HEIGHT_FROM_TERRAIN]: { unit: 'm', label: 'm', value: 'm' },
+    [MeasureTypes.SLOPE]: { unit: 'deg', label: '°', value: 'deg' },
+    [MeasureTypes.ANGLE_3D]: { unit: 'deg', label: '°', value: 'deg' }
+};
+
+export const measureIcons = {
+    [MeasureTypes.POLYLINE_DISTANCE_3D]: 'polyline-3d',
+    [MeasureTypes.AREA_3D]: 'polygon-3d',
+    [MeasureTypes.POINT_COORDINATES]: 'point-coordinates',
+    [MeasureTypes.HEIGHT_FROM_TERRAIN]: 'height-from-terrain',
+    [MeasureTypes.ANGLE_3D]: 'angle',
+    [MeasureTypes.SLOPE]: 'slope'
+};
+
+export const defaultUnitOfMeasureOptions = {
+    [MeasureTypes.POLYLINE_DISTANCE_3D]: [
+        { value: 'ft', label: 'ft' },
+        { value: 'm', label: 'm' },
+        { value: 'km', label: 'km' },
+        { value: 'mi', label: 'mi' },
+        { value: 'nm', label: 'nm' }
+    ],
+    [MeasureTypes.AREA_3D]: [
+        { value: 'sqft', label: 'ft²' },
+        { value: 'sqm', label: 'm²' },
+        { value: 'sqkm', label: 'km²' },
+        { value: 'sqmi', label: 'mi²' },
+        { value: 'sqnm', label: 'nm²' }
+    ],
+    [MeasureTypes.HEIGHT_FROM_TERRAIN]: [
+        { value: 'ft', label: 'ft' },
+        { value: 'm', label: 'm' }
+    ],
+    [MeasureTypes.ANGLE_3D]: [
+        { value: 'deg', label: '°' },
+        { value: 'rad', label: 'rad' }
+    ],
+    [MeasureTypes.SLOPE]: [
+        { value: 'deg', label: '°' },
+        { value: 'percentage', label: '%' }
+    ],
+    [MeasureTypes.POINT_COORDINATES]: [
+        { value: 'ft', label: 'ft' },
+        { value: 'm', label: 'm' }
+    ]
+};
+
+export const mapUomAreaToLength = {
+    sqft: { value: 'ft', label: 'ft' },
+    sqm: { value: 'm', label: 'm' },
+    sqkm: { value: 'km', label: 'km' },
+    sqmi: { value: 'mi', label: 'mi' },
+    sqnm: { value: 'nm', label: 'nm' }
+};
+
 export function degToDms(deg) {
     // convert decimal deg to minutes and seconds
     var d = Math.floor(deg);
@@ -146,7 +218,27 @@ export const CONVERSION_RATE = {
     }
 };
 
+const ANGLE_CONVERSIONS = {
+    deg: {
+        rad: value => value * Math.PI / 180,
+        percentage: value => Math.round(Math.tan(value * Math.PI / 180) * 100)
+    },
+    rad: {
+        deg: value => value * 180 / Math.PI,
+        percentage: value => Math.round(Math.tan(value) * 100)
+    },
+    percentage: {
+        deg: value => Math.atan(value / 100) * 180 / Math.PI,
+        rad: value => Math.atan(value / 100)
+    }
+};
+
 export function convertUom(value, source = "m", dest = "m") {
+
+    if (ANGLE_CONVERSIONS[source] && ANGLE_CONVERSIONS[source][dest]) {
+        return ANGLE_CONVERSIONS[source][dest](value);
+    }
+
     if (!!CONVERSION_RATE[source] && !!CONVERSION_RATE[source][dest]) {
         return value * CONVERSION_RATE[source][dest];
     }

@@ -9,7 +9,6 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-dom/test-utils';
 
 import MeasureDialog from '../MeasureDialog';
 
@@ -28,39 +27,23 @@ describe("test the MeasureDialog", () => {
     it('test component creation', () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureDialog show measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
-    });
-    it('test close', () => {
-        let measurement = {};
-        const handlers = {
-            onClose() {}
-        };
-        let spy = expect.spyOn(handlers, "onClose");
-        const mc = ReactDOM.render(<MeasureDialog show onClose={handlers.onClose} measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
-        const dom = ReactDOM.findDOMNode(mc);
-        const closeBtn = dom.getElementsByClassName('close')[0];
-        expect(closeBtn).toExist();
-        ReactTestUtils.Simulate.click(closeBtn);
-        expect(spy.calls.length).toBe(1);
+        expect(mc).toBeTruthy();
     });
     it('test default, render a modal', () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureDialog show measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
-        const dialog = document.getElementById('measure-dialog');
-        expect(dialog).toExist();
+        expect(mc).toBeTruthy();
+        const dialog = document.getElementById('measure-panel');
+        expect(dialog).toBeTruthy();
 
     });
     it('test render as side panel', () => {
         let measurement = {};
         const handlers = {
             onMount: () => {},
-            onInit: () => {},
             toggleMeasure: () => {}
         };
         let spyMount = expect.spyOn(handlers, "onMount");
-        let spyInit = expect.spyOn(handlers, "onInit");
         let spyToggleMeasure = expect.spyOn(handlers, "toggleMeasure");
 
         const showCoordinateEditor = true;
@@ -71,33 +54,28 @@ describe("test the MeasureDialog", () => {
                 showCoordinateEditor={showCoordinateEditor}
                 defaultOptions={defaultOptions}
                 onMount={handlers.onMount}
-                onInit={handlers.onInit}
                 toggleMeasure={handlers.toggleMeasure}
                 measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
         expect(btnGroups.length).toBe(3);
 
-        const dialog = document.getElementById('measure-dialog');
-        expect(dialog).toNotExist();
+        const dialog = document.getElementById('measure-container');
+        expect(dialog).toBeTruthy();
         expect(spyMount.calls.length).toBe(1);
         expect(spyMount).toHaveBeenCalledWith(showCoordinateEditor);
         expect(spyToggleMeasure.calls.length).toBe(1);
         expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "LineString"});
-        expect(spyInit.calls.length).toBe(1);
-        expect(spyInit).toHaveBeenCalledWith(defaultOptions);
     });
 
     it('test render as side panel with Bearing as default tool', () => {
         let measurement = {};
         const handlers = {
             onMount: () => {},
-            onInit: () => {},
             toggleMeasure: () => {}
         };
         let spyMount = expect.spyOn(handlers, "onMount");
-        let spyInit = expect.spyOn(handlers, "onInit");
         let spyToggleMeasure = expect.spyOn(handlers, "toggleMeasure");
 
         const showCoordinateEditor = true;
@@ -114,29 +92,25 @@ describe("test the MeasureDialog", () => {
                 onInit={handlers.onInit}
                 toggleMeasure={handlers.toggleMeasure}
                 measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
         expect(btnGroups.length).toBe(3);
 
-        const dialog = document.getElementById('measure-dialog');
-        expect(dialog).toNotExist();
+        const dialog = document.getElementById('measure-container');
+        expect(dialog).toBeTruthy();
         expect(spyMount.calls.length).toBe(1);
         expect(spyToggleMeasure.calls.length).toBe(1);
         expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "Bearing"});
-        expect(spyInit.calls.length).toBe(1);
-        expect(spyInit).toHaveBeenCalledWith(defaultOptions);
     });
 
     it('test render as modal with Bearing as default tool', () => {
         let measurement = {};
         const handlers = {
             onMount: () => {},
-            onInit: () => {},
             toggleMeasure: () => {}
         };
         let spyMount = expect.spyOn(handlers, "onMount");
-        let spyInit = expect.spyOn(handlers, "onInit");
         let spyToggleMeasure = expect.spyOn(handlers, "toggleMeasure");
 
         const defaultOptions = {
@@ -154,39 +128,15 @@ describe("test the MeasureDialog", () => {
                 onInit={handlers.onInit}
                 toggleMeasure={handlers.toggleMeasure}
                 measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
         expect(btnGroups.length).toBe(3);
 
-        const dialog = document.getElementById('measure-dialog');
-        expect(dialog).toExist();
+        const dialog = document.getElementById('measure-panel');
+        expect(dialog).toBeTruthy();
         expect(spyMount.calls.length).toBe(1);
         expect(spyToggleMeasure.calls.length).toBe(1);
         expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "Bearing"});
-        expect(spyInit.calls.length).toBe(1);
-        expect(spyInit).toHaveBeenCalledWith(defaultOptions);
-    });
-
-    it('should trigger onInit if defaultOptions are updated', () => {
-        const handler = {
-            onInit: () => {}
-        };
-        const spyInit = expect.spyOn(handler, "onInit");
-        const measurement = {};
-        ReactDOM.render(
-            <MeasureDialog
-                show
-                onInit={handler.onInit}
-                defaultOptions={{showAddAsAnnotation: true}}
-                measurement={measurement}/>, document.getElementById("container"));
-        expect(spyInit.calls.length).toBe(1);
-        ReactDOM.render(
-            <MeasureDialog
-                show
-                onInit={handler.onInit}
-                defaultOptions={{showAddAsAnnotation: false}}
-                measurement={measurement}/>, document.getElementById("container"));
-        expect(spyInit.calls.length).toBe(2);
     });
 });
