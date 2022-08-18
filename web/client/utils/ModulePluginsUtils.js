@@ -15,7 +15,7 @@ function cleanEpics(epics, excludedNames = []) {
  * Utility to convert static plugin into module plugin loaded dynamically on demand
  * @param {string} name - plugin name
  * @param {function(): Promise} implementationFunction - implementation function performing import of the plugin component
- * @param {{}|{overrides: {}, exportedName: string}} options
+ * @param {{}|{overrides: {}, exportedName: string, priority: number}} options
  */
 export function toModulePlugin(name, implementationFunction, options = {overrides: {}, exportedName: 'default', priority: 10}) {
     const getModulePlugin = () => {
@@ -81,3 +81,10 @@ export function getPlugins(plugins, type = 'static') {
             [name]: plugins[name]
         }), {});
 }
+
+export const onPluginsLoadedHandler = (loadedPlugins, requiredPlugins, callback, semaphore) => {
+    const pluginKeys = typeof loadedPlugins === 'object' ? Object.keys(loadedPlugins) : loadedPlugins;
+    if (requiredPlugins.every(elem => pluginKeys.includes(normalizeName(elem))) && !semaphore) {
+        callback();
+    }
+};

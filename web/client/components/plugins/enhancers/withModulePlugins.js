@@ -26,11 +26,12 @@ const getPluginsConfig = ({pluginsConfig: config, mode = 'desktop', defaultMode}
  * HOC to provide additional logic layer for module plugins loading and caching
  * @param {function(): string[]} getPluginsConfigCallback - callback to extract proper part of plugins configuration passed with `pluginsConfig` prop
  */
-const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Component) => ({ onLoading = () => {}, pluginsConfig, plugins = {}, loaderComponent = () => null, ...props }) => {
+const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Component) => ({ onPluginsLoaded = () => {}, pluginsConfig, plugins = {}, loaderComponent = () => null, ...props }) => {
     const config = getPluginsConfigCallback({pluginsConfig, ...props});
-    const { plugins: loadedPlugins, pending, loadedPriorities } = useModulePlugins({
+    const { plugins: loadedPlugins, loadedPriorities, pending } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
-        pluginsConfig: config
+        pluginsConfig: config,
+        reorderRequestsOnly: false
     });
     const parsedPlugins = useMemo(() => ({ ...loadedPlugins, ...getPlugins(plugins) }), [loadedPlugins]);
     const loading = pending;

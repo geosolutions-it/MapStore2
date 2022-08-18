@@ -24,7 +24,21 @@ function filterRemoved(registry, removed = []) {
     }, {});
 }
 
+function processReducersEpics(impls) {
+    const store = getStore();
+    impls.forEach(impl => {
+        if (size(impl.reducers)) {
+            Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
+        }
+        if (size(impl.epics)) {
+            store.storeManager.addEpics(impl.name, impl.epics);
+        }
+    });
+    store.dispatch({type: 'REDUCERS_LOADED'});
+}
+
 let storedPlugins = {};
+let processedPriorities = [];
 const pluginsCache = {};
 
 /**
@@ -32,16 +46,20 @@ const pluginsCache = {};
  * @param {object} pluginsEntries - object containing complete set of module plugins registered in app.
  * @param {array} pluginsConfig - list of the plugins should be loaded or fetched from cache
  * @param {array} removed - list of removed plugins
+ * @param reorderRequestsOnly - will sort promises creators prior to making requests, prioritised requests will be created first;
+ * if false - it will group promise creators by their priority, requests will be created in batches and only after previous priority
+ * requests are completely fulfilled.
  * @returns {{plugins: {}, pending: boolean}}
  */
 function useModulePlugins({
     pluginsEntries = {},
     pluginsConfig = [],
-    removed = []
+    removed = [],
+    reorderRequestsOnly = false
 }) {
     const [plugins, setPlugins] = useState(storedPlugins);
     const [pending, setPending] = useState(true);
-    const [loadedPriorities, setLoadedPriorities] = useState([]);
+    const [loadedPriorities, setLoadedPriorities] = useState(processedPriorities);
     const [prioritisedItems, setPrioritisedItems] = useState({});
 
     const pluginsKeys = useMemo(() => pluginsConfig.reduce((prev, curr) => {
@@ -69,14 +87,26 @@ function useModulePlugins({
             .filter((pluginName) => !pluginsCache[pluginName]);
         if (filteredPluginsKeys.length > 0) {
             setPending(true);
-            const prioritizedItems = filteredPluginsKeys
+            let prioritizedItems = filteredPluginsKeys
                 .reduce((prev, pluginName) => {
                     const priority = configPriorities[pluginName] ?? pluginsEntries[pluginName].priority;
                     return {...prev, [priority]: [...(prev[priority] ?? []), () => pluginsEntries[pluginName]().then((mod) => {
                         return mod.default;
                     })]};
                 }, {});
-            setLoadedPriorities([]);
+            if (reorderRequestsOnly) {
+                const tempItems = prioritizedItems;
+                prioritizedItems = {0: []};
+                Object.keys(tempItems).forEach(priority => {
+                    prioritizedItems[0].push(...tempItems[priority]);
+                });
+                processedPriorities.length = 0;
+                processedPriorities.push(0);
+                setLoadedPriorities(processedPriorities);
+            } else {
+                processedPriorities.length = 0;
+                setLoadedPriorities(processedPriorities);
+            }
             setPrioritisedItems(prioritizedItems);
         } else {
             setPlugins(storedPlugins);
@@ -101,50 +131,89 @@ function useModulePlugins({
         const keys = Object.keys(prioritisedItems).map(el => toInteger(el));
         if (keys.length) {
             const keyToLoad = Math.min(...keys);
-            Promise.all(prioritisedItems[keyToLoad].map(el => el()))
-                .then((impls) => {
-                    const store = getStore();
-                    impls.forEach(impl => {
-                        if (size(impl.reducers)) {
-                            Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
-                            store.dispatch({type: 'REDUCERS_LOADED'});
-                        }
-                        if (size(impl.epics)) {
-                            store.storeManager.addEpics(impl.name, impl.epics);
-                        }
-                    });
-                    return getPlugins({
-                        ...filterRemoved(impls.map(impl => {
-                            if (!isMapStorePlugin(impl?.component)) {
-                                // plugin similar to Toolbar implement a selector function
-                                // so need to be parsed separately
-                                return {
-                                    [impl.name + 'Plugin']: impl.component
-                                };
+            // Resolve promises one by one if it should only reorder requests
+            if (reorderRequestsOnly) {
+                prioritisedItems[keyToLoad].forEach((promiseCreator) => {
+                    promiseCreator()
+                        .then(implementation => {
+                            const impls = [implementation];
+                            processReducersEpics(impls);
+                            return getPlugins({
+                                ...filterRemoved(impls.map(impl => {
+                                    if (!isMapStorePlugin(impl?.component)) {
+                                        // plugin similar to Toolbar implement a selector function
+                                        // so need to be parsed separately
+                                        return {
+                                            [impl.name + 'Plugin']: impl.component
+                                        };
+                                    }
+                                    return createPlugin(impl.name, impl);
+                                }), removed)
+                            });
+                        })
+                        .then((newPlugins) => {
+                            Object.keys(newPlugins).forEach(pluginName => {
+                                pluginsCache[pluginName] = true;
+                            });
+                            storedPlugins = {
+                                ...storedPlugins,
+                                ...newPlugins
+                            };
+                            setPlugins(storedPlugins);
+                            if (keys.length === 1) {
+                                setPending(false);
                             }
-                            return createPlugin(impl.name, impl);
-                        }), removed)
-                    });
-                })
-                .then((newPlugins) => {
-                    Object.keys(newPlugins).forEach(pluginName => {
-                        pluginsCache[pluginName] = true;
-                    });
-                    storedPlugins = {
-                        ...storedPlugins,
-                        ...newPlugins
-                    };
-                    setPlugins(storedPlugins);
-                    if (keys.length === 1) {
-                        setPending(false);
-                    }
-                    setLoadedPriorities([...loadedPriorities, keyToLoad]);
-                    setPrioritisedItems(omit(prioritisedItems, keyToLoad));
-                })
-                .catch(() => {
-                    setPlugins({});
-                    setPending(false);
+                            processedPriorities.push(keyToLoad);
+                            setLoadedPriorities(processedPriorities);
+                            if (!reorderRequestsOnly) {
+                                setPrioritisedItems(omit(prioritisedItems, keyToLoad));
+                            }
+                        })
+                        .catch(() => {
+                            setPlugins({});
+                            setPending(false);
+                        });
                 });
+            } else {
+                Promise.all(prioritisedItems[keyToLoad].map(el => el()))
+                    .then((impls) => {
+                        processReducersEpics(impls);
+                        return getPlugins({
+                            ...filterRemoved(impls.map(impl => {
+                                if (!isMapStorePlugin(impl?.component)) {
+                                    // plugin similar to Toolbar implement a selector function
+                                    // so need to be parsed separately
+                                    return {
+                                        [impl.name + 'Plugin']: impl.component
+                                    };
+                                }
+                                return createPlugin(impl.name, impl);
+                            }), removed)
+                        });
+                    })
+                    .then((newPlugins) => {
+                        Object.keys(newPlugins).forEach(pluginName => {
+                            pluginsCache[pluginName] = true;
+                        });
+                        storedPlugins = {
+                            ...storedPlugins,
+                            ...newPlugins
+                        };
+                        setPlugins(storedPlugins);
+                        if (keys.length === 1) {
+                            setPending(false);
+                        }
+                        processedPriorities.push(keyToLoad);
+                        setLoadedPriorities(processedPriorities);
+                        if (!reorderRequestsOnly) {
+                            setPrioritisedItems(omit(prioritisedItems, keyToLoad));
+                        }
+                    })
+                    .catch(() => {
+                        setPlugins({});
+                        setPending(false);
+                    });
+            }
         }
     }, [prioritisedItems]);
 
