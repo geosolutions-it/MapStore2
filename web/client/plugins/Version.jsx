@@ -38,7 +38,7 @@ export default {
     VersionPlugin: assign(Version, {
         SidebarMenu: {
             name: 'version',
-            position: 2,
+            position: 4,
             priority: 1,
             doNotHide: true,
             tooltip: "version.label",

@@ -13,7 +13,6 @@ import castArray from 'lodash/castArray';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
-import { augmentStore } from '../../utils/StateUtils';
 import { LOAD_EXTENSIONS, PLUGIN_UNINSTALLED } from '../../actions/contextcreator';
 
 /**
@@ -93,7 +92,7 @@ function withExtensions(AppComponent) {
                 } else {
                     afterInit(config);
                 }
-            });
+            }, store);
         };
 
         getAssetPath = (asset) => {
@@ -145,15 +144,23 @@ function withExtensions(AppComponent) {
             }, {});
         };
 
-        loadExtensions = (path, callback) => {
+        loadExtensions = (path, callback, store) => {
             if (this.props.enableExtensions) {
+                let reducersLoaded = false;
                 return axios.get(path).then((response) => {
                     const plugins = response.data;
                     Promise.all(Object.keys(plugins).map((pluginName) => {
                         const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
                         return PluginsUtils.loadPlugin(bundlePath, pluginName).then((loaded) => {
                             const impl = loaded.plugin?.default ?? loaded.plugin;
-                            augmentStore({ reducers: impl?.reducers ?? {}, epics: impl?.epics ?? {} });
+
+                            if (impl?.isModulePlugin) {
+                                return { plugin: {[pluginName + 'Plugin']: impl}, translations: plugins[pluginName].translations || ""};
+                            }
+
+                            Object.keys(impl?.reducers ?? {}).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
+                            store.storeManager.addEpics(impl.name, impl?.epics ?? {});
+                            reducersLoaded = true;
                             const pluginDef = {
                                 [pluginName + "Plugin"]: {
                                     [pluginName + "Plugin"]: {
@@ -170,6 +177,9 @@ function withExtensions(AppComponent) {
                             return null;
                         });
                     })).then((loaded) => {
+                        if (reducersLoaded) {
+                            store.dispatch({type: 'REDUCERS_LOADED'});
+                        }
                         callback(
                             loaded
                                 .filter(l => l !== null) // exclude extensions that triggered errors

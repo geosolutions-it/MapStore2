@@ -14,11 +14,12 @@ const urlQuery = url.parse(window.location.href, true).query;
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 import BorderLayout from '../components/layout/BorderLayout';
+import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer').default);
+}))(ModulePluginsContainer);
 
 class HolyGrail extends React.Component {
     static propTypes = {

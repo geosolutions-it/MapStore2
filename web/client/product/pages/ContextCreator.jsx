@@ -32,7 +32,8 @@ class ContextCreator extends React.Component {
         match: PropTypes.object,
         loadContext: PropTypes.func,
         reset: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -65,6 +66,7 @@ class ContextCreator extends React.Component {
             includeCommon={false}
             plugins={this.props.plugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }

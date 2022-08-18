@@ -22,21 +22,7 @@ import {shareSelector} from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
 import {changeMapType} from '../actions/maptype';
 import {getCesiumViewerOptions, getParametersValues, getQueryActions, paramActions} from "../utils/QueryParamsUtils";
-
-/**
- * Semaphore function to skip epic processing under specific conditions
- * @param sem$
- * @param start
- * @param condition
- * @return {external:Observable}
- * */
-const semaphore = (sem$, start = true, condition = c=>c) =>
-    stream$ =>
-        stream$.withLatestFrom(
-            sem$.startWith(start)
-        )
-            .filter(([, s]) => condition(s))
-            .map(([e]) => e);
+import {semaphore} from "../utils/EpicsUtils";
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.

@@ -27,7 +27,8 @@ class ContextManager extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         reset: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        loaderComponent: PropTypes.func
     };
 
     static contextTypes = {
@@ -49,6 +50,7 @@ class ContextManager extends React.Component {
             className="manager"
             plugins={this.props.plugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }
