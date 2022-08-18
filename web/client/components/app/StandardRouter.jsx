@@ -66,25 +66,26 @@ class StandardRouter extends React.Component {
     renderAfterTheme() {
         return (
             <div className={this.props.className}>
-
                 <ThemeProvider {...this.props.themeCfg} version={this.props.version} onLoad={this.props.onThemeLoaded}>
-                    {this.props.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
-                        <ConnectedRouter history={history}>
-                            <div className="error-container">
-                                <ErrorBoundary
-                                    onError={e => {
-                                        /* eslint-disable no-console */
-                                        console.error(e);
-                                        /* eslint-enable no-console */
-                                    }}
-                                    FallbackComponent={ ErrorBoundaryFallbackComponent}>
-                                    {this.renderPages()}
-                                </ErrorBoundary>
-                            </div>
-                        </ConnectedRouter>
-                    </Localized>) :
-                        (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
-                            <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>)}
+                    <>
+                        <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+                            <ConnectedRouter history={history}>
+                                <div className="error-container">
+                                    <ErrorBoundary
+                                        onError={e => {
+                                            /* eslint-disable no-console */
+                                            console.error(e);
+                                            /* eslint-enable no-console */
+                                        }}
+                                        FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                        {this.renderPages()}
+                                    </ErrorBoundary>
+                                </div>
+                            </ConnectedRouter>
+                        </Localized>
+                        {!this.props.themeLoaded && <span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
+                            <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>}
+                    </>
                 </ThemeProvider>
                 <Debug/>
             </div>
