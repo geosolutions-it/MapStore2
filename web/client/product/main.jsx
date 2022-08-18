@@ -30,6 +30,7 @@ import security from '../reducers/security';
 import mousePosition from "../reducers/mousePosition";
 import annotations from "../reducers/annotations";
 import print from "../reducers/print";
+import userSession from "../reducers/usersession";
 
 import { versionSelector } from '../selectors/version';
 import { loadAfterThemeSelector } from '../selectors/config';
@@ -39,6 +40,17 @@ import {
     standardEpics,
     standardRootReducerFunc
 } from '../stores/defaultOptions';
+import {
+    autoSaveSessionEpicCreator, loadUserSessionEpicCreator,
+    reloadOriginalConfigEpic, removeUserSessionEpicCreator,
+    saveUserSessionEpicCreator,
+    stopSaveSessionEpic
+} from "../epics/usersession";
+
+const saveUserSessionEpic = saveUserSessionEpicCreator();
+const autoSaveSessionEpic = autoSaveSessionEpicCreator();
+const loadUserSessionEpic = loadUserSessionEpicCreator();
+const removeUserSessionEpic = removeUserSessionEpicCreator();
 
 export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
 
@@ -82,6 +94,8 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 mousePosition,
                 annotations,
                 print,
+                userSession,
+                // entities reducers
                 ...configAppReducers
             }),
 
@@ -96,6 +110,7 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 updateActiveDockEpic,
                 setSupportedLocales,
                 readQueryParamsOnMapEpic,
+                saveUserSessionEpic, autoSaveSessionEpic, stopSaveSessionEpic, loadUserSessionEpic, removeUserSessionEpic, reloadOriginalConfigEpic,
                 ...configAppEpics
             }),
 
