@@ -195,9 +195,16 @@ export const createStoreManager = (initialReducers, initialEpics) => {
         // Adds a new epics set, mutable by the specified key
         addEpics: (key, epicsList) => {
             if (Object.keys(epicsList).length) {
+                const epicsToAdd = Object.keys(epicsList).reduce((prev, current) => {
+                    if (!epics[current]) {
+                        epics[current] = epicsList[current];
+                        return ({...prev, [current]: epicsList[current]});
+                    }
+                    return prev;
+                }, {});
                 const normalizedName = normalizeName(key);
                 muteState[normalizedName] = new Subject();
-                const isolatedEpics = isolateEpics(epicsList, muteState[normalizedName].asObservable());
+                const isolatedEpics = isolateEpics(epicsToAdd, muteState[normalizedName].asObservable());
                 wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
             }
         },
