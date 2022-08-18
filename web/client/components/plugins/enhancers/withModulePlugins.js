@@ -42,7 +42,7 @@ const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Comp
         onPluginsLoaded(parsedPlugins);
     }, [loading, loadedPriorities]);
 
-    return !loadedPriorities.length ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
+    return !loadedPriorities.length ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} allPlugins={plugins} />;
 };
 
 
