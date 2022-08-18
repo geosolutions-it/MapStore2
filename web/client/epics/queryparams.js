@@ -16,7 +16,6 @@ import {setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 
 import {getLonLatFromPoint} from '../utils/CoordinatesUtils';
 import {hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
-import {mapSelector} from '../selectors/map';
 import {clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector} from '../selectors/mapInfo';
 import {shareSelector} from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
@@ -49,7 +48,9 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                 action$.ofType(INIT_MAP)
                     .take(1)
                     .switchMap(() => {
-                        const cesiumViewerOptions = getCesiumViewerOptions(parameters, mapSelector(store.getState()));
+                        // On map initialization, query params containing cesium viewer options
+                        // is used to determine cesium map type
+                        const cesiumViewerOptions = getCesiumViewerOptions(parameters);
                         if (cesiumViewerOptions) {
                             skipProcessing = true;
                             return Rx.Observable.of(changeMapType('cesium'));
