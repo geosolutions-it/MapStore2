@@ -18,7 +18,6 @@ import { loadDashboard, resetDashboard } from '../../actions/dashboard';
 import { checkLoggedUser } from '../../actions/security';
 import Page from '../../containers/Page';
 import BorderLayout from '../../components/layout/BorderLayout';
-import {onPluginsLoadedHandler} from "../../utils/ModulePluginsUtils";
 
 /**
   * @name Dashboard
@@ -65,8 +64,8 @@ class DashboardPage extends React.Component {
         this.props.reset();
     }
 
-    onPluginsLoaded = (loadedPlugins) => {
-        onPluginsLoadedHandler(loadedPlugins, ['Dashboard'], () => {
+    onPluginsLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
             this.setState({pluginsAreLoaded: true}, () => {
                 const id = get(this.props, "match.params.did");
                 if (id) {
@@ -77,7 +76,7 @@ class DashboardPage extends React.Component {
                     this.props.checkLoggedUser();
                 }
             });
-        }, this.state.pluginsAreLoaded);
+        }
     }
 
     render() {
