@@ -41,7 +41,7 @@ const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Comp
         if (!loading) onPluginsLoaded(true);
     }, [loading]);
 
-    return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
+    return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} allPlugins={plugins} />;
 };
 
 
