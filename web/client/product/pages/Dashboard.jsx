@@ -18,6 +18,7 @@ import { loadDashboard, resetDashboard } from '../../actions/dashboard';
 import { checkLoggedUser } from '../../actions/security';
 import Page from '../../containers/Page';
 import BorderLayout from '../../components/layout/BorderLayout';
+import {onPluginsLoadedHandler} from "../../utils/ModulePluginsUtils";
 
 /**
   * @name Dashboard
@@ -48,34 +49,37 @@ class DashboardPage extends React.Component {
         checkLoggedUser: () => {}
     };
 
+    state = {};
+
     componentDidUpdate(oldProps) {
-        if (!this.state.loading) {
-            const id = get(this.props, "match.params.did");
-            if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did")) {
-                if (isNil(id)) {
-                    this.props.reset();
-                } else {
-                    this.props.loadResource(id);
-                }
+        const id = get(this.props, "match.params.did");
+        if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did") && this.state.pluginsAreLoaded) {
+            if (isNil(id)) {
+                this.props.reset();
+            } else {
+                this.props.loadResource(id);
             }
         }
     }
     componentWillUnmount() {
         this.props.reset();
     }
-    getConfig = (loading) => {
-        if (!loading) {
-            const id = get(this.props, "match.params.did");
-            if (id) {
-                this.props.reset();
-                this.props.loadResource(id);
-            } else {
-                this.props.reset();
-                this.props.checkLoggedUser();
-            }
-        }
-        this.setState({ loading });
-    };
+
+    onPluginsLoaded = (loadedPlugins) => {
+        onPluginsLoadedHandler(loadedPlugins, ['Dashboard'], () => {
+            this.setState({pluginsAreLoaded: true}, () => {
+                const id = get(this.props, "match.params.did");
+                if (id) {
+                    this.props.reset();
+                    this.props.loadResource(id);
+                } else {
+                    this.props.reset();
+                    this.props.checkLoggedUser();
+                }
+            });
+        }, this.state.pluginsAreLoaded);
+    }
+
     render() {
         return (<Page
             id={this.props.name}
@@ -84,7 +88,7 @@ class DashboardPage extends React.Component {
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
-            onLoading={this.getConfig}
+            onPluginsLoaded={this.onPluginsLoaded}
         />);
     }
 }

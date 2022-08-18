@@ -17,6 +17,7 @@ import '../libs/bindings/rxjsRecompose';
 // import GeoStory from "../plugins/GeoStory";
 // import GeoStories from "../plugins/GeoStories";
 // import Maps from "../plugins/Maps";
+import MapType from "./plugins/MapType";
 // import RulesDataGrid from "../plugins/RulesDataGrid";
 // import RulesEditor from "../plugins/RulesEditor";
 // import RulesManagerFooter from "../plugins/RulesManagerFooter";
@@ -28,10 +29,10 @@ import '../libs/bindings/rxjsRecompose';
  */
 export const plugins = {
     // ### STATIC PLUGINS ### //
-    ContextPlugin: toModulePlugin('Context', () => import(/* webpackChunkName: 'plugins/context' */'../plugins/Context')),
+    ContextPlugin: toModulePlugin('Context', () => import(/* webpackChunkName: 'plugins/context' */'../plugins/Context'), {priority: -1}),
     DashboardPlugin: toModulePlugin('Dashboard', () => import(/* webpackChunkName: 'plugins/dashboard' */'../plugins/Dashboard')),
     DashboardsPlugin: toModulePlugin('Dashboards', () => import(/* webpackChunkName: 'plugins/dashboards' */'../plugins/Dashboards')),
-    FeedbackMaskPlugin: toModulePlugin('FeedbackMask', () => import(/* webpackChunkName: 'plugins/feedbackMask' */'../plugins/FeedbackMask'), { priority: 0 }),
+    FeedbackMaskPlugin: toModulePlugin('FeedbackMask', () => import(/* webpackChunkName: 'plugins/feedbackMask' */'../plugins/FeedbackMask'), { priority: -1 }),
     GeoStoryPlugin: toModulePlugin('GeoStory', () => import(/* webpackChunkName: 'plugins/geostory' */'../plugins/GeoStory')),
     GeoStoriesPlugin: toModulePlugin('GeoStories', () => import(/* webpackChunkName: 'plugins/geoStories' */'../plugins/GeoStories')),
     MapsPlugin: toModulePlugin('Maps', () => import(/* webpackChunkName: 'plugins/maps' */'../plugins/Maps')),
@@ -40,7 +41,7 @@ export const plugins = {
     RulesDataGridPlugin: toModulePlugin('RulesDataGrid', () => import(/* webpackChunkName: 'plugins/rulesDataGrid' */'../plugins/RulesDataGrid')),
     RulesEditorPlugin: toModulePlugin('RulesEditor', () => import(/* webpackChunkName: 'plugins/rulesEditor' */'../plugins/RulesEditor')),
     RulesManagerFooter: toModulePlugin('RulesManagerFooter', () => import(/* webpackChunkName: 'plugins/rulesManagerFooter' */'../plugins/RulesManagerFooter')),
-    UserSessionPlugin: toModulePlugin('UserSession', () => import(/* webpackChunkName: 'plugins/userSession' */'../plugins/UserSession')),
+    UserSessionPlugin: toModulePlugin('UserSession', () => import(/* webpackChunkName: 'plugins/userSession' */'../plugins/UserSession'), {priority: 0}),
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -52,7 +53,7 @@ export const plugins = {
     HomeDescriptionPlugin: toModulePlugin('HomeDescription', () => import(/* webpackChunkName: 'plugins/HomeDescription' */ './plugins/HomeDescription')),
     MadeWithLovePlugin: toModulePlugin('MadeWithLove', () => import(/* webpackChunkName: 'plugins/madeWithLove' */ './plugins/MadeWithLove')),
     // framework plugins
-    MapTypePlugin: toModulePlugin('MapType', () => import(/* webpackChunkName: 'plugins/mapType' */ './plugins/MapType'), { priority: 1 }),
+    MapTypePlugin: MapType,
     NavMenuPlugin: toModulePlugin('NavMenu', () => import(/* webpackChunkName: 'plugins/navMenu' */ './plugins/NavMenu')),
     AddGroupPlugin: toModulePlugin('AddGroup', () => import(/* webpackChunkName: 'plugins/about' */'../plugins/AddGroup')),
     AnnotationsPlugin: toModulePlugin('Annotations', () => import(/* webpackChunkName: 'plugins/annotations' */ '../plugins/Annotations')),
@@ -117,7 +118,7 @@ export const plugins = {
     MetadataExplorerPlugin: toModulePlugin('MetadataExplorer', () => import(/* webpackChunkName: 'plugins/metadataExplorer' */ '../plugins/MetadataExplorer')),
     MousePositionPlugin: toModulePlugin('MousePosition', () => import(/* webpackChunkName: 'plugins/mousePosition' */ '../plugins/MousePosition')),
     NotificationsPlugin: toModulePlugin('Notifications', () => import(/* webpackChunkName: 'plugins/notifications' */ '../plugins/Notifications')),
-    OmniBarPlugin: toModulePlugin('OmniBar', () => import(/* webpackChunkName: 'plugins/omniBar' */ '../plugins/OmniBar'), { priority: 12}),
+    OmniBarPlugin: toModulePlugin('OmniBar', () => import(/* webpackChunkName: 'plugins/omniBar' */ '../plugins/OmniBar'), { priority: 11}),
     PlaybackPlugin: toModulePlugin('Playback', () => import(/* webpackChunkName: 'plugins/playback' */ '../plugins/Playback')),
     QueryPanelPlugin: toModulePlugin('QueryPanel', () => import(/* webpackChunkName: 'plugins/queryPanel' */ '../plugins/QueryPanel')),
     RedirectPlugin: toModulePlugin('Redirect', () => import(/* webpackChunkName: 'plugins/redirect' */ '../plugins/Redirect')),

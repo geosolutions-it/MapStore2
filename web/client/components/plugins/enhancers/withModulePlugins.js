@@ -39,7 +39,7 @@ const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Comp
     const Loader = loaderComponent;
 
     useEffect(() => {
-        onLoading(loadedPriorities.length === 0);
+        onPluginsLoaded(parsedPlugins);
     }, [loading, loadedPriorities]);
 
     return !loadedPriorities.length ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;

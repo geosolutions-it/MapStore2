@@ -8,7 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
+import {isEqual} from 'lodash';
 import { compose } from 'recompose';
 import { createStructuredSelector } from 'reselect';
 
@@ -17,6 +17,7 @@ import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector, contextCustomVariablesEnabledSelector } from '../../selectors/context';
 import ContextTheme from '../../components/theme/ContextTheme';
+import {onPluginsLoadedHandler} from "../../utils/ModulePluginsUtils";
 
 const ConnectedContextTheme = connect(
     createStructuredSelector({
@@ -92,38 +93,38 @@ class Context extends React.Component {
     state = {};
 
     componentDidUpdate(oldProps) {
-        if (!this.state.loading) {
-            const paramsChanged = !isEqual(this.props.match.params, oldProps.match.params);
-            const newParams = this.props.match.params;
+        const paramsChanged = !isEqual(this.props.match.params, oldProps.match.params);
+        const newParams = this.props.match.params;
 
-            if (paramsChanged) {
-                this.props.loadContext(newParams);
-            }
+        if (paramsChanged && this.state.pluginsAreLoaded) {
+            this.props.loadContext(newParams);
+        }
 
-            if (this.props.windowTitle) {
-                document.title = this.props.windowTitle;
-            }
+        if (this.props.windowTitle) {
+            document.title = this.props.windowTitle;
         }
     }
     componentWillUnmount() {
         document.title = this.oldTitle;
         this.props.reset();
     }
-    getConfig = (loading) => {
-        if (!loading) {
-            const params = this.props.match.params;
-            this.oldTitle = document.title;
-            this.props.loadContext(params);
-        }
-        this.setState({ loading });
-    }
     render() {
         return (
             <>
                 <ConnectedContextTheme />
-                <MapViewerCmp {...this.props} onLoading={this.getConfig}/>
+                <MapViewerCmp {...this.props} onPluginsLoaded={this.onPluginsLoaded} />
             </>
         );
+    }
+
+    onPluginsLoaded = (loadedPlugins) => {
+        onPluginsLoadedHandler(loadedPlugins, ['Context'], () => {
+            this.setState({pluginsAreLoaded: true}, () => {
+                const params = this.props.match.params;
+                this.oldTitle = document.title;
+                this.props.loadContext(params);
+            });
+        }, this.state.pluginsAreLoaded);
     }
 }
 

@@ -16,11 +16,11 @@ import {resetControls} from '../../actions/controls';
 import {loadMaps} from '../../actions/maps';
 import Page from '../../containers/Page';
 import ConfigUtils from '../../utils/ConfigUtils';
+import {normalizeName} from "../../utils/PluginsUtils";
 
 import("../assets/css/maps.css");
 
 const urlQuery = url.parse(window.location.href, true).query;
-
 
 /**
   * @name Maps
@@ -45,6 +45,8 @@ class MapsPage extends React.Component {
         reset: () => {}
     };
 
+    state = {};
+
     UNSAFE_componentWillMount() {
         if (this.props.match.params.mapType && this.props.match.params.mapId) {
             if (this.props.mode === 'mobile') {
@@ -54,10 +56,20 @@ class MapsPage extends React.Component {
         }
     }
 
+    onPluginsLoaded = (loadedPlugins) => {
+        const pluginKeys = typeof loadedPlugins === 'object' ? Object.keys(loadedPlugins) : loadedPlugins;
+        const plugins = ['Dashboards', 'GeoStories', 'Maps'];
+        if (plugins.every(elem => pluginKeys.includes(normalizeName(elem))) && !this.state.pluginsAreLoaded) {
+            this.setState({pluginsAreLoaded: true}, () => {
+                this.props.loadMaps();
+            });
+        }
+    }
+
     render() {
         return (<Page
             id="maps"
-            onLoading={loading => !loading && this.props.loadMaps()}
+            onPluginsLoaded={this.onPluginsLoaded}
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
