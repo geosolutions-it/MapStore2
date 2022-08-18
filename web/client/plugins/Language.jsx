@@ -29,7 +29,7 @@ export default {
     LanguagePlugin: assign(LangBar, {
         OmniBar: {
             name: 'language',
-            position: 4,
+            position: 5,
             tool: true,
             priority: 1
         }
