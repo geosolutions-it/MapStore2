@@ -13,7 +13,6 @@ import {semaphore, wrapEpics} from "./EpicsUtils";
 import ConfigUtils from './ConfigUtils';
 import isEmpty from 'lodash/isEmpty';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {normalizeName} from "./PluginsUtils";
 
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
@@ -118,10 +117,17 @@ export const getState = (name) => {
     return !isEmpty(getStore(name)) && getStore(name)?.getState() || {};
 };
 
-const isolateEpics = (epics, muteState$) => {
-    const isolateEpic = (epic) => (action$, store) => epic(action$.let(semaphore(muteState$.startWith(true))), store, muteState$).let(semaphore(
-        muteState$.startWith(true)
-    ));
+const isolateEpics = (epics, muteState) => {
+    const isolateEpic = (epic, name) => (action$, store, options) => {
+        const modifiedOptions = options ?? {};
+        muteState[name] = new Subject();
+        const pluginRenderStream$ = muteState[name].asObservable();
+
+        modifiedOptions.pluginRenderStream$ = pluginRenderStream$;
+        return epic(action$.let(semaphore(pluginRenderStream$.startWith(true))), store, modifiedOptions).let(semaphore(
+            pluginRenderStream$.startWith(true)
+        ));
+    };
     return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic) }), {});
 };
 
