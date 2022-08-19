@@ -7,39 +7,40 @@
  */
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
+// add this binding to ensure all the streams inside components are working
+import '../libs/bindings/rxjsRecompose';
 
-import Context from "../plugins/Context";
-import ContextCreator from "../plugins/ContextCreator";
-import Dashboard from "../plugins/Dashboard";
-import Dashboards from "../plugins/Dashboards";
-import FeedbackMask from '../plugins/FeedbackMask';
-import GeoStory from "../plugins/GeoStory";
-import GeoStories from "../plugins/GeoStories";
-import Maps from "../plugins/Maps";
-import RulesDataGrid from "../plugins/RulesDataGrid";
-import RulesEditor from "../plugins/RulesEditor";
-import RulesManagerFooter from "../plugins/RulesManagerFooter";
-import Print from "../plugins/Print";
-import UserSession from "../plugins/UserSession";
+// import Context from "../plugins/Context";
+// import Dashboard from "../plugins/Dashboard";
+// import Dashboards from "../plugins/Dashboards";
+// import FeedbackMask from '../plugins/FeedbackMask';
+// import GeoStory from "../plugins/GeoStory";
+// import GeoStories from "../plugins/GeoStories";
+// import Maps from "../plugins/Maps";
+// import RulesDataGrid from "../plugins/RulesDataGrid";
+// import RulesEditor from "../plugins/RulesEditor";
+// import RulesManagerFooter from "../plugins/RulesManagerFooter";
+// import Print from "../plugins/Print";
+// import UserSession from "../plugins/UserSession";
 
 /**
   * Please, keep them sorted alphabetically
  */
 export const plugins = {
     // ### STATIC PLUGINS ### //
-    ContextCreatorPlugin: ContextCreator,
-    ContextPlugin: Context,
-    Dashboard: Dashboard,
-    DashboardsPlugin: Dashboards,
-    FeedbackMaskPlugin: FeedbackMask,
-    GeoStoryPlugin: GeoStory,
-    GeoStoriesPlugin: GeoStories,
-    MapsPlugin: Maps,
-    PrintPlugin: Print,
-    RulesDataGridPlugin: RulesDataGrid,
-    RulesEditorPlugin: RulesEditor,
-    RulesManagerFooter: RulesManagerFooter,
-    UserSessionPlugin: UserSession,
+    ContextPlugin: toModulePlugin('Context', () => import(/* webpackChunkName: 'plugins/context' */'../plugins/Context')),
+    DashboardPlugin: toModulePlugin('Dashboard', () => import(/* webpackChunkName: 'plugins/dashboard' */'../plugins/Dashboard')),
+    DashboardsPlugin: toModulePlugin('Dashboards', () => import(/* webpackChunkName: 'plugins/dashboards' */'../plugins/Dashboards')),
+    FeedbackMaskPlugin: toModulePlugin('FeedbackMask', () => import(/* webpackChunkName: 'plugins/feedbackMask' */'../plugins/FeedbackMask')),
+    GeoStoryPlugin: toModulePlugin('GeoStory', () => import(/* webpackChunkName: 'plugins/geostory' */'../plugins/GeoStory')),
+    GeoStoriesPlugin: toModulePlugin('GeoStories', () => import(/* webpackChunkName: 'plugins/geoStories' */'../plugins/GeoStories')),
+    MapsPlugin: toModulePlugin('Maps', () => import(/* webpackChunkName: 'plugins/maps' */'../plugins/Maps')),
+    PrintPlugin: toModulePlugin('Print', () => import(/* webpackChunkName: 'plugins/print' */'../plugins/Print')),
+
+    RulesDataGridPlugin: toModulePlugin('RulesDataGrid', () => import(/* webpackChunkName: 'plugins/rulesDataGrid' */'../plugins/RulesDataGrid')),
+    RulesEditorPlugin: toModulePlugin('RulesEditor', () => import(/* webpackChunkName: 'plugins/rulesEditor' */'../plugins/RulesEditor')),
+    RulesManagerFooter: toModulePlugin('RulesManagerFooter', () => import(/* webpackChunkName: 'plugins/rulesManagerFooter' */'../plugins/RulesManagerFooter')),
+    UserSessionPlugin: toModulePlugin('UserSession', () => import(/* webpackChunkName: 'plugins/userSession' */'../plugins/UserSession')),
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -60,6 +61,7 @@ export const plugins = {
     BurgerMenuPlugin: toModulePlugin('BurgerMenu', () => import(/* webpackChunkName: 'plugins/burgerMenu' */ '../plugins/BurgerMenu')),
     CRSSelectorPlugin: toModulePlugin('CRSSelector', () => import(/* webpackChunkName: 'plugins/CRSSelector' */ '../plugins/CRSSelector')),
     ContentTabs: toModulePlugin('ContentTabs', () => import(/* webpackChunkName: 'plugins/contentTabs' */ '../plugins/ContentTabs')),
+    ContextCreatorPlugin: toModulePlugin('ContextCreator', () => import(/* webpackChunkName: 'plugins/contextCreator' */ '../plugins/ContextCreator')),
     ContextManagerPlugin: toModulePlugin('ContextManager', () => import(/* webpackChunkName: 'plugins/contextManager' */ '../plugins/contextmanager/ContextManager')),
     ContextsPlugin: toModulePlugin('Contexts', () => import(/* webpackChunkName: 'plugins/contexts' */ '../plugins/Contexts')),
     CookiePlugin: toModulePlugin('Cookie', () => import(/* webpackChunkName: 'plugins/cookie' */ '../plugins/Cookie')),
