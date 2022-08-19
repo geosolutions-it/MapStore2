@@ -140,19 +140,18 @@ export const createStoreManager = (initialReducers, initialEpics) => {
     const epicsListenedBy = {};
     const epicRegistrations = {};
     const groupedByModule = {};
+    let muteState = {};
 
     // Create the initial combinedReducer
     let combinedReducer = combineReducers(reducers);
-
     const subject = new Subject();
     subject.next(true);
-    const isolated = isolateEpics(epics, subject.asObservable());
-    const epic$ = new BehaviorSubject(combineEpics(...wrapEpics(isolated)));
+    // appEpics should not be mutable, therefore do not add them into muteState
+    const isolated = isolateEpics(epics, []);
 
+    const epic$ = new BehaviorSubject(combineEpics(...wrapEpics(isolated)));
     // An array which is used to delete state keys when reducers are removed
     let keysToRemove = [];
-
-    let muteState = {};
 
     const addToRegistry = (module, epicName) => {
         epicRegistrations[epicName] = [...(epicRegistrations[epicName] ?? []), module];
