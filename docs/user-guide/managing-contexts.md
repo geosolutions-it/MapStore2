@@ -17,7 +17,7 @@ In this page the administrator can:
 
 <img src="../img/managing-users/search-users.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* Create an [Application context](application-context.md) through the <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> button 
+* Create an [Application context](application-context.md#application-context) through the <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> button 
 
 In each context's card the administrator can:
 
@@ -27,8 +27,8 @@ In each context's card the administrator can:
 
 * Edit the context through the **Edit context** button <img src="../img/button/edit-context-button.jpg" class="ms-docbutton"/>
 
-* Open the [Edit properties](resources-properties.md) through the **Edit properties** button  <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> 
+* Open the [Edit properties](resources-properties.md#resource-properties) through the **Edit properties** button  <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> 
 
-* [Sharing](share.md) the context through the **Share** button <img src="../img/button/share.jpg" class="ms-docbutton"/>
+* [Sharing](share.md#sharing-resources) the context through the **Share** button <img src="../img/button/share.jpg" class="ms-docbutton"/>
 
 

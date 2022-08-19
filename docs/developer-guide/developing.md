@@ -127,7 +127,7 @@ To run ESLint checks launch:
 To run the same tests Travis will check (before a pull request):
 `npm run travis`
 
-More information on frontend building tools and configuration is available [here](frontend-building-tools-and-configuration)
+More information on frontend building tools and configuration is available [here](building-and-deploying.md#understanding-frontend-building-tools)
 
 ## Back-end
 

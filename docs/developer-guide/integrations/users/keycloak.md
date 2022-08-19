@@ -4,7 +4,7 @@
 
 MapStore supports various Keycloak integration features:
 
-- [**OpenID support**](../openId/#keycloak): Allows to login to MapStore using a keycloak account.
+- [**OpenID support**](openId.md#keycloak): Allows to login to MapStore using a keycloak account.
 - [**Single sign on**](#single-sign-on-integration): Enhances the OpenID support by detecting a session in the keycloak realm and automatically login/logout from MapStore
 - [**Direct user integration**](#direct-user-integration): Enhances the OpenID support making MapStore use keycloak as unique Identity Manager System (IdM), replacing the MapStore DB with Keycloak REST API.
 
@@ -12,7 +12,7 @@ MapStore supports various Keycloak integration features:
 
 **Keycloak OpenID support** allows to use a keycloak instance as Identity Provider (IdP) via OpenID Connect (OIDC), so that the user can login to MapStore using an existing account in keycloak.
 
-You can find details about how to configure it in the dedicated [**"OpenID Connect" page section dedicated to keycloak**](../openId/#keycloak)
+You can find details about how to configure it in the dedicated [**"OpenID Connect" page section dedicated to keycloak**](openId.md#keycloak)
 
 ## Single sign on integration
 
@@ -20,17 +20,17 @@ MapStore provides an integration with the keycloak **Single Sign On** (SSO) syst
 
 In order to enable the SSO in keycloak you have to:
 
-- Have already configured the [openID for keycloak](../openId#keycloak).
+- Have already configured the [openID for keycloak](openId.md#keycloak).
 - Create a keycloak client in the same realm of openID integration above.
 - Configure SSO in MapStore's `localConfig.json`
 
 ### Configure the OpenID integration
 
-- See here [openID integration](../openId#keycloak).
+- See here [openID integration](openId.md#keycloak).
 
 ### Configure keycloak client
 
-After configuring the open [openID integration](../openId#keycloak), you will have a keycloak client called `mapstore-server`.
+After configuring the open [openID integration](openId.md#keycloak), you will have a keycloak client called `mapstore-server`.
 In order to enable SSO you have to create **another** new Client on keycloak. In this guide we will name it `mapstore-client`.
 
 <img src="../img/kc-create-client.jpg" class="ms-docimage"  style="max-width:500px;"/>
@@ -48,7 +48,7 @@ In order to enable SSO you have to create **another** new Client on keycloak. In
 
 ### Configure SSO in MapStore
 
-After configuring the open [openID integration](../openId#keycloak), you will have an entry named `keycloak` in `authenticationProviders`.
+After configuring the open [openID integration](openId.md#keycloak), you will have an entry named `keycloak` in `authenticationProviders`.
 In this entry, you will have to add `"sso":{"type":"keycloak"}` and `config: "<configuration coped from keycloak>"`.
 
 e.g.
@@ -75,7 +75,7 @@ e.g.
 }
 ```
 
-Here implementation details about [keycloak login workflow](../keycloak-sso-impl/).
+Here implementation details about [keycloak login workflow](keycloak-sso-impl.md#sso-workflow-in-keycloak).
 
 ## Direct user integration
 

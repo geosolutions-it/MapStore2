@@ -15,7 +15,7 @@ When a layer with a time dimension is added to the map, the Timeline panel becom
 <img src="../img/timeline/timeline-base.jpg" class="ms-docimage"/>
 
 !!! Note
-    Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#widgets-tray) to learn more about this. 
+    Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#manage-existing-widgets) to learn more about this. 
 
 ## Timeline histogram
 

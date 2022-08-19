@@ -21,7 +21,7 @@ For each template in the *Map Templates* list the following buttons are displaye
 
 ## Enabling the Map templates in a context
 
-The *Map templates* extension is enabled by the admin in the [Application Context](application-context.md) wizard. In particular, this is possible in the [third step](application-context.md#configure-plugins) of the wizard and after the extension is added to the *Enabled Plugins* list.
+The *Map templates* extension is enabled by the admin in the [Application Context](application-context.md#application-context) wizard. In particular, this is possible in the [third step](application-context.md#configure-plugins) of the wizard and after the extension is added to the *Enabled Plugins* list.
 
 <img src="../img/map-templates/configure-templates.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -51,7 +51,7 @@ Here the admin, in order to import a template file, can drag and drop it inside 
 
     * The [WMC](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#web-map-context) (Web Map Context) file in `xml` format
 
-The admin can also add **Thumbnail**, **Name**, **Description** and **Groups permissions** as describe [here](resources-properties.md)
+The admin can also add **Thumbnail**, **Name**, **Description** and **Groups permissions** as describe [here](resources-properties.md#resource-properties)
 
 ### Customize the template
 
@@ -61,6 +61,6 @@ The admin can also delete or modify an existing template through the buttons tha
 
 In particular, the admin can:
 
-* Modify the template using the [Edit properties](resources-properties.md) that opens by clicking on the **Edit properties** button <img src="../img/button/edit-details-button.jpg" class="ms-docbutton"/>
+* Modify the template using the [Edit properties](resources-properties.md#resource-properties) that opens by clicking on the **Edit properties** button <img src="../img/button/edit-details-button.jpg" class="ms-docbutton"/>
 
 * Delete the template through the **Delete** button <img src="../img/button/delete_white_button.jpg" class="ms-docbutton" />

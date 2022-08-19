@@ -13,11 +13,11 @@ This separation allows to:
 They are `.properties` files or `.xml` files, and they allow to configure the various parts of the back-end.
 They are located in `java/web/src/main/resources` and they will be copied in  `MapStore.war` under the directory `/WEB-INF/classes`.
 
-* `proxy.properties`: configuration for the internal proxy (for cross-origin requests). More information [here](https://github.com/geosolutions-it/http-proxy/wiki/Configuring-Http-Proxy>).
+* `proxy.properties`: configuration for the internal proxy (for cross-origin requests). More information [here](https://github.com/geosolutions-it/http-proxy/wiki/Configuring-Http-Proxy).
 * `geostore-datasource-ovr.properties`: provides settings for the database.
 * `log4j.properties`: configuration for back-end logging
 * `sample-categories.xml`: initial set of categories for back-end resources (MAP, DASHBOARD, GEOSTORY...)
-* `mapstore.properties`: allow specific overrides to front-end files, See [externalization system](../externalized-configuration) for more details
+* `mapstore.properties`: allow specific overrides to front-end files, See [externalization system](externalized-configuration.md#externalized-configuration) for more details
 
 Except for `mapstore.properties` and `ldap.properties`, all these files are simply overrides of original configuration files coming from the included sub-applications part of the back-end. In `WEB-INF/classes` you will find also some other useful files coming from the original application:
 
@@ -31,7 +31,7 @@ Depending on the chosen profile a different file will be copied from the `produc
 
 Specific configuration files are available to configure connection details for the chosen profile.
 
-For example, if using LDAP, look at [LDAP integration](integrations/users/ldap.md).
+For example, if using LDAP, look at [LDAP integration](integrations/users/ldap.md#ldap-integration-with-mapstore).
 
 ## Front-end Configurations Files
 
@@ -39,10 +39,10 @@ They are JSON files that will be loaded via HTTP from the client, keeping most o
 
 Several configuration files (at development and / or run time) are available to configure all the different aspects of an application.
 
-* `localConfig.json`: Dedicated to the application configuration. Defines all general settings of the front-end part, with all the plugins for all the pages. See [Application Configuration](../local-config) for more information.
-* `new.json` Can be customized to set-up the initial new map, setting the backgrounds, initial position .. See [Maps configuration](../maps-configuration) for more information.
-* `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config.md) for more information.
+* `localConfig.json`: Dedicated to the application configuration. Defines all general settings of the front-end part, with all the plugins for all the pages. See [Application Configuration](local-config.md#application-configuration) for more information.
+* `new.json` Can be customized to set-up the initial new map, setting the backgrounds, initial position .. See [Maps configuration](maps-configuration.md#map-configuration) for more information.
+* `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager) for more information.
 
 ## Externalize Configurations
 
-Typically configuration customization should stay outside the effective application installation directory to simplify future updates. Updates in fact are usually replacement of the old application file package with the newer one. Changes applied directly inside the application package may be so removed on every update. For this reason MapStore provides a externalization system for both the configuration systems. See [Externalize Configuration](../externalized-configuration) section to learn how to do this.
+Typically configuration customization should stay outside the effective application installation directory to simplify future updates. Updates in fact are usually replacement of the old application file package with the newer one. Changes applied directly inside the application package may be so removed on every update. For this reason MapStore provides a externalization system for both the configuration systems. See [Externalize Configuration](externalized-configuration.md#externalized-configuration) section to learn how to do this.

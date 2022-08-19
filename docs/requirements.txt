@@ -1,2 +1,5 @@
 mkdocs-material==3.2.0
 jinja2==3.0.3
+Markdown==3.3.7
+git+https://github.com/geosolutions-it/mkdocs-pdf-export-plugin.git
+WeasyPrint==52.5

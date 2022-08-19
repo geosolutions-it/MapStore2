@@ -40,7 +40,7 @@ With a click on it, if only another Map widget is present, by default the connec
 
 ### Maps with Charts, Tables and Counters
 
-In order to connect Charts, Tables or Counters widget with Maps widget, the procedure is similar to that seen in the [previous section](connecting-widgets.md#maps-with-other-maps). The result is that the information displayed in the Chart, Table or Counter changes accordingly with the map portion displayed in the connected Map widget. For example the result could be:
+In order to connect Charts, Tables or Counters widget with Maps widget, the procedure is similar to that seen in the [previous section](#connecting-widgets). The result is that the information displayed in the Chart, Table or Counter changes accordingly with the map portion displayed in the connected Map widget. For example the result could be:
 
 * Connecting Charts with Maps:
 
@@ -64,7 +64,7 @@ Also in this case the connecting procedure is similar to those seen previously, 
 
 ## Connecting Table widgets with other widgets
 
-With the same procedure used for maps (see [previous section](connecting-widgets.md#maps-with-other-maps)) the user can connect Table widgets with:
+With the same procedure used for maps (see [previous section](#maps-with-other-maps)) the user can connect Table widgets with:
 
 * Map widgets
 
