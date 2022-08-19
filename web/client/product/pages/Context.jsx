@@ -8,7 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 import { compose } from 'recompose';
 import { createStructuredSelector } from 'reselect';
 
@@ -17,7 +17,6 @@ import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector, contextCustomVariablesEnabledSelector } from '../../selectors/context';
 import ContextTheme from '../../components/theme/ContextTheme';
-import {onPluginsLoadedHandler} from "../../utils/ModulePluginsUtils";
 
 const ConnectedContextTheme = connect(
     createStructuredSelector({
@@ -89,14 +88,16 @@ class Context extends React.Component {
         },
         wrappedContainer: MapViewerContainer
     };
-
-    state = {};
-
+    UNSAFE_componentWillMount() {
+        const params = this.props.match.params;
+        this.oldTitle = document.title;
+        this.props.loadContext(params);
+    }
     componentDidUpdate(oldProps) {
         const paramsChanged = !isEqual(this.props.match.params, oldProps.match.params);
         const newParams = this.props.match.params;
 
-        if (paramsChanged && this.state.pluginsAreLoaded) {
+        if (paramsChanged) {
             this.props.loadContext(newParams);
         }
 
@@ -112,19 +113,9 @@ class Context extends React.Component {
         return (
             <>
                 <ConnectedContextTheme />
-                <MapViewerCmp {...this.props} onPluginsLoaded={this.onPluginsLoaded} />
+                <MapViewerCmp {...this.props} />
             </>
         );
-    }
-
-    onPluginsLoaded = (loadedPlugins) => {
-        onPluginsLoadedHandler(loadedPlugins, ['Context'], () => {
-            this.setState({pluginsAreLoaded: true}, () => {
-                const params = this.props.match.params;
-                this.oldTitle = document.title;
-                this.props.loadContext(params);
-            });
-        }, this.state.pluginsAreLoaded);
     }
 }
 

@@ -15,7 +15,6 @@ const urlQuery = url.parse(window.location.href, true).query;
 import {clearContextCreator, loadContext} from '../../actions/contextcreator';
 import Page from '../../containers/Page';
 import BorderLayout from '../../components/layout/BorderLayout';
-import {onPluginsLoadedHandler} from "../../utils/ModulePluginsUtils";
 
 /**
   * @name ContextCreator
@@ -44,12 +43,15 @@ class ContextCreator extends React.Component {
         reset: () => {}
     };
 
-    state = {};
-
+    UNSAFE_componentWillMount() {
+        const contextId = get(this.props, "match.params.contextId");
+        this.props.reset();
+        this.props.loadContext(contextId);
+    }
     componentDidUpdate(oldProps) {
         const contextId = get(this.props, "match.params.contextId");
         const oldContextId = get(oldProps, "match.params.contextId");
-        if (contextId !== oldContextId && this.state.pluginsAreLoaded) {
+        if (contextId !== oldContextId) {
             this.props.reset();
             this.props.loadContext(contextId);
         }
@@ -57,17 +59,6 @@ class ContextCreator extends React.Component {
     componentWillUnmount() {
         this.props.reset();
     }
-
-    onPluginsLoaded = (loadedPlugins) => {
-        onPluginsLoadedHandler(loadedPlugins, ['ContextCreator', 'Tutorial'], () => {
-            this.setState({pluginsAreLoaded: true}, () => {
-                const contextId = get(this.props, "match.params.contextId");
-                this.props.reset();
-                this.props.loadContext(contextId);
-            });
-        }, this.state.pluginsAreLoaded);
-    }
-
     render() {
         return (<Page
             id="context-creator"
@@ -76,7 +67,6 @@ class ContextCreator extends React.Component {
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
-            onPluginsLoaded={this.onPluginsLoaded}
         />);
     }
 }
