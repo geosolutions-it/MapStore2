@@ -9,6 +9,7 @@
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
 import Context from "../plugins/Context";
+import ContextCreator from "../plugins/ContextCreator";
 import Dashboard from "../plugins/Dashboard";
 import Dashboards from "../plugins/Dashboards";
 import FeedbackMask from '../plugins/FeedbackMask';
@@ -26,6 +27,7 @@ import UserSession from "../plugins/UserSession";
  */
 export const plugins = {
     // ### STATIC PLUGINS ### //
+    ContextCreatorPlugin: ContextCreator,
     ContextPlugin: Context,
     Dashboard: Dashboard,
     DashboardsPlugin: Dashboards,
@@ -58,7 +60,6 @@ export const plugins = {
     BurgerMenuPlugin: toModulePlugin('BurgerMenu', () => import(/* webpackChunkName: 'plugins/burgerMenu' */ '../plugins/BurgerMenu')),
     CRSSelectorPlugin: toModulePlugin('CRSSelector', () => import(/* webpackChunkName: 'plugins/CRSSelector' */ '../plugins/CRSSelector')),
     ContentTabs: toModulePlugin('ContentTabs', () => import(/* webpackChunkName: 'plugins/contentTabs' */ '../plugins/ContentTabs')),
-    ContextCreatorPlugin: toModulePlugin('ContextCreator', () => import(/* webpackChunkName: 'plugins/contextCreator' */ '../plugins/ContextCreator')),
     ContextManagerPlugin: toModulePlugin('ContextManager', () => import(/* webpackChunkName: 'plugins/contextManager' */ '../plugins/contextmanager/ContextManager')),
     ContextsPlugin: toModulePlugin('Contexts', () => import(/* webpackChunkName: 'plugins/contexts' */ '../plugins/Contexts')),
     CookiePlugin: toModulePlugin('Cookie', () => import(/* webpackChunkName: 'plugins/cookie' */ '../plugins/Cookie')),
