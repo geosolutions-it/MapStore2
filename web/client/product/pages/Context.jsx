@@ -17,6 +17,7 @@ import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, contextThemeSelector, contextCustomVariablesEnabledSelector } from '../../selectors/context';
 import ContextTheme from '../../components/theme/ContextTheme';
+import {onPluginsLoadedHandler} from "../../utils/ModulePluginsUtils";
 
 const ConnectedContextTheme = connect(
     createStructuredSelector({
@@ -116,14 +117,14 @@ class Context extends React.Component {
         );
     }
 
-    onPluginsLoaded = (pluginsAreLoaded) => {
-        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+    onPluginsLoaded = (loadedPlugins) => {
+        onPluginsLoadedHandler(loadedPlugins, ['Context'], () => {
             this.setState({pluginsAreLoaded: true}, () => {
                 const params = this.props.match.params;
                 this.oldTitle = document.title;
                 this.props.loadContext(params);
             });
-        }
+        }, this.state.pluginsAreLoaded);
     }
 }
 

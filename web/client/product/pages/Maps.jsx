@@ -16,6 +16,7 @@ import {resetControls} from '../../actions/controls';
 import {loadMaps} from '../../actions/maps';
 import Page from '../../containers/Page';
 import ConfigUtils from '../../utils/ConfigUtils';
+import {normalizeName} from "../../utils/PluginsUtils";
 
 import("../assets/css/maps.css");
 
@@ -55,8 +56,10 @@ class MapsPage extends React.Component {
         }
     }
 
-    onPluginsLoaded = (pluginsAreLoaded) => {
-        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+    onPluginsLoaded = (loadedPlugins) => {
+        const pluginKeys = typeof loadedPlugins === 'object' ? Object.keys(loadedPlugins) : loadedPlugins;
+        const plugins = ['Dashboards', 'GeoStories', 'Maps'];
+        if (plugins.every(elem => pluginKeys.includes(normalizeName(elem))) && !this.state.pluginsAreLoaded) {
             this.setState({pluginsAreLoaded: true}, () => {
                 this.props.loadMaps();
             });

@@ -15,6 +15,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 import {clearContextCreator, loadContext} from '../../actions/contextcreator';
 import Page from '../../containers/Page';
 import BorderLayout from '../../components/layout/BorderLayout';
+import {onPluginsLoadedHandler} from "../../utils/ModulePluginsUtils";
 
 /**
   * @name ContextCreator
@@ -57,14 +58,14 @@ class ContextCreator extends React.Component {
         this.props.reset();
     }
 
-    onPluginsLoaded = (pluginsAreLoaded) => {
-        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+    onPluginsLoaded = (loadedPlugins) => {
+        onPluginsLoadedHandler(loadedPlugins, ['ContextCreator', 'Tutorial'], () => {
             this.setState({pluginsAreLoaded: true}, () => {
                 const contextId = get(this.props, "match.params.contextId");
                 this.props.reset();
                 this.props.loadContext(contextId);
             });
-        }
+        }, this.state.pluginsAreLoaded);
     }
 
     render() {
