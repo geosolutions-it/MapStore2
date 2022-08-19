@@ -15,7 +15,7 @@ functionalities (like chart widgets, dashboards, timelines and others).
 geospatial application. Since [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is also a framework, you can use it to build your own WebGIS applications by using its plugins and modules.
 
 Last but not the least, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is map agnostic and ensures the greatest flexibility: its abstraction tier allows to work with different web mapping libraries.
-The mapping engines currently supported by [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) are [OpenLayers](https://openlayers.org/) (used by default for desktops), [LeafletJS](https://leafletjs.com/) (used by default for mobile devices) and [Cesium 3D viewer](https://cesiumjs.org/).
+The mapping engines currently supported by [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) are [OpenLayers](https://openlayers.org/) (used by default for desktops), [LeafletJS](https://leafletjs.com/) (used by default for mobile devices) and [Cesium 3D viewer](https://cesium.com/platform/cesiumjs/).
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) has been designed from the beginning to provide a coherent and comprehensive experience across different devices types.
 

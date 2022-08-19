@@ -244,7 +244,7 @@ example
 {
     "name": "ContextCreator",
     "cfg": {
-        "documentationBaseURL": "https://mapstore.geo-solutions.it/mapstore/docs/api/plugins",
+        "documentationBaseURL": "https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins",
         "backToPageDestRoute": "/context-manager",
         "backToPageConfirmationMessage": "contextCreator.undo",
         "themes": [{

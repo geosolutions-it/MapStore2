@@ -72,7 +72,7 @@ In particular, the user is allowed to:
 
 * Decide to display the image as a single tile or as multiple tiles
 
-* Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wms/wmtscatalog)
+* Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wmswmts-catalog)
 
 * Enable/disable the _Force proxy_ layer option. If enabled, forces the application to check the source and applies proxy if needed. 
 

@@ -120,7 +120,7 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 
 <img src="../img/application-context/plugin-config.jpg" class="ms-docimage" style="max-width:300px;"/>
 
-* The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins) in another page.
+* The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins) in another page.
 
 
 ### How to update extensions

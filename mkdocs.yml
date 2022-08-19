@@ -119,6 +119,7 @@ nav:
       - Styling and theming: 'developer-guide/customize-theme.md'
       - Working with Extensions: 'developer-guide/extensions.md'
       - Printing Module: 'developer-guide/printing-module.md'
+      - How to use CDN: 'developer-guide/how-to-use-a-cdn.md'
       - FAQ: 'developer-guide/dev-faq.md'
     - Guidelines:
       - Code Conventions: 'developer-guide/code-conventions.md'
