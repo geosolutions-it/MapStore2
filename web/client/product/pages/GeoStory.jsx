@@ -21,7 +21,6 @@ import {
 import { geostoryIdSelector } from '../../selectors/geostory';
 import { isLoggedIn } from '../../selectors/security';
 import BorderLayout from '../../components/layout/BorderLayout';
-import {normalizeName} from "../../utils/PluginsUtils";
 
 /**
   * @name GeoStory
@@ -79,10 +78,8 @@ class GeoStoryPage extends React.Component {
         this.props.reset();
     }
 
-    onPluginsLoaded = (loadedPlugins) => {
-        const pluginKeys = typeof loadedPlugins === 'object' ? Object.keys(loadedPlugins) : loadedPlugins;
-        const plugins = ['GeoStory'];
-        if (plugins.every(elem => pluginKeys.includes(normalizeName(elem))) && !this.state.pluginsAreLoaded) {
+    onPluginsLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
             this.setState({pluginsAreLoaded: true}, () => {
                 const id = get(this.props, "match.params.gid");
                 const previousId = this.props.previousId && this.props.previousId + '';
