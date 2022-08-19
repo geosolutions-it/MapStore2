@@ -1107,7 +1107,7 @@
             "styleGeometry": "Changer le style",
             "deleteGeometry": "Supprimer toutes les géométries d'annotations",
             "removeannotation": "Voulez-vous supprimer l'annotation avec le titre : {title}?",
-            "removegeometry": "Voulez-vous supprimer toutes les annotations ?",
+            "removegeometry": "Voulez-vous supprimer cette géometrie ?",
             "confirm": "Confirmer",
             "mandatory": "Champ obligatoire",
             "add": "Nouvelle",
