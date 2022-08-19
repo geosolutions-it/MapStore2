@@ -11,7 +11,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import '../../assets/css/viewer.css';
-import {normalizeName} from "../../../utils/PluginsUtils";
 let oldLocation;
 
 class MapViewerComponent extends React.Component {
@@ -54,15 +53,13 @@ class MapViewerComponent extends React.Component {
         }
     }
 
-    onPluginsLoaded = (loadedPlugins) => {
-        const pluginKeys = typeof loadedPlugins === 'object' ? Object.keys(loadedPlugins) : loadedPlugins;
-        const plugins = ['Map'];
-        if (plugins.every(elem => pluginKeys.includes(normalizeName(elem))) && !this.state.pluginsAreLoaded) {
+    onPluginsLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
             this.setState({pluginsAreLoaded: true}, () => {
                 const id = this.props.match.params.mapId || '0';
                 const contextId = this.props.match.params.contextId;
                 this.updateMap(id, contextId);
-                this.props.onPluginsLoaded(loadedPlugins);
+                this.props.onPluginsLoaded(true);
             });
         }
     };
