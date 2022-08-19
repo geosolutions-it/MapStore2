@@ -1,9 +1,9 @@
 # Working with Extensions
 
-The MapStore2 [plugins architecture](../plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
+The MapStore2 [plugins architecture](plugins-architecture.md#plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Extensions are plugins that can be distributed as a separate package (a zip file), and be installed, activated and used at runtime.
-Creating an extension is similar to creating a plugin. If you are not familiar with plugins, please, read the [Plugins HowTo page](../plugins-howto) first.
+Creating an extension is similar to creating a plugin. If you are not familiar with plugins, please, read the [Plugins HowTo page](plugins-howto.md#creating-a-mapstore2-plugin) first.
 
 ## Developing an extension
 
@@ -152,7 +152,7 @@ The `index.json file should contain all the information about the extension:
 }
 ```
 
-`plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md)
+`plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager)
 
 ### Installing Extensions
 
@@ -169,7 +169,7 @@ Please refer to the [How to update extensions](../../user-guide/application-cont
 
 ### Extensions and datadir
 
-Extensions work better if you use a [datadir](externalized-configuration.md), because when a datadir is configured,
+Extensions work better if you use a [datadir](externalized-configuration.md#externalized-configuration), because when a datadir is configured,
 extensions are uploaded inside it, so they can ***live*** outside the application main folder (and you don't risk to overwrite them when
 you upgrade MapStore to a newer version).
 

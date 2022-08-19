@@ -11,4 +11,4 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 
 # Other References
 
-* [How to use a CDN](../how-to-use-a-cdn)
+* [How to use a CDN](how-to-use-a-cdn.md#how-to-use-a-cdn)

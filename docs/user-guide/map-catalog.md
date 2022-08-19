@@ -18,9 +18,9 @@ For each map in the *Map Catalog* list the following buttons are displayed:
 
 * The **Delete** button <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> allows the user to remove the map
 
-* The **Edit Properties** button <img src="../img/button/properties.jpg" class="ms-docbutton" /> allows the user to [Edit Properties](resources-properties.md) of the map
+* The **Edit Properties** button <img src="../img/button/properties.jpg" class="ms-docbutton" /> allows the user to [Edit Properties](resources-properties.md#resource-properties) of the map
 
-* The **Share** button <img src="../img/button/share.jpg" class="ms-docbutton" /> allows the user to [Share](share.md) the map
+* The **Share** button <img src="../img/button/share.jpg" class="ms-docbutton" /> allows the user to [Share](share.md#sharing-resources) the map
 
 
 
