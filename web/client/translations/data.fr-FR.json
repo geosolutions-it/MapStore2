@@ -35,12 +35,12 @@
             "message": "Échec du rechargement de la couche avec un nom modifié"
         },
         "version": {
-            "label": "Version",
-            "message": "Message",
-            "commit": "Commit",
-            "date": "Date",
-            "author": "Auteur",
-            "githuburl": "Ouvrir l'arborescence github dans un nouvel onglet"
+          "title": "MapStore Version",
+          "label": "Version",
+          "message": "Message",
+          "commit": "Commit",
+          "date": "Date",
+          "githubUrl": "Ouvrir l'arborescence github dans un nouvel onglet"
         },
         "errorPage": {
             "title":"Oups, quelque chose a mal tourné...",

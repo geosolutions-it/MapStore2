@@ -22,6 +22,29 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2022.01.02 to 2022.02.00
 
+### Version plugin has been removed
+
+We no longer maintain the Version plugin since we have moved its content inside the About plugin (see [here](https://github.com/geosolutions-it/MapStore2/issues/7934#issuecomment-1201433942) for more details)
+
+We suggest you to clean up your project as well:
+
+- remove Version entry it from a local list of plugins.js
+- remove Version entries it from a localConfig
+- add About entry into other pages of mapstore plugins array, suggest list is:
+  - dashboard
+  - geostory
+  - mobile
+- remove Define plugins in webpack-config.js or prod.webpack-config.js, since we have moved these definition to a more general buildConfig.js
+- add to your package.-json the globals object defined as the following
+
+```json
+"globals": {
+      "__MAPSTORE_PROJECT_CONFIG__": false,
+      "__COMMITHASH__": false,
+      "__COMMIT_DATA__": false
+    }
+```
+
 ### Support for OpenID
 
 MapStore introduced support for OpenID for google and keycloak. In order to have this functionalities and to be aligned with the latest version of MapStore you have to update the following files in your projects:

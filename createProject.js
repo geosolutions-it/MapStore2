@@ -50,6 +50,11 @@ function doWork(params) {
         version: params.projectVersion,
         description: params.projectDescription || params.projectName,
         repository: params.repoURL,
+        globals: {
+            "__MAPSTORE_PROJECT_CONFIG__": false,
+            "__COMMITHASH__": false,
+            "__COMMIT_DATA__": false
+        },
         eslintConfig: {
             "extends": [
                 "@mapstore/eslint-config-mapstore"
