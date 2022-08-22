@@ -37,7 +37,7 @@ const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Comp
 
     const Loader = loaderComponent;
 
-    return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} />;
+    return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} allPlugins={plugins} />;
 };
 
 

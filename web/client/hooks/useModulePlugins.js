@@ -7,7 +7,7 @@
  */
 
 import {useEffect, useMemo, useState} from 'react';
-import {createPlugin, getPlugins, isMapStorePlugin} from '../utils/PluginsUtils';
+import {createPlugin, getPlugins, isMapStorePlugin, normalizeName} from '../utils/PluginsUtils';
 import {getStore} from '../utils/StateUtils';
 import join from 'lodash/join';
 import {size} from "lodash";
@@ -41,13 +41,14 @@ function useModulePlugins({
 }) {
     const [plugins, setPlugins] = useState(storedPlugins);
     const [pending, setPending] = useState(true);
-
+    const normalizedEntries = useMemo(
+        () => Object.keys(pluginsEntries).reduce((prev, current) => ({...prev, [normalizeName(current)]: pluginsEntries[current]}), {}),
+        [pluginsEntries]
+    );
     const pluginsKeys = useMemo(() => pluginsConfig.reduce((prev, curr) => {
-        const key = curr?.name ?? curr;
-        if (pluginsEntries[key]) {
+        const key = normalizeName(curr?.name ?? curr);
+        if (normalizedEntries[key]) {
             return [ ...prev, key];
-        } else if (pluginsEntries[key + 'Plugin']) {
-            return [ ...prev, key + 'Plugin'];
         }
         return prev;
     }, []),
@@ -61,7 +62,7 @@ function useModulePlugins({
             setPending(true);
             const loadPlugins = filteredPluginsKeys
                 .map(pluginName => {
-                    return pluginsEntries[pluginName]().then((mod) => {
+                    return normalizedEntries[pluginName]().then((mod) => {
                         return mod.default;
                     });
                 });
