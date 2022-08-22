@@ -13,7 +13,6 @@ import {semaphore, wrapEpics} from "./EpicsUtils";
 import ConfigUtils from './ConfigUtils';
 import isEmpty from 'lodash/isEmpty';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {normalizeName} from "./PluginsUtils";
 
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
@@ -118,10 +117,17 @@ export const getState = (name) => {
     return !isEmpty(getStore(name)) && getStore(name)?.getState() || {};
 };
 
-const isolateEpics = (epics, muteState$) => {
-    const isolateEpic = (epic) => (action$, store) => epic(action$.let(semaphore(muteState$.startWith(true))), store, muteState$).let(semaphore(
-        muteState$.startWith(true)
-    ));
+const isolateEpics = (epics, muteState) => {
+    const isolateEpic = (epic, name) => (action$, store, options) => {
+        const modifiedOptions = options ?? {};
+        muteState[name] = new Subject();
+        const pluginRenderStream$ = muteState[name].asObservable();
+
+        modifiedOptions.pluginRenderStream$ = pluginRenderStream$;
+        return epic(action$.let(semaphore(pluginRenderStream$.startWith(true))), store, modifiedOptions).let(semaphore(
+            pluginRenderStream$.startWith(true)
+        ));
+    };
     return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic) }), {});
 };
 
@@ -130,19 +136,28 @@ export const createStoreManager = (initialReducers, initialEpics) => {
     // Create an object which maps keys to reducers
     const reducers = {...initialReducers};
     const epics = {...initialEpics};
+    const addedEpics = {};
+    const epicsListenedBy = {};
+    const epicRegistrations = {};
+    const groupedByModule = {};
+    let muteState = {};
 
     // Create the initial combinedReducer
     let combinedReducer = combineReducers(reducers);
-
     const subject = new Subject();
     subject.next(true);
-    const isolated = isolateEpics(epics, subject.asObservable());
-    const epic$ = new BehaviorSubject(combineEpics(...wrapEpics(isolated)));
+    // appEpics should not be mutable, therefore do not add them into muteState
+    const isolated = isolateEpics(epics, []);
 
+    const epic$ = new BehaviorSubject(combineEpics(...wrapEpics(isolated)));
     // An array which is used to delete state keys when reducers are removed
     let keysToRemove = [];
 
-    let muteState = {};
+    const addToRegistry = (module, epicName) => {
+        epicRegistrations[epicName] = [...(epicRegistrations[epicName] ?? []), module];
+        groupedByModule[module] = [...(groupedByModule[module] ?? []), epicName];
+        epicsListenedBy[epicName] = [...(epicsListenedBy[epicName] ?? []), module];
+    };
 
     return {
         getReducerMap: () => reducers,
@@ -195,24 +210,47 @@ export const createStoreManager = (initialReducers, initialEpics) => {
         // Adds a new epics set, mutable by the specified key
         addEpics: (key, epicsList) => {
             if (Object.keys(epicsList).length) {
-                const normalizedName = normalizeName(key);
-                muteState[normalizedName] = new Subject();
-                const isolatedEpics = isolateEpics(epicsList, muteState[normalizedName].asObservable());
+                const epicsToAdd = Object.keys(epicsList).reduce((prev, current) => {
+                    if (!addedEpics[current]) {
+                        addedEpics[current] = key;
+                        addToRegistry(key, current);
+                        return ({...prev, [current]: epicsList[current]});
+                    }
+                    addToRegistry(key, current);
+                    return prev;
+                }, {});
+                const isolatedEpics = isolateEpics(epicsToAdd, muteState);
                 wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
             }
         },
         // Mute epics set with a specified key
         muteEpics: (key) => {
-            const normalizedName = normalizeName(key);
-            if (typeof muteState[normalizedName] !== 'undefined') {
-                muteState[normalizedName].next(false);
-            }
+            const moduleEpicRegistrations = groupedByModule[key];
+            // try to mute everything registered by module. If epic is shared, remove current module from epicsListenedBy
+            moduleEpicRegistrations && moduleEpicRegistrations.forEach(epicName => {
+                const indexOf = epicsListenedBy[epicName].indexOf(key);
+                if (indexOf >= 0) {
+                    delete epicsListenedBy[epicName][indexOf];
+                }
+                // check if epic is still listened by anything. If not - mute it
+                if (!epicsListenedBy[epicName].length) {
+                    muteState[epicName].next(false);
+                }
+            });
         },
         unmuteEpics: (key) => {
-            const normalizedName = normalizeName(key);
-            if (typeof muteState[normalizedName] !== 'undefined') {
-                muteState[normalizedName].next(true);
-            }
+            const moduleEpicRegistrations = groupedByModule[key];
+            // unmute epics if exactly one plugin wants to register specific epic
+            moduleEpicRegistrations && moduleEpicRegistrations.forEach(epicName => {
+                const indexOf = epicsListenedBy[epicName].indexOf(key);
+                if (indexOf === -1) {
+                    epicsListenedBy[epicName].push(key);
+                }
+                // now if epic intended to be registered by first listener plugin - unmute it
+                if (epicsListenedBy[epicName].length === 1) {
+                    muteState[epicName].next(true);
+                }
+            });
         },
         rootEpic: (...args) => epic$.mergeMap(e => e(...args))
     };
