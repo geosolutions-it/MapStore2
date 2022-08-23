@@ -1,15 +1,22 @@
-
+/*
+ * Copyright 2022, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import React, { useRef, useEffect } from 'react';
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
+import uuidv1 from 'uuid/v1';
+
 import DrawGeometrySupport from './DrawGeometrySupport';
 import {
     MeasureTypes,
     convertUom,
     mapUomAreaToLength
 } from '../../../utils/MeasureUtils';
-import uuidv1 from 'uuid/v1';
 
 function getCesiumColor({ color, opacity }) {
     const [r, g, b, a] = chroma(color).gl();
@@ -272,7 +279,7 @@ function measureFeatureToCartesianCoordinates(feature) {
  * This adds also the Cesium Primitives to visualize the measurement geometries
  * @name DrawMeasureSupport
  * @prop {object} map instance of the current map library in use
- * @prop {boolean} active activate the drawing functionalities
+ * @prop {boolean} [active=false] activate the drawing functionalities
  * @prop {string} type measurement type to enable, one of: POLYLINE_DISTANCE_3D, AREA_3D, POINT_COORDINATES, HEIGHT_FROM_TERRAIN, ANGLE_3D and SLOPE
  * @prop {string} clearId value that trigger clear process
  * @prop {boolean} hideInfoLabel hide labels the show the measure value

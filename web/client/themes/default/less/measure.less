@@ -10,7 +10,11 @@
 // Theme
 // **************
 
-// #ms-components-theme(@theme-vars) {}
+#ms-components-theme(@theme-vars) {
+    .ms-measure-toolbar {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
 
 // **************
 // Layout

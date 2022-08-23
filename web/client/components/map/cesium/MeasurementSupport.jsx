@@ -1,15 +1,24 @@
+/*
+ * Copyright 2022, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import MSButton from '../../misc/Button';
+import { camelCase } from 'lodash';
 import { Glyphicon, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
 import { DropdownList } from 'react-widgets';
+
+import MSButton from '../../misc/Button';
 import DrawMeasureSupport from './DrawMeasureSupport';
 import MeasureToolbar from '../../mapcontrols/measure/MeasureToolbar';
 import { MeasureTypes, defaultUnitOfMeasureOptions, measureIcons } from '../../../utils/MeasureUtils';
 import tooltip from '../../misc/enhancers/tooltip';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import { camelCase } from 'lodash';
+
 const Button = tooltip(MSButton);
 
 /**

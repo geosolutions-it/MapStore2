@@ -89,7 +89,9 @@ function MeasureSupportComponent({ onInit, ...props }) {
         props.onChangeMeasureType(null);
     }, [props.mapType]);
 
-    return <MeasureSupportWithFormatNumber {...props} />;
+    // prevent the component load via lazy/suspense
+    // if the support is not enabled
+    return props.enabled ? <MeasureSupportWithFormatNumber {...props} /> : null;
 }
 
 export const MeasureSupport = connect(

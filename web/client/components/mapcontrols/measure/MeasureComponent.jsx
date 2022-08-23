@@ -278,7 +278,16 @@ class MeasureComponent extends React.Component {
         return (
             <BorderLayout
                 id={this.props.id}
-                style={{overflow: 'visible'}}
+                style={{
+                    overflow: 'visible',
+                    // the measure component needs to cover the surface of the container
+                    // only if it has the coordinates editor enabled
+                    ...(!this.props.showCoordinateEditor && {
+                        display: 'block',
+                        width: 'auto',
+                        height: 'auto'
+                    })
+                }}
                 header={
                     <MeasureToolbar
                         info={this.renderPanel(isFeatureInvalid)}
