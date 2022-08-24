@@ -35,7 +35,7 @@ We suggest you to clean up your project as well:
   - geostory
   - mobile
 - remove Define plugins in webpack-config.js or prod.webpack-config.js, since we have moved these definition to a more general buildConfig.js
-- add to your package.-json the globals object defined as the following
+- add to your package.json the globals object defined as the following
 
 ```json
 "globals": {
