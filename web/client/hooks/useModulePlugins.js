@@ -79,7 +79,7 @@ function useModulePlugins({
                             store.storeManager.addEpics(impl.name, impl.epics);
                         }
                     });
-                    if (reducerLoaded) {
+                    if (reducersLoaded) {
                         store.dispatch({type: 'REDUCERS_LOADED'});
                     }
                     return getPlugins({
