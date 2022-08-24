@@ -73,7 +73,7 @@ function useModulePlugins({
                     impls.forEach(impl => {
                         if (size(impl.reducers)) {
                             Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
-                            reducerLoaded = true;
+                            reducersLoaded = true;
                         }
                         if (size(impl.epics)) {
                             store.storeManager.addEpics(impl.name, impl.epics);
