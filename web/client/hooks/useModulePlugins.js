@@ -69,7 +69,7 @@ function useModulePlugins({
             Promise.all(loadPlugins)
                 .then((impls) => {
                     const store = getStore();
-                    let reducerLoaded = false;
+                    let reducersLoaded = false;
                     impls.forEach(impl => {
                         if (size(impl.reducers)) {
                             Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
