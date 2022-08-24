@@ -1,6 +1,6 @@
 {
   "name": "@mapstore/eslint-config-mapstore",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "description": "ESLint Configuration for MapStore project",
   "author": "GeoSolutions S.a.s.",
@@ -18,6 +18,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "globals": {
+    "__MAPSTORE_PROJECT_CONFIG__": false,
+    "__COMMITHASH__": false,
+    "__COMMIT_DATA__": false
   },
   "dependencies": {
     "@babel/eslint-parser": "7.11.5",
