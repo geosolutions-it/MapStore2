@@ -26,7 +26,10 @@ module.exports = {
         "beforeEach": false,
         "after": false,
         "afterEach": false,
-        "__DEVTOOLS__": false
+        "__DEVTOOLS__": false,
+        "__MAPSTORE_PROJECT_CONFIG__": false,
+        "__COMMITHASH__": false,
+        "__COMMIT_DATA__": false
     },
     "rules": {
         /**

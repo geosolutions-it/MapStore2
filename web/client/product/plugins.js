@@ -126,7 +126,6 @@ export default {
         UserManagerPlugin: require('../plugins/manager/UserManager').default,
         UserExtensionsPlugin: require('../plugins/UserExtensions').default,
         UserSessionPlugin: require('../plugins/UserSession').default,
-        VersionPlugin: require('../plugins/Version').default,
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder').default,
         WidgetsPlugin: require('../plugins/Widgets').default,
         WidgetsTrayPlugin: require('../plugins/WidgetsTray').default,
@@ -134,7 +133,6 @@ export default {
         ZoomInPlugin: require('../plugins/ZoomIn').default,
         ZoomOutPlugin: require('../plugins/ZoomOut').default,
         SidebarMenuPlugin: require('../plugins/SidebarMenu').default
-
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
