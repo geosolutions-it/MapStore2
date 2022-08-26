@@ -196,7 +196,9 @@
                       }
                     }
                 }
-            }, "Version", "DrawerMenu",
+            }, {
+              "name": "About"
+            }, "DrawerMenu",
             {
                 "name": "BackgroundSelector",
                 "cfg": {
@@ -318,7 +320,7 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
             "cfg": {
               "measurementAnnotationEdit": false
@@ -410,7 +412,9 @@
                 "cfg": {
                     "wrap": true
                 }
-            }, "About",
+            }, {
+              "name": "About"
+            },
             {
               "name": "MousePosition",
               "cfg": {
@@ -665,7 +669,9 @@
           "Dashboard",
           "Notifications",
           "Login",
-          "Version",
+          {
+            "name": "About"
+          },
           "Language",
           "NavMenu",
           "DashboardSave",
@@ -788,7 +794,9 @@
           },
           "Login",
           "BurgerMenu",
-          "Version",
+          {
+            "name": "About"
+          },
           "Language",
           "NavMenu",
           "Attribution",

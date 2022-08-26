@@ -35,12 +35,12 @@
         },
         "expand": "Ausklappen",
         "version": {
-            "label": "Version",
-            "message": "Botschaft",
-            "commit": "Commit",
-            "date": "Datum",
-            "author": "Autor",
-            "githuburl": "Öffnen Sie den Github-Baum in einem neuen Tab"
+          "title": "Mapstore Version",
+          "label": "Version",
+          "message": "Botschaft",
+          "commit": "Commit",
+          "date": "Datum",
+          "githubUrl": "Öffnen Sie den Github-Baum in einem neuen Tab"
         },
         "errorPage": {
             "title":"Ups, etwas ist schief gelaufen...",
