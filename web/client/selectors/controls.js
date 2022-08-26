@@ -12,6 +12,7 @@ export const createControlVariableSelector = (name, attribute) => state => get(s
 export const createControlEnabledSelector = name => createControlVariableSelector(name, 'enabled');
 
 
+export const aboutSelector = (state) => get(state, "controls.about.enabled", false);
 /**
  * selects the showCoordinateEditor flag from state
  * @memberof selectors.controls

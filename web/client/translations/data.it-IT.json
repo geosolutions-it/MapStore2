@@ -35,12 +35,12 @@
             "message": "Il livello non è stato ricaricato con un nome modificato"
         },
         "version": {
-            "label": "Versione",
-            "message": "Testo",
-            "commit": "Commit",
-            "date": "Data",
-            "author": "Autore",
-            "githuburl": "Apri Github in una nuova scheda"
+          "title": "Versione di Mapstore",
+          "label": "Versione",
+          "message": "Testo",
+          "commit": "Commit",
+          "date": "Data",
+          "githubUrl": "Apri Github in una nuova scheda"
         },
         "errorPage": {
             "title":"Ops, qualcosa è andato storto...",

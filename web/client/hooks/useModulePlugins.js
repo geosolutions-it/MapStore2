@@ -53,6 +53,7 @@ function useModulePlugins({
         return prev;
     }, []),
     [pluginsConfig]);
+
     const pluginsString = join(pluginsKeys, ',');
 
     useEffect(() => {
@@ -69,15 +70,19 @@ function useModulePlugins({
             Promise.all(loadPlugins)
                 .then((impls) => {
                     const store = getStore();
+                    let reducersLoaded = false;
                     impls.forEach(impl => {
                         if (size(impl.reducers)) {
                             Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
-                            store.dispatch({type: 'REDUCERS_LOADED'});
+                            reducersLoaded = true;
                         }
                         if (size(impl.epics)) {
                             store.storeManager.addEpics(impl.name, impl.epics);
                         }
                     });
+                    if (reducersLoaded) {
+                        store.dispatch({type: 'REDUCERS_LOADED'});
+                    }
                     return getPlugins({
                         ...filterRemoved(impls.map(impl => {
                             if (!isMapStorePlugin(impl?.component)) {

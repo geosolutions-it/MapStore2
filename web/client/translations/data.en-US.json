@@ -35,13 +35,12 @@
             "message": "The layer failed to reload with a changed name"
         },
         "version": {
-            "label": "Version",
-            "message": "Message",
-            "commit": "Commit",
-            "date": "Date",
-            "author": "Author",
-            "githuburl": "Open github tree in a new tab"
-
+          "title": "MapStore Version",
+          "label": "Version",
+          "message": "Message",
+          "commit": "Commit",
+          "date": "Date",
+          "githubUrl": "Open github tree in a new tab"
         },
         "errorPage": {
             "title":"Oops, something has gone wrong...",
