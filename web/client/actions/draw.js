@@ -18,14 +18,11 @@ export const SNAPPING_IS_LOADING = 'DRAW:SNAPPING_IS_LOADING';
 export const TOGGLE_SNAPPING = 'DRAW:TOGGLE_SNAPPING';
 export const SET_SNAPPING_CONFIG = 'DRAW:SET_SNAPPING_CONFIG';
 
-import  { normalizeGeometry } from '../../client/utils/CoordinatesUtils';
-import  { set } from '../../client/utils/ImmutableUtils';
 
 export function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
-
     return {
         type: GEOMETRY_CHANGED,
-        features: set("[0].geometry", normalizeGeometry(features[0].geometry), features),
+        features,
         owner,
         enableEdit,
         textChanged,
