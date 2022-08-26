@@ -30,21 +30,23 @@ Replacing:
 
 ### naming conventions
 
-**release and tag**
-- **vYYYY.XX.mm** name of the release and tag. (e.g. `v2022.01.01`) 
+#### release and tag
+
+- **vYYYY.XX.mm** name of the release and tag. (e.g. `v2022.01.01`)
 - **YYYY** is the year,
-- **XX** is the incremental number of the release for the current year (starting from 01) 
+- **XX** is the incremental number of the release for the current year (starting from 01)
 - **mm** is an incremental value (starting from 00) to increment for minor releases
 
-**stable branch**
+#### stable branch
+
 - **YYYY.XX.xx** name of stable branch (e.g. `2022.01.xx` )
 - **YYYY** is the year
-- **XX** is the incremental number of the release for the current year (starting from 01) 
+- **XX** is the incremental number of the release for the current year (starting from 01)
 - **xx** is the fixed text `xx`
 
 ### Release procedure
 
-```
+```txt
 - [ ] Create an issue with this checklist in the release milestone.
 - [ ] Verify if it is needed to release a new version of http_proxy, mapfish print or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process) and MapFish Print [here](https://github.com/geosolutions-it/mapfish-print/wiki/How-to-Release)
   - [ ] for geostore, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
@@ -62,7 +64,7 @@ Replacing:
 - [ ] Prepare PR for updating `CHANGELOG.md` for **master** and **stable** [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
 - [ ] Fix `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
 - [ ] Update the version of java modules on the stable branch to a stable, incremental version.
-    - [ ] Run `mvn release:update-versions -DdevelopmentVersion=<VERSION> -Pprinting,printingbundle,release`
+    - [ ] Run `mvn release:update-versions -DdevelopmentVersion=<VERSION> -Pprinting,printingbundle,binary`
     to update package version, where <VERSION> is the version of the java packages (e.g. `1.3.1`).
     - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`
 - [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp (java/web) should be deployed for new project system). 
@@ -87,7 +89,7 @@ Replacing:
   - [ ] `description` describe the major changes and add links of the Changelog paragraph.
 - [ ] Launch [MapStore2-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/) Jenkins job with **YYYY.XX.mm** for the version and **YYYY.XX.xx** for the branch to build and  **wait the end**). **Note:** Using the MapStore2 Releaser allows to write the correct version number into the binary packages.
     - [ ] Get the [latest mapstore.war](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/ws/product/target/mapstore.war) from the Releaser Jenkins build 
-    - [ ] Get the [latest mapstore2-YYYY.XX.mm-bin.zip](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/ws/release/target/) from the Releaser Jenkins build
+    - [ ] Get the [latest mapstore2-YYYY.XX.mm-bin.zip](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/ws/binary/target/) from the Releaser Jenkins build
     > from the job [configuration page](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/ws/) there is a link to access the job workspace to easily download the built WAR and binary package
     - [ ] Download `mapstore-printing.zip` [here](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/ws/java/printing/target/mapstore-printing.zip) from the Releaser Jenkins build workspace
     - [ ] Check that the printing plugin is missing in the binary package to release
