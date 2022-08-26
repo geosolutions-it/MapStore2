@@ -47,6 +47,9 @@ We suggest you to clean up your project as well:
 
 - edit the version of the *@mapstore/eslint-config-mapstore* to **1.0.5** in your package.json so that the new globals config will be inherited
 
+!!! note
+    this may fail on gha workflows, in that case we suggest to edit directly your package.json with globals taken from mapstore framework
+
 ### Support for OpenID
 
 MapStore introduced support for OpenID for google and keycloak. In order to have this functionalities and to be aligned with the latest version of MapStore you have to update the following files in your projects:
