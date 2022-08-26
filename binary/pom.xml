@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.geosolutions.mapstore</groupId>
-  <artifactId>mapstore-bin-release</artifactId>
+  <artifactId>mapstore-binary</artifactId>
   <packaging>pom</packaging>
   <version>${mapstore2.version}</version>
-  <name>MapStore 2 Release Module</name>
+  <name>MapStore 2 Binary Module</name>
   <description>Project to create the binary package</description>
   <url>http://www.geo-solutions.it</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>8.5.69</tomcat.version>
-    <release.number>${project.version}</release.number>
+    <binary.number>${project.version}</binary.number>
   </properties>
   <dependencies>
     <dependency>
@@ -147,7 +147,7 @@
           <descriptors>
             <descriptor>bin.xml</descriptor>
           </descriptors>
-          <finalName>mapstore2-${release.number}</finalName>
+            <finalName>mapstore2-${binary.number}</finalName>
           <outputDirectory>${project.build.directory}</outputDirectory>
         </configuration>
         <executions>

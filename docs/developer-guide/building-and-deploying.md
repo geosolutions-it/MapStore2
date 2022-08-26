@@ -19,14 +19,14 @@ To create the final war, you have several options:
 
 `mvn clean install -Dmapstore2.version=[version_identifier] [profiles]`
 
-* release build (produces also the binary)
+* binary build (produces also the binary)
 
-`mvn clean install -Dmapstore2.version=[version_identifier] -Prelease`
+`mvn clean install -Dmapstore2.version=[version_identifier] -Pbinary`
 
 ## Building the documentation
 
 MapStore uses JSDoc to annotate the components, so the documentation can be automatically generated using [docma](http://onury.github.io/docma/).
-Please see http://usejsdoc.org/ for further information about code documentation.
+Please see [jsdoc](http://usejsdoc.org/) for further information about code documentation.
 
 Refer to the existing files to follow the documentation style:
 
@@ -44,7 +44,7 @@ While developing you can generate the documentation to be accessible in the loca
 
 `npm run doctest`
 
-The resulting doc will be accessible from http://localhost:8081/mapstore/docs/
+The resulting doc will be accessible from `http://localhost:8081/mapstore/docs/`
 
 For the production deploy a different npm task must be used:
 
@@ -63,7 +63,6 @@ Build the mkdocs and generate md files to test in local machine by:
 Start the built-in dev-server of mkdocs to preview and test documentation live by:
 
 `npm run serve-doc`
-
 
 ## Understanding frontend building tools
 
