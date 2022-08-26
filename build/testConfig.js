@@ -5,7 +5,7 @@ const ProvidePlugin = require("webpack/lib/ProvidePlugin");
 const NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 const {
     VERSION_INFO_DEFINE_PLUGIN
-} = require('./utilities');
+} = require('./BuildUtils');
 
 module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
     browsers,

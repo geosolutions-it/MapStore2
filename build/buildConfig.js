@@ -11,7 +11,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const castArray = require('lodash/castArray');
 const {
     VERSION_INFO_DEFINE_PLUGIN
-} = require('./utilities');
+} = require('./BuildUtils');
 
 /**
  * Webpack configuration builder.
