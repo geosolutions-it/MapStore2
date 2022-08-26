@@ -34,16 +34,18 @@ We suggest you to clean up your project as well:
   - dashboard
   - geostory
   - mobile
-- remove Define plugins in webpack-config.js or prod.webpack-config.js, since we have moved these definition to a more general buildConfig.js
-- add to your package.json the globals object defined as the following
+- remove Define plugins in webpack-config.js or prod.webpack-config.js, since we have moved these definition to a more general *build/buildConfig.js* file
+- check that in your package.json you have this extends rule
 
-```json
-"globals": {
-      "__MAPSTORE_PROJECT_CONFIG__": false,
-      "__COMMITHASH__": false,
-      "__COMMIT_DATA__": false
-    }
+```js
+"eslintConfig": {
+    "extends": [
+      "@mapstore/eslint-config-mapstore"
+    ],
+    ...
 ```
+
+- edit the version of the *@mapstore/eslint-config-mapstore* to **1.0.5** in your package.json so that the new globals config will be inherited
 
 ### Support for OpenID
 
