@@ -12,8 +12,6 @@ import React from 'react';
 import { isEqual } from 'lodash';
 import MeasureComponent from './MeasureComponent';
 import Message from '../../I18N/Message';
-import Dialog from '../../misc/Dialog';
-import { Glyphicon } from 'react-bootstrap';
 import ResponsivePanel from "../../misc/panels/ResponsivePanel";
 
 class MeasureDialog extends React.Component {
@@ -38,7 +36,6 @@ class MeasureDialog extends React.Component {
         show: false,
         defaultOptions: {},
         onMount: () => {},
-        onInit: () => {},
         toggleMeasure: () => {},
         showCoordinateEditor: false,
         showAddAsAnnotation: false,
@@ -57,7 +54,6 @@ class MeasureDialog extends React.Component {
         this.props.toggleMeasure({
             geomType: otherDefaultOptions.geomType || "LineString"
         });
-        this.props.onInit(otherDefaultOptions);
     }
 
     UNSAFE_componentWillMount() {
@@ -92,15 +88,7 @@ class MeasureDialog extends React.Component {
                 >
                     <MeasureComponent id="measure-panel" {...this.props}/>
                 </ResponsivePanel>
-                : (<Dialog id="measure-dialog">
-                    <div key="header" role="header">
-                        <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
-                        <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
-                    </div>
-                    <div key="body" role="body">
-                        <MeasureComponent id="measure-panel" style={{minWidth: "500px"}}{...this.props}/>
-                    </div>
-                </Dialog>)
+                : (<MeasureComponent id="measure-panel" style={{minWidth: "500px"}}{...this.props}/>)
         ) : null;
     }
 }

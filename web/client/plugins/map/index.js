@@ -13,17 +13,6 @@ import { changeMapView, clickOnMap, mouseMove, mouseOut } from '../../actions/ma
 import { boxEnd } from '../../actions/box';
 import { removePopup } from '../../actions/mapPopups';
 import { layerLoading, layerLoad, layerError } from '../../actions/layers';
-
-import {
-    changeMeasurementState,
-    changeGeometry,
-    resetGeometry,
-    updateMeasures,
-    setTextLabels,
-    changeMeasurement
-} from '../../actions/measurement';
-
-import { measurementSelector } from '../../selectors/measurement';
 import { changeSelectionState } from '../../actions/selection';
 import { boxSelectionStatus } from '../../selectors/box';
 
@@ -76,24 +65,6 @@ const pluginsCreator = (mapType, actions) => {
             }));
         })(components.LMap);
 
-        const MeasurementSupport = connect((state) => ({
-            enabled: state.controls && state.controls.measure && state.controls.measure.enabled || false,
-            // TODO TEST selector to validate the feature: filter the coords, if length >= minValue return ft validated (close the polygon) else empty ft
-            measurement: measurementSelector(state),
-            useTreshold: state.measurement && state.measurement.useTreshold || null,
-            uom: state.measurement && state.measurement.uom || {
-                length: {unit: 'm', label: 'm'},
-                area: {unit: 'sqm', label: 'm²'}
-            }
-        }), {
-            changeMeasurementState,
-            updateMeasures,
-            resetGeometry,
-            changeGeometry,
-            setTextLabels,
-            changeMeasurement
-        })(components.MeasurementSupport || Empty);
-
         const DrawSupport = connect((state) =>
             ({
                 ...(state.draw ?? {}),
@@ -145,7 +116,6 @@ const pluginsCreator = (mapType, actions) => {
             Layer: LLayer,
             Feature: components.Feature || Empty,
             tools: {
-                measurement: MeasurementSupport,
                 overview: components.Overview || Empty,
                 scalebar: components.ScaleBar || Empty,
                 draw: DrawSupport,
