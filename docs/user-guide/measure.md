@@ -17,9 +17,9 @@ Through this window it is possible to:
 
 * Export the measures to *GeoJSON* <img src="../img/button/json_export_button.jpg" class="ms-docbutton"/>
 
-* Add the measure as a layer in [TOC](toc.md) <img src="../img/button/layers_button.jpg" class="ms-docbutton"/>
+* Add the measure as a layer in [TOC](toc.md#table-of-contents) <img src="../img/button/layers_button.jpg" class="ms-docbutton"/>
 
-* Add the measure as an [Annotation](annotations.md) <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/>
+* Add the measure as an [Annotation](annotations.md#adding-annotations) <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/>
 
 !!! note
     The user can perform more than one measurement simultaneously on the map and then cancel it with the ** Clear Measures ** button <img src="../img/button/x_button.jpg" class="ms-docbutton"/>
@@ -63,14 +63,14 @@ Measurements drawn on the map can be exported in `GeoJson` format through the <i
 
 ## Add the measure as layer 
 
-Once a measure is drawn, it is possible to add it as a layer through the <img src="../img/button/layers_button.jpg" class="ms-docbutton"/> button. The created layer is added to the [Table of Contents](toc.md) as follows:
+Once a measure is drawn, it is possible to add it as a layer through the <img src="../img/button/layers_button.jpg" class="ms-docbutton"/> button. The created layer is added to the [Table of Contents](toc.md#table-of-contents) as follows:
 
 <img src="../img/measure/as_layer.jpg" class="ms-docimage"/>
 
 ## Add measure as annotation
 
-Once a measure is drawn, it is possible to add it as an [Annotation](annotations.md) through the <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/> button. The following panel opens:
+Once a measure is drawn, it is possible to add it as an [Annotation](annotations.md#adding-annotations) through the <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/> button. The following panel opens:
 
 <img src="../img/measure/add-as-annotation-ex.jpg" class="ms-docimage"/>
 
-From this step the creation process is the same described in the [Annotations section](annotations.md).
+From this step the creation process is the same described in the [Annotations section](annotations.md#adding-annotations).

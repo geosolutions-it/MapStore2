@@ -1,7 +1,7 @@
 # Import Files
 **************
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to add map context files or vector files to a map. This operation can be performed by clicking on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/> from the [Menu Bar](menu-bar.md) and by selecting the <img src="../img/button/import.jpg" class="ms-docbutton"/> option. Following these steps the import screen appears:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to add map context files or vector files to a map. This operation can be performed by clicking on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/> from the [Menu Bar](menu-bar.md#menu-bar) and by selecting the <img src="../img/button/import.jpg" class="ms-docbutton"/> option. Following these steps the import screen appears:
 
 <img src="../img/import/import-screen.jpg" class="ms-docimage" style="max-width:700px;"/>
 
@@ -18,7 +18,7 @@ Here the user, in order to import a file, can drag and drop it inside the import
 
 A map context is, for example, the file that an user download selecting the <img src="../img/button/export.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu). Map contexts can be exported in two different format:
 
-* The <img src="../img/button/mapstore_format_button.jpg" class="ms-docbutton"/> file, is an export in `json` format of the current map context state: current projections, coordinates, zoom, extent, layers present in the map, widgets and more (additional information can be found in the [Maps Configuration](../developer-guide/maps-configuration.md) section of the [Developer Guide](https://mapstore.readthedocs.io/en/latest/developer-guide/)).
+* The <img src="../img/button/mapstore_format_button.jpg" class="ms-docbutton"/> file, is an export in `json` format of the current map context state: current projections, coordinates, zoom, extent, layers present in the map, widgets and more (additional information can be found in the [Maps Configuration](../developer-guide/maps-configuration.md#map-configuration) section of the [Developer Guide](https://mapstore.readthedocs.io/en/latest/developer-guide/)).
 
 Adding a MapStore configuration file the behavior is similar to the following:
 
@@ -47,9 +47,9 @@ In particular, from this window, it is possible to:
 
 * Toggle the **Zoom on the vector files**
 
-Once the settings are done, the files can be added with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button and they will be immediately available in the [TOC](toc.md) nested inside the *Imported layers* group. For example:
+Once the settings are done, the files can be added with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button and they will be immediately available in the [TOC](toc.md#table-of-contents) nested inside the *Imported layers* group. For example:
 
 <img src="../img/import/local-files-added.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 !!! warning
-    Currently is not possible to read the [Attribute Table](attributes-table.md) of the imported vector files and for this reason also the [Layer Filter](filtering-layers.md) and the creation of [Widgets](widgets.md) are not allowed for those layers.
+    Currently is not possible to read the [Attribute Table](attributes-table.md#attribute-table) of the imported vector files and for this reason also the [Layer Filter](filtering-layers.md#filtering-layers) and the creation of [Widgets](widgets.md#widgets) are not allowed for those layers.

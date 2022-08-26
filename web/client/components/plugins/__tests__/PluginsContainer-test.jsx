@@ -97,6 +97,12 @@ const pluginsCfgRef = {
     ]
 };
 
+const store = {
+    dispatch: () => {},
+    subscribe: () => {},
+    getState: () => ({})
+};
+
 describe('PluginsContainer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -110,8 +116,11 @@ describe('PluginsContainer', () => {
     });
 
     it('checks filterDisabledPlugins one disabled', () => {
-        const cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
-            plugins={plugins} pluginsConfig={pluginsCfg}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(
+            <Provider store={store}>
+                <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
+                    plugins={plugins} pluginsConfig={pluginsCfg}/>
+            </Provider>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -122,8 +131,11 @@ describe('PluginsContainer', () => {
     });
 
     it('checks filterDisabledPlugins no disabled', () => {
-        const cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
-            plugins={plugins} pluginsConfig={pluginsCfg2} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(
+            <Provider store={store}>
+                <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
+                    plugins={plugins} pluginsConfig={pluginsCfg2} />
+            </Provider>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -134,8 +146,11 @@ describe('PluginsContainer', () => {
     });
     it('test noRoot option disable root rendering of plugins', () => {
         // Not rendered without container
-        let cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
-            plugins={plugins} pluginsConfig={pluginsCfg3} />, document.getElementById("container"));
+        let cmp = ReactDOM.render(
+            <Provider store={store}>
+                <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
+                    plugins={plugins} pluginsConfig={pluginsCfg3} />
+            </Provider>, document.getElementById("container"));
         expect(cmp).toExist();
 
         let cmpDom = ReactDOM.findDOMNode(cmp);
@@ -145,8 +160,11 @@ describe('PluginsContainer', () => {
 
         // rendered in container
         expect(rendered.length).toBe(1);
-        cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
-            plugins={plugins} pluginsConfig={pluginsCfg4} />, document.getElementById("container"));
+        cmp = ReactDOM.render(
+            <Provider store={store}>
+                <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
+                    plugins={plugins} pluginsConfig={pluginsCfg4} />
+            </Provider>, document.getElementById("container"));
         expect(cmp).toExist();
 
         cmpDom = ReactDOM.findDOMNode(cmp);
@@ -157,13 +175,10 @@ describe('PluginsContainer', () => {
         expect(document.getElementById('no-root')).toExist();
     });
     it('checks plugin with forwardRef = true connect option', () => {
-        const store = {
-            dispatch: () => {},
-            subscribe: () => {},
-            getState: () => ({})
-        };
-        const app = ReactDOM.render(<Provider store={store}><PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
-            plugins={plugins} pluginsConfig={pluginsCfgRef}/></Provider>, document.getElementById("container"));
+        const app = ReactDOM.render(<Provider store={store}>
+            <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
+                plugins={plugins} pluginsConfig={pluginsCfgRef}/>
+        </Provider>, document.getElementById("container"));
 
         expect(app).toExist();
         expect(window.WithGlobalRefPlugin.myFunc).toExist();

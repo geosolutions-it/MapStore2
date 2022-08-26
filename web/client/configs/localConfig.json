@@ -10,7 +10,11 @@
           "https://gs-stable.geo-solutions.it/geoserver",
           "https://gs-stable.geo-solutions.it:443/geoserver",
           "http://gs-stable.geo-solutions.it/geoserver",
-          "http://gs-stable.geo-solutions.it:443/geoserver"
+          "http://gs-stable.geo-solutions.it:443/geoserver",
+          "https://gs-stable.geosolutionsgroup.com/geoserver",
+          "https://gs-stable.geosolutionsgroup.com:443/geoserver",
+          "http://gs-stable.geosolutionsgroup.com/geoserver",
+          "http://gs-stable.geosolutionsgroup.com:443/geoserver"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
@@ -192,7 +196,9 @@
                       }
                     }
                 }
-            }, "Version", "DrawerMenu",
+            }, {
+              "name": "About"
+            }, "DrawerMenu",
             {
                 "name": "BackgroundSelector",
                 "cfg": {
@@ -314,7 +320,7 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
             "cfg": {
               "measurementAnnotationEdit": false
@@ -406,7 +412,9 @@
                 "cfg": {
                     "wrap": true
                 }
-            }, "About",
+            }, {
+              "name": "About"
+            },
             {
               "name": "MousePosition",
               "cfg": {
@@ -661,7 +669,9 @@
           "Dashboard",
           "Notifications",
           "Login",
-          "Version",
+          {
+            "name": "About"
+          },
           "Language",
           "NavMenu",
           "DashboardSave",
@@ -784,7 +794,9 @@
           },
           "Login",
           "BurgerMenu",
-          "Version",
+          {
+            "name": "About"
+          },
           "Language",
           "NavMenu",
           "Attribution",

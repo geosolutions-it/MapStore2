@@ -15,6 +15,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 import ConfigUtils from '../utils/ConfigUtils';
 import { getMonitoredState } from '../utils/PluginsUtils';
+import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
 
 const PluginsContainer = connect((state) => ({
     statePluginsConfig: state.plugins,
@@ -23,7 +24,7 @@ const PluginsContainer = connect((state) => ({
         layerSettings: state.layers.settings
     }),
     monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer').default);
+}))(ModulePluginsContainer);
 
 class MapViewer extends React.Component {
     static propTypes = {
@@ -32,7 +33,8 @@ class MapViewer extends React.Component {
         statePluginsConfig: PropTypes.object,
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -50,6 +52,7 @@ class MapViewer extends React.Component {
             pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
             plugins={this.props.plugins}
             params={this.props.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }

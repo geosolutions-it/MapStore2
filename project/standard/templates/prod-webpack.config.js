@@ -4,8 +4,6 @@ const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
 const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
 const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
-const DefinePlugin = require("webpack/lib/DefinePlugin");
 
 const paths = {
     base: __dirname,
@@ -13,9 +11,6 @@ const paths = {
     framework: path.join(__dirname, "MapStore2", "web", "client"),
     code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
 };
-const gitRevPlugin = new GitRevisionPlugin({
-    branchCommand: 'log -n1 --format=format:"Message: %s%nCommit: %H%nDate: %aD%nAuthor: %an"'
-});
 module.exports = require('./MapStore2/build/buildConfig')({
     bundles: {
         '__PROJECTNAME__': path.join(__dirname, "js", "app"),
@@ -26,10 +21,7 @@ module.exports = require('./MapStore2/build/buildConfig')({
     },
     themeEntries,
     paths,
-    plugins: [extractThemesPlugin, ModuleFederationPlugin, new DefinePlugin({
-        __COMMITHASH__: JSON.stringify(gitRevPlugin.commithash()),
-        __COMMIT_DATA__: JSON.stringify(gitRevPlugin.branch())
-    })],
+    plugins: [extractThemesPlugin, ModuleFederationPlugin],
     prod: true,
     publicPath: undefined,
     cssPrefix: '.__PROJECTNAME__',

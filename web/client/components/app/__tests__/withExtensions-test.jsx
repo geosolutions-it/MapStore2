@@ -57,7 +57,16 @@ describe('StandardApp withExtensions', () => {
             },
             subscribe() {
             },
-            replaceReducer: () => { }
+            replaceReducer: () => { },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
+            }
         });
         setStore(store());
         const MyApp = ({ plugins }) => {
@@ -79,6 +88,15 @@ describe('StandardApp withExtensions', () => {
                 return {};
             },
             subscribe() {
+            },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
             }
         });
 
@@ -99,6 +117,15 @@ describe('StandardApp withExtensions', () => {
                 return {};
             },
             subscribe() {
+            },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
             }
         });
 
@@ -125,6 +152,15 @@ describe('StandardApp withExtensions', () => {
                 listener({
                     type: LOAD_EXTENSIONS
                 });
+            },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
             }
         });
 
@@ -165,7 +201,16 @@ describe('StandardApp withExtensions', () => {
                     }
                 });
             },
-            replaceReducer: () => { }
+            replaceReducer: () => { },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
+            }
 
         });
         setStore(store());
@@ -199,7 +244,16 @@ describe('StandardApp withExtensions', () => {
                     plugin: "My"
                 });
             },
-            replaceReducer: () => { }
+            replaceReducer: () => { },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
+            }
 
         });
         setStore(store());
@@ -228,7 +282,16 @@ describe('StandardApp withExtensions', () => {
             },
             subscribe() {
             },
-            replaceReducer() { }
+            replaceReducer() { },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
+            }
         });
         ConfigUtils.setConfigProp("persisted.reduxStore", store());
 
@@ -260,7 +323,16 @@ describe('StandardApp withExtensions', () => {
             },
             subscribe() {
             },
-            replaceReducer() { }
+            replaceReducer() { },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {},
+                unmuteEpics: () => {},
+                rootEpic: () => {}
+            }
         });
         ConfigUtils.setConfigProp("persisted.reduxStore", store());
         const MyApp = ({ plugins }) => {

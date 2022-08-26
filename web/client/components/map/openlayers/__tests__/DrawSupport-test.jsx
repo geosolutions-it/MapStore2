@@ -12,7 +12,7 @@ import assign from 'object-assign';
 import DrawSupport from '../DrawSupport';
 import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
-
+import {IMAGE} from '../../../../utils/openlayers/DrawSupportUtils';
 import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
@@ -2678,5 +2678,47 @@ describe('Test DrawSupport', () => {
 
     });
 
+
+    it('test snapping interaction creation when single tile option is checked', () => {
+        const fakeMap = {
+            ol_uid: "1",
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            }),
+            getLayers: () => ({
+                getArray: () => [{
+                    get: () => 'snap_layer_1',
+                    getSource: () => new VectorSource(),
+                    type: IMAGE
+                }]
+            })
+        };
+
+        let support = renderDrawSupport({ map: fakeMap});
+        support = renderDrawSupport({
+            map: fakeMap,
+            snapping: true,
+            options: {geodesic: true},
+            snappingLayer: "snap_layer_1",
+            snappingLayerInstance: { id: 'snap_layer_1', type: "wms" },
+            snapConfig: { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'},
+            features: []
+        });
+        const snappingInteraction = !!support?.snapInteraction;
+        expect(snappingInteraction).toBe(true);
+    });
 });
 

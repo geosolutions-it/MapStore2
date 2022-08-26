@@ -1,3 +1,5 @@
+# Story Settings
+
 The Story Settings panel allows the editor to customize the theme of the story and configure which additional components should appear to end users in the story view.
 
 The Story settings panel is available in Edit Mode and it can be opened by clicking on the **Settings** button <img src="../img/button/setting-button.jpg" class="ms-docbutton"/>.

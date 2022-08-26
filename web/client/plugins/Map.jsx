@@ -34,14 +34,13 @@ import ErrorPanel from '../components/map/ErrorPanel';
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
  * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
- * An example is the MeasurementSupport tool that allows implementing measurement on a map.
  * The list of enabled tools can be configured using the tools property, as in the following example:
  *
  * ```
  * {
  * "name": "Map",
  * "cfg": {
- *     "tools": ["measurement", "locate", "overview", "scalebar", "draw", "highlight"]
+ *     "tools": ["overview", "scalebar", "draw", "highlight"]
  *   ...
  *  }
  * }
@@ -106,7 +105,7 @@ import ErrorPanel from '../components/map/ErrorPanel';
  *      "cfg": {
  *        "shouldLoadFont": true,
  *        "fonts": ['FontAwesome'],
- *        "tools": ["measurement", "locate", "overview", "scalebar", "draw", {
+ *        "tools": ["overview", "scalebar", "draw", {
  *          "leaflet": {
  *            "name": "test",
  *            "impl": "{context.TestSupportLeaflet}"
@@ -231,7 +230,7 @@ class MapPlugin extends React.Component {
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
-        tools: ["measurement", "scalebar", "draw", "highlight", "popup", "box"],
+        tools: ["scalebar", "draw", "highlight", "popup", "box"],
         options: {},
         mapOptions: {},
         fonts: ['FontAwesome'],

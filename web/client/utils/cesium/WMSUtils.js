@@ -60,17 +60,22 @@ export const getProxy = (options) => {
 export const wmsToCesiumOptionsBIL = (options) => {
     let url = options.url;
     const headers = getAuthenticationHeaders(url, options.securityToken);
+    // MapStore only supports "image/bil" format for WMS provider
     return {
         url,
         headers,
         proxy: getProxy(options),
-        littleEndian: options.littleendian || false,
+        littleEndian: options.littleEndian || options.littleendian || false,
         layerName: options.name,
         version: options.version,
-        fixedHeight: options.fixedHeight,
-        fixedWidth: options.fixedWidth,
         crs: options.crs, // Support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
-        format: "image/bil" // MapStore only supports "image/bil" format for WMS provider
+        sampleTerrainZoomLevel: options.sampleTerrainZoomLevel,
+        heightMapWidth: options.heightMapWidth,
+        heightMapHeight: options.heightMapHeight,
+        waterMask: options.waterMask,
+        offset: options.offset,
+        highest: options.highest,
+        lowest: options.lowest
     };
 };
 

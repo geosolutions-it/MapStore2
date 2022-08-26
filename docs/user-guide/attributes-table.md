@@ -8,9 +8,9 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), through the <
 
 Accessing this panel the user can perform the following main operations:
 
-* [Edit records](attributes-table.md#editing-and-removing-existing-features) through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button 
+* [Edit records](#editing-and-removing-existing-features) through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button 
 
-* Filter records in Attribute Table in different ways as described in the [Set filter](attributes-table.md#set-filters) section below
+* Filter records in Attribute Table in different ways as described in the [Set filter](#set-filters) section below
 
 * Opening the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button
 
@@ -22,7 +22,7 @@ Accessing this panel the user can perform the following main operations:
 
 * Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
 
-* Create [Widgets](widgets.md) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
+* Create [Widgets](widgets.md#widgets) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
 
 * Zoom to features through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record or zoom to the page max extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton"/> button (available only if the virtual scrolling is disabled, it is enabled by default in MapStore). 
 
@@ -119,7 +119,7 @@ With a click on **Save changes** <img src="../img/button/save-changes.jpg" class
 
 ## Set filters
 
-In the Attribute table it is possible to apply filters in three ways (as explained in the [Filtering layers](filtering-layers.md) section):
+In the Attribute table it is possible to apply filters in three ways (as explained in the [Filtering layers](filtering-layers.md#filtering-layers) section):
 
 * [Advanced search](filtering-layers.md#advanced-search)
 

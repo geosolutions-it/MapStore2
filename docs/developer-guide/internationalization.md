@@ -1,4 +1,4 @@
-# Introduction
+# Internationalization
 MapStore offers the support for internationalization (I18N). To provide this functionality MapStore uses [react-intl](https://github.com/yahoo/react-intl).
 In this section you can find which configuration and JS files are involved in the I18N system.
 
