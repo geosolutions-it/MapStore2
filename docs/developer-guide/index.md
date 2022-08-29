@@ -33,10 +33,10 @@ Then point your preferred browser to [http://localhost:8081](http://localhost:80
 npm test
 
 # run test with hot reload
-npm run continuoustest
+npm run test:watch
 
 #generate test documentation
-npm run doctest
+npm run doc:test
 ```
 
 ## Quick Build and Deploy
@@ -45,7 +45,7 @@ Install latest Maven, if needed, from [here](https://maven.apache.org/download.c
 
 Build the deployable war:
 
-```
+```sh
 ./build.sh [version_identifier]
 ```
 

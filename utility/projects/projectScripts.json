@@ -1,12 +1,17 @@
 {
-    "postinstall": "node MapStore2/utility/build/postInstall.js",
-    "clean": "rimraf dist",
-    "compile": "npm run clean && mkdirp ./dist && node --max_old_space_size=3072 ./node_modules/webpack/bin/webpack.js --color --config prod-webpack.config.js",
-    "start": "webpack serve --progress --color --port 8081 --hot --inline --content-base .",
-    "test": "karma start ./karma.conf.single-run.js --color",
-    "continuoustest": "karma start ./karma.conf.continuous-test.js --color",
-    "mvntest": "karma start ./karma.conf.single-run.js --reporters junit,dots,coverage",
-    "lint": "eslint js --ext .jsx,.js",
-    "travis": "eslint js --ext .jsx,.js && karma start ./karma.conf.single-run.js --browsers FirefoxHeadless --reporters dots,junit,coverage,coveralls",
-    "updateDevDeps": "node updateDevDependencies.js"
+  "start": "webpack serve --progress --color --port 8081 --hot --inline --content-base .",
+  "frontend:build": "npm run clean && mkdirp ./dist && node --max_old_space_size=3072 ./node_modules/webpack/bin/webpack.js --color --config prod-webpack.config.js",
+  "compile": "npm run frontend:build",
+  "backend:build": "mvn clean install -Pprinting",
+  "backend:dev": "npm run backend:build && mvn cargo:run -f ./web/pom.xml",
+
+  "pretest": "npm run lint",
+  "test": "karma start ./karma.conf.single-run.js --color",
+  "test:watch": "karma start ./karma.conf.continuous-test.js --color",
+  "continuoustest": "npm run test:watch",
+
+  "postinstall": "node MapStore2/utility/build/postInstall.js",
+  "clean": "rimraf dist",
+  "lint": "eslint js --ext .jsx,.js",
+  "updateDevDeps": "node updateDevDependencies.js"
 }

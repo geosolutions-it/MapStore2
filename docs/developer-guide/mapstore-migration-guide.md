@@ -22,6 +22,15 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2022.01.02 to 2022.02.00
 
+### Package scripts migration
+
+With this release we are refactoring a bit the naming of the scripts maintaining retrocompatibility avoiding builds on ci/cd systems to break.
+Anyway we suggest to align them as listed [here](https://github.com/geosolutions-it/MapStore2/blob/master/utility/projects/projectScripts.json)
+
+We have removed travis and mvntest scripts.
+
+Although is optional we suggest to align the new names into build.sh as well
+
 ### Version plugin has been removed
 
 We no longer maintain the Version plugin since we have moved its content inside the About plugin (see [here](https://github.com/geosolutions-it/MapStore2/issues/7934#issuecomment-1201433942) for more details)

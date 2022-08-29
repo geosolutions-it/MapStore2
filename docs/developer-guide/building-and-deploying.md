@@ -25,8 +25,7 @@ To create the final war, you have several options:
 
 ## Building the documentation
 
-MapStore uses JSDoc to annotate the components, so the documentation can be automatically generated using [docma](http://onury.github.io/docma/).
-Please see http://usejsdoc.org/ for further information about code documentation.
+MapStore uses JSDoc to annotate the components, so the documentation can be automatically generated using [docma](http://onury.github.io/docma/). Please see [http://usejsdoc.org/](http://usejsdoc.org/) for further information about code documentation.
 
 Refer to the existing files to follow the documentation style:
 
@@ -42,9 +41,9 @@ To install docma:
 
 While developing you can generate the documentation to be accessible in the local machine by:
 
-`npm run doctest`
+`npm run doc:test`
 
-The resulting doc will be accessible from http://localhost:8081/mapstore/docs/
+The resulting doc will be accessible from [http://localhost:8081/mapstore/docs/](http://localhost:8081/mapstore/docs/)
 
 For the production deploy a different npm task must be used:
 
@@ -54,16 +53,15 @@ The documentation will be accessible from the */mapstore/docs/* path
 
 The generated folders can be removed with:
 
-`npm run cleandoc`
+`npm run doc:clean`
 
 Build the mkdocs and generate md files to test in local machine by:
 
-`npm run build-doc`
+`npm run doc-build`
 
 Start the built-in dev-server of mkdocs to preview and test documentation live by:
 
-`npm run serve-doc`
-
+`npm run doc-serve`
 
 ## Understanding frontend building tools
 
@@ -84,13 +82,12 @@ In particular:
 | Command                  | Description                                                  |
 |--------------------------|--------------------------------------------------------------|
 | `npm install`            | download dependencies and init developer environment         |
-| `npm start`              | start development instance                                   |
-| `npm run compile`        | run single build / bundling                                  |
+| `npm start`              | start development instance and backend too                   |
+| `npm run frontend:build` | run single build / bundling                                  |
 | `npm test`               | run test suite once                                          |
-| `npm run continuoustest` | run continuous test suite running (useful during developing) |
+| `npm run test:watch`     | run continuous test suite running (useful during developing) |
 | `npm run lint`           | run ESLint checks                                            |
-| `npm run mvntest`        | run tests from Maven                                         |
-| `npm run travis`         | run the test build used for travis                           |
+| `npm run i18n`           | checks missing strings in mandatory i18n files (ref to en-US)|
 
 ## Including the printing engine in your build
 

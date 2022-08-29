@@ -7,68 +7,39 @@ Due to the dual nature of the project (Java backend and JavaScript frontend) bui
 
 A basic knowledge of both tools is required.
 
-## Frontend
+## Start developing
 
 To start developing the MapStore framework you have to:
 
-* download developer tools and frontend dependencies locally:
+* download developer tools and install frontend dependencies locally:
 
-`npm install`
+```sh
+    npm install
+```
 
 After a while (depending on the network bandwidth) the full set of dependencies and tools will be downloaded to the **node_modules** sub-folder.
 
-* start the development instance with:
+* **start the local server and the backend** instance with:
 
-`npm start`
-
-Then point your preferred browser to [http://localhost:8081](http://localhost:8081). By default the front-end works using the online dev server as back-end. This configuration is useful for a quick startup, but is not the suggested configuration if you want to develop.
-To learn how to connect the front-end dev server to a local back-end read the following instructions.
-
-### Connect Front-end to local back-end
-
-By default `npm start` uses the online dev server as a backend.
-This configuration needs to be changed to develop locally in order to access all the functionalities.
-
-To use a local back-end you have to:
-
-* **Remove auth configuration dedicated to GeoServer** from `localConfig.json --> authenticationRules` (it provides the MapStore/GeoServer integration for dev-server, that is not present in your local back-end)
-
-```diff
-"authenticationRules": [{
-        "urlPattern": ".*geostore.*",
-        "method": "bearer"
-      }, {
-        "urlPattern": ".*rest/config.*",
-        "method": "bearer"
--      },
--      {
--        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it\\/geoserver/.*",
--        "authkeyParamName": "authkey",
--       "method": "authkey"
-    }],
+```sh
+    npm start
 ```
 
-* **Run the back-end locally**. See the [dedicated section in this page](#back-end)
+Then point your preferred browser to [http://localhost:8081/?debug=true#/](http://localhost:8081/?debug=true#/). By default the frontend works using the local dev server as backend. This configuration is suggested if you want to develop.
 
-* **Setup dev-server to use the local back-end**, applying this changes to `buildConfig.js` --> devServer configuration. (the configuration of the port and path depends on how you configured the local back-end.
+**NOTE:**
 
-```javascript
-devServer: {
-        // ...
-        proxy: {
-            '/rest/': {
-                target: "http://localhost:8080/mapstore" // port 8080, mapstore path
-            },
-            '/proxy': {
-                target: "http://localhost:8080/mapstore", // port 8080, mapstore path
-                secure: false
-            }
-        }
-    },
-    // ...
+```txt
+Now, by default `npm start` uses the local dev server as a backend which now runs concurrently with the frontend dev server.
 ```
 
-* **re-run** `npm start`
+If you still want to start only the frontend because you have the backend running in a tomcat container for example you may simply run
+
+```sh
+npm run frontend:dev
+```
+
+See the [dedicated section in this page](#backend) for more info
 
 ### Debugging the frontend
 
@@ -110,32 +81,35 @@ This way you can monitor the application's state evolution and the action trigge
 
 To run the MapStore frontend test suite you can use:
 
-`npm test`
+```sh
+npm test
+```
 
 You can also have a continuously running watching test runner, that will execute the complete suite each time a file is changed, launching:
 
-`npm run continuoustest`
+```sh
+npm run test:watch
+```
 
 Usually during the development you may need to execute less tests, when working on some specific files.
 
-You can reduce the tests invoked in `npm run continuoustest` execution by editing the file `tests.webpack.js` and modifying the directory (`/web`) and/or the regular expression that intercept the files to execute.
+You can reduce the tests invoked in `npm run test:watch` execution by editing the file `tests.webpack.js` and modifying the directory (`/web`) and/or the regular expression that intercept the files to execute.
 
 To run ESLint checks launch:
 
-`npm run lint`
+```sh
+npm run lint
+```
 
-To run the same tests Travis will check (before a pull request):
-`npm run travis`
+More information on frontend building tools and configuration is available [here](frontend-building-tools-and-configuration)
 
-More information on frontend building tools and configuration is available [here](building-and-deploying.md#understanding-frontend-building-tools)
+## Backend
 
-## Back-end
-
-In order to have a full running MapStore in development environment, you need to run also the back-end java part locally. In this section you will find how to start the back-end and how to develop with it.
+In order to have a full running MapStore in development environment, you need to run also the backend java part locally. In this section you will find how to start the backend and how to develop with it.
 
 ### Defaults Users and Database
 
-Running MapStore back-end locally, on start-up you will find the following users:
+Running MapStore backend locally, on start-up you will find the following users:
 
 * `admin`, with ADMIN role and password `admin`
 * `user` with USER role with password `user`
@@ -144,24 +118,25 @@ You can login as `admin` to set-up new users and access to all the features rese
 
 The database used by default in this mode is H2 on disk. You can find the files of the database in the directory `webapps/mapstore/` starting from your execution context. Check how to set-up database in the dedicated section of the documentation.
 
-### Running Back-end
+### Running Backend
 
-When we say "running the back-end", in fact we say that we are running some sort of a whole instance of MapStore locally, that can be used as back-end for your front-end dev server, or for debugging of the back-end itself.
+When we say "running the backend", in fact we say that we are running some sort of a whole instance of MapStore locally, that can be used as backend for your frontend dev server, or for debugging of the backend itself.
 
 #### Embedded tomcat
 
 MapStore is configured to use a tomcat maven plugin-in to build and run mapstore locally. To use it you have to:
 
-* make sure to run at least once `mvn install` in the root directory, to make `mapstore-product` artifact available.
-* `cd product` directory
-* run `mvn cargo:run`
+* make sure to run at least once `mvn install` **in the root** directory, to make `mapstore-product` artifact available.
+* npm run backend:dev
 
-Your local back-end will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
-If you want to change the port you can edit the dedicated entry in `product/pom.xml`, just remember to change also the dev-server proxy configuration on the front-end in the same way.
+Now you are good to go, and you can start the frontend
+
+Your local backend will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
+If you want to change the port you can edit the dedicated entry in `product/pom.xml`, just remember to change also the dev-server proxy configuration on the frontend in the same way.
 
 #### Local tomcat instance
 
-If you prefer, or if you have some problems with `mvn cargo:run`, you can run MapStore back-end in a tomcat instance instead of using the embedded one.
+If you prefer, or if you have some problems with `mvn cargo:run`, you can run MapStore backend in a tomcat instance instead of using the embedded one.
 To do so, you can :
 
 * download a tomcat standalone [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) and extract to a folder of your choice
@@ -169,11 +144,11 @@ To do so, you can :
 * Copy the `mapstore.war` and then head back to your tomcat folder. Look for a `webapps` folder and paste the `mapstore.war` file there.
 * To start tomcat server, go to the terminal, `cd` into the root of your tomcat extracted folder and run `./bin/startup.sh` ( unix systems) or `./bin/startup.bat` (Windows). The server will start on port `8080` and Mapstore will be running at `http://localhost:8080/mapstore`. For development purposes we're only interested in the backend that was started on the tomcat server along with Mapstore.
 
-Even in this case you can connect your front-end to point to this instance of MapStore.
+Even in this case you can connect your frontend to point to this instance of MapStore.
 
 ### Debug
 
-To run or debug the server side part of MapStore we suggest to run the back-end in tomcat (embedded or installed) and connect in remote debugging to it. This guide explains how to do it with Eclipse. This procedure has been tested with Eclipse Luna.
+To run or debug the server side part of MapStore we suggest to run the backend in tomcat (embedded or installed) and connect in remote debugging to it. This guide explains how to do it with Eclipse. This procedure has been tested with Eclipse Luna.
 
 ### Enable Remote Debugging
 
