@@ -128,7 +128,7 @@ const isolateEpics = (epics, muteState) => {
             pluginRenderStream$.startWith(true)
         ));
     };
-    return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic) }), {});
+    return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic, k) }), {});
 };
 
 
