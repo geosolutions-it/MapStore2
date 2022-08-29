@@ -13,6 +13,7 @@ import {semaphore, wrapEpics} from "./EpicsUtils";
 import ConfigUtils from './ConfigUtils';
 import isEmpty from 'lodash/isEmpty';
 import {BehaviorSubject, Subject} from 'rxjs';
+import {normalizeName} from "./PluginsUtils";
 
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
@@ -209,14 +210,15 @@ export const createStoreManager = (initialReducers, initialEpics) => {
         },
         // Adds a new epics set, mutable by the specified key
         addEpics: (key, epicsList) => {
+            const normalizedName = normalizeName(key);
             if (Object.keys(epicsList).length) {
                 const epicsToAdd = Object.keys(epicsList).reduce((prev, current) => {
                     if (!addedEpics[current]) {
-                        addedEpics[current] = key;
-                        addToRegistry(key, current);
+                        addedEpics[current] = normalizedName;
+                        addToRegistry(normalizedName, current);
                         return ({...prev, [current]: epicsList[current]});
                     }
-                    addToRegistry(key, current);
+                    addToRegistry(normalizedName, current);
                     return prev;
                 }, {});
                 const isolatedEpics = isolateEpics(epicsToAdd, muteState);
@@ -230,7 +232,7 @@ export const createStoreManager = (initialReducers, initialEpics) => {
             moduleEpicRegistrations && moduleEpicRegistrations.forEach(epicName => {
                 const indexOf = epicsListenedBy[epicName].indexOf(key);
                 if (indexOf >= 0) {
-                    delete epicsListenedBy[epicName][indexOf];
+                    epicsListenedBy[epicName].splice(indexOf, 1);
                 }
                 // check if epic is still listened by anything. If not - mute it
                 if (!epicsListenedBy[epicName].length) {
