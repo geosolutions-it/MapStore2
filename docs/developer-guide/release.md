@@ -67,6 +67,9 @@ npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
   - Test **everything**, not only the new features
   - Test the creation of a standard project starting in from the stable branch and with the internal backend, so `npm start:both`, then check that an empty homepage loads correctly
 - [ ] Test [Binary](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/) (take the mapstore2-<RELEASE_BRANCH>-qa-bin.zip, from latest build)
+- [ ] check if there are changes to be ported to STABLE branch of [mapstore-datadir](https://github.com/geosolutions-it/mapstore-datadir/tree/STABLE) repo
+  - [ ] if so prepare a pr to be merged
+  - [ ] merge the PR and move on with the steps otherwise stop here
 - [ ] Launch the [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/) and wait for the MapStore2-Stable-EndPointsTests to complete as well
   - [ ] When previous two jobs are green you can:
     - [ ] Change [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/) to build on stable branch **YYYY.XX.xx**
@@ -77,7 +80,7 @@ npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
   - [ ] `branch` **YYYY.XX.xx**
   - [ ] `tag` **vYYYY.XX.mm** (create a new tag from UI after entering this value)
   - [ ] `release` name equal to tag **vYYYY.XX.mm**  
-  - [ ] `description` describe the major changes and add links of the Cha ngelog paragraph.
+  - [ ] `description` describe the major changes and add links of the Changelog paragraph.
 - [ ] Launch [MapStore2-Stable-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Releaser/) Jenkins job with **YYYY.XX.mm** for the version and **YYYY.XX.xx** for the branch to build and  **wait the end**). **Note:** Using the MapStore2 Releaser allows to write the correct version number into the binary packages. In the overview of this job you can find and download :
   - [ ] the latest `mapstore.war`
   - [ ] the latest binary `mapstore2-YYYY.XX.mm-bin.zip`
