@@ -14,7 +14,7 @@ To start developing the MapStore framework you have to:
 * download developer tools and install frontend dependencies locally:
 
 ```sh
-    npm install
+npm install
 ```
 
 After a while (depending on the network bandwidth) the full set of dependencies and tools will be downloaded to the **node_modules** sub-folder.
@@ -22,7 +22,7 @@ After a while (depending on the network bandwidth) the full set of dependencies 
 * **start the local server and the backend** instance with:
 
 ```sh
-    npm start
+npm start:both
 ```
 
 Then point your preferred browser to [http://localhost:8081/?debug=true#/](http://localhost:8081/?debug=true#/). By default the frontend works using the local dev server as backend. This configuration is suggested if you want to develop.
@@ -36,7 +36,7 @@ Now, by default `npm start` uses the local dev server as a backend which now run
 If you still want to start only the frontend because you have the backend running in a tomcat container for example you may simply run
 
 ```sh
-npm run frontend:dev
+npm start
 ```
 
 See the [dedicated section in this page](#backend) for more info

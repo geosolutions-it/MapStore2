@@ -82,8 +82,10 @@ In particular:
 | Command                  | Description                                                  |
 |--------------------------|--------------------------------------------------------------|
 | `npm install`            | download dependencies and init developer environment         |
-| `npm start`              | start development instance and backend too                   |
+| `npm start`              | start development instance (frontend only)                   |
+| `npm start:both`         | start development instance and the backend too               |
 | `npm run frontend:build` | run single build / bundling                                  |
+| `npm run backend:dev`    | run embedded backend only                                    |
 | `npm test`               | run test suite once                                          |
 | `npm run test:watch`     | run continuous test suite running (useful during developing) |
 | `npm run lint`           | run ESLint checks                                            |

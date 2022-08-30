@@ -121,7 +121,9 @@ Start the demo locally:
 
 The demo runs at `http://localhost:8081` afterwards.
 
-It starts also the backend, so if you want to just start the frontend you have to use `npm run frontend:dev`
+To start also the backend run:
+
+`npm run backend:dev`
 
 Install latest Maven, if needed, from <a href="https://maven.apache.org/download.cgi" target="_blank">here</a> (see [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) the minimum version required).
 

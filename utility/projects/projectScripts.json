@@ -1,7 +1,12 @@
 {
-  "start": "webpack serve --progress --color --port 8081 --hot --inline --content-base .",
-  "frontend:build": "npm run clean && mkdirp ./dist && node --max_old_space_size=3072 ./node_modules/webpack/bin/webpack.js --color --config prod-webpack.config.js",
+  "start": "npm run frontend:dev",
+  "start:both": "concurrently \"npm:frontend:dev\" \"npm:backend:dev\"",
+
+  "frontend:dev": "webpack serve --progress --color --port 8081 --hot --inline --config webpack.config.js --content-base .",
+  "frontend:dev-prod": "webpack serve --progress --color --port 8081 --hot --inline --config prod.webpack.config.js --content-base .",
+  "frontend:build": "npm run clean && mkdirp ./dist && webpack build --progress --color --config prod-webpack.config.js",
   "compile": "npm run frontend:build",
+
   "backend:build": "mvn clean install -Pprinting",
   "backend:dev": "npm run backend:build && mvn cargo:run -f ./web/pom.xml",
 

@@ -300,9 +300,11 @@
     "xpath": "0.0.27"
   },
   "scripts": {
-    "start": "concurrently \"npm:frontend:dev\" \"npm:backend:dev\"",
+    "start": "npm run frontend:dev",
+    "start:both": "concurrently \"npm:frontend:dev\" \"npm:backend:dev\"",
+
     "frontend:dev": "webpack serve --progress --color --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
-    "frontend:dev-prod": "webpack serve --progress --color --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",
+    "frontend:dev-prod": "webpack serve --progress --color --port 8081 --hot --inline --config build/prod-webpack.config.js --content-base web/client",
     "frontend:build": "npm run clean && mkdirp ./web/client/dist && webpack build --progress --color --config build/prod-webpack.config.js",
     "compile": "npm run frontend:build",
 
@@ -326,7 +328,8 @@
     "lint": "eslint web/client --ext .jsx,.js",
     "i18n": "node  utility/translations/findMissingTranslations.js",
     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
-    "generate-icons": "node ./build/generateIcons.js"
+    "generate:icons": "node ./build/generateIcons.js",
+    "generate:changelog": "node ./build/generateChangelog.js"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"

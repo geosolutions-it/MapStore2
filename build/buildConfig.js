@@ -52,6 +52,7 @@ const {
  * @param {object} config.resolveModules webpack resolve configuration object, available only with object syntax
  * @param {object} config.projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
  * @param {string} config.cesiumBaseUrl (optional) url for cesium assets, workers and widgets. It is needed only for custom project where the structure of dist folder is not following the default one
+ * @param {string} config.baseUrl (optional) url for proxy, by default is http://localhost:8080
  * @returns a webpack configuration object
  * @example
  * // It's possible to use a single object argument to pass the parameters.
@@ -118,7 +119,8 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     projectConfig = {},
     devServer,
     resolveModules,
-    cesiumBaseUrl
+    cesiumBaseUrl,
+    baseUrl = "http://localhost:8080"
 }) => ({
     target: "web",
     entry: assign({}, bundles, themeEntries),
@@ -307,25 +309,25 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         publicPath: "/dist/",
         proxy: proxy || {
             '/rest': {
-                target: "localhost:8080/mapstore"
+                target: `${baseUrl}/mapstore`
             },
             '/pdf': {
-                target: "localhost:8080/mapstore"
+                target: `${baseUrl}/mapstore`
             },
             '/mapstore/pdf': {
-                target: "localhost:8080"
+                target: `${baseUrl}`
             },
             '/proxy': {
-                target: "localhost:8080/mapstore"
+                target: `${baseUrl}/mapstore`
             },
             '/extensions.json': {
-                target: "http://localhost:8080/mapstore"
+                target: `${baseUrl}/mapstore`
             },
             '/dist/extensions': {
-                target: "http://localhost:8080/mapstore"
+                target: `${baseUrl}/mapstore`
             },
             '/geofence': {
-                target: "http://localhost:8080"
+                target: `${baseUrl}`
             },
             '/docs': {
                 target: "http://localhost:8081",
