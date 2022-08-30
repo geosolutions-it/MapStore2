@@ -46,10 +46,9 @@ If you create a *standard* project, you can customize it editing **js/app.jsx**:
 
 The following steps are:
 
-* npm install to download dependencies
-* npm start to test the project
-* git add / push to publish the initial project on the git repo
-* ./build.sh to build the full war
+* `npm install` to download dependencies
+* `npm start` to test the project
+* `./build.sh` to build the full .war
 
 ## Create a new project type
 

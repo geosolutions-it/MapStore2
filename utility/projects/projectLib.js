@@ -22,16 +22,43 @@ const initGit = (outFolder) => {
     const git = require('simple-git')(outFolder);
     return new Promise((resolve, reject) => {
         git.init(() => {
+            process.stdout.write('initializing git repo...\n');
             git.submoduleAdd('https://github.com/geosolutions-it/MapStore2.git', 'MapStore2', (err) => {
                 if (err) {
                     reject(err);
                 } else {
                     resolve();
+                    process.stdout.write('MapStore2 submodule added...\n');
                 }
             });
         });
     });
 };
+
+
+/**
+ * it creates the first commit to be used in git versioning
+ * @return {Promise} the promise to continue the flow of project creation
+ */
+const createFirstCommit = (outFolder) => {
+    process.stdout.write('Creating first commit...\n');
+
+    const git = require('simple-git')(outFolder);
+    return new Promise((resolve, reject) => {
+        git.add(["*"], () => {
+            process.stdout.write('adding all files...\n');
+            git.commit('First Commit', (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                    process.stdout.write('First commit created...\n');
+                }
+            });
+        });
+    });
+};
+
 
 /**
  * it does a checkout to a specified folder which in general is rootProject/MapStore2
@@ -125,5 +152,6 @@ module.exports = {
     createPackageJSON,
     copyTemplates,
     copyStaticFiles,
-    updateSubmoduleBranch
+    updateSubmoduleBranch,
+    createFirstCommit
 };
