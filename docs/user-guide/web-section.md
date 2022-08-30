@@ -9,7 +9,7 @@ Below an example of a Web Page Section that embed a Wikipedia site page:
 
 <img src="../img/web-section/web-page.jpg" class="ms-docimage"/>
 
-It is possible to add or remove multiple Web Page contents in the same way of text and media contents as it is explained in the [Paragraph Sections](paragraph-section.md).
+It is possible to add or remove multiple Web Page contents in the same way of text and media contents as it is explained in the [Paragraph Sections](paragraph-section.md#paragraph-section).
 
 <img src="../img/web-section/add-section.jpg" class="ms-docimage"/>
 

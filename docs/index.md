@@ -15,20 +15,20 @@ functionalities (like chart widgets, dashboards, timelines and others).
 geospatial application. Since [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is also a framework, you can use it to build your own WebGIS applications by using its plugins and modules.
 
 Last but not the least, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is map agnostic and ensures the greatest flexibility: its abstraction tier allows to work with different web mapping libraries.
-The mapping engines currently supported by [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) are [OpenLayers](https://openlayers.org/) (used by default for desktops), [LeafletJS](https://leafletjs.com/) (used by default for mobile devices) and [Cesium 3D viewer](https://cesiumjs.org/).
+The mapping engines currently supported by [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) are [OpenLayers](https://openlayers.org/) (used by default for desktops), [LeafletJS](https://leafletjs.com/) (used by default for mobile devices) and [Cesium 3D viewer](https://cesium.com/platform/cesiumjs/).
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) has been designed from the beginning to provide a coherent and comprehensive experience across different devices types.
 
 **MapStore  is based on OpenLayers, Leaflet and ReactJS, and is licensed under the Simplified BSD license.**
 
-##Supported Browsers
+## Supported Browsers
 
 The browsers supported by [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) are *Google Chrome*, *Microsoft Edge*, *Mozilla Firefox* and *Safari*. Ensure to have the latest version installed. 
 
-##Quick Start
+## Quick Start
 
-You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore. See the [Quick Start](quick-start/) documentation for more details.
+You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore. See the [Quick Start](quick-start.md#quick-start) documentation for more details.
 
 ## Documentation
- * [Users Guide](user-guide/home-page/)
- * [Developers Guide](developer-guide/)
+ * [Users Guide](user-guide/home-page.md#home-page)
+ * [Developers Guide](developer-guide/index.md#quick-setup-and-run)

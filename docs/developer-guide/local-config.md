@@ -114,9 +114,9 @@ This is the main structure:
 
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
 
-For adding a new locale or configuring currently supported locales, go check [this](internationalization.md) out.
+For adding a new locale or configuring currently supported locales, go check [this](internationalization.md#internationalization) out.
 
-For configuring plugins, see the [Configuring Plugins Section](plugins-documentation.md) and the [plugin reference page](plugins-architecture.md)
+For configuring plugins, see the [Configuring Plugins Section](plugins-documentation.md#configuring-plugins) and the [plugin reference page](plugins-architecture.md#plugins-architecture)
 
 ## Explanation of some config properties
 

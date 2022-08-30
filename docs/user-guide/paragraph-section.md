@@ -23,34 +23,34 @@ By default, as soon as a Paragraph is added, an empty text content is already pr
 
 * Delete the *Paragraph  Section* through the **Remove** button <img src="../img/button/remove2.jpg" class="ms-docbutton"/>
 
-The editor can write a text by clicking on the text content and customize it through the [Text Editor Toolbar](text-editor-toolbar.md). A possible result of adding and formatting the text can be the following:
+The editor can write a text by clicking on the text content and customize it through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar). A possible result of adding and formatting the text can be the following:
 
 <img src="../img/paragraph-section/text_content.jpg" class="ms-docimage"/>
 
 ## Media Content
 
-Adding a media content, the [Media Editor](media-editor-window.md) opens to allow adding the supported media (like Image, Map or Video). 
+Adding a media content, the [Media Editor](media-editor-window.md#media-editor-window) opens to allow adding the supported media (like Image, Map or Video). 
 
 ### Images
 
-An image added inside the paragraph section can be customized through the [Image Content Toolbar](content-image-toolbar.md). Below is an example of a small, center-aligned image, just below a text content:
+An image added inside the paragraph section can be customized through the [Image Content Toolbar](content-image-toolbar.md#image-content-toolbar). Below is an example of a small, center-aligned image, just below a text content:
 
 <img src="../img/paragraph-section/text-image.jpg" class="ms-docimage"/>
 
 ### Videos
 
-A video added inside the paragraph section can be customized through the [Video Content Toolbar](content-video-toolbar.md). Below is an example of a video, just below an image content:
+A video added inside the paragraph section can be customized through the [Video Content Toolbar](content-video-toolbar.md#video-content-toolbar). Below is an example of a video, just below an image content:
 
 <img src="../img/paragraph-section/image-video.gif" class="ms-docimage"/>
 
 ### Maps
 
-A map added inside the paragraph section can be customized through the [Map Content Toolbar](content-map-toolbar.md). Below is an example of a large, center-aligned map, just below an Image content:
+A map added inside the paragraph section can be customized through the [Map Content Toolbar](content-map-toolbar.md#map-content-toolbar). Below is an example of a large, center-aligned map, just below an Image content:
 
 <img src="../img/paragraph-section/image-map.jpg" class="ms-docimage"/>
 
 ## Web Page Content 
 
-Adding a web page content, the Web Page Windows opens allowing the user to add the URL of an extenal web page. A web page added inside the paragraph section can be customized through the [Web Page Content Toolbar](content-web-toolbar.md). Below is an example of a medium, center-aligned web content, just below a map one:
+Adding a web page content, the Web Page Windows opens allowing the user to add the URL of an extenal web page. A web page added inside the paragraph section can be customized through the [Web Page Content Toolbar](content-web-toolbar.md#web-page-content-toolbar). Below is an example of a medium, center-aligned web content, just below a map one:
 
 <img src="../img/paragraph-section/map-web5.jpg" class="ms-docimage"/>

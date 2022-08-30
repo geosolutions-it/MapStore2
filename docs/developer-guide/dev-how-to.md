@@ -12,4 +12,4 @@ Still to do:
 
 Work in progress: 
 
-* [Extensions](../extensions)
+* [Extensions](extensions.md#working-with-extensions)

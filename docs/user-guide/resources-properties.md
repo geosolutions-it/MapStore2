@@ -27,7 +27,7 @@ It is possible to add an image as thumbnail dropping it or clicking inside the f
 
 ## Permission rules
 
-In the *Add a rule...* section you can set one ore more permission rules in order to allow a group to access the resource. In particular it is possible to choose between a particular group of authenticated users or the *everyone* group that includes all authenticated users but also anonymous users (more information about different user types can be found in [Homepage](home-page.md) section). <br>
+In the *Add a rule...* section you can set one ore more permission rules in order to allow a group to access the resource. In particular it is possible to choose between a particular group of authenticated users or the *everyone* group that includes all authenticated users but also anonymous users (more information about different user types can be found in [Homepage](home-page.md#home-page) section). <br>
 Moreover it is possible to choose between two different ways with which the selected group can approach the resource:
 
 * *View* the map and save a copy
@@ -40,7 +40,7 @@ For example, a resource that can be seen by *everyone*, should have a rule like 
 <img src="../img/resource-properties/rule_added.jpg" class="ms-docimage" />
 
 Once a rule is set, the user can always remove it through the **Remove** button <img src="../img/button/remove-rule-icon.jpg" class="ms-docbutton"/>. <br>
-How to manage users and groups is a topic present in the [Managing Users](managing-users.md) and [Managing Groups](managing-groups.md) sections.
+How to manage users and groups is a topic present in the [Managing Users](managing-users.md#managing-users) and [Managing Groups](managing-groups.md#managing-groups) sections.
 
 ## Details
 
@@ -52,7 +52,7 @@ With a click on the **Add new details** button <img src="../img/button/add_detai
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
-The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other buttons appear on the *Edit properties* panel.
+The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other buttons appear on the *Edit properties* panel.
 
 <img src="../img/resource-properties/details_sheet_buttons.jpg" class="ms-docimage"/>
 

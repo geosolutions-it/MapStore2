@@ -27,13 +27,13 @@ The anonymous user is allowed to:
 
 <img src="../img/home-page/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
-* Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/> (more information about Login can be found in [Managing Users and Groups](managing-users-and-groups.md) section)
+* Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/> (more information about Login can be found in [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
 
 * Perform a search for resources, through the *Search bar*:
 
 <img src="../img/home-page/search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-* [Share](share.md) a resource <img src="../img/button/share.jpg" class="ms-docbutton"/>
+* [Share](share.md#sharing-resources) a resource <img src="../img/button/share.jpg" class="ms-docbutton"/>
 
 * Take a look at map [Details](resources-properties.md#details) when available <img src="../img/button/details_button.jpg" class="ms-docbutton"/>
 
@@ -61,7 +61,7 @@ Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsg
 
 The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator can also:
 
-* Access the **Manager** button <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> for [Manage Accounts](managing-users-and-groups.md) and [Manage Contexts](managing-contexts.md)
+* Access the **Manager** button <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> for [Manage Accounts](managing-users-and-groups.md#managing-users-and-groups) and [Manage Contexts](managing-contexts.md#managing-contexts)
 
 * Menage the resources by including <img src="../img/button/featured.jpg" class="ms-docbutton"/> or excluding <img src="../img/button/unfeatured.jpg" class="ms-docbutton"/> them from *Featured* section
 

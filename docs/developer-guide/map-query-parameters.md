@@ -179,7 +179,7 @@ GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
 
 ### Actions
 
-To dispatch additional actions when the map viewer is started, the **actions** query parameter can be used. Only actions from a configured whitelist can be dispatched in this way (see the [configuration section](../configuration-files/) for more details).
+To dispatch additional actions when the map viewer is started, the **actions** query parameter can be used. Only actions from a configured whitelist can be dispatched in this way (see the [configuration section](configuration-files.md#configuring-mapstore) for more details).
 
 ```yaml
 // list of actions types that are available to be launched dynamically from query param (#3817)

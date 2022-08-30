@@ -43,7 +43,7 @@ export const panTo = (center = defaultValue) => ({
 ```
 **Note:** Stick to es6 import/export module system and when possible provide a default value for the parameters
 
-These action creators are used in the connected components or in [MapStore2 plugins](../plugins-howto/#connectedsamplejsx-2)
+These action creators are used in the connected components or in [MapStore2 plugins](plugins-howto.md#jspluginsconnectedsamplejsx-2)
 But actions by themselves are not enough we need Reducers that intercepts those actions and change the state accordingly.
 
 **Note:** Remember to put all the actions .js files in the web/client/actions folder or in js/actions if you are working with custom plugins
@@ -186,4 +186,4 @@ in order to point to the reducers folder and then running
 Actions are not only used by redux to update the store (through the reducers),
 but also for triggering side effects workflows managed by epics
 
-For more details see [Writing epics](../writing-epics)
+For more details see [Writing epics](../writing-epics/#writing-epics)
