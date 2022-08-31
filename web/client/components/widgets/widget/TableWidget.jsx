@@ -5,11 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { lazy } from 'react';
 
 import { getWidgetFilterRenderers } from '../../../plugins/widgets/getWidgetFilterRenderers';
 import EmptyRowsView from '../../data/featuregrid/EmptyRowsView';
-import FeatureGridComp from '../../data/featuregrid/FeatureGrid';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import loadingState from '../../misc/enhancers/loadingState';
@@ -17,9 +16,10 @@ import LoadingSpinner from '../../misc/LoadingSpinner';
 import errorChartState from '../enhancers/errorChartState';
 import WidgetContainer from './WidgetContainer';
 import WidgetEmptyMessage from './WidgetEmptyMessage';
+import withSuspense from '../../misc/withSuspense';
 
+const FeatureGridComp = withSuspense()(lazy(() => import('../../data/featuregrid/FeatureGrid')));
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
-
 
 export default getWidgetFilterRenderers(({
     id,

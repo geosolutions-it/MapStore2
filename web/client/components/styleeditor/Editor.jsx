@@ -6,30 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/search/searchcursor';
-import 'codemirror/addon/selection/mark-selection';
-import 'codemirror/addon/hint/show-hint.css';
-import 'codemirror/addon/hint/show-hint';
-import 'codemirror/mode/xml/xml';
-import 'codemirror/mode/javascript/javascript';
-
-import CM from 'codemirror/lib/codemirror';
 import { debounce, endsWith, isEqual, isFunction, isObject, isString } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Controlled as Codemirror } from 'react-codemirror2';
-
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 import Loader from '../misc/Loader';
 import InfoPopover from '../widgets/widget/InfoPopover';
 
-/* SLD styling highlight */
+import CodeMirror from '../../libs/codemirror/react-codemirror-suspense';
 
-require('./mode/geocss').default(CM);
-require('./hint/geocss').default(CM);
+/* SLD styling highlight */
 
 /**
  * Component for rendering a grid of style templates.
@@ -166,7 +154,7 @@ class Editor extends React.Component {
         const token = instance.getTokenAt(cur);
         if (token.string && (endsWith(token.string, '-') || token.string.match(/^[.`\w@]\w*$/)) && token.string.length > 0) {
             const wrapperElement = this.editor && this.editor.getWrapperElement && this.editor.getWrapperElement() || null;
-            CM.commands.autocomplete(instance, null, { completeSingle: false, container: wrapperElement });
+            this.cm.commands.autocomplete(instance, null, { completeSingle: false, container: wrapperElement });
         }
     };
 
@@ -221,12 +209,13 @@ class Editor extends React.Component {
                         }
                     </div>
                 }>
-                <Codemirror
+                <CodeMirror
                     key="style-editor"
                     value={this.state.code}
-                    editorDidMount={editor => {
+                    editorDidMount={(editor, editorValue, initCb, cm) => {
                         this.onRenderToken(editor);
                         this.editor = editor;
+                        this.cm = cm;
                         editor.on('inputRead', this.onAutocomplete);
                         this.update = debounce(() => {
                             const { error, code } = this.getChangedCode(this.state.code, this.props.mode);
@@ -236,7 +225,7 @@ class Editor extends React.Component {
                                 this.props.onChange(code);
                             }
                         }, this.props.waitTime);
-                        CM.extendMode(this.props.mode, { hintProperties: this.props.hintProperties });
+                        cm.extendMode(this.props.mode, { hintProperties: this.props.hintProperties });
                     }}
                     editorWillUnmount={editor => editor.off('inputRead', this.onAutocomplete)}
                     onBeforeChange={(editor, data, code) => this.setState({ code })}

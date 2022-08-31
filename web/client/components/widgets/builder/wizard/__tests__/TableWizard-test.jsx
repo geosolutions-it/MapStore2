@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 
 import TableWizard from '../TableWizard';
 
-describe('ChartWizard component', () => {
+describe('TableWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -22,14 +22,14 @@ describe('ChartWizard component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('ChartWizard rendering with defaults', () => {
+    it('TableWizard rendering with defaults', () => {
         ReactDOM.render(<TableWizard />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
         expect(el).toExist();
         expect(container.querySelector('.chart-options-form')).toExist();
     });
-    it('ChartWizard rendering options', () => {
+    it('TableWizard rendering options', () => {
         ReactDOM.render(<TableWizard step={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-options-form');

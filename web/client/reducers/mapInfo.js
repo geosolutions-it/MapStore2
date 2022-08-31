@@ -42,6 +42,8 @@ import { findIndex, isUndefined, isEmpty } from 'lodash';
 import { MAP_TYPE_CHANGED } from './../actions/maptype';
 
 import { getValidator } from '../utils/MapInfoUtils';
+import buffer from 'turf-buffer';
+import intersect from 'turf-intersect';
 
 /**
  * Identifies when to update a index when the display information trigger is click (GFI panel)
@@ -338,8 +340,6 @@ function mapInfo(state = initState, action) {
         });
     }
     case GET_VECTOR_INFO: {
-        const buffer = require('turf-buffer');
-        const intersect = require('turf-intersect');
         const point = {
             "type": "Feature",
             "properties": {},
