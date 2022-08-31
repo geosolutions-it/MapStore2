@@ -139,9 +139,8 @@ export const createStoreManager = (initialReducers, initialEpics) => {
     const epics = {...initialEpics};
     const addedEpics = {};
     const epicsListenedBy = {};
-    const epicRegistrations = {};
     const groupedByModule = {};
-    let muteState = {};
+    const muteState = {};
 
     // Create the initial combinedReducer
     let combinedReducer = combineReducers(reducers);
@@ -155,13 +154,20 @@ export const createStoreManager = (initialReducers, initialEpics) => {
     let keysToRemove = [];
 
     const addToRegistry = (module, epicName) => {
-        epicRegistrations[epicName] = [...(epicRegistrations[epicName] ?? []), module];
         groupedByModule[module] = [...(groupedByModule[module] ?? []), epicName];
         epicsListenedBy[epicName] = [...(epicsListenedBy[epicName] ?? []), module];
     };
 
     return {
         getReducerMap: () => reducers,
+
+        // Callback to get current state of epics registry, used for testing purposes
+        getEpicsRegistry: () => ({
+            addedEpics,
+            epicsListenedBy,
+            groupedByModule,
+            muteState
+        }),
 
         // The root reducer function exposed by this object
         // This will be passed to the store
@@ -221,8 +227,10 @@ export const createStoreManager = (initialReducers, initialEpics) => {
                     addToRegistry(normalizedName, current);
                     return prev;
                 }, {});
-                const isolatedEpics = isolateEpics(epicsToAdd, muteState);
-                wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
+                if (Object.keys(epicsToAdd).length) {
+                    const isolatedEpics = isolateEpics(epicsToAdd, muteState);
+                    wrapEpics(isolatedEpics).forEach(epic => epic$.next(epic));
+                }
             }
         },
         // Mute epics set with a specified key
