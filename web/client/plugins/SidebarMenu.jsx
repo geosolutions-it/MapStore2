@@ -98,13 +98,14 @@ class SidebarMenu extends React.Component {
     componentDidUpdate(prevProps) {
         const { onInit, onDetach } = this.props;
         const { hidden } = this.state;
+        const burgerMenuEnabled = this.props.state?.controls?.burgermenu?.enabled;
         const visibleElements = this.visibleItems('sidebar').length;
         visibleElements && prevProps.isActive === false && onInit();
 
-        if (visibleElements === 0 && !hidden) {
+        if ((visibleElements === 0 || burgerMenuEnabled) && !hidden) {
             onDetach();
             this.setState((state) => ({ ...state, hidden: true}));
-        } else if (visibleElements > 0 && hidden) {
+        } else if (visibleElements > 0 && !burgerMenuEnabled && hidden) {
             onInit();
             this.setState((state) => ({ ...state, hidden: false}));
         }
