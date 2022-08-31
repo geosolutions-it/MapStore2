@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import SidebarMenu from "../SidebarMenu";
 import { getPluginForTest } from './pluginsTestUtils';
 
+
 describe('SidebarMenu Plugin', () => {
     beforeEach(() => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -38,5 +39,28 @@ describe('SidebarMenu Plugin', () => {
         expect(sidebarMenuContainer).toExist();
         const elements = document.querySelectorAll('#mapstore-sidebar-menu > button, #mapstore-sidebar-menu #extra-items + .dropdown-menu li');
         expect(elements.length).toBe(2);
+    });
+
+    it('hide sidebar if burger menu is on the page', () => {
+        document.getElementById('container').style.height = '600px';
+        const { Plugin } = getPluginForTest(SidebarMenu, {
+            controls: {
+                burgermenu: {
+                    enabled: true
+                }
+            } });
+        const items = [{
+            name: 'test',
+            position: 1,
+            text: 'Test Item'
+        }, {
+            name: 'test2',
+            position: 2,
+            text: 'Test Item 2'
+        }];
+        ReactDOM.render(<Plugin items={items}/>, document.getElementById("container"));
+        ReactDOM.render(<Plugin items={[...items]}/>, document.getElementById("container"));
+        const sidebarMenuContainer = document.getElementById('mapstore-sidebar-menu-container');
+        expect(sidebarMenuContainer).toNotExist();
     });
 });
