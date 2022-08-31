@@ -57,7 +57,7 @@ describe('Test the draw reducer', () => {
         expect(state.features.length).toBe(0);
     });
 
-    it('FeatureGrid SET_CURRENT_STYLE', () => {
+    it('FeatureGrid GEOMETRY_CHANGED', () => {
         const style = {
             fill: {
                 color: "red"

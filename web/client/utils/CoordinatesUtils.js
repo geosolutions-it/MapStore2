@@ -36,8 +36,6 @@ import overlap from '@turf/boolean-overlap';
 import contains from '@turf/boolean-contains';
 import turfBbox from '@turf/bbox';
 import { getConfigProp } from './ConfigUtils';
-import { set } from './ImmutableUtils';
-
 
 let CoordinatesUtils;
 
@@ -369,7 +367,6 @@ export const lineIntersectPolygon = function(linestring, polygon) {
     let polygonLines = polygonToLinestring(polygon).features[0];
     return lineIntersect(linestring, polygonLines).features.length !== 0;
 };
-
 export const normalizeLng = (lng) => {
     let tLng = lng / 360 % 1 * 360;
     if (tLng < -180) {
@@ -378,36 +375,6 @@ export const normalizeLng = (lng) => {
         tLng = tLng - 360;
     }
     return tLng;
-};
-
-/**
- * function used to normalize and entire geometry by checking all of the longitude values
- * @param {object} geometry the geojson geometry to parse
- */
-export const normalizeGeometry = (geometry) => {
-    let newCoords = [];
-    switch (geometry.type) {
-    case "Point": {
-        let item = geometry.coordinates;
-        newCoords = [normalizeLng(item[0]), item[1]];
-        break;
-    }
-    case "LineString": case "MultiPoint": {
-        newCoords = geometry.coordinates.map((item) => [normalizeLng(item[0]), item[1]]);
-        break;
-    }
-    case "Polygon": case "MultiLineString": {
-        newCoords = geometry.coordinates.map(x => x.map((item) => [normalizeLng(item[0]), item[1]]));
-        break;
-    }
-    case "MultiPolygon": {
-        newCoords = geometry.coordinates.map(i => i.map(x => x.map((item) => [normalizeLng(item[0]), item[1]])));
-        break;
-    }
-    default:
-        break;
-    }
-    return set("coordinates", newCoords, geometry);
 };
 /**
  * Reprojects a bounding box.
