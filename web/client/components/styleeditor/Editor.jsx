@@ -225,7 +225,7 @@ class Editor extends React.Component {
                                 this.props.onChange(code);
                             }
                         }, this.props.waitTime);
-                        cm.extendMode(this.props.mode, { hintProperties: this.props.hintProperties });
+                        this.cm.extendMode(this.props.mode, { hintProperties: this.props.hintProperties });
                     }}
                     editorWillUnmount={editor => editor.off('inputRead', this.onAutocomplete)}
                     onBeforeChange={(editor, data, code) => this.setState({ code })}
