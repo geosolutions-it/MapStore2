@@ -26,6 +26,7 @@ import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
+import {burgerMenuSelector} from "../selectors/controls";
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -41,7 +42,8 @@ class SidebarMenu extends React.Component {
         sidebarWidth: PropTypes.number,
         state: PropTypes.object,
         setLastActiveItem: PropTypes.func,
-        lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        burgerMenuIsActive: PropTypes.bool
     };
 
     static contextTypes = {
@@ -76,8 +78,8 @@ class SidebarMenu extends React.Component {
     }
 
     componentDidMount() {
-        const { onInit } = this.props;
-        onInit();
+        const { onInit, burgerMenuIsActive } = this.props;
+        !burgerMenuIsActive && onInit();
     }
 
     shouldComponentUpdate(nextProps) {
@@ -85,27 +87,27 @@ class SidebarMenu extends React.Component {
         const newSize = nextProps.state.map?.present?.size?.height !== this.props.state.map?.present?.size?.height;
         const newHeight = nextProps.style.bottom !== this.props.style.bottom;
         const newItems = nextProps.items !== this.props.items;
-        const burgerMenuState = nextProps.state?.controls?.burgermenu?.enabled !== this.props.state?.controls?.burgermenu?.enabled;
+        const burgerMenuStateChanged = nextProps.burgerMenuIsActive !== this.props.burgerMenuIsActive;
         const newVisibleItems = !newItems ? nextProps.items.reduce((prev, cur, idx) => {
             if (this.isNotHidden(cur, nextProps.state) !== this.isNotHidden(this.props.items[idx], this.props.state)) {
                 prev.push(cur);
             }
             return prev;
         }, []).length > 0 : false;
-        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState || markedAsInactive;
+        return newSize || newItems || newVisibleItems || newHeight || burgerMenuStateChanged || markedAsInactive;
     }
 
     componentDidUpdate(prevProps) {
         const { onInit, onDetach } = this.props;
         const { hidden } = this.state;
-        const burgerMenuEnabled = this.props.state?.controls?.burgermenu?.enabled;
+        const burgerMenuIsActive = this.props.burgerMenuIsActive;
         const visibleElements = this.visibleItems('sidebar').length;
-        visibleElements.length && !burgerMenuEnabled && prevProps.isActive === false && onInit();
+        visibleElements.length && !burgerMenuIsActive && prevProps.isActive === false && onInit();
 
-        if ((visibleElements === 0 || burgerMenuEnabled) && !hidden) {
+        if ((visibleElements === 0 || burgerMenuIsActive) && !hidden) {
             onDetach();
             this.setState((state) => ({ ...state, hidden: true}));
-        } else if (visibleElements > 0 && !burgerMenuEnabled && hidden) {
+        } else if (visibleElements > 0 && !burgerMenuIsActive && hidden) {
             onInit();
             this.setState((state) => ({ ...state, hidden: false}));
         }
@@ -270,12 +272,14 @@ const sidebarMenuSelector = createSelector([
     state => state,
     state => lastActiveToolSelector(state),
     state => mapLayoutValuesSelector(state, {dockSize: true, bottom: true, height: true}),
-    sidebarIsActiveSelector
-], (state, lastActiveTool, style, isActive) => ({
+    sidebarIsActiveSelector,
+    burgerMenuSelector
+], (state, lastActiveTool, style, isActive, burgerMenuIsActive) => ({
     style,
     lastActiveTool,
     state,
-    isActive
+    isActive,
+    burgerMenuIsActive
 }));
 
 /**
