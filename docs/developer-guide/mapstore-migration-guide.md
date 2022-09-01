@@ -22,6 +22,41 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2022.01.02 to 2022.02.00
 
+### HTML pages optimization
+
+We removed script and css link to leaflet CDN in favor of a dynamic import of the libraries in the main bundle, now leaflet is only loaded when the library is selected as map type of the viewer. You can update the project HTML files by removing these tags:
+
+```diff
+- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
+- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="shortcut icon" type="image/png" href="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/favicon.ico" />
+<!--script src="https://maps.google.com/maps/api/js?v=3"></script-->
+- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+```
+
+We also made asynchronous the script to detect valid browser this should slightly improve the initial requests time, you can updated the script in your project as follow:
+
+```html
+<script async type="text/javascript" src="https://unpkg.com/bowser@2.7.0/es5.js" onload="checkBrowser()"></script>
+<script type="text/javascript">
+    function checkBrowser() {
+        var browserInfo = bowser.getParser(window.navigator.userAgent);
+        var isValidBrowser = browserInfo.satisfies({
+            "edge": ">1",
+            "chrome": ">1",
+            "safari": ">1",
+            "firefox": ">1"
+        });
+        if (!isValidBrowser) {
+            window.location.href = "unsupportedBrowser.html"
+            document.querySelector("container").style.display = "none";
+        }
+    }
+</script>
+```
+
 ### Version plugin has been removed
 
 We no longer maintain the Version plugin since we have moved its content inside the About plugin (see [here](https://github.com/geosolutions-it/MapStore2/issues/7934#issuecomment-1201433942) for more details)
