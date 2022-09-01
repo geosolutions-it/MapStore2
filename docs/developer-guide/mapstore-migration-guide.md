@@ -36,7 +36,9 @@ We removed script and css link to leaflet CDN in favor of a dynamic import of th
 - <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
 ```
 
-We also made asynchronous the script to detect valid browser this should slightly improve the initial requests time, you can updated the script in your project as follow:
+We also made asynchronous the script to detect valid browser. This should slightly improve the initial requests time.
+ You can updated the script in your project as following:
+
 
 ```html
 <script async type="text/javascript" src="https://unpkg.com/bowser@2.7.0/es5.js" onload="checkBrowser()"></script>
