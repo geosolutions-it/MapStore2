@@ -22,7 +22,8 @@ import geoCssHint from './hint/geocss';
 
 geoCssMode(cm);
 geoCssHint(cm);
-
+// this component has been moved in a separated file to contains all the codemirror dependencies
+// in this way we are able to use suspense and import everything only when the component is mounted
 function CodeMirror({ editorDidMount = () => {}, ...props}, ref) {
     return (
         <Controlled
