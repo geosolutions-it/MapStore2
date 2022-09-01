@@ -98,7 +98,6 @@ function doWork(params) {
             return project.updateSubmoduleBranch(params.outFolder);
         })
         .then(() => {
-            process.stdout.write('createFirstCommit\n');
             return project.createFirstCommit(params.outFolder);
         })
         .then(() => {

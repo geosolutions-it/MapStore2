@@ -46,7 +46,6 @@ const createFirstCommit = (outFolder) => {
     const git = require('simple-git')(outFolder);
     return new Promise((resolve, reject) => {
         git.add(["*"], () => {
-            process.stdout.write('adding all files...\n');
             git.commit('First Commit', (err) => {
                 if (err) {
                     reject(err);
@@ -69,23 +68,37 @@ const updateSubmoduleBranch = (outFolder) => {
     const git = require('simple-git')();
     const gitProjectMs2 = require('simple-git')(`${outFolder}/MapStore2`);
 
+    const stableBranch = "2022.02.xx";
+
     return new Promise((resolve, reject) => {
         try {
             git.branchLocal( (err, data) => {
                 if (err) {
                     reject(err);
                 }
-                process.stdout.write("doing checkout to the branch: " + data.current + "\n");
-                gitProjectMs2.checkout(data.current, null, (error) => {
-                    if (error) {
-                        reject(error);
+                git.fetch("origin", data.current, (er) => {
+                    if (er) {
+                        process.stdout.write(`Warning: It was not possible to checkout to ${data.current} so we checkout to latest stable: ${stableBranch}\n`);
+                        gitProjectMs2.checkout(stableBranch, null, (e) => {
+                            if (e) {
+                                reject(e);
+                            }
+                            process.stdout.write(`checkout to stable branch: ${stableBranch} done\n`);
+                            resolve();
+                        });
+                    } else {
+                        process.stdout.write("doing checkout to the branch: " + data.current + "\n");
+                        gitProjectMs2.checkout(data.current, null, (error) => {
+                            if (error) {
+                                reject(error);
+                            }
+                            resolve();
+                        });
                     }
-                    process.stdout.write("checkout done");
-                    resolve();
                 });
             });
         } catch (e) {
-            process.stdout.write("error");
+            process.stdout.write("error\n");
             process.stdout.write(e);
             reject(e);
         }
