@@ -6,12 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { lazy } from 'react';
-
 import QuillEditor from './QuillEditor';
-import withSuspense from '../../../../misc/withSuspense';
-
-const DraftJSEditor = withSuspense()(lazy(() => import('./DraftJSEditor')));
+import DraftJSEditor from './DraftJSEditor';
 
 export default {
     QuillEditor,
