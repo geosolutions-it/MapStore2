@@ -70,6 +70,7 @@ export const identifyLifecycle = compose(
             const {
                 enabled,
                 showInMapPopup,
+                maxItems,
                 changeMousePointer = () => {},
                 disableCenterToMarker,
                 enableInfoForSelectedLayers = true,
@@ -80,7 +81,12 @@ export const identifyLifecycle = compose(
             } = this.props;
 
             // Initialize plugin configuration
-            onInitPlugin({enableInfoForSelectedLayers});
+            onInitPlugin({
+                enableInfoForSelectedLayers,
+                configuration: {
+                    maxItems
+                }
+            });
 
             if (enabled || showInMapPopup) {
                 changeMousePointer('pointer');

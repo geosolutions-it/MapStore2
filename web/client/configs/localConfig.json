@@ -342,7 +342,8 @@
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}"
                     },
-                    "showEdit": true
+                    "showEdit": true,
+                    "maxItems": 2
                 },
                 "override": {
                   "Toolbar": {
