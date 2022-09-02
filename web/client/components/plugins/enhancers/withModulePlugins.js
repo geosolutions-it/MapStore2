@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import useModulePlugins from "../../../hooks/useModulePlugins";
 import {getPlugins} from "../../../utils/ModulePluginsUtils";
 
@@ -26,7 +26,8 @@ const getPluginsConfig = ({pluginsConfig: config, mode = 'desktop', defaultMode}
  * HOC to provide additional logic layer for module plugins loading and caching
  * @param {function(): string[]} getPluginsConfigCallback - callback to extract proper part of plugins configuration passed with `pluginsConfig` prop
  */
-const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Component) => ({ pluginsConfig, plugins = {}, loaderComponent = () => null, ...props }) => {
+const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Component) => ({ onLoaded = () => {
+}, pluginsConfig, plugins = {}, loaderComponent = () => null, ...props }) => {
     const config = getPluginsConfigCallback({pluginsConfig, ...props});
     const { plugins: loadedPlugins, pending } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
@@ -36,6 +37,10 @@ const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Comp
     const loading = pending;
 
     const Loader = loaderComponent;
+
+    useEffect(() => {
+        if (!loading) onLoaded(true);
+    }, [loading]);
 
     return loading ? <Loader /> : <Component {...props} pluginsConfig={pluginsConfig} plugins={parsedPlugins} allPlugins={plugins} />;
 };

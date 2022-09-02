@@ -25,7 +25,8 @@ class MapViewerComponent extends React.Component {
         loaderComponent: PropTypes.func,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object,
-        className: PropTypes.string
+        className: PropTypes.string,
+        onLoaded: PropTypes.func
     };
     static defaultProps = {
         mode: 'desktop',
@@ -36,23 +37,32 @@ class MapViewerComponent extends React.Component {
         match: {
             params: {}
         },
-        loaderComponent: () => null
+        loaderComponent: () => null,
+        onLoaded: () => null
     };
-    UNSAFE_componentWillMount() {
-        const id = this.props.match.params.mapId || '0';
-        const contextId = this.props.match.params.contextId;
-        this.updateMap(id, contextId);
-    }
+
+    state = {};
+
     componentDidUpdate(oldProps) {
         const id = this.props.match.params.mapId || '0';
         const oldId = oldProps.match.params.mapId || '0';
         const contextId = this.props.match.params.contextId;
         const oldContextId = oldProps.match.params.contextId;
-        if (id !== oldId || contextId  !== oldContextId) {
+        if ((id !== oldId || contextId  !== oldContextId) && this.state.pluginsAreLoaded) {
             this.updateMap(id, contextId);
         }
     }
 
+    onLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+            this.setState({pluginsAreLoaded: true}, () => {
+                const id = this.props.match.params.mapId || '0';
+                const contextId = this.props.match.params.contextId;
+                this.updateMap(id, contextId);
+                this.props.onLoaded(true);
+            });
+        }
+    };
     render() {
         const WrappedContainer = this.props.wrappedContainer;
         return (<WrappedContainer
@@ -61,8 +71,10 @@ class MapViewerComponent extends React.Component {
             params={this.props.match.params}
             className={this.props.className}
             loaderComponent={this.props.loaderComponent}
+            onLoaded={this.onLoaded}
         />);
     }
+
     updateMap = (id, contextId) => {
         if (id && oldLocation !== this.props.location) {
             oldLocation = this.props.location;

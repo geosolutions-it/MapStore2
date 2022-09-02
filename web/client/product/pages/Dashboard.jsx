@@ -48,19 +48,11 @@ class DashboardPage extends React.Component {
         checkLoggedUser: () => {}
     };
 
-    UNSAFE_componentWillMount() {
-        const id = get(this.props, "match.params.did");
-        if (id) {
-            this.props.reset();
-            this.props.loadResource(id);
-        } else {
-            this.props.reset();
-            this.props.checkLoggedUser();
-        }
-    }
+    state = {};
+
     componentDidUpdate(oldProps) {
         const id = get(this.props, "match.params.did");
-        if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did")) {
+        if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did") && this.state.pluginsAreLoaded) {
             if (isNil(id)) {
                 this.props.reset();
             } else {
@@ -71,6 +63,22 @@ class DashboardPage extends React.Component {
     componentWillUnmount() {
         this.props.reset();
     }
+
+    onLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+            this.setState({pluginsAreLoaded: true}, () => {
+                const id = get(this.props, "match.params.did");
+                if (id) {
+                    this.props.reset();
+                    this.props.loadResource(id);
+                } else {
+                    this.props.reset();
+                    this.props.checkLoggedUser();
+                }
+            });
+        }
+    }
+
     render() {
         return (<Page
             id={this.props.name}
@@ -79,6 +87,7 @@ class DashboardPage extends React.Component {
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
+            onLoaded={this.onLoaded}
         />);
     }
 }

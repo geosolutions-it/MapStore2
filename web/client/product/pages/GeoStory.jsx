@@ -60,14 +60,8 @@ class GeoStoryPage extends React.Component {
         updateUrlOnScroll: () => {}
     };
 
-    UNSAFE_componentWillMount() {
-        const id = get(this.props, "match.params.gid");
-        const previousId = this.props.previousId && this.props.previousId + '';
-        this.props.reset();
-        this.setInitialMode(previousId !== id);
-        this.props.updateUrlOnScroll(true);
-        this.props.loadResource(id);
-    }
+    state = {};
+
     componentDidUpdate(oldProps) {
         const id = get(this.props, "match.params.gid");
         const oldId = get(oldProps, "match.params.gid");
@@ -83,6 +77,20 @@ class GeoStoryPage extends React.Component {
     componentWillUnmount() {
         this.props.reset();
     }
+
+    onLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+            this.setState({pluginsAreLoaded: true}, () => {
+                const id = get(this.props, "match.params.gid");
+                const previousId = this.props.previousId && this.props.previousId + '';
+                this.props.reset();
+                this.setInitialMode(previousId !== id);
+                this.props.updateUrlOnScroll(true);
+                this.props.loadResource(id);
+            });
+        }
+    }
+
     render() {
         return (<Page
             id={this.props.name}
@@ -91,6 +99,7 @@ class GeoStoryPage extends React.Component {
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
+            onLoaded={this.onLoaded}
         />);
     }
 

@@ -28,6 +28,7 @@ class Page extends React.Component {
         pluginsConfig: PropTypes.object,
         params: PropTypes.object,
         onMount: PropTypes.func,
+        onLoaded: PropTypes.func,
         plugins: PropTypes.object,
         loaderComponent: PropTypes.func,
         component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -37,6 +38,7 @@ class Page extends React.Component {
     static defaultProps = {
         mode: 'desktop',
         onMount: () => {},
+        onLoaded: () => {},
         className: '',
         includeCommon: true
     };
@@ -69,6 +71,7 @@ class Page extends React.Component {
             plugins={this.props.plugins}
             params={this.props.params}
             loaderComponent={this.props.loaderComponent}
+            onLoaded={this.props.onLoaded}
         />);
     }
 }
