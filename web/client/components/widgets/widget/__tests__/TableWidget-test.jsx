@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { compose, defaultProps } from 'recompose';
+import { waitFor } from '@testing-library/react';
 
 import describePois from '../../../../test-resources/wfs/describe-pois.json';
 import tableWidget from '../../enhancers/tableWidget';
@@ -62,11 +63,11 @@ describe('TableWidget component', () => {
         const el = container.querySelector('.loader-container');
         expect(el).toExist();
     });
-    it('TableWidget empty', () => {
+    it('TableWidget empty', (done) => {
         ReactDOM.render(<TableWidget describeFeatureType={describePois} features={[]} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.react-grid-Empty');
-        expect(el).toExist();
+        waitFor(() =>expect( container.querySelector('.react-grid-Empty')).toBeTruthy())
+            .then(() => done());
     });
     it('TableWidget onAddFilter', (done) => {
         const _d = {...describePois, featureTypes: [{...describePois.featureTypes[0], properties: [...describePois.featureTypes[0].properties, {

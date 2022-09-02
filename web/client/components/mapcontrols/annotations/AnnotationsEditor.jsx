@@ -22,7 +22,7 @@ import {
     NavItem,
     Row
 } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
+import ReactQuill from '../../../libs/quill/react-quill-suspense';
 
 import {
     coordToArray,

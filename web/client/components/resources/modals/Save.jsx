@@ -8,7 +8,7 @@
 
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { lazy } from 'react';
 // require('./css/modals.css');
 import { Grid } from 'react-bootstrap';
 
@@ -16,10 +16,13 @@ import Message from '../../I18N/Message';
 import Portal from '../../misc/Portal';
 import ResizableModal from '../../misc/ResizableModal';
 import ruleEditor from './enhancers/ruleEditor';
-import DetailsComp from './fragments/Details';
+
 import ErrorBox from './fragments/ErrorBox';
 import MainForm from './fragments/MainForm';
 import PermissionEditorComp from './fragments/PermissionEditor';
+
+import withSuspense from '../../misc/withSuspense';
+const DetailsComp = withSuspense()(lazy(() => import('./fragments/Details')));
 
 const PermissionEditor = ruleEditor(PermissionEditorComp);
 

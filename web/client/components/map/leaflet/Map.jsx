@@ -24,6 +24,7 @@ import {
 import Rx from 'rxjs';
 
 import {throttle} from 'lodash';
+import 'leaflet/dist/leaflet.css';
 
 import './SingleClick';
 
