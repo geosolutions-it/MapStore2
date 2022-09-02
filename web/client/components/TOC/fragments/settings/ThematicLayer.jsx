@@ -6,15 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/javascript/javascript';
-
 import { isEqual, isObject } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Alert, Checkbox, Col, ControlLabel, FormGroup, Grid, Row } from 'react-bootstrap';
-import { Controlled as Codemirror } from 'react-codemirror2';
+import CodeMirror from '../../../../libs/codemirror/react-codemirror-suspense';
 import { Combobox, NumberPicker } from 'react-widgets';
 import tinycolor from 'tinycolor2';
 
@@ -116,7 +113,8 @@ class ThematicLayer extends React.Component {
         enableRemoveStyle: PropTypes.bool,
         applyEnabled: PropTypes.bool,
         invalidInputs: PropTypes.object,
-        geometryType: PropTypes.string
+        geometryType: PropTypes.string,
+        onEditorReady: PropTypes.func
     };
 
     static contextTypes = {
@@ -159,7 +157,8 @@ class ThematicLayer extends React.Component {
         enableRemoveStyle: false,
         applyEnabled: false,
         invalidInputs: {},
-        geometryType: 'Polygon'
+        geometryType: 'Polygon',
+        onEditorReady: () => {}
     };
 
     UNSAFE_componentWillMount() {
@@ -396,11 +395,17 @@ class ThematicLayer extends React.Component {
                             visible: !isValid
                         }]}
                     >
-                        <Codemirror ref={(cmp) => {this.cfgEditor = cmp; }} style={{ width: '500px' }} key="code-mirror" value={this.props.adminCfg.current} onBeforeChange={this.updateCfg} options={{
-                            theme: "midnight",
-                            mode: { name: "javascript" },
-                            lineNumbers: true
-                        }} />
+                        <CodeMirror
+                            ref={(cmp) => { this.cfgEditor = cmp; }}
+                            editorDidMount={this.props.onEditorReady}
+                            style={{ width: '500px' }}
+                            key="code-mirror"
+                            value={this.props.adminCfg.current}
+                            onBeforeChange={this.updateCfg} options={{
+                                theme: "midnight",
+                                mode: { name: "javascript" },
+                                lineNumbers: true
+                            }} />
                     </SwitchPanel>
                 </Col>
             </Row>

@@ -37,7 +37,6 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
 import converter from 'json-2-csv';
-import canvg from 'canvg-browser';
 import { updateDependenciesMapOfMapList } from "../utils/WidgetsUtils";
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
@@ -218,17 +217,21 @@ export const exportWidgetImage = action$ =>
             // svgOffsetY = svgOffsetY ? svgOffsetY : 0;
             // svgCanv.setAttribute("width", Number.parseFloat(svgW) + left);
             // svgCanv.setAttribute("height", svgH);
-            canvg(canvas, svgString, {
-                renderCallback: () => {
-                    const context = canvas.getContext("2d");
-                    context.globalCompositeOperation = "destination-over";
-                    // set background color
-                    context.fillStyle = '#fff'; // <- background color
-                    // draw background / rect on entire canvas
-                    context.fillRect(0, 0, canvas.width, canvas.height);
-                    downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
-                }
-            });
+            import('canvg-browser')
+                .then((mod) => {
+                    const canvg = mod.default;
+                    canvg(canvas, svgString, {
+                        renderCallback: () => {
+                            const context = canvas.getContext("2d");
+                            context.globalCompositeOperation = "destination-over";
+                            // set background color
+                            context.fillStyle = '#fff'; // <- background color
+                            // draw background / rect on entire canvas
+                            context.fillRect(0, 0, canvas.width, canvas.height);
+                            downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
+                        }
+                    });
+                });
         })
         .filter( () => false);
 /**

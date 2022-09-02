@@ -164,34 +164,51 @@ describe('test ThematicLayer module component', () => {
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(0);
     });
 
-    it('tests ThematicLayer component with unconfigured thematic admin', () => {
-        const comp = ReactDOM.render(<ThematicLayer layer={layerWithUnconfiguredThematic} canEditThematic adminCfg={{ open: true, current: "{}" }} />, document.getElementById("container"));
+    it('tests ThematicLayer component with unconfigured thematic admin', (done) => {
+        const comp = ReactDOM.render(<ThematicLayer
+            layer={layerWithUnconfiguredThematic}
+            canEditThematic
+            adminCfg={{ open: true, current: "{}" }}
+            onEditorReady={() => {
+                expect(document.getElementsByClassName('react-codemirror2').length).toBe(1);
+                done();
+            }}
+        />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.getElementsByClassName('react-codemirror2').length).toBe(1);
     });
 
-    it('tests ThematicLayer component with configured thematic admin panel open', () => {
-        const comp = ReactDOM.render(<ThematicLayer layer={layerWithConfiguredThematic} adminCfg={{ open: true, current: "{}" }} canEditThematic/>, document.getElementById("container"));
+    it('tests ThematicLayer component with configured thematic admin panel open', (done) => {
+        const comp = ReactDOM.render(<ThematicLayer
+            layer={layerWithConfiguredThematic}
+            adminCfg={{ open: true, current: "{}" }}
+            canEditThematic
+            onEditorReady={() => {
+                expect(document.getElementsByClassName('react-codemirror2').length).toBe(1);
+                done();
+            }}
+        />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.getElementsByClassName('react-codemirror2').length).toBe(1);
     });
 
     it('tests ThematicLayer component with configured thematic admin panel close', () => {
-        const comp = ReactDOM.render(<ThematicLayer layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} canEditThematic />, document.getElementById("container"));
+        const comp = ReactDOM.render(<ThematicLayer
+            layer={layerWithConfiguredThematic}
+            adminCfg={{ open: false, current: "{}" }}
+            canEditThematic
+        />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.getElementsByClassName('react-codemirror2').length).toBe(0);
     });
 
     it('tests ThematicLayer component with configured thematic thema style', () => {

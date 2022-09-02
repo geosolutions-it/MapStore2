@@ -16,6 +16,7 @@ import {
     getFormattedBearingValue
 } from '../../../utils/MeasureUtils';
 import 'leaflet-draw';
+import 'leaflet-draw/dist/leaflet.draw.css';
 
 let defaultPrecision = {
     km: 2,

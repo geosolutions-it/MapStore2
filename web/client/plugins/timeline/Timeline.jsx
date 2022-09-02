@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { lazy } from 'react';
 
 import { connect } from 'react-redux';
 import { isString, isObject, differenceBy, isNil, some } from 'lodash';
 import { currentTimeSelector } from '../../selectors/dimension';
 import { selectTime, selectLayer, onRangeChanged } from '../../actions/timeline';
+import withSuspense from '../../components/misc/withSuspense';
 
 import {
     itemsSelector,
@@ -214,7 +215,7 @@ const enhance = compose(
         {white: true}
     )
 );
-import Timeline from '../../components/time/TimelineComponent';
 
+const Timeline = withSuspense()(lazy(() => import( /* webpackChunkName: 'components/TimelineComponent' */ '../../components/time/TimelineComponent')));
 
 export default enhance(Timeline);
