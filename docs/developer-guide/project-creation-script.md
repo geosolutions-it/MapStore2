@@ -1,9 +1,7 @@
 # Create your own MapStore project
 
-
 !!! note
     From version 2021.02.xx MapStore introduced a new project system. Take a look [here](https://github.com/geosolutions-it/MapStore2/issues/6314) to learn more about the new project system.
-
 
 To create a new MapStore based project you can use the createProject script.
 First of all, if you don't have done it before, clone the MapStore2 repository master branch into a local folder:
@@ -18,9 +16,21 @@ Then, move into the folder that has just been created, containing MapStore2:
 cd MapStore2
 ```
 
+Choose from which branch you want the mapstore revision to be aligned, we suggest to use latest release or latest stable available
+
+```sh
+git checkout stable-branch
+```
+
+or
+
+```sh
+git checkout v2022.02.00
+```
+
 Install dependencies for MapStore:
 
-```
+```sh
 npm install
 ```
 
@@ -39,6 +49,12 @@ Note that projectName and outputFolder are mandatory:
 * **projectDescription**: project description, used in sample index page and as description in package.json
 * **gitRepositoryUrl**: full url to the github repository where the project will be published
 * **outputFolder**: folder where the project will be created
+
+Usage:
+
+```sh
+node ./createProject.js standard MyProject "1.0.0" "this is my awesome project" "" ../MY_PROJECT_NAME
+```
 
 At the end of the script execution, the given outputFolder will be populated by all the configuration files needed to start working on the project. Moreover, the local git repository will be initialized and the MapStore sub-module added and downloaded.
 
@@ -73,9 +89,11 @@ In addition to static and templates, the following files from the root MapStore 
 
 To update MapStore2 version enter the MapStore2 folder and pull desired git version.
 If MapStore2 devDependencies have been changed you can manually update these in the project package.json file or run the script updateDevDeps
+
 ```sh
 npm run updateDevDeps
 ```
+
 The script will automatically copy the devDependencies from MapStore2 package.json to the project package.json file. All the project existing devDependencies will be overwritten.
 
 To sync MapStore2 dependencies just run npm install from project root folder.
