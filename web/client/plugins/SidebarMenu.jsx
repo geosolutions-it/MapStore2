@@ -102,7 +102,7 @@ class SidebarMenu extends React.Component {
         const { hidden } = this.state;
         const burgerMenuIsActive = this.props.burgerMenuIsActive;
         const visibleElements = this.visibleItems('sidebar').length;
-        visibleElements.length && !burgerMenuIsActive && prevProps.isActive === false && onInit();
+        visibleElements && !burgerMenuIsActive && prevProps.isActive === false && onInit();
 
         if ((visibleElements === 0 || burgerMenuIsActive) && !hidden) {
             onDetach();
