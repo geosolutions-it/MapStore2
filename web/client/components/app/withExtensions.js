@@ -14,6 +14,7 @@ import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
 import { LOAD_EXTENSIONS, PLUGIN_UNINSTALLED } from '../../actions/contextcreator';
+import {reducersLoaded} from "../../utils/StateUtils";
 
 /**
  * This HOC adds to StandardApp (or whatever customization) the
@@ -146,7 +147,7 @@ function withExtensions(AppComponent) {
 
         loadExtensions = (path, callback, store) => {
             if (this.props.enableExtensions) {
-                let reducersLoaded = false;
+                let reducersList = [];
                 return axios.get(path).then((response) => {
                     const plugins = response.data;
                     Promise.all(Object.keys(plugins).map((pluginName) => {
@@ -158,9 +159,11 @@ function withExtensions(AppComponent) {
                                 return { plugin: {[pluginName + 'Plugin']: impl}, translations: plugins[pluginName].translations || ""};
                             }
 
-                            Object.keys(impl?.reducers ?? {}).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
+                            Object.keys(impl?.reducers ?? {}).forEach((name) => {
+                                store.storeManager.addReducer(name, impl.reducers[name]);
+                                reducersList.push(name);
+                            });
                             store.storeManager.addEpics(impl.name, impl?.epics ?? {});
-                            reducersLoaded = true;
                             const pluginDef = {
                                 [pluginName + "Plugin"]: {
                                     [pluginName + "Plugin"]: {
@@ -177,8 +180,8 @@ function withExtensions(AppComponent) {
                             return null;
                         });
                     })).then((loaded) => {
-                        if (reducersLoaded) {
-                            store.dispatch({type: 'REDUCERS_LOADED'});
+                        if (reducersList.length) {
+                            store.dispatch(reducersLoaded(reducersList));
                         }
                         callback(
                             loaded

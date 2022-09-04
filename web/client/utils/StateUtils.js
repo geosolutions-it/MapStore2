@@ -15,6 +15,18 @@ import isEmpty from 'lodash/isEmpty';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {normalizeName} from "./PluginsUtils";
 
+export const REDUCERS_LOADED = 'REDUCERS_LOADED';
+
+/**
+ * Action that should be dispatched whenever new reducers are added
+ * @param reducers
+ * @returns {{reducers, type: string}}
+ */
+export const reducersLoaded = (reducers) => ({
+    type: REDUCERS_LOADED,
+    reducers
+});
+
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
  *
@@ -338,6 +350,6 @@ export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     Object.keys(reducers).forEach((key) => {
         persistedStore.storeManager.addReducer(key, reducers[key]);
     });
-    persistedStore.dispatch({type: 'REDUCERS_LOADED'});
+    persistedStore.dispatch(reducersLoaded(reducers));
     persistedStore.storeManager.addEpics('notMutable', wrapEpics(epics));
 };

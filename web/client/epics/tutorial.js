@@ -25,13 +25,15 @@ import { modeSelector } from '../selectors/geostory';
 import { CHANGE_MODE } from '../actions/geostory';
 import { creationStepSelector } from '../selectors/contextcreator';
 import { CONTEXT_TUTORIALS } from '../actions/contextcreator';
-const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
-    || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
-    || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
-import { mapSelector } from './../selectors/map';
+import { mapSelector } from '../selectors/map';
+import {REDUCERS_LOADED} from "../utils/StateUtils";
+
+const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
+    || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
+    || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
 
 /**
  * Closes the tutorial if 3D button has been toggled
@@ -53,21 +55,22 @@ export const closeTutorialEpic = (action$) =>
  */
 
 export const switchTutorialEpic = (action$, store) =>
-    action$.ofType(LOCATION_CHANGE)
+    action$.ofType(LOCATION_CHANGE, REDUCERS_LOADED)
         .filter(action =>
-            action.payload
-            && action.payload.location
-            && action.payload.location.pathname)
+            (action.payload && action.payload.location && action.payload.location.pathname)
+            || (action.type === REDUCERS_LOADED && action.reducers.includes('tutorial'))
+        )
         .switchMap( (action) =>
             action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
                 .take(1)
                 .switchMap( () => {
-                    let id = findTutorialId(action.payload.location.pathname);
                     const state = store.getState();
+                    const location = action?.payload?.location ?? state.router.location;
+                    let id = findTutorialId(location.pathname);
                     const presetList = state.tutorial && state.tutorial.presetList || {};
                     const browser = state.browser;
                     const mobile = browser && browser.mobile ? '_mobile' : '';
-                    const defaultName = id ? 'default' : action.payload && action.payload.location && action.payload.location.pathname || 'default';
+                    const defaultName = id ? 'default' : location.pathname || 'default';
                     const prevTutorialId = state.tutorial && state.tutorial.id;
                     let presetName = id + mobile + '_tutorial';
                     if (defaultName.indexOf("context") !== -1) {

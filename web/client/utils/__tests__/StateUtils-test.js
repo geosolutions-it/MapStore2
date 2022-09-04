@@ -12,7 +12,7 @@ import {
     getStore,
     createStore,
     updateStore,
-    createStoreManager
+    createStoreManager, reducersLoaded, REDUCERS_LOADED
 } from '../StateUtils';
 import {createEpicMiddleware} from "redux-observable";
 import Rx from 'rxjs';
@@ -266,5 +266,13 @@ describe('StateUtils', () => {
             expect(listenedBy.epic2.length).toBe(1);
             done();
         });
+    });
+
+    it('test reducersLoaded action creator', (done) => {
+        const reducers = ['a', 'b'];
+        const action = reducersLoaded(reducers);
+        expect(action.reducers).toEqual(reducers);
+        expect(action.type).toBe(REDUCERS_LOADED);
+        done();
     });
 });
