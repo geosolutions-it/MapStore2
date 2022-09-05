@@ -97,6 +97,8 @@ describe("Test the MapViewerCmp component", () => {
         const mapViewerPros = {
             match, location, onInit: () => { },
             wrappedContainer: MapViewerContainer,
+            pluginsConfig: [],
+            plugins: {},
             loadMapConfig: (cfgUrl, mapId) => {
                 expect(cfgUrl).toBe(`/rest/geostore/data/${count}`);
                 expect(mapId).toBe(count);
@@ -109,8 +111,10 @@ describe("Test the MapViewerCmp component", () => {
         // override location force re-render. (not sure check location is correct)
         renderMapViewerComp({ ...mapViewerPros, location: { ...location }});
         // render second time
-        const component = renderMapViewerComp({ ...mapViewerPros, match: match2, location: {...location}});
-        expect(component).toExist();
+        setTimeout(() => {
+            const component = renderMapViewerComp({ ...mapViewerPros, match: match2, location: {...location}});
+            expect(component).toExist();
+        }, 300);
     });
 
 });
