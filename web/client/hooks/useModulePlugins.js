@@ -11,6 +11,7 @@ import {createPlugin, getPlugins, isMapStorePlugin, normalizeName} from '../util
 import {getStore} from '../utils/StateUtils';
 import join from 'lodash/join';
 import {size} from "lodash";
+import url from "url";
 
 function filterRemoved(registry, removed = []) {
     return Object.keys(registry).reduce((acc, p) => {
@@ -25,6 +26,7 @@ function filterRemoved(registry, removed = []) {
 }
 
 let storedPlugins = {};
+let location = '';
 const pluginsCache = {};
 
 /**
@@ -119,14 +121,20 @@ function useModulePlugins({
 
     useEffect(() => {
         const store = getStore();
+        const urlQuery = url.parse(window.location.href, true).hash;
         if (store.storeManager) {
+            // some plugins like ContextCreator have edge-case of this scenario:
+            // there are two PluginsContainer components, whereas inner one load another list of plugins, like mapViewer
+            // on second step of context creator. To make it properly work, we need to check if router.location.path has
+            // changed and do not mute epics unless that's the case. Epics can be unmuted with no limitations though.
             Object.keys(pluginsCache).forEach((plugin) => {
-                if (!pluginsKeys.includes(plugin)) {
+                if (!pluginsKeys.includes(plugin) && urlQuery !== location) {
                     store.storeManager.muteEpics(plugin);
                 } else {
                     store.storeManager.unmuteEpics(plugin);
                 }
             });
+            location = urlQuery;
         }
     }, [pluginsString]);
 
