@@ -16,16 +16,16 @@ Then, move into the folder that has just been created, containing MapStore2:
 cd MapStore2
 ```
 
-Choose from which branch you want the mapstore revision to be aligned, we suggest to use latest release or latest stable available
+Choose from which branch you want the mapstore revision to be aligned, we suggest to use latest release or latest stable available (if you know which is)
 
 ```sh
-git checkout stable-branch
+git checkout <stable-branch>
 ```
 
 or
 
 ```sh
-git checkout v2022.02.00
+git checkout v2022.01.02
 ```
 
 Install dependencies for MapStore:
