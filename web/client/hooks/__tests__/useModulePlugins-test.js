@@ -49,6 +49,7 @@ describe('useModulePlugins hook', () => {
     });
     afterEach((done) => {
         setStore(originalStore);
+        window.history.back();
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
