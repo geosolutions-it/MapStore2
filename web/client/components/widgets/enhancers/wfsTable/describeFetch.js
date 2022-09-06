@@ -12,8 +12,8 @@ import { describeFeatureType } from '../../../../observables/wfs';
 import { getSearchUrl } from '../../../../utils/LayersUtils';
 
 /**
- * Retrieves feature types for the layer provideded in props. When the layer changes url,
- * @param {Obserbable} props$ props stream
+ * Retrieves feature types for the layer provided in props. When the layer changes url,
+ * @param {Observable} props$ props stream
  */
 export default props$ =>
     props$
