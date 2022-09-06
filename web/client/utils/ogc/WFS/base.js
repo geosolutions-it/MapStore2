@@ -34,12 +34,13 @@ const wfsToGmlVersion = (v = "1.1.0") => WFS_TO_GML[v];
  * @return {object[]}                     The array of featuretypes properties
  */
 const getFeatureTypeProperties = (describeFeatureType) => get(describeFeatureType, "featureTypes[0].properties");
+const isGeometryType = (pd) => pd.type.indexOf("gml:") === 0 || pd.type === "xsd:Geometry";
 /**
  * Provides the first geometry type found
  * @param  {object} describeFeatureType the describeFeatureType object
  * @return {object}                     the featureType property
  */
-const findGeometryProperty = (describeFeatureType) => head((getFeatureTypeProperties(describeFeatureType) || []).filter( d => d.type.indexOf("gml:") === 0));
+const findGeometryProperty = (describeFeatureType) => head((getFeatureTypeProperties(describeFeatureType) || []).filter( isGeometryType ));
 /**
  * Retrives the descriptor for a property in the describeFeatureType (supports single featureTypes)
  * @memberof utils.ogc.WFS
@@ -58,7 +59,6 @@ const getPropertyDesciptor = (propName, describeFeatureType) =>
  * @return {string}   url of the schemaLocation
  */
 const schemaLocation = (d) => d.targetNamespace;
-const isGeometryType = (pd) => pd.type.indexOf("gml:") === 0;
 const isValidValue = (v, pd) =>
     pd === undefined
     || pd === null

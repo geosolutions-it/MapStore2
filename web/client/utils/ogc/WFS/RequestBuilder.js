@@ -49,7 +49,7 @@ const getStaticAttributesWFS2 = (ver) => 'service="WFS" version="' + ver + '" ' 
  *      filter(
  *          and(
  *              property("P1").equals("v1"),
- *              proprety("the_geom").intersects(geoJSONGeometry)
+ *              property("the_geom").intersects(geoJSONGeometry)
  *          )
  *      ),
  *      {srsName="EPSG:4326"} // 3rd for query is optional
