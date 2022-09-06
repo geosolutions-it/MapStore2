@@ -72,18 +72,20 @@ function useModulePlugins({
             Promise.all(loadPlugins)
                 .then((impls) => {
                     const store = getStore();
-                    let reducersLoaded = false;
+                    const reducersList = [];
                     impls.forEach(impl => {
                         if (size(impl.reducers)) {
-                            Object.keys(impl.reducers).forEach((name) => store.storeManager.addReducer(name, impl.reducers[name]));
-                            reducersLoaded = true;
+                            Object.keys(impl.reducers).forEach((name) => {
+                                store.storeManager.addReducer(name, impl.reducers[name]);
+                                reducersList.push(name);
+                            });
                         }
                         if (size(impl.epics)) {
                             store.storeManager.addEpics(impl.name, impl.epics);
                         }
                     });
-                    if (reducersLoaded) {
-                        store.dispatch({type: 'REDUCERS_LOADED'});
+                    if (reducersList.length) {
+                        store.dispatch(reducersLoaded(reducersList));
                     }
                     return getPlugins({
                         ...filterRemoved(impls.map(impl => {

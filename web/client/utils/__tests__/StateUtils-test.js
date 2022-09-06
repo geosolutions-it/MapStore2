@@ -16,6 +16,7 @@ import {
 } from '../StateUtils';
 import {createEpicMiddleware} from "redux-observable";
 import Rx from 'rxjs';
+import {REDUCERS_LOADED, reducersLoaded} from "../../actions/storemanager";
 
 describe('StateUtils', () => {
     beforeEach((done) => {
@@ -266,5 +267,13 @@ describe('StateUtils', () => {
             expect(listenedBy.epic2.length).toBe(1);
             done();
         });
+    });
+
+    it('test reducersLoaded action creator', (done) => {
+        const reducers = ['a', 'b'];
+        const action = reducersLoaded(reducers);
+        expect(action.reducers).toEqual(reducers);
+        expect(action.type).toBe(REDUCERS_LOADED);
+        done();
     });
 });

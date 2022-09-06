@@ -14,6 +14,7 @@ import ConfigUtils from './ConfigUtils';
 import isEmpty from 'lodash/isEmpty';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {normalizeName} from "./PluginsUtils";
+import {reducersLoaded} from "../actions/storemanager";
 
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
@@ -338,6 +339,6 @@ export const augmentStore = ({ reducers = {}, epics = {} } = {}, store) => {
     Object.keys(reducers).forEach((key) => {
         persistedStore.storeManager.addReducer(key, reducers[key]);
     });
-    persistedStore.dispatch({type: 'REDUCERS_LOADED'});
+    persistedStore.dispatch(reducersLoaded(reducers));
     persistedStore.storeManager.addEpics('notMutable', wrapEpics(epics));
 };
