@@ -33,18 +33,15 @@ describe('useModulePlugins hook', () => {
             rootEpic: () => {}
         }
     };
-    const Component = ({onLoaded}) => {
+    const Component = ({onLoaded = () => {}, plugins, config}) => {
         const { plugins: loadedPlugins, pending } = useModulePlugins({
-            pluginsEntries: {
-                ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy'))
-            },
-            pluginsConfig: [
-                'ExamplePlugin'
-            ]
+            pluginsEntries: plugins,
+            pluginsConfig: config
         });
         if (!pending) onLoaded(loadedPlugins);
         return false;
     };
+
     beforeEach((done) => {
         setStore(store);
         document.body.innerHTML = '<div id="container"></div>';
@@ -59,8 +56,106 @@ describe('useModulePlugins hook', () => {
     it('test module plugins load', done => {
         const assertCallback = (plugins) => {
             expect(plugins.ExamplePlugin).toExist();
+            expect(plugins.Example2Plugin).toExist();
             done();
         };
-        ReactDOM.render(<Component onLoaded={assertCallback} />, document.getElementById('container'));
+
+        const plugins = {
+            ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy')),
+            Example2Plugin: toModulePlugin('Example2', () => import('../../test-resources/module-plugins/dummy2'))
+        };
+        const pluginsConfig = [
+            'ExamplePlugin',
+            'Example2Plugin'
+        ];
+
+        ReactDOM.render(<Component onLoaded={assertCallback} plugins={plugins} config={pluginsConfig} />, document.getElementById('container'));
+    });
+    it('test epics should not be muted on nested PluginsContainer render', done => {
+        const newStore = {
+            dispatch() { },
+            getState: () => {
+                return {};
+            },
+            subscribe() {
+            },
+            replaceReducer: () => { },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: () => {
+                    // we should not end up in here
+                    expect(true).toBe(false);
+                },
+                unmuteEpics: () => {},
+                rootEpic: () => {}
+            }
+        };
+        setStore(newStore);
+
+        const plugins = {
+            ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy')),
+            Example2Plugin: toModulePlugin('Example2', () => import('../../test-resources/module-plugins/dummy2'))
+        };
+        const pluginsConfig = [
+            'ExamplePlugin',
+            'Example2Plugin'
+        ];
+
+        ReactDOM.render(<Component plugins={plugins} config={pluginsConfig} />, document.getElementById('container'));
+        setTimeout(() => {
+            ReactDOM.render(<Component
+                plugins={{ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy'))}}
+                config={['ExamplePlugin']} />, document.getElementById('container'));
+        }, 200);
+        setTimeout(() => {
+            done();
+        }, 200);
+    });
+    it('test epics should be muted if route has changed', done => {
+        const newStore = {
+            dispatch() { },
+            getState: () => {
+                return {};
+            },
+            subscribe() {
+            },
+            replaceReducer: () => { },
+            storeManager: {
+                reduce: () => {},
+                addReducer: () => {},
+                removeReducer: () => {},
+                addEpics: () => {},
+                muteEpics: (plugin) => {
+                    expect(plugin).toBe('Example2Plugin');
+                    done();
+                },
+                unmuteEpics: () => {},
+                rootEpic: () => {}
+            }
+        };
+        setStore(newStore);
+
+        const plugins = {
+            ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy')),
+            Example2Plugin: toModulePlugin('Example2', () => import('../../test-resources/module-plugins/dummy2'))
+        };
+        const pluginsConfig = [
+            'ExamplePlugin',
+            'Example2Plugin'
+        ];
+
+        ReactDOM.render(<Component plugins={plugins} config={pluginsConfig} />, document.getElementById('container'));
+        setTimeout(() => {
+            window.history.pushState('page2', 'Title', '/mapstore/#/newPage');
+            ReactDOM.render(<Component
+                plugins={{ExamplePlugin: toModulePlugin('Example', () => import('../../test-resources/module-plugins/dummy'))}}
+                config={['ExamplePlugin']} />, document.getElementById('container'));
+        }, 200);
+        setTimeout(() => {
+            expect(true).toBe(false);
+        }, 200);
     });
 });
