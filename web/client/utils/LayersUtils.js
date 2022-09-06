@@ -19,7 +19,6 @@ import findIndex from 'lodash/findIndex';
 import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
 import {addAuthenticationParameter} from './SecurityUtils';
-import {mergeFiltersToOGC} from "./FilterUtils";
 
 let LayersUtils;
 

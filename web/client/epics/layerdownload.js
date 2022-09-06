@@ -96,7 +96,10 @@ const DOWNLOAD_FORMATS_LOOKUP = {
 };
 
 const { getFeature: getFilterFeature, query, sortBy, propertyName } = requestBuilder({ wfsVersion: "1.1.0" });
-
+const getCQLFilterFromLayer = (layer = {}) => {
+    const params = layer?.params ?? {};
+    return params?.[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
+};
 
 const hasOutputFormat = (data) => {
     const operation = get(data, "WFS_Capabilities.OperationsMetadata.Operation");
@@ -109,8 +112,7 @@ const hasOutputFormat = (data) => {
 
 const getWFSFeature = ({ url, filterObj = {}, layerFilter,  layer, downloadOptions = {}, options } = {}) => {
     const { sortOptions, propertyNames } = options;
-    const params = layer?.params ?? {};
-    const cqlFilter = params?.[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
+    const cqlFilter = getCQLFilterFromLayer(layer);
     const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj, cqlFilter);
 
     return getXMLFeature(url, getFilterFeature(query(
@@ -307,8 +309,7 @@ export const startFeatureExportDownload = (action$, store) =>
         const wpsFlow = () => {
             const isVectorLayer = !!layer.search?.url;
             const cropToROI = action.downloadOptions.cropDataSet && !!mapBbox && !!mapBbox.bounds;
-            const params = layer?.params ?? {};
-            const cqlFilter = params?.[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
+            const cqlFilter = getCQLFilterFromLayer(layer);
             const wpsDownloadOptions = {
                 layerName: layer.name,
                 outputFormat: action.downloadOptions.selectedFormat,
