@@ -773,7 +773,9 @@ export const createUniqueLayerFilter = (layer, ...filters) => {
     const cqlFilter = params[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
     return layer?.type === "vector" ?
         filters
-        : (mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, ...filters));
+        : (mergeFiltersToOGC({ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: [
+            'xmlns:gml="http://www.opengis.net/gml"', 'xmlns:ogc="http://www.opengis.net/ogc"'
+        ]}, cqlFilter, layerFilter, ...filters));
 };
 
 LayersUtils = {
