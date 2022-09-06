@@ -762,22 +762,6 @@ export const isTimelineVisible = (layers)=>{
     return false;
 };
 
-/**
- * This function creates a unique filter merging CQL FILTER, internal layer filter and passed optional filters
- * @param layer
- * @param filters
- * @returns {*|string}
- */
-export const createUniqueLayerFilter = (layer, ...filters) => {
-    const {layerFilter, params = {}} = layer ?? {};
-    const cqlFilter = params[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
-    return layer?.type === "vector" ?
-        filters
-        : (mergeFiltersToOGC({ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: [
-            'xmlns:gml="http://www.opengis.net/gml"', 'xmlns:ogc="http://www.opengis.net/ogc"'
-        ]}, cqlFilter, layerFilter, ...filters));
-};
-
 LayersUtils = {
     getGroupByName,
     getLayerId,
@@ -789,6 +773,5 @@ LayersUtils = {
     getRegGeoserverRule,
     findGeoServerName,
     isInsideResolutionsLimits,
-    visibleTimelineLayers,
-    createUniqueLayerFilter
+    visibleTimelineLayers
 };

@@ -9,7 +9,7 @@ import expect from 'expect';
 
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, createUniqueLayerFilter} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers } = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
