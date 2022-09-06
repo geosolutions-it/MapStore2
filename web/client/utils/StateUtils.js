@@ -133,7 +133,12 @@ const isolateEpics = (epics, muteState) => {
     return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic, k) }), {});
 };
 
-
+/**
+ * Creates new instance of storeManager
+ * @param initialReducers
+ * @param initialEpics
+ * @returns {{reduce: (function(*, *): any), rootEpic: (function(...[*]): Observable<Action>), removeReducer: removeReducer, unmuteEpics: unmuteEpics, getEpicsRegistry: (function(): {addedEpics: {}, muteState: {}, epicsListenedBy: {}, groupedByModule: {}}), addEpics: addEpics, muteEpics: muteEpics, addReducer: addReducer}}
+ */
 export const createStoreManager = (initialReducers, initialEpics) => {
     // Create an object which maps keys to reducers
     const reducers = {...initialReducers};
@@ -160,9 +165,10 @@ export const createStoreManager = (initialReducers, initialEpics) => {
     };
 
     return {
-        getReducerMap: () => reducers,
-
-        // Callback to get current state of epics registry, used for testing purposes
+        /**
+         * Exposes information about current state of epics registry, used for testing purposes
+         * @returns {{addedEpics: {}, muteState: {}, epicsListenedBy: {}, groupedByModule: {}}}
+         */
         getEpicsRegistry: () => ({
             addedEpics,
             epicsListenedBy,
@@ -187,7 +193,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
             return combinedReducer(state, action);
         },
 
-        // Adds a new reducer with the specified key
+        /**
+         * Registers new reducer
+         * @param {string} key - unique name of reducer
+         * @param {function} reducer - reducer function
+         */
         addReducer: (key, reducer) => {
             if (!key || reducers[key]) {
                 return;
@@ -201,6 +211,10 @@ export const createStoreManager = (initialReducers, initialEpics) => {
         },
 
         // Removes a reducer with the specified key
+        /**
+         * Removes a reducer with the specified key
+         * @param {string} key - unique name of reducer
+         */
         removeReducer: key => {
             if (!key || !reducers[key]) {
                 return;
@@ -216,6 +230,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
             combinedReducer = combineReducers(reducers);
         },
         // Adds a new epics set, mutable by the specified key
+        /**
+         * Adds a new epics set, that can be muted by the specified key
+         * @param {string} key
+         * @param {Object.<string, function>} epicsList
+         */
         addEpics: (key, epicsList) => {
             const normalizedName = normalizeName(key);
             if (Object.keys(epicsList).length) {
@@ -234,7 +253,10 @@ export const createStoreManager = (initialReducers, initialEpics) => {
                 }
             }
         },
-        // Mute epics set with a specified key
+        /**
+         * Mutes set of epics with a specified key
+         * @param {string} key
+         */
         muteEpics: (key) => {
             const moduleEpicRegistrations = groupedByModule[key];
             // try to mute everything registered by module. If epic is shared, remove current module from epicsListenedBy
@@ -249,6 +271,10 @@ export const createStoreManager = (initialReducers, initialEpics) => {
                 }
             });
         },
+        /**
+         * Unmutes set of epics with a specified key
+         * @param {string} key
+         */
         unmuteEpics: (key) => {
             const moduleEpicRegistrations = groupedByModule[key];
             // unmute epics if exactly one plugin wants to register specific epic
@@ -263,6 +289,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
                 }
             });
         },
+        /**
+         * Root epic, is used upon middleware creation
+         * @param args
+         * @returns {Observable<Action>}
+         */
         rootEpic: (...args) => epic$.mergeMap(e => e(...args))
     };
 };

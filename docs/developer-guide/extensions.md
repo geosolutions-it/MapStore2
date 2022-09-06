@@ -76,7 +76,11 @@ The extension definition will import or define all the needed dependencies (comp
 ### Dynamic import of extension
 
 MapStore supports dynamic import of plugins and extensions.
-In this case, plugin or extension is loaded when app demands to render it for the first time.
+
+Dynamically imported plugin or extension uses lazy-loading: component, reducers and epics will be loaded when extension
+is rendered on the page for the first time.
+Regardless if extension uses lazy-loading or not, its epics will be muted once extension is not rendered on the page.
+For more details see [Writing epics](../writing-epics/#writing-epics).
 
 There are few changes required to make extension loaded dynamically:
 
