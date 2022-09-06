@@ -41,7 +41,7 @@ export default ({
 } = {}) => {
     const { size: {height: mapHeight, width: mapWidth} = {}, mapInfoControl } = map;
     const enablePopupTools = mapHeight > 400 && mapWidth > 400 && mapInfoControl;
-    return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
+    return (<WidgetContainer className={"map-widget-view"} id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={[
             <MapSwitcher
@@ -56,10 +56,11 @@ export default ({
         isDraggable={dataGrid.isDraggable}
     >
         <BorderLayout
-            footer={
-                <div style={{ height: "30px", overflow: "hidden"}}>
-                    {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
+            footer={loading
+                ? <div className={"widget-footer"}>
+                    <span style={{ "float": "right"}}><LoadingSpinner /></span>
                 </div>
+                : null
             }>
             <MapView
                 tools={enablePopupTools ? ['popup'] : []}
@@ -71,7 +72,7 @@ export default ({
                 mapStateSource={mapStateSource}
                 hookRegister={hookRegister}
                 layers={map && map.layers}
-                options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
+                options={{ style: { margin: '0 10px 10px 10px', height: 'calc(100% - 10px)' }}}
                 env={env}
             />
         </BorderLayout>

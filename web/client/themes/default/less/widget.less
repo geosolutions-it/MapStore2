@@ -9,6 +9,12 @@
 // **************
 // Theme
 // **************
+.setFontSize (@val){
+    @fSize: @val
+};
+.em (@prop, @val) {
+    @{prop}: (@val/(@fSize*1em));
+};
 #ms-components-theme(@theme-vars) {
     .widget-container {
         &.selection-active {
@@ -132,53 +138,57 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .mapstore-widget-card {
-        margin: 20px 0;
         overflow: visible;
         position: absolute;
         height: 100%;
         width: 100%;
         margin: 0;
+        .setFontSize(@font-size-medium);
+        font-size: @fSize;
         .shadow-far;
         .mapstore-widget-layer {
             text-align: center;
-            margin: 10px 5%;
+            .em(margin-top, 10);
+            .em(margin-right, 10);
+            margin-bottom: 5%;
+            margin-left: 5%;
             font-style: italic;
         }
         .mapstore-widget-header {
-            height: 32px;
-            text-align: center;
-            width: 90%;
-            margin: 10px 5%;
-            font-size: 22px;
+            font-size: @fSize;
+            .em(height, 28);
             font-weight: bold;
-            border-bottom: 1px solid @ms-main-border-color;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             .widget-title {
                 text-overflow: ellipsis;
                 width: calc(100% - 30px);
-                font-size: 14px;
+                .setFontSize(@font-size-base);
+                font-size: @fSize;
+                .em(margin-left, 6);
             }
             .mapstore-info-popover .glyphicon {
-                margin-top: 7px;
+                .setFontSize(@font-size-base);
+                font-size: @fSize;
+                .em(margin-top, 7);
                 position: absolute;
-                left: 22px;
-                font-size: 14px;
+                .em(left, 22);
             }
             .widget-icons {
-                text-align: left;
-                position: absolute;
-                width: 100%;
-                top: 0;
-                left: 0;
-                overflow: visible;
-                height: 10px;
+                .em(height, 10);
+                .em(margin-left, 4);
                 .btn-group {
-                    left: 0px;
+                    left: 0;
+                    span {
+                        display: flex;
+                    }
                     button {
                         background: transparent;
-                        top: -8px;
+                        .em(top, -8);
                         position: relative;
-                        padding-left:4px;
-                        padding-right:4px;
+                        .em(padding-left, 4);
+                        .em(padding-right, 4);
                         // rotate pin icon
                         .glyphicon.active::before {
                             transform: rotate(45deg);
@@ -190,44 +200,93 @@
                     }
                 }
             }
-            .map-switcher {
-                text-align: left;
-                font-weight: normal;
-                width: 200px;
-                bottom: 4px;
-                .Select-option {
-                    word-break: break-all;
+            .glyphicon {
+                cursor: pointer;
+            }
+        }
+        .react-grid-Grid {
+            .react-grid-Header {
+                .react-grid-HeaderCell {
+                    .setFontSize(@font-size-small);
+                    font-size: @fSize;
+                    .em(padding, 4);
+                    line-height: 1.6;
+                    input {
+                        .setFontSize(11px);
+                        font-size: @fSize;
+                        .em(width, 72);
+                        .em(height, 20);
+                        .em(padding-top, 5);
+                        .em(padding-right, 10);
+                        .em(padding-bottom, 5);
+                        .em(padding-left, 10);
+                    }
+                }
+            }
+            .react-grid-Viewport {
+                .react-grid-Cell {
+                    font-size: @font-size-small;
                 }
             }
         }
         .mapstore-widget-default-content {
             // avoid editor defaults for text-widget
             &.ql-editor {
+                .setFontSize(@font-size-small);
+                font-size: @fSize;
                 height: auto;
                 padding: 0;
+                .em(margin-top, 10);
+                .em(margin-right, 10);
+                margin-bottom: 5%;
+                margin-left: 5%;
             }
-            margin: 10px 5%;
             // avoid images to be wider than their container
             img {
                 max-width: 100%;
             }
         }
         .mapstore-widget-description {
+            font-size: @fSize;
             text-align: center;
             width: 90%;
-            margin: 5px 5%;
+            .em(margin-top, 5);
+            .em(margin-right, 5);
+            margin-bottom: 5%;
+            margin-left: 5%;
         }
         .mapstore-widget-options {
-            position: absolute;
-            font-size: 18px;
-            right: 7px;
-            top: 10px;
+            .setFontSize(@font-size-large);
+            font-size: @fSize;
             display: flex;
+            .em(margin-top, 4);
+            .em(margin-right, 10);
+            margin-bottom: 0;
+            margin-left: 0;
+            .map-switcher {
+                text-align: left;
+                font-weight: normal;
+                .em(width, 200);
+                .em(bottom, 4);
+                .Select-option {
+                    word-break: break-all;
+                }
+            }
         }
         .widget-menu {
             border: none;
-            top: -2px;
-            left: 7px;
+            display: flex;
+            .em(margin-top, -4);
+            .em(margin-right, -8);
+        }
+        .widget-footer {
+            .em(height, 30);
+            overflow: hidden;
+            .result-info {
+                font-size: @font-size-small;
+                float: left;
+                .em(margin, 5);
+            }
         }
         .mapstore-widget-chart {
             height: 100%;
@@ -242,6 +301,7 @@
             overflow: hidden;
         }
         .mapstore-widget-table {
+            font-size: @font-size-small;
             height: 100%;
             width: 90%;
             margin: 0 5%;
@@ -259,33 +319,46 @@
             position: relative;
         }
         .legend-widget {
-            padding: 0 15px;
+            .setFontSize(@font-size-small);
+            font-size: @fSize;
+            padding-top: 0;
+            .em(padding-right, 15);
+            .em(padding-bottom, 15);
+            .em(padding-left, 15);
             .widget-legend-toc {
                 -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
                 -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
                 box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
                 padding: 0;
-                margin-top: 10px;
+                .em(margin-top, 10);
                 .toc-default-layer-head {
-                    height: 52px;
+                    .em(height, 44);
                     width: 100%;
                     margin-bottom: 0;
-                    padding: 18px 0;
-                    border-bottom-width: 1px;
+                    .em(padding-top, 14);
+                    .em(padding-right, 14);
+                    padding-bottom: 0;
+                    padding-left: 0;
+                    .em(border-bottom-width, 1);
                     border-bottom-style: solid;
                     .visibility-check{
                         &.glyphicon {
                             cursor: pointer;
                             float: left;
-                            font-size: 15px;
-                            margin: 0 10px;
+                            margin-top: 0;
+                            margin-right: 0;
+                            .em(margin-bottom, 10);
+                            .em(margin-left, 10);
                         }
                     }
                     .toc-title {
                         overflow: hidden;
-                        height: 15px;
-                        margin: 0 5px;
-                        width: 140px;
+                        .em(height, 15);
+                        margin-top: 0;
+                        margin-right: 0;
+                        .em(margin-bottom, 5);
+                        .em(margin-left, 5);
+                        .em(width, 140);
                         line-height: 1;
                     }
                     .toc-legend-icon {
@@ -295,12 +368,26 @@
                         &.glyphicon {
                             cursor: pointer;
                             float: right;
-                            margin-right: 10px;
+                            .em(margin-right, 10);
                         }
+                    }
+                    .mapstore-slider {
+                        .em(margin-top, -8);
                     }
                 }
                 .expanded-legend-view {
-                    margin-top: 15px;
+                    .em(margin-top, 15);
+                }
+            }
+        }
+        .map-widget-view {
+            .widget-icons, .widget-title {
+                .em(margin-bottom, 6);
+            }
+            .mapstore-widget-header {
+                .em(height, 45);
+                .btn-toolbar {
+                    .em(margin-top, 5);
                 }
             }
         }
