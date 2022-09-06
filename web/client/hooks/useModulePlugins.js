@@ -11,6 +11,7 @@ import {createPlugin, getPlugins, isMapStorePlugin, normalizeName} from '../util
 import {getStore} from '../utils/StateUtils';
 import join from 'lodash/join';
 import {size} from "lodash";
+import {reducersLoaded} from "../actions/storemanager";
 import url from "url";
 
 function filterRemoved(registry, removed = []) {
