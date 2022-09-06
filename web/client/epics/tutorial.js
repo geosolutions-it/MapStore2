@@ -57,15 +57,14 @@ export const closeTutorialEpic = (action$) =>
 export const switchTutorialEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE, REDUCERS_LOADED)
         .filter(action =>
-            (action.payload && action.payload.location && action.payload.location.pathname)
-            || (action.type === REDUCERS_LOADED && action.reducers.includes('tutorial'))
+            action.payload?.location?.pathname || (action.type === REDUCERS_LOADED && action.reducers.includes('tutorial'))
         )
-        .switchMap( (action) =>
+        .switchMap( () =>
             action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
                 .take(1)
                 .switchMap( () => {
                     const state = store.getState();
-                    const location = action?.payload?.location ?? state.router.location;
+                    const location = state.router.location;
                     let id = findTutorialId(location.pathname);
                     const presetList = state.tutorial && state.tutorial.presetList || {};
                     const browser = state.browser;
