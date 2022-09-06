@@ -125,7 +125,8 @@ const WidgetsView = compose(
  * @prop {object} cfg.cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
  * @prop {object} cfg.minLayoutWidth minimum size of the layout, below this size the widgets are listed in a single column
  * for more info about rowHeight and cols, see https://github.com/STRML/react-grid-layout#grid-layout-props
- * @prop {object} cfg.widgetOpts widget specific options
+ * @prop {object} cfg.widgetOpts can be used to configure widget specific options.
+ * Currently, it explicitly supports table widget with following options
  * @example
  * {
  *   "name": "Dashboard",
@@ -135,7 +136,9 @@ const WidgetsView = compose(
  *      "widgetOpts": {
  *          "table": {
  *              gridOpts: {
- *                  rowHeight: 20
+ *                  rowHeight: 20,
+ *                  headerRowHeight: 20,
+ *                  headerFiltersHeight: 20
  *              }
  *          }
  *      }

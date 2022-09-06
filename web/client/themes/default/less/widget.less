@@ -214,7 +214,6 @@
                     input {
                         .setFontSize(11px);
                         font-size: @fSize;
-                        .em(width, 72);
                         .em(height, 20);
                         .em(padding-top, 5);
                         .em(padding-right, 10);
@@ -263,15 +262,6 @@
             .em(margin-right, 10);
             margin-bottom: 0;
             margin-left: 0;
-            .map-switcher {
-                text-align: left;
-                font-weight: normal;
-                .em(width, 200);
-                .em(bottom, 4);
-                .Select-option {
-                    word-break: break-all;
-                }
-            }
         }
         .widget-menu {
             border: none;
@@ -385,9 +375,19 @@
                 .em(margin-bottom, 6);
             }
             .mapstore-widget-header {
-                .em(height, 45);
-                .btn-toolbar {
-                    .em(margin-top, 5);
+                height: max-content;
+                .mapstore-widget-options {
+                    align-items: center;
+                    .em(margin-top, 4);
+                    .em(margin-bottom, 4);
+                    .map-switcher {
+                        text-align: left;
+                        font-weight: normal;
+                        .em(width, 200);
+                        .Select-option {
+                            word-break: break-all;
+                        }
+                    }
                 }
             }
         }

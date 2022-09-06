@@ -51,7 +51,6 @@ export default ({
             </Button>);
         }
         return (<Select
-            style={{width: 200}}
             className={className}
             disabled={disabled}
             noResultsText="widgets.mapSwitcher.noResults"
