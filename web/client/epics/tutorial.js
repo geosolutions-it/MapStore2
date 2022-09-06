@@ -57,9 +57,11 @@ export const closeTutorialEpic = (action$) =>
 
 export const switchTutorialEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE, REDUCERS_LOADED)
-        .filter(action =>
-            action.payload?.location?.pathname || (action.type === REDUCERS_LOADED && action.reducers.includes('tutorial'))
-        )
+        .filter(action => {
+            const state = store.getState();
+            return (action.type === LOCATION_CHANGE && state.router?.location?.pathname)
+                    || (action.type === REDUCERS_LOADED && action.reducers.includes('tutorial'));
+        })
         .switchMap( () =>
             action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
                 .take(1)
