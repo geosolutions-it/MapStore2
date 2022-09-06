@@ -8,9 +8,10 @@
 
 import {useEffect, useMemo, useState} from 'react';
 import {createPlugin, getPlugins, isMapStorePlugin, normalizeName} from '../utils/PluginsUtils';
-import {getStore, reducersLoaded} from '../utils/StateUtils';
+import {getStore} from '../utils/StateUtils';
 import join from 'lodash/join';
 import {size} from "lodash";
+import {reducersLoaded} from "../actions/storemanager";
 
 function filterRemoved(registry, removed = []) {
     return Object.keys(registry).reduce((acc, p) => {

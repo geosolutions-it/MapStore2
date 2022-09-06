@@ -14,18 +14,7 @@ import ConfigUtils from './ConfigUtils';
 import isEmpty from 'lodash/isEmpty';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {normalizeName} from "./PluginsUtils";
-
-export const REDUCERS_LOADED = 'REDUCERS_LOADED';
-
-/**
- * Action that should be dispatched whenever new reducers are added
- * @param reducers
- * @returns {{reducers, type: string}}
- */
-export const reducersLoaded = (reducers) => ({
-    type: REDUCERS_LOADED,
-    reducers
-});
+import {reducersLoaded} from "../actions/storemanager";
 
 /**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.

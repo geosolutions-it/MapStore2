@@ -29,7 +29,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
 import { mapSelector } from '../selectors/map';
-import {REDUCERS_LOADED} from "../utils/StateUtils";
+import {REDUCERS_LOADED} from "../actions/storemanager";
 
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
@@ -50,7 +50,8 @@ export const closeTutorialEpic = (action$) =>
 /**
  * Setup new steps based on the current path
  * @memberof epics.tutorial
- * @param {external:Observable} action$ manages `LOCATION_CHANGE`
+ * @param {external:Observable} action$ manages `LOCATION_CHANGE`, `REDUCERS_LOADED`
+ * @param {external:Observable} store
  * @return {external:Observable}
  */
 

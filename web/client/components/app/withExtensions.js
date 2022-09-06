@@ -14,7 +14,7 @@ import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
 import { LOAD_EXTENSIONS, PLUGIN_UNINSTALLED } from '../../actions/contextcreator';
-import {reducersLoaded} from "../../utils/StateUtils";
+import {reducersLoaded} from "../../actions/storemanager";
 
 /**
  * This HOC adds to StandardApp (or whatever customization) the

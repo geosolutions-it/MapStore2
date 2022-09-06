@@ -12,10 +12,11 @@ import {
     getStore,
     createStore,
     updateStore,
-    createStoreManager, reducersLoaded, REDUCERS_LOADED
+    createStoreManager
 } from '../StateUtils';
 import {createEpicMiddleware} from "redux-observable";
 import Rx from 'rxjs';
+import {REDUCERS_LOADED, reducersLoaded} from "../../actions/storemanager";
 
 describe('StateUtils', () => {
     beforeEach((done) => {
