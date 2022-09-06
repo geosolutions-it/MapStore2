@@ -19,7 +19,6 @@ import findIndex from 'lodash/findIndex';
 import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
 import {addAuthenticationParameter} from './SecurityUtils';
-import {mergeFiltersToOGC} from "./FilterUtils";
 
 let LayersUtils;
 
@@ -762,20 +761,6 @@ export const isTimelineVisible = (layers)=>{
     return false;
 };
 
-/**
- * This function creates a unique filter merging CQL FILTER, internal layer filter and passed optional filters
- * @param layer
- * @param filters
- * @returns {*|string}
- */
-export const createUniqueLayerFilter = (layer, ...filters) => {
-    const {layerFilter, params = {}} = layer ?? {};
-    const cqlFilter = params[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
-    return layer?.type === "vector" ?
-        filters
-        : (mergeFiltersToOGC({ogcVersion: '1.1.0'}, cqlFilter, layerFilter, ...filters));
-};
-
 LayersUtils = {
     getGroupByName,
     getLayerId,
@@ -787,6 +772,5 @@ LayersUtils = {
     getRegGeoserverRule,
     findGeoServerName,
     isInsideResolutionsLimits,
-    visibleTimelineLayers,
-    createUniqueLayerFilter
+    visibleTimelineLayers
 };

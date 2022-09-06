@@ -67,8 +67,9 @@ import { describeProcess } from '../observables/wps/describe';
 import { download, downloadWithAttributesFilter } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
+import { mergeFiltersToOGC } from '../utils/FilterUtils';
 import { getByOutputFormat } from '../utils/FileFormatUtils';
-import {createUniqueLayerFilter, getLayerTitle} from '../utils/LayersUtils';
+import { getLayerTitle } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -95,7 +96,10 @@ const DOWNLOAD_FORMATS_LOOKUP = {
 };
 
 const { getFeature: getFilterFeature, query, sortBy, propertyName } = requestBuilder({ wfsVersion: "1.1.0" });
-
+const getCQLFilterFromLayer = (layer = {}) => {
+    const params = layer?.params ?? {};
+    return params?.[Object.keys(params).find((k) => k?.toLowerCase() === "cql_filter")];
+};
 
 const hasOutputFormat = (data) => {
     const operation = get(data, "WFS_Capabilities.OperationsMetadata.Operation");
@@ -106,9 +110,11 @@ const hasOutputFormat = (data) => {
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
-const getWFSFeature = ({ url, filterObj = {}, downloadOptions = {}, options, layer } = {}) => {
+const getWFSFeature = ({ url, filterObj = {}, layerFilter,  layer, downloadOptions = {}, options } = {}) => {
     const { sortOptions, propertyNames } = options;
-    const data = createUniqueLayerFilter(layer, filterObj);
+    const cqlFilter = getCQLFilterFromLayer(layer);
+    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj, cqlFilter);
+
     return getXMLFeature(url, getFilterFeature(query(
         filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
         { srsName: downloadOptions.selectedSrs })
@@ -243,12 +249,13 @@ export const startFeatureExportDownload = (action$, store) =>
         ] : null;
 
         const { layerFilter } = layer;
+
         const wfsFlow = () => getWFSFeature({
             url: action.url,
             downloadOptions: action.downloadOptions,
             filterObj: action.filterObj,
-            layerFilter,
             layer,
+            layerFilter,
             options: {
                 pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                 propertyNames
@@ -265,9 +272,9 @@ export const startFeatureExportDownload = (action$, store) =>
             .catch(() => {
                 return getWFSFeature({
                     url: action.url,
-                    layer,
                     downloadOptions: action.downloadOptions,
                     filterObj: action.filterObj,
+                    layer,
                     layerFilter,
                     options: {
                         pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
@@ -302,6 +309,7 @@ export const startFeatureExportDownload = (action$, store) =>
         const wpsFlow = () => {
             const isVectorLayer = !!layer.search?.url;
             const cropToROI = action.downloadOptions.cropDataSet && !!mapBbox && !!mapBbox.bounds;
+            const cqlFilter = getCQLFilterFromLayer(layer);
             const wpsDownloadOptions = {
                 layerName: layer.name,
                 outputFormat: action.downloadOptions.selectedFormat,
@@ -313,7 +321,11 @@ export const startFeatureExportDownload = (action$, store) =>
                     type: 'TEXT',
                     data: {
                         mimeType: 'text/xml; subtype=filter/1.1',
-                        data: createUniqueLayerFilter(layer, action?.filterObj)
+                        data: mergeFiltersToOGC({
+                            ogcVersion: '1.1.0',
+                            addXmlnsToRoot: true,
+                            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+                        }, layer.layerFilter, action.filterObj, cqlFilter)
                     }
                 } : undefined,
                 ROI: cropToROI ? {
