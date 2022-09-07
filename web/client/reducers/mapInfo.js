@@ -481,7 +481,14 @@ function mapInfo(state = initState, action) {
         return state;
     }
     case INIT_PLUGIN: {
-        return { ...state, ...action.cfg };
+        return {
+            ...state,
+            ...action.cfg,
+            configuration: {
+                ...state.configuration,
+                ...(action.cfg?.configuration)
+            }
+        };
     }
     default:
         return state;
