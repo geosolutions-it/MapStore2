@@ -196,7 +196,7 @@ Also, remember to update your project pom.xml with the updated dependency:
 <dependency>
     <groupId>org.mapfish.print</groupId>
     <artifactId>print-lib</artifactId>
-    <version>geosolutions-2.1</version>
+    <version>geosolutions-2.1.0</version>
     <exclusions>
         <exclusion>
             <groupId>commons-codec</groupId>
