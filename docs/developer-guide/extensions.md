@@ -80,7 +80,7 @@ MapStore supports dynamic import of plugins and extensions.
 Dynamically imported plugin or extension uses lazy-loading: component, reducers and epics will be loaded when extension
 is rendered on the page for the first time.
 Regardless if extension uses lazy-loading or not, its epics will be muted once extension is not rendered on the page.
-For more details see [Writing epics](../writing-epics/#writing-epics).
+For more details see [Epic state](../writing-epics/#epic-state-muted-unmuted).
 
 There are few changes required to make extension loaded dynamically:
 
