@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect } from 'react';
-import ReactPlayer from 'react-player';
+import React, { useState, useEffect, lazy } from 'react';
+import withSuspense from '../../misc/withSuspense';
 import Loader from '../../misc/Loader';
 import { withResizeDetector } from 'react-resize-detector';
 import { Glyphicon } from 'react-bootstrap';
 import { Modes } from '../../../utils/GeoStoryUtils';
 import Message from '../../I18N/Message';
+
+const ReactPlayer = withSuspense()(lazy(() => import('react-player')));
 
 /**
  * Video component

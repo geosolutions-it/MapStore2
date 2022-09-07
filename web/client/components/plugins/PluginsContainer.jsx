@@ -35,6 +35,7 @@ class PluginsContainer extends React.Component {
         mode: PropTypes.string,
         params: PropTypes.object,
         plugins: PropTypes.object,
+        allPlugins: PropTypes.object,
         pluginsConfig: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
         id: PropTypes.string,
         className: PropTypes.string,
@@ -81,7 +82,7 @@ class PluginsContainer extends React.Component {
 
     getChildContext() {
         return {
-            plugins: this.props.plugins,
+            plugins: this.props.allPlugins ?? this.props.plugins,
             pluginsConfig: this.props.pluginsConfig && this.getPluginsConfig(this.props),
             loadedPlugins: this.state.loadedPlugins
         };

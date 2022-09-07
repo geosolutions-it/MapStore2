@@ -175,7 +175,6 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),
-        new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
         // see https://github.com/CesiumGS/cesium/issues/9212

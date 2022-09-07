@@ -6,6 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import assign from 'object-assign';
+import { findIndex, isUndefined, isEmpty } from 'lodash';
+import buffer from 'turf-buffer';
+import intersect from 'turf-intersect';
+
 import {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -37,8 +42,6 @@ import {
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { RESET_CONTROLS } from '../actions/controls';
-import assign from 'object-assign';
-import { findIndex, isUndefined, isEmpty } from 'lodash';
 import { MAP_TYPE_CHANGED } from './../actions/maptype';
 
 import { getValidator } from '../utils/MapInfoUtils';
@@ -338,8 +341,6 @@ function mapInfo(state = initState, action) {
         });
     }
     case GET_VECTOR_INFO: {
-        const buffer = require('turf-buffer');
-        const intersect = require('turf-intersect');
         const point = {
             "type": "Feature",
             "properties": {},

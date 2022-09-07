@@ -225,19 +225,21 @@ function mergeItems(standard, overrides) {
 export default {
     PrintPlugin: assign({
         loadPlugin: (resolve) => {
-            require.ensure('./print/index', () => {
+            Promise.all([
+                import('./print/index'),
+                import('../utils/PrintUtils')
+            ]).then(([printMod, utilsMod]) => {
+
                 const {
                     standardItems
-                } = require('./print/index').default;
+                } = printMod.default;
 
                 const {
                     getDefaultPrintingService,
                     getLayoutName,
                     getPrintScales,
                     getNearestZoom
-                } = require('../utils/PrintUtils');
-
-
+                } = utilsMod;
                 class Print extends React.Component {
                     static propTypes = {
                         map: PropTypes.object,

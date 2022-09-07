@@ -7,8 +7,7 @@
  */
 
 import React from 'react';
-import { connect } from '../utils/PluginsUtils';
-import assign from 'object-assign';
+import {connect, createPlugin} from '../utils/PluginsUtils';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
@@ -104,40 +103,47 @@ const Share = connect(createSelector([
     addMarker: addMarker
 })(SharePanel);
 
-export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}",
-    BurgerMenu: {
-        name: 'share',
-        position: 1000,
-        priority: 2,
-        doNotHide: true,
-        text: <Message msgId="share.title"/>,
-        tooltip: "share.tooltip",
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
+
+const SharePlugin = createPlugin('Share', {
+    component: Share,
+    options: {
+        disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}"
     },
-    SidebarMenu: {
-        name: 'share',
-        position: 1000,
-        priority: 1,
-        doNotHide: true,
-        tooltip: "share.tooltip",
-        text: <Message msgId="share.title"/>,
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null),
-        toggle: true
+    containers: {
+        BurgerMenu: {
+            name: 'share',
+            position: 1000,
+            priority: 2,
+            doNotHide: true,
+            text: <Message msgId="share.title"/>,
+            tooltip: "share.tooltip",
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null)
+        },
+        SidebarMenu: {
+            name: 'share',
+            position: 1000,
+            priority: 1,
+            doNotHide: true,
+            tooltip: "share.tooltip",
+            text: <Message msgId="share.title"/>,
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null),
+            toggle: true
+        },
+        Toolbar: {
+            name: 'share',
+            alwaysVisible: true,
+            position: 2,
+            priority: 0,
+            doNotHide: true,
+            tooltip: "share.title",
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null)
+        }
     },
-    Toolbar: {
-        name: 'share',
-        alwaysVisible: true,
-        position: 2,
-        priority: 0,
-        doNotHide: true,
-        tooltip: "share.title",
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
-    }
+    epics: shareEpics,
+    reducers: { controls }
 });
 
-export const reducers = { controls };
-export const epics = shareEpics;
+export default SharePlugin;

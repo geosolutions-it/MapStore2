@@ -6,12 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import csstree from 'css-tree';
-
 import assign from 'object-assign';
-import fontawesome from 'raw-loader!./font-awesome.txt';
+import fontawesome from './font-awesome.json';
 
-const css = {
+const cssJSON = {
     fontawesome
 };
 import baseImageUrl from '../components/mapcontrols/annotations/img/markers_default.png';
@@ -23,37 +21,15 @@ const shadowImage = new Image();
 baseImage.src = baseImageUrl;
 shadowImage.src = shadowImageUrl;
 
-const getNodeOfType = (node, condition) => {
-    if (condition(node)) {
-        return node;
-    }
-    if (node.children) {
-        return node.children.reduce((previous, current) => {
-            const result = getNodeOfType(current, condition);
-            return result || previous;
-        }, null);
-    }
-    return null;
-};
-
 const glyphs = {};
 
 const loadGlyphs = (font) => {
-    const parsedCss = csstree.toPlainObject(csstree.parse(css[font]));
-    return parsedCss.children.reduce((previous, rule) => {
-        if (rule.prelude) {
-            const classSelector = getNodeOfType(rule.prelude, (node) => node.type === 'ClassSelector');
-            const pseudoClassSelector = getNodeOfType(rule.prelude, (node) => node.type === 'PseudoClassSelector');
-            if (classSelector && classSelector.name && classSelector.name.indexOf('fa-') === 0 && pseudoClassSelector && pseudoClassSelector.name === 'before') {
-                const text = getNodeOfType(getNodeOfType(rule.block, (node) => node.type === 'Declaration' && node.property === 'content').value, (node) => node.type === 'String').value;
-                /* eslint-disable */
-                return assign(previous, {
-                    [classSelector.name.substring(3)]: eval("'\\u" + text.substring(2, text.length - 1) + "'")
-                });
-                /* eslint-enable */
-            }
-        }
-        return previous;
+    const fontJSON = cssJSON[font];
+    return Object.keys(fontJSON).reduce((acc, key) => {
+        return {
+            ...acc,
+            [key]: eval("'\\u" + fontJSON[key] + "'") // eslint-disable-line
+        };
     }, {});
 };
 

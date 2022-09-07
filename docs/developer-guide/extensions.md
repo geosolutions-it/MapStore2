@@ -73,6 +73,32 @@ As you can see from the code, the most important difference is that you need to 
 The extension definition will import or define all the needed dependencies (components, reducers, epics) as well as the plugin configuration elements
 (e.g. containers).
 
+### Dynamic import of extension
+
+MapStore supports dynamic import of plugins and extensions.
+In this case, plugin or extension is loaded when app demands to render it for the first time.
+
+There are few changes required to make extension loaded dynamically:
+
+1. Create `Module.jsx` file in `js/extension/plugins/` and populate it with `js/extension/plugins/Extension.jsx` content.
+2. Update content of `js/extension/plugins/Extension.jsx` to be like:
+```jsx
+import {toModulePlugin} from "@mapstore/utils/ModulePluginsUtils";
+import { name } from '../../../config';
+
+export default toModulePlugin(name, () => import(/* webpackChunkName: 'extensionName' */ './Module'));
+```
+3. Update `js/extensions.js` and remove `createPlugin` wrapper from `Extension` export. File content should look like:
+```js
+import Extension from './extension/plugins/Extension';
+import { name } from '../config';
+
+
+export default {
+    [name]: Extension
+};
+```
+
 ### Distributing your extension as an uploadable module
 
 The sample project allow you to create the final zip file for you.
@@ -131,10 +157,15 @@ The `index.json file should contain all the information about the extension:
 ### Installing Extensions
 
 Extensions can be uploaded using the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle is managed by a dedicated MapStore backend service, the ***Upload Service***.
-The Upload Service is responsible of unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
+The Upload Service is responsible for unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
 
 * `extensions.json` (the extensions registry)
 * `pluginsConfig.json.patch` (the context creator plugins catalog patch file)
+
+### Updating Extensions
+
+Please refer to the [How to update extensions](../../user-guide/application-context/#how-to-update-extensions) section of user guide to get more information about extensions update workflow.
+
 
 ### Extensions and datadir
 
@@ -144,7 +175,7 @@ you upgrade MapStore to a newer version).
 
 ### Extensions for dependent projects
 
-Extensions build in MapStore actually can run only in MapStore product. They can not be installed in dependent projects. If you have a custom project and you want to add support for extensions, you will have to create your build system for extensions dedicated to your application, to build the Javascript with the correct paths.
+Extensions build in MapStore actually can run only in MapStore product. They can not be installed in dependent projects. If you have a custom project, and you want to add support for extensions, you will have to create your build system for extensions dedicated to your application, to build the Javascript with the correct paths.
 Moreover, to enable extensions to work with the datadir in a dependent project (MapStore product is already configured to use it) you need to configure (or customize) the following configuration properties in your `app.jsx`:
 
 #### Externalize the extensions configuration
@@ -179,7 +210,9 @@ Assets are loaded using a different service, `/rest/config/loadasset`.
 Extension could implement drawing interactions, and it's necessary to prevent a situation when multiple tools from different plugins or extensions have active drawing, otherwise it could end up in an unpredicted or buggy behavior.
 
 There are two ways how drawing interaction can be implemented in plugin or extension:
+
 - Using DrawSupport (e.g. Annotations plugin)
+
 - By intercepting click on the map interactions (e.g. Measure plugin)
 
 ### Making another plugins aware of your extension starts drawing

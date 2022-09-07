@@ -94,7 +94,7 @@ import { connect } from '../utils/PluginsUtils';
 export default {
     ThematicLayerPlugin: assign({
         loadPlugin: (resolve)=> {
-            require.ensure(['../components/TOC/fragments/settings/ThematicLayer'], () => {
+            import('../components/TOC/fragments/settings/ThematicLayer').then((thematicLayerMod) => {
                 const ThematicLayer = connect((state) => {
                     const customColors = state.thematic && state.thematic.colors;
                     return assign({}, {
@@ -130,7 +130,7 @@ export default {
                     onDirtyStyle: setDirty,
                     onInvalidInput: setInvalidInput,
                     onValidInput: resetInvalidInput
-                })(require('../components/TOC/fragments/settings/ThematicLayer').default);
+                })(thematicLayerMod.default);
                 resolve(ThematicLayer);
             });
         }, enabler: (state) => state.layerSettings && state.layerSettings.expanded
