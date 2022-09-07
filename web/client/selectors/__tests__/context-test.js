@@ -43,7 +43,7 @@ describe('context selectors', () => {
         const DUMMY_PLUGINS = { desktop: ["TEST"] };
         const OLD_PLUGINS = ConfigUtils.getConfigProp('plugins');
         ConfigUtils.setConfigProp('plugins', DUMMY_PLUGINS);
-        expect(pluginsSelector(stateMocker(loading(true)))).toEqual({desktop: ["TEST", "Context"]});
+        expect(pluginsSelector(stateMocker(loading(true)))).toEqual({desktop: ["TEST", "Context", "FeedbackMask"]});
         ConfigUtils.setConfigProp('plugins', OLD_PLUGINS);
     });
 
