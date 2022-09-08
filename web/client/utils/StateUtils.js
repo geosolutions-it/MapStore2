@@ -17,8 +17,16 @@ import {normalizeName} from "./PluginsUtils";
 import {reducersLoaded} from "../actions/storemanager";
 
 /**
+ * State management utils.
+ * @memberOf utils
+ * @static
+ * @name StateUtils
+ */
+
+/**
  * Returns a list of standard ReduxJS middlewares, augmented with user ones.
  *
+ * @memberof utils.StateUtils
  * @param {array} userMiddlewares user middlewares to add to standard ones
  * @param {bool} debug if true, middlewares needed to enable debug mode are returned also
  */
@@ -37,6 +45,7 @@ export const PERSISTED_STORE_NAME = 'persisted.reduxStore';
  * A Redux Store can be persisted so that it can be used outside of the Redux Provider tree.
  * For example it is used by the dynamic plugin loading mechanism to add new reducers at runtime.
  *
+ * @memberof utils.StateUtils
  * @param {object} store store to be persisted
  * @param {string} name optional name (if you want to persist more than one store)
  */
@@ -48,6 +57,7 @@ export const setStore = (store, name = PERSISTED_STORE_NAME) => {
 /**
  * Returns a persisted store.
  *
+ * @memberof utils.StateUtils
  * @param {string} name optional name (if you want to restore more than one store)
  */
 export const getStore = (name = 'persisted.reduxStore') => {
@@ -60,6 +70,7 @@ export const getStore = (name = 'persisted.reduxStore') => {
  * For example it is used by the dynamic plugin loading mechanism to add new epics to the redux-observable middleware
  * at runtime.
  *
+ * @memberof utils.StateUtils
  * @param {object} middleware middleware to be persisted
  * @param {string} storeName optional store name the middleware is used by
  * @param {string} name optional name (if you want to persist more than one middleware)
@@ -71,6 +82,7 @@ export const persistMiddleware = (middleware, storeName = PERSISTED_STORE_NAME, 
 
 /**
  * Returns a stored middleware
+ * @memberof utils.StateUtils
  * @param {string} storeName optional store name the middleware is used by
  * @param {string} name optional name (if you want to persist more than one middleware)
  */
@@ -83,7 +95,7 @@ const fetchMiddleware = (storeName = PERSISTED_STORE_NAME, name = 'epicMiddlewar
  * A Redux reducer can be persisted so that it can be modified after creation.
  * For example it is used by the dynamic plugin loading mechanism to update a store reducer
  * at runtime.
- *
+ * @memberof utils.StateUtils
  * @param {object} reducer reducer to be persisted
  * @param {string} storeName optional store name the reducer is used by
  * @param {string} name optional name (if you want to persist more than one reducer)
@@ -98,7 +110,7 @@ export const persistReducer = (reducer, storeName = PERSISTED_STORE_NAME, name =
  * A redux-observable epic can be persisted so that it can be modified after creation.
  * For example it is used by the dynamic plugin loading mechanism to update epics
  * at runtime.
- *
+ * @memberof utils.StateUtils
  * @param {object} epic epic to be persisted
  * @param {string} storeName optional store name the epic is used by
  * @param {string} name optional name (if you want to persist more than one epic)
@@ -112,7 +124,7 @@ export const persistEpic = (epic, storeName = PERSISTED_STORE_NAME, name = 'root
 
 /**
  * Returns state from a persisted store.
- *
+ * @memberof utils.StateUtils
  * @param {string} name optional name (if you want to persist more than one store)
  */
 export const getState = (name) => {
@@ -133,7 +145,13 @@ const isolateEpics = (epics, muteState) => {
     return Object.entries(epics).reduce((out, [k, epic]) => ({ ...out, [k]: isolateEpic(epic, k) }), {});
 };
 
-
+/**
+ * Creates new instance of storeManager
+ * @memberof utils.StateUtils
+ * @param {Object} initialReducers list of reducers
+ * @param {Object} initialEpics list of epics
+ * @returns {{reduce: (function(*, *): any), rootEpic: (function(...[*]): Observable<Action>), removeReducer: removeReducer, unmuteEpics: unmuteEpics, getEpicsRegistry: (function(): {addedEpics: {}, muteState: {}, epicsListenedBy: {}, groupedByModule: {}}), addEpics: addEpics, muteEpics: muteEpics, addReducer: addReducer}}
+ */
 export const createStoreManager = (initialReducers, initialEpics) => {
     // Create an object which maps keys to reducers
     const reducers = {...initialReducers};
@@ -160,9 +178,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
     };
 
     return {
-        getReducerMap: () => reducers,
-
-        // Callback to get current state of epics registry, used for testing purposes
+        /**
+         * @memberof utils.StateUtils
+         * Exposes information about current state of epics registry, used for testing purposes
+         * @returns {{addedEpics: {}, muteState: {}, epicsListenedBy: {}, groupedByModule: {}}}
+         */
         getEpicsRegistry: () => ({
             addedEpics,
             epicsListenedBy,
@@ -187,7 +207,12 @@ export const createStoreManager = (initialReducers, initialEpics) => {
             return combinedReducer(state, action);
         },
 
-        // Adds a new reducer with the specified key
+        /**
+         * Registers new reducer
+         * @memberof utils.StateUtils
+         * @param {string} key - unique name of reducer
+         * @param {function} reducer - reducer function
+         */
         addReducer: (key, reducer) => {
             if (!key || reducers[key]) {
                 return;
@@ -200,7 +225,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
             combinedReducer = combineReducers(reducers);
         },
 
-        // Removes a reducer with the specified key
+        /**
+         * Removes a reducer with the specified key
+         * @memberof utils.StateUtils
+         * @param {string} key - unique name of reducer
+         */
         removeReducer: key => {
             if (!key || !reducers[key]) {
                 return;
@@ -216,6 +245,12 @@ export const createStoreManager = (initialReducers, initialEpics) => {
             combinedReducer = combineReducers(reducers);
         },
         // Adds a new epics set, mutable by the specified key
+        /**
+         * Adds a new epics set, that can be muted by the specified key
+         * @memberof utils.StateUtils
+         * @param {string} key
+         * @param {Object.<string, function>} epicsList
+         */
         addEpics: (key, epicsList) => {
             const normalizedName = normalizeName(key);
             if (Object.keys(epicsList).length) {
@@ -234,7 +269,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
                 }
             }
         },
-        // Mute epics set with a specified key
+        /**
+         * Mutes set of epics with a specified key
+         * @memberof utils.StateUtils
+         * @param {string} key
+         */
         muteEpics: (key) => {
             const moduleEpicRegistrations = groupedByModule[key];
             // try to mute everything registered by module. If epic is shared, remove current module from epicsListenedBy
@@ -249,6 +288,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
                 }
             });
         },
+        /**
+         * Unmutes set of epics with a specified key
+         * @memberof utils.StateUtils
+         * @param {string} key
+         */
         unmuteEpics: (key) => {
             const moduleEpicRegistrations = groupedByModule[key];
             // unmute epics if exactly one plugin wants to register specific epic
@@ -263,6 +307,12 @@ export const createStoreManager = (initialReducers, initialEpics) => {
                 }
             });
         },
+        /**
+         * Root epic, is used upon middleware creation
+         * @memberof utils.StateUtils
+         * @param args
+         * @returns {Observable<Action>}
+         */
         rootEpic: (...args) => epic$.mergeMap(e => e(...args))
     };
 };
@@ -270,7 +320,7 @@ export const createStoreManager = (initialReducers, initialEpics) => {
 /**
  * Creates and returns a Redux store, using the given options.
  * Includes the following functionalities by default: redux-thunk, redux-observables, debug mode.
- *
+ * @memberof utils.StateUtils
  * @param {object} options key-value pairs of options for the store.
  * @param {function} options.rootReducer optional root (combined) reducer for the store, if not specified it is built using the reducers.
  * @param {function} options.rootEpic optional root (combined) epic for the store, if not specified it is built using the epics.
@@ -306,7 +356,7 @@ export const createStore = ({
  * Updates a Redux store with new reducers and epics.
  *
  * This method needs a new COMPLETE set of reducers / epics. If you want to add reducers / epics to existing ones, use storeManager methods instead.
- *
+ * @memberof utils.StateUtils
  * @param {object} options options to update
  * @param {function} options.rootReducer optional root (combined) reducer for the store, if not specified it is built using the reducers.
  * @param {function} options.rootEpic optional root (combined) epic for the store, if not specified it is built using the epics.
@@ -327,7 +377,7 @@ export const updateStore = ({ rootReducer, rootEpic, reducers = {}, epics = {} }
  * Needed by the dynamic plugins loading system, to update the application store with new reducers and epics exported by the plugins.
  *
  * If you want to add replace current reducers / epics with new ones, use updateStore instead.
- *
+ * @memberof utils.StateUtils
  * @param {object} options options to update
  * @param {object} options.reducers list of reducers to add.
  * @param {object} options.epics list of epics to add.
