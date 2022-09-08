@@ -111,7 +111,7 @@ class Context extends React.Component {
         return (
             <>
                 <ConnectedContextTheme />
-                <MapViewerCmp {...this.props} onLoaded={this.onLoaded} />
+                <MapViewerCmp {...this.props} onLoaded={this.onLoaded} loaderComponent={false} />
             </>
         );
     }

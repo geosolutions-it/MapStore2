@@ -40,7 +40,7 @@ describe('context selectors', () => {
     it('pluginsSelector', () => {
         expect(pluginsSelector(stateMocker(setContext(CONTEXT_DATA)))).toEqual(CONTEXT_DATA.plugins);
         // when loading, use default plugins
-        const DUMMY_PLUGINS = { desktop: ["TEST"] };
+        const DUMMY_PLUGINS = { context: ["TEST"] };
         const OLD_PLUGINS = ConfigUtils.getConfigProp('plugins');
         ConfigUtils.setConfigProp('plugins', DUMMY_PLUGINS);
         expect(pluginsSelector(stateMocker(loading(true)))).toEqual({desktop: ["TEST", "Context", "FeedbackMask"]});

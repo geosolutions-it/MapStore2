@@ -34,7 +34,7 @@ class MapViewer extends React.Component {
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
         plugins: PropTypes.object,
-        loaderComponent: PropTypes.func,
+        loaderComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
         onLoaded: PropTypes.func
     };
 
