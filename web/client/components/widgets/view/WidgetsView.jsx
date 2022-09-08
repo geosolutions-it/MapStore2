@@ -25,9 +25,11 @@ export default pure(({
     style,
     className = "",
     toolsOptions = {},
-    rowHeight = 208,
+    rowHeight = 150,
     breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols = { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 },
+    // eslint-disable-next-line no-unused-vars
+    widgetOpts = {},
     widgets = [],
     layouts,
     dependencies,
@@ -105,6 +107,7 @@ export default pure(({
                 data-grid={w.dataGrid}
                 {...actions}
                 {...w}
+                widgetOpts={widgetOpts}
                 quickFilters={getEnableColumnFilters(w) ? w.quickFilters : undefined}
                 toolsOptions={toolsOptions}
                 groups={getWidgetGroups(groups, w)}
