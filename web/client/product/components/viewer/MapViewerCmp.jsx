@@ -22,7 +22,7 @@ class MapViewerComponent extends React.Component {
         onInit: PropTypes.func,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
-        loaderComponent: PropTypes.func
+        loaderComponent: PropTypes.func,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object,
         className: PropTypes.string,
