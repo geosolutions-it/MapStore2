@@ -27,7 +27,7 @@ const getPluginsConfig = ({pluginsConfig: config, mode = 'desktop', defaultMode}
  * @param {function(): string[]} getPluginsConfigCallback - callback to extract proper part of plugins configuration passed with `pluginsConfig` prop
  */
 const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Component) => ({ onLoaded = () => {
-}, pluginsConfig, plugins = {}, loaderComponent = false, ...props }) => {
+}, pluginsConfig, plugins = {}, loaderComponent, ...props }) => {
     const config = getPluginsConfigCallback({pluginsConfig, ...props});
     const { plugins: loadedPlugins, pending } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
@@ -42,7 +42,7 @@ const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Comp
         if (!loading) onLoaded(true);
     }, [loading]);
 
-    if (loading && typeof loaderComponent === 'function') {
+    if (loading && loaderComponent) {
         return <Loader />;
     }
 
