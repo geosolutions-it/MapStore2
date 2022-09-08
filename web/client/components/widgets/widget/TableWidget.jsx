@@ -19,6 +19,9 @@ import WidgetContainer from './WidgetContainer';
 import WidgetEmptyMessage from './WidgetEmptyMessage';
 
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
+const DEFAULT_GRID_HEIGHT = 28;
+const defaultGridOpts = ['rowHeight', 'headerRowHeight', 'headerFiltersHeight']
+    .reduce((acc, prop) => ({...acc, [prop]: DEFAULT_GRID_HEIGHT}), '');
 
 
 export default getWidgetFilterRenderers(({
@@ -45,7 +48,8 @@ export default getWidgetFilterRenderers(({
     error,
     pagination = {},
     dataGrid = {},
-    virtualScroll = true
+    virtualScroll = true,
+    gridOpts = defaultGridOpts
 }) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
@@ -59,10 +63,10 @@ export default getWidgetFilterRenderers(({
         topRightItems={topRightItems}>
         <BorderLayout
             footer={pagination.totalFeatures ? (
-                <div style={{ height: "30px", overflow: "hidden"}}>
+                <div className={"widget-footer"}>
                     {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
                     {error === undefined &&
-                    <span style={{ "float": "left", margin: "5px" }} ><Message
+                    <span className={"result-info"} ><Message
                         msgId={"featuregrid.resultInfoVirtual"}
                         msgParams={{ total: pagination.totalFeatures }} /></span>}
                 </div>) : null}
@@ -85,7 +89,8 @@ export default getWidgetFilterRenderers(({
                 size={size}
                 rowKey="id"
                 describeFeatureType={describeFeatureType}
-                pagination={pagination} />
+                pagination={pagination}
+                gridOpts={gridOpts}/>
         </BorderLayout>
     </WidgetContainer>
 
