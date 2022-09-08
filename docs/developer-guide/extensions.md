@@ -78,7 +78,7 @@ The extension definition will import or define all the needed dependencies (comp
 MapStore supports dynamic import of plugins and extensions.
 
 Dynamically imported plugins or extensions uses lazy-loading: components, reducers and epics will be loaded once plugin or extension
-is in the list of plugins configured for the current page (via `localConfig.json`).
+is in the list of plugins configured for the current page (eg. via `localConfig.json` or plugins selected to be included in a context).
 
 !!! note
 
