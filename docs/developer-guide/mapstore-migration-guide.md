@@ -59,6 +59,24 @@ We also made asynchronous the script to detect valid browser. This should slight
 </script>
 ```
 
+
+### Update plugins.js to make upstream plugins use dynamic import
+
+We've updated `plugins.js` in MapStore to make most of the plugins use dynamic import. `plugins.js` of your project have to be updated separately.
+
+Please use `web\client\product\plugins.js` file as a reference listing plugins whose definition can be changed to support dynamic import.
+
+To use dynamic import for plugin, please update its definition to look like:
+
+```js
+{
+    ...
+    AnnotationsPlugin: toModulePlugin('Annotations', () => import(/* webpackChunkName: 'plugins/annotations' */ '../plugins/Annotations')),
+    ...
+}
+
+```
+
 ### Version plugin has been removed
 
 We no longer maintain the Version plugin since we have moved its content inside the About plugin (see [here](https://github.com/geosolutions-it/MapStore2/issues/7934#issuecomment-1201433942) for more details)
