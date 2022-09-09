@@ -77,6 +77,9 @@ To use dynamic import for plugin, please update its definition to look like:
 
 ```
 
+See [Dynamic import of extension](../extensions/#dynamic-import-of-extension) to have more details about transforming extensions to use dynamic import.
+
+
 ### Version plugin has been removed
 
 We no longer maintain the Version plugin since we have moved its content inside the About plugin (see [here](https://github.com/geosolutions-it/MapStore2/issues/7934#issuecomment-1201433942) for more details)
