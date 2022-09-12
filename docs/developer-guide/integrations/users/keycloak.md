@@ -81,11 +81,9 @@ Here implementation details about [keycloak login workflow](keycloak-sso-impl.md
 
 By default MapStore can integrate openID login with Keycloak and also supports integration with Keycloak SSO.
 
-By default users that login with Keycloak are created on the database.
+By default users that login with Keycloak are created on the database and their Keycloak roles inserted as MapStore UserGroup.
 Anyway MapStore can interact with Keycloak REST API to provide a direct integration without persisting anything on the MapStore's database.
 This provides a stricter integration between the applications, allowing the assignment of roles and groups directly from keycloak, and avoiding any synchronization issue.
-
-This is actually the only way to map keycloak roles to MapStore groups.
 
 In this scenario the integration MapStore replaces the user and user-group database tables with the keycloak REST API.
 
@@ -121,7 +119,14 @@ And click on Save.
 
 #### 2. Configure `mapstore-ovr.properties`
 
-moreover in `mapstore-ovr.properties` you have to add the following information (replacing `<keycloak-base-url>` with your base keycloak base url):
+
+The `autoCreateUser` option must be set to false in `mapstore-ovr.properties`.
+
+```properties
+keycloakOAuth2Config.autoCreateUser=false
+```
+
+Moreover in `mapstore-ovr.properties` you have to add the following information (replacing `<keycloak-base-url>` with your base keycloak base url):
 
 ```properties
 ## Keycloak as User and UserGroup repository
@@ -140,10 +145,11 @@ Where:
 
 !!! note
     <sup>1</sup> In order to query the keycloak REST API, you need to have in your realm at least one user with
-    `view-users` role permission. Usually the administrator of the realm has these permission. To associate these
-    permissions to a new user dedicated to this purpose you have to open "Role Mappings" tab of keycloak and in "Client
-    Roles" select `realm-management` (or in master realm select `master-realm`), add to selected at least `view-users`.
+    `realm-admin` role permission. Usually the administrator of the realm has these permission. To associate these
+    permissions to a new user dedicated to this purpose, you have to open "Role Mappings" tab of keycloak and in "Client
+    Roles" select `realm-management` (or in master realm select `master-realm`) and add to selected `realm-admin`.
     <img src="../img/kc-role-view-user.jpg" class="ms-docimage" style="max-width: 500px" />
+
 
 #### 3. Activate the functionality via system property
 
