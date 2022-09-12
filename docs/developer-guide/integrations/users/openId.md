@@ -143,6 +143,9 @@ keycloakOAuth2Config.autoCreateUser=true
 # Comma separated list of <keycloak-role>:<geostore-role>
 keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
 
+# Comma separated list of <keycloak-role>:<geostore-group>
+keycloakOAuth2Config.roleMappings=MY_KEYCLOAK_ROLE:MY_MAPSTORE_GROUP,MY_KEYCLOAK_ROLE2:MY_MAPSTORE_GROUP2
+
 # Default role, when no mapping has matched
 keycloakOAuth2Config.authenticatedDefaultRole=USER
 ```
@@ -150,10 +153,12 @@ keycloakOAuth2Config.authenticatedDefaultRole=USER
 - `keycloakOAuth2Config.jsonConfig`: insert the JSON copied, removing all the spaces
 - `keycloakOAuth2Config.redirectUri`: need to be configured to point to your application at the path `<base-app-url>/rest/geostore/openid/keycloak/callback`, e.g. `https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback`
 - `keycloakOAuth2Config.internalRedirectUri` can be set to your application root, e.g. `https://my.mapstore.site.com/mapstore/`
-- `keycloakOAuth2Config.autoCreateUser`: true if you want to create user on DB on login (if you are not using any other user integration e.g. `ldap`, `keycloak`)
+- `keycloakOAuth2Config.autoCreateUser`: true if you want MapStore to insert a Keycloak authenticated user on the DB. UserGroups will be inserted as well and kept in synch with the roles defined for the user in Keycloak. The options must be set to false if MapStore is using as user and group sources external services (i.e. Keycloak or LDAP).
 - `keycloakOAuth2Config.forceConfiguredRedirectURI`: optional, if `true`, forces the redirect URI for callback to be equal to teh redirect URI. This is useful if you have problems logging in behind a proxy, or in dev mode.
-- `keycloakOAuth2Config.roleMappings`: comma separated list of mappings, to map keycloak roles to mapstore roles. Allowed values `USER` or `ADMIN`
+- `keycloakOAuth2Config.roleMappings`: comma separated list of mappings with the following format ``keycloak_admin_role:ADMIN,keycloak_user_role:USER``. These mappings will be used to map Keycloak roles to MapStore roles. Allowed values `USER` or `ADMIN`.
 - `keycloakOAuth2Config.authenticatedDefaultRole`: where the role has not been assigned by the mappings above, the role here will be used. Allowed values `USER` or `ADMIN`.
+- `keycloakOAuth2Config.groupMappings`: comma separated list of mappings with the following format ``keycloak_role_name:mapstore_group_name,keycloak_role_name2:mapstore_group_name2``. These mappings will be used to map Keycloak roles to MapStore groups.
+- `keycloakOAuth2Config.dropUnmapped`: when set to false, MapStore will drop Keycloak roles that are not matched by any mapping role and group mapping. When set to true all the unmatched Keycloak roles will be added as MapStore UserGroups.
 
 
 
