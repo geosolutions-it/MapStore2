@@ -83,6 +83,7 @@ function useModulePlugins({
                         }
                         if (size(impl.epics)) {
                             store.storeManager.addEpics(impl.name, impl.epics);
+                            store.storeManager.unmuteEpics(impl.name);
                         }
                     });
                     if (reducersList.length) {

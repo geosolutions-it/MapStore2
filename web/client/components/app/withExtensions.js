@@ -78,7 +78,8 @@ function withExtensions(AppComponent) {
                     if (action.type === LOAD_EXTENSIONS) {
                         this.loadExtensions(
                             ConfigUtils.getConfigProp('extensionsRegistry'),
-                            (plugins, translations) => this.onPluginsLoaded(plugins, translations, store)
+                            (plugins, translations) => this.onPluginsLoaded(plugins, translations, store),
+                            store
                         );
                     }
                     if (action.type === PLUGIN_UNINSTALLED) {
@@ -164,6 +165,7 @@ function withExtensions(AppComponent) {
                                 reducersList.push(name);
                             });
                             store.storeManager.addEpics(impl.name, impl?.epics ?? {});
+                            store.storeManager.unmuteEpics(impl.name);
                             const pluginDef = {
                                 [pluginName + "Plugin"]: {
                                     [pluginName + "Plugin"]: {
