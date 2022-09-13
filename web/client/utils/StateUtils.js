@@ -275,10 +275,11 @@ export const createStoreManager = (initialReducers, initialEpics) => {
          * @param {string} key
          */
         muteEpics: (key) => {
-            const moduleEpicRegistrations = groupedByModule[key];
+            const normalizedName = normalizeName(key);
+            const moduleEpicRegistrations = groupedByModule[normalizedName];
             // try to mute everything registered by module. If epic is shared, remove current module from epicsListenedBy
             moduleEpicRegistrations && moduleEpicRegistrations.forEach(epicName => {
-                const indexOf = epicsListenedBy[epicName].indexOf(key);
+                const indexOf = epicsListenedBy[epicName].indexOf(normalizedName);
                 if (indexOf >= 0) {
                     epicsListenedBy[epicName].splice(indexOf, 1);
                 }
@@ -294,12 +295,13 @@ export const createStoreManager = (initialReducers, initialEpics) => {
          * @param {string} key
          */
         unmuteEpics: (key) => {
-            const moduleEpicRegistrations = groupedByModule[key];
+            const normalizedName = normalizeName(key);
+            const moduleEpicRegistrations = groupedByModule[normalizedName];
             // unmute epics if exactly one plugin wants to register specific epic
             moduleEpicRegistrations && moduleEpicRegistrations.forEach(epicName => {
-                const indexOf = epicsListenedBy[epicName].indexOf(key);
+                const indexOf = epicsListenedBy[epicName].indexOf(normalizedName);
                 if (indexOf === -1) {
-                    epicsListenedBy[epicName].push(key);
+                    epicsListenedBy[epicName].push(normalizedName);
                 }
                 // now if epic intended to be registered by first listener plugin - unmute it
                 if (epicsListenedBy[epicName].length === 1) {
