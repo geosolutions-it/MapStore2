@@ -10,7 +10,7 @@ import React, { Suspense } from 'react';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
 import LoadingView from '../misc/LoadingView';
-import { every, includes, isNumber, isString, union, orderBy } from 'lodash';
+import { every, includes, isNumber, isString, union, orderBy, groupBy, find, flatten } from 'lodash';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -214,19 +214,42 @@ function getData({
     type,
     xDataKey,
     yDataKey,
-    data,
+    data: dataUnsorted,
     formula,
     yAxisOpts,
     classificationAttr,
     yAxisLabel,
     autoColorOptions,
     customColorEnabled,
-    classficationType
+    classificationType
 }) {
+    let classifications = [];
+    let classificationColors = [];
+    let colorCategories = [];
+    let data = dataUnsorted;
+    if (classificationAttr) {
+        classifications = dataUnsorted.map(d => d[classificationAttr]);
+        classificationColors = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).classificationColors;
+        colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
+
+        let dataSplit = groupBy(dataUnsorted, xDataKey);
+        dataSplit = Object.keys(dataSplit).map(k => {
+            return dataSplit[k];
+        });
+        const newData = dataSplit.map(dataAggregated => {
+            const dataSorted = colorCategories.map(colorCat => {
+                return find(dataAggregated, (d) => d[classificationAttr] === colorCat.value);
+            });
+            return dataSorted;
+        });
+        data = flatten(newData);
+        classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
+    }
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
-    const classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
-    const { classificationColors, colorCategories } = getClassification(classficationType, classifications, autoColorOptions, customColorEnabled);
+
+    classificationColors = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).classificationColors;
+    colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
 
     const { defaultClassLabel = ''} = autoColorOptions;
 
@@ -242,10 +265,10 @@ function getData({
             pull: 0.005
         };
         /* pie chart is classified colored */
-        if (classficationType !== 'default' && classificationColors.length) {
+        if (classificationType !== 'default' && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
                 const groupByValue = x[index];
-                const customLabel =  classficationType === 'value' ? getLegendLabel(item, colorCategories, defaultClassLabel, type) :
+                const customLabel =  classificationType === 'value' ? getLegendLabel(item, colorCategories, defaultClassLabel, type) :
                     getRangeClassLabel(item, colorCategories, defaultClassLabel, groupByValue, classificationAttr);
                 if (!customLabel) {
                     return groupByValue;
@@ -275,8 +298,8 @@ function getData({
         let barChartTrace = { type };
 
         /** Bar chart is classified colored*/
-        if (classficationType !== 'default' && classificationColors.length) {
-            const legendLabels = classficationType === 'value' ? classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type)) :
+        if (classificationType !== 'default' && classificationColors.length) {
+            const legendLabels = classificationType === 'value' ? classifications.map(item => getLegendLabel(item, colorCategories, defaultClassLabel, type)) :
                 classifications.map(item => getRangeClassLabel(item, colorCategories, defaultClassLabel, yAxisLabel || yDataKey, classificationAttr));
             const filteredLegendLabels = union(legendLabels);
             const customLabels = filteredLegendLabels.reduce((acc, cur) => {
@@ -407,7 +430,7 @@ export const toPlotly = (props) => {
     const classificationAttr = classifications?.dataKey;
     const { classificationAttributeType } = props.options || {};
     const customColorEnabled = autoColorOptions.name === 'global.colors.custom';
-    const classficationType = getChartClassificationType(classificationAttr, classificationAttributeType, autoColorOptions, customColorEnabled);
+    const classificationType = getChartClassificationType(classificationAttr, classificationAttributeType, autoColorOptions, customColorEnabled);
     return {
         layout: {
             showlegend: legend,
@@ -424,7 +447,7 @@ export const toPlotly = (props) => {
             uirevision: true
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, classficationType });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, classificationType });
             const chartData = allData ? allData?.x?.map((axis, index) => {
                 return { xAxis: axis, yAxis: allData.y[index]};
             }) : {};
