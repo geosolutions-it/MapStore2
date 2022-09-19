@@ -10,16 +10,20 @@ import {
     DATASET_1,
     DATASET_2,
     DATASET_3,
+    DATASET_5_UNORDERED,
+    DATASET_5_ORDERED,
     DATASET_4,
     LABELLED_CLASSIFICATION,
     LABELLED_RANGE_CLASSIFICATION,
     UNLABELLED_CLASSIFICATION,
     UNLABELLED_CLASSIFICATION_3,
+    UNLABELLED_CLASSIFICATION_5_ORDERED,
     UNLABELLED_RANGE_CLASSIFICATION,
     PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION,
     PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION,
     SPLIT_DATASET_2,
     SPLIT_DATASET_3,
+    SPLIT_DATASET_5_ORDERED,
     TEMPLATE_LABELS_CLASSIFICATION,
     TEMPLATE_LABELS_RANGE_CLASSIFICATION,
     DATASET_WITH_DATES,
@@ -275,6 +279,41 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             data[0].marker.colors.map((v, i) => {
                 const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === DATASET_3.data[i][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
+                expect(v).toBe(classColor);
+            });
+            // LAYOUT
+            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+        });
+        it('custom classified colors - using default labels and colors, wrong order', () => {
+            const classification = UNLABELLED_CLASSIFICATION_5_ORDERED;
+            const autoColorOptions = {
+                defaultCustomColor: "#00ff00",
+                defaultClassLabel: "Default",
+                classification,
+                name: 'global.colors.custom'
+            };
+            const { data, layout } = toPlotly({
+                type: 'pie',
+                autoColorOptions,
+                classificationAttr: "classValue",
+                classifications: CLASSIFICATIONS,
+                options: {
+                    classificationAttributeType: 'string'
+                },
+                ...DATASET_5_UNORDERED
+            });
+            expect(data.length).toBe(1);
+            expect(data[0].type).toBe('pie');
+            expect(data[0].textposition).toEqual('inside');
+            // data values mapped
+            data[0].values.map((v, i) => expect(v).toBe(DATASET_5_ORDERED.data[i][DATASET_5_ORDERED.series[0].dataKey]));
+            // data labels mapped
+            data[0].labels.map((v, i) => {
+                expect(v).toBe(DATASET_5_ORDERED.data[i][DATASET_5_ORDERED.xAxis.dataKey]);
+            });
+            // colors are those defined by the user
+            data[0].marker.colors.map((v, i) => {
+                const classColor = classification.filter(item => item.value === DATASET_5_ORDERED.data[i][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
                 expect(v).toBe(classColor);
             });
             // LAYOUT
@@ -593,6 +632,42 @@ describe('Widget Chart: data conversions ', () => {
                 expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
             });
         });
+        it('custom classified colors - using default labels and colors, wrong order', () => {
+            const classification = UNLABELLED_CLASSIFICATION_5_ORDERED;
+            const autoColorOptions = {
+                defaultCustomColor: "#00ff00",
+                defaultClassLabel: "Default",
+                classification,
+                name: 'global.colors.custom'
+            };
+            const { data, layout } = toPlotly({
+                type: 'bar',
+                autoColorOptions,
+                classificationAttr: "classValue",
+                classifications: CLASSIFICATIONS,
+                options: {
+                    classificationAttributeType: 'string'
+                },
+                ...DATASET_5_UNORDERED
+            });
+            expect(data.length).toBe(1);
+            const traces = data[0];
+            expect(traces.length).toBe(3);
+            traces.forEach((trace, i) => {
+                expect(trace.type).toBe('bar');
+                // data values mapped
+                trace.y.map((v, j) => expect(v).toBe(SPLIT_DATASET_5_ORDERED.data[i][j][SPLIT_DATASET_5_ORDERED.series[0].dataKey]));
+                trace.x.map((v, j) => expect(v).toBe(SPLIT_DATASET_5_ORDERED.data[i][j][SPLIT_DATASET_5_ORDERED.xAxis.dataKey], "here 2"));
+                // data labels mapped
+                const classLabel = classification.filter(item => item.value === SPLIT_DATASET_5_ORDERED.data[i][0][CLASSIFICATIONS.dataKey])[0]?.value ?? autoColorOptions.defaultClassLabel;
+                expect(trace.name).toBe(classLabel);
+                // colors are those defined by the user
+                const classColor = classification.filter(item => item.value === SPLIT_DATASET_5_ORDERED.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
+                trace.marker.color.forEach(item => expect(item).toBe(classColor));
+                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+            });
+        });
+
         it('custom classified colors - using templatized labels and custom colors only - bar charts', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
             const { data, layout } = toPlotly({

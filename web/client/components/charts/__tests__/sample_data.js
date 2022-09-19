@@ -58,6 +58,7 @@ export const SPLIT_DATASET_3 = {
     series: [{ dataKey: "value" }]
 };
 
+
 export const DATASET_4 = {
     data: [
         { name: 'Page A', value: 0, classValue: 'class1'},
@@ -83,6 +84,70 @@ export const SPLIT_DATASET_4 = {
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "value" }]
 };
+
+export const DATASET_5_UNORDERED = {
+    data: [
+        { name: 'Page A', value: 1, classValue: '2'},
+        { name: 'Page A', value: 1, classValue: '3'},
+        { name: 'Page A', value: 1, classValue: '1'},
+        { name: 'Page B', value: 10, classValue: '2'},
+        { name: 'Page B', value: 0, classValue: '1'},
+        { name: 'Page B', value: 100, classValue: '3'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const DATASET_5_ORDERED = {
+    data: [
+        { name: 'Page A', value: 1, classValue: '1'},
+        { name: 'Page A', value: 1, classValue: '2'},
+        { name: 'Page A', value: 1, classValue: '3'},
+        { name: 'Page B', value: 0, classValue: '1'},
+        { name: 'Page B', value: 10, classValue: '2'},
+        { name: 'Page B', value: 100, classValue: '3'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const SPLIT_DATASET_5_ORDERED = {
+    data: [
+        [
+            { name: 'Page A', value: 1, classValue: '1'},
+            { name: 'Page B', value: 0, classValue: '1'}
+        ],
+        [
+            { name: 'Page A', value: 1, classValue: '2'},
+            { name: 'Page B', value: 10, classValue: '2'}
+        ],
+        [
+            { name: 'Page A', value: 1, classValue: '3'},
+            { name: 'Page B', value: 100, classValue: '3'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const UNLABELLED_CLASSIFICATION_5_ORDERED = [
+    {
+        color: '#0000ff',
+        value: '1',
+        unique: '1'
+    },
+    {
+        color: '#00FF00',
+        value: '2',
+        unique: '2'
+    },
+    {
+        color: '#ff0000',
+        value: '3',
+        unique: '3'
+    }
+];
+
 
 export const CLASSIFICATIONS = {
     dataKey: 'classValue'
