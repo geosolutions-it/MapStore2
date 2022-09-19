@@ -194,6 +194,14 @@ export const UNLABELLED_CLASSIFICATION = [
         unique: 'class2'
     }
 ];
+export const UNLABELLED_CLASSIFICATION_3 = [
+    ...UNLABELLED_CLASSIFICATION,
+    {
+        color: '#00FF00',
+        value: 'class3',
+        unique: 'class3'
+    }
+];
 
 export const UNLABELLED_RANGE_CLASSIFICATION = [
     {

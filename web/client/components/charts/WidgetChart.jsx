@@ -143,7 +143,7 @@ const getLegendLabel = (value, colorCategories, defaultClassLabel, type) => {
  * @param {number} value the classification value to be labelled
  * @param {object[]} colorCategories mapping objects value => label [{..., min: 100, max: 200, title: "Between 100 and 200"}, ...]
  * @param {string} defaultClassLabel the default label, if specified, to be shown in case there is no mapping for the value
- * @param {string} xValue the x value in the chart, to be shown as fall back in case value is not classfied nor defaultClassLabel exists
+ * @param {string} xValue the x value in the chart, to be shown as fall back in case value is not classified nor defaultClassLabel exists
  * @param {string} rangeClassAttribute the attributed name used to color code the chart, to be used if the value falls within a classification
  * range but no label exists for such classification
  * @returns {string} the assigned label to the classified value, or empty string
@@ -227,7 +227,7 @@ function getData({
     let classificationColors = [];
     let colorCategories = [];
     let data = dataUnsorted;
-    if (classificationAttr) {
+    if (classificationAttr && classificationType === "value")  {
         classifications = dataUnsorted.map(d => d[classificationAttr]);
         classificationColors = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).classificationColors;
         colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
@@ -239,12 +239,12 @@ function getData({
         const newData = dataSplit.map(dataAggregated => {
             const dataSorted = colorCategories.map(colorCat => {
                 return find(dataAggregated, (d) => d[classificationAttr] === colorCat.value);
-            });
+            }).filter(v => v);
             return dataSorted;
         });
         data = flatten(newData);
-        classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     }
+    classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
 
