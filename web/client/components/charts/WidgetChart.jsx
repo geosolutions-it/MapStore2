@@ -228,6 +228,7 @@ function getData({
     let colorCategories = [];
     let data = dataUnsorted;
     if (classificationAttr && classificationType === "value")  {
+        // #8591 changing order of data for matching colorCategories order
         classifications = dataUnsorted.map(d => d[classificationAttr]);
         classificationColors = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).classificationColors;
         colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
