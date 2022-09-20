@@ -24,6 +24,7 @@ import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, 
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
 import {gridTools, gridEvents, pageEvents, toolbarEvents} from './index';
+import { getDockProps } from '../../components/data/featuregrid/FeatureEditorFallback';
 
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
@@ -164,17 +165,7 @@ const FeatureDock = (props = {
 }) => {
     const virtualScroll  = props.virtualScroll ?? true;
     const maxZoom  = props?.pluginCfg?.maxZoom;
-    const dockProps = {
-        dimMode: "none",
-        defaultSize: 0.35,
-        fluid: true,
-        isVisible: props.open,
-        maxDockSize: 0.7,
-        minDockSize: 0.1,
-        position: "bottom",
-        setDockSize: () => {},
-        zIndex: 1060
-    };
+    const dockProps = getDockProps(props.open);
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
