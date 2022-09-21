@@ -25,7 +25,7 @@ import {
 import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY } from '../actions/controls';
 import { set } from '../utils/ImmutableUtils';
 import { getGeomTypeSelected } from '../utils/MeasurementUtils';
-import { validateCoord } from '../utils/MeasureUtils';
+import { validateCoord, defaultUnitOfMeasure } from '../utils/MeasureUtils';
 import { isPolygon } from '../utils/openlayers/DrawUtils';
 import { dropRight, isEmpty, findIndex, isNumber } from 'lodash';
 import assign from 'object-assign';
@@ -44,10 +44,7 @@ const defaultState = {
             fillColor: "red"
         }
     },
-    uom: {
-        length: {unit: 'm', label: 'm'},
-        area: {unit: 'sqm', label: 'm²'}
-    },
+    uom: defaultUnitOfMeasure,
     lengthFormula: "haversine",
     showLabel: true,
     showSegmentLengths: true,
@@ -121,8 +118,8 @@ function measurement(state = defaultState, action) {
         const prop = action.uom === "length" ? "lenUnit" : "lenArea";
         const {value, label} = action.value;
         return assign({}, state, {
-            [prop]: value,
-            uom: assign({}, action.previousUom, {
+            ...((action.uom === "length" || action.uom === "area") && { [prop]: value }),
+            uom: assign({}, action.previousUom || state.uom, {
                 [action.uom]: {
                     unit: value,
                     label
@@ -239,7 +236,13 @@ function measurement(state = defaultState, action) {
         return {...state, format: action.format};
     }
     case INIT: {
-        return {...state, ...action.defaultOptions};
+        return state.init
+            ? state
+            : {
+                ...state,
+                ...action.defaultOptions,
+                init: true
+            };
     }
     case CHANGE_COORDINATES: {
         const coordinates = action.coordinates.map(c => ([c.lon, c.lat]));

@@ -16,27 +16,12 @@ import {setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 
 import {getLonLatFromPoint} from '../utils/CoordinatesUtils';
 import {hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
-import {mapSelector} from '../selectors/map';
 import {clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector} from '../selectors/mapInfo';
 import {shareSelector} from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
 import {changeMapType} from '../actions/maptype';
 import {getCesiumViewerOptions, getParametersValues, getQueryActions, paramActions} from "../utils/QueryParamsUtils";
-
-/**
- * Semaphore function to skip epic processing under specific conditions
- * @param sem$
- * @param start
- * @param condition
- * @return {external:Observable}
- * */
-const semaphore = (sem$, start = true, condition = c=>c) =>
-    stream$ =>
-        stream$.withLatestFrom(
-            sem$.startWith(start)
-        )
-            .filter(([, s]) => condition(s))
-            .map(([e]) => e);
+import {semaphore} from "../utils/EpicsUtils";
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
@@ -63,7 +48,9 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                 action$.ofType(INIT_MAP)
                     .take(1)
                     .switchMap(() => {
-                        const cesiumViewerOptions = getCesiumViewerOptions(parameters, mapSelector(store.getState()));
+                        // On map initialization, query params containing cesium viewer options
+                        // is used to determine cesium map type
+                        const cesiumViewerOptions = getCesiumViewerOptions(parameters);
                         if (cesiumViewerOptions) {
                             skipProcessing = true;
                             return Rx.Observable.of(changeMapType('cesium'));

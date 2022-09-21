@@ -666,6 +666,65 @@ describe('queryparam epics', () => {
             }
         }, state);
     });
+    it('do not switch map type to cesium if cesium viewer options are present only in map state', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5"
+                }
+            },
+            map: {
+                present: {
+                    viewerOptions: {
+                        heading: '0.1',
+                        pitch: '-0.7',
+                        roll: '6.2'
+                    }
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+        testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
+            onLocationChanged({}),
+            initMap(true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
+    });
+    it('retain map type if cesium viewer options is not present query params', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?center=-74.2,40.7&zoom=16.5"
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+        testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
+            onLocationChanged({}),
+            initMap(true)
+        ], (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
+    });
     it('do nothing if cesium viewer options are not found', (done) => {
         const state = {
             maptype: {

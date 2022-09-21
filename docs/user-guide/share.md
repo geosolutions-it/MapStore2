@@ -3,7 +3,7 @@
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
 
-* Directly from the MapStore [Homepage](home-page.md) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in the toolbar of each resource card
+* Directly from the MapStore [Homepage](home-page.md#home-page) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in the toolbar of each resource card
 
 <img src="../img/share/share_cards.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -43,12 +43,12 @@ In addition, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) prov
 
 <img src="../img/share/embed_maps_size.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* For maps, the user can choose to show the [TOC](toc.md) in the embedded map by enabling the **Shown TOC** option
+* For maps, the user can choose to show the [TOC](toc.md#table-of-contents) in the embedded map by enabling the **Shown TOC** option
 
 <img src="../img/share/embed_maps_toc.jpg" class="ms-docimage"  style="max-width:400px;"/> 
 
 
-* For dashboards, the user can show the [connections](connecting-widgets.md) between widgets on the embedded dashboard by enabling the **Show connections**
+* For dashboards, the user can show the [connections](connecting-widgets.md#connecting-widgets) between widgets on the embedded dashboard by enabling the **Show connections**
 
 <img src="../img/share/embed-dash.jpg" class="ms-docimage"  style="max-width:400px;"/>
 

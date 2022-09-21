@@ -99,7 +99,8 @@ class ContentTabs extends React.Component {
                             activeStyle="default"
                             tools={[...this.props.items].sort((a, b) => a.position - b.position).filter( ({key}, i) => (key || i) === this.props.selected)}
                             panels={[]}
-                        /></Col>
+                        />
+                    </Col>
                 </Row>
             </Grid>
         );

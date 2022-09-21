@@ -773,9 +773,12 @@ export const specCreators = {
                     throw Error("No base URL found for this layer");
                 }
                 // transform in xyz format for mapfish-print.
+                const queryIndex = validURL.indexOf("?");
                 const firstBracketIndex = validURL.indexOf('{');
                 const baseURL = validURL.slice(0, firstBracketIndex);
-                const pathSection = validURL.slice(firstBracketIndex);
+                const pathSection = queryIndex < 0
+                    ? validURL.slice(firstBracketIndex)
+                    : validURL.slice(firstBracketIndex, queryIndex);
                 const pathFormat = pathSection
                     .replace("{x}", "${x}")
                     .replace("{y}", "${y}")
@@ -785,7 +788,7 @@ export const specCreators = {
                     baseURL,
                     path_format: pathFormat,
                     "type": 'xyz',
-                    "extension": validURL.split('.').pop() || "png",
+                    "extension": pathSection.split('.').pop() || "png",
                     "opacity": getOpacity(layer),
                     "tileSize": [256, 256],
                     "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
@@ -815,7 +818,8 @@ export const specCreators = {
                             isIncluded = isIncluded && i <= layerConfig.maxNativeZoom;
                         }
                         return isIncluded;
-                    })
+                    }),
+                    "customParams": Object.fromEntries((new URL(validURL)).searchParams)
                 };
             }
             return {};

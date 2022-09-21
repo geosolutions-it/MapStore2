@@ -13,9 +13,6 @@ theme:
   palette:
     primary: 'teal'
     accent: 'teal'
-  font:
-    text: 'Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif'
-    code: 'Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif'
 extra:
   repo_icon: 'github'
   social:
@@ -30,7 +27,7 @@ extra:
       link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
 extra_javascript:
   - 'https://code.jquery.com/jquery-3.3.1.min.js'
-  - 'https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'
+  - 'https://unpkg.com/mermaid@9.1.3/dist/mermaid.min.js'
 extra_css:
   - 'theme/css/extra.css'
 repo_name: 'geosolutions-it/MapStore2'
@@ -50,6 +47,7 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_div_format
 nav:
+  - Home: 'index.md' # To include in pdf
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
     - Managing Users and Groups:
@@ -121,6 +119,7 @@ nav:
       - Styling and theming: 'developer-guide/customize-theme.md'
       - Working with Extensions: 'developer-guide/extensions.md'
       - Printing Module: 'developer-guide/printing-module.md'
+      - How to use CDN: 'developer-guide/how-to-use-a-cdn.md'
       - FAQ: 'developer-guide/dev-faq.md'
     - Guidelines:
       - Code Conventions: 'developer-guide/code-conventions.md'
@@ -141,12 +140,15 @@ nav:
       - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
-      - users:
+      - Users:
         - GeoServer: 'developer-guide/integrations/users/geoserver.md'
         - LDAP: 'developer-guide/integrations/users/ldap.md'
-        - OpenId Connect: 'developer-guide/integrations/users/openId.md'
-      - Single Sign On:
-        - Keycloak: 'developer-guide/integrations/sso/keycloak.md'
+        - OpenID Connect: 'developer-guide/integrations/users/openId.md'
+        - Keycloak: 'developer-guide/integrations/users/keycloak.md'
+        - Keycloak-SSO: 'developer-guide/integrations/users/keycloak-sso-impl.md'
+      - General:
+        - Authentication: 'developer-guide/integrations/auth.md'
+        - Infrastructure: 'developer-guide/integrations/infrastructure-setups.md'
     - Projects:
       - MapStore Projects: 'developer-guide/mapstore-projects.md'
       - Project Creation Script: 'developer-guide/project-creation-script.md'
@@ -154,3 +156,8 @@ nav:
       - API usage: 'developer-guide/API-usage.md'
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
   - Quick Start: 'quick-start.md'
+plugins:
+  - search
+  - pdf-export:
+      combined: true
+      combined_output_path: pdf/mapstore_documentation.pdf

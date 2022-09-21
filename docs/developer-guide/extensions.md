@@ -1,9 +1,9 @@
 # Working with Extensions
 
-The MapStore2 [plugins architecture](../plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
+The MapStore2 [plugins architecture](plugins-architecture.md#plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Extensions are plugins that can be distributed as a separate package (a zip file), and be installed, activated and used at runtime.
-Creating an extension is similar to creating a plugin. If you are not familiar with plugins, please, read the [Plugins HowTo page](../plugins-howto) first.
+Creating an extension is similar to creating a plugin. If you are not familiar with plugins, please, read the [Plugins HowTo page](plugins-howto.md#creating-a-mapstore2-plugin) first.
 
 ## Developing an extension
 
@@ -73,6 +73,42 @@ As you can see from the code, the most important difference is that you need to 
 The extension definition will import or define all the needed dependencies (components, reducers, epics) as well as the plugin configuration elements
 (e.g. containers).
 
+### Dynamic import of extension
+
+MapStore supports dynamic import of plugins and extensions.
+
+Dynamically imported plugins or extensions uses lazy-loading: components, reducers and epics will be loaded once plugin or extension
+is in the list of plugins configured for the current page (eg. via `localConfig.json` or plugins selected to be included in a context).
+
+!!! note
+
+    Application context could have plugins configured to be loaded optionally using the [Extensions Library](../../user-guide/extension-library/#extension-library).
+    Such plugins will be loaded only after being directly activated by the user in the extensions library UI.
+
+Regardless if extension uses lazy-loading or not, its epics will be muted once extension is not rendered on the page.
+For more details see [Epic state](../writing-epics/#epic-state-muted-unmuted).
+
+There are few changes required to make extension loaded dynamically:
+
+1. Create `Module.jsx` file in `js/extension/plugins/` and populate it with `js/extension/plugins/Extension.jsx` content.
+2. Update content of `js/extension/plugins/Extension.jsx` to be like:
+```jsx
+import {toModulePlugin} from "@mapstore/utils/ModulePluginsUtils";
+import { name } from '../../../config';
+
+export default toModulePlugin(name, () => import(/* webpackChunkName: 'extensionName' */ './Module'));
+```
+3. Update `js/extensions.js` and remove `createPlugin` wrapper from `Extension` export. File content should look like:
+```js
+import Extension from './extension/plugins/Extension';
+import { name } from '../config';
+
+
+export default {
+    [name]: Extension
+};
+```
+
 ### Distributing your extension as an uploadable module
 
 The sample project allow you to create the final zip file for you.
@@ -126,25 +162,30 @@ The `index.json file should contain all the information about the extension:
 }
 ```
 
-`plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md)
+`plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager)
 
 ### Installing Extensions
 
 Extensions can be uploaded using the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle is managed by a dedicated MapStore backend service, the ***Upload Service***.
-The Upload Service is responsible of unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
+The Upload Service is responsible for unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
 
 * `extensions.json` (the extensions registry)
 * `pluginsConfig.json.patch` (the context creator plugins catalog patch file)
 
+### Updating Extensions
+
+Please refer to the [How to update extensions](../../user-guide/application-context/#how-to-update-extensions) section of user guide to get more information about extensions update workflow.
+
+
 ### Extensions and datadir
 
-Extensions work better if you use a [datadir](externalized-configuration.md), because when a datadir is configured,
-extensions are uploaded inside it so they can ***live*** outside of the application main folder (and you don't risk to overwrite them when
+Extensions work better if you use a [datadir](externalized-configuration.md#externalized-configuration), because when a datadir is configured,
+extensions are uploaded inside it, so they can ***live*** outside the application main folder (and you don't risk to overwrite them when
 you upgrade MapStore to a newer version).
 
 ### Extensions for dependent projects
 
-Extensions build in MapStore actually can run only in MapStore product. They can not be installed in dependent projects. If you have a custom project and you want to add support for extensions, you will have to create your build system for extensions dedicated to your application, to build the Javascript with the correct paths.
+Extensions build in MapStore actually can run only in MapStore product. They can not be installed in dependent projects. If you have a custom project, and you want to add support for extensions, you will have to create your build system for extensions dedicated to your application, to build the Javascript with the correct paths.
 Moreover, to enable extensions to work with the datadir in a dependent project (MapStore product is already configured to use it) you need to configure (or customize) the following configuration properties in your `app.jsx`:
 
 #### Externalize the extensions configuration
@@ -179,7 +220,9 @@ Assets are loaded using a different service, `/rest/config/loadasset`.
 Extension could implement drawing interactions, and it's necessary to prevent a situation when multiple tools from different plugins or extensions have active drawing, otherwise it could end up in an unpredicted or buggy behavior.
 
 There are two ways how drawing interaction can be implemented in plugin or extension:
+
 - Using DrawSupport (e.g. Annotations plugin)
+
 - By intercepting click on the map interactions (e.g. Measure plugin)
 
 ### Making another plugins aware of your extension starts drawing

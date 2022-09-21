@@ -1,7 +1,7 @@
 # Exploring Dashboards
 **********************
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md#widgets), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
 
 1. Provide an overview to better visualize a specific data context
 
@@ -25,7 +25,8 @@ Through the *Topbar* it is possible to:
 
 * Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) with the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
 
-* Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing Users and Groups](managing-users-and-groups.md) section)
+* Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
+
 
 ### Options Menu
 
@@ -49,13 +50,14 @@ In the **Options** <img src="../img/button/burger.jpg" class="ms-docbutton"/> dr
 
 <img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
 
+
 ## Sidebar
 
 The *Sidebar* allows the user to:
 
-* [Add new widgets](adding-widgets.md) with the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+* [Add new widgets](adding-widgets.md#adding-widgets) with the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* See the connections between widgets with the <img src="../img/button/show-connections.jpg" class="ms-docbutton"/> button, available when connections are present (more information about this option are available in [Connecting Widgets](connecting-widgets.md) section)
+* See the connections between widgets with the <img src="../img/button/show-connections.jpg" class="ms-docbutton"/> button, available when connections are present (more information about this option are available in [Connecting Widgets](connecting-widgets.md#connecting-widgets) section)
 
 ## Viewer
 
@@ -67,4 +69,4 @@ Once the widgets are added in the viewer it is possible to:
 
 * Access widgets menu <img src="../img/button/menu.jpg" class="ms-docbutton"/> from which the user can choose between several options (more information about this menu's options can be found in Map's [Access Widget Menu](widgets.md#access-widgets-menu) section)
 
-* Take a look at the widget *Description* (more information about widget *Description* can be found in Map's [Access Widgets Info](widgets.md#access-widgets-info) section)
+* Take a look at the widget *Description* (more information about widget *Description* can be found in Map's [Access Widgets Info](widgets.md#manage-existing-widgets) section)

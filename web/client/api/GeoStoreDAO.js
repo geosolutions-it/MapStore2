@@ -172,6 +172,18 @@ const Api = {
             return response.data;
         });
     },
+    /**
+     * Gets the tokens for a given identifier, created during openID login.
+     * @param {string} provider the provider name (e.g. keycloak)
+     * @param {string} identifier the identifier of the token
+     * @returns {object}
+     */
+    getTokens: function(provider, identifier) {
+        return axios.get(
+            `openid/${provider}/tokens`,
+            this.addBaseUrl({params: {identifier}})
+        ).then(response => response.data?.sessionToken);
+    },
     login: function(username, password, options) {
         const url = "session/login";
         let authData;

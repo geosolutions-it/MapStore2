@@ -78,7 +78,7 @@ In addition to the layers information, the following are provided by the *Identi
 
 <img src="../img/side-bar/hightlight-point1.gif" class="ms-docimage"/>
 
-* The **Edit** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> allows the user to open the [Attribute Table](attributes-table.md)  in edit mode showing only layers records corresponding to the clicked point on the map. 
+* The **Edit** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> allows the user to open the [Attribute Table](attributes-table.md#attribute-table)  in edit mode showing only layers records corresponding to the clicked point on the map. 
 
 <img src="../img/side-bar/edit_identify.gif" class="ms-docimage"/>
 
@@ -104,7 +104,7 @@ If the user clicks on the map where one or more overlapping layers are present, 
 
 <img src="../img/side-bar/layers.jpg" class="ms-docimage"/>
 
-In order to have information about one layer only the user can select the layer on the [Table of Contents](toc.md), through the *TOC* button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/>, and then click on the layer in the map to perform the identify operation only for that selected layer in TOC. The identify panel opens containing the layer information corresponding to the clicked point in the map, as follows:
+In order to have information about one layer only the user can select the layer on the [Table of Contents](toc.md#table-of-contents), through the *TOC* button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/>, and then click on the layer in the map to perform the identify operation only for that selected layer in TOC. The identify panel opens containing the layer information corresponding to the clicked point in the map, as follows:
 
 <img src="../img/side-bar/layer.gif" class="ms-docimage"/>
 

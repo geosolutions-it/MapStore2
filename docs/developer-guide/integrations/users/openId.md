@@ -72,7 +72,6 @@ googleOAuth2Config.internalRedirectUri=https://<your-appliction-domain>/mapstore
 
 ## discoveryUrl: contains all the information for the specific service.
 googleOAuth2Config.discoveryUrl=https://accounts.google.com/.well-known/openid-configuration
-#If the `discoveryUrl` has not been specified, you can manually configure the following options.
 ```
 
 #### Configure MapStore front-end for Google OpenID
@@ -98,11 +97,11 @@ googleOAuth2Config.discoveryUrl=https://accounts.google.com/.well-known/openid-c
 
 [Keycloak](https://www.keycloak.org/) is an open source identity and access management application widely used. MapStore has the ability to integrate with keycloak:
 
-- Using the standard OpenID protocol
-- Supporting SSO (not yet implemented)
-- Integrating with users and roles, as well as for ldap. (not yet implemented)
+- Using the standard OpenID Connect (OIDC) protocol to login/logout in MapStore
+- Supporting Single Sign On (SSO) with other applications.
+- Mapping keycloak roles to MapStore groups, as well as for ldap.
 
-In this section you can see how to configure keycloak as a standard OpenID provider
+In this section you can see how to configure keycloak as a standard OpenID provider. For other advanced functionalities, you can see the [dedicated section of the documentation](keycloak.md#keycloak-integrations)
 
 #### Configure keycloak Client
 
@@ -121,12 +120,7 @@ Create a new Client on keycloak. In this guide we will name it `mapstore-server`
 
 ### Configure MapStore back-end for Keycloak OpenID
 
-- create/edit `mapstore-ovr.properties` file (in data-dir or class path) to configure the keycloak provider this way:
-  - `keycloakOAuth2Config.jsonConfig`: insert the JSON copied, removing all the spaces
-  - `keycloakOAuth2Config.redirectUri`: need to be configured to point to your application at the path `<base-app-url>/rest/geostore/openid/keycloak/callback`, e.g. `https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback`
-  - `keycloakOAuth2Config.internalRedirectUri` can be set to your application root, e.g. `https://my.mapstore.site.com/mapstore/`
-  - `keycloakOAuth2Config.autoCreateUser`: true if you want to create user on DB on login (if you are not using any other user integration e.g. `ldap`, `keycloak`)
-  - `keycloakOAuth2Config.forceConfiguredRedirectURI`: optional, if `true`, forces the redirect URI for callback to be equal to teh redirect URI. This is useful if you have problems logging in behind a proxy, or in dev mode.
+Create/edit `mapstore-ovr.properties` file (in data-dir or class path) to configure the keycloak provider this way:
 
 ```properties
 # enables the keycloak OpenID Connect filter
@@ -145,8 +139,28 @@ keycloakOAuth2Config.internalRedirectUri=https://my.mapstore.site.com/mapstore/
 
 # Create user (if you are using local database, this should be set to true)
 keycloakOAuth2Config.autoCreateUser=true
-#
+
+# Comma separated list of <keycloak-role>:<geostore-role>
+keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
+
+# Comma separated list of <keycloak-role>:<geostore-group>
+keycloakOAuth2Config.roleMappings=MY_KEYCLOAK_ROLE:MY_MAPSTORE_GROUP,MY_KEYCLOAK_ROLE2:MY_MAPSTORE_GROUP2
+
+# Default role, when no mapping has matched
+keycloakOAuth2Config.authenticatedDefaultRole=USER
 ```
+
+- `keycloakOAuth2Config.jsonConfig`: insert the JSON copied, removing all the spaces
+- `keycloakOAuth2Config.redirectUri`: need to be configured to point to your application at the path `<base-app-url>/rest/geostore/openid/keycloak/callback`, e.g. `https://my.mapstore.site.com/mapstore/rest/geostore/openid/keycloak/callback`
+- `keycloakOAuth2Config.internalRedirectUri` can be set to your application root, e.g. `https://my.mapstore.site.com/mapstore/`
+- `keycloakOAuth2Config.autoCreateUser`: true if you want MapStore to insert a Keycloak authenticated user on the DB. UserGroups will be inserted as well and kept in synch with the roles defined for the user in Keycloak. The option **must be set to false if MapStore is using a read-only external service for users and groups** (i.e. Keycloak or LDAP).
+- `keycloakOAuth2Config.forceConfiguredRedirectURI`: optional, if `true`, forces the redirect URI for callback to be equal to teh redirect URI. This is useful if you have problems logging in behind a proxy, or in dev mode.
+- `keycloakOAuth2Config.roleMappings`: comma separated list of mappings with the following format ``keycloak_admin_role:ADMIN,keycloak_user_role:USER``. These mappings will be used to map Keycloak roles to MapStore roles. Allowed values `USER` or `ADMIN`.
+- `keycloakOAuth2Config.authenticatedDefaultRole`: where the role has not been assigned by the mappings above, the role here will be used. Allowed values `USER` or `ADMIN`.
+- `keycloakOAuth2Config.groupMappings`: comma separated list of mappings with the following format ``keycloak_role_name:mapstore_group_name,keycloak_role_name2:mapstore_group_name2``. These mappings will be used to map Keycloak roles to MapStore groups.
+- `keycloakOAuth2Config.dropUnmapped`: when set to false, MapStore will drop Keycloak roles that are not matched by any mapping role and group mapping. When set to true all the unmatched Keycloak roles will be added as MapStore UserGroups.
+
+
 
 #### Configure MapStore front-end for Keycloak OpenID
 

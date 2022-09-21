@@ -13,18 +13,18 @@ For example choosing *OpenTopoMap*, the map background will change like in the f
 
 <img src="../img/background/back-selector.jpg" class="ms-docimage"/>
 
-If the user has editing permissions on the map (independently on the role, see [Resource Properties](resources-properties.md) section for more information about permissions), it is also possible to add, edit or remove backgrounds.
+If the user has editing permissions on the map (independently on the role, see [Resource Properties](resources-properties.md#resource-properties) section for more information about permissions), it is also possible to add, edit or remove backgrounds.
 
 ## Add background
 
-A new background can be added through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button on the top of the background selector main card. Performing this operation the [Catalog](catalog.md) panel opens with the possibility to access the *Remote Services*:
+A new background can be added through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button on the top of the background selector main card. Performing this operation the [Catalog](catalog.md#catalog-services) panel opens with the possibility to access the *Remote Services*:
 
 <img src="../img/background/bck-catalog.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! warning
-    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md) from [Buger Menu](menu-bar.md#burger-menu) or from [TOC](toc.md). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md) section).
+    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md#catalog-services) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md#catalog-services) from [Buger Menu](menu-bar.md#burger-menu) or from [TOC](toc.md#table-of-contents). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md#map-configuration) section).
 
-From the [Catalog](catalog.md) the user can choose the layers to add to the list of backgrounds:
+From the [Catalog](catalog.md#catalog-services) the user can choose the layers to add to the list of backgrounds:
 
 <img src="../img/background/add-ocean.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -84,6 +84,6 @@ It is possible to remove a background from the background selector by clicking o
 <img src="../img/background/bck-delete.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! note
-    By default, for new maps, all backgrounds from *Default Backgrounds* Service are added to the background selector, and in [Catalog](catalog.md) they appear grayed (it's not allowed to add the same default background twice): as soon as you remove one from the background selector, it becomes selectable from the [Catalog](catalog.md).
+    By default, for new maps, all backgrounds from *Default Backgrounds* Service are added to the background selector, and in [Catalog](catalog.md#catalog-services) they appear grayed (it's not allowed to add the same default background twice): as soon as you remove one from the background selector, it becomes selectable from the [Catalog](catalog.md#catalog-services).
 
     <img src="../img/background/bck-unselectable.jpg" class="ms-docimage"/>

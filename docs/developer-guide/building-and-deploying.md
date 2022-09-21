@@ -56,6 +56,15 @@ The generated folders can be removed with:
 
 `npm run cleandoc`
 
+Build the mkdocs and generate md files to test in local machine by:
+
+`npm run build-doc`
+
+Start the built-in dev-server of mkdocs to preview and test documentation live by:
+
+`npm run serve-doc`
+
+
 ## Understanding frontend building tools
 
 Frontend building is delegated to [NPM](https://www.npmjs.com/) and so leverages the NodeJS ecosystem.
@@ -66,8 +75,8 @@ In particular:
 * **[babel](https://babeljs.io/)** is used for ES6/7 and JSX transpiling integrated with the other tools (e.g. webpack)
 * **[webpack-dev-server](http://webpack.github.io/docs/webpack-dev-server.html)** is used to host the development application instance
 * **[mocha](http://mochajs.org/)/[expect](https://github.com/mjackson/expect)** is used as a testing framework (with BDD style unit-tests)
-* **[webpack](http://webpack.github.io/)**: as the bundling tool, for development (see [webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/webpack.config.js)), deploy (see [prod-webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/prod-webpack.config.js)) and test (see [test.webpack.js](https://github.com/geosolutions-it/MapStore2/blob/master/tests.webpack.js))
-* **[karma](http://karma-runner.github.io/)** is used as the test suite runner, with several plugins to allow for custom reporting, browser running and so on; the test suite running is configured through different configuration files, for **[single running](https://github.com/geosolutions-it/MapStore2/blob/master/karma.conf.single-run.js)**  or **[continuous testing](https://github.com/geosolutions-it/MapStore2/blob/master/karma.conf.continuous-test.js)**
+* **[webpack](http://webpack.github.io/)**: as the bundling tool, for development (see [webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/build/webpack.config.js)), deploy (see [prod-webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/build/prod-webpack.config.js)) and test (see [test.webpack.js](https://github.com/geosolutions-it/MapStore2/blob/master/build/tests.webpack.js))
+* **[karma](http://karma-runner.github.io/)** is used as the test suite runner, with several plugins to allow for custom reporting, browser running and so on; the test suite running is configured through different configuration files, for **[single running](https://github.com/geosolutions-it/MapStore2/blob/master/build/karma.conf.single-run.js)**  or **[continuous testing](https://github.com/geosolutions-it/MapStore2/blob/master/build/karma.conf.continuous-test.js)**
 * **[istanbul](https://gotwarlost.github.io/istanbul/)/[coveralls](https://www.npmjs.com/package/coveralls)** are used for code coverage reporting
 
 ## Index of main npm scripts
@@ -85,7 +94,7 @@ In particular:
 
 ## Including the printing engine in your build
 
-The [printing module](printing-module.md) is not included in official builds by default.
+The [printing module](printing-module.md#printing-module) is not included in official builds by default.
 
 To build your own version of MapStore with the this module, you can use the **printing** profile running the build script:
 
@@ -93,4 +102,4 @@ To build your own version of MapStore with the this module, you can use the **pr
 ./build.sh [version_identifier] printing
 ```
 
-For more information or troubleshooting about the printing module you can see the [dedicated section](printing-module.md)
+For more information or troubleshooting about the printing module you can see the [dedicated section](printing-module.md#printing-module)

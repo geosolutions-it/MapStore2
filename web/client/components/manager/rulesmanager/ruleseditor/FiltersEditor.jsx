@@ -9,9 +9,7 @@ import React from 'react';
 
 import { Grid } from 'react-bootstrap';
 import ContainerDimensions from 'react-container-dimensions';
-import { Controlled as Codemirror } from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/sql/sql';
+import CodeMirror from '../../../../libs/codemirror/react-codemirror-suspense';
 import switchEnhancer from './enhancers/switch';
 import filtersEnhancer from './enhancers/filters';
 import MapModal from '../MapModal';
@@ -37,7 +35,7 @@ export default filtersEnhancer(({onMapReady, geometryState = {}, spatialField = 
                 <div style={{width: '100%'}}>
                     <ContainerDimensions>
                         {({width}) => <div style={{width}}>
-                            <Codemirror
+                            <CodeMirror
                                 value={constraints.cqlFilterRead}
                                 onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterRead", value})}
                                 options={{
@@ -53,7 +51,7 @@ export default filtersEnhancer(({onMapReady, geometryState = {}, spatialField = 
                 <div style={{width: '100%'}}>
                     <ContainerDimensions>
                         {({width}) => <div style={{width}}>
-                            <Codemirror
+                            <CodeMirror
                                 value={constraints.cqlFilterWrite}
                                 onBeforeChange={(editor, data, value) => setOption({key: "cqlFilterWrite", value})}
                                 options={{

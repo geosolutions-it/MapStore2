@@ -36,3 +36,17 @@ const defaultEpicWrapper = (epic, k = "--unknown--") => (...args) =>
 export const wrapEpics = (epics, wrapper = defaultEpicWrapper) =>
     Object.keys(epics).map(k => wrapper(epics[k], k));
 
+/**
+ * Semaphore function to skip epic processing under specific conditions
+ * @param sem$
+ * @param start
+ * @param condition
+ * @return {external:Observable}
+ * */
+export const semaphore = (sem$, start = true, condition = c => c) =>
+    stream$ =>
+        stream$.withLatestFrom(
+            sem$.startWith(start)
+        )
+            .filter(([, s]) => condition(s))
+            .map(([e]) => e);

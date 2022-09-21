@@ -196,3 +196,52 @@ const fetchDataEpic = (action$, store) => action$
             map(response => dataFetched(response.data))
     );
 ```
+
+## Epic state: muted / unmuted
+
+All the epics attached to plugins or extension will be registered once plugin is loaded.
+
+Each registered epic can be in one of two possible states:
+
+   **muted**: no reaction to the actions that comes in   
+   **unmuted**: reacting to the listed actions
+
+
+- Whenever new epic is registered it will be in unmuted state by default.
+
+- Epic will become muted whenever there is no plugin/extension on the page listing that specific epic in plugin definition.
+In other words, if there are `Extension1` and `Plugin2`, both are adding epic called `testEpic` and both plugin and extension
+are not added to the current page plugins in pluginsConfig, then epic will become muted.
+
+## Muted epics: how to mute internal streams
+
+MapStore will mute all the epics whenever corresponding plugin or extension is not rendered on the page.
+Though, it might be the case that one of your epics will return internal stream, like in example below:
+
+```js
+export const dummyEpic = (action$, store) => action$.ofType(ACTION)
+    .switchMap(() => {
+        return Rx.Observable.interval(1000)
+            .switchMap(() => {
+                console.log('TEST');
+                return Rx.Observable.empty();
+            });
+    });
+```
+
+In this case, internal stream should be muted explicitly.
+
+Each epic receives third argument type of object, having property called `pluginRenderStream$`.
+Combined with `semaphore` it allows to mute internal stream whenever epic is muted:
+
+```js
+export const dummyEpic = (action$, store, { pluginRenderStream$ }) => action$.ofType(ACTION)
+    .switchMap(() => {
+        return Rx.Observable.interval(1000)
+            .let(semaphore(pluginRenderStream$.startWith(true)))
+            .switchMap(() => {
+                console.log('TEST');
+                return Rx.Observable.empty();
+            });
+    });
+```

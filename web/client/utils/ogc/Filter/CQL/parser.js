@@ -16,6 +16,7 @@ const spatialOperators = {
     WITHIN: "WITHIN"
 };
 const patterns = {
+    INCLUDE: /^INCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE)/i,
     IS_NULL: /^IS NULL/i,
@@ -55,6 +56,7 @@ const patterns = {
     END: /^$/
 };
 const follows = {
+    INCLUDE: ['END'],
     LPAREN: ['GEOMETRY', 'SPATIAL', 'PROPERTY', 'VALUE', 'LPAREN'],
     RPAREN: ['NOT', 'LOGICAL', 'END', 'RPAREN'],
     PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL'],
@@ -87,6 +89,9 @@ const logical = {
     'AND': "and",
     'OR': "or",
     'NOT': "not"
+};
+const cql = {
+    "INCLUDE": "include"
 };
 
 const precedence = {
@@ -136,7 +141,7 @@ const nextToken = (text, tokens) => {
 const tokenize = (text) => {
     let results = [];
     let token;
-    const expect = ["NOT", "GEOMETRY", "SPATIAL", "PROPERTY", "LPAREN"];
+    const expect = ["INCLUDE", "NOT", "GEOMETRY", "SPATIAL", "PROPERTY", "LPAREN"];
     let text2 = text;
     let expect2 = expect;
     do {
@@ -168,6 +173,7 @@ const buildAst = (tokens) => {
         case "COMPARISON":
         case "BETWEEN":
         case "IS_NULL":
+        case "INCLUDE":
         case "LOGICAL":
             let p = precedence[tok.type];
 
@@ -259,6 +265,11 @@ const buildAst = (tokens) => {
                 return match[1].replace(/''/g, "'");
             }
             return Number(tok.text);
+        case "INCLUDE": {
+            return ({
+                type: cql.INCLUDE
+            });
+        }
         case "SPATIAL":
             switch (tok.text.toUpperCase()) {
             case "BBOX": {

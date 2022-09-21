@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 -240 1200 1200"
+   id="svg6"
+   sodipodi:docname="point-coordinates.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="0.39333334"
+     inkscape:cx="596.18643"
+     inkscape:cy="636.8644"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2"
+     showguides="false"
+     inkscape:pagecheckerboard="0" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="glyph">
+    <path
+       id="path845"
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:166.97"
+       d="M 575 120 L 575 212.0918 A 509.86899 509.86899 0 0 0 91.917969 695 L 0 695 L 0 745 L 91.919922 745 A 499.21901 493.34449 0 0 0 94.587891 782.31055 A 509.86899 509.86899 0 0 0 98.779297 808.4668 A 499.21901 493.34449 0 0 0 105.125 837.63477 A 509.86899 509.86899 0 0 0 575 1227.9492 L 575 1320 L 625 1320 L 625 1227.9629 A 509.86899 509.86899 0 0 0 1109.2559 745 L 1200 745 L 1200 695 L 1109.2559 695 A 509.86899 509.86899 0 0 0 625 212.03711 L 625 120 L 575 120 z M 575 252.76562 L 575 695 L 132.5957 695 A 469.19101 469.19101 0 0 1 575 252.76562 z M 625 745 L 1068.4961 745 A 469.19101 469.19101 0 0 1 625 1187.2891 L 625 745 z "
+       transform="translate(0,-240)" />
+  </g>
+</svg>

@@ -11,12 +11,36 @@ import {createStructuredSelector} from 'reselect';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, showDialogSelector, isLoadingSelector,
-    loadFlagsSelector, isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector,
-    validationStatusSelector, cfgErrorSelector, templatesSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
-    availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
-    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector, selectedThemeSelector,
-    customVariablesEnabledSelector, isNewContext} from '../selectors/contextcreator';
+import {
+    newContextSelector,
+    resourceSelector,
+    creationStepSelector,
+    reloadConfirmSelector,
+    showDialogSelector,
+    isLoadingSelector,
+    loadFlagsSelector,
+    isValidContextNameSelector,
+    contextNameCheckedSelector,
+    pluginsSelector,
+    editedPluginSelector,
+    editedCfgSelector,
+    validationStatusSelector,
+    cfgErrorSelector,
+    templatesSelector,
+    parsedTemplateSelector,
+    fileDropStatusSelector,
+    editedTemplateSelector,
+    availablePluginsFilterTextSelector,
+    availableTemplatesFilterTextSelector,
+    enabledPluginsFilterTextSelector,
+    enabledTemplatesFilterTextSelector,
+    showBackToPageConfirmationSelector,
+    tutorialStepSelector,
+    selectedThemeSelector,
+    customVariablesEnabledSelector,
+    isNewContext,
+    tutorialsSelector
+} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {tutorialSelector} from '../selectors/tutorial';
 import {init, setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
@@ -33,6 +57,7 @@ export const contextCreatorSelector = createStructuredSelector({
     user: userSelector,
     curStepId: creationStepSelector,
     tutorialStatus: state => tutorialSelector(state)?.status,
+    tutorialsList: tutorialsSelector,
     tutorialStep: tutorialStepSelector,
     newContext: newContextSelector,
     resource: resourceSelector,

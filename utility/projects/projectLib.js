@@ -22,16 +22,42 @@ const initGit = (outFolder) => {
     const git = require('simple-git')(outFolder);
     return new Promise((resolve, reject) => {
         git.init(() => {
+            process.stdout.write('initializing git repo...\n');
             git.submoduleAdd('https://github.com/geosolutions-it/MapStore2.git', 'MapStore2', (err) => {
                 if (err) {
                     reject(err);
                 } else {
                     resolve();
+                    process.stdout.write('MapStore2 submodule added...\n');
                 }
             });
         });
     });
 };
+
+
+/**
+ * it creates the first commit to be used in git versioning
+ * @return {Promise} the promise to continue the flow of project creation
+ */
+const createFirstCommit = (outFolder) => {
+    process.stdout.write('Creating first commit...\n');
+
+    const git = require('simple-git')(outFolder);
+    return new Promise((resolve, reject) => {
+        git.add(["*"], () => {
+            git.commit('First Commit', (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                    process.stdout.write('First commit created...\n');
+                }
+            });
+        });
+    });
+};
+
 
 /**
  * it does a checkout to a specified folder which in general is rootProject/MapStore2
@@ -42,23 +68,37 @@ const updateSubmoduleBranch = (outFolder) => {
     const git = require('simple-git')();
     const gitProjectMs2 = require('simple-git')(`${outFolder}/MapStore2`);
 
+    const stableBranch = "2022.02.xx";
+
     return new Promise((resolve, reject) => {
         try {
             git.branchLocal( (err, data) => {
                 if (err) {
                     reject(err);
                 }
-                process.stdout.write("doing checkout to the branch: " + data.current + "\n");
-                gitProjectMs2.checkout(data.current, null, (error) => {
-                    if (error) {
-                        reject(error);
+                git.fetch("origin", data.current, (er) => {
+                    if (er) {
+                        process.stdout.write(`Warning: It was not possible to checkout to ${data.current} so we checkout to latest stable: ${stableBranch}\n`);
+                        gitProjectMs2.checkout(stableBranch, null, (e) => {
+                            if (e) {
+                                reject(e);
+                            }
+                            process.stdout.write(`checkout to stable branch: ${stableBranch} done\n`);
+                            resolve();
+                        });
+                    } else {
+                        process.stdout.write("doing checkout to the branch: " + data.current + "\n");
+                        gitProjectMs2.checkout(data.current, null, (error) => {
+                            if (error) {
+                                reject(error);
+                            }
+                            resolve();
+                        });
                     }
-                    process.stdout.write("checkout done");
-                    resolve();
                 });
             });
         } catch (e) {
-            process.stdout.write("error");
+            process.stdout.write("error\n");
             process.stdout.write(e);
             reject(e);
         }
@@ -125,5 +165,6 @@ module.exports = {
     createPackageJSON,
     copyTemplates,
     copyStaticFiles,
-    updateSubmoduleBranch
+    updateSubmoduleBranch,
+    createFirstCommit
 };

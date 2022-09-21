@@ -9,7 +9,7 @@
 import {dropRight, get, isEqual, round} from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ButtonToolbar, Col, FormGroup, Glyphicon, Grid, Row, Tooltip} from 'react-bootstrap';
+import {ButtonToolbar, Col, Glyphicon, Grid, Row, Tooltip} from 'react-bootstrap';
 import {DropdownList} from 'react-widgets';
 import uuidv1 from 'uuid/v1';
 
@@ -22,6 +22,7 @@ import NumberFormat from '../../I18N/Number';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import CoordinatesEditor from '../annotations/CoordinatesEditor';
+import MeasureToolbar from './MeasureToolbar';
 
 import('./measure.css');
 
@@ -187,63 +188,47 @@ class MeasureComponent extends React.Component {
     renderMeasurements = (disabled = false) => {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
-            <Grid fluid style={{maxHeight: 400}}>
-                {this.props.lineMeasureEnabled && <Row >
-                    <FormGroup style={{display: 'flex', alignItems: 'center'}}>
-                        {this.props.lineMeasureValueEnabled && <Col xs={6}>
-                            <span>{this.props.lengthLabel}: </span>
-                            <span id="measure-len-res" className="measure-value">
-                                <h3><strong>
-                                    <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}
-                                </strong></h3>
-                            </span>
-                        </Col>}
-                        <Col xs={6}>
-                            <DropdownList
-                                disabled={disabled}
-                                value={this.props.uom.length.label}
-                                onChange={(value) => {
-                                    this.props.onChangeUom("length", value, this.props.uom);
-                                }}
-                                data={this.props.uomLengthValues}
-                                textField="label"
-                                valueField="value"
-                            />
-                        </Col>
-                    </FormGroup>
-                </Row>}
-                {this.props.areaMeasureEnabled && <Row>
-                    <FormGroup style={{display: 'flex', alignItems: 'center'}}>
-                        {this.props.areaMeasureValueEnabled && <Col xs={6}>
-                            <span>{this.props.areaLabel}: </span>
-                            <span id="measure-area-res" className="measure-value">
-                                <h3><strong>
-                                    <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}
-                                </strong></h3>
-                            </span>
-                        </Col>}
-                        <Col xs={6}>
-                            <DropdownList
-                                disabled={disabled}
-                                value={this.props.uom.area.label}
-                                onChange={(value) => {
-                                    this.props.onChangeUom("area", value, this.props.uom);
-                                }}
-                                data={this.props.uomAreaValues}
-                                textField="label"
-                                valueField="value"/>
-                        </Col>
-                    </FormGroup>
-                </Row>}
-                {this.props.bearingMeasureEnabled && this.props.bearingMeasureValueEnabled && <Row>
-                    <FormGroup style={{display: 'flex', alignItems: 'center', minHeight: 34}}>
-                        <Col xs={6}>
-                            <span>{this.isTrueBearing() ? this.props.trueBearingLabel : this.props.bearingLabel}: </span>
-                            <span id="measure-bearing-res" className="measure-value"><h3><strong>{this.props.formatBearing((this.props.measurement.bearing || 0), this.isTrueBearing() && this.props.measurement.trueBearing)}</strong></h3></span>
-                        </Col>
-                    </FormGroup>
-                </Row>}
-            </Grid>
+            <>
+                {this.props.lineMeasureEnabled && <>
+                    {this.props.lineMeasureValueEnabled && <>
+                        <div>{this.props.lengthLabel}{': '} </div>
+                        <div id="measure-len-res" className="measure-value">
+                            <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}
+                        </div>
+                    </>}
+                    <DropdownList
+                        disabled={disabled}
+                        value={this.props.uom.length.label}
+                        onChange={(value) => {
+                            this.props.onChangeUom("length", value, this.props.uom);
+                        }}
+                        data={this.props.uomLengthValues}
+                        textField="label"
+                        valueField="value"
+                    />
+                </>}
+                {this.props.areaMeasureEnabled && <>
+                    {this.props.areaMeasureValueEnabled && <>
+                        <div>{this.props.areaLabel}{': '} </div>
+                        <div id="measure-area-res" className="measure-value">
+                            <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}
+                        </div>
+                    </>}
+                    <DropdownList
+                        disabled={disabled}
+                        value={this.props.uom.area.label}
+                        onChange={(value) => {
+                            this.props.onChangeUom("area", value, this.props.uom);
+                        }}
+                        data={this.props.uomAreaValues}
+                        textField="label"
+                        valueField="value"/>
+                </>}
+                {this.props.bearingMeasureEnabled && this.props.bearingMeasureValueEnabled && <>
+                    <div>{this.isTrueBearing() ? this.props.trueBearingLabel : this.props.bearingLabel}{': '} </div>
+                    <div id="measure-bearing-res" className="measure-value">{this.props.formatBearing((this.props.measurement.bearing || 0), this.isTrueBearing() && this.props.measurement.trueBearing)}</div>
+                </>}
+            </>
         );
     };
 
@@ -275,6 +260,7 @@ class MeasureComponent extends React.Component {
     render() {
         let geomType;
         let coords;
+        const measureToolEnabled = !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled);
         const features = get(this.props.measurement, 'features', []);
         const feature = features[this.props.measurement.currentFeature || 0];
         const isFeatureInvalid = feature?.properties?.disabled || false;
@@ -292,10 +278,21 @@ class MeasureComponent extends React.Component {
         return (
             <BorderLayout
                 id={this.props.id}
-                style={{overflow: 'visible'}}
+                style={{
+                    overflow: 'visible',
+                    // the measure component needs to cover the surface of the container
+                    // only if it has the coordinates editor enabled
+                    ...(!this.props.showCoordinateEditor && {
+                        display: 'block',
+                        width: 'auto',
+                        height: 'auto'
+                    })
+                }}
                 header={
-                    <div>
-                        <ButtonToolbar style={{width: '100%', marginBottom: 15, marginTop: 8, display: 'flex', justifyContent: 'center'}}>
+                    <MeasureToolbar
+                        info={this.renderPanel(isFeatureInvalid)}
+                    >
+                        <ButtonToolbar>
                             <Toolbar
                                 btnDefaultProps={{
                                     className: 'square-button-md',
@@ -338,7 +335,7 @@ class MeasureComponent extends React.Component {
                                 buttons={
                                     [
                                         {
-                                            glyph: 'remove',
+                                            glyph: 'trash',
                                             visible: !!this.props.withReset,
                                             tooltip: <Message msgId="measureComponent.resetTooltip"/>,
                                             onClick: () => this.onResetClick()
@@ -354,8 +351,8 @@ class MeasureComponent extends React.Component {
                                     [
                                         {
                                             glyph: 'ext-json',
-                                            disabled: toolbarDisabled,
-                                            visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showExportToGeoJSON,
+                                            disabled: !measureToolEnabled || toolbarDisabled,
+                                            visible: this.props.showExportToGeoJSON,
                                             tooltip: <Message msgId="measureComponent.exportToGeoJSON"/>,
                                             onClick: () => {
                                                 download(JSON.stringify(convertMeasuresToGeoJSON(
@@ -369,8 +366,8 @@ class MeasureComponent extends React.Component {
                                         },
                                         {
                                             glyph: '1-layer',
-                                            visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsLayer,
-                                            disabled: toolbarDisabled || exportToAnnotation,
+                                            visible: this.props.showAddAsLayer,
+                                            disabled: !measureToolEnabled || toolbarDisabled || exportToAnnotation,
                                             tooltip: <Message msgId="measureComponent.addAsLayer"/>,
                                             onClick: () => this.props.onAddAsLayer(
                                                 this.props.measurement.features,
@@ -393,14 +390,13 @@ class MeasureComponent extends React.Component {
                                                     }
                                                 );
                                             },
-                                            disabled: toolbarDisabled,
-                                            visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsAnnotation
+                                            disabled: !measureToolEnabled || toolbarDisabled,
+                                            visible: this.props.showAddAsAnnotation
                                         }
                                     ]
                                 }/>
                         </ButtonToolbar>
-                        {this.renderPanel(isFeatureInvalid)}
-                    </div>
+                    </MeasureToolbar>
                 }>
                 {this.props.showCoordinateEditor && (<Grid fluid style={{maxHeight: 400, borderTop: '1px solid #ddd'}}>
                     {(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled)

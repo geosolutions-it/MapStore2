@@ -21,13 +21,13 @@ The Story content is organized in Sections, that can be added with the <img src=
 
 <img src="../img/exploring-stories/sections.jpg" class="ms-docimage" width="400px"/>
 
-* [Title Section](title-section.md)
-* [Banner Section](banner-section.md)
-* [Paragraph Section](paragraph-section.md)
-* [Immersive Section](immersive-section.md)
-* [GeoCarousel Section](geocarousel-section.md)
-* [Media Section](media-section.md)
-* [Web Page Section](web-section.md)
+* [Title Section](title-section.md#title-section)
+* [Banner Section](banner-section.md#banner-section)
+* [Paragraph Section](paragraph-section.md#paragraph-section)
+* [Immersive Section](immersive-section.md#immersive-section)
+* [GeoCarousel Section](geocarousel-section.md#geocarousel-section)
+* [Media Section](media-section.md#media-section)
+* [Web Page Section](web-section.md#web-page-section)
 
 ## View Mode
 
@@ -48,7 +48,7 @@ The elements available in the top bar can be the following:
 * The **Logo** of the story chosen by the story editor in the story settings 
 
 !!! Warning
-    In order to set up this information the story editor neededs to go back in Edit Mode and open the **Setting** button <img src="../img/button/setting-button.jpg" class="ms-docbutton"/> as explained in [Story Setting](story-setting.md).
+    In order to set up this information the story editor neededs to go back in Edit Mode and open the **Setting** button <img src="../img/button/setting-button.jpg" class="ms-docbutton"/> as explained in [Story Setting](story-setting.md#story-settings).
 
 The Story layout allows to navigate contents by scrolling up and down the Story page by using the mouse or the **Navigation bar**.
 

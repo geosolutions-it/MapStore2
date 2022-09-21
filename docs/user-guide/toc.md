@@ -1,4 +1,4 @@
-# Table of Contents (TOC)
+# Table of Contents
 **************************
 
 The Table of Contents, briefly TOC from now on, is a space where all the layers and the layers groups are listed. Through this panel it is also possible to carry out the following operations:
@@ -19,7 +19,7 @@ The user can access the TOC with the **Layers** button <img src="../img/button/s
 
 <img src="../img/toc/toc.jpg" class="ms-docimage"  style="max-width:300px;" />
 
-The **Add Layer** button <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> opens the [Catalog](catalog.md), a panel  where it is possible to choose the desired layer and add it to the map with the **Add to Map** button <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/>:
+The **Add Layer** button <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> opens the [Catalog](catalog.md#catalog-services), a panel  where it is possible to choose the desired layer and add it to the map with the **Add to Map** button <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/>:
 
 <img src="../img/toc/catalog.jpg" class="ms-docimage"  style="max-width:500px;" />
 
@@ -114,7 +114,7 @@ Through this toolbar it is possible to:
 
 * **Zoom to selected layers extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to all layers belonging to the group
 
-* Open the **Selected group settings** <img src="../img/button/properties.jpg" class="ms-docbutton"/> where it is possible to change the group's title, the title translations and see the group name (its ID). It is also possible to add/customize the description of the group and configure the tooltips placement in the UI (more information can be found in [Layer Settings](layer-settings.md) section)
+* Open the **Selected group settings** <img src="../img/button/properties.jpg" class="ms-docbutton"/> where it is possible to change the group's title, the title translations and see the group name (its ID). It is also possible to add/customize the description of the group and configure the tooltips placement in the UI (more information can be found in [Layer Settings](layer-settings.md#layer-settings) section)
 
 <img src="../img/toc/group-settings.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -134,17 +134,17 @@ In this case the user is allowed to:
 
 * **Zoom to selected layer extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
 
-* Access the selected [Layer Settings](layer-settings.md) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
+* Access the selected [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
 
-* [Set a Filter](filtering-layers.md) for that layer <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/>
+* [Set a Filter](filtering-layers.md#filtering-layers) for that layer <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/>
 
-* Access the [Attribute Table](attributes-table.md) <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/>
+* Access the [Attribute Table](attributes-table.md#attribute-table) <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/>
 
 * **Remove** the selected layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
 
-* [Create Widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
+* [Create Widgets](widgets.md#widgets) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
 
-* [Export](export-data.md) the data of the selected layer <img src="../img/button/export_data.jpg" class="ms-docbutton"/>
+* [Export](export-data.md#export-layer-data) the data of the selected layer <img src="../img/button/export_data.jpg" class="ms-docbutton"/>
 
 * Open the **Layer Metadata** <img src="../img/button/info_button.jpg" class="ms-docbutton"/> (if configured), to retrieve layer metadata from the remote catalog source.
 

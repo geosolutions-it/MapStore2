@@ -1,3 +1,11 @@
+/**
+ * Copyright 2022, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import url from "url";
 import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, toNumber} from "lodash";
 
@@ -12,14 +20,6 @@ import {mapSelector} from "../selectors/map";
 import {featureInfoClick} from "../actions/mapInfo";
 import {warning} from "../actions/notifications";
 import {addMarker, SEARCH_LAYER_WITH_FILTER} from "../actions/search";
-
-/**
- * Copyright 2022, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
 
 /**
  * Retrieves parameters from hash "query string" of react router
@@ -58,24 +58,26 @@ export const getRequestLoadValue = (name, state) => {
  * }
  * </pre>
  * @param {string} name - name of the parameter to get
+ * @param queryParamsID - unique identifier of the request
  * @param {Storage} storage - sessionStorage or localStorage
  */
-export const postRequestLoadValue = (name, storage = sessionStorage) => {
-    const queryParams = storage.getItem('queryParams') ?? null;
+export const postRequestLoadValue = (name, queryParamsID, storage = sessionStorage) => {
+    const itemName = queryParamsID ? `queryParams-${queryParamsID}` : 'queryParams';
+    const queryParams = storage.getItem(itemName) ?? null;
     if (queryParams) {
         try {
             const params = JSON.parse(queryParams);
             const { [name]: item, ...rest } = params;
             if (item && typeof params === 'object') {
                 const { length } = Object.keys(params);
-                length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
-                length === 1 && storage.removeItem('queryParams');
+                length > 1 && storage.setItem(itemName, JSON.stringify(rest));
+                length === 1 && storage.removeItem(itemName);
             }
             return item;
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error(`Unable to parse query parameters from sessionStorage`);
-            storage.removeItem('queryParams');
+            storage.removeItem(itemName);
             return null;
         }
     }
@@ -93,7 +95,8 @@ export const postRequestLoadValue = (name, storage = sessionStorage) => {
  * @param {Storage} storage - sessionStorage or localStorage
  */
 export const getRequestParameterValue = (name, state, storage = sessionStorage) => {
-    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, storage);
+    // Check if `queryParamsID` passed in query parameters. If so, use it as a key to retrieve data for POST method
+    return getRequestLoadValue(name, state) ?? postRequestLoadValue(name, getRequestLoadValue('queryParamsID', state), storage);
 };
 
 

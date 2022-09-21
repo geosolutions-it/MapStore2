@@ -531,13 +531,31 @@ describe('Create and update flow using persistence api', () => {
             }
         }, {});
     });
-
-    it('test reloadMaps', function(done) {
-        const callback = actions => {
-            expect(actions.length).toEqual(1);
-            expect(actions[0].type).toEqual(MAPS_LOAD_MAP);
-            done();
-        };
-        testEpic(reloadMapsEpic, 1, mapDeleted(9, 'success'), callback);
+    describe("test reloadMaps", () => {
+        it('on delete', function(done) {
+            const callback = actions => {
+                expect(actions.length).toEqual(1);
+                expect(actions[0].type).toEqual(MAPS_LOAD_MAP);
+                done();
+            };
+            testEpic(reloadMapsEpic, 1, mapDeleted(9, 'success'), callback);
+        });
+        it('on login', function(done) {
+            const callback = actions => {
+                expect(actions.length).toEqual(1);
+                expect(actions[0].type).toEqual(MAPS_LOAD_MAP);
+                done();
+            };
+            testEpic(reloadMapsEpic, 1, loginSuccess(), callback);
+        });
+        it('on logout', function(done) {
+            const callback = actions => {
+                expect(actions.length).toEqual(1);
+                expect(actions[0].type).toEqual(MAPS_LOAD_MAP);
+                done();
+            };
+            testEpic(reloadMapsEpic, 1, logout(), callback);
+        });
     });
+
 });

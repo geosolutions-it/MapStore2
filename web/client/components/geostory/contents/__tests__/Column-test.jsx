@@ -9,6 +9,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { waitFor } from '@testing-library/react';
 
 import expect from 'expect';
 import Column from '../Column';
@@ -30,11 +31,11 @@ describe('Column component', () => {
         const el = container.querySelector('.ms-column-contents');
         expect(el).toExist();
     });
-    it('Column rendering contents', () => {
+    it('Column rendering contents', (done) => {
         ReactDOM.render(<Column contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('#TEST_HTML');
-        expect(el).toExist();
+        waitFor(() => expect(container.querySelector('#TEST_HTML')).toBeTruthy())
+            .then(() => done());
     });
     it('Column edit mode has add button', () => {
         ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]} />, document.getElementById("container"));

@@ -10,9 +10,7 @@ import React from 'react';
 import {compose, withState, lifecycle, getContext} from 'recompose';
 import {get} from 'lodash';
 import {Glyphicon, Tooltip, OverlayTrigger, Alert} from 'react-bootstrap';
-import {Controlled as Codemirror} from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/javascript/javascript';
+import CodeMirror from '../../libs/codemirror/react-codemirror-suspense';
 
 import Button from '../misc/Button';
 import Transfer from '../misc/transfer/Transfer';
@@ -124,7 +122,7 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                 onShowDialog, changePluginsKey) : getAvailableTools(plugin, onShowDialog)) : [],
             component: (enableTools && plugin.enabled) && plugin.name === editedPlugin ?
                 <div className="plugin-configuration-editor">
-                    <Codemirror
+                    <CodeMirror
                         value={editedCfg}
                         editorDidMount={editor => setEditor(editor)}
                         onBeforeChange={(editor, data, cfg) => onUpdateCfg(cfg)}
