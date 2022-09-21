@@ -1,21 +1,23 @@
-# Annotations 
-********************
+# Annotations
 
 [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
 Those features make up the so called **Annotations** layers.
 
-Starting from a new map or an already existing one, the editor can access the **Annotations** <img src="../img/button/annotations2.jpg" class="ms-docbutton" style="max-height:30px;"/> button from the [TOC](toc.md) <img src="../img/button/show-layers.jpg" class="ms-docbutton" style="max-height:30px;"/> panel on the top-left corner of the map viewer. The annotation panel will open:
+Starting from a new map or an already existing one, the editor can access the **Annotations** <img src="../img/button/annotations2.jpg" class="ms-docbutton" style="max-height:30px;"/> button from the [TOC](toc.md) <img src="../img/button/show-layers.jpg" class="ms-docbutton" style="max-height:30px;"/> panel on the top-left corner of the map viewer.
+
+<img src="../img/annotations/annotations_on_toc.jpg" class="ms-docimage" style="max-width:500px;" />
+
+ The annotation panel will open:
 
 <img src="../img/annotations/annotation_tool.jpg" class="ms-docimage" style="max-width:500px;" />
 
-Add new Annotation
--------------------------
+## Add new Annotation
 
 To begin, from the annotation panel, the editor can open the new annotation panel by selecting the <img src="../img/button/+++.jpg" class="ms-docbutton" /> button.
 
 <img src="../img/annotations/annotation_form_filled.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-From here the user can insert a **Title** (required), a **Description** (optional) and choose between five different types of **Geometries**:
+From here the editor can insert a **Title** (required), a **Description** (optional) and choose between five different types of **Geometries**:
 
 * **Marker** <img src="../img/button/marker2.jpg" class="ms-docbutton" />
 * **Line** <img src="../img/button/line2.jpg" class="ms-docbutton" />
@@ -51,18 +53,15 @@ Once the geometry has been saved through the **Save** <img src="../img/button/sa
 
 * **Delete** the geometry annotation through the <img src="../img/button/delete_white_button.jpg" class="ms-docbutton" /> button
 
-Once all the *Geometries* have been created, the user can save the annotation through the **Save** <img src="../img/button/save_button.jpg" class="ms-docbutton" /> button and it will be visible:
-
-* in the annotation list
+Once all the *Geometries* have been created, the editor can save the annotation through the **Save** <img src="../img/button/save_button.jpg" class="ms-docbutton" /> button that will be visible in the annotation list:
 
 <img src="../img/annotations/annotation1.jpg" class="ms-docimage" />
 
-* once the annotations panel is closed, trought the <img src="../img/button/x2.jpg" class="ms-docbutton" /> button, in the [TOC](toc.md) as annotations layer
+Then, if not present, a new **Annotations**  layer will be created and added to the [TOC](toc.md)
 
 <img src="../img/annotations/annotation2.jpg" class="ms-docimage" />
 
-Styling Annotations
--------------------
+## Styling Annotations
 
 Based on which type of annotation was chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
 
@@ -116,10 +115,9 @@ See the example below.
 
 Click on <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> to apply the style.
 
-Managing Annotations
---------------------
+## Managing Annotations
 
-Once annotations are added to the [TOC](toc.md), the user can **Manage** it by clicking to <img src="../img/button/edit_button.jpg" class="ms-docbutton" /> button from the TOC toolbar and the *Main Annotations panel* will be open.
+Once annotations are added to the [TOC](toc.md), the editor can **Manage** them by clicking to <img src="../img/button/edit_button.jpg" class="ms-docbutton" /> button from the TOC toolbar and the *Main Annotations panel* will be open.
 
 <img src="../img/annotations/annotations_main_panel.jpg" class="ms-docimage" style="max-width:500px;" />
 
@@ -133,7 +131,7 @@ From it, the editor is allowed to:
 
 * **Show/Hide** an annotation on the map by clicking on <img src="../img/button/eyeon.jpg" class="ms-docbutton" /> button
 
-From the *Main Annotations Panel*, by selecting an annotation from the list, the user is returned to the *Annotation Viewer* where the annotation can be edited.
+From the *Main Annotations Panel*, by selecting an annotation from the list, the editor is returned to the *Annotation Viewer* where the annotation can be edited.
 
 <img src="../img/annotations/annotation_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
