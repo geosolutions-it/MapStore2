@@ -29,21 +29,25 @@ Through the *Topbar* it is possible to:
 
 ### Options Menu
 
-From the *Topbar* the **Options** <img src="../img/button/burger.jpg" class="ms-docbutton"/> drop-down menu opens allowing the editor to:
+In the **Options** <img src="../img/button/burger.jpg" class="ms-docbutton"/> drop-down menu you can:
 
 <img src="../img/exploring-dashboards/options-menu.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
 * **Export** dashboard in `json` format
 
-* **Import** dashboard in `json` format
-
-* See the information about the deployed **Version** of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
-
-<img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
+* **Import** dashboard in `json` format (it will replace without asking the current dashboard)
 
 * [Save/Save as](resources-properties.md) the dashboard
 
+* **Delete** the dashboard
+
+* Open the [Share](share.md#link) panel 
+
 * Start the **Tutorial**
+
+* See the information about the deployed **Version** of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) in the **About** panel.
+
+<img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
 
 ## Sidebar
 
