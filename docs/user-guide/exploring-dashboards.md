@@ -1,5 +1,4 @@
 # Exploring Dashboards
-**********************
 
 In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md#widgets), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
 
@@ -27,7 +26,6 @@ Through the *Topbar* it is possible to:
 
 * Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
 
-
 ### Options Menu
 
 In the **Options** <img src="../img/button/burger.jpg" class="ms-docbutton"/> drop-down menu you can:
@@ -42,14 +40,13 @@ In the **Options** <img src="../img/button/burger.jpg" class="ms-docbutton"/> dr
 
 * **Delete** the dashboard
 
-* Open the [Share](share.md#link) panel 
+* Open the [Share](share.md#link) panel
 
 * Start the **Tutorial**
 
 * See the information about the deployed **Version** of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) in the **About** panel.
 
 <img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
-
 
 ## Sidebar
 
