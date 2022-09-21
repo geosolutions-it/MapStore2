@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import { compose, branch, withPropsOnChange } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 
@@ -66,6 +65,8 @@ import { createWidget } from '../actions/widgets';
 import { getMetadataRecordById } from '../actions/catalog';
 import { isActiveSelector } from '../selectors/catalog';
 import { isCesium } from '../selectors/maptype';
+import { createShallowSelectorCreator } from '../utils/ReselectUtils';
+import isEqual from 'lodash/isEqual';
 
 const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
@@ -91,28 +92,27 @@ const filterLayersByTitle = (layer, filterText, currentLocale) => {
     return title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
 };
 
-const tocSelector = createSelector(
-    [
-        (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
-        groupsSelector,
-        layerSettingSelector,
-        layerSwipeSettingsSelector,
-        layerMetadataSelector,
-        wfsDownloadSelector,
-        mapSelector,
-        currentLocaleSelector,
-        currentLocaleLanguageSelector,
-        selectedNodesSelector,
-        layerFilterSelector,
-        layersSelector,
-        mapNameSelector,
-        isActiveSelector,
-        widgetBuilderAvailable,
-        generalInfoFormatSelector,
-        isCesium,
-        userSelector,
-        isLocalizedLayerStylesEnabledSelector
-    ], (enabled, groups, settings, swipeSettings, layerMetadata, layerdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
+const tocSelector = createShallowSelectorCreator(isEqual)(
+    (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
+    groupsSelector,
+    layerSettingSelector,
+    layerSwipeSettingsSelector,
+    layerMetadataSelector,
+    wfsDownloadSelector,
+    mapSelector,
+    currentLocaleSelector,
+    currentLocaleLanguageSelector,
+    selectedNodesSelector,
+    layerFilterSelector,
+    layersSelector,
+    mapNameSelector,
+    isActiveSelector,
+    widgetBuilderAvailable,
+    generalInfoFormatSelector,
+    isCesium,
+    userSelector,
+    isLocalizedLayerStylesEnabledSelector,
+    (enabled, groups, settings, swipeSettings, layerMetadata, layerdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
         enabled,
         groups,
         settings,
