@@ -1,3 +1,11 @@
+import React, { Suspense } from 'react';
+import { every, includes, isNumber, isString, union, orderBy, groupBy, find, flatten } from 'lodash';
+
+import LoadingView from '../misc/LoadingView';
+
+import { sameToneRangeColors } from '../../utils/ColorUtils';
+import { parseExpression } from '../../utils/ExpressionUtils';
+
 /*
  * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
@@ -6,11 +14,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Suspense } from 'react';
-import { sameToneRangeColors } from '../../utils/ColorUtils';
-import { parseExpression } from '../../utils/ExpressionUtils';
-import LoadingView from '../misc/LoadingView';
-import { every, includes, isNumber, isString, union, orderBy, groupBy, find, flatten } from 'lodash';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 export const COLOR_DEFAULTS = {
@@ -227,6 +230,8 @@ function getData({
     let classificationColors = [];
     let colorCategories = [];
     let data = dataUnsorted;
+    const { defaultClassLabel = ''} = autoColorOptions;
+
     if (classificationAttr && classificationType === "value")  {
         // #8591 changing order of data for matching colorCategories order
         classifications = dataUnsorted.map(d => d[classificationAttr]);
@@ -237,11 +242,19 @@ function getData({
         dataSplit = Object.keys(dataSplit).map(k => {
             return dataSplit[k];
         });
+        if (dataSplit.every(item => item.length === 1)) {
+            dataSplit = [data];
+        }
         const newData = dataSplit.map(dataAggregated => {
+            const colorCatValues = colorCategories.map((c) => c.value);
             const dataSorted = colorCategories.map(colorCat => {
                 return find(dataAggregated, (d) => d[classificationAttr] === colorCat.value);
             }).filter(v => v);
-            return dataSorted;
+            const defaultClassLabelAggregated = dataAggregated.filter(d => !includes(colorCatValues, d[classificationAttr]));
+            return [
+                ...dataSorted,
+                ...defaultClassLabelAggregated
+            ];
         });
         data = flatten(newData);
     }
@@ -251,8 +264,6 @@ function getData({
 
     classificationColors = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).classificationColors;
     colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
-
-    const { defaultClassLabel = ''} = autoColorOptions;
 
     switch (type) {
 

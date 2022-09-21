@@ -13,9 +13,7 @@ export const DATASET_1 = {
 export const DATASET_2 = {
     data: [
         { name: 'Page A', value: 0, classValue: 'class1'},
-        { name: 'Page B', value: 1, classValue: 'class2'},
-        { name: 'Page C', value: 2, classValue: 'class2'},
-        { name: 'Page D', value: 3, classValue: 'class1'}
+        { name: 'Page B', value: 1, classValue: 'class2'}
     ],
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "value" }]
@@ -57,7 +55,6 @@ export const SPLIT_DATASET_3 = {
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "value" }]
 };
-
 
 export const DATASET_4 = {
     data: [
@@ -147,7 +144,6 @@ export const UNLABELLED_CLASSIFICATION_5_ORDERED = [
         unique: '3'
     }
 ];
-
 
 export const CLASSIFICATIONS = {
     dataKey: 'classValue'

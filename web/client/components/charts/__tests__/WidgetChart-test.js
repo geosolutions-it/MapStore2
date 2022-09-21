@@ -1,9 +1,7 @@
-
 import React from 'react';
-import ReactDOM from 'react-dom';
-import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
-
 import expect from 'expect';
+import ReactDOM from 'react-dom';
+
 import {
     CLASSIFICATIONS,
     RANGE_CLASSIFICATIONS,
@@ -29,6 +27,7 @@ import {
     DATASET_WITH_DATES,
     SPLIT_DATASET_4
 } from './sample_data';
+import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
 
 describe('WidgetChart', () => {
     beforeEach((done) => {
@@ -95,7 +94,6 @@ describe('WidgetChart', () => {
         ReactDOM.render(<WidgetChart onInitialized={check} {...DATASET_1} type="bar" />, document.getElementById("container"));
     });
 });
-
 
 const TYPES = ['pie', 'line', 'bar'];
 
@@ -257,7 +255,9 @@ describe('Widget Chart: data conversions ', () => {
                 defaultCustomColor: "#00ff00",
                 defaultClassLabel: "",
                 classification: UNLABELLED_CLASSIFICATION,
-                name: 'global.colors.custom' };
+                name: 'global.colors.custom'
+            };
+
             const { data, layout } = toPlotly({
                 type: 'pie',
                 autoColorOptions,
