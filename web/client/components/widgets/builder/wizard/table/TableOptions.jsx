@@ -18,6 +18,12 @@ import noAttributes from '../common/noAttributesEmptyView';
 import Button from '../../../../misc/Button';
 
 const AttributeSelector = compose(
+    withProps(({options = {}})=>({
+        options: {
+            // Parse to allow compatibility for existing table
+            propertyName: (options?.propertyName || [])?.map(p => typeof p === "string" ? ({name: p}) : p)
+        }
+    })),
     withProps(
         ({ attributes = [], options = {}} = {}) => ({ // TODO manage hide condition
             attributes: attributes
