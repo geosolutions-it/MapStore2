@@ -20,6 +20,9 @@ import withSuspense from '../../misc/withSuspense';
 
 const FeatureGridComp = withSuspense()(lazy(() => import('../../data/featuregrid/FeatureGrid')));
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
+const DEFAULT_GRID_HEIGHT = 28;
+const defaultGridOpts = ['rowHeight', 'headerRowHeight', 'headerFiltersHeight']
+    .reduce((acc, prop) => ({...acc, [prop]: DEFAULT_GRID_HEIGHT}), '');
 
 export default getWidgetFilterRenderers(({
     id,
@@ -45,7 +48,9 @@ export default getWidgetFilterRenderers(({
     error,
     pagination = {},
     dataGrid = {},
-    virtualScroll = true
+    virtualScroll = true,
+    gridOpts = defaultGridOpts,
+    options = {}
 }) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
@@ -85,7 +90,9 @@ export default getWidgetFilterRenderers(({
                 size={size}
                 rowKey="id"
                 describeFeatureType={describeFeatureType}
-                pagination={pagination} />
+                pagination={pagination}
+                gridOpts={gridOpts}
+                options={options}/>
         </BorderLayout>
     </WidgetContainer>
 
