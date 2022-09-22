@@ -35,13 +35,13 @@ const columns = [{
     key: 'title',
     editor: getEditor("^[-@.\\/\#&+\\w\\s*]{0,100}$"),
     width: 150,
-    editable: true
+    editable: (rowData) => !rowData?.hide
 }, {
     name: 'Description',
     key: 'description',
     editor: getEditor("^[-@.,\\/\#&+\\w\\s*]{0,200}$"),
     width: 200,
-    editable: true
+    editable: (rowData) => !rowData?.hide
 }];
 
 export default ({
