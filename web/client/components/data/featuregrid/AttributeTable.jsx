@@ -29,18 +29,19 @@ const getEditor = (formatRegex) => <FormatEditor dataType="string" formatRegex={
 // Columns for configuring table options
 const columns = [{
     name: 'Name',
-    key: 'attribute'
+    key: 'attribute',
+    width: 120
 }, {
     name: 'Title',
     key: 'title',
     editor: getEditor("^[-@.\\/\#&+\\w\\s*]{0,100}$"),
-    width: 150,
+    width: 120,
     editable: (rowData) => !rowData?.hide
 }, {
     name: 'Description',
     key: 'description',
     editor: getEditor("^[-@.,\\/\#&+\\w\\s*]{0,200}$"),
-    width: 200,
+    width: 150,
     editable: (rowData) => !rowData?.hide
 }];
 
