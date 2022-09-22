@@ -16,6 +16,7 @@ import { getWidgetsGroups, getWidgetDependency } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
+import { getAttributesNames } from "../utils/FeatureGridUtils";
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -50,7 +51,7 @@ export const getWidgetAttributeFilter = (id, attributeName) => createSelector(
     getVisibleFloatingWidgets,
     (widgets) => {
         const widget = find(widgets, {id});
-        return widget && widget.quickFilters && widget.options && find(widget.options.propertyName, f => f === attributeName) && widget.quickFilters[attributeName] || {};
+        return widget && widget.quickFilters && widget.options && find(getAttributesNames(widget.options?.propertyName), f => f === attributeName) && widget.quickFilters[attributeName] || {};
     });
 
 export const getCollapsedIds = createSelector(

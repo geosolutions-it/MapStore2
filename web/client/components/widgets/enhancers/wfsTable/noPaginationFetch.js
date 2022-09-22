@@ -13,6 +13,7 @@
 import Rx from 'rxjs';
 
 import { getLayerJSONFeature } from '../../../../observables/wfs';
+import { getAttributesNames } from "../../../../utils/FeatureGridUtils";
 
 export default props$ => props$.switchMap(
     ({
@@ -24,7 +25,7 @@ export default props$ => props$.switchMap(
     }) =>
         getLayerJSONFeature(layer, filter, {
             timeout: 15000,
-            params: { propertyName: options.propertyName, viewParams: options.viewParams }
+            params: { propertyName: getAttributesNames(options.propertyName), viewParams: options.viewParams }
             // TODO totalFeatures
             // TODO sortOptions - default
         })
