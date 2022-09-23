@@ -9,7 +9,6 @@
 import React, { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { getDockSize } from '../../../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import Loader from '../../misc/Loader';
 
@@ -25,7 +24,7 @@ const FeatureEditorFallback = ({ size, dockStyle }) => {
 };
 
 export default connect(createSelector(
-    getDockSize,
+    state => state?.featuregrid?.dockSize,
     state => mapLayoutValuesSelector(state, { transform: true }),
     (size, dockStyle) => ({
         size,
