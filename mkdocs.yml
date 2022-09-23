@@ -77,7 +77,7 @@ nav:
       - Importing and Exporting Files: 'user-guide/import.md'
       - Catalog Services: 'user-guide/catalog.md'
       - Performing Measurments: 'user-guide/measure.md'
-      - Adding Annotations: 'user-guide/annotations.md'
+      - Annotations: 'user-guide/annotations.md'
       - Street View: 'user-guide/street-view.md'
       - Side Bar: 'user-guide/side-bar.md'
       - Background Selector: 'user-guide/background.md'
