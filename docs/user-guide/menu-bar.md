@@ -7,7 +7,7 @@ The *Menu Bar* consist of four different parts:
 
 * The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
-* The **Login** button (for more information see the [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
+* The **Login** button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
 
 * The **Burger Menu** button <img src="../img/button/burger.jpg" class="ms-docbutton"/>
 
@@ -150,31 +150,46 @@ The *Burger Menu* is an important tools container that allows the user to perfor
 
 In particular, with these options it is possible to:
 
-* [Print](print.md#printing-a-map) the map
+* [Print](print.md) the map
 
 * **Export map** in `json` format
 
-* [Import](import.md#import-files) files from your machine
+* [Import](import.md) files from your machine
 
-* Open the [Catalog](catalog.md#catalog-services) in order to connect to a remote service and add layers to the map
+* Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map
 
-* Perform a [Measure](measure.md#performing-measurements) on the map
+* Perform a [Measure](measure.md) on the map
 
-* **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md#resource-properties) window opens, already filled with the current map properties
+* **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
 
-* **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md#resource-properties) window opens.
+* **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
 
 * **Delete Map** in order to delete the current map. 
 
-* Create [Annotations](annotations.md#adding-annotations) and add them to the map
+* Create [Annotations](annotations.md) and add them to the map
 
 * Access the map **Settings** where the user can change the current *Language*, select the *Identify response format* (*Text*, *html* or *Properties*) and see the application *Version* (more information about the *Identify response format* can be found in the [Identify tool](side-bar.md#identify-tool) section)
 
 <img src="../img/menu-bar/settings.jpg" class="ms-docimage" style="max-width:400px;"/>
 
+!!!Note
+    When the [3D navigation](side-bar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*. 
+    <img src="../img/menu-bar/cesium-settings.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+    In particular, from the *Map Settings* it is possible to:
+
+    * Enable the **Show sky atmosphere** to see the atmosphere around the globe
+
+    * Enable the **Show ground atmosphere** to view the ground atmosphere on the globe when viewed from a distance
+
+    * Enable the **Show fog** to allow additional performance by rendering less geometry and dispatching less terrain requests
+
+    * Enable the **Depth test against terrain** if polylines, labels, etc. should be depth-tested against the terrain surface
+
+
 * See the **About this map** panel, when [Details](resources-properties.md#details) are present
 
-* [Share](share.md#sharing-resources) the map
+* [Share](share.md) the map
 
 * Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/)
 
