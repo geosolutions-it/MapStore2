@@ -26,10 +26,13 @@ import DownloadWPSOptions from './DownloadWPSOptions';
  */
 class DownloadOptions extends React.Component {
     static propTypes = {
+        wpsAvailable: PropTypes.bool,
+        service: PropTypes.string,
         downloadOptions: PropTypes.object,
         formatOptionsFetch: PropTypes.func,
         formats: PropTypes.array,
         srsList: PropTypes.array,
+        setService: PropTypes.func,
         onChange: PropTypes.func,
         defaultSrs: PropTypes.string,
         wpsOptionsVisible: PropTypes.bool,
@@ -41,6 +44,8 @@ class DownloadOptions extends React.Component {
     };
 
     static defaultProps = {
+        wpsAvailable: false,
+        service: 'wps',
         downloadOptions: {},
         formatsLoading: false,
         formats: [],
@@ -51,6 +56,15 @@ class DownloadOptions extends React.Component {
         virtualScroll: true
     };
 
+    constructor(props) {
+        super(props);
+
+        this.services = [
+            { value: "wps", label: "WPS" },
+            { value: "wfs", label: "WFS" }
+        ];
+    }
+
     getSelectedFormat = () => {
         return get(this.props, "downloadOptions.selectedFormat");
     };
@@ -60,6 +74,12 @@ class DownloadOptions extends React.Component {
 
     render() {
         return (<form>
+            <label><Message msgId="layerdownload.service" /></label>
+            <Select
+                value={this.props.service}
+                disabled={!this.props.wpsAvailable}
+                onChange={(sel) => this.props.setService(sel.value)}
+                options={this.services} />
             <label><Message msgId="layerdownload.format" /></label>
             <Select
                 clearable={false}

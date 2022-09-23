@@ -37,7 +37,8 @@ import {
     serializeCookie,
     addExportDataResult,
     updateExportDataResult,
-    showInfoBubbleMessage
+    showInfoBubbleMessage,
+    setWPSAvailability
 } from '../actions/layerdownload';
 import { TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { DOWNLOAD } from '../actions/layers';
@@ -207,12 +208,14 @@ export const checkWPSAvailabilityEpic = (action$) => action$
                     xmlObj?.ProcessDescriptions?.ProcessDescription?.[0]?.Identifier?.[0],
                     xmlObj?.ProcessDescriptions?.ProcessDescription?.[1]?.Identifier?.[0]
                 ];
+                const service = findIndex(ids, x => x === 'gs:DownloadEstimator') > -1 && findIndex(ids, x => x === 'gs:Download') > -1 ? 'wps' : 'wfs';
                 return Rx.Observable.of(
-                    setService(findIndex(ids, x => x === 'gs:DownloadEstimator') > -1 && findIndex(ids, x => x === 'gs:Download') > -1 ? 'wps' : 'wfs'),
+                    setService(service),
+                    setWPSAvailability(service === 'wps'),
                     checkingWPSAvailability(false)
                 );
             })
-            .catch(() => Rx.Observable.of(setService('wfs'), checkingWPSAvailability(false)))
+            .catch(() => Rx.Observable.of(setService('wfs'), setWPSAvailability(false), checkingWPSAvailability(false)))
             .startWith(checkingWPSAvailability(true));
     });
 export const openDownloadTool = (action$) =>

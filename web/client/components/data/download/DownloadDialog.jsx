@@ -27,6 +27,7 @@ class DownloadDialog extends React.Component {
         filterObj: PropTypes.object,
         closeGlyph: PropTypes.string,
         url: PropTypes.string,
+        wpsAvailable: PropTypes.bool,
         service: PropTypes.string,
         enabled: PropTypes.bool,
         loading: PropTypes.bool,
@@ -34,6 +35,7 @@ class DownloadDialog extends React.Component {
         onClose: PropTypes.func,
         onExport: PropTypes.func,
         onCheckWPSAvailability: PropTypes.func,
+        setService: PropTypes.func,
         onDownloadOptionChange: PropTypes.func,
         onClearDownloadOptions: PropTypes.func,
         onFormatOptionsFetch: PropTypes.func,
@@ -53,12 +55,14 @@ class DownloadDialog extends React.Component {
         onExport: () => {},
         onClose: () => {},
         onCheckWPSAvailability: () => {},
+        setService: () => {},
         onDownloadOptionChange: () => {},
         onClearDownloadOptions: () => {},
         onFormatOptionsFetch: () => {},
         checkingWPSAvailability: false,
         layer: {},
         closeGlyph: "1-close",
+        wpsAvailable: false,
         service: 'wfs',
         wfsFormats: [],
         formats: [
@@ -119,7 +123,10 @@ class DownloadDialog extends React.Component {
                     this.props.service === 'wfs' && !this.props.layer.search?.url ?
                         <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/> :
                         <DownloadOptions
+                            wpsAvailable={this.props.wpsAvailable}
+                            service={this.props.service}
                             downloadOptions={this.props.downloadOptions}
+                            setService={this.props.setService}
                             onChange={this.props.onDownloadOptionChange}
                             formatOptionsFetch={this.props.service === 'wfs' ? this.props.onFormatOptionsFetch : () => {}}
                             formatsLoading={this.props.formatsLoading}

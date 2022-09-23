@@ -12,6 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import {
     downloadFeatures,
     checkWPSAvailability,
+    setService,
     onDownloadOptionChange,
     onFormatOptionsFetch,
     clearDownloadOptions,
@@ -26,6 +27,7 @@ import {
     loadingSelector,
     wfsFormatsSelector,
     formatsLoadingSelector,
+    wpsAvailableSelector,
     serviceSelector,
     checkingWPSAvailabilitySelector,
     wfsFilterSelector,
@@ -109,6 +111,7 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         wfsFormats: wfsFormatsSelector,
         formatsLoading: formatsLoadingSelector,
         layer: getSelectedLayer,
+        wpsAvailable: wpsAvailableSelector,
         service: serviceSelector,
         checkingWPSAvailability: checkingWPSAvailabilitySelector,
         virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll,
@@ -116,6 +119,7 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         attributes: attributesSelector
     }), {
         onExport: downloadFeatures,
+        setService,
         onDownloadOptionChange,
         onClearDownloadOptions: clearDownloadOptions,
         onFormatOptionsFetch,
