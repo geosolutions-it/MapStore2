@@ -40,7 +40,8 @@ import {
     searchItemSelected,
     searchOnStartEpic,
     textSearchShowGFIEpic,
-    zoomAndAddPointEpic
+    zoomAndAddPointEpic,
+    delayedSearchEpic
 } from '../epics/search';
 import mapInfoReducers from '../reducers/mapInfo';
 import searchReducers from '../reducers/search';
@@ -417,7 +418,7 @@ export default {
                 priority: 1
             }
         }),
-    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic, delayedSearchEpic},
     reducers: {
         search: searchReducers,
         mapInfo: mapInfoReducers
