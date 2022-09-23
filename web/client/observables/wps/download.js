@@ -197,11 +197,10 @@ export const downloadWithAttributesFilter = (url, downloadOptions, executeOption
         const resultOutput = downloadOptions.resultOutput || downloadOptions.outputFormat || 'application/zip';
 
         const executeProcess$ = executeProcess(url, downloadXML({
-            ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess', 'attribute', 'asynchronous', 'outputFormat'),
+            ...omit(downloadOptions, 'notifyDownloadEstimatorSuccess', 'attribute', 'asynchronous'),
             asynchronous: true,
             outputAsReference: true,
-            resultOutput: 'application/wfs-collection-1.0',
-            outputFormat: 'application/wfs-collection-1.0'
+            resultOutput: 'application/wfs-collection-1.0'
         }), executeOptions, {headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/wfs-collection-1.0`}});
 
         return downloadEstimator$
