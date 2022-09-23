@@ -84,5 +84,34 @@ describe('wfsTable enhancer', () => {
             }
         }} />, document.getElementById("container"));
     });
-
+    it('test columnsettings with options propertyName', (done) => {
+        let triggered = false;
+        const Sink = wfsTable(createSink(props => {
+            expect(props).toExist();
+            if (props.features.length > 0 && props?.pages?.[0] === 0 && !triggered) {
+                expect(props.pages[1]).toBe(20);
+                triggered = true;
+                props.pageEvents.moreFeatures({ startPage: 2, endPage: 3 });
+            } else if (props.features.length > 0 && props?.pages?.[0] === 40) {
+                expect(props.pages[1]).toBe(60);
+                done();
+            }
+            if (props.columnSettings) {
+                expect(Object.keys(props.columnSettings).includes('NAME')).toBeFalsy();
+            }
+        }));
+        ReactDOM.render(<Sink virtualScroll
+            describeFeatureType = {{
+                featureTypes: [{properties: []}]
+            }}
+            options={{propertyName: [{name: "NAME"}]}}
+            layer={{
+                name: "pois",
+                describeFeatureTypeURL: "DESCRIBE",
+                search: {
+                    type: "wfs",
+                    url: "WFS"
+                }
+            }} />, document.getElementById("container"));
+    });
 });

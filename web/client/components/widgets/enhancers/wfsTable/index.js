@@ -14,6 +14,7 @@ import describeFetch from './describeFetch';
 import noPaginationFetch from './noPaginationFetch';
 import triggerFetch from './triggerFetch';
 import virtualScrollFetch from './virtualScrollFetch';
+import { getAttributesNames } from "../../../../utils/FeatureGridUtils";
 
 const fetchDataStream = (props$, pages$, virtualScroll = true) =>
     triggerFetch(props$)
@@ -97,7 +98,7 @@ export default compose(
         columnSettings: merge(
             dft ?
                 getFeatureTypeProperties(dft)
-                    .filter(p => !includes(options.propertyName || [], p.name))
+                    .filter(p => !includes(getAttributesNames(options.propertyName) || [], p.name))
                     .reduce((acc, p) => ({
                         ...acc,
                         [p.name]: {

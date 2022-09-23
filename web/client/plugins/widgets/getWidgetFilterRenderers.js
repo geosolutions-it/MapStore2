@@ -10,7 +10,7 @@ import { find } from 'lodash';
 import { compose, mapPropsStream, withProps, withPropsOnChange } from 'recompose';
 
 import { getFilterRenderer } from '../../components/data/featuregrid/filterRenderers';
-import { getAttributeFields } from '../../utils/FeatureGridUtils';
+import { getAttributeFields, getAttributesNames } from '../../utils/FeatureGridUtils';
 
 /**
  * Uses the quickFilterStream$ to generate the value prop.
@@ -22,7 +22,9 @@ const mergeQuickFiltersStream = compose(
             // extract the quickFilterStream$ from props
             props$.pluck('quickFilterStream$').distinctUntilChanged().switchMap(quickFilterStream$ => quickFilterStream$).startWith(undefined),
             (props, quickFilters) => {
-                const attributeQuickFilter = quickFilters && props.options && find(props.options.propertyName, f => f === props.attributeName) && quickFilters[props.attributeName] || {};
+                const attributeQuickFilter = quickFilters && props.options
+                    && find(getAttributesNames(props.options?.propertyName), f => f === props.attributeName)
+                    && quickFilters[props.attributeName] || {};
                 const value = attributeQuickFilter && (attributeQuickFilter.rawValue || attributeQuickFilter.value);
                 return {
                     ...props,
