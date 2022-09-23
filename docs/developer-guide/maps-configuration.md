@@ -258,10 +258,10 @@ Some other feature will break, for example the layer properties will stop workin
 },
 ```
 
-##### special case - The Elevation layer (deprecated)
+##### special case - The Elevation layer
 
 !!! note
-    See the `terrain` layer section for a more versatile way of handling elevation.
+    This type of layer configuration is still needed to show the elevation data inside the MousePosition plugin. The `terrain` layer section shows a more versatile way of handling elevation but it will work only as visualization in the 3D map viewer.
 
 WMS layers can be configured to be used as a source for elevation related functions.
 
@@ -278,8 +278,9 @@ in `localConfig.json`
     "name": "Map",
     "cfg": {
         "additionalLayers": [{
-            "url": "http..."
+            "url": "http...",
             "format": "application/bil16",
+            "type": "wms",
             ...
             "name": "elevation",
             "littleendian": false,
@@ -1190,7 +1191,7 @@ In order to create a `wms` based mesh there are some requirements that need to b
     }
     ```
 !!! note
-With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
+    With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
 
 Generic layer configuration of type `terrain` and provide `wms` is as follows. 
 The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider:
