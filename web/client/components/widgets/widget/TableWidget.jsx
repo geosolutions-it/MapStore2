@@ -20,9 +20,12 @@ import withSuspense from '../../misc/withSuspense';
 
 const FeatureGridComp = withSuspense()(lazy(() => import('../../data/featuregrid/FeatureGrid')));
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
+<<<<<<< HEAD
 const DEFAULT_GRID_HEIGHT = 28;
 const defaultGridOpts = ['rowHeight', 'headerRowHeight', 'headerFiltersHeight']
     .reduce((acc, prop) => ({...acc, [prop]: DEFAULT_GRID_HEIGHT}), '');
+=======
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
 
 export default getWidgetFilterRenderers(({
     id,

@@ -69,6 +69,7 @@ describe('TableWidget component', () => {
         const container = document.getElementById('container');
         waitFor(() =>expect( container.querySelector('.react-grid-Empty')).toBeTruthy())
             .then(() => done());
+<<<<<<< HEAD
     });
     it('TableWidget with default gridOpts', () => {
         ReactDOM.render(<TableWidget
@@ -90,6 +91,8 @@ describe('TableWidget component', () => {
         expect(Number(headerRowHeight)).toBe(35);
         const headerFiltersHeight = gridHeaderRows[1]?.getAttribute('height');
         expect(Number(headerFiltersHeight)).toBe(35);
+=======
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
     });
     it('TableWidget onAddFilter', (done) => {
         const _d = {...describePois, featureTypes: [{...describePois.featureTypes[0], properties: [...describePois.featureTypes[0].properties, {

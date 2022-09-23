@@ -21,8 +21,11 @@ import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
 import Print from "../plugins/Print";
 import UserSession from "../plugins/UserSession";
+<<<<<<< HEAD
 import Login from '../plugins/Login';
 
+=======
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
 
 /**
   * Please, keep them sorted alphabetically
@@ -42,7 +45,10 @@ export const plugins = {
     RulesEditorPlugin: RulesEditor,
     RulesManagerFooter: RulesManagerFooter,
     UserSessionPlugin: UserSession,
+<<<<<<< HEAD
     LoginPlugin: Login,
+=======
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -53,9 +59,15 @@ export const plugins = {
     HeaderPlugin: toModulePlugin('Header', () => import(/* webpackChunkName: 'plugins/header' */ './plugins/Header')),
     HomeDescriptionPlugin: toModulePlugin('HomeDescription', () => import(/* webpackChunkName: 'plugins/HomeDescription' */ './plugins/HomeDescription')),
     MadeWithLovePlugin: toModulePlugin('MadeWithLove', () => import(/* webpackChunkName: 'plugins/madeWithLove' */ './plugins/MadeWithLove')),
+<<<<<<< HEAD
     // framework plugins
     MapTypePlugin: toModulePlugin('MapType', () => import(/* webpackChunkName: 'plugins/mapType' */ './plugins/MapType')),
     NavMenuPlugin: toModulePlugin('NavMenu', () => import(/* webpackChunkName: 'plugins/navMenu' */ './plugins/NavMenu')),
+=======
+    MapTypePlugin: toModulePlugin('MapType', () => import(/* webpackChunkName: 'plugins/mapType' */ './plugins/MapType')),
+    NavMenuPlugin: toModulePlugin('NavMenu', () => import(/* webpackChunkName: 'plugins/navMenu' */ './plugins/NavMenu')),
+    // framework plugins
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
     AddGroupPlugin: toModulePlugin('AddGroup', () => import(/* webpackChunkName: 'plugins/about' */'../plugins/AddGroup')),
     AnnotationsPlugin: toModulePlugin('Annotations', () => import(/* webpackChunkName: 'plugins/annotations' */ '../plugins/Annotations')),
     AutoMapUpdatePlugin: toModulePlugin('AutoMapUpdate', () => import(/* webpackChunkName: 'plugins/autoMapUpdate' */ '../plugins/AutoMapUpdate')),
@@ -101,6 +113,10 @@ export const plugins = {
     LayerDownload: toModulePlugin('LayerDownload', () => import(/* webpackChunkName: 'plugins/layerDownload' */ '../plugins/LayerDownload')),
     LayerInfoPlugin: toModulePlugin('LayerInfo', () => import(/* webpackChunkName: 'plugins/layerInfo' */ '../plugins/LayerInfo')),
     LocatePlugin: toModulePlugin('Locate', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Locate')),
+<<<<<<< HEAD
+=======
+    LoginPlugin: toModulePlugin('Login', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Login')),
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
     ManagerMenuPlugin: toModulePlugin('ManagerMenu', () => import(/* webpackChunkName: 'plugins/managerMenu' */ '../plugins/manager/ManagerMenu')),
     ManagerPlugin: toModulePlugin('Manager', () => import(/* webpackChunkName: 'plugins/manager' */ '../plugins/manager/Manager')),
     MapEditorPlugin: toModulePlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),
