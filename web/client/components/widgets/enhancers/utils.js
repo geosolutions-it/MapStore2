@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { find, get, isEmpty, reduce } from 'lodash';
+import {find, get, isEmpty, reduce} from 'lodash';
 
-import { gridUpdateToQueryUpdate } from '../../../utils/FeatureGridUtils';
+import { gridUpdateToQueryUpdate, getAttributesNames } from '../../../utils/FeatureGridUtils';
 import { composeAttributeFilters } from '../../../utils/FilterUtils';
 
 /**
@@ -27,7 +27,7 @@ export const getDependencyLayerParams = (layer, dependencies) =>
 export const composeFilterObject =  (filterObj, quickFilters, options) => {
     const quickFiltersForVisibleProperties = quickFilters && options &&
         Object.keys(quickFilters)
-            .filter(qf => find(options.propertyName, f => f === qf))
+            .filter(qf => find(getAttributesNames(options.propertyName), f => f === qf))
             .reduce((p, c) => {
                 return {...p, [c]: quickFilters[c]};
             }, {});

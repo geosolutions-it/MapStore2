@@ -189,4 +189,17 @@ describe('Test for FeatureGrid component', () => {
         const rowHeight = gridRow[0]?.offsetHeight;
         expect(rowHeight).toBe(28);
     });
+    it('Test grid with default header title', () => {
+        ReactDOM.render(<FeatureGrid virtualScroll={false}
+            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderCell = document.getElementsByClassName('react-grid-HeaderCell');
+        expect(gridHeaderCell[0].innerText).toBe('NAME');
+    });
+    it('Test grid with custom header title', () => {
+        ReactDOM.render(<FeatureGrid virtualScroll={false}
+            options={{propertyName: [{name: "NAME", title: "Some Name", description: "Some description"}]}}
+            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderCell = document.getElementsByClassName('react-grid-HeaderCell');
+        expect(gridHeaderCell[0].innerText).toBe('Some Name');
+    });
 });
