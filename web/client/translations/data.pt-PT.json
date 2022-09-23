@@ -1361,6 +1361,7 @@
         },
         "layerdownload": {
             "title": "Export Data",
+            "service": "Service",
             "format": "File Format",
             "srs":  "Spatial Reference System",
             "export": "Export",
