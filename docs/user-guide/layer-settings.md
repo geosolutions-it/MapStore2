@@ -1,4 +1,5 @@
 # Layer Settings
+
 ****************
 
 In this section, you will learn how to manage the layer settings in terms of general information, display mode, style and feature Info. <br>
@@ -55,11 +56,11 @@ Through the second section of the layer settings panel it is possible to change 
 
 In particular, the user is allowed to:
 
-* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` and `gif` 
+* Set the image format: choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` and `gif`
 
 !!! note
     The list of available format is the same of the related [catalog source](catalog.md#catalog-types). Therefore, for WMS services, the updated list of formats supported by the WMS server is used.
-    
+
 * Set the size of layer tiles: choosing between `256` or `512`
 
 * Set the opacity value of the layer (in %)
@@ -74,14 +75,14 @@ In particular, the user is allowed to:
 
 * Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wms/wmtscatalog)
 
-* Enable/disable the _Force proxy_ layer option. If enabled, forces the application to check the source and applies proxy if needed. 
+* Enable/disable the *Force proxy* layer option. If enabled, forces the application to check the source and applies proxy if needed.
 
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.
 
 !!!Warning
-    The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources. 
+    The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
 
 ## Style
 
@@ -104,7 +105,7 @@ In this case the user is allowed to:
 
     Take a look at the [User Integration with GeoServer](../developer-guide/integrations/users/geoserver.md) section of [Developer Guide](../developer-guide/index.md) in order to understand how to configure the way MapStore and GeoServer share users, groups and roles. If the users integration between GeoServer and MapStore is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
 
-### Create a new style 
+### Create a new style
 
 It is possible to create a new style with a click on the <img src="../img/button/style_editor_new_style_button.jpg" class="ms-docbutton"/> button. At this stage the user can choose between different types of template from which the customization will start:
 
@@ -164,7 +165,7 @@ Once a symbolizer has been added and customized, you can:
 
 #### Mark
 
-The mark type allows you to add a mark to the layer: clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button a mark panel appears: 
+The mark type allows you to add a mark to the layer: clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button a mark panel appears:
 
 <img src="../img/layer-settings/mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -172,7 +173,7 @@ The mark can have different `Shape`, `Color`, `Stroke` with different `Color` an
 
 <img src="../img/layer-settings/mark_style_ex.jpg" class="ms-docimage">
 
-#### Icon 
+#### Icon
 
 With the icon panel, which opens by clicking on <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, the style editor is allowed to add an image as an icon (by specifying its *URL*) and customize the icon `Opacity`, `Size` and `Rotation` angle:
 
@@ -180,7 +181,7 @@ With the icon panel, which opens by clicking on <img src="../img/button/add_icon
 
 #### Line
 
-The line rule is used to style linear features of the layer: clicking on the <img src="../img/button/add_line_button.jpg" class="ms-docbutton"/>  button a panel allows the user to edit the corresponding properties. 
+The line rule is used to style linear features of the layer: clicking on the <img src="../img/button/add_line_button.jpg" class="ms-docbutton"/>  button a panel allows the user to edit the corresponding properties.
 
 <img src="../img/layer-settings/line_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -196,7 +197,7 @@ The Fill rule is used to style polygon features. Clicking on <img src="../img/bu
 
 #### Text
 
-The Text rule is used to style features as text labels. Text labels are positioned either at points or along linear paths derived from the geometry being labelled. Clicking on the <img src="../img/button/add_text_button.jpg" class="ms-docbutton"/> button a specific panel opens: 
+The Text rule is used to style features as text labels. Text labels are positioned either at points or along linear paths derived from the geometry being labelled. Clicking on the <img src="../img/button/add_text_button.jpg" class="ms-docbutton"/> button a specific panel opens:
 
 <img src="../img/layer-settings/text_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -204,7 +205,7 @@ The editor is allowed to type the name of the layer attribute to use for the `La
 
 <img src="../img/layer-settings/ex_text_style.gif" class="ms-docimage">
 
-### Style Methods 
+### Style Methods
 
 Different styles methods can be used for each style rule. Clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel of each symbolizer, the editor can choose one of the following depending on the rule type:
 
@@ -218,11 +219,11 @@ Different styles methods can be used for each style rule. Clicking on the <img s
 
 #### Simple style
 
-The Simple style is the default style described above for each symbolizer. 
+The Simple style is the default style described above for each symbolizer.
 
 #### Classification style
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to classify the style based on the attributes of the layer. The *Classification style* is available for *Marker*, *Line*, *Fill* and *Text* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Classification style** options from the dropdown menu. 
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to classify the style based on the attributes of the layer. The *Classification style* is available for *Marker*, *Line*, *Fill* and *Text* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Classification style** options from the dropdown menu.
 
 <img src="../img/layer-settings/classification_styl_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -232,7 +233,7 @@ It this case the editor is allowed to choose a `Color ramp` and the order (with 
 
 #### Pattern mark style
 
-With the *Pattern mark style* it is possible to represent *Line* or *Fill*  style rules with a mark by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern mark style** options from the dropdown menu. 
+With the *Pattern mark style* it is possible to represent *Line* or *Fill*  style rules with a mark by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern mark style** options from the dropdown menu.
 
 <img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -242,7 +243,7 @@ The style editor can configure a *Mark* as explained [here](layer-settings.md#ma
 
 #### Patter icon style
 
-With the *Pattern icon style*  it is possible to represent *Line* or *Fill* style rules with an icon by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern icon style** options from the dropdown menu. 
+With the *Pattern icon style*  it is possible to represent *Line* or *Fill* style rules with an icon by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern icon style** options from the dropdown menu.
 
 <img src="../img/layer-settings/classify_icon_style_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
@@ -262,11 +263,11 @@ For the 3D Tiles styling, while with the **Code Text Editor** it is possible to 
 
 The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Style Editor** supports for now only a limited set of capabilities:
 
-* Customization of the **Fill color** 
+* Customization of the **Fill color**
 
 <img src="../img/layer-settings/ex_3dtiles_style.gif" class="ms-docimage">
 
-* Style Rule filtering based on the available [properties dictionary ](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification#properties) defined in the tileset.json
+* Style Rule filtering based on the available [properties dictionary](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification#properties) defined in the tileset.json
 
 <img src="../img/layer-settings/filter_3dtiles_style.jpg" class="ms-docimage">
 
@@ -295,7 +296,7 @@ In particular, the user can choose between:
 * **Template**
 
 !!!note
-    Without selecting any format here, the [Identify Tool](side-bar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Options Bar](menu-bar.md#options-bar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
+    Without selecting any format here, the [Identify Tool](side-bar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Side Toolbar](mapstore-toolbars.md#side-toolbar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
 
 ### Text
 

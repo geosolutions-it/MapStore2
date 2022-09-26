@@ -1,4 +1,5 @@
 # Resource Properties
+
 *********************
 
 In order to customize the properties of a resource, the Admin or a normal user with permission can access the *Edit properties* window from the **Edit properties** button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) or from the **Save** and the **Save as** buttons inside the resource viewer.
@@ -48,7 +49,7 @@ Only for resources of type map, it is possible to add details to the map. This i
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-With a click on the **Add new details** button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> it opens a panel where the user can write the details of the map. 
+With a click on the **Add new details** button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> it opens a panel where the user can write the details of the map.
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
@@ -58,11 +59,11 @@ The text can be edited and some links and images can be added through the [Text 
 
 Here, the user is allowed to:
 
-* Show the details **preview** <img src="../img/button/details_preview_button.jpg" class="ms-docbutton"/> 
+* Show the details **preview** <img src="../img/button/details_preview_button.jpg" class="ms-docbutton"/>
 
 * **Edit** the details <img src="../img/button/edit-details-button.jpg" class="ms-docbutton"/>
 
-* Enable the **Show as modal** <img src="../img/button/show-as-modal-button.jpg" class="ms-docbutton"/> button, to show the details on a modal when the user clicks on <img src="../img/button/about_this_map.jpg" class="ms-docbutton"/> button, which is listed in the [Burger Menu](menu-bar.md#burger-menu) options
+* Enable the **Show as modal** <img src="../img/button/show-as-modal-button.jpg" class="ms-docbutton"/> button, to show the details on a modal when the user clicks on <img src="../img/button/about_this_map.jpg" class="ms-docbutton"/> button, which is listed in the [Side Toolbar](mapstore-toolbars.md#side-toolbar) options
 
 <img src="../img/resource-properties/show-as-modal.jpg" class="ms-docimage"/>
 
@@ -70,7 +71,7 @@ Here, the user is allowed to:
     If the **Show as modal** button is not activated once the user opens the *About this map* button, the details are displayed on a panel. <img src="../img/resource-properties/show-as-panel.jpg" class="ms-docimage"/>
 
 !!! warning
-    The *About this map* button is visible in the [Burger Menu](menu-bar.md#burger-menu) only when the details are present on the map.
+    The *About this map* button is visible in the [Side Toolbar](mapstore-toolbars.md#side-toolbar) only when the details are present on the map.
 
 * Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button. If active, as soon as the user opens the map, the details panel is visualized.
 
@@ -81,5 +82,5 @@ Once the details are saved, the **Show details** button <img src="../img/button/
 <img src="../img/resource-properties/card-map-details-button.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 Through this, it is possible to open the details panel also from the home page.
-    
+
 <img src="../img/resource-properties/details-sheet.jpg" class="ms-docimage"/>
