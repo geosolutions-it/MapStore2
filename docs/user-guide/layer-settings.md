@@ -1,5 +1,7 @@
 # Layer Settings
 
+****************
+
 In this section, you will learn how to manage the layer settings in terms of general information, display mode, style and feature Info. <br>
 Since a layer is added to the [TOC](toc.md) it is possible to access its settings with the dedicated button <img src="../img/button/properties.jpg" class="ms-docbutton"/> that appears selecting a layer:
 
@@ -323,7 +325,7 @@ In particular, the user can choose between:
 * **Template**
 
 !!!note
-    Without selecting any format here, the [Identify Tool](side-bar.md#identify-tool) will return the layers information with the format chosen in Map Settings (a [Burger Menu](menu-bar.md#burger-menu) option). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
+    Without selecting any format here, the [Identify Tool](side-bar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Side Toolbar](mapstore-toolbars.md#side-toolbar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
 
 ### Text
 
