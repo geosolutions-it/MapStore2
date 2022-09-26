@@ -1,15 +1,10 @@
-# Menu Bar
-**********
+# MapStore Toolbars
 
-The *Menu Bar* consist of four different parts:
+The main toolbar of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), used by the user to interact on the map viewer, are:
 
 * The **Search bar**
 
-* The **Homepage** button <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/>, that redirect the user to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
-
-* The **Login** button (for more information see the [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
-
-* The **Burger Menu** button <img src="../img/button/burger.jpg" class="ms-docbutton"/>
+* The **Side toolbar**
 
 <img src="../img/menu-bar/menu-bar.jpg" class="ms-docimage"/>
 
@@ -79,7 +74,7 @@ In this case, the user can define the following settings:
 
 * The **Description** to report in the results just below the title
 
-* The **Priority**, a parameter which determines the position of the records in the results list. Lower values imply a higher positions in the results list and vice versa. By default the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, therefore in order to see the custom results in a higher position a lower priority value is needed 
+* The **Priority**, a parameter which determines the position of the records in the results list. Lower values imply a higher positions in the results list and vice versa. By default the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, therefore in order to see the custom results in a higher position a lower priority value is needed
 
 * The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](side-bar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up once a record from the search results is selected. Selecting *All Layers* or *Single Layer* the Identify tool is triggered, and the related panel opens displaying the information of all/single layer(s) visible in the map. With *Single Layer* instead, the Identify tool is triggered only for the layer (if it is present and visible in the map) related to the selected record in the search result list.
 
@@ -130,10 +125,10 @@ In particular, the information to be entered are:
 
 * **Bounding Box** property the user wish to zoom to
 
-    * **West**, **South**, **East** and **North**
-    
+  * **West**, **South**, **East** and **North**
+
 * **Toggle layer visibility reload**, <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> to enable/disable the layer visibility reload when searched by bookmark
-    
+
 Note: The user can define bounding box value either manually or by selecting **Use current view as bounding box** <img src="../img/button/get_bbox.jpg" class="ms-docbutton"/> to fetch the current bounding box values from the map view to populate the fields
 
 When all the properties have been set, selecting the <img src="../img/button/save-update-button.jpg" class="ms-docbutton"/> it is possible to see the newly added bookmark in the **View bookmarks** list:
@@ -142,38 +137,44 @@ When all the properties have been set, selecting the <img src="../img/button/sav
 
 Once a bookmark has been created, it is always possible to *Edit* it <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> or *Remove* it <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> from the list.
 
-## Burger Menu
+## Side toolbar
 
-The *Burger Menu* is an important tools container that allows the user to perform different operations and take a look at several information:
+The *Side Toolbar* is an important component, positioned on the right side of the map viewer, that provides to the user the access to different tools of MapStore. The following tools are the ones available by default:
 
-<img src="../img/menu-bar/burger-menu.jpg" class="ms-docimage" style="max-width:300px;"/>
+<img src="../img/menu-bar/options-menu.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 In particular, with these options it is possible to:
 
-* [Print](print.md#printing-a-map) the map
+* Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/homepage.jpg" class="ms-docbutton"/> button
 
-* **Export map** in `json` format
+* **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
 
-* [Import](import.md#import-files) files from your machine
+>>>>>>> 3eb1bd6727d848df670659d62e91022abe9f3718:docs/user-guide/mapstore-toolbars.md
 
-* Open the [Catalog](catalog.md#catalog-services) in order to connect to a remote service and add layers to the map
+* [Print](print.md) the map by clicking the <img src="../img/button/print2.jpg" class="ms-docbutton"/> button
 
-* Perform a [Measure](measure.md#performing-measurements) on the map
+* **Export map** in `json` format by clicking the <img src="../img/button/export2.jpg" class="ms-docbutton"/> button
 
-* **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md#resource-properties) window opens, already filled with the current map properties
+* [Import](import.md) files from your computer by clicking the <img src="../img/button/import2.jpg" class="ms-docbutton"/> button
 
-* **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md#resource-properties) window opens.
+* Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map by clicking the <img src="../img/button/catalog2.jpg" class="ms-docbutton"/> button
 
-* **Delete Map** in order to delete the current map. 
+* Perform a [Measure](measure.md) on the map by clicking the <img src="../img/button/measurament.jpg" class="ms-docbutton"/> button
 
-* Create [Annotations](annotations.md#adding-annotations) and add them to the map
+* **Save** the map by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button, in order to apply the changes made in an existing map. Selecting this option, the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
 
-* Access the map **Settings** where the user can change the current *Language*, select the *Identify response format* (*Text*, *html* or *Properties*) and see the application *Version* (more information about the *Identify response format* can be found in the [Identify tool](side-bar.md#identify-tool) section)
+>>>>>>> 3eb1bd6727d848df670659d62e91022abe9f3718:docs/user-guide/mapstore-toolbars.md
 
-<img src="../img/menu-bar/settings.jpg" class="ms-docimage" style="max-width:400px;"/>
+* **Save as** when the user needs to save a copy of a map or save one for the first time by clicking the <img src="../img/button/saveas2.jpg" class="ms-docbutton"/> button. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
+
+* **Delete Map** in order to delete the current map by clicking the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button
+
+* Access the map **Settings** by clicking the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, where the user can change the current **Language** and select the [Identify](side-bar.md#identify-tool) options
+
+<img src="../img/menu-bar/settings-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 !!!Note
-    When the [3D navigation](side-bar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*. 
+    When the [3D navigation](side-bar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*.
     <img src="../img/menu-bar/cesium-settings.jpg" class="ms-docimage" style="max-width:500px;"/>
 
     In particular, from the *Map Settings* it is possible to:
@@ -186,18 +187,20 @@ In particular, with these options it is possible to:
 
     * Enable the **Depth test against terrain** if polylines, labels, etc. should be depth-tested against the terrain surface
 
+* See the **About this map** panel by clicking the <img src="../img/button/details2.jpg" class="ms-docbutton"/> button, when [Details](resources-properties.md#details) are present
 
-* See the **About this map** panel, when [Details](resources-properties.md#details) are present
+* [Share](share.md) the map by clicking the <img src="../img/button/share2.jpg" class="ms-docbutton"/> button
 
-* [Share](share.md#sharing-resources) the map
+>>>>>>> 3eb1bd6727d848df670659d62e91022abe9f3718:docs/user-guide/mapstore-toolbars.md
 
-* Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/)
+* Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/) by clicking the <img src="../img/button/doc2.jpg" class="ms-docbutton"/> button
 
-* Start the **Tutorial** 
+* Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
 
-* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** of *MapStore* by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
 
-<img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>
+<img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 !!!warning
-    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Burger Menu* only when the map has already been saved once.
+
+    The **Save**, the **Delete Map** and the **Share** buttons are present in the *Options Menu* only when the map has already been saved once.
