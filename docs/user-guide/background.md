@@ -1,4 +1,5 @@
 # Background Selector
+
 *********************
 
 The background selector, located in the bottom left corner of the *Viewer*, allows the user to add, manage and remove map backgrounds.
@@ -22,7 +23,7 @@ A new background can be added through the <img src="../img/button/+++.jpg" class
 <img src="../img/background/bck-catalog.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! warning
-    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md#catalog-services) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md#catalog-services) from [Buger Menu](menu-bar.md#burger-menu) or from [TOC](toc.md#table-of-contents). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md#map-configuration) section).
+    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md) from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) or from [TOC](toc.md). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md) section).
 
 From the [Catalog](catalog.md#catalog-services) the user can choose the layers to add to the list of backgrounds:
 
@@ -51,7 +52,7 @@ Once the options are chosen, with the <img src="../img/button/add_group_confirm_
 
 ### Add WMTS background
 
-In case of a WMTS layer added as a background layer, the **Add New Background window** is a bit different: 
+In case of a WMTS layer added as a background layer, the **Add New Background window** is a bit different:
 
 <img src="../img/background/add_wmts_background.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -64,7 +65,6 @@ The user can perform the following operations:
 * Set the **Attribution** visible at the bottom left of the footer in the map viewer.
 
 <img src="../img/background/wmts-attribution.gif" class="ms-docimage" />
-
 
 ## Edit background
 

@@ -1,4 +1,5 @@
 # Filtering Layers
+
 ******************
 
 When using vector layers it might be useful to work with a subset of features. About that, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) let the user set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
@@ -29,7 +30,7 @@ This filter is applicable from the **Filter layer** button <img src="../img/butt
 
 <img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage"/>
 
-* Opening the map next time (you need to Save the map from [Burger Menu](menu-bar.md#burger-menu) after applying a filter)
+* Opening the map next time (you need to Save the map from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) after applying a filter)
 
 Once a *Layer filter* is set, it is possible to enable/disable it simply by clicking on the button that will appear near the layer name in [TOC](toc.md#table-of-contents):
 
@@ -103,7 +104,7 @@ It is possible to filter records in the [Attribute Table](attributes-table.md#at
 
 * Click on the map over the features he wants to select
 
-* Add multiple features to the selection by pressing Ctrl and clicking again over other features in map 
+* Add multiple features to the selection by pressing Ctrl and clicking again over other features in map
 
 <img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
 
@@ -193,4 +194,3 @@ In order to better understand this type of filter, let's make an example. We sup
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
 <img src="../img/filtering-layers/layer_filter.gif" class="ms-docimage"/>
-
