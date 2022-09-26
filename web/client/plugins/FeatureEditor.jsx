@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 import * as epics from '../epics/featuregrid';
 import featuregrid from '../reducers/featuregrid';
+import FeatureEditorFallback from '../components/data/featuregrid/FeatureEditorFallback';
 import withSuspense from '../components/misc/withSuspense';
 
 /**
@@ -134,7 +135,10 @@ import withSuspense from '../components/misc/withSuspense';
 */
 const EditorPlugin = connect(
     createSelector([state => state?.featuregrid?.open], (open) => ({ open }))
-)(withSuspense(props => !!props.open)(lazy(() => import('./featuregrid/FeatureEditor'))));
+)(withSuspense(
+    props => !!props.open,
+    { fallback: <FeatureEditorFallback /> }
+)(lazy(() => import('./featuregrid/FeatureEditor'))));
 
 export default createPlugin('FeatureEditor', {
     component: EditorPlugin,
