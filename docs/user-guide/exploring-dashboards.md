@@ -1,7 +1,6 @@
 # Exploring Dashboards
-**********************
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md#widgets), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
 
 1. Provide an overview to better visualize a specific data context
 
@@ -25,17 +24,41 @@ Through the *Topbar* it is possible to:
 
 * Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) with the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
 
-* Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing Users and Groups](managing-users-and-groups.md) section)
+* Take a look at the account info, change password and logout, with the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (more info about these options are available in [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
 
-* Open the *Options* <img src="../img/button/burger.jpg" class="ms-docbutton"/> panel which allows you to start the *Tutorial* and [Save/Save as](resources-properties.md) the dashboard
+<<<<<<< HEAD
+### Options Menu
+
+In the **Options** <img src="../img/button/burger.jpg" class="ms-docbutton"/> drop-down menu you can:
+
+<img src="../img/exploring-dashboards/options-menu.jpg" class="ms-docimage"  style="max-width:150px;"/>
+
+* **Export** dashboard in `json` format
+
+* **Import** dashboard in `json` format (it will replace without asking the current dashboard)
+
+* [Save/Save as](resources-properties.md) the dashboard
+
+* **Delete** the dashboard
+
+* Open the [Share](share.md#link) panel
+
+* Start the **Tutorial**
+
+* See the information about the deployed **Version** of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) in the **About** panel.
+
+<img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
+=======
+* Open the *Options* <img src="../img/button/burger.jpg" class="ms-docbutton"/> panel which allows you to start the *Tutorial* and [Save/Save as](resources-properties.md#resource-properties) the dashboard
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
 
 ## Sidebar
 
 The *Sidebar* allows the user to:
 
-* [Add new widgets](adding-widgets.md) with the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+* [Add new widgets](adding-widgets.md#adding-widgets) with the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* See the connections between widgets with the <img src="../img/button/show-connections.jpg" class="ms-docbutton"/> button, available when connections are present (more information about this option are available in [Connecting Widgets](connecting-widgets.md) section)
+* See the connections between widgets with the <img src="../img/button/show-connections.jpg" class="ms-docbutton"/> button, available when connections are present (more information about this option are available in [Connecting Widgets](connecting-widgets.md#connecting-widgets) section)
 
 ## Viewer
 
@@ -47,4 +70,4 @@ Once the widgets are added in the viewer it is possible to:
 
 * Access widgets menu <img src="../img/button/menu.jpg" class="ms-docbutton"/> from which the user can choose between several options (more information about this menu's options can be found in Map's [Access Widget Menu](widgets.md#access-widgets-menu) section)
 
-* Take a look at the widget *Description* (more information about widget *Description* can be found in Map's [Access Widgets Info](widgets.md#access-widgets-info) section)
+* Take a look at the widget *Description* (more information about widget *Description* can be found in Map's [Access Widgets Info](widgets.md#manage-existing-widgets) section)

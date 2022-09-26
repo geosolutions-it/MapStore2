@@ -153,6 +153,7 @@ export default class ContextCreator extends React.Component {
         backToPageDestRoute: PropTypes.string,
         backToPageConfirmationMessage: PropTypes.string,
         tutorials: PropTypes.object,
+        tutorialsList: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
         themes: PropTypes.array,
         setSelectedTheme: PropTypes.func,
         selectedTheme: PropTypes.string,
@@ -251,13 +252,22 @@ export default class ContextCreator extends React.Component {
         showBackToPageConfirmation: false,
         backToPageDestRoute: '/context-manager',
         backToPageConfirmationMessage: 'contextCreator.undo',
-        tutorials: CONTEXT_TUTORIALS
+        tutorials: CONTEXT_TUTORIALS,
+        tutorialsList: false
     };
 
     componentDidMount() {
         this.props.onInit({
             tutorials: this.props.tutorials
         });
+    }
+
+    componentDidUpdate() {
+        if (!this.props.tutorialsList) {
+            this.props.onInit({
+                tutorials: this.props.tutorials
+            });
+        }
     }
 
     render() {

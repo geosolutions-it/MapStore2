@@ -35,12 +35,12 @@
             "message": "Il livello non è stato ricaricato con un nome modificato"
         },
         "version": {
-            "label": "Versione",
-            "message": "Testo",
-            "commit": "Commit",
-            "date": "Data",
-            "author": "Autore",
-            "githuburl": "Apri Github in una nuova scheda"
+          "title": "Versione di Mapstore",
+          "label": "Versione",
+          "message": "Testo",
+          "commit": "Commit",
+          "date": "Data",
+          "githubUrl": "Apri Github in una nuova scheda"
         },
         "errorPage": {
             "title":"Ops, qualcosa è andato storto...",
@@ -741,7 +741,25 @@
             "exportToGeoJSON": "Esporta in GeoJSON",
             "saveMeasure": "Salva le misure nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
-            "addAsLayer": "Aggiungi come livello"
+            "addAsLayer": "Aggiungi come livello",
+            "polylineDistance3DMeasure": "Misurare la distanza nello spazio 3D",
+            "area3DMeasure": "Misurare l'area nello spazio 3D",
+            "pointCoordinatesMeasure": "Misurare le coordinate di un punto",
+            "heightFromTerrainMeasure": "Misurare altezza dal terreno",
+            "angle3DMeasure": "Misurare l'angolo nello spazio 3D",
+            "slopeMeasure": "Misurare la pendenza",
+            "tooltipPolylineDistance3DStart": "Click singolo per avviare la misurazione",
+            "tooltipPolylineDistance3DEnd": "Click singolo per aggiungere un segmento\no doppio click per terminare",
+            "tooltipArea3DStart": "Click singolo per avviare la misurazione",
+            "tooltipArea3DMissingVertex": "L'area necessita di almeno 3 vertici, \nclick singolo per aggiungere un vertice",
+            "tooltipArea3DEnd": "Click singolo per aggiungere un segmento\no doppio click per terminare",
+            "tooltipPointCoordinatesStart": "Click singolo per aggiungere una misurazione del punto di altitudine",
+            "tooltipHeightFromTerrainStart": "Click per aggiungere il valore della distanza dalla superficie del terreno",
+            "tooltipAngle3DStart": "Click singolo per disegnare 3 punti che rappresentano i vertici dell'angolo",
+            "tooltipSlopeStart": "Click singolo per disegnare 3 punti che rappresentano una superficie triangolare.\nIl valore della pendenza viene calcolato in base alla superficie triangolare disegnata",
+            "altitude": "Altitudine",
+            "latitude": "Latitudine",
+            "longitude": "Longitudine"
         },
         "search": {
             "layerMustBeVisible": "Il livello di destinazione è inattivo",

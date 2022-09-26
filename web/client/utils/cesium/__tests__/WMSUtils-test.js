@@ -13,7 +13,6 @@ const testLayerConfig = {
     "provider": "wms",
     "url": "http://sample.com/geoserver/wms",
     "name": "workspace:layername",
-    "format": "image/bil",
     "littleendian": false,
     "visibility": true,
     "version": "1.3.0",
@@ -29,7 +28,6 @@ describe('Test the WMSUtil for Cesium', () => {
         expect(config.url).toBe(testLayerConfig.url);
         expect(config.proxy.getURL("test")).toBe("/mapstore/proxy/?url=test");
         expect(config.layerName).toBe(testLayerConfig.name);
-        expect(config.format).toBe(testLayerConfig.format);
         expect(config.littleEndian).toBe(testLayerConfig.littleendian);
         expect(config.version).toBe(testLayerConfig.version);
         expect(config.crs).toBe(testLayerConfig.crs);

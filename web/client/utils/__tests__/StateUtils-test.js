@@ -8,15 +8,15 @@
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import {
-    PERSISTED_STORE_NAME,
     setStore,
     getStore,
     createStore,
     updateStore,
-    augmentStore
+    createStoreManager
 } from '../StateUtils';
+import {createEpicMiddleware} from "redux-observable";
 import Rx from 'rxjs';
-import { setConfigProp } from '../ConfigUtils';
+import {REDUCERS_LOADED, reducersLoaded} from "../../actions/storemanager";
 
 describe('StateUtils', () => {
     beforeEach((done) => {
@@ -157,73 +157,123 @@ describe('StateUtils', () => {
         expect(spy2.calls.length > 0).toBe(true);
         expect(spy1.calls.length).toBe(beforeUpdateCalls);
     });
-    it('augmentStore should add all reducers if called many times', () => {
-        const rootReducer = () => ({});
-        let currentReducer = rootReducer;
-        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', rootReducer);
-        const store = {
-            replaceReducer: (reducer) => {
-                currentReducer = reducer;
-            }
-        };
-        augmentStore({ reducers: {
-            map: () => {
-                return {};
-            }
-        }}, store);
-        augmentStore({ reducers: {
-            controls: () => {
-                return {};
-            }
-        } }, store);
-        const newState = currentReducer({}, {});
-        expect(Object.keys(newState)).toEqual([ 'map', 'controls' ]);
-        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', undefined);
-    });
-    it('should use the new added reducers (augmentStore)', () => {
-        const rootReducer = () => ({});
-        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', rootReducer);
-        const store = {
-            replaceReducer: (reducer) => {
-                reducer();
-            }
-        };
-        let reducersKeys = [];
-        augmentStore({ reducers: {
-            map: () => {
-                reducersKeys.push('map');
-                return {};
-            },
-            controls: () => {
-                reducersKeys.push('controls');
-                return {};
-            }
-        } }, store);
-        expect(reducersKeys).toEqual([ 'map', 'controls' ]);
-        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', undefined);
-    });
-    it('should not use the new added reducers if they are available in the root reducer (augmentStore)', () => {
-        const rootReducer = () => ({
-            map: () => ({})
+
+    describe('storeManager', () => {
+        let storeManager;
+        let epicMiddleware;
+        beforeEach(() => {
+            storeManager = createStoreManager({}, {});
+            epicMiddleware = createEpicMiddleware(storeManager.rootEpic);
+            createStore({
+                rootReducer: (action, state) => state,
+                state: {},
+                middlewares: [epicMiddleware]
+            });
+            storeManager.addEpics('test', {
+                epic1: (action$) =>
+                    action$.ofType('TEST')
+                        .switchMap(() => {
+                            return Rx.Observable.empty();
+                        }),
+                epic2: (action$) =>
+                    action$.ofType('TEST')
+                        .switchMap(() => {
+                            return Rx.Observable.empty();
+                        })
+            });
         });
-        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', rootReducer);
-        const store = {
-            replaceReducer: (reducer) => {
-                reducer();
-            }
-        };
-        let reducersKeys = [];
-        augmentStore({ reducers: {
-            map: () => {
-                reducersKeys.push('map');
-                return {};
-            },
-            controls: () => {
-                reducersKeys.push('controls');
-                return {};
-            }
-        } }, store);
-        expect(reducersKeys).toEqual([ 'controls' ]);
-        setConfigProp(PERSISTED_STORE_NAME + '.rootReducer', undefined);
+        afterEach(() => {
+            storeManager = {};
+        });
+
+        it('addEpics and verify they are isolated', (done) => {
+            const subjects = storeManager.getEpicsRegistry().muteState;
+            expect(subjects.epic1).toExist();
+            expect(subjects.epic2).toExist();
+            done();
+        });
+        it('addEpics and verify they are added into registry', (done) => {
+            const added = storeManager.getEpicsRegistry().addedEpics;
+            expect(added.epic1).toBe('testPlugin');
+            expect(added.epic2).toBe('testPlugin');
+            done();
+        });
+        it('add same epics from two different plugins and make sure both of them are counted upon epic mute/unmute', (done) => {
+            storeManager.addEpics('test2', {
+                epic1: (action$) =>
+                    action$.ofType('TEST')
+                        .switchMap(() => {
+                            return Rx.Observable.empty();
+                        })
+            });
+            const listenedBy = storeManager.getEpicsRegistry().epicsListenedBy;
+            expect(listenedBy.epic1.length).toBe(2);
+            expect(listenedBy.epic2.length).toBe(1);
+            done();
+        });
+        it('add same epics from two different plugins and make sure that all of the epics are properly grouped per plugin', (done) => {
+            storeManager.addEpics('test2', {
+                epic1: (action$) =>
+                    action$.ofType('TEST')
+                        .switchMap(() => {
+                            return Rx.Observable.empty();
+                        })
+            });
+            const groupedByModule = storeManager.getEpicsRegistry().groupedByModule;
+            expect(groupedByModule.testPlugin).toInclude('epic1');
+            expect(groupedByModule.testPlugin).toInclude('epic2');
+            expect(groupedByModule.test2Plugin).toInclude('epic1');
+            done();
+        });
+        it('add same epics from two different plugins and make sure that repetitive epic is getting registered only from the first plugin attempting to register it', (done) => {
+            storeManager.addEpics('test2', {
+                epic1: (action$) =>
+                    action$.ofType('TEST')
+                        .switchMap(() => {
+                            return Rx.Observable.empty();
+                        })
+            });
+            const addedEpics = storeManager.getEpicsRegistry().addedEpics;
+            expect(addedEpics.epic1).toBe('testPlugin');
+            expect(addedEpics.epic2).toBe('testPlugin');
+            done();
+        });
+        it('mute epic when plugin is missing on the page, assure that it updates listeners list', (done) => {
+            storeManager.addEpics('test2', {
+                epic1: (action$) =>
+                    action$.ofType('TEST')
+                        .switchMap(() => {
+                            return Rx.Observable.empty();
+                        })
+            });
+            storeManager.muteEpics('testPlugin');
+            const listenedBy = storeManager.getEpicsRegistry().epicsListenedBy;
+            expect(listenedBy.epic1.length).toBe(1);
+            expect(listenedBy.epic2.length).toBe(0);
+            done();
+        });
+        it('unmute epic when plugin is added back to the page, assure that it updates listeners list', (done) => {
+            storeManager.addEpics('test2', {
+                epic1: (action$) =>
+                    action$.ofType('TEST')
+                        .switchMap(() => {
+                            return Rx.Observable.empty();
+                        })
+            });
+            storeManager.muteEpics('testPlugin');
+            storeManager.unmuteEpics('testPlugin');
+            const listenedBy = storeManager.getEpicsRegistry().epicsListenedBy;
+            expect(listenedBy.epic1.length).toBe(2);
+            expect(listenedBy.epic2.length).toBe(1);
+            done();
+        });
+    });
+
+    it('test reducersLoaded action creator', (done) => {
+        const reducers = ['a', 'b'];
+        const action = reducersLoaded(reducers);
+        expect(action.reducers).toEqual(reducers);
+        expect(action.type).toBe(REDUCERS_LOADED);
+        done();
     });
 });

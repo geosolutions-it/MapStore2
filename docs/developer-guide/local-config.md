@@ -114,9 +114,9 @@ This is the main structure:
 
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
 
-For adding a new locale or configuring currently supported locales, go check [this](internationalization.md) out.
+For adding a new locale or configuring currently supported locales, go check [this](internationalization.md#internationalization) out.
 
-For configuring plugins, see the [Configuring Plugins Section](plugins-documentation.md) and the [plugin reference page](plugins-architecture.md)
+For configuring plugins, see the [Configuring Plugins Section](plugins-documentation.md#configuring-plugins) and the [plugin reference page](plugins-architecture.md#plugins-architecture)
 
 ## Explanation of some config properties
 
@@ -215,49 +215,6 @@ CSW service
 <br>newService is used internally as the starting object for an empty service.
 
 <br>
-
-### Measure Tool configuration
-
-Inside defaultState you can set lengthFormula, showLabel, uom:
-
-- you can customize the formula used for length calculation from "haversine" or "vincenty" (default haversine)
-- show or not the measurement label on the map after drawing a measurement (default true)
-- set the default uom used for measure tool (default m and sqm)
-<br>For the label you can choose whatever value you want.
-<br>For the unit you can choose between:
-- unit length values : ft, m, km, mi, nm standing for feets, meters, kilometers, miles, nautical miles
-- unit area values : sqft, sqm, sqkm, sqmi, sqnm standing for square feets, square meters, square kilometers, square miles, square nautical miles
-- Customize the style for the start/endPoint for the measure features. You can set *startEndPoint* to:
-  - false if you want to disable it
-  - true (defaults will be used)
-  - object for customizing styles by placing *startPointOptions* and/or *endPointOptions*<br>
-- You can either change the radius or set the fillColor or decide to apply this customization to the first and second-last point for polygons<br>
-For lineString endPointOptions refers to the last point of the polyline
-
-Example:<br>
-
-```javascript
-"measurement": {
-  "lengthFormula": "vincenty",
-  "showLabel": true,
-  "uom": {
-    "length": {"unit": "m", "label": "m"},
-    "area": {"unit": "sqm", "label": "m²"}
-  },
-  "startEndPoint": {
-    "startPointOptions": {
-        "radius": 3,
-        "fillColor": "green",
-        "applyToPolygon": false
-    },
-    "endPointOptions": {
-        "radius": 3,
-        "fillColor": "red",
-        "applyToPolygon": false
-    }
-  }
-}
-```
 
 #### Annotations Editor configuration
 

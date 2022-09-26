@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 -240 1200 1200"
+   id="svg6"
+   sodipodi:docname="height-from-terrain.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="0.39333334"
+     inkscape:cx="512.28813"
+     inkscape:cy="880.93219"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2"
+     showguides="false"
+     inkscape:pagecheckerboard="0" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="glyph">
+    <path
+       id="path4066"
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:38.1097;stroke-miterlimit:4;stroke-dasharray:76.2196, 38.1097;stroke-dashoffset:0"
+       d="M 600,-120 A 158.89831,158.89831 0 0 0 441.10169,38.898306 158.89831,158.89831 0 0 0 600,197.79662 158.89831,158.89831 0 0 0 758.89831,38.898306 158.89831,158.89831 0 0 0 600,-120 Z m 0,61.046194 A 97.852635,97.852635 0 0 1 697.85211,38.898306 97.852635,97.852635 0 0 1 600,136.75042 97.852635,97.852635 0 0 1 502.14789,38.898306 97.852635,97.852635 0 0 1 600,-58.953806 Z" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:40.5289;stroke-miterlimit:4;stroke-dasharray:81.0577, 40.5289;stroke-dashoffset:0"
+       id="rect5939"
+       width="29.661016"
+       height="483.08853"
+       x="585.16949"
+       y="283.69107" />
+    <path
+       style="fill:#000000;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="M -6.2500003e-6,1080 368.64406,741.35592 640.67796,932.0339 920.33897,860.8474 1200,1080 Z"
+       id="path6222" />
+  </g>
+</svg>

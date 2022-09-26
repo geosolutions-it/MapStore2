@@ -317,12 +317,25 @@
             </plugin>
         </plugins>
        </build>
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                    <version>4.5.13</version>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
        <dependencies>
         <!-- mapfish-print -->
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>geosolutions-2.1-SNAPSHOT</version>
+<<<<<<< HEAD
+            <version>geosolutions-2.2-SNAPSHOT</version>
+=======
+            <version>geosolutions-2.1.0</version>
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>

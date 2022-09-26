@@ -93,10 +93,10 @@ describe('tutorial Epics', () => {
     });
 
     it('switchTutorialEpic with path', (done) => {
-
+        const pathname = '/dashboard';
         testEpic(switchTutorialEpic, 1, [
             onLocationChanged({
-                pathname: '/dashboard'
+                pathname
             }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
@@ -119,16 +119,21 @@ describe('tutorial Epics', () => {
                     'default_tutorial': [],
                     'default_mobile_tutorial': []
                 }
+            },
+            router: {
+                location: {
+                    pathname
+                }
             }
         });
 
     });
 
     it('switchTutorialEpic with viewer path', (done) => {
-
+        const pathname = '/viewer/cesium/001';
         testEpic(switchTutorialEpic, 1, [
             onLocationChanged({
-                pathname: '/viewer/cesium/001'
+                pathname
             }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
@@ -151,16 +156,21 @@ describe('tutorial Epics', () => {
                     'default_tutorial': [],
                     'default_mobile_tutorial': []
                 }
+            },
+            router: {
+                location: {
+                    pathname
+                }
             }
         });
 
     });
 
     it('switchTutorialEpic with path and id', (done) => {
-
+        const pathname = '/dashboard/001';
         testEpic(switchTutorialEpic, 1, [
             onLocationChanged({
-                pathname: '/dashboard/001'
+                pathname
             }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
@@ -183,16 +193,21 @@ describe('tutorial Epics', () => {
                     'default_tutorial': [],
                     'default_mobile_tutorial': []
                 }
+            },
+            router: {
+                location: {
+                    pathname
+                }
             }
         });
 
     });
 
     it('switchTutorialEpic mobile', (done) => {
-
+        const pathname = '/dashboard/001';
         testEpic(switchTutorialEpic, 1, [
             onLocationChanged({
-                pathname: '/dashboard/001'
+                pathname
             }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
@@ -218,16 +233,21 @@ describe('tutorial Epics', () => {
             },
             browser: {
                 mobile: true
+            },
+            router: {
+                location: {
+                    pathname
+                }
             }
         });
 
     });
 
     it('switchTutorialEpic missing preset steps', (done) => {
-
+        const pathname = '/dashboard/001';
         testEpic(switchTutorialEpic, 1, [
             onLocationChanged({
-                pathname: '/dashboard/001'
+                pathname
             }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
@@ -248,14 +268,20 @@ describe('tutorial Epics', () => {
                     'default_tutorial': [],
                     'default_mobile_tutorial': []
                 }
+            },
+            router: {
+                location: {
+                    pathname
+                }
             }
         });
     });
     it('switchTutorialEpic selecting geostory_edit_tutorial preset for newgeostory page', (done) => {
         const NUM_ACTIONS = 1;
+        const pathname = '/geostory/newgeostory';
         testEpic(switchTutorialEpic, NUM_ACTIONS, [
             onLocationChanged({
-                pathname: '/geostory/newgeostory'
+                pathname
             }),
             initTutorial("", [], {}, null, {}, {})
         ], (actions) => {
@@ -283,15 +309,21 @@ describe('tutorial Epics', () => {
                     'geostory_view_tutorial': GEOSTORY_VIEW_STEPS
                 }
             },
-            geostory: {mode: "edit"}
+            geostory: {mode: "edit"},
+            router: {
+                location: {
+                    pathname
+                }
+            }
         });
 
     });
     it('switchTutorialEpic selecting geostory_view_tutorial preset for story viewer page', (done) => {
         const NUM_ACTIONS = 1;
+        const pathname = '/geostory/123';
         testEpic(switchTutorialEpic, NUM_ACTIONS, [
             onLocationChanged({
-                pathname: '/geostory/123'
+                pathname
             }),
             initTutorial("", [], {}, null, {}, {})
         ], (actions) => {
@@ -319,15 +351,21 @@ describe('tutorial Epics', () => {
                     'geostory_view_tutorial': GEOSTORY_VIEW_STEPS
                 }
             },
-            geostory: {mode: "view"}
+            geostory: {mode: "view"},
+            router: {
+                location: {
+                    pathname
+                }
+            }
         });
 
     });
     it('switchTutorialEpic selecting geostory_view_tutorial preset for story viewer page, missing presetList', (done) => {
         const NUM_ACTIONS = 1;
+        const pathname = '/geostory/newgeostory';
         testEpic(addTimeoutEpic(switchTutorialEpic, 50), NUM_ACTIONS, [
             onLocationChanged({
-                pathname: '/geostory/newgeostory'
+                pathname
             }),
             initTutorial("", [], {}, null, {}, {})
         ], (actions) => {
@@ -346,15 +384,21 @@ describe('tutorial Epics', () => {
                 presetList: {
                 }
             },
-            geostory: {mode: "view"}
+            geostory: {mode: "view"},
+            router: {
+                location: {
+                    pathname
+                }
+            }
         });
 
     });
     it('switchTutorialEpic loads correct tutorial for context', (done) => {
         const NUM_ACTIONS = 1;
+        const pathname = '/context-creator/new';
         testEpic(switchTutorialEpic, NUM_ACTIONS, [
             onLocationChanged({
-                pathname: '/context-creator/new'
+                pathname
             }),
             initTutorial("", [], {}, null, {}, {})
         ], (actions) => {
@@ -376,6 +420,11 @@ describe('tutorial Epics', () => {
                     "contextcreator_generalsettings_tutorial": {
                         context: "steps"
                     }
+                }
+            },
+            router: {
+                location: {
+                    pathname
                 }
             }
         });

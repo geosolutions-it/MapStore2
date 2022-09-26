@@ -4,42 +4,16 @@ Accordingly with your infrastructure, there are several setups you can imagine w
 
 ## MapStore-GeoServer integration
 
-```mermaid
-flowchart TB
-      MapStore -->|"Resources <br/> (e.g. maps)"| DB[(MapStore<br/> Database)]
-      MapStore -->| Users, Groups, Roles| DB[(MapStore<br/> Database)]
-      GeoServer --> |Users, Groups, Roles| DB
-      GeoServer <--> |authkey| MapStore
-```
+<img src="../img/mapstore-geoserver-integration.png" class="ms-docimage"/>
 
 ## MapStore-LDAP + MapStore-GeoServer
 
-```mermaid
-flowchart TB
-    MapStore -->| Users, Groups, Roles| DB[(MapStore<br/> Database)]
-    MapStore -->|"Resources <br/> (e.g. maps)"| DB[(MapStore<br/> Database)]
-    GeoServer <--> |authkey| MapStore
-    DB <--> | sync on login | LDAP[(LDAP)]
-    GeoServer --> |Users, Groups, Roles| DB
-```
+<img src="../img/mapstore-ldap-mapstore-geoserver.png" class="ms-docimage"/>
 
 ## MapStore-GeoServer + MapStore-LDAP + GeoServer-LDAP
 
-```mermaid
-flowchart TB
-    MapStore -->|"Resources <br/> (e.g.maps)"| DB[(MapStore<br/> Database)]
-    MapStore -->| Users, Groups, Roles| DB
-    GeoServer <--> |authkey| MapStore
-    GeoServer --> |Users, Groups, Roles| LDAP
-    DB <--> | sync on login | LDAP[(LDAP)]
-```
+<img src="../img/mapStore-geoserver-mapstore-ldap-geoserver-ldap.png" class="ms-docimage"/>
 
 ## MapStore-GeoServer + MapStore-LDAP (direct) + GeoServer-LDAP
 
-```mermaid
-flowchart TB
-    MapStore -->|"Resources <br/> (e.g. maps)"| DB[(MapStore<br/> Database)]
-    GeoServer <--> |authkey| MapStore
-    MapStore -->| Users, Groups, Roles| LDAP[(LDAP)]
-    GeoServer --> |Users, Groups, Roles| LDAP
-```
+<img src="../img/mapStore-geoserver-mapstore-ldap-direct-geoserver-ldap.png" class="ms-docimage"/>

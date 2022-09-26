@@ -21,7 +21,6 @@ import("../assets/css/maps.css");
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-
 /**
   * @name Maps
   * @memberof pages
@@ -36,13 +35,16 @@ class MapsPage extends React.Component {
         match: PropTypes.object,
         reset: PropTypes.func,
         loadMaps: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
         mode: 'desktop',
         reset: () => {}
     };
+
+    state = {};
 
     UNSAFE_componentWillMount() {
         if (this.props.match.params.mapType && this.props.match.params.mapId) {
@@ -53,12 +55,21 @@ class MapsPage extends React.Component {
         }
     }
 
+    onLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+            this.setState({pluginsAreLoaded: true}, () => {
+                this.props.loadMaps();
+            });
+        }
+    }
+
     render() {
         return (<Page
             id="maps"
-            onMount={this.props.loadMaps}
+            onLoaded={this.onLoaded}
             plugins={this.props.plugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />);
     }
 }

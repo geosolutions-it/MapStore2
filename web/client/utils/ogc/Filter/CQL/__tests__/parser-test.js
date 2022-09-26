@@ -68,6 +68,12 @@ const COMPARISON_TESTS = [
             type: "like",
             value: 'a'
         }
+    },
+    {
+        cql: "INCLUDE",
+        expected: {
+            type: "include"
+        }
     }
 ];
 const VARIANTS = [{

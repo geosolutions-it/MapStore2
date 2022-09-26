@@ -53,4 +53,4 @@ Where version_identifier is an optional identifier of the generated war that wil
 
 Deploy the generated `mapstore.war` file (in product/target) to your favourite J2EE container (e.g. Tomcat).
 
-[Here](database-setup) you can find how to setup the database.
+[Here](database-setup.md#database-setup) you can find how to setup the database.

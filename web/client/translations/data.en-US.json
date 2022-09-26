@@ -35,13 +35,12 @@
             "message": "The layer failed to reload with a changed name"
         },
         "version": {
-            "label": "Version",
-            "message": "Message",
-            "commit": "Commit",
-            "date": "Date",
-            "author": "Author",
-            "githuburl": "Open github tree in a new tab"
-
+          "title": "MapStore Version",
+          "label": "Version",
+          "message": "Message",
+          "commit": "Commit",
+          "date": "Date",
+          "githubUrl": "Open github tree in a new tab"
         },
         "errorPage": {
             "title":"Oops, something has gone wrong...",
@@ -742,7 +741,25 @@
             "selectTool": "Select a measurement tool",
             "exportToGeoJSON": "Export to GeoJSON",
             "resetTooltip": "Clear measures",
-            "addAsLayer": "Add as layer"
+            "addAsLayer": "Add as layer",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "layerMustBeVisible": "The target layer is inactive",
@@ -1700,6 +1717,7 @@
                 "syncOnMap": "Sync map with filter",
                 "enableTimeSync": "Synchronize with the selected time or time interval",
                 "disableTimeSync": "Do not synchronize with the selected time or interval",
+                "createNewChart": "Create chart for the selected level",
                 "enableSnapping": "Activate snapping",
                 "disableSnapping": "Deactivate snapping",
                 "snapToLayer": "Snap to the layer",

@@ -149,6 +149,8 @@ In particular, with these options it is possible to:
 
 * **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
 
+>>>>>>> 3eb1bd6727d848df670659d62e91022abe9f3718:docs/user-guide/mapstore-toolbars.md
+
 * [Print](print.md) the map by clicking the <img src="../img/button/print2.jpg" class="ms-docbutton"/> button
 
 * **Export map** in `json` format by clicking the <img src="../img/button/export2.jpg" class="ms-docbutton"/> button
@@ -161,6 +163,8 @@ In particular, with these options it is possible to:
 
 * **Save** the map by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button, in order to apply the changes made in an existing map. Selecting this option, the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
 
+>>>>>>> 3eb1bd6727d848df670659d62e91022abe9f3718:docs/user-guide/mapstore-toolbars.md
+
 * **Save as** when the user needs to save a copy of a map or save one for the first time by clicking the <img src="../img/button/saveas2.jpg" class="ms-docbutton"/> button. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
 
 * **Delete Map** in order to delete the current map by clicking the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button
@@ -169,9 +173,25 @@ In particular, with these options it is possible to:
 
 <img src="../img/menu-bar/settings-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
+!!!Note
+    When the [3D navigation](side-bar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*.
+    <img src="../img/menu-bar/cesium-settings.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+    In particular, from the *Map Settings* it is possible to:
+
+    * Enable the **Show sky atmosphere** to see the atmosphere around the globe
+
+    * Enable the **Show ground atmosphere** to view the ground atmosphere on the globe when viewed from a distance
+
+    * Enable the **Show fog** to allow additional performance by rendering less geometry and dispatching less terrain requests
+
+    * Enable the **Depth test against terrain** if polylines, labels, etc. should be depth-tested against the terrain surface
+
 * See the **About this map** panel by clicking the <img src="../img/button/details2.jpg" class="ms-docbutton"/> button, when [Details](resources-properties.md#details) are present
 
 * [Share](share.md) the map by clicking the <img src="../img/button/share2.jpg" class="ms-docbutton"/> button
+
+>>>>>>> 3eb1bd6727d848df670659d62e91022abe9f3718:docs/user-guide/mapstore-toolbars.md
 
 * Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/) by clicking the <img src="../img/button/doc2.jpg" class="ms-docbutton"/> button
 
@@ -182,4 +202,5 @@ In particular, with these options it is possible to:
 <img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 !!!warning
+
     The **Save**, the **Delete Map** and the **Share** buttons are present in the *Options Menu* only when the map has already been saved once.

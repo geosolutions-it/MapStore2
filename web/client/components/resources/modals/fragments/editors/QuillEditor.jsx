@@ -8,7 +8,7 @@
 
 import {identity} from 'lodash';
 import React from 'react';
-import ReactQuill from 'react-quill';
+import ReactQuill from '../../../../../libs/quill/react-quill-suspense';
 
 const Editor = ({
     modules = {

@@ -5,11 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { lazy } from 'react';
 
 import { getWidgetFilterRenderers } from '../../../plugins/widgets/getWidgetFilterRenderers';
 import EmptyRowsView from '../../data/featuregrid/EmptyRowsView';
-import FeatureGridComp from '../../data/featuregrid/FeatureGrid';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import loadingState from '../../misc/enhancers/loadingState';
@@ -17,9 +16,16 @@ import LoadingSpinner from '../../misc/LoadingSpinner';
 import errorChartState from '../enhancers/errorChartState';
 import WidgetContainer from './WidgetContainer';
 import WidgetEmptyMessage from './WidgetEmptyMessage';
+import withSuspense from '../../misc/withSuspense';
 
+const FeatureGridComp = withSuspense()(lazy(() => import('../../data/featuregrid/FeatureGrid')));
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(FeatureGridComp));
-
+<<<<<<< HEAD
+const DEFAULT_GRID_HEIGHT = 28;
+const defaultGridOpts = ['rowHeight', 'headerRowHeight', 'headerFiltersHeight']
+    .reduce((acc, prop) => ({...acc, [prop]: DEFAULT_GRID_HEIGHT}), '');
+=======
+>>>>>>> 6191402349d6d286fff27e6e3c8df0e5825927a8
 
 export default getWidgetFilterRenderers(({
     id,
@@ -45,7 +51,9 @@ export default getWidgetFilterRenderers(({
     error,
     pagination = {},
     dataGrid = {},
-    virtualScroll = true
+    virtualScroll = true,
+    gridOpts = defaultGridOpts,
+    options = {}
 }) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
@@ -59,10 +67,10 @@ export default getWidgetFilterRenderers(({
         topRightItems={topRightItems}>
         <BorderLayout
             footer={pagination.totalFeatures ? (
-                <div style={{ height: "30px", overflow: "hidden"}}>
+                <div className={"widget-footer"}>
                     {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
                     {error === undefined &&
-                    <span style={{ "float": "left", margin: "5px" }} ><Message
+                    <span className={"result-info"} ><Message
                         msgId={"featuregrid.resultInfoVirtual"}
                         msgParams={{ total: pagination.totalFeatures }} /></span>}
                 </div>) : null}
@@ -85,7 +93,9 @@ export default getWidgetFilterRenderers(({
                 size={size}
                 rowKey="id"
                 describeFeatureType={describeFeatureType}
-                pagination={pagination} />
+                pagination={pagination}
+                gridOpts={gridOpts}
+                options={options}/>
         </BorderLayout>
     </WidgetContainer>
 

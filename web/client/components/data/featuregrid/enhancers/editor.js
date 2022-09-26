@@ -6,9 +6,12 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+import React from 'react';
 import { isNil } from 'lodash';
-import { compose, createEventHandler, defaultProps, withHandlers, withPropsOnChange } from 'recompose';
+import { Tooltip } from "react-bootstrap";
+import { compose, createEventHandler, defaultProps, withHandlers, withProps, withPropsOnChange } from 'recompose';
 
+import OverlayTrigger from "../../../misc/OverlayTrigger";
 import EditorRegistry from '../../../../utils/featuregrid/EditorRegistry';
 import {
     applyAllChanges,
@@ -147,7 +150,8 @@ const featuresToGrid = compose(
                     .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {
                         editable: props.mode === "EDIT",
                         sortable: props.sortable && !props.isFocused,
-                        defaultSize: props.defaultSize
+                        defaultSize: props.defaultSize,
+                        options: props.options?.propertyName
                     }, {
                         getEditor: (desc) => {
                             const generalProps = {
@@ -214,7 +218,17 @@ const featuresToGrid = compose(
             };
         }
     ),
-    propsStreamFactory
+    propsStreamFactory,
+    withProps(({columns}) => ({
+        columns: columns?.map(c => ({
+            ...c,
+            name: !c.showTitleTooltip
+                ? (c.title || c.name)
+                : <OverlayTrigger  placement="top" overlay={<Tooltip id={c.name}>{c.description}</Tooltip>}>
+                    <span>{c.title}</span>
+                </OverlayTrigger>
+        }))
+    }))
 );
 
 export default featuresToGrid;

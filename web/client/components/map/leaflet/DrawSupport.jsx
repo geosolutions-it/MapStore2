@@ -11,6 +11,7 @@ import {last, isNil } from 'lodash';
 import L from 'leaflet';
 
 import 'leaflet-draw';
+import 'leaflet-draw/dist/leaflet.draw.css';
 
 L.Draw.Polygon.prototype._calculateFinishDistance = function(t) {
     if (this._markers.length > 0) {

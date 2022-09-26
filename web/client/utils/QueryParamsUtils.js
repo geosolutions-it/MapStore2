@@ -70,14 +70,14 @@ export const postRequestLoadValue = (name, queryParamsID, storage = sessionStora
             const { [name]: item, ...rest } = params;
             if (item && typeof params === 'object') {
                 const { length } = Object.keys(params);
-                length > 1 && storage.setItem('queryParams', JSON.stringify(rest));
-                length === 1 && storage.removeItem('queryParams');
+                length > 1 && storage.setItem(itemName, JSON.stringify(rest));
+                length === 1 && storage.removeItem(itemName);
             }
             return item;
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error(`Unable to parse query parameters from sessionStorage`);
-            storage.removeItem('queryParams');
+            storage.removeItem(itemName);
             return null;
         }
     }

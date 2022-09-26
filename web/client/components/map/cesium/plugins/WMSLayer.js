@@ -8,8 +8,7 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
-import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
-const BILTerrainProvider = createBILTerrainProvider(Cesium);
+import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTerrainProvider';
 import assign from 'object-assign';
 import {isArray, isEqual} from 'lodash';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
@@ -96,7 +95,7 @@ function wmsToCesiumOptions(options) {
 const createLayer = (options) => {
     let layer;
     if (options.useForElevation) {
-        return new BILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(options));
+        return new GeoServerBILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(options));
     }
     if (options.singleTile) {
         layer = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(options));

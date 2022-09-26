@@ -16,7 +16,11 @@ Through this window it is possible to:
 
 * Enter a **Title** and a **Description**, that will be shown on the print page
 
-* Change the **Resolution** of the print (choosing between 96, 150 and 300 dpi)
+* Change the **Format** (`PDF`, `PNG`, `JPEG`)
+
+* Change the **Coordinates System** (`EPSG:3857`, `EPSG:4326`)
+
+* Change the **Resolution** of the print (`96 dpi`, `150 dpi`, `300 dpi`)
 
 * Accessing **Layout** settings
 

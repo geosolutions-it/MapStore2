@@ -31,7 +31,7 @@ As soon as the *New User* window opens, the *User ID* section is displayed:
 
 <img src="../img/managing-users/popup-user.jpg" class="ms-docimage"/>
 
-In this section the Amin is allowed to:
+In this section the Admin is allowed to:
 
 * Set the *Username*
 

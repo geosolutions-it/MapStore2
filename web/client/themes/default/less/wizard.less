@@ -76,10 +76,10 @@
     }
 }
 .ms-wizard > .row{
-    margin: 15px;
+    margin: 15px -5px;
 }
 .ms-wizard.map-options {
-    padding: 8px;
+    padding: 8px 6px;
     .widget-map-selector {
         padding-bottom: 15px;
         display: flex;
@@ -90,6 +90,9 @@
         }
         .widget-empty-map {
             width: 250px;
+        }
+        .Select {
+            width: 200px;
         }
         .Select-option {
             word-break: break-all;
@@ -121,7 +124,13 @@
             }
         }
     }
-
+    .react-grid-Grid {
+        .react-grid-Viewport{
+            .react-grid-Canvas {
+                overflow-x: hidden !important;
+            }
+        }
+    }
 }
 .mapstore-step-title {
     font-size: 20px;

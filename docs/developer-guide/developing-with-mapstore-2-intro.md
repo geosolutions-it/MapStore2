@@ -12,7 +12,7 @@ Developing with MapStore as an application means to develop directly on the proj
 
 ## MapStore as a Framework
 
-The recommended way to use MapStore as a framework is to create a project that includes MapStore as a sub-folder. For this purpose we created a script that generates the main folder structure and the necessary files [Project Creation Script](../project-creation-script).
+The recommended way to use MapStore as a framework is to create a project that includes MapStore as a sub-folder. For this purpose we created a script that generates the main folder structure and the necessary files [Project Creation Script](project-creation-script.md#create-your-own-mapstore-project).
 
 This setup allows to create your application or customizations inside the `js` directory and/or add custom back-end services (the set-up allows to create a project that builds a Java WAR package).
 Keeping your customization separated and MapStore as a git sub-modules has the followind advantages:

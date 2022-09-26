@@ -1,46 +1,43 @@
-# Adding Annotations 
-********************
+# Annotations
 
 [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
 Those features make up the so called **Annotations** layers.
 
-Starting from a new map or an already existing one:
+Starting from a new map or an already existing one, the editor can access the **Annotations** <img src="../img/button/annotations2.jpg" class="ms-docbutton" style="max-height:30px;"/> button from the [TOC](toc.md) <img src="../img/button/show-layers.jpg" class="ms-docbutton" style="max-height:30px;"/> panel on the top-left corner of the map viewer.
 
-* **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton" /> from the main menu bar.
-* **Click** on the *Annotations* option from the list <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/>.
+<img src="../img/annotations/annotations_on_toc.jpg" class="ms-docimage" style="max-width:500px;" />
 
-The annotation panel will open.
+ The annotation panel will open:
 
-<img src="../img/annotations/annotation_tool.jpg" class="ms-docimage" />
+<img src="../img/annotations/annotation_tool.jpg" class="ms-docimage" style="max-width:500px;" />
 
-Creating a New Annotation
--------------------------
+## Add new Annotation
 
-In order to add a new annotation:
-
-* **Click** on <img src="../img/button/+++.jpg" class="ms-docbutton" />, a new form will appear.
-
-* **Type** a *Title* (required) and a *Description* (optional).
+To begin, from the annotation panel, the editor can open the new annotation panel by selecting the <img src="../img/button/+++.jpg" class="ms-docbutton" /> button.
 
 <img src="../img/annotations/annotation_form_filled.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-* **Click** on the geometry icon to define the annotation geometry and position. You have to select the annotation type first, then to draw it on the map.
+From here the editor can insert a **Title** (required), a **Description** (optional) and choose between five different types of **Geometries**:
 
-<img src="../img/annotations/annotations_types.jpg" class="ms-docimage" style="max-width:500px;"/>
+* **Marker** <img src="../img/button/marker2.jpg" class="ms-docbutton" />
+* **Line** <img src="../img/button/line2.jpg" class="ms-docbutton" />
+* **Polygon** <img src="../img/button/polygon2.jpg" class="ms-docbutton" />
+* **Text** <img src="../img/button/text2.jpg" class="ms-docbutton" />
+* **Circle** <img src="../img/button/circle2.jpg" class="ms-docbutton" />
 
-* **Select**, for example, the *Polygon* type.
+After selecting a geometry type, the editor can:
 
-* **Click** on the map to define the polygon vertices.
+* Draw a *Geometry* on the map.
 
 <img src="../img/annotations/polygon_annotation_drawing.gif" class="ms-docimage" style="max-width:700px;"/>
 
-You can also insert new vertices, or edit existing ones, through the coordinates editor using `Decimal` or `Aeronautical` formats.
+* Enter the vertices of the geometry or modify the existing ones through the **Coordinates editor** using `Decimal` or `Aeronautical` formats.
 
-<img src="../img/annotations/coordinates_format_switcher.jpg" class="ms-docimage" style="max-width:500px;" />
+<img src="../img/annotations/coordinates_format_switcher.gif" class="ms-docimage" style="max-width:700px;" />
 
-New vertices can be also added using the <img src="../img/button/++.jpg" class="ms-docbutton" /> button and typing the `latitude` and `longitude` values (see the picture below).
+* For *Line* and *Polygon*, add new vertices using the <img src="../img/button/++.jpg" class="ms-docbutton" /> button and typing the `latitude` and `longitude` values.
 
-<img src="../img/annotations/add_vertex_button.jpg" class="ms-docimage" style="max-width:500px;" />
+<img src="../img/annotations/add_vertex_button.gif" class="ms-docimage" style="max-width:700px;"/>
 
 !!! note
     If the vertices are invalid, they are notified with a red exclamation point.
@@ -48,22 +45,23 @@ New vertices can be also added using the <img src="../img/button/++.jpg" class="
     In this case, it is not possible to add new geometry or save the annotation until a valid value is entered. It is still possible to interact with the geometries already present in the annotation, by zooming in on it or deleting it, as follows:
     <img src="../img/annotations/invalid_vertex2.gif" class="ms-docimage" style="max-width:500px;" />
 
-* **Click** the *Style* tab of the annotation viewer (optional) to manage the annotation style (see the next paragraph).
+* Customize the **Style** of the annotation, as explained in the following paragraph.
 
-* **Click** on *Zoom* <img src="../img/button/zoom-feature.jpg" class="ms-docbutton" /> to zoom to the geometry of the annotation.
+Once the geometry has been saved through the **Save** <img src="../img/button/save_button.jpg" class="ms-docbutton" /> button, for each geometry created, the editor can perform the following operations:
 
-* **Click** on *Delete* <img src="../img/button/delete_white_button.jpg" class="ms-docbutton" /> to delete the geometry of the annotation.
+* **Zoom** to the geometry annotation on map through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton" /> button
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton" /> to save the geometry information.
+* **Delete** the geometry annotation through the <img src="../img/button/delete_white_button.jpg" class="ms-docbutton" /> button
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton" /> on the main form to save annotation information.
+Once all the *Geometries* have been created, the editor can save the annotation through the **Save** <img src="../img/button/save_button.jpg" class="ms-docbutton" /> button that will be visible in the annotation list:
 
-The annotations layer will be added to the TOC and the annotation will be visible in the annotations list as in the figure below.
+<img src="../img/annotations/annotation1.jpg" class="ms-docimage" />
 
-<img src="../img/annotations/tijuana_annotation.jpg" class="ms-docimage" />
+Then, if not present, a new **Annotations**  layer will be created and added to the [TOC](toc.md)
 
-Styling Annotations
--------------------
+<img src="../img/annotations/annotation2.jpg" class="ms-docimage" />
+
+## Styling Annotations
 
 Based on which type of annotation was chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
 
@@ -117,29 +115,30 @@ See the example below.
 
 Click on <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> to apply the style.
 
-Managing Annotations
---------------------
+## Managing Annotations
 
-You can manage anytime your annotations through the *Annotation Viewer*. Click on some annotation to display it.
-
-<img src="../img/annotations/annotation_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
-
-* You can edit your annotations by clicking the geometry card from list of geometries of the annotation. It allows you to change the geometry and/or the information related to the annotations. See the gif below to better understand how:
-
-<img src="../img/annotations/editing_annotations.gif" class="ms-docimage" style="max-width:700px;" />
-
-* The <img src="../img/button/zoom_button.jpg" class="ms-docbutton" /> button allow the map to zoom on the annotation.
-
-* The <img src="../img/button/eyeon.jpg" class="ms-docbutton" /> button allow the user to show/hide the annotation on the map.
-
-* Annotations can be also download in `json` format and reused in other maps. Using <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" /> button you will be able to export your annotation in the `Annotation.json` file and download it.
-
-<img src="../img/annotations/download_annotation.jpg" class="ms-docimage"/>
-
-From the main panel of the *Annotations* tool you can also download/upload annotations to/from a `json` file.
+Once annotations are added to the [TOC](toc.md), the editor can **Manage** them by clicking to <img src="../img/button/edit_button.jpg" class="ms-docbutton" /> button from the TOC toolbar and the *Main Annotations panel* will be open.
 
 <img src="../img/annotations/annotations_main_panel.jpg" class="ms-docimage" style="max-width:500px;" />
 
-* **Click** on <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" > to *download* a file with all the existing annotations.
+From it, the editor is allowed to:
 
-* **Click** on <img src="../img/button/upload_annotation_button.jpg" class="ms-docbutton" > to *upload* annotations from a valid `json` file.
+* **Download** a file with all the existing annotations by clicking on <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" > button
+
+* **Upload** annotations from a valid `json` file by clicking on <img src="../img/button/upload_annotation_button.jpg" class="ms-docbutton" > button
+
+* **Zoom** an annotation on map by clicking on <img src="../img/button/white-zoom.jpg" class="ms-docbutton" /> button
+
+* **Show/Hide** an annotation on the map by clicking on <img src="../img/button/eyeon.jpg" class="ms-docbutton" /> button
+
+From the *Main Annotations Panel*, by selecting an annotation from the list, the editor is returned to the *Annotation Viewer* where the annotation can be edited.
+
+<img src="../img/annotations/annotation_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+In particular, the editor can:
+
+* Change the *Coordinates* and the *Style* by clicking a geometry from list of geometries.
+
+<img src="../img/annotations/editing_annotations.gif" class="ms-docimage" style="max-width:700px;" />
+
+* **Download** the annotation in `json` format and reused in other maps by clicking on <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" > button

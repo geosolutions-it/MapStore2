@@ -47,15 +47,28 @@ Here a sample page you can create to test the service:
             "zoom": 4,
             "actions": [],
         };
+        let i = 0;
+        function createIframe() {
+            i++;
+            const iframe = document.createElement('iframe');
+            iframe.name = `_iframe-${i}`;
+            iframe.id = `_iframe-${i}`;
+            iframe.style.width = "100%";
+            iframe.style.height = "400px";
+            document.body.appendChild(iframe);
+            return iframe.name;
+        }
         window.onload = function(){
             Object.keys(queryParameters).forEach(function (key) {
                 const element = document.getElementById(key);
                 if (element) element.value = typeof queryParameters[key] === "object" || Array.isArray(queryParameters[key]) ? JSON.stringify(queryParameters[key]) : queryParameters[key];
             });
-            document.getElementById("post-form").addEventListener('submit', function() {
+            const form = document.getElementById("post-form");
+            form.addEventListener('submit', function() {
                 const base_url = document.getElementById('mapstore-base').value.replace(/\/?$/, '/');
+                const method = document.getElementById("method").value;
                 // handle GET URL
-                if(document.getElementById("method").value === "GET") {
+                if(method === "GET") {
                     event.preventDefault();
                     const page = document.getElementById("page")?.value;
                     const data = new FormData(event.target);
@@ -65,8 +78,27 @@ Here a sample page you can create to test the service:
                         .reduce((qs = "", [k, v]) => `${qs}&${k}=${encodeURIComponent(v)}`, "");
                     window.open(`${base_url}${page}?${queryString}`, "_blank");
                     return false;
+                } else if (method === "GET_IFRAME") {
+                    event.preventDefault();
+                    const page = document.getElementById("page")?.value;
+                    const data = new FormData(event.target);
+                    const values = Array.from(data.entries());
+                    const queryString = values
+                        .filter(([k, v]) => !!v)
+                        .reduce((qs = "", [k, v]) => `${qs}&${k}=${encodeURIComponent(v)}`, "");
+                    const iframeName = createIframe();
+                    const iframe = document.getElementById(iframeName);
+                    iframe.src = `${base_url}${page}?${queryString}`;
+                    return false;
                 }
-                document.getElementById("post-form").action = base_url + POST_PATH;
+                // handle POST and POST_IFRAME
+                if(method === "POST_IFRAME") {
+                    const iframeName = createIframe();
+                    form.target = iframeName;
+                } else if(method === "POST") {
+                    form.target = "_blank";
+                }
+                form.action = base_url + POST_PATH;
                 return true;
             })
         }
@@ -77,6 +109,8 @@ Here a sample page you can create to test the service:
         <label>method:</label><select id="method">
             <option value="POST">POST</option>
             <option value="GET">GET</option>
+            <option value="GET_IFRAME">GET_IFRAME</option>
+            <option value="POST_IFRAME">POST_IFRAME</option>
         </select>
     <br/>
     <label>MapStore Base URL:</label><input type="text" id="mapstore-base" value="http://localhost:8080/mapstore/">
@@ -145,7 +179,7 @@ GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
 
 ### Actions
 
-To dispatch additional actions when the map viewer is started, the **actions** query parameter can be used. Only actions from a configured whitelist can be dispatched in this way (see the [configuration section](../configuration-files/) for more details).
+To dispatch additional actions when the map viewer is started, the **actions** query parameter can be used. Only actions from a configured whitelist can be dispatched in this way (see the [configuration section](configuration-files.md#configuring-mapstore) for more details).
 
 ```yaml
 // list of actions types that are available to be launched dynamically from query param (#3817)

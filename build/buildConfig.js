@@ -9,6 +9,10 @@ const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const castArray = require('lodash/castArray');
+const {
+    VERSION_INFO_DEFINE_PLUGIN
+} = require('./BuildUtils');
+
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
@@ -157,6 +161,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             }
         }),
         new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
+        VERSION_INFO_DEFINE_PLUGIN,
         new DefinePlugin({
             // Define relative base path in cesium for loading assets
             'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
@@ -170,7 +175,6 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),
-        new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
         // see https://github.com/CesiumGS/cesium/issues/9212
