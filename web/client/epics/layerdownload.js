@@ -64,7 +64,7 @@ import {
 
 import { getLayerWFSCapabilities, getXMLFeature } from '../observables/wfs';
 import { describeProcess } from '../observables/wps/describe';
-import { download, downloadWithAttributesFilter } from '../observables/wps/download';
+import { download } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
@@ -345,7 +345,7 @@ export const startFeatureExportDownload = (action$, store) =>
                     } : {})
                 },
                 notifyDownloadEstimatorSuccess: true,
-                attribute: propertyNames
+                attribute: isVectorLayer && propertyNames ? propertyNames : undefined
             };
             const newResult = {
                 id: uuidv1(),
@@ -357,9 +357,7 @@ export const startFeatureExportDownload = (action$, store) =>
                 outputsExtractor: makeOutputsExtractor(referenceOutputExtractor)
             };
 
-            const executor = isVectorLayer && propertyNames ? downloadWithAttributesFilter : download;
-
-            return executor(action.url, wpsDownloadOptions, wpsExecuteOptions)
+            return download(action.url, wpsDownloadOptions, wpsExecuteOptions)
                 .takeUntil(action$.ofType(REMOVE_EXPORT_DATA_RESULT).filter(({id}) => id === newResult.id).take(1))
                 .flatMap((data) => {
                     if (data === 'DownloadEstimatorSuccess') {
