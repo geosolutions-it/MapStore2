@@ -1,12 +1,10 @@
-# Menu Bar
+# MapStore Toolbars
 
-**********
-
-The *Menu Bar* is composed of various tools that are used by the user to interact on the map viewer. In particular, it consists of two parts:
+The main toolbar of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), used by the user to interact on the map viewer, are:
 
 * The **Search bar**
 
-* The **Options Menu**
+* The **Side toolbar**
 
 <img src="../img/menu-bar/menu-bar.jpg" class="ms-docimage"/>
 
@@ -139,9 +137,9 @@ When all the properties have been set, selecting the <img src="../img/button/sav
 
 Once a bookmark has been created, it is always possible to *Edit* it <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> or *Remove* it <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> from the list.
 
-## Options Bar
+## Side toolbar
 
-The *Options Bar* is an important tools bar, positioned on the right side of the map viewer, that allows the user to perform different operations and take a look at several information:
+The *Side Toolbar* is an important component, positioned on the right side of the map viewer, that provides to the user the access to different tools of MapStore. The following tools are the ones available by default:
 
 <img src="../img/menu-bar/options-menu.jpg" class="ms-docimage" style="max-width:300px;"/>
 
@@ -151,13 +149,11 @@ In particular, with these options it is possible to:
 
 * **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
 
-* Open the **Version** panel to see the information about the deployed version of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/version.jpg" class="ms-docbutton"/> button
-
 * [Print](print.md) the map by clicking the <img src="../img/button/print2.jpg" class="ms-docbutton"/> button
 
 * **Export map** in `json` format by clicking the <img src="../img/button/export2.jpg" class="ms-docbutton"/> button
 
-* [Import](import.md) files from your machine by clicking the <img src="../img/button/import2.jpg" class="ms-docbutton"/> button
+* [Import](import.md) files from your computer by clicking the <img src="../img/button/import2.jpg" class="ms-docbutton"/> button
 
 * Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map by clicking the <img src="../img/button/catalog2.jpg" class="ms-docbutton"/> button
 
@@ -181,9 +177,9 @@ In particular, with these options it is possible to:
 
 * Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
 
-* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
+* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** of *MapStore* by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
 
-<img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:500px;"/>
+<img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 !!!warning
     The **Save**, the **Delete Map** and the **Share** buttons are present in the *Options Menu* only when the map has already been saved once.

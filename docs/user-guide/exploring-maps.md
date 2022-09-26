@@ -20,7 +20,7 @@ In particular:
 
 * The [Table of Contents (TOC)](toc.md#table-of-contents) shows the layers and the layers groups on the map and allows to remove or edit them, and add some new ones
 
-* The [Menu Bar](menu-bar.md) includes the [Search Bar](menu-bar.md#search-bar) and the [Options Bar](menu-bar.md#options-bar), an important list of options that contains several functions and information
+* The [MapStore Toolbars](mapstore-toolbars.md) includes the [Search Bar](mapstore-toolbars.md#search-bar) and the [Side Toolbar](mapstore-toolbars.md#side-toolbar), an important list of options that contains several functions and information
 
 * The [Sidebar](side-bar.md#sidebar) that is mainly a navigation panel
 
