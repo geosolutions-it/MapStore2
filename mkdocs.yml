@@ -70,7 +70,7 @@ nav:
       - Attribute Table: 'user-guide/attributes-table.md'
       - Widgets: 'user-guide/widgets.md'
       - Export Layer Data: 'user-guide/export-data.md'
-      - Menu Bar: 'user-guide/menu-bar.md'
+      - MapStore Toolbars: 'user-guide/mapstore-toolbars.md'
       - Printing a Map: 'user-guide/print.md'
       - Importing and Exporting Files: 'user-guide/import.md'
       - Catalog Services: 'user-guide/catalog.md'

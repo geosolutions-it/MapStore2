@@ -1,4 +1,5 @@
 # Sharing Resources
+
 *******************
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
@@ -7,7 +8,7 @@
 
 <img src="../img/share/share_cards.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* Inside the resource by selecting the <img src="../img/button/share-button-bm.jpg" class="ms-docbutton" style="max-height:25px;"/> option from [Burger Menu](menu-bar.md#burger-menu) 
+* Inside the resource by selecting the <img src="../img/button/share-button-bm.jpg" class="ms-docbutton" style="max-height:25px;"/> option from the [Side Toolbar](mapstore-toolbars.md#side-toolbar)
 
 From the *Share panel* the user is allowed to share a resource in different ways:
 
@@ -35,7 +36,7 @@ The **Social** section allows the user to share the resource on the most common 
 
 The **Embed** section provides to the user the needed snippets, **embedded code** or the **MS APIs** (only available for *maps*) to embed MapStore in a third party web page.
 
-<img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/> 
+<img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 In addition, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides options to customize a bit the *embedded code*:
 
@@ -45,8 +46,7 @@ In addition, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) prov
 
 * For maps, the user can choose to show the [TOC](toc.md#table-of-contents) in the embedded map by enabling the **Shown TOC** option
 
-<img src="../img/share/embed_maps_toc.jpg" class="ms-docimage"  style="max-width:400px;"/> 
-
+<img src="../img/share/embed_maps_toc.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 * For dashboards, the user can show the [connections](connecting-widgets.md#connecting-widgets) between widgets on the embedded dashboard by enabling the **Show connections**
 
@@ -54,10 +54,10 @@ In addition, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) prov
 
 ## Advanced options
 
-Some **Advanced options** are available for maps and geostories inside the **Share** tool. 
+Some **Advanced options** are available for maps and geostories inside the **Share** tool.
 
 !!!note
-    Some **Advanced options** are available only opening *Share tool* from the [Burger Menu](menu-bar.md#burger-menu) and not from the MapStore home page.
+    Some **Advanced options** are available only opening *Share tool* from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) and not from the MapStore home page.
 
 ### Advanced options for sharing maps
 
@@ -67,31 +67,31 @@ In case of maps, enabling the **Advanced options** in the *Share tool* the user 
 
 * The **bounding box** parameter to share the current viewport of the map visualized by the user
 
-* The desired center and zoom of the map by enabling the **Add center and zoom** 
+* The desired center and zoom of the map by enabling the **Add center and zoom**
 
 <img src="../img/share/share_window_center_zoom.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 The related available options allow the user to:
 
-* Center the shared map to specific coordinates by typing them in two different formats (*Decimal* or *Aeronautical* that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button) or by clicking on the map to set automatically the coordinate fields. 
+* Center the shared map to specific coordinates by typing them in two different formats (*Decimal* or *Aeronautical* that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button) or by clicking on the map to set automatically the coordinate fields.
 
 * Share the map at a specific **Zoom level** (`Min:1` and `Max:35`)
 
-* **Add marker on loaded map** to show the center point in the shared map 
+* **Add marker on loaded map** to show the center point in the shared map
 
-### Advanced options for sharing 3D maps 
+### Advanced options for sharing 3D maps
 
 Once the [3D Navigation](side-bar.md#3d-navigation) is active on map, the user can include the following to the share URL by enabling the **Advanced options** in the *Share tool*:
 
 <img src="../img/share/share_window_3d_map_options.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* The desired center and zoom of the map by enabling the **Add center and zoom to sharing link** 
+* The desired center and zoom of the map by enabling the **Add center and zoom to sharing link**
 
 <img src="../img/share/share_3d_map.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 The related available options allow the user to:
 
-* Center the shared map to specific coordinates by typing them in two different formats (*Decimal* or *Aeronautical* that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button) or by clicking on the map to set automatically the coordinate fields. 
+* Center the shared map to specific coordinates by typing them in two different formats (*Decimal* or *Aeronautical* that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button) or by clicking on the map to set automatically the coordinate fields.
 
 * Share the map at a specific **Zoom level** (`Min:1` and `Max:35`), **Heading** (`Min:0°` and `Max:360°`), **Roll** (`Min:-90°` and `Max:90°`) and **Pitch** (`Min:-90°` and `Max:90°`)
 
