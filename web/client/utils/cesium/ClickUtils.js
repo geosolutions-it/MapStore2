@@ -18,11 +18,18 @@ export const getCartesian = function(viewer, event) {
     return null;
 };
 export const getMouseXYZ = (viewer, event) => {
-    var scene = viewer.scene;
+    const scene = viewer.scene;
     const mousePosition = event.position || event.endPosition;
     if (!mousePosition) {
         return null;
     }
+
+    const feature = scene.pick(mousePosition);
+    if (feature) {
+        const depthCartesian = scene.pickPosition(mousePosition);
+        return Cesium.Cartographic.fromCartesian(depthCartesian);
+    }
+
     const ray = viewer.camera.getPickRay(mousePosition);
     const position = viewer.scene.globe.pick(ray, viewer.scene);
     const ellipsoid = scene._globe.ellipsoid;
