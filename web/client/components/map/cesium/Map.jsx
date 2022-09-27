@@ -222,7 +222,9 @@ class CesiumMap extends React.Component {
                         x: x,
                         y: y
                     },
-                    height: this.props.mapOptions && this.props.mapOptions.terrainProvider ? cartographic.height : undefined,
+                    height: (this.props.mapOptions && this.props.mapOptions.terrainProvider) || intersectedFeatures.length > 0
+                        ? cartographic.height
+                        : undefined,
                     cartographic,
                     latlng: {
                         lat: latitude,
@@ -293,25 +295,16 @@ class CesiumMap extends React.Component {
     };
 
     getIntersectedFeatures = (map, position) => {
-        const features = map.scene.drillPick(position);
-        if (features) {
-            const groupIntersectedFeatures = features.reduce((acc, feature) => {
-                if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
-                    const msId = feature.tileset.msId;
-                    // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
-                    // it has content but refers to the whole tile model
-                    const propertyNames = feature.getPropertyNames();
-                    const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
-                    return {
-                        ...acc,
-                        [msId]: acc[msId]
-                            ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
-                            : [{ type: 'Feature', properties, geometry: null }]
-                    };
-                }
-                return acc;
-            }, []);
-            return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+        // we can use pick so the only first intersect feature will be returned
+        // this is more intuitive for uses such as get feature info
+        const feature = map.scene.pick(position);
+        if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
+            const msId = feature.tileset.msId;
+            // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
+            // it has content but refers to the whole tile model
+            const propertyNames = feature.getPropertyNames();
+            const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
+            return [{ id: msId, features: [{ type: 'Feature', properties, geometry: null }] }];
         }
         return [];
     }

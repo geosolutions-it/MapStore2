@@ -7,6 +7,7 @@
 */
 
 export const UPDATE_MAP_LAYOUT = 'MAP_LAYOUT:UPDATE_MAP_LAYOUT';
+export const FORCE_UPDATE_MAP_LAYOUT = 'MAP_LAYOUT:FORCE_UPDATE_MAP_LAYOUT';
 
 /**
  * updateMapLayout action, type `UPDATE_MAP_LAYOUT`
@@ -18,6 +19,12 @@ export function updateMapLayout(layout) {
     return {
         type: UPDATE_MAP_LAYOUT,
         layout
+    };
+}
+
+export function forceUpdateMapLayout() {
+    return {
+        type: FORCE_UPDATE_MAP_LAYOUT
     };
 }
 

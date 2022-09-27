@@ -113,7 +113,13 @@ export const clickedPointToGeoJson = (clickedPoint) => {
             type: "Feature",
             geometry: {
                 type: 'Point',
-                coordinates: [parseFloat(clickedPoint.lng), parseFloat(clickedPoint.lat)]
+                coordinates: [
+                    parseFloat(clickedPoint.lng),
+                    parseFloat(clickedPoint.lat),
+                    ...(clickedPoint.height !== undefined
+                        ? [parseFloat(clickedPoint.height)]
+                        : [])
+                ]
             },
             style: [{
                 iconUrl,
