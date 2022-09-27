@@ -56,12 +56,14 @@ import { getValidator } from '../utils/MapInfoUtils';
 const isIndexValid = (state, responses, requestIndex, isVector) => {
     const {configuration, requests, queryableLayers = [], index} = state;
     const {infoFormat} = configuration || {};
-
+    const { layer = {} } = responses[requestIndex] || {};
+    // these layers do not perform requests to a backend
+    const isVectorLayer = !!(isVector || layer.type === '3dtiles');
     // Index when first response received is valid
     const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]]);
     const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses);
     const cond1 = isUndefined(index) && !!validResponse.length;
-    const cond2 = !isVector && requests.length === inValidResponse.filter(res => res).length;
+    const cond2 = !isVectorLayer && requests.length === inValidResponse.filter(res => res).length;
     const cond3 = isUndefined(index) && isVector && requests.filter(r => isEmpty(r)).length === queryableLayers.length;
     return (cond1 || cond2 || cond3);
     // Check if all requested layers are vector

@@ -7,17 +7,14 @@
 */
 import Rx from 'rxjs';
 
-import {UPDATE_DOCK_PANELS, updateMapLayout} from '../actions/maplayout';
+import {UPDATE_DOCK_PANELS, updateMapLayout, FORCE_UPDATE_MAP_LAYOUT} from '../actions/maplayout';
 import {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, setControlProperty} from '../actions/controls';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, closeFeatureGrid} from '../actions/featuregrid';
 
 import {
     CLOSE_IDENTIFY,
-    ERROR_FEATURE_INFO,
     TOGGLE_MAPINFO_STATE,
-    LOAD_FEATURE_INFO,
-    EXCEPTIONS_FEATURE_INFO,
     NO_QUERYABLE_LAYERS
 } from '../actions/mapInfo';
 
@@ -58,14 +55,13 @@ export const updateMapLayoutEpic = (action$, store) =>
         CLOSE_IDENTIFY,
         NO_QUERYABLE_LAYERS,
         TOGGLE_MAPINFO_STATE,
-        LOAD_FEATURE_INFO,
-        EXCEPTIONS_FEATURE_INFO,
         TOGGLE_CONTROL,
         SET_CONTROL_PROPERTY,
         SET_CONTROL_PROPERTIES,
         SHOW_SETTINGS,
         HIDE_SETTINGS,
-        ERROR_FEATURE_INFO)
+        FORCE_UPDATE_MAP_LAYOUT
+    )
         .switchMap(() => {
             const state = store.getState();
 

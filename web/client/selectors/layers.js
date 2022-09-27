@@ -61,7 +61,7 @@ export const layerSelectorWithMarkers = createSelector(
                 }}
             }));
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
-            newLayers.push(getMarkerLayer("GetFeatureInfo", coords));
+            newLayers.push(getMarkerLayer("GetFeatureInfo", { ...coords, height: markerPosition.height }));
         }
         if ( highlightPoint ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(highlightPoint.latlng) : highlightPoint.latlng;

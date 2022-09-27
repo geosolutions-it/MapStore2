@@ -8,6 +8,7 @@
 
 export const UPDATE_MAP_LAYOUT = 'MAP_LAYOUT:UPDATE_MAP_LAYOUT';
 export const UPDATE_DOCK_PANELS = 'MAP_LAYOUT:UPDATE_DOCK_PANELS';
+export const FORCE_UPDATE_MAP_LAYOUT = 'MAP_LAYOUT:FORCE_UPDATE_MAP_LAYOUT';
 
 /**
  * updateMapLayout action, type `UPDATE_MAP_LAYOUT`
@@ -36,6 +37,12 @@ export function updateDockPanelsList(name, action = 'add', location = 'right') {
         name,
         action,
         location
+    };
+}
+
+export function forceUpdateMapLayout() {
+    return {
+        type: FORCE_UPDATE_MAP_LAYOUT
     };
 }
 
