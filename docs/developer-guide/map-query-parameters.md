@@ -205,9 +205,13 @@ If so, it will postpone search to ensure that layer is added to the map. Otherwi
 immediately.
 
 GET: `#/viewer/openlayers/new?addLayers=layer1|service&mapinfo=layer1&mapInfoFilter="BB='cc'"`
-Where `layer1` is layer name. `service` is the service name providing layer data. Service name is optional,
-service selected by default will be used if it is omitted.
-`mapInfoFilter` is a cql filter applied to the layer.
+
+Where : 
+
+- `layer1` is layer name. 
+- `service` is the service name providing layer data. Service name is optional. If missing the default.
+- `mapInfoFilter` is a cql filter applied to the layer.
+
 
 ### Background
 
@@ -216,6 +220,7 @@ Supports default backgrounds provided by static service defined in `localConfig.
 as other layers:
 
 `#/viewer/openlayers/new?background=Sentinel`
+
 `#/viewer/openlayers/new?background=layer1|service`
 
 Where `Sentinel` & `layer1` are layer names, `service` is the service name providing layer data. Service name is optional,
