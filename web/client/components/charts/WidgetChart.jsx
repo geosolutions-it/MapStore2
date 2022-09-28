@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { every, includes, isNumber, isString, union, orderBy, groupBy, find, flatten } from 'lodash';
+import { every, includes, isNumber, isString, union, orderBy, flatten } from 'lodash';
 
 import LoadingView from '../misc/LoadingView';
 
@@ -213,6 +213,49 @@ const preProcessValues = (formula, values) => (
         }
     }));
 
+const reorderDataByClassification = (data, {classificationAttr, classificationType, autoColorOptions, customColorEnabled}) => {
+    const classifications = data.map(d => d[classificationAttr]);
+    const colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
+    if (classificationAttr)  {
+        let tempData = [];
+        let groupedData = [];
+        switch (classificationType) {
+        case 'value':
+            tempData = [...data];
+            groupedData = Object.keys(colorCategories).reduce((prev, cur) => {
+                const entries = [];
+                tempData.forEach((el, idx) => {
+                    if (el[classificationAttr] === colorCategories[cur].value) {
+                        entries.push(el);
+                        delete tempData[idx];
+                    }
+                });
+                return [...prev, entries];
+            }, []);
+            return flatten(groupedData.concat(tempData.filter(Boolean)));
+        case "range":
+            // Ranges are open at the end
+            // e.g. 0-10 will include 0-9 values
+            // if two ranges are crossing - first range in the list will contain data value
+            tempData = [...data];
+            groupedData = Object.keys(colorCategories).reduce((prev, cur) => {
+                const entries = [];
+                tempData.forEach((el, idx) => {
+                    if (el[classificationAttr] >= colorCategories[cur].min && el[classificationAttr] < colorCategories[cur].max) {
+                        entries.push(el);
+                        delete tempData[idx];
+                    }
+                });
+                return [...prev, entries];
+            }, []);
+            return flatten(groupedData.concat(tempData.filter(Boolean)));
+        default:
+            return data;
+        }
+    }
+    return data;
+};
+
 function getData({
     type,
     xDataKey,
@@ -226,38 +269,22 @@ function getData({
     customColorEnabled,
     classificationType
 }) {
-    let classifications = [];
-    let classificationColors = [];
+    let classifications;
+    let classificationColors;
     let colorCategories = [];
     let data = dataUnsorted;
     const { defaultClassLabel = ''} = autoColorOptions;
 
-    if (classificationAttr && classificationType === "value")  {
-        // #8591 changing order of data for matching colorCategories order
-        classifications = dataUnsorted.map(d => d[classificationAttr]);
-        classificationColors = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).classificationColors;
-        colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
+    // #8591 Plotly order legend according to the first appearance of the corresponding data. To preserve order defined by
+    // palette we need to make sure that data entries are ordered properly
+    data = reorderDataByClassification(data, {
+        classificationAttr,
+        classificationType,
+        autoColorOptions,
+        customColorEnabled,
+        xDataKey
+    });
 
-        let dataSplit = groupBy(dataUnsorted, xDataKey);
-        dataSplit = Object.keys(dataSplit).map(k => {
-            return dataSplit[k];
-        });
-        if (dataSplit.every(item => item.length === 1)) {
-            dataSplit = [data];
-        }
-        const newData = dataSplit.map(dataAggregated => {
-            const colorCatValues = colorCategories.map((c) => c.value);
-            const dataSorted = colorCategories.map(colorCat => {
-                return find(dataAggregated, (d) => d[classificationAttr] === colorCat.value);
-            }).filter(v => v);
-            const defaultClassLabelAggregated = dataAggregated.filter(d => !includes(colorCatValues, d[classificationAttr]));
-            return [
-                ...dataSorted,
-                ...defaultClassLabelAggregated
-            ];
-        });
-        data = flatten(newData);
-    }
     classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
     const x = data.map(d => d[xDataKey]);
     let y = data.map(d => d[yDataKey]);
