@@ -48,7 +48,7 @@ npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
   - [ ] Take note of current version of mapstore in `package.json` in master branch, it should be in the form 0.x.0
   - [ ] If major release, make pr and merge on master **0.&lt;x-incremented&gt;.0**
   - [ ] if minor release, make pr and merge on stable YYYY.XX.xx **0.x.&lt;number-of-minor-version&gt;**
-- [ ] Create a milestone on GitHub with the same name of the release (vYYYY.XX.xx)
+- [ ] Create a milestone on GitHub with the same name of the release, without `v` (`YYYY.XX.xx`)
   - [ ] assign the label "current-release" to all the issues and Prs of the current zenhub release
   - [ ] use the label to filter the issues on github and assign to all the issues and Prs the milestone created
   - [ ] remove assignments of "current-release"
@@ -109,4 +109,4 @@ npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Optional - prepare a PR for updating release procedure
 - [ ] Close this issue
-- [ ] Close the related milestone **vYYYY.XX.mm**
+- [ ] Close the related milestone **YYYY.XX.mm**
