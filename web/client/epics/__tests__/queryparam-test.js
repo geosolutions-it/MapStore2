@@ -791,7 +791,7 @@ describe('queryparam epics', () => {
             },
             router: {
                 location: {
-                    search: "?mapinfo=tiger:poly_landmarks&mapInfoFilter=\"CFCC='H41'\""
+                    search: "?mapinfo=tiger:poly_landmarks&mapInfoFilter=CFCC='H41'"
                 }
             }
         };
@@ -820,7 +820,7 @@ describe('queryparam epics', () => {
             },
             router: {
                 location: {
-                    search: "?addLayers=tiger:poly_landmarks|gs_stable_wms,anotherLayer&layerFilters=\"CFCC='H41'\""
+                    search: "?addLayers=tiger:poly_landmarks;gs_stable_wms,anotherLayer&layerFilters=CFCC='H41'"
                 }
             },
             catalog: {
