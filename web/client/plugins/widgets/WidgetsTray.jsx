@@ -80,14 +80,18 @@ class WidgetsTray extends React.Component {
         items: PropTypes.array,
         expanded: PropTypes.bool,
         setExpanded: PropTypes.func,
-        layout: PropTypes.object
+        layout: PropTypes.object,
+        isMobile: PropTypes.bool,
+        isTablet: PropTypes.bool
     };
     static defaultProps = {
         enabled: true,
         items: [],
         expanded: false,
         setExpanded: () => { },
-        layout: {}
+        layout: {},
+        isMobile: false,
+        isTablet: false
     };
     render() {
         return this.props.enabled
@@ -101,11 +105,15 @@ class WidgetsTray extends React.Component {
                 }}>
                 <BorderLayout
                     columns={[
-                        <CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
+                        ...( !this.props.isMobile
+                            ? [<CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />]
+                            : []
+                        ),
                         <CollapseAllButton key="collapse-all" toolsOptions={this.props.toolsOptions} />,
                         ...(this.props.items.map( i => i.tool) || [])
                     ]}
-                >{this.props.expanded ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
+                >
+                    {this.props.expanded && !this.props.isMobile ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
                 </BorderLayout>
             </div>)
             : null;
@@ -116,8 +124,9 @@ export default compose(
     withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,
+        state => state.browser && state.browser.mobile,
         (state) => mapLayoutValuesSelector(state, { right: true }),
-        (widgets, layout = []) => ({ widgets, layout })
+        (widgets, isMobileAgent, layout = []) => ({ widgets, layout, isMobileAgent })
     ), {
         toggleTray
     }),
@@ -126,6 +135,12 @@ export default compose(
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
         hasTrayWidgets: widgets.length > 0
     })),
+    withProps(({ isMobileAgent }) => {
+        return {
+            isMobile: isMobileAgent && window.innerWidth < 600,
+            isTablet: isMobileAgent && window.innerWidth >= 600
+        };
+    }),
     // flag of plugin presence
     lifecycle({
         componentDidMount() {

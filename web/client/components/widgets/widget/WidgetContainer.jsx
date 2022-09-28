@@ -10,6 +10,7 @@ import React from 'react';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import ConfirmModal from '../../maps/modals/ConfirmModal';
+import MobileControls from "./MobileControls";
 
 /**
  * Base container for widgets.
@@ -35,14 +36,19 @@ export default ({
     topLeftItems,
     topRightItems,
     headerStyle = {},
+    options = {},
     children
 }) =>
-    (<div className="mapstore-widget-card" id={id}>
+    (<div className={`mapstore-widget-card ${options.isMobile  ? 'mobile' : ''}`} id={id}>
         <BorderLayout className={className} header={(<div style={headerStyle} className={`mapstore-widget-info ${isDraggable ? 'draggableHandle' : ''}`}>
             <div className="mapstore-widget-header">
                 <span className="widget-icons">{icons}</span>
                 {topLeftItems}
-                <span className="widget-title">{title}</span>
+                {
+                    options.isMobile
+                        ? <MobileControls options={options} />
+                        : (<span className="widget-title">{title}</span>)
+                }
                 <span className="mapstore-widget-options">
                     {topRightItems}
                 </span>

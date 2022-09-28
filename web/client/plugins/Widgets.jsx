@@ -8,16 +8,32 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
-import { compose, defaultProps, withProps, withPropsOnChange } from 'recompose';
+import {connect} from 'react-redux';
+import {createSelector} from 'reselect';
+import {compose, defaultProps, withProps, withPropsOnChange, withState} from 'recompose';
 
 
-import { createPlugin } from '../utils/PluginsUtils';
+import {createPlugin} from '../utils/PluginsUtils';
 
-import { mapIdSelector } from '../selectors/map';
-import { getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout, isTrayEnabled, getMaximizedState } from '../selectors/widgets';
-import { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, toggleCollapse, toggleMaximize } from '../actions/widgets';
+import {mapIdSelector} from '../selectors/map';
+import {
+    dependenciesSelector,
+    getFloatingWidgets,
+    getFloatingWidgetsLayout,
+    getMaximizedState,
+    getVisibleFloatingWidgets,
+    isTrayEnabled
+} from '../selectors/widgets';
+import {
+    changeLayout,
+    deleteWidget,
+    editWidget,
+    exportCSV,
+    exportImage,
+    toggleCollapse,
+    toggleMaximize,
+    updateWidgetProperty
+} from '../actions/widgets';
 import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
 
@@ -37,13 +53,17 @@ compose(
             getMaximizedState,
             dependenciesSelector,
             (state) => mapLayoutValuesSelector(state, { right: true}),
-            (id, widgets, layouts, maximized, dependencies, mapLayout) => ({
+            state => state.browser && state.browser.mobile,
+            getFloatingWidgets,
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets) => ({
                 id,
                 widgets,
                 layouts,
                 maximized,
                 dependencies,
-                mapLayout
+                mapLayout,
+                isMobileAgent,
+                dropdownWidgets
             })
         ), {
             editWidget,
@@ -60,10 +80,17 @@ compose(
     compose(
         heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
         widthProvider({ overrideWidthProvider: false }),
-        withProps(({width, height, maximized, mapLayout} = {}) => {
+        withProps(({ isMobileAgent, width }) => {
+            return {
+                isMobile: isMobileAgent && width < 600,
+                isTablet: isMobileAgent && width >= 600
+            };
+        }),
+        withProps(({width, height, maximized, mapLayout, isMobile, isTablet} = {}) => {
+            const backgroundSelectorOffset = isMobile ? 40 : 0;
             const rightOffset = mapLayout?.right ?? 0;
-            const divHeight = height - 120;
-            const nRows = 4;
+            const divHeight = isMobile ? (height - backgroundSelectorOffset - 120) / 2 : height - backgroundSelectorOffset - 120;
+            const nRows = isMobile ? 1 : 4;
             const rowHeight = Math.floor(divHeight / nRows - 20);
 
             const maximizedStyle = maximized?.widget ? {
@@ -82,8 +109,14 @@ compose(
                 breakpoints: { xxs: 0 },
                 cols: { xxs: 1 }
             } : {};
-            const viewWidth = width && width > 800 ? width - (500 + rightOffset + RIGHT_MARGIN) : width - rightOffset - RIGHT_MARGIN;
+            let viewWidth = width && width > 800 ? width - (500 + rightOffset + RIGHT_MARGIN) : width - rightOffset - RIGHT_MARGIN;
+            let leftOffset = (width && width > 800) ? "500px" : "0";
+            if (isMobile) {
+                viewWidth = isTablet ? width / 2 : width - rightOffset - RIGHT_MARGIN;
+                leftOffset = isTablet ? width / 2 - rightOffset - RIGHT_MARGIN : 0;
+            }
             const widthOptions = width ? {width: viewWidth - 1} : {};
+            const baseHeight = Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10);
             return ({
                 rowHeight,
                 className: "on-map",
@@ -92,10 +125,9 @@ compose(
                 ...widthOptions,
                 useDefaultWidthProvider: false,
                 style: {
-                    left: (width && width > 800) ? "500px" : "0",
-                    marginTop: 52,
-                    bottom: 65,
-                    height: Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10),
+                    left: leftOffset,
+                    bottom: 65 + backgroundSelectorOffset,
+                    height: isMobile ? baseHeight / 2 : baseHeight,
                     width: viewWidth + 'px',
                     position: 'absolute',
                     zIndex: 50,
@@ -139,6 +171,54 @@ compose(
             ({ widgets = [], toolsOptions = {}}) => ({
                 widgets: widgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true)
             })
+        ),
+        // making only one widget displayed at a time for mobile view
+        compose(
+            // add state to store currently selected widget
+            withState('activeWidget', 'setActiveWidget', false),
+            // adjust dropdown options according to the widgets visibility for the user
+            withPropsOnChange(
+                ["dropdownWidgets", "toolsOptions"],
+                ({ dropdownWidgets = [], toolsOptions = {}}) => ({
+                    dropdownWidgets: dropdownWidgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true)
+                })
+            ),
+            // set default active widget whenever set of widgets has changed and mobile user-agent is found
+            withPropsOnChange(
+                ["widgets", "isMobile", "id"],
+                ({widgets, isMobile, activeWidget, setActiveWidget}) => {
+                    if (widgets.length && isMobile && !activeWidget) {
+                        setActiveWidget(widgets[0]);
+                    }
+                }
+            ),
+            withPropsOnChange(
+                ['activeWidget', 'isMobile', 'widgets'],
+                ({activeWidget, dropdownWidgets, setActiveWidget, isMobile, widgets, pluginCfg, toolsOptions}) => {
+                    if (activeWidget && isMobile && widgets.length) {
+                        const widget = {
+                            ...activeWidget,
+                            canEdit: false,
+                            options: {
+                                activeWidget,
+                                dropdownWidgets,
+                                ...(activeWidget.options ?? {}),
+                                isMobile: true,
+                                showMobileNavigation: pluginCfg.showMobileNavigation ?? true,
+                                setActiveWidget
+                            }
+                        };
+                        return {
+                            toolsOptions: {
+                                ...toolsOptions,
+                                showPin: false
+                            },
+                            widgets: [widget]
+                        };
+                    }
+                    return widgets;
+                }
+            )
         )
     )
 )(WidgetsViewBase);
@@ -160,6 +240,7 @@ class Widgets extends React.Component {
  * @memberof plugins
  * @name Widgets
  * @class
+ * @prop {boolean} [showMobileNavigation] show arrows to toggle between available widgets in mobile view. True by default.
  * @prop {object} [toolsOptions] options to show and manage widgets tools. Widget tools are buttons available in some widgets. Any entry of this object can be configured using accessRules.
  *       Access rules can be defined using the syntax (@see components.misc.enhancers.security.accessRuleParser).
  *       The accessible parts of the state are `{mapInfo: {canEdit, canDelete...}, user: {role: "USER"}}`. So you can define rules like this:
