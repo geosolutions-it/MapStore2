@@ -193,12 +193,11 @@ compose(
                 }
             ),
             withPropsOnChange(
-                ['activeWidget', 'isMobile', 'widgets'],
-                ({activeWidget, dropdownWidgets, setActiveWidget, isMobile, widgets, pluginCfg, toolsOptions}) => {
+                ['activeWidget', 'isMobile', 'isTablet', 'widgets'],
+                ({activeWidget, dropdownWidgets, setActiveWidget, isMobile, isTablet, widgets, pluginCfg, toolsOptions}) => {
                     if (activeWidget && isMobile && widgets.length) {
                         const widget = {
                             ...activeWidget,
-                            canEdit: false,
                             options: {
                                 activeWidget,
                                 dropdownWidgets,
@@ -209,6 +208,7 @@ compose(
                             }
                         };
                         return {
+                            canEdit: false,
                             toolsOptions: {
                                 ...toolsOptions,
                                 showPin: false
@@ -216,7 +216,12 @@ compose(
                             widgets: [widget]
                         };
                     }
-                    return widgets;
+                    if (isTablet) {
+                        return {
+                            canEdit: false
+                        };
+                    }
+                    return { widgets };
                 }
             )
         )
