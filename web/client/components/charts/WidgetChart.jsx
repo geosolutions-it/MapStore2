@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { every, includes, isNumber, isString, union, orderBy, flatten } from 'lodash';
+import {every, includes, isNumber, isString, union, orderBy, flatten, groupBy} from 'lodash';
 
 import LoadingView from '../misc/LoadingView';
 
@@ -213,45 +213,57 @@ const preProcessValues = (formula, values) => (
         }
     }));
 
-const reorderDataByClassification = (data, {classificationAttr, classificationType, autoColorOptions, customColorEnabled}) => {
+const reorderDataByClassification = (data, {classificationAttr, classificationType, autoColorOptions, customColorEnabled, xDataKey}) => {
     const classifications = data.map(d => d[classificationAttr]);
     const colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
     if (classificationAttr)  {
-        let tempData = [];
+        const tempData = data.map(el => ({...el}));
         let groupedData = [];
+
+        let dataSplit = groupBy(tempData, xDataKey);
+        dataSplit = Object.keys(dataSplit).map(k => {
+            return dataSplit[k];
+        });
+
+        if (dataSplit.every(item => item.length === 1)) {
+            dataSplit = [tempData];
+        }
         switch (classificationType) {
         case 'value':
-            tempData = [...data];
             groupedData = Object.keys(colorCategories).reduce((prev, cur) => {
                 const entries = [];
-                tempData.forEach((el, idx) => {
-                    if (el[classificationAttr] === colorCategories[cur].value) {
-                        entries.push(el);
-                        delete tempData[idx];
-                    }
+                dataSplit.forEach((aggregated) => {
+                    aggregated.forEach((el, idx) => {
+                        if (el[classificationAttr] === colorCategories[cur].value) {
+                            entries.push(el);
+                            delete aggregated[idx];
+                        }
+                    });
                 });
                 return [...prev, entries];
             }, []);
-            return flatten(groupedData.concat(tempData.filter(Boolean)));
+            break;
         case "range":
             // Ranges are open at the end
             // e.g. 0-10 will include 0-9 values
             // if two ranges are crossing - first range in the list will contain data value
-            tempData = [...data];
             groupedData = Object.keys(colorCategories).reduce((prev, cur) => {
                 const entries = [];
-                tempData.forEach((el, idx) => {
-                    if (el[classificationAttr] >= colorCategories[cur].min && el[classificationAttr] < colorCategories[cur].max) {
-                        entries.push(el);
-                        delete tempData[idx];
-                    }
+                dataSplit.forEach((aggregated) => {
+                    aggregated.forEach((el, idx) => {
+                        if (el[classificationAttr] >= colorCategories[cur].min && el[classificationAttr] < colorCategories[cur].max) {
+                            entries.push(el);
+                            delete aggregated[idx];
+                        }
+                    });
                 });
                 return [...prev, entries];
             }, []);
-            return flatten(groupedData.concat(tempData.filter(Boolean)));
+            break;
         default:
             return data;
         }
+        return flatten(groupedData.concat(flatten(dataSplit).filter(Boolean)));
     }
     return data;
 };
