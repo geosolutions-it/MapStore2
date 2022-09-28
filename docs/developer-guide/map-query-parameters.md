@@ -187,12 +187,16 @@ GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
 
 This is a shortened syntax for `CATALOG:ADD_LAYERS_FROM_CATALOGS` action described down below.
 
-GET: `#/viewer/openlayers/config?addLayers=tiger:layer1|service,layer2&layerFilters="MM='nn'"`
+GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=MM='nn'`
 
-Where `layer1` and `layer2` are layer names. `service` is the service name providing layer data. Service name is optional,
-service selected by default will be used if it is omitted.
-`layerFilters` is a comma-separated list of cql filters to apply to the corresponding layer.
-E.g. `layerFilters="MM='nn'","CC='bb'"`
+`addLayers` parameter is a comma separated list of `<layerName>;<service>` (`service` is optional, and if present is separated
+from the layerName by a `;`.
+
+In the example above:
+- `layer1` and `layer2` are layer names;
+- `service` is the service identifier of the catalog.
+If no service is provided, the default service will be used.
+- `layerFilters` is a comma-separated list of cql filters to apply to the corresponding layer in the same position of the `addLayers` parameter
 
 ### MapInfo
 
@@ -204,9 +208,9 @@ In this case search execution will be postponed up to the moment when layer is a
 If so, it will postpone search to ensure that layer is added to the map. Otherwise, in case of no matches, search will execute
 immediately.
 
-GET: `#/viewer/openlayers/new?addLayers=layer1|service&mapinfo=layer1&mapInfoFilter="BB='cc'"`
+GET: `#/viewer/openlayers/new?addLayers=layer1;service&mapinfo=layer1&mapInfoFilter=BB='cc'`
 
-Where : 
+Where:
 
 - `layer1` is layer name. 
 - `service` is the service name providing layer data. Service name is optional. If missing the default.
@@ -221,10 +225,13 @@ as other layers:
 
 `#/viewer/openlayers/new?background=Sentinel`
 
-`#/viewer/openlayers/new?background=layer1|service`
+`#/viewer/openlayers/new?background=layer1;service`
 
-Where `Sentinel` & `layer1` are layer names, `service` is the service name providing layer data. Service name is optional,
+Where:
+- `Sentinel` & `layer1` are layer names,
+- `service` is the service name providing layer data. Service name is optional,
 `default_map_backgrounds` will be used if it is omitted.
+
 According to the implementation of default service, it is enough to pass desired layer name even partially, e.g. `background=Sen`, 
 it will use the closest layer name match in this case.
 

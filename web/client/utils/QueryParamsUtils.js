@@ -263,7 +263,7 @@ export const paramActions = {
             const layers = parameters.addLayers;
             if (typeof layers === 'string') {
                 const parsed = layers.split(',');
-                const pairs = parsed.map(el => el.split(/[;|]/));
+                const pairs = parsed.map(el => el.split(";"));
                 if (pairs.find(el => el[0] === value)) {
                     return [
                         scheduleSearchLayerWithFilter({layer: value, cql_filter: filterValue ?? ''})
@@ -282,7 +282,7 @@ export const paramActions = {
             const parsed = layers.split(',');
             if (parsed.length) {
                 const defaultSource = selectedServiceSelector(state);
-                const pairs = parsed.map(el => el.split(/[;|]/));
+                const pairs = parsed.map(el => el.split(";"));
                 const layerFilters = (parameters.layerFilters ?? '').split(',') ?? [];
                 return [
                     addLayersMapViewerUrl(
@@ -305,7 +305,7 @@ export const paramActions = {
         const background = parameters.background;
         if (typeof background === 'string') {
             const defaultSource = 'default_map_backgrounds';
-            const pair = background.split(/[;|]/);
+            const pair = background.split(";");
             const id = uuid();
             return [
                 addLayersMapViewerUrl(
