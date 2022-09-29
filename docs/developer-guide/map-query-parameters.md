@@ -196,7 +196,7 @@ In the example above:
 - `layer1` and `layer2` are layer names;
 - `service` is the service identifier of the catalog.
 If no service is provided, the default service will be used.
-- `layerFilters` is a list of cql filters delimited by a semicolon (`;`) to apply to the corresponding layer in the same position of the `addLayers` parameter
+- `layerFilters` is a list of cql filters to apply to the corresponding layer in the same position of the `addLayers` parameter, separated by `;`
 
 ### MapInfo
 
