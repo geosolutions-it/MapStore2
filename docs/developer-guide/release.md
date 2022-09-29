@@ -34,16 +34,17 @@ npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
 
 ### Release procedure
 
+```txt
 - [ ] Create an issue with this checklist in the release milestone.
 - [ ] Verify if it is needed to release a new version of http_proxy or geostore, and do it if necessary. Instruction for GeoStore [here](https://github.com/geosolutions-it/geostore/wiki/Release-Process)
   - [ ] for geostore, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
   - [ ] for http_proxy, check if [here](https://mvnrepository.com/artifact/proxy/http_proxy) is present the version specified in the [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022)
 - [ ] If major release (YYYY.XX.00), create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
-- [ ] If major release
+- [ ] If major release (YYYY.XX.00)
+  - [ ] Create a branch `YYYY.XX.xx`  (`xx` is really `xx`, example: 2018.01.xx)
   - [ ] Change [MapStore2-QA-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/)
   to build the new branch, enable the job continuous deploy by updating the `branch` parameter in the build configuration page to `YYYY.XX.xx`
-  
-  Note that the job that run after this will inherit this change
+  - [ ] If major release, update the default stable branch used in `createProject.js` script , in particular the `utility/projects/projectLib.js` file. Note that the job that run after this will inherit this change - to decilde if master, stable or both.
 - [ ] Check version in `package.json`. (as for semantic versioning the major have to be 0 until the npm package has not a stable API).
   - [ ] Take note of current version of mapstore in `package.json` in master branch, it should be in the form 0.x.0
   - [ ] If major release, make pr and merge on master **0.&lt;x-incremented&gt;.0**
@@ -55,10 +56,9 @@ npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
 - [ ] Prepare PR for updating `CHANGELOG.md` for **master** and **stable** [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
 - [ ] Fix `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
 - [ ] Update the version of java modules on the stable branch to a stable, incremental version.
-  - [ ] Run `mvn release:update-versions -DdevelopmentVersion=<VERSION> -Pprinting,printingbundle,binary`
-  
+  - [ ] Run `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`
     to update package version, where `<VERSION>` is the version of the java packages (e.g. `1.3.1`).
-  - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`
+  - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`. `project/standard/templates/web/pom.xml`
 - [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp (java/web) should be deployed for new project system).
   - [ ] Use `mvn clean install deploy -f java/pom.xml` to deploy `mapstore-services` and `mapstore-webapp`.
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)

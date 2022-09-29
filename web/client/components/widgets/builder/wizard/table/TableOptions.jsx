@@ -6,10 +6,9 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { castArray, includes, uniq } from 'lodash';
 import React from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
-import {compose, withHandlers, withProps} from 'recompose';
+import {compose, withProps} from 'recompose';
 
 import { isGeometryType } from '../../../../../utils/ogc/WFS/base';
 import AttributeTable from '../../../../data/featuregrid/AttributeTable';
@@ -18,30 +17,31 @@ import StepHeader from '../../../../misc/wizard/StepHeader';
 import noAttributes from '../common/noAttributesEmptyView';
 import Button from '../../../../misc/Button';
 
-const updatePropertyName = (arr, name, hide) => {
-    const names = castArray(name);
-    if (hide) {
-        return arr.filter(e => !includes(names, e));
-    }
-    return uniq([...arr, ...names]);
-};
 const AttributeSelector = compose(
+    withProps(({options = {}})=>({
+        options: {
+            // Parse to allow compatibility for existing table
+            propertyName: (options?.propertyName || [])?.map(p => typeof p === "string" ? ({name: p}) : p)
+        }
+    })),
     withProps(
         ({ attributes = [], options = {}} = {}) => ({ // TODO manage hide condition
             attributes: attributes
                 .filter(a => !isGeometryType(a))
-                .map( a => ({
-                    ...a,
-                    label: a.name,
-                    attribute: a.name,
-                    hide: options.propertyName && (options.propertyName.indexOf( a.name ) < 0)
+                .map( a => {
+                    const propertyNames = options?.propertyName?.map(p => p.name);
+                    const currPropertyName = options?.propertyName?.find(p => p.name === a.name);
+                    return {
+                        ...a,
+                        label: a.name,
+                        attribute: a.name,
+                        hide: propertyNames?.indexOf( a.name ) < 0,
+                        title: currPropertyName?.title || '',
+                        description: currPropertyName?.description || ''
+                    };
                 })
-                )
         })),
-    noAttributes(({ attributes = []}) => attributes.length === 0),
-    withHandlers({
-        onChange: ({ onChange = () => {}, options = {}}) => (name, hide) => onChange("options.propertyName", updatePropertyName(options && options.propertyName || [], name, hide))
-    })
+    noAttributes(({ attributes = []}) => attributes.length === 0)
 )(AttributeTable);
 
 

@@ -17,14 +17,16 @@ import {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_CANCEL_ITEM,
     UPDATE_RESULTS_STYLE,
-    changeActiveSearchTool,
     CHANGE_SEARCH_TOOL,
-    zoomAndAddPoint,
     ZOOM_ADD_POINT,
-    changeFormat,
     CHANGE_FORMAT,
-    changeCoord,
+    SCHEDULE_SEARCH_LAYER_WITH_FILTER,
     CHANGE_COORD,
+    HIDE_MARKER,
+    changeActiveSearchTool,
+    zoomAndAddPoint,
+    changeFormat,
+    changeCoord,
     searchResultLoaded,
     searchTextLoading,
     searchResultError,
@@ -34,7 +36,7 @@ import {
     cancelSelectedItem,
     updateResultsStyle,
     hideMarker,
-    HIDE_MARKER
+    scheduleSearchLayerWithFilter
 } from '../search';
 
 describe('Test correctness of the search actions', () => {
@@ -138,5 +140,12 @@ describe('Test correctness of the search actions', () => {
         const retval = hideMarker();
         expect(retval).toExist();
         expect(retval.type).toBe(HIDE_MARKER);
+    });
+    it('scheduleSearchLayerWithFilter', () => {
+        const retval = scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "mm='nn'"});
+        expect(retval).toExist();
+        expect(retval.type).toBe(SCHEDULE_SEARCH_LAYER_WITH_FILTER);
+        expect(retval.layer).toBe('layer1');
+        expect(retval.cql_filter).toBe("mm='nn'");
     });
 });

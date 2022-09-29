@@ -8,21 +8,11 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactQuill from 'react-quill';
+import ReactQuill from '../../../../libs/quill/react-quill-suspense';
 
 import Message from '../../../I18N/Message';
 import Portal from '../../../misc/Portal';
-import resizeModuleIFrametoolbarConfigFactory from '../../../misc/quillmodules/ResizeModule';
 import ResizableModal from '../../../misc/ResizableModal';
-
-const {Quill} = ReactQuill;
-
-const {ResizeModule, IFrame, toolbarConfig} = resizeModuleIFrametoolbarConfigFactory(Quill);
-
-Quill.register({
-    'formats/video': IFrame,
-    'modules/resizeModule': ResizeModule
-});
 
 /**
  * Component for rendering FeatureInfoEditor a modal editor to modify format template
@@ -43,7 +33,8 @@ class FeatureInfoEditor extends React.Component {
         element: PropTypes.object,
         onChange: PropTypes.func,
         onShowEditor: PropTypes.func,
-        enableIFrameModule: PropTypes.bool
+        enableIFrameModule: PropTypes.bool,
+        onReady: PropTypes.func
     };
 
     static defaultProps = {
@@ -65,7 +56,7 @@ class FeatureInfoEditor extends React.Component {
     }
 
     render() {
-        const { showEditor, enableIFrameModule = true } = this.props;
+        const { showEditor, enableIFrameModule = true, onReady = () => {} } = this.props;
         return (
             <Portal>
                 <ResizableModal
@@ -86,8 +77,8 @@ class FeatureInfoEditor extends React.Component {
                     <div id="ms-template-editor" className="ms-editor">
                         <ReactQuill
                             bounds="#ms-template-editor"
-                            ref={(quill) => { if (quill) { this.quill = quill; } } }
-                            modules={enableIFrameModule ? {
+                            ref={(quill) => { if (quill) { this.quill = quill; onReady(quill); } } }
+                            modules={(toolbarConfig) => enableIFrameModule ? {
                                 resizeModule: {},
                                 toolbar: toolbarConfig
                             } : {}}

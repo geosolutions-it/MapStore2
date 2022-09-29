@@ -9,22 +9,34 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import assign from 'object-assign';
 import url from 'url';
+import isEqual from 'lodash/isEqual';
 const urlQuery = url.parse(window.location.href, true).query;
 
 import ConfigUtils from '../utils/ConfigUtils';
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
+import { createShallowSelectorCreator } from '../utils/ReselectUtils';
 
-const PluginsContainer = connect((state) => ({
-    statePluginsConfig: state.plugins,
-    mode: urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
-    pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
-        layerSettings: state.layers.settings
-    }),
-    monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(ModulePluginsContainer);
+const PluginsContainer = connect(
+    createShallowSelectorCreator(isEqual)(
+        state => state.plugins,
+        state => state.mode,
+        state => state?.browser?.mobile,
+        state => state.controls,
+        state => state?.layers?.settings,
+        state => getMonitoredState(state, ConfigUtils.getConfigProp('monitorState')),
+        (statePluginsConfig, stateMode, mobile, controls, layerSettings, monitoredState) => ({
+            statePluginsConfig,
+            mode: urlQuery.mode || stateMode || (mobile ? 'mobile' : 'desktop'),
+            pluginsState: {
+                ...controls,
+                ...(layerSettings && { layerSettings })
+            },
+            monitoredState
+        })
+    )
+)(ModulePluginsContainer);
 
 class MapViewer extends React.Component {
     static propTypes = {
@@ -34,13 +46,15 @@ class MapViewer extends React.Component {
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
         plugins: PropTypes.object,
-        loaderComponent: PropTypes.func
+        loaderComponent: PropTypes.func,
+        onLoaded: PropTypes.func
     };
 
     static defaultProps = {
         mode: 'desktop',
         className: 'viewer',
-        loadMapConfig: () => {}
+        loadMapConfig: () => {},
+        onLoaded: () => {}
     };
 
     UNSAFE_componentWillMount() {
@@ -53,6 +67,7 @@ class MapViewer extends React.Component {
             plugins={this.props.plugins}
             params={this.props.params}
             loaderComponent={this.props.loaderComponent}
+            onLoaded={this.props.onLoaded}
         />);
     }
 }

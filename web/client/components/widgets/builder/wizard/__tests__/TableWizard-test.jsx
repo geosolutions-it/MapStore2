@@ -11,8 +11,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import TableWizard from '../TableWizard';
+import { waitFor } from '@testing-library/react';
 
-describe('ChartWizard component', () => {
+describe('TableWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -22,17 +23,21 @@ describe('ChartWizard component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('ChartWizard rendering with defaults', () => {
+    it('TableWizard rendering with defaults', (done) => {
         ReactDOM.render(<TableWizard />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.chart-options-form')).toExist();
+        waitFor(() => container.querySelector('.chart-options-form'))
+            .then(() => {
+                const el = container.querySelector('.ms-wizard');
+                expect(el).toExist();
+                expect(container.querySelector('.chart-options-form')).toBeTruthy();
+                done();
+            });
     });
-    it('ChartWizard rendering options', () => {
+    it('TableWizard rendering options', () => {
         ReactDOM.render(<TableWizard step={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-options-form');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

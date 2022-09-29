@@ -14,7 +14,7 @@ const Select = localizedProps('noResultsText')(RS);
 
 import CommonAdvancedSettings from './CommonAdvancedSettings';
 import {isNil} from "lodash";
-import ReactQuill from "react-quill";
+import ReactQuill from '../../../../libs/quill/react-quill-suspense';
 
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";

@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 
 import { getLayerJSONFeature } from '../../../../observables/wfs';
-import { getCurrentPaginationOptions, updatePages } from '../../../../utils/FeatureGridUtils';
+import { getAttributesNames, getCurrentPaginationOptions, updatePages } from '../../../../utils/FeatureGridUtils';
 
 /**
  * Create an operator that resonds to a fetch data trigger event to retrives data on scroll.
@@ -33,7 +33,7 @@ export default pages$ => props$ => props$.switchMap(({
     sortOptions: sortOptions,
     timeout: 15000,
     totalFeatures: pagination.totalFeatures, // this is needed to allow workaround of GEOS-7233
-    propertyName: options.propertyName,
+    propertyName: getAttributesNames(options.propertyName),
     viewParams: options.viewParams
     // TODO: defaultSortOptions - to skip primary-key issues
 })

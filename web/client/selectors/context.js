@@ -34,12 +34,12 @@ export const isLoadingSelector = state => get(state, 'context.loading');
 export const loadFlagsSelector = state => get(state, 'context.loadFlags');
 
 /**
- * returns the default plugins for context. By default always adds the Context plugin
+ * returns the default plugins for context. By default always adds the Context plugin and FeedbackMask
  * (context plugin now provides epics and reducers, they should be anyway loaded)
  */
 export const defaultPluginsSelector = createSelector(
-    () => get(ConfigUtils.getConfigProp("plugins"), 'desktop'),
-    (plugins = []) => ({ desktop: [...plugins, "Context"] } )
+    () => get(ConfigUtils.getConfigProp("plugins"), 'context'),
+    (plugins = []) => ({ desktop: [...plugins, "Context", "FeedbackMask"] } )
 );
 export const loadingPluginsSelector = state => defaultPluginsSelector(state);
 export const errorPluginsSelector = state => loadingPluginsSelector(state);

@@ -19,9 +19,9 @@ To create the final war, you have several options:
 
 `mvn clean install -Dmapstore2.version=[version_identifier] [profiles]`
 
-* release build (produces also the binary)
+* binary build (produces also the binary)
 
-`mvn clean install -Dmapstore2.version=[version_identifier] -Prelease`
+`mvn clean install -Dmapstore2.version=[version_identifier] -Pbinary`
 
 ## Building the documentation
 

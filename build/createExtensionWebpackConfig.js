@@ -11,13 +11,14 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
  * @param {boolean} cfg.prod discriminates the production or development environment
  * @param {string} cfg.name the name of the plugin/extension
  * @param {object} cfg.exposes this is the main entry point of the module federation plugin. For MapStore extension plugin it must be { './plugin': "path/to/the/plugin/file>"}
+ * @param {boolean} cfg.sharedLibrariesEager this flag controls whether shared libraries should be included into index.js of extensions or loaded asynchronously
  * @param {object} cfg.alias aliases for the JS build
  * @param {object} cfg.publicPath the publicPath, useful for debugging
  * @param {string} cfg.destination the destination folder of the build packages
  * @param {array} cfg.plugins additional plugins, more then the default ones.
  * @param {object} cfg.overrides any other configuration you want to add to the configuration.
  */
-module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destination, plugins = [], overrides = {} }) => ({
+module.exports = ({ prod = true, name, exposes, sharedLibrariesEager = true, alias = {}, publicPath, destination, plugins = [], overrides = {} }) => ({
     target: "web",
     mode: prod ? "production" : "development",
     entry: {},
@@ -44,7 +45,10 @@ module.exports = ({ prod = true, name, exposes, alias = {}, publicPath, destinat
         name,
         filename: "index.js", // "bundle.[chunkhash:8].js", // [chunkhash:8]
         exposes,
-        shared
+        shared: Object.keys(shared).reduce((prev, el) => {
+            prev[el] = {...shared[el], eager: sharedLibrariesEager};
+            return prev;
+        }, {})
     }),
     new MiniCssExtractPlugin({
         filename: "assets/css/[name].css"

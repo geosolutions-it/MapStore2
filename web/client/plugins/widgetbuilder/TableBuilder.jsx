@@ -52,7 +52,7 @@ const Builder = connect(
             .do(({ featureTypeProperties = [], onChange = () => { }, data = {} } = {}) => {
                 // initialize attribute list if empty (first time)
                 if (onChange && featureTypeProperties.length > 0 && !get(data, "options.propertyName")) {
-                    onChange("options.propertyName", featureTypeProperties.filter(a => !isGeometryType(a)).map(ft => ft.name));
+                    onChange("options.propertyName", featureTypeProperties.filter(a => !isGeometryType(a)).map(ft => ({name: ft.name})));
                 }
             }).ignoreElements()
     ))

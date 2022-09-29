@@ -72,6 +72,7 @@ import { setControlProperties } from '../../actions/controls';
 import { BROWSE_DATA } from '../../actions/layers';
 import { configureMap } from '../../actions/config';
 import { changeMapType } from './../../actions/maptype';
+import { FORCE_UPDATE_MAP_LAYOUT } from '../../actions/maplayout';
 
 const TEST_MAP_STATE = {
     present: {
@@ -173,11 +174,11 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        const NUM_ACTIONS = 5;
+        const NUM_ACTIONS = 6;
         testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
             try {
-                expect(actions.length).toBe(5);
-                const [a0, a1, a2, a3, a4] = actions;
+                expect(actions.length).toBe(6);
+                const [a0, a1, a2, a3, a4, a5] = actions;
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
@@ -194,8 +195,12 @@ describe('identify Epics', () => {
                 expect(a3.requestParams).toExist();
                 expect(a3.reqId).toExist();
                 expect(a3.layerMetadata.title).toBe(state.layers.flat[a3.requestParams.id === "TEST" ? 0 : 1].title);
+
                 expect(a4).toExist();
-                expect(a4.layerMetadata.title).toBe(state.layers.flat[a4.requestParams.id === "TEST" ? 0 : 1].title);
+                expect(a4.type).toBe(FORCE_UPDATE_MAP_LAYOUT);
+
+                expect(a5).toExist();
+                expect(a5.layerMetadata.title).toBe(state.layers.flat[a5.requestParams.id === "TEST" ? 0 : 1].title);
                 done();
             } catch (ex) {
                 done(ex);
@@ -580,7 +585,7 @@ describe('identify Epics', () => {
         }, state);
     });
     it('getFeatureInfoOnFeatureInfoClick with enableInfoForSelectedLayers set to false', (done) => {
-        const NUM_ACTIONS = 5;
+        const NUM_ACTIONS = 6;
         const state = {
             map: TEST_MAP_STATE,
             mapInfo: {
@@ -623,6 +628,8 @@ describe('identify Epics', () => {
                         expect(action.requestParams).toBeTruthy();
                         expect(action.reqId).toBeTruthy();
                         expect([state.layers.flat[0].title, state.layers.flat[1].title].includes(action.layerMetadata.title)).toBeTruthy();
+                        break;
+                    case FORCE_UPDATE_MAP_LAYOUT:
                         break;
                     default:
                         expect(true).toBe(false);

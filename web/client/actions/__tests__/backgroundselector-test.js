@@ -7,7 +7,8 @@
  */
 
 import expect from 'expect';
-import {CREATE_BACKGROUNDS_LIST,
+import {
+    CREATE_BACKGROUNDS_LIST,
     ADD_BACKGROUND,
     ADD_BACKGROUND_PROPERTIES,
     UPDATE_BACKGROUND_THUMBNAIL,
@@ -20,7 +21,8 @@ import {CREATE_BACKGROUNDS_LIST,
     updateThumbnail,
     clearModalParameters,
     clearBackgrounds,
-    removeBackground} from '../backgroundselector';
+    removeBackground, syncActiveBackgroundLayer, SYNC_CURRENT_BACKGROUND_LAYER
+} from '../backgroundselector';
 
 describe('Test backgroundSelector actions', () => {
     it('test accessing catalog from backgroundSelector', () => {
@@ -69,5 +71,11 @@ describe('Test backgroundSelector actions', () => {
         const action = clearModalParameters();
         expect(action).toExist();
         expect(action.type).toBe(CLEAR_MODAL_PARAMETERS);
+    });
+    it('test syncActiveBackgroundLayer', () => {
+        const action = syncActiveBackgroundLayer('id');
+        expect(action).toExist();
+        expect(action.type).toBe(SYNC_CURRENT_BACKGROUND_LAYER);
+        expect(action.id).toBe('id');
     });
 });

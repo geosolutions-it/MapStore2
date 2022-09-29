@@ -10,14 +10,14 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tomcat.version>8.5.69</tomcat.version>
-        <release.number>${project.version}</release.number>
+        <binary.number>${project.version}</binary.number>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>it.geosolutions.mapstore</groupId>
             <artifactId>mapstore-product</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>1.5-SNAPSHOT</version>
             <type>war</type>
             <scope>runtime</scope>
         </dependency>

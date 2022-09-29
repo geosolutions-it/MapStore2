@@ -14,12 +14,20 @@ import {isValidExtent} from "./CoordinatesUtils";
 import {getCenter, getConfigProp} from "./ConfigUtils";
 import {updatePointWithGeometricFilter} from "./IdentifyUtils";
 import {mapProjectionSelector} from "./PrintUtils";
-import {ADD_LAYERS_FROM_CATALOGS} from "../actions/catalog";
+import {ADD_LAYERS_FROM_CATALOGS, addLayersMapViewerUrl} from "../actions/catalog";
 import {changeMapView, ZOOM_TO_EXTENT, zoomToExtent} from "../actions/map";
 import {mapSelector} from "../selectors/map";
 import {featureInfoClick} from "../actions/mapInfo";
 import {warning} from "../actions/notifications";
-import {addMarker, SEARCH_LAYER_WITH_FILTER} from "../actions/search";
+import {
+    addMarker,
+    scheduleSearchLayerWithFilter,
+    SEARCH_LAYER_WITH_FILTER,
+    searchLayerWithFilter
+} from "../actions/search";
+import uuid from "uuid/v1";
+import {syncActiveBackgroundLayer} from "../actions/backgroundselector";
+import {selectedServiceSelector} from "../selectors/catalog";
 
 /**
  * Retrieves parameters from hash "query string" of react router
@@ -111,7 +119,8 @@ export const getRequestParameterValue = (name, state, storage = sessionStorage) 
 export const getParametersValues = (paramActions, state) => (
     Object.keys(paramActions)
         .reduce((params, parameter) => {
-            const value = getRequestParameterValue(parameter, state, sessionStorage);
+            const lowercase = parameter.toLowerCase();
+            const value = getRequestParameterValue(parameter, state, sessionStorage) ?? getRequestParameterValue(lowercase, state, sessionStorage);
             return {
                 ...params,
                 ...(!isNil(value) ? { [parameter]: value } : {})
@@ -222,28 +231,97 @@ export const paramActions = {
             })
         ];
     },
-    featureinfo: (parameters, state) => {
-        const value = parameters.featureinfo;
+    featureInfo: (parameters, state) => {
+        const value = parameters.featureInfo;
         const {lat, lng, filterNameList} = value;
+        const projection = mapProjectionSelector(state);
         if (typeof lat !== 'undefined' && typeof lng !== 'undefined') {
-            const projection = mapProjectionSelector(state);
             return [featureInfoClick(updatePointWithGeometricFilter({
                 latlng: {
                     lat,
                     lng
                 }
             }, projection), false, filterNameList ?? [])];
+        } else if (typeof value === 'string') {
+            const [latitude, longitude] = value.split(',');
+            if (typeof latitude !== 'undefined' && typeof longitude !== 'undefined') {
+                return [featureInfoClick(updatePointWithGeometricFilter({
+                    latlng: {
+                        lat: latitude,
+                        lng: longitude
+                    }
+                }, projection), false, [])];
+            }
         }
         return [];
     },
-    zoom: () => {
+    mapInfo: (parameters) => {
+        const value = parameters.mapInfo;
+        const filterValue = parameters.mapInfoFilter;
+        if (typeof value === 'string') {
+            // use delayed action dispatching if we have same layer name for mapInfo parameter and addLayers parameter
+            const layers = parameters.addLayers;
+            if (typeof layers === 'string') {
+                const parsed = layers.split(',');
+                const pairs = parsed.map(el => el.split(";"));
+                if (pairs.find(el => el[0] === value)) {
+                    return [
+                        scheduleSearchLayerWithFilter({layer: value, cql_filter: filterValue ?? ''})
+                    ];
+                }
+            }
+            return [
+                searchLayerWithFilter({layer: value, cql_filter: filterValue ?? ''})
+            ];
+        }
+        return [];
     },
-    heading: () => {
+    addLayers: (parameters, state) => {
+        const layers = parameters.addLayers;
+        if (typeof layers === 'string') {
+            const parsed = layers.split(',');
+            if (parsed.length) {
+                const defaultSource = selectedServiceSelector(state);
+                const pairs = parsed.map(el => el.split(";"));
+                const layerFilters = (parameters.layerFilters ?? '').split(';') ?? [];
+                return [
+                    addLayersMapViewerUrl(
+                        pairs.map(el => el[0]),
+                        pairs.map(el => el[1] ?? defaultSource),
+                        layerFilters.map(filter => {
+                            return filter.length ? ({
+                                params: {
+                                    CQL_FILTER: filter
+                                }
+                            }) : {};
+                        })
+                    )
+                ];
+            }
+        }
+        return [];
     },
-    pitch: () => {
+    background: (parameters) => {
+        const background = parameters.background;
+        if (typeof background === 'string') {
+            const defaultSource = 'default_map_backgrounds';
+            const pair = background.split(";");
+            const id = uuid();
+            return [
+                addLayersMapViewerUrl(
+                    [pair[0]],
+                    [pair[1] ?? defaultSource],
+                    [{
+                        id,
+                        'group': 'background',
+                        visibility: true
+                    }]
+                ),
+                syncActiveBackgroundLayer(id)
+            ];
+        }
+        return [];
     },
-    roll: () => {
-    }, // roll is currently not supported, we return standard 0 roll
     actions: (parameters) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
@@ -254,5 +332,12 @@ export const paramActions = {
             return parameters.actions.filter(a => includes(whiteList, a.type));
         }
         return [];
-    }
+    },
+    ...([
+        // supplementary parameter types with no processing callback
+        'zoom', 'heading', 'pitch', 'roll',
+        'layerFilters', 'mapInfoFilter'
+    ]
+        .reduce((prev, cur) => ({...prev, [cur]: () => {}}), {})
+    )
 };

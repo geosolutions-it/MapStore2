@@ -11,7 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactQuill from 'react-quill';
 
-import resizeModuleComp from '../../../misc/quillmodules/ResizeModule';
+import resizeModuleComp from '../ResizeModule';
 const {Quill} = ReactQuill;
 
 const {ResizeModule, IFrame, toolbarConfig, Toolbar, DisplaySize, Resize} = resizeModuleComp(Quill);

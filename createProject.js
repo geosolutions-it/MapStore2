@@ -49,7 +49,7 @@ function doWork(params) {
         name: params.projectName,
         version: params.projectVersion,
         description: params.projectDescription || params.projectName,
-        repository: params.repoURL,
+        repository: params.repoURL || "",
         eslintConfig: {
             "extends": [
                 "@mapstore/eslint-config-mapstore"
@@ -96,6 +96,9 @@ function doWork(params) {
         .then(() => {
             process.stdout.write('git init\n');
             return project.updateSubmoduleBranch(params.outFolder);
+        })
+        .then(() => {
+            return project.createFirstCommit(params.outFolder);
         })
         .then(() => {
             process.stdout.write('git repo OK!\n');

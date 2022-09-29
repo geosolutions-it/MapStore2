@@ -1,6 +1,6 @@
 # Printing Module
 
-The **printing module** of MapStore is a back-end service **not included  by default in the release package** that allows to create a printable PDF from the current map.
+The **printing module** of MapStore is a back-end service **not included by default in the binary package** that allows to create a printable PDF from the current map.
 
 !!! note
     The **printing module** is required by the **Print plugin** of MapStore, so if you want to have the Print plugin working in your application, you have to include also the printing module in your MapStore installation.
@@ -23,13 +23,13 @@ MapStore projects also allow to use the `printing` profile to include this modul
 
 If you have an existing and deployed instance of MapStore and you want to add the printing module, you can build only the printing extension as a zip running `mvn clean install -Pprintingbundle` from the [official Mapstore project](https://github.com/geosolutions-it/MapStore2). The zip bundle will created in `java/printing/target/mapstore-printing.zip`.
 
+You can copy the content of this zip bundle into the root of mapstore application (`<app_root>`, for instance `webapps/mapstore` in Tomcat):
 
-You can copy the content of this zip bundle into the root of mapstore application (`<app_root>`, for instance `webapps/mapstore` in Tomcat): 
-
-- files from zip directory `WEB-INF/classes` must be placed in `<app_root>/WEB-INF/classes` 
-- files from zip directory `WEB-INF/lib` must be placed in `<app_root>/WEB-INF/lib` 
+- files from zip directory `WEB-INF/classes` must be placed in `<app_root>/WEB-INF/classes`
+- files from zip directory `WEB-INF/lib` must be placed in `<app_root>/WEB-INF/lib`
 
 for the printing configuration files (if they are missing)
+
 - [these files](https://github.com/geosolutions-it/MapStore2/tree/master/java/printing/resources/geoserver/print) must be placed in `<app_root>/printing`
 
 Then restart your java container.
@@ -52,9 +52,9 @@ In `localConfig.json` you will find also a `printUrl` configuration that refers 
 This fork uses the same configuration files of the original library to define the various print layouts and options.
 This files is in the directory `resources/geoserver/print`, and they will be copied in `WEB-INF/classes` in the final `war` file.
 
-* `config.yml`: The main file that configures the layout. More information about this configuration file in the [original documentaiton](http://www.mapfish.org/doc/print/configuration.html)
-* `print_header.png`: The header, referred in `config.yml`
-* `Arrow_north_CFCF.svg` the north indicator, referred in `config.yml`
+- `config.yml`: The main file that configures the layout. More information about this configuration file in the [original documentaiton](http://www.mapfish.org/doc/print/configuration.html)
+- `print_header.png`: The header, referred in `config.yml`
+- `Arrow_north_CFCF.svg` the north indicator, referred in `config.yml`
 
 ## Troubleshooting
 
@@ -62,10 +62,10 @@ This files is in the directory `resources/geoserver/print`, and they will be cop
 
 Please check if:
 
-* "Print" plugin is present in `localConfig.json --> plugins --> desktop`.
-* You are using a desktop browser. The plugin is not designed for a mobile devices (tablet, smartphone...), for this reason it is not included in `plugins --> mobile`
-* The service at url `http(s)://<your-domain>/<applciation-base-paath>/pdf/info.json` is responding. Example: `https://example.com/mapstore/pdf/info.json`. The URL of this `info.json` is configured (by default as relative URL) in `localConfig.json` --> `printUrl` entry.
-* Looking at the JSON returned by the request above, the URLs in the entries `printURL` and `createURL` are reachable, and the domain, (the port) and the schema (http/https) of these URLs are the same of MapStore.
+- "Print" plugin is present in `localConfig.json --> plugins --> desktop`.
+- You are using a desktop browser. The plugin is not designed for a mobile devices (tablet, smartphone...), for this reason it is not included in `plugins --> mobile`
+- The service at url `http(s)://<your-domain>/<applciation-base-paath>/pdf/info.json` is responding. Example: `https://example.com/mapstore/pdf/info.json`. The URL of this `info.json` is configured (by default as relative URL) in `localConfig.json` --> `printUrl` entry.
+- Looking at the JSON returned by the request above, the URLs in the entries `printURL` and `createURL` are reachable, and the domain, (the port) and the schema (http/https) of these URLs are the same of MapStore.
 
 ### I have an error printing (using Reverse Proxy/HTTPS)
 
@@ -79,7 +79,7 @@ To avoid this problem, you can use several solution, depending on your setup and
 
 Some typical solutions are:
 
-* Using AJP instead of http (this forwards all the information by default)
+- Using AJP instead of http (this forwards all the information by default)
 
 ```conf
 # Example for Apache HTTP server
@@ -87,7 +87,7 @@ ProxyPass        /mapstore   ajp://localhost:8010/mapstore
 ProxyPassReverse /mapstore   ajp://localhost:8010/mapstore
 ```
 
-* Using rewrite engine to rewrite the requests. (apache web server)
+- Using rewrite engine to rewrite the requests. (apache web server)
 
 ```conf
 # example for Apache HTTP server
@@ -100,7 +100,7 @@ ProxyPreserveHost On
 ProxyVia full
 ```
 
-* Using non-standard headers, `X-Forwarded-Host` and `X-Forwarded-Proto`.
+- Using non-standard headers, `X-Forwarded-Host` and `X-Forwarded-Proto`.
 
 ```conf
 # example for nginx
