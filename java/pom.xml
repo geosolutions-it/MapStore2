@@ -68,6 +68,8 @@
         </property>
       </activation>
       <modules>
+        <module>services</module>
+        <module>web</module>
         <module>printing</module>
       </modules>
     </profile>
