@@ -283,7 +283,7 @@ export const paramActions = {
             if (parsed.length) {
                 const defaultSource = selectedServiceSelector(state);
                 const pairs = parsed.map(el => el.split(";"));
-                const layerFilters = (parameters.layerFilters ?? '').split(',') ?? [];
+                const layerFilters = (parameters.layerFilters ?? '').split(';') ?? [];
                 return [
                     addLayersMapViewerUrl(
                         pairs.map(el => el[0]),

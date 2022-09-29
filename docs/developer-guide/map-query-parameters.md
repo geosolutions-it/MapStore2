@@ -187,7 +187,7 @@ GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
 
 This is a shortened syntax for `CATALOG:ADD_LAYERS_FROM_CATALOGS` action described down below.
 
-GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=MM='nn'`
+GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=MM='nn';Aa='bb'`
 
 `addLayers` parameter is a comma separated list of `<layerName>;<service>` (`service` is optional, and if present is separated
 from the layerName by a `;`.
@@ -196,7 +196,7 @@ In the example above:
 - `layer1` and `layer2` are layer names;
 - `service` is the service identifier of the catalog.
 If no service is provided, the default service will be used.
-- `layerFilters` is a comma-separated list of cql filters to apply to the corresponding layer in the same position of the `addLayers` parameter
+- `layerFilters` is a list of cql filters delimited by a semicolon (`;`) to apply to the corresponding layer in the same position of the `addLayers` parameter
 
 ### MapInfo
 
