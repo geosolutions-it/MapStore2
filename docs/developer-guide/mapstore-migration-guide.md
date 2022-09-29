@@ -39,7 +39,6 @@ We removed script and css link to leaflet CDN in favor of a dynamic import of th
 We also made asynchronous the script to detect valid browser. This should slightly improve the initial requests time.
  You can updated the script in your project as following:
 
-
 ```html
 <script async type="text/javascript" src="https://unpkg.com/bowser@2.7.0/es5.js" onload="checkBrowser()"></script>
 <script type="text/javascript">
@@ -59,7 +58,6 @@ We also made asynchronous the script to detect valid browser. This should slight
 </script>
 ```
 
-
 ### Update plugins.js to make upstream plugins use dynamic import
 
 We've updated `plugins.js` in MapStore to make most of the plugins use dynamic import. `plugins.js` of your project have to be updated separately.
@@ -78,7 +76,6 @@ To use dynamic import for plugin, please update its definition to look like:
 ```
 
 See [Dynamic import of extension](../extensions/#dynamic-import-of-extension) to have more details about transforming extensions to use dynamic import.
-
 
 ### Version plugin has been removed
 
@@ -796,7 +793,7 @@ This will allow to use the data dir in an easy way. So:
 
 In particular:
 
-- all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `binary`, already existing).
+- all the java code has been moved from `web/src/` to the `java/` and `product/` directories (and `release`, already existing).
 - `mapstore-backend` has been renamed into `mapstore-services`.
 - Some servlets have been added in order to provide native support to data dir and make it work with the new `configs` directory.
 
@@ -1088,7 +1085,7 @@ Embedded Dashboards and GeoStories need a new set of javascript entries, html te
 
 The steps described above assume this structure of the MapStore2 project for the files that need update:
 
-```txt
+```
 MapStore2Project/
 |-- ...
 |-- js/
@@ -1397,7 +1394,6 @@ the final entry should look like this
 Database schema has changed. To update your database you need to apply this SQL scripts to your database
 
 - Update the user schema
-
 run the script available [here](https://github.com/geosolutions-it/geostore/tree/master/doc/sql/migration/postgresql):
 
 ```sql
@@ -1565,7 +1561,7 @@ The version 2017.02.00 has many improvements and changes:
 - introduced `redux-observable`
 - updated `webpack` to version 2
 - updated `react-intl` to version 2.x
-- updated `react` to [version 15.4.2](https://facebook.github.io/react/blog/2016/04/07/react-v15.html)
+- updated `react` to [version 15.4.2] (<https://facebook.github.io/react/blog/2016/04/07/react-v15.html>)
 - updated `react-bootstrap` to version 0.30.7
 
 We suggest you to:
