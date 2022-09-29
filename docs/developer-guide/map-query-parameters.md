@@ -187,7 +187,7 @@ GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
 
 This is a shortened syntax for `CATALOG:ADD_LAYERS_FROM_CATALOGS` action described down below.
 
-GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=MM='nn';Aa='bb'`
+GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=attributeLayer1='value';attributeLayer2='value2'`
 
 `addLayers` parameter is a comma separated list of `<layerName>;<service>` (`service` is optional, and if present is separated
 from the layerName by a `;`.
