@@ -98,10 +98,10 @@ export const DATASET_5_UNORDERED = {
 export const DATASET_5_ORDERED = {
     data: [
         { name: 'Page A', value: 1, classValue: '1'},
-        { name: 'Page A', value: 1, classValue: '2'},
-        { name: 'Page A', value: 1, classValue: '3'},
         { name: 'Page B', value: 0, classValue: '1'},
+        { name: 'Page A', value: 1, classValue: '2'},
         { name: 'Page B', value: 10, classValue: '2'},
+        { name: 'Page A', value: 1, classValue: '3'},
         { name: 'Page B', value: 100, classValue: '3'}
     ],
     xAxis: { dataKey: "name" },
