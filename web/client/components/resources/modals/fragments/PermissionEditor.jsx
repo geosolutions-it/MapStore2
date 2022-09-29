@@ -191,7 +191,7 @@ class PermissionEditor extends React.Component {
                         </tr>
 
 
-                        <tr key="addRowKey">
+                        <tr key="addRowKey" className="insert-row">
                             <td>
                                 <Select
                                     noResultsText={getMessageById(this.context.messages, "map.permissions.noResult")}
