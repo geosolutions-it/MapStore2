@@ -372,6 +372,9 @@ Please refer to the [extensions](../extensions/#managing-drawing-interactions-co
 A new `terrain` layer type has been created in order to provide more options and versatility when defining an elevation profile for the 3D map terrain.
 This `terrain` layer will substitute the former `wms` layer (with `useForElevation` attribute) used to define the elevation profile.
 
+!!! note
+    The `wms` layer (with `useForElevation` attribute) configuration is still needed to show the elevation data inside the MousePosition plugin and it will display the terrain at the same time. The `terrain` layer type allows a more versatile way of handling elevation but it will work only as terrain visualization in the 3D map viewer.
+
 The `additionalLayers` object on the `localConfig.json` file should adhere now to the [terrain layer configuration](../maps-configuration/#terrain).
 Serve the following code as an example:
 

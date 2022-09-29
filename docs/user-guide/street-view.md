@@ -1,7 +1,8 @@
 # Street View
+
 *******************
 
-The **Street View** tool allows the user to browse [Google Street View](https://www.google.com/streetview/) contents in MapStore. Through the <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button available in the *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, the tool can be activated so that it is possible to navigate the map with [Google Street View](https://www.google.com/streetview/). 
+The **Street View** tool allows the user to browse [Google Street View](https://www.google.com/streetview/) contents in MapStore. Through the <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), the tool can be activated so that it is possible to navigate the map with [Google Street View](https://www.google.com/streetview/).
 
 <img src="../img/street-view/streetview-popup.jpg" class="ms-docimage" width="500px"/>
 
@@ -23,4 +24,3 @@ By clicking on a street in the map, the tool window displays the Street View and
 
 !!! note
     By default, the **Street View** plugin is ready to be configured for [application contexts](application-context.md#configure-plugins), and is not available in the default plugin configuration due to licensing reasons.
-
