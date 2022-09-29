@@ -917,7 +917,8 @@ describe('Test the mapInfo reducer', () => {
     });
     it('onInitPlugin', () => {
         const initialState = { configuration: {} };
-        const state = mapInfo(initialState, onInitPlugin({cfg1: "test"}));
-        expect(state.cfg1).toBe("test");
+        const state = mapInfo(initialState, onInitPlugin({cfg1: "test", configuration: {maxItems: 3}}));
+        expect(state.cfg1).toEqual("test");
+        expect(state.configuration).toEqual({maxItems: 3});
     });
 });
