@@ -149,6 +149,12 @@ GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "fil
 
 GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": ["layerName1", "layerName2"]}`
 
+#### Simplified syntax:
+
+GET: `#/viewer/openlayers/config?featureInfo=38.72,-95.625`
+
+Where lat,lng values are comma-separated respecting order.
+
 ### Map
 
 Allows to pass the entire map JSON definition (see the map configuration format of MapStore). 
@@ -176,6 +182,58 @@ GET: `#/viewer/openlayers/config?marker=0,0&zoom=5`
 ### Bbox
 
 GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
+
+### AddLayers
+
+This is a shortened syntax for `CATALOG:ADD_LAYERS_FROM_CATALOGS` action described down below.
+
+GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=attributeLayer1='value';attributeLayer2='value2'`
+
+`addLayers` parameter is a comma separated list of `<layerName>;<service>` (`service` is optional, and if present is separated
+from the layerName by a `;`.
+
+In the example above:
+- `layer1` and `layer2` are layer names;
+- `service` is the service identifier of the catalog.
+If no service is provided, the default service will be used.
+- `layerFilters` is a list of cql filters to apply to the corresponding layer in the same position of the `addLayers` parameter, separated by `;`
+
+### MapInfo
+
+This is a shortened syntax for `SEARCH:SEARCH_WITH_FILTER` action described down below.
+In opposite to direct usage of action, `mapInfo` parameter can work with layers added by `addLayers` parameter.
+In this case search execution will be postponed up to the moment when layer is added to the map.
+
+`mapInfo` handler will check if `addLayers` parameter is present and if it lists layer name used in `mapInfo` parameter.
+If so, it will postpone search to ensure that layer is added to the map. Otherwise, in case of no matches, search will execute
+immediately.
+
+GET: `#/viewer/openlayers/new?addLayers=layer1;service&mapinfo=layer1&mapInfoFilter=BB='cc'`
+
+Where:
+
+- `layer1` is layer name. 
+- `service` is the service name providing layer data. Service name is optional. If missing the default.
+- `mapInfoFilter` is a cql filter applied to the layer.
+
+
+### Background
+
+Allows to dynamically add background to the map and activate it.
+Supports default backgrounds provided by static service defined in `localConfig.json` (`default_map_backgrounds`) as well
+as other layers:
+
+`#/viewer/openlayers/new?background=Sentinel`
+
+`#/viewer/openlayers/new?background=layer1;service`
+
+Where:
+- `Sentinel` & `layer1` are layer names,
+- `service` is the service name providing layer data. Service name is optional,
+`default_map_backgrounds` will be used if it is omitted.
+
+According to the implementation of default service, it is enough to pass desired layer name even partially, e.g. `background=Sen`, 
+it will use the closest layer name match in this case.
 
 ### Actions
 

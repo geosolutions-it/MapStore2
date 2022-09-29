@@ -17,17 +17,19 @@ import {
     BACKGROUND_ADDED,
     BACKGROUND_EDITED,
     REMOVE_BACKGROUND,
+    SYNC_CURRENT_BACKGROUND_LAYER,
     createBackgroundsList,
     clearModalParameters,
     setBackgroundModalParams,
     setCurrentBackgroundLayer,
-    allowBackgroundsDeletion
+    allowBackgroundsDeletion,
+    backgroundAdded
 } from '../actions/backgroundselector';
 
 import { setControlProperty } from '../actions/controls';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { changeSelectedService } from '../actions/catalog';
-import { changeLayerProperties, removeNode } from '../actions/layers';
+import {ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
 import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
 import { backgroundLayersSelector } from '../selectors/backgroundselector';
 import { getLayerCapabilities } from '../observables/wms';
@@ -130,6 +132,22 @@ const backgroundRemovedEpic = (action$, store) =>
             ) : Rx.Observable.empty();
         });
 
+/**
+ * Helper epic to properly update selected background icon/item whenever background is added via query parameters
+ * @param {external:Observable} action$ manages `SYNC_CURRENT_BACKGROUND_LAYER` and `ADD_LAYER`.
+ * @return {external:Observable}
+ */
+const syncSelectedBackgroundEpic = (action$) =>
+    action$.ofType(SYNC_CURRENT_BACKGROUND_LAYER)
+        .take(1)
+        .switchMap(({ id }) =>
+            action$.ofType(ADD_LAYER)
+                .filter(({layer}) => layer.id === id)
+                .switchMap(() => {
+                    return Rx.Observable.of(backgroundAdded(id));
+                })
+                .takeUntil(action$.ofType(BACKGROUND_ADDED)));
+
 export default {
     accessMetadataExplorer,
     addBackgroundPropertiesEpic,
@@ -137,5 +155,6 @@ export default {
     setCurrentBackgroundLayerEpic,
     backgroundAddedEpic,
     backgroundEditedEpic,
-    backgroundRemovedEpic
+    backgroundRemovedEpic,
+    syncSelectedBackgroundEpic
 };
