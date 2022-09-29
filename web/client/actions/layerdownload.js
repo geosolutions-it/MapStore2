@@ -34,9 +34,10 @@ export const SET_INFO_BUBBLE_MESSAGE = "LAYERDOWNLOAD:SET_INFO_BUBBLE_MESSAGE";
  * @name layerdownload
  * @type {Object}
  */
-export const checkWPSAvailability = (url) => ({
+export const checkWPSAvailability = (url, selectedService) => ({
     type: CHECK_WPS_AVAILABILITY,
-    url
+    url,
+    selectedService
 });
 export const checkingWPSAvailability = (checking) => ({
     type: CHECKING_WPS_AVAILABILITY,

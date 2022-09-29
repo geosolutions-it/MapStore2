@@ -40,7 +40,8 @@ class DownloadOptions extends React.Component {
         downloadFilteredVisible: PropTypes.bool,
         layer: PropTypes.object,
         formatsLoading: PropTypes.bool,
-        virtualScroll: PropTypes.bool
+        virtualScroll: PropTypes.bool,
+        services: PropTypes.arrayOf(PropTypes.object)
     };
 
     static defaultProps = {
@@ -53,16 +54,15 @@ class DownloadOptions extends React.Component {
         wpsOptionsVisible: false,
         wpsAdvancedOptionsVisible: false,
         downloadFilteredVisible: false,
-        virtualScroll: true
+        virtualScroll: true,
+        services: [
+            { value: "wps", label: "WPS" },
+            { value: "wfs", label: "WFS" }
+        ]
     };
 
     constructor(props) {
         super(props);
-
-        this.services = [
-            { value: "wps", label: "WPS" },
-            { value: "wfs", label: "WFS" }
-        ];
     }
 
     getSelectedFormat = () => {
@@ -74,12 +74,16 @@ class DownloadOptions extends React.Component {
 
     render() {
         return (<form>
-            <label><Message msgId="layerdownload.service" /></label>
-            <Select
-                value={this.props.service}
-                disabled={!this.props.wpsAvailable}
-                onChange={(sel) => this.props.setService(sel.value)}
-                options={this.services} />
+            {this.props.wpsAvailable &&
+                <>
+                    <label><Message msgId="layerdownload.service" /></label>
+                    <Select
+                        clearable={false}
+                        value={this.props.service}
+                        onChange={(sel) => this.props.setService(sel.value)}
+                        options={this.props.services} />
+                </>
+            }
             <label><Message msgId="layerdownload.format" /></label>
             <Select
                 clearable={false}

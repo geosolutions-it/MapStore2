@@ -89,7 +89,10 @@ class DownloadDialog extends React.Component {
         if (this.props.enabled !== oldProps.enabled && this.props.enabled) {
             this.props.onClearDownloadOptions();
             if (this.props.layer.type === 'wms') {
-                this.props.onCheckWPSAvailability(this.props.url || this.props.layer.url);
+                this.props.onCheckWPSAvailability(
+                    this.props.url || this.props.layer.url,
+                    this.props.defaultSelectedService || 'wps'
+                );
             }
         }
     }
