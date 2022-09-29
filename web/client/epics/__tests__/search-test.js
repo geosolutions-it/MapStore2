@@ -23,17 +23,25 @@ import {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_TEXT_CHANGE,
     TEXT_SEARCH_ERROR,
-    zoomAndAddPoint,
+    SEARCH_LAYER_WITH_FILTER,
     ZOOM_ADD_POINT,
+    zoomAndAddPoint,
     searchLayerWithFilter,
-    showGFI
+    showGFI, scheduleSearchLayerWithFilter
 } from '../../actions/search';
 
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER, loadFeatureInfo, UPDATE_CENTER_TO_MARKER } from '../../actions/mapInfo';
 import { ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../actions/map';
 import { UPDATE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
-import { searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, textSearchShowGFIEpic } from '../search';
+import {
+    searchEpic,
+    searchItemSelected,
+    zoomAndAddPointEpic,
+    searchOnStartEpic,
+    textSearchShowGFIEpic,
+    delayedSearchEpic
+} from '../search';
 const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, textSearchShowGFIEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -43,6 +51,7 @@ const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
 const STATE_NAME = 'STATE_NAME';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import {addLayer} from "../../actions/layers";
 
 const nestedService = {
     nestedPlaceholder: TEST_NESTED_PLACEHOLDER
@@ -669,5 +678,21 @@ describe('search Epics', () => {
             expect(actions[5].status).toBe(true);
             done();
         }, { mapInfo: {centerToMarker: true}, layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
+    });
+    it('delayedSearchEpic', (done) => {
+        const NUM_ACTIONS = 1;
+        testEpic(delayedSearchEpic, NUM_ACTIONS,
+            [
+                scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "MM='nn'"}),
+                addLayer({ name: 'layer1'})
+            ],
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
+                expect(actions[0].layer).toBe('layer1');
+                expect(actions[0].cql_filter).toBe("MM='nn'");
+                done();
+            }, {});
     });
 });

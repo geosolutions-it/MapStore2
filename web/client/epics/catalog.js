@@ -54,7 +54,7 @@ import {
     searchOptionsSelector,
     catalogSearchInfoSelector,
     getFormatUrlUsedSelector,
-    isActiveSelector
+    isActiveSelector, servicesSelectorWithBackgrounds
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
@@ -147,9 +147,9 @@ export default (API) => ({
             .filter(({ layers, sources }) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
             // maxRecords is 4 (by default), but there can be a possibility that the record desired is not among
             // the results. In that case a more detailed search with full record name can be helpful
-            .switchMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
+            .mergeMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
-                const services = servicesSelector(state);
+                const services = servicesSelectorWithBackgrounds(state);
                 const actions = layers
                     .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
