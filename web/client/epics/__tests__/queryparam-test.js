@@ -20,6 +20,9 @@ import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
 import {layerLoad} from "../../actions/layers";
 import {FEATURE_INFO_CLICK} from "../../actions/mapInfo";
+import {SEARCH_LAYER_WITH_FILTER} from "../../actions/search";
+import {ADD_LAYERS_FROM_CATALOGS} from "../../actions/catalog";
+import {SYNC_CURRENT_BACKGROUND_LAYER} from "../../actions/backgroundselector";
 
 const center = {
     x: -74.2,
@@ -397,7 +400,7 @@ describe('queryparam epics', () => {
                 done();
             }, state);
     });
-    it('test readQueryParamsOnMapEpic with featureinfo and zoom in sessionStorage', (done) => {
+    it('test readQueryParamsOnMapEpic with featureinfo in sessionStorage', (done) => {
         sessionStorage.setItem('queryParams', JSON.stringify({featureinfo: {lat: 0, lng: 0, filterNameList: []}}));
         const state = {
             router: {
@@ -749,5 +752,179 @@ describe('queryparam epics', () => {
                 done(e);
             }
         }, state);
+    });
+    it('simplified featureinfo request', (done)=>{
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: "?featureInfo=38.72,-95.625"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                    expect(actions[0].point.latlng).toEqual({lat: '38.72', lng: '-95.625'});
+                    expect(actions[0].point.pixel).toBe(undefined);
+                    expect(actions[0].point.geometricFilter).toExist();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('simplified mapInfo request', (done)=>{
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: "?mapinfo=tiger:poly_landmarks&mapInfoFilter=CFCC='H41'"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
+                    expect(actions[0].layer).toBe("tiger:poly_landmarks");
+                    expect(actions[0].cql_filter).toBe("CFCC='H41'");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('simplified addLayers request', (done)=>{
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: "?addLayers=tiger:poly_landmarks;gs_stable_wms,anotherLayer&layerFilters=CFCC='H41'"
+                }
+            },
+            catalog: {
+                selectedService: 'service'
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(ADD_LAYERS_FROM_CATALOGS);
+                    expect(actions[0].layers[0]).toBe("tiger:poly_landmarks");
+                    expect(actions[0].sources[0]).toBe("gs_stable_wms");
+                    expect(actions[0].layers[1]).toBe("anotherLayer");
+                    expect(actions[0].sources[1]).toBe("service");
+                    expect(actions[0].options[0].params.CQL_FILTER).toBe("CFCC='H41'");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('add background', (done)=>{
+        const NUMBER_OF_ACTIONS = 2;
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: "?background=Sentinel"
+                }
+            },
+            catalog: {
+                selectedService: 'service',
+                "staticServices": {
+                    "default_map_backgrounds": {
+                        "type": "backgrounds",
+                        "title": "Default Backgrounds",
+                        "titleMsgId": "defaultMapBackgroundsServiceTitle",
+                        "autoload": true,
+                        "backgrounds": [{
+                            "type": "osm",
+                            "title": "Open Street Map",
+                            "name": "mapnik",
+                            "source": "osm",
+                            "group": "background"
+                        }, {
+                            "type": "tileprovider",
+                            "title": "NASAGIBS Night 2012",
+                            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+                            "name": "Night2012",
+                            "source": "nasagibs",
+                            "group": "background"
+                        }, {
+                            "type": "tileprovider",
+                            "title": "OpenTopoMap",
+                            "provider": "OpenTopoMap",
+                            "name": "OpenTopoMap",
+                            "source": "OpenTopoMap",
+                            "group": "background"
+                        }, {
+                            "format": "image/jpeg",
+                            "group": "background",
+                            "name": "s2cloudless:s2cloudless",
+                            "opacity": 1,
+                            "title": "Sentinel 2 Cloudless",
+                            "type": "wms",
+                            "url": "https://1maps.geo-solutions.it/geoserver/wms",
+                            "source": "s2cloudless",
+                            "singleTile": false
+                        }, {
+                            "source": "ol",
+                            "group": "background",
+                            "title": "Empty Background",
+                            "fixed": true,
+                            "type": "empty"
+                        }]
+                    }
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(ADD_LAYERS_FROM_CATALOGS);
+                    expect(actions[0].layers[0]).toBe("Sentinel");
+                    expect(actions[0].sources[0]).toBe("default_map_backgrounds");
+                    expect(actions[0].options[0].group).toBe("background");
+                    expect(actions[0].options[0].visibility).toBe(true);
+                    expect(actions[1].type).toBe(SYNC_CURRENT_BACKGROUND_LAYER);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
     });
 });

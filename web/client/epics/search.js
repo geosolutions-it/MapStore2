@@ -17,7 +17,7 @@ import { queryableLayersSelector, getLayerFromName, centerToMarkerSelector } fro
 import { updateAdditionalLayer } from '../actions/additionallayers';
 import { showMapinfoMarker, featureInfoClick, updateCenterToMarker, LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO  } from '../actions/mapInfo';
 import { zoomToExtent, zoomToPoint } from '../actions/map';
-import { changeLayerProperties } from '../actions/layers';
+import { ADD_LAYER, LAYER_LOAD, changeLayerProperties } from '../actions/layers';
 import {
     SEARCH_LAYER_WITH_FILTER,
     TEXT_SEARCH_STARTED,
@@ -34,7 +34,7 @@ import {
     searchResultLoaded,
     searchResultError,
     selectNestedService,
-    searchTextChanged
+    searchTextChanged, SCHEDULE_SEARCH_LAYER_WITH_FILTER, searchLayerWithFilter
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
@@ -324,4 +324,16 @@ export const searchOnStartEpic = (action$, store) =>
                     });
             }
             return Rx.Observable.empty();
+        });
+
+
+export const delayedSearchEpic = (action$) =>
+    action$.ofType(SCHEDULE_SEARCH_LAYER_WITH_FILTER)
+        .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
+            return action$.ofType(ADD_LAYER)
+                .filter(({ layer }) => layer.name === name)
+                .switchMap(() => {
+                    return Rx.Observable.of(searchLayerWithFilter({layer: name, "cql_filter": cqlFilter}));
+                })
+                .takeUntil(action$.ofType(LAYER_LOAD));
         });
