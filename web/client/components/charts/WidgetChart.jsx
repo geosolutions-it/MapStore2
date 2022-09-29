@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import {every, includes, isNumber, isString, union, orderBy, flatten, groupBy} from 'lodash';
+import {every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
 
 import LoadingView from '../misc/LoadingView';
 
@@ -213,32 +213,21 @@ const preProcessValues = (formula, values) => (
         }
     }));
 
-const reorderDataByClassification = (data, {classificationAttr, classificationType, autoColorOptions, customColorEnabled, xDataKey}) => {
+const reorderDataByClassification = (data, {classificationAttr, classificationType, autoColorOptions, customColorEnabled}) => {
     const classifications = data.map(d => d[classificationAttr]);
     const colorCategories = getClassification(classificationType, classifications, autoColorOptions, customColorEnabled).colorCategories;
     if (classificationAttr)  {
         const tempData = data.map(el => ({...el}));
         let groupedData = [];
-
-        let dataSplit = groupBy(tempData, xDataKey);
-        dataSplit = Object.keys(dataSplit).map(k => {
-            return dataSplit[k];
-        });
-
-        if (dataSplit.every(item => item.length === 1)) {
-            dataSplit = [tempData];
-        }
         switch (classificationType) {
         case 'value':
             groupedData = Object.keys(colorCategories).reduce((prev, cur) => {
                 const entries = [];
-                dataSplit.forEach((aggregated) => {
-                    aggregated.forEach((el, idx) => {
-                        if (el[classificationAttr] === colorCategories[cur].value) {
-                            entries.push(el);
-                            delete aggregated[idx];
-                        }
-                    });
+                tempData.forEach((el, idx) => {
+                    if (el[classificationAttr] === colorCategories[cur].value) {
+                        entries.push(el);
+                        delete tempData[idx];
+                    }
                 });
                 return [...prev, entries];
             }, []);
@@ -249,13 +238,11 @@ const reorderDataByClassification = (data, {classificationAttr, classificationTy
             // if two ranges are crossing - first range in the list will contain data value
             groupedData = Object.keys(colorCategories).reduce((prev, cur) => {
                 const entries = [];
-                dataSplit.forEach((aggregated) => {
-                    aggregated.forEach((el, idx) => {
-                        if (el[classificationAttr] >= colorCategories[cur].min && el[classificationAttr] < colorCategories[cur].max) {
-                            entries.push(el);
-                            delete aggregated[idx];
-                        }
-                    });
+                tempData.forEach((el, idx) => {
+                    if (el[classificationAttr] >= colorCategories[cur].min && el[classificationAttr] < colorCategories[cur].max) {
+                        entries.push(el);
+                        delete tempData[idx];
+                    }
                 });
                 return [...prev, entries];
             }, []);
@@ -263,7 +250,7 @@ const reorderDataByClassification = (data, {classificationAttr, classificationTy
         default:
             return data;
         }
-        return flatten(groupedData.concat(flatten(dataSplit).filter(Boolean)));
+        return flatten(groupedData.concat(flatten(tempData).filter(Boolean)));
     }
     return data;
 };
@@ -293,8 +280,7 @@ function getData({
         classificationAttr,
         classificationType,
         autoColorOptions,
-        customColorEnabled,
-        xDataKey
+        customColorEnabled
     });
 
     classifications = classificationAttr ? data.map(d => d[classificationAttr]) : [];
