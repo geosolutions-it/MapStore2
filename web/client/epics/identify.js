@@ -33,6 +33,7 @@ import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
 import { cancelSelectedItem } from '../actions/search';
+import { forceUpdateMapLayout } from '../actions/maplayout';
 import {
     stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
@@ -96,6 +97,9 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                 "filter",
                 "propertyName"
             ];
+
+            let firstResponseReturned = false;
+
             const out$ = Rx.Observable.from((queryableLayers.filter(l => {
             // filtering a subset of layers
                 return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
@@ -120,12 +124,26 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                         const reqId = uuid.v1();
                         const param = { ...appParams, ...requestParams };
                         return getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
+                            // this 0 delay is needed for vector/3dtiles layer because makes the response async and give time to the GUI to render
+                            // these type of layers don't perform requests to the server because the values are taken from the client map so the response were applied synchronously
+                            // this delay allows the panel to open and show the spinner for the first one
+                            // this delay mitigates the freezing of the app when there are a great amount of queried layers at the same time
+                            .delay(0)
                             .map((response) =>
                                 response.data.exceptions
                                     ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
                                     : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer)
                             )
                             .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
+                            .concat(Rx.Observable.defer(() => {
+                                // update the layout only after the initial response
+                                // we don't need to trigger this for each query layer
+                                if (!firstResponseReturned) {
+                                    firstResponseReturned = true;
+                                    return Rx.Observable.of(forceUpdateMapLayout());
+                                }
+                                return Rx.Observable.empty();
+                            }))
                             .startWith(newMapInfoRequest(reqId, param));
                     }
                     return Rx.Observable.of(getVectorInfo(layer, request, metadata, queryableLayers));
@@ -147,10 +165,13 @@ export const handleMapInfoMarker = (action$, {getState}) =>
             ? hideMapinfoMarker()
             : showMapinfoMarker()
         );
-export const closeFeatureGridFromIdentifyEpic = (action$) =>
+export const closeFeatureGridFromIdentifyEpic = (action$, store) =>
     action$.ofType(LOAD_FEATURE_INFO, GET_VECTOR_INFO)
         .switchMap(() => {
-            return Rx.Observable.of(closeFeatureGrid());
+            if (isFeatureGridOpen(store.getState())) {
+                return Rx.Observable.of(closeFeatureGrid());
+            }
+            return Rx.Observable.empty();
         });
 /**
  * Check if something is editing in feature info.
