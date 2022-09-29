@@ -120,7 +120,7 @@ compose(
             return ({
                 rowHeight,
                 className: "on-map",
-                breakpoints: { md: 480, xxs: 0 },
+                breakpoints: { md: 600, xxs: 0 },
                 cols: { md: 6, xxs: 1 },
                 ...widthOptions,
                 useDefaultWidthProvider: false,
@@ -194,7 +194,7 @@ compose(
             ),
             withPropsOnChange(
                 ['activeWidget', 'isMobile', 'isTablet', 'widgets'],
-                ({activeWidget, dropdownWidgets, setActiveWidget, isMobile, isTablet, widgets, pluginCfg, toolsOptions}) => {
+                ({activeWidget, dropdownWidgets, setActiveWidget, isMobile, isTablet, widgets, pluginCfg, toolsOptions, layouts}) => {
                     if (activeWidget && isMobile && widgets.length) {
                         const widget = {
                             ...activeWidget,
@@ -212,6 +212,12 @@ compose(
                             toolsOptions: {
                                 ...toolsOptions,
                                 showPin: false
+                            },
+                            layouts: {
+                                ...layouts,
+                                xxs: [
+                                    ...(layouts.xxs.map(el => ({...el, h: 1, w: 1, x: 0, y: 0})))
+                                ]
                             },
                             widgets: [widget]
                         };
