@@ -103,9 +103,7 @@ Clone the repository:
 
 `git clone https://github.com/geosolutions-it/MapStore2.git`
 
-Install NodeJS and npm (npm it will come with NodeJS)
-
-Checkout <a href="https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/" target="_blank">here</a> what are the recommended versions of NodeJS and npm
+Install NodeJS (with npm), Java and Maven following the requirements [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/)
 
 Install docma to build the documentation
 
@@ -119,21 +117,15 @@ Start the demo locally:
 
 `npm start`
 
-The demo runs at `http://localhost:8081` afterwards.
-
-To start also the backend run:
-
-`npm run backend:dev`
-
-Install latest Maven, if needed, from <a href="https://maven.apache.org/download.cgi" target="_blank">here</a> (see [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) the minimum version required).
+The demo runs at [http://localhost:8081](http://localhost:8081) afterwards (with the Java back-end running at port `http://localhost:8080`).
 
 Build the deployable war:
 
 `./build.sh [version_identifier]`
 
-Where version_identifier is an optional identifier of the generated war that will be shown in the settings panel of the application.
+Where `version_identifier` is an optional identifier of the generated war that will be shown in the settings panel of the application.
 
-Deploy the generated mapstore.war file (in product/target) to your favorite J2EE container (e.g. Tomcat).
+Deploy the generated `mapstore.war` file (in `product/target`) to your favorite J2EE container (e.g. Tomcat).
 
 Read more on the <a href="https://mapstore.readthedocs.io/en/latest/" target="_blank">documentation site</a>.
 

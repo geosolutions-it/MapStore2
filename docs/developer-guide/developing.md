@@ -19,19 +19,17 @@ npm install
 
 After a while (depending on the network bandwidth) the full set of dependencies and tools will be downloaded to the **node_modules** sub-folder.
 
-* **start the local server and the backend** instance with:
+* **start the local dev server** instances with:
 
 ```sh
-npm start:both
+npm start
 ```
 
 Then point your preferred browser to [http://localhost:8081/?debug=true#/](http://localhost:8081/?debug=true#/). By default the frontend works using the local dev server as backend. This configuration is suggested if you want to develop.
 
-**NOTE:**
-
-```txt
-Now, by default `npm start` uses the local dev server as a backend which now runs concurrently with the frontend dev server.
-```
+!!! note
+    `npm start` will run both front-end on port 8081 and back-end on port 8080 (make sure to have both the ports available).
+    The first time back-end will take a lot to start, downloading all the dependencies.
 
 If you still want to start only the frontend because you have the backend running in a tomcat container for example you may simply run
 
@@ -41,7 +39,12 @@ npm start
 
 See the [dedicated section in this page](#backend) for more info
 
-### Debugging the frontend
+## Frontend
+
+You can run only the front-end running `npm run fe:start`.
+Running this script MapStore will run on port 8081 and will look for the back-end at port 8080. If you want to change the back-end URL, you have to set it in `build/devServer.js` file.
+
+### Debugging
 
 The development instance uses file watching and live reload, so each time a MapStore file is changed, the browser will reload the updated application.
 
@@ -65,7 +68,7 @@ We suggest to use one of the following:
   * Babel snippets
   * Emmet
 
-### Redux Dev Tools
+#### Redux Dev Tools
 
 When you are running the application locally using `npm start` you can debug the application with [redux dev tools](https://github.com/gaearon/redux-devtools) using the flag ?debug=true
 
@@ -77,7 +80,7 @@ It also integrates with the [browser's extension](https://github.com/zalmoxisus/
 
 This way you can monitor the application's state evolution and the action triggered by your application.
 
-## Frontend unit tests
+### Unit tests
 
 To run the MapStore frontend test suite you can use:
 
@@ -105,7 +108,15 @@ More information on frontend building tools and configuration is available [here
 
 ## Backend
 
-In order to have a full running MapStore in development environment, you need to run also the backend java part locally. In this section you will find how to start the backend and how to develop with it.
+In order to have a full running MapStore in development environment, you need to run also the backend java part locally.
+This runs automatically with `npm start`. If you want to run only the backend, you can use `npm run be:start`.
+
+The back end will run on port 8080 and will look for the front-end at port 8081. If you want to change the back-end port, you can set the environment variable `MAPSTORE_BACKEND_PORT` to the desired port.
+
+```sh
+export MAPSTORE_BACKEND_PORT=8082
+npm start # or npm run be:start
+```
 
 ### Defaults Users and Database
 
@@ -124,10 +135,9 @@ When we say "running the backend", in fact we say that we are running some sort 
 
 #### Embedded tomcat
 
-MapStore is configured to use a tomcat maven plugin-in to build and run mapstore locally. To use it you have to:
+MapStore is configured to use a maven plugin-in to build and run mapstore locally in tomcat. To use it you have to:
 
-* make sure to run at least once `mvn install` **in the root** directory, to make `mapstore-product` artifact available.
-* npm run backend:dev
+* `npm run be:start`
 
 Now you are good to go, and you can start the frontend
 
@@ -167,8 +177,7 @@ set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_soc
 then start tomcat
 
 ```bash
-cd product
-mvn cargo:run
+npm start # or npm run start:app, or npm run be:start (this last only for the backend)
 ```
 
 For your local tomcat, you can follow the standard procedure to debug with tomcat.

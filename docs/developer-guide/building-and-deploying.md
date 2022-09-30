@@ -77,20 +77,6 @@ In particular:
 * **[karma](http://karma-runner.github.io/)** is used as the test suite runner, with several plugins to allow for custom reporting, browser running and so on; the test suite running is configured through different configuration files, for **[single running](https://github.com/geosolutions-it/MapStore2/blob/master/build/karma.conf.single-run.js)**  or **[continuous testing](https://github.com/geosolutions-it/MapStore2/blob/master/build/karma.conf.continuous-test.js)**
 * **[istanbul](https://gotwarlost.github.io/istanbul/)/[coveralls](https://www.npmjs.com/package/coveralls)** are used for code coverage reporting
 
-## Index of main npm scripts
-
-| Command                  | Description                                                  |
-|--------------------------|--------------------------------------------------------------|
-| `npm install`            | download dependencies and init developer environment         |
-| `npm start`              | start development instance (frontend only)                   |
-| `npm start:both`         | start development instance and the backend too               |
-| `npm run frontend:build` | run single build / bundling                                  |
-| `npm run backend:dev`    | run embedded backend only                                    |
-| `npm test`               | run test suite once                                          |
-| `npm run test:watch`     | run continuous test suite running (useful during developing) |
-| `npm run lint`           | run ESLint checks                                            |
-| `npm run i18n`           | checks missing strings in mandatory i18n files (ref to en-US)|
-
 ## Including the printing engine in your build
 
 The [printing module](printing-module.md#printing-module) is not included in official builds by default.

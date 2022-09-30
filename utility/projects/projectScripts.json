@@ -1,14 +1,14 @@
 {
-  "start": "npm run frontend:dev",
-  "start:both": "concurrently \"npm:frontend:dev\" \"npm:backend:dev\"",
+  "start": "npm run app:start",
+  "app:start": "concurrently -n frontend,backend -c green,blue \"npm:fe:start\" \"npm:be:start\"",
 
-  "frontend:dev": "webpack serve --progress --color --port 8081 --hot --inline --config webpack.config.js --content-base .",
-  "frontend:dev-prod": "webpack serve --progress --color --port 8081 --hot --inline --config prod.webpack.config.js --content-base .",
-  "frontend:build": "npm run clean && mkdirp ./dist && webpack build --progress --color --config prod-webpack.config.js",
-  "compile": "npm run frontend:build",
+  "fe:start": "webpack serve --progress --color --port 8081 --hot --inline --config webpack.config.js --content-base .",
+  "fe:start-prod": "webpack serve --progress --color --port 8081 --hot --inline --config prod.webpack.config.js --content-base .",
+  "fe:build": "npm run clean && mkdirp ./dist && webpack build --progress --color --config prod-webpack.config.js",
+  "compile": "npm run fe:build",
 
-  "backend:build": "mvn clean install -Pprinting",
-  "backend:dev": "npm run backend:build && mvn cargo:run -f ./web/pom.xml",
+  "be:build": "mvn clean install -Pprinting",
+  "be:start": "npm run be:build && mvn cargo:run -f ./web/pom.xml",
 
   "pretest": "npm run lint",
   "test": "karma start ./karma.conf.single-run.js --color",

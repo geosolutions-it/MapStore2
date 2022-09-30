@@ -12,7 +12,7 @@ const castArray = require('lodash/castArray');
 const {
     VERSION_INFO_DEFINE_PLUGIN
 } = require('./BuildUtils');
-
+const {devServer: DEV_SERVER, devtool: DEV_TOOL} = require('./devServer');
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
@@ -52,7 +52,7 @@ const {
  * @param {object} config.resolveModules webpack resolve configuration object, available only with object syntax
  * @param {object} config.projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
  * @param {string} config.cesiumBaseUrl (optional) url for cesium assets, workers and widgets. It is needed only for custom project where the structure of dist folder is not following the default one
- * @param {string} config.baseUrl (optional) url for proxy, by default is http://localhost:8080
+ * @param {string} config.devtool (optional) dev tool for webpack, available only with object syntax. Default is undefined.
  * @returns a webpack configuration object
  * @example
  * // It's possible to use a single object argument to pass the parameters.
@@ -117,10 +117,10 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     proxy,
     // new optional only for single object argument
     projectConfig = {},
-    devServer,
+    devServer = DEV_SERVER,
     resolveModules,
     cesiumBaseUrl,
-    baseUrl = "http://localhost:8080"
+    devtool = DEV_TOOL
 }) => ({
     target: "web",
     entry: assign({}, bundles, themeEntries),
@@ -304,36 +304,9 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             loader: 'html-loader'
         }] : [])
     },
-    devServer: devServer || {
-        publicPath: "/dist/",
-        proxy: proxy || {
-            '/rest': {
-                target: `${baseUrl}/mapstore`
-            },
-            '/pdf': {
-                target: `${baseUrl}/mapstore`
-            },
-            '/mapstore/pdf': {
-                target: `${baseUrl}`
-            },
-            '/proxy': {
-                target: `${baseUrl}/mapstore`
-            },
-            '/extensions.json': {
-                target: `${baseUrl}/mapstore`
-            },
-            '/dist/extensions': {
-                target: `${baseUrl}/mapstore`
-            },
-            '/geofence': {
-                target: `${baseUrl}`
-            },
-            '/docs': {
-                target: "http://localhost:8081",
-                pathRewrite: {'/docs': '/mapstore/docs'}
-            }
-        }
-    },
-    devtool: !prod ? 'eval' : undefined
+    devServer: proxy
+        ? { publicPath: "/dist/", proxy } // backward compatibility
+        : devServer,
+    devtool: !prod ? 'eval' : devtool || undefined
 }));
 

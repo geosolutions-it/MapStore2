@@ -8,7 +8,7 @@ The Developer and User guide documentation are built on the [Read the Docs](http
 
 ## Building documentation
 
-The documentation is built on RTD ([Read the Docs](https://docs.readthedocs.io/en/latest/index.html)) documentation hosting platform. 
+The documentation is built on RTD ([Read the Docs](https://docs.readthedocs.io/en/latest/index.html)) documentation hosting platform.
 
 But in order to build it locally, there are certain steps that needs to be followed
 
@@ -18,9 +18,11 @@ But in order to build it locally, there are certain steps that needs to be follo
 
 2. **Libraries installation**
 
-    Install **all** the libraries/plugins in `docs/requirements.txt` using **_pip_** while matching the exact version present
+    Install **all** the libraries/plugins in `docs/requirements.txt` using **_pip_** while matching the exact version present.
 
-    *Example*
+    `pip install -r docs/requirements.txt`
+
+    _Example_
 
     For `mkdocs-material==3.2.0`, the installation using pip is as follows `pip install mkdocs-material==3.2.0`
 
@@ -30,5 +32,5 @@ But in order to build it locally, there are certain steps that needs to be follo
 
 !!! Note
     When creating a link to internal document (.md) files, make sure to use full link instead of a relative path to the file. As using relative path will not work in exported PDF document.
-    ***Example***:
+    _Example_:
     Instead of creating a link `[FAQ]('../dev-faq/')`, use `[FAQ]('../dev-faq/#faq')` or `[FAQ]('../dev-faq.md#faq')` or `[FAQ]('dev-faq.md#faq')`
