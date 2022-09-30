@@ -308,7 +308,7 @@
     "compile": "npm run fe:build",
     "be:build": "mvn clean install -Pprinting",
     "be:start": "npm run be:build && mvn cargo:run -f ./product/pom.xml",
-    "pretest": "npm run doc:clean && npm run lint",
+    "pretest": "npm run jsdoc:clean && npm run lint",
     "test": "karma start ./build/karma.conf.single-run.js --color",
     "test:watch": "karma start ./build/karma.conf.continuous-test.js --color",
     "continuoustest": "npm run test:watch",
