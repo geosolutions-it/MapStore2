@@ -60,4 +60,4 @@ The documentation will be available at [http://localhost:8000](http://localhost:
 Every time you save some documentation file, the page will be automatically updated.
 
 !!! Note
-    make you sure to not have set `ENABLE_PDF_EXPORT=1` while testing live, in order to avoid build the pdf every time, or it will take 5 minutes on every file change.
+    make you sure to not have set `ENABLE_PDF_EXPORT=1` while testing live, in order to avoid build the pdf every time that takes a long time to be generated.
