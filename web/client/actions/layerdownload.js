@@ -106,6 +106,11 @@ export const onDownloadFinished = () => ({
     type: DOWNLOAD_FINISHED
 });
 
+/**
+ * action that sets if WPS available for download requests
+ * @memberof actions.layerdownload
+ * @returns {action} action of type `SET_WPS_AVAILABILITY`
+ */
 export const setWPSAvailability = (value) => ({
     type: SET_WPS_AVAILABILITY,
     value

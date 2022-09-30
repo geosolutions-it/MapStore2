@@ -29,6 +29,7 @@ class DownloadDialog extends React.Component {
         url: PropTypes.string,
         wpsAvailable: PropTypes.bool,
         service: PropTypes.string,
+        defaultSelectedService: PropTypes.string,
         enabled: PropTypes.bool,
         loading: PropTypes.bool,
         checkingWPSAvailability: PropTypes.bool,
@@ -64,6 +65,7 @@ class DownloadDialog extends React.Component {
         closeGlyph: "1-close",
         wpsAvailable: false,
         service: 'wfs',
+        defaultSelectedService: 'wps',
         wfsFormats: [],
         formats: [
             {name: 'application/json', label: 'GeoJSON', type: 'vector', validServices: ['wps']},
@@ -91,7 +93,7 @@ class DownloadDialog extends React.Component {
             if (this.props.layer.type === 'wms') {
                 this.props.onCheckWPSAvailability(
                     this.props.url || this.props.layer.url,
-                    this.props.defaultSelectedService || 'wps'
+                    this.props.defaultSelectedService
                 );
             }
         }

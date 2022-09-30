@@ -10,9 +10,9 @@ import expect from 'expect';
 
 import { toggleControl, TOGGLE_CONTROL } from '../../actions/controls';
 import { download } from '../../actions/layers';
-import { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures } from '../../actions/layerdownload';
+import { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures, checkWPSAvailability, SET_SERVICE, SET_WPS_AVAILABILITY, CHECKING_WPS_AVAILABILITY } from '../../actions/layerdownload';
 import { QUERY_CREATE } from '../../actions/wfsquery';
-import { closeExportDownload, openDownloadTool, startFeatureExportDownload } from '../layerdownload';
+import { checkWPSAvailabilityEpic, closeExportDownload, openDownloadTool, startFeatureExportDownload } from '../layerdownload';
 import { testEpic } from './epicTestUtils';
 describe('layerdownload Epics', () => {
     it('close export panel', (done) => {
@@ -27,6 +27,32 @@ describe('layerdownload Epics', () => {
 
         const state = {controls: { queryPanel: {enabled: false}, layerdownload: {enabled: true}}};
         testEpic(closeExportDownload, 1, toggleControl("queryPanel"), epicResult, state);
+    });
+    it('check WPS availability', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(CHECKING_WPS_AVAILABILITY);
+            expect(actions[0].checking).toBe(true);
+            expect(actions[3].type).toBe(CHECKING_WPS_AVAILABILITY);
+            expect(actions[3].checking).toBe(false);
+
+            actions.slice(1, actions.length - 1).map((action) => {
+                switch (action.type) {
+                case SET_SERVICE:
+                    expect(action.service).toBe('wfs');
+                    break;
+                case SET_WPS_AVAILABILITY:
+                    expect(action.value).toBe(false);
+                    break;
+                default:
+                    break;
+                }
+            });
+            done();
+        };
+
+        const state = { controls: { layerdownload: { enabled: false, downloadOptions: {}} } };
+        testEpic(checkWPSAvailabilityEpic, 4, checkWPSAvailability('http://check.wps.availability.url', 'wfs'), epicResult, state);
     });
     it('downloads a layer', (done) => {
         const epicResult = actions => {
