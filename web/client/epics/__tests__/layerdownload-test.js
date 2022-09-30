@@ -95,15 +95,16 @@ describe('layerdownload Epics', () => {
     it('startFeatureExportDownload triggers on downloadFeatures', (done) => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
-            expect(actions[0].error.request.responseURL).toExist();
+            expect(actions[0].error.config.url).toExist();
             // remove duplicated question marks
-            expect(actions[0].error.request.responseURL.indexOf('??') < 0).toBe(true);
+            expect(actions[0].error.config.url.indexOf('??') < 0).toBe(true);
 
             // forwards outputFormat in the URL
-            expect(actions[0].error.request.responseURL.indexOf("test-format") > 0).toBe(true);
+            expect(actions[0].error.config.url.indexOf("test-format") > 0).toBe(true);
             done();
         };
 
+        mockAxios.onGet().reply(404);
         const state = {
             controls: {
                 queryPanel: { enabled: false },
