@@ -358,12 +358,7 @@
                     }
                 }
             }, "Home", "FeatureEditor",
-            {
-              "name": "LayerDownload",
-              "cfg": {
-                "defaultSelectedService": "wps"
-              }
-            },
+            "LayerDownload",
             {
               "name": "QueryPanel",
               "cfg": {
