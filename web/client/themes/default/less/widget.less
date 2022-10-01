@@ -164,44 +164,10 @@
             .Select {
                 flex-grow: 1;
                 .Select-control {
-                    margin: 0 auto;
-                    max-width: 60%;
-                    height: 28px;
-
-                    .Select-placeholder {
-                        line-height: 24px;
-                    }
-
                     .Select-value {
-                        padding-right: 18px;
-                        padding-left: 5px;
-                        line-height: 24px !important;
-
-                        .Select-value-label {
-                            line-height: 24px;
-                        }
-                    }
-                    .Select-input {
-                        height: 24px;
+                        padding-right: 22px;
                     }
                 }
-                .Select-menu-outer {
-                    margin-top: 2px;
-                }
-            }
-
-            .previous-widget, .next-widget {
-                position: relative;
-                z-index: 10;
-            }
-
-            .previous-widget {
-                left: calc(25% - 15px);
-                transform: translateX(-50%);
-            }
-            .next-widget {
-                right: calc(25% - 15px);
-                transform: translateX(+50%);
             }
         }
 
@@ -446,12 +412,12 @@
         }
     }
 
-    .mapstore-widget-card.mobile {
+    .mapstore-widget-card.single-widget {
+        .mapstore-widget-options {
+            width: 24px;
+        }
         .mapstore-widget-header {
-            .widget-icons {
-                height: auto;
-                z-index: 10;
-            }
+            height: auto;
         }
     }
 }

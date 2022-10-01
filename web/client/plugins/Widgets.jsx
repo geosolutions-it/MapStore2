@@ -38,6 +38,7 @@ import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
 
 const RIGHT_MARGIN = 55;
+const singleWidgetLayoutBreakpoint = 600;
 import { widthProvider, heightProvider } from '../components/layout/enhancers/gridLayout';
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
@@ -80,17 +81,16 @@ compose(
     compose(
         heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
         widthProvider({ overrideWidthProvider: false }),
-        withProps(({ isMobileAgent, width }) => {
+        withProps(({ isMobileAgent }) => {
             return {
-                isMobile: isMobileAgent && width < 600,
-                isTablet: isMobileAgent && width >= 600
+                isSingleWidgetLayout: isMobileAgent || window.innerWidth <= singleWidgetLayoutBreakpoint
             };
         }),
-        withProps(({width, height, maximized, mapLayout, isMobile, isTablet} = {}) => {
-            const backgroundSelectorOffset = isMobile ? 40 : 0;
+        withProps(({width, height, maximized, mapLayout, isSingleWidgetLayout, isMobileAgent} = {}) => {
+            const backgroundSelectorOffset = isSingleWidgetLayout ? (isMobileAgent ? 40 : 60) : 0;
             const rightOffset = mapLayout?.right ?? 0;
-            const divHeight = isMobile ? (height - backgroundSelectorOffset - 120) / 2 : height - backgroundSelectorOffset - 120;
-            const nRows = isMobile ? 1 : 4;
+            const divHeight = isSingleWidgetLayout ? (height - backgroundSelectorOffset - 120) / 2 : height - backgroundSelectorOffset - 120;
+            const nRows = isSingleWidgetLayout ? 1 : 4;
             const rowHeight = Math.floor(divHeight / nRows - 20);
 
             const maximizedStyle = maximized?.widget ? {
@@ -109,25 +109,21 @@ compose(
                 breakpoints: { xxs: 0 },
                 cols: { xxs: 1 }
             } : {};
-            let viewWidth = width && width > 800 ? width - (500 + rightOffset + RIGHT_MARGIN) : width - rightOffset - RIGHT_MARGIN;
-            let leftOffset = (width && width > 800) ? "500px" : "0";
-            if (isMobile) {
-                viewWidth = isTablet ? width / 2 : width - rightOffset - RIGHT_MARGIN;
-                leftOffset = isTablet ? width / 2 - rightOffset - RIGHT_MARGIN : 0;
-            }
+            let leftOffset = 0;
+            let viewWidth = width - (leftOffset + rightOffset + RIGHT_MARGIN);
             const widthOptions = width ? {width: viewWidth - 1} : {};
             const baseHeight = Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10);
             return ({
                 rowHeight,
                 className: "on-map",
-                breakpoints: { md: 600, xxs: 0 },
+                breakpoints: { md: singleWidgetLayoutBreakpoint, xxs: 0 },
                 cols: { md: 6, xxs: 1 },
                 ...widthOptions,
                 useDefaultWidthProvider: false,
                 style: {
-                    left: leftOffset,
+                    left: leftOffset + 'px',
                     bottom: 65 + backgroundSelectorOffset,
-                    height: isMobile ? baseHeight / 2 : baseHeight,
+                    height: isSingleWidgetLayout ? baseHeight / 2 : baseHeight,
                     width: viewWidth + 'px',
                     position: 'absolute',
                     zIndex: 50,
@@ -185,25 +181,25 @@ compose(
             ),
             // set default active widget whenever set of widgets has changed and mobile user-agent is found
             withPropsOnChange(
-                ["widgets", "isMobile", "id"],
-                ({widgets, isMobile, activeWidget, setActiveWidget}) => {
-                    if (widgets.length && isMobile && !activeWidget) {
+                ["widgets", "isSingleWidgetLayout", "id"],
+                ({widgets, isSingleWidgetLayout, activeWidget, setActiveWidget}) => {
+                    if (widgets.length && isSingleWidgetLayout && !activeWidget) {
                         setActiveWidget(widgets[0]);
                     }
                 }
             ),
             withPropsOnChange(
-                ['activeWidget', 'isMobile', 'isTablet', 'widgets'],
-                ({activeWidget, dropdownWidgets, setActiveWidget, isMobile, isTablet, widgets, pluginCfg, toolsOptions, layouts}) => {
-                    if (activeWidget && isMobile && widgets.length) {
+                ['activeWidget', 'isSingleWidgetLayout', 'widgets'],
+                ({activeWidget, dropdownWidgets, setActiveWidget, isSingleWidgetLayout, widgets, pluginCfg, toolsOptions, layouts}) => {
+                    if (activeWidget && isSingleWidgetLayout && widgets.length) {
                         const widget = {
                             ...activeWidget,
                             options: {
                                 activeWidget,
                                 dropdownWidgets,
                                 ...(activeWidget.options ?? {}),
-                                isMobile: true,
-                                showMobileNavigation: pluginCfg.showMobileNavigation ?? true,
+                                singleWidget: true,
+                                showArrowsNavigation: pluginCfg.showArrowsNavigation ?? true,
                                 setActiveWidget
                             }
                         };
@@ -222,12 +218,7 @@ compose(
                             widgets: [widget]
                         };
                     }
-                    if (isTablet) {
-                        return {
-                            canEdit: false
-                        };
-                    }
-                    return { widgets };
+                    return false;
                 }
             )
         )
@@ -251,7 +242,7 @@ class Widgets extends React.Component {
  * @memberof plugins
  * @name Widgets
  * @class
- * @prop {boolean} [showMobileNavigation] show arrows to toggle between available widgets in mobile view. True by default.
+ * @prop {boolean} [showArrowsNavigation] show arrows to toggle between available widgets in mobile view. True by default.
  * @prop {object} [toolsOptions] options to show and manage widgets tools. Widget tools are buttons available in some widgets. Any entry of this object can be configured using accessRules.
  *       Access rules can be defined using the syntax (@see components.misc.enhancers.security.accessRuleParser).
  *       The accessible parts of the state are `{mapInfo: {canEdit, canDelete...}, user: {role: "USER"}}`. So you can define rules like this:

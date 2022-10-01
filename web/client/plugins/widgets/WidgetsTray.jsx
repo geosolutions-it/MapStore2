@@ -23,7 +23,7 @@ import BButton from '../../components/misc/Button';
 import {mapLayoutValuesSelector} from "../../selectors/maplayout";
 
 const Button = tooltip(BButton);
-
+const singleWidgetLayoutBreakpoint = 600;
 
 /**
  * Button that allows collapse/Expand functionality of the tray.
@@ -81,8 +81,7 @@ class WidgetsTray extends React.Component {
         expanded: PropTypes.bool,
         setExpanded: PropTypes.func,
         layout: PropTypes.object,
-        isMobile: PropTypes.bool,
-        isTablet: PropTypes.bool
+        isSingleWidgetLayout: PropTypes.bool,
     };
     static defaultProps = {
         enabled: true,
@@ -105,7 +104,7 @@ class WidgetsTray extends React.Component {
                 }}>
                 <BorderLayout
                     columns={[
-                        ...( !this.props.isMobile
+                        ...( !this.props.isSingleWidgetLayout
                             ? [<CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />]
                             : []
                         ),
@@ -113,7 +112,7 @@ class WidgetsTray extends React.Component {
                         ...(this.props.items.map( i => i.tool) || [])
                     ]}
                 >
-                    {this.props.expanded && !this.props.isMobile ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
+                    {this.props.expanded && !this.props.isSingleWidgetLayout ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
                 </BorderLayout>
             </div>)
             : null;
@@ -137,8 +136,7 @@ export default compose(
     })),
     withProps(({ isMobileAgent }) => {
         return {
-            isMobile: isMobileAgent && window.innerWidth < 600,
-            isTablet: isMobileAgent && window.innerWidth >= 600
+            isSingleWidgetLayout: isMobileAgent || window.innerWidth <= singleWidgetLayoutBreakpoint
         };
     }),
     // flag of plugin presence
