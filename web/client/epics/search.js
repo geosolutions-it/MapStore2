@@ -335,5 +335,5 @@ export const delayedSearchEpic = (action$) =>
                 .switchMap(() => {
                     return Rx.Observable.of(searchLayerWithFilter({layer: name, "cql_filter": cqlFilter}));
                 })
-                .takeUntil(action$.ofType(LAYER_LOAD));
+                .takeUntil(action$.ofType(LAYER_LOAD).filter(({ layerId }) => layerId.startsWith(name)));
         });
