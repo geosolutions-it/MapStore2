@@ -117,7 +117,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     proxy,
     // new optional only for single object argument
     projectConfig = {},
-    devServer = DEV_SERVER,
+    devServer,
     resolveModules,
     cesiumBaseUrl,
     devtool = DEV_TOOL
@@ -304,9 +304,11 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             loader: 'html-loader'
         }] : [])
     },
-    devServer: proxy
-        ? { publicPath: "/dist/", proxy } // backward compatibility
-        : devServer,
+    devServer: devServer || {
+        publicPath: '/dist/', // default configuration for dev server
+        ...DEV_SERVER,
+        proxy: proxy ?? devServer?.proxy // proxy has priority over devServer proxy configuration
+    },
     devtool: !prod ? 'eval' : devtool || undefined
 }));
 
