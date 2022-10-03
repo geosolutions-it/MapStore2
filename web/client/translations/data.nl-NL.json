@@ -1637,6 +1637,7 @@
         },
         "layerdownload": {
             "title": "Exporteer Data",
+            "service": "Service",
             "format": "Bestandsformaat",
             "srs":  "Coördinaten ReferentieSysteem",
             "export": "Exporteer",
