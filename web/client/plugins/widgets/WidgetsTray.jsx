@@ -81,7 +81,7 @@ class WidgetsTray extends React.Component {
         expanded: PropTypes.bool,
         setExpanded: PropTypes.func,
         layout: PropTypes.object,
-        isSingleWidgetLayout: PropTypes.bool,
+        isSingleWidgetLayout: PropTypes.bool
     };
     static defaultProps = {
         enabled: true,
