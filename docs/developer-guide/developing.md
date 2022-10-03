@@ -42,7 +42,17 @@ See the [dedicated section in this page](#backend) for more info
 ## Frontend
 
 You can run only the front-end running `npm run fe:start`.
-Running this script MapStore will run on port 8081 and will look for the back-end at port 8080. If you want to change the back-end URL, you have to set it in `build/devServer.js` file.
+Running this script MapStore will run on port `8081` and will look for the back-end at port `8080`.
+
+If you want to use an online instance of MapStore as backend, instead of the local one, you can define the environment variable `MAPSTORE_BACKEND_BASE_URL` to the desired URL.
+
+```sh
+export MAPSTORE_BACKEND_BASE_URL=https://demo.geo-solutions.it/mapstore
+npm run fe:start # this command lunches only the front-end
+```
+
+!!! Note
+    for more customizations on devServer you can edit the `build/devServer.js` file.
 
 ### Debugging
 

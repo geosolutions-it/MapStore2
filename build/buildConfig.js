@@ -121,123 +121,98 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     resolveModules,
     cesiumBaseUrl,
     devtool = DEV_TOOL
-}) => ({
-    target: "web",
-    entry: assign({}, bundles, themeEntries),
-    mode: prod ? "production" : "development",
-    optimization: {
-        minimize: !!prod,
-        ...(prod && {
-            minimizer: [
-                // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`)
-                `...`,
-                new CssMinimizerPlugin() // minify css bundle
-            ]
-        })
-    },
-    output: {
-        path: paths.dist,
-        publicPath,
-        filename: "[name].js",
-        chunkFilename: prod ? (paths.chunks || "") + "[name].[hash].chunk.js" : (paths.chunks || "") + "[name].js"
-    },
-    plugins: [
-        new CopyWebpackPlugin([
-            { from: path.join(paths.base, 'node_modules', 'bootstrap', 'less'), to: path.join(paths.dist, "bootstrap", "less") }
-        ]),
-        new CopyWebpackPlugin([
-            { from: path.join(paths.base, 'node_modules', 'react-nouislider', 'example'), to: path.join(paths.dist, "react-nouislider", "example") }
-        ]),
-        new LoaderOptionsPlugin({
-            debug: !prod,
-            options: {
-                context: paths.base
-            }
-        }),
-        new DefinePlugin({
-            "__DEVTOOLS__": !prod
-        }),
-        new DefinePlugin({
-            'process.env': {
-                'NODE_ENV': prod ? '"production"' : '""'
-            }
-        }),
-        new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
-        VERSION_INFO_DEFINE_PLUGIN,
-        new DefinePlugin({
-            // Define relative base path in cesium for loading assets
-            'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
-        }),
-        new CopyWebpackPlugin([
-            { from: path.join(getCesiumPath({ paths, prod }), 'Workers'), to: path.join(paths.dist, 'cesium', 'Workers') },
-            { from: path.join(getCesiumPath({ paths, prod }), 'Assets'), to: path.join(paths.dist, 'cesium', 'Assets') },
-            { from: path.join(getCesiumPath({ paths, prod }), 'Widgets'), to: path.join(paths.dist, 'cesium', 'Widgets') },
-            { from: path.join(getCesiumPath({ paths, prod }), 'ThirdParty'), to: path.join(paths.dist, 'cesium', 'ThirdParty') }
-        ]),
-        new ProvidePlugin({
-            Buffer: ['buffer', 'Buffer']
-        }),
-        new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
-        // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
-        // see https://github.com/CesiumGS/cesium/issues/9212
-        new NormalModuleReplacementPlugin(/^cesium\/index\.css$/, path.join(paths.base, "node_modules", "cesium/Build/Cesium/Widgets/widgets.css")),
-        new NoEmitOnErrorsPlugin()]
-        .concat(castArray(plugins))
-        .concat(prod ? prodPlugins : devPlugins),
-    resolve: {
-        fallback: {
-            timers: false,
-            stream: false
+}) => {
+    console.log("=============================================");
+    console.log("devServer", devServer);
+    console.log("=============================================");
+
+    return {
+        target: "web",
+        entry: assign({}, bundles, themeEntries),
+        mode: prod ? "production" : "development",
+        optimization: {
+            minimize: !!prod,
+            ...(prod && {
+                minimizer: [
+                    // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`)
+                    `...`,
+                    new CssMinimizerPlugin() // minify css bundle
+                ]
+            })
         },
-        extensions: [".js", ".jsx"],
-        alias: assign({}, {
-            jsonix: '@boundlessgeo/jsonix',
-            // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
-            proj4: '@geosolutions/proj4',
-            "react-joyride": '@geosolutions/react-joyride'
-        }, alias),
-        ...(resolveModules && { modules: resolveModules })
-    },
-    module: {
-        noParse: [/html2canvas/],
-        rules: [
-            {
-                test: /\.css$/,
-                use: [{
-                    loader: 'style-loader'
-                }, {
-                    loader: 'css-loader'
-                }, {
-                    loader: 'postcss-loader',
-                    options: {
-                        postcssOptions: {
-                            plugins: {
-                                "postcss-prefix-selector": {
-                                    prefix: cssPrefix || '.ms2',
-                                    exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
-                                }
-                            }
-                        }
-                    }
-                }]
+        output: {
+            path: paths.dist,
+            publicPath,
+            filename: "[name].js",
+            chunkFilename: prod ? (paths.chunks || "") + "[name].[hash].chunk.js" : (paths.chunks || "") + "[name].js"
+        },
+        plugins: [
+            new CopyWebpackPlugin([
+                { from: path.join(paths.base, 'node_modules', 'bootstrap', 'less'), to: path.join(paths.dist, "bootstrap", "less") }
+            ]),
+            new CopyWebpackPlugin([
+                { from: path.join(paths.base, 'node_modules', 'react-nouislider', 'example'), to: path.join(paths.dist, "react-nouislider", "example") }
+            ]),
+            new LoaderOptionsPlugin({
+                debug: !prod,
+                options: {
+                    context: paths.base
+                }
+            }),
+            new DefinePlugin({
+                "__DEVTOOLS__": !prod
+            }),
+            new DefinePlugin({
+                'process.env': {
+                    'NODE_ENV': prod ? '"production"' : '""'
+                }
+            }),
+            new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
+            VERSION_INFO_DEFINE_PLUGIN,
+            new DefinePlugin({
+                // Define relative base path in cesium for loading assets
+                'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
+            }),
+            new CopyWebpackPlugin([
+                { from: path.join(getCesiumPath({ paths, prod }), 'Workers'), to: path.join(paths.dist, 'cesium', 'Workers') },
+                { from: path.join(getCesiumPath({ paths, prod }), 'Assets'), to: path.join(paths.dist, 'cesium', 'Assets') },
+                { from: path.join(getCesiumPath({ paths, prod }), 'Widgets'), to: path.join(paths.dist, 'cesium', 'Widgets') },
+                { from: path.join(getCesiumPath({ paths, prod }), 'ThirdParty'), to: path.join(paths.dist, 'cesium', 'ThirdParty') }
+            ]),
+            new ProvidePlugin({
+                Buffer: ['buffer', 'Buffer']
+            }),
+            new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
+            // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
+            // see https://github.com/CesiumGS/cesium/issues/9212
+            new NormalModuleReplacementPlugin(/^cesium\/index\.css$/, path.join(paths.base, "node_modules", "cesium/Build/Cesium/Widgets/widgets.css")),
+            new NoEmitOnErrorsPlugin()]
+            .concat(castArray(plugins))
+            .concat(prod ? prodPlugins : devPlugins),
+        resolve: {
+            fallback: {
+                timers: false,
+                stream: false
             },
-            {
-                test: /\.less$/,
-                exclude: /themes[\\\/]?.+\.less$/,
-                use: [{
-                    loader: 'style-loader'
-                }, {
-                    loader: 'css-loader'
-                }, {
-                    loader: 'less-loader'
-                }]
-            },
-            {
-                test: /themes[\\\/]?.+\.less$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    {
+            extensions: [".js", ".jsx"],
+            alias: assign({}, {
+                jsonix: '@boundlessgeo/jsonix',
+                // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
+                proj4: '@geosolutions/proj4',
+                "react-joyride": '@geosolutions/react-joyride'
+            }, alias),
+            ...(resolveModules && { modules: resolveModules })
+        },
+        module: {
+            noParse: [/html2canvas/],
+            rules: [
+                {
+                    test: /\.css$/,
+                    use: [{
+                        loader: 'style-loader'
+                    }, {
+                        loader: 'css-loader'
+                    }, {
                         loader: 'postcss-loader',
                         options: {
                             postcssOptions: {
@@ -249,66 +224,97 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                                 }
                             }
                         }
-                    },
-                    'less-loader'
-                ]
-            },
-            {
-                test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        mimetype: "application/font-woff"
-                    }
-                }]
-            },
-            {
-                test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        name: "[name].[ext]"
-                    }
-                }]
-            },
-            {
-                test: /\.(png|jpg|gif)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        name: "[path][name].[ext]",
-                        limit: 8192
-                    }
-                }] // inline base64 URLs for <=8k images, direct URLs for the rest
-            },
-            {
-                test: /\.jsx?$/,
-                exclude: /(ol\.js)$|(Cesium\.js)$/,
-                use: [{
-                    loader: "babel-loader",
-                    options: {
-                        configFile: path.join(__dirname, 'babel.config.js')
-                    }
-                }],
-                include: [
-                    paths.code,
-                    paths.framework,
-                    path.join(paths.base, "node_modules", "query-string"),
-                    path.join(paths.base, "node_modules", "strict-uri-encode"),
-                    path.join(paths.base, "node_modules", "react-draft-wysiwyg"), // added for issue #4602
-                    path.join(paths.base, "node_modules", "split-on-first")
-                ]
-            }
-        ].concat(prod ? [{
-            test: /\.html$/,
-            loader: 'html-loader'
-        }] : [])
-    },
-    devServer: devServer || {
-        publicPath: '/dist/', // default configuration for dev server
-        ...DEV_SERVER,
-        proxy: proxy ?? devServer?.proxy // proxy has priority over devServer proxy configuration
-    },
-    devtool: !prod ? 'eval' : devtool || undefined
-}));
+                    }]
+                },
+                {
+                    test: /\.less$/,
+                    exclude: /themes[\\\/]?.+\.less$/,
+                    use: [{
+                        loader: 'style-loader'
+                    }, {
+                        loader: 'css-loader'
+                    }, {
+                        loader: 'less-loader'
+                    }]
+                },
+                {
+                    test: /themes[\\\/]?.+\.less$/,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        'css-loader',
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                postcssOptions: {
+                                    plugins: {
+                                        "postcss-prefix-selector": {
+                                            prefix: cssPrefix || '.ms2',
+                                            exclude: ['.ms2', ':root', '[data-ms2-container]'].concat(cssPrefix ? [cssPrefix] : [])
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        'less-loader'
+                    ]
+                },
+                {
+                    test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
+                    use: [{
+                        loader: 'url-loader',
+                        options: {
+                            mimetype: "application/font-woff"
+                        }
+                    }]
+                },
+                {
+                    test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/,
+                    use: [{
+                        loader: 'file-loader',
+                        options: {
+                            name: "[name].[ext]"
+                        }
+                    }]
+                },
+                {
+                    test: /\.(png|jpg|gif)$/,
+                    use: [{
+                        loader: 'url-loader',
+                        options: {
+                            name: "[path][name].[ext]",
+                            limit: 8192
+                        }
+                    }] // inline base64 URLs for <=8k images, direct URLs for the rest
+                },
+                {
+                    test: /\.jsx?$/,
+                    exclude: /(ol\.js)$|(Cesium\.js)$/,
+                    use: [{
+                        loader: "babel-loader",
+                        options: {
+                            configFile: path.join(__dirname, 'babel.config.js')
+                        }
+                    }],
+                    include: [
+                        paths.code,
+                        paths.framework,
+                        path.join(paths.base, "node_modules", "query-string"),
+                        path.join(paths.base, "node_modules", "strict-uri-encode"),
+                        path.join(paths.base, "node_modules", "react-draft-wysiwyg"), // added for issue #4602
+                        path.join(paths.base, "node_modules", "split-on-first")
+                    ]
+                }
+            ].concat(prod ? [{
+                test: /\.html$/,
+                loader: 'html-loader'
+            }] : [])
+        },
+        devServer: devServer || {
+            publicPath: '/dist/', // default configuration for dev server
+            ...DEV_SERVER,
+            proxy: proxy ?? DEV_SERVER?.proxy // proxy has priority over devServer proxy configuration
+        },
+        devtool: !prod ? 'eval' : devtool || undefined
+    };
+});
 
