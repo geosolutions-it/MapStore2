@@ -32,16 +32,18 @@ MapStore generates 2 types of documentation:
 
 ### API and Plugins documentation (JSDoc)
 
-The JSDoc documentation can be automatically generated using [docma](http://onury.github.io/docma/).
-Please see [http://usejsdoc.org/](http://usejsdoc.org/) for further information about how to write proper documentation.
+The API and plugins documentation is automatically generated using [docma](http://onury.github.io/docma/). Docma
+parses the JSDoc comments in the source code and generates a static HTML documentation.
 
-Refer to the existing files to follow the documentation style:
+Refer to the existing files to follow the documentation style of various parts of the application:
 
 * [actions](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/actions/controls.js)
 * [reducers](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/reducers/controls.js)
 * [components](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/components/buttons/FullScreenButton.jsx)
 * [epics](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/epics/fullscreen.js)
 * [plugins](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/plugins/Login.jsx)
+
+Please see [http://usejsdoc.org/](http://usejsdoc.org/) for further information about how to write proper documentation in JSDoc.
 
 To install docma:
 
@@ -64,6 +66,10 @@ The generated folders can be removed with:
 `npm run jsdoc:clean`
 
 ### Users and developers documentation (MkDocs)
+
+!!! Note
+    Make sure to install the proper python dependencies for Mkdocs.
+    See the dedicated page [here](./documentation-guidelines.md#building-documentation)
 
 Build the mkdocs and generate md files to test in local machine by:
 
