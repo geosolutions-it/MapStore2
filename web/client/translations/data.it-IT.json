@@ -1732,6 +1732,7 @@
         },
         "layerdownload": {
             "title": "Esporta dati",
+            "service": "Servizio",
             "format": "Formato file",
             "srs": "Sistema di riferimento",
             "export": "Esporta",

@@ -1387,6 +1387,7 @@
         },
         "layerdownload": {
             "title": "Izvezi podatke",
+            "service": "Service",
             "format": "Format datoteke",
             "srs":  "Koordinatni sustav",
             "export": "Izvoz",
