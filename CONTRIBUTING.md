@@ -27,7 +27,7 @@ and if it's already reported, just add any additional details in the comments.
 After you've made sure that you've found a new MapStore bug,
 here are some tips for creating a helpful report that will make fixing it much easier and quicker:
 
-- Write a **descriptive, specific title**. Bad: *Map does not show*. Good: *Doing X in IE9 causes Z*.
+- Write a **descriptive, specific title**. Bad: *Map does not show*. Good: *Doing X in Chrome causes Z*.
 - Include **browser, OS and MapStore version** info in the description.
 - Create a **simple test case** that demonstrates the bug (e.g. using [JSFiddle](http://jsfiddle.net/) or [JS Bin](http://jsbin.com/)).
 - Check whether the bug can be reproduced in **other browsers**.
