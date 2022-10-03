@@ -20,14 +20,18 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2022.02.00 to 2022.02.00
+## Migration from 2022.02.00 to 2022.02.01
 
 ### Package.json scripts migration
 
-With this release we are refactoring a bit the naming of the scripts maintaining retrocompatibility avoiding builds on ci/cd systems to break.
+With this release we are refactoring a bit the naming of the scripts maintaining retro compatibility avoiding builds on ci/cd systems to break.
 Anyway we suggest to align them as listed [here](https://github.com/geosolutions-it/MapStore2/blob/master/utility/projects/projectScripts.json)
 
-We have removed `travis` and `mvntest` scripts.
+The main changes are:
+
+- We have removed `travis` and `mvntest` scripts.
+- Most of the scripts are now prefixed with `app` or `fe` or `be` to make them more clear.
+- Now `npm start` is an alias of `npm run app:start` and starts both front-end and back-end.
 
 Although is optional we suggest to align the new names into `build.sh` as well
 

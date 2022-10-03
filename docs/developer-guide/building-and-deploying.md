@@ -25,7 +25,15 @@ To create the final war, you have several options:
 
 ## Building the documentation
 
-MapStore uses JSDoc to annotate the components, so the documentation can be automatically generated using [docma](http://onury.github.io/docma/). Please see [http://usejsdoc.org/](http://usejsdoc.org/) for further information about code documentation.
+MapStore generates 2 types of documentation:
+
+* JSDoc: generated from source code, provides a reference of the API and for the plugins configurations
+* MkDocs: generated from markdown files, provides guides for the developers and users
+
+### API and Plugins documentation (JSDoc)
+
+The JSDoc documentation can be automatically generated using [docma](http://onury.github.io/docma/).
+Please see [http://usejsdoc.org/](http://usejsdoc.org/) for further information about how to write proper documentation.
 
 Refer to the existing files to follow the documentation style:
 
@@ -41,27 +49,29 @@ To install docma:
 
 While developing you can generate the documentation to be accessible in the local machine by:
 
-`npm run doc:test`
+`npm run jsdoc:test`
 
 The resulting doc will be accessible from [http://localhost:8081/mapstore/docs/](http://localhost:8081/mapstore/docs/)
 
 For the production deploy a different npm task must be used:
 
-`npm run doc`
+`npm run jsdoc:build`
 
 The documentation will be accessible from the */mapstore/docs/* path
 
 The generated folders can be removed with:
 
-`npm run doc:clean`
+`npm run jsdoc:clean`
+
+### Users and developers documentation (MkDocs)
 
 Build the mkdocs and generate md files to test in local machine by:
 
-`npm run doc-build`
+`npm run doc:build`
 
 Start the built-in dev-server of mkdocs to preview and test documentation live by:
 
-`npm run doc-serve`
+`npm run doc:start`
 
 ## Understanding frontend building tools
 
