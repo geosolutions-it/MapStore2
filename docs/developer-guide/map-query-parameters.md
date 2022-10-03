@@ -193,6 +193,7 @@ GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=at
 from the layerName by a `;`.
 
 In the example above:
+
 - `layer1` and `layer2` are layer names;
 - `service` is the service identifier of the catalog.
 If no service is provided, the default service will be used.
@@ -228,6 +229,7 @@ as other layers:
 `#/viewer/openlayers/new?background=layer1;service`
 
 Where:
+
 - `Sentinel` & `layer1` are layer names,
 - `service` is the service name providing layer data. Service name is optional,
 `default_map_backgrounds` will be used if it is omitted.

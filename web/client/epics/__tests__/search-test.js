@@ -679,6 +679,7 @@ describe('search Epics', () => {
             done();
         }, { mapInfo: {centerToMarker: true}, layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
+
     it('delayedSearchEpic', (done) => {
         const NUM_ACTIONS = 1;
         testEpic(delayedSearchEpic, NUM_ACTIONS,
@@ -692,6 +693,44 @@ describe('search Epics', () => {
                 expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
                 expect(actions[0].layer).toBe('layer1');
                 expect(actions[0].cql_filter).toBe("MM='nn'");
+                done();
+            }, {});
+    });
+
+    it('delayedSearchEpic - do not dispatch action once layer was added', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(delayedSearchEpic, 100), NUM_ACTIONS,
+            [
+                scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "MM='nn'"}),
+                addLayer({ name: 'layer1'}),
+                addLayer({ name: 'layer1'})
+            ],
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
+                expect(actions[0].layer).toBe('layer1');
+                expect(actions[0].cql_filter).toBe("MM='nn'");
+                expect(actions[1].type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+    });
+
+    it('delayedSearchEpic - dispatch action if another layer was added prior to the expected', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(delayedSearchEpic, 100), NUM_ACTIONS,
+            [
+                scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "MM='nn'"}),
+                addLayer({ name: 'layer2'}),
+                addLayer({ name: 'layer1'})
+            ],
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
+                expect(actions[0].layer).toBe('layer1');
+                expect(actions[0].cql_filter).toBe("MM='nn'");
+                expect(actions[1].type).toBe(TEST_TIMEOUT);
                 done();
             }, {});
     });
