@@ -22,8 +22,9 @@ import {warning} from "../actions/notifications";
 import {
     addMarker,
     scheduleSearchLayerWithFilter,
+    searchLayerWithFilter,
     SEARCH_LAYER_WITH_FILTER,
-    searchLayerWithFilter
+    SCHEDULE_SEARCH_LAYER_WITH_FILTER
 } from "../actions/search";
 import uuid from "uuid/v1";
 import {syncActiveBackgroundLayer} from "../actions/backgroundselector";
@@ -301,10 +302,10 @@ export const paramActions = {
         }
         return [];
     },
-    background: (parameters) => {
+    background: (parameters, state) => {
         const background = parameters.background;
         if (typeof background === 'string') {
-            const defaultSource = 'default_map_backgrounds';
+            const defaultSource = selectedServiceSelector(state);
             const pair = background.split(";");
             const id = uuid();
             return [
@@ -325,6 +326,7 @@ export const paramActions = {
     actions: (parameters) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
             SEARCH_LAYER_WITH_FILTER,
+            SCHEDULE_SEARCH_LAYER_WITH_FILTER,
             ZOOM_TO_EXTENT,
             ADD_LAYERS_FROM_CATALOGS
         ]);
