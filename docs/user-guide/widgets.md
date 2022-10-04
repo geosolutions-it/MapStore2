@@ -267,18 +267,18 @@ The toolbar on the top of this panel is similar to the one present in [Chart sec
 
 * **Enable/Disable** the layer fields that will be displayed in the widget.
 
-<img src="../img/widgets/table-attribute.gif" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/table-attribute.gif" class="ms-docimage"/>
 
 !!!warning
     At least one field must be selected in order to move to the next configuration step.
 
 * Enter a **Title** for each column to be displayed in the table header in place of the *Name* of the layer field
 
-<img src="../img/widgets/table-title.gif" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/table-title.gif" class="ms-docimage"/>
 
 * Enter a **Description** for each fields to be displayed in the table through a tooltip
 
-<img src="../img/widgets/table-description.gif" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/table-description.gif" class="ms-docimage"/>
 
 Once the desired fields are selected, a click on the <img src="../img/button/next.jpg" class="ms-docbutton"/> button opens the following panel:
 
