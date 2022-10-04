@@ -168,8 +168,6 @@ class DefaultLayer extends React.Component {
                 : null);
     }
     renderNode = (grab, hide, selected, error, warning, isDummy, other) => {
-        // const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
-        // || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
         const isEmpty = !(
             this.props.showFullTitleOnExpand
             || this.props.activateLegendTool
