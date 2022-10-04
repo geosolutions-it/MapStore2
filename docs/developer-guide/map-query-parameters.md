@@ -313,7 +313,7 @@ For more details check out the [searchLayerWithFilter](https://mapstore.geosolut
 #### Scheduled Map Info
 
 It works similarly to the `Map Info` action, but supports delaying of the search execution up to the moment when layer is added to the map.
-This behavior is used when search should be applied to the dynamically added layer:
+This behavior is used when search should be applied to the dynamically added layer (e.g. using `addLayer` parameter) :
 
 Example:
 
