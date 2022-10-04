@@ -10,41 +10,48 @@ import * as Rx from 'rxjs';
 import toBbox from 'turf-bbox';
 import pointOnSurface from '@turf/point-on-surface';
 import assign from 'object-assign';
-import { sortBy, isNil } from 'lodash';
+import {isNil, sortBy} from 'lodash';
 
-import { queryableLayersSelector, getLayerFromName, centerToMarkerSelector } from '../selectors/layers';
+import {centerToMarkerSelector, getLayerFromName, queryableLayersSelector} from '../selectors/layers';
 
-import { updateAdditionalLayer } from '../actions/additionallayers';
-import { showMapinfoMarker, featureInfoClick, updateCenterToMarker, LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO  } from '../actions/mapInfo';
-import { zoomToExtent, zoomToPoint } from '../actions/map';
-import { changeLayerProperties } from '../actions/layers';
+import {updateAdditionalLayer} from '../actions/additionallayers';
 import {
-    SEARCH_LAYER_WITH_FILTER,
-    TEXT_SEARCH_STARTED,
-    TEXT_SEARCH_RESULTS_PURGE,
-    TEXT_SEARCH_RESET,
-    TEXT_SEARCH_ITEM_SELECTED,
-    TEXT_SEARCH_SHOW_GFI,
-    ZOOM_ADD_POINT,
+    ERROR_FEATURE_INFO,
+    EXCEPTIONS_FEATURE_INFO,
+    featureInfoClick,
+    LOAD_FEATURE_INFO,
+    showMapinfoMarker,
+    updateCenterToMarker
+} from '../actions/mapInfo';
+import {zoomToExtent, zoomToPoint} from '../actions/map';
+import {ADD_LAYER, changeLayerProperties} from '../actions/layers';
+import {
     addMarker,
     nonQueriableLayerError,
-    serverError,
-    resultsPurge,
-    searchTextLoading,
-    searchResultLoaded,
+    resultsPurge, SCHEDULE_SEARCH_LAYER_WITH_FILTER,
+    SEARCH_LAYER_WITH_FILTER, searchLayerWithFilter,
     searchResultError,
+    searchResultLoaded,
+    searchTextChanged,
+    searchTextLoading,
     selectNestedService,
-    searchTextChanged
+    serverError,
+    TEXT_SEARCH_ITEM_SELECTED,
+    TEXT_SEARCH_RESET,
+    TEXT_SEARCH_RESULTS_PURGE,
+    TEXT_SEARCH_SHOW_GFI,
+    TEXT_SEARCH_STARTED,
+    ZOOM_ADD_POINT
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import {defaultIconStyle, showGFIForService, layerIsVisibleForGFI} from '../utils/SearchUtils';
+import {defaultIconStyle, layerIsVisibleForGFI, showGFIForService} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
-import { getDefaultInfoFormatValueFromLayer } from '../utils/MapInfoUtils';
-import { identifyOptionsSelector } from '../selectors/mapInfo';
+import {getDefaultInfoFormatValueFromLayer} from '../utils/MapInfoUtils';
+import {identifyOptionsSelector} from '../selectors/mapInfo';
 
 const getInfoFormat = (layerObj, state) => getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(state)});
 
@@ -324,4 +331,19 @@ export const searchOnStartEpic = (action$, store) =>
                     });
             }
             return Rx.Observable.empty();
+        });
+
+/**
+ * Gets every `SCHEDULE_SEARCH_LAYER_WITH_FILTER` event.
+ * Triggers a GetFeature with a subsequent getFeatureInfo with a point taken from geometry of first feature retrieved after layer is added to the map
+ */
+export const delayedSearchEpic = (action$) =>
+    action$.ofType(SCHEDULE_SEARCH_LAYER_WITH_FILTER)
+        .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
+            return action$.ofType(ADD_LAYER)
+                .filter(({layer}) => layer.name === name)
+                .take(1)
+                .switchMap(() => {
+                    return Rx.Observable.of(searchLayerWithFilter({layer: name, "cql_filter": cqlFilter}));
+                });
         });

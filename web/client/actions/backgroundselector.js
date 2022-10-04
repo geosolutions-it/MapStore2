@@ -24,6 +24,7 @@ export const CREATE_BACKGROUNDS_LIST = 'BACKGROUND_SELECTOR:CREATE_BACKGROUNDS_L
 export const CLEAR_MODAL_PARAMETERS = 'BACKGROUND_SELECTOR:CLEAR_MODAL_PARAMETERS';
 export const CONFIRM_DELETE_BACKGROUND_MODAL = 'BACKGROUND_SELECTOR:CONFIRM_DELETE_BACKGROUND_MODAL';
 export const ALLOW_BACKGROUNDS_DELETION = 'BACKGROUND_SELECTOR:ALLOW_BACKGROUNDS_DELETION';
+export const SYNC_CURRENT_BACKGROUND_LAYER = 'BACKGROUND_SELECTOR:SYNC_CURRENT_BACKGROUND_LAYER';
 
 export function createBackgroundsList(backgrounds) {
     return {
@@ -71,6 +72,14 @@ export function setCurrentBackgroundLayer(layerId) {
     return {
         type: SET_CURRENT_BACKGROUND_LAYER,
         layerId
+    };
+}
+
+
+export function syncActiveBackgroundLayer(id) {
+    return {
+        type: SYNC_CURRENT_BACKGROUND_LAYER,
+        id
     };
 }
 
