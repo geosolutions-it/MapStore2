@@ -33,7 +33,50 @@ The main changes are:
 - Most of the scripts are now prefixed with `app` or `fe` or `be` to make them more clear.
 - Now `npm start` is an alias of `npm run app:start` and starts both front-end and back-end.
 
-Although is optional we suggest to align the new names into `build.sh` as well
+Although it is optional we suggest to align your project to these changes. In order to align your repository you should:
+
+- update your `package.json` to latest scripts, you can copy them from `utility/projects/projectScripts.json` in MapStore2 repository.
+- update your `build.sh` to use the latest scripts, instead of the old ones. See `project/standard/templates/build.sh` in MapStore2 repository.
+- update in your repository `web/pom.xml` of your project to receive the backend property from ENV variables.
+
+```diff
+@@ -14,6 +14,7 @@
+   <properties>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     <tomcat.version>8.5.69</tomcat.version>
++    <tomcat.port>${env.MAPSTORE_BACKEND_PORT}</tomcat.port>
+   </properties>
+
+   <dependencies>
+@@ -400,7 +401,7 @@
+                         ${project.build.directory}/apache-tomcat-${tomcat.version}
+                     </home>
+                     <properties>
+-                        <cargo.servlet.port>8080</cargo.servlet.port>
++                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
+                         <cargo.logging>low</cargo.logging>
+                     </properties>
+                 </configuration>
+@@ -419,6 +420,18 @@
+     </plugins>
+   </build>
+     <profiles>
++        <profile>
++            <id>dev-custom-port</id>
++            <activation>
++                <property>
++                    <name>env.MAPSTORE_BACKEND_PORT</name>
++                </property>
++            </activation>
++            <properties>
++                <!-- Override only if necessary -->
++                <tomcat.port>${env.MAPSTORE_BACKEND_PORT}</tomcat.port>
++            </properties>
++        </profile>
+         <profile>
+             <id>printing</id>
+             <activation>
+```
 
 ## Migration from 2022.01.02 to 2022.02.00
 
