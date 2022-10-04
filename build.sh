@@ -24,11 +24,11 @@ npm install
 
 echo "Building MS2 bundles"
 echo `date`
-npm run compile
+npm run fe:build
 
 echo "Cleanup Documentation"
 echo `date`
-npm run cleandoc
+npm run jsdoc:clean
 
 echo "Checking syntax"
 echo `date`
@@ -40,7 +40,7 @@ npm test
 
 echo "Creating Documentation"
 echo `date`
-npm run doc
+npm run jsdoc:build
 
 echo "Building final WAR package"
 echo `date`
@@ -65,4 +65,4 @@ fi
 
 echo "Final Cleanup"
 echo `date`
-npm run cleandoc
+npm run jsdoc:clean

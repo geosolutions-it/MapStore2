@@ -1,15 +1,12 @@
 # Quick Setup and Run
 
+!!! Note
+    Please make sure to have installed all the software as for requirements before to proceed.
+
 Clone the repository:
 
 ```bash
 git clone https://github.com/geosolutions-it/MapStore2.git
-```
-
-If needed, install NodeJS version >= 8 from [here](https://nodejs.org/en/download/releases/), then update npm to version >= 5, using:
-
-```bash
-npm install -g npm
 ```
 
 Start the demo locally:
@@ -24,7 +21,8 @@ npm start
 
 Then point your preferred browser to [http://localhost:8081](http://localhost:8081).
 
-**note:** This running demo uses [https://dev-mapstore.geosolutionsgroup.com/mapstore/](https://dev-mapstore.geosolutionsgroup.com/mapstore/) as back-end.
+!!! Note
+    This application runs the Java backend at `localhost:8080`. Make sure to have both ports 8080 and 8081 free before to run.
 
 ## Other useful commands
 
@@ -33,10 +31,10 @@ Then point your preferred browser to [http://localhost:8081](http://localhost:80
 npm test
 
 # run test with hot reload
-npm run continuoustest
+npm run test:watch
 
 #generate test documentation
-npm run doctest
+npm run doc:test
 ```
 
 ## Quick Build and Deploy
@@ -45,7 +43,7 @@ Install latest Maven, if needed, from [here](https://maven.apache.org/download.c
 
 Build the deployable war:
 
-```
+```sh
 ./build.sh [version_identifier]
 ```
 
