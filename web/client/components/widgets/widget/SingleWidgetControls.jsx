@@ -12,15 +12,13 @@ const SingleWidgetControls = ({ options }) => {
     const prevIndex = activeIndex === 0 ? maxIndex : activeIndex - 1;
     return (
         <div className="widget-selector">
-            {options.showArrowsNavigation ?
-                <Button
-                    className="previous-widget btn-sm no-border"
-                    onPointerDown={() => options.setActiveWidget(options.dropdownWidgets[prevIndex])}
-                >
-                    <Glyphicon
-                        glyph="arrow-left"/>
-                </Button> : null
-            }
+            <Button
+                className="previous-widget btn-sm no-border"
+                onPointerDown={() => options.setActiveWidget(options.dropdownWidgets[prevIndex])}
+            >
+                <Glyphicon
+                    glyph="arrow-left"/>
+            </Button>
             <Select
                 openOnFocus
                 clearable={false}
@@ -40,15 +38,13 @@ const SingleWidgetControls = ({ options }) => {
                     {option.label}
                 </div>}
             />
-            {options.showArrowsNavigation ?
-                <Button
-                    className="next-widget btn-sm no-border"
-                    onPointerDown={() => options.setActiveWidget(options.dropdownWidgets[nextIndex])}
-                >
-                    <Glyphicon
-                        glyph="arrow-right"/>
-                </Button> : null
-            }
+            <Button
+                className="next-widget btn-sm no-border"
+                onPointerDown={() => options.setActiveWidget(options.dropdownWidgets[nextIndex])}
+            >
+                <Glyphicon
+                    glyph="arrow-right"/>
+            </Button>
         </div>
     );
 };

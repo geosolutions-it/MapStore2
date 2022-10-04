@@ -38,7 +38,6 @@ import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
 
 const RIGHT_MARGIN = 55;
-const singleWidgetLayoutBreakpoint = 600;
 import { widthProvider, heightProvider } from '../components/layout/enhancers/gridLayout';
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
@@ -81,17 +80,45 @@ compose(
     compose(
         heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
         widthProvider({ overrideWidthProvider: false }),
-        withProps(({ isMobileAgent }) => {
+        withProps(({ isMobileAgent, width, mapLayout, singleWidgetLayoutBreakpoint = 600 }) => {
+            const rightOffset = mapLayout?.right ?? 0;
+            const leftOffset = 0;
+            const viewWidth = width - (leftOffset + rightOffset + RIGHT_MARGIN);
+            const isSingleWidgetLayout = isMobileAgent || viewWidth <= singleWidgetLayoutBreakpoint;
+            const backgroundSelectorOffset = isSingleWidgetLayout ? (isMobileAgent ? 40 : 60) : 0;
             return {
-                isSingleWidgetLayout: isMobileAgent || window.innerWidth <= singleWidgetLayoutBreakpoint
+                backgroundSelectorOffset,
+                isSingleWidgetLayout,
+                viewWidth,
+                rightOffset,
+                leftOffset,
+                singleWidgetLayoutBreakpoint
             };
         }),
-        withProps(({width, height, maximized, mapLayout, isSingleWidgetLayout, isMobileAgent} = {}) => {
-            const backgroundSelectorOffset = isSingleWidgetLayout ? (isMobileAgent ? 40 : 60) : 0;
-            const rightOffset = mapLayout?.right ?? 0;
-            const divHeight = isSingleWidgetLayout ? (height - backgroundSelectorOffset - 120) / 2 : height - backgroundSelectorOffset - 120;
+        withProps(({
+            width,
+            height,
+            maximized,
+            leftOffset,
+            viewWidth,
+            isSingleWidgetLayout,
+            singleWidgetLayoutBreakpoint,
+            singleWidgetLayoutMaxHeight = 300,
+            singleWidgetLayoutMinHeight = 200,
+            backgroundSelectorOffset
+        } = {}) => {
+            const divHeight = isSingleWidgetLayout
+                ? (height - backgroundSelectorOffset - 120) / 2
+                : height - backgroundSelectorOffset - 120;
             const nRows = isSingleWidgetLayout ? 1 : 4;
-            const rowHeight = Math.floor(divHeight / nRows - 20);
+            const rowHeight = !isSingleWidgetLayout
+                ? Math.floor(divHeight / nRows - 20)
+                : divHeight > singleWidgetLayoutMaxHeight
+                    ? singleWidgetLayoutMaxHeight
+                    : divHeight < singleWidgetLayoutMinHeight
+                        ? singleWidgetLayoutMinHeight
+                        : singleWidgetLayoutMaxHeight;
+
 
             const maximizedStyle = maximized?.widget ? {
                 width: '100%',
@@ -109,21 +136,21 @@ compose(
                 breakpoints: { xxs: 0 },
                 cols: { xxs: 1 }
             } : {};
-            let leftOffset = 0;
-            let viewWidth = width - (leftOffset + rightOffset + RIGHT_MARGIN);
             const widthOptions = width ? {width: viewWidth - 1} : {};
-            const baseHeight = Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10);
+            const baseHeight = isSingleWidgetLayout
+                ? rowHeight
+                : Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10);
             return ({
                 rowHeight,
                 className: "on-map",
-                breakpoints: { md: singleWidgetLayoutBreakpoint, xxs: 0 },
+                breakpoints: isSingleWidgetLayout ? { xxs: 0 } : { md: singleWidgetLayoutBreakpoint, xxs: 0 },
                 cols: { md: 6, xxs: 1 },
                 ...widthOptions,
                 useDefaultWidthProvider: false,
                 style: {
                     left: leftOffset + 'px',
                     bottom: 65 + backgroundSelectorOffset,
-                    height: isSingleWidgetLayout ? baseHeight / 2 : baseHeight,
+                    height: baseHeight,
                     width: viewWidth + 'px',
                     position: 'absolute',
                     zIndex: 50,
@@ -190,7 +217,7 @@ compose(
             ),
             withPropsOnChange(
                 ['activeWidget', 'isSingleWidgetLayout', 'widgets'],
-                ({activeWidget, dropdownWidgets, setActiveWidget, isSingleWidgetLayout, widgets, pluginCfg, toolsOptions, layouts}) => {
+                ({activeWidget, dropdownWidgets, setActiveWidget, isSingleWidgetLayout, widgets, toolsOptions, layouts}) => {
                     if (activeWidget && isSingleWidgetLayout && widgets.length) {
                         const widget = {
                             ...activeWidget,
@@ -199,7 +226,6 @@ compose(
                                 dropdownWidgets,
                                 ...(activeWidget.options ?? {}),
                                 singleWidget: true,
-                                showArrowsNavigation: pluginCfg.showArrowsNavigation ?? true,
                                 setActiveWidget
                             }
                         };
@@ -242,7 +268,6 @@ class Widgets extends React.Component {
  * @memberof plugins
  * @name Widgets
  * @class
- * @prop {boolean} [showArrowsNavigation] show arrows to toggle between available widgets in mobile view. True by default.
  * @prop {object} [toolsOptions] options to show and manage widgets tools. Widget tools are buttons available in some widgets. Any entry of this object can be configured using accessRules.
  *       Access rules can be defined using the syntax (@see components.misc.enhancers.security.accessRuleParser).
  *       The accessible parts of the state are `{mapInfo: {canEdit, canDelete...}, user: {role: "USER"}}`. So you can define rules like this:

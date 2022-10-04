@@ -21,6 +21,7 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import WidgetsBar from './WidgetsBar';
 import BButton from '../../components/misc/Button';
 import {mapLayoutValuesSelector} from "../../selectors/maplayout";
+import {withContainerDimensions} from "./withContainerDimensions";
 
 const Button = tooltip(BButton);
 const singleWidgetLayoutBreakpoint = 600;
@@ -88,9 +89,7 @@ class WidgetsTray extends React.Component {
         items: [],
         expanded: false,
         setExpanded: () => { },
-        layout: {},
-        isMobile: false,
-        isTablet: false
+        layout: {}
     };
     render() {
         return this.props.enabled
@@ -120,6 +119,7 @@ class WidgetsTray extends React.Component {
 }
 
 export default compose(
+    withContainerDimensions,
     withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,
@@ -134,9 +134,9 @@ export default compose(
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
         hasTrayWidgets: widgets.length > 0
     })),
-    withProps(({ isMobileAgent }) => {
+    withProps(({ isMobileAgent, width }) => {
         return {
-            isSingleWidgetLayout: isMobileAgent || window.innerWidth <= singleWidgetLayoutBreakpoint
+            isSingleWidgetLayout: isMobileAgent || width <= singleWidgetLayoutBreakpoint
         };
     }),
     // flag of plugin presence
