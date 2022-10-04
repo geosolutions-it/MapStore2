@@ -17,16 +17,16 @@
   </modules>
   <profiles>
     <profile>
-      <id>release</id>
+      <id>binary</id>
       <activation>
         <property>
-          <name>release</name>
+          <name>binary</name>
         </property>
       </activation>
       <modules>
         <module>java</module>
         <module>product</module>
-        <module>release</module>
+        <module>binary</module>
       </modules>
     </profile>
   </profiles>
