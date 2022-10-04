@@ -53,7 +53,7 @@ jobs:
         run: npm run lint
 
       - name: Doc build
-        run: npm run doc
+        run: npm run jsdoc:build
 
       - name: Check i18n
         run: npm run i18n
@@ -141,7 +141,7 @@ jobs:
         run: npm install
 
       - name: compile
-        run: npm run compile
+        run: npm run fe:build
       ################
       # JAVA CHECKS
       ##############

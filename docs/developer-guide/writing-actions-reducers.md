@@ -3,15 +3,17 @@
 > ┻┳|  
 > ┳┻| _  
 > ┻┳| •.•) 💬 *"Hey, Checkout this awesome documentation for actions and reducers!"*  
-> ┳┻|⊂ﾉ     
+> ┳┻|⊂ﾉ
 > ┻┳|  
 
 ## What are actions?
+
 Quoting the redux [documentation](https://redux.js.org/basics/actions) they are:
 > Actions are payloads of information that send data from your application to your store.
 
 They are simply plain JavaScript objects
-```
+
+```js
 /* trigger the panning action of the map to a center point */
 const center = [42.3, 36.5];
 export const PAN_TO = 'MAP:PAN_TO';
@@ -20,15 +22,19 @@ export const PAN_TO = 'MAP:PAN_TO';
     center
 }
 ```
+
 They must have type property, typically a constant with a string value, but any other properties are optional
 
 ## Why we use them
+
 We need them to trigger changes to the application's store via reducers.
 To do that we use Action Creators
 
 ## Action Creators
+
 They are simply function that returns actions objects
-```
+
+```js
 const defaultValue = [42.3, 36.5];
 /*
  * by convention, use an initial name (the action filename)
@@ -41,6 +47,7 @@ export const panTo = (center = defaultValue) => ({
     center
 });
 ```
+
 **Note:** Stick to es6 import/export module system and when possible provide a default value for the parameters
 
 These action creators are used in the connected components or in [MapStore2 plugins](plugins-howto.md#jspluginsconnectedsamplejsx-2)
@@ -57,7 +64,8 @@ Reducers are pure functions that take the previous state and an action and retur
 > (previousState, action) => newState
 
 let's see an example:
-```
+
+```js
 // @mapstore is an alias for dir_name/web/client (see webpack.config.js)
 import {PAN_TO} from '@mapstore/actions/map';
 
@@ -73,6 +81,7 @@ export default function map(state, action) {
     }
 }
 ```
+
 As you can see we are changing the center of the map that triggers the panning action of the mapping library
 
 And that's it we have wrote an action and a reducers that make the map panning around.
@@ -80,24 +89,28 @@ And that's it we have wrote an action and a reducers that make the map panning a
 **Note:** Remember to put all the reducers .js files in the web/client/reducers folder or in js/reducers if you are working with custom plugins
 
 ## Advanced usage and tips
+
 Sometimes you need to change a value of an item which is stored inside an array or in a nested object.
 
 Let's imagine we have this object in the store:
-```
+
+```js
 layer: {
     features: [object_1, object_2, ...object_n]
 }
 ```
 
 And we have created an action that holds the id of the object to change and some properties
-```
+
+```js
 export const UPDATE_LAYER_FEATURE = 'LAYER:UPDATE_LAYER_FEATURE'
 export const updateFeature = (id, props = {}) => ({type: UPDATE_LAYER_FEATURE, id, props})
 ```
 
 Then in the reducer we can have different implementations.
 Here we show the one using **arrayUpdate** from @mapstore/utils/ImmutableUtils for updating objects in array
-```
+
+```js
 import {UPDATE_LAYER_FEATURE} from '@mapstore/actions/layer';
 import {find} from 'lodash';
 const defaultState = {
@@ -119,10 +132,12 @@ export default function layer(state = defaultState, action) {
 }
 ```
 
-# Testing
+## Testing
+
 Tests in mapstore are stored in `__tests__` folder at the same level where actions/reducer are.
 The file name is the same of the action/reducer with a '-test' suffix
-```
+
+```txt
 actions/map.js
 actions/__tests__/map-test.js
 or
@@ -133,10 +148,12 @@ reducers/__tests__/map-test.js
 We use [expect](https://github.com/mjackson/expect) as testing library, therefore we suggest to have a look there.
 
 ## How to test an action
+
 Typically you want to test the type and the params return from the action creator
 
 let's test the mapTo action:
-```
+
+```js
 // copyright section
 import expect from 'expect';
 import {panTo, PAN_TO} from '@mapstore/actions/map';
@@ -150,19 +167,22 @@ describe('Test correctness of the map actions', () => {
 });
 
 ```
+
 In order to speed up the unit test runner, you can:
 
-- change the path in tests.webpack.js (custom/standard project) or build\tests.webpack.js (framework) to point to the folder parent of __tests__
+- change the path in tests.webpack.js (custom/standard project) or build\tests.webpack.js (framework) to point to the folder parent of **tests**
 for example `'/js/actions'` for custom/standard project or `'../web/client/actions'` for framework
 - then run this command:
-`npm run continuoustest`
+`npm run test:watch`
 
 This allows to run only the tests contained to the specified path.
 **Note:** When all tests are successfully passing remember to restore it to its original value.
 
 ## How to test a reducer
+
 Here things can become more complicated depending on your reducer but in general you want to test all cases
-```
+
+```js
 // copyright section
 import expect from 'expect';
 import {panTo} from '@mapstore/actions/map';
@@ -180,9 +200,10 @@ describe('Test correctness of the map reducers', () => {
 
 Here for speedup testing you can again modify the tests.webpack.js (custom/standard project) or build\tests.webpack.js (framework)
 in order to point to the reducers folder and then running
-`npm run continuoustest`
+`npm run test:watch`
 
 ## Actions and epics
+
 Actions are not only used by redux to update the store (through the reducers),
 but also for triggering side effects workflows managed by epics
 

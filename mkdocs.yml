@@ -106,6 +106,7 @@ nav:
   - Developer Guide:
     - Requirements: 'developer-guide/requirements.md'
     - Quick Setup and Run: 'developer-guide/index.md'
+    - Main Scripts: 'developer-guide/main-scripts.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
     - Developing with MapStore:
       - Introduction: 'developer-guide/developing-with-mapstore-2-intro.md'
