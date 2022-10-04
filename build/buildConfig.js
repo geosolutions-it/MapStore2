@@ -307,7 +307,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     devServer: devServer || {
         publicPath: '/dist/', // default configuration for dev server
         ...DEV_SERVER,
-        proxy: proxy ?? DEV_SERVER?.proxy // proxy has priority over devServer proxy configuration
+        proxy: proxy || DEV_SERVER && DEV_SERVER.proxy // proxy has priority over devServer proxy configuration
     },
     devtool: !prod ? 'eval' : devtool || undefined
 })
