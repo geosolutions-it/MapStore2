@@ -232,10 +232,10 @@ as other layers:
 
 Where:
 
-- `Sentinel` & `layer1` are layer names,
-- `service` is the service name providing layer data. Service name is optional. If no service is provided, the default service will be used.
+- `Sentinel`, `layer1`, `layer2` are layer names,
+- `service`, `default_map_backgrounds` are the service names providing layer data. Service name is optional. If no service is provided, the default service will be used.
 
-According to the implementation of `default_map_backgrounds` service, it is enough to pass desired layer name even partially, e.g. `background=Sen`, 
+According to the implementation of `default_map_backgrounds` service, it is enough to pass desired layer name even partially, e.g. `background=Sen;default_map_backgrounds`, 
 it will use the closest layer name match in this case.
 
 ### Actions
