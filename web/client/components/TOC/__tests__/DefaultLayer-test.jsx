@@ -393,4 +393,77 @@ describe('test DefaultLayer module component', () => {
         expect(headNode).toExist();
         expect(headNode.childNodes.length).toBe(0);
     });
+
+    it('should not render collapsible (WFS/Vector without geostyler)', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            opacity: 0.5,
+            style: {
+                'weight': 1,
+                'color': 'rgba(0, 0, 255, 1)',
+                'opacity': 1,
+                'fillColor': 'rgba(0, 0, 255, 0.1)',
+                'fillOpacity': 0.1,
+                'radius': 10
+            }
+        };
+
+        for (const type of ['wfs', 'vector']) {
+            l.type = type;
+            const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />,
+                document.getElementById("container"));
+            expect(comp).toExist();
+            const domNode = ReactDOM.findDOMNode(comp);
+            expect(domNode).toExist();
+            const collapsible = domNode.getElementsByClassName("collapsible-toc");
+            expect(collapsible.length).toBe(0);
+            const button = domNode.getElementsByClassName("toc-legend");
+            expect(button.length).toBe(0);
+        }
+    });
+
+    it('should render collapsible (WFS/Vector with geostyler)', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            opacity: 0.5,
+            style: {
+                format: 'geostyler',
+                body: {
+                    rules: [
+                        {
+                            name: 'Rule name',
+                            symbolizers: [
+                                {
+                                    color: '#FFFFFF',
+                                    opacity: 1,
+                                    kind: 'Line',
+                                    cap: 'round',
+                                    join: 'bevel'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+
+        for (const type of ['wfs', 'vector']) {
+            l.type = type;
+            const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />,
+                document.getElementById("container"));
+            expect(comp).toExist();
+            const domNode = ReactDOM.findDOMNode(comp);
+            expect(domNode).toExist();
+            const collapsible = domNode.getElementsByClassName("collapsible-toc");
+            expect(collapsible.length).toBe(1);
+            const button = domNode.getElementsByClassName("toc-legend");
+            expect(button.length).toBe(1);
+        }
+    });
 });

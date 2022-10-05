@@ -126,7 +126,7 @@ class DefaultLayer extends React.Component {
                             </Col>
                         </Row>}
                     {this.props.activateLegendTool && ['wfs', 'vector'].includes(this.props.node.type) &&
-                        <WFSLegend node={this.props.node}/>
+                        <WFSLegend rules={this.props.node.style.body.rules}/>
                     }
                 </Grid>
                 {this.renderOpacitySlider(this.props.hideOpacityTooltip)}

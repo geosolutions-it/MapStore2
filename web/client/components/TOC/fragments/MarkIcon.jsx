@@ -29,7 +29,7 @@ function MarkIcon({ symbolizer }) {
     </svg>);
 }
 
-MarkIcon.PropTypes = {
+MarkIcon.propTypes = {
     symbolizer: PropTypes.object
 };
 

@@ -9,7 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MarkIcon from './MarkIcon';
 
-function WFSLegend({ node }) {
+function WFSLegend({ rules }) {
     const renderIcon = (symbolizer) => {
         const {
             color,
@@ -27,10 +27,17 @@ function WFSLegend({ node }) {
         } = symbolizer;
         switch (symbolizer.kind) {
         case 'Line':
+            let displayWidth = width;
+            if (width === 0) {
+                displayWidth = 1;
+            }
+            if (width > 7) {
+                displayWidth = 7;
+            }
             return (<svg width="21" height="21" viewBox="0 0 50 50">
-                <path d="M 5 5 L 45 45"
+                <path d={`M ${displayWidth} ${displayWidth} L ${50 - displayWidth} ${50 - displayWidth}`}
                     stroke={color}
-                    strokeWidth={width}
+                    strokeWidth={displayWidth}
                     strokeDasharray={dasharray ? "18 18" : null}
                     strokeLinecap={cap}
                     strokeLinejoin={join}
@@ -60,7 +67,7 @@ function WFSLegend({ node }) {
         }
     };
 
-    const renderRules = (rules) => {
+    const renderRules = () => {
         return rules.map((rule) => {
             return (<div className="wfs-legend-rule" key={rule.ruleId}>
                 <div className="wfs-legend-icon">{renderIcon(rule.symbolizers[0])}</div>
@@ -70,12 +77,12 @@ function WFSLegend({ node }) {
     };
 
     return (<div className="wfs-legend">
-        {renderRules(node.style.body.rules)}
+        {renderRules()}
     </div>);
 }
 
-WFSLegend.PropTypes = {
-    node: PropTypes.object
+WFSLegend.propTypes = {
+    rules: PropTypes.object
 };
 
 export default WFSLegend;
