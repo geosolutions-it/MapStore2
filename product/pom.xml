@@ -274,6 +274,9 @@
                     <properties>
                         <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
+                        <cargo.jvmargs>
+                            -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"
+                        </cargo.jvmargs>
                     </properties>
                 </configuration>
                 <deployables>
