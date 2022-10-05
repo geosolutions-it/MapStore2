@@ -3,7 +3,7 @@
 ****************
 
 In this section, you will learn how to manage the layer settings in terms of general information, display mode, style and feature Info. <br>
-Since a layer is added to the [TOC](toc.md) it is possible to access its settings with the dedicated button <img src="../img/button/properties.jpg" class="ms-docbutton"/> that appears selecting a layer:
+Since a layer is added to the [TOC](toc.md#table-of-contents) it is possible to access its settings with the dedicated button <img src="../img/button/properties.jpg" class="ms-docbutton"/> that appears selecting a layer:
 
 <img src="../img/layer-settings/layer-settings.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
@@ -73,7 +73,7 @@ In particular, the user is allowed to:
 
 * Decide to display the image as a single tile or as multiple tiles
 
-* Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wms/wmtscatalog)
+* Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wmswmts-catalog)
 
 * Enable/disable the *Force proxy* layer option. If enabled, forces the application to check the source and applies proxy if needed.
 
@@ -103,7 +103,7 @@ In this case the user is allowed to:
 !!!note
     By the default [service security rules](https://docs.geoserver.org/stable/en/user/security/service.html#service-security) the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only the list of available styles will appear to allow the user to select one of them to the layer.
 
-    Take a look at the [User Integration with GeoServer](../developer-guide/integrations/users/geoserver.md) section of [Developer Guide](../developer-guide/index.md) in order to understand how to configure the way MapStore and GeoServer share users, groups and roles. If the users integration between GeoServer and MapStore is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
+    Take a look at the [User Integration with GeoServer](../developer-guide/integrations/users/geoserver.md#geoserver-integrations) section of [Developer Guide](../developer-guide/index.md#quick-setup-and-run) in order to understand how to configure the way MapStore and GeoServer share users, groups and roles. If the users integration between GeoServer and MapStore is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
 
 ### Create a new style
 
@@ -237,7 +237,7 @@ With the *Pattern mark style* it is possible to represent *Line* or *Fill*  styl
 
 <img src="../img/layer-settings/classify_mark_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The style editor can configure a *Mark* as explained [here](layer-settings.md#mark) along with the usual options available for rules of type [line](layer-settings.md#line) or [fill](layer-settings.md#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
+The style editor can configure a *Mark* as explained [here](#mark) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of the *Pattern mark style* for the *Line* rule sample.
 
 <img src="../img/layer-settings/classify_mark_ex.jpg" class="ms-docimage">
 
@@ -247,7 +247,7 @@ With the *Pattern icon style*  it is possible to represent *Line* or *Fill* styl
 
 <img src="../img/layer-settings/classify_icon_style_panel.jpg" class="ms-docimage"  style="max-width:500px;">
 
-The style editor can configure the *Icon* as explained [here](layer-settings.md#icon) along with the usual options available for rules of type [line](layer-settings.md#line) or [fill](layer-settings.md#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
+The style editor can configure the *Icon* as explained [here](#icon) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
@@ -283,7 +283,7 @@ The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Styl
 
 #### Styling of Vector layer
 
-In [3D Navigation](side-bar.md#3d-navigation), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* with the same characteristics of the [Visual Style Editor](layer-settings.md#visual-editor-style) as described in the previous chapter.
+In [3D Navigation](side-bar.md#3d-navigation), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* with the same characteristics of the [Visual Style Editor](#visual-editor-style) as described in the previous chapter.
 
 !!!Warning
     For the Vector layer, the *Cesium Style Editor* have some limitations:
@@ -356,7 +356,7 @@ In particular, by clicking on the <img src="../img/button/edit_button.jpg" class
 <img src="../img/layer-settings/edit_custom_format.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 Here it is possible to insert the text to be displayed through the [Identify Tool](side-bar.md#identify-tool), with the possibility to wrap the desired properties. <br>
-Let's make an example: we assume to have a layer where each record corresponds to a USA State geometry in the map. In the [Attribute Table](attributes-table.md) of this layer there's the `STATE_NAME` field that, for each record, contains a text value with the name of the State. <br>
+Let's make an example: we assume to have a layer where each record corresponds to a USA State geometry in the map. In the [Attribute Table](attributes-table.md#attribute-table) of this layer there's the `STATE_NAME` field that, for each record, contains a text value with the name of the State. <br>
 If the goal is to show, performing the [Identify Tool](side-bar.md#identify-tool), only the State name, an option could be to insert the following text on the Template text editor:
 
 <img src="../img/layer-settings/GFI_template_ex.jpg" class="ms-docimage"  style="max-width:400px;"/>
