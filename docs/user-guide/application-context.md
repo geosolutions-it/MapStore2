@@ -41,7 +41,7 @@ In particular the admin can configure the context map using the following MapSto
 
 * [Import](import.md#import-files), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to import map files and import [vector file](import.md#import-vector-files).
 
-* [Annotations](annotations.md#adding-annotations), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" /> button, to add annotations to the map.
+* [Annotations](annotations.md#add-new-annotation), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" /> button, to add annotations to the map.
 
 * [Table of Contents](toc.md#table-of-contents), through the <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> button where the admin can use all the available functionalities to manage context layers.
 

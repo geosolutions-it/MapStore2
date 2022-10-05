@@ -46,7 +46,7 @@ The available tools to modify the map are the following:
 
 * Adding the **Layers** by using the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Catalog Services](catalog.md#catalog-services).
 
-* Adding  **Annotations** by clicking on the <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Adding Annotations](annotations.md#adding-annotations).
+* Adding  **Annotations** by clicking on the <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Adding Annotations](annotations.md#add-new-annotation).
 
 * **Import** a map or a vectorial file by clicking on the <img src="../img/button/import-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Import files](import.md#import-files).
 
