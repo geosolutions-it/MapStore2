@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2022, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -34,13 +34,18 @@ describe('SingleWidgetControls component', () => {
         };
         ReactDOM.render(<SingleWidgetControls options={options} />, document.getElementById("container"));
         const container = document.getElementById('container');
+
         const el = container.querySelector('.widget-selector');
         const left = container.querySelector('.previous-widget');
         const right = container.querySelector('.next-widget');
         const label = container.querySelector('.Select-value .Select-value-label');
+
         expect(el).toExist();
         expect(left).toExist();
         expect(right).toExist();
         expect(label.textContent).toBe('Another Widget');
+
+        ReactDOM.render(<SingleWidgetControls options={{...options, activeWidget: { id: 2, title: 'Test Widget'}}} />, document.getElementById("container"));
+        expect(label.textContent).toBe('Test Widget');
     });
 });
