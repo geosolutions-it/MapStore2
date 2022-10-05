@@ -6,6 +6,16 @@ All new front-end technologies, development procedures, best practices and guide
 
 The Developer and User guide documentation are built on the [Read the Docs](https://docs.readthedocs.io/en/latest/index.html) hosting platform. The MapStore's documentation files are available in the [docs/](https://github.com/geosolutions-it/MapStore2/tree/master/docs) section of this repository; [Mkdocs](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html) is used in MapStore as documentation generator, you can look at the available [online documentation](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html#getting-started-with-mkdocs) for more information on how to use it (MapStore uses his own customized [MkDocs Material theme](https://squidfunk.github.io/mkdocs-material/) for both User and Developer documentations).
 
+## General Guidelines
+
+### Internal links
+
+When creating internal links between pages (`.md` files), make sure to use **full link** to the paragraph instead of using only the relative path to the file. 
+As using relative path will not work in exported PDF document.
+
+!!! Example
+    Instead of creating a link `[FAQ]('../dev-faq/')`, use `[FAQ]('../dev-faq/#faq')` or `[FAQ]('../dev-faq.md#faq')` or `[FAQ]('dev-faq.md#faq')`
+
 ## Building documentation
 
 The documentation is built on RTD ([Read the Docs](https://docs.readthedocs.io/en/latest/index.html)) documentation hosting platform.
@@ -41,11 +51,6 @@ This will build the documentation and puts the built files into `site` folder an
 
 The documentation can be launched using `index.html` in `site` folder
 
-!!! Note
-    When creating a link to internal document (.md) files, make sure to use full link instead of a relative path to the file. As using relative path will not work in exported PDF document.
-    !!! Example
-        Instead of creating a link `[FAQ]('../dev-faq/')`, use `[FAQ]('../dev-faq/#faq')` or `[FAQ]('../dev-faq.md#faq')` or `[FAQ]('dev-faq.md#faq')`
-
 ### 4. Editing the documentation
 
 To live build and test the documentation locally, run the following command:
@@ -60,4 +65,4 @@ The documentation will be available at [http://localhost:8000](http://localhost:
 Every time you save some documentation file, the page will be automatically updated.
 
 !!! Note
-    make you sure to not have set `ENABLE_PDF_EXPORT=1` while testing live, in order to avoid build the pdf every time that takes a long time to be generated.
+    make you sure to **not** have set `ENABLE_PDF_EXPORT=1` while testing live, in order to avoid build the pdf every time that takes a long time to be generated.

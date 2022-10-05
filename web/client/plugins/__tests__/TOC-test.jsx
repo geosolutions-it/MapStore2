@@ -462,7 +462,7 @@ describe('TOCPlugin Plugin', () => {
             expect(document.querySelector(FILTER_LAYER_SELECTOR)).toExist();
             expect(document.querySelector(REMOVE_SELECTOR)).toExist();
         });
-        it('render WidgetBuilder', () => { // this test fails only on travis (not locally)
+        it('render WidgetBuilder', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, { ...SELECTED_LAYER_STATE, controls: { widgetBuilder: {available: true}}});
             const WrappedPlugin = dndContext(Plugin);
             ReactDOM.render(<WrappedPlugin items={[{

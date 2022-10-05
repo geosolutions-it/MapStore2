@@ -1430,6 +1430,7 @@
     },
     "layerdownload": {
       "title": "Vie tietoja",
+      "service": "Service",
       "format": "Tiedostomuoto",
       "srs": "SRS",
       "export": "Vie",

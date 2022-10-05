@@ -8,7 +8,6 @@ This is the overall framework folder structure:
 +-- build.sh
 +-- .editorconfig
 +-- Dockerfile
-+-- .travis.yml
 +-- ...
 +-- build       (build related files)
     +-- karma.conf.*.js

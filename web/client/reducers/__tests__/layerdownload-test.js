@@ -10,7 +10,8 @@ import {
     downloadFeatures,
     onDownloadFinished,
     onFormatOptionsFetch,
-    updateFormats
+    updateFormats,
+    setWPSAvailability
 } from '../../actions/layerdownload';
 
 import layerdownload from '../layerdownload';
@@ -29,6 +30,10 @@ describe('Test the layerdownload reducer', () => {
     it('onDownloadFinished', () => {
         const state = layerdownload({loading: true}, onDownloadFinished());
         expect(state.loading).toBe(false);
+    });
+    it('setWPSAvailability', () => {
+        const state = layerdownload({wpsAvailable: false}, setWPSAvailability(true));
+        expect(state.wpsAvailable).toBe(true);
     });
     it('onFormatOptionsFetch', () => {
         const state = layerdownload({formatsLoading: false, wfsFormats: [{name: "CSV", label: "CSV"}, {name: "SHAPE-FILE", label: "SHAPE-FILE"}]}, onFormatOptionsFetch());
