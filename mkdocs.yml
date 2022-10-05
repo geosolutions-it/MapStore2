@@ -161,3 +161,4 @@ plugins:
   - pdf-export:
       combined: true
       combined_output_path: pdf/mapstore_documentation.pdf
+      enabled_if_env: ENABLE_PDF_EXPORT
