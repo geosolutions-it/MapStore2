@@ -10,7 +10,6 @@
 import WidgetsTray from './widgets/WidgetsTray';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
 import epics from '../epics/widgetsTray';
-import {withResizeDetector} from "react-resize-detector";
 
 /**
  * Plugin that allow to collapse widgets. Shows a small tray where to see the collapsed plugins list.
@@ -20,6 +19,6 @@ import {withResizeDetector} from "react-resize-detector";
  * @class
  */
 export default {
-    WidgetsTrayPlugin: withResizeDetector(autoDisableWidgets(WidgetsTray)),
+    WidgetsTrayPlugin: autoDisableWidgets(WidgetsTray),
     epics
 };

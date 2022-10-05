@@ -24,7 +24,6 @@ import {mapLayoutValuesSelector} from "../../selectors/maplayout";
 import {withContainerDimensions} from "./withContainerDimensions";
 
 const Button = tooltip(BButton);
-const singleWidgetLayoutBreakpoint = 600;
 
 /**
  * Button that allows collapse/Expand functionality of the tray.
@@ -134,7 +133,7 @@ export default compose(
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
         hasTrayWidgets: widgets.length > 0
     })),
-    withProps(({ isMobileAgent, width }) => {
+    withProps(({ isMobileAgent, width, singleWidgetLayoutBreakpoint = 600 }) => {
         return {
             isSingleWidgetLayout: isMobileAgent || width <= singleWidgetLayoutBreakpoint
         };
