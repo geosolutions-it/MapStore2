@@ -64,10 +64,10 @@ export default getWidgetFilterRenderers(({
         topRightItems={topRightItems}>
         <BorderLayout
             footer={pagination.totalFeatures ? (
-                <div style={{ height: "30px", overflow: "hidden"}}>
+                <div className={"widget-footer"}>
                     {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
                     {error === undefined &&
-                    <span style={{ "float": "left", margin: "5px" }} ><Message
+                    <span className={"result-info"} ><Message
                         msgId={"featuregrid.resultInfoVirtual"}
                         msgParams={{ total: pagination.totalFeatures }} /></span>}
                 </div>) : null}
