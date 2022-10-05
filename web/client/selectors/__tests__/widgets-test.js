@@ -108,6 +108,35 @@ describe('widgets selectors', () => {
         expect(widgetFilter).toEqual({ rawValue: 'y', value: 'y', operator: 'ilike', type: 'string', attribute: 'state' });
 
     });
+    it('getWidgetAttributeFilter propertyName with array of objects', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    floating: {
+                        widgets: [{
+                            id: "wId",
+                            quickFilters: {
+                                state: {
+                                    rawValue: 'y',
+                                    value: 'y',
+                                    operator: 'ilike',
+                                    type: 'string',
+                                    attribute: 'state'
+                                }
+                            },
+                            options: {
+                                propertyName: [{name: 'state'}]
+                            }
+                        }]
+                    }
+                }
+            }
+        };
+        const widgetFilter = getWidgetAttributeFilter("wId", "state")(state);
+        expect(widgetFilter).toExist();
+        expect(widgetFilter).toEqual({ rawValue: 'y', value: 'y', operator: 'ilike', type: 'string', attribute: 'state' });
+
+    });
     it('getWidgetLayer', () => {
         const tocLayerState = {'layers': { selected: ["TEST1"], flat: [{id: "TEST1", name: "TEST1"}] }};
         expect(getWidgetLayer(tocLayerState)).toExist();

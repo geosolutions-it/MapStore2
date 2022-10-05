@@ -6,7 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
-import {updatePages, gridUpdateToQueryUpdate, getAttributesList} from '../FeatureGridUtils';
+import {
+    updatePages,
+    gridUpdateToQueryUpdate,
+    getAttributesList,
+    getAttributesNames,
+    featureTypeToGridColumns
+} from '../FeatureGridUtils';
 
 
 describe('FeatureGridUtils', () => {
@@ -214,5 +220,45 @@ describe('FeatureGridUtils', () => {
         expect(customSettings).toEqual(['ATTR1', 'ATTR3']);
         expect(noSettings).toBe(undefined);
         expect(allDeselected).toEqual([]);
+    });
+    it('getAttributesNames', () => {
+        const attributes = ['ATTR1', 'ATTR2', 'ATTR3'];
+        expect(getAttributesNames(attributes)).toEqual(['ATTR1', 'ATTR2', 'ATTR3']);
+    });
+    it('getAttributesNames from array of object', () => {
+        const attributes = [
+            {
+                "label": "ATTR1",
+                "attribute": "ATTR1",
+                "name": "ATTR1",
+                "title": "Attribute 1",
+                "description": "Some attribute 1",
+                "type": "number",
+                "valueId": "id",
+                "valueLabel": "name",
+                "values": []
+            }
+        ];
+        expect(getAttributesNames(attributes)).toEqual(['ATTR1']);
+    });
+    it('test featureTypeToGridColumns', () => {
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const columnSettings = {name: 'Test1', hide: false};
+        const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, {options});
+        expect(featureGridColumns.length).toBe(2);
+        featureGridColumns.forEach((fgColumns, index) => {
+            if (index === 0) {
+                expect(fgColumns.description).toBe('Some description');
+                expect(fgColumns.title).toBe('Some title');
+                expect(fgColumns.showTitleTooltip).toBeTruthy();
+            }
+            expect(['Test1', 'Test2'].includes(fgColumns.name)).toBeTruthy();
+            expect(fgColumns.resizable).toBeTruthy();
+            expect(fgColumns.filterable).toBeTruthy();
+            expect(fgColumns.editable).toBeFalsy();
+            expect(fgColumns.sortable).toBeTruthy();
+            expect(fgColumns.width).toBe(200);
+        });
     });
 });

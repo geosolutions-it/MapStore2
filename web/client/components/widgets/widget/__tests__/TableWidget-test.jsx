@@ -14,6 +14,7 @@ import { compose, defaultProps } from 'recompose';
 import { waitFor } from '@testing-library/react';
 
 import describePois from '../../../../test-resources/wfs/describe-pois.json';
+import museam from '../../../../test-resources/wfs/museam.json';
 import tableWidget from '../../enhancers/tableWidget';
 import TableWidgetComp from '../TableWidget';
 
@@ -68,6 +69,27 @@ describe('TableWidget component', () => {
         const container = document.getElementById('container');
         waitFor(() =>expect( container.querySelector('.react-grid-Empty')).toBeTruthy())
             .then(() => done());
+    });
+    it('TableWidget with default gridOpts', () => {
+        ReactDOM.render(<TableWidget
+            virtualScroll={false} describeFeatureType={describePois} enableColumnFilters features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
+        expect(gridHeaderRows.length).toBe(2);
+        const headerRowHeight = gridHeaderRows[0]?.getAttribute('height');
+        expect(Number(headerRowHeight)).toBe(28);
+        const headerFiltersHeight = gridHeaderRows[1]?.getAttribute('height');
+        expect(Number(headerFiltersHeight)).toBe(28);
+    });
+    it('TableWidget with custom gridOpts', () => {
+        ReactDOM.render(<TableWidget
+            gridOpts={{ headerRowHeight: 35, headerFiltersHeight: 35}}
+            virtualScroll={false} describeFeatureType={describePois} enableColumnFilters features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
+        expect(gridHeaderRows.length).toBe(2);
+        const headerRowHeight = gridHeaderRows[0]?.getAttribute('height');
+        expect(Number(headerRowHeight)).toBe(35);
+        const headerFiltersHeight = gridHeaderRows[1]?.getAttribute('height');
+        expect(Number(headerFiltersHeight)).toBe(35);
     });
     it('TableWidget onAddFilter', (done) => {
         const _d = {...describePois, featureTypes: [{...describePois.featureTypes[0], properties: [...describePois.featureTypes[0].properties, {

@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AttributeSelector from '../AttributeTable';
 import expect from 'expect';
+import TestUtils from "react-dom/test-utils";
 const spyOn = expect.spyOn;
 
 
@@ -53,5 +54,86 @@ describe('Test for AttributeTable component', () => {
         expect(events.onChange).toHaveBeenCalled();
 
     });
+    it('click event onChange', () => {
+        const events = {
+            onChange: () => {}
+        };
+        const _spyOn = spyOn(events, "onChange");
+        ReactDOM.render(<AttributeSelector onChange={events.onChange} attributes={[{label: "label", name: "attr", attribute: "attr", hide: true}]}/>, document.getElementById("container"));
+        const checks = document.getElementsByTagName("input");
+        expect(checks.length).toBe(2);
+        checks[0].click();
+        expect(events.onChange).toHaveBeenCalled();
+        const [arg, value] = _spyOn.calls[0].arguments;
+        expect(arg).toEqual("options.propertyName");
+        expect(value).toEqual([{name: "attr"}]);
+    });
+    it('test title onGridRowsUpdated', () => {
+        const events = {
+            onChange: () => {}
+        };
+        const _spyOn = spyOn(events, "onChange");
+        ReactDOM.render(<AttributeSelector options={{propertyName: [{name: 'attr'}, {name: 'attr1'}]}} onChange={events.onChange} attributes={[{label: "label", name: "attr", attribute: "attr"}]}/>, document.getElementById("container"));
+        const checks = document.getElementsByClassName("react-grid-Cell");
+        TestUtils.Simulate.doubleClick(checks[2]); // Activate input field
+        const input = document.getElementsByTagName("input");
+        expect(input.length).toBe(3);
+        TestUtils.Simulate.change(input[1], {target: {value: 'Attribute title'}}); // Update value in title to trigger 'onGridRowsUpdated'
+        TestUtils.Simulate.keyDown(input[1], { key: 'Enter', keyCode: 13 });
+        expect(events.onChange).toHaveBeenCalled();
+        const [arg, value] = _spyOn.calls[0].arguments;
+        expect(arg).toEqual("options.propertyName");
+        expect(value).toEqual([{"name": "attr", "title": "Attribute title"}, {"name": "attr1"}]);
+    });
+    it('test description onGridRowsUpdated', () => {
+        const events = {
+            onChange: () => {}
+        };
+        const _spyOn = spyOn(events, "onChange");
+        ReactDOM.render(<AttributeSelector options={{propertyName: [{name: 'attr'}, {name: 'attr1'}]}} onChange={events.onChange} attributes={[{label: "label", name: "attr", attribute: "attr"}]}/>, document.getElementById("container"));
+        const checks = document.getElementsByClassName("react-grid-Cell");
+        TestUtils.Simulate.doubleClick(checks[3]); // Activate input field
+        const input = document.getElementsByTagName("input");
+        expect(input.length).toBe(3);
 
+        // Update value in title to trigger 'onGridRowsUpdated'
+        TestUtils.Simulate.change(input[1], {target: {value: 'Attribute description'}});
+        TestUtils.Simulate.keyDown(input[1], { key: 'Enter', keyCode: 13 });
+        expect(events.onChange).toHaveBeenCalled();
+
+        const [arg, value] = _spyOn.calls[0].arguments;
+        expect(arg).toEqual("options.propertyName");
+        expect(value).toEqual([{"name": "attr", "description": "Attribute description"}, {"name": "attr1"}]);
+    });
+    it('test retain attributes onGridRowsUpdated when no matching attribute name found', () => {
+        const options = { propertyName: [{name: 'attr1'}, {name: 'attr2'}]};
+        const events = {
+            onChange: () => {}
+        };
+        const _spyOn = spyOn(events, "onChange");
+        ReactDOM.render(<AttributeSelector options={options} onChange={events.onChange} attributes={[{label: "label", name: "attr", attribute: "attr"}]}/>, document.getElementById("container"));
+        const checks = document.getElementsByClassName("react-grid-Cell");
+        TestUtils.Simulate.doubleClick(checks[3]); // Activate input field
+        const input = document.getElementsByTagName("input");
+        expect(input.length).toBe(3);
+        TestUtils.Simulate.change(input[1], {target: {value: 'some val'}});
+        TestUtils.Simulate.keyDown(input[1], { key: 'Enter', keyCode: 13 });
+        expect(events.onChange).toHaveBeenCalled();
+
+        const [arg, value] = _spyOn.calls[0].arguments;
+        expect(arg).toEqual("options.propertyName");
+        expect(value).toEqual(options.propertyName);
+    });
+    it('test disable editable cell when row is not selected', () => {
+        ReactDOM.render(<AttributeSelector options={{propertyName: [{name: 'attr'}, {name: 'attr1'}]}}  attributes={[{label: "label", name: "attr", attribute: "attr", hide: true}]}/>, document.getElementById("container"));
+        const checks = document.getElementsByClassName("react-grid-Cell");
+        TestUtils.Simulate.doubleClick(checks[2]); // Activate title field
+        let input = document.getElementsByTagName("input");
+        // Title input field is not enabled, as activated would result in 3 total fields
+        expect(input.length).toBe(2);
+
+        TestUtils.Simulate.doubleClick(checks[3]); // Activate description field
+        input = document.getElementsByTagName("input");
+        expect(input.length).toBe(2); // Description input field is not enabled
+    });
 });
