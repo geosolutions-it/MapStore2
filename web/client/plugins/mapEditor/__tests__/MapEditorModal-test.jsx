@@ -11,7 +11,6 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import {Provider} from 'react-redux';
 import MapEditorModal from '../MapEditorModal';
-// TODO: it fails on travis and not locally
 describe('MapEditorModal component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
