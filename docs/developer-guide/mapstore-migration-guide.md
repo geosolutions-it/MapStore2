@@ -44,7 +44,7 @@ Although it is optional we suggest to align your project to these changes. In or
    <properties>
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      <tomcat.version>8.5.69</tomcat.version>
-+    <tomcat.port>${env.MAPSTORE_BACKEND_PORT}</tomcat.port>
++    <tomcat.port>8080</tomcat.port>
    </properties>
 
    <dependencies>
