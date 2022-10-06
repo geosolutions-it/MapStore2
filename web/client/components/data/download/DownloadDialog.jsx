@@ -116,6 +116,7 @@ class DownloadDialog extends React.Component {
         const wfsFormats = validWFSFormats.length > 0 ?
             validWFSFormats.filter(f => this.props.wfsFormats.find(wfsF => wfsF.name.toLowerCase() === f.name.toLowerCase())) :
             this.props.wfsFormats;
+        const wfsAvailable = Boolean(this.props.layer.search?.url);
 
         return this.props.enabled ? (<Portal><Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
@@ -125,10 +126,11 @@ class DownloadDialog extends React.Component {
             <div role="body">
                 {this.props.checkingWPSAvailability ?
                     <Loader size={100} style={{margin: '0 auto'}}/> :
-                    this.props.service === 'wfs' && !this.props.layer.search?.url ?
+                    !this.props.wpsAvailable && !wfsAvailable ?
                         <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/> :
                         <DownloadOptions
                             wpsAvailable={this.props.wpsAvailable}
+                            wfsAvailable={wfsAvailable}
                             service={this.props.service}
                             downloadOptions={this.props.downloadOptions}
                             setService={this.props.setService}

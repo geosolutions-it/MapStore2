@@ -30,7 +30,7 @@ describe('Test for DownloadOptions component', () => {
     });
 
     it('render serivce selector', () => {
-        ReactDOM.render(<DownloadOptions wpsAvailable />, document.getElementById("container"));
+        ReactDOM.render(<DownloadOptions wpsAvailable wfsAvailable />, document.getElementById("container"));
         const form = document.getElementsByTagName('form')[0];
         const firstChild = form.querySelector('label');
         expect(firstChild.innerHTML).toBe('<span>layerdownload.service</span>');
@@ -39,9 +39,16 @@ describe('Test for DownloadOptions component', () => {
     });
 
     it('render service selector with WFS service', () => {
-        ReactDOM.render(<DownloadOptions wpsAvailable service="wfs" />, document.getElementById("container"));
+        ReactDOM.render(<DownloadOptions wpsAvailable wfsAvailable service="wfs" />, document.getElementById("container"));
         const form = document.getElementsByTagName('form')[0];
         const selectorValueLabel = form.querySelector('.Select .Select-value-label');
         expect(selectorValueLabel.innerText).toBe('WFS');
+    });
+
+    it('should not render service selector', () => {
+        ReactDOM.render(<DownloadOptions wpsAvailable wfsAvailable={false} service="wps" />, document.getElementById("container"));
+        const form = document.getElementsByTagName('form')[0];
+        const selectors = form.querySelectorAll('.Select');
+        expect(selectors.length).toBe(2);
     });
 });
