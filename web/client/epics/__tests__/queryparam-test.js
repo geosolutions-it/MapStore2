@@ -917,7 +917,7 @@ describe('queryparam epics', () => {
                 try {
                     expect(actions[0].type).toBe(ADD_LAYERS_FROM_CATALOGS);
                     expect(actions[0].layers[0]).toBe("Sentinel");
-                    expect(actions[0].sources[0]).toBe("default_map_backgrounds");
+                    expect(actions[0].sources[0]).toBe("service");
                     expect(actions[0].options[0].group).toBe("background");
                     expect(actions[0].options[0].visibility).toBe(true);
                     expect(actions[1].type).toBe(SYNC_CURRENT_BACKGROUND_LAYER);

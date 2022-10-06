@@ -193,6 +193,7 @@ GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=at
 from the layerName by a `;`.
 
 In the example above:
+
 - `layer1` and `layer2` are layer names;
 - `service` is the service identifier of the catalog.
 If no service is provided, the default service will be used.
@@ -213,7 +214,7 @@ GET: `#/viewer/openlayers/new?addLayers=layer1;service&mapinfo=layer1&mapInfoFil
 Where:
 
 - `layer1` is layer name. 
-- `service` is the service name providing layer data. Service name is optional. If missing the default.
+- `service` is the service name providing layer data. Service name is optional. If no service is provided, the default service of the catalog will be used.
 - `mapInfoFilter` is a cql filter applied to the layer.
 
 
@@ -223,16 +224,18 @@ Allows to dynamically add background to the map and activate it.
 Supports default backgrounds provided by static service defined in `localConfig.json` (`default_map_backgrounds`) as well
 as other layers:
 
-`#/viewer/openlayers/new?background=Sentinel`
+`#/viewer/openlayers/new?background=Sentinel;default_map_backgrounds`
 
 `#/viewer/openlayers/new?background=layer1;service`
 
-Where:
-- `Sentinel` & `layer1` are layer names,
-- `service` is the service name providing layer data. Service name is optional,
-`default_map_backgrounds` will be used if it is omitted.
+`#/viewer/openlayers/new?background=layer2`
 
-According to the implementation of default service, it is enough to pass desired layer name even partially, e.g. `background=Sen`, 
+Where:
+
+- `Sentinel`, `layer1`, `layer2` are layer names,
+- `service`, `default_map_backgrounds` are the service names providing layer data. Service name is optional. If no service is provided, the default service of the catalog will be used.
+
+According to the implementation of `default_map_backgrounds` service, it is enough to pass desired layer name even partially, e.g. `background=Sen;default_map_backgrounds`, 
 it will use the closest layer name match in this case.
 
 ### Actions
@@ -306,6 +309,23 @@ The MapStore invocation URL above executes the following operations:
 - Execution of a map zoom to the provided extent
 
 For more details check out the [searchLayerWithFilter](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.search.exports.searchLayerWithFilter) in the framework documentation
+
+#### Scheduled Map Info
+
+It works similarly to the `Map Info` action, but supports delaying of the search execution up to the moment when layer is added to the map.
+This behavior is used when search should be applied to the dynamically added layer (e.g. using `addLayer` parameter) :
+
+Example:
+
+```json
+{
+    "type": "SEARCH:SCHEDULE_SEARCH_WITH_FILTER",
+    "cql_filter": "ID=75",
+    "layer": "WORKSPACE:LAYER_NAME"
+}
+```
+
+GET: `#/viewer/openlayers/config?actions=[{"type":"SEARCH:SCHEDULE_SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"},{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["WORKSPACE:LAYER_NAME"],"sources":["catalog1"]}]`
 
 #### Add Layers
 

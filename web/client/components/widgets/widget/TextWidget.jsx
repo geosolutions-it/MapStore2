@@ -18,6 +18,7 @@ export default ({
     id, title, text,
     headerStyle,
     topRightItems,
+    options = {},
     dataGrid = {},
     confirmDelete = false,
     onDelete = () => {}
@@ -27,6 +28,7 @@ export default ({
         icons={icons}
         topLeftItems={topLeftItems}
         topRightItems={topRightItems}
+        options={options}
     >
         <TextView text={text} />
     </WidgetContainer>

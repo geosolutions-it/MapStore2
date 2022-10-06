@@ -6,13 +6,13 @@ module.exports = function karmaConfig(config) {
     process.env.BABEL_ENV = 'test';
     const testConfig = require('./testConfig')({
         files: [
-            'build/tests-travis.webpack.js',
+            'build/tests-firefox.webpack.js',
             { pattern: './web/client/test-resources/**/*', included: false },
             { pattern: './web/client/translations/**/*', included: false }
         ],
         path: path.join(__dirname, "..", "web", "client"),
         basePath: path.join(__dirname, ".."),
-        testFile: 'build/tests-travis.webpack.js',
+        testFile: 'build/tests-firefox.webpack.js',
         singleRun: true
     });
     config.set(testConfig);

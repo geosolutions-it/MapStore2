@@ -50,12 +50,7 @@
       }, {
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
-      },
-      {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
-    }],
+      }],
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
@@ -389,7 +384,6 @@
                     }
                 }
             },
-          "SidebarMenu",
             "FilterLayer",
             "AddGroup",
             "TOCItemsSettings",
@@ -496,7 +490,8 @@
             "Playback",
             "FeedbackMask",
             "StyleEditor",
-            "DeleteMap"
+            "DeleteMap",
+            "SidebarMenu"
         ],
         "embedded": ["Details", {
                 "name": "Map",

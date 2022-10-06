@@ -9,6 +9,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>8.5.69</tomcat.version>
+    <tomcat.port>8080</tomcat.port>
   </properties>
 
   <dependencies>
@@ -271,8 +272,12 @@
                         ${project.build.directory}/apache-tomcat-${tomcat.version}
                     </home>
                     <properties>
-                        <cargo.servlet.port>8080</cargo.servlet.port>
+                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
+<!-- setting javax.xml.parsers.SAXParserFactory is a workaround for issue https://github.com/geosolutions-it/geostore/issues/311 and can be removed when solved -->
+                        <cargo.jvmargs>
+                            -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"
+                        </cargo.jvmargs>
                     </properties>
                 </configuration>
                 <deployables>
@@ -290,6 +295,18 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+        <id>dev-custom-port</id>
+        <activation>
+            <property>
+                <name>env.MAPSTORE_BACKEND_PORT</name>
+            </property>
+        </activation>
+        <properties>
+            <!-- Override only if necessary -->
+            <tomcat.port>${env.MAPSTORE_BACKEND_PORT}</tomcat.port>
+        </properties>
+    </profile>
     <profile>
       <id>printing</id>
       <activation>
