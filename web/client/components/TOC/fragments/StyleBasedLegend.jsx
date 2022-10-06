@@ -9,7 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MarkIcon from './MarkIcon';
 
-function WFSLegend({ rules }) {
+function WFSLegend({ style }) {
     const renderIcon = (symbolizer) => {
         const {
             color,
@@ -34,7 +34,7 @@ function WFSLegend({ rules }) {
             if (width > 7) {
                 displayWidth = 7;
             }
-            return (<svg width="21" height="21" viewBox="0 0 50 50">
+            return (<svg viewBox="0 0 50 50">
                 <path d={`M ${displayWidth} ${displayWidth} L ${50 - displayWidth} ${50 - displayWidth}`}
                     stroke={color}
                     strokeWidth={displayWidth}
@@ -45,7 +45,7 @@ function WFSLegend({ rules }) {
                 />
             </svg>);
         case 'Fill':
-            return (<svg width="21" height="21" viewBox="0 0 50 50">
+            return (<svg viewBox="0 0 50 50">
                 <path d="M 1 1 L 1 49 L 49 49 L 49 1 L 1 1"
                     fill={color}
                     opacity={fillOpacity}
@@ -57,32 +57,35 @@ function WFSLegend({ rules }) {
         case 'Mark':
             return <MarkIcon symbolizer={symbolizer} />;
         case 'Icon':
-            const svgStyle = {transform: `rotate(${rotate}deg)`, opacity};
-            return (<svg width="21" height="21" viewBox="0 0 50 50" style={svgStyle}>
-                <image href={image} height="50" width="50"/>
+            const svgStyle = { transform: `rotate(${rotate}deg)`, opacity };
+            return (<svg viewBox="0 0 50 50" style={svgStyle}>
+                <image href={image} height="50" width="50" />
             </svg>);
         default:
             return null;
-
         }
     };
 
-    const renderRules = () => {
+    const renderRules = (rules) => {
         return rules.map((rule) => {
             return (<div className="wfs-legend-rule" key={rule.ruleId}>
                 <div className="wfs-legend-icon">{renderIcon(rule.symbolizers[0])}</div>
-                <span>{rule.name || 'No Label'}</span>
+                <span>{rule.name || ''}</span>
             </div>);
         });
     };
 
-    return (<div className="wfs-legend">
-        {renderRules()}
-    </div>);
+    return <>
+        {
+            style.format === 'geostyler' && <div className="wfs-legend">
+                {renderRules(style.body.rules)}
+            </div>
+        }
+    </>;
 }
 
 WFSLegend.propTypes = {
-    rules: PropTypes.object
+    style: PropTypes.object
 };
 
 export default WFSLegend;

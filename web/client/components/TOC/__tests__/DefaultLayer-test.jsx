@@ -455,7 +455,7 @@ describe('test DefaultLayer module component', () => {
 
         for (const type of ['wfs', 'vector']) {
             l.type = type;
-            const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />,
+            const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" activateLegendTool node={l} />,
                 document.getElementById("container"));
             expect(comp).toExist();
             const domNode = ReactDOM.findDOMNode(comp);

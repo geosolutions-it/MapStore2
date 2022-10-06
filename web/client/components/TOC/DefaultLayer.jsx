@@ -22,7 +22,7 @@ import ToggleFilter from './fragments/ToggleFilter';
 import tooltip from '../misc/enhancers/tooltip';
 import localizedProps from '../misc/enhancers/localizedProps';
 import { isInsideResolutionsLimits } from '../../utils/LayersUtils';
-import WFSLegend from './fragments/WFSLegend';
+import StyleBasedLegend from './fragments/StyleBasedLegend';
 
 const GlyphIndicator = localizedProps('tooltip')(tooltip(Glyphicon));
 
@@ -125,8 +125,8 @@ class DefaultLayer extends React.Component {
                                 <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} language={this.props.language} {...this.props.legendOptions} />
                             </Col>
                         </Row>}
-                    {this.props.activateLegendTool && ['wfs', 'vector'].includes(this.props.node.type) &&
-                        <WFSLegend rules={this.props.node.style.body.rules}/>
+                    {this.props.activateLegendTool && ['wfs', 'vector', '3dtiles'].includes(this.props.node.type) &&
+                        <StyleBasedLegend style={this.props.node.style}/>
                     }
                 </Grid>
                 {this.renderOpacitySlider(this.props.hideOpacityTooltip)}
@@ -170,9 +170,10 @@ class DefaultLayer extends React.Component {
     renderNode = (grab, hide, selected, error, warning, isDummy, other) => {
         const isEmpty = !(
             this.props.showFullTitleOnExpand
-            || this.props.activateLegendTool
-                && this.props.node.type === 'wms'
-                || ['wfs', 'vector'].includes(this.props.node.type) && this.props.node.style.format === 'geostyler'
+            || this.props.activateLegendTool && (
+                this.props.node.type === 'wms'
+                || ['wfs', 'vector'].includes(this.props.node.type) && this.props.node?.style?.format === 'geostyler'
+            )
         );
         const head = (isDummy ?
             <div style={{padding: 0, height: 10}} className="toc-default-layer-head"/> :
