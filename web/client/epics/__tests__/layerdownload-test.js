@@ -63,7 +63,61 @@ describe('layerdownload Epics', () => {
         };
 
         mockAxios.onGet().reply(200, xmlData);
-        const state = { controls: { layerdownload: { enabled: false, downloadOptions: {}} } };
+        const state = {
+            controls: {
+                layerdownload: { enabled: false, downloadOptions: {}}
+            },
+            layers: {
+                flat: [
+                    {
+                        type: 'wfs',
+                        visibility: true,
+                        id: 'mapstore:states__7',
+                        search: {
+                            url: 'http://u.r.l'
+                        }
+                    }
+                ],
+                selected: [
+                    'mapstore:states__7'
+                ]
+            }
+        };
+        testEpic(checkWPSAvailabilityEpic, 4, checkWPSAvailability('http://check.wps.availability.url', 'wfs'), epicResult, state);
+    });
+    it('should select WPS service', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(4);
+            actions.map((action) => {
+                switch (action.type) {
+                case SET_SERVICE:
+                    expect(action.service).toBe('wps');
+                    break;
+                default:
+                    break;
+                }
+            });
+            done();
+        };
+
+        mockAxios.onGet().reply(200, xmlData);
+        const state = {
+            controls: {
+                layerdownload: { enabled: false, downloadOptions: {}}
+            },
+            layers: {
+                flat: [
+                    {
+                        type: 'wms',
+                        visibility: true,
+                        id: 'mapstore:states__7'
+                    }
+                ],
+                selected: [
+                    'mapstore:states__7'
+                ]
+            }
+        };
         testEpic(checkWPSAvailabilityEpic, 4, checkWPSAvailability('http://check.wps.availability.url', 'wfs'), epicResult, state);
     });
     it('downloads a layer', (done) => {
