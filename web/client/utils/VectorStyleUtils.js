@@ -104,7 +104,7 @@ const paintCross = (ctx, cx, cy, r, p) => {
     ctx.closePath();
 };
 
-function getWellKnownNameImageFromSymbolizer(symbolizer) {
+export function getWellKnownNameImageFromSymbolizer(symbolizer) {
     const id = getImageIdFromSymbolizer(symbolizer);
     if (imagesCache[id]) {
         return Promise.resolve(imagesCache[id]);
