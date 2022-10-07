@@ -25,7 +25,29 @@ describe('Test for DownloadDialog component', () => {
     });
 
     it('render download options', () => {
-        ReactDOM.render(<DownloadDialog enabled service="wps"/>, document.getElementById("container"));
+        const selectedLayer =
+        {
+            type: 'wfs',
+            visibility: true,
+            id: 'mapstore:states__7',
+            search: {
+                url: 'http://u.r.l'
+            }
+        };
+        ReactDOM.render(<DownloadDialog enabled service="wps" layer={selectedLayer} />, document.getElementById("container"));
+        const dialog = document.getElementById('mapstore-export');
+        expect(dialog).toBeTruthy();
+        expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+    });
+
+    it('render download options with only "wps" available', () => {
+        const selectedLayer =
+        {
+            type: 'wms',
+            visibility: true,
+            id: 'mapstore:states__7'
+        };
+        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable layer={selectedLayer} />, document.getElementById("container"));
         const dialog = document.getElementById('mapstore-export');
         expect(dialog).toBeTruthy();
         expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
