@@ -125,7 +125,7 @@ class DefaultLayer extends React.Component {
                                 <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} language={this.props.language} {...this.props.legendOptions} />
                             </Col>
                         </Row>}
-                    {this.props.activateLegendTool && ['wfs', 'vector', '3dtiles'].includes(this.props.node.type) &&
+                    {this.props.activateLegendTool && ['wfs', 'vector'].includes(this.props.node.type) &&
                         <StyleBasedLegend style={this.props.node.style}/>
                     }
                 </Grid>
