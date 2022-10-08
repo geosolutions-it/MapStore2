@@ -24,7 +24,8 @@ const Button = tooltip(ButtonRB);
  */
 export default ({
     charts = [],
-    onChange = () => {},
+    // onChange = () => {},
+    onChange,
     value = '',
     disabled = false,
     className = '',
@@ -88,7 +89,7 @@ export default ({
         onChange
     ]);
     return (<>
-        { editorData.charts?.length > 1
+        { editorData?.charts?.length > 1
             ? <div className="widget-selector">
                 <div className="widget-selector-label">
                     <strong>

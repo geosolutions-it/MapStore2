@@ -25,7 +25,7 @@ import {
     availableDependenciesForEditingWidgetSelector,
     returnToFeatureGridSelector,
     isTrayEnabled,
-    getVisibleFloatingWidgets
+    getVisibleFloatingWidgets, getChartWidgetLayers
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -145,6 +145,23 @@ describe('widgets selectors', () => {
         expect(getWidgetLayer(dashboardNoLayer)).toNotExist();
         const widgetLayer = set(`widgets.builder.editor`, { layer: { name: "TEST2" } }, dashboardNoLayer);
         expect(getWidgetLayer(widgetLayer).name).toBe("TEST2");
+        const chartWidgetLayer = set(`widgets.builder.editor`,
+            { selectedChartId: "1", charts: [{ chartId: "1", layer: {name: "TEST2"} }] }, dashboardNoLayer);
+        expect(getWidgetLayer(chartWidgetLayer).name).toBe("TEST2");
+    });
+    it('getEditingWidgetLayer charts', () => {
+        const chartWidgetLayer =
+            getEditingWidgetLayer(set(`widgets.builder.editor`, { selectedChartId: "1", charts: [{ chartId: "1", layer: {name: "TEST2"} }] }, {}));
+        expect(chartWidgetLayer.name).toBe("TEST2");
+    });
+    it('getWidgetLayers charts', () => {
+        const chartWidgetLayer =
+            getChartWidgetLayers(set(`widgets.builder.editor`, {
+                selectedChartId: "1",
+                charts: [{ chartId: "1", layer: {name: "TEST1"} },
+                    { chartId: "2", layer: {name: "TEST2"} }]}, {})
+            );
+        expect(chartWidgetLayer.length).toBe(2);
     });
     it('availableDependenciesSelector', () => {
         const state = {

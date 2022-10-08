@@ -12,14 +12,14 @@ import {connect} from 'react-redux';
 import {compose, renameProps, branch, renderComponent, withState} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
-import {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} from '../../actions/widgets';
+import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import chartLayerSelector from './enhancers/chartLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
 import viewportBuilderConnectMask from './enhancers/connection/viewportBuilderConnectMask';
 import withExitButton from './enhancers/withChartExitButton';
 import withConnectButton from './enhancers/connection/withConnectButton';
-import {wizardStateToProps, wizardSelector} from './commons';
+import { wizardStateToProps, wizardSelector } from './commons';
 import ChartWizard from '../../components/widgets/builder/wizard/ChartWizard';
 import LayerSelector from './ChartLayerSelector';
 import BuilderHeader from './BuilderHeader';

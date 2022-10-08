@@ -11,10 +11,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import MapSwitcher from '../MapSwitcher';
+import ChartSwitcher from '../ChartSwitcher';
 
-const maps = [{mapId: 1, name: 'm1'}, {mapId: 2, name: 'm2'}];
-describe('MapSwitcher component', () => {
+const charts = [{chartId: 1, layer: {title: 'm1'}}, {chartId: 2, layer: {title: 'm2'}}];
+describe('ChartSwitcher component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -24,8 +24,8 @@ describe('MapSwitcher component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('MapSwitcher render default', () => {
-        ReactDOM.render(<MapSwitcher editorData={{maps}} withContainer/>, document.getElementById("container"));
+    it('ChartSwitcher render default', () => {
+        ReactDOM.render(<ChartSwitcher editorData={{charts}} withContainer/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-selector');
         expect(el).toBeTruthy();
@@ -36,8 +36,8 @@ describe('MapSwitcher component', () => {
         const switcherValue = container.querySelector('.Select-value-label');
         expect(switcherValue.textContent).toBe('m1');
     });
-    it('MapSwitcher render without container', () => {
-        ReactDOM.render(<MapSwitcher maps={maps}/>, document.getElementById("container"));
+    it('ChartSwitcher render without container', () => {
+        ReactDOM.render(<ChartSwitcher charts={charts}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-selector');
         expect(el).toBeFalsy();
@@ -46,45 +46,34 @@ describe('MapSwitcher component', () => {
         const switcherDropdown = container.querySelector('.Select');
         expect(switcherDropdown).toBeTruthy();
     });
-    it('MapSwitcher render icon when map size is small', () => {
-        ReactDOM.render(<MapSwitcher maps={maps.map(m=> ({...m, size: {width: 400}}))} value={1} />, document.getElementById("container"));
+    it('ChartSwitcher render icon when map size is small', () => {
+        ReactDOM.render(<ChartSwitcher width={400} charts={charts} value={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-selector');
         expect(el).toBeFalsy();
         const switcherIcon = container.querySelector('.glyphicon-info-sign');
         expect(switcherIcon).toBeTruthy();
     });
-    it('MapSwitcher render empty map', () => {
-        ReactDOM.render(<MapSwitcher withContainer emptyMap />, document.getElementById("container"));
+    it('ChartSwitcher - wizard do not render select component', () => {
+        ReactDOM.render(<ChartSwitcher withContainer editorData={{charts: charts[0]}} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-selector');
-        expect(el).toBeTruthy();
-        const fcEmptyName = container.querySelector('.widget-empty-map');
-        expect(fcEmptyName).toBeTruthy();
-        const button = container.querySelector('button');
-        expect(button.classList.contains('disabled')).toBeTruthy();
-        ReactTestUtils.Simulate.change(fcEmptyName, {target: {value: 'map1'}});
-        expect(button.classList.contains('disabled')).toBeFalsy();
+        expect(el).toBeFalsy();
+        const selectArrow = container.querySelector('.Select-arrow');
+        expect(selectArrow).toBeFalsy();
     });
-    it('MapSwitcher render empty map onChange', () => {
-        const action = { onChange: () => {} };
-        const spyOnChange = expect.spyOn(action, 'onChange');
-        ReactDOM.render(<MapSwitcher withContainer emptyMap onChange={action.onChange} />, document.getElementById("container"));
+    it('ChartSwitcher - widget do not render select component', () => {
+        ReactDOM.render(<ChartSwitcher charts={[charts[0]]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-selector');
-        expect(el).toBeTruthy();
-        const fcEmptyName = container.querySelector('.widget-empty-map');
-        expect(fcEmptyName).toBeTruthy();
-        const button = container.querySelector('button');
-        ReactTestUtils.Simulate.change(fcEmptyName, {target: {value: 'map1'}});
-        ReactTestUtils.Simulate.click(button);
-        expect(spyOnChange).toHaveBeenCalled();
-        expect(spyOnChange.calls.length).toBe(2);
+        expect(el).toBeFalsy();
+        const selectArrow = container.querySelector('.Select-arrow');
+        expect(selectArrow).toBeFalsy();
     });
-    it('MapSwitcher onChange', () => {
+    it('ChartSwitcher onChange', () => {
         const action = { onChange: () => {} };
         const spyOnChange = expect.spyOn(action, 'onChange');
-        ReactDOM.render(<MapSwitcher maps={maps} value={1} onChange={action.onChange} />, document.getElementById("container"));
+        ReactDOM.render(<ChartSwitcher charts={charts} value={1} onChange={action.onChange} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-selector');
         expect(el).toBeFalsy();
@@ -97,6 +86,14 @@ describe('MapSwitcher component', () => {
         ReactTestUtils.Simulate.keyDown(selectControl, { keyCode: 40, key: 'ArrowDown' });
         ReactTestUtils.Simulate.keyDown(inputs[0], { keyCode: 13, key: 'Enter' });
         expect(spyOnChange.calls.length).toBe(1);
-        expect(spyOnChange.calls[0].arguments).toEqual(['selectedMapId', 2]);
+        expect(spyOnChange.calls[0].arguments).toEqual(['selectedChartId', 2]);
+    });
+    it('ChartSwitcher render child component', () => {
+        ReactDOM.render(<ChartSwitcher withContainer><button>TEST</button></ChartSwitcher>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+
+        const button = container.querySelector('button');
+        expect(button.textContent).toBe('TEST');
     });
 });

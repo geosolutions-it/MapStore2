@@ -24,27 +24,25 @@ describe('ChartType component', () => {
     it('ChartType rendering with defaults', () => {
         ReactDOM.render(<ChartType />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
-        expect(container.querySelector('.selected')).toNotExist();
+        const el = container.querySelectorAll('button');
+        expect(el).toBeTruthy();
+        expect(el.length).toBe(3);
+        expect(container.querySelector('.btn-success')).toBeFalsy();
     });
     it('ChartType selected', () => {
         ReactDOM.render(<ChartType type="bar"/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.selected');
-        expect(el).toExist();
+        expect(container).toBeTruthy();
+        expect(container.querySelector('.btn-success')).toBeTruthy();
     });
     it('Test ChartType onSelect', () => {
         const actions = {
-            onSelect: () => {},
-            onNextPage: () => {}
+            onSelect: () => {}
         };
         const spyonSelect = expect.spyOn(actions, 'onSelect');
-        const spyonNextPage = expect.spyOn(actions, 'onNextPage');
-        ReactDOM.render(<ChartType type="bar" onSelect={actions.onSelect} onNextPage={actions.onNextPage} />, document.getElementById("container"));
-        ReactTestUtils.Simulate.click(document.querySelector('.selected')); // <-- trigger event callback
+        ReactDOM.render(<ChartType type="bar" onSelect={actions.onSelect}  />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelectorAll('button')[1]);
         expect(spyonSelect).toHaveBeenCalled();
-        expect(spyonSelect.calls[0].arguments[0]).toBe("bar");
-        expect(spyonNextPage).toHaveBeenCalled();
+        expect(spyonSelect.calls[0].arguments[0]).toBe("pie");
     });
 });

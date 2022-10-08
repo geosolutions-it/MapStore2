@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 
 import Toolbar from '../Toolbar';
 
-describe('CounterWizard Toolbar component', () => {
+describe('ChartWizard Toolbar component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -26,36 +26,40 @@ describe('CounterWizard Toolbar component', () => {
         ReactDOM.render(<Toolbar />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.btn-group');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('step 0', () => {
         ReactDOM.render(<Toolbar step={0} valid={false} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.btn-group');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const buttons = container.querySelectorAll('button');
-        expect(buttons.length).toBe(0);
+        expect(buttons.length).toBe(4);
+    });
+    it('step 0 - arrow right - disable button', () => {
+        ReactDOM.render(<Toolbar step={0} valid={false} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.btn-group');
+        expect(el).toBeTruthy();
+        const buttons = container.querySelectorAll('button');
+        expect(buttons[3].classList.contains('disabled')).toBeTruthy();
+    });
+    it('step 0 - disable button on validating charts', () => {
+        ReactDOM.render(<Toolbar step={0} valid validating />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.btn-group');
+        expect(el).toBeTruthy();
+        const buttons = container.querySelectorAll('button');
+        expect(buttons[3].classList.contains('disabled')).toBeTruthy();
     });
     it('step 1', () => {
         ReactDOM.render(<Toolbar step={1} valid />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.btn-group');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const buttons = container.querySelectorAll('button');
         expect(buttons.length).toBe(3);
-        expect(buttons[0].querySelector('.glyphicon-arrow-left')).toExist();
-        expect(buttons[1].querySelector('.glyphicon-filter')).toExist();
-    });
-    it('step 2', () => {
-        ReactDOM.render(<Toolbar step={1} valid />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.btn-group');
-        expect(el).toExist();
-        const buttons = container.querySelectorAll('button');
-        expect(buttons.length).toBe(3);
-        expect(buttons[0].querySelector('.glyphicon-arrow-left')).toExist();
-        expect(buttons[1].querySelector('.glyphicon-filter')).toExist();
-        expect(buttons[2].querySelector('.glyphicon-arrow-right')).toExist();
+        expect(buttons[2].querySelector('.glyphicon-floppy-disk')).toBeTruthy();
     });
     it('step buttons', () => {
         ReactDOM.render(<Toolbar stepButtons={[{ text: "text", glyph: 'test', id: "test-button" }]} step={0} valid={false} />, document.getElementById("container"));
@@ -63,7 +67,7 @@ describe('CounterWizard Toolbar component', () => {
         const el = container.querySelector('.btn-group');
         expect(el).toExist();
         const buttons = container.querySelectorAll('button');
-        expect(buttons.length).toBe(1);
+        expect(buttons.length).toBe(5);
         expect(buttons[0].querySelector('.glyphicon-test')).toExist();
     });
 });

@@ -22,7 +22,7 @@ import {
     getEditorSettings,
     getFloatingWidgets,
     getWidgetLayer,
-    getWidgetLayers
+    getChartWidgetLayers
 } from '../../selectors/widgets';
 
 export const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
@@ -39,7 +39,7 @@ export const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProp
 });
 export const wizardSelector = createSelector(
     getWidgetLayer,
-    getWidgetLayers,
+    getChartWidgetLayers,
     getEditingWidget,
     getEditorSettings,
     getFloatingWidgets,

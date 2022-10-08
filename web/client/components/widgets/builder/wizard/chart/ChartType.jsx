@@ -30,18 +30,19 @@ const ITEMS = [{
 export default ({ onSelect = () => { }, types = ITEMS, type} = {}) => (
     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
         <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
-        <div style={{marginTop: 4}}><Toolbar btnDefaultProps={{
-            bsStyle: "primary",
-            bsSize: "sm"
-        }}
-        buttons={
-            types && ITEMS.map(item => ({
-                bsStyle: type === item.type ? "success" : "primary",
-                onClick: () =>{onSelect(item.type);},
-                glyph: item.glyph,
-                tooltipId: `widgets.chartType.${item.type}.title`
-            }))
-        }/>
+        <div style={{marginTop: 4}}>
+            <Toolbar btnDefaultProps={{
+                bsStyle: "primary",
+                bsSize: "sm"
+            }}
+            buttons={
+                types && ITEMS.map(item => ({
+                    bsStyle: type === item.type ? "success" : "primary",
+                    onClick: () =>{onSelect(item.type);},
+                    glyph: item.glyph,
+                    tooltipId: `widgets.chartType.${item.type}.title`
+                }))
+            }/>
         </div>
     </div>
 );

@@ -33,7 +33,7 @@ export const getWidgetLayer = createSelector(
     state => isDashboardAvailable(state) && isDashboardEditing(state),
     (layer, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
 );
-export const getWidgetLayers = (state) => getEditingWidget(state)?.charts?.map(c => c.layer) || [];
+export const getChartWidgetLayers = (state) => getEditingWidget(state)?.charts?.map(c => c.layer) || [];
 
 export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 export const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
