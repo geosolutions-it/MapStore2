@@ -6,18 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { get, find, isNumber, round, findIndex, includes, isEmpty, cloneDeep, omit, castArray} from 'lodash';
-
-import { MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
+import {
+    get,
+    find,
+    isNumber,
+    round,
+    findIndex,
+    includes,
+    isEmpty,
+    cloneDeep,
+    omit,
+    castArray,
+    pick
+} from 'lodash';
+import set from "lodash/fp/set";
+import { CHARTS_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
+import { arrayUpsert } from "../utils/ImmutableUtils";
 
 export const getDependentWidget = (k, widgets) => {
     const [match, id] = WIDGETS_REGEX.exec(k);
     if (match) {
-        const widget = find(widgets, { id });
-        return widget;
+        return find(widgets, { id });
     }
     return null;
 };
@@ -128,6 +140,8 @@ export const getDefaultAggregationOperations = () => {
     ];
 };
 
+export const CHART_PROPS = ["selectedChartId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description"];
+
 /**
  * Convert the dependenciesMapping to support maplist
  * widget for compatibility
@@ -147,6 +161,16 @@ export const convertDependenciesMappingForCompatibility = (data) => {
                 const mapId = uuidv1(); // Add mapId to existing map data
                 widget = omit({...w, selectedMapId: mapId, maps: castArray({...w.map, mapId})}, 'map');
                 tempWidgetMapDependency.push({widgetId: widget.id, mapId});
+            }
+            if (w.widgetType === 'chart' && w.layer) {
+                const chartId = uuidv1(); // Add chartId to existing chart data
+                const chartData = omit(widget, CHART_PROPS) || {};
+                const editorData = pick(widget, CHART_PROPS) || {};
+                widget = {
+                    ...editorData,
+                    selectedChartId: chartId,
+                    charts: castArray({...chartData, layer: w.layer, chartId })
+                };
             }
             if (!isEmpty(widget.dependenciesMap)) {
                 const widgetPath = Object.values(widget.dependenciesMap)[0];
@@ -210,4 +234,68 @@ export const updateDependenciesMapOfMapList = (allWidgets = [], widgetId, select
         });
     }
     return widgets;
+};
+
+/**
+ * Generate widget editor props
+ * @param {object} action
+ * @returns {object} updated editor change props
+ */
+export const editorChangeProps = (action) => {
+    let key = action.key;
+    let pathProp = key;
+    const value = action.value;
+    let regex = '';
+    let identifier = '';
+    if (key.includes('maps')) {
+        pathProp = 'maps';
+        regex = MAPS_REGEX;
+        identifier = 'mapId';
+    } else if (key.includes('charts')) {
+        pathProp = 'charts';
+        regex = CHARTS_REGEX;
+        identifier = 'chartId';
+    }
+    return { path: `builder.editor.${pathProp}`, value, key, regex, identifier };
+};
+
+/**
+ * Perform state with widget editor changes
+ * @param {object} action
+ * @param {object} state object
+ * @returns {object|object[]} updated state
+ */
+export const editorChange = (action, state) => {
+    const { key, path, identifier, regex, value } = editorChangeProps(action);
+    if (['maps', 'charts'].some(k => key.includes(k))) {
+        if (key === 'maps' && value === undefined) {
+            return set(path, value, state);
+        }
+        const [, id, pathToUpdate] = regex.exec(key) || [];
+        let updatedValue = value;
+        if (id) {
+            const editorArray = get(state, path, []);
+            updatedValue = set(pathToUpdate, value, editorArray.find(m => m[identifier] === id));
+        }
+        return arrayUpsert(path, updatedValue, {[identifier]: id || value?.[identifier]}, state);
+    }
+    if (["chart-layers", "chart-delete", "chart-add"].includes(key)) {
+        const data = { ...state?.builder?.editor };
+        const chartData = omit(data, CHART_PROPS) || {};
+        const editorData = pick(data, CHART_PROPS) || {};
+        let _charts = [];
+        if (key === 'chart-layers') {
+            _charts = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
+        } else if (key === 'chart-delete') {
+            _charts = value;
+        } else {
+            _charts = editorData?.charts?.concat(
+                value
+                    ?.filter(v => !editorData?.charts?.map(c => c?.layer?.name)?.includes(v.name))
+                    ?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }))
+            );
+        }
+        return set('builder.editor', {...editorData, charts: _charts, selectedChartId: _charts?.[0]?.chartId }, state);
+    }
+    return set(path, action.value, state);
 };

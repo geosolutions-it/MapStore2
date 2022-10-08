@@ -21,7 +21,8 @@ import {
     getEditingWidget,
     getEditorSettings,
     getFloatingWidgets,
-    getWidgetLayer
+    getWidgetLayer,
+    getWidgetLayers
 } from '../../selectors/widgets';
 
 export const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
@@ -38,12 +39,14 @@ export const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProp
 });
 export const wizardSelector = createSelector(
     getWidgetLayer,
+    getWidgetLayers,
     getEditingWidget,
     getEditorSettings,
     getFloatingWidgets,
     isDashboardEditing,
-    (layer, editorData, settings, widgets, dashBoardEditing) => ({
-        layer: (editorData && editorData.layer) || layer,
+    (layer, layers, editorData, settings, widgets, dashBoardEditing) => ({
+        layer,
+        layers,
         editorData,
         settings,
         widgets,

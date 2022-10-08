@@ -1838,9 +1838,11 @@
                     "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
                     "selectALayer": "Select a layer",
+                    "selectLayers": "Select one or more layers",
                     "selectAMap": "Select one or more maps",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
+                    "errorChart": "One or more chart(s) is invalid",
                     "backToTableOptions": "Back to table options",
                     "configureTableOptions": "Configure table options",
                     "resetColumnsSizes": "Reset all changes to the column sizes",
@@ -1893,7 +1895,9 @@
                     "noMapAvailableForLegend": "No map available",
                     "noMapAvailableForLegendDescription": "You need at least one map widget to create the legend"
                 },
-                "setupFilter": "Configure a filter for the widget data"
+                "setupFilter": "Configure a filter for the widget data",
+                "addNewLayers": "Add new layer(s)",
+                "deleteChart": "Delete current chart"
             },
             "widget": {
                 "menu": {
@@ -1919,6 +1923,12 @@
                 "placeholder": "Enter map name",
                 "selectLabel": "Select a map",
                 "infoOnHide": "Expand widget to see map switcher",
+                "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "No layer found",
+                "selectLabel": "Select a layer",
+                "infoOnHide": "Expand widget to see chart switcher",
                 "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
             },
             "chartType": {

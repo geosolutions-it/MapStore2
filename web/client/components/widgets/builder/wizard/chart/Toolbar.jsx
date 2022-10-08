@@ -10,26 +10,20 @@ import React from 'react';
 import Toolbar from '../../../../misc/toolbar/Toolbar';
 
 const getBackTooltipId = step => {
-    switch (step) {
-    case 1:
-        return "widgets.builder.wizard.backToTypeSelection";
-    case 2:
+    if (step === 1) {
         return "widgets.builder.wizard.backToChartOptions";
-    default:
-        return "back";
-
     }
+    return "back";
 };
 
-const getNextTooltipId = step => {
-    switch (step) {
-    case 0:
-        return "widgets.builder.wizard.configureChartOptions";
-    case 1:
-        return "widgets.builder.wizard.configureWidgetOptions";
-    default:
-        return "next";
+const getNextTooltipId = (step, isInvalid) => {
+    if (isInvalid) {
+        return "widgets.builder.wizard.errorChart";
     }
+    if (step === 0) {
+        return "widgets.builder.wizard.configureWidgetOptions";
+    }
+    return "next";
 };
 
 const getSaveTooltipId = (step, {id} = {}) => {
@@ -39,33 +33,54 @@ const getSaveTooltipId = (step, {id} = {}) => {
     return "widgets.builder.wizard.addTheWidget";
 };
 
+const onDelete = (editorData, onChange) => {
+    const charts = editorData?.charts?.filter(c => c.chartId !== editorData?.selectedChartId);
+    onChange('chart-delete', charts.length ? charts : undefined);
+};
+
 export default ({
-    step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {},
+    step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {}, onChange = () => {},
     stepButtons = [],
-    openFilterEditor = () => {}
-} = {}) => (<Toolbar btnDefaultProps={{
-    bsStyle: "primary",
-    bsSize: "sm"
-}}
-buttons={[{
-    onClick: () => setPage(Math.max(0, step - 1)),
-    visible: step > 0,
-    glyph: "arrow-left",
-    tooltipId: getBackTooltipId(step)
-}, ...stepButtons, {
-    visible: step > 0,
-    onClick: openFilterEditor,
-    glyph: "filter",
-    tooltipId: "widgets.builder.setupFilter"
-}, {
-    onClick: () => setPage(Math.min(step + 1, 2)),
-    visible: !!( step === 1 ),
-    disabled: step === 1 && !valid,
-    glyph: "arrow-right",
-    tooltipId: getNextTooltipId(step)
-}, {
-    onClick: () => onFinish(Math.min(step + 1, 1)),
-    visible: step === 2,
-    glyph: "floppy-disk",
-    tooltipId: getSaveTooltipId(step, editorData)
-}]} />);
+    openFilterEditor = () => {},
+    toggleLayerSelector = () => {},
+    validating
+} = {}) => {
+    const disable = !valid || validating;
+    return (
+        <Toolbar btnDefaultProps={{
+            bsStyle: "primary",
+            bsSize: "sm"
+        }}
+        buttons={[{
+            onClick: () => setPage(Math.max(0, step - 1)),
+            visible: step > 0,
+            glyph: "arrow-left",
+            tooltipId: getBackTooltipId(step)
+        }, ...stepButtons, {
+            onClick: openFilterEditor,
+            glyph: "filter",
+            tooltipId: "widgets.builder.setupFilter"
+        }, {
+            onClick: () => toggleLayerSelector(true),
+            visible: step === 0,
+            glyph: "plus",
+            tooltipId: "widgets.builder.addNewLayers"
+        }, {
+            onClick: () => onDelete(editorData, onChange),
+            visible: step === 0,
+            glyph: "trash",
+            tooltipId: "widgets.builder.deleteChart"
+        }, {
+            onClick: () => setPage(Math.min(step + 1, 1)),
+            visible: step === 0,
+            disabled: step === 0 && disable,
+            glyph: "arrow-right",
+            tooltipId: getNextTooltipId(step, disable)
+        }, {
+            onClick: () => onFinish(Math.min(step - 1, 1)),
+            visible: step === 1,
+            glyph: "floppy-disk",
+            tooltipId: getSaveTooltipId(step, editorData)
+        }]} />
+    );
+};

@@ -9,7 +9,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import { compose, renameProps, branch, renderComponent} from 'recompose';
+import {compose, renameProps, branch, renderComponent, withState} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
 import {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} from '../../actions/widgets';
@@ -17,11 +17,11 @@ import builderConfiguration from '../../components/widgets/enhancers/builderConf
 import chartLayerSelector from './enhancers/chartLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
 import viewportBuilderConnectMask from './enhancers/connection/viewportBuilderConnectMask';
-import withExitButton from './enhancers/withExitButton';
+import withExitButton from './enhancers/withChartExitButton';
 import withConnectButton from './enhancers/connection/withConnectButton';
 import {wizardStateToProps, wizardSelector} from './commons';
 import ChartWizard from '../../components/widgets/builder/wizard/ChartWizard';
-import LayerSelector from './LayerSelector';
+import LayerSelector from './ChartLayerSelector';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
@@ -46,18 +46,19 @@ const Builder = connect(
 
 
 const ChartToolbar = compose(
-    connect(wizardSelector, {
-        openFilterEditor,
-        setPage,
-        onChange: onEditorChange,
-        insertWidget
-    },
-    wizardStateToProps
+    connect(
+        wizardSelector,
+        {
+            openFilterEditor,
+            setPage,
+            onChange: onEditorChange,
+            insertWidget
+        },
+        wizardStateToProps
     ),
     viewportBuilderConnect,
     withExitButton(),
-    withConnectButton(({step}) => step === 1)
-
+    withConnectButton(({step}) => step === 0)
 )(Toolbar);
 
 /*
@@ -65,11 +66,13 @@ const ChartToolbar = compose(
  * prompts a catalog view to allow layer selection
  */
 const chooseLayerEnhancer = compose(
-    connect(wizardSelector),
+    withState('showLayers', "toggleLayerSelector", false),
+    withState('validating', 'triggerValidation', false),
+    connect(wizardSelector, null, wizardStateToProps),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
     branch(
-        ({layer} = {}) => !layer,
+        ({layer, showLayers} = {}) => !layer || showLayers,
         renderComponent(chartLayerSelector(LayerSelector))
     )
 );
@@ -84,9 +87,12 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
                     editorData={editorData}
                     toggleConnection={toggleConnection}
                     availableDependencies={availableDependencies}
-                    onClose={onClose}/>
+                    onClose={onClose}
+                    toggleLayerSelector={props.toggleLayerSelector}
+                    validating={props.validating}
+                />
             </BuilderHeader>}
         >
-            {enabled ? <Builder dependencies={dependencies} {...props}/> : null}
+            {enabled ? <Builder dependencies={dependencies}  {...props}/> : null}
         </BorderLayout>
     </div>));

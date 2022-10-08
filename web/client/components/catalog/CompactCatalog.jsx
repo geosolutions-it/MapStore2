@@ -88,6 +88,11 @@ const loadPage = ({text, catalog = {}}, page = 0) => {
         .map(({records, result}) => resToProps({records, result, catalog}));
 };
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};
+const getCatalogItems = (items = [], selected = {}) => items.map(i =>
+    (i === selected || selected && i && i.record && selected.identifier === i.record?.identifier)
+        ? {...i, selected: true}
+        : i
+);
 /**
  * Compat catalog : Reusable catalog component, with infinite scroll.
  * You can simply pass the catalog to browse and the handler onRecordSelected.
@@ -123,7 +128,9 @@ export default compose(
     })
 )(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector = true, error,
     onChangeSelectedService = () => {},
-    selectedService, onChangeCatalogMode = () => {}}) => {
+    selectedService, onChangeCatalogMode = () => {},
+    getItems = (_items) => getCatalogItems(_items, selected),
+    onItemClick = ({record} = {}) => onRecordSelected(record, catalog)}) => {
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
@@ -137,15 +144,9 @@ export default compose(
             {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
         </div>}>
         <SideGrid
-            items={items.map(i =>
-                i === selected
-                        || selected
-                        && i && i.record
-                        && selected.identifier === i.record.identifier
-                    ? {...i, selected: true}
-                    : i)}
+            items={getItems(items)}
             loading={loading}
             error={error}
-            onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
+            onItemClick={onItemClick}/>
     </BorderLayout>);
 });

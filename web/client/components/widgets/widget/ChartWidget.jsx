@@ -13,6 +13,7 @@ import WidgetContainer from './WidgetContainer';
 import {
     Glyphicon
 } from 'react-bootstrap';
+import ChartSwitcher from "../builder/wizard/chart/ChartSwitcher";
 
 const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {
@@ -27,6 +28,8 @@ const ChartWidget = ({
     description,
     headerStyle,
     data = [],
+    charts = [],
+    selectedChartId,
     series = [],
     loading,
     icons,
@@ -37,9 +40,14 @@ const ChartWidget = ({
     onDelete = () => {},
     toggleTableView = () => {},
     toggleDeleteConfirm = () => {},
-    ...props}) =>
-    (<WidgetContainer
-        id={`widget-chart-${id}`}
+    updateProperty = () => { },
+    selectionActive,
+    ...props}) => {
+    const containerId = `widget-chart-${id}`;
+    const width = document.getElementById(containerId)?.clientWidth;
+    return (<WidgetContainer
+        className={"chart-widget-view"}
+        id={containerId}
         headerStyle={headerStyle}
         isDraggable={dataGrid.isDraggable}
         title={title}
@@ -47,8 +55,21 @@ const ChartWidget = ({
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
         confirmDelete={confirmDelete}
         onDelete={onDelete}
-        toggleDeleteConfirm = {toggleDeleteConfirm}
-        topRightItems={topRightItems}
+        toggleDeleteConfirm={toggleDeleteConfirm}
+        topRightItems={
+            topRightItems
+                ? [
+                    <ChartSwitcher
+                        className={'chart-switcher'}
+                        charts={charts}
+                        onChange={(...args) => updateProperty(id, ...args)}
+                        value={selectedChartId}
+                        disabled={selectionActive}
+                        width={width}
+                    />,
+                    ...topRightItems
+                ] : topRightItems
+        }
     >
         {showTable
             ? <TableView data={data} {...props}/>
@@ -56,5 +77,6 @@ const ChartWidget = ({
     </WidgetContainer>
 
     );
+};
 
 export default ChartWidget;

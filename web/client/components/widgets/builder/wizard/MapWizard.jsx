@@ -37,7 +37,8 @@ export default ({
             step={step}
             setPage={setPage}
             onFinish={onFinish}
-            hideButtons>
+            hideButtons
+            className={"map-options"}>
             <div>
                 {emptyMap && <EmptyView
                     glyph={"1-map"}
