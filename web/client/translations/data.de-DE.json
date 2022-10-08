@@ -1875,9 +1875,11 @@
                     "backToPreview": "Zurück zur Vorschau",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "selectALayer": "Wähle eine Ebene",
+                    "selectLayers": "Wählen Sie eine oder mehrere Ebenen aus",
                     "selectAMap": "Wählen Sie eine oder mehrere Karten aus",
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
+                    "errorChart": "Mindestens ein Diagramm ist ungültig",
                     "backToTableOptions": "Zurück zu den Tabellenoptionen",
                     "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
                     "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
@@ -1930,7 +1932,9 @@
                     "noMapAvailableForLegend": "Keine Karte verfügbar",
                     "noMapAvailableForLegendDescription": "Sie benötigen mindestens ein Karten-Widget, um die Legende zu erstellen"
                 },
-                "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
+                "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten",
+                "addNewLayers": "Neue Ebene(n) hinzufügen",
+                "deleteChart": "Aktuelles Diagramm löschen"
             },
             "widget": {
                 "menu": {
@@ -1955,6 +1959,12 @@
                 "noResults": "Keine Karte gefunden",
                 "placeholder": "Kartennamen eingeben",
                 "selectLabel": "Wählen Sie eine Karte aus",
+                "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
+                "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Keine Ebene gefunden",
+                "selectLabel": "Wählen Sie eine Ebene aus",
                 "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
                 "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
             },

@@ -1837,10 +1837,12 @@
                     "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "selectALayer": "Seleziona un livello",
+                    "selectLayers": "Seleziona uno o più livelli",
                     "selectAMap": "Seleziona una o più mappe",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
-                     "backToTableOptions": "Torna alle opzioni della tabella",
+                    "errorChart": "Uno o più grafici non sono validi",
+                    "backToTableOptions": "Torna alle opzioni della tabella",
                     "configureTableOptions": "Configura le opzioni della tabella",
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
@@ -1894,7 +1896,9 @@
                     "noMapAvailableForLegend": "Nessuna mappa disponibile",
                     "noMapAvailableForLegendDescription": "C'è bisogno almeno di una mappa per creare una lagenda"
                 },
-                "setupFilter": "Configura un filtro per il livello selezionato"
+                "setupFilter": "Configura un filtro per il livello selezionato",
+                "addNewLayers": "Aggiungi nuovi livelli",
+                "deleteChart": "Elimina il grafico corrente"
             },
             "widget": {
                 "menu": {
@@ -1920,6 +1924,12 @@
                 "placeholder": "Inserisci il nome della mappa",
                 "selectLabel": "Seleziona una mappa",
                 "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
+                "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Nessun livello trovato",
+                "selectLabel": "Seleziona un livello",
+                "infoOnHide": "Espandi il widget per vedere il selettore del grafico",
                 "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
             },
             "chartType": {

@@ -1838,9 +1838,11 @@
                     "backToPreview": "Retour à l'aperçu",
                     "backToChartOptions": "Retour aux options de graphique",
                     "selectALayer": "Sélectionner une couche",
+                    "selectLayers": "Sélectionnez un ou plusieurs calques",
                     "selectAMap": "Sélectionnez une ou plusieurs cartes",
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
+                    "errorChart": "Un ou plusieurs graphiques ne sont pas valides",
                     "backToTableOptions": "Retour à l'option de table",
                     "configureTableOptions": "Configurer les options de table",
                     "resetColumnsSizes": "Réinitialiser toutes les modifications de taille des colonnes",
@@ -1893,7 +1895,9 @@
                     "noMapAvailableForLegend": "Aucune carte disponible",
                     "noMapAvailableForLegendDescription": "Vous avez besoin d'au moins un widget de carte pour créer la légende"
                 },
-                "setupFilter": "Configurer un filtre pour les données du widget"
+                "setupFilter": "Configurer un filtre pour les données du widget",
+                "addNewLayers": "Ajouter de nouveaux calques",
+                "deleteChart": "Supprimer le graphique actuel"
             },
             "widget": {
                 "menu": {
@@ -1919,6 +1923,12 @@
                 "placeholder": "Entrez le nom de la carte",
                 "selectLabel": "Sélectionnez une carte",
                 "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
+                "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Aucune couche trouvée",
+                "selectLabel": "Sélectionnez un calque",
+                "infoOnHide": "Développer le widget pour voir le sélecteur de graphique",
                 "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
             },
             "chartType": {

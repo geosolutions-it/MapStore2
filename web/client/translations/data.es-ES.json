@@ -1837,9 +1837,11 @@
                     "backToPreview": "Volver a vista previa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "selectALayer": "Seleccionar una capa",
+                    "selectLayers": "Seleccione una o más capas",
                     "selectAMap": "Seleccione uno o más mapas",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
+                    "errorChart": "Uno o más gráficos no son válidos",
                     "backToTableOptions": "Volver a las opciones de tabla",
                     "configureTableOptions": "Configurar opciones de tabla",
                     "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
@@ -1892,7 +1894,9 @@
                     "noMapAvailableForLegend": "No hay mapa disponible",
                     "noMapAvailableForLegendDescription": "Necesita al menos un widget de mapa para crear la leyenda"
                 },
-                "setupFilter": "Configurar un filtro para los datos del widget"
+                "setupFilter": "Configurar un filtro para los datos del widget",
+                "addNewLayers": "Agregar nuevas capas",
+                "deleteChart": "Eliminar gráfico actual"
             },
             "widget": {
                 "menu": {
@@ -1918,6 +1922,12 @@
                 "placeholder": "Ingrese el nombre del mapa",
                 "selectLabel": "Seleccione un mapa",
                 "infoOnHide": "Expanda el widget para ver el selector de mapas",
+                "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "No se encontró ninguna capa",
+                "selectLabel": "Seleccione una capa",
+                "infoOnHide": "Expanda el widget para ver el selector de gráficos",
                 "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
             "chartType": {
