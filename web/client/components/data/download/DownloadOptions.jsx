@@ -27,6 +27,7 @@ import DownloadWPSOptions from './DownloadWPSOptions';
 class DownloadOptions extends React.Component {
     static propTypes = {
         wpsAvailable: PropTypes.bool,
+        wfsAvailable: PropTypes.bool,
         service: PropTypes.string,
         downloadOptions: PropTypes.object,
         formatOptionsFetch: PropTypes.func,
@@ -46,6 +47,7 @@ class DownloadOptions extends React.Component {
 
     static defaultProps = {
         wpsAvailable: false,
+        wfsAvailable: true,
         service: 'wps',
         downloadOptions: {},
         formatsLoading: false,
@@ -74,7 +76,7 @@ class DownloadOptions extends React.Component {
 
     render() {
         return (<form>
-            {this.props.wpsAvailable &&
+            {this.props.wpsAvailable && this.props.wfsAvailable &&
                 <>
                     <label><Message msgId="layerdownload.service" /></label>
                     <Select

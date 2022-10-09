@@ -20,6 +20,7 @@ export default ({
     headerStyle,
     confirmDelete = false,
     topRightItems,
+    options = {},
     dataGrid = {},
     onDelete = () => {},
     ...props
@@ -28,6 +29,7 @@ export default ({
         icons={icons}
         topRightItems={topRightItems}
         isDraggable={dataGrid.isDraggable}
+        options={options}
     >
         <LegendView {...props} />
     </WidgetContainer>

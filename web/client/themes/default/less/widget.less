@@ -154,6 +154,23 @@
             margin-left: 5%;
             font-style: italic;
         }
+
+        .widget-selector {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+
+            .Select {
+                flex-grow: 1;
+                .Select-control {
+                    .Select-value {
+                        padding-right: 22px;
+                    }
+                }
+            }
+        }
+
         .mapstore-widget-header {
             font-size: @fSize;
             .em(height, 28);
@@ -392,6 +409,15 @@
                     }
                 }
             }
+        }
+    }
+
+    .mapstore-widget-card.single-widget {
+        .mapstore-widget-options {
+            width: 24px;
+        }
+        .mapstore-widget-header {
+            height: auto;
         }
     }
 }

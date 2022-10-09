@@ -31,6 +31,7 @@ export default ({
     hookRegister,
     mapStateSource,
     topRightItems,
+    options = {},
     confirmDelete = false,
     loading = false,
     dataGrid = {},
@@ -54,6 +55,7 @@ export default ({
             ...topRightItems]
         }
         isDraggable={dataGrid.isDraggable}
+        options={options}
     >
         <BorderLayout
             footer={loading

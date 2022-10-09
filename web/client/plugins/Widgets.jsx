@@ -8,16 +8,32 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
-import { compose, defaultProps, withProps, withPropsOnChange } from 'recompose';
+import {connect} from 'react-redux';
+import {createSelector} from 'reselect';
+import {compose, defaultProps, withProps, withPropsOnChange, withState} from 'recompose';
 
 
-import { createPlugin } from '../utils/PluginsUtils';
+import {createPlugin} from '../utils/PluginsUtils';
 
-import { mapIdSelector } from '../selectors/map';
-import { getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout, isTrayEnabled, getMaximizedState } from '../selectors/widgets';
-import { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, toggleCollapse, toggleMaximize } from '../actions/widgets';
+import {mapIdSelector} from '../selectors/map';
+import {
+    dependenciesSelector,
+    getFloatingWidgets,
+    getFloatingWidgetsLayout,
+    getMaximizedState,
+    getVisibleFloatingWidgets,
+    isTrayEnabled
+} from '../selectors/widgets';
+import {
+    changeLayout,
+    deleteWidget,
+    editWidget,
+    exportCSV,
+    exportImage,
+    toggleCollapse,
+    toggleMaximize,
+    updateWidgetProperty
+} from '../actions/widgets';
 import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
 
@@ -37,13 +53,17 @@ compose(
             getMaximizedState,
             dependenciesSelector,
             (state) => mapLayoutValuesSelector(state, { right: true}),
-            (id, widgets, layouts, maximized, dependencies, mapLayout) => ({
+            state => state.browser && state.browser.mobile,
+            getFloatingWidgets,
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets) => ({
                 id,
                 widgets,
                 layouts,
                 maximized,
                 dependencies,
-                mapLayout
+                mapLayout,
+                isMobileAgent,
+                dropdownWidgets
             })
         ), {
             editWidget,
@@ -60,11 +80,45 @@ compose(
     compose(
         heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
         widthProvider({ overrideWidthProvider: false }),
-        withProps(({width, height, maximized, mapLayout} = {}) => {
+        withProps(({ isMobileAgent, width, mapLayout, singleWidgetLayoutBreakpoint = 600 }) => {
             const rightOffset = mapLayout?.right ?? 0;
-            const divHeight = height - 120;
-            const nRows = 4;
-            const rowHeight = Math.floor(divHeight / nRows - 20);
+            const leftOffset = 0;
+            const viewWidth = width - (leftOffset + rightOffset + RIGHT_MARGIN);
+            const isSingleWidgetLayout = isMobileAgent || viewWidth <= singleWidgetLayoutBreakpoint;
+            const backgroundSelectorOffset = isSingleWidgetLayout ? (isMobileAgent ? 40 : 60) : 0;
+            return {
+                backgroundSelectorOffset,
+                isSingleWidgetLayout,
+                viewWidth,
+                rightOffset,
+                leftOffset,
+                singleWidgetLayoutBreakpoint
+            };
+        }),
+        withProps(({
+            width,
+            height,
+            maximized,
+            leftOffset,
+            viewWidth,
+            isSingleWidgetLayout,
+            singleWidgetLayoutBreakpoint,
+            singleWidgetLayoutMaxHeight = 300,
+            singleWidgetLayoutMinHeight = 200,
+            backgroundSelectorOffset
+        } = {}) => {
+            const divHeight = isSingleWidgetLayout
+                ? (height - backgroundSelectorOffset - 120) / 2
+                : height - backgroundSelectorOffset - 120;
+            const nRows = isSingleWidgetLayout ? 1 : 4;
+            const rowHeight = !isSingleWidgetLayout
+                ? Math.floor(divHeight / nRows - 20)
+                : divHeight > singleWidgetLayoutMaxHeight
+                    ? singleWidgetLayoutMaxHeight
+                    : divHeight < singleWidgetLayoutMinHeight
+                        ? singleWidgetLayoutMinHeight
+                        : singleWidgetLayoutMaxHeight;
+
 
             const maximizedStyle = maximized?.widget ? {
                 width: '100%',
@@ -82,20 +136,21 @@ compose(
                 breakpoints: { xxs: 0 },
                 cols: { xxs: 1 }
             } : {};
-            const viewWidth = width && width > 800 ? width - (500 + rightOffset + RIGHT_MARGIN) : width - rightOffset - RIGHT_MARGIN;
             const widthOptions = width ? {width: viewWidth - 1} : {};
+            const baseHeight = isSingleWidgetLayout
+                ? rowHeight
+                : Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10);
             return ({
                 rowHeight,
                 className: "on-map",
-                breakpoints: { md: 480, xxs: 0 },
+                breakpoints: isSingleWidgetLayout ? { xxs: 0 } : { md: singleWidgetLayoutBreakpoint, xxs: 0 },
                 cols: { md: 6, xxs: 1 },
                 ...widthOptions,
                 useDefaultWidthProvider: false,
                 style: {
-                    left: (width && width > 800) ? "500px" : "0",
-                    marginTop: 52,
-                    bottom: 65,
-                    height: Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10),
+                    left: leftOffset + 'px',
+                    bottom: 65 + backgroundSelectorOffset,
+                    height: baseHeight,
                     width: viewWidth + 'px',
                     position: 'absolute',
                     zIndex: 50,
@@ -139,6 +194,59 @@ compose(
             ({ widgets = [], toolsOptions = {}}) => ({
                 widgets: widgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true)
             })
+        ),
+        // making only one widget displayed at a time for mobile view
+        compose(
+            // add state to store currently selected widget
+            withState('activeWidget', 'setActiveWidget', false),
+            // adjust dropdown options according to the widgets visibility for the user
+            withPropsOnChange(
+                ["dropdownWidgets", "toolsOptions"],
+                ({ dropdownWidgets = [], toolsOptions = {}}) => ({
+                    dropdownWidgets: dropdownWidgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true)
+                })
+            ),
+            // set default active widget whenever set of widgets has changed and mobile user-agent is found
+            withPropsOnChange(
+                ["widgets", "isSingleWidgetLayout", "id"],
+                ({widgets, isSingleWidgetLayout, activeWidget, setActiveWidget}) => {
+                    if (widgets.length && isSingleWidgetLayout && !activeWidget) {
+                        setActiveWidget(widgets[0]);
+                    }
+                }
+            ),
+            withPropsOnChange(
+                ['activeWidget', 'isSingleWidgetLayout', 'widgets'],
+                ({activeWidget, dropdownWidgets, setActiveWidget, isSingleWidgetLayout, widgets, toolsOptions, layouts}) => {
+                    if (activeWidget && isSingleWidgetLayout && widgets.length) {
+                        const widget = {
+                            ...activeWidget,
+                            options: {
+                                activeWidget,
+                                dropdownWidgets,
+                                ...(activeWidget.options ?? {}),
+                                singleWidget: true,
+                                setActiveWidget
+                            }
+                        };
+                        return {
+                            canEdit: false,
+                            toolsOptions: {
+                                ...toolsOptions,
+                                showPin: false
+                            },
+                            layouts: {
+                                ...layouts,
+                                xxs: [
+                                    ...(layouts.xxs.map(el => ({...el, h: 1, w: 1, x: 0, y: 0})))
+                                ]
+                            },
+                            widgets: [widget]
+                        };
+                    }
+                    return false;
+                }
+            )
         )
     )
 )(WidgetsViewBase);
