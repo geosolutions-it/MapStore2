@@ -222,13 +222,12 @@ describe('widgets dependenciesToFilter enhancer', () => {
     it('dependenciesToFilter on widget type chart', (done) => {
         const Sink = dependenciesToFilter(createSink(props => {
             expect(props).toBeTruthy();
-            expect(props.filter).toBeTruthy();
+            expect(props.filter).toEqual({});
             done();
         }));
         ReactDOM.render(<Sink
             mapSync
             geomProp={"geometry"}
-            selectedChartId={"1"}
             widgetType={"chart"}
             charts={[{chartId: "1", layer: { name: "test", id: "test"}, filter: {}}]}
             dependencies={{

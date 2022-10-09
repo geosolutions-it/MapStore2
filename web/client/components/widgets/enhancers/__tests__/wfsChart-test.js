@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
 import expect from 'expect';
 import wfsChart from '../wfsChart';
+const spyOn = expect.spyOn;
 
 describe('wfsChart enhancer', () => {
     beforeEach((done) => {
@@ -69,5 +70,71 @@ describe('wfsChart enhancer', () => {
             }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+    });
+    it('wfsChart multi chart error', (done) => {
+        const action = { setErrors: () => {} };
+        const spyOnErrors = spyOn(action, "setErrors");
+        const Sink = wfsChart(createSink( ({error, loading, ...props} = {}) => {
+            if (!loading && error) {
+                expect(error).toExist();
+            }
+            expect(props.setErrors).toBeTruthy();
+            expect(props.errors).toBeTruthy();
+            props.setErrors({...props.errors, [props.layer.name]: true});
+        }));
+        const props = {
+            layer: {
+                name: "test",
+                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                wpsUrl: 'base/web/client/test-resources/widgetbuilder/no-data',
+                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
+            options: {
+                aggregateFunction: "Count",
+                aggregationAttribute: "test",
+                groupByAttributes: "test",
+                classificationAttribute: "test"
+            },
+            setErrors: action.setErrors,
+            errors: {}
+        };
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+        expect(spyOnErrors).toHaveBeenCalled();
+        expect(spyOnErrors.calls[0].arguments[0]).toEqual({test: true});
+        done();
+    });
+    it('wfsChart data retrival error management', (done) => {
+        const action = { setErrors: () => {} };
+        const spyOnErrors = spyOn(action, "setErrors");
+        const Sink = wfsChart(createSink( ({data, loading, ...props} = {}) => {
+            if (!loading) {
+                expect(data).toExist();
+                expect(data.length).toBe(18);
+                data.map(({ STATE_NAME, LAND_KM}) => {
+                    expect(STATE_NAME).toBeTruthy();
+                    expect(LAND_KM).toBeTruthy();
+                });
+            }
+            expect(props.setErrors).toBeTruthy();
+            expect(props.errors).toBeTruthy();
+            props.setErrors({...props.errors, [props.layer.name]: false});
+        }));
+        const props = {
+            layer: {
+                name: "test",
+                url: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
+                wpsUrl: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
+                search: { url: 'base/web/client/test-resources/wfs/Arizona_18_results.json'}},
+            options: {
+                aggregationAttribute: "LAND_KM",
+                groupByAttributes: "STATE_NAME",
+                classificationAttribute: "SUB_REGION"
+            },
+            setErrors: action.setErrors,
+            errors: {test: true}
+        };
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+        expect(spyOnErrors).toHaveBeenCalled();
+        expect(spyOnErrors.calls[0].arguments[0]).toEqual({test: false});
+        done();
     });
 });

@@ -24,7 +24,7 @@ const getCqlFilter = (layer, dependencies) => {
 
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
 
-const getFilter = ({quickFilters, filter: filterObj, options, mapSync, layerFilter, dependencies, layer, geomProp}) => {
+const getFilter = ({quickFilters, filter: filterObj, options, mapSync, layerFilter, dependencies = {}, layer, geomProp}) => {
     let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
     const viewport = dependencies.viewport;
     const fb = filterBuilder({ gmlVersion: "3.1.1" });
@@ -95,7 +95,7 @@ const getChartFilter = ({ quickFilters, geomProp, dependencies, mapSync, charts,
         };
     }) : [];
     return {
-        filter: filters ? filters?.find(f => f.chartId === selectedChartId)?.filter : {}
+        filter: filters && selectedChartId ? filters?.find(f => f.chartId === selectedChartId)?.filter : {}
     };
 };
 

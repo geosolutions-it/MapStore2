@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import TableView from './TableView';
+import TableViewComp from './TableView';
 import ChartView from './ChartView';
 
 import WidgetContainer from './WidgetContainer';
@@ -14,6 +14,8 @@ import {
     Glyphicon
 } from 'react-bootstrap';
 import ChartSwitcher from "../builder/wizard/chart/ChartSwitcher";
+import emptyTableState from "../../widgets/enhancers/emptyChartState";
+const TableView = emptyTableState(TableViewComp);
 
 const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {
@@ -56,20 +58,17 @@ const ChartWidget = ({
         confirmDelete={confirmDelete}
         onDelete={onDelete}
         toggleDeleteConfirm={toggleDeleteConfirm}
-        topRightItems={
-            topRightItems
-                ? [
-                    <ChartSwitcher
-                        className={'chart-switcher'}
-                        charts={charts}
-                        onChange={(...args) => updateProperty(id, ...args)}
-                        value={selectedChartId}
-                        disabled={selectionActive}
-                        width={width}
-                    />,
-                    ...topRightItems
-                ] : topRightItems
-        }
+        topRightItems={[
+            <ChartSwitcher
+                className={'chart-switcher'}
+                charts={charts}
+                onChange={(...args) => updateProperty(id, ...args)}
+                value={selectedChartId}
+                disabled={selectionActive}
+                width={width}
+            />,
+            ...(topRightItems ? topRightItems : [])
+        ]}
     >
         {showTable
             ? <TableView data={data} {...props}/>

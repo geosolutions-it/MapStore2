@@ -279,23 +279,21 @@ export const editorChange = (action, state) => {
         }
         return arrayUpsert(path, updatedValue, {[identifier]: id || value?.[identifier]}, state);
     }
-    if (["chart-layers", "chart-delete", "chart-add"].includes(key)) {
+    if (key.includes("chart-")) {
         const data = { ...state?.builder?.editor };
         const chartData = omit(data, CHART_PROPS) || {};
         const editorData = pick(data, CHART_PROPS) || {};
         let _charts = [];
-        if (key === 'chart-layers') {
+        if (key.includes('layers')) {
             _charts = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
-        } else if (key === 'chart-delete') {
+        } else if (key.includes('delete')) {
             _charts = value;
         } else {
-            _charts = editorData?.charts?.concat(
-                value
-                    ?.filter(v => !editorData?.charts?.map(c => c?.layer?.name)?.includes(v.name))
-                    ?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }))
-            );
+            const filteredLayers = value?.filter(v => !editorData?.charts?.map(c => c?.layer?.name)?.includes(v.name));
+            const newCharts = filteredLayers?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
+            _charts = editorData?.charts?.concat(newCharts);
         }
         return set('builder.editor', {...editorData, charts: _charts, selectedChartId: _charts?.[0]?.chartId }, state);
     }
-    return set(path, action.value, state);
+    return set(path, value, state);
 };
