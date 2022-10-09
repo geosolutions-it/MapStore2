@@ -43,9 +43,10 @@ export default ({
     stepButtons = [],
     openFilterEditor = () => {},
     toggleLayerSelector = () => {},
-    validating
+    errors
 } = {}) => {
-    const disable = !valid || validating;
+    const mapSync = editorData?.mapSync;
+    const disable = !valid || (mapSync && Object.values(errors).some(error => error));
     return (
         <Toolbar btnDefaultProps={{
             bsStyle: "primary",

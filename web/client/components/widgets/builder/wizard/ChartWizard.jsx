@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import { compose, lifecycle, setDisplayName, withState } from 'recompose';
-import { isEqual, isEmpty } from "lodash";
+import { isEqual, isEmpty, pick } from "lodash";
 
 import WizardContainer from '../../../misc/wizard/WizardContainer';
 import { wizardHandlers } from '../../../misc/wizard/enhancers';
@@ -27,7 +27,6 @@ import dependenciesToFilter from '../../enhancers/dependenciesToFilter';
 import dependenciesToOptions from '../../enhancers/dependenciesToOptions';
 import emptyChartState from '../../enhancers/emptyChartState';
 import errorChartState from '../../enhancers/errorChartState';
-import validateCharts from '../../enhancers/validateCharts';
 
 const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = "" } = {}) => type.indexOf("gml:") !== 0).length === 0;
@@ -41,8 +40,7 @@ const enhancePreview = compose(
     multiProtocolChart,
     loadingState,
     errorChartState,
-    emptyChartState,
-    validateCharts
+    emptyChartState
 );
 const PreviewChart = enhancePreview(SimpleChart);
 const SampleChart = sampleData(SimpleChart);
@@ -114,7 +112,7 @@ const enhanceWizard = compose(
             const chartData = {...data, ...data?.charts?.find(c => c.chartId === data?.selectedChartId)};
             this.props?.setSelectedChart({...chartData});
         },
-        UNSAFE_componentWillReceiveProps({ data = {}, valid, setValid = () => { }, hasAggregateProcess, selectedChart, setSelectedChart, triggerValidation = () => {} } = {}) {
+        UNSAFE_componentWillReceiveProps({ data = {}, valid, setValid = () => { }, hasAggregateProcess, selectedChart, setSelectedChart, setErrors = () => {}, errors } = {}) {
             const matchedChart = {...data, ...data?.charts?.find(c => c.chartId === data?.selectedChartId)};
             if (valid && data?.charts?.some(chart => !isChartOptionsValid(chart.options, { hasAggregateProcess }))) {
                 setValid(false);
@@ -122,22 +120,24 @@ const enhanceWizard = compose(
             if (isEmpty(selectedChart) || !isEqual(selectedChart, matchedChart)) {
                 setSelectedChart({...matchedChart});
             }
-            if (!data.mapSync && !isEqual(this.props?.data?.mapSync, data?.mapSync)) {
-                triggerValidation(false);
+            if (isEmpty(selectedChart) || !isEqual(selectedChart, matchedChart)) {
+                const layerNames = matchedChart?.charts?.map(({layer} = {}) => layer?.name);
+                setErrors(isEmpty(layerNames) ? {} : pick(errors, [...layerNames]));
+                setSelectedChart({...matchedChart});
             }
         }
     }),
     setDisplayName('ChartWizard')
 );
 
-const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, triggerValidation = () => {}, validating, selectedChart = {}, setSelectedChart = () => {},  layer = {}, step = 0, types, featureTypeProperties, dependencies, hasAggregateProcess }) => {
+const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, setErrors, errors, selectedChart = {}, setSelectedChart = () => {},  layer = {}, step = 0, types, featureTypeProperties, dependencies, hasAggregateProcess }) => {
     const sampleChart = renderPreview({
         hasAggregateProcess,
         data: selectedChart,
         layer: selectedChart?.layer || layer,
         dependencies,
-        triggerValidation,
-        validating,
+        setErrors,
+        errors,
         setValid
     });
     const ChartConfig = (

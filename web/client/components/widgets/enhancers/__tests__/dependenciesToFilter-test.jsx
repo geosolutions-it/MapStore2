@@ -204,12 +204,6 @@ describe('widgets dependenciesToFilter enhancer', () => {
             expect(props).toBeTruthy();
             expect(props.filter).toBeTruthy();
             expect(props.filter).toBe(resultMergeFilterCQLRes);
-            expect(props.layerOptions).toBeTruthy();
-            expect(props.layerOptions.length).toBe(1);
-            const [{chartId, layer, filter}] = props.layerOptions;
-            expect(chartId).toBe("1");
-            expect(layer).toEqual({ name: "test", id: "test"});
-            expect(filter).toBe(resultMergeFilterCQLRes);
             done();
         }));
         ReactDOM.render(<Sink
@@ -229,8 +223,6 @@ describe('widgets dependenciesToFilter enhancer', () => {
         const Sink = dependenciesToFilter(createSink(props => {
             expect(props).toBeTruthy();
             expect(props.filter).toBeTruthy();
-            expect(props.layerOptions).toBeTruthy();
-            expect(props.layerOptions.length).toBe(1);
             done();
         }));
         ReactDOM.render(<Sink

@@ -38,7 +38,7 @@ const dataStreamFactory = ($props) =>
                 && sameOptions(options, newProps.options)
                 && sameFilter(filter, newProps.filter))
         .switchMap(
-            ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
+            ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}, setErrors = () => {}, errors}) =>
                 getLayerJSONFeature(
                     layer,
                     filter,
@@ -61,13 +61,19 @@ const dataStreamFactory = ($props) =>
                     classifications: {dataKey: options.classificationAttribute},
                     xAxis: { dataKey: options.groupByAttributes}
                 }))
-                    .do(onLoad)
+                    .do(()=>{
+                        onLoad();
+                        setErrors({...errors, [layer.name]: false});
+                    })
                     .catch((e) => Rx.Observable.of({
                         loading: false,
                         error: e,
                         data: []
-                    }).do(onLoadError)
-                    ).startWith({loading: true})
+                    }).do(()=>{
+                        onLoadError();
+                        setErrors({...errors, [layer.name]: true});
+                    }))
+                    .startWith({loading: true})
         );
 export default compose(
     withProps( () => ({

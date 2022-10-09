@@ -95,7 +95,6 @@ const getChartFilter = ({ quickFilters, geomProp, dependencies, mapSync, charts,
         };
     }) : [];
     return {
-        layerOptions: filters,
         filter: filters ? filters?.find(f => f.chartId === selectedChartId)?.filter : {}
     };
 };
