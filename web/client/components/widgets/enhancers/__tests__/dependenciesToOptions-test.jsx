@@ -66,4 +66,60 @@ describe('widgets dependenciesToOptions enhancer', () => {
             } }
             options={options}/>, document.getElementById("container"));
     });
+    it('dependenciesToOptions for selected charts', (done) => {
+        const options = {
+            a: "a"
+        };
+        const Sink = dependenciesToOptions(createSink( props => {
+            expect(props).toBeTruthy();
+            expect(props.options).toBeTruthy();
+            expect(props.options.a).toBe("a");
+            expect(props.options.viewParams).toBe("a:b");
+            expect(props.layerOptions).toBeTruthy();
+            expect(props.layerOptions.length).toBe(1);
+            expect(props.layerOptions[0].options).toBeTruthy();
+            done();
+        }));
+        ReactDOM.render(<Sink
+            mapSync
+            geomProp={"geometry"}
+            selectedChartId={1}
+            layerOptions={[{chartId: 1, layer: {name: "test", id: 1} }]}
+            layer={{id: 1}}
+            dependencies={ {
+                layers: [{
+                    id: 1,
+                    params: { viewParams: "a:b" }
+                }]
+            } }
+            options={options}
+        />, document.getElementById("container"));
+    });
+    it('dependenciesToOptions for charts', (done) => {
+        const options = {
+            a: "a"
+        };
+        const Sink = dependenciesToOptions(createSink( props => {
+            expect(props).toBeTruthy();
+            expect(props.options).toBeTruthy();
+            expect(props.options.a).toBe("a");
+            expect(props.options.viewParams).toBeTruthy();
+            expect(props.layerOptions).toBeTruthy();
+            expect(props.layerOptions[0].options).toBeFalsy();
+            done();
+        }));
+        ReactDOM.render(<Sink
+            mapSync
+            geomProp={"geometry"}
+            layerOptions={[{chartId: 1, layer: {name: "test", id: 1} }]}
+            layer={{id: 1}}
+            dependencies={ {
+                layers: [{
+                    id: 1,
+                    params: { viewParams: "a:b" }
+                }]
+            } }
+            options={options}
+        />, document.getElementById("container"));
+    });
 });

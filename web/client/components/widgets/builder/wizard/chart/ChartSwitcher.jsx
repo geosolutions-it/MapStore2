@@ -24,8 +24,7 @@ const Button = tooltip(ButtonRB);
  */
 export default ({
     charts = [],
-    // onChange = () => {},
-    onChange,
+    onChange = () => {},
     value = '',
     disabled = false,
     className = '',

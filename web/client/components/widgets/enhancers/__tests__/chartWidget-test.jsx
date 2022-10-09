@@ -24,6 +24,7 @@ describe('chartWidget enhancer', () => {
     it('chartWidget default', (done) => {
         const Sink = chartWidget(createSink(props => {
             expect(props).toBeTruthy();
+            expect(props.toggleTableView).toBeTruthy();
             expect(props.showTable).toBeFalsy();
             done();
         }));

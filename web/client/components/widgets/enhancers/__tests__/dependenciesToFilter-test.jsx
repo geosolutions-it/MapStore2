@@ -199,4 +199,52 @@ describe('widgets dependenciesToFilter enhancer', () => {
         />, document.getElementById("container"));
 
     });
+    it('dependenciesToFilter for charts', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toBeTruthy();
+            expect(props.filter).toBeTruthy();
+            expect(props.filter).toBe(resultMergeFilterCQLRes);
+            expect(props.layerOptions).toBeTruthy();
+            expect(props.layerOptions.length).toBe(1);
+            const [{chartId, layer, filter}] = props.layerOptions;
+            expect(chartId).toBe("1");
+            expect(layer).toEqual({ name: "test", id: "test"});
+            expect(filter).toBe(resultMergeFilterCQLRes);
+            done();
+        }));
+        ReactDOM.render(<Sink
+            mapSync
+            geomProp={"geometry"}
+            selectedChartId={"1"}
+            charts={[{chartId: "1", layer: { name: "test", id: "test"}, filter: inputFilterObjSpatial}]}
+            dependencies={{
+                layers: [{id: "test", params: {
+                    cql_filter: "prop = 'value'"
+                }}],
+                viewport: { "bounds": { "minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1" }, "crs": "EPSG:4326", "rotation": 0 }
+            }}  />, document.getElementById("container"));
+
+    });
+    it('dependenciesToFilter on widget type chart', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toBeTruthy();
+            expect(props.filter).toBeTruthy();
+            expect(props.layerOptions).toBeTruthy();
+            expect(props.layerOptions.length).toBe(1);
+            done();
+        }));
+        ReactDOM.render(<Sink
+            mapSync
+            geomProp={"geometry"}
+            selectedChartId={"1"}
+            widgetType={"chart"}
+            charts={[{chartId: "1", layer: { name: "test", id: "test"}, filter: {}}]}
+            dependencies={{
+                layers: [{id: "test", params: {
+                    cql_filter: "prop = 'value'"
+                }}],
+                viewport: { "bounds": { "minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1" }, "crs": "EPSG:4326", "rotation": 0 }
+            }}  />, document.getElementById("container"));
+
+    });
 });
