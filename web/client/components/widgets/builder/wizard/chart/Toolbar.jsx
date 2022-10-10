@@ -43,7 +43,8 @@ export default ({
     stepButtons = [],
     openFilterEditor = () => {},
     toggleLayerSelector = () => {},
-    errors
+    errors,
+    noAttributes = false
 } = {}) => {
     const mapSync = editorData?.mapSync;
     const disable = !valid || (mapSync && Object.values(errors).some(error => error));
@@ -59,6 +60,7 @@ export default ({
             tooltipId: getBackTooltipId(step)
         }, ...stepButtons, {
             onClick: openFilterEditor,
+            disabled: noAttributes,
             glyph: "filter",
             tooltipId: "widgets.builder.setupFilter"
         }, {

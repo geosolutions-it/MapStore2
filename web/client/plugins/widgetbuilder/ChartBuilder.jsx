@@ -68,6 +68,7 @@ const ChartToolbar = compose(
 const chooseLayerEnhancer = compose(
     withState('showLayers', "toggleLayerSelector", false),
     withState('errors', 'setErrors', {}),
+    withState('noAttributes', 'setNoAttributes', false),
     connect(wizardSelector, null, wizardStateToProps),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
@@ -90,6 +91,7 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
                     onClose={onClose}
                     toggleLayerSelector={props.toggleLayerSelector}
                     errors={props.errors}
+                    noAttributes={props.noAttributes}
                 />
             </BuilderHeader>}
         >

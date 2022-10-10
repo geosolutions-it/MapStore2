@@ -31,7 +31,7 @@ import errorChartState from '../../enhancers/errorChartState';
 const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = "" } = {}) => type.indexOf("gml:") !== 0).length === 0;
 const ChartType = noAttribute(hasNoAttributes)(BaseChartType);
-const ChartOptions = wfsChartOptions(WPSWidgetOptions);
+const ChartOptionsComp = wfsChartOptions(WPSWidgetOptions);
 
 const enhancePreview = compose(
     dependenciesToWidget,
@@ -62,13 +62,18 @@ export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) => {
 
 const Wizard = wizardHandlers(WizardContainer);
 
-const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, hasAggregateProcess, ...previewProps }) => isChartOptionsValid(data.options, { hasAggregateProcess })
+const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, hasAggregateProcess, setErrors = () => {}, errors }) => isChartOptionsValid(data.options, { hasAggregateProcess })
     ? (<PreviewChart
         {...sampleProps}
-        {...previewProps}
         key="preview-chart"
-        onLoad={() => setValid(true)}
-        onLoadError={() => setValid(false)}
+        onLoad={() => {
+            setValid(true);
+            setErrors({...errors, [layer.name]: false});
+        }}
+        onLoadError={() => {
+            setValid(false);
+            setErrors({...errors, [layer.name]: true});
+        }}
         isAnimationActive={false}
         dependencies={dependencies}
         dependenciesMap={data.dependenciesMap}
@@ -112,25 +117,55 @@ const enhanceWizard = compose(
             const chartData = {...data, ...data?.charts?.find(c => c.chartId === data?.selectedChartId)};
             this.props?.setSelectedChart({...chartData});
         },
-        UNSAFE_componentWillReceiveProps({ data = {}, valid, setValid = () => { }, hasAggregateProcess, selectedChart, setSelectedChart, setErrors = () => {}, errors } = {}) {
+        UNSAFE_componentWillReceiveProps({
+            data = {},
+            valid,
+            setValid = () => { },
+            hasAggregateProcess,
+            selectedChart,
+            setSelectedChart,
+            setErrors = () => {},
+            errors,
+            featureTypeProperties,
+            setNoAttributes = () => {}
+        } = {}) {
             const matchedChart = {...data, ...data?.charts?.find(c => c.chartId === data?.selectedChartId)};
             if (valid && data?.charts?.some(chart => !isChartOptionsValid(chart.options, { hasAggregateProcess }))) {
                 setValid(false);
             }
-            if (isEmpty(selectedChart) || !isEqual(selectedChart, matchedChart)) {
-                setSelectedChart({...matchedChart});
-            }
-            if (isEmpty(selectedChart) || !isEqual(selectedChart, matchedChart)) {
+            if ((isEmpty(selectedChart) && !isEmpty(matchedChart)) || !isEqual(selectedChart, matchedChart)) {
                 const layerNames = matchedChart?.charts?.map(({layer} = {}) => layer?.name);
                 setErrors(isEmpty(layerNames) ? {} : pick(errors, [...layerNames]));
                 setSelectedChart({...matchedChart});
+            }
+            const noAttributes = hasNoAttributes({featureTypeProperties});
+            if (!isEqual(featureTypeProperties, this.props.featureTypeProperties) ) {
+                setNoAttributes(noAttributes);
             }
         }
     }),
     setDisplayName('ChartWizard')
 );
 
-const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, setValid = () => { }, data = {}, setErrors, errors, selectedChart = {}, setSelectedChart = () => {},  layer = {}, step = 0, types, featureTypeProperties, dependencies, hasAggregateProcess }) => {
+const ChartWizard = ({
+    onChange = () => {},
+    onFinish = () => {},
+    setPage = () => {},
+    setValid = () => {},
+    data = {},
+    setErrors = () => {},
+    errors,
+    selectedChart = {},
+    setSelectedChart = () => {},
+    layer = {},
+    step = 0,
+    types,
+    featureTypeProperties,
+    dependencies,
+    hasAggregateProcess,
+    noAttributes = false,
+    withContainer = true // To render charts switcher in container mode. And to allow test overrides
+}) => {
     const sampleChart = renderPreview({
         hasAggregateProcess,
         data: selectedChart,
@@ -140,14 +175,14 @@ const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () 
         errors,
         setValid
     });
-    const ChartConfig = (
+    const ChartOptions = (
         <>
             <ChartType
                 key="type"
                 featureTypeProperties={featureTypeProperties}
                 type={selectedChart?.type}
                 onSelect={(val) => onChange(`charts[${selectedChart?.chartId}].type`, val)} />
-            <ChartOptions
+            {!noAttributes && <ChartOptionsComp
                 hasAggregateProcess={hasAggregateProcess}
                 dependencies={dependencies}
                 key="chart-options"
@@ -157,10 +192,10 @@ const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () 
                 onChange={(key, value)=>onChange(`charts[${selectedChart?.chartId}].${key}`, value)}
                 layer={selectedChart?.layer || layer}
                 sampleChart={sampleChart}
-            />
+            />}
         </>
     );
-    const WidgetOptions = (
+    const WidgetOptions = !noAttributes ? (
         <ChartWidgetOptions
             key="widget-options"
             data={data}
@@ -168,7 +203,7 @@ const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () 
             layer={selectedChart?.layer || layer}
             sampleChart={sampleChart}
         />
-    );
+    ) : null;
     return (<Wizard
         step={step}
         setPage={setPage}
@@ -182,7 +217,7 @@ const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () 
         }
         hideButtons
         className={"chart-options"}>
-        {[ChartConfig, WidgetOptions].map(component =>
+        {[ChartOptions, WidgetOptions].map(component =>
             <ChartSwitcher
                 key="chart-switcher"
                 editorData={data}
@@ -191,7 +226,7 @@ const ChartWizard = ({ onChange = () => { }, onFinish = () => { }, setPage = () 
                 setSelectedChart={setSelectedChart}
                 selectedChart={selectedChart}
                 featureTypeProperties={featureTypeProperties}
-                withContainer
+                withContainer={withContainer}
             >
                 {component}
             </ChartSwitcher>

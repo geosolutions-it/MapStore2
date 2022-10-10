@@ -63,7 +63,7 @@ const dataStreamFactory = ($props) =>
                 && sameOptions(options, newProps.options)
                 && sameFilter(filter, newProps.filter))
         .switchMap(
-            ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}, setErrors = () => {}, errors}) =>
+            ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
                 wpsAggregate(getWpsUrl(layer), {featureType: layer.name, ...options, filter}, {
                     timeout: 15000
                 }).map((data) => ({
@@ -74,20 +74,13 @@ const dataStreamFactory = ($props) =>
                     series: [{dataKey: `${data.AggregationFunctions[0]}(${data.AggregationAttribute})`}],
                     classifications: {dataKey: options.classificationAttribute},
                     xAxis: {dataKey: data.GroupByAttributes[0]}
-                }))
-                    .do(()=>{
-                        onLoad();
-                        setErrors({...errors, [layer.name]: false});
-                    })
+                })).do(onLoad)
                     .catch((e) => Rx.Observable.of({
                         loading: false,
                         error: e,
                         data: []
-                    }).do(()=>{
-                        onLoadError();
-                        setErrors({...errors, [layer.name]: true});
-                    }))
-                    .startWith({loading: true})
+                    }).do(onLoadError)
+                    ).startWith({loading: true})
         );
 export default compose(
     withProps( () => ({

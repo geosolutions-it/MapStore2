@@ -15,7 +15,8 @@ import {
 } from 'react-bootstrap';
 import ChartSwitcher from "../builder/wizard/chart/ChartSwitcher";
 import emptyTableState from "../../widgets/enhancers/emptyChartState";
-const TableView = emptyTableState(TableViewComp);
+import loadingState from '../../misc/enhancers/loadingState';
+const TableView = loadingState()(emptyTableState(TableViewComp));
 
 const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {

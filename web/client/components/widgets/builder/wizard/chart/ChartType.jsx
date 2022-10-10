@@ -28,7 +28,7 @@ const ITEMS = [{
 }));
 
 export default ({ onSelect = () => { }, types = ITEMS, type} = {}) => (
-    <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+    <div className={"chart-type"}>
         <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
         <div style={{marginTop: 4}}>
             <Toolbar btnDefaultProps={{

@@ -72,15 +72,15 @@ describe('wfsChart enhancer', () => {
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
     it('wfsChart multi chart error', (done) => {
-        const action = { setErrors: () => {} };
-        const spyOnErrors = spyOn(action, "setErrors");
+        const action = { onLoadError: () => {} };
+        const spyOnErrors = spyOn(action, "onLoadError");
         const Sink = wfsChart(createSink( ({error, loading, ...props} = {}) => {
             if (!loading && error) {
                 expect(error).toExist();
             }
-            expect(props.setErrors).toBeTruthy();
+            expect(props.onLoadError).toBeTruthy();
             expect(props.errors).toBeTruthy();
-            props.setErrors({...props.errors, [props.layer.name]: true});
+            props.onLoadError({...props.errors, [props.layer.name]: true});
         }));
         const props = {
             layer: {
@@ -94,7 +94,7 @@ describe('wfsChart enhancer', () => {
                 groupByAttributes: "test",
                 classificationAttribute: "test"
             },
-            setErrors: action.setErrors,
+            onLoadError: action.onLoadError,
             errors: {}
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
@@ -103,8 +103,8 @@ describe('wfsChart enhancer', () => {
         done();
     });
     it('wfsChart data retrival error management', (done) => {
-        const action = { setErrors: () => {} };
-        const spyOnErrors = spyOn(action, "setErrors");
+        const action = { onLoadError: () => {} };
+        const spyOnErrors = spyOn(action, "onLoadError");
         const Sink = wfsChart(createSink( ({data, loading, ...props} = {}) => {
             if (!loading) {
                 expect(data).toExist();
@@ -114,9 +114,9 @@ describe('wfsChart enhancer', () => {
                     expect(LAND_KM).toBeTruthy();
                 });
             }
-            expect(props.setErrors).toBeTruthy();
+            expect(props.onLoadError).toBeTruthy();
             expect(props.errors).toBeTruthy();
-            props.setErrors({...props.errors, [props.layer.name]: false});
+            props.onLoadError({...props.errors, [props.layer.name]: false});
         }));
         const props = {
             layer: {
@@ -129,7 +129,7 @@ describe('wfsChart enhancer', () => {
                 groupByAttributes: "STATE_NAME",
                 classificationAttribute: "SUB_REGION"
             },
-            setErrors: action.setErrors,
+            onLoadError: action.onLoadError,
             errors: {test: true}
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));

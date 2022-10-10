@@ -78,7 +78,7 @@ export default ({
             } else {
                 onChange("selectedChartId", selected.chartId);
             }
-            setSelectedChart({...selected});
+            setSelectedChart({...selectedChart, ...selected});
         }
     }, [
         editorData.charts,
