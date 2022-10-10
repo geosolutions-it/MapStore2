@@ -774,7 +774,7 @@ describe('queryparam epics', () => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
                     expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
-                    expect(actions[0].point.latlng).toEqual({lat: '38.72', lng: '-95.625'});
+                    expect(actions[0].point.latlng).toEqual({lng: '38.72', lat: '-95.625'});
                     expect(actions[0].point.pixel).toBe(undefined);
                     expect(actions[0].point.geometricFilter).toExist();
                 } catch (e) {
