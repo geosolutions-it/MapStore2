@@ -84,9 +84,9 @@ const getFilter = ({quickFilters, filter: filterObj, options, mapSync, layerFilt
  */
 const getChartFilter = ({ quickFilters, geomProp, dependencies, mapSync, charts, selectedChartId}) => {
     const filters = !isEmpty(charts) ? charts.map(chart => {
-        const { layer, filter, options, chartId } = chart;
+        const { layer, filter, options, chartId, geomProp: cGeomProp } = chart;
         const { layerFilter } = layer || {};
-        const filterProps = { layerFilter, geomProp, dependencies, mapSync, quickFilters, layer, filter, options };
+        const filterProps = { layerFilter, geomProp: geomProp || cGeomProp, dependencies, mapSync, quickFilters, layer, filter, options };
         return {
             chartId,
             layer,

@@ -9,7 +9,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {compose, renameProps, branch, renderComponent, withState} from 'recompose';
+import {compose, renameProps, branch, renderComponent, withState, withProps} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
 import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
@@ -58,6 +58,9 @@ const ChartToolbar = compose(
     ),
     viewportBuilderConnect,
     withExitButton(),
+    withProps(({editorData, disableMultiDependencySupport} = {}) =>({
+        disableMultiDependencySupport: disableMultiDependencySupport || editorData?.charts?.some(f => !f.geomProp)
+    })),
     withConnectButton(({step}) => step === 0)
 )(Toolbar);
 

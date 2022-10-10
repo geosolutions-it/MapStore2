@@ -46,8 +46,7 @@ export default ({
     errors,
     noAttributes = false
 } = {}) => {
-    const mapSync = editorData?.mapSync;
-    const disable = !valid || (mapSync && Object.values(errors).some(error => error));
+    const disable = !valid || (editorData?.mapSync && Object.values(errors).some(error => error));
     return (
         <Toolbar btnDefaultProps={{
             bsStyle: "primary",

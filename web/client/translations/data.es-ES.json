@@ -1861,6 +1861,7 @@
                     "connectToTheMap": "Conectar al mapa",
                     "selectMapToConnect": "Seleccione el widget para conectarse",
                     "clearConnection": "Borrar conexión",
+                    "clearConnection": "No se puede conectar al mapa",
                     "classAttributes": {
                         "classColor": "Color de la Clase",
                         "classLabel": "Etiqueta de la Clase",

@@ -1862,6 +1862,7 @@
                     "connectToTheMap": "Connect to the map",
                     "selectMapToConnect": "Select the widget to connect",
                     "clearConnection": "Clear connection",
+                    "disableConnectToMap": "Cannot connect to the map",
                     "classAttributes": {
                         "classColor": "Class Color",
                         "classLabel": "Class Label",
