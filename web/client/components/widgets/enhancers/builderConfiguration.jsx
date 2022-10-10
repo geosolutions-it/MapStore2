@@ -13,7 +13,7 @@ const TYPES = "ALL";
 import {findGeometryProperty} from '../../../utils/ogc/WFS/base';
 
 const setGeomProp = ({onEditorChange, geomProp, editorData} = {}) => {
-    let key = geomProp;
+    let key = 'geomProp';
     if (editorData?.selectedChartId) { // Update geomProp for multi-charts
         key = `charts[${editorData?.selectedChartId}].geomProp`;
     }
