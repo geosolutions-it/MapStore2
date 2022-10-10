@@ -55,6 +55,7 @@ import {getDefaultInfoFormatValueFromLayer} from '../utils/MapInfoUtils';
 import {identifyOptionsSelector, isMapPopup} from '../selectors/mapInfo';
 import { addPopup } from '../actions/mapPopups';
 import { IDENTIFY_POPUP } from '../components/map/popups';
+import { projectionSelector } from '../selectors/map';
 
 const getInfoFormat = (layerObj, state) => getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(state)});
 
@@ -302,7 +303,7 @@ export const zoomAndAddPointEpic = (action$, store) =>
 export const searchOnStartEpic = (action$, store) =>
     action$.ofType(SEARCH_LAYER_WITH_FILTER)
         .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
-            const state = store.getState();
+            const state = store.getState(store.getState());
             // if layer is NOT queriable and visible then show error notification
             if (queryableLayersSelector(state).filter(l => l.name === name ).length === 0) {
                 return Rx.Observable.of(nonQueriableLayerError());
@@ -324,14 +325,39 @@ export const searchOnStartEpic = (action$, store) =>
                     .switchMap(({ type, geometry, typeName }) => {
                         let coord = pointOnSurface({ type, geometry }).geometry.coordinates;
                         const latlng = {lng: coord[0], lat: coord[1] };
-                        const {x, y} = reproject(coord, 'EPSG:4326', 'EPSG:3857');
+                        const projection = projectionSelector(store.getState());
+                        const { x, y } = reproject(
+                            coord,
+                            "EPSG:4326",
+                            projection
+                        );
 
-                        if (coord) { // trigger get feature info
-                            return Rx.Observable.of(featureInfoClick({latlng}, typeName, [typeName], {[typeName]: {cql_filter: cqlFilter}}), showMapinfoMarker())
-                                .merge(Rx.Observable.of(addPopup(uuid(),
-                                    {component: IDENTIFY_POPUP, maxWidth: 600, position: {coordinates: [x, y]}}))
-                                    .filter(() => isMapPopup(store.getState()))
-                                );
+                        let mapActionObservable;
+                        if (isMapPopup(store.getState())) {
+                            mapActionObservable = Rx.Observable.of(
+                                addPopup(uuid(), {
+                                    component: IDENTIFY_POPUP,
+                                    maxWidth: 600,
+                                    position: { coordinates: [x, y] }
+                                })
+                            );
+                        } else {
+                            mapActionObservable = Rx.Observable.of(
+                                showMapinfoMarker()
+                            );
+                        }
+
+                        if (coord) {
+                            // trigger get feature info
+                            return Rx.Observable.of(
+                                featureInfoClick(
+                                    { latlng },
+                                    typeName,
+                                    [typeName],
+                                    { [typeName]: { cql_filter: cqlFilter } }
+                                )
+                            )
+                                .merge(mapActionObservable);
                         }
                         return Rx.Observable.empty();
                     }).catch(() => {
