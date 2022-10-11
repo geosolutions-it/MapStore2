@@ -1752,6 +1752,7 @@
         },
         "layerdownload": {
             "title": "Daten exportieren",
+            "service": "Service",
             "format": "Dateiformat",
             "srs": "Räumliches Bezugssystem",
             "export": "Export",

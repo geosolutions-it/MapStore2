@@ -37,7 +37,8 @@ import {
     serializeCookie,
     addExportDataResult,
     updateExportDataResult,
-    showInfoBubbleMessage
+    showInfoBubbleMessage,
+    setWPSAvailability
 } from '../actions/layerdownload';
 import { TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { DOWNLOAD } from '../actions/layers';
@@ -197,22 +198,28 @@ const str2bytes = (str) => {
     return bytes;
 };
 */
-export const checkWPSAvailabilityEpic = (action$) => action$
+export const checkWPSAvailabilityEpic = (action$, store) => action$
     .ofType(CHECK_WPS_AVAILABILITY)
-    .switchMap(({url}) => {
+    .switchMap(({url, selectedService}) => {
         return describeProcess(url, 'gs:DownloadEstimator,gs:Download')
             .switchMap(response => Rx.Observable.defer(() => new Promise((resolve, reject) => parseString(response.data, {tagNameProcessors: [stripPrefix]}, (err, res) => err ? reject(err) : resolve(res)))))
             .flatMap(xmlObj => {
+                const state = store.getState();
+                const layer = getSelectedLayer(state);
                 const ids = [
                     xmlObj?.ProcessDescriptions?.ProcessDescription?.[0]?.Identifier?.[0],
                     xmlObj?.ProcessDescriptions?.ProcessDescription?.[1]?.Identifier?.[0]
                 ];
+                const isWpsAvailable = findIndex(ids, x => x === 'gs:DownloadEstimator') > -1 && findIndex(ids, x => x === 'gs:Download') > -1;
+                const isWfsAvailable = layer.search?.url;
+                const shouldSelectWps = isWpsAvailable && (selectedService === 'wps' || !isWfsAvailable);
                 return Rx.Observable.of(
-                    setService(findIndex(ids, x => x === 'gs:DownloadEstimator') > -1 && findIndex(ids, x => x === 'gs:Download') > -1 ? 'wps' : 'wfs'),
+                    setService(shouldSelectWps ? 'wps' : 'wfs'),
+                    setWPSAvailability(isWpsAvailable),
                     checkingWPSAvailability(false)
                 );
             })
-            .catch(() => Rx.Observable.of(setService('wfs'), checkingWPSAvailability(false)))
+            .catch(() => Rx.Observable.of(setService('wfs'), setWPSAvailability(false), checkingWPSAvailability(false)))
             .startWith(checkingWPSAvailability(true));
     });
 export const openDownloadTool = (action$) =>

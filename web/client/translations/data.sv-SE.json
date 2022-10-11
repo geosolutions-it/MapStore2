@@ -1632,6 +1632,7 @@
         },
         "layerdownload": {
             "title": "Exportera data",
+            "service": "Service",
             "format": "Filformat",
             "srs": "Geodetiskt referenssystem",
             "export": "Exportera",

@@ -1652,6 +1652,7 @@
         },
         "layerdownload": {
             "title": "Exportovať dáta",
+            "service": "Service",
             "format": "Formát súboru",
             "srs":  "Spatial Reference System",
             "export": "Exportovať",

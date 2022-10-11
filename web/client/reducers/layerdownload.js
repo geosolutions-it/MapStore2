@@ -23,7 +23,8 @@ import {
     REMOVE_EXPORT_DATA_RESULTS,
     SHOW_INFO_BUBBLE,
     SET_INFO_BUBBLE_MESSAGE,
-    CHECKING_EXPORT_DATA_ENTRIES
+    CHECKING_EXPORT_DATA_ENTRIES,
+    SET_WPS_AVAILABILITY
 } from '../actions/layerdownload';
 
 /**
@@ -83,6 +84,12 @@ function layerdownload( state = {downloadOptions: {singlePage: true}}, action) {
         return {
             ...state,
             service: action.service
+        };
+    }
+    case SET_WPS_AVAILABILITY: {
+        return {
+            ...state,
+            wpsAvailable: action.value
         };
     }
     case CHECKING_WPS_AVAILABILITY: {

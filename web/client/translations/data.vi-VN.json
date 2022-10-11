@@ -1755,6 +1755,7 @@
         },
         "warning": "Cảnh báo",
         "layerdownload": {
+            "service": "Service",
             "downloadonlycurrentpage": "Chỉ tải xuống trang hiện tại",
             "error": {
                 "invalidOutputFormat": "Định dạng xuất đã chọn không khả dụng",
