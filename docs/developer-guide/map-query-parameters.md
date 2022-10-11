@@ -153,7 +153,7 @@ GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "fil
 
 GET: `#/viewer/openlayers/config?featureInfo=38.72,-95.625`
 
-Where lat,lng values are comma-separated respecting order.
+Where lon,lat values are comma-separated respecting order.
 
 ### Map
 
@@ -175,13 +175,20 @@ Following example will override "catalogServices" and "mapInfoConfiguration":
 
 GET: `#/viewer/openlayers/config?center=0,0&zoom=5`
 
+Where lon,lat values are comma-separated respecting order.
+
+
 ### Marker / Zoom
 
 GET: `#/viewer/openlayers/config?marker=0,0&zoom=5`
 
+Where lon,lat values are comma-separated respecting order.
+
 ### Bbox
 
 GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
+
+Where values are `minLongitude, minLatitude, maxLongitude, maxLatitude` respecting order.
 
 ### AddLayers
 
