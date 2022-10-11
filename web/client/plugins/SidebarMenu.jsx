@@ -126,7 +126,7 @@ class SidebarMenu extends React.Component {
             height: hasBottomOffset ? 'auto' : '100%',
             maxHeight: style?.height ?? null,
             bottom: hasBottomOffset ? `calc(${style.dockSize}vh + 30px)` : null,
-            zIndex: this.props.displayUnsavedDialog ? '2001' : null 
+            zIndex: this.props.displayUnsavedDialog ? '2001' : null
         };
     };
 
