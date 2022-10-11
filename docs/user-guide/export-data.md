@@ -12,7 +12,7 @@ Once a layer is selected in the [TOC](toc.md#table-of-contents), the user can op
 
 From the **Export Data** panel the user can:
 
-* Select the **Service**, choosing between `WPS`and `WFS` (this option is present in the form only if the WPS Download process is available, otherwise the WFS service will be added automatically).
+* Select the **Service**, choosing between `WPS`and `WFS` (this option is present in the form only if the WPS Download process is available, otherwise the WFS service is used directly).
 
 * Select the **File Format**. The list of formats depends on the availability of the WPS Download process in GeoServer. If the WPS process is available, the user can choose between `GeoJSON`, `wfs-collection-1.0`, `wfs-collection-1.1`, `Shapefile` and `CSV` for *vector layers*, and between `ArcGrid`, `TIFF`, `PNG`, `JPEG`, in case of *raster layers*. If the WPS Download process is not available for some reasons, MapStore provides the list of formats valid for the WFS service by looking at the ones offered by the services capabilities (WFS Capabilities).
 
