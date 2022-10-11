@@ -199,7 +199,7 @@ class MeasurementSupport extends React.Component {
     };
 
     UNSAFE_componentWillMount() {
-        if (this.props.measurement.geomType && (this.props.measurement.lineMeasureEnabled || this.props.measurement.areaMeasureEnabled || this.props.measurement.bearingMeasureEnabled) && isNil(this.drawControl) && this.props.enabled) {
+        if (this.props.measurement?.geomType && (this.props.measurement?.lineMeasureEnabled || this.props.measurement?.areaMeasureEnabled || this.props.measurement?.bearingMeasureEnabled) && isNil(this.drawControl) && this.props.enabled) {
             this.addDrawInteraction(this.props);
         }
     }
