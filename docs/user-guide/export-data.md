@@ -2,10 +2,14 @@
 
 **************************
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to export both vector and raster layers present in  [TOC](toc.md#table-of-contents). In order to provide advanced export capabilities the[WPS Download process](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html) must be installed and available in GeoServer. MapStore performs a preventive check for this as soon as the user opens the tool: if the WPS Download process is not available, MapStore uses the WFS service as fallback and the export options are limited (eg. only vector data can be exported).
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to export both vector and raster layers present in  [TOC](toc.md#table-of-contents). In order to provide advanced export capabilities the [WPS Download process](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html) must be installed and available in GeoServer. MapStore performs a preventive check for this as soon as the user opens the tool: if the WPS Download process is not available, MapStore uses the WFS service as fallback and the export options are limited (eg. only vector data can be exported).
 Once a layer is selected in the [TOC](toc.md#table-of-contents), the user can open the **Export Data** tool by clicking the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button available in the layer toolbar.
 
 <img src="../img/export_data/export_data_ex.jpg" class="ms-docimage"/>
+
+!!! note
+    If the `WFS` service is the only one available, once the **Export Data** opens, the user can only select the *File Format* and the *Spatial Reference System* (as explained below).
+    <img src="../img/export_data/wfs-export-data.jpg" class="ms-docimage"/>
 
 !!! note
     Only for the **Vector layer**, the user can also download data by opening the Attribute Table <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/> from the [TOC](toc.md#table-of-contents) and clicking the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button.
