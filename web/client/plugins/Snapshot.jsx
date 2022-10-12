@@ -60,7 +60,20 @@ const SnapshotContainer = props => (
     </>
 );
 
-
+/**
+ * Tool to create snapshots from the active map viewport.
+ * @example
+ * {
+ *     "name": "Snapshot",
+ *     "cfg": {
+ *         "floatingPanel": true
+ *     }
+ * }
+ * @prop {boolean} [cfg.floatingPanel=true] show plugin UI in a floating dialog rather than inside the static panel
+ * @name Snapshot
+ * @class
+ * @memberof plugins
+ */
 export default createPlugin('SnapshotPlugin', {
     component: SnapshotContainer,
     containers: {
