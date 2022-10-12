@@ -260,6 +260,30 @@ export const editorChangeProps = (action) => {
 };
 
 /**
+ * Chart widget specific operation to perform multi chart management
+ * @param {object} editorData
+ * @param {string} key
+ * @param {any} value
+ * @param {object} state
+ * @returns {*}
+ */
+const chartWidgetOperation = ({editorData, key, value}, state) => {
+    const chartData = omit(editorData, CHART_PROPS) || {};
+    const editorProp = pick(editorData, CHART_PROPS) || {};
+    let datas = [];
+    if (key.includes('layers')) {
+        datas = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
+    } else if (key.includes('delete')) {
+        datas = value;
+    } else {
+        const filteredLayers = value?.filter(v => !editorProp?.charts?.map(c => c?.layer?.name)?.includes(v.name));
+        const multiData = filteredLayers?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
+        datas = editorProp?.charts?.concat(multiData);
+    }
+    return set('builder.editor', {...editorProp, charts: datas, selectedChartId: datas?.[0]?.chartId }, state);
+};
+
+/**
  * Perform state with widget editor changes
  * @param {object} action
  * @param {object} state object
@@ -267,6 +291,7 @@ export const editorChangeProps = (action) => {
  */
 export const editorChange = (action, state) => {
     const { key, path, identifier, regex, value } = editorChangeProps(action);
+    // Update multi widgets (currently charts and maps)
     if (['maps', 'charts'].some(k => key.includes(k))) {
         if (key === 'maps' && value === undefined) {
             return set(path, value, state);
@@ -279,21 +304,12 @@ export const editorChange = (action, state) => {
         }
         return arrayUpsert(path, updatedValue, {[identifier]: id || value?.[identifier]}, state);
     }
-    if (key.includes("chart-")) {
-        const data = { ...state?.builder?.editor };
-        const chartData = omit(data, CHART_PROPS) || {};
-        const editorData = pick(data, CHART_PROPS) || {};
-        let _charts = [];
-        if (key.includes('layers')) {
-            _charts = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
-        } else if (key.includes('delete')) {
-            _charts = value;
-        } else {
-            const filteredLayers = value?.filter(v => !editorData?.charts?.map(c => c?.layer?.name)?.includes(v.name));
-            const newCharts = filteredLayers?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
-            _charts = editorData?.charts?.concat(newCharts);
-        }
-        return set('builder.editor', {...editorData, charts: _charts, selectedChartId: _charts?.[0]?.chartId }, state);
+    const editorData = { ...state?.builder?.editor };
+    // Widget specific editor changes
+    if (key.includes(`chart-`)) {
+        // TODO Allow to support all widget types that might support multi widget feature
+        return chartWidgetOperation({key, value, editorData}, state);
     }
+
     return set(path, value, state);
 };

@@ -25,7 +25,7 @@ export default (showCondition = () => true) => compose(
             onClick: () => toggleConnection(availableDependencies, props.widgets),
             disabled: disableMultiDependencySupport,
             visible: !!showCondition(props) && availableDependencies.length > 0,
-            bsStyle: connected ? "success" : "primary",
+            bsStyle: (!disableMultiDependencySupport && connected) ? "success" : "primary",
             glyph: connected ? "plug" : "unplug",
             tooltipId: (disableMultiDependencySupport || !canConnect)
                 ? "widgets.builder.wizard.disableConnectToMap"

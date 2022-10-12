@@ -1899,7 +1899,7 @@
                     "connectToTheMap": "Verbinden Sie sich mit der Karte",
                     "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
                     "clearConnection": "Verbindung löschen",
-                    "clearConnection": "Es kann keine Verbindung zur Karte hergestellt werden",
+                    "clearConnection": "Vorgang nicht verfügbar",
                     "classAttributes": {
                         "classColor": "Klasse Farbe",
                         "classLabel": "Klassenbezeichnung",
