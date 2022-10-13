@@ -181,7 +181,7 @@ In particular, with these options it is possible to:
 
     * Enable the **Show fog** to allow additional performance by rendering less geometry and dispatching less terrain requests
 
-    * Enable the **Depth test against terrain** to allow setting the `disableDepthTestDistance` value for features
+    * Enable the **Depth test against terrain** if primitives such as billboards, polylines, labels, etc. should be depth-tested against the terrain surface instead of always having them drawn on top of terrain unless they're on the opposite side of the globe
 
 * See the **About this map** panel by clicking the <img src="../img/button/details2.jpg" class="ms-docbutton"/> button, when [Details](resources-properties.md#details) are present
 
