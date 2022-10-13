@@ -31,6 +31,7 @@ import {
     exportCSV,
     exportImage,
     toggleCollapse,
+    toggleCollapseAll,
     toggleMaximize,
     updateWidgetProperty
 } from '../actions/widgets';
@@ -70,6 +71,7 @@ compose(
             updateWidgetProperty,
             exportCSV,
             toggleCollapse,
+            toggleCollapseAll,
             toggleMaximize,
             exportImage,
             deleteWidget,
@@ -217,8 +219,23 @@ compose(
             ),
             withPropsOnChange(
                 ['activeWidget', 'isSingleWidgetLayout', 'widgets'],
-                ({activeWidget, dropdownWidgets, setActiveWidget, isSingleWidgetLayout, widgets, toolsOptions, layouts}) => {
+                ({
+                    activeWidget,
+                    dropdownWidgets,
+                    isSingleWidgetLayout,
+                    widgets,
+                    toolsOptions,
+                    layouts,
+                    setActiveWidget,
+                    toggleCollapseAll: collapseAll
+                }) => {
                     if (activeWidget && isSingleWidgetLayout && widgets.length) {
+                        const showWidget = widgets.find(el => el.id === activeWidget.id);
+                        if (!showWidget) {
+                            // If single widget should not be displayed - hide all other widgets to make widgets tray
+                            // update its state properly (show "Expand all widgets" button)
+                            collapseAll();
+                        }
                         const widget = {
                             ...activeWidget,
                             options: {
