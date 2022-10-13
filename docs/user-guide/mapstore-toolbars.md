@@ -177,11 +177,11 @@ In particular, with these options it is possible to:
 
     * Enable the **Show sky atmosphere** to see the atmosphere around the globe
 
-    * Enable the **Show ground atmosphere** to view the ground atmosphere on the globe when viewed from a distance
+    * Enable the **Show ground atmosphere** to view the ground atmosphere on the globe when the camera is far away
 
     * Enable the **Show fog** to allow additional performance by rendering less geometry and dispatching less terrain requests
 
-    * Enable the **Depth test against terrain** if polylines, labels, etc. should be depth-tested against the terrain surface
+    * Enable the **Depth test against terrain** to allow setting the `disableDepthTestDistance` value for features
 
 * See the **About this map** panel by clicking the <img src="../img/button/details2.jpg" class="ms-docbutton"/> button, when [Details](resources-properties.md#details) are present
 
