@@ -37,10 +37,28 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-       - name: "cache maven dependencies"
+      - name: "cache maven dependencies"
         uses: actions/cache@v1
         with:
           path: ~/.m2/repository
           key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             mapstore-${{ runner.os }}-maven-
+      ############
+      # Build
+      ##########
+      - name: "build"
+        run: "build.sh ${{GITHUB_REF_NAME}} printing-bundle,binary"
+      ############
+      # Publish
+      ##########
+      - name: "publish zip as artifact"
+        uses: actions/upload-artifact@v1
+        with:
+            name: MapStore-${{ github.sha }}
+            path: |
+                product/target/mapstore.war
+                printing/target/mapstore-printing.zip
+                binary/target/mapstore2*-bin.zip
+                
+                
