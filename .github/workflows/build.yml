@@ -51,7 +51,7 @@ jobs:
       - run : "npm install"
       - run: "npm run fe:build"
       - run: "npm run jsdoc:build"
-      - run: "mvn clean install -Dmapstore2.version=$GITHUB_REF_NAME printingbundle"
+      - run: "mvn clean install -Dmapstore2.version=$GITHUB_REF_NAME -Pprintingbundle"
       ############
       # Publish
       ##########
