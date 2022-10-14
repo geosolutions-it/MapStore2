@@ -6,12 +6,9 @@ on:
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
     - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
-  pull_request:
-    branches:
-    - master # only to test the current PR
 
 jobs:
-  build-mapstore:
+  build-publish:
     runs-on: ubuntu-latest
     steps:
       - name: "checking out"
