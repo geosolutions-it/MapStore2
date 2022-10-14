@@ -7,10 +7,10 @@
  */
 import { withProps } from 'recompose';
 
-export default (visible = ({step}) => step === 0) => withProps(({ stepButtons = [], exitButton, onChange, editorData, ...props}) => ({
+export default (visible = ({step}) => step === 0) => withProps(({ stepButtons = [], exitButton, onChange, editorData, dashBoardEditing, ...props}) => ({
     stepButtons: [{
         ...exitButton,
         visible: visible({stepButtons, exitButton, ...props}),
-        onClick: () => onChange('chart-layers', undefined)
+        ...(dashBoardEditing && {onClick: () => onChange('chart-layers', undefined)})
     }, ...stepButtons]
 }));

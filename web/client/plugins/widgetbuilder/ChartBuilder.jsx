@@ -12,7 +12,13 @@ import {connect} from 'react-redux';
 import {compose, renameProps, branch, renderComponent, withState, withProps} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
-import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
+import {
+    insertWidget,
+    onEditorChange,
+    setPage,
+    openFilterEditor,
+    changeEditorSetting
+} from '../../actions/widgets';
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import chartLayerSelector from './enhancers/chartLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
@@ -25,7 +31,19 @@ import LayerSelector from './ChartLayerSelector';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
+import { getDependantWidget } from "../../utils/WidgetsUtils";
 
+
+const setMultiDependencySupport = ({editorData = {}, disableMultiDependencySupport: disableSupport, widgets = []} = {}) => {
+    let disableMultiDependencySupport = disableSupport || editorData?.charts?.some(f => !f.geomProp);
+    const dependantWidget = getDependantWidget({widgets, dependenciesMap: editorData?.dependenciesMap});
+    if (dependantWidget?.widgetType === 'table') {
+        // Disable dependency support when some layers in multi chart
+        // doesn't match dependant table widget
+        disableMultiDependencySupport = disableMultiDependencySupport || editorData?.charts?.some(c => c.layer.name !==  dependantWidget?.layer?.name);
+    }
+    return { disableMultiDependencySupport };
+};
 
 const Builder = connect(
     wizardSelector,
@@ -58,9 +76,7 @@ const ChartToolbar = compose(
     ),
     viewportBuilderConnect,
     withExitButton(),
-    withProps(({editorData, disableMultiDependencySupport} = {}) =>({
-        disableMultiDependencySupport: disableMultiDependencySupport || editorData?.charts?.some(f => !f.geomProp)
-    })),
+    withProps((props) => setMultiDependencySupport(props)),
     withConnectButton(({step}) => step === 0)
 )(Toolbar);
 
@@ -95,6 +111,7 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
                     toggleLayerSelector={props.toggleLayerSelector}
                     errors={props.errors}
                     noAttributes={props.noAttributes}
+                    dashboardEditing={props.dashboardEditing}
                 />
             </BuilderHeader>}
         >

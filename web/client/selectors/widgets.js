@@ -12,7 +12,7 @@ import { mapSelector } from './map';
 import { getSelectedLayer } from './layers';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
-import { getWidgetsGroups, getWidgetDependency } from '../utils/WidgetsUtils';
+import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
@@ -98,7 +98,7 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
     pathnameSelector,
     getEditingWidget,
     (ws = [], tableWidgets = [], map = {}, pathname, editingWidget) => {
-        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
+        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? editingWidget.widgetType === "chart" ? getSelectedWidgetData(editingWidget)?.layer || {} : editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
         return {
             availableDependencies:
                 flatten(ws

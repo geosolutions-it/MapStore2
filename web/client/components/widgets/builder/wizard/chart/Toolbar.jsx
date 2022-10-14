@@ -44,7 +44,8 @@ export default ({
     openFilterEditor = () => {},
     toggleLayerSelector = () => {},
     errors,
-    noAttributes = false
+    noAttributes = false,
+    dashBoardEditing = false
 } = {}) => {
     const disable = !valid || (editorData?.mapSync && Object.values(errors).some(error => error));
     return (
@@ -64,12 +65,12 @@ export default ({
             tooltipId: "widgets.builder.setupFilter"
         }, {
             onClick: () => toggleLayerSelector(true),
-            visible: step === 0,
+            visible: dashBoardEditing && step === 0,
             glyph: "plus",
             tooltipId: "widgets.builder.addNewLayers"
         }, {
             onClick: () => onDelete(editorData, onChange),
-            visible: step === 0,
+            visible: dashBoardEditing && step === 0,
             glyph: "trash",
             tooltipId: "widgets.builder.deleteChart"
         }, {

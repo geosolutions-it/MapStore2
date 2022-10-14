@@ -17,7 +17,8 @@ import {
     WIDGETS_REGEX,
     UPDATE_PROPERTY,
     replaceWidgets,
-    WIDGETS_MAPS_REGEX
+    WIDGETS_MAPS_REGEX,
+    EDITOR_CHANGE
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -25,12 +26,15 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import {
     availableDependenciesSelector,
     isWidgetSelectionActive,
-    getDependencySelectorConfig, getFloatingWidgets
+    getDependencySelectorConfig,
+    getFloatingWidgets,
+    getWidgetLayer
 } from '../selectors/widgets';
 
 import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } from '../actions/layers';
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
+import { isDashboardEditing } from '../selectors/dashboard';
 import { MAP_CREATED, SAVING_MAP, MAP_ERROR } from '../actions/maps';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
@@ -287,6 +291,19 @@ export const updateDependenciesMapOnMapSwitch = (action$, store) =>
             return observable$;
         });
 
+export const onWidgetCreationFromMap = (action$, store) =>
+    action$.ofType(EDITOR_CHANGE)
+        .filter(({key, value}) => key === 'widgetType' && value === 'chart' && !isDashboardEditing(store.getState()))
+        .switchMap(() => {
+            let observable$ = Rx.Observable.empty();
+            const state = store.getState();
+            const layer = getWidgetLayer(state);
+            if (layer) {
+                observable$ = Rx.Observable.of(onEditorChange('chart-layers', [layer]));
+            }
+            return observable$;
+        });
+
 export default {
     exportWidgetData,
     alignDependenciesToWidgets,
@@ -295,5 +312,6 @@ export default {
     exportWidgetImage,
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
-    updateDependenciesMapOnMapSwitch
+    updateDependenciesMapOnMapSwitch,
+    onWidgetCreationFromMap
 };

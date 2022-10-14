@@ -46,6 +46,7 @@ import {
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
+import { getSelectedWidgetData } from "../utils/WidgetsUtils";
 
 const WidgetsView = compose(
     connect(
@@ -108,7 +109,10 @@ const WidgetsView = compose(
                      * then make it non selectable
                     */
                     target.widgetType === "table" &&
-                        (editingWidget.widgetType !== "map" && (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
+                        (editingWidget.widgetType !== "map" &&
+                            editingWidget.widgetType === "chart"
+                            ? (target.layer && editingWidget && target.layer.name === (getSelectedWidgetData(editingWidget)?.layer?.name || ''))
+                            : (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
                         || editingWidget.widgetType === "map") && !target.mapSync
                 ) && target.id !== editingWidget.id
     })

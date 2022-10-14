@@ -15,6 +15,7 @@ import { read } from '../../../utils/ogc/Filter/CQL/parser';
 import filterBuilder from '../../../utils/ogc/Filter/FilterBuilder';
 import fromObject from '../../../utils/ogc/Filter/fromObject';
 import { composeFilterObject, getDependencyLayerParams } from './utils';
+import { getDependantWidget } from '../../../utils/WidgetsUtils';
 
 const getCqlFilter = (layer, dependencies) => {
     const params = getDependencyLayerParams(layer, dependencies);
@@ -24,79 +25,11 @@ const getCqlFilter = (layer, dependencies) => {
 
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
 
-const getFilter = ({quickFilters, filter: filterObj, options, mapSync, layerFilter, dependencies = {}, layer, geomProp}) => {
-    let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
-    const viewport = dependencies.viewport;
-    const fb = filterBuilder({ gmlVersion: "3.1.1" });
-    const toFilter = fromObject(fb);
-    const {filter, property, and} = fb;
-
-    let geom = {};
-    let cqlFilterRules = {};
-    // merging attribute filter and quickFilters of the current widget into a single filterObj
-    if (!mapSync) {
-        return {
-            filter: !isEmpty(newFilterObj) || layerFilter ? filter(and(
-                ...(layerFilter && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
-            )) : undefined
-        };
-    }
-    // merging filterObj with quickFilters coming from dependencies
-    if (layer && dependencies && dependencies.quickFilters && dependencies.layer && layer.name === dependencies.layer.name ) {
-        newFilterObj = {...newFilterObj, ...composeFilterObject(newFilterObj, dependencies.quickFilters, dependencies.options)};
-    }
-    // merging filterObj with attribute filter coming from dependencies
-    if (layer && dependencies && dependencies.filter && dependencies.layer && layer.name === dependencies.layer.name ) {
-        newFilterObj = {...newFilterObj, ...composeAttributeFilters([newFilterObj, dependencies.filter])};
-    }
-    // generating a cqlFilter based viewport coming from dependencies
-    if (dependencies.viewport) {
-        const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
-            return {...p, [c]: parseFloat(viewport.bounds[c])};
-        }, {});
-        geom = getViewportGeometry(bounds, viewport.crs);
-        const cqlFilter = getCqlFilter(layer, dependencies);
-        cqlFilterRules = cqlFilter
-            ? [toFilter(read(cqlFilter))]
-            : [];
-        // this will contain an ogc filter based on current and other filters (cql included)
-        return {
-            filter: filter(and(
-                ...cqlFilterRules,
-                ...(layerFilter  && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
-                property(geomProp).intersects(geom)))
-        };
-    }
-    // this will contain only an ogc filter based on current and other filters (cql excluded)
-    return {
-        filter: filter(and(
-            ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-            ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
-    };
-};
-
-/**
- * Formulate chart filter and layer options
- * @param {object} widget props
- * @returns {{filter: *, layerOptions: (*|*[])}}
- */
-const getChartFilter = ({ quickFilters, geomProp, dependencies, mapSync, charts, selectedChartId}) => {
-    const filters = !isEmpty(charts) ? charts.map(chart => {
-        const { layer, filter, options, chartId, geomProp: cGeomProp } = chart;
-        const { layerFilter } = layer || {};
-        const filterProps = { layerFilter, geomProp: geomProp || cGeomProp, dependencies, mapSync, quickFilters, layer, filter, options };
-        return {
-            chartId,
-            layer,
-            options,
-            ...getFilter(filterProps)
-        };
-    }) : [];
-    return {
-        filter: filters && selectedChartId ? filters?.find(f => f.chartId === selectedChartId)?.filter : {}
-    };
+const testFilterMerging = ({layer = {}, widgets = [], dependenciesMap = {}, selectedChartId, charts = []} = {}) => {
+    const { widgetType } = getDependantWidget({ widgets, dependenciesMap });
+    // When dependent widget is a table,
+    // check if multi charts of widget has some matching layer to allow filter merging
+    return widgetType === 'table' && selectedChartId && !isEmpty(charts) && charts?.some(c => c.chartId === selectedChartId && c?.layer?.name === layer?.name);
 };
 
 /**
@@ -115,10 +48,59 @@ export default compose(
             || quickFilters !== nextProps.quickFilters
             || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
             || getLayerFilter(layer) !== getLayerFilter(nextProps.layer),
-        (props = {}) =>
-            (props?.widgetType === "chart" || !isEmpty(props?.charts))
-                ? getChartFilter(props)
-                : getFilter({...props, layerFilter: getLayerFilter(props?.layer)})
+        ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options, ...props} = {}) => {
+            const allowDependencyFilterMerging = testFilterMerging({layer, ...props});
+            const viewport = dependencies.viewport;
+            const fb = filterBuilder({ gmlVersion: "3.1.1" });
+            const toFilter = fromObject(fb);
+            const {filter, property, and} = fb;
+            const {layerFilter} = layer || {};
+            let geom = {};
+            let cqlFilterRules = {};
+            // merging attribute filter and quickFilters of the current widget into a single filterObj
+            let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
 
+            if (!mapSync) {
+                return {
+                    filter: !isEmpty(newFilterObj) || layerFilter ? filter(and(
+                        ...(layerFilter && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
+                    )) : undefined
+                };
+            }
+            // merging filterObj with quickFilters coming from dependencies
+            if (layer && dependencies && dependencies.quickFilters && dependencies.layer && (layer.name === dependencies.layer.name || allowDependencyFilterMerging) ) {
+                newFilterObj = {...newFilterObj, ...composeFilterObject(newFilterObj, dependencies.quickFilters, dependencies.options)};
+            }
+            // merging filterObj with attribute filter coming from dependencies
+            if (layer && dependencies && dependencies.filter && dependencies.layer && (layer.name === dependencies.layer.name || allowDependencyFilterMerging) ) {
+                newFilterObj = {...newFilterObj, ...composeAttributeFilters([newFilterObj, dependencies.filter])};
+            }
+            // generating a cqlFilter based viewport coming from dependencies
+            if (dependencies.viewport) {
+                const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
+                    return {...p, [c]: parseFloat(viewport.bounds[c])};
+                }, {});
+                geom = getViewportGeometry(bounds, viewport.crs);
+                const cqlFilter = getCqlFilter(layer, dependencies);
+                cqlFilterRules = cqlFilter
+                    ? [toFilter(read(cqlFilter))]
+                    : [];
+                // this will contain an ogc filter based on current and other filters (cql included)
+                return {
+                    filter: filter(and(
+                        ...cqlFilterRules,
+                        ...(layerFilter  && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
+                        property(geomProp).intersects(geom)))
+                };
+            }
+            // this will contain only an ogc filter based on current and other filters (cql excluded)
+            return {
+                filter: filter(and(
+                    ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                    ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
+            };
+        }
     )
 );

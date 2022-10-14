@@ -271,6 +271,7 @@ const chartWidgetOperation = ({editorData, key, value}, state) => {
     const chartData = omit(editorData, CHART_PROPS) || {};
     const editorProp = pick(editorData, CHART_PROPS) || {};
     let datas = [];
+    let selectedChartId = null;
     if (key.includes('layers')) {
         datas = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
     } else if (key.includes('delete')) {
@@ -279,8 +280,9 @@ const chartWidgetOperation = ({editorData, key, value}, state) => {
         const filteredLayers = value?.filter(v => !editorProp?.charts?.map(c => c?.layer?.name)?.includes(v.name));
         const multiData = filteredLayers?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
         datas = editorProp?.charts?.concat(multiData);
+        selectedChartId = multiData?.[0]?.chartId;
     }
-    return set('builder.editor', {...editorProp, charts: datas, selectedChartId: datas?.[0]?.chartId }, state);
+    return set('builder.editor', {...editorProp, charts: datas, selectedChartId: selectedChartId || datas?.[0]?.chartId }, state);
 };
 
 /**
@@ -310,6 +312,23 @@ export const editorChange = (action, state) => {
         // TODO Allow to support all widget types that might support multi widget feature
         return chartWidgetOperation({key, value, editorData}, state);
     }
-
     return set(path, value, state);
+};
+
+export const getDependantWidget = ({widgets = [], dependenciesMap = {}}) =>
+    widgets?.find(w => w.id === (WIDGETS_REGEX.exec(Object.values(dependenciesMap)?.[0]) || [])[1]) || {};
+
+/**
+ * Get editing widget from widget data with multi support
+ * @param {object} widget editing widget
+ * @returns {object} selected widget data
+ */
+export const getSelectedWidgetData = (widget = {}) => {
+    if (widget.widgetType === 'chart' || widget.charts) {
+        return widget?.charts?.find(c => c.chartId === widget?.selectedChartId) || {};
+    }
+    if (widget.widgetType === 'map' || widget.maps) {
+        return widget?.maps?.find(c => c.mapId === widget?.selectedMapId) || {};
+    }
+    return widget;
 };

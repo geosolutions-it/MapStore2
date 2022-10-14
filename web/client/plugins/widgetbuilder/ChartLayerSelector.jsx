@@ -8,9 +8,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { branch, compose } from 'recompose';
 import { Glyphicon } from "react-bootstrap";
-import { createSelector } from 'reselect';
 import castArray from "lodash/castArray";
 import isEmpty from "lodash/isEmpty";
 
@@ -22,23 +20,39 @@ import ButtonRB from "../../components/misc/Button";
 import tooltip from "../../components/misc/enhancers/tooltip";
 import { selectedCatalogSelector } from '../../selectors/catalog';
 import BuilderHeader from './BuilderHeader';
-import CatalogComp from './Catalog';
+import Catalog from './Catalog';
 
 const Button = tooltip(ButtonRB);
-
-const Catalog = compose(
-    branch(
-        ({catalog} = {}) => !catalog,
-        connect(createSelector(selectedCatalogSelector, catalog => ({catalog})))
-    )
-)(CatalogComp);
 
 /**
  * Builder page that allows layer's selection
  * @prop {function} [layerValidationStream]
  */
-export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, layers, catalog, defaultServices,
-    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, getItems, onItemClick, showLayers, toggleLayerSelector} = {}) => {
+export default connect((state) =>({
+    selectedCatalog: selectedCatalogSelector(state)
+}))(({
+    onClose = () => { },
+    setSelected = () => { },
+    onLayerChoice = () => { },
+    stepButtons,
+    selected,
+    error,
+    canProceed,
+    layer,
+    layers,
+    catalog,
+    defaultServices,
+    onChangeSelectedService,
+    defaultSelectedService,
+    onChangeCatalogMode,
+    dashboardServices,
+    dashboardSelectedService,
+    getItems,
+    onItemClick,
+    showLayers,
+    toggleLayerSelector,
+    selectedCatalog
+}) => {
     const _canProceed = showLayers ? !isEmpty(layers) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
     const onProceed = () => {
         const isUpdate = showLayers && !isEmpty(layers);
@@ -68,7 +82,7 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
             onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
             services={dashboardServices || defaultServices}
             selected={selected}
-            catalog={catalog}
+            catalog={catalog || selectedCatalog}
             onRecordSelected={r => setSelected(r)}
             getItems={getItems}
             onItemClick={onItemClick}
@@ -85,4 +99,4 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
             </>}
         />
     </BorderLayout>);
-};
+});

@@ -37,7 +37,10 @@ import assign from 'object-assign';
 import set from 'lodash/fp/set';
 import { get, find, omit, mapValues, castArray } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
-import { editorChange } from "../utils/WidgetsUtils";
+import {
+    convertDependenciesMappingForCompatibility as convertToCompatibleWidgets,
+    editorChange
+} from "../utils/WidgetsUtils";
 
 const emptyState = {
     dependencies: {
@@ -167,8 +170,9 @@ function widgetsReducer(state = emptyState, action) {
         }, state);
     case MAP_CONFIG_LOADED:
         const { widgetsConfig } = (action.config || {});
+        const updatedWidgetsConfig = convertToCompatibleWidgets(widgetsConfig);
         return set(`containers[${DEFAULT_TARGET}]`, {
-            ...widgetsConfig
+            ...updatedWidgetsConfig
         }, state);
     case CHANGE_LAYOUT: {
         return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));

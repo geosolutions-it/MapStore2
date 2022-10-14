@@ -34,10 +34,18 @@ describe('ChartWizard Toolbar component', () => {
         const el = container.querySelector('.btn-group');
         expect(el).toBeTruthy();
         const buttons = container.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+    });
+    it('step 0 with dashboard editing', () => {
+        ReactDOM.render(<Toolbar step={0} valid={false} dashBoardEditing />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.btn-group');
+        expect(el).toBeTruthy();
+        const buttons = container.querySelectorAll('button');
         expect(buttons.length).toBe(4);
     });
     it('step 0 - arrow right - disable button', () => {
-        ReactDOM.render(<Toolbar step={0} valid={false} />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar step={0} valid={false} dashBoardEditing />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.btn-group');
         expect(el).toBeTruthy();
@@ -45,7 +53,7 @@ describe('ChartWizard Toolbar component', () => {
         expect(buttons[3].classList.contains('disabled')).toBeTruthy();
     });
     it('step 0 - disable button on error in charts', () => {
-        ReactDOM.render(<Toolbar step={0} valid editorData={{mapSync: true}} errors={{"layer1": true}} />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar step={0} valid dashBoardEditing editorData={{mapSync: true}} errors={{"layer1": true}} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.btn-group');
         expect(el).toBeTruthy();
@@ -61,8 +69,17 @@ describe('ChartWizard Toolbar component', () => {
         expect(buttons.length).toBe(3);
         expect(buttons[2].querySelector('.glyphicon-floppy-disk')).toBeTruthy();
     });
-    it('step buttons', () => {
+    it('step buttons in map viewer', () => {
         ReactDOM.render(<Toolbar stepButtons={[{ text: "text", glyph: 'test', id: "test-button" }]} step={0} valid={false} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.btn-group');
+        expect(el).toExist();
+        const buttons = container.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].querySelector('.glyphicon-test')).toExist();
+    });
+    it('step buttons with dashBoardEditing', () => {
+        ReactDOM.render(<Toolbar dashBoardEditing stepButtons={[{ text: "text", glyph: 'test', id: "test-button" }]} step={0} valid={false} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.btn-group');
         expect(el).toExist();

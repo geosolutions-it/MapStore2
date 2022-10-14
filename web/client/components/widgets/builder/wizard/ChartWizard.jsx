@@ -62,7 +62,7 @@ export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) => {
 
 const Wizard = wizardHandlers(WizardContainer);
 
-const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, hasAggregateProcess, setErrors = () => {}, errors }) => isChartOptionsValid(data.options, { hasAggregateProcess })
+const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => { }, hasAggregateProcess, setErrors = () => {}, errors, widgets = [] }) => isChartOptionsValid(data.options, { hasAggregateProcess })
     ? (<PreviewChart
         {...sampleProps}
         key="preview-chart"
@@ -95,6 +95,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         yAxis={data.yAxis}
         xAxisAngle={data.xAxisAngle}
         yAxisLabel={data.yAxisLabel}
+        widgets={widgets}
     />)
     : (<SampleChart
         hasAggregateProcess={hasAggregateProcess}
@@ -164,7 +165,8 @@ const ChartWizard = ({
     dependencies,
     hasAggregateProcess,
     noAttributes = false,
-    withContainer = true // To render charts switcher in container mode. And to allow test overrides
+    withContainer = true, // To render charts switcher in container mode. And to allow test overrides
+    widgets = []
 }) => {
     const sampleChart = renderPreview({
         hasAggregateProcess,
@@ -173,7 +175,8 @@ const ChartWizard = ({
         dependencies,
         setErrors,
         errors,
-        setValid
+        setValid,
+        widgets
     });
     const ChartOptions = (
         <>

@@ -10,8 +10,8 @@ import expect from 'expect';
 
 import {
     convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
-    getConnectionList,
-    getMapDependencyPath, getWidgetDependency,
+    getConnectionList, getDependantWidget,
+    getMapDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
     shortenLabel, updateDependenciesMapOfMapList
 } from '../WidgetsUtils';
@@ -269,5 +269,35 @@ describe('Test WidgetsUtils', () => {
             expect(charts[2].layer.name).toBe('Test3');
             expect(charts[2].type).toBe('bar');
         });
+    });
+    it("getDependantWidget", () => {
+        const widget = getDependantWidget({
+            widgets: [{id: "1", layer: {name: "test"}}, {id: 2, layer: {name: "test1"}}],
+            dependenciesMap: {layer: 'widgets[1].layer'}}
+        );
+        expect(widget).toBeTruthy();
+        expect(widget.layer.name).toBe("test");
+    });
+    it("getDependantWidget when not matching", () => {
+        const widget = getDependantWidget({
+            widgets: [{id: "1", layer: {name: "test"}}, {id: 2, layer: {name: "test1"}}],
+            dependenciesMap: {layer: 'widgets[3].layer'}}
+        );
+        expect(widget).toEqual({});
+    });
+    it("getSelectedWidgetData for charts", () => {
+        const widget = getSelectedWidgetData({id: "1", selectedChartId: "1", widgetType: "chart", charts: [{layer: "test", chartId: "1"}]});
+        expect(widget).toBeTruthy();
+        expect(widget.layer).toBe("test");
+    });
+    it("getSelectedWidgetData for maps", () => {
+        const widget = getSelectedWidgetData({id: "1", selectedMapId: "1", widgetType: "map", maps: [{layer: "test", mapId: "1"}]});
+        expect(widget).toBeTruthy();
+        expect(widget.layer).toBe("test");
+    });
+    it("getSelectedWidgetData other widget type", () => {
+        const widget = getSelectedWidgetData({id: "1", widgetType: "table", layer: {name: "test"}});
+        expect(widget).toBeTruthy();
+        expect(widget.layer.name).toBe("test");
     });
 });
