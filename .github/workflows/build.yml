@@ -49,7 +49,7 @@ jobs:
       # Build
       ##########
       - name: "build"
-        run: "build.sh ${{GITHUB_REF_NAME}} printing-bundle,binary"
+        run: "./build.sh $GITHUB_REF_NAME printing-bundle,binary"
       ############
       # Publish
       ##########
