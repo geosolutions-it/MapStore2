@@ -303,7 +303,7 @@ export const zoomAndAddPointEpic = (action$, store) =>
 export const searchOnStartEpic = (action$, store) =>
     action$.ofType(SEARCH_LAYER_WITH_FILTER)
         .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
-            const state = store.getState(store.getState());
+            const state = store.getState();
             // if layer is NOT queriable and visible then show error notification
             if (queryableLayersSelector(state).filter(l => l.name === name ).length === 0) {
                 return Rx.Observable.of(nonQueriableLayerError());
