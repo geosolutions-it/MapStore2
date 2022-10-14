@@ -12,6 +12,7 @@ on:
 
 jobs:
   build-mapstore:
+    runs-on: ubuntu-latest
     steps:
       - name: "checking out"
         uses: actions/checkout@v2
@@ -60,5 +61,4 @@ jobs:
                 product/target/mapstore.war
                 printing/target/mapstore-printing.zip
                 binary/target/mapstore2*-bin.zip
-                
                 
