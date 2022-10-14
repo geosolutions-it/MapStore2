@@ -48,15 +48,16 @@ jobs:
       ############
       # Build
       ##########
-      - run: "./build.sh $GITHUB_REF_NAME printing-bundle,binary"
+      - run : "npm install"
+      - run: "npm run fe:build"
+      - run: "npm run jsdoc:build"
+      - run: "mvn clean install -Dmapstore2.version=$GITHUB_REF_NAME printingbundle"
       ############
       # Publish
       ##########
       - uses: actions/upload-artifact@v3.1.0
         with:
-            name: MapStore-${{ github.sha }}
+            name: MapStore-Artifacts${{ github.sha }}
             path: |
                 product/target/mapstore.war
-                printing/target/mapstore-printing.zip
-                binary/target/mapstore2*-bin.zip
-                
+                printing/target/mapstore-printing.zip                
