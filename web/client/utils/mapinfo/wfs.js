@@ -27,6 +27,21 @@ import assign from 'object-assign';
  * @return {object} an object with `request`, containing request params, `metadata` with some info about the layer and the request, and `url` to send the request to.
  */
 const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, featureInfo) => {
+    const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
+    if (features.length) {
+        return {
+            request: {
+                features: [...features],
+                outputFormat: 'application/json'
+            },
+            metadata: {
+                title: isObject(layer.title)
+                    ? layer.title[currentLocale] || layer.title.default
+                    : layer.title
+            },
+            url: 'client'
+        };
+    }
     /* In order to create a valid feature info request
      * we create a bbox of 101x101 pixel that wrap the point.
      * center point is re-projected then is built a box of 101x101pixel around it
@@ -75,7 +90,14 @@ const getIdentifyGeometry = point => {
 export default {
     buildRequest,
     getIdentifyFlow: (layer, baseURL, defaultParams) => {
-        const { point, ...baseParams} = defaultParams;
+        const { point, features = [], ...baseParams} = defaultParams;
+        if (features.length) {
+            return Observable.of({
+                data: {
+                    features
+                }
+            });
+        }
         const geometry = getIdentifyGeometry(point);
         return Observable.defer( () => describeFeatureType(layer.url, layer.name) // TODO: cache this
             .then(describe => {
