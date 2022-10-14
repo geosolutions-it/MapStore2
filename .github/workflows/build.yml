@@ -1,4 +1,4 @@
-name: checks
+name: build artifacts
 on:
   push:
     branches:
