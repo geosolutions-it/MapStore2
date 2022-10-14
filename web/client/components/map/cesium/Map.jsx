@@ -322,6 +322,10 @@ class CesiumMap extends React.Component {
             const propertyNames = feature.getPropertyNames();
             const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
             return [{ id: msId, features: [{ type: 'Feature', properties, geometry: null }] }];
+        } else if (feature?.id instanceof Cesium.Entity && feature.id.id && feature.id.properties) {
+            const {propertyNames} = feature.id.properties;
+            const properties = Object.fromEntries(propertyNames.map(key => [key, feature.id.properties[key].getValue(0)]));
+            return [{ features: [{ type: 'Feature', properties, id: feature?.id?.id, geometry: null }] }];
         }
         return [];
     }

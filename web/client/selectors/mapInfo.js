@@ -109,6 +109,8 @@ export const isHighlightEnabledSelector = (state = {}) => state.mapInfo && state
 
 export const indexSelector = (state = {}) => state && state.mapInfo && state.mapInfo.index;
 
+export const intersectedFeaturesSelector = state => state?.mapInfo?.intersectedFeatures;
+
 export const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
 
 export const requestsSelector = state => state?.mapInfo?.requests || [];

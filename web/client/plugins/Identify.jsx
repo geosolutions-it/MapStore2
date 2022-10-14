@@ -66,7 +66,8 @@ import {
     showEmptyMessageGFISelector,
     validResponsesSelector,
     hoverEnabledSelector,
-    mapInfoEnabledSelector
+    mapInfoEnabledSelector,
+    intersectedFeaturesSelector
 } from '../selectors/mapInfo';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { isCesium, mapTypeSelector } from '../selectors/maptype';
@@ -78,6 +79,7 @@ import Message from './locale/Message';
 
 const selector = createStructuredSelector({
     enabled: (state) => mapInfoEnabledSelector(state) || state.controls && state.controls.info && state.controls.info.enabled || false,
+    intersectedFeatures: intersectedFeaturesSelector,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: requestsSelector,
@@ -104,7 +106,7 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, isLoadedResponseSelector, (state) => state.browser && state.browser.mobile,  (index, loaded, isMobile) => ({ index, loaded, isMobile })),
+        createSelector(indexSelector, isLoadedResponseSelector, intersectedFeaturesSelector, (state) => state.browser && state.browser.mobile,  (index, loaded, intersectedFeatures, isMobile) => ({ index, loaded: loaded || intersectedFeatures, isMobile })),
         {
             setIndex: changePage
         }
@@ -124,6 +126,7 @@ const identifyDefaultProps = defaultProps({
     draggable: true,
     collapsible: false,
     format: getDefaultInfoFormatValue(),
+    intersectedFeatures: [],
     requests: [],
     responses: [],
     viewerOptions: {},

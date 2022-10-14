@@ -37,7 +37,8 @@ import {
     SET_CURRENT_EDIT_FEATURE_QUERY,
     SET_MAP_TRIGGER,
     SET_SHOW_IN_MAP_POPUP,
-    INIT_PLUGIN
+    INIT_PLUGIN,
+    SET_INTERSECTED_FEATURES
 } from '../actions/mapInfo';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -282,7 +283,11 @@ function mapInfo(state = initState, action) {
     }
     case PURGE_MAPINFO_RESULTS:
         const {index, loaded, ...others} = state;
-        return {...others, queryableLayers: [], responses: [], requests: [] };
+        return {...others, queryableLayers: [], responses: [], requests: [], intersectedFeatures: [] };
+    case SET_INTERSECTED_FEATURES: {
+        const {intersectedFeatures} = action;
+        return {...state, intersectedFeatures};
+    }
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');
     }

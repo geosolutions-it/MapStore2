@@ -33,6 +33,7 @@ export const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 export const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
 export const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
 export const SET_MAP_TRIGGER = 'IDENTIFY:SET_MAP_TRIGGER';
+export const SET_INTERSECTED_FEATURES = 'IDENTIFY:SET_INTERSECTED_FEATURES';
 
 export const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 
@@ -83,6 +84,17 @@ export function exceptionsFeatureInfo(reqId, exceptions, rParams, lMetaData) {
         exceptions: exceptions,
         requestParams: rParams,
         layerMetadata: lMetaData
+    };
+}
+
+/**
+ * Private
+ * @return a SET_INTERSECTED_FEATURES action with the actual intersected features captured with picking
+ */
+export function setIntersectedFeature(intersectedFeatures) {
+    return {
+        type: SET_INTERSECTED_FEATURES,
+        intersectedFeatures
     };
 }
 

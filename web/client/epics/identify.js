@@ -19,7 +19,7 @@ import {
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
     showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery,
-    SET_MAP_TRIGGER, CLEAR_WARNING
+    SET_MAP_TRIGGER, CLEAR_WARNING, setIntersectedFeature
 } from '../actions/mapInfo';
 
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
@@ -75,6 +75,10 @@ import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { } }) =>
     action$.ofType(FEATURE_INFO_CLICK)
         .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
+            if (point.intersectedFeatures?.length) {
+                return Rx.Observable.of(setIntersectedFeature(point.intersectedFeatures));
+            }
+
             // Reverse - To query layer in same order as in TOC
             let queryableLayers = reverse(queryableLayersSelector(getState()));
             const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
@@ -151,7 +155,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             // NOTE: multiSelection is inside the event
             // TODO: move this flag in the application state
             if (point && point.modifiers && point.modifiers.ctrl === true && point.multiSelection) {
-                return out$;
+                return out$.startWith(setIntersectedFeature([]));
             }
             return out$.startWith(purgeMapInfoResults());
         });

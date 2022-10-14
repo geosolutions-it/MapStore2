@@ -26,8 +26,16 @@ export const getMouseXYZ = (viewer, event) => {
 
     const feature = scene.pick(mousePosition);
     if (feature) {
+        let currentDepthTestAgainstTerrain = scene.globe.depthTestAgainstTerrain;
+        let currentPickTranslucentDepth = scene.pickTranslucentDepth;
+        scene.globe.depthTestAgainstTerrain = true;
+        scene.pickTranslucentDepth = true;
         const depthCartesian = scene.pickPosition(mousePosition);
-        return Cesium.Cartographic.fromCartesian(depthCartesian);
+        scene.globe.depthTestAgainstTerrain = currentDepthTestAgainstTerrain;
+        scene.pickTranslucentDepth = currentPickTranslucentDepth;
+        if (depthCartesian) {
+            return Cesium.Cartographic.fromCartesian(depthCartesian);
+        }
     }
 
     const ray = viewer.camera.getPickRay(mousePosition);

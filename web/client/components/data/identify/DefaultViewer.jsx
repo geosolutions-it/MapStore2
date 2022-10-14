@@ -21,6 +21,7 @@ class DefaultViewer extends React.Component {
     static propTypes = {
         format: PropTypes.string,
         collapsible: PropTypes.bool,
+        intersectedFeatures: PropTypes.array,
         requests: PropTypes.array,
         responses: PropTypes.array,
         missingResponses: PropTypes.number,
@@ -45,6 +46,7 @@ class DefaultViewer extends React.Component {
 
     static defaultProps = {
         format: getDefaultInfoFormatValue(),
+        intersectedFeatures: [],
         responses: [],
         requests: [],
         missingResponses: 0,
@@ -68,7 +70,10 @@ class DefaultViewer extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses || nextProps.index !== this.props.index;
+        return nextProps.responses !== this.props.responses
+            || nextProps.missingResponses !== this.props.missingResponses
+            || nextProps.index !== this.props.index
+            || nextProps.intersectedFeatures !== this.props.intersectedFeatures;
     }
 
     /**
@@ -142,6 +147,20 @@ class DefaultViewer extends React.Component {
     }
 
     renderPages = () => {
+        if (this.props.intersectedFeatures.length) {
+            return this.props.intersectedFeatures.map(featureSet => (<Panel
+                eventKey={0}
+                key={0}
+                collapsible={this.props.collapsible}
+                header={ null }
+                style={this.props.style}>
+                <ViewerPage
+                    response={{features: featureSet.features}}
+                    format="application/json"
+                    viewers={this.props.viewers}
+                    layer={{title: 'Unknown'}}/>
+            </Panel>));
+        }
         const {validResponses: responses} = this.getResponseProperties();
         return responses.map((res, i) => {
             const {response, layerMetadata} = res;
@@ -194,7 +213,7 @@ class DefaultViewer extends React.Component {
         componentOrder = this.props.isMobile ? componentOrder : reverse(componentOrder);
         return (
             <div className="mapstore-identify-viewer">
-                {!emptyResponses ? componentOrder.map((c)=> c) : this.renderEmptyPages()}
+                {!emptyResponses || this.props.intersectedFeatures.length ? componentOrder.map((c)=> c) : this.renderEmptyPages()}
             </div>
         );
     }
@@ -203,7 +222,7 @@ class DefaultViewer extends React.Component {
         if (isEmpty(currResponse) && this.props.isMobile) {
             return {height: "100%"};
         }
-        return {display: isEmpty(currResponse) ? 'none' : 'block'};
+        return {display: (isEmpty(currResponse) && !this.props.intersectedFeatures.length) ? 'none' : 'block'};
     }
 }
 

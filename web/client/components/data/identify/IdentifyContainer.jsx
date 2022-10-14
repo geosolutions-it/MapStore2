@@ -34,6 +34,7 @@ import ResponsivePanel from "../../misc/panels/ResponsivePanel";
 export default props => {
     const {
         enabled,
+        intersectedFeatures = [],
         requests = [],
         onClose = () => {},
         responses = [],
@@ -114,7 +115,7 @@ export default props => {
             containerClassName={enabled && requests.length !== 0 ? "identify-active" : ""}
             bsStyle="primary"
             glyph="map-marker"
-            open={enabled && requests.length !== 0}
+            open={enabled && (requests.length !== 0 || intersectedFeatures.length)}
             size={size}
             fluid={fluid}
             position={position}
@@ -203,6 +204,7 @@ export default props => {
                 setIndex={setIndex}
                 format={format}
                 missingResponses={missingResponses}
+                intersectedFeatures={intersectedFeatures}
                 responses={responses}
                 requests={requests}
                 showEmptyMessageGFI={showEmptyMessageGFI}
