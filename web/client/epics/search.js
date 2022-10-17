@@ -323,31 +323,31 @@ export const searchOnStartEpic = (action$, store) =>
                         .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
                 )
                     .switchMap(({ type, geometry, typeName }) => {
-                        let coord = pointOnSurface({ type, geometry }).geometry.coordinates;
-                        const latlng = {lng: coord[0], lat: coord[1] };
-                        const projection = projectionSelector(store.getState());
-                        const { x, y } = reproject(
-                            coord,
-                            "EPSG:4326",
-                            projection
-                        );
-
-                        let mapActionObservable;
-                        if (isMapPopup(store.getState())) {
-                            mapActionObservable = Rx.Observable.of(
-                                addPopup(uuid(), {
-                                    component: IDENTIFY_POPUP,
-                                    maxWidth: 600,
-                                    position: { coordinates: [x, y] }
-                                })
-                            );
-                        } else {
-                            mapActionObservable = Rx.Observable.of(
-                                showMapinfoMarker()
-                            );
-                        }
+                        const coord = pointOnSurface({ type, geometry }).geometry.coordinates;
 
                         if (coord) {
+                            const latlng = {lng: coord[0], lat: coord[1] };
+                            const projection = projectionSelector(store.getState());
+                            const { x, y } = reproject(
+                                coord,
+                                "EPSG:4326",
+                                projection
+                            );
+                            let mapActionObservable;
+                            if (isMapPopup(store.getState())) {
+                                mapActionObservable = Rx.Observable.of(
+                                    addPopup(uuid(), {
+                                        component: IDENTIFY_POPUP,
+                                        maxWidth: 600,
+                                        position: { coordinates: [x, y] }
+                                    })
+                                );
+                            } else {
+                                mapActionObservable = Rx.Observable.of(
+                                    showMapinfoMarker()
+                                );
+                            }
+
                             // trigger get feature info
                             return Rx.Observable.of(
                                 featureInfoClick(
