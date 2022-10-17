@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {compose, defaultProps, withProps, withPropsOnChange, withState} from 'recompose';
+import {compose, defaultProps, withHandlers, withProps, withPropsOnChange, withState} from 'recompose';
 
 
 import {createPlugin} from '../utils/PluginsUtils';
@@ -31,6 +31,7 @@ import {
     exportCSV,
     exportImage,
     toggleCollapse,
+    toggleCollapseAll,
     toggleMaximize,
     updateWidgetProperty
 } from '../actions/widgets';
@@ -70,6 +71,7 @@ compose(
             updateWidgetProperty,
             exportCSV,
             toggleCollapse,
+            toggleCollapseAll,
             toggleMaximize,
             exportImage,
             deleteWidget,
@@ -199,6 +201,16 @@ compose(
         compose(
             // add state to store currently selected widget
             withState('activeWidget', 'setActiveWidget', false),
+            withHandlers({
+                toggleCollapse: props => (w) => {
+                    const showWidget = props.widgets?.find(el => el.id === props.activeWidget?.id);
+                    if (props.isSingleWidgetLayout && showWidget) {
+                        props.toggleCollapseAll();
+                    } else {
+                        props.toggleCollapse(w);
+                    }
+                }
+            }),
             // adjust dropdown options according to the widgets visibility for the user
             withPropsOnChange(
                 ["dropdownWidgets", "toolsOptions"],
@@ -206,7 +218,7 @@ compose(
                     dropdownWidgets: dropdownWidgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true)
                 })
             ),
-            // set default active widget whenever set of widgets has changed and mobile user-agent is found
+            // set default active widget whenever set of widgets has changed and singleWidgetLayout is used
             withPropsOnChange(
                 ["widgets", "isSingleWidgetLayout", "id"],
                 ({widgets, isSingleWidgetLayout, activeWidget, setActiveWidget}) => {
@@ -217,7 +229,15 @@ compose(
             ),
             withPropsOnChange(
                 ['activeWidget', 'isSingleWidgetLayout', 'widgets'],
-                ({activeWidget, dropdownWidgets, setActiveWidget, isSingleWidgetLayout, widgets, toolsOptions, layouts}) => {
+                ({
+                    activeWidget,
+                    dropdownWidgets,
+                    isSingleWidgetLayout,
+                    widgets,
+                    toolsOptions,
+                    layouts,
+                    setActiveWidget
+                }) => {
                     if (activeWidget && isSingleWidgetLayout && widgets.length) {
                         const widget = {
                             ...activeWidget,

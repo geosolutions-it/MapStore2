@@ -32,7 +32,6 @@ const ChartWidget = ({
     icons,
     showTable,
     topRightItems,
-    options = {},
     confirmDelete = false,
     dataGrid = {},
     onDelete = () => {},
@@ -50,7 +49,7 @@ const ChartWidget = ({
         onDelete={onDelete}
         toggleDeleteConfirm = {toggleDeleteConfirm}
         topRightItems={topRightItems}
-        options={options}
+        options={props?.options}
     >
         {showTable
             ? <TableView data={data} {...props}/>
