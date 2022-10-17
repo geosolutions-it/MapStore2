@@ -11,6 +11,7 @@ import toBbox from 'turf-bbox';
 import pointOnSurface from '@turf/point-on-surface';
 import assign from 'object-assign';
 import {isNil, sortBy} from 'lodash';
+import uuid from 'uuid';
 
 import {centerToMarkerSelector, getLayerFromName, queryableLayersSelector} from '../selectors/layers';
 
@@ -44,14 +45,17 @@ import {
     ZOOM_ADD_POINT
 } from '../actions/search';
 
-import CoordinatesUtils from '../utils/CoordinatesUtils';
+import CoordinatesUtils, { reproject } from '../utils/CoordinatesUtils';
 import {defaultIconStyle, layerIsVisibleForGFI, showGFIForService} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
 import {getDefaultInfoFormatValueFromLayer} from '../utils/MapInfoUtils';
-import {identifyOptionsSelector} from '../selectors/mapInfo';
+import {identifyOptionsSelector, isMapPopup} from '../selectors/mapInfo';
+import { addPopup } from '../actions/mapPopups';
+import { IDENTIFY_POPUP } from '../components/map/popups';
+import { projectionSelector } from '../selectors/map';
 
 const getInfoFormat = (layerObj, state) => getDefaultInfoFormatValueFromLayer(layerObj, {...identifyOptionsSelector(state)});
 
@@ -319,11 +323,41 @@ export const searchOnStartEpic = (action$, store) =>
                         .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
                 )
                     .switchMap(({ type, geometry, typeName }) => {
-                        let coord = pointOnSurface({ type, geometry }).geometry.coordinates;
-                        const latlng = {lng: coord[0], lat: coord[1] };
+                        const coord = pointOnSurface({ type, geometry }).geometry.coordinates;
 
-                        if (coord) { // trigger get feature info
-                            return Rx.Observable.of(featureInfoClick({latlng}, typeName, [typeName], {[typeName]: {cql_filter: cqlFilter}}), showMapinfoMarker());
+                        if (coord) {
+                            const latlng = {lng: coord[0], lat: coord[1] };
+                            const projection = projectionSelector(store.getState());
+                            const { x, y } = reproject(
+                                coord,
+                                "EPSG:4326",
+                                projection
+                            );
+                            let mapActionObservable;
+                            if (isMapPopup(store.getState())) {
+                                mapActionObservable = Rx.Observable.of(
+                                    addPopup(uuid(), {
+                                        component: IDENTIFY_POPUP,
+                                        maxWidth: 600,
+                                        position: { coordinates: [x, y] }
+                                    })
+                                );
+                            } else {
+                                mapActionObservable = Rx.Observable.of(
+                                    showMapinfoMarker()
+                                );
+                            }
+
+                            // trigger get feature info
+                            return Rx.Observable.of(
+                                featureInfoClick(
+                                    { latlng },
+                                    typeName,
+                                    [typeName],
+                                    { [typeName]: { cql_filter: cqlFilter } }
+                                )
+                            )
+                                .merge(mapActionObservable);
                         }
                         return Rx.Observable.empty();
                     }).catch(() => {
