@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {compose, defaultProps, lifecycle, withProps, withPropsOnChange, withState} from 'recompose';
+import {compose, defaultProps, withHandlers, withProps, withPropsOnChange, withState} from 'recompose';
 
 
 import {createPlugin} from '../utils/PluginsUtils';
@@ -201,6 +201,16 @@ compose(
         compose(
             // add state to store currently selected widget
             withState('activeWidget', 'setActiveWidget', false),
+            withHandlers({
+                toggleCollapse: props => (w) => {
+                    const showWidget = props.widgets?.find(el => el.id === props.activeWidget?.id);
+                    if (props.isSingleWidgetLayout && showWidget) {
+                        props.toggleCollapseAll();
+                    } else {
+                        props.toggleCollapse(w);
+                    }
+                }
+            }),
             // adjust dropdown options according to the widgets visibility for the user
             withPropsOnChange(
                 ["dropdownWidgets", "toolsOptions"],
@@ -217,21 +227,6 @@ compose(
                     }
                 }
             ),
-            // If single widget should not be displayed - hide all other widgets to make widgets tray
-            // update its state properly (show "Expand all widgets" button)
-            lifecycle({
-                componentDidUpdate(prevProps) {
-                    const { widgets, activeWidget, isSingleWidgetLayout, toggleCollapseAll: collapseAll } = this.props;
-                    if (activeWidget && isSingleWidgetLayout && widgets.length && widgets !== prevProps.widgets) {
-                        const showWidget = widgets.find(el => el.id === activeWidget.id);
-                        if (!showWidget) {
-                            // If single widget should not be displayed - hide all other widgets to make widgets tray
-                            // update its state properly (show "Expand all widgets" button)
-                            collapseAll();
-                        }
-                    }
-                }
-            }),
             withPropsOnChange(
                 ['activeWidget', 'isSingleWidgetLayout', 'widgets'],
                 ({
