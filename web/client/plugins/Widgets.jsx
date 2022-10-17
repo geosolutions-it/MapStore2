@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {compose, defaultProps, withProps, withPropsOnChange, withState} from 'recompose';
+import {compose, defaultProps, lifecycle, withProps, withPropsOnChange, withState} from 'recompose';
 
 
 import {createPlugin} from '../utils/PluginsUtils';
@@ -208,7 +208,7 @@ compose(
                     dropdownWidgets: dropdownWidgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true)
                 })
             ),
-            // set default active widget whenever set of widgets has changed and mobile user-agent is found
+            // set default active widget whenever set of widgets has changed and singleWidgetLayout is used
             withPropsOnChange(
                 ["widgets", "isSingleWidgetLayout", "id"],
                 ({widgets, isSingleWidgetLayout, activeWidget, setActiveWidget}) => {
@@ -217,6 +217,21 @@ compose(
                     }
                 }
             ),
+            // If single widget should not be displayed - hide all other widgets to make widgets tray
+            // update its state properly (show "Expand all widgets" button)
+            lifecycle({
+                componentDidUpdate(prevProps) {
+                    const { widgets, activeWidget, isSingleWidgetLayout, toggleCollapseAll: collapseAll } = this.props;
+                    if (activeWidget && isSingleWidgetLayout && widgets.length && widgets !== prevProps.widgets) {
+                        const showWidget = widgets.find(el => el.id === activeWidget.id);
+                        if (!showWidget) {
+                            // If single widget should not be displayed - hide all other widgets to make widgets tray
+                            // update its state properly (show "Expand all widgets" button)
+                            collapseAll();
+                        }
+                    }
+                }
+            }),
             withPropsOnChange(
                 ['activeWidget', 'isSingleWidgetLayout', 'widgets'],
                 ({
@@ -226,16 +241,9 @@ compose(
                     widgets,
                     toolsOptions,
                     layouts,
-                    setActiveWidget,
-                    toggleCollapseAll: collapseAll
+                    setActiveWidget
                 }) => {
                     if (activeWidget && isSingleWidgetLayout && widgets.length) {
-                        const showWidget = widgets.find(el => el.id === activeWidget.id);
-                        if (!showWidget) {
-                            // If single widget should not be displayed - hide all other widgets to make widgets tray
-                            // update its state properly (show "Expand all widgets" button)
-                            collapseAll();
-                        }
                         const widget = {
                             ...activeWidget,
                             options: {
