@@ -30,6 +30,8 @@ import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
 import { createFeatureFilter } from '../utils/FilterUtils';
 import ErrorPanel from '../components/map/ErrorPanel';
+import catalog from "../epics/catalog";
+import API from '../api/catalog';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -471,7 +473,10 @@ export default createPlugin('Map', {
         maptype: mapTypeReducer,
         additionallayers: additionalLayersReducer
     },
-    epics: mapEpics,
+    epics: {
+        ...mapEpics,
+        ...catalog(API)
+    },
     containers: {
         Settings: () => ({
             tool: <MapSettings />,
