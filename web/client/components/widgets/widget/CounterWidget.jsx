@@ -31,7 +31,6 @@ export default ({
     headerStyle,
     icons,
     topRightItems,
-    options = {},
     dataGrid = {},
     toggleTableView = () => {},
     toggleDeleteConfirm = () => {},
@@ -49,7 +48,7 @@ export default ({
         toggleDeleteConfirm = {toggleDeleteConfirm}
         headerStyle={headerStyle}
         topRightItems={topRightItems}
-        options={options}
+        options={props?.options}
     >
         <CounterView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />
     </WidgetContainer>);
