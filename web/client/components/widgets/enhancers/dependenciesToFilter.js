@@ -25,11 +25,11 @@ const getCqlFilter = (layer, dependencies) => {
 
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
 
-const testFilterMerging = ({layer = {}, widgets = [], dependenciesMap = {}, selectedChartId, charts = []} = {}) => {
+const testFilterMerging = ({dependencies = {}, widgets = [], dependenciesMap = {}, charts = []} = {}) => {
     const { widgetType } = getDependantWidget({ widgets, dependenciesMap });
     // When dependent widget is a table,
     // check if multi charts of widget has some matching layer to allow filter merging
-    return widgetType === 'table' && selectedChartId && !isEmpty(charts) && charts?.some(c => c.chartId === selectedChartId && c?.layer?.name === layer?.name);
+    return widgetType === 'table' && !isEmpty(charts) && charts?.some(c => c?.layer?.name === dependencies?.layer?.name);
 };
 
 /**
@@ -49,7 +49,7 @@ export default compose(
             || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
             || getLayerFilter(layer) !== getLayerFilter(nextProps.layer),
         ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options, ...props} = {}) => {
-            const allowDependencyFilterMerging = testFilterMerging({layer, ...props});
+            const allowDependencyFilterMerging = testFilterMerging({dependencies, ...props});
             const viewport = dependencies.viewport;
             const fb = filterBuilder({ gmlVersion: "3.1.1" });
             const toFilter = fromObject(fb);

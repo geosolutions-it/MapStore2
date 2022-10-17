@@ -24,16 +24,21 @@ describe('ChartType component', () => {
     it('ChartType rendering with defaults', () => {
         ReactDOM.render(<ChartType />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelectorAll('button');
-        expect(el).toBeTruthy();
-        expect(el.length).toBe(3);
-        expect(container.querySelector('.btn-success')).toBeFalsy();
+        const chartTypeEl = container.querySelector('.chart-type');
+        expect(chartTypeEl).toBeTruthy();
+        const switcherDropdown = container.querySelector('.Select');
+        expect(switcherDropdown).toBeTruthy();
+        const switcherValue = container.querySelector('.Select-value-label');
+        expect(switcherValue).toBeFalsy();
     });
     it('ChartType selected', () => {
         ReactDOM.render(<ChartType type="bar"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toBeTruthy();
-        expect(container.querySelector('.btn-success')).toBeTruthy();
+        const switcherDropdown = container.querySelector('.Select');
+        expect(switcherDropdown).toBeTruthy();
+        const switcherValue = container.querySelector('.Select-value-label');
+        expect(switcherValue.textContent).toContain('Bar Chart');
     });
     it('Test ChartType onSelect', () => {
         const actions = {
@@ -41,7 +46,17 @@ describe('ChartType component', () => {
         };
         const spyonSelect = expect.spyOn(actions, 'onSelect');
         ReactDOM.render(<ChartType type="bar" onSelect={actions.onSelect}  />, document.getElementById("container"));
-        ReactTestUtils.Simulate.click(document.querySelectorAll('button')[1]);
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+
+        // Simulate selection
+        const selectArrow = container.querySelector('.Select-arrow');
+        const selectControl = container.querySelector('.Select-control');
+        const inputs = container.querySelectorAll("input" );
+        ReactTestUtils.Simulate.mouseDown(selectArrow, { button: 0 });
+        ReactTestUtils.Simulate.keyDown(selectControl, { keyCode: 40, key: 'ArrowDown' });
+        ReactTestUtils.Simulate.keyDown(inputs[0], { keyCode: 13, key: 'Enter' });
+        expect(spyonSelect.calls.length).toBe(1);
         expect(spyonSelect).toHaveBeenCalled();
         expect(spyonSelect.calls[0].arguments[0]).toBe("pie");
     });

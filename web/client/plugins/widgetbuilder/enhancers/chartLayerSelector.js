@@ -78,7 +78,7 @@ const chartLayerSelector = compose(
     layerSelectorConnect,
     defaultProps({
         layerValidationStream: stream$ => stream$.switchMap(layers =>
-            layers.map(layer=> canGenerateCharts(layer))
+            Rx.Observable.forkJoin(layers.map(layer=> canGenerateCharts(layer)))
         )
     }),
     withBackButton,

@@ -121,7 +121,7 @@ export default compose(
                 .ignoreElements() // don't want to emit props
         ))),
     withPropsOnChange(['selectedService'], props => {
-        const service = props?.services?.[props.selectedService];
+        const service = props.services?.[props.selectedService];
         if (!isEmpty(service)) {
             props.loadFirst({text: props.searchText || "", catalog: service});
         }

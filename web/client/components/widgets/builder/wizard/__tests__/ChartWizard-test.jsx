@@ -99,7 +99,15 @@ describe('ChartWizard component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
         expect(el).toBeTruthy();
+        expect(container.querySelector('.chart-option-title')).toBeTruthy();
         expect(container.querySelector('.chart-type')).toBeFalsy();
+    });
+    it('ChartWizard with featureTypeProperties', () => {
+        ReactDOM.render(<ChartWizard featureTypeProperties={featureTypeProperties} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+        expect(container.querySelector('.chart-option-title')).toBeTruthy();
+        expect(container.querySelector('.chart-type')).toBeTruthy();
     });
     it('ChartWizard rendering chart options', () => {
         ReactDOM.render(<ChartWizard step={1}/>, document.getElementById("container"));
@@ -129,7 +137,7 @@ describe('ChartWizard component', () => {
         expect(cmp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toBeTruthy();
-        expect(domNode.children.length).toBe(2);
+        expect(domNode.children.length).toBe(3);
         const cOptionsFormEl = domNode.querySelector('.Select');
         expect(cOptionsFormEl).toBeTruthy();
     });
@@ -138,7 +146,7 @@ describe('ChartWizard component', () => {
         expect(cmp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toBeTruthy();
-        expect(domNode.children.length).toBe(2);
+        expect(domNode.children.length).toBe(3);
     });
     describe('isChartOptionsValid', () => {
         it('mandatory operation if process present', () => {

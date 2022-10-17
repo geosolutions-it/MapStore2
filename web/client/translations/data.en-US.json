@@ -1798,7 +1798,8 @@
             },
             "selectWidgetType": "Select the widget type",
             "selectChartType": {
-                "title": "Select the Chart type"
+                "title": "Chart type",
+                "noResults": "No chart found"
             },
             "selectMap": {
                 "TOC": {
@@ -1832,6 +1833,7 @@
                 "wizard": {
                     "backToTypeSelection": "Back to chart type selection",
                     "backToWidgetTypeSelection": "Back to widget type selection",
+                    "backToChartOptionConfiguration": "Back to chart option configuration",
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
                     "backToMapSelection": "Back to map selection",
@@ -1928,7 +1930,7 @@
             },
             "chartSwitcher": {
                 "noResults": "No layer found",
-                "selectLabel": "Select a layer",
+                "selectLabel": "Layer",
                 "infoOnHide": "Expand widget to see chart switcher",
                 "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
             },

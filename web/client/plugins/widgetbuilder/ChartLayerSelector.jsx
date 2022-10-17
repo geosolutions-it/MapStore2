@@ -23,6 +23,11 @@ import BuilderHeader from './BuilderHeader';
 import Catalog from './Catalog';
 
 const Button = tooltip(ButtonRB);
+const withBackButton = ({toggleLayerSelector} = {}) => [{
+    glyph: 'arrow-left',
+    tooltipId: 'widgets.builder.wizard.backToChartOptionConfiguration',
+    onClick: () =>  toggleLayerSelector(false)
+}];
 
 /**
  * Builder page that allows layer's selection
@@ -53,7 +58,7 @@ export default connect((state) =>({
     toggleLayerSelector,
     selectedCatalog
 }) => {
-    const _canProceed = showLayers ? !isEmpty(layers) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
+    const _canProceed = showLayers ? canProceed && !isEmpty(layers) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
     const onProceed = () => {
         const isUpdate = showLayers && !isEmpty(layers);
         const key = isUpdate ? 'chart-add' : 'chart-layers';
@@ -61,10 +66,11 @@ export default connect((state) =>({
         onLayerChoice(key, _layers);
         toggleLayerSelector(false);
     };
+    const stepButton = !showLayers ? stepButtons : withBackButton({toggleLayerSelector});
     return (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
-            <Toolbar stepButtons={stepButtons}
+            <Toolbar stepButtons={stepButton}
                 canProceed={_canProceed}
                 onProceed={onProceed}
             />

@@ -89,12 +89,10 @@ export default ({
     ]);
     return (<>
         { editorData?.charts?.length > 1
-            ? <div className="widget-selector">
-                <div className="widget-selector-label">
-                    <strong>
-                        <Message msgId={"widgets.chartSwitcher.selectLabel"}/>
-                    </strong>
-                </div>
+            ? <div className="chart-switcher">
+                <strong>
+                    <Message msgId={"widgets.chartSwitcher.selectLabel"}/>
+                </strong>
                 {renderChartSwitchSelector(editorData.charts)}
             </div> : null
         }

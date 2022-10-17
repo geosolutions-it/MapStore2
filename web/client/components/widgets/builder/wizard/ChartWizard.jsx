@@ -19,6 +19,7 @@ import WPSWidgetOptions from './common/WPSWidgetOptions';
 import ChartWidgetOptions from './common/WidgetOptions';
 import SimpleChart from '../../../charts/SimpleChart';
 import ChartSwitcher from "../wizard/chart/ChartSwitcher";
+import Message from "../../../I18N/Message";
 
 import sampleData from '../../enhancers/sampleChartData';
 import multiProtocolChart from '../../enhancers/multiProtocolChart';
@@ -148,6 +149,12 @@ const enhanceWizard = compose(
     setDisplayName('ChartWizard')
 );
 
+const StepHeader = ({step} = {}) => (
+    <div className="chart-option-title">
+        <Message msgId={`widgets.${step === 0 ? 'chartOptionsTitle' : 'widgetOptionsTitle'}`}/>
+    </div>
+);
+
 const ChartWizard = ({
     onChange = () => {},
     onFinish = () => {},
@@ -195,6 +202,7 @@ const ChartWizard = ({
                 onChange={(key, value)=>onChange(`charts[${selectedChart?.chartId}].${key}`, value)}
                 layer={selectedChart?.layer || layer}
                 sampleChart={sampleChart}
+                showTitle={false}
             />}
         </>
     );
@@ -205,6 +213,7 @@ const ChartWizard = ({
             onChange={onChange}
             layer={selectedChart?.layer || layer}
             sampleChart={sampleChart}
+            showTitle={false}
         />
     ) : null;
     return (<Wizard
@@ -221,18 +230,21 @@ const ChartWizard = ({
         hideButtons
         className={"chart-options"}>
         {[ChartOptions, WidgetOptions].map(component =>
-            <ChartSwitcher
-                key="chart-switcher"
-                editorData={data}
-                onChange={onChange}
-                value={data?.selectedChartId}
-                setSelectedChart={setSelectedChart}
-                selectedChart={selectedChart}
-                featureTypeProperties={featureTypeProperties}
-                withContainer={withContainer}
-            >
-                {component}
-            </ChartSwitcher>
+            <>
+                <StepHeader step={step}/>
+                <ChartSwitcher
+                    key="chart-switcher"
+                    editorData={data}
+                    onChange={onChange}
+                    value={data?.selectedChartId}
+                    setSelectedChart={setSelectedChart}
+                    selectedChart={selectedChart}
+                    featureTypeProperties={featureTypeProperties}
+                    withContainer={withContainer}
+                >
+                    {component}
+                </ChartSwitcher>
+            </>
         )}
     </Wizard>);
 };

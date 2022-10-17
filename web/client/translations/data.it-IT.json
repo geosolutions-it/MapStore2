@@ -1798,7 +1798,8 @@
             },
             "selectWidgetType": "Seleziona il tipo di widget",
             "selectChartType": {
-                "title": "Seleziona il tipo di widget"
+                "title": "Tipo di grafico",
+                "noResults": "Nessun grafico trovato"
             },
             "selectMap": {
                 "TOC": {
@@ -1831,6 +1832,7 @@
                 "wizard": {
                     "backToTypeSelection": "Torna alla selezione del tipo di grafico",
                     "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
+                    "backToChartOptionConfiguration": "Torna alla configurazione delle opzioni del grafico",
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
                     "backToMapSelection": "Torna alla selezione della mappa",
@@ -1929,7 +1931,7 @@
             },
             "chartSwitcher": {
                 "noResults": "Nessun livello trovato",
-                "selectLabel": "Seleziona un livello",
+                "selectLabel": "Strato",
                 "infoOnHide": "Espandi il widget per vedere il selettore del grafico",
                 "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
             },

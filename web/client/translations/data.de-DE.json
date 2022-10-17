@@ -1836,7 +1836,8 @@
             },
             "selectWidgetType": "Wählen Sie den Widgettyp",
             "selectChartType": {
-                "title": "Wählen Sie den Diagrammtyp aus"
+                "title": "Diagramm Typ",
+                "noResults": "Kein Diagramm gefunden"
             },
             "selectMap": {
                 "TOC": {
@@ -1869,6 +1870,7 @@
                 "wizard": {
                     "backToTypeSelection": "Zurück zur Typenauswahl",
                     "backToWidgetTypeSelection": "Zurück zur Auswahl des Widget-Typs",
+                    "backToChartOptionConfiguration": "Zurück zur Konfiguration der Kartenoptionen",
                     "backToFeatureGrid": "Zurück zum Feature-Raster",
                     "backToLayerSelection": "Zurück zur Ebenenauswahl",
                     "backToMapSelection": "Zurück zur Kartenauswahl",
@@ -1965,7 +1967,7 @@
             },
             "chartSwitcher": {
                 "noResults": "Keine Ebene gefunden",
-                "selectLabel": "Wählen Sie eine Ebene aus",
+                "selectLabel": "Schicht",
                 "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
                 "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
             },

@@ -27,10 +27,8 @@ describe('ChartSwitcher component', () => {
     it('ChartSwitcher render default', () => {
         ReactDOM.render(<ChartSwitcher editorData={{charts}} withContainer/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-selector');
+        const el = container.querySelector('.chart-switcher');
         expect(el).toBeTruthy();
-        const switcherLabel = container.querySelector('.widget-selector-label');
-        expect(switcherLabel).toBeTruthy();
         const switcherDropdown = container.querySelector('.Select');
         expect(switcherDropdown).toBeTruthy();
         const switcherValue = container.querySelector('.Select-value-label');
@@ -39,17 +37,15 @@ describe('ChartSwitcher component', () => {
     it('ChartSwitcher render without container', () => {
         ReactDOM.render(<ChartSwitcher charts={charts}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-selector');
+        const el = container.querySelector('.chart-switcher');
         expect(el).toBeFalsy();
-        const switcherLabel = container.querySelector('.widget-selector-label');
-        expect(switcherLabel).toBeFalsy();
         const switcherDropdown = container.querySelector('.Select');
         expect(switcherDropdown).toBeTruthy();
     });
     it('ChartSwitcher render icon when map size is small', () => {
         ReactDOM.render(<ChartSwitcher width={400} charts={charts} value={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-selector');
+        const el = container.querySelector('.chart-switcher');
         expect(el).toBeFalsy();
         const switcherIcon = container.querySelector('.glyphicon-info-sign');
         expect(switcherIcon).toBeTruthy();
@@ -57,7 +53,7 @@ describe('ChartSwitcher component', () => {
     it('ChartSwitcher - wizard do not render select component', () => {
         ReactDOM.render(<ChartSwitcher withContainer editorData={{charts: charts[0]}} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-selector');
+        const el = container.querySelector('.chart-switcher');
         expect(el).toBeFalsy();
         const selectArrow = container.querySelector('.Select-arrow');
         expect(selectArrow).toBeFalsy();
@@ -65,7 +61,7 @@ describe('ChartSwitcher component', () => {
     it('ChartSwitcher - widget do not render select component', () => {
         ReactDOM.render(<ChartSwitcher charts={[charts[0]]} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-selector');
+        const el = container.querySelector('.chart-switcher');
         expect(el).toBeFalsy();
         const selectArrow = container.querySelector('.Select-arrow');
         expect(selectArrow).toBeFalsy();
@@ -75,7 +71,7 @@ describe('ChartSwitcher component', () => {
         const spyOnChange = expect.spyOn(action, 'onChange');
         ReactDOM.render(<ChartSwitcher charts={charts} value={1} onChange={action.onChange} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-selector');
+        const el = container.querySelector('.chart-switcher');
         expect(el).toBeFalsy();
 
         // Simulate selection

@@ -10,8 +10,10 @@
 import React from 'react';
 
 import Message from '../../../../I18N/Message';
-import StepHeader from '../../../../misc/wizard/StepHeader';
-import Toolbar from "../../../../misc/toolbar/Toolbar";
+import ReactSelect from "react-select";
+import localizedProps from "../../../../misc/enhancers/localizedProps";
+import {Glyphicon} from "react-bootstrap";
+const Select = localizedProps(["noResultsText"])(ReactSelect);
 
 const ITEMS = [{
     type: "bar",
@@ -22,27 +24,25 @@ const ITEMS = [{
 }, {
     type: "line",
     glyph: "line"
-}].map((item) => ({
-    ...item,
-    title: <Message msgId={`widgets.chartType.${item.type}.title`} />
-}));
-
+}];
+const TypeRenderer = ({value, glyph})=>{
+    return <span><Glyphicon glyph={glyph}/>&nbsp;{`${value.charAt(0).toUpperCase() + value.slice(1)} Chart`}</span>;
+};
 export default ({ onSelect = () => { }, types = ITEMS, type} = {}) => (
     <div className={"chart-type"}>
-        <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
+        <strong>
+            <Message msgId={"widgets.selectChartType.title"}/>
+        </strong>
         <div style={{marginTop: 4}}>
-            <Toolbar btnDefaultProps={{
-                bsStyle: "primary",
-                bsSize: "sm"
-            }}
-            buttons={
-                types && ITEMS.map(item => ({
-                    bsStyle: type === item.type ? "success" : "primary",
-                    onClick: () =>{onSelect(item.type);},
-                    glyph: item.glyph,
-                    tooltipId: `widgets.chartType.${item.type}.title`
-                }))
-            }/>
+            <Select
+                noResultsText="widgets.selectChartType.noResults"
+                optionRenderer={TypeRenderer}
+                valueRenderer={TypeRenderer}
+                options={types.map(({type: value, glyph}) =>({value, label: value, glyph}))}
+                onChange={(val) => val.value && onSelect(val.value)}
+                value={type}
+                clearable={false}
+            />
         </div>
     </div>
 );

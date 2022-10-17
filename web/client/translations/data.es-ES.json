@@ -1798,7 +1798,8 @@
             },
             "selectWidgetType": "Seleccione el tipo de widget",
             "selectChartType": {
-                "title": "Seleccione el tipo de widget"
+                "title": "Tipo de gráfico",
+                "noResults": "No se encontró ningún gráfico"
             },
             "selectMap": {
                 "TOC": {
@@ -1831,6 +1832,7 @@
                 "wizard": {
                     "backToTypeSelection": "Volver a la selección de tipo",
                     "backToWidgetTypeSelection": "Volver a la selección del tipo de widget",
+                    "backToChartOptionConfiguration": "Volver a la configuración de opciones del gráfico",
                     "backToFeatureGrid": "Volver a la tabla de atributos",
                     "backToLayerSelection": "Volver a la selección de capas",
                     "backToMapSelection": "Volver a la selección del mapa",
@@ -1927,7 +1929,7 @@
             },
             "chartSwitcher": {
                 "noResults": "No se encontró ninguna capa",
-                "selectLabel": "Seleccione una capa",
+                "selectLabel": "Capa",
                 "infoOnHide": "Expanda el widget para ver el selector de gráficos",
                 "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
