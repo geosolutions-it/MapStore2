@@ -52,6 +52,7 @@ const STATE_NAME = 'STATE_NAME';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import {addLayer} from "../../actions/layers";
+import { ADD_MAP_POPUP } from '../../actions/mapPopups';
 
 const nestedService = {
     nestedPlaceholder: TEST_NESTED_PLACEHOLDER
@@ -599,6 +600,22 @@ describe('search Epics', () => {
         }, {layers: {flat: [{name: "layerName", url: "clearlyNotAUrl", visibility: true, queryable: true, type: "wms"}]}});
     });
     it('searchOnStartEpic, that sends a Getfeature and a GFI requests', (done) => {
+        const testStore = {
+            map: {
+                projection: "EPSG:3857"
+            },
+            layers: {
+                flat: [
+                    {
+                        name: "layerName",
+                        url: "base/web/client/test-resources/wms/GetFeature.json",
+                        visibility: true,
+                        queryable: true,
+                        type: "wms"
+                    }
+                ]
+            }
+        };
         let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
         const NUM_ACTIONS = 2;
         testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
@@ -607,7 +624,48 @@ describe('search Epics', () => {
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
             done();
-        }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, queryable: true, type: "wms"}]}});
+        }, testStore);
+    });
+    it('searchOnStartEpic, that adds popup', (done) => {
+        const testStore = {
+            mapInfo: { showInMapPopup: true },
+            map: {
+                projection: "EPSG:3857"
+            },
+            layers: {
+                flat: [
+                    {
+                        name: "layerName",
+                        url: "base/web/client/test-resources/wms/GetFeature.json",
+                        visibility: true,
+                        queryable: true,
+                        type: "wms"
+                    }
+                ]
+            }
+        };
+        let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
+        const NUM_ACTIONS = 2;
+        testEpic(
+            searchOnStartEpic,
+            NUM_ACTIONS,
+            action,
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                const popupAction = actions[1];
+                expect(popupAction.type).toBe(ADD_MAP_POPUP);
+                expect(popupAction.popup?.position?.coordinates?.[0]).toBe(
+                    968346.2286324208
+                );
+                expect(popupAction.popup?.position?.coordinates?.[1]).toBe(
+                    5538315.133325616
+                );
+                done();
+            },
+            testStore
+        );
     });
     it('textSearchShowGFIEpic, it sends info format taken from layer', (done) => {
         let action = showGFI(

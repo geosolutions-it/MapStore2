@@ -6,26 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import React from 'react';
-import { Glyphicon } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
+import {Glyphicon} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {createSelector} from 'reselect';
 
-import { toggleControl } from '../actions/controls';
-import {
-    changeSnapshotState,
-    onCreateSnapshot,
-    onRemoveSnapshot,
-    onSnapshotError,
-    saveImage
-} from '../actions/snapshot';
+import {createPlugin} from "../utils/PluginsUtils";
+import {toggleControl} from '../actions/controls';
+import {changeSnapshotState, onCreateSnapshot, onRemoveSnapshot, onSnapshotError, saveImage} from '../actions/snapshot';
 import SnapshotPanelComp from "../components/mapcontrols/Snapshot/SnapshotPanel";
 import SnapshotQueueComp from "../components/mapcontrols/Snapshot/SnapshotQueue";
 import snapshotReducers from '../reducers/snapshot';
-import { layersSelector } from '../selectors/layers';
-import { mapSelector } from '../selectors/map';
-import { mapTypeSelector } from '../selectors/maptype';
+import {layersSelector} from '../selectors/layers';
+import {mapSelector} from '../selectors/map';
+import {mapTypeSelector} from '../selectors/maptype';
 import Message from './locale/Message';
 
 const snapshotSelector = createSelector([
@@ -51,7 +45,7 @@ const SnapshotPanel = connect(snapshotSelector, {
     toggleControl: toggleControl.bind(null, 'snapshot', null)
 })(SnapshotPanelComp);
 
-const SnapshotPlugin = connect((state) => ({
+const SnapshotQueue = connect((state) => ({
     queue: state.snapshot && state.snapshot.queue || []
 }), {
     downloadImg: saveImage,
@@ -59,44 +53,62 @@ const SnapshotPlugin = connect((state) => ({
     onRemoveSnapshot
 })(SnapshotQueueComp);
 
+const SnapshotContainer = props => (
+    <>
+        <SnapshotPanel {...props} />
+        <SnapshotQueue {...props} />
+    </>
+);
 
-export default {
-    SnapshotPlugin: assign(SnapshotPlugin, {
+/**
+ * Tool to create snapshots from the active map viewport.
+ * @example
+ * {
+ *     "name": "Snapshot",
+ *     "cfg": {
+ *         "floatingPanel": true
+ *     }
+ * }
+ * @prop {boolean} [cfg.floatingPanel=true] show plugin UI in a floating dialog rather than inside the static panel
+ * @name Snapshot
+ * @class
+ * @memberof plugins
+ */
+export default createPlugin('SnapshotPlugin', {
+    component: SnapshotContainer,
+    containers: {
         Toolbar: {
             name: 'snapshot',
             position: 8,
-            panel: SnapshotPanel,
             help: <Message msgId="helptexts.snapshot"/>,
             tooltip: "snapshot.tooltip",
             icon: <Glyphicon glyph="camera"/>,
-            wrap: true,
+            toggle: true,
+            doNotHide: true,
             title: "snapshot.title",
-            exclusive: true,
             priority: 1
         },
         BurgerMenu: {
             name: 'snapshot',
             position: 3,
-            panel: SnapshotPanel,
             text: <Message msgId="snapshot.title"/>,
             icon: <Glyphicon glyph="camera"/>,
             action: toggleControl.bind(null, 'snapshot', null),
-            tools: [SnapshotPlugin],
-            priority: 2
+            priority: 3
         },
         SidebarMenu: {
             name: 'snapshot',
             position: 3,
-            panel: SnapshotPanel,
             text: <Message msgId="snapshot.title"/>,
             icon: <Glyphicon glyph="camera"/>,
             tooltip: "snapshot.tooltip",
             action: toggleControl.bind(null, 'snapshot', null),
+            doNotHide: true,
             toggle: true,
-            priority: 1
+            priority: 2
         }
-    }),
+    },
     reducers: {
         snapshot: snapshotReducers
     }
-};
+});

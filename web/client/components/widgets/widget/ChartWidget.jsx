@@ -70,6 +70,7 @@ const ChartWidget = ({
             />,
             ...(topRightItems ? topRightItems : [])
         ]}
+        options={props?.options}
     >
         {showTable
             ? <TableView data={data} {...props}/>

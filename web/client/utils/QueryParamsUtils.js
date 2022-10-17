@@ -244,7 +244,7 @@ export const paramActions = {
                 }
             }, projection), false, filterNameList ?? [])];
         } else if (typeof value === 'string') {
-            const [latitude, longitude] = value.split(',');
+            const [longitude, latitude] = value.split(',');
             if (typeof latitude !== 'undefined' && typeof longitude !== 'undefined') {
                 return [featureInfoClick(updatePointWithGeometricFilter({
                     latlng: {

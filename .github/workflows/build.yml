@@ -1,0 +1,60 @@
+name: build artifacts
+on:
+  push:
+    branches:
+    - master
+    # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+    - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v2
+      - name: "setting up npm"
+        uses: actions/setup-node@v2
+        with:
+            node-version: '12.x'
+      - name: "setting up Java"
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+      ############
+      # CACHING
+      ##########
+      - name: "cache node modules"
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: "cache maven dependencies"
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            mapstore-${{ runner.os }}-maven-
+      ############
+      # Build
+      ##########
+      - run : "npm install"
+      - run: "npm run fe:build"
+      - run: "npm run jsdoc:build"
+      - run: "mvn clean install -Dmapstore2.version=$GITHUB_REF_NAME -Pprintingbundle"
+      ############
+      # Publish
+      ##########
+      - uses: actions/upload-artifact@v3.1.0
+        with:
+            name: MapStore-Artifacts${{ github.sha }}
+            path: |
+                product/target/mapstore.war
+                printing/target/mapstore-printing.zip                
