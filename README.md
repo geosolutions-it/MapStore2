@@ -2,14 +2,14 @@
 
 ![Build Checks](https://github.com/geosolutions-it/MapStore2/actions/workflows/tests.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/geosolutions-it/MapStore2/badge.svg?branch=master)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
-[![Documentation Status](https://readthedocs.org/projects/mapstore2/badge/?version=latest)](https://mapstore.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/mapstore2/badge/?version=latest)](https://docs.mapstore.geosolutionsgroup.com/en/latest/?badge=latest)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
-MapStore is a framework to build *web mapping* applications using standard mapping libraries, such as <a href="http://openlayers.org/" target="_blank">OpenLayers</a> and <a href="http://leafletjs.com/" target="_blank">Leaflet</a>. For more information check the <a href="https://mapstore.readthedocs.io/en/latest/" target="_blank">MapStore documentation!</a>
+MapStore is a framework to build *web mapping* applications using standard mapping libraries, such as <a href="http://openlayers.org/" target="_blank">OpenLayers</a> and <a href="http://leafletjs.com/" target="_blank">Leaflet</a>. For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
 
 ## Download
 
-You can download the WAR file from the latest release [MapStore documentation!](https://mapstore.readthedocs.io/en/latest/)
+You can download the WAR file from the latest release [MapStore documentation!](https://docs.mapstore.geosolutionsgroup.com/en/latest/)
 
 [All the releases](https://github.com/geosolutions-it/MapStore2/releases)
 
@@ -70,7 +70,7 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 After downloading the MapStore war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
 
-Check out <a href="https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/" target="_blank">here</a> which version of Java and Tomcat are needed.
+Check out <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/requirements/" target="_blank">here</a> which version of Java and Tomcat are needed.
 
 Then you can access MapStore using the following URL (assuming the web container is on the standard 8080 port):
 
@@ -80,7 +80,7 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 ## Documentation
 
-You can find more documentation about how to build, install or develop with MapStore on the <a href="https://mapstore.readthedocs.io/en/latest/" target="_blank">documentation site</a>.
+You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
 
 ## License
 
@@ -103,7 +103,7 @@ Clone the repository:
 
 `git clone https://github.com/geosolutions-it/MapStore2.git`
 
-Install NodeJS (with npm), Java and Maven following the requirements [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/)
+Install NodeJS (with npm), Java and Maven following the requirements [here](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/requirements/)
 
 Install docma to build the documentation
 
@@ -127,7 +127,7 @@ Where `version_identifier` is an optional identifier of the generated war that w
 
 Deploy the generated `mapstore.war` file (in `product/target`) to your favorite J2EE container (e.g. Tomcat).
 
-Read more on the <a href="https://mapstore.readthedocs.io/en/latest/" target="_blank">documentation site</a>.
+Read more on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
 
 ## Professional Support
 
