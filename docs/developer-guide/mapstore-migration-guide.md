@@ -142,12 +142,13 @@ We no longer maintain the Version plugin since we have moved its content inside 
 We suggest you to clean up your project as well:
 
 - remove Version entry it from a local list of plugins.js
-- remove Version entries it from a localConfig
-- add About entry into other pages of mapstore plugins array, suggest list is:
+- remove Version entries it from a localConfig.json and pluginConfig.json
+- add About entry into other pages of mapstore plugins array:
+
   - dashboard
   - geostory
   - mobile
-- remove Define plugins in webpack-config.js or prod.webpack-config.js, since we have moved these definition to a more general *build/buildConfig.js* file
+- remove Define plugins in webpack-config.js or prod.webpack-config.js containing version info retrieved with git-revision-webpack-plugin, because we have moved these definitions to a more general file *build/BuildUtils.js*
 - check that in your package.json you have this extends rule
 
 ```js
