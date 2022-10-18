@@ -1931,7 +1931,7 @@
             },
             "chartSwitcher": {
                 "noResults": "Nessun livello trovato",
-                "selectLabel": "Strato",
+                "selectLabel": "Layer selezionato",
                 "infoOnHide": "Espandi il widget per vedere il selettore del grafico",
                 "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
             },
