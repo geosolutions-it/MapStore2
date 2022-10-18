@@ -8,7 +8,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {round, get, isEqual, dropRight, last, isNil} from 'lodash';
+import {round, get, isEqual, dropRight, last} from 'lodash';
 
 import {
     reprojectGeoJson,
@@ -83,12 +83,6 @@ export default class MeasurementSupport extends React.Component {
         updateOnMouseMove: false
     };
 
-    UNSAFE_componentWillMount() {
-        if (this.props.measurement.geomType && (this.props.measurement.lineMeasureEnabled || this.props.measurement.areaMeasureEnabled || this.props.measurement.bearingMeasureEnabled) && isNil(this.drawControl) && this.props.enabled) {
-            this.addDrawInteraction(this.props);
-        }
-    }
-
     /**
      * we assume that only valid features are passed to the draw tools
      */
@@ -118,12 +112,23 @@ export default class MeasurementSupport extends React.Component {
             this.addDrawInteraction(newProps);
         }
         if (!newProps.measurement.geomType) {
-            this.cleanupMeasures(newProps);
+            this.removeDrawInteraction();
+            this.removeMeasureTooltips();
+            this.removeSegmentLengthOverlays();
+            this.textLabels = [];
+            this.segmentLengths = [];
+            this.props.map.removeLayer(this.measureLayer);
+            this.vector = null;
+            this.measureLayer = null;
             if (newProps.measurement.features && newProps.measurement.features.length > 0) {
                 this.props.changeGeometry([]);
             }
             if (newProps.measurement.textLabels && newProps.measurement.textLabels.length > 0) {
                 this.props.setTextLabels([]);
+            }
+            if (this.source) {
+                this.source.clear();
+                this.source = null;
             }
         }
         let oldFt = this.props.measurement.features;
@@ -139,9 +144,6 @@ export default class MeasurementSupport extends React.Component {
         }
     }
 
-    componentWillUnmount() {
-        this.cleanupMeasures();
-    }
 
     getLength = (coords, props) => {
         if (props.measurement.geomType === 'Bearing' && coords.length > 1) {
@@ -152,7 +154,6 @@ export default class MeasurementSupport extends React.Component {
         return calculateDistance(reprojectedCoords, props.measurement.lengthFormula);
     }
 
-
     getArea = (polygon) => {
         return this.calculateGeodesicArea(polygon.getLinearRing(0).getCoordinates());
     }
@@ -160,24 +161,6 @@ export default class MeasurementSupport extends React.Component {
     render() {
         return null;
     }
-
-    /**
-     * Remove draw interaction and reset measurement data
-     */
-    cleanupMeasures = () => {
-        this.removeDrawInteraction();
-        this.removeMeasureTooltips();
-        this.removeSegmentLengthOverlays();
-        this.textLabels = [];
-        this.segmentLengths = [];
-        this.props.map.removeLayer(this.measureLayer);
-        this.vector = null;
-        this.measureLayer = null;
-        if (this.source) {
-            this.source.clear();
-            this.source = null;
-        }
-    };
 
     /**
      * Update the draw interaction when feature in edit
