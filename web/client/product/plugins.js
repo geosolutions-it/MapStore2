@@ -21,6 +21,8 @@ import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
 import Print from "../plugins/Print";
 import UserSession from "../plugins/UserSession";
+import Login from '../plugins/Login';
+import Identify from '../plugins/Identify';
 
 /**
   * Please, keep them sorted alphabetically
@@ -40,6 +42,8 @@ export const plugins = {
     RulesEditorPlugin: RulesEditor,
     RulesManagerFooter: RulesManagerFooter,
     UserSessionPlugin: UserSession,
+    LoginPlugin: Login,
+    IdentifyPlugin: Identify,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -93,12 +97,10 @@ export const plugins = {
     HelpLinkPlugin: toModulePlugin('HelpLink', () => import(/* webpackChunkName: 'plugins/helpLink' */ '../plugins/HelpLink')),
     HelpPlugin: toModulePlugin('Help', () => import(/* webpackChunkName: 'plugins/helpPlugin' */ '../plugins/Help')),
     HomePlugin: toModulePlugin('Home', () => import(/* webpackChunkName: 'plugins/home' */ '../plugins/Home')),
-    IdentifyPlugin: toModulePlugin('Identify', () => import(/* webpackChunkName: 'plugins/identify' */ '../plugins/Identify')),
     LanguagePlugin: toModulePlugin('Language', () => import(/* webpackChunkName: 'plugins/language' */ '../plugins/Language')),
     LayerDownload: toModulePlugin('LayerDownload', () => import(/* webpackChunkName: 'plugins/layerDownload' */ '../plugins/LayerDownload')),
     LayerInfoPlugin: toModulePlugin('LayerInfo', () => import(/* webpackChunkName: 'plugins/layerInfo' */ '../plugins/LayerInfo')),
     LocatePlugin: toModulePlugin('Locate', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Locate')),
-    LoginPlugin: toModulePlugin('Login', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Login')),
     ManagerMenuPlugin: toModulePlugin('ManagerMenu', () => import(/* webpackChunkName: 'plugins/managerMenu' */ '../plugins/manager/ManagerMenu')),
     ManagerPlugin: toModulePlugin('Manager', () => import(/* webpackChunkName: 'plugins/manager' */ '../plugins/manager/Manager')),
     MapEditorPlugin: toModulePlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),
