@@ -13,9 +13,10 @@ import withBackButton from './withBackButton';
 import { toLayer, addSearchObservable } from './layerSelector';
 import canGenerateCharts from '../../../observables/widgets/canGenerateCharts';
 
-import { castArray, isEmpty, isUndefined } from "lodash";
+import { castArray, isEmpty, isUndefined, get } from "lodash";
 
 import { onEditorChange } from '../../../actions/widgets';
+import { getDependantWidget } from "../../../utils/WidgetsUtils";
 
 const layerSelectorConnect = connect(() => ({}), {
     onLayerChoice: (...args) => onEditorChange(...args),
@@ -33,9 +34,9 @@ const layerSelector = compose(
     mapPropsStream(props$ =>
         props$.distinctUntilKeyChanged('selected').filter(({ selected } = {}) => selected)
             .switchMap(
-                ({ selected, layerValidationStream = s => s, setLayer = () => { }, dashboardSelectedService, dashboardServices, defaultSelectedService, defaultServices } = {}) =>
+                ({ selected, layerValidationStream = s => s, setLayer = () => { }, dashboardSelectedService, dashboardServices, defaultSelectedService, defaultServices, ...props } = {}) =>
                     Rx.Observable.of(castArray(selected)?.map(s => toLayer(s, dashboardServices ? dashboardServices[dashboardSelectedService] : defaultServices[defaultSelectedService])))
-                        .let(layerValidationStream)
+                        .let((stream$) => layerValidationStream(stream$, props))
                         .switchMap(() =>
                             Rx.Observable.forkJoin(
                                 selected.map(s => addSearchObservable(s, dashboardServices ? dashboardServices[dashboardSelectedService] : defaultServices[defaultSelectedService]))
@@ -43,10 +44,15 @@ const layerSelector = compose(
                         )
                         .do(layers => setLayer(layers?.map(l=>({...l, visibility: !isUndefined(l.visibility) ? l.visibility : true}))))
                         .mapTo({ canProceed: true })
-                        .catch((error) => Rx.Observable.of({ error, canProceed: false }))
+                        .catch((error) =>
+                            Rx.Observable.of({
+                                layerError: `widgets.builder.errors.${error?.code ? 'noWidgetsAvailableDescription' : error?.message}`,
+                                canProceed: false
+                            })
+                        )
             ).startWith({ canProceed: true })
-            .combineLatest(props$, ({ canProceed, error } = {}, props) => ({
-                error,
+            .combineLatest(props$, ({ canProceed, layerError } = {}, props) => ({
+                layerError,
                 canProceed,
                 ...props
             }))
@@ -77,8 +83,26 @@ const chartLayerSelector = compose(
     setDisplayName('ChartLayerSelector'),
     layerSelectorConnect,
     defaultProps({
-        layerValidationStream: stream$ => stream$.switchMap(layers =>
+        layerValidationStream: (stream$, props) => stream$.switchMap(layers =>
             Rx.Observable.forkJoin(layers.map(layer=> canGenerateCharts(layer)))
+                .switchMap((resp) => {
+                    let $observable = Rx.Observable.of(layers);
+                    const dependantWidget = getDependantWidget({widgets: props?.widgets, dependenciesMap: get(props, 'editorData.dependenciesMap', {})});
+                    if (resp.length && dependantWidget.widgetType === 'table') {
+                        // Compare the dependant widget attributes with the selected layer(s)
+                        // when the dependant widget is a table
+                        const layersAttributes = resp.map(res => get(res[0], 'data.featureTypes[0].properties')?.map(p => p.name));
+                        const dependantAttributes = get(dependantWidget, 'options.propertyName', []);
+                        if (dependantAttributes.length && layersAttributes?.length ) {
+                            const isDependantAttributesMatching =
+                                layersAttributes.every(lAttrib => dependantAttributes.every(depAttrib => lAttrib.includes(depAttrib)));
+                            $observable = isDependantAttributesMatching
+                                ? $observable
+                                : Rx.Observable.throw(new Error('attributesNotMatchingDescription'));
+                        }
+                    }
+                    return $observable;
+                })
         )
     }),
     withBackButton,

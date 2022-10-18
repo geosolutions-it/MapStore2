@@ -1893,6 +1893,7 @@
                     "noAttributesDescription": "La capa seleccionada no tiene atributos para mostrar. Seleccione otro tipo de widget o capa",
                     "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
                     "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
+                    "attributesNotMatchingDescription": "<p><strong>Intenta seleccionar otra capa</strong></p><p>Los atributos de las capas seleccionadas no coinciden con el widget dependiente principal</p>",
                     "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna",
                     "noMapAvailableForLegend": "No hay mapa disponible",
                     "noMapAvailableForLegendDescription": "Necesita al menos un widget de mapa para crear la leyenda"

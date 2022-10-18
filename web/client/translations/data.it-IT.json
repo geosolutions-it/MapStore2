@@ -1895,6 +1895,7 @@
                     "noAttributesDescription": "Il layer selezonato non ha atrributi da mostrare. Selezionare un altro layer o un altro tipo di widget.",
                     "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
                     "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
+                    "attributesNotMatchingDescription": "<p><strong>Prova a selezionare un altro livello</strong></p><p>Gli attributi dei livelli selezionati non corrispondono al widget dipendente dal genitore</p>",
                     "checkAtLeastOneAttribute": "seleziona almeno un attributo",
                     "noMapAvailableForLegend": "Nessuna mappa disponibile",
                     "noMapAvailableForLegendDescription": "C'è bisogno almeno di una mappa per creare una lagenda"

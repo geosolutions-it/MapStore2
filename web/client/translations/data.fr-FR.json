@@ -1894,6 +1894,7 @@
                     "noAttributesDescription": "La couche sélectionnée n'a aucun attribut à afficher. Veuillez sélectionner un autre type de widget ou une autre couche",
                     "noWidgetsAvailableTitle": "Impossible de créer le widget pour le calque sélectionné",
                     "noWidgetsAvailableDescription": "<p> <strong> Veuillez essayer de sélectionner un autre type de couche ou de widget </strong> </p> <p> Le serveur ne fournit pas les services requis pour la couche et le type de widget sélectionnés </p> <p> Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li> <li> Le service WFS n'est pas disponible </li> <li> Le processus WPS <code> gs:aggregate </code> n'est pas disponible </li> </ul> </p> ",
+                    "attributesNotMatchingDescription": "<p><strong>Veuillez essayer de sélectionner un autre calque</strong></p><p>Les attributs du ou des calques sélectionnés ne correspondent pas au widget dépendant du parent</p>",
                     "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne",
                     "noMapAvailableForLegend": "Aucune carte disponible",
                     "noMapAvailableForLegendDescription": "Vous avez besoin d'au moins un widget de carte pour créer la légende"
