@@ -148,7 +148,7 @@ We suggest you to clean up your project as well:
   - dashboard
   - geostory
   - mobile
-- remove Define plugins in webpack-config.js or prod.webpack-config.js containing version info retrieved with git-revision-webpack-plugin, because we have moved these definitions to a more general file *build/BuildUtils.js*
+- remove `DefinePlugin` entries dedicated to git revision retrieved by `git-revision-webpack-plugin`, if any, from `webpack-config.js` or `prod.webpack-config.js`, because they have been moved to the file `build/BuildUtils.js`
 - check that in your package.json you have this extends rule
 
 ```js
