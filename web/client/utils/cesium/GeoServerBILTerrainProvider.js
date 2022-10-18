@@ -402,7 +402,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
         const hasChildren = terrainChildrenMask(x, y, level, this._options);
         if (tilesCache[urlValue]) {
             // we need .when because sampleTerrain expect to use .otherwise
-            return when(Promise.resolve(tilesCache[urlValue]));
+            return when(Promise.resolve(new HeightmapTerrainData(tilesCache[urlValue])));
         }
         const proxy = this._options.proxy || { getURL: v => v };
         requestPromise = Resource.fetchArrayBuffer({
@@ -418,7 +418,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
         if (defined(requestPromise)) {
             return requestPromise
                 .then((arrayBuffer) => {
-                    tilesCache[urlValue] = this.arrayToHeightmapTerrainData(
+                    tilesCache[urlValue] = this.arrayToHeightmapTerrainDataOptions(
                         arrayBuffer,
                         limitations,
                         {
@@ -430,7 +430,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
                         this._options.littleEndian,
                         hasChildren
                     );
-                    return tilesCache[urlValue];
+                    return new HeightmapTerrainData(tilesCache[urlValue]);
                 })
                 .otherwise(() => {
                     return new HeightmapTerrainData({
@@ -447,7 +447,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
     return requestPromise;
 };
 
-GeoServerBILTerrainProvider.prototype.arrayToHeightmapTerrainData = function(arrayBuffer, limitations, size, formatArray, hasWaterMask, littleEndian, childrenMask) {
+GeoServerBILTerrainProvider.prototype.arrayToHeightmapTerrainDataOptions = function(arrayBuffer, limitations, size, formatArray, hasWaterMask, littleEndian, childrenMask) {
     let sizeValue = size;
     if (typeof (sizeValue) === "number") {
         sizeValue = { width: sizeValue, height: sizeValue };
@@ -479,7 +479,7 @@ GeoServerBILTerrainProvider.prototype.arrayToHeightmapTerrainData = function(arr
         }
         optionsHeihtmapTerrainData.waterMask = waterMask;
     }
-    return new HeightmapTerrainData(optionsHeihtmapTerrainData);
+    return optionsHeihtmapTerrainData;
 };
 
 GeoServerBILTerrainProvider.prototype.requestTileGeometry = function(x, y, level) {
