@@ -31,6 +31,7 @@ import withScalesDenominators from "../components/map/enhancers/withScalesDenomi
 import { createFeatureFilter } from '../utils/FilterUtils';
 import ErrorPanel from '../components/map/ErrorPanel';
 import catalog from "../epics/catalog";
+import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
 
 /**
@@ -475,6 +476,7 @@ export default createPlugin('Map', {
     },
     epics: {
         ...mapEpics,
+        ...backgroundSelector,
         ...catalog(API)
     },
     containers: {
