@@ -27,8 +27,8 @@ import assign from 'object-assign';
  * @return {object} an object with `request`, containing request params, `metadata` with some info about the layer and the request, and `url` to send the request to.
  */
 const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, featureInfo) => {
-    const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
-    if (features.length) {
+    if (point?.intersectedFeatures) {
+        const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
         return {
             request: {
                 features: [...features],
@@ -37,7 +37,10 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
             metadata: {
                 title: isObject(layer.title)
                     ? layer.title[currentLocale] || layer.title.default
-                    : layer.title
+                    : layer.title,
+                regex: layer.featureInfoRegex,
+                viewer,
+                featureInfo
             },
             url: 'client'
         };
@@ -90,8 +93,8 @@ const getIdentifyGeometry = point => {
 export default {
     buildRequest,
     getIdentifyFlow: (layer, baseURL, defaultParams) => {
-        const { point, features = [], ...baseParams} = defaultParams;
-        if (features.length) {
+        const { point, features, ...baseParams} = defaultParams;
+        if (features) {
             return Observable.of({
                 data: {
                     features
