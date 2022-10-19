@@ -3,7 +3,6 @@ import React from 'react';
 import assign from 'object-assign';
 import L from 'leaflet';
 import {
-    isNil,
     slice
 } from 'lodash';
 import {
@@ -198,11 +197,6 @@ class MeasurementSupport extends React.Component {
         feet: false
     };
 
-    UNSAFE_componentWillMount() {
-        if (this.props.measurement?.geomType && (this.props.measurement?.lineMeasureEnabled || this.props.measurement?.areaMeasureEnabled || this.props.measurement?.bearingMeasureEnabled) && isNil(this.drawControl) && this.props.enabled) {
-            this.addDrawInteraction(this.props);
-        }
-    }
 
     UNSAFE_componentWillReceiveProps(newProps) {
         if ((newProps && newProps.uom && newProps.uom.length && newProps.uom.length.unit) !== (this.props && this.props.uom && this.props.uom.length && this.props.uom.length.unit) && this.drawControl) {
@@ -226,11 +220,6 @@ class MeasurementSupport extends React.Component {
             this.removeDrawInteraction();
         }
     }
-
-    componentWillUnmount() {
-        this.removeDrawInteraction();
-    }
-
     onDrawStart = () => {
         this.props.map.off('click', this.restartDrawing, this);
         this.removeArcLayer();
