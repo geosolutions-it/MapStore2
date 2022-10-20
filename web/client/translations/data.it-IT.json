@@ -1798,7 +1798,8 @@
             },
             "selectWidgetType": "Seleziona il tipo di widget",
             "selectChartType": {
-                "title": "Seleziona il tipo di widget"
+                "title": "Tipo di grafico",
+                "noResults": "Nessun grafico trovato"
             },
             "selectMap": {
                 "TOC": {
@@ -1831,16 +1832,19 @@
                 "wizard": {
                     "backToTypeSelection": "Torna alla selezione del tipo di grafico",
                     "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
+                    "backToChartOptionConfiguration": "Torna alla configurazione delle opzioni del grafico",
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
                     "backToMapSelection": "Torna alla selezione della mappa",
                     "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "selectALayer": "Seleziona un livello",
+                    "selectLayers": "Seleziona uno o più livelli",
                     "selectAMap": "Seleziona una o più mappe",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
-                     "backToTableOptions": "Torna alle opzioni della tabella",
+                    "errorChart": "Uno o più grafici non sono validi",
+                    "backToTableOptions": "Torna alle opzioni della tabella",
                     "configureTableOptions": "Configura le opzioni della tabella",
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
@@ -1859,6 +1863,7 @@
                     "connectToTheMap": "Collegati alla mappa",
                     "selectMapToConnect": "Seleziona il widget da connettere",
                     "clearConnection": "Disconnetti",
+                    "disableConnectToMap": "Operazione non disponibile",
                     "classAttributes": {
                         "classColor": "Colore della Classe",
                         "classLabel": "Etichetta della Classe",
@@ -1890,11 +1895,14 @@
                     "noAttributesDescription": "Il layer selezonato non ha atrributi da mostrare. Selezionare un altro layer o un altro tipo di widget.",
                     "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
                     "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
+                    "attributesNotMatchingDescription": "<p><strong>Prova a selezionare un altro livello</strong></p><p>Gli attributi dei livelli selezionati non corrispondono al widget dipendente dal genitore</p>",
                     "checkAtLeastOneAttribute": "seleziona almeno un attributo",
                     "noMapAvailableForLegend": "Nessuna mappa disponibile",
                     "noMapAvailableForLegendDescription": "C'è bisogno almeno di una mappa per creare una lagenda"
                 },
-                "setupFilter": "Configura un filtro per il livello selezionato"
+                "setupFilter": "Configura un filtro per il livello selezionato",
+                "addNewLayers": "Aggiungi nuovi livelli",
+                "deleteChart": "Elimina il grafico corrente"
             },
             "widget": {
                 "menu": {
@@ -1920,6 +1928,12 @@
                 "placeholder": "Inserisci il nome della mappa",
                 "selectLabel": "Seleziona una mappa",
                 "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
+                "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Nessun livello trovato",
+                "selectLabel": "Layer selezionato",
+                "infoOnHide": "Espandi il widget per vedere il selettore del grafico",
                 "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
             },
             "chartType": {

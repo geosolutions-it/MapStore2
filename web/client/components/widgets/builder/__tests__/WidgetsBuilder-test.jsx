@@ -25,13 +25,14 @@ describe('WidgetsBuilder component', () => {
         ReactDOM.render(<WidgetBuilder />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.chart-options-form')).toNotExist();
+        expect(el).toBeTruthy();
     });
     it('WidgetsBuilder rendering chart options', () => {
-        ReactDOM.render(<WidgetBuilder step={1} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetBuilder step={0} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.chart-options-form');
-        expect(el).toExist();
+        const elChartOption = container.querySelector('.chart-options');
+        expect(elChartOption).toBeTruthy();
+        const elChartOptionForm = container.querySelector('.chart-options-form');
+        expect(elChartOptionForm).toBeTruthy();
     });
 });

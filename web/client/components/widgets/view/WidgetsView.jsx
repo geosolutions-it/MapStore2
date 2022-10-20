@@ -107,6 +107,7 @@ export default pure(({
                 data-grid={w.dataGrid}
                 {...actions}
                 {...w}
+                widgets={widgets}
                 widgetOpts={widgetOpts}
                 quickFilters={getEnableColumnFilters(w) ? w.quickFilters : undefined}
                 toolsOptions={toolsOptions}

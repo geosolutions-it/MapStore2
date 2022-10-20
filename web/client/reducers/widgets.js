@@ -27,7 +27,6 @@ import {
     TOGGLE_COLLAPSE_ALL,
     TOGGLE_TRAY,
     toggleCollapse,
-    MAPS_REGEX,
     REPLACE,
     WIDGETS_REGEX
 } from '../actions/widgets';
@@ -36,8 +35,12 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
 import assign from 'object-assign';
 import set from 'lodash/fp/set';
-import { get, find, omit, mapValues, castArray, isNil } from 'lodash';
+import { get, find, omit, mapValues, castArray } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
+import {
+    convertDependenciesMappingForCompatibility as convertToCompatibleWidgets,
+    editorChange
+} from "../utils/WidgetsUtils";
 
 const emptyState = {
     dependencies: {
@@ -90,32 +93,24 @@ function widgetsReducer(state = emptyState, action) {
             ...action.widget,
             // for backward compatibility widgets without widgetType are charts
             widgetType: action.widget && action.widget.widgetType || 'chart'
-        }, set("builder.settings.step",
-            (action.widget && action.widget.widgetType || 'chart') === 'chart'
-                ? 1
-                : 0
-            , state));
+        }, set("builder.settings.step", 0, state));
     }
     case EDITOR_CHANGE: {
-        if (action.key.includes('maps') && !isNil(action.value)) {
-            let value = action.value;
-            const [, id, pathToUpdate] = MAPS_REGEX.exec(action.key) || [];
-            if (id) {
-                const maps = get(state, "builder.editor.maps", []);
-                value = set(pathToUpdate, action.value, maps.find(m => m.mapId === id));
-            }
-            return arrayUpsert('builder.editor.maps', value, {mapId: id || action.value?.mapId}, state);
-        }
-        return set(`builder.editor.${action.key}`, action.value, state);
+        return editorChange(action, state);
     }
-    case INSERT:
+    case INSERT: {
+        let widget = {...action.widget};
+        if (widget.widgetType === 'chart') {
+            widget = omit(widget, ["layer", "url"]);
+        }
         return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
-            ...action.widget,
+            ...widget,
             dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
         }, {
             id: action.widget.id || action.id
         }, state);
+    }
 
     case REPLACE:
         const widgetsPath = `containers[${action.target}].widgets`;
@@ -175,8 +170,9 @@ function widgetsReducer(state = emptyState, action) {
         }, state);
     case MAP_CONFIG_LOADED:
         const { widgetsConfig } = (action.config || {});
+        const updatedWidgetsConfig = convertToCompatibleWidgets(widgetsConfig);
         return set(`containers[${DEFAULT_TARGET}]`, {
-            ...widgetsConfig
+            ...updatedWidgetsConfig
         }, state);
     case CHANGE_LAYOUT: {
         return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));

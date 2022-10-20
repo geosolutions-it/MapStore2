@@ -1798,7 +1798,8 @@
             },
             "selectWidgetType": "Seleccione el tipo de widget",
             "selectChartType": {
-                "title": "Seleccione el tipo de widget"
+                "title": "Tipo de gráfico",
+                "noResults": "No se encontró ningún gráfico"
             },
             "selectMap": {
                 "TOC": {
@@ -1831,15 +1832,18 @@
                 "wizard": {
                     "backToTypeSelection": "Volver a la selección de tipo",
                     "backToWidgetTypeSelection": "Volver a la selección del tipo de widget",
+                    "backToChartOptionConfiguration": "Volver a la configuración de opciones del gráfico",
                     "backToFeatureGrid": "Volver a la tabla de atributos",
                     "backToLayerSelection": "Volver a la selección de capas",
                     "backToMapSelection": "Volver a la selección del mapa",
                     "backToPreview": "Volver a vista previa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "selectALayer": "Seleccionar una capa",
+                    "selectLayers": "Seleccione una o más capas",
                     "selectAMap": "Seleccione uno o más mapas",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
+                    "errorChart": "Uno o más gráficos no son válidos",
                     "backToTableOptions": "Volver a las opciones de tabla",
                     "configureTableOptions": "Configurar opciones de tabla",
                     "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
@@ -1859,6 +1863,7 @@
                     "connectToTheMap": "Conectar al mapa",
                     "selectMapToConnect": "Seleccione el widget para conectarse",
                     "clearConnection": "Borrar conexión",
+                    "disableConnectToMap": "Operación no disponible",
                     "classAttributes": {
                         "classColor": "Color de la Clase",
                         "classLabel": "Etiqueta de la Clase",
@@ -1888,11 +1893,14 @@
                     "noAttributesDescription": "La capa seleccionada no tiene atributos para mostrar. Seleccione otro tipo de widget o capa",
                     "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
                     "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
+                    "attributesNotMatchingDescription": "<p><strong>Intenta seleccionar otra capa</strong></p><p>Los atributos de las capas seleccionadas no coinciden con el widget dependiente principal</p>",
                     "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna",
                     "noMapAvailableForLegend": "No hay mapa disponible",
                     "noMapAvailableForLegendDescription": "Necesita al menos un widget de mapa para crear la leyenda"
                 },
-                "setupFilter": "Configurar un filtro para los datos del widget"
+                "setupFilter": "Configurar un filtro para los datos del widget",
+                "addNewLayers": "Agregar nuevas capas",
+                "deleteChart": "Eliminar gráfico actual"
             },
             "widget": {
                 "menu": {
@@ -1918,6 +1926,12 @@
                 "placeholder": "Ingrese el nombre del mapa",
                 "selectLabel": "Seleccione un mapa",
                 "infoOnHide": "Expanda el widget para ver el selector de mapas",
+                "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "No se encontró ninguna capa",
+                "selectLabel": "Capa",
+                "infoOnHide": "Expanda el widget para ver el selector de gráficos",
                 "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
             "chartType": {

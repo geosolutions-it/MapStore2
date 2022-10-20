@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
 
 import wpsChart from '../wpsChart';
+const spyOn = expect.spyOn;
 
 describe('wpsChart enhancer', () => {
     beforeEach((done) => {
@@ -94,5 +95,68 @@ describe('wpsChart enhancer', () => {
             }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+    });
+    it('wpsChart data retrival error management', (done) => {
+        const action = { onLoadError: () => {} };
+        const spyOnErrors = spyOn(action, "onLoadError");
+        const Sink = wpsChart(createSink( ({data, loading, ...props} = {}) => {
+            if (!loading) {
+                expect(data).toExist();
+                expect(data.length).toBe(6);
+            }
+            expect(props.onLoadError).toBeTruthy();
+            expect(props.errors).toBeTruthy();
+            props.onLoadError({...props.errors, [props.layer.name]: false});
+        }));
+        const props = {
+            layer: {
+                name: "test",
+                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
+            options: {
+                aggregateFunction: "Count",
+                aggregationAttribute: "test",
+                groupByAttributes: "test",
+                classificationAttribute: "S_Region"
+            },
+            onLoadError: action.onLoadError,
+            errors: {test: true}
+        };
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+        expect(spyOnErrors).toHaveBeenCalled();
+        expect(spyOnErrors.calls[0].arguments[0]).toEqual({test: false});
+        done();
+    });
+    it('wpsChart multi chart error', (done) => {
+        const action = { onLoadError: () => {} };
+        const spyOnErrors = spyOn(action, "onLoadError");
+        const Sink = wpsChart(createSink( ({error, loading, ...props} = {}) => {
+            if (!loading && error) {
+                expect(error).toExist();
+            }
+            expect(props.onLoadError).toBeTruthy();
+            expect(props.errors).toBeTruthy();
+            props.onLoadError({...props.errors, [props.layer.name]: true});
+        }));
+        const props = {
+            layer: {
+                name: "test",
+                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                wpsUrl: 'base/web/client/test-resources/widgetbuilder/no-data',
+                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
+            options: {
+                aggregateFunction: "Count",
+                aggregationAttribute: "test",
+                groupByAttributes: "test",
+                classificationAttribute: "S_Region"
+            },
+            onLoadError: action.onLoadError,
+            errors: {}
+        };
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+        expect(spyOnErrors).toHaveBeenCalled();
+        expect(spyOnErrors.calls[0].arguments[0]).toEqual({test: true});
+        done();
     });
 });

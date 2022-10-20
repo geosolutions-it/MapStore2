@@ -9,9 +9,9 @@
 import expect from 'expect';
 
 import {
-    convertDependenciesMappingForCompatibility,
-    getConnectionList,
-    getMapDependencyPath, getWidgetDependency,
+    convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
+    getConnectionList, getDependantWidget,
+    getMapDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
     shortenLabel, updateDependenciesMapOfMapList
 } from '../WidgetsUtils';
@@ -143,5 +143,161 @@ describe('Test WidgetsUtils', () => {
     it('updateDependenciesMapOfMapList when no updated needed', () => {
         const modified = updateDependenciesMapOfMapList(dataWidgets.widgets, 'w_1', 'm_1');
         expect(modified).toEqual(dataWidgets.widgets);
+    });
+    describe('Test editor change', () => {
+        it('editorChangeProps', () =>{
+            const props = editorChangeProps({key: 'layer', value: "test"});
+            expect(props.path).toBe("builder.editor.layer");
+            expect(props.key).toBe("layer");
+            expect(props.regex).toBe('');
+            expect(props.identifier).toBe("");
+            expect(props.value).toBe("test");
+        });
+        it('editorChangeProps maps', () =>{
+            const props = editorChangeProps({key: 'maps'});
+            expect(props.path).toBe("builder.editor.maps");
+            expect(props.key).toBe("maps");
+            expect(props.regex).toBeTruthy();
+            expect(props.identifier).toBe("mapId");
+        });
+        it('editorChangeProps maps with value', () =>{
+            const value = [{mapId: 1}];
+            const props = editorChangeProps({key: 'maps', value });
+            expect(props.path).toBe("builder.editor.maps");
+            expect(props.key).toBe("maps");
+            expect(props.identifier).toBe("mapId");
+            expect(props.value).toEqual(value);
+        });
+        it('editorChangeProps maps key with mapId ', () =>{
+            const value = "test-value";
+            const props = editorChangeProps({key: 'maps[1].test', value });
+            expect(props.path).toBe("builder.editor.maps");
+            expect(props.key).toBe('maps[1].test');
+            expect(props.identifier).toBe("mapId");
+            expect(props.value).toEqual(value);
+        });
+        it('editorChangeProps charts', () =>{
+            const props = editorChangeProps({key: 'charts'});
+            expect(props.path).toBe("builder.editor.charts");
+            expect(props.key).toBe("charts");
+            expect(props.regex).toBeTruthy();
+            expect(props.identifier).toBe("chartId");
+        });
+        it('editorChangeProps charts with value', () =>{
+            const value = [{chartId: 1}];
+            const props = editorChangeProps({key: 'charts', value });
+            expect(props.path).toBe("builder.editor.charts");
+            expect(props.identifier).toBe("chartId");
+            expect(props.value).toEqual(value);
+        });
+        it('editorChangeProps charts key with chartId ', () =>{
+            const value = "test-value";
+            const props = editorChangeProps({key: 'charts[1].test', value });
+            expect(props.path).toBe("builder.editor.charts");
+            expect(props.key).toBe('charts[1].test');
+            expect(props.identifier).toBe("chartId");
+            expect(props.value).toEqual(value);
+        });
+        const state = {builder: {editor: {}}};
+        it('editorChange', () =>{
+            const props = editorChange({key: 'layer', value: "test"}, state);
+            expect(props.builder.editor).toEqual({layer: "test"});
+        });
+        it('editorChange maps', () =>{
+            const props = editorChange({key: 'maps', value: [{mapId: 1}]}, state);
+            expect(props.builder.editor).toBeTruthy();
+            const {maps} = props.builder.editor;
+            expect(maps).toBeTruthy();
+            expect(maps).toEqual([{mapId: 1}]);
+        });
+        it('editorChange maps with mapId', () =>{
+            const _state = {...state, maps: [{mapId: 1, layer: {name: "Test1"}}]};
+            const props = editorChange({key: 'maps[1].layer', value: {name: "Test2"}}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {maps} = props.builder.editor;
+            expect(maps).toBeTruthy();
+            expect(maps.length).toBe(1);
+            expect(maps[0].layer.name).toBe('Test2');
+        });
+        it('editorChange charts', () =>{
+            const props = editorChange({key: 'charts', value: [{chartId: 1}]}, state);
+            expect(props.builder.editor).toBeTruthy();
+            const {charts} = props.builder.editor;
+            expect(charts).toBeTruthy();
+            expect(charts).toEqual([{chartId: 1}]);
+        });
+        it('editorChange charts with chartId', () =>{
+            const _state = {...state, charts: [{chartId: 1, layer: {name: "Test1"}}]};
+            const props = editorChange({key: 'charts[1].layer', value: {name: "Test2"}}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {charts} = props.builder.editor;
+            expect(charts).toBeTruthy();
+            expect(charts.length).toBe(1);
+            expect(charts[0].layer.name).toBe('Test2');
+        });
+        it('editorChange charts update layers', () =>{
+            const _state = {builder: {editor: {selectedChartId: 1, charts: [{chartId: 1, layer: {name: "Test1"}}, {chartId: 2, layer: {name: "Test2"}}] }} };
+            const props = editorChange({key: 'chart-layers', value: [{name: "NewTest"}, {name: "NewTest1"}]}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {charts, selectedChartId} = props.builder.editor;
+            expect(charts).toBeTruthy();
+            expect(charts.length).toBe(2);
+            expect(charts[0].type).toBe('bar');
+            expect(charts[0].chartId).toBeTruthy();
+            expect(charts[0].layer.name).toBe('NewTest');
+            expect(selectedChartId).toBeTruthy();
+        });
+        it('editorChange delete a chart', () =>{
+            const _state = {builder: {editor: {selectedChartId: 2, charts: [{chartId: 1, layer: {name: "Test1"}}, {chartId: 2, layer: {name: "Test2"}}] }} };
+            const props = editorChange({key: 'chart-delete', value: [{chartId: 2, layer: {name: "Test2"}}]}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {charts, selectedChartId} = props.builder.editor;
+            expect(charts).toBeTruthy();
+            expect(selectedChartId).toBe(2);
+            expect(charts.length).toBe(1);
+            expect(charts[0].chartId).toBe(2);
+            expect(charts[0].layer.name).toBe('Test2');
+        });
+        it('editorChange add a new chart to existing', () =>{
+            const _state = {builder: {editor: {selectedChartId: 2, charts: [{chartId: 1, layer: {name: "Test1"}}, {chartId: 2, layer: {name: "Test2"}}] }} };
+            const props = editorChange({key: 'chart-add', value: [{name: "Test1"}, {name: "Test2"}, {name: "Test3"}]}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {charts} = props.builder.editor;
+            expect(charts).toBeTruthy();
+            expect(charts.length).toBe(3);
+            expect(charts[2].chartId).toBeTruthy();
+            expect(charts[2].layer.name).toBe('Test3');
+            expect(charts[2].type).toBe('bar');
+        });
+    });
+    it("getDependantWidget", () => {
+        const widget = getDependantWidget({
+            widgets: [{id: "1", layer: {name: "test"}}, {id: 2, layer: {name: "test1"}}],
+            dependenciesMap: {layer: 'widgets[1].layer'}}
+        );
+        expect(widget).toBeTruthy();
+        expect(widget.layer.name).toBe("test");
+    });
+    it("getDependantWidget when not matching", () => {
+        const widget = getDependantWidget({
+            widgets: [{id: "1", layer: {name: "test"}}, {id: 2, layer: {name: "test1"}}],
+            dependenciesMap: {layer: 'widgets[3].layer'}}
+        );
+        expect(widget).toEqual({});
+    });
+    it("getSelectedWidgetData for charts", () => {
+        const widget = getSelectedWidgetData({id: "1", selectedChartId: "1", widgetType: "chart", charts: [{layer: "test", chartId: "1"}]});
+        expect(widget).toBeTruthy();
+        expect(widget.layer).toBe("test");
+    });
+    it("getSelectedWidgetData for maps", () => {
+        const widget = getSelectedWidgetData({id: "1", selectedMapId: "1", widgetType: "map", maps: [{layer: "test", mapId: "1"}]});
+        expect(widget).toBeTruthy();
+        expect(widget.layer).toBe("test");
+    });
+    it("getSelectedWidgetData other widget type", () => {
+        const widget = getSelectedWidgetData({id: "1", widgetType: "table", layer: {name: "test"}});
+        expect(widget).toBeTruthy();
+        expect(widget.layer.name).toBe("test");
     });
 });

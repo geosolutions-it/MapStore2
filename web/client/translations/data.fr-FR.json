@@ -1799,7 +1799,8 @@
             },
             "selectWidgetType": "Sélectionner le type de widget",
             "selectChartType": {
-                "title": "Sélectionner le type de widget"
+                "title": "Type de graphique",
+                "noResults": "Aucun graphique trouvé"
             },
             "selectMap": {
                 "TOC": {
@@ -1832,15 +1833,18 @@
                 "wizard": {
                     "backToTypeSelection": "Retour à la sélection du type",
                     "backToWidgetTypeSelection": "Retour à la sélection du type de widget",
+                    "backToChartOptionConfiguration": "Retour à la configuration des options de graphique",
                     "backToFeatureGrid": "Retour à la grille des fonctionnalités",
                     "backToLayerSelection": "Retour à la sélection de la couche",
                     "backToMapSelection": "Retour à la sélection de la carte",
                     "backToPreview": "Retour à l'aperçu",
                     "backToChartOptions": "Retour aux options de graphique",
                     "selectALayer": "Sélectionner une couche",
+                    "selectLayers": "Sélectionnez un ou plusieurs calques",
                     "selectAMap": "Sélectionnez une ou plusieurs cartes",
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
+                    "errorChart": "Un ou plusieurs graphiques ne sont pas valides",
                     "backToTableOptions": "Retour à l'option de table",
                     "configureTableOptions": "Configurer les options de table",
                     "resetColumnsSizes": "Réinitialiser toutes les modifications de taille des colonnes",
@@ -1860,6 +1864,7 @@
                     "connectToTheMap": "Connectez-vous à la carte",
                     "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
                     "clearConnection": "Effacer la connexion",
+                    "disableConnectToMap": "Opération indisponible",
                     "classAttributes": {
                         "classColor": "Couleur de la Classe",
                         "classLabel": "Étiquette de la Classe",
@@ -1889,11 +1894,14 @@
                     "noAttributesDescription": "La couche sélectionnée n'a aucun attribut à afficher. Veuillez sélectionner un autre type de widget ou une autre couche",
                     "noWidgetsAvailableTitle": "Impossible de créer le widget pour le calque sélectionné",
                     "noWidgetsAvailableDescription": "<p> <strong> Veuillez essayer de sélectionner un autre type de couche ou de widget </strong> </p> <p> Le serveur ne fournit pas les services requis pour la couche et le type de widget sélectionnés </p> <p> Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li> <li> Le service WFS n'est pas disponible </li> <li> Le processus WPS <code> gs:aggregate </code> n'est pas disponible </li> </ul> </p> ",
+                    "attributesNotMatchingDescription": "<p><strong>Veuillez essayer de sélectionner un autre calque</strong></p><p>Les attributs du ou des calques sélectionnés ne correspondent pas au widget dépendant du parent</p>",
                     "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne",
                     "noMapAvailableForLegend": "Aucune carte disponible",
                     "noMapAvailableForLegendDescription": "Vous avez besoin d'au moins un widget de carte pour créer la légende"
                 },
-                "setupFilter": "Configurer un filtre pour les données du widget"
+                "setupFilter": "Configurer un filtre pour les données du widget",
+                "addNewLayers": "Ajouter de nouveaux calques",
+                "deleteChart": "Supprimer le graphique actuel"
             },
             "widget": {
                 "menu": {
@@ -1919,6 +1927,12 @@
                 "placeholder": "Entrez le nom de la carte",
                 "selectLabel": "Sélectionnez une carte",
                 "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
+                "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Aucune couche trouvée",
+                "selectLabel": "Couche",
+                "infoOnHide": "Développer le widget pour voir le sélecteur de graphique",
                 "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
             },
             "chartType": {

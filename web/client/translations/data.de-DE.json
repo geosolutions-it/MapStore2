@@ -1836,7 +1836,8 @@
             },
             "selectWidgetType": "Wählen Sie den Widgettyp",
             "selectChartType": {
-                "title": "Wählen Sie den Diagrammtyp aus"
+                "title": "Diagramm Typ",
+                "noResults": "Kein Diagramm gefunden"
             },
             "selectMap": {
                 "TOC": {
@@ -1869,15 +1870,18 @@
                 "wizard": {
                     "backToTypeSelection": "Zurück zur Typenauswahl",
                     "backToWidgetTypeSelection": "Zurück zur Auswahl des Widget-Typs",
+                    "backToChartOptionConfiguration": "Zurück zur Konfiguration der Kartenoptionen",
                     "backToFeatureGrid": "Zurück zum Feature-Raster",
                     "backToLayerSelection": "Zurück zur Ebenenauswahl",
                     "backToMapSelection": "Zurück zur Kartenauswahl",
                     "backToPreview": "Zurück zur Vorschau",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "selectALayer": "Wähle eine Ebene",
+                    "selectLayers": "Wählen Sie eine oder mehrere Ebenen aus",
                     "selectAMap": "Wählen Sie eine oder mehrere Karten aus",
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
+                    "errorChart": "Mindestens ein Diagramm ist ungültig",
                     "backToTableOptions": "Zurück zu den Tabellenoptionen",
                     "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
                     "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
@@ -1897,6 +1901,7 @@
                     "connectToTheMap": "Verbinden Sie sich mit der Karte",
                     "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
                     "clearConnection": "Verbindung löschen",
+                    "disableConnectToMap": "Vorgang nicht verfügbar",
                     "classAttributes": {
                         "classColor": "Klasse Farbe",
                         "classLabel": "Klassenbezeichnung",
@@ -1926,11 +1931,14 @@
                     "noAttributesDescription": "Die ausgewählte Ebene enthält keine anzuzeigenden Attribute. Bitte wählen Sie einen anderen Widget-Typ oder Layer",
                     "noWidgetsAvailableTitle": "Das Widget für die ausgewählte Ebene kann nicht erstellt werden",
                     "noWidgetsAvailableDescription": "<p><strong>Bitte wählen Sie eine andere Ebene oder einen anderen Widgets-Typ</strong></p><p>Der Server bietet nicht die erforderlichen Dienste für die Ebene und den ausgewählten Widget-Typ</p><p> Mögliche Ursachen sind: <ul> <li> Der ausgewählte Layer ist ein Raster-Layer </li> <li> Der WFS-Service ist nicht verfügbar </li> <li> Der WPS-Prozess <code>gs:aggregate</code> ist nicht verfügbar </li> </ul> </p>",
+                    "attributesNotMatchingDescription": "<p><strong>Bitte versuchen Sie, eine andere Ebene auszuwählen</strong></p><p>Die Attribute der ausgewählten Ebene(n) stimmen nicht mit dem übergeordneten abhängigen Widget überein</p>",
                     "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen",
                     "noMapAvailableForLegend": "Keine Karte verfügbar",
                     "noMapAvailableForLegendDescription": "Sie benötigen mindestens ein Karten-Widget, um die Legende zu erstellen"
                 },
-                "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
+                "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten",
+                "addNewLayers": "Neue Ebene(n) hinzufügen",
+                "deleteChart": "Aktuelles Diagramm löschen"
             },
             "widget": {
                 "menu": {
@@ -1955,6 +1963,12 @@
                 "noResults": "Keine Karte gefunden",
                 "placeholder": "Kartennamen eingeben",
                 "selectLabel": "Wählen Sie eine Karte aus",
+                "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
+                "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Keine Ebene gefunden",
+                "selectLabel": "Schicht",
                 "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
                 "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
             },

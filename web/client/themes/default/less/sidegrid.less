@@ -44,6 +44,10 @@
             }
         }
 
+        &.disabled {
+            .color-var(@theme-vars[disabled-color]);
+        }
+
         &.ms-dragging {
             border: 1px dashed @ms-main-border-color;
             .border-color-var(@theme-vars[main-border-color]);
@@ -290,6 +294,9 @@
                 }
             }
         }
+    }
+    &.disabled {
+        pointer-events: none;
     }
 }
 

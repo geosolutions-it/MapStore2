@@ -52,4 +52,18 @@ describe('ChartWidget component', () => {
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonEdit).toHaveBeenCalled();
     });
+    it('Test ChartWidget with chartSwitcher', () => {
+        const charts = [{chartId: 1, layer: {title: "test1"}}, {chartId: 2, layer: {title: "test2"}}];
+        ReactDOM.render(<ChartWidget topRightItems={[]} charts={charts} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.chart-switcher');
+        expect(el).toBeTruthy();
+    });
+    it('Test ChartWidget render chartSwitcher on table view', () => {
+        const charts = [{chartId: 1, layer: {title: "test1"}}, {chartId: 2, layer: {title: "test2"}}];
+        ReactDOM.render(<ChartWidget showTable charts={charts} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.chart-switcher');
+        expect(el).toBeTruthy();
+    });
 });

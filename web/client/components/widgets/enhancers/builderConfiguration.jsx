@@ -11,6 +11,14 @@ import pingAggregateProcess from '../../../observables/widgets/pingAggregateProc
 import {Message, HTML} from "../../I18N/I18N";
 const TYPES = "ALL";
 import {findGeometryProperty} from '../../../utils/ogc/WFS/base';
+
+const setGeomProp = ({onEditorChange, geomProp, editorData} = {}) => {
+    let key = 'geomProp';
+    if (editorData?.selectedChartId) { // Update geomProp for multi-charts
+        key = `charts[${editorData?.selectedChartId}].geomProp`;
+    }
+    return onEditorChange(key, geomProp);
+};
 /**
  * Enhancer that retrieves information about the featureType attributes and the aggregate process
  * to find out proper information
@@ -21,7 +29,7 @@ export default ({needsWPS} = {}) => compose(
         dataStreamFactory: ($props, {onEditorChange = () => {}, onConfigurationError = () => {}} = {}) =>
             $props
                 .distinctUntilChanged( ({layer = {}} = {}, {layer: newLayer} = {})=> layer.name === newLayer.name)
-                .switchMap(({ layer } = {}) => Observable.forkJoin(
+                .switchMap(({ layer, editorData } = {}) => Observable.forkJoin(
                     describeFeatureType({ layer }),
                     // if the builder needWPS service, then if missing it emits an exception
                     // otherwise, it simply sets the flag to false
@@ -30,7 +38,7 @@ export default ({needsWPS} = {}) => compose(
                         const geomProp = get(findGeometryProperty(result.data || {}), "name");
                         if (geomProp) {
                         // set the geometry property (needed for synchronization with a map or any other sort of spatial filter)
-                            onEditorChange("geomProp", geomProp);
+                            setGeomProp({onEditorChange, editorData, geomProp});
                         }
                     })
                     .map(([result, hasAggregateProcess]) => ({
