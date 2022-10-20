@@ -315,9 +315,6 @@
       "glyph": "cog",
       "title": "plugins.Settings.title",
       "description": "plugins.Settings.description",
-      "children": [
-        "Version"
-      ],
       "dependencies": [
         "SidebarMenu"
       ],
