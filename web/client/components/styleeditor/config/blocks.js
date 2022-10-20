@@ -20,19 +20,35 @@ const vector3dStyleOptions = {
 
 const billboard3dStyleOptions = {
     msBringToFront: property.msBringToFront({
-        label: 'styleeditor.msBringToFront'
+        label: "styleeditor.msBringToFront"
     }),
     msHeightReference: property.msHeightReference({
-        label: 'styleeditor.heightReferenceFromGround'
+        label: "styleeditor.heightReferenceFromGround"
     }),
     heightMode: property.select({
-        label: 'styleeditor.height',
-        key: 'heightMode',
-        getOptions: () => HEIGHT_MODES
+        label: "styleeditor.height",
+        key: "heightMode",
+        getOptions: () => {
+            return HEIGHT_MODES;
+        },
     }),
     constantHeight: property.constantHeight({
-        label: 'styleeditor.heightValue',
-        key: 'constantHeight'
+        label: "styleeditor.heightValue",
+        key: "constantHeight"
+    }),
+    heightAttribute: property.select({
+        label: "styleeditor.heightAttribute",
+        key: "heightAttribute",
+        isVisible: (value, { heightMode }) => {
+            return heightMode === "property";
+        },
+        getOptions: ({ attributes }) => {
+            return attributes
+                .map(({ label, attribute, type }) =>
+                    type === "number" ? { label, value: attribute } : null
+                )
+                .filter((x) => !!x);
+        }
     })
 };
 

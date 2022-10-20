@@ -2234,6 +2234,7 @@
             "heightReferenceFromGround": "Height reference from ground",
             "height": "Height",
             "heightValue": "Height value",
+            "heightAttribute": "Height attribute",
             "strokeColor": "Stroke color",
             "strokeWidth": "Stroke width",
         
