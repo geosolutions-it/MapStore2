@@ -336,6 +336,27 @@ const property = {
         },
         setValue: (value) => !!value
     }),
+    msHeightReference: ({ key = 'msHeightReference', label = 'Height reference from ground' }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.none',
+                value: 'NONE'
+            }, {
+                labelId: 'styleeditor.relative',
+                value: 'RELATIVE_TO_GROUND'
+            }, {
+                labelId: 'styleeditor.clamp',
+                value: 'CLAMP_TO_GROUND'
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value
+            };
+        }
+    }),
     shape: ({ label, key = 'wellKnownName' }) => ({
         type: 'mark',
         label,
@@ -447,9 +468,9 @@ const property = {
             selectProps,
             isValid
         },
-        getValue: (value) => {
+        getValue: (...args) => {
             return {
-                [key]: value
+                [key]: args[0]
             };
         },
         isDisabled,
@@ -501,6 +522,28 @@ const property = {
             return {
                 channelSelection: value.channelSelection,
                 contrastEnhancement: value.contrastEnhancement
+            };
+        }
+    }),
+    constantHeight: ({ key = 'constantHeight', label = 'Constant height' }) => ({
+        type: 'slider',
+        label,
+        config: {
+            range: { min: 0, max: 200 },
+            format: {
+                from: value => Math.round(value),
+                to: value => Math.round(value)
+            }
+        },
+        isVisible: (value, {heightMode}) => {
+            return heightMode === 'constant';
+        },
+        setValue: (value = 1) => {
+            return parseFloat(value);
+        },
+        getValue: (value = []) => {
+            return {
+                [key]: parseFloat(value[0] || 0)
             };
         }
     })

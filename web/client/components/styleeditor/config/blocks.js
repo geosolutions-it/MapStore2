@@ -10,7 +10,7 @@ import property from './property';
 import omit from 'lodash/omit';
 import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
-import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
+import {HEIGHT_MODES, SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const vector3dStyleOptions = {
     msClampToGround: property.msClampToGround({
@@ -21,6 +21,18 @@ const vector3dStyleOptions = {
 const billboard3dStyleOptions = {
     msBringToFront: property.msBringToFront({
         label: 'styleeditor.msBringToFront'
+    }),
+    msHeightReference: property.msHeightReference({
+        label: 'styleeditor.heightReferenceFromGround'
+    }),
+    heightMode: property.select({
+        label: 'styleeditor.height',
+        key: 'heightMode',
+        getOptions: () => HEIGHT_MODES
+    }),
+    constantHeight: property.constantHeight({
+        label: 'styleeditor.heightValue',
+        key: 'constantHeight'
     })
 };
 
@@ -81,7 +93,8 @@ const getBlocks = ({
                 strokeWidth: 1,
                 radius: 16,
                 rotate: 0,
-                msBringToFront: false
+                msBringToFront: false,
+                msHeightReference: 'CLAMP_TO_GROUND'
             }
         },
         Icon: {

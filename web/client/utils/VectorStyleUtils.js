@@ -733,7 +733,10 @@ function msStyleToSymbolizer(style, feature) {
             strokeOpacity: style.opacity,
             strokeWidth: style.weight,
             radius: style.radius ?? 10,
-            wellKnownName: 'Circle'
+            wellKnownName: 'Circle',
+            msHeightReference: 'CLAMP_TO_GROUND',
+            heightMode: 'original',
+            constantHeight: 0
         });
     }
     if (isAttrPresent(style, ['iconUrl']) && !style.iconGlyph && !style.iconShape) {

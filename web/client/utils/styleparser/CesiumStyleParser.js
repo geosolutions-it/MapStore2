@@ -85,6 +85,7 @@ function getStyleFuncFromRules({
 }) {
     return ({
         entities,
+        map,
         opacity: globalOpacity = 1
     }) => {
 
@@ -119,12 +120,18 @@ function getStyleFuncFromRules({
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
-                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    heightReference: Cesium.HeightReference[symbolizer.msHeightReference || 'CLAMP_TO_GROUND'],
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: 1 * globalOpacity
                                     })
                                 });
+                                const ellipsoid = map.scene.globe.ellipsoid;
+                                const cartographic = ellipsoid.cartesianToCartographic(
+                                    entity.position.getValue(Cesium.JulianDate.now())
+                                );
+                                cartographic.height = symbolizer.heightMode === 'constant' && symbolizer.constantHeight || 0;
+                                entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
                             }
                         }
                         if (symbolizer.kind === 'Icon' && entity.position) {

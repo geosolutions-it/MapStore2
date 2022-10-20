@@ -487,6 +487,17 @@ export const SUPPORTED_MIME_TYPES = [{
     value: 'image/svg+xml'
 }];
 
+export const HEIGHT_MODES = [{
+    label: 'Constant value',
+    value: 'constant'
+}, {
+    label: 'List of attributes',
+    value: 'property'
+}, {
+    label: 'Original z value',
+    value: 'original'
+}];
+
 // Get format and graphic path for custom parsing of external graphic
 const getParseContent = (rulesArray, index) => {
     const { kind, ...symbolizerObj } = rulesArray[index]?.symbolizers?.[0] || {};
