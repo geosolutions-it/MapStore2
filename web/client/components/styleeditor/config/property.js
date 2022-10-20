@@ -468,9 +468,9 @@ const property = {
             selectProps,
             isValid
         },
-        getValue: (...args) => {
+        getValue: (value) => {
             return {
-                [key]: args[0]
+                [key]: value
             };
         },
         isDisabled,
