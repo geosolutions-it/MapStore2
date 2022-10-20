@@ -61,7 +61,8 @@ export default getWidgetFilterRenderers(({
         confirmDelete={confirmDelete}
         onDelete={onDelete}
         toggleDeleteConfirm={toggleDeleteConfirm}
-        topRightItems={topRightItems}>
+        topRightItems={topRightItems}
+        options={options}>
         <BorderLayout
             footer={pagination.totalFeatures ? (
                 <div className={"widget-footer"}>
