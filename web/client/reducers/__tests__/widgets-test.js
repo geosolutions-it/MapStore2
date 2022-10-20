@@ -176,6 +176,10 @@ describe('Test the widgets reducer', () => {
         const state = widgets(undefined, configureMap({widgetsConfig: {widgets: [{id: "1"}]}}));
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
+    it('configureMap with no widget', () => {
+        const state = widgets(undefined, configureMap({}));
+        expect(state.containers[DEFAULT_TARGET].widgets).toBeFalsy();
+    });
     it('changeLayout', () => {
         const L = {lg: []};
         const AL = {md: []};
