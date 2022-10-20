@@ -10,7 +10,11 @@ import expect from 'expect';
 
 import createStore from "../StandardStore";
 import { Observable } from 'rxjs';
+import { standardRootReducerFunc } from "../defaultOptions";
 import {LOAD_MAP_CONFIG} from "../../actions/config";
+import mapInfoReducers from "../../reducers/mapInfo";
+import browserReducers from "../../reducers/browser";
+import { CHANGE_BROWSER_PROPERTIES } from '../../actions/browser';
 import MapType from '../../product/plugins/MapType';
 
 
@@ -88,5 +92,79 @@ describe('Test StandardStore', () => {
         const maptype = store.getState().maptype.mapType;
         expect(maptype).toBe("leaflet");
         window.location.hash = oldHash;
+    });
+    it("tests that mobile overrides don't merge on desktop", () => {
+        const store = createStore({
+            initialState: {
+                defaultState: {
+                    mapInfo: {
+                        enabled: true,
+                        highlight: true
+                    }
+                },
+                mobile: { // This has been duplicated from product/appConfig.js
+                    mapInfo: {enabled: true, infoFormat: 'application/json' },
+                    mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}
+                }
+            },
+            appReducers: {
+                mapInfo: mapInfoReducers,
+                browser: browserReducers
+            },
+            rootReducerFunc: standardRootReducerFunc
+        });
+
+        store.dispatch({
+            type: CHANGE_BROWSER_PROPERTIES,
+            newProperties: {
+                mobile: false
+            }
+        });
+
+        const state = store.getState();
+        expect(state.browser.mobile).toBe(false);
+        expect(state.mapInfo.enabled).toBe(true);
+        expect(state.mapInfo.highlight).toBe(true);
+        expect(state.mapInfo.infoFormat).toBe(undefined);
+    });
+    it("tests that mobile-specific state overrides merge deeply", () => {
+        const store = createStore({
+            initialState: {
+                defaultState: {
+                    mapInfo: {
+                        highlight: true
+                    }
+                },
+                mobile: { // This has been duplicated from product/appConfig.js
+                    mapInfo: {
+                        enabled: true,
+                        infoFormat: 'application/json'
+                    },
+                    mousePosition: {
+                        enabled: true,
+                        crs: "EPSG:4326",
+                        showCenter: true
+                    }
+                }
+            },
+            appReducers: {
+                mapInfo: mapInfoReducers,
+                browser: browserReducers
+            },
+            rootReducerFunc: standardRootReducerFunc
+        });
+
+        store.dispatch({
+            type: CHANGE_BROWSER_PROPERTIES,
+            newProperties: {
+                mobile: true
+            }
+        });
+
+        const state = store.getState();
+        expect(state.browser.mobile).toBe(true);
+        expect(state.mapInfo.enabled).toBe(true);
+        expect(state.mapInfo.highlight).toBe(true);
+        expect(state.mapInfo.infoFormat).toBe("application/json");
     });
 });
