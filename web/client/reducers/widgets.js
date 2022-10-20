@@ -169,10 +169,12 @@ function widgetsReducer(state = emptyState, action) {
             ...data
         }, state);
     case MAP_CONFIG_LOADED:
-        const { widgetsConfig } = (action.config || {});
-        const updatedWidgetsConfig = convertToCompatibleWidgets(widgetsConfig);
+        let { widgetsConfig } = (action.config || {});
+        if (widgetsConfig) {
+            widgetsConfig = convertToCompatibleWidgets(widgetsConfig);
+        }
         return set(`containers[${DEFAULT_TARGET}]`, {
-            ...updatedWidgetsConfig
+            ...widgetsConfig
         }, state);
     case CHANGE_LAYOUT: {
         return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
