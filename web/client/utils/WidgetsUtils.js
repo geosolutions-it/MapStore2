@@ -151,7 +151,7 @@ export const CHART_PROPS = ["selectedChartId", "id", "mapSync", "widgetType", "c
 export const convertDependenciesMappingForCompatibility = (data) => {
     const mapDependencies = ["layers", "viewport", "zoom", "center"];
     const _data = cloneDeep(data);
-    const widgets = _data.widgets || {};
+    const widgets = _data?.widgets || [];
     const tempWidgetMapDependency = [];
     return {
         ..._data,

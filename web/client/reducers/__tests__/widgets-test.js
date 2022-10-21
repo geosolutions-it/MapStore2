@@ -176,9 +176,17 @@ describe('Test the widgets reducer', () => {
         const state = widgets(undefined, configureMap({widgetsConfig: {widgets: [{id: "1"}]}}));
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
-    it('configureMap with no widget', () => {
+    it('configureMap with no widgetsConfig', () => {
         const state = widgets(undefined, configureMap({}));
         expect(state.containers[DEFAULT_TARGET].widgets).toBeFalsy();
+    });
+    it('configureMap with empty object widgetsConfig', () => {
+        const state = widgets(undefined, configureMap({widgetsConfig: {}}));
+        expect(state.containers[DEFAULT_TARGET].widgets).toBeFalsy({});
+    });
+    it('configureMap with empty widgets in widgetsConfig', () => {
+        const state = widgets(undefined, configureMap({widgetsConfig: { widgets: []}}));
+        expect(state.containers[DEFAULT_TARGET].widgets).toEqual([]);
     });
     it('changeLayout', () => {
         const L = {lg: []};
