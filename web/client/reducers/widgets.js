@@ -35,7 +35,7 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
 import assign from 'object-assign';
 import set from 'lodash/fp/set';
-import { get, find, omit, mapValues, castArray } from 'lodash';
+import { get, find, omit, mapValues, castArray, isEmpty } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
 import {
     convertDependenciesMappingForCompatibility as convertToCompatibleWidgets,
@@ -170,7 +170,7 @@ function widgetsReducer(state = emptyState, action) {
         }, state);
     case MAP_CONFIG_LOADED:
         let { widgetsConfig } = (action.config || {});
-        if (widgetsConfig) {
+        if (!isEmpty(widgetsConfig)) {
             widgetsConfig = convertToCompatibleWidgets(widgetsConfig);
         }
         return set(`containers[${DEFAULT_TARGET}]`, {
