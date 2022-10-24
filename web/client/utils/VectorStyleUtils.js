@@ -735,8 +735,7 @@ function msStyleToSymbolizer(style, feature) {
             radius: style.radius ?? 10,
             wellKnownName: 'Circle',
             msHeightReference: 'CLAMP_TO_GROUND',
-            heightMode: 'original',
-            constantHeight: 0
+            height: 0
         });
     }
     if (isAttrPresent(style, ['iconUrl']) && !style.iconGlyph && !style.iconShape) {

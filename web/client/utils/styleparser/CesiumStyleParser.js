@@ -130,8 +130,9 @@ function getStyleFuncFromRules({
                                 const cartographic = ellipsoid.cartesianToCartographic(
                                     entity.position.getValue(Cesium.JulianDate.now())
                                 );
-                                cartographic.height = symbolizer.heightMode === 'constant' && symbolizer.constantHeight
-                                    || symbolizer.heightMode === 'property' && properties[symbolizer.heightAttribute]
+                                const constantHeight = parseFloat(symbolizer.height);
+                                cartographic.height = !isNaN(constantHeight) && constantHeight
+                                    || symbolizer.height?.type === 'attribute' && properties[symbolizer.height.name]
                                     || 0;
                                 entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
                             }

@@ -2233,8 +2233,8 @@
             "msBringToFront": "Bring to front",
             "heightReferenceFromGround": "Height reference from ground",
             "height": "Height",
-            "heightValue": "Height value",
-            "heightAttribute": "Height attribute",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
             "strokeColor": "Stroke color",
             "strokeWidth": "Stroke width",
         

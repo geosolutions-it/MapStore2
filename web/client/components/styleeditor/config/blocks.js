@@ -10,7 +10,7 @@ import property from './property';
 import omit from 'lodash/omit';
 import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
-import {HEIGHT_MODES, SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
+import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const vector3dStyleOptions = {
     msClampToGround: property.msClampToGround({
@@ -18,6 +18,7 @@ const vector3dStyleOptions = {
     })
 };
 
+const ORIGINAL_OPTION_VALUE = '__height_mode_original__';
 const billboard3dStyleOptions = {
     msBringToFront: property.msBringToFront({
         label: "styleeditor.msBringToFront"
@@ -25,29 +26,20 @@ const billboard3dStyleOptions = {
     msHeightReference: property.msHeightReference({
         label: "styleeditor.heightReferenceFromGround"
     }),
-    heightMode: property.select({
+    height: property.multiInput({
         label: "styleeditor.height",
-        key: "heightMode",
-        getOptions: () => {
-            return HEIGHT_MODES;
-        },
-    }),
-    constantHeight: property.constantHeight({
-        label: "styleeditor.heightValue",
-        key: "constantHeight"
-    }),
-    heightAttribute: property.select({
-        label: "styleeditor.heightAttribute",
-        key: "heightAttribute",
-        isVisible: (value, { heightMode }) => {
-            return heightMode === "property";
-        },
-        getOptions: ({ attributes }) => {
-            return attributes
+        key: "height",
+        originalOptionValue: ORIGINAL_OPTION_VALUE,
+        getSelectOptions: ({ attributes }) => {
+            const numberAttributes = attributes
                 .map(({ label, attribute, type }) =>
                     type === "number" ? { label, value: attribute } : null
                 )
                 .filter((x) => !!x);
+            return [
+                ...numberAttributes,
+                {label: "Original Z value", value: ORIGINAL_OPTION_VALUE}
+            ];
         }
     })
 };
@@ -110,7 +102,7 @@ const getBlocks = ({
                 radius: 16,
                 rotate: 0,
                 msBringToFront: false,
-                msHeightReference: 'CLAMP_TO_GROUND'
+                height: 0
             }
         },
         Icon: {

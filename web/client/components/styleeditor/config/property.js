@@ -476,6 +476,21 @@ const property = {
         isDisabled,
         isVisible
     }),
+    multiInput: ({ label, key = '', originalOptionValue, getSelectOptions = () => [], isDisabled, isVisible }) => ({
+        type: 'multiInput',
+        label,
+        config: {
+            originalOptionValue,
+            getSelectOptions
+        },
+        getValue: (value) => {
+            return {
+                [key]: value
+            };
+        },
+        isDisabled,
+        isVisible
+    }),
     colorRamp: ({ label, key = '', getOptions = () => [] }) => ({
         type: 'colorRamp',
         label,
@@ -522,28 +537,6 @@ const property = {
             return {
                 channelSelection: value.channelSelection,
                 contrastEnhancement: value.contrastEnhancement
-            };
-        }
-    }),
-    constantHeight: ({ key = 'constantHeight', label = 'Constant height' }) => ({
-        type: 'slider',
-        label,
-        config: {
-            range: { min: 0, max: 200 },
-            format: {
-                from: value => Math.round(value),
-                to: value => Math.round(value)
-            }
-        },
-        isVisible: (value, {heightMode}) => {
-            return heightMode === 'constant';
-        },
-        setValue: (value = 1) => {
-            return parseFloat(value);
-        },
-        getValue: (value = []) => {
-            return {
-                [key]: parseFloat(value[0] || 0)
             };
         }
     })
