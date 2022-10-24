@@ -85,12 +85,10 @@ export const fields = {
     slider: ({
         label,
         value,
-        visible,
         disabled,
         config = {},
         onChange = () => {}
     }) => {
-        if (!visible) return null;
         return (
             <PropertyField
                 label={label}

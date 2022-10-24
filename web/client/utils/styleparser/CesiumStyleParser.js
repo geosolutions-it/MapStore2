@@ -46,7 +46,10 @@ function getCesiumDashArray({ color, opacity, dasharray }) {
 }
 
 function modifyPointHeight(map, entity, symbolizer, properties) {
-    const ellipsoid = map.scene.globe.ellipsoid;
+    const ellipsoid = map?.scene?.globe?.ellipsoid;
+    if (!ellipsoid) {
+        return;
+    }
     const cartographic = ellipsoid.cartesianToCartographic(
         entity.position.getValue(Cesium.JulianDate.now())
     );
