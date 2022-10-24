@@ -17,6 +17,8 @@ import { clickedPointWithFeaturesSelector } from './mapInfo';
 import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
 import { flattenGroups } from '../utils/TOCUtils';
 import { mapSelector } from './map';
+import { getSelectedMapView } from './mapviews';
+import { mergeViewLayers } from '../utils/MapViewsUtils';
 
 export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -153,7 +155,7 @@ const isLayerQueryable = (state, layer) => {
 * @param {object} state the state
 * @return {array} the queriable layers
 */
-export const queryableLayersSelector = state => layersSelector(state).filter((layer) => isLayerQueryable(state, layer));
+export const queryableLayersSelector = state => mergeViewLayers(layersSelector(state), getSelectedMapView(state)).filter((layer) => isLayerQueryable(state, layer));
 /**
  * Return loading error state for selected layer
  * @param {object} state the state

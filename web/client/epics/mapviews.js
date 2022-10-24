@@ -1,0 +1,221 @@
+/*
+ * Copyright 2022, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import { Observable } from 'rxjs';
+import { isEmpty, isString } from 'lodash';
+import {
+    SELECT_VIEW,
+    UPDATE_VIEWS,
+    ACTIVATE_VIEWS,
+    SETUP_VIEWS,
+    HIDE_VIEWS,
+    setPreviousView,
+    updateResources,
+    hideViews
+} from '../actions/mapviews';
+import {
+    TOGGLE_CONTROL,
+    SET_CONTROL_PROPERTY
+} from '../actions/controls';
+import {
+    removeAdditionalLayer,
+    updateAdditionalLayer
+} from '../actions/additionallayers';
+import {
+    getSelectedMapView,
+    getResourceById,
+    getPreviousView,
+    getMapViewsResources
+} from '../selectors/mapviews';
+import { layersSelector } from '../selectors/layers';
+import {
+    isShallowEqualBy
+} from '../utils/ReselectUtils';
+import { getResourceFromLayer } from '../api/MapViews';
+
+import { MAP_VIEWS_LAYERS_OWNER, formatClippingFeatures } from '../utils/MapViewsUtils';
+const deepCompare = isShallowEqualBy();
+
+const updateResourcesObservable = (view, store) => {
+    const state = store.getState();
+    const resources = getMapViewsResources(state);
+    const { layers = [], mask = {} } = view || {};
+    return Observable.defer(() => {
+        const mapLayers = layersSelector(state);
+        const maskLayerResource = isString(mask.resourceId) ? getResourceById(state, mask.resourceId) : undefined;
+        const maskVectorLayer = mapLayers?.find(layer => layer.id === maskLayerResource?.data?.id);
+        const checkResources = [
+            {
+                resource: maskLayerResource,
+                options: mask,
+                vectorLayer: maskVectorLayer
+            },
+            ...layers
+                .filter(({ clippingLayerResourceId }) => clippingLayerResourceId)
+                .map(({ clippingLayerResourceId }) => {
+                    const layerResource = isString(clippingLayerResourceId) ? getResourceById(state, clippingLayerResourceId) : undefined;
+                    const vectorLayer = mapLayers?.find(layer => layer.id === layerResource?.data?.id);
+                    return {
+                        resource: layerResource,
+                        vectorLayer
+                    };
+                })
+        ];
+        return Promise.all(
+            checkResources
+                .filter(({ resource }) => resource)
+                .map(({ resource, options, vectorLayer }) =>
+                    getResourceFromLayer({
+                        resourceId: resource.id,
+                        layer: {
+                            ...(vectorLayer?.features && {
+                                features: vectorLayer?.features
+                            }),
+                            ...resource.data
+                        },
+                        inverse: options?.inverse,
+                        offset: options?.offset,
+                        resources
+                    })
+                        .then((response) => response)
+                        .catch(() => ({ id: resource.id, error: true }))
+                )
+        );
+    });
+};
+
+export const updateMapViewsLayers = (action$, store) =>
+    action$.ofType(
+        SELECT_VIEW,
+        UPDATE_VIEWS,
+        ACTIVATE_VIEWS,
+        HIDE_VIEWS,
+        SETUP_VIEWS
+    )
+        .filter((action) =>
+            action.type !== ACTIVATE_VIEWS
+            || action.type === ACTIVATE_VIEWS && action.active
+            || action.type === HIDE_VIEWS && !action.hide)
+        .switchMap(() => {
+            const state = store.getState();
+            const previousView = getPreviousView(state);
+            const currentView =  getSelectedMapView(state);
+            const { layers = [], mask = {}, id: viewId } = currentView || {};
+            const shouldUpdate = !!(
+                !deepCompare(previousView?.layers || [], layers)
+                || !deepCompare(previousView?.mask || {}, mask)
+            );
+            if (!shouldUpdate) {
+                return Observable.of(
+                    setPreviousView(currentView)
+                );
+            }
+            const resources = getMapViewsResources(state);
+            return updateResourcesObservable(currentView, store)
+                .switchMap((allResources) => {
+                    const checkedResources = allResources.filter(({ error }) => !error);
+                    const mapLayers = layersSelector(state);
+                    const updatedResources = checkedResources.filter(resource => resource.updated);
+                    const maskLayerResource = isString(mask.resourceId) && checkedResources.find((resource) => resource.id === mask.resourceId);
+                    return Observable.of(
+                        ...(updatedResources.length > 0 ? [
+                            updateResources(resources.map((resource) => {
+                                const { updated, ...updatedResource } = updatedResources.find(uResource => uResource.id === resource.id) || {};
+                                return !isEmpty(updatedResource) ? updatedResource : resource;
+                            }))
+                        ] : []),
+                        setPreviousView(currentView),
+                        removeAdditionalLayer({ owner: MAP_VIEWS_LAYERS_OWNER }),
+                        ...layers
+                            .filter((layer) => !!mapLayers.find(mapLayer => mapLayer.id === layer.id))
+                            .map((layer) => {
+                                const clipPolygonLayerResource = isString(layer.clippingLayerResourceId) && checkedResources.find((resource) => resource.id === layer.clippingLayerResourceId);
+                                const clippingPolygon = isString(layer.clippingPolygonFeatureId)
+                                    && formatClippingFeatures(clipPolygonLayerResource?.data?.collection?.features)?.find(feature => feature.id === layer.clippingPolygonFeatureId);
+                                return updateAdditionalLayer(
+                                    layer.id,
+                                    MAP_VIEWS_LAYERS_OWNER,
+                                    'override',
+                                    {
+                                        ...layer,
+                                        clippingPolygon
+                                    }
+                                );
+                            }),
+                        ...(maskLayerResource?.data?.collection?.features
+                            ? [updateAdditionalLayer(
+                                `${viewId}-mask`,
+                                MAP_VIEWS_LAYERS_OWNER,
+                                'overlay',
+                                {
+                                    id: `${viewId}-mask`,
+                                    type: 'vector',
+                                    features: maskLayerResource.data.collection.features,
+                                    visibility: true,
+                                    style: {
+                                        format: 'geostyler',
+                                        body: {
+                                            name: '',
+                                            rules: [
+                                                {
+                                                    name: '',
+                                                    symbolizers: [{
+                                                        kind: 'Fill',
+                                                        color: '#ffffff',
+                                                        fillOpacity: 0
+                                                    }]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            )]
+                            : [])
+                    );
+                });
+        });
+
+export const removeMapViewsLayersWhenDeactivated = (action$) =>
+    action$.ofType(ACTIVATE_VIEWS)
+        .filter((action) => !action.active)
+        .switchMap(() => {
+            return Observable.of(
+                removeAdditionalLayer({ owner: MAP_VIEWS_LAYERS_OWNER }),
+                setPreviousView()
+            );
+        });
+
+const controlsToCheck = ['drawer', 'metadataexplorer', 'print', 'queryPanel'];
+
+export const hideMapViewsBasedOnLayoutChanges = (action$, store) =>
+    action$.ofType(
+        TOGGLE_CONTROL,
+        SET_CONTROL_PROPERTY
+    )
+        .filter((action) =>
+            controlsToCheck.includes(action.control)
+        )
+        .switchMap(() => {
+            const state = store.getState();
+            const shouldBeHidden = !!controlsToCheck.find((key) => !!state?.controls?.[key]?.enabled);
+            return shouldBeHidden
+                ? Observable.of(
+                    removeAdditionalLayer({ owner: MAP_VIEWS_LAYERS_OWNER }),
+                    setPreviousView(),
+                    hideViews(true)
+                )
+                : Observable.of(
+                    hideViews(false)
+                );
+        });
+
+export default {
+    updateMapViewsLayers,
+    removeMapViewsLayersWhenDeactivated,
+    hideMapViewsBasedOnLayoutChanges
+};

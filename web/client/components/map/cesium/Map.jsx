@@ -120,6 +120,10 @@ class CesiumMap extends React.Component {
             skyBox: false
         }, this.getMapOptions(this.props.mapOptions)));
 
+        // prevent default behavior
+        // such as lock the camera on model after double click
+        map.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
         if (this.props.errorPanel) {
             // override the default error message overlay
             map.cesiumWidget.showErrorPanel = (title, message, error) => {
