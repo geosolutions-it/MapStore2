@@ -45,6 +45,20 @@ function getCesiumDashArray({ color, opacity, dasharray }) {
     });
 }
 
+function modifyPointHeight(map, entity, symbolizer, properties) {
+    const ellipsoid = map.scene.globe.ellipsoid;
+    const cartographic = ellipsoid.cartesianToCartographic(
+        entity.position.getValue(Cesium.JulianDate.now())
+    );
+    const constantHeight = parseFloat(symbolizer.height);
+    cartographic.height =
+        (!isNaN(constantHeight) && constantHeight) ||
+        (symbolizer.height?.type === "attribute" &&
+            properties[symbolizer.height.name]) ||
+        0;
+    entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
+}
+
 function parseLabel(feature, label = '') {
     if (!feature.properties) {
         return label;
@@ -126,15 +140,7 @@ function getStyleFuncFromRules({
                                         opacity: 1 * globalOpacity
                                     })
                                 });
-                                const ellipsoid = map.scene.globe.ellipsoid;
-                                const cartographic = ellipsoid.cartesianToCartographic(
-                                    entity.position.getValue(Cesium.JulianDate.now())
-                                );
-                                const constantHeight = parseFloat(symbolizer.height);
-                                cartographic.height = !isNaN(constantHeight) && constantHeight
-                                    || symbolizer.height?.type === 'attribute' && properties[symbolizer.height.name]
-                                    || 0;
-                                entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
+                                modifyPointHeight(map, entity, symbolizer, properties);
                             }
                         }
                         if (symbolizer.kind === 'Icon' && entity.position) {
@@ -147,12 +153,13 @@ function getStyleFuncFromRules({
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
-                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    heightReference: Cesium.HeightReference[symbolizer.msHeightReference || 'CLAMP_TO_GROUND'],
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: symbolizer.opacity * globalOpacity
                                     })
                                 });
+                                modifyPointHeight(map, entity, symbolizer, properties);
                             }
                         }
                         if (symbolizer.kind === 'Line' && entity._msStoredCoordinates.polyline) {

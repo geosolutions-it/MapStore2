@@ -744,7 +744,9 @@ function msStyleToSymbolizer(style, feature) {
             image: style.iconUrl,
             size: max(style.iconSize || [32]),
             opacity: 1,
-            rotate: 0
+            rotate: 0,
+            msHeightReference: 'CLAMP_TO_GROUND',
+            height: 0
         });
     }
     if (isMarkerStyle(style)) {
@@ -753,7 +755,9 @@ function msStyleToSymbolizer(style, feature) {
             image: MarkerUtils.extraMarkers.markerToDataUrl(style),
             size: 45,
             opacity: 1,
-            rotate: 0
+            rotate: 0,
+            msHeightReference: 'CLAMP_TO_GROUND',
+            height: 0
         });
     }
     if (isSymbolStyle(style)) {
@@ -769,7 +773,9 @@ function msStyleToSymbolizer(style, feature) {
                     image: symbolUrlCustomized,
                     size: style.size,
                     opacity: 1,
-                    rotate: 0
+                    rotate: 0,
+                    msHeightReference: 'CLAMP_TO_GROUND',
+                    height: 0
                 };
             })
             .catch(() => ({}));

@@ -102,6 +102,7 @@ const getBlocks = ({
                 radius: 16,
                 rotate: 0,
                 msBringToFront: false,
+                msHeightReference: 'CLAMP_TO_GROUND',
                 height: 0
             }
         },
