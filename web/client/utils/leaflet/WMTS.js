@@ -42,8 +42,9 @@ var WMTS = L.TileLayer.extend({
             wmtsParams.width = wmtsParams.height = tileSize;
         }
         for (let i in options) {
-            // all keys that are not TileLayer options go to WMS params
-            if (!this.options.hasOwnProperty(i) && i !== 'crs') {
+            // all keys that are not TileLayer options go to WMTS params
+            // skip attribution parameter, html content of it make requests fail
+            if (!this.options.hasOwnProperty(i) && i !== 'crs' && i !== 'attribution') {
                 wmtsParams[i] = options[i];
             }
         }
