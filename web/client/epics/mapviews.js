@@ -26,6 +26,7 @@ import {
     removeAdditionalLayer,
     updateAdditionalLayer
 } from '../actions/additionallayers';
+import { CATALOG_CLOSE } from '../actions/catalog';
 import {
     getSelectedMapView,
     getResourceById,
@@ -195,10 +196,12 @@ const controlsToCheck = ['drawer', 'metadataexplorer', 'print', 'queryPanel'];
 export const hideMapViewsBasedOnLayoutChanges = (action$, store) =>
     action$.ofType(
         TOGGLE_CONTROL,
-        SET_CONTROL_PROPERTY
+        SET_CONTROL_PROPERTY,
+        CATALOG_CLOSE
     )
         .filter((action) =>
-            controlsToCheck.includes(action.control)
+            action.type === CATALOG_CLOSE
+            || controlsToCheck.includes(action.control)
         )
         .switchMap(() => {
             const state = store.getState();
