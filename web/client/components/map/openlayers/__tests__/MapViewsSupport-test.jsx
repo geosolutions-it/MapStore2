@@ -13,6 +13,7 @@ import expect from 'expect';
 import { act } from 'react-dom/test-utils';
 import MapViewsSupport from '../MapViewsSupport';
 import { ViewSettingsTypes } from '../../../../utils/MapViewsUtils';
+import { clearHooks } from '../../../../utils/MapUtils';
 
 describe('OpenLayers MapViewsSupport', () => {
     beforeEach((done) => {
@@ -23,6 +24,7 @@ describe('OpenLayers MapViewsSupport', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
+        clearHooks();
     });
     it('should render with default values', () => {
         act(() => {
