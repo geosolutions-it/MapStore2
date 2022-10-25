@@ -96,11 +96,11 @@ export default {
                         if (code === 'TileOutOfRange') {
                             return { data: { features: []}};
                         }
-                        return e;
+                        throw e;
                     });
 
                 }
-                return e;
+                throw e;
             })
 
 };
