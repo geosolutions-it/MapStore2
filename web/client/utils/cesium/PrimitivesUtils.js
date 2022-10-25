@@ -10,6 +10,12 @@ import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
 import uniqBy from 'lodash/uniqBy';
 
+/**
+ * return a cesium color
+ * @param {object} options
+ * @param {string} options.color a color css string (eg. #ff0000)
+ * @param {number} options.opacity a number between 0 and 1 where 1 is fully opaque
+ */
 export const getCesiumColor = ({ color, opacity }) => {
     const [r, g, b, a] = chroma(color).gl();
     if (opacity !== undefined) {
@@ -18,6 +24,9 @@ export const getCesiumColor = ({ color, opacity }) => {
     return new Cesium.Color(r, g, b, a);
 };
 
+/**
+ * create a polyline primitive
+ */
 export const createPolylinePrimitive = ({
     coordinates,
     width = 4,
@@ -80,6 +89,9 @@ export const createPolylinePrimitive = ({
     });
 };
 
+/**
+ * create a polygon primitive
+ */
 export const createPolygonPrimitive = ({
     coordinates,
     color = '#ff00ffAA',
@@ -127,6 +139,14 @@ export const clearPrimitivesCollection = (map, primitivesCollection) => {
     }
 };
 
+/**
+ * return a canvas with a circle drawn on it that can be used as billboard image
+ * @param {object} size size of the canvas
+ * @param {object} options
+ * @param {string} options.fill color css string (eg. #ff0000)
+ * @param {string} options.stroke color css string (eg. #ff0000)
+ * @param {number} options.strokeWidth width of the stroke in pixel
+ */
 export const createCircleMarkerImage = (size, { stroke, strokeWidth = 1, fill = '#ffffff' } = {}) => {
     const fullSize = stroke ? size + strokeWidth * 2 : size;
     const canvas = document.createElement('canvas');
@@ -157,6 +177,12 @@ const clockwiseCoordinates = (coordinates) => {
         });
 };
 
+/**
+ * convert a polygon feature to clipping planes
+ * @param {object} feature a GeoJSON polygon feature
+ * @param {boolean} union if true the clip will show the outside of the feature
+ * @param {boolean} clipOriginalGeometry use the original geometry without conversion to convex geometry
+ */
 export const polygonToClippingPlanes = (feature, union, clipOriginalGeometry) => {
     return import('@turf/convex')
         .then((mod) => {

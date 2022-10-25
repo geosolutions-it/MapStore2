@@ -50,7 +50,12 @@ const getFeatureFromBbox = (bbox, offset = 0) => {
         properties: {}
     };
 };
-
+/**
+ * create an inverse GeoJSON layer given a GeoJSON input with Polygon or MultiPolygon geometries
+ * @param {object} collection feature collection
+ * @param {object} options available options
+ * @param {number} options.offset offset in meter
+ */
 export const createInverseMaskFromPolygonFeatureCollection = (collection, { offset = 0 } = {}) => {
     return Promise.all([
         import('@turf/difference'),
@@ -75,7 +80,11 @@ export const createInverseMaskFromPolygonFeatureCollection = (collection, { offs
             };
         });
 };
-
+/**
+ * merge the configuration of view layers in the main layers array
+ * @param {array} layers array of layer object
+ * @param {object} view map view configuration
+ */
 export const mergeViewLayers = (layers, { layers: viewLayers = [] } = {}) => {
     if (viewLayers.length === 0) {
         return layers || [];
@@ -88,7 +97,10 @@ export const mergeViewLayers = (layers, { layers: viewLayers = [] } = {}) => {
         return layer;
     });
 };
-
+/**
+ * Exclude all geometry but polygons and ensure each feature has an identifier
+ * @param {array} features array of GeoJSON features
+ */
 export const formatClippingFeatures = (features) => {
     return features
         ? features
@@ -98,10 +110,21 @@ export const formatClippingFeatures = (features) => {
 };
 
 export const ZOOM_TO_HEIGHT = 80000000;
-
+/**
+ * convert height to zoom level
+ * @param {number} height height in meter
+ */
 export const getZoomFromHeight = (height) => Math.log2(ZOOM_TO_HEIGHT / height) + 1;
+/**
+ * convert zoom level to height
+ * @param {number} zoom zoom level
+ */
 export const getHeightFromZoom = (zoom) => ZOOM_TO_HEIGHT / Math.pow(2, zoom - 1);
-
+/**
+ * clean the current state of the map views before using it in the saving process
+ * @param {object} payload current map views state
+ * @param {array} layers layers available inside a map
+ */
 export const cleanMapViewSavedPayload = ({ views, resources, ...payload }, layers = []) => {
     const newViews = views?.map((view) => {
         if (view?.layers?.length > 0) {
