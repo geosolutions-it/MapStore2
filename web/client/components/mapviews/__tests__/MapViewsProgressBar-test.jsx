@@ -25,7 +25,30 @@ describe('MapViewsProgressBar component', () => {
 
     it('should render with default', () => {
         ReactDOM.render(<MapViewsProgressBar />, document.getElementById("container"));
-        const sectionNode = document.querySelector('.ms-map-view-progress-container');
-        expect(sectionNode).toBeTruthy();
+        const progressNode = document.querySelector('.ms-map-view-progress-container');
+        expect(progressNode).toBeTruthy();
+    });
+
+    it('should display the bar based on progress prop', () => {
+        ReactDOM.render(<MapViewsProgressBar
+            progress={50}
+        />, document.getElementById("container"));
+        const progressBar = document.querySelector('.ms-map-view-progress-bar');
+        expect(progressBar).toBeTruthy();
+        expect(progressBar.style.width).toBe('50%');
+    });
+    it('should display ticks based on segments and totalLength props', () => {
+        ReactDOM.render(<MapViewsProgressBar
+            segments={[0, 2000, 4000, 5000]}
+            totalLength={10000}
+        />, document.getElementById("container"));
+        const tickNodes = [...document.querySelectorAll('.ms-map-view-progress-tick')];
+        expect(tickNodes.length).toBeTruthy(4);
+        expect(tickNodes.map(tickNode => tickNode.style.left)).toEqual([
+            '0%',
+            '20%',
+            '40%',
+            '50%'
+        ]);
     });
 });
