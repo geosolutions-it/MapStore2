@@ -101,3 +101,39 @@ export const ZOOM_TO_HEIGHT = 80000000;
 
 export const getZoomFromHeight = (height) => Math.log2(ZOOM_TO_HEIGHT / height) + 1;
 export const getHeightFromZoom = (zoom) => ZOOM_TO_HEIGHT / Math.pow(2, zoom - 1);
+
+export const cleanMapViewSavedPayload = ({ views, resources, ...payload }, layers = []) => {
+    const newViews = views?.map((view) => {
+        if (view?.layers?.length > 0) {
+            return {
+                ...view,
+                layers: view.layers.filter(viewLayer => !!layers.find(layer => layer.id === viewLayer.id))
+            };
+        }
+        return view;
+    });
+    const newResources = resources?.filter((resource) => {
+        const isUsedByView = !!newViews?.find((view) =>
+            view?.mask?.resourceId === resource.id
+            || view?.terrain?.clippingLayerResourceId === resource.id
+            || view?.layers?.find(layer => layer?.clippingLayerResourceId === resource.id));
+        return isUsedByView;
+    }).map((resource) => {
+        // we should store the feature collection
+        // if the layer is vector and is not possible to find the original layer in map config
+        // so we persist the mask or clipping resource
+        if (resource?.data?.type === 'vector' && !layers.find(layer => layer.id === resource?.data?.id)) {
+            return resource;
+        }
+        const { collection, ...data } = resource?.data;
+        return {
+            ...resource,
+            data
+        };
+    });
+    return {
+        ...payload,
+        views: newViews,
+        resources: newResources
+    };
+};

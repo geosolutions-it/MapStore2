@@ -11,10 +11,11 @@ import {
     mergeViewLayers,
     formatClippingFeatures,
     getZoomFromHeight,
-    getHeightFromZoom
+    getHeightFromZoom,
+    cleanMapViewSavedPayload
 } from '../MapViewsUtils';
 
-describe('Test MapViewsUtils', () => {
+describe.only('Test MapViewsUtils', () => {
     it('createInverseMaskFromPolygonFeatureCollection', (done) => {
         createInverseMaskFromPolygonFeatureCollection({
             type: 'FeatureCollection',
@@ -120,5 +121,200 @@ describe('Test MapViewsUtils', () => {
     });
     it('getHeightFromZoom', () => {
         expect(Math.round(getHeightFromZoom(17))).toBe(1221);
+    });
+    it('cleanMapViewSavedPayload remove resources if not used', () => {
+        const mapViews = cleanMapViewSavedPayload({
+            views: [],
+            resources: [
+                {
+                    id: 'resource.01',
+                    data: {
+                        id: 'layer.01',
+                        type: 'wfs',
+                        url: '/geoserver/wfs',
+                        name: 'layer'
+                    }
+                }
+            ]
+        });
+        expect(mapViews.resources.length).toBe(0);
+    });
+    it('cleanMapViewSavedPayload remove layers from view if not available anymore in map', () => {
+        const mapViews = cleanMapViewSavedPayload({
+            views: [
+                {
+                    id: 'view.01',
+                    layers: [
+                        {
+                            id: 'layer.01',
+                            type: 'wfs',
+                            url: '/geoserver/wfs',
+                            name: 'layer'
+                        }
+                    ]
+                }
+            ]
+        }, []);
+        expect(mapViews.views[0].layers.length).toBe(0);
+    });
+    it('cleanMapViewSavedPayload remove layers from view if not available anymore in map', () => {
+        const mapViews = cleanMapViewSavedPayload({
+            views: [
+                {
+                    id: 'view.01',
+                    layers: [
+                        {
+                            id: 'layer.01',
+                            type: 'wfs',
+                            url: '/geoserver/wfs',
+                            name: 'layer'
+                        }
+                    ]
+                }
+            ]
+        }, []);
+        expect(mapViews.views[0].layers.length).toBe(0);
+    });
+    it('cleanMapViewSavedPayload remove feature collection from resources', () => {
+        const mapViews = cleanMapViewSavedPayload({
+            views: [
+                {
+                    id: 'view.01',
+                    mask: {
+                        resourceId: 'resource.01'
+                    },
+                    layers: [
+                        {
+                            id: 'layer.01',
+                            type: 'wfs',
+                            url: '/geoserver/wfs',
+                            name: 'layer',
+                            clippingLayerResourceId: 'resource.02'
+                        }
+                    ]
+                }
+            ],
+            resources: [
+                {
+                    id: 'resource.01',
+                    data: {
+                        id: 'layer.01',
+                        type: 'wfs',
+                        url: '/geoserver/wfs',
+                        name: 'layer',
+                        collection: {
+                            type: 'FeatureCollection',
+                            features: []
+                        }
+                    }
+                },
+                {
+                    id: 'resource.02',
+                    data: {
+                        id: 'layer.02',
+                        type: 'vector',
+                        name: 'layer',
+                        collection: {
+                            type: 'FeatureCollection',
+                            features: []
+                        }
+                    }
+                }
+            ]
+        }, [{ id: 'layer.01' }, { id: 'layer.02' }]);
+        expect(mapViews.resources).toEqual(
+            [
+                {
+                    id: 'resource.01',
+                    data: {
+                        id: 'layer.01',
+                        type: 'wfs',
+                        url: '/geoserver/wfs',
+                        name: 'layer'
+                    }
+                },
+                {
+                    id: 'resource.02',
+                    data: {
+                        id: 'layer.02',
+                        type: 'vector',
+                        name: 'layer'
+                    }
+                }
+            ]
+        );
+    });
+    it('cleanMapViewSavedPayload persist feature collection if original vector layer is not available anymore', () => {
+        const mapViews = cleanMapViewSavedPayload({
+            views: [
+                {
+                    id: 'view.01',
+                    mask: {
+                        resourceId: 'resource.01'
+                    },
+                    layers: [
+                        {
+                            id: 'layer.01',
+                            type: 'wfs',
+                            url: '/geoserver/wfs',
+                            name: 'layer',
+                            clippingLayerResourceId: 'resource.02'
+                        }
+                    ]
+                }
+            ],
+            resources: [
+                {
+                    id: 'resource.01',
+                    data: {
+                        id: 'layer.01',
+                        type: 'wfs',
+                        url: '/geoserver/wfs',
+                        name: 'layer',
+                        collection: {
+                            type: 'FeatureCollection',
+                            features: []
+                        }
+                    }
+                },
+                {
+                    id: 'resource.02',
+                    data: {
+                        id: 'layer.02',
+                        type: 'vector',
+                        name: 'layer',
+                        collection: {
+                            type: 'FeatureCollection',
+                            features: []
+                        }
+                    }
+                }
+            ]
+        }, [{ id: 'layer.01' }]);
+        expect(mapViews.resources).toEqual(
+            [
+                {
+                    id: 'resource.01',
+                    data: {
+                        id: 'layer.01',
+                        type: 'wfs',
+                        url: '/geoserver/wfs',
+                        name: 'layer'
+                    }
+                },
+                {
+                    id: 'resource.02',
+                    data: {
+                        id: 'layer.02',
+                        type: 'vector',
+                        name: 'layer',
+                        collection: {
+                            type: 'FeatureCollection',
+                            features: []
+                        }
+                    }
+                }
+            ]
+        );
     });
 });

@@ -23,37 +23,19 @@ import {
 import { registerCustomSaveHandler } from '../selectors/mapsave';
 import { isLoggedIn } from '../selectors/security';
 import { mapIdSelector } from '../selectors/map';
+import { layersSelector } from '../selectors/layers';
+import { cleanMapViewSavedPayload } from '../utils/MapViewsUtils';
 
 const Button = tooltip(ButtonMS);
 
 const MAP_VIEWS_CONFIG_KEY = 'mapViews';
-
-function cleanMapViewSavedPayload({ views, resources, ...payload }) {
-    return {
-        ...payload,
-        views,
-        resources: resources?.filter((resource) => {
-            const isUsedByView = !!views?.find((view) =>
-                view?.mask?.resourceId === resource.id
-                || view?.terrain?.clippingLayerResourceId === resource.id
-                || view?.layers?.find(layer => layer?.clippingLayerResourceId === resource.id));
-            return isUsedByView;
-        }).map((resource) => {
-            const { collection, ...data } = resource?.data;
-            return {
-                ...resource,
-                data
-            };
-        })
-    };
-}
 
 registerCustomSaveHandler(MAP_VIEWS_CONFIG_KEY, (state) => cleanMapViewSavedPayload({
     active: isMapViewsActive(state),
     selectedId: getSelectedMapViewId(state),
     views: getMapViews(state),
     resources: getMapViewsResources(state)
-}));
+}, layersSelector(state)));
 
 const pluginName = 'MapViews';
 
