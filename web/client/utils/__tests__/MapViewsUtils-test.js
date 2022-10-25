@@ -15,7 +15,7 @@ import {
     cleanMapViewSavedPayload
 } from '../MapViewsUtils';
 
-describe.only('Test MapViewsUtils', () => {
+describe('Test MapViewsUtils', () => {
     it('createInverseMaskFromPolygonFeatureCollection', (done) => {
         createInverseMaskFromPolygonFeatureCollection({
             type: 'FeatureCollection',
