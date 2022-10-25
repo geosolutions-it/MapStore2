@@ -119,7 +119,7 @@ function LayerOverridesNode({
                             onChange={(option) => handleUpdateLayer({ layer: option?.layer })}
                         />
                         {error && <Alert bsStyle="danger" style={{ marginTop: 8 }}>
-                            <Message msgId="mapViews.clipLayerRequestError"/>
+                            <Message msgId="mapViews.resourceLayerRequestError"/>
                         </Alert>}
                     </FormGroup>
                     <FormGroup

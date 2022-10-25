@@ -117,7 +117,7 @@ function MaskSection({
                     <Message msgId="mapViews.maskLayerPolygonError"/>
                 </Alert>}
                 {error && <Alert bsStyle="danger" style={{ marginTop: 8 }}>
-                    <Message msgId="mapViews.maskLayerRequestError"/>
+                    <Message msgId="mapViews.resourceLayerRequestError"/>
                 </Alert>}
             </FormGroup>
             <FormGroup controlId="map-views-mask-inverse">
