@@ -84,7 +84,7 @@ compose(
         widthProvider({ overrideWidthProvider: false }),
         withProps(({ isMobileAgent, width, mapLayout, singleWidgetLayoutBreakpoint = 600 }) => {
             const rightOffset = mapLayout?.right ?? 0;
-            const leftOffset = 0;
+            const leftOffset = (width && width > 800) ? 500 : 0;
             const viewWidth = width - (leftOffset + rightOffset + RIGHT_MARGIN);
             const isSingleWidgetLayout = isMobileAgent || viewWidth <= singleWidgetLayoutBreakpoint;
             const backgroundSelectorOffset = isSingleWidgetLayout ? (isMobileAgent ? 40 : 60) : 0;
