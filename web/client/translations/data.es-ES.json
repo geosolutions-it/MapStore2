@@ -3046,6 +3046,10 @@
           "ZoomOut": {
             "description": "Botón que disminuye el nivel de zoom del mapa",
             "title": "Zoom Out"
+          },
+          "MapViews": {
+            "description": "Este complemento permite agregar una secuencia de diferentes vistas dentro de un mapa",
+            "title": "Vistas del mapa"
           }
         },
         "contextCreator": {

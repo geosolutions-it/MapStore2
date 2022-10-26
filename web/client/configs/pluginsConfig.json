@@ -615,6 +615,15 @@
     {
       "name": "SidebarMenu",
       "hidden": true
+    },
+    {
+      "name": "MapViews",
+      "glyph": "map-view",
+      "title": "plugins.MapViews.title",
+      "description": "plugins.MapViews.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
     }
   ]
 }

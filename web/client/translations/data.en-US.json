@@ -3058,6 +3058,10 @@
           "ZoomOut": {
             "description": "Button that decrease zoom level of the map",
             "title": "Zoom Out"
+          },
+          "MapViews": {
+            "description": "This plugin allows to add a sequence of different views inside a map",
+            "title": "MapViews"
           }
         },
         "contextCreator": {

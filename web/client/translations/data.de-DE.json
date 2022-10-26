@@ -3084,6 +3084,10 @@
           "ZoomOut": {
             "description": "Schaltfläche zum Verringern der Zoomstufe der Karte",
             "title": "Herauszoomen"
+          },
+          "MapViews": {
+            "description": "Dieses Plugin ermöglicht das Hinzufügen einer Sequenz verschiedener Ansichten innerhalb einer Karte",
+            "title": "Kartenansichten"
           }
         },
         "contextCreator": {
