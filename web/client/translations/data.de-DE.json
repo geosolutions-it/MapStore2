@@ -3335,6 +3335,7 @@
             "undoChanges": "Änderungen rückgängig machen",
             "redoChanges": "Änderungen wiederholen",
             "addNewView": "Neue Ansicht hinzufügen",
+            "addNewViewBelowSelected": "Eine neue Ansicht unterhalb der ausgewählten hinzufügen",
             "hideDescription": "Beschreibung ausblenden",
             "showDescription": "Beschreibung anzeigen",
             "copyCurrentView": "Aktuelle Ansicht kopieren",

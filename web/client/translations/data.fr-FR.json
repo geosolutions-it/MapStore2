@@ -3299,6 +3299,7 @@
             "undoChanges": "Annuler les modifications",
             "redoChanges": "Rétablir les modifications",
             "addNewView": "Ajouter une nouvelle vue",
+            "addNewViewBelowSelected": "Ajouter une nouvelle vue sous celle sélectionnée",
             "hideDescription": "Masquer la description",
             "showDescription": "Afficher la description",
             "copyCurrentView": "Copier la vue actuelle",

@@ -454,7 +454,7 @@ function MapViewsSupport({
                                             className="square-button-md"
                                             disabled={expanded === 'settings'}
                                             onClick={handleCreateView.bind(null, undefined)}
-                                            tooltipId="mapViews.addNewView"
+                                            tooltipId={selected ? 'mapViews.addNewViewBelowSelected' : 'mapViews.addNewView'}
                                             tooltipPosition="bottom"
                                         >
                                             <Glyphicon glyph="plus" />

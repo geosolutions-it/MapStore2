@@ -3309,6 +3309,7 @@
             "undoChanges": "Undo changes",
             "redoChanges": "Redo changes",
             "addNewView": "Add new view",
+            "addNewViewBelowSelected": "Add a new view below the selected one",
             "hideDescription": "Hide description",
             "showDescription": "Show description",
             "copyCurrentView": "Copy current view",
