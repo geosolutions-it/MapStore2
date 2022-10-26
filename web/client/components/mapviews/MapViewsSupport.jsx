@@ -413,13 +413,17 @@ function MapViewsSupport({
                                 totalLength={viewsTimeTotalLength}
                             />
                             <div className="ms-map-views-header">
-                                {!play && <Button
-                                    className="square-button-md no-border"
-                                    style={{ borderRadius: '50%', marginRight: 4 }}
-                                    onClick={() => setExpanded(expanded !== 'list' ? 'list' : '')}
-                                >
-                                    <Glyphicon glyph={expanded === 'list' ? "chevron-down" : "chevron-right"} />
-                                </Button>}
+                                {(selected?.description && !expanded) ?
+                                    <Button
+                                        className="square-button-md no-border"
+                                        style={{ borderRadius: '50%', marginRight: 4 }}
+                                        onClick={() => setShowDescription(!showDescription)}
+                                        tooltipId={showDescription ? 'mapViews.hideDescription' : 'mapViews.showDescription'}
+                                        tooltipPosition="bottom"
+                                    >
+                                        <Glyphicon glyph={showDescription ? "chevron-down" : "chevron-right"} />
+                                    </Button>
+                                    : null}
                                 <div className="ms-map-views-title">
                                     {expanded === 'settings'
                                         ? (
@@ -432,21 +436,23 @@ function MapViewsSupport({
                                         : selected?.title}
                                 </div>
                                 <ButtonToolbar>
-                                    {(selected?.description && !expanded) ? <ButtonGroup>
+                                    {!play && <ButtonGroup>
                                         <Button
-                                            className="square-button-md no-border"
-                                            active={!!showDescription}
-                                            onClick={() => setShowDescription(!showDescription)}
-                                            tooltipId={showDescription ? 'mapViews.hideDescription' : 'mapViews.showDescription'}
+                                            bsStyle="primary"
+                                            className="square-button-md"
+                                            active={expanded === 'list'}
+                                            onClick={() => setExpanded(expanded !== 'list' ? 'list' : '')}
+                                            tooltipId={expanded === 'list' ? 'mapViews.hideViewsList' : 'mapViews.showViewsList'}
                                             tooltipPosition="bottom"
                                         >
-                                            <Glyphicon glyph="story-paragraph-section" />
+                                            <Glyphicon glyph="list" />
                                         </Button>
-                                    </ButtonGroup> : null}
+                                    </ButtonGroup>}
                                     {(!play && edit) && <ButtonGroup>
                                         <Button
                                             bsStyle="primary"
                                             className="square-button-md"
+                                            disabled={expanded === 'settings'}
                                             onClick={handleCreateView.bind(null, undefined)}
                                             tooltipId="mapViews.addNewView"
                                             tooltipPosition="bottom"
@@ -456,7 +462,7 @@ function MapViewsSupport({
                                         <Button
                                             bsStyle="primary"
                                             className="square-button-md"
-                                            disabled={!selected}
+                                            disabled={!selected || expanded === 'settings'}
                                             onClick={handleCreateView.bind(null, selected)}
                                             tooltipId="mapViews.copyCurrentView"
                                             tooltipPosition="bottom"
@@ -469,10 +475,10 @@ function MapViewsSupport({
                                             active={expanded === 'settings'}
                                             disabled={!selected}
                                             onClick={() => setExpanded(expanded !== 'settings' ? 'settings' : '')}
-                                            tooltipId={expanded === 'settings' ? 'mapViews.hideSettings' : 'mapViews.showSettings'}
+                                            tooltipId="mapViews.edit"
                                             tooltipPosition="bottom"
                                         >
-                                            <Glyphicon glyph="wrench" />
+                                            <Glyphicon glyph="pencil" />
                                         </Button>
                                         <Button
                                             bsStyle="primary"
