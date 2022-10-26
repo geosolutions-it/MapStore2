@@ -11,6 +11,8 @@ import chroma from 'chroma-js';
 import { castArray } from 'lodash';
 import range from 'lodash/range';
 
+const LARGE_TERRAIN_LOD = 55;
+
 function getCesiumColor({ color, opacity }) {
     const [r, g, b, a] = chroma(color).gl();
     if (opacity !== undefined) {
@@ -50,9 +52,7 @@ function modifyPointHeight(map, entity, symbolizer, properties) {
     if (!ellipsoid) {
         return;
     }
-    const cartographic = ellipsoid.cartesianToCartographic(
-        entity.position.getValue(Cesium.JulianDate.now())
-    );
+    const cartographic = ellipsoid.cartesianToCartographic(entity.position.getValue(Cesium.JulianDate.now()));
     const constantHeight = parseFloat(symbolizer.height);
     cartographic.height =
         (!isNaN(constantHeight) && constantHeight) ||
@@ -60,6 +60,35 @@ function modifyPointHeight(map, entity, symbolizer, properties) {
             properties[symbolizer.height.name]) ||
         0;
     entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
+
+    delete entity.polyline;
+    if (symbolizer?.msHeightReference !== "CLAMP_TO_GROUND") {
+        let promise = Promise.resolve(0);
+        if (symbolizer?.msHeightReference === "RELATIVE_TO_GROUND") {
+            promise = Cesium.sampleTerrain(map.terrainProvider, LARGE_TERRAIN_LOD, [
+                Cesium.Cartographic.fromRadians(
+                    cartographic.longitude,
+                    cartographic.latitude
+                )
+            ]).then((updatedPositions) => {
+                return Promise.resolve(updatedPositions?.[0].height);
+            });
+        }
+        promise.then((zValue = 0) => {
+            entity.polyline = {
+                positions: Cesium.Cartesian3.fromRadiansArrayHeights([
+                    cartographic.longitude,
+                    cartographic.latitude,
+                    zValue,
+                    cartographic.longitude,
+                    cartographic.latitude,
+                    zValue + cartographic.height
+                ]),
+                width: 2,
+                material: Cesium.Color.RED
+            };
+        });
+    }
 }
 
 function parseLabel(feature, label = '') {
