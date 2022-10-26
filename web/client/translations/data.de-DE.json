@@ -3299,7 +3299,7 @@
         "mapViews": {
             "description": "Beschreibung",
             "position": "Position",
-            "navigation": "navigation",
+            "animation": "Animation",
             "mask": "Maske",
             "globeTranslucency": "Globustransluzenz",
             "layersOptions": "Ebenenoptionen",

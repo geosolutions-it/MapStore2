@@ -58,7 +58,7 @@ describe('Cesium MapViewsSupport', () => {
                                 settings: [
                                     ViewSettingsTypes.DESCRIPTION,
                                     ViewSettingsTypes.POSITION,
-                                    ViewSettingsTypes.NAVIGATION,
+                                    ViewSettingsTypes.ANIMATION,
                                     ViewSettingsTypes.MASK,
                                     ViewSettingsTypes.GLOBE_TRANSLUCENCY,
                                     ViewSettingsTypes.LAYERS_OPTIONS

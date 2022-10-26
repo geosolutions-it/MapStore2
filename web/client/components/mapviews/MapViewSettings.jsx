@@ -10,7 +10,7 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import DescriptionSection from './settings/DescriptionSection';
 import PositionsSection from './settings/PositionsSection';
-import NavigationSection from './settings/NavigationSection';
+import AnimationSection from './settings/AnimationSection';
 import MaskSection from './settings/MaskSection';
 import GlobeTranslucencySection from './settings/GlobeTranslucencySection';
 import LayersSection from './settings/LayersSection';
@@ -21,7 +21,7 @@ import Message from '../I18N/Message';
 const sections = {
     [ViewSettingsTypes.DESCRIPTION]: DescriptionSection,
     [ViewSettingsTypes.POSITION]: PositionsSection,
-    [ViewSettingsTypes.NAVIGATION]: NavigationSection,
+    [ViewSettingsTypes.ANIMATION]: AnimationSection,
     [ViewSettingsTypes.MASK]: MaskSection,
     [ViewSettingsTypes.GLOBE_TRANSLUCENCY]: GlobeTranslucencySection,
     [ViewSettingsTypes.LAYERS_OPTIONS]: LayersSection

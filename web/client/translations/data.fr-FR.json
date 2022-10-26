@@ -3263,7 +3263,7 @@
         "mapViews": {
             "description": "Description",
             "position": "Position",
-            "navigation": "Navigation",
+            "animation": "Animation",
             "mask": "Masque",
             "globeTranslucency": "Globe Translucidité",
             "layersOptions": "Options des calques",

@@ -8,10 +8,10 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import NavigationSection from '../NavigationSection';
+import AnimationSection from '../AnimationSection';
 import expect from 'expect';
 
-describe('NavigationSection component', () => {
+describe('AnimationSection component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -24,12 +24,12 @@ describe('NavigationSection component', () => {
     });
 
     it('should render with default', () => {
-        ReactDOM.render(<NavigationSection />, document.getElementById("container"));
+        ReactDOM.render(<AnimationSection />, document.getElementById("container"));
         const sectionNode = document.querySelector('.ms-map-views-section');
         expect(sectionNode).toBeTruthy();
     });
     it('should display two inputs if expanded', () => {
-        ReactDOM.render(<NavigationSection expandedSections={{ navigation: true }}/>, document.getElementById("container"));
+        ReactDOM.render(<AnimationSection expandedSections={{ animation: true }}/>, document.getElementById("container"));
         const sectionNode = document.querySelector('.ms-map-views-section');
         expect(sectionNode).toBeTruthy();
         const inputNodes = document.querySelectorAll('input');

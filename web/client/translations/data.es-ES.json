@@ -3261,7 +3261,7 @@
         "mapViews": {
             "description": "Descripción",
             "position": "Posición",
-            "navigation": "Navegación",
+            "animation": "Animación",
             "mask": "Máscara",
             "globeTranslucency": "Translucidez del Globo",
             "layersOptions": "Opciones de capas",

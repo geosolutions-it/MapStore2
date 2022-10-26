@@ -80,8 +80,8 @@ describe('MapViewsSupport component', () => {
                 const buttons = [...document.querySelectorAll('button > .glyphicon')];
                 expect(buttons.length).toBe(7);
                 expect(buttons.map(button => button.getAttribute('class').replace('glyphicon glyphicon-', ''))).toEqual([
-                    'chevron-right',
-                    'story-paragraph-section',
+                    'chevron-down',
+                    'list',
                     'fast-backward',
                     'step-backward',
                     'play',
@@ -144,11 +144,11 @@ describe('MapViewsSupport component', () => {
                 const buttons = [...document.querySelectorAll('button > .glyphicon')];
                 expect(buttons.length).toBe(12);
                 expect(buttons.map(button => button.getAttribute('class').replace('glyphicon glyphicon-', ''))).toEqual([
-                    'chevron-right',
-                    'story-paragraph-section',
+                    'chevron-down',
+                    'list',
                     'plus',
                     'duplicate',
-                    'wrench',
+                    'pencil',
                     'undo',
                     'redo',
                     'fast-backward',

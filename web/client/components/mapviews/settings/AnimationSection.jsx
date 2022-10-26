@@ -17,7 +17,7 @@ import { DefaultViewValues } from '../../../utils/MapViewsUtils';
 import Section from './Section';
 import Message from '../../I18N/Message';
 
-function NavigationSection({
+function AnimationSection({
     view,
     expandedSections = {},
     onExpandSection,
@@ -26,12 +26,12 @@ function NavigationSection({
 
     return (
         <Section
-            title={<Message msgId="mapViews.navigation"/>}
-            initialExpanded={expandedSections.navigation}
-            onExpand={(expanded) => onExpandSection({ navigation: expanded })}
+            title={<Message msgId="mapViews.animation"/>}
+            initialExpanded={expandedSections.animation}
+            onExpand={(expanded) => onExpandSection({ animation: expanded })}
         >
             <FormGroup
-                controlId="map-views-navigation-duration">
+                controlId="map-views-animation-duration">
                 <ControlLabel><Message msgId="mapViews.durationLabel"/></ControlLabel>
                 <FormControl
                     min={1}
@@ -43,7 +43,7 @@ function NavigationSection({
                 />
             </FormGroup>
             <FormGroup
-                controlId="map-views-navigation-fly-to">
+                controlId="map-views-animation-fly-to">
                 <Checkbox
                     checked={!!view?.flyTo}
                     onChange={() => onChange({ flyTo: !view?.flyTo })}
@@ -55,4 +55,4 @@ function NavigationSection({
     );
 }
 
-export default NavigationSection;
+export default AnimationSection;

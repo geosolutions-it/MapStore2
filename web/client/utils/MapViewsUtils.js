@@ -21,7 +21,7 @@ export const DefaultViewValues = {
 export const ViewSettingsTypes = {
     DESCRIPTION: 'description',
     POSITION: 'position',
-    NAVIGATION: 'navigation',
+    ANIMATION: 'animation',
     MASK: 'mask',
     GLOBE_TRANSLUCENCY: 'globeTranslucency',
     LAYERS_OPTIONS: 'layersOptions'

@@ -55,7 +55,7 @@ describe('OpenLayers MapViewsSupport', () => {
                                 settings: [
                                     ViewSettingsTypes.DESCRIPTION,
                                     ViewSettingsTypes.POSITION,
-                                    ViewSettingsTypes.NAVIGATION,
+                                    ViewSettingsTypes.ANIMATION,
                                     ViewSettingsTypes.LAYERS_OPTIONS
                                 ],
                                 unsupportedLayers: ['3dtiles', 'terrain']
