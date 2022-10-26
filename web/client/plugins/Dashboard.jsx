@@ -46,7 +46,6 @@ import {
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
-import { getSelectedWidgetData } from "../utils/WidgetsUtils";
 
 const WidgetsView = compose(
     connect(
