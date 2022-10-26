@@ -1,4 +1,5 @@
 # Managing Groups
+
 *****************
 
 The *Groups Manager* section displays like the following:

@@ -46,9 +46,9 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the information displayed in the widget are automatically filtered with the map viewport. When a widget is not linked, it otherwise shows all the elements of that level regardless of the map viewport
 
-* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section). 
+* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section).
 
-* Add new layers <img src="../img/button/+++.jpg" class="ms-docbutton"/> to existing chart configuration 
+* Add new layers <img src="../img/button/+++.jpg" class="ms-docbutton"/> to existing chart configuration
 
 * Delete the current layer <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> and it's related chart configuration from the wizard
 

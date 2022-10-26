@@ -1,4 +1,4 @@
-## Docma Default Template
+# Docma Default Template
 
 > © 2017, Onur Yıldırım (@onury). MIT License.
 

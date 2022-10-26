@@ -160,8 +160,6 @@ keycloakOAuth2Config.authenticatedDefaultRole=USER
 - `keycloakOAuth2Config.groupMappings`: comma separated list of mappings with the following format ``keycloak_role_name:mapstore_group_name,keycloak_role_name2:mapstore_group_name2``. These mappings will be used to map Keycloak roles to MapStore groups.
 - `keycloakOAuth2Config.dropUnmapped`: when set to false, MapStore will drop Keycloak roles that are not matched by any mapping role and group mapping. When set to true all the unmatched Keycloak roles will be added as MapStore UserGroups.
 
-
-
 #### Configure MapStore front-end for Keycloak OpenID
 
 - Add an entry for `keycloak` in `authenticationProviders` inside `localConfig.json` file.
@@ -180,4 +178,3 @@ keycloakOAuth2Config.authenticatedDefaultRole=USER
     ]
 }
 ```
-

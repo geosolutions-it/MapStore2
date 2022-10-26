@@ -1,7 +1,8 @@
 # Managing Users and Groups
+
 ****************************
 
-Accessing [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) as anonymous user the **Login** button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) is blue <img src="../img/button/login-b.jpg" class="ms-docbutton"/>. With a click on it, the following window appears: 
+Accessing [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) as anonymous user the **Login** button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) is blue <img src="../img/button/login-b.jpg" class="ms-docbutton"/>. With a click on it, the following window appears:
 
 <img src="../img/managing-users-and-groups/login.jpg" class="ms-docimage" style="max-width:450px"/>
 

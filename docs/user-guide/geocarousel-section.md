@@ -1,4 +1,5 @@
 # GeoCarousel Section
+
 **********************
 
 The GeoCarousel section allows another kind of immersive experience than the [Immersive Section](immersive-section.md#immersive-section). The story editor can define a list of carousel cards to be presented with an accompanying descriptive content and a geographic location. In edit mode it is composed of three elements: the background  map, the descriptive panel and the carousel panel where the editor can manage carousel items.
@@ -12,7 +13,7 @@ The background editing toolbar allows to add a map as a background of the sectio
 <img src="../img/immersive-section/bck-toolbar.jpg" class="ms-docimage" width="550px"/>
 
 !!! note
-    
+
     In the *GeoCarousel Section* the story editor, unlike the [Immersive Section](immersive-section.md#immersive-section) and the [Title Section](title-section.md#title-section), can only add a **map** as a background.
 
 Once a *map* is selected for the background, the editing toolbar appears in the upper left corner of the section allowing the story editor to manage the background content.
@@ -41,7 +42,6 @@ The **Background editing toolbar** allows the following actions:
 The Descriptive panel allows to put descriptive content such as *text*, *image*, *video* or *map* for the different cards composing the GeoCarousel section. The story editor can customize it through the **Content Toolbar**, as it is explained in the [Content section](immersive-section.md#content).
 
 <img src="../img/immersive-section/imm-content-toolbar.jpg" class="ms-docimage" style="width:400px"/>
- 
 
 ## Carousel
 
@@ -57,7 +57,7 @@ Once a card is selected in edit mode, the story editor can perform the following
 
 <img src="../img/geocarousel-section/edit_card_panel.jpg" class="ms-docimage" style="width:500px"/>
 
-* **Delete** <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/> the card 
+* **Delete** <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/> the card
 
 * **Add marker** <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> on map or modify the current marker position: clicking on this button the **Map Inline Editor** opens, and the story editor can click a point on map to add a new marker or change its position as follows:
 
@@ -86,6 +86,6 @@ In a GeoCarousel section, in [view Mode](exploring-stories.md#view-mode), the us
 
 <img src="../img/geocarousel-section/marker.gif" class="ms-docimage" style="width:700px"/>
 
-* Use the left and right arrows <img src="../img/button/left_right_arrow.jpg" class="ms-docbutton"/> to browse the different geocarousel content 
+* Use the left and right arrows <img src="../img/button/left_right_arrow.jpg" class="ms-docbutton"/> to browse the different geocarousel content
 
 <img src="../img/geocarousel-section/arrows.gif" class="ms-docimage" style="width:700px"/>

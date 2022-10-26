@@ -1,11 +1,11 @@
 # Styling and Theming
 
 The look and feel is completely customizable either using one of the included themes, or building your own. Themes are built using [less](http://lesscss.org/).  
-You can find the default theme here: https://github.com/geosolutions-it/MapStore2/tree/master/web/client/themes/default
+You can find the default theme here: [https://github.com/geosolutions-it/MapStore2/tree/master/web/client/themes/default](https://github.com/geosolutions-it/MapStore2/tree/master/web/client/themes/default)
 
 ## Theme Structure
 
-```
+```text
 .
 +-- themes/
 |   +-- theme-name/
@@ -48,6 +48,7 @@ You can find the default theme here: https://github.com/geosolutions-it/MapStore
 |variable.less|contains the import of mapstore variables and the override of bootstrap variables|
 
 below an example of entry configuration:
+
 ```js
 entry: {
     ...other entries,
@@ -57,7 +58,7 @@ entry: {
 
 MapStore uses a `themeEntries` function to automatically create the entries for default themes that can be found under the `web/client/themes` directory
 
-```js 
+```js
 const themeEntries = require('./themes.js').themeEntries;
 
 entry: {
@@ -111,6 +112,7 @@ Example:
 ```
 
 ### ms-variables.less
+
 MapStore uses basic less variables to change theme colors, buttons sizes and fonts.
 It possible also to override bootstrap less variable for advanced customization.
 Basic variables can be found in the ms-variable.less file
@@ -124,10 +126,10 @@ local: `@ms-name-of-plugin--rule-value`
 - `@ms` suffix for MapStore variable
 - `name-of-plugin` for local variable it's important to write the name of plugin in kebab-case
 - `rule-value` value to use in compiled CSS, some examples:
-    - `color` generic color variable
-    - `text-color` color for text
-    - `background-color` color for background
-    - `border-color` color for border
+  - `color` generic color variable
+  - `text-color` color for text
+  - `background-color` color for background
+  - `border-color` color for border
 
 ### less/ directory
 
@@ -135,7 +137,7 @@ The `less/` directory contains all the modules needed to create the final CSS of
 
 Each file in this directory is related to a specific plugin or component and the files are named based on the plugin's name are referring to.
 
-`common.less` file can be used for generic styles. 
+`common.less` file can be used for generic styles.
 
 ### inline styles
 
@@ -155,7 +157,7 @@ If you are not using themeEntries a new entry needs to be added in the `buildCon
 
 You can then switch your application to use the theme adding a new section in the `appConfig.js` file:
 
-```
+```json
 initialState: {
     defaultState: {
         ...
@@ -179,7 +181,7 @@ Below steps to configure a custom theme and override styles:
 
 - add the following files to the themes folder of the project:
 
-```
+```text
 .
 +-- themes/
 |   +-- default/
@@ -229,7 +231,6 @@ module.exports = require('./MapStore2/buildConfig')(
 }
 ```
 
-
 ## Custom Theme for contexts
 
 You can configure a list of themes to be used inside a context.
@@ -240,6 +241,7 @@ In order to do that you have to:
 - edit **ContextCreator** plugin in the `localConfig.json`
 
 example
+
 ```json
 {
     "name": "ContextCreator",
@@ -284,8 +286,9 @@ example
 ```
 
 for each theme you can define:
+
 - **id** id of the theme equal to its name
-- **type** values can be 
+- **type** values can be
   - **link** will require a href property
 - **href** path to find the css once built
 - **defaultVariables** variables of the theme used to initialize the pickers (optional)
@@ -300,7 +303,7 @@ This example will create a complete css file and is not recommended if you want 
 
 Add the following files to the themes folder of the project
 
-```
+```text
 +-- themes/
 |   +-- theme-name/
 |       +-- theme.less
@@ -331,6 +334,7 @@ in `theme.less` put
 ```
 
 in `variables.less` you can put the mapstore variables customizations
+
 ```less
 /*
  * A variable that will override the default css one
@@ -342,7 +346,7 @@ in `variables.less` you can put the mapstore variables customizations
 
 This example is perfect if you just want to customize a few colors of the theme
 
-```
+```text
 +-- themes/
 |   +-- theme-name/
 |       +-- theme.less
@@ -350,6 +354,7 @@ This example is perfect if you just want to customize a few colors of the theme
 ```
 
 in `theme.less` put
+
 ```less
 /*
  * This example is the lightest version of all three examples
@@ -386,7 +391,8 @@ in `theme.less` put
 In the `variables.less` you can do put your variable customizations
 
 ### partial theme override
-```
+
+```text
 +-- themes/
 |   +-- theme-name/
 |       +-- less/
@@ -410,7 +416,6 @@ In the `variables.less` you can do put your variable customizations
 ```
 
 Note: These three styles are an example on how is possible to approach on the mapstore customizations. You could extend/combine them together to create a more complex theme.
-
 
 ## Tips
 

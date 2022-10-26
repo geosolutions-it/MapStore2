@@ -1144,7 +1144,7 @@ Embedded Dashboards and GeoStories need a new set of javascript entries, html te
 
 The steps described above assume this structure of the MapStore2 project for the files that need update:
 
-```
+```text
 MapStore2Project/
 |-- ...
 |-- js/

@@ -1,18 +1,21 @@
 # Creating a MapStore2 plugin
+
 The MapStore2 [plugins architecture](plugins-architecture.md#plugins-architecture) allows building your own independent modules that will integrate seamlessly into your project.
 
 Creating a plugin is like assembling and connecting several pieces together into an atomic module. This happens by writing a plugin module, a ReactJS JSX file exporting the plugin descriptor.
 
 ## Introduction
+
 During this tutorial, you will learn how to create and configure plugins in a MapStore project.
-If you don't know how to work with MapStore projects, please read the [Projects Guide](mapstore-projects.md#mapstore-projects). 
-For this tutorial, a "standard project" is used. 
+If you don't know how to work with MapStore projects, please read the [Projects Guide](mapstore-projects.md#mapstore-projects).
+For this tutorial, a "standard project" is used.
 
 ## A plugin example
 
 A plugin is a ReactJS *component with a name*. The chosen name is always suffixed with **Plugin**.
 
 ### js/plugins/Sample.jsx
+
 ```javascript
 import React from 'react';
 
@@ -27,9 +30,11 @@ export const SamplePlugin = SampleComponent;
 // the Plugin postfix is mandatory, avoid bugs by calling all your descriptors
 // <Something>Plugin
 ```
+
 Being a component with a name (**Sample** in our case) you can include it in your project by creating a *plugins.js* file:
 
 ### js/plugins.js
+
 ```javascript
 module.exports = {
     plugins: {
@@ -46,6 +51,7 @@ module.exports = {
 Include the plugin.js from your app.jsx either replacing the plugins import from the product or extending it:
 
 ### js/app.jsx
+
 ```javascript
 ...
 
@@ -60,6 +66,7 @@ require('@mapstore/product/main')(appConfig, allPlugins);
 Then you have to configure it properly so that is enabled in one or more application modes / pages:
 
 ### localConfig.json
+
 ```javascript
 {
     ...
@@ -72,8 +79,8 @@ Then you have to configure it properly so that is enabled in one or more applica
 
 Note: to enable a plugin you need to do two things:
 
- - require it in the plugins.js file
- - configure it in localConfig.json (remove the Plugins suffix here)
+- require it in the plugins.js file
+- configure it in localConfig.json (remove the Plugins suffix here)
 
 If one is missing, the plugin won't appear.
 To globally remove a plugin from your project the preferred way is removing it from plugins.js, because this will reduce the global javascript size of your application.
@@ -81,6 +88,7 @@ To globally remove a plugin from your project the preferred way is removing it f
 You can also specify plugins properties in the configuration, using the **cfg** property:
 
 ### localConfig.json (2)
+
 ```javascript
 {
     ...
@@ -97,9 +105,11 @@ You can also specify plugins properties in the configuration, using the **cfg** 
 ```
 
 ## A store connected plugin example
+
 A plugin component is a **smart component** (connected to the Redux store) so that properties can be taken from the global state, as needed.
 
 ### js/plugins/ConnectedSample.jsx (1)
+
 ```javascript
 import React from 'react';
 import {connect} from 'react-redux';
@@ -129,6 +139,7 @@ export const ConnectedSamplePlugin = ConnectedSample;
 A plugin can use actions to update the global state.
 
 ### js/plugins/ConnectedSample.jsx (2)
+
 ```javascript
 
 import React from 'react';
@@ -166,6 +177,7 @@ A plugin can define its own state fragments and the related reducers.
 Obviously you will also be able to define your own actions.
 
 ### js/actions/sample.js
+
 ```javascript
 export const UPDATE_SOMETHING = 'SAMPLE:UPDATE_SOMETHING';
 export const updateSomething = (payload) => {
@@ -177,6 +189,7 @@ export const updateSomething = (payload) => {
 ```
 
 ### js/reducers/sample.js
+
 ```javascript
 import { UPDATE_SOMETHING } from '../actions/sample';
 export default function(state = { text: 'Initial Text' }, action) {
@@ -192,6 +205,7 @@ export default function(state = { text: 'Initial Text' }, action) {
 ```
 
 ### js/plugins/ConnectedSample.jsx (3)
+
 ```javascript
 import React from 'react';
 import { connect } from 'react-redux';
@@ -226,12 +240,14 @@ export const reducers = {sample};
 ```
 
 ## Data fetching and side effects
+
 Side effects should be limited as much as possible, but there are cases where a side effect cannot be avoided.
 In particular all asynchronous operations are side effects in Redux, but we obviously need to handle them, in particular we need to asynchronously load the data that we need from ore or more web services.
 
 To handle data fetching a plugin can define Epics. To have more detail about epics look at the [Epics developers guide](../writing-epics/#writing-epics) section of this documentation.
 
 ### js/actions/sample.js
+
 ```javascript
 // custom action
 export const LOAD_DATA = 'SAMPLE:LOAD_DATA';
@@ -259,6 +275,7 @@ export const loadError = (error) => {
 ```
 
 ### js/reducers/sample.js
+
 ```javascript
 import { LOADED_DATA, LOAD_ERROR } from '../actions/sample';
 export default function(state = { text: 'Initial Text' }, action) {
@@ -278,6 +295,7 @@ export default function(state = { text: 'Initial Text' }, action) {
 ```
 
 ### js/epics/sample.js
+
 ```javascript
 import * as Rx from 'rxjs';
 import axios from 'axios';
@@ -299,6 +317,7 @@ export default {
 ```
 
 ### js/plugins/SideEffectComponent.jsx
+
 ```javascript
 import React from 'react';
 import { connect } from 'react-redux';
@@ -335,11 +354,13 @@ export const epics = sampleEpics;
 ```
 
 ## Plugins that are containers of other plugins
+
 It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dynamically configure their items / tools from the configuration.
 
 In addition to those "user defined" containers, there is always a **root container**. When no container is specified for a plugin, it will be included in the root container.
 
 ### js/plugins/ContainerComponent.jsx
+
 ```javascript
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -365,9 +386,11 @@ export const ContainerPlugin = SampleContainer;
 ```
 
 ## Plugins for other plugins
+
 Since we have containers, we can build plugins that can be contained in one or more container plugins.
 
 ### js/plugins/ContainedComponent.jsx
+
 ```javascript
 import React from 'react';
 import { connect } from 'react-redux';
@@ -417,6 +440,7 @@ items = [{plugin: ConnectedSample, name: "Sample", id: "sample_tool", ...}]
 Notice that also container related properties can be overridden in the application configuration, using the override property:
 
 ### localConfig.json
+
 ```javascript
 {
     ...
@@ -433,11 +457,14 @@ Notice that also container related properties can be overridden in the applicati
     }
 }
 ```
+
 ## Plugins Configuration
+
 We have already mentioned that plugins can be configured through the localConfig.json file.
 The simplest configuration is needed to include the plugin in a particular application mode, and is accomplished by listing the plugin name in the plugins array of the chosen mode:
 
 ### localConfig.json
+
 ```javascript
 {
     ...
@@ -467,6 +494,7 @@ To customize a plugin style and behaviour a JSON object can be used instead, spe
 ```
 
 ### Dynamic configuration
+
 Configuration can also dynamically change when the application state changes. This is accomplished by using expressions in configuration values. An expression is a value of the following form:
 
 ```javascript
@@ -475,11 +503,12 @@ Configuration can also dynamically change when the application state changes. Th
 
 The expression itself is javascript code (supported by the browser, babel transpiled code is not supported here) where you can use the following variables:
 
- * *request*: **request URL** parsed by the [url library](https://www.npmjs.com/package/url)
- * *context*: anything defined in **plugins.js requires section**
- * *state*: a function usable to extract values from the **application state** (e.g. state('map.present.zoom' to get current zoom))
+- *request*: **request URL** parsed by the [url library](https://www.npmjs.com/package/url)
+- *context*: anything defined in **plugins.js requires section**
+- *state*: a function usable to extract values from the **application state** (e.g. state('map.present.zoom' to get current zoom))
 
 Note that not all the application state is available through the state function, only the *monitored state* is. To add new fragments the monitored state, you can add the following to localConfig.json:
+
 ```javascript
 {
     ...,
@@ -498,6 +527,7 @@ The default monitored state is:
 ```
 
 #### Example
+
 ```javascript
 {
     ...,
@@ -516,12 +546,14 @@ The default monitored state is:
 ```
 
 ### Container configuration
+
 Each plugin can define a list of supported containers, but it's the plugin system that decides which ones will be used at runtime based on:
 
- * container existance: if a container is not configured, it will not be used (obviously)
- * between the existing ones, the ones with the highest priority property value will be chosen; note that a plugin can be included in more than one container if they have the same priority
+- container existance: if a container is not configured, it will not be used (obviously)
+- between the existing ones, the ones with the highest priority property value will be chosen; note that a plugin can be included in more than one container if they have the same priority
 
 #### Example
+
 ```javascript
 ...
 
@@ -579,13 +611,14 @@ This will force the plugin system to choose Container1 instead of Container3, an
 
 There is also a set of options to (dynamically) add/exclude containers:
 
- * **showIn**: can be used to add a plugin to a container or more than one, in addition to the default one (it is an array of container plugin names)
- * **hideFrom**: can be used to exclude a plugin from a given container or more than one (it is an array of container plugin names)
- * **doNotHide**: can be used to show a plugin in the root container, in addition to the default one
+- **showIn**: can be used to add a plugin to a container or more than one, in addition to the default one (it is an array of container plugin names)
+- **hideFrom**: can be used to exclude a plugin from a given container or more than one (it is an array of container plugin names)
+- **doNotHide**: can be used to show a plugin in the root container, in addition to the default one
 
 Note that also these properties accept dynamic expressions.
 
 #### js/plugins/Container.jsx
+
 ```javascript
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -612,6 +645,7 @@ export const ContainerPlugin = SampleContainer;
 ```
 
 #### js/plugins/ContainerOther.jsx
+
 ```javascript
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -638,6 +672,7 @@ export const ContainerOtherPlugin = SampleContainer;
 ```
 
 #### js/plugins/Sample.jsx
+
 ```javascript
 import React from 'react';
 import assign from 'object-assign';
@@ -667,7 +702,9 @@ export const SamplePlugin = assign(SampleComponent, {
 With this configuration the sample plugin will be shown in both Container and ContainerOther plugins (they have the same priority, so both are picked).
 
 We can change this using `showIn` or `hideFrom` in `localConfig.json`:
-#### localConfig.json
+
+#### localConfig.json - `showIn` and `hideFrom` examples
+
 ```javascript
 {
     ...,
@@ -681,9 +718,11 @@ We can change this using `showIn` or `hideFrom` in `localConfig.json`:
     }
     ...
 }
+```
 
 or
 
+```javascript
 {
     ...,
     "plugins": {
@@ -700,7 +739,8 @@ or
 
 We can also add the plugin to the root container, using the doNotHide property (note that this is a container property, so we have to use an override for it):
 
-#### localConfig.json
+#### localConfig.json - `doNotHide` example
+
 ```javascript
 {
     ...,
@@ -723,6 +763,7 @@ We can also add the plugin to the root container, using the doNotHide property (
 ```
 
 ### Conditionally disabling plugins
+
 Dynamic expression can also be used to enable a plugin only when a specific application state is met, using the **disablePluginIf** property.
 
 ```javascript
@@ -741,15 +782,17 @@ Dynamic expression can also be used to enable a plugin only when a specific appl
     ...
 }
 ```
+
 The plugin will be disabled in 3D mode.
 
 ## Lazy loading plugins
+
 You can lazy load your plugins (load them on demand), but only if you define a loading mechanism for your plugin. This is expecially useful for plugins that include big external libraries.
 
 A lazy loaded plugin is not defined by its component, but with a lazy descriptor with:
 
- * a **loadPlugin** function that loads the plugin code and calls the given **resolve** when the plugin is loaded
- * an **enabler** function that triggers plugin loading on a specific state change
+- a **loadPlugin** function that loads the plugin code and calls the given **resolve** when the plugin is loaded
+- an **enabler** function that triggers plugin loading on a specific state change
 
 ```javascript
 module.exports = {
@@ -768,23 +811,24 @@ module.exports = {
 ```
 
 ## Testing plugins
+
 As we already mentioned a plugin is a collection of entities that should already have unit tests (components, reducers, actions, selectors, epics).
 We can limit plugins testing to testing the interactions between these different entities, for example:
 
- * connection of the redux state to the plugins properties
- * epics that are related to the plugin lifecycle
- * containment relations between plugins
+- connection of the redux state to the plugins properties
+- epics that are related to the plugin lifecycle
+- containment relations between plugins
 
 To ease writing a plugin unit test, an helper is available (pluginsTestUtils) that can be used to:
 
-  * create a plugin connected with a redux store (**getPluginForTest**), initialized with plugin's defined reducers and epics, and with a given initial state
-  * get access to the redux store
-  * get access to the list of actions dispatched to the store
-  * get access to the list of containers plugins supported by the plugin (you can limit this list by passing your plugins definitions to getPluginForTest)
+- create a plugin connected with a redux store (**getPluginForTest**), initialized with plugin's defined reducers and epics, and with a given initial state
+- get access to the redux store
+- get access to the list of actions dispatched to the store
+- get access to the list of containers plugins supported by the plugin (you can limit this list by passing your plugins definitions to getPluginForTest)
 
 ### Examples
 
-#### js/__tests__/myplugin-test.js
+#### `js/__tests__/myplugin-test.js`
 
 ```javascript
 import expect from 'expect';
@@ -848,14 +892,15 @@ describe('MyPlugin Test', () => {
 ```
 
 ## General Guidelines
- * Components
-    * define the plugin component(s) into dedicated JSX file(s), so that they can be reused outside of the plugin
-    * connect the component(s) in the plugin JSX file
- * State
-    * define your own state fragment (and related actions and reducers) to handle internal state, and use existing actions and state fragments from MapStore2 to interact with the framework
- * Selectors
-    * use existing selectors when possible to connect the state, eventually using reselect to compose them together or with your own selectors
- * Avoid as much as possible direct interactions between different plugins; plugins are meant to be independent modules, so they should be able to work if other plugins appear / disappear from the application configuration
-   * interact with other plugins and the application itself using actions and state sharing
-   * creating side effects to make plugins interact in more strict ways should not be done at the plugin level, orchestrating different plugins should be delegated at the top (application) level
-   * use containers configuration to combine plugins in containers
+
+- Components
+  - define the plugin component(s) into dedicated JSX file(s), so that they can be reused outside of the plugin
+  - connect the component(s) in the plugin JSX file
+- State
+  - define your own state fragment (and related actions and reducers) to handle internal state, and use existing actions and state fragments from MapStore2 to interact with the framework
+- Selectors
+  - use existing selectors when possible to connect the state, eventually using reselect to compose them together or with your own selectors
+- Avoid as much as possible direct interactions between different plugins; plugins are meant to be independent modules, so they should be able to work if other plugins appear / disappear from the application configuration
+  - interact with other plugins and the application itself using actions and state sharing
+  - creating side effects to make plugins interact in more strict ways should not be done at the plugin level, orchestrating different plugins should be delegated at the top (application) level
+  - use containers configuration to combine plugins in containers

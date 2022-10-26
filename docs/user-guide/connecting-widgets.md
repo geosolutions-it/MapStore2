@@ -1,4 +1,5 @@
 # Connecting Widgets
+
 ********************
 In dashboards it is possible to connect the added widgets allowing the user to inspect and interact with more than one of them at the same time.
 
@@ -26,7 +27,7 @@ In dashboards it is possible to connect Map widgets with:
 
 * Counter widgets
 
-* Legend widgets 
+* Legend widgets
 
 ### Maps with other Maps
 
@@ -84,20 +85,20 @@ It is possible to apply a filter in the *Parent Table* simply by typing a text i
 
 A Map widget that is connected to a Parent Table receives the alphanumeric filter of the Table and:
 
-- Performs a zoom to the extent that contains all the Table widget records (the result of the filter in the Table)
+* Performs a zoom to the extent that contains all the Table widget records (the result of the filter in the Table)
 
-- If the Map widget contains the same dataset (layer) of the Parent Table, also the layer on map is filtered accordingly
+* If the Map widget contains the same dataset (layer) of the Parent Table, also the layer on map is filtered accordingly
 
 Once a widget is connected to a map widget that is connected to a Parent Table at the same time:
 
-- If the widget has been created on the same dataset (layer) of the Parent Table then two filters will be applied in AND to the widget itself: the spatial filter of the Map widget and the attribute filter defined in the Parent Table
+* If the widget has been created on the same dataset (layer) of the Parent Table then two filters will be applied in AND to the widget itself: the spatial filter of the Map widget and the attribute filter defined in the Parent Table
 
 <img src="../img/connecting-widgets/interaction_a.gif" class="ms-docimage" style="max-width:700px;"/>
 
-- If the dataset isn't the same, only the spatial filter of the Map widget will be applied as usual: in the following example, the Counter refers to a level other than that configured for the Parent Table
+* If the dataset isn't the same, only the spatial filter of the Map widget will be applied as usual: in the following example, the Counter refers to a level other than that configured for the Parent Table
 
-<img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/> 
+<img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/>
 
 There are different combinations of connections, the image below illustrates the allowed ones by reporting also the kind of filters applied for each case
 
-<img src="../img/connecting-widgets/available_connections.jpg" class="ms-docimage" style="max-width:700px;"/> 
+<img src="../img/connecting-widgets/available_connections.jpg" class="ms-docimage" style="max-width:700px;"/>

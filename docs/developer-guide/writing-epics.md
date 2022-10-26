@@ -203,9 +203,8 @@ All the epics attached to plugins or extension will be registered once plugin is
 
 Each registered epic can be in one of two possible states:
 
-   **muted**: no reaction to the actions that comes in   
+   **muted**: no reaction to the actions that comes in
    **unmuted**: reacting to the listed actions
-
 
 - Whenever new epic is registered it will be in unmuted state by default.
 

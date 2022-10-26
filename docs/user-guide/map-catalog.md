@@ -1,7 +1,8 @@
 # Map Catalog
+
 *******************
 
-The **Map Catalog** is an extension that can be included in the step #3 of the application context wizard to allow the end user to browse the existing MapStore maps directly inside the viewer itself. The <img src="../img/button/map-catalog-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the list of the MapStore maps that are also available in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/). 
+The **Map Catalog** is an extension that can be included in the step #3 of the application context wizard to allow the end user to browse the existing MapStore maps directly inside the viewer itself. The <img src="../img/button/map-catalog-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the list of the MapStore maps that are also available in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/).
 
 <img src="../img/map-catalog/map-catalog-panel.jpg" class="ms-docimage"/>
 
@@ -21,9 +22,3 @@ For each map in the *Map Catalog* list the following buttons are displayed:
 * The **Edit Properties** button <img src="../img/button/properties.jpg" class="ms-docbutton" /> allows the user to [Edit Properties](resources-properties.md#resource-properties) of the map
 
 * The **Share** button <img src="../img/button/share.jpg" class="ms-docbutton" /> allows the user to [Share](share.md#sharing-resources) the map
-
-
-
-
-
-
