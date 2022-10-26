@@ -155,8 +155,6 @@ keycloakOAuth2Config.authenticatedDefaultRole=USER
 - `keycloakOAuth2Config.roleMappings`: comma separated list of mappings, to map keycloak roles to mapstore roles. Allowed values `USER` or `ADMIN`
 - `keycloakOAuth2Config.authenticatedDefaultRole`: where the role has not been assigned by the mappings above, the role here will be used. Allowed values `USER` or `ADMIN`.
 
-
-
 #### Configure MapStore front-end for Keycloak OpenID
 
 - Add an entry for `keycloak` in `authenticationProviders` inside `localConfig.json` file.
@@ -175,4 +173,3 @@ keycloakOAuth2Config.authenticatedDefaultRole=USER
     ]
 }
 ```
-

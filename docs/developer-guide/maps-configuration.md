@@ -131,10 +131,10 @@ Map configuration also contains the following additional options:
 - `widgetsConfig` configuration of map widgets
 - `mapInfoConfiguration` map info configuration options
 - `dimensionData` contains map time information
-    - `currentTime` currently selected time; the beginning of a time range if offsetTime is set
-    - `offsetTime` the end of a time range
+- `currentTime` currently selected time; the beginning of a time range if offsetTime is set
+- `offsetTime` the end of a time range
 - `timelineData` timeline options
-    - `selectedLayer` selected layer id; if not present time cursor will be unlocked
+- `selectedLayer` selected layer id; if not present time cursor will be unlocked
 
 ## Layers options
 
@@ -531,11 +531,11 @@ TODO
 
 !!! note
     The use of Google maps tiles in MapStore is not enabled and maintained due to licensing reasons. If your usage conditions respect the google license, you can enable the google layers by:
-    
+
     * Adding `<script src="https://maps.google.com/maps/api/js?v=3"></script>` to all `html` files you need it.
     * Add your API-KEY to the request
     * Fix the code, if needed.
-    
+
 example:
 
 ```json
@@ -793,6 +793,7 @@ The `vector` and `wfs` layer types are rendered by the client as GeoJSON feature
 - `body` the actual style rules and symbolizers
 
 example:
+
 ```json
 {
   "type": "vector",
@@ -836,6 +837,7 @@ A `rule` object is composed by following properties:
 The `filter` expression define with features should be rendered with the symbolizers listed in the rule
 
 example:
+
 ```js
 // simple comparison condition structure
 // [operator, property key, value]
@@ -919,7 +921,6 @@ The `symbolizer` could be of following `kinds`:
   - `haloColor` halo color of the label
   - `haloWidth` halo width of the label
   - `offset` array of x and y values offset of the label
-
 
 #### Legacy Vector Style (deprecated)
 
@@ -1156,45 +1157,52 @@ In order to create a `wms` based mesh there are some requirements that need to b
   - BILTerrainProvider is used to parse `wms` based mesh. Supports three ways in parsing the metadata of the layer
     1. Layer configuration with **sufficient metadata** of the layer. This prevents a call to `getCapabilities` eventually improving performance of the parsing of the layer.
         Mandatory fields are `url`, `name`, `version`, `crs`.
-    ```json
-    {
-      "type": "terrain",
-      "provider": "wms",
-      "url": "http://hot-sample/geoserver/wms",
-      "name": "workspace:layername", 
-      "littleendian": false,
-      "visibility": true,
-      "version": "1.3.0",
-      "fixedHeight": null, // Map height. Max value is < 65
-      "fixedWidth": null, // Map width. Max value is < 65
-      "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
-    }
-    ```
-    2. Layer configuration of `geoserver` layer with layer name _prefixed with workspace_, then the `getCapabilities` is requested only for that layer
-    ```json
-    {
-    "type": "terrain",
-    "provider": "wms",
-    "url": "https://host-sample/geoserver/wms", // 'geoserver' url
-    "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
-    "littleendian": false
-    }
-    ```
-    3. Layer configuration of geoserver layer with layer name _not prefixed with workspace_ then `getCapabilities` is requested in global scope.
-    ```json
-    { 
-      "type": "terrain",
-      "provider": "wms",
-      "url": "https://host-sample/geoserver/wms",
-      "name": "layername",
-      "littleendian": false
-    }
-    ```
+
+        ```json
+        {
+          "type": "terrain",
+          "provider": "wms",
+          "url": "http://hot-sample/geoserver/wms",
+          "name": "workspace:layername", 
+          "littleendian": false,
+          "visibility": true,
+          "version": "1.3.0",
+          "fixedHeight": null, // Map height. Max value is < 65
+          "fixedWidth": null, // Map width. Max value is < 65
+          "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
+        }
+        ```
+
+    2. Layer configuration of `geoserver` layer with layer name *prefixed with workspace*, then the `getCapabilities` is requested only for that layer
+
+        ```json
+        {
+        "type": "terrain",
+        "provider": "wms",
+        "url": "https://host-sample/geoserver/wms", // 'geoserver' url
+        "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
+        "littleendian": false
+        }
+        ```
+
+    3. Layer configuration of geoserver layer with layer name *not prefixed with workspace* then `getCapabilities` is requested in global scope.
+
+        ```json
+        { 
+          "type": "terrain",
+          "provider": "wms",
+          "url": "https://host-sample/geoserver/wms",
+          "name": "layername",
+          "littleendian": false
+        }
+        ```
+
 !!! note
     With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
 
 Generic layer configuration of type `terrain` and provide `wms` is as follows. 
 The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider:
+
 ```json
 { 
   "type": "terrain",
@@ -1238,12 +1246,10 @@ In order to use these layers they need to be added to the `additionalLayers` in 
 }
 ```
 
-
 ## Layer groups
 
 Inside the map configuration, near the `layers` entry, you can find also the `groups` entry. This array contains information about the groups in the TOC.
 A group entry has this shape:
-
 
 - `id`: the id of the group.
 - `expanded`: boolean that keeps the status (expanded/collapsed) of the group.
@@ -1392,7 +1398,7 @@ Openlayers:
 
 Cesium:
 
-- `tileDiscardPolicy` sets a policy for discarding (missing/broken) tiles (https://cesium.com/learn/cesiumjs/ref-doc/TileDiscardPolicy.html). If it is not specified the NeverTileDiscardPolicy will be used. If "none" is specified, no policy at all will be set.
+- `tileDiscardPolicy` sets a policy for discarding (missing/broken) tiles ([https://cesium.com/learn/cesiumjs/ref-doc/TileDiscardPolicy.html](https://cesium.com/learn/cesiumjs/ref-doc/TileDiscardPolicy.html)). If it is not specified the NeverTileDiscardPolicy will be used. If "none" is specified, no policy at all will be set.
 
 MapStore specific:
 

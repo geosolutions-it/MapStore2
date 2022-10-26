@@ -7,8 +7,7 @@ Moreover, the following icon <img src="../img/button/collapse.jpg" class="ms-doc
 
 <img src="../img/side-bar/sidebar.jpg" class="ms-docimage"/>
 
-Geolocation tool
-----------------
+## Geolocation tool
 
 Through the *Show my position* <img src="../img/button/geolocation.jpg" class="ms-docbutton"/> the user can center the map on his position. Therefore the button turns green.
 
@@ -17,8 +16,7 @@ Through the *Show my position* <img src="../img/button/geolocation.jpg" class="m
 The position is still active even when the user interacts with the map; with a single click on the button it is possible re-center the map on his position.
 To disable the position the button needs to be duble clicked.
 
-Zooming tools
--------------
+## Zooming tools
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides several tools allows the user to:
 
@@ -34,8 +32,7 @@ Zooming tools
 
 * **Zoom to the maximum extent** <img src="../img/button/max-extent.jpg" class="ms-docbutton"/> the map
 
-3D Navigation
--------------
+## 3D Navigation
 
 The *3D navigation* in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is based on CesiumJS. If the 3D button <img src="../img/button/3D-icon.jpg" class="ms-docbutton"/> in the sidebar is clicked, the map switch in 3D mode so map contents are displayed on a 3D globe and it is possible to orbit around it through the compass place in the upper right corner of the map.
 

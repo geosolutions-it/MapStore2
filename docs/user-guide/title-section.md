@@ -1,4 +1,5 @@
 # Title Section
+
 **********************
 
 As soon as you create a new Story, by default, only a Title Section (the cover) is present in the workspace. In this section the story editor can customize two different elements: the title text and the cover's background.
@@ -13,7 +14,7 @@ With a click inside the text area, it expands and the [Text Editor Toolbar](text
 
 <img src="../img/title-section/rich-text.jpg" class="ms-docimage"/>
 
-Once the text has been written, it is possible to configure the text area position and its style from the component's toolbar: 
+Once the text has been written, it is possible to configure the text area position and its style from the component's toolbar:
 
 <img src="../img/title-section/textwin-toolbar.jpg" class="ms-docimage"/>
 
@@ -30,7 +31,7 @@ The text window toolbar allows the user to change the following settings:
 !!! note
     When a section has only one content, and the story editor remove that content, the entire section will be also automatically deleted.
 
-Setting a title with *Large* size, aligned on the *Center* of the Container and with a *Bright* theme, the result is something like: 
+Setting a title with *Large* size, aligned on the *Center* of the Container and with a *Bright* theme, the result is something like:
 
 <img src="../img/title-section/title-text.jpg" class="ms-docimage"/>
 
