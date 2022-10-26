@@ -1,4 +1,5 @@
 # Adding Widgets
+
 ****************
 
 With a click on the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button in [Sidebar](exploring-dashboards.md#sidebar) the *Widget* panel opens, showing the list of the available widget types that can be added to the dashboard:
@@ -35,7 +36,7 @@ In dashboards, selecting the Map type widget, the following panel appears:
 
 Here the user can:
 
-* Go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button 
+* Go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
 * Search for a map by writing its title
 
@@ -46,8 +47,7 @@ Here the user can:
 Once a map has been selected, the panel display the layers present in the map in the preview and lists the layer associated with the map.
 
 !!!note
-    If user has selected more than one map, the map wizard displays the _map switcher_ dropdown allowing user to select and configure the map.
-    
+    If user has selected more than one map, the map wizard displays the *map switcher* dropdown allowing user to select and configure the map.
 
 <img src="../img/adding-widgets/wid-layers-list.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -74,7 +74,7 @@ Here, the user is allowed to:
 
 * **Remove** layers through the <img src="../img/button/delete.jpg" class="ms-docbutton"/> button
 
-* Disable/Enable the [Floating Identify Tool](side-bar.md#floating-identify-tool) to retrieve Identify information about layers available on the map through the <img src="../img/button/identify_green_burron.jpg" class="ms-docbutton"/> button 
+* Disable/Enable the [Floating Identify Tool](side-bar.md#floating-identify-tool) to retrieve Identify information about layers available on the map through the <img src="../img/button/identify_green_burron.jpg" class="ms-docbutton"/> button
 
 !!!warning
     The *Floating Identify* tool is active by default (the button is green)

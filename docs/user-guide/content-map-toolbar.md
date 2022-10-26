@@ -1,4 +1,5 @@
 # Map Content Toolbar
+
 **********************
 
 As soon as a map content is added, the Map Content Toolbar appears on top of the map component:

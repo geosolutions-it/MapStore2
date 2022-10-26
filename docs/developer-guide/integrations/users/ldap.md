@@ -15,12 +15,12 @@ If this can create confusion, you can eventually fully disable the UI when using
 
 The LDAP storage can be configured in two different ways:
 
- * *synchronized* mode
- * *direct connection* mode (experimental)
+* *synchronized* mode
+* *direct connection* mode (experimental)
 
 ### Synchronized mode
 
-In _synchronized mode_, user data (users, groups, roles) is read from LDAP on every login and copied on the internal database.
+In *synchronized mode*, user data (users, groups, roles) is read from LDAP on every login and copied on the internal database.
 
 Any other operation, for example getting user permissions on maps, always uses the internal database.
 
@@ -38,10 +38,10 @@ Direct connection is still experimental and not tested in all the possible scena
 
 Configuring MapStore to use the LDAP storage requires:
 
- * filling out the LDAP configuration properties in the java/web/src/main/resources/ldap.properties file to match your LDAP repository structure
- * invoking the build with the **ldap** profile 
+* filling out the LDAP configuration properties in the java/web/src/main/resources/ldap.properties file to match your LDAP repository structure
+* invoking the build with the **ldap** profile
 
-```bash 
+```bash
 ./build.sh <version> ldap
 ```
 
@@ -49,7 +49,7 @@ Configuring MapStore to use the LDAP storage requires:
 
 Configurable properties in the ldap.properties file include the following:
 
-```properties 
+```properties
 ## name of the LDAP server host
 ldap.host=localhost
 ## port of the LDAP server
@@ -90,7 +90,7 @@ ldap.convertToUpperCase=true
 
 The default configuration enables the synchronized mode. To switch to direct connection mode you have to manually edit the final `geostore-spring-security.xml` to uncomment the related section at the end of the file:
 
-```xml 
+```xml
 <!-- enable direct connection mode -->
 <bean id="ldapUserDAO" [...]>
         [...]
@@ -102,6 +102,7 @@ The default configuration enables the synchronized mode. To switch to direct con
 ```
 
 ## Testing LDAP support
+
 If you don't have an LDAP repository at hand, a very light solution for testing is the acme-ldap java server included in the GeoServer LDAP documentation [here](https://github.com/geoserver/geoserver/blob/master/doc/en/user/source/security/tutorials/ldap/acme-ldap/src/main/java/org/acme/Ldap.java).
 
 You can easily customize the sample data tree, editing the java code.

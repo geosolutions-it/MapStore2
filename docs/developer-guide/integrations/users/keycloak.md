@@ -119,7 +119,6 @@ And click on Save.
 
 #### 2. Configure `mapstore-ovr.properties`
 
-
 The `autoCreateUser` option must be set to false in `mapstore-ovr.properties`.
 
 ```properties
@@ -149,7 +148,6 @@ Where:
     permissions to a new user dedicated to this purpose, you have to open "Role Mappings" tab of keycloak and in "Client
     Roles" select `realm-management` (or in master realm select `master-realm`) and add to selected `realm-admin`.
     <img src="../img/kc-role-view-user.jpg" class="ms-docimage" style="max-width: 500px" />
-
 
 #### 3. Activate the functionality via system property
 

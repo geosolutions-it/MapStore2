@@ -1,11 +1,12 @@
 # Configure the map
+
 **********************
 
 With the Edit map configuration button <img src="../img/button/configure-map-button.jpg" class="ms-docbutton"/> the **Map Inline Editor** opens to give the opportunity to do quick customizations (like basic map settings, layer opacity and something more) to the map (more advanced customizations then, are allowed only through the *Advanced Map Editor*).
 
 <img src="../img/configure-map/configure-map.jpg" class="ms-docimage"/>
 
-## Layers 
+## Layers
 
 The Map Inline Editor opens with the Layers section available, where it is possible to edit the layers settings (by selecting a layer in the TOC) and the visibility of layers present in the map:
 
@@ -15,7 +16,7 @@ The Map Inline Editor opens with the Layers section available, where it is possi
 
 * Toggle the layer visibility by switching off <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> and on <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> the "eye" icon.
 
-## Setting 
+## Setting
 
 The *Setting section* allows the user to:
 
