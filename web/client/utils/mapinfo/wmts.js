@@ -94,13 +94,13 @@ export default {
                     }, callback))(e.data).map(data => {
                         const code = get(data, "ExceptionReport.Exception.exceptionCode");
                         if (code === 'TileOutOfRange') {
-                            return { data: { features: []}};
+                            return params.infoformat === 'text/plain' ? {data: 'no features were found'} : { data: { features: []}};
                         }
-                        throw e;
+                        return e;
                     });
 
                 }
-                throw e;
+                return e;
             })
 
 };
