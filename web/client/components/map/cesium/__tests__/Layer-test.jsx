@@ -1384,6 +1384,7 @@ describe('Cesium layer', () => {
             url: 'geoserver/wfs',
             title: 'Title',
             name: 'workspace:layer',
+            id: 'ws:layer_id',
             visibility: true,
             bbox: {
                 crs: 'EPSG:4326',
@@ -1398,7 +1399,7 @@ describe('Cesium layer', () => {
         // create layers
         const cmp = ReactDOM.render(
             <CesiumLayer
-                type="vector"
+                type="wfs"
                 options={options}
                 map={map}
             />, document.getElementById('container'));
@@ -1406,7 +1407,37 @@ describe('Cesium layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.dataSource).toBeTruthy();
         expect(cmp.layer.dataSource.entities.values.length).toBe(0);
+        expect(cmp.layer.dataSource.name).toBe('ws:layer_id');
+        expect(cmp.layer.dataSource.queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
+    });
+    it('should create a non-queriable wfs layer', () => {
+        const options = {
+            type: 'wfs',
+            url: 'geoserver/wfs',
+            title: 'Title',
+            name: 'workspace:layer',
+            id: 'ws:layer_id',
+            visibility: true,
+            queryable: false,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="wfs"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp.layer.dataSource.queryable).toBe(false);
     });
 
     it('should create a bil terrain provider from wms layer (deprecated)', (done) => {
