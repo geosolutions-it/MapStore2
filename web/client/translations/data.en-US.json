@@ -3314,6 +3314,7 @@
             "showDescription": "Show description",
             "copyCurrentView": "Copy current view",
             "edit": "Edit",
+            "stopEdit": "Stop editing",
             "showViewsList": "Show views list",
             "hideViewsList": "Hide views list",
             "gotToFirstView": "Go to first view",

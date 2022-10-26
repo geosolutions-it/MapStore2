@@ -3304,6 +3304,7 @@
             "showDescription": "Mostra descrizione",
             "copyCurrentView": "Copia vista corrente",
             "edit": "Modifica",
+            "stopEdit": "Chiudi modifica",
             "showViewsList": "Mostra elenco viste",
             "hideViewsList": "Nascondi elenco viste",
             "gotToFirstView": "Vai alla prima vista",

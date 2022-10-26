@@ -3340,6 +3340,7 @@
             "showDescription": "Beschreibung anzeigen",
             "copyCurrentView": "Aktuelle Ansicht kopieren",
             "edit": "Bearbeiten",
+            "stopEdit": "Bearbeitung beenden",
             "showViewsList": "Ansichtsliste anzeigen",
             "hideViewsList": "Ansichtsliste ausblenden",
             "gotToFirstView": "Gehe zur ersten Ansicht",

@@ -475,7 +475,7 @@ function MapViewsSupport({
                                             active={expanded === 'settings'}
                                             disabled={!selected}
                                             onClick={() => setExpanded(expanded !== 'settings' ? 'settings' : '')}
-                                            tooltipId="mapViews.edit"
+                                            tooltipId={expanded === 'settings' ? 'mapViews.stopEdit' : 'mapViews.edit'}
                                             tooltipPosition="bottom"
                                         >
                                             <Glyphicon glyph="pencil" />
