@@ -111,7 +111,7 @@ const WidgetsView = compose(
                     target.widgetType === "table" &&
                         (editingWidget.widgetType !== "map" &&
                             editingWidget.widgetType === "chart"
-                            ? (target.layer && editingWidget && target.layer.name === (getSelectedWidgetData(editingWidget)?.layer?.name || ''))
+                            ? (target.layer && editingWidget && editingWidget?.charts?.map(c => c?.layer?.name)?.includes(target.layer.name))
                             : (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
                         || editingWidget.widgetType === "map") && !target.mapSync
                 ) && target.id !== editingWidget.id

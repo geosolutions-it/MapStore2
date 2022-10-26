@@ -57,22 +57,25 @@ const layerSelector = compose(
                 ...props
             }))
     ),
-    withProps(({selected, setSelected, layers}) => ({
+    withProps(({selected, setSelected}) => ({
         getItems: (items) => items.map(i =>
             !isEmpty(selected)
                 && i && i.record
                 && selected.some(s => s.identifier === i.record.identifier)
                 ? { ...i, selected: true }
-                : !isEmpty(layers)
-                && layers.some(l => i?.record?.identifier === l.name)
-                    ? { ...i, className: 'disabled' }
-                    : i
+                : i
         ),
         onItemClick: ({record} = {}, props, event) => {
             if (event.ctrlKey) {
-                return setSelected(isEmpty(selected)
-                    ? castArray(record)
-                    : castArray(selected).concat(record));
+                const selectedArray = castArray(selected);
+                if (isEmpty(selected)) {
+                    return setSelected(castArray(record));
+                }
+                const present = selectedArray.find((s) => s?.identifier === record?.identifier);
+                if (present) {
+                    return setSelected(selectedArray.filter(s => s?.identifier !== record?.identifier));
+                }
+                return setSelected(selectedArray.concat(record));
             }
             return setSelected(castArray(record));
         }

@@ -1968,7 +1968,8 @@
             },
             "chartSwitcher": {
                 "noResults": "Keine Ebene gefunden",
-                "selectLabel": "Schicht",
+                "placeholder": "Diagrammnamen eingeben",
+                "selectLabel": "Diagramm",
                 "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
                 "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
             },

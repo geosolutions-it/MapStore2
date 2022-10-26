@@ -169,7 +169,7 @@ export const convertDependenciesMappingForCompatibility = (data) => {
                 widget = {
                     ...editorData,
                     selectedChartId: chartId,
-                    charts: castArray({...chartData, layer: w.layer, chartId })
+                    charts: castArray({...chartData, layer: w.layer, name: 'Chart-1', chartId })
                 };
             }
             if (!isEmpty(widget.dependenciesMap)) {
@@ -273,13 +273,12 @@ const chartWidgetOperation = ({editorData, key, value}, state) => {
     let datas = [];
     let selectedChartId = null;
     if (key.includes('layers')) {
-        datas = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
+        datas = value?.map((v, i) => ({...chartData, name: `Chart-${i + 1}`, chartId: uuidv1(), type: 'bar', layer: v }));
     } else if (key.includes('delete')) {
         datas = value;
     } else {
-        const filteredLayers = value?.filter(v => !editorProp?.charts?.map(c => c?.layer?.name)?.includes(v.name));
-        const multiData = filteredLayers?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
-        datas = editorProp?.charts?.concat(multiData);
+        const multiData = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
+        datas = editorProp?.charts?.concat(multiData)?.map((c, i) => ({...c, name: isEmpty(c.name) ? `Chart-${i + 1}` : c.name}));
         selectedChartId = multiData?.[0]?.chartId;
     }
     return set('builder.editor', {...editorProp, charts: datas, selectedChartId: selectedChartId || datas?.[0]?.chartId }, state);

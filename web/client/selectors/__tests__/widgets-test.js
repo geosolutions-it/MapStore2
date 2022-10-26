@@ -68,6 +68,10 @@ describe('widgets selectors', () => {
         const state = set(`widgets.builder.editor`, { filter: { name: "TEST" } }, {});
         expect(getEditingWidgetFilter(state)).toExist();
     });
+    it('getEditingWidgetFilter - chart', () => {
+        const state = set(`widgets.builder.editor`, {widgetType: "chart", charts: [{chartId: "1", filter: { name: "TEST" } }], selectedChartId: "1" }, {});
+        expect(getEditingWidgetFilter(state)).toBeTruthy();
+    });
     it('getEditorSettings', () => {
         const state = set(`widgets.builder.settings`, { flag: true }, {});
         expect(getEditorSettings(state)).toExist();
@@ -222,6 +226,55 @@ describe('widgets selectors', () => {
         expect(availableDeps.length).toBe(2);
         expect(availableDeps[0]).toBe('widgets[tableId]');
         expect(availableDeps[1]).toBe('widgets[otherTableId]');
+    });
+    it('availableDependenciesForEditingWidgetSelector for chart', () => {
+        const stateInput = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            widgetType: "table",
+                            id: "tableId",
+                            layer: {
+                                name: "layername"
+                            }
+                        }, {
+                            widgetType: "table",
+                            id: "otherTableId",
+                            layer: {
+                                name: "layername"
+                            }
+                        },
+                        {
+                            id: "WIDGET",
+                            maps: [{mapId: "MAPS"}],
+                            widgetType: "map"
+                        }]
+                    }
+                },
+                builder: {
+                    editor: {
+                        charts: [
+                            {
+                                chartId: "1",
+                                layer: {
+                                    name: "layername"
+                                }
+                            }
+                        ],
+                        widgetType: "chart",
+                        id: "chartId"
+                    }
+                }
+            }
+        };
+        const state = availableDependenciesForEditingWidgetSelector(stateInput);
+        const availableDeps = state.availableDependencies;
+        expect(availableDeps).toExist();
+        expect(availableDeps.length).toBe(3);
+        expect(availableDeps[0]).toBe('widgets[WIDGET].maps[MAPS].map');
+        expect(availableDeps[1]).toBe('widgets[tableId]');
+        expect(availableDeps[2]).toBe('widgets[otherTableId]');
     });
     it('availableDependenciesForEditingWidgetSelector for counter', () => {
         const stateInput = {

@@ -88,11 +88,11 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         layer={data.layer || layer}
         charts={data.charts || []}
         selectedChartId={data.selectedChartId}
-        filter={data.filter}
+        filter={data.filter || {}}
         geomProp={data.geomProp}
         mapSync={data.mapSync}
         autoColorOptions={data.autoColorOptions}
-        options={data.options}
+        options={data.options || []}
         yAxis={data.yAxis}
         xAxisAngle={data.xAxisAngle}
         yAxisLabel={data.yAxisLabel}

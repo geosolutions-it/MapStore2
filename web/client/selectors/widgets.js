@@ -98,7 +98,8 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
     pathnameSelector,
     getEditingWidget,
     (ws = [], tableWidgets = [], map = {}, pathname, editingWidget) => {
-        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? editingWidget.widgetType === "chart" ? getSelectedWidgetData(editingWidget)?.layer || {} : editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
+        const isChart = editingWidget && editingWidget.widgetType === 'chart';
+        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? isChart ? (editingWidget?.charts?.map(c => c?.layer?.name) || []) : editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
         return {
             availableDependencies:
                 flatten(ws
@@ -108,7 +109,7 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
                     .concat(
                         castArray(tableWidgets)
                             .filter(() => pathname.indexOf("viewer") === -1)
-                            .filter((w) => isArray(editingLayer) || editingLayer.name === w.layer.name)
+                            .filter((w) => (!isChart && isArray(editingLayer)) || (isChart ? editingLayer.includes(w.layer.name) : editingLayer.name === w.layer.name))
                             .filter((w) => editingWidget && editingWidget.id !== w.id)
                             .map(({id}) => `widgets[${id}]`)
                     )
@@ -141,7 +142,10 @@ export const isTrayEnabled = state => get(state, "widgets.tray");
 export const dashboardHasWidgets = state => (getDashboardWidgets(state) || []).length > 0;
 export const getDashboardWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
 export const returnToFeatureGridSelector = (state) => get(state, "widgets.builder.editor.returnToFeatureGrid", false);
-export const getEditingWidgetFilter = state => get(getEditingWidget(state), "filter");
+export const getEditingWidgetFilter = state => {
+    const editingWidget = getSelectedWidgetData(getEditingWidget(state));
+    return get(editingWidget, "filter");
+};
 export const dashBoardDependenciesSelector = () => ({}); // TODO dashboard dependencies
 /**
  * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into

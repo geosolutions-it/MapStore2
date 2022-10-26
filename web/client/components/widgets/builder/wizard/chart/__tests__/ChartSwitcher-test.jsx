@@ -42,7 +42,7 @@ describe('ChartSwitcher component', () => {
         const switcherDropdown = container.querySelector('.Select');
         expect(switcherDropdown).toBeTruthy();
     });
-    it('ChartSwitcher render icon when map size is small', () => {
+    it('ChartSwitcher render icon when widget size is small', () => {
         ReactDOM.render(<ChartSwitcher width={400} charts={charts} value={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.chart-switcher');
@@ -91,5 +91,53 @@ describe('ChartSwitcher component', () => {
 
         const button = container.querySelector('button');
         expect(button.textContent).toBe('TEST');
+    });
+    it('ChartSwitcher with chart fields', () => {
+        ReactDOM.render(<ChartSwitcher withContainer editorData={{charts}} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.chart-switcher');
+        expect(el).toBeTruthy();
+        const fieldsEl = container.querySelector('.chart-fields');
+        expect(fieldsEl).toBeTruthy();
+        const selectArrow = container.querySelector('.Select-arrow');
+        expect(selectArrow).toBeTruthy();
+
+        const button = container.querySelector('.chart-fields button');
+        expect(button).toBeTruthy();
+        ReactTestUtils.Simulate.click(button);
+
+        const inputEl = container.querySelector('.chart-fields input');
+        expect(inputEl).toBeTruthy();
+    });
+    it('ChartSwitcher on chart name change', () => {
+        const action = { onChange: () => {} };
+        const spyOnChange = expect.spyOn(action, 'onChange');
+        ReactDOM.render(<ChartSwitcher withContainer editorData={{charts}} selectedChart={{...charts[0]}} onChange={action.onChange} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.chart-switcher');
+        expect(el).toBeTruthy();
+        let button = container.querySelector('.chart-fields button');
+        expect(button).toBeTruthy();
+        ReactTestUtils.Simulate.click(button);
+        const inputEl = container.querySelector('.chart-fields input');
+        expect(inputEl).toBeTruthy();
+        ReactTestUtils.Simulate.change(inputEl, {target: {value: "ChartEdited"}});
+        ReactTestUtils.Simulate.click(button);
+        expect(spyOnChange).toHaveBeenCalled();
+        spyOnChange.calls.forEach(c => {
+            const args = c.arguments;
+            if (args[0].includes('charts')) {
+                expect(args).toEqual(["charts[1].name", "ChartEdited"]);
+            } else {
+                expect(args).toEqual(["selectedChartId", 1]);
+            }
+        });
+    });
+    it('ChartSwitcher hide chart edit in widget view', () => {
+        ReactDOM.render(<ChartSwitcher editorData={{charts}} selectedChart={{...charts[0]}} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+        const button = container.querySelector('.chart-fields button');
+        expect(button).toBeFalsy();
     });
 });

@@ -37,8 +37,10 @@ Selecting a *Layer* or *Layers*, the following *Chart* options is presented to u
 
 <img src="../img/widgets/chart-options.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-From here it is possible to choose between *Bar Chart*, *Pie Chart* or *Line Chart*, or simply go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button. <br>
-By default, the bar chart is selected.
+From the chart configuration page, the user can perform the following operation
+
+* Edit chart name <img src="../img/button/edit_button.jpg" class="ms-docbutton"/>
+* Choose between *Bar Chart*, *Pie Chart* or *Line Chart*. By default, the bar chart is selected.
 
 From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> the user is allowed to:
 
