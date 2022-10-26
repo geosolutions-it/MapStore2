@@ -22,13 +22,13 @@ import {
 } from '../selectors/mapviews';
 import { registerCustomSaveHandler } from '../selectors/mapsave';
 import { isLoggedIn } from '../selectors/security';
-import { mapIdSelector } from '../selectors/map';
 import { layersSelector } from '../selectors/layers';
-import { cleanMapViewSavedPayload } from '../utils/MapViewsUtils';
+import {
+    cleanMapViewSavedPayload,
+    MAP_VIEWS_CONFIG_KEY
+} from '../utils/MapViewsUtils';
 
 const Button = tooltip(ButtonMS);
-
-const MAP_VIEWS_CONFIG_KEY = 'mapViews';
 
 /*
 
@@ -175,12 +175,9 @@ const pluginName = 'MapViews';
  */
 const MapViewsPlugin = connect(
     createSelector([
-        mapIdSelector,
         isLoggedIn
-    ], (mapId, canEdit) => ({
+    ], (canEdit) => ({
         pluginName,
-        mapViewsConfigKey: MAP_VIEWS_CONFIG_KEY,
-        mapId,
         edit: !!canEdit
     }))
 )(MapViews);

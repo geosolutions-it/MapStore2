@@ -3312,7 +3312,8 @@
             "maskOtherVisibleLayerWarning": "Il existe d'autres couches vectorielles visibles, toutes les entités polygonales visibles sur la carte seront appliquées à toutes les tuiles 3D visibles",
             "resourceLayerRequestError": "Il n'a pas été possible de compléter la requête vers la couche sélectionnée. Veuillez vérifier si la couche est toujours disponible",
             "maskLayerPolygonError": "Le calque sélectionné ne contient pas d'entités polygonales, le masque ne peut donc pas avoir d'effet",
-            "clipPolygonFeaturesNotAvailable": "Le calque sélectionné ne contient pas d'entités polygonales, veuillez sélectionner un autre calque"
+            "clipPolygonFeaturesNotAvailable": "Le calque sélectionné ne contient pas d'entités polygonales, veuillez sélectionner un autre calque",
+            "addNewLayerToTheMap": "La carte est vide. Veuillez ajouter de nouvelles couches à l'intérieur de la carte pour les rendre disponibles dans la liste d'affichage des couches"
         },
         "tutorial": {
             "title": "Tutoriel",

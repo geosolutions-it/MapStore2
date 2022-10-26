@@ -3312,7 +3312,8 @@
             "maskOtherVisibleLayerWarning": "Sono visibili altri layer vettoriali, tutte le features poligonali visibili nella mappa verranno applicate a tutte le 3D tiles visibili",
             "resourceLayerRequestError": "Non è stato possibile completare la richiesta al layer selezionato. Verifica se il layer è ancora disponibile",
             "maskLayerPolygonError": "Il livello selezionato non contiene elementi poligonali quindi la maschera potrebbe non avere effetto",
-            "clipPolygonFeaturesNotAvailable": "Il livello selezionato non contiene elementi poligonali, seleziona un altro livello"
+            "clipPolygonFeaturesNotAvailable": "Il livello selezionato non contiene elementi poligonali, seleziona un altro livello",
+            "addNewLayerToTheMap": "La mappa è vuota. Aggiungi nuovi layer all'interno della mappa per renderli disponibili nell'elenco della vista"
         },
         "tutorial": {
             "title": "Tutorial",

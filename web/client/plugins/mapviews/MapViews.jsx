@@ -6,12 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 
 import { createSelector } from 'reselect';
-import uuid from 'uuid';
-
 import useStoreManager from '../../hooks/useStoreManager';
 import {
     updateViews,
@@ -30,9 +28,11 @@ import {
     getMapViewsResources,
     isMapViewsActive,
     isMapViewsHidden,
-    getPreviousStoredMapId
+    isMapViewsInitialized,
+    getMapViewsUpdateUUID
 } from '../../selectors/mapviews';
 import Loader from '../../components/misc/Loader';
+import { MAP_VIEWS_CONFIG_KEY } from '../../utils/MapViewsUtils';
 
 const MapViewsSupport = lazy(() => import('../../components/mapviews/MapViewsSupport'));
 
@@ -45,28 +45,19 @@ function MapViews({
     mapConfig,
     onSetup = () => {},
     active,
-    mapViewsConfigKey,
     onHideViews,
-    mapId,
-    previousMapId,
+    initialized,
+    updateUUID,
     ...props
 }) {
 
     useStoreManager(pluginName, { reducers, epics });
-
-    const [reloadKey, setReload] = useState(uuid());
     useEffect(() => {
-        // reload the map views state only if the map has changed
-        if (!previousMapId
-        || !!previousMapId && previousMapId !== mapId) {
-            onSetup({ ...mapConfig?.[mapViewsConfigKey], mapId });
+        // reload the map views state only if the map has changed the first time
+        if (!initialized && mapConfig?.[MAP_VIEWS_CONFIG_KEY]) {
+            onSetup(mapConfig[MAP_VIEWS_CONFIG_KEY]);
         }
-        onHideViews(false);
-        setReload(uuid());
-        return () => {
-            onHideViews(true);
-        };
-    }, [mapId, previousMapId, mapConfig?.[mapViewsConfigKey]]);
+    }, [mapConfig?.[MAP_VIEWS_CONFIG_KEY], initialized]);
 
     if (!active) {
         return null;
@@ -83,7 +74,7 @@ function MapViews({
             </div>
         }>
             <MapViewsSupport
-                key={reloadKey}
+                key={updateUUID}
                 {...props}
             />
         </Suspense>
@@ -100,8 +91,9 @@ const ConnectedMapViews = connect(
         getMapViewsResources,
         isMapViewsActive,
         isMapViewsHidden,
-        getPreviousStoredMapId
-    ], (selectedId, views, layers, locale, mapConfig, resources, active, hide, previousMapId) => ({
+        isMapViewsInitialized,
+        getMapViewsUpdateUUID
+    ], (selectedId, views, layers, locale, mapConfig, resources, active, hide, initialized, updateUUID) => ({
         selectedId,
         views,
         layers: layers.filter(({ group }) => group !== 'background'),
@@ -110,7 +102,8 @@ const ConnectedMapViews = connect(
         resources,
         active,
         hide,
-        previousMapId
+        initialized,
+        updateUUID
     })),
     {
         onSelectView: selectView,

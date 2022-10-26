@@ -3348,7 +3348,8 @@
             "maskOtherVisibleLayerWarning": "Es sind andere Vektorebenen sichtbar, alle in der Karte sichtbaren polygonalen Features werden auf alle sichtbaren 3D-Kacheln angewendet",
             "resourceLayerRequestError": "Die Anfrage an die ausgewählte Ebene konnte nicht abgeschlossen werden. Bitte überprüfen Sie, ob die Ebene noch verfügbar ist",
             "maskLayerPolygonError": "Die ausgewählte Ebene enthält keine polygonalen Features, daher konnte die Maske keine Wirkung haben",
-            "clipPolygonFeaturesNotAvailable": "Der ausgewählte Layer enthält keine polygonalen Features, bitte wählen Sie einen anderen Layer"
+            "clipPolygonFeaturesNotAvailable": "Der ausgewählte Layer enthält keine polygonalen Features, bitte wählen Sie einen anderen Layer",
+            "addNewLayerToTheMap": "Die Karte ist leer. Bitte fügen Sie neue Ebenen in die Karte ein, um sie dann in der Ebenenansichtsliste verfügbar zu machen."
         },
         "tutorial": {
             "title": "Anleitung",

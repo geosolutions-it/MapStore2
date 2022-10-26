@@ -15,8 +15,8 @@ import {
     getMapViewsResources,
     getResourceById,
     getPreviousView,
-    getPreviousStoredMapId,
-    getSelectedMapView
+    getSelectedMapView,
+    isMapViewsInitialized
 } from '../mapviews';
 
 describe('mapviews selectors', () => {
@@ -59,6 +59,14 @@ describe('mapviews selectors', () => {
             }
         };
         expect(getSelectedMapViewId(state)).toBe(false);
+    });
+    it('isMapViewsInitialized', () => {
+        const state = {
+            mapviews: {
+                initialized: true
+            }
+        };
+        expect(isMapViewsInitialized(state)).toBe(state.mapviews.initialized);
     });
     it('getMapViews', () => {
         const state = {
@@ -163,14 +171,6 @@ describe('mapviews selectors', () => {
             }
         };
         expect(getPreviousView(state)).toBe(state.mapviews.previousView);
-    });
-    it('getPreviousStoredMapId', () => {
-        const state = {
-            mapviews: {
-                mapId: 'map.01'
-            }
-        };
-        expect(getPreviousStoredMapId(state)).toBe(state.mapviews.mapId);
     });
     it('getSelectedMapView', () => {
         let state = {

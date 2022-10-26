@@ -27,11 +27,14 @@ import {
     updateAdditionalLayer
 } from '../actions/additionallayers';
 import { CATALOG_CLOSE } from '../actions/catalog';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 import {
     getSelectedMapView,
     getResourceById,
     getPreviousView,
-    getMapViewsResources
+    getMapViewsResources,
+    isMapViewsHidden,
+    isMapViewsActive
 } from '../selectors/mapviews';
 import { layersSelector } from '../selectors/layers';
 import {
@@ -96,12 +99,13 @@ export const updateMapViewsLayers = (action$, store) =>
         UPDATE_VIEWS,
         ACTIVATE_VIEWS,
         HIDE_VIEWS,
-        SETUP_VIEWS
+        SETUP_VIEWS,
+        MAP_CONFIG_LOADED
     )
-        .filter((action) =>
-            action.type !== ACTIVATE_VIEWS
-            || action.type === ACTIVATE_VIEWS && action.active
-            || action.type === HIDE_VIEWS && !action.hide)
+        .filter(() => {
+            const state = store.getState();
+            return !isMapViewsHidden(state) && isMapViewsActive(state);
+        })
         .switchMap(() => {
             const state = store.getState();
             const previousView = getPreviousView(state);
@@ -197,10 +201,11 @@ export const hideMapViewsBasedOnLayoutChanges = (action$, store) =>
     action$.ofType(
         TOGGLE_CONTROL,
         SET_CONTROL_PROPERTY,
-        CATALOG_CLOSE
+        CATALOG_CLOSE,
+        MAP_CONFIG_LOADED
     )
         .filter((action) =>
-            action.type === CATALOG_CLOSE
+            [CATALOG_CLOSE, MAP_CONFIG_LOADED].includes(action.type)
             || controlsToCheck.includes(action.control)
         )
         .switchMap(() => {

@@ -3310,7 +3310,8 @@
             "maskOtherVisibleLayerWarning": "Hay otras capas vectoriales visibles, todas las características poligonales visibles en el mapa se aplicarán a todas las teselas 3D visibles",
             "resourceLayerRequestError": "No fue posible completar la solicitud a la capa seleccionada. Verifique si la capa aún está disponible",
             "maskLayerPolygonError": "La capa seleccionada no contiene elementos poligonales por lo que la máscara no podría tener efecto",
-            "clipPolygonFeaturesNotAvailable": "La capa seleccionada no contiene elementos poligonales, seleccione otra capa"
+            "clipPolygonFeaturesNotAvailable": "La capa seleccionada no contiene elementos poligonales, seleccione otra capa",
+            "addNewLayerToTheMap": "El mapa está vacío. Agregue nuevas capas dentro del mapa para que estén disponibles en la lista de vista de capas"
         },
         "tutorial": {
             "title": "Tutorial",

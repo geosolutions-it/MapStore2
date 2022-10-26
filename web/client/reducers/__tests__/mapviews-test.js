@@ -56,10 +56,13 @@ describe('mapviews reducer', () => {
         expect(state.selectedId).toBe(config.selectedId);
         expect(state.views).toBe(config.views);
         expect(state.mapId).toBe(config.mapId);
+        expect(state.initialized).toBe(true);
+        expect(state.updateUUID).toBeTruthy();
     });
     it('setup views with undefined config', () => {
         const state = mapviews(undefined, setupViews());
-        expect(state).toEqual({});
+        expect(state.initialized).toBe(true);
+        expect(state.updateUUID).toBeTruthy();
     });
     it('activate views', () => {
         const state = mapviews(undefined, activateViews(true));

@@ -178,7 +178,11 @@ describe('mapviews epics', () => {
             } catch (e) {
                 done(e);
             }
-        }, {}, done);
+        }, {
+            mapviews: {
+                active: true
+            }
+        }, done);
     });
 
     it('removeMapViewsLayersWhenDeactivated', (done) => {

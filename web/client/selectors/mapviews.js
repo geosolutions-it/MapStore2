@@ -13,7 +13,8 @@ export const getMapViews = state => state?.mapviews?.views;
 export const getMapViewsResources = state => state?.mapviews?.resources;
 export const getResourceById = (state, id) => getMapViewsResources(state)?.find(resource => resource.id === id);
 export const getPreviousView = state => state?.mapviews?.previousView;
-export const getPreviousStoredMapId = state => state?.mapviews?.mapId;
+export const isMapViewsInitialized = state => !!state?.mapviews?.initialized;
+export const getMapViewsUpdateUUID = state => state?.mapviews?.updateUUID;
 export const getSelectedMapView = state => {
     const selectedId = getSelectedMapViewId(state);
     const views = getMapViews(state) || [];

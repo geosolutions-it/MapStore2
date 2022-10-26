@@ -339,11 +339,15 @@ function MapViewsSupport({
         if (initApi && !init.current) {
             init.current = true;
             if (selected) {
-                api.current.setView({
-                    ...selected,
-                    // remove fly animation to the initial view
-                    flyTo: false
-                });
+                // delay the initial set view
+                // waiting that the zoom from map has been completed
+                setTimeout(() => {
+                    api.current.setView({
+                        ...selected,
+                        // remove fly animation to the initial view
+                        flyTo: false
+                    });
+                }, 500);
             }
         }
     }, [initApi]);

@@ -8,6 +8,8 @@
 import isNumber from 'lodash/isNumber';
 
 const METERS_PER_DEGREES = 111194.87428468118;
+
+export const MAP_VIEWS_CONFIG_KEY = 'mapViews';
 export const MAP_VIEWS_LAYERS_OWNER = 'MAP_VIEWS_LAYERS_OWNER';
 export const DefaultViewValues = {
     DURATION: 10,

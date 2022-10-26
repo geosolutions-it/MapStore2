@@ -16,10 +16,23 @@ import {
     SET_PREVIOUS_VIEW
 } from '../actions/mapviews';
 
+import { MAP_CONFIG_LOADED } from '../actions/config';
+
+import { MAP_VIEWS_CONFIG_KEY } from '../utils/MapViewsUtils';
+
+import uuid from 'uuid';
+
 const defaultState = {};
 
 const mapviews = (state = defaultState, action) => {
     switch (action.type) {
+    case MAP_CONFIG_LOADED:
+        return {
+            initialized: true,
+            hide: state?.hide,
+            updateUUID: uuid(),
+            ...action?.config?.[MAP_VIEWS_CONFIG_KEY] || {}
+        };
     case SELECT_VIEW:
         return {
             ...state,
@@ -46,11 +59,15 @@ const mapviews = (state = defaultState, action) => {
             hide: action.hide
         };
     case SETUP_VIEWS:
-        if (!action.config) {
-            // reset state
-            return {};
+        // do not update the state if initialized already
+        if (state.initialized) {
+            return state;
         }
-        return action.config;
+        return {
+            initialized: true,
+            updateUUID: uuid(),
+            ...(action.config ?? {})
+        };
     case SET_PREVIOUS_VIEW:
         return {
             ...state,

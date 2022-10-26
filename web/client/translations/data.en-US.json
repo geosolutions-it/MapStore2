@@ -3280,7 +3280,7 @@
             "centerPosition": "Center position",
             "captureThisViewPositions": "Capture this view positions",
             "durationLabel": "Duration (s)",
-            "flyToLabel": "'Animation transition during navigation",
+            "flyToLabel": "Animation transition during navigation",
             "maskEnable": "Enable mask",
             "maskLayer": "Layer",
             "maskInverse": "Inverse",
@@ -3322,7 +3322,8 @@
             "maskOtherVisibleLayerWarning": "There are other vector layers visible, all polygonal features visible in map will be applied to all the visible 3D tiles",
             "resourceLayerRequestError": "It was not possible to complete the request to the selected layer. Please verify if the layer is still available",
             "maskLayerPolygonError": "The layer selected does not contain polygonal features so the mask could not have effect",
-            "clipPolygonFeaturesNotAvailable": "The selected layer does not contain polygonal features, please select another layer"
+            "clipPolygonFeaturesNotAvailable": "The selected layer does not contain polygonal features, please select another layer",
+            "addNewLayerToTheMap": "The map is empty. Please add new layers inside the map to make them available in the view list"
         },
         "tutorial": {
             "title": "Tutorial",
