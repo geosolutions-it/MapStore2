@@ -32,7 +32,7 @@ const requestFeatures = (options, params, cancelToken) => {
 
 const createLayer = (options, map) => {
 
-    let dataSource = new Cesium.GeoJsonDataSource();
+    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
 
     const params = optionsToVendorParams(options);
 
@@ -70,6 +70,7 @@ const createLayer = (options, map) => {
     }
 
     dataSource.show = !!options.visibility;
+    dataSource.queryable = options.queryable === undefined || options.queryable;
 
     return {
         detached: true,
