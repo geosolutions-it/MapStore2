@@ -15,6 +15,7 @@ import {
     createCircleMarkerImage,
     polygonToClippingPlanes
 } from '../../../utils/cesium/PrimitivesUtils';
+import { computeAngle } from '../../../utils/cesium/MathUtils';
 import {
     DefaultViewValues,
     formatClippingFeatures,
@@ -41,18 +42,32 @@ const computeDestinationOrientation = (map, {
             roll: map.camera.roll
         }
     };
+
+    const target = Cesium.Cartographic.toCartesian(
+        Cesium.Cartographic.fromDegrees(center.longitude, center.latitude, center.height, new Cesium.Cartographic())
+    );
+    const targetUp = Cesium.Cartographic.toCartesian(
+        Cesium.Cartographic.fromDegrees(center.longitude, center.latitude, center.height + 1, new Cesium.Cartographic())
+    );
     const origin = Cesium.Cartographic.toCartesian(
         Cesium.Cartographic.fromDegrees(cameraPosition.longitude, cameraPosition.latitude, cameraPosition.height, new Cesium.Cartographic())
     );
     const originUp = Cesium.Cartographic.toCartesian(
         Cesium.Cartographic.fromDegrees(cameraPosition.longitude, cameraPosition.latitude, cameraPosition.height + 1, new Cesium.Cartographic())
     );
-    const up = Cesium.Cartesian3.subtract(originUp, origin, new Cesium.Cartesian3());
-    let target;
+
+    const diff = Cesium.Cartesian3.subtract(origin, target, new Cesium.Cartesian3());
+    const vertical = Cesium.Cartesian3.subtract(targetUp, target, new Cesium.Cartesian3());
+
+    // if the direction of the camera is perpendicular to the globe
+    // we are using a threshold of 5 degrees
+    // we should reverse the up is the latitude is greater than 0
+    const shouldReverseUp = center.latitude > 0 && Math.round(computeAngle(diff, vertical)) <= 5;
+    const up = shouldReverseUp
+        ? Cesium.Cartesian3.subtract(origin, originUp, new Cesium.Cartesian3())
+        : Cesium.Cartesian3.subtract(originUp, origin, new Cesium.Cartesian3());
+
     let direction;
-    target = Cesium.Cartographic.toCartesian(
-        Cesium.Cartographic.fromDegrees(center.longitude, center.latitude, center.height, new Cesium.Cartographic())
-    );
     direction = Cesium.Cartesian3.subtract(target, origin, new Cesium.Cartesian3());
     Cesium.Cartesian3.normalize(direction, direction);
     map.camera.setView({
