@@ -22,6 +22,7 @@ function MapViewSupport({
             options: {
                 settings: [
                     ViewSettingsTypes.DESCRIPTION,
+                    ViewSettingsTypes.POSITION,
                     ViewSettingsTypes.NAVIGATION,
                     ViewSettingsTypes.LAYERS_OPTIONS
                 ],
@@ -65,9 +66,6 @@ function MapViewSupport({
                     );
                 }
                 return null;
-            },
-            computeViewCoordinates: (view, newProperties) => {
-                return newProperties;
             }
         });
     }, [map]);

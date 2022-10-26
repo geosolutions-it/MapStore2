@@ -28,6 +28,7 @@ import {
 } from '../actions/additionallayers';
 import { CATALOG_CLOSE } from '../actions/catalog';
 import { MAP_CONFIG_LOADED } from '../actions/config';
+import { MAP_TYPE_CHANGED } from '../actions/maptype';
 import {
     getSelectedMapView,
     getResourceById,
@@ -43,6 +44,8 @@ import {
 import { getResourceFromLayer } from '../api/MapViews';
 
 import { MAP_VIEWS_LAYERS_OWNER, formatClippingFeatures } from '../utils/MapViewsUtils';
+import { isCesium } from '../selectors/maptype';
+
 const deepCompare = isShallowEqualBy();
 
 const updateResourcesObservable = (view, store) => {
@@ -100,19 +103,21 @@ export const updateMapViewsLayers = (action$, store) =>
         ACTIVATE_VIEWS,
         HIDE_VIEWS,
         SETUP_VIEWS,
-        MAP_CONFIG_LOADED
+        MAP_CONFIG_LOADED,
+        MAP_TYPE_CHANGED
     )
         .filter(() => {
             const state = store.getState();
             return !isMapViewsHidden(state) && isMapViewsActive(state);
         })
-        .switchMap(() => {
+        .switchMap((action) => {
             const state = store.getState();
             const previousView = getPreviousView(state);
             const currentView =  getSelectedMapView(state);
             const { layers = [], mask = {}, id: viewId } = currentView || {};
             const shouldUpdate = !!(
-                !deepCompare(previousView?.layers || [], layers)
+                action.type === MAP_TYPE_CHANGED
+                || !deepCompare(previousView?.layers || [], layers)
                 || !deepCompare(previousView?.mask || {}, mask)
             );
             if (!shouldUpdate) {
@@ -152,7 +157,7 @@ export const updateMapViewsLayers = (action$, store) =>
                                     }
                                 );
                             }),
-                        ...(maskLayerResource?.data?.collection?.features
+                        ...(isCesium(state) && maskLayerResource?.data?.collection?.features
                             ? [updateAdditionalLayer(
                                 `${viewId}-mask`,
                                 MAP_VIEWS_LAYERS_OWNER,

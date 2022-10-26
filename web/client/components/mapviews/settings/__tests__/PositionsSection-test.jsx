@@ -30,7 +30,7 @@ describe('PositionsSection component', () => {
         expect(sectionNode).toBeTruthy();
     });
     it('should display six inputs if expanded', () => {
-        ReactDOM.render(<PositionsSection expandedSections={{ positions: true }}/>, document.getElementById("container"));
+        ReactDOM.render(<PositionsSection computeViewCoordinates={value => value} expandedSections={{ positions: true }}/>, document.getElementById("container"));
         const sectionNode = document.querySelector('.ms-map-views-section');
         expect(sectionNode).toBeTruthy();
         const inputNodes = document.querySelectorAll('input');

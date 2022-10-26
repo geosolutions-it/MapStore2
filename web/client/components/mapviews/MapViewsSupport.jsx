@@ -405,7 +405,7 @@ function MapViewsSupport({
                         </div>
                     </div>
                 ) : (
-                    <div className="ms-map-views">
+                    <div className="ms-map-views" onClick={(event) => event.stopPropagation()}>
                         <div className="ms-map-views-wrapper">
                             <MapViewsProgressBar
                                 progress={navigationProgress}

@@ -98,6 +98,9 @@ describe('mapviews epics', () => {
                     { id: 'layer.02', type: 'vector', visibility: true, features: [feature] }
                 ]
             },
+            maptype: {
+                mapType: 'cesium'
+            },
             mapviews: {
                 selectedId: 'view.01',
                 active: true,

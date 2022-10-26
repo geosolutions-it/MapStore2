@@ -54,6 +54,7 @@ describe('Leaflet MapViewsSupport', () => {
                             expect(api.options).toEqual({
                                 settings: [
                                     ViewSettingsTypes.DESCRIPTION,
+                                    ViewSettingsTypes.POSITION,
                                     ViewSettingsTypes.NAVIGATION,
                                     ViewSettingsTypes.LAYERS_OPTIONS
                                 ],
@@ -61,7 +62,6 @@ describe('Leaflet MapViewsSupport', () => {
                             });
                             expect(api.getView).toBeTruthy();
                             expect(api.setView).toBeTruthy();
-                            expect(api.computeViewCoordinates).toBeTruthy();
                             done();
                         }}
                     />

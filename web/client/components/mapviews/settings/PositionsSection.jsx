@@ -44,82 +44,84 @@ function PositionsSection({
             initialExpanded={expandedSections.positions}
             onExpand={(expanded) => onExpandSection({ positions: expanded })}
         >
-            <div className="ms-map-views-position-container">
-                <div className="ms-map-views-position-title"><Message msgId="mapViews.cameraPosition"/></div>
-                <div className="ms-map-views-position-group">
-                    <FormGroup controlId="map-views-camera-position-lng" >
-                        <ControlLabel><Message msgId="mapViews.longitude"/></ControlLabel>
-                        <FormControl
-                            type="number"
-                            className="coordinate-field"
-                            min={-180}
-                            max={180}
-                            step={0.00001}
-                            value={formatDegrees(cameraPosition?.longitude)}
-                            onChange={(value) => handleCoordinatesUpdate({ cameraPosition: { ...cameraPosition, longitude: parseFloat(value) } })}
-                        />
-                    </FormGroup>
-                    <FormGroup controlId="map-views-camera-position-lat">
-                        <ControlLabel><Message msgId="mapViews.latitude"/></ControlLabel>
-                        <FormControl
-                            type="number"
-                            className="coordinate-field"
-                            min={-90}
-                            max={90}
-                            step={0.00001}
-                            value={formatDegrees(cameraPosition?.latitude)}
-                            onChange={(value) => handleCoordinatesUpdate({ cameraPosition: { ...cameraPosition, latitude: parseFloat(value) } })}
-                        />
-                    </FormGroup>
-                    <FormGroup controlId="map-views-camera-position-height">
-                        <ControlLabel><Message msgId="mapViews.height"/></ControlLabel>
-                        <FormControl
-                            type="number"
-                            className="height-field"
-                            value={formatHeight(cameraPosition?.height)}
-                            onChange={(value) => handleCoordinatesUpdate({ cameraPosition: { ...cameraPosition, height: parseFloat(value) } })}
-                        />
-                    </FormGroup>
+            {computeViewCoordinates && <>
+                <div className="ms-map-views-position-container">
+                    <div className="ms-map-views-position-title"><Message msgId="mapViews.cameraPosition"/></div>
+                    <div className="ms-map-views-position-group">
+                        <FormGroup controlId="map-views-camera-position-lng" >
+                            <ControlLabel><Message msgId="mapViews.longitude"/></ControlLabel>
+                            <FormControl
+                                type="number"
+                                className="coordinate-field"
+                                min={-180}
+                                max={180}
+                                step={0.00001}
+                                value={formatDegrees(cameraPosition?.longitude)}
+                                onChange={(value) => handleCoordinatesUpdate({ cameraPosition: { ...cameraPosition, longitude: parseFloat(value) } })}
+                            />
+                        </FormGroup>
+                        <FormGroup controlId="map-views-camera-position-lat">
+                            <ControlLabel><Message msgId="mapViews.latitude"/></ControlLabel>
+                            <FormControl
+                                type="number"
+                                className="coordinate-field"
+                                min={-90}
+                                max={90}
+                                step={0.00001}
+                                value={formatDegrees(cameraPosition?.latitude)}
+                                onChange={(value) => handleCoordinatesUpdate({ cameraPosition: { ...cameraPosition, latitude: parseFloat(value) } })}
+                            />
+                        </FormGroup>
+                        <FormGroup controlId="map-views-camera-position-height">
+                            <ControlLabel><Message msgId="mapViews.height"/></ControlLabel>
+                            <FormControl
+                                type="number"
+                                className="height-field"
+                                value={formatHeight(cameraPosition?.height)}
+                                onChange={(value) => handleCoordinatesUpdate({ cameraPosition: { ...cameraPosition, height: parseFloat(value) } })}
+                            />
+                        </FormGroup>
+                    </div>
                 </div>
-            </div>
-            <div className="ms-map-views-position-container">
-                <div className="ms-map-views-position-title"><Message msgId="mapViews.centerPosition"/></div>
-                <div className="ms-map-views-position-group">
-                    <FormGroup controlId="map-views-center-position-lng">
-                        <ControlLabel><Message msgId="mapViews.longitude"/></ControlLabel>
-                        <FormControl
-                            type="number"
-                            className="coordinate-field"
-                            min={-180}
-                            max={180}
-                            step={0.00001}
-                            value={formatDegrees(center?.longitude)}
-                            onChange={(value) => handleCoordinatesUpdate({ center: { ...center, longitude: parseFloat(value) } })}
-                        />
-                    </FormGroup>
-                    <FormGroup controlId="map-views-center-position-lat">
-                        <ControlLabel><Message msgId="mapViews.latitude"/></ControlLabel>
-                        <FormControl
-                            type="number"
-                            className="coordinate-field"
-                            min={-90}
-                            max={90}
-                            step={0.00001}
-                            value={formatDegrees(center?.latitude)}
-                            onChange={(value) => handleCoordinatesUpdate({ center: { ...center, latitude: parseFloat(value) } })}
-                        />
-                    </FormGroup>
-                    <FormGroup controlId="map-views-center-position-height">
-                        <ControlLabel><Message msgId="mapViews.height"/></ControlLabel>
-                        <FormControl
-                            type="number"
-                            className="height-field"
-                            value={formatHeight(center?.height)}
-                            onChange={(value) => handleCoordinatesUpdate({ center: { ...center, height: parseFloat(value) } })}
-                        />
-                    </FormGroup>
+                <div className="ms-map-views-position-container">
+                    <div className="ms-map-views-position-title"><Message msgId="mapViews.centerPosition"/></div>
+                    <div className="ms-map-views-position-group">
+                        <FormGroup controlId="map-views-center-position-lng">
+                            <ControlLabel><Message msgId="mapViews.longitude"/></ControlLabel>
+                            <FormControl
+                                type="number"
+                                className="coordinate-field"
+                                min={-180}
+                                max={180}
+                                step={0.00001}
+                                value={formatDegrees(center?.longitude)}
+                                onChange={(value) => handleCoordinatesUpdate({ center: { ...center, longitude: parseFloat(value) } })}
+                            />
+                        </FormGroup>
+                        <FormGroup controlId="map-views-center-position-lat">
+                            <ControlLabel><Message msgId="mapViews.latitude"/></ControlLabel>
+                            <FormControl
+                                type="number"
+                                className="coordinate-field"
+                                min={-90}
+                                max={90}
+                                step={0.00001}
+                                value={formatDegrees(center?.latitude)}
+                                onChange={(value) => handleCoordinatesUpdate({ center: { ...center, latitude: parseFloat(value) } })}
+                            />
+                        </FormGroup>
+                        <FormGroup controlId="map-views-center-position-height">
+                            <ControlLabel><Message msgId="mapViews.height"/></ControlLabel>
+                            <FormControl
+                                type="number"
+                                className="height-field"
+                                value={formatHeight(center?.height)}
+                                onChange={(value) => handleCoordinatesUpdate({ center: { ...center, height: parseFloat(value) } })}
+                            />
+                        </FormGroup>
+                    </div>
                 </div>
-            </div>
+            </>}
             <FormGroup controlId="capture-view">
                 <Button bsSize="sm" bsStyle="primary" onClick={() => onCaptureView(view)}>
                     <Message msgId="mapViews.captureThisViewPositions"/>
