@@ -18,9 +18,30 @@ const vector3dStyleOptions = {
     })
 };
 
+const INITIAL_OPTION_VALUE = '__height_mode_original__';
 const billboard3dStyleOptions = {
     msBringToFront: property.msBringToFront({
-        label: 'styleeditor.msBringToFront'
+        label: "styleeditor.msBringToFront"
+    }),
+    msHeightReference: property.msHeightReference({
+        label: "styleeditor.heightReferenceFromGround"
+    }),
+    msHeight: property.multiInput({
+        label: "styleeditor.height",
+        key: "msHeight",
+        isDisabled: (value, properties) => properties?.msHeightReference === 'clamp',
+        initialOptionValue: INITIAL_OPTION_VALUE,
+        getSelectOptions: ({ attributes }) => {
+            const numberAttributes = attributes
+                .map(({ label, attribute, type }) =>
+                    type === "number" ? { label, value: attribute } : null
+                )
+                .filter((x) => !!x);
+            return [
+                ...numberAttributes,
+                { label: 'Point height', value: INITIAL_OPTION_VALUE }
+            ];
+        }
     })
 };
 
@@ -81,7 +102,8 @@ const getBlocks = ({
                 strokeWidth: 1,
                 radius: 16,
                 rotate: 0,
-                msBringToFront: false
+                msBringToFront: false,
+                msHeightReference: 'none'
             }
         },
         Icon: {
@@ -126,7 +148,8 @@ const getBlocks = ({
                 opacity: 1,
                 size: 32,
                 rotate: 0,
-                msBringToFront: false
+                msBringToFront: false,
+                msHeightReference: 'none'
             }
         },
         Line: {

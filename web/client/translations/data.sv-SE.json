@@ -2230,7 +2230,13 @@
             "imageSrcNotSupportedBase64Image": "Någon stilåtergivare stöder inte base64 -bilder även om den aktuella källan är giltig",
             "imageFormatEmpty": "Bildformatet kan inte identifieras. Välj bildformat bland de tillgängliga i rullgardinsmenyn Format ",
             "warningTextOrderTitle": "Varning",
-            "warningTextOrder": "Regelordningen som innehåller textstil kunde inte matcha återgivningsordningen på kartan. Detta beteende är relaterat till någon återgivningsmotor som ritar etikett ovanpå andra regler"
+            "warningTextOrder": "Regelordningen som innehåller textstil kunde inte matcha återgivningsordningen på kartan. Detta beteende är relaterat till någon återgivningsmotor som ritar etikett ovanpå andra regler",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {
