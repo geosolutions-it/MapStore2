@@ -438,7 +438,7 @@ function MapViewsSupport({
                                 <ButtonToolbar>
                                     {!play && <ButtonGroup>
                                         <Button
-                                            bsStyle="primary"
+                                            bsStyle={expanded === 'list' ? 'success' : 'primary'}
                                             className="square-button-md"
                                             active={expanded === 'list'}
                                             onClick={() => setExpanded(expanded !== 'list' ? 'list' : '')}
@@ -470,7 +470,7 @@ function MapViewsSupport({
                                             <Glyphicon glyph="duplicate" />
                                         </Button>
                                         <Button
-                                            bsStyle="primary"
+                                            bsStyle={expanded === 'settings' ? 'success' : 'primary'}
                                             className="square-button-md"
                                             active={expanded === 'settings'}
                                             disabled={!selected}
