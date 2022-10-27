@@ -342,18 +342,19 @@ const property = {
         config: {
             options: [{
                 labelId: 'styleeditor.none',
-                value: 'NONE'
+                value: 'none'
             }, {
                 labelId: 'styleeditor.relative',
-                value: 'RELATIVE_TO_GROUND'
+                value: 'relative'
             }, {
                 labelId: 'styleeditor.clamp',
-                value: 'CLAMP_TO_GROUND'
+                value: 'clamp'
             }]
         },
         getValue: (value) => {
             return {
-                [key]: value
+                [key]: value,
+                ...(value === 'clamp' && { msHeight: undefined })
             };
         }
     }),
@@ -476,14 +477,36 @@ const property = {
         isDisabled,
         isVisible
     }),
-    multiInput: ({ label, key = '', originalOptionValue, getSelectOptions = () => [], isDisabled, isVisible }) => ({
+    multiInput: ({ label, key = '', initialOptionValue, getSelectOptions = () => [], isDisabled, isVisible }) => ({
         type: 'multiInput',
         label,
         config: {
-            originalOptionValue,
+            initialOptionValue,
             getSelectOptions
         },
+        setValue: (value) => {
+            if (value === undefined) {
+                return { type: 'initial' };
+            }
+            if (!isObject(value)) {
+                return {
+                    type: 'constant',
+                    value
+                };
+            }
+            return value;
+        },
         getValue: (value) => {
+            if (value?.type === 'initial') {
+                return {
+                    [key]: undefined
+                };
+            }
+            if (value?.type === 'constant') {
+                return {
+                    [key]: value?.value ?? 0
+                };
+            }
             return {
                 [key]: value
             };
