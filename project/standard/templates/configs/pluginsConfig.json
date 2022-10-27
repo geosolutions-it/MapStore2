@@ -155,12 +155,6 @@
       ]
     },
     {
-      "name": "Version",
-      "glyph": "info-sign",
-      "title": "plugins.Version.title",
-      "description": "plugins.Version.description"
-    },
-    {
       "name": "BackgroundSelector",
       "title": "plugins.BackgroundSelector.title",
       "description": "plugins.BackgroundSelector.description"
@@ -321,9 +315,6 @@
       "glyph": "cog",
       "title": "plugins.Settings.title",
       "description": "plugins.Settings.description",
-      "children": [
-        "Version"
-      ],
       "dependencies": [
         "SidebarMenu"
       ],
