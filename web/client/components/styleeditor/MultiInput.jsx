@@ -19,7 +19,7 @@ function MultiInput({
     label,
     value,
     config: {
-        originalOptionValue,
+        initialOptionValue,
         getSelectOptions = () => [],
         selectClearable = false
     } = {},
@@ -28,72 +28,53 @@ function MultiInput({
     ...props
 }) {
 
-    let castedValue = value;
-    if (typeof value !== 'object') {
-        castedValue = {
-            type: "constant",
-            value
-        };
-    }
-
     const selectOptions = getSelectOptions(props);
 
     const dropdownButtonOptions = [
         { labelId: "styleeditor.constantValue", value: "constant" },
         { labelId: "styleeditor.attributeValue", value: "attribute" }
     ];
-    const dropdownButtonValue = typeof value === 'object' && value.type || 'constant';
-
-    const onChangeHandler = (newValue) => {
-        if (newValue.type === "constant") {
-            onChange(newValue.value ?? 0);
-        } else {
-            onChange(newValue);
-        }
-    };
+    const dropdownButtonValue = value?.type === 'constant' ? 'constant' : 'attribute';
 
     const onConstantValueChangeHandler = (event) => {
-        // match float number
-        if (event.target.value.match(/^-?\d*(\.\d*)?$/)) {
-            castedValue.value = event.target.value;
-        }
-        onChangeHandler(castedValue);
+        onChange({
+            ...value,
+            value: event.target.value
+        });
     };
 
     const onSelectValueChangeHandler = (option) => {
-        if (option.value === originalOptionValue) {
-            castedValue = { type: "original" };
-            onChangeHandler({ type: "original" });
+        if (option.value === initialOptionValue) {
+            onChange({ type: "initial" });
             return;
         }
-        onChangeHandler({ type: "attribute", name: option.value });
+        onChange({ type: "attribute", name: option.value });
     };
 
     const handleDropdownButtonSelect = (newValue) => {
-        if (castedValue.type !== newValue) {
-            castedValue = {
+        if (value.type !== newValue) {
+            onChange({
                 type: newValue
-            };
-            onChangeHandler(castedValue);
+            });
         }
     };
 
     return (<div className="flex-center">
-        {castedValue.type === 'constant' && <FormGroup>
+        {value?.type === 'constant' && <FormGroup>
             <FormControl
-                type="text"
+                type="number"
                 disabled={disabled}
-                value={castedValue.value}
+                value={value?.value}
                 placeholder="styleeditor.placeholderInput"
                 onChange={onConstantValueChangeHandler}
             />
         </FormGroup>}
-        {castedValue.type !== 'constant' && <div className="flex-grow-1">
+        {value?.type !== 'constant' && <div className="flex-grow-1">
             <ReactSelect
                 disabled={disabled}
                 clearable={selectClearable}
                 options={selectOptions}
-                value={castedValue.type === 'original' && originalOptionValue || castedValue.name}
+                value={value?.type === 'initial' ? initialOptionValue : value?.name}
                 onChange={onSelectValueChangeHandler}
             />
         </div>}
