@@ -42,7 +42,7 @@ describe('WidgetChart', () => {
     it('rendering pie', (done) => {
         const check = ({ data, layout }, graphDiv) => {
             expect(graphDiv).toExist();
-            expect(layout.showLegend).toBeFalsy();
+            expect(layout.showlegend).toBeFalsy();
             expect(layout.autosize).toBeFalsy();
             expect(layout.automargin).toBeFalsy();
             expect(layout.legend).toBeFalsy();
@@ -60,7 +60,7 @@ describe('WidgetChart', () => {
     it('rendering line', (done) => {
         const check = ({ data, layout }, graphDiv) => {
             expect(graphDiv).toExist();
-            expect(layout.showLegend).toBeFalsy();
+            expect(layout.showlegend).toBeFalsy();
             expect(layout.autosize).toBeFalsy();
             expect(layout.automargin).toBeFalsy();
             expect(layout.hovermode).toBe('x unified');
@@ -78,7 +78,7 @@ describe('WidgetChart', () => {
     it('rendering bar', (done) => {
         const check = ({ data, layout }, graphDiv) => {
             expect(graphDiv).toExist();
-            expect(layout.showLegend).toBeFalsy();
+            expect(layout.showlegend).toBeFalsy();
             expect(layout.autosize).toBeFalsy();
             expect(layout.automargin).toBeFalsy();
             expect(layout.hovermode).toBe('x unified');
@@ -108,7 +108,7 @@ describe('Widget Chart: data conversions ', () => {
         it('defaults', () => {
             testAllTypes(DATASET_1, ({data, config, layout}) => {
                 // default settings valid for all chart types
-                expect(layout.showLegend).toBeFalsy();
+                expect(layout.showlegend).toBeFalsy();
                 expect(layout.autosize).toBeFalsy();
                 expect(layout.automargin).toBeFalsy();
                 expect(data.length).toEqual(1);

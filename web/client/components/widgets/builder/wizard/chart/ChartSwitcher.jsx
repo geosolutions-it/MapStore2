@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactSelect from "react-select";
-import { Glyphicon } from "react-bootstrap";
+import {FormControl as FC, Glyphicon} from "react-bootstrap";
 import isEmpty from "lodash/isEmpty";
 import get from "lodash/get";
 import tooltip from "../../../../misc/enhancers/tooltip";
@@ -16,6 +16,7 @@ import localizedProps from "../../../../misc/enhancers/localizedProps";
 import Message from "../../../../I18N/Message";
 import ButtonRB from "../../../../misc/Button";
 const Select = localizedProps(["noResultsText"])(ReactSelect);
+const FormControl = localizedProps("placeholder")(FC);
 const Button = tooltip(ButtonRB);
 
 
@@ -36,6 +37,8 @@ export default ({
     width,
     ...props
 }) => {
+    const [showInput, setShowInput] = useState(false);
+    const [inputVal, setInputVal] = useState(selectedChart?.name);
     const renderChartSwitchSelector = (options) => {
         if (options.length === 1) {
             return null;
@@ -49,21 +52,53 @@ export default ({
                 <Glyphicon glyph="info-sign" />
             </Button>);
         }
-        return (<Select
-            className={className}
-            disabled={disabled}
-            noResultsText="widgets.chartSwitcher.noResults"
-            options={isEmpty(options)
-                ? []
-                : options.map(m => ({
-                    label: m?.layer?.title,
-                    value: m.chartId
-                }))
-            }
-            onChange={(val) => val.value && onChange("selectedChartId", val.value)}
-            value={value || options?.[0]?.chartId}
-            clearable={false}
-        />);
+        const formValue = inputVal ?? options?.find(o => o.chartId === value)?.name;
+        return (
+            <div className={"chart-fields"}>
+                {showInput
+                    ? <FormControl
+                        type="text"
+                        placeholder={"widgets.chartSwitcher.placeholder"}
+                        style={{
+                            textOverflow: "ellipsis"
+                        }}
+                        value={formValue}
+                        onChange={(e) => setInputVal(e.target.value)}/>
+                    : <Select
+                        className={className}
+                        disabled={disabled}
+                        noResultsText="widgets.chartSwitcher.noResults"
+                        options={isEmpty(options)
+                            ? []
+                            : options.map(m => ({
+                                label: m?.name || (m?.layer?.title),
+                                value: m.chartId
+                            }))
+                        }
+                        onChange={(chart) => {
+                            if (chart.value) {
+                                onChange("selectedChartId", chart.value);
+                                setInputVal(null);
+                            }
+                        }}
+                        value={value || options?.[0]?.chartId}
+                        clearable={false}
+                    />}
+                {withContainer && <Button
+                    bsStyle="primary"
+                    disabled={showInput && isEmpty(formValue)}
+                    onClick={() => {
+                        if (!showInput) {
+                            setShowInput(true);
+                        } else {
+                            inputVal && onChange(`charts[${selectedChart?.chartId}].name`, inputVal);
+                            setShowInput(false);
+                        }
+                    }}>
+                    <Glyphicon glyph={showInput ? "ok" : "pencil"}/>
+                </Button>}
+            </div>
+        );
     };
 
     if (!withContainer) {

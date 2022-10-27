@@ -132,6 +132,23 @@ describe('Test WidgetsUtils', () => {
         const modified = convertDependenciesMappingForCompatibility(dataWidgets);
         expect(modified).toEqual(dataWidgets);
     });
+    it('convertDependenciesMappingForCompatibility for chart', () => {
+        const data = {widgets: [{id: 'w_2', widgetType: "chart", layer: {name: "Test1"}, mapSync: true, geomProp: "the_geom", yAxis: true, cartesian: false, legend: false, options: {}, autoColorOptions: {}, url: "some_url"}]};
+        const { widgets: _widgets } = convertDependenciesMappingForCompatibility(data);
+        expect(_widgets[0].id).toBe("w_2");
+        expect(_widgets[0].mapSync).toBeTruthy();
+        expect(_widgets[0].selectedChartId).toBeTruthy();
+        expect(_widgets[0].charts).toBeTruthy();
+        expect(_widgets[0].charts[0].layer).toBeTruthy();
+        expect(_widgets[0].charts[0].yAxis).toBeTruthy();
+        expect(_widgets[0].charts[0].cartesian).toBe(false);
+        expect(_widgets[0].charts[0].legend).toBe(false);
+        expect(_widgets[0].charts[0].options).toBeTruthy();
+        expect(_widgets[0].charts[0].autoColorOptions).toBeTruthy();
+        expect(_widgets[0].charts[0].url).toBe('some_url');
+        expect(_widgets[0].charts[0].name).toBe('Chart-1');
+        expect(_widgets[0].charts[0].chartId).toBe(_widgets[0].selectedChartId);
+    });
     it('updateDependenciesMapOfMapList', () => {
         const modified = updateDependenciesMapOfMapList(dataWidgets.widgets, 'w_1', 'm_2');
         [
@@ -235,7 +252,7 @@ describe('Test WidgetsUtils', () => {
             expect(charts.length).toBe(1);
             expect(charts[0].layer.name).toBe('Test2');
         });
-        it('editorChange charts update layers', () =>{
+        it('editorChange charts add new layers', () => {
             const _state = {builder: {editor: {selectedChartId: 1, charts: [{chartId: 1, layer: {name: "Test1"}}, {chartId: 2, layer: {name: "Test2"}}] }} };
             const props = editorChange({key: 'chart-layers', value: [{name: "NewTest"}, {name: "NewTest1"}]}, _state);
             expect(props.builder.editor).toBeTruthy();
@@ -245,6 +262,7 @@ describe('Test WidgetsUtils', () => {
             expect(charts[0].type).toBe('bar');
             expect(charts[0].chartId).toBeTruthy();
             expect(charts[0].layer.name).toBe('NewTest');
+            expect(charts[0].name).toBe('Chart-1');
             expect(selectedChartId).toBeTruthy();
         });
         it('editorChange delete a chart', () =>{
@@ -258,16 +276,17 @@ describe('Test WidgetsUtils', () => {
             expect(charts[0].chartId).toBe(2);
             expect(charts[0].layer.name).toBe('Test2');
         });
-        it('editorChange add a new chart to existing', () =>{
+        it('editorChange add a new chart to existing', () => {
             const _state = {builder: {editor: {selectedChartId: 2, charts: [{chartId: 1, layer: {name: "Test1"}}, {chartId: 2, layer: {name: "Test2"}}] }} };
             const props = editorChange({key: 'chart-add', value: [{name: "Test1"}, {name: "Test2"}, {name: "Test3"}]}, _state);
             expect(props.builder.editor).toBeTruthy();
             const {charts} = props.builder.editor;
             expect(charts).toBeTruthy();
-            expect(charts.length).toBe(3);
-            expect(charts[2].chartId).toBeTruthy();
-            expect(charts[2].layer.name).toBe('Test3');
-            expect(charts[2].type).toBe('bar');
+            expect(charts.length).toBe(5);
+            expect(charts[4].chartId).toBeTruthy();
+            expect(charts[4].layer.name).toBe('Test3');
+            expect(charts[4].name).toBe('Chart-5');
+            expect(charts[4].type).toBe('bar');
         });
     });
     it("getDependantWidget", () => {

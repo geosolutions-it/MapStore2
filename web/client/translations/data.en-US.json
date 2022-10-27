@@ -1931,7 +1931,8 @@
             },
             "chartSwitcher": {
                 "noResults": "No layer found",
-                "selectLabel": "Layer",
+                "placeholder": "Enter chart name",
+                "selectLabel": "Chart",
                 "infoOnHide": "Expand widget to see chart switcher",
                 "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
             },

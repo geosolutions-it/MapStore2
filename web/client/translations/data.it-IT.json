@@ -1932,7 +1932,8 @@
             },
             "chartSwitcher": {
                 "noResults": "Nessun livello trovato",
-                "selectLabel": "Layer selezionato",
+                "placeholder": "Inserisci il nome del grafico",
+                "selectLabel": "Grafico",
                 "infoOnHide": "Espandi il widget per vedere il selettore del grafico",
                 "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
             },

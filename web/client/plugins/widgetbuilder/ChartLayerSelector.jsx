@@ -62,8 +62,7 @@ export default connect((state) =>({
     const onProceed = () => {
         const isUpdate = showLayers && !isEmpty(layers);
         const key = isUpdate ? 'chart-add' : 'chart-layers';
-        const _layers = isUpdate ? layers.concat(layer) : layer;
-        onLayerChoice(key, _layers);
+        onLayerChoice(key, layer);
         toggleLayerSelector(false);
     };
     const stepButton = !showLayers ? stepButtons : withBackButton({toggleLayerSelector});

@@ -470,7 +470,7 @@ export const toPlotly = (props) => {
     const classificationType = getChartClassificationType(classificationAttr, classificationAttributeType, autoColorOptions, customColorEnabled);
     return {
         layout: {
-            showlegend: legend,
+            showlegend: legend ?? false, // Set false when legend is undefined, else pie-chart attempts to display legend
             // https://plotly.com/javascript/setting-graph-size/
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly

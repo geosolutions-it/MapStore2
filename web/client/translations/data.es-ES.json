@@ -1930,7 +1930,8 @@
             },
             "chartSwitcher": {
                 "noResults": "No se encontró ninguna capa",
-                "selectLabel": "Capa",
+                "placeholder": "Introduzca el nombre del gráfico",
+                "selectLabel": "Cuadro",
                 "infoOnHide": "Expanda el widget para ver el selector de gráficos",
                 "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
