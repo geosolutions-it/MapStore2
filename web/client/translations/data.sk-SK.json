@@ -2234,7 +2234,13 @@
             "imageSrcInvalidBase64": "Toto nie je platný obrázok base64. Niektoré vykresľovače štýlov nepodporujú tento typ zdroja, môžeš namiesto toho použiť externý zdroj adries URL",
             "imageSrcNotSupportedBase64Image": "Niektoré vykresľovače štýlov nepodporujú obrázky base64, aj keď je aktuálny zdroj platný",
             "warningTextOrderTitle": "Upozornenie",
-            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {

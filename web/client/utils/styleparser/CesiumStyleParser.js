@@ -8,7 +8,7 @@
 
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
-import { castArray } from 'lodash';
+import { castArray, isNumber } from 'lodash';
 import range from 'lodash/range';
 
 function getCesiumColor({ color, opacity }) {
@@ -45,6 +45,44 @@ function getCesiumDashArray({ color, opacity, dasharray }) {
     });
 }
 
+const getNumberAttributeValue = (value, properties) => {
+    const constantHeight = parseFloat(value);
+
+    if (!isNaN(constantHeight) && isNumber(constantHeight)) {
+        return constantHeight;
+    }
+
+    const attributeValue = value?.type === "attribute" && parseFloat(properties[value.name]);
+
+    if (!isNaN(attributeValue) && isNumber(attributeValue)) {
+        return attributeValue;
+    }
+    return null;
+};
+
+function modifyPointHeight(map, entity, symbolizer, properties) {
+    // store the initial position of the feature created from the GeoJSON feature
+    if (!entity._msPosition) {
+        entity._msPosition = entity.position.getValue(Cesium.JulianDate.now());
+    }
+
+    const height = getNumberAttributeValue(symbolizer.msHeight, properties);
+
+    if (height === null) {
+        entity.position.setValue(entity._msPosition);
+        return;
+    }
+    const ellipsoid = map?.scene?.globe?.ellipsoid;
+    if (!ellipsoid) {
+        return;
+    }
+
+    const cartographic = ellipsoid.cartesianToCartographic(entity._msPosition);
+    cartographic.height = height;
+    entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
+    return;
+}
+
 function parseLabel(feature, label = '') {
     if (!feature.properties) {
         return label;
@@ -76,6 +114,12 @@ const GRAPHIC_KEYS = [
     'wall'
 ];
 
+const HEIGHT_REFERENCE_CONSTANTS_MAP = {
+    none: 'NONE',
+    relative: 'RELATIVE_TO_GROUND',
+    clamp: 'CLAMP_TO_GROUND'
+};
+
 function getStyleFuncFromRules({
     rules = []
 } = {}, {
@@ -85,6 +129,7 @@ function getStyleFuncFromRules({
 }) {
     return ({
         entities,
+        map,
         opacity: globalOpacity = 1
     }) => {
 
@@ -119,12 +164,13 @@ function getStyleFuncFromRules({
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
-                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: 1 * globalOpacity
                                     })
                                 });
+                                modifyPointHeight(map, entity, symbolizer, properties);
                             }
                         }
                         if (symbolizer.kind === 'Icon' && entity.position) {
@@ -137,12 +183,13 @@ function getStyleFuncFromRules({
                                     scale,
                                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
-                                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                    heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
                                     color: getCesiumColor({
                                         color: '#ffffff',
                                         opacity: symbolizer.opacity * globalOpacity
                                     })
                                 });
+                                modifyPointHeight(map, entity, symbolizer, properties);
                             }
                         }
                         if (symbolizer.kind === 'Line' && entity._msStoredCoordinates.polyline) {
@@ -203,7 +250,7 @@ function getStyleFuncFromRules({
                                     color: symbolizer.color,
                                     opacity: 1 * globalOpacity
                                 }),
-                                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                                heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
                                 pixelOffset: new Cesium.Cartesian2(symbolizer?.offset?.[0] ?? 0, symbolizer?.offset?.[1] ?? 0),
                                 // outline is not working
                                 // rotation is not available as property
@@ -213,6 +260,7 @@ function getStyleFuncFromRules({
                                 }),
                                 outlineWidth: symbolizer.haloWidth
                             });
+                            modifyPointHeight(map, entity, symbolizer, properties);
                         }
                     }
                 });

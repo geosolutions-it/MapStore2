@@ -25,6 +25,7 @@ import MarkSelector from './MarkSelector';
 import Band from './Band';
 import IconInput from './IconInput';
 import SelectInput from './SelectInput';
+import MultiInput from './MultiInput';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
@@ -118,6 +119,14 @@ export const fields = {
                         placeholder="styleeditor.placeholderInput"
                         onChange={event => onChange(event.target.value)}/>
                 </FormGroup>
+            </PropertyField>
+        );
+    },
+    multiInput: (props) => {
+        return (
+            <PropertyField
+                label={props.label}>
+                <MultiInput {...props} />
             </PropertyField>
         );
     },

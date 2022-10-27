@@ -336,6 +336,28 @@ const property = {
         },
         setValue: (value) => !!value
     }),
+    msHeightReference: ({ key = 'msHeightReference', label = 'Height reference from ground' }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.none',
+                value: 'none'
+            }, {
+                labelId: 'styleeditor.relative',
+                value: 'relative'
+            }, {
+                labelId: 'styleeditor.clamp',
+                value: 'clamp'
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value,
+                ...(value === 'clamp' && { msHeight: undefined })
+            };
+        }
+    }),
     shape: ({ label, key = 'wellKnownName' }) => ({
         type: 'mark',
         label,
@@ -448,6 +470,43 @@ const property = {
             isValid
         },
         getValue: (value) => {
+            return {
+                [key]: value
+            };
+        },
+        isDisabled,
+        isVisible
+    }),
+    multiInput: ({ label, key = '', initialOptionValue, getSelectOptions = () => [], isDisabled, isVisible }) => ({
+        type: 'multiInput',
+        label,
+        config: {
+            initialOptionValue,
+            getSelectOptions
+        },
+        setValue: (value) => {
+            if (value === undefined) {
+                return { type: 'initial' };
+            }
+            if (!isObject(value)) {
+                return {
+                    type: 'constant',
+                    value
+                };
+            }
+            return value;
+        },
+        getValue: (value) => {
+            if (value?.type === 'initial') {
+                return {
+                    [key]: undefined
+                };
+            }
+            if (value?.type === 'constant') {
+                return {
+                    [key]: value?.value ?? 0
+                };
+            }
             return {
                 [key]: value
             };
