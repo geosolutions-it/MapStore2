@@ -11,7 +11,7 @@ import { defaultMemoize, createSelectorCreator } from 'reselect';
 
 const defaultCompare = (a, b) => a === b;
 
-const isShallowEqualBy = (compare = defaultCompare) => (el1, el2) => {
+export const isShallowEqualBy = (compare = defaultCompare) => (el1, el2) => {
     if (Array.isArray(el1) && Array.isArray(el2)) {
         return el1 === el2
             || el1.length === el2.length
