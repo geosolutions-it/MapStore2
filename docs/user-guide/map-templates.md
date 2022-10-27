@@ -1,7 +1,8 @@
 # Map Templates
+
 *******************
 
-This extension allows to browse **Map Templates** in a MapStore's viewer. Supported Map Templates formats in MapStore are [WMC](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#web-map-context) and [MapStore's native JSON](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#map-options). The <img src="../img/button/map-templates-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the list of the available templates. 
+This extension allows to browse **Map Templates** in a MapStore's viewer. Supported Map Templates formats in MapStore are [WMC](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#web-map-context) and [MapStore's native JSON](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#map-options). The <img src="../img/button/map-templates-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the list of the available templates.
 
 <img src="../img/map-templates/map-templates-panel.jpg" class="ms-docimage"/>
 
@@ -44,7 +45,7 @@ Here the admin, in order to import a template file, can drag and drop it inside 
 <img src="../img/map-templates/import-screen.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 !!! warning
-    
+
     The file that the admin can upload are:
 
     * The [MapStore native map definition](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#map-options) `json` format

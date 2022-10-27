@@ -10,11 +10,11 @@ The Story settings panel is available in Edit Mode and it can be opened by click
 
 The editor can customize the different components of the story through the following sections:
 
-* The **Theme** to choose the default background and text color and the default font of the whole story: clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker appears to allow selecting the desired color: 
+* The **Theme** to choose the default background and text color and the default font of the whole story: clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker appears to allow selecting the desired color:
 
 <img src="../img/story-setting/theme.gif" class="ms-docimage"/>
 
- * The *Font Family* to choose the default text font present in the whole story: clicking on the search bar a dropdown menu opens to allow selecting the desired font (*Inherit*, *Arial*, *Georgia*, *Impact*, *Tahoma*, *Time New Roman*, *Verdana*). The default list of Font Families can be customized in the MapStore configuration file.
+* The *Font Family* to choose the default text font present in the whole story: clicking on the search bar a dropdown menu opens to allow selecting the desired font (*Inherit*, *Arial*, *Georgia*, *Impact*, *Tahoma*, *Time New Roman*, *Verdana*). The default list of Font Families can be customized in the MapStore configuration file.
 
 <img src="../img/story-setting/font_family.gif" class="ms-docimage"/>
 

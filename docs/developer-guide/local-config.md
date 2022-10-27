@@ -198,9 +198,11 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   }
 }
 ```
+
 CSW service
 <br> `filter` - For both static and dynamic filter, input only xml element contained within <ogc:Filter> (i.e. Do not enclose the filter value in <ogc:Filter>)<br>
 <br>Example:<br>
+
 ```javascript
 {
     "filter": { // Default filter values
@@ -352,7 +354,8 @@ with the following properties:
 
 ### Search plugin configuration
 
-The search plugin provides several configurations to customize the services behind the search bar in the map: 
+The search plugin provides several configurations to customize the services behind the search bar in the map:
+
 - Allow to configure more many services to use in parallel, in the `services` array.
 - Natively supports nominatim and WFS protcols
 - Allows to register **your own** custom services to develop and use in your custom project
@@ -361,6 +364,7 @@ The search plugin provides several configurations to customize the services behi
 Following you can find some examples of the various configurations. For more details about the properties, please check to plugin API documentation: [https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search)
 
 Nominatim configuration:
+
 ```javascript
 {
    "type": "nominatim",
@@ -372,6 +376,7 @@ Nominatim configuration:
 ```
 
 WFS configuration:
+
 ```javascript
 "plugins": {
   ...
@@ -405,6 +410,7 @@ WFS configuration:
 ```
 
 WFS configuration with nested services:
+
 ```javascript
 "plugins": {
   ...
@@ -457,6 +463,7 @@ WFS configuration with nested services:
 ```
 
 Custom services configuration:
+
 ```javascript
 {
   "type": "custom Service Name",

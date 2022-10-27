@@ -22,8 +22,8 @@ Example:
 ### POST Request
 
 Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with an entire map, or complex data. To overcome this kind of situations, an adhoc `POST` service available at `<mapstore-base-path>/rest/config/setParams` allows to pass the parameters in the request payload `application/x-www-form-urlencoded`.
-The parameters will be then passed to the client (using a temporary `queryParams-{random-UUID}` variable in `sessionStorage`). 
-Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/openlayers/config`. 
+The parameters will be then passed to the client (using a temporary `queryParams-{random-UUID}` variable in `sessionStorage`).
+Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/openlayers/config`.
 The UUID used in the `queryParams-{random-UUID}` variable name is being added to the redirect URL in a query parameter named `queryParamsID=`. Assuming to use the default redirect value, the url will then look like the following: `#/viewer/openlayers/config?queryParamsID={random-UUID}`.
 
 Example `application/x-www-form-urlencoded` request payload (URL encoded):
@@ -139,7 +139,7 @@ Here a sample page you can create to test the service:
 
 ### Feature Info
 
-Allows to trigger [identify tool](../../user-guide/side-bar/#identify-tool) for the coordinates passed in "lat"/"lng" parameters. 
+Allows to trigger [identify tool](../../user-guide/side-bar/#identify-tool) for the coordinates passed in "lat"/"lng" parameters.
 
 Optional parameter "filterNameList" allows limiting request to the specific layer names.
 It will be effectively used only if it's passed as non-empty array of layer names.
@@ -149,7 +149,7 @@ GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "fil
 
 GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": ["layerName1", "layerName2"]}`
 
-#### Simplified syntax:
+#### Simplified syntax
 
 GET: `#/viewer/openlayers/config?featureInfo=38.72,-95.625`
 
@@ -157,7 +157,7 @@ Where lon,lat values are comma-separated respecting order.
 
 ### Map
 
-Allows to pass the entire map JSON definition (see the map configuration format of MapStore). 
+Allows to pass the entire map JSON definition (see the map configuration format of MapStore).
 
 GET:
 
@@ -168,15 +168,16 @@ GET:
 It also allows partial overriding of existing map configuration by passing only specific properties of the root object and/or the internal "map" object.
 
 Following example will override "catalogServices" and "mapInfoConfiguration":
+
 ```text
 #/viewer/openlayers/config?map={"mapInfoConfiguration":{"trigger":"click","infoFormat":"text/html"},"catalogServices":{"services": {"wms": {"url": "http://example.com/geoserver/wms","type": "wms","title": "WMS","autoload": true}},"selectedService": "wms"}}
 ```
+
 ### Center / Zoom
 
 GET: `#/viewer/openlayers/config?center=0,0&zoom=5`
 
 Where lon,lat values are comma-separated respecting order.
-
 
 ### Marker / Zoom
 
@@ -220,10 +221,9 @@ GET: `#/viewer/openlayers/new?addLayers=layer1;service&mapinfo=layer1&mapInfoFil
 
 Where:
 
-- `layer1` is layer name. 
+- `layer1` is layer name.
 - `service` is the service name providing layer data. Service name is optional. If no service is provided, the default service of the catalog will be used.
 - `mapInfoFilter` is a cql filter applied to the layer.
-
 
 ### Background
 
@@ -242,7 +242,7 @@ Where:
 - `Sentinel`, `layer1`, `layer2` are layer names,
 - `service`, `default_map_backgrounds` are the service names providing layer data. Service name is optional. If no service is provided, the default service of the catalog will be used.
 
-According to the implementation of `default_map_backgrounds` service, it is enough to pass desired layer name even partially, e.g. `background=Sen;default_map_backgrounds`, 
+According to the implementation of `default_map_backgrounds` service, it is enough to pass desired layer name even partially, e.g. `background=Sen;default_map_backgrounds`,
 it will use the closest layer name match in this case.
 
 ### Actions

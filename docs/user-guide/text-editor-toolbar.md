@@ -1,4 +1,5 @@
 # Text Editor Toolbar
+
 *********************
 
 With the *Text Editor Toolbar* it is possible to customize the text by modifying the following aspects:
@@ -28,4 +29,4 @@ With the *Text Editor Toolbar* it is possible to customize the text by modifying
 !!! note
     In order to setup an hyperlink to an external website, the protocol must be specified (e.g., `http://` or `https://`).
 
-* **Remove** <img src="../img/button/remove4.jpg" class="ms-docbutton" style="max-height:15px;"/> to remove the formatting  
+* **Remove** <img src="../img/button/remove4.jpg" class="ms-docbutton" style="max-height:15px;"/> to remove the formatting

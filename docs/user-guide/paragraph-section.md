@@ -1,4 +1,5 @@
 # Paragraph Section
+
 **********************
 
 The Paragraph Section allows to insert a textual content to the story. The story editor can also click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button to add additional contents to this section (like media, other paragraphs or embed third party contens). It is possible to choose between:
@@ -9,7 +10,7 @@ The Paragraph Section allows to insert a textual content to the story. The story
 
 * **Media Content** <img src="../img/button/add-media-content.jpg" class="ms-docbutton"/> to open the Media Editor to add an image, a map or a video.
 
-* **Web Page Content** <img src="../img/button/web_page_button.jpg" class="ms-docbutton"/> to add an external web page 
+* **Web Page Content** <img src="../img/button/web_page_button.jpg" class="ms-docbutton"/> to add an external web page
 
 ## Text Content
 
@@ -17,7 +18,7 @@ By default, as soon as a Paragraph is added, an empty text content is already pr
 
 <img src="../img/paragraph-section/paragraph-section.jpg" class="ms-docimage"/>
 
-* Change the size of the text content: clicking on the **Change Size** button <img src="../img/button/change_size2.jpg" class="ms-docbutton"/> a dropdown menu appears to allow selecting between *Small*, *Medium* or *Full* size: 
+* Change the size of the text content: clicking on the **Change Size** button <img src="../img/button/change_size2.jpg" class="ms-docbutton"/> a dropdown menu appears to allow selecting between *Small*, *Medium* or *Full* size:
 
 <img src="../img/paragraph-section/paragraphe-size.jpg" class="ms-docimage"/>
 
@@ -29,7 +30,7 @@ The editor can write a text by clicking on the text content and customize it thr
 
 ## Media Content
 
-Adding a media content, the [Media Editor](media-editor-window.md#media-editor-window) opens to allow adding the supported media (like Image, Map or Video). 
+Adding a media content, the [Media Editor](media-editor-window.md#media-editor-window) opens to allow adding the supported media (like Image, Map or Video).
 
 ### Images
 
@@ -49,7 +50,7 @@ A map added inside the paragraph section can be customized through the [Map Cont
 
 <img src="../img/paragraph-section/image-map.jpg" class="ms-docimage"/>
 
-## Web Page Content 
+## Web Page Content
 
 Adding a web page content, the Web Page Windows opens allowing the user to add the URL of an extenal web page. A web page added inside the paragraph section can be customized through the [Web Page Content Toolbar](content-web-toolbar.md#web-page-content-toolbar). Below is an example of a medium, center-aligned web content, just below a map one:
 
