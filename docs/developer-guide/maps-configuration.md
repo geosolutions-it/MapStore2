@@ -1200,7 +1200,7 @@ In order to create a `wms` based mesh there are some requirements that need to b
 !!! note
     With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
 
-Generic layer configuration of type `terrain` and provide `wms` is as follows. 
+Generic layer configuration of type `terrain` and provide `wms` is as follows.
 The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider:
 
 ```json
