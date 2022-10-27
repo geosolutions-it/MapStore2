@@ -1,7 +1,8 @@
 # Video Content Toolbar
+
 **********************
 
-As soon as a video content is added, the Video Content Toolbar appears on top of the video: 
+As soon as a video content is added, the Video Content Toolbar appears on top of the video:
 
 <img src="../img/content-video-toolbar/c-video-toolbar.jpg" class="ms-docimage"/>
 

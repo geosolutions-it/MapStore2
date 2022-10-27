@@ -19,7 +19,7 @@ import BuilderHeader from './BuilderHeader';
 import { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } from '../../actions/widgets';
 
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
-import chartLayerSelector from './enhancers/chartLayerSelector';
+import tableLayerSelector from './enhancers/tableLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
 import viewportBuilderConnectMask from './enhancers/connection/viewportBuilderConnectMask';
 import withExitButton from './enhancers/withExitButton';
@@ -82,7 +82,7 @@ const chooseLayerEnhancer = compose(
     catalogEditorEnhancer,
     branch(
         ({ layer } = {}) => !layer,
-        renderComponent(chartLayerSelector(LayerSelector))
+        renderComponent(tableLayerSelector(LayerSelector))
     )
 );
 

@@ -15,7 +15,8 @@ import {
     toggleWidgetConnectFlow,
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
-    updateDependenciesMapOnMapSwitch
+    updateDependenciesMapOnMapSwitch,
+    onWidgetCreationFromMap
 } from '../widgets';
 
 import {
@@ -29,7 +30,8 @@ import {
     LOAD_DEPENDENCIES,
     DEPENDENCY_SELECTOR_KEY,
     updateWidgetProperty,
-    REPLACE
+    REPLACE,
+    onEditorChange
 } from '../../actions/widgets';
 
 import { savingMap, mapCreated } from '../../actions/maps';
@@ -597,5 +599,39 @@ describe('widgets Epics', () => {
                     }
                 }
             });
+    });
+    it('onWidgetCreationFromMap', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(EDITOR_CHANGE);
+            expect(actions[0].key).toBe("chart-layers");
+            expect(actions[0].value).toEqual([{id: "1", name: "layer"}]);
+            done();
+        };
+        const state = {
+            layers: {
+                flat: [{
+                    id: "1",
+                    name: "layer"
+                }, {
+                    id: "2",
+                    name: "layer2"
+                }, {
+                    id: "3",
+                    name: "layer3"
+                }],
+                selected: ["1"]
+            },
+            dashboard: {
+                editor: {
+                    available: false
+                },
+                editing: false
+            }
+        };
+        testEpic(onWidgetCreationFromMap,
+            1,
+            [onEditorChange("widgetType", "chart")],
+            checkActions, state);
     });
 });

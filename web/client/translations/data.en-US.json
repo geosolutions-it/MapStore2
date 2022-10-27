@@ -1798,7 +1798,8 @@
             },
             "selectWidgetType": "Select the widget type",
             "selectChartType": {
-                "title": "Select the Chart type"
+                "title": "Chart type",
+                "noResults": "No chart found"
             },
             "selectMap": {
                 "TOC": {
@@ -1832,15 +1833,18 @@
                 "wizard": {
                     "backToTypeSelection": "Back to chart type selection",
                     "backToWidgetTypeSelection": "Back to widget type selection",
+                    "backToChartOptionConfiguration": "Back to chart option configuration",
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
                     "backToMapSelection": "Back to map selection",
                     "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
                     "selectALayer": "Select a layer",
+                    "selectLayers": "Select one or more layers",
                     "selectAMap": "Select one or more maps",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
+                    "errorChart": "One or more chart(s) is invalid",
                     "backToTableOptions": "Back to table options",
                     "configureTableOptions": "Configure table options",
                     "resetColumnsSizes": "Reset all changes to the column sizes",
@@ -1860,6 +1864,7 @@
                     "connectToTheMap": "Connect to the map",
                     "selectMapToConnect": "Select the widget to connect",
                     "clearConnection": "Clear connection",
+                    "disableConnectToMap": "Operation unavailable",
                     "classAttributes": {
                         "classColor": "Class Color",
                         "classLabel": "Class Label",
@@ -1889,11 +1894,14 @@
                     "noAttributesDescription": "The selected layer has no attributes to show. Please select another widget type or layer",
                     "noWidgetsAvailableTitle": "Can not create the widget for the selected layer",
                     "noWidgetsAvailableDescription": "<p><strong>Please try to select another layer or widget type</strong></p><p>The server doesn't provide the needed services for the layer and the widget type selected</p><p>Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>The WPS process <code>gs:aggregate</code> is not available</li></ul></p>",
+                    "attributesNotMatchingDescription": "<p><strong>Please try to select another layer</strong></p><p>The attributes of the selected layer(s) doesn't match the parent dependant widget</p>",
                     "checkAtLeastOneAttribute": "You must select at least one column",
                     "noMapAvailableForLegend": "No map available",
                     "noMapAvailableForLegendDescription": "You need at least one map widget to create the legend"
                 },
-                "setupFilter": "Configure a filter for the widget data"
+                "setupFilter": "Configure a filter for the widget data",
+                "addNewLayers": "Add new layer(s)",
+                "deleteChart": "Delete current chart"
             },
             "widget": {
                 "menu": {
@@ -1919,6 +1927,13 @@
                 "placeholder": "Enter map name",
                 "selectLabel": "Select a map",
                 "infoOnHide": "Expand widget to see map switcher",
+                "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "No layer found",
+                "placeholder": "Enter chart name",
+                "selectLabel": "Chart",
+                "infoOnHide": "Expand widget to see chart switcher",
                 "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
             },
             "chartType": {
@@ -3050,6 +3065,10 @@
           "ZoomOut": {
             "description": "Button that decrease zoom level of the map",
             "title": "Zoom Out"
+          },
+          "MapViews": {
+            "description": "This plugin allows to add a sequence of different views inside a map",
+            "title": "MapViews"
           }
         },
         "contextCreator": {
@@ -3257,6 +3276,68 @@
                 "message": "An unexpected error occurred during layers syncing. There is probably a bug in MapStore"
             },
             "layerType": "type: {type}"
+        },
+        "mapViews": {
+            "description": "Description",
+            "position": "Position",
+            "animation": "Animation",
+            "mask": "Mask",
+            "globeTranslucency": "Globe Transluncency",
+            "layersOptions": "Layers Options",
+            "cameraPosition": "Camera position",
+            "longitude": "Longitude",
+            "latitude": "Latitude",
+            "height": "Height (m)",
+            "centerPosition": "Center position",
+            "captureThisViewPositions": "Capture this view positions",
+            "durationLabel": "Duration (s)",
+            "flyToLabel": "Animation transition during navigation",
+            "maskEnable": "Enable mask",
+            "maskLayer": "Layer",
+            "maskInverse": "Inverse",
+            "maskInverseOffset": "Inverse offset (m)",
+            "globeTranslucencyEnable": "Enable translucency",
+            "globeTranslucencyOpacity": "Opacity",
+            "globeTranslucencyFadeByDistance": "Fade translucency by distance",
+            "globeTranslucencyNearDistance": "Minimum distance (m)",
+            "globeTranslucencyFarDistance": "Maximum distance (m)",
+            "showClippingLayersGeometries": "Show clipping layers geometries",
+            "terrain": "Terrain",
+            "clippingSourceLayer": "Clipping layer source",
+            "clippingFeature": "Clipping feature",
+            "clippingInverse": "Inverse clipping",
+            "layerOpacity": "Opacity",
+            "showViewsGeometries": "Show views positions",
+            "addInitialView": "Click on the plus button to add a new view",
+            "removeView": "Remove view",
+            "resetLayerOverrides": "Reset changes to align layer to default value",
+            "hideLayer": "Hide layer",
+            "showLayer": "Show layer",
+            "undoChanges": "Undo changes",
+            "redoChanges": "Redo changes",
+            "addNewView": "Add new view",
+            "addNewViewBelowSelected": "Add a new view below the selected one",
+            "hideDescription": "Hide description",
+            "showDescription": "Show description",
+            "copyCurrentView": "Copy current view",
+            "edit": "Edit",
+            "stopEdit": "Stop editing",
+            "showViewsList": "Show views list",
+            "hideViewsList": "Hide views list",
+            "gotToFirstView": "Go to first view",
+            "gotToPreviousView": "Go to previous view",
+            "play": "Start navigation",
+            "pause": "Pause navigation",
+            "gotToNextView": "Go to next view",
+            "gotToLastView": "Go to last view",
+            "maskWithGlobeTranslucencyWarning": "Enabling mask and globe translucency at the same time could cause artifact in the visualization. Please use one only of these two options per view",
+            "deactivateMapViews": "Disable map views",
+            "activateMapViews": "Activate map views",
+            "maskOtherVisibleLayerWarning": "There are other vector layers visible, all polygonal features visible in map will be applied to all the visible 3D tiles",
+            "resourceLayerRequestError": "It was not possible to complete the request to the selected layer. Please verify if the layer is still available",
+            "maskLayerPolygonError": "The layer selected does not contain polygonal features so the mask could not have effect",
+            "clipPolygonFeaturesNotAvailable": "The selected layer does not contain polygonal features, please select another layer",
+            "addNewLayerToTheMap": "The map is empty. Please add new layers inside the map to make them available in the view list"
         },
         "tutorial": {
             "title": "Tutorial",

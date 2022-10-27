@@ -1798,7 +1798,8 @@
             },
             "selectWidgetType": "Seleccione el tipo de widget",
             "selectChartType": {
-                "title": "Seleccione el tipo de widget"
+                "title": "Tipo de gráfico",
+                "noResults": "No se encontró ningún gráfico"
             },
             "selectMap": {
                 "TOC": {
@@ -1831,15 +1832,18 @@
                 "wizard": {
                     "backToTypeSelection": "Volver a la selección de tipo",
                     "backToWidgetTypeSelection": "Volver a la selección del tipo de widget",
+                    "backToChartOptionConfiguration": "Volver a la configuración de opciones del gráfico",
                     "backToFeatureGrid": "Volver a la tabla de atributos",
                     "backToLayerSelection": "Volver a la selección de capas",
                     "backToMapSelection": "Volver a la selección del mapa",
                     "backToPreview": "Volver a vista previa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "selectALayer": "Seleccionar una capa",
+                    "selectLayers": "Seleccione una o más capas",
                     "selectAMap": "Seleccione uno o más mapas",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
+                    "errorChart": "Uno o más gráficos no son válidos",
                     "backToTableOptions": "Volver a las opciones de tabla",
                     "configureTableOptions": "Configurar opciones de tabla",
                     "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
@@ -1859,6 +1863,7 @@
                     "connectToTheMap": "Conectar al mapa",
                     "selectMapToConnect": "Seleccione el widget para conectarse",
                     "clearConnection": "Borrar conexión",
+                    "disableConnectToMap": "Operación no disponible",
                     "classAttributes": {
                         "classColor": "Color de la Clase",
                         "classLabel": "Etiqueta de la Clase",
@@ -1888,11 +1893,14 @@
                     "noAttributesDescription": "La capa seleccionada no tiene atributos para mostrar. Seleccione otro tipo de widget o capa",
                     "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
                     "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
+                    "attributesNotMatchingDescription": "<p><strong>Intenta seleccionar otra capa</strong></p><p>Los atributos de las capas seleccionadas no coinciden con el widget dependiente principal</p>",
                     "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna",
                     "noMapAvailableForLegend": "No hay mapa disponible",
                     "noMapAvailableForLegendDescription": "Necesita al menos un widget de mapa para crear la leyenda"
                 },
-                "setupFilter": "Configurar un filtro para los datos del widget"
+                "setupFilter": "Configurar un filtro para los datos del widget",
+                "addNewLayers": "Agregar nuevas capas",
+                "deleteChart": "Eliminar gráfico actual"
             },
             "widget": {
                 "menu": {
@@ -1918,6 +1926,13 @@
                 "placeholder": "Ingrese el nombre del mapa",
                 "selectLabel": "Seleccione un mapa",
                 "infoOnHide": "Expanda el widget para ver el selector de mapas",
+                "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "No se encontró ninguna capa",
+                "placeholder": "Introduzca el nombre del gráfico",
+                "selectLabel": "Cuadro",
+                "infoOnHide": "Expanda el widget para ver el selector de gráficos",
                 "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
             },
             "chartType": {
@@ -3038,6 +3053,10 @@
           "ZoomOut": {
             "description": "Botón que disminuye el nivel de zoom del mapa",
             "title": "Zoom Out"
+          },
+          "MapViews": {
+            "description": "Este complemento permite agregar una secuencia de diferentes vistas dentro de un mapa",
+            "title": "Vistas del mapa"
           }
         },
         "contextCreator": {
@@ -3245,6 +3264,68 @@
                 "message": "Se produjo un error inesperado durante la sincronización de capas. Probablemente hay un error en MapStore"
             },
             "layerType": "tipo: {type}"
+        },
+        "mapViews": {
+            "description": "Descripción",
+            "position": "Posición",
+            "animation": "Animación",
+            "mask": "Máscara",
+            "globeTranslucency": "Translucidez del Globo",
+            "layersOptions": "Opciones de capas",
+            "cameraPosition": "Posición de la cámara",
+            "longitude": "Longitud",
+            "latitude": "Latitud",
+            "height": "Altura (m)",
+            "centerPosition": "Posición central",
+            "captureThisViewPositions": "Capturar las posiciones de esta vista",
+            "durationLabel": "Duración(es)",
+            "flyToLabel": "Transición de animación durante la navegación",
+            "maskEnable": "Habilitar máscara",
+            "maskLayer": "Capa",
+            "maskInverse": "Inverso",
+            "maskInverseOffset": "Desplazamiento inverso (m)",
+            "globeTranslucencyEnable": "Habilitar translucidez",
+            "globeTranslucencyOpacity": "Opacidad",
+            "globeTranslucencyFadeByDistance": "Desvanecer translucidez por distancia",
+            "globeTranslucencyNearDistance": "Distancia mínima (m)",
+            "globeTranslucencyFarDistance": "Distancia máxima (m)",
+            "showClippingLayersGeometries": "Mostrar geometrías de capas de recorte",
+            "terrain": "Terreno",
+            "clippingSourceLayer": "Fuente de la capa de recorte",
+            "clippingFeature": "Función de recorte",
+            "clippingInverse": "Recorte inverso",
+            "layerOpacity": "Opacidad",
+            "showViewsGeometries": "Mostrar posiciones de vistas",
+            "addInitialView": "Haga clic en el botón más para agregar una nueva vista",
+            "removeView": "Eliminar vista",
+            "resetLayerOverrides": "Restablecer cambios para alinear la capa al valor predeterminado",
+            "hideLayer": "Ocultar capa",
+            "showLayer": "Mostrar capa",
+            "undoChanges": "Deshacer cambios",
+            "redoChanges": "Rehacer cambios",
+            "addNewView": "Agregar nueva vista",
+            "addNewViewBelowSelected": "Agregar una nueva vista debajo de la seleccionada",
+            "hideDescription": "Ocultar descripción",
+            "showDescription": "Mostrar descripción",
+            "copyCurrentView": "Copiar vista actual",
+            "edit": "Editar",
+            "stopEdit": "Dejar de editar",
+            "showViewsList": "Mostrar lista de vistas",
+            "hideViewsList": "Ocultar lista de vistas",
+            "gotToFirstView": "Ir a la primera vista",
+            "gotToPreviousView": "Ir a la vista anterior",
+            "play": "Iniciar navegación",
+            "pause": "Pausar la navegación",
+            "gotToNextView": "Ir a la siguiente vista",
+            "gotToLastView": "Ir a la última vista",
+            "maskWithGlobeTranslucencyWarning": "Habilitar la translucidez de la máscara y el globo al mismo tiempo podría causar artefactos en la visualización. Utilice solo una de estas dos opciones por vista",
+            "deactivateMapViews": "Deshabilitar vistas de mapa",
+            "activateMapViews": "Activar vistas de mapa",
+            "maskOtherVisibleLayerWarning": "Hay otras capas vectoriales visibles, todas las características poligonales visibles en el mapa se aplicarán a todas las teselas 3D visibles",
+            "resourceLayerRequestError": "No fue posible completar la solicitud a la capa seleccionada. Verifique si la capa aún está disponible",
+            "maskLayerPolygonError": "La capa seleccionada no contiene elementos poligonales por lo que la máscara no podría tener efecto",
+            "clipPolygonFeaturesNotAvailable": "La capa seleccionada no contiene elementos poligonales, seleccione otra capa",
+            "addNewLayerToTheMap": "El mapa está vacío. Agregue nuevas capas dentro del mapa para que estén disponibles en la lista de vista de capas"
         },
         "tutorial": {
             "title": "Tutorial",

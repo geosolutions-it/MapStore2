@@ -29,14 +29,18 @@ From here the user can choose between four different types of widget:
 
 ### Chart
 
-Selecting *Chart* option the following window opens:
+Charts widget allow multi-selection of layer to create a widget that allows user to configure chart options for each layer. And switch between multiple charts in a widget.
 
-<img src="../img/widgets/chart-types.jpg" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/chart-layer-selection.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-From here it is possible to choose between *Bar Chart*, *Pie Chart* or *Line Chart*, or simply go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button. <br>
-If a chart type is selected, it can display similar the following (in this case a *Bar Chart*):
+Selecting a *Layer* or *Layers*, the following *Chart* options is presented to user:
 
-<img src="../img/widgets/configure-chart.jpg" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/chart-options.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+From the chart configuration page, the user can perform the following operation
+
+* Edit chart name <img src="../img/button/edit_button.jpg" class="ms-docbutton"/>
+* Choose between *Bar Chart*, *Pie Chart* or *Line Chart*. By default, the bar chart is selected.
 
 From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> the user is allowed to:
 
@@ -44,9 +48,13 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the information displayed in the widget are automatically filtered with the map viewport. When a widget is not linked, it otherwise shows all the elements of that level regardless of the map viewport
 
-* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section)
+* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section).
 
-* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed
+* Add new layers <img src="../img/button/+++.jpg" class="ms-docbutton"/> to existing chart configuration
+
+* Delete the current layer <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> and it's related chart configuration from the wizard
+
+* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed. The button prohibits the user from proceeding further when some chart is invalid
 
 Just below the chart's preview, the following configurations are available:
 

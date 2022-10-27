@@ -1,4 +1,5 @@
 # Configuring plugins
+
 To configure the plugins used by your application, a dedicated section is available in the **localConfig.json** configuration file:
 
 ```js
@@ -8,7 +9,6 @@ To configure the plugins used by your application, a dedicated section is availa
 ```
 
 Inside the **plugins** section, several modes can be configured (e.g. desktop or mobile), each one with its own list of plugins:
-
 
 ```js
 "plugins": {
@@ -42,6 +42,7 @@ or fully configured:
 ```
 
 ## Dynamic configuration
+
 Configuration properties of plugins can use expressions, so that they are dynamically bound to the
 application state.
 
@@ -59,11 +60,13 @@ To define the monitored state, you have to add a **monitorState** property in **
 ```
 
 Where:
- * **name** is the name of the variable that can be used in expressions
- * **path** is a javascript object path to the state fragment to be monitored (e.g. map.present.zoom)
+
+* **name** is the name of the variable that can be used in expressions
+* **path** is a javascript object path to the state fragment to be monitored (e.g. map.present.zoom)
 
 When you have a monitored state, you can use it in configuration properties this way:
 Be sure to write a valid javascript expression.
+
 ```js
 "cfg": {
   ...

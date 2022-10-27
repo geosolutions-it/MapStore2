@@ -6,13 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import TableView from './TableView';
+import TableViewComp from './TableView';
 import ChartView from './ChartView';
 
 import WidgetContainer from './WidgetContainer';
 import {
     Glyphicon
 } from 'react-bootstrap';
+import ChartSwitcher from "../builder/wizard/chart/ChartSwitcher";
+import emptyTableState from "../../widgets/enhancers/emptyChartState";
+import loadingState from '../../misc/enhancers/loadingState';
+const TableView = loadingState()(emptyTableState(TableViewComp));
 
 const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {
@@ -27,6 +31,8 @@ const ChartWidget = ({
     description,
     headerStyle,
     data = [],
+    charts = [],
+    selectedChartId,
     series = [],
     loading,
     icons,
@@ -37,9 +43,14 @@ const ChartWidget = ({
     onDelete = () => {},
     toggleTableView = () => {},
     toggleDeleteConfirm = () => {},
-    ...props}) =>
-    (<WidgetContainer
-        id={`widget-chart-${id}`}
+    updateProperty = () => { },
+    selectionActive,
+    ...props}) => {
+    const containerId = `widget-chart-${id}`;
+    const width = document.getElementById(containerId)?.clientWidth;
+    return (<WidgetContainer
+        className={"chart-widget-view"}
+        id={containerId}
         headerStyle={headerStyle}
         isDraggable={dataGrid.isDraggable}
         title={title}
@@ -47,8 +58,18 @@ const ChartWidget = ({
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
         confirmDelete={confirmDelete}
         onDelete={onDelete}
-        toggleDeleteConfirm = {toggleDeleteConfirm}
-        topRightItems={topRightItems}
+        toggleDeleteConfirm={toggleDeleteConfirm}
+        topRightItems={[
+            <ChartSwitcher
+                className={'chart-switcher'}
+                charts={charts}
+                onChange={(...args) => updateProperty(id, ...args)}
+                value={selectedChartId}
+                disabled={selectionActive}
+                width={width}
+            />,
+            ...(topRightItems ? topRightItems : [])
+        ]}
         options={props?.options}
     >
         {showTable
@@ -57,5 +78,6 @@ const ChartWidget = ({
     </WidgetContainer>
 
     );
+};
 
 export default ChartWidget;

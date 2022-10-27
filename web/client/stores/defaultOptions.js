@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { merge } from 'lodash';
+
 import { CHANGE_BROWSER_PROPERTIES } from '../actions/browser';
 
 import layersEpics from '../epics/layers';
@@ -69,7 +71,7 @@ export const standardRootReducerFunc = ({
         layers: mapState ? layers(mapState.layers, action) : null
     };
     if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.mobile) {
-        newState = { ...newState, ...mobileOverride };
+        newState = merge(newState, mobileOverride);
     }
     return newState;
 };

@@ -125,7 +125,7 @@ class LeafletMap extends React.Component {
             maxZoom: limits && limits.maxZoom || 23
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
-        const map = L.map(this.getDocument().getElementById(this.props.id), assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        const map = L.map(this.getDocument().querySelector(`#${this.props.id} > .map-viewport`), assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
             Math.round(this.props.zoom));
 
         this.map = map;
@@ -375,6 +375,15 @@ class LeafletMap extends React.Component {
         }) : null;
         return (
             <div id={this.props.id} style={this.props.style}>
+                <div
+                    className="map-viewport"
+                    style={{
+                        position: 'relative',
+                        overflow: 'hidden',
+                        width: '100%',
+                        height: '100%'
+                    }}
+                ></div>
                 {children}
             </div>
         );

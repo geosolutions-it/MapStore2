@@ -18,7 +18,7 @@ const vector3dStyleOptions = {
     })
 };
 
-const ORIGINAL_OPTION_VALUE = '__height_mode_original__';
+const INITIAL_OPTION_VALUE = '__height_mode_original__';
 const billboard3dStyleOptions = {
     msBringToFront: property.msBringToFront({
         label: "styleeditor.msBringToFront"
@@ -26,10 +26,11 @@ const billboard3dStyleOptions = {
     msHeightReference: property.msHeightReference({
         label: "styleeditor.heightReferenceFromGround"
     }),
-    height: property.multiInput({
+    msHeight: property.multiInput({
         label: "styleeditor.height",
-        key: "height",
-        originalOptionValue: ORIGINAL_OPTION_VALUE,
+        key: "msHeight",
+        isDisabled: (value, properties) => properties?.msHeightReference === 'clamp',
+        initialOptionValue: INITIAL_OPTION_VALUE,
         getSelectOptions: ({ attributes }) => {
             const numberAttributes = attributes
                 .map(({ label, attribute, type }) =>
@@ -38,7 +39,7 @@ const billboard3dStyleOptions = {
                 .filter((x) => !!x);
             return [
                 ...numberAttributes,
-                {label: "Original Z value", value: ORIGINAL_OPTION_VALUE}
+                { label: 'Point height', value: INITIAL_OPTION_VALUE }
             ];
         }
     })
@@ -102,8 +103,7 @@ const getBlocks = ({
                 radius: 16,
                 rotate: 0,
                 msBringToFront: false,
-                msHeightReference: 'CLAMP_TO_GROUND',
-                height: 0
+                msHeightReference: 'none'
             }
         },
         Icon: {
@@ -148,7 +148,8 @@ const getBlocks = ({
                 opacity: 1,
                 size: 32,
                 rotate: 0,
-                msBringToFront: false
+                msBringToFront: false,
+                msHeightReference: 'none'
             }
         },
         Line: {

@@ -82,7 +82,7 @@ const Builder = connect(
 const mapBuilder = compose(
     chooseMapEnhancer,
     withProps(({ editorData = {}}) => ({
-        map: find(editorData.maps, ({mapId}) => mapId === editorData.selectedMapId) || {}
+        map: find(editorData?.maps, ({mapId} = {}) => mapId === editorData.selectedMapId) || {}
     })),
     mapBuilderConnectMask,
     handleNodeSelection,

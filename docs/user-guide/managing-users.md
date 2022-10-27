@@ -1,4 +1,5 @@
 # Managing Users
+
 ****************
 
 Switching to *Users Manager*, the page displayed is the following:

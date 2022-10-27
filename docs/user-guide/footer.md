@@ -1,4 +1,5 @@
 # Footer
+
 ********
 
 In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) some of the map information are reported in the *Footer*. By default, as soon as the user opens the map, the scale bar and the scale switcher are showed so that the user can change the scale bar by zooming in/out the map or by selecting a map scale through the scale switcher.

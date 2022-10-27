@@ -27,24 +27,24 @@ describe('MultiInput component', () => {
 
     it('should render with default', () => {
         ReactDOM.render(<MultiInput />, document.getElementById("container"));
-        const inputNode = document.querySelector('.form-control');
-        expect(inputNode).toBeTruthy();
+        const selectNode = document.querySelector('.Select');
+        expect(selectNode).toBeTruthy();
     });
 
     it('should render with constant value', () => {
-        ReactDOM.render(<MultiInput value="123.123" />, document.getElementById("container"));
+        ReactDOM.render(<MultiInput value={{ type: 'constant', value: 123.123}} />, document.getElementById("container"));
         const inputNode = document.querySelector('.form-control');
         expect(inputNode.value).toBe("123.123");
     });
 
     it('should render with select value', () => {
-        const ORIGINAL_OPTION_VALUE = 'original_option_value';
+        const INITIAL_OPTION_VALUE = 'original_option_value';
         const config = {
-            originalOptionValue: ORIGINAL_OPTION_VALUE,
+            initialOptionValue: INITIAL_OPTION_VALUE,
             selectOptions: [
                 { label: 'Height', value: 'height' },
                 { label: 'Id', value: 'id' },
-                { label: 'Original value', value: ORIGINAL_OPTION_VALUE }
+                { label: 'Original value', value: INITIAL_OPTION_VALUE }
             ]
         };
         ReactDOM.render(<MultiInput value={{ type: 'attributes', name: 'height' }} config={config} />, document.getElementById("container"));
@@ -59,11 +59,11 @@ describe('MultiInput component', () => {
             onChange: () => { }
         };
         const spy = expect.spyOn(callbacks, 'onChange');
-        ReactDOM.render(<MultiInput value="123.123" onChange={callbacks.onChange} />, document.getElementById("container"));
+        ReactDOM.render(<MultiInput value={{ type: 'constant', value: 123.123 }} onChange={callbacks.onChange} />, document.getElementById("container"));
         const inputNode = document.querySelector('.form-control');
         inputNode.value = '-33';
         Simulate.change(inputNode);
-        expect(spy).toHaveBeenCalledWith('-33');
+        expect(spy).toHaveBeenCalledWith({ type: 'constant', value: '-33' });
     });
 
     it('should change height mode', () => {
@@ -71,7 +71,7 @@ describe('MultiInput component', () => {
             onChange: () => { }
         };
         const spy = expect.spyOn(callbacks, 'onChange');
-        ReactDOM.render(<MultiInput value="123.123" onChange={callbacks.onChange} />, document.getElementById("container"));
+        ReactDOM.render(<MultiInput value={{ type: 'constant', value: 123.123}} onChange={callbacks.onChange} />, document.getElementById("container"));
         const buttonNode = document.querySelector('button');
         Simulate.click(buttonNode);
         const menuItems = document.querySelectorAll('ul.dropdown-menu li a');
@@ -84,20 +84,20 @@ describe('MultiInput component', () => {
         const callbacks = {
             onChange: () => { }
         };
-        const ORIGINAL_OPTION_VALUE = 'original_option_value';
+        const INITIAL_OPTION_VALUE = 'original_option_value';
         const config = {
-            originalOptionValue: ORIGINAL_OPTION_VALUE,
+            initialOptionValue: INITIAL_OPTION_VALUE,
             getSelectOptions: () => [
                 { label: 'Height', value: 'height' },
                 { label: 'Id', value: 'id' },
-                { label: 'Original value', value: ORIGINAL_OPTION_VALUE }
+                { label: 'Original value', value: INITIAL_OPTION_VALUE }
             ]
         };
         const spy = expect.spyOn(callbacks, 'onChange');
         ReactDOM.render(
             <MultiInput
 
-                value={{ type: 'attributes', name: 'height' }}
+                value={{ type: 'attribute', name: 'height' }}
                 config={config} onChange={callbacks.onChange}
             />,
             document.getElementById("container")

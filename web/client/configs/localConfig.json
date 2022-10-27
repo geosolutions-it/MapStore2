@@ -491,7 +491,8 @@
             "FeedbackMask",
             "StyleEditor",
             "DeleteMap",
-            "SidebarMenu"
+            "SidebarMenu",
+            { "name": "MapViews" }
         ],
         "embedded": ["Details", {
                 "name": "Map",

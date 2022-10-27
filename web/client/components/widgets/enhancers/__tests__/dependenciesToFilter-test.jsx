@@ -199,4 +199,31 @@ describe('widgets dependenciesToFilter enhancer', () => {
         />, document.getElementById("container"));
 
     });
+    it('dependenciesToFilter for charts', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toBeTruthy();
+            expect(props.filter).toBeTruthy();
+            expect(props.filter).toBe(resultMergeFilterCQLRes);
+            done();
+        }));
+        const charts = [{chartId: "1", layer: { name: "test", id: "test"}},
+            {chartId: "2", layer: { name: "test2", id: "test2"}}];
+        ReactDOM.render(<Sink
+            mapSync
+            geomProp={"geometry"}
+            selectedChartId={"1"}
+            filter={inputFilterObjSpatial}
+            dependenciesMap={{layer: 'widgets[2].layer'}}
+            layer={{name: "test", id: "test"}}
+            widgets={[{id: "1", widgetType: "chart", charts},
+                {id: "2", widgetType: 'table'}]}
+            charts={charts}
+            dependencies={{
+                layers: [{id: "test", params: {
+                    cql_filter: "prop = 'value'"
+                }}],
+                viewport: { "bounds": { "minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1" }, "crs": "EPSG:4326", "rotation": 0 }
+            }}  />, document.getElementById("container"));
+
+    });
 });

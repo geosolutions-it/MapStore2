@@ -120,6 +120,10 @@ class CesiumMap extends React.Component {
             skyBox: false
         }, this.getMapOptions(this.props.mapOptions)));
 
+        // prevent default behavior
+        // such as lock the camera on model after double click
+        map.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
         if (this.props.errorPanel) {
             // override the default error message overlay
             map.cesiumWidget.showErrorPanel = (title, message, error) => {
@@ -314,7 +318,10 @@ class CesiumMap extends React.Component {
     getIntersectedFeatures = (map, position) => {
         // we can use pick so the only first intersect feature will be returned
         // this is more intuitive for uses such as get feature info
-        const feature = map.scene.pick(position);
+        const feature = map.scene.drillPick(position).find((aFeature) => {
+            const {entityCollection: {owner: {queryable}}} = aFeature.id;
+            return queryable;
+        });
         if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
             const msId = feature.tileset.msId;
             // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
@@ -322,6 +329,10 @@ class CesiumMap extends React.Component {
             const propertyNames = feature.getPropertyNames();
             const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
             return [{ id: msId, features: [{ type: 'Feature', properties, geometry: null }] }];
+        } else if (feature?.id instanceof Cesium.Entity && feature.id.id && feature.id.properties) {
+            const {properties: {propertyNames}, entityCollection: {owner: {name}}} = feature.id;
+            const props = Object.fromEntries(propertyNames.map(key => [key, feature.id.properties[key].getValue(0)]));
+            return [{ id: name, features: [{ type: 'Feature', properties: props, id: feature?.id?.id, geometry: null }] }];
         }
         return [];
     }

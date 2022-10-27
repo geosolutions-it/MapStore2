@@ -315,9 +315,6 @@
       "glyph": "cog",
       "title": "plugins.Settings.title",
       "description": "plugins.Settings.description",
-      "children": [
-        "Version"
-      ],
       "dependencies": [
         "SidebarMenu"
       ],
@@ -618,6 +615,15 @@
     {
       "name": "SidebarMenu",
       "hidden": true
+    },
+    {
+      "name": "MapViews",
+      "glyph": "map-view",
+      "title": "plugins.MapViews.title",
+      "description": "plugins.MapViews.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
     }
   ]
 }

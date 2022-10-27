@@ -1,4 +1,5 @@
 # Immersive Section
+
 **********************
 
 The immersive section is composed of two elements: the background and the immersive content. As soon as you add an immersive section to your story, an empty background with an empty text content will be displayed.
@@ -53,5 +54,3 @@ The **Background editing toolbar** changes depending on the type of media added 
 
 !!! note
     Only for Immersive Section, when the user try to add another section of the same type just below the current one, the added section is actually another immersive content, that fits inside the same immersive section.
-
-

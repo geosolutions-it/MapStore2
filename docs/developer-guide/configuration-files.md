@@ -22,12 +22,13 @@ They are located in `java/web/src/main/resources` and they will be copied in  `M
 Except for `mapstore.properties` and `ldap.properties`, all these files are simply overrides of original configuration files coming from the included sub-applications part of the back-end. In `WEB-INF/classes` you will find also some other useful files coming from the original application:
 
 ### Back-end security configuration files
-Back-end security can be configured to use different authentication strategies. Maven profiles can be used to switch between these different strategies. 
 
-Depending on the chosen profile a different file will be copied from the `product/config` folder to  override `WEB-INF/classes/geostore-spring-security.xml` in the final package. In particular: 
+Back-end security can be configured to use different authentication strategies. Maven profiles can be used to switch between these different strategies.
 
-- **default**: `db\geostore-spring-security-db.xml` (geostore database) 
-- **ldap**: `ldap\geostore-spring-security-ldap.xml` (LDAP source)
+Depending on the chosen profile a different file will be copied from the `product/config` folder to  override `WEB-INF/classes/geostore-spring-security.xml` in the final package. In particular:
+
+* **default**: `db\geostore-spring-security-db.xml` (geostore database)
+* **ldap**: `ldap\geostore-spring-security-ldap.xml` (LDAP source)
 
 Specific configuration files are available to configure connection details for the chosen profile.
 

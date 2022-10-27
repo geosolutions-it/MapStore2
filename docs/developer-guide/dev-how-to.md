@@ -10,6 +10,6 @@ Still to do:
 * Writing components
 * Using JS API
 
-Work in progress: 
+Work in progress:
 
 * [Extensions](extensions.md#working-with-extensions)

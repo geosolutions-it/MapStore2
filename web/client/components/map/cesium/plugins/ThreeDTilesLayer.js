@@ -13,6 +13,7 @@ import isNumber from 'lodash/isNumber';
 import isNaN from 'lodash/isNaN';
 import { getProxyUrl, needProxy } from "../../../../utils/ProxyUtils";
 import { getStyleParser } from '../../../../utils/VectorStyleUtils';
+import { polygonToClippingPlanes } from '../../../../utils/cesium/PrimitivesUtils';
 
 function getStyle({ style }) {
     const { format, body } = style || {};
@@ -48,6 +49,41 @@ function updateModelMatrix(tileSet, { heightOffset }) {
     }
 }
 
+function clip3DTiles(tileSet, options, map) {
+    if (options.clippingPolygon) {
+        polygonToClippingPlanes(options.clippingPolygon, !!options.clippingPolygonUnion, options.clipOriginalGeometry)
+            .then((planes) => {
+                tileSet.clippingPlanes = new Cesium.ClippingPlaneCollection({
+                    modelMatrix: Cesium.Matrix4.inverse(
+                        Cesium.Matrix4.multiply(
+                            tileSet.root.computedTransform,
+                            tileSet._initialClippingPlanesOriginMatrix,
+                            new Cesium.Matrix4()
+                        ),
+                        new Cesium.Matrix4()),
+                    planes,
+                    edgeWidth: 1.0,
+                    edgeColor: Cesium.Color.WHITE,
+                    unionClippingRegions: !!options.clippingPolygonUnion
+                });
+                map.scene.requestRender();
+            });
+    } else {
+        tileSet.clippingPlanes = new Cesium.ClippingPlaneCollection({ planes: [] });
+        map.scene.requestRender();
+    }
+}
+
+function ensureReady(tileSet, callback) {
+    if (tileSet.ready) {
+        callback();
+    } else {
+        tileSet.readyPromise.then(() => {
+            callback();
+        });
+    }
+}
+
 Layers.registerType('3dtiles', {
     create: (options, map) => {
         if (options.visibility && options.url) {
@@ -66,20 +102,16 @@ Layers.registerType('3dtiles', {
             // assign the original mapstore id of the layer
             tileSet.msId = options.id;
 
-            if (tileSet.ready) {
+            ensureReady(tileSet, () => {
                 updateModelMatrix(tileSet, options);
-            } else {
-                tileSet.readyPromise.then(() => {
-                    updateModelMatrix(tileSet, options);
-                });
-            }
-
-            getStyle(options)
-                .then((style) => {
-                    if (style) {
-                        tileSet.style = new Cesium.Cesium3DTileStyle(style);
-                    }
-                });
+                clip3DTiles(tileSet, options, map);
+                getStyle(options)
+                    .then((style) => {
+                        if (style) {
+                            tileSet.style = new Cesium.Cesium3DTileStyle(style);
+                        }
+                    });
+            });
 
             return {
                 detached: true,
@@ -106,23 +138,30 @@ Layers.registerType('3dtiles', {
             layer.remove();
             return null;
         }
+        if (
+            (!isEqual(newOptions.clippingPolygon, oldOptions.clippingPolygon)
+            || newOptions.clippingPolygonUnion !== oldOptions.clippingPolygonUnion
+            || newOptions.clipOriginalGeometry !== oldOptions.clipOriginalGeometry)
+         && layer?.tileSet) {
+            ensureReady(layer.tileSet, () => {
+                clip3DTiles(layer.tileSet, newOptions, map);
+            });
+        }
         if (!isEqual(newOptions.style, oldOptions.style) && layer?.tileSet) {
-            getStyle(newOptions)
-                .then((style) => {
-                    if (style && layer?.tileSet) {
-                        layer.tileSet.makeStyleDirty();
-                        layer.tileSet.style = new Cesium.Cesium3DTileStyle(style);
-                    }
-                });
+            ensureReady(layer.tileSet, () => {
+                getStyle(newOptions)
+                    .then((style) => {
+                        if (style && layer?.tileSet) {
+                            layer.tileSet.makeStyleDirty();
+                            layer.tileSet.style = new Cesium.Cesium3DTileStyle(style);
+                        }
+                    });
+            });
         }
         if (layer?.tileSet && newOptions.heightOffset !== oldOptions.heightOffset) {
-            if (layer.tileSet.ready) {
+            ensureReady(layer.tileSet, () => {
                 updateModelMatrix(layer.tileSet, newOptions);
-            } else {
-                layer.tileSet.readyPromise.then(() => {
-                    updateModelMatrix(layer.tileSet, newOptions);
-                });
-            }
+            });
         }
         return null;
     }

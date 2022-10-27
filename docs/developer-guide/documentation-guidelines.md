@@ -10,7 +10,7 @@ The Developer and User guide documentation are built on the [Read the Docs](http
 
 ### Internal links
 
-When creating internal links between pages (`.md` files), make sure to use **full link** to the paragraph instead of using only the relative path to the file. 
+When creating internal links between pages (`.md` files), make sure to use **full link** to the paragraph instead of using only the relative path to the file.
 As using relative path will not work in exported PDF document.
 
 !!! Example

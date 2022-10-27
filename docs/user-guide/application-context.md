@@ -1,4 +1,5 @@
 # Application Context
+
 *******************
 
 In order to create a context, the *Admin* can click on the **New Context** button <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> in the [Contexts page](managing-contexts.md#managing-contexts) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
@@ -122,14 +123,13 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 
 * The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins) in another page.
 
-
 ### How to update extensions
 
 Extension can be updated using two steps:
 
-- Old extension removal.
+* Old extension removal.
 
-- Uploading and installation of the new version of extension.
+* Uploading and installation of the new version of extension.
 
 As previously stated, extension can be removed on "Configure Plugins" step of wizard using **Delete** button <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>.
 
@@ -142,13 +142,13 @@ Do not save context and upload new version of extension right away after old ver
 
 With all stated above, complete workflow is:
 
-- Open context editing and jump to the "Configure Plugins" step of the wizard.
+* Open context editing and jump to the "Configure Plugins" step of the wizard.
 
-- Delete old version of extension using **Delete** button <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>.
+* Delete old version of extension using **Delete** button <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>.
 
-- Upload and install new version of extension using the **Add extension to MapStore** button <img src="../img/button/upload-button.jpg" class="ms-docbutton"/>
+* Upload and install new version of extension using the **Add extension to MapStore** button <img src="../img/button/upload-button.jpg" class="ms-docbutton"/>
 
-- Do not save context, close wizard.
+* Do not save context, close wizard.
 
 Existing configuration of extension (default or customized) will be preserved for all the contexts using extension.
 
@@ -176,7 +176,7 @@ An example of the **dark** theme applied to a context is the following one:
 
 ### Custom Theme
 
-After selecting a theme from the drop-down, it is also possible to customize it from UI by enabling **Custom Variables**. 
+After selecting a theme from the drop-down, it is also possible to customize it from UI by enabling **Custom Variables**.
 
 <img src="../img/application-context/custom_variables.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -194,9 +194,9 @@ The colors that can be customized are the following ones:
 
 * **Primary Color** to choose the color used for icons inside toolbar, header and button backgrounds
 
-* **Secondary Text Color** to choose the color used as button text when a button is active or selected 
+* **Secondary Text Color** to choose the color used as button text when a button is active or selected
 
-* **Secondary Color** to choose the color used as button background when a button is active or selected 
+* **Secondary Color** to choose the color used as button background when a button is active or selected
 
 !!! warning
     To ensure a good and well readable color contrast between each UI component, make sure to not use a secondary color too similar to the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary).

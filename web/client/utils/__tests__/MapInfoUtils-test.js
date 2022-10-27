@@ -22,6 +22,7 @@ import {
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
+    getMarkerLayer,
     defaultQueryableFilter,
     filterRequestParams
 } from '../MapInfoUtils';
@@ -725,4 +726,56 @@ describe('MapInfoUtils', () => {
         expect(results).toEqual(false);
     });
 
+    it("getMarkerLayer should return layer config", () => {
+        let features;
+        let styleName;
+        let markerLabel;
+        let results = getMarkerLayer(
+            "GetFeatureInfoHighLight",
+            { features },
+            styleName,
+            {
+                overrideOLStyle: true,
+                style: {
+                    iconUrl:
+                        "data:image/png;base64,iVBORw...",
+                    shadowUrl:
+                        "data:image/png;base64,iVBORw...",
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41],
+                    color: "#3388ff",
+                    weight: 4,
+                    dashArray: "",
+                    fillColor: "#3388ff",
+                    fillOpacity: 0.2
+                }
+            },
+            markerLabel
+        );
+        expect(results).toEqual({
+            type: "vector",
+            visibility: true,
+            queryable: false,
+            name: "GetFeatureInfoHighLight",
+            styleName: "marker",
+            label: undefined,
+            features: [],
+            overrideOLStyle: true,
+            style: {
+                iconUrl: "data:image/png;base64,iVBORw...",
+                shadowUrl: "data:image/png;base64,iVBORw...",
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41],
+                color: "#3388ff",
+                weight: 4,
+                dashArray: "",
+                fillColor: "#3388ff",
+                fillOpacity: 0.2
+            }
+        });
+    });
 });

@@ -134,6 +134,7 @@ export const getMarkerLayer = (name, clickedMapPoint, styleName, otherParams, ma
     return {
         type: 'vector',
         visibility: true,
+        queryable: false,
         name: name || "GetFeatureInfo",
         styleName: styleName || "marker",
         label: markerLabel,
