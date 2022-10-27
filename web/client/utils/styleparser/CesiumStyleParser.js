@@ -85,7 +85,7 @@ function modifyPointHeight(map, entity, symbolizer, properties) {
                     zValue + cartographic.height
                 ]),
                 width: 2,
-                material: Cesium.Color.RED
+                material: symbolizer?.strokeColor ? getCesiumColor({color: symbolizer?.strokeColor}) : Cesium.Color.RED
             };
         });
     }
