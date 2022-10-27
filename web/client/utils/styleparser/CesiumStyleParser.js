@@ -62,26 +62,7 @@ const getNumberAttributeValue = (value, properties) => {
     return null;
 };
 
-function modifyPointHeight(map, entity, symbolizer, properties) {
-    // store the initial position of the feature created from the GeoJSON feature
-    if (!entity._msPosition) {
-        entity._msPosition = entity.position.getValue(Cesium.JulianDate.now());
-    }
-
-    const height = getNumberAttributeValue(symbolizer.msHeight, properties);
-
-    if (height === null) {
-        entity.position.setValue(entity._msPosition);
-        return;
-    }
-    const ellipsoid = map?.scene?.globe?.ellipsoid;
-    if (!ellipsoid) {
-        return;
-    }
-
-    const cartographic = ellipsoid.cartesianToCartographic(entity._msPosition);
-    cartographic.height = height;
-    entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
+function addRelationToTerrain(map, entity, symbolizer, cartographic) {
     delete entity.polyline;
     if (symbolizer?.msHeightReference !== "clamp") {
         let promise = Promise.resolve(0);
@@ -110,6 +91,31 @@ function modifyPointHeight(map, entity, symbolizer, properties) {
             };
         });
     }
+}
+
+function modifyPointHeight(map, entity, symbolizer, properties) {
+    // store the initial position of the feature created from the GeoJSON feature
+    if (!entity._msPosition) {
+        entity._msPosition = entity.position.getValue(Cesium.JulianDate.now());
+    }
+
+    const ellipsoid = map?.scene?.globe?.ellipsoid;
+    if (!ellipsoid) {
+        return;
+    }
+
+    const height = getNumberAttributeValue(symbolizer.msHeight, properties);
+
+    if (height === null) {
+        entity.position.setValue(entity._msPosition);
+        addRelationToTerrain(map, entity, symbolizer, ellipsoid.cartesianToCartographic(entity._msPosition));
+        return;
+    }
+
+    const cartographic = ellipsoid.cartesianToCartographic(entity._msPosition);
+    cartographic.height = height;
+    entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
+    addRelationToTerrain(map, entity, symbolizer, cartographic);
     return;
 }
 
