@@ -91,7 +91,7 @@ export default ({
                         if (!showInput) {
                             setShowInput(true);
                         } else {
-                            onChange(`charts[${selectedChart?.chartId}].name`, inputVal);
+                            inputVal && onChange(`charts[${selectedChart?.chartId}].name`, inputVal);
                             setShowInput(false);
                         }
                     }}>

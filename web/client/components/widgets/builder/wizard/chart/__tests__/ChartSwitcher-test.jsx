@@ -133,6 +133,39 @@ describe('ChartSwitcher component', () => {
             }
         });
     });
+    it('ChartSwitcher on chart name empty', () => {
+        ReactDOM.render(<ChartSwitcher withContainer editorData={{charts}} selectedChart={{...charts[0]}} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.chart-switcher');
+        expect(el).toBeTruthy();
+        let button = container.querySelector('.chart-fields button');
+        expect(button).toBeTruthy();
+        // Edit button
+        ReactTestUtils.Simulate.click(button);
+        const inputEl = container.querySelector('.chart-fields input');
+        expect(inputEl).toBeTruthy();
+        expect(button.classList.contains('disabled')).toBeTruthy();
+    });
+    it('ChartSwitcher onChange chart name unmodified', () => {
+        const action = { onChange: () => {} };
+        const spyOnChange = expect.spyOn(action, 'onChange');
+        ReactDOM.render(<ChartSwitcher withContainer value={1} editorData={{charts: charts.map((c, i) =>({...c, name: `Chart-${i}`}))}} selectedChart={{...charts[0]}} onChange={action.onChange} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.chart-switcher');
+        expect(el).toBeTruthy();
+        let button = container.querySelector('.chart-fields button');
+        expect(button).toBeTruthy();
+        // Edit button
+        ReactTestUtils.Simulate.click(button);
+        const inputEl = container.querySelector('.chart-fields input');
+        expect(inputEl).toBeTruthy();
+        expect(button.classList.contains('disabled')).toBeFalsy();
+        expect(spyOnChange).toHaveBeenCalled();
+        spyOnChange.calls.forEach(c => {
+            // onChange name is not dispatched
+            expect(c.arguments).toEqual(["selectedChartId", 1]);
+        });
+    });
     it('ChartSwitcher hide chart edit in widget view', () => {
         ReactDOM.render(<ChartSwitcher editorData={{charts}} selectedChart={{...charts[0]}} />, document.getElementById("container"));
         const container = document.getElementById('container');
