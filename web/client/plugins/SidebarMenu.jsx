@@ -24,8 +24,6 @@ import sidebarMenuReducer from "../reducers/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
-import {unsavedMapSelector, unsavedMapSourceSelector} from '../selectors/controls';
-import {feedbackMaskSelector} from '../selectors/feedbackmask';
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
 
@@ -43,8 +41,7 @@ class SidebarMenu extends React.Component {
         sidebarWidth: PropTypes.number,
         state: PropTypes.object,
         setLastActiveItem: PropTypes.func,
-        lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        displayUnsavedDialog: PropTypes.bool
+        lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
     };
 
     static contextTypes = {
@@ -65,8 +62,7 @@ class SidebarMenu extends React.Component {
         stateSelector: 'sidebarMenu',
         tool: SidebarElement,
         toolCfg: {},
-        sidebarWidth: 40,
-        displayUnsavedDialog: false
+        sidebarWidth: 40
     };
 
     constructor() {
@@ -121,13 +117,7 @@ class SidebarMenu extends React.Component {
 
     getStyle = (style) => {
         const hasBottomOffset = style?.dockSize > 0;
-        return {
-            ...style,
-            height: hasBottomOffset ? 'auto' : '100%',
-            maxHeight: style?.height ?? null,
-            bottom: hasBottomOffset ? `calc(${style.dockSize}vh + 30px)` : null,
-            zIndex: this.props.displayUnsavedDialog ? '2001' : null
-        };
+        return { ...style, height: hasBottomOffset ? 'auto' : '100%', maxHeight: style?.height ?? null, bottom: hasBottomOffset ? `calc(${style.dockSize}vh + 30px)` : null };
     };
 
     getPanels = () => {
@@ -279,16 +269,12 @@ const sidebarMenuSelector = createSelector([
     state => state,
     state => lastActiveToolSelector(state),
     state => mapLayoutValuesSelector(state, {dockSize: true, bottom: true, height: true}),
-    sidebarIsActiveSelector,
-    state => (unsavedMapSelector(state)
-        && unsavedMapSourceSelector(state) === 'gohome'
-        && feedbackMaskSelector(state).currentPage === 'viewer')
-], (state, lastActiveTool, style, isActive, displayUnsavedDialog) => ({
+    sidebarIsActiveSelector
+], (state, lastActiveTool, style, isActive) => ({
     style,
     lastActiveTool,
     state,
-    isActive,
-    displayUnsavedDialog
+    isActive
 }));
 
 /**
