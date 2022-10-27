@@ -733,7 +733,8 @@ function msStyleToSymbolizer(style, feature) {
             strokeOpacity: style.opacity,
             strokeWidth: style.weight,
             radius: style.radius ?? 10,
-            wellKnownName: 'Circle'
+            wellKnownName: 'Circle',
+            msHeightReference: 'none'
         });
     }
     if (isAttrPresent(style, ['iconUrl']) && !style.iconGlyph && !style.iconShape) {
@@ -742,7 +743,8 @@ function msStyleToSymbolizer(style, feature) {
             image: style.iconUrl,
             size: max(style.iconSize || [32]),
             opacity: 1,
-            rotate: 0
+            rotate: 0,
+            msHeightReference: 'none'
         });
     }
     if (isMarkerStyle(style)) {
@@ -751,7 +753,8 @@ function msStyleToSymbolizer(style, feature) {
             image: MarkerUtils.extraMarkers.markerToDataUrl(style),
             size: 45,
             opacity: 1,
-            rotate: 0
+            rotate: 0,
+            msHeightReference: 'none'
         });
     }
     if (isSymbolStyle(style)) {
@@ -767,7 +770,8 @@ function msStyleToSymbolizer(style, feature) {
                     image: symbolUrlCustomized,
                     size: style.size,
                     opacity: 1,
-                    rotate: 0
+                    rotate: 0,
+                    msHeightReference: 'none'
                 };
             })
             .catch(() => ({}));

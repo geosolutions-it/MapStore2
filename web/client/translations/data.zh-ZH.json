@@ -1686,7 +1686,13 @@
             "setDefaultStyleSuccessTitle": "Success on set default style",
             "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
             "setDefaultStyleErrorTitle": "Error on set default style",
-            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {

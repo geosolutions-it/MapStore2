@@ -216,7 +216,7 @@ describe('CesiumStyleParser', () => {
                             expect(entities[0].billboard.scale.getValue()).toBe(1);
                             expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
                             expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
-                            expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.CLAMP_TO_GROUND);
+                            expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
                         } catch (e) {
                             done(e);
                         }
@@ -273,7 +273,7 @@ describe('CesiumStyleParser', () => {
                             expect(entities[0].billboard.scale.getValue()).toBe(0.125);
                             expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
                             expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
-                            expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.CLAMP_TO_GROUND);
+                            expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
                         } catch (e) {
                             done(e);
                         }
@@ -329,7 +329,7 @@ describe('CesiumStyleParser', () => {
                             expect({ ...entities[0].label.fillColor.getValue() }).toEqual({ red: 0, green: 0, blue: 0, alpha: 1 });
                             expect({ ...entities[0].label.outlineColor.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 1 });
                             expect(entities[0].label.outlineWidth.getValue()).toBe(2);
-                            expect(entities[0].label.heightReference.getValue()).toBe(Cesium.HeightReference.CLAMP_TO_GROUND);
+                            expect(entities[0].label.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
 
                         } catch (e) {
                             done(e);
