@@ -30,7 +30,7 @@ import {
 */
 
 export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetDate'} = {}) => compose(
-    withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) /* props */ => {
+    withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) => {
         let dateToParse = date;
         let datePart = "1970-01-01";
         let timePart = "00:00:00";
@@ -81,7 +81,7 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
         };
     }),
     withHandlers({
-        [setDateProp]: ({[setDateProp]: changeVal, [dateTypeProp]: type, useUTCOffset = true} = {}) /* props */ => (date, stringDate) /* event */ => {
+        [setDateProp]: ({[setDateProp]: changeVal, [dateTypeProp]: type, useUTCOffset = true} = {}) => (date, stringDate) => {
             if (!date) {
                 changeVal(null);
             } else {
