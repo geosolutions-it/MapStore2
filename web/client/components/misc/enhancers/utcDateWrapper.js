@@ -30,7 +30,7 @@ import {
 */
 
 export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetDate'} = {}) => compose(
-    withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) /* props */ => {
+    withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) => {
         let dateToParse = date;
         let datePart = "1970-01-01";
         let timePart = "00:00:00";
