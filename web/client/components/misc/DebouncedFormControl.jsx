@@ -18,6 +18,15 @@ const FormControlOnChange = withDebounceOnCallback('onChange', 'value')(
     )
 );
 
+/**
+ * Component for rendering an input with the following functionalities:
+ * - debounce on change event
+ * - restore to a fallback value on blur
+ * @memberof components.DebouncedFormControl
+ * @class
+ * @prop {string|number} fallbackValue it replaces the value if undefined on blur
+ *
+ */
 function DebouncedFormControl({ fallbackValue, ...props }) {
 
     const [value, setValue] = useState(props.value ?? fallbackValue);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, GeoSolutions Sas.
+ * Copyright 2022, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -14,11 +14,19 @@ import { isValidURLTemplate } from '../../utils/URLUtils';
 import DebouncedFormControl from '../misc/DebouncedFormControl';
 
 const Glyphicon = tooltip(GlyphiconRB);
-
+/**
+ * Component to validate the model url
+ * @memberof components.styleeditor
+ * @name ModelInput
+ * @class
+ * @prop {string} value href of the image
+ * @prop {function} onChange returns the updated href value of the model
+ * @prop {function} onError callback to check if the url is valid
+ */
 function ModelInput({
     value,
-    onChange,
-    onError
+    onChange = () => {},
+    onError = () => {}
 }) {
 
     const [moduleUrl, setModuleUrl] = useState(value);
