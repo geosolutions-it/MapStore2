@@ -2402,7 +2402,17 @@
             "warningTextOrderTitle": "Warning",
             "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules",
             "invalidProperty": "The { key } property type is invalid",
-            "notSupportedVariable": "The variable { key } is not supported by the tileset"
+            "notSupportedVariable": "The variable { key } is not supported by the tileset",
+            "addModelRule": "Add 3D model rule",
+            "model": "3D Model",
+            "placeholderEnterModelUrl": "Enter a .glb file url",
+            "invalidModelUrl": "The provided url is invalid",
+            "scale": "Scale",
+            "heading": "Z axis rotation",
+            "pitch": "X axis rotation",
+            "roll": "Y axis rotation",
+            "color": "Color",
+            "pointHeight": "Point height"
         },
         "playback": {
             "settings": {

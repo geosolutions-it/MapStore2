@@ -54,16 +54,23 @@ describe('MultiInput component', () => {
         expect(selectNode).toBeTruthy();
     });
 
-    it('should handle onChange', () => {
-        const callbacks = {
-            onChange: () => { }
-        };
-        const spy = expect.spyOn(callbacks, 'onChange');
-        ReactDOM.render(<MultiInput value={{ type: 'constant', value: 123.123 }} onChange={callbacks.onChange} />, document.getElementById("container"));
+    it('should handle onChange', (done) => {
+        act(() => {
+            ReactDOM.render(<MultiInput
+                value={{ type: 'constant', value: 123.123 }}
+                onChange={(value) => {
+                    try {
+                        expect(value).toEqual({ type: 'constant', value: '-33' });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+        });
         const inputNode = document.querySelector('.form-control');
-        inputNode.value = '-33';
-        Simulate.change(inputNode);
-        expect(spy).toHaveBeenCalledWith({ type: 'constant', value: '-33' });
+        Simulate.focus(inputNode);
+        Simulate.change(inputNode, { target: { value: '-33' } });
     });
 
     it('should change height mode', () => {

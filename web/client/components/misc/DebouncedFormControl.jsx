@@ -9,8 +9,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { FormControl as FormControlRB } from 'react-bootstrap';
-import withDebounceOnCallback from '../misc/enhancers/withDebounceOnCallback';
-import localizedProps from '../misc/enhancers/localizedProps';
+import withDebounceOnCallback from './enhancers/withDebounceOnCallback';
+import localizedProps from './enhancers/localizedProps';
 
 const FormControlOnChange = withDebounceOnCallback('onChange', 'value')(
     localizedProps('placeholder')(({ debounceTime, ...props }) =>
@@ -22,6 +22,7 @@ function DebouncedFormControl({ fallbackValue, ...props }) {
 
     const [value, setValue] = useState(props.value ?? fallbackValue);
     const [resetTrigger, setResetTrigger] = useState(0);
+    const focus = useRef(false);
     const updateValue = useRef();
     updateValue.current = value;
     useEffect(() => {
@@ -66,25 +67,32 @@ function DebouncedFormControl({ fallbackValue, ...props }) {
                 const { changed, value: newValue } = computeRange(value);
                 if (changed) {
                     props.onChange(newValue);
-                    setValue(newValue);
-                    setResetTrigger(prevCount => prevCount + 1);
                 }
+                setResetTrigger(prevCount => prevCount + 1);
+                setValue(newValue);
             }
         }
+        focus.current = false;
+    }
+
+    function handleFocusChange() {
+        focus.current = true;
     }
 
     function handleChange(newValue) {
-        let eventValue = newValue;
-        let update = true;
-        if (props.type === 'number') {
-            const { changed: rangeChanged } = computeRange(eventValue);
-            if (eventValue === '' || rangeChanged) {
-                update = false;
+        if (focus.current) {
+            let eventValue = newValue;
+            let update = true;
+            if (props.type === 'number') {
+                const { changed: rangeChanged } = computeRange(eventValue);
+                if (eventValue === '' || rangeChanged) {
+                    update = false;
+                }
             }
-        }
-        setValue(eventValue);
-        if (update) {
-            props.onChange(eventValue);
+            setValue(eventValue);
+            if (update) {
+                props.onChange(eventValue);
+            }
         }
     }
 
@@ -95,6 +103,7 @@ function DebouncedFormControl({ fallbackValue, ...props }) {
             value={value}
             onChange={handleChange}
             onBlur={handleBlurChange}
+            onFocus={handleFocusChange}
         />
     );
 }

@@ -18,11 +18,9 @@ const vector3dStyleOptions = {
     })
 };
 
-const INITIAL_OPTION_VALUE = '__height_mode_original__';
-const billboard3dStyleOptions = {
-    msBringToFront: property.msBringToFront({
-        label: "styleeditor.msBringToFront"
-    }),
+const INITIAL_OPTION_VALUE = '@ms-INITIAL_OPTION_VALUE';
+
+const heightPoint3dOptions = {
     msHeightReference: property.msHeightReference({
         label: "styleeditor.heightReferenceFromGround"
     }),
@@ -38,11 +36,18 @@ const billboard3dStyleOptions = {
                 )
                 .filter((x) => !!x);
             return [
-                ...numberAttributes,
-                { label: 'Point height', value: INITIAL_OPTION_VALUE }
+                { labelId: 'styleeditor.pointHeight', value: INITIAL_OPTION_VALUE },
+                ...numberAttributes
             ];
         }
     })
+};
+
+const point3dStyleOptions = {
+    msBringToFront: property.msBringToFront({
+        label: "styleeditor.msBringToFront"
+    }),
+    ...heightPoint3dOptions
 };
 
 const polygon3dStyleOptions = {
@@ -90,7 +95,7 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
-                ...(enable3dStyleOptions ? billboard3dStyleOptions : {})
+                ...(enable3dStyleOptions ? point3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Mark',
@@ -140,7 +145,7 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
-                ...(enable3dStyleOptions ? billboard3dStyleOptions : {})
+                ...(enable3dStyleOptions ? point3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Icon',
@@ -319,6 +324,61 @@ const getBlocks = ({
                 fillOpacity: 1
             }
         },
+        Model: {
+            kind: 'Model',
+            glyph: 'model',
+            glyphAdd: 'model-plus',
+            tooltipAddId: 'styleeditor.addModelRule',
+            supportedTypes: enable3dStyleOptions ? ['point', 'vector'] : [],
+            hideMenu: true,
+            params: {
+                model: property.model({
+                    label: 'styleeditor.model',
+                    key: 'model'
+                }),
+                scale: property.number({
+                    key: 'scale',
+                    label: 'styleeditor.scale',
+                    fallbackValue: 1,
+                    maxWidth: 80
+                }),
+                pitch: property.number({
+                    key: 'pitch',
+                    label: 'styleeditor.pitch',
+                    fallbackValue: 0,
+                    maxWidth: 105,
+                    uom: '°'
+                }),
+                roll: property.number({
+                    key: 'roll',
+                    label: 'styleeditor.roll',
+                    fallbackValue: 0,
+                    maxWidth: 105,
+                    uom: '°'
+                }),
+                heading: property.number({
+                    key: 'heading',
+                    label: 'styleeditor.heading',
+                    fallbackValue: 0,
+                    maxWidth: 105,
+                    uom: '°'
+                }),
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'opacity',
+                    label: 'styleeditor.color'
+                }),
+                ...(enable3dStyleOptions ? heightPoint3dOptions : {})
+            },
+            defaultProperties: {
+                kind: 'Model',
+                model: '',
+                scale: 1,
+                color: '#ffffff',
+                opacity: 1,
+                msHeightReference: 'none'
+            }
+        },
         Text: {
             kind: 'Text',
             glyph: 'font',
@@ -390,7 +450,8 @@ const getBlocks = ({
                 offsetY: property.offset({
                     label: 'styleeditor.offsetY',
                     axis: 'y'
-                })
+                }),
+                ...(enable3dStyleOptions ? point3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Text',
@@ -401,7 +462,9 @@ const getBlocks = ({
                 haloColor: '#ffffff',
                 haloWidth: 1,
                 allowOverlap: true,
-                offset: [0, 0]
+                offset: [0, 0],
+                msBringToFront: false,
+                msHeightReference: 'none'
             }
         },
         Raster: {

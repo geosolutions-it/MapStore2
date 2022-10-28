@@ -8,12 +8,12 @@
 
 import React from 'react';
 import Select from 'react-select';
-import { Glyphicon, MenuItem, DropdownButton, FormGroup, FormControl as FormControlRB } from 'react-bootstrap';
+import { Glyphicon, MenuItem, DropdownButton, FormGroup } from 'react-bootstrap';
 import localizedProps from '../misc/enhancers/localizedProps';
 import Message from '../I18N/Message';
+import DebouncedFormControl from '../misc/DebouncedFormControl';
 
 const ReactSelect = localizedProps(['placeholder', 'noResultsText'])(Select);
-const FormControl = localizedProps('placeholder')(FormControlRB);
 
 function MultiInput({
     label,
@@ -21,14 +21,16 @@ function MultiInput({
     config: {
         initialOptionValue,
         getSelectOptions = () => [],
-        selectClearable = false
+        selectClearable = false,
+        fallbackValue
     } = {},
     onChange,
     disabled,
     ...props
 }) {
 
-    const selectOptions = getSelectOptions(props);
+    const selectOptions = getSelectOptions(props)
+        .map((option) => ({ ...option, label: option.labelId ? <Message msgId={option.labelId} /> : option.label }));
 
     const dropdownButtonOptions = [
         { labelId: "styleeditor.constantValue", value: "constant" },
@@ -36,10 +38,10 @@ function MultiInput({
     ];
     const dropdownButtonValue = value?.type === 'constant' ? 'constant' : 'attribute';
 
-    const onConstantValueChangeHandler = (event) => {
+    const onConstantValueChangeHandler = (eventValue) => {
         onChange({
             ...value,
-            value: event.target.value
+            value: eventValue
         });
     };
 
@@ -53,23 +55,25 @@ function MultiInput({
 
     const handleDropdownButtonSelect = (newValue) => {
         if (value.type !== newValue) {
-            onChange({
-                type: newValue
-            });
+            onChange(newValue === 'attribute' && initialOptionValue
+                ? { type: 'initial' }
+                : { type: newValue }
+            );
         }
     };
 
-    return (<div className="flex-center">
+    return (<div className="ms-style-editor-multi-input">
         {value?.type === 'constant' && <FormGroup>
-            <FormControl
+            <DebouncedFormControl
                 type="number"
                 disabled={disabled}
+                fallbackValue={fallbackValue}
                 value={value?.value}
                 placeholder="styleeditor.placeholderInput"
                 onChange={onConstantValueChangeHandler}
             />
         </FormGroup>}
-        {value?.type !== 'constant' && <div className="flex-grow-1">
+        {value?.type !== 'constant' && <FormGroup>
             <ReactSelect
                 disabled={disabled}
                 clearable={selectClearable}
@@ -77,9 +81,9 @@ function MultiInput({
                 value={value?.type === 'initial' ? initialOptionValue : value?.name}
                 onChange={onSelectValueChangeHandler}
             />
-        </div>}
+        </FormGroup>}
         <DropdownButton
-            className="square-button-md no-border flex-center"
+            className="square-button-md no-border"
             noCaret
             pullRight
             disabled={disabled}

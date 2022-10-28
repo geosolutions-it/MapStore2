@@ -12,7 +12,7 @@ import {
     FormGroup,
     ControlLabel
 } from 'react-bootstrap';
-import FormControl from '../DebouncedFormControl';
+import FormControl from '../../misc/DebouncedFormControl';
 import { DefaultViewValues } from '../../../utils/MapViewsUtils';
 import Section from './Section';
 import Message from '../../I18N/Message';

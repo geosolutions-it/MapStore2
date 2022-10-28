@@ -2391,7 +2391,17 @@
             "warningTextOrderTitle": "Advertencia",
             "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas",
             "invalidProperty": "El tipo de propiedad { key } no es válido",
-            "notSupportedVariable": "La variable { key } no es compatible con el conjunto de fichas"
+            "notSupportedVariable": "La variable { key } no es compatible con el conjunto de fichas",
+            "addModelRule": "Agregar regla de modelo 3D",
+            "model": "Modelo 3D",
+            "placeholderEnterModelUrl": "Ingrese una URL de archivo .glb",
+            "invalidModelUrl": "La URL proporcionada no es válida",
+            "scale": "Escala",
+            "heading": "Rotación del eje Z",
+            "pitch": "Rotación del eje X",
+            "roll": "Rotación del eje Y",
+            "color": "Color",
+            "pointHeight": "Altura del punto"
         },
         "playback": {
             "settings": {

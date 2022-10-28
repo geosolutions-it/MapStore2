@@ -2429,7 +2429,17 @@
             "warningTextOrderTitle": "Warnung",
             "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen",
             "invalidProperty": "Der Eigenschaftstyp { key } ist ungültig",
-            "notSupportedVariable": "Die Variable { key } wird vom Tileset nicht unterstützt"
+            "notSupportedVariable": "Die Variable { key } wird vom Tileset nicht unterstützt",
+            "addModelRule": "3D-Modellregel hinzufügen",
+            "model": "3D-Modell",
+            "placeholderEnterModelUrl": "Geben Sie eine .glb-Datei-URL ein",
+            "invalidModelUrl": "Die angegebene URL ist ungültig",
+            "scale": "Skala",
+            "heading": "Drehung der Z-Achse",
+            "pitch": "Rotation der X-Achse",
+            "roll": "Drehung der Y-Achse",
+            "color": "Farbe",
+            "pointHeight": "Punkthöhe"
         },
         "playback": {
             "settings": {
