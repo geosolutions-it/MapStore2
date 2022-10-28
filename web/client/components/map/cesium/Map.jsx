@@ -319,8 +319,7 @@ class CesiumMap extends React.Component {
         // we can use pick so the only first intersect feature will be returned
         // this is more intuitive for uses such as get feature info
         const feature = map.scene.drillPick(position).find((aFeature) => {
-            const {entityCollection: {owner: {queryable}}} = aFeature.id;
-            return queryable;
+            return !(aFeature?.id?.entityCollection?.owner?.queryable === false);
         });
         if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
             const msId = feature.tileset.msId;
