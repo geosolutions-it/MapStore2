@@ -81,7 +81,7 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
         };
     }),
     withHandlers({
-        [setDateProp]: ({[setDateProp]: changeVal, [dateTypeProp]: type, useUTCOffset = true} = {}) /* props */ => (date, stringDate) /* event */ => {
+        [setDateProp]: ({[setDateProp]: changeVal, [dateTypeProp]: type, useUTCOffset = true} = {}) => (date, stringDate) => {
             if (!date) {
                 changeVal(null);
             } else {
