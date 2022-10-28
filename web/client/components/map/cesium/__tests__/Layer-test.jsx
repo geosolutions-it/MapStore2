@@ -1378,6 +1378,37 @@ describe('Cesium layer', () => {
         expect(cmp.layer.dataSource.entities.values.length).toBe(1);
         expect(cmp.layer.detached).toBe(true);
     });
+    it('should create a vector layer queryable', () => {
+        const options = {
+            type: 'vector',
+            features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [0, 0] } }],
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            },
+            queryable: false
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="vector"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.dataSource).toBeTruthy();
+        expect(cmp.layer.dataSource.entities.values.length).toBe(1);
+        expect(cmp.layer.detached).toBe(true);
+        expect(cmp.layer.dataSource.queryable).toBe(false);
+    });
     it('should create a wfs layer', () => {
         const options = {
             type: 'wfs',
