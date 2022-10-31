@@ -308,7 +308,7 @@ function getStyleFuncFromRules({
         opacity: globalOpacity = 1
     }) => {
 
-        entities.forEach((entity) => {
+        (entities || []).forEach((entity) => {
             let coordinates = {};
             GRAPHIC_KEYS.forEach((graphicKey) => {
                 if (!entity._msStoredCoordinates) {
