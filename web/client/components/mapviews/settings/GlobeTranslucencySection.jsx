@@ -13,7 +13,7 @@ import {
     ControlLabel
 } from 'react-bootstrap';
 import Section from './Section';
-import FormControl from '../DebouncedFormControl';
+import FormControl from '../../misc/DebouncedFormControl';
 import Message from '../../I18N/Message';
 import { DefaultViewValues } from '../../../utils/MapViewsUtils';
 

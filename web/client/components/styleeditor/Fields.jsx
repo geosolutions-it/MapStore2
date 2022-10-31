@@ -7,7 +7,7 @@
  */
 
 import React, { useRef, useState } from 'react';
-import { FormGroup, FormControl as FormControlRB } from 'react-bootstrap';
+import { FormGroup, InputGroup } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
@@ -19,15 +19,14 @@ import ColorRamp from './ColorRamp';
 import DashArray from '../style/vector/DashArray';
 import ThemaClassesEditor from '../style/ThemaClassesEditor';
 import Message from '../I18N/Message';
-import localizedProps from '../misc/enhancers/localizedProps';
 import PropertyField from './PropertyField';
 import MarkSelector from './MarkSelector';
 import Band from './Band';
 import IconInput from './IconInput';
+import ModelInput from './ModelInput';
 import SelectInput from './SelectInput';
 import MultiInput from './MultiInput';
-
-const FormControl = localizedProps('placeholder')(FormControlRB);
+import DebouncedFormControl from '../misc/DebouncedFormControl';
 
 export const fields = {
     color: ({
@@ -107,17 +106,26 @@ export const fields = {
             </PropertyField>
         );
     },
-    input: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
+    input: ({ label, value, config = {}, onChange = () => {}, disabled, placeholderId }) => {
         return (
             <PropertyField
                 label={label}>
                 <FormGroup>
-                    <FormControl
-                        type={config.type || 'text'}
-                        value={value}
-                        disabled={disabled}
-                        placeholder="styleeditor.placeholderInput"
-                        onChange={event => onChange(event.target.value)}/>
+                    <InputGroup style={config?.maxWidth ? { maxWidth: config?.maxWidth } : {}}>
+                        <DebouncedFormControl
+                            type={config.type || 'text'}
+                            value={value}
+                            disabled={disabled}
+                            min={config.min}
+                            max={config.max}
+                            fallbackValue={config.fallbackValue}
+                            placeholder={placeholderId}
+                            style={{ zIndex: 0 }}
+                            onChange={eventValue => onChange(eventValue)}/>
+                        {config.uom && <InputGroup.Addon>
+                            {config.uom}
+                        </InputGroup.Addon>}
+                    </InputGroup>
                 </FormGroup>
             </PropertyField>
         );
@@ -151,7 +159,7 @@ export const fields = {
                         tooltipId,
                         disabled,
                         text: optionLabelId ? <Message msgId={optionLabelId} /> : optionLabel,
-                        active: optionValue === value ? true : false,
+                        ...(optionValue === value && { bsStyle: 'primary' }),
                         onClick: () => onChange(value === optionValue ? undefined : optionValue)
                     }))}/>
         </PropertyField>
@@ -191,6 +199,26 @@ export const fields = {
                             onChange({ src, errorId: err.messageId });
                         }
                     }}
+                />
+            </PropertyField>
+        );
+    },
+    model: ({
+        label,
+        value,
+        onChange
+    }) => {
+        const [error, setError] = useState(false);
+        return (
+            <PropertyField
+                label={label}
+                invalid={error}
+            >
+                <ModelInput
+                    label={label}
+                    value={value}
+                    onChange={onChange}
+                    onError={setError}
                 />
             </PropertyField>
         );

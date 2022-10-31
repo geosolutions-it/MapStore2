@@ -16,7 +16,7 @@ import {
     Alert
 } from 'react-bootstrap';
 import Select from 'react-select';
-import FormControl from '../DebouncedFormControl';
+import FormControl from '../../misc/DebouncedFormControl';
 import { formatClippingFeatures } from '../../../utils/MapViewsUtils';
 import Message from '../../I18N/Message';
 import ButtonMS from '../../misc/Button';

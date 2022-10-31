@@ -43,6 +43,10 @@ const withDebounceOnCallback = (propCallbackKey, propKey) => (Component) => {
         useEffect(() => {
             if (updateValue.current !== props[propKey]) {
                 setValue(props[propKey]);
+                const noDebounceCallback = props[`${propCallbackKey}NoDebounce`];
+                if (noDebounceCallback) {
+                    noDebounceCallback(props[propKey]);
+                }
             }
         }, [props[propKey]]);
         useEffect(() => {
@@ -55,6 +59,10 @@ const withDebounceOnCallback = (propCallbackKey, propKey) => (Component) => {
         }, [ props.debounceTime ]);
         function handleCallback(newValue) {
             setValue(newValue);
+            const noDebounceCallback = props[`${propCallbackKey}NoDebounce`];
+            if (noDebounceCallback) {
+                noDebounceCallback(newValue);
+            }
             if (update.current) {
                 update.current.cancel();
                 update.current({ newProps: props, newValue });

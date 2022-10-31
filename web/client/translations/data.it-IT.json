@@ -2393,7 +2393,17 @@
             "warningTextOrderTitle": "Attenzione",
             "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole",
             "invalidProperty": "Il tipo della proprietà { key } non è valido",
-            "notSupportedVariable": "La variabile { key } non è supportata dal tileset"
+            "notSupportedVariable": "La variabile { key } non è supportata dal tileset",
+            "addModelRule": "Aggiungi regola modello 3D",
+            "model": "Modello 3D",
+            "placeholderEnterModelUrl": "Inserisci l'URL di un file .glb",
+            "invalidModelUrl": "L'URL fornito non è valido",
+            "scale": "Scala",
+            "heading": "Rotazione asse Z",
+            "pitch": "Rotazione asse X",
+            "roll": "Rotazione asse Y",
+            "color": "Colore",
+            "pointHeight": "Altezza punto"
         },
         "playback": {
             "settings": {

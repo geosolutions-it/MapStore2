@@ -2392,7 +2392,17 @@
             "warningTextOrderTitle": "Avertissement",
             "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles",
             "invalidProperty": "Le type de propriété { key } n'est pas valide",
-            "notSupportedVariable": "La variable { key } n'est pas prise en charge par le jeu de tuiles"
+            "notSupportedVariable": "La variable { key } n'est pas prise en charge par le jeu de tuiles",
+            "addModelRule": "Ajouter une règle de modèle 3D",
+            "model": "Modèle 3D",
+            "placeholderEnterModelUrl": "Entrez une URL de fichier .glb",
+            "invalidModelUrl": "L'URL fournie n'est pas valide",
+            "scale": "Échelle",
+            "heading": "Rotation de l'axe Z",
+            "pitch": "Rotation de l'axe X",
+            "roll": "Rotation de l'axe Y",
+            "color": "Couleur",
+            "pointHeight": "Hauteur du point"
         },
         "playback": {
             "settings": {

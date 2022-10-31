@@ -19,7 +19,7 @@ import {
     DefaultViewValues,
     mergeViewLayers
 } from '../../../utils/MapViewsUtils';
-import FormControl from '../DebouncedFormControl';
+import FormControl from '../../misc/DebouncedFormControl';
 import Section from './Section';
 import Message from '../../I18N/Message';
 

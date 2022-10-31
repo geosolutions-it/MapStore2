@@ -690,7 +690,7 @@ describe('RulesEditor', () => {
         expect(symbolizersNode.length).toBe(1);
 
         const inputNodes = symbolizersNode[0].querySelectorAll('input');
-        expect(inputNodes.length).toBe(2);
+        expect(inputNodes.length).toBe(4);
         TestUtils.act(() => {
             TestUtils.Simulate.change(inputNodes[0], { target: { value: 'new-url' }});
         });

@@ -8,6 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MarkIcon from './MarkIcon';
+import { Glyphicon } from 'react-bootstrap';
 
 function WFSLegend({ style }) {
     const renderIcon = (symbolizer) => {
@@ -61,6 +62,8 @@ function WFSLegend({ style }) {
             return (<svg viewBox="0 0 50 50" style={svgStyle}>
                 <image href={image} height="50" width="50" />
             </svg>);
+        case 'Model':
+            return <Glyphicon glyph="model"/>;
         default:
             return null;
         }

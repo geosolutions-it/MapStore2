@@ -281,6 +281,56 @@ describe('CesiumStyleParser', () => {
                     });
                 });
         });
+        it('should write a style function with model symbolizer', (done) => {
+
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Model',
+                                model: '/path/to/file.glb',
+                                scale: 1,
+                                heading: 0,
+                                roll: 0,
+                                pitch: 0,
+                                color: '#ffffff',
+                                opacity: 0.5,
+                                msHeightReference: 'relative',
+                                height: 10
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            parser.writeStyle(style)
+                .then((styleFunc) => {
+                    Cesium.GeoJsonDataSource.load({
+                        type: 'Feature',
+                        properties: {},
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [7, 41]
+                        }
+                    }).then((dataSource) => {
+                        try {
+                            const entities = dataSource?.entities?.values;
+                            styleFunc({ entities });
+                            expect(entities[0].model.uri.getValue()._url).toBe('/path/to/file.glb');
+                            expect({ ...entities[0].model.color.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 0.5 });
+                            expect(entities[0].model.scale.getValue()).toBe(1);
+                            expect(entities[0].model.heightReference.getValue()).toBe(Cesium.HeightReference.RELATIVE_TO_GROUND);
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    });
+                });
+        });
         it('should write a style function with text symbolizer', (done) => {
 
             const style = {

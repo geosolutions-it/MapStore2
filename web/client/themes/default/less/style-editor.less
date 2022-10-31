@@ -616,10 +616,6 @@ Ported to CodeMirror by Peter Kroon
             }
         }
 
-        .flex-grow-1 {
-            flex-grow: 1;
-        }
-
         &.ms-symbolizer-value-invalid {
             outline: 1px solid @ms-danger;
         }
@@ -629,6 +625,28 @@ Ported to CodeMirror by Peter Kroon
         &.ms-symbolizer-value-disabled {
             opacity: 0.4;
         }
+    }
+}
+
+.ms-style-editor-multi-input {
+    display: flex;
+    .form-group {
+        flex: 1;
+    }
+    .dropdown-toggle {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > * {
+            margin: 0;
+        }
+    }
+    .dropdown {
+        margin-left: 4px;
+    }
+    input[type='number'] {
+        height: 35px;
     }
 }
 

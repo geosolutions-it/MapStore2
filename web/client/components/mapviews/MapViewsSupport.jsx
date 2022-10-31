@@ -20,7 +20,7 @@ import identity from 'lodash/identity';
 
 import MapViewsList from './MapViewsList';
 import MapViewsProgressBar from './MapViewsProgressBar';
-import FormControl from './DebouncedFormControl';
+import FormControl from '../misc/DebouncedFormControl';
 import { DefaultViewValues } from '../../utils/MapViewsUtils';
 import Message from '../I18N/Message';
 import Loader from '../misc/Loader';

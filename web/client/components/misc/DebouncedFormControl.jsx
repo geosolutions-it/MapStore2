@@ -9,8 +9,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { FormControl as FormControlRB } from 'react-bootstrap';
-import withDebounceOnCallback from '../misc/enhancers/withDebounceOnCallback';
-import localizedProps from '../misc/enhancers/localizedProps';
+import withDebounceOnCallback from './enhancers/withDebounceOnCallback';
+import localizedProps from './enhancers/localizedProps';
 
 const FormControlOnChange = withDebounceOnCallback('onChange', 'value')(
     localizedProps('placeholder')(({ debounceTime, ...props }) =>
@@ -18,10 +18,22 @@ const FormControlOnChange = withDebounceOnCallback('onChange', 'value')(
     )
 );
 
+/**
+ * Component for rendering an input with the following functionalities:
+ * - debounce on change event
+ * - restore to a fallback value on blur
+ * @memberof components.DebouncedFormControl
+ * @class
+ * @prop {string|number} fallbackValue it replaces the value if undefined on blur
+ *
+ */
 function DebouncedFormControl({ fallbackValue, ...props }) {
 
     const [value, setValue] = useState(props.value ?? fallbackValue);
+    const [tmpValue, setTmpValue] = useState(props.value ?? fallbackValue);
+
     const [resetTrigger, setResetTrigger] = useState(0);
+    const focus = useRef(false);
     const updateValue = useRef();
     updateValue.current = value;
     useEffect(() => {
@@ -52,49 +64,55 @@ function DebouncedFormControl({ fallbackValue, ...props }) {
         }
         return {
             changed: false,
-            value: eventValue
+            value: validNumber ? parseFloat(eventValue) : eventValue
         };
     }
 
     function handleBlurChange() {
         if (props.type === 'number') {
-            if (value === '') {
+            if (tmpValue === '') {
                 props.onChange(undefined);
                 setValue(fallbackValue);
                 setResetTrigger(prevCount => prevCount + 1);
             } else {
-                const { changed, value: newValue } = computeRange(value);
-                if (changed) {
-                    props.onChange(newValue);
-                    setValue(newValue);
-                    setResetTrigger(prevCount => prevCount + 1);
-                }
+                const { value: newValue } = computeRange(tmpValue);
+                props.onChange(newValue);
+                setResetTrigger(prevCount => prevCount + 1);
+                setValue(newValue);
             }
         }
+        focus.current = false;
+    }
+
+    function handleFocusChange() {
+        focus.current = true;
     }
 
     function handleChange(newValue) {
-        let eventValue = newValue;
-        let update = true;
-        if (props.type === 'number') {
-            const { changed: rangeChanged } = computeRange(eventValue);
-            if (eventValue === '' || rangeChanged) {
-                update = false;
+        if (focus.current) {
+            let eventValue = newValue;
+            let update = true;
+            if (props.type === 'number') {
+                const { changed: rangeChanged } = computeRange(eventValue);
+                if (eventValue === '' || rangeChanged) {
+                    update = false;
+                }
+            }
+            setValue(eventValue);
+            if (update) {
+                props.onChange(eventValue);
             }
         }
-        setValue(eventValue);
-        if (update) {
-            props.onChange(eventValue);
-        }
     }
-
     return (
         <FormControlOnChange
             {...props}
             key={resetTrigger}
             value={value}
             onChange={handleChange}
+            onChangeNoDebounce={setTmpValue}
             onBlur={handleBlurChange}
+            onFocus={handleFocusChange}
         />
     );
 }
