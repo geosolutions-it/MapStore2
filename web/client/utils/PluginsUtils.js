@@ -242,6 +242,15 @@ const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && is
     ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
     pluginImpl;
 
+const shouldBeAlwaysRendered = (plugin, override = {}, container) => {
+    const pluginImpl = executeDeferredProp(plugin.impl, plugin.config, container);
+    return (
+        get(override, container + ".alwaysRendered") ||
+        get(pluginImpl, container + ".alwaysRendered") ||
+        false
+    );
+};
+
 const getPriority = (plugin, override = {}, container) => {
     const pluginImpl = executeDeferredProp(plugin.impl, plugin.config, container);
     return (
@@ -333,9 +342,13 @@ export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containe
             }
             return [...acc, curr];
         }, [])
-    // include only plugins for which container is the preferred container
-        .filter((plugin) => isMorePrioritizedContainer(plugin, plugin.config.override, pluginsConfig,
-            getPriority(plugin, plugin.config.override, containerName)))
+        // include only plugins for which container is the preferred container
+        .filter((plugin) =>
+            shouldBeAlwaysRendered(plugin, plugin.config.override, containerName)
+            || isMorePrioritizedContainer(plugin, plugin.config.override, pluginsConfig,
+                getPriority(plugin, plugin.config.override, containerName)
+            )
+        )
         .map((plugin) => {
             const pluginName = getPluginSimpleName(plugin.name);
             const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
