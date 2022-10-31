@@ -974,7 +974,8 @@ export function applyDefaultStyleToLayer(layer) {
                                 strokeOpacity: 1,
                                 strokeWidth: 2,
                                 wellKnownName: 'Circle',
-                                radius: 10
+                                radius: 10,
+                                msBringToFront: true
                             }
                         ]
                     },
