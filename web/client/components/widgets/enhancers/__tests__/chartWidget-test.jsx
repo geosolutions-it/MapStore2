@@ -33,7 +33,7 @@ describe('chartWidget enhancer', () => {
     it('chartWidgetProps default', (done) => {
         const Sink = chartWidgetProps(createSink(props => {
             expect(props).toBeTruthy();
-            expect(props).toEqual({charts: [], selectedChartId: undefined});
+            expect(props).toEqual({charts: [], selectedChartId: undefined, options: {}});
             done();
         }));
         ReactDOM.render(<Sink/>, document.getElementById("container"));
