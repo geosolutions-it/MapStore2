@@ -53,7 +53,7 @@ compose(
             getFloatingWidgetsLayout,
             getMaximizedState,
             dependenciesSelector,
-            (state) => mapLayoutValuesSelector(state, { right: true, left: true }),
+            (state) => mapLayoutValuesSelector(state, { right: true}),
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
             (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets) => ({
