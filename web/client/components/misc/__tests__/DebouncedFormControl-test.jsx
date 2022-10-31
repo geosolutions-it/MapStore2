@@ -136,4 +136,30 @@ describe('DebouncedFormControl component', () => {
             Simulate.blur(inputNode);
         }, debounceTime * 2);
     });
+    it('should apply the latest value even if the debounce is not completed', (done) => {
+        const debounceTime = 1000;
+        act(() => {
+            ReactDOM.render(
+                <DebouncedFormControl
+                    value={1}
+                    type="number"
+                    fallbackValue={1}
+                    debounceTime={debounceTime}
+                    onChange={(value) => {
+                        try {
+                            expect(value).toBe(200);
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    }}
+                />, document.getElementById('container'));
+        });
+
+        const inputNode = document.querySelector('.form-control');
+        expect(inputNode).toBeTruthy();
+        Simulate.focus(inputNode);
+        Simulate.change(inputNode, { target: { value: '200' } });
+        Simulate.blur(inputNode);
+    });
 });

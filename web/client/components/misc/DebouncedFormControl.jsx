@@ -30,6 +30,8 @@ const FormControlOnChange = withDebounceOnCallback('onChange', 'value')(
 function DebouncedFormControl({ fallbackValue, ...props }) {
 
     const [value, setValue] = useState(props.value ?? fallbackValue);
+    const [tmpValue, setTmpValue] = useState(props.value ?? fallbackValue);
+
     const [resetTrigger, setResetTrigger] = useState(0);
     const focus = useRef(false);
     const updateValue = useRef();
@@ -62,21 +64,19 @@ function DebouncedFormControl({ fallbackValue, ...props }) {
         }
         return {
             changed: false,
-            value: eventValue
+            value: validNumber ? parseFloat(eventValue) : eventValue
         };
     }
 
     function handleBlurChange() {
         if (props.type === 'number') {
-            if (value === '') {
+            if (tmpValue === '') {
                 props.onChange(undefined);
                 setValue(fallbackValue);
                 setResetTrigger(prevCount => prevCount + 1);
             } else {
-                const { changed, value: newValue } = computeRange(value);
-                if (changed) {
-                    props.onChange(newValue);
-                }
+                const { value: newValue } = computeRange(tmpValue);
+                props.onChange(newValue);
                 setResetTrigger(prevCount => prevCount + 1);
                 setValue(newValue);
             }
@@ -104,13 +104,13 @@ function DebouncedFormControl({ fallbackValue, ...props }) {
             }
         }
     }
-
     return (
         <FormControlOnChange
             {...props}
             key={resetTrigger}
             value={value}
             onChange={handleChange}
+            onChangeNoDebounce={setTmpValue}
             onBlur={handleBlurChange}
             onFocus={handleFocusChange}
         />
