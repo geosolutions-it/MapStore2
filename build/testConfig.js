@@ -20,7 +20,11 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
 
     basePath,
 
-    files,
+    files: [
+        ...files,
+        // add all assets needed for Cesium library
+        { pattern: './node_modules/cesium/Source/**/*', included: false }
+    ],
 
     plugins: [
         require('karma-chrome-launcher'),
@@ -150,7 +154,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
             }),
             new webpack.DefinePlugin({
                 // Define relative base path in cesium for loading assets
-                'CESIUM_BASE_URL': JSON.stringify(nodePath.join(basePath, 'node_modules', 'cesium', 'Source'))
+                'CESIUM_BASE_URL': JSON.stringify('base/node_modules/cesium/Source')
             }),
             VERSION_INFO_DEFINE_PLUGIN,
             // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
