@@ -133,7 +133,7 @@ export default compose(
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
         hasTrayWidgets: widgets.length > 0
     })),
-    withProps(({ isMobileAgent, width, singleWidgetLayoutBreakpoint = 600 }) => {
+    withProps(({ isMobileAgent, width, singleWidgetLayoutBreakpoint = 1024 }) => {
         return {
             isSingleWidgetLayout: isMobileAgent || width <= singleWidgetLayoutBreakpoint
         };
