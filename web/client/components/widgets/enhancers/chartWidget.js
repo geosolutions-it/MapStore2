@@ -44,8 +44,8 @@ export default compose(
 );
 
 export const chartWidgetProps = compose(
-    withProps(({charts = [], selectedChartId})=> {
+    withProps(({charts = [], selectedChartId, options = {}})=> {
         const chartData = charts?.find(c => c.chartId === selectedChartId) || {};
-        return { ...chartData, charts, selectedChartId };
+        return { ...chartData, options: {...options, ...(chartData?.options ?? {})}, charts, selectedChartId };
     })
 );
