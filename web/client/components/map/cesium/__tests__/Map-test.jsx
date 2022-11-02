@@ -351,7 +351,7 @@ describe('CesiumMap', () => {
                 });
             })
             .catch(done);
-    });
+    }).timeout(5000);
     it('check if the map changes when receive new props', () => {
         let ref;
         act(() => {
