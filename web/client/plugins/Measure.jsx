@@ -200,7 +200,7 @@ export default createPlugin('Measure', {
             name: 'Measure',
             Tool: MeasureSupport,
             doNotHide: true,
-            alwaysRendered: true
+            alwaysRender: true
         }
     },
     reducers: {
