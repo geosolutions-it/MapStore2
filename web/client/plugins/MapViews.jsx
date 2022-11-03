@@ -10,8 +10,9 @@ import { connect } from 'react-redux';
 import { createPlugin } from '../utils/PluginsUtils';
 import { createSelector } from 'reselect';
 import MapViews from './mapviews/MapViews';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, MenuItem } from 'react-bootstrap';
 import ButtonMS from '../components/misc/Button';
+import Message from '../components/I18N/Message';
 import tooltip from '../components/misc/enhancers/tooltip';
 import { activateViews } from '../actions/mapviews';
 import {
@@ -185,20 +186,34 @@ const MapViewsPlugin = connect(
 function MapViewsButton({
     active,
     onClick,
-    visible
+    visible,
+    menuItem
 }) {
-    return visible ? (
-        <Button
-            className="square-button"
-            bsStyle={active ? 'primary' : 'tray'}
-            active={active}
-            onClick={() => onClick(!active)}
-            tooltipId={!active ? 'mapViews.activateMapViews' : 'mapViews.deactivateMapViews'}
-            tooltipPosition="left"
-        >
-            <Glyphicon glyph="map-view"/>
-        </Button>
-    ) : true;
+    if (!visible) {
+        return null;
+    }
+    const messageId = !active ? 'mapViews.activateMapViews' : 'mapViews.deactivateMapViews';
+    return menuItem
+        ? (
+            <MenuItem
+                active={active}
+                onClick={() => onClick(!active)}
+            >
+                <Glyphicon glyph="map-view"/><Message msgId={messageId}/>
+            </MenuItem>
+        )
+        : (
+            <Button
+                className="square-button"
+                bsStyle={active ? 'primary' : 'tray'}
+                active={active}
+                onClick={() => onClick(!active)}
+                tooltipId={messageId}
+                tooltipPosition="left"
+            >
+                <Glyphicon glyph="map-view"/>
+            </Button>
+        );
 }
 
 const ConnectedMapViewsButton = connect(
