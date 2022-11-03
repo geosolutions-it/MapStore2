@@ -54,6 +54,7 @@ const createLayer = (options, map) => {
     }
 
     dataSource.show = !!options.visibility;
+    dataSource.queryable = options.queryable === undefined || options.queryable;
 
     return {
         detached: true,

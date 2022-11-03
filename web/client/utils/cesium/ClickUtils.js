@@ -25,8 +25,7 @@ export const getMouseXYZ = (viewer, event) => {
     }
 
     const feature = viewer.scene.drillPick(mousePosition).find((aFeature) => {
-        const {entityCollection: {owner: {queryable}}} = aFeature.id;
-        return queryable;
+        return !(aFeature?.id?.entityCollection?.owner?.queryable === false);
     });
     if (feature) {
         let currentDepthTestAgainstTerrain = scene.globe.depthTestAgainstTerrain;
