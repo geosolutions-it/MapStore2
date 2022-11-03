@@ -1382,7 +1382,13 @@
             "updateStyleErrorTitle": "Chỉnh sửa kiểu",
             "updateTmpErrorTitle": "Cập nhật kiểu tạm thời",
             "updateTmpStyleErrorMessage": "Kiểu tạm thời không thể được cập nhậ, có thể do định dạng kiểu không được hỗ trợ hoặc vấn đề kết nối.",
-            "validationErrorTitle": "Lỗi xác nhận"
+            "validationErrorTitle": "Lỗi xác nhận",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "styler": {
             "layerlabel": "Lớp",
