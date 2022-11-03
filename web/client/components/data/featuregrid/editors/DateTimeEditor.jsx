@@ -1,12 +1,9 @@
 import PropTypes from 'prop-types';
-// import { editors } from 'react-data-grid';
 import AttributeEditor from "./AttributeEditor";
-// import IntlNumberFormControl from "../../../I18N/IntlNumberFormControl";
 import React from "react";
 import DateTimePicker from "../../../misc/datetimepicker";
 import utcDateWrapper from "../../../misc/enhancers/utcDateWrapper";
 import moment from "moment";
-import "moment-timezone";
 
 /**
  * Date time picker enhanced with UTC and timezone offset
