@@ -312,22 +312,37 @@ class CesiumMap extends React.Component {
     };
 
     getIntersectedFeatures = (map, position) => {
-        // we can use pick so the only first intersect feature will be returned
-        // this is more intuitive for uses such as get feature info
-        const feature = map.scene.drillPick(position).find((aFeature) => {
+        // for consistency with 2D view we allow to drill pick through the first feature
+        // and intersect all the features behind
+        const features = map.scene.drillPick(position).filter((aFeature) => {
             return !(aFeature?.id?.entityCollection?.owner?.queryable === false);
         });
-        if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
-            const msId = feature.tileset.msId;
-            // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
-            // it has content but refers to the whole tile model
-            const propertyNames = feature.getPropertyNames();
-            const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
-            return [{ id: msId, features: [{ type: 'Feature', properties, geometry: null }] }];
-        } else if (feature?.id instanceof Cesium.Entity && feature.id.id && feature.id.properties) {
-            const {properties: {propertyNames}, entityCollection: {owner: {name}}} = feature.id;
-            const props = Object.fromEntries(propertyNames.map(key => [key, feature.id.properties[key].getValue(0)]));
-            return [{ id: name, features: [{ type: 'Feature', properties: props, id: feature?.id?.id, geometry: null }] }];
+        if (features) {
+            const groupIntersectedFeatures = features.reduce((acc, feature) => {
+                let msId;
+                let properties;
+                if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
+                    msId = feature.tileset.msId;
+                    // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
+                    // it has content but refers to the whole tile model
+                    const propertyNames = feature.getPropertyNames();
+                    properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
+                } else if (feature?.id instanceof Cesium.Entity && feature.id.id && feature.id.properties) {
+                    const {properties: {propertyNames}, entityCollection: {owner: {name}}} = feature.id;
+                    properties = Object.fromEntries(propertyNames.map(key => [key, feature.id.properties[key].getValue(0)]));
+                    msId = name;
+                }
+                if (!properties || !msId) {
+                    return acc;
+                }
+                return {
+                    ...acc,
+                    [msId]: acc[msId]
+                        ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
+                        : [{ type: 'Feature', properties, geometry: null }]
+                };
+            }, []);
+            return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
         }
         return [];
     }
