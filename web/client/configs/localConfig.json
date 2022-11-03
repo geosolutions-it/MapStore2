@@ -287,7 +287,9 @@
                 "declineUrl" : "http://www.google.com"
               }
             },
-            "FeedbackMask"
+            "FeedbackMask",
+            { "name": "Widgets" },
+            { "name": "WidgetsTray" }
         ],
         "desktop": ["Details",
           {

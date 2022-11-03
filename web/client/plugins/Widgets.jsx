@@ -82,11 +82,11 @@ compose(
     compose(
         heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
         widthProvider({ overrideWidthProvider: false }),
-        withProps(({ isMobileAgent, width, mapLayout, singleWidgetLayoutBreakpoint = 600 }) => {
+        withProps(({ isMobileAgent, width, mapLayout, singleWidgetLayoutBreakpoint = 1024 }) => {
             const rightOffset = mapLayout?.right ?? 0;
-            const leftOffset = 0;
-            const viewWidth = width - (leftOffset + rightOffset + RIGHT_MARGIN);
-            const isSingleWidgetLayout = isMobileAgent || viewWidth <= singleWidgetLayoutBreakpoint;
+            const isSingleWidgetLayout = isMobileAgent || width <= singleWidgetLayoutBreakpoint;
+            const leftOffset = isSingleWidgetLayout ? 0 : 500;
+            const viewWidth = width - (rightOffset + RIGHT_MARGIN + leftOffset);
             const backgroundSelectorOffset = isSingleWidgetLayout ? (isMobileAgent ? 40 : 60) : 0;
             return {
                 backgroundSelectorOffset,
@@ -104,7 +104,6 @@ compose(
             leftOffset,
             viewWidth,
             isSingleWidgetLayout,
-            singleWidgetLayoutBreakpoint,
             singleWidgetLayoutMaxHeight = 300,
             singleWidgetLayoutMinHeight = 200,
             backgroundSelectorOffset
@@ -145,7 +144,7 @@ compose(
             return ({
                 rowHeight,
                 className: "on-map",
-                breakpoints: isSingleWidgetLayout ? { xxs: 0 } : { md: singleWidgetLayoutBreakpoint, xxs: 0 },
+                breakpoints: isSingleWidgetLayout ? { xxs: 0 } : { md: 0 },
                 cols: { md: 6, xxs: 1 },
                 ...widthOptions,
                 useDefaultWidthProvider: false,
