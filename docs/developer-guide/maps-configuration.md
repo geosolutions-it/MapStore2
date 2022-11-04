@@ -1570,7 +1570,7 @@ The mapViews properties
 
 | Name | Type | Description |
 | --- | --- | --- |
-| active | boolean | if true the view will be active at initialization |
+| active | boolean | if true the map view tool will be active at initialization |
 | selectedId | string | id of the selected view |
 | views | array | array of views configuration (see below) |
 | resources | array | resources array of resources configuration (see below) |
