@@ -1602,7 +1602,7 @@ View configuration object
 | globeTranslucency.opacity | number | opacity of the globe translucency, it should be a value between 0 and 1 where 1 is fully opaque  |
 | globeTranslucency.fadeByDistance | boolean | if true the translucency is visible only between the `nearDistance` and `farDistance` values |
 | globeTranslucency.nearDistance | number | when `fadeByDistance` is true it indicates the minimum distance to apply translucency |
-| globeTranslucency.farDistance | number | maximum distance to apply translucency when fadeByDistance is true |
+| globeTranslucency.farDistance | number |  when `fadeByDistance` is true it indicates the maximum distance to apply translucency |
 | layers | array | array of layer configuration overrides, default property visibility and opacity |
 
 Resource object configuration
