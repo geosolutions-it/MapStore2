@@ -1595,7 +1595,7 @@ View configuration object
 | mask.offset | number | offset in meters for the inverse mask |
 | terrain | object | optional configurations for terrain clipping |
 |terrain.clippingLayerResourceId | string | identifier of a resource configuration in the `resources` array |
-| terrain.clippingPolygonFeatureId | string | identifier of a polygon feature available in the selected layer source |
+| terrain.clippingPolygonFeatureId | string | identifier of a polygonal feature available in the selected layer source to use to apply the clipping |
 | terrain.clippingPolygonUnion | boolean | if true it applies inverse clipping |
 | globeTranslucency | object | optional configuration for the globe translucency |
 | globeTranslucency.enabled | boolean | enable translucency |
