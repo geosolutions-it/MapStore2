@@ -1590,7 +1590,7 @@ View configuration object
 | bbox | array | bounding box in WGS84 as [minx, miny, maxx, maxy] |
 | mask | object | optional configuration for the 3D tiles mask |
 | mask.enabled | boolean | enable mask |
-| mask.resourceId | string | identifier of a resource configuration |
+| mask.resourceId | string | identifier of a resource configuration in the `resources` array |
 | mask.inverse | boolean | enabled inverse mask |
 | mask.offset | number | offset in meter for the inverse mask |
 | terrain | object | optional configuration for terrain clipping |
