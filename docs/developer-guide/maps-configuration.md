@@ -1585,7 +1585,7 @@ View configuration object
 | duration | number | when playing, duration in seconds of the view|
 | flyTo | boolean | enable animation transition during navigation |
 | center | object | center target position as { latitude (degrees), longitude (degrees), height (meters) } |
-| cameraPosition | object | cameraPosition point of view position as { latitude (degrees), longitude (degrees), height (meter) } |
+| cameraPosition | object | point of view position as { latitude (degrees), longitude (degrees), height (meters) } |
 | zoom | number | zoom level |
 | bbox | array | bounding box in WGS84 as [minx, miny, maxx, maxy] |
 | mask | object | optional configuration for the 3D tiles mask |
