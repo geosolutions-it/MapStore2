@@ -123,158 +123,6 @@ i.e.
 !!! warning
     Actually the custom resolution values are valid for one single CRS. It's therefore suggested to avoid to add this parameter when multiple CRSs in the same map configuration are needed.
 
-## Additional map configuration options
-
-Map configuration also contains the following additional options:
-
-- `catalogServices` object describing services configuration for Catalog
-- `widgetsConfig` configuration of map widgets
-- `mapInfoConfiguration` map info configuration options
-- `dimensionData` contains map time information
-- `currentTime` currently selected time; the beginning of a time range if offsetTime is set
-- `offsetTime` the end of a time range
-- `timelineData` timeline options
-- `selectedLayer` selected layer id; if not present time cursor will be unlocked
-- `mapViews` map views options
-
-### mapViews
-
-Example:
-
-```js
-{
-  "mapViews": {
-    "active": true,
-    "selectedId": "view.id.01",
-    "views": [
-      {
-        "id": "view.id.01",
-        "title": "Title",
-        "description": "<p>Description</p>",
-        "duration": 10,
-        "flyTo": true,
-        "center": {
-          "longitude": 8.93690091201193,
-          "latitude": 44.39522451776296,
-          "height": -0.0022900843616703204
-        },
-        "cameraPosition": {
-          "longitude": 8.93925651181738,
-          "latitude": 44.38698231953802,
-          "height": 655.705914040523
-        },
-        "zoom": 17.89659156734602,
-        "bbox": [
-          8.920925393119584,
-          44.39084055670365,
-          8.948118718933738,
-          44.40554444092288
-        ],
-        "mask": {
-          "enabled": true,
-          "resourceId": "resource.id.01",
-          "inverse": true,
-          "offset": 10000
-        },
-        "terrain": {
-          "clippingLayerResourceId": "resource.id.02",
-          "clippingPolygonFeatureId": "feature.id.01",
-          "clippingPolygonUnion": true
-        },
-        "globeTranslucency": {
-          "enabled": true,
-          "fadeByDistance": false,
-          "nearDistance": 500,
-          "farDistance": 50000,
-          "opacity": 0.5
-        },
-        "layers": [
-          {
-            "id": "layer.id.01",
-            "visibility": true,
-            "opacity": 0.5
-          },
-          {
-            "id": "layer.id.04",
-            "visibility": true,
-            "clippingLayerResourceId": "resource.id.02",
-            "clippingPolygonFeatureId": "feature.id.01",
-            "clippingPolygonUnion": false
-          }
-        ]
-      }
-    ],
-    "resources": [
-      {
-        "id": "resource.id.01",
-        "data": {
-          "type": "vector",
-          "name": "mask",
-          "title": "Mask",
-          "id": "layer.id.02"
-        }
-      },
-      {
-        "id": "resource.id.02",
-        "data": {
-          "type": "wfs",
-          "url": "/service/wfs",
-          "name": "clip",
-          "title": "Clip",
-          "id": "layer.id.03"
-        }
-      }
-    ]
-  }
-}
-```
-
-The mapViews properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| active | boolean | if true the view will be active at initialization |
-| selectedId | string | id of the selected view |
-| views | array | array of views configuration (see below) |
-| resources | array | resources array of resources configuration (see below) |
-
-View configuration object
-
-| Name | Type | Description |
-| --- | --- | --- |
-| id | string | identifier of the view |
-| title | string | title of the view |
-| description | string | an html string to describe the view |
-| duration | number | time duration during navigation in seconds |
-| flyTo | boolean | enable animation transition during navigation |
-| center | object | center target position as { latitude (degrees), longitude (degrees), height (meter) } |
-| cameraPosition | object | cameraPosition point of view position as { latitude (degrees), longitude (degrees), height (meter) } |
-| zoom | number | zoom level |
-| bbox | array | bounding box in WGS84 as [minx, miny, maxx, maxy] |
-| mask | object | optional configuration for the 3D tiles mask |
-| mask.enabled | boolean | enable mask |
-| mask.resourceId | string | identifier of a resource configuration |
-| mask.inverse | boolean | enabled inverse mask |
-| mask.offset | number | offset in meter for the inverse mask |
-| terrain | object | optional configuration for terrain clipping |
-|terrain.clippingLayerResourceId | string | identifier of a resource configuration |
-| terrain.clippingPolygonFeatureId | string | identifier of a polygon feature available in the selected layer source |
-| terrain.clippingPolygonUnion | boolean | if true it applies inverse clipping |
-| globeTranslucency | object | optional configuration for the globe translucency |
-| globeTranslucency.enabled | boolean | enable translucency |
-| globeTranslucency.opacity | number | opacity of the globe translucency, it should be a value between 0 and 1 where 1 is fully opaque  |
-| globeTranslucency.fadeByDistance | boolean | if true the translucency is visible only in between the nearDistance and farDistance values |
-| globeTranslucency.nearDistance | number | minimum distance to apply translucency when fadeByDistance is true |
-| globeTranslucency.farDistance | number | maximum distance to apply translucency when fadeByDistance is true |
-| layers | array | array of layer configuration overrides, default property visibility and opacity |
-
-Resource object configuration
-
-| Name | Type | Description |
-| --- | --- | --- |
-| id | string | identifier for the resource |
-| data | object | properties related to the layer used for the resource (wfs or vector type) |
-
 ## Layers options
 
 Every layer has it's own properties. Anyway there are some options valid for every layer:
@@ -1611,3 +1459,155 @@ Due to the limitations posed by WMC format the conversion process will not prese
 to do this is to export to MapStore JSON format. The WMC export option presumably should be used in cases when the WMS layers inside
 a MapStore map need to be used in some way with a different geospatial software suite, or to import such layers from outside
 MapStore or if you already have WMC context files that you want to use.
+
+## Additional map configuration options
+
+Map configuration also contains the following additional options:
+
+- `catalogServices` object describing services configuration for Catalog
+- `widgetsConfig` configuration of map widgets
+- `mapInfoConfiguration` map info configuration options
+- `dimensionData` contains map time information
+- `currentTime` currently selected time; the beginning of a time range if offsetTime is set
+- `offsetTime` the end of a time range
+- `timelineData` timeline options
+- `selectedLayer` selected layer id; if not present time cursor will be unlocked
+- `mapViews` map views options
+
+### mapViews
+
+Example:
+
+```js
+{
+  "mapViews": {
+    "active": true,
+    "selectedId": "view.id.01",
+    "views": [
+      {
+        "id": "view.id.01",
+        "title": "Title",
+        "description": "<p>Description</p>",
+        "duration": 10,
+        "flyTo": true,
+        "center": {
+          "longitude": 8.93690091201193,
+          "latitude": 44.39522451776296,
+          "height": -0.0022900843616703204
+        },
+        "cameraPosition": {
+          "longitude": 8.93925651181738,
+          "latitude": 44.38698231953802,
+          "height": 655.705914040523
+        },
+        "zoom": 17.89659156734602,
+        "bbox": [
+          8.920925393119584,
+          44.39084055670365,
+          8.948118718933738,
+          44.40554444092288
+        ],
+        "mask": {
+          "enabled": true,
+          "resourceId": "resource.id.01",
+          "inverse": true,
+          "offset": 10000
+        },
+        "terrain": {
+          "clippingLayerResourceId": "resource.id.02",
+          "clippingPolygonFeatureId": "feature.id.01",
+          "clippingPolygonUnion": true
+        },
+        "globeTranslucency": {
+          "enabled": true,
+          "fadeByDistance": false,
+          "nearDistance": 500,
+          "farDistance": 50000,
+          "opacity": 0.5
+        },
+        "layers": [
+          {
+            "id": "layer.id.01",
+            "visibility": true,
+            "opacity": 0.5
+          },
+          {
+            "id": "layer.id.04",
+            "visibility": true,
+            "clippingLayerResourceId": "resource.id.02",
+            "clippingPolygonFeatureId": "feature.id.01",
+            "clippingPolygonUnion": false
+          }
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "id": "resource.id.01",
+        "data": {
+          "type": "vector",
+          "name": "mask",
+          "title": "Mask",
+          "id": "layer.id.02"
+        }
+      },
+      {
+        "id": "resource.id.02",
+        "data": {
+          "type": "wfs",
+          "url": "/service/wfs",
+          "name": "clip",
+          "title": "Clip",
+          "id": "layer.id.03"
+        }
+      }
+    ]
+  }
+}
+```
+
+The mapViews properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| active | boolean | if true the view will be active at initialization |
+| selectedId | string | id of the selected view |
+| views | array | array of views configuration (see below) |
+| resources | array | resources array of resources configuration (see below) |
+
+View configuration object
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | string | identifier of the view |
+| title | string | title of the view |
+| description | string | an html string to describe the view |
+| duration | number | time duration during navigation in seconds |
+| flyTo | boolean | enable animation transition during navigation |
+| center | object | center target position as { latitude (degrees), longitude (degrees), height (meter) } |
+| cameraPosition | object | cameraPosition point of view position as { latitude (degrees), longitude (degrees), height (meter) } |
+| zoom | number | zoom level |
+| bbox | array | bounding box in WGS84 as [minx, miny, maxx, maxy] |
+| mask | object | optional configuration for the 3D tiles mask |
+| mask.enabled | boolean | enable mask |
+| mask.resourceId | string | identifier of a resource configuration |
+| mask.inverse | boolean | enabled inverse mask |
+| mask.offset | number | offset in meter for the inverse mask |
+| terrain | object | optional configuration for terrain clipping |
+|terrain.clippingLayerResourceId | string | identifier of a resource configuration |
+| terrain.clippingPolygonFeatureId | string | identifier of a polygon feature available in the selected layer source |
+| terrain.clippingPolygonUnion | boolean | if true it applies inverse clipping |
+| globeTranslucency | object | optional configuration for the globe translucency |
+| globeTranslucency.enabled | boolean | enable translucency |
+| globeTranslucency.opacity | number | opacity of the globe translucency, it should be a value between 0 and 1 where 1 is fully opaque  |
+| globeTranslucency.fadeByDistance | boolean | if true the translucency is visible only in between the nearDistance and farDistance values |
+| globeTranslucency.nearDistance | number | minimum distance to apply translucency when fadeByDistance is true |
+| globeTranslucency.farDistance | number | maximum distance to apply translucency when fadeByDistance is true |
+| layers | array | array of layer configuration overrides, default property visibility and opacity |
+
+Resource object configuration
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | string | identifier for the resource |
+| data | object | properties related to the layer used for the resource (wfs or vector type) |
