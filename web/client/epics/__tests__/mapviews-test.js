@@ -13,7 +13,8 @@ import MockAdapter from 'axios-mock-adapter';
 import {
     updateMapViewsLayers,
     removeMapViewsLayersWhenDeactivated,
-    hideMapViewsBasedOnLayoutChanges
+    hideMapViewsBasedOnLayoutChanges,
+    closePluginWhenMapViewsActivate
 } from '../mapviews';
 
 import {
@@ -26,7 +27,7 @@ import {
     REMOVE_ADDITIONAL_LAYER,
     UPDATE_ADDITIONAL_LAYER
 } from '../../actions/additionallayers';
-import { toggleControl } from '../../actions/controls';
+import { SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
 import { MAP_VIEWS_LAYERS_OWNER } from '../../utils/MapViewsUtils';
 
 describe('mapviews epics', () => {
@@ -222,6 +223,32 @@ describe('mapviews epics', () => {
             controls: {
                 drawer: {
                     enabled: false
+                }
+            }
+        }, done);
+    });
+    it('closePluginWhenMapViewsActivate', (done) => {
+        testEpic(closePluginWhenMapViewsActivate, 4, activateViews(true), actions => {
+            try {
+                expect(actions.map(({ type }) => type)).toEqual([
+                    SET_CONTROL_PROPERTY,
+                    SET_CONTROL_PROPERTY,
+                    SET_CONTROL_PROPERTY,
+                    SET_CONTROL_PROPERTY
+                ]);
+                expect(actions.map(({ control }) => control)).toEqual([
+                    'drawer',
+                    'metadataexplorer',
+                    'print',
+                    'queryPanel'
+                ]);
+            } catch (e) {
+                done(e);
+            }
+        }, {
+            controls: {
+                drawer: {
+                    enabled: true
                 }
             }
         }, done);
