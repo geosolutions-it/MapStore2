@@ -614,6 +614,7 @@ There is also a set of options to (dynamically) add/exclude containers:
 - **showIn**: can be used to add a plugin to a container or more than one, in addition to the default one (it is an array of container plugin names)
 - **hideFrom**: can be used to exclude a plugin from a given container or more than one (it is an array of container plugin names)
 - **doNotHide**: can be used to show a plugin in the root container, in addition to the default one
+- **alwaysRender**: can be used to always renders the component in the given container, regardless the priority
 
 Note that also these properties accept dynamic expressions.
 

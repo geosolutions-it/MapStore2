@@ -178,7 +178,8 @@ export default createPlugin('Measure', {
             text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
             action: () => setControlProperty("measure", "enabled", true),
-            doNotHide: true
+            doNotHide: true,
+            priority: 2
         },
         SidebarMenu: {
             name: 'measurement',
@@ -192,12 +193,14 @@ export default createPlugin('Measure', {
             toggle: true,
             toggleControl: 'measure',
             toggleProperty: 'enabled',
-            doNotHide: true
+            doNotHide: true,
+            priority: 1
         },
         Map: {
             name: 'Measure',
             Tool: MeasureSupport,
-            doNotHide: true
+            doNotHide: true,
+            alwaysRender: true
         }
     },
     reducers: {
