@@ -1582,7 +1582,7 @@ View configuration object
 | id | string | identifier of the view |
 | title | string | title of the view |
 | description | string | an html string to describe the view |
-| duration | number | time duration during navigation in seconds |
+| duration | number | when playing, duration in seconds of the view|
 | flyTo | boolean | enable animation transition during navigation |
 | center | object | center target position as { latitude (degrees), longitude (degrees), height (meter) } |
 | cameraPosition | object | cameraPosition point of view position as { latitude (degrees), longitude (degrees), height (meter) } |
