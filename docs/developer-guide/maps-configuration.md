@@ -1598,7 +1598,7 @@ View configuration object
 | terrain.clippingPolygonFeatureId | string | identifier of a polygonal feature available in the selected layer source to use to apply the clipping |
 | terrain.clippingPolygonUnion | boolean | if true it applies inverse clipping |
 | globeTranslucency | object | optional configuration for the globe translucency |
-| globeTranslucency.enabled | boolean | enable translucency |
+| globeTranslucency.enabled | boolean | if true enables translucency |
 | globeTranslucency.opacity | number | opacity of the globe translucency, it should be a value between 0 and 1 where 1 is fully opaque  |
 | globeTranslucency.fadeByDistance | boolean | if true the translucency is visible only in between the nearDistance and farDistance values |
 | globeTranslucency.nearDistance | number | minimum distance to apply translucency when fadeByDistance is true |
