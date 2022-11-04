@@ -1589,7 +1589,7 @@ View configuration object
 | zoom | number | zoom level |
 | bbox | array | bounding box in WGS84 as [minx, miny, maxx, maxy] |
 | mask | object | optional configuration for the 3D tiles mask |
-| mask.enabled | boolean | enable mask |
+| mask.enabled | boolean | if true enables the mask |
 | mask.resourceId | string | identifier of a resource configuration in the `resources` array |
 | mask.inverse | boolean | if true enables the inverse mask |
 | mask.offset | number | offset in meter for the inverse mask |
