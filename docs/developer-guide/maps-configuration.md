@@ -1592,7 +1592,7 @@ View configuration object
 | mask.enabled | boolean | if true enables the mask |
 | mask.resourceId | string | identifier of a resource configuration in the `resources` array |
 | mask.inverse | boolean | if true enables the inverse mask |
-| mask.offset | number | offset in meter for the inverse mask |
+| mask.offset | number | offset in meters for the inverse mask |
 | terrain | object | optional configuration for terrain clipping |
 |terrain.clippingLayerResourceId | string | identifier of a resource configuration |
 | terrain.clippingPolygonFeatureId | string | identifier of a polygon feature available in the selected layer source |
