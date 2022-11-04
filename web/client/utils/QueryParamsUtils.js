@@ -7,7 +7,7 @@
  */
 
 import url from "url";
-import {get, includes, inRange, isEmpty, isNaN, isNil, isObject, toNumber} from "lodash";
+import {every, get, has, includes, inRange, isEmpty, isNaN, isNil, isObject, partial, toNumber} from "lodash";
 
 import {getBbox} from "./MapUtils";
 import {isValidExtent} from "./CoordinatesUtils";
@@ -15,7 +15,7 @@ import {getCenter, getConfigProp} from "./ConfigUtils";
 import {updatePointWithGeometricFilter} from "./IdentifyUtils";
 import {mapProjectionSelector} from "./PrintUtils";
 import {ADD_LAYERS_FROM_CATALOGS, addLayersMapViewerUrl} from "../actions/catalog";
-import {changeMapView, ZOOM_TO_EXTENT, zoomToExtent} from "../actions/map";
+import {changeMapView, orientateMap, ZOOM_TO_EXTENT, zoomToExtent} from "../actions/map";
 import {mapSelector} from "../selectors/map";
 import {featureInfoClick} from "../actions/mapInfo";
 import {warning} from "../actions/notifications";
@@ -29,6 +29,7 @@ import {
 import uuid from "uuid/v1";
 import {syncActiveBackgroundLayer} from "../actions/backgroundselector";
 import {selectedServiceSelector} from "../selectors/catalog";
+import {mapTypeSelector} from "../selectors/maptype";
 
 /**
  * Retrieves parameters from hash "query string" of react router
@@ -167,7 +168,7 @@ functions must return an array of actions or and empty array
 */
 export const paramActions = {
     bbox: (parameters) => {
-        const extent = parameters.bbox.split(',')
+        const extent = String(parameters.bbox).split(',')
             .map(val => parseFloat(val))
             .filter((val, idx) => idx % 2 === 0
                 ? val > -180.5 && val < 180.5
@@ -188,7 +189,21 @@ export const paramActions = {
     },
     center: (parameters, state) => {
         const map = mapSelector(state);
+        const mapType = mapTypeSelector(state);
         const validCenter = parameters && !isEmpty(parameters.center) && parameters.center.split(',').map(val => !isEmpty(val) && toNumber(val));
+
+        if (mapType === 'cesium') {
+            // if there is no bbox parameter and 'zoom', 'heading', 'pitch', 'roll' are presented - use orientate action
+            if (parameters?.bbox) {
+                return [];
+            }
+            const requiredKeys = ['center', 'zoom', 'heading', 'pitch', 'roll'];
+            if (every(requiredKeys, partial(has, parameters))) {
+                return [orientateMap(parameters)];
+            }
+            return [];
+        }
+
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
         const zoom = toNumber(parameters.zoom);
         const bbox = getBbox(center, zoom);
@@ -206,6 +221,7 @@ export const paramActions = {
                 position: "tc"
             })
         ];
+
     },
     marker: (parameters, state) => {
         const map = mapSelector(state);

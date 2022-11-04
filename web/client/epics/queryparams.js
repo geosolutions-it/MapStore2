@@ -8,9 +8,9 @@
 
 import * as Rx from 'rxjs';
 import {LOCATION_CHANGE} from 'connected-react-router';
-import {every, get, has, head, isEmpty, isUndefined, partial} from 'lodash';
+import {get, head, isUndefined} from 'lodash';
 
-import {CHANGE_MAP_VIEW, CLICK_ON_MAP, INIT_MAP, orientateMap} from '../actions/map';
+import {CHANGE_MAP_VIEW, CLICK_ON_MAP, INIT_MAP} from '../actions/map';
 import {addMarker, hideMarker, resetSearch} from '../actions/search';
 import {setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 
@@ -66,17 +66,14 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                             : Rx.Observable.empty();
                     }),
                 action$.ofType(CHANGE_MAP_VIEW)
-                    .take(1).switchMap(() => {
+                    .take(1)
+                    .switchMap(() => {
                         const mapType = get(store.getState(), 'maptype.mapType') || '';
                         if (mapType === 'cesium') {
-                            if (!parameters?.bbox) {
-                                if (!isEmpty(parameters)) {
-                                    const requiredKeys = ['center', 'zoom', 'heading', 'pitch', 'roll'];
-                                    if (every(requiredKeys, partial(has, parameters))) {
-                                        return Rx.Observable.of(orientateMap(parameters));
-                                    }
-                                }
-                            }
+                            const queryActions = getQueryActions(parameters, paramActions, store.getState());
+                            return head(queryActions)
+                                ? Rx.Observable.of(...queryActions)
+                                : Rx.Observable.empty();
                         }
                         return Rx.Observable.empty();
                     })
