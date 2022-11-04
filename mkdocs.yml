@@ -77,7 +77,7 @@ nav:
       - Performing Measurments: 'user-guide/measure.md'
       - Annotations: 'user-guide/annotations.md'
       - Street View: 'user-guide/street-view.md'
-      - Side Bar: 'user-guide/side-bar.md'
+      - Navigation Toolbar: 'user-guide/navigation-toolbar.md'
       - Background Selector: 'user-guide/background.md'
       - Timeline: 'user-guide/timeline.md'
       - Footer: 'user-guide/footer.md'
