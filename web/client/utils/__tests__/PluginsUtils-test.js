@@ -604,4 +604,34 @@ describe('PluginsUtils', () => {
         expect(result.loaded).toBe(true);
 
     });
+    it('getPluginItems with alwaysRender', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 2
+                },
+                Container3: {
+                    alwaysRender: true
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [
+            { name: "Test1" },
+            { name: "Container1" },
+            { name: "Container2" },
+            { name: "Container3" }
+        ];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+        expect(items1.length).toBe(0);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+        expect(items2.length).toBe(1);
+        const items3 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container3", "Container3", true, []);
+        expect(items3.length).toBe(1);
+    });
 });
