@@ -1591,7 +1591,7 @@ View configuration object
 | mask | object | optional configuration for the 3D tiles mask |
 | mask.enabled | boolean | enable mask |
 | mask.resourceId | string | identifier of a resource configuration in the `resources` array |
-| mask.inverse | boolean | enabled inverse mask |
+| mask.inverse | boolean | if true enables the inverse mask |
 | mask.offset | number | offset in meter for the inverse mask |
 | terrain | object | optional configuration for terrain clipping |
 |terrain.clippingLayerResourceId | string | identifier of a resource configuration |
