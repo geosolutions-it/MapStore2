@@ -1584,7 +1584,7 @@ View configuration object
 | description | string | an html string to describe the view |
 | duration | number | when playing, duration in seconds of the view|
 | flyTo | boolean | enable animation transition during navigation |
-| center | object | center target position as { latitude (degrees), longitude (degrees), height (meter) } |
+| center | object | center target position as { latitude (degrees), longitude (degrees), height (meters) } |
 | cameraPosition | object | cameraPosition point of view position as { latitude (degrees), longitude (degrees), height (meter) } |
 | zoom | number | zoom level |
 | bbox | array | bounding box in WGS84 as [minx, miny, maxx, maxy] |
