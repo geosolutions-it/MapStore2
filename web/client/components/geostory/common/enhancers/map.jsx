@@ -13,7 +13,6 @@ import {branch, compose, createEventHandler, mapPropsStream, withHandlers, withP
 import {createSelector} from 'reselect';
 import uuid from "uuid";
 
-import {show} from '../../../../actions/mapEditor';
 import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector} from '../../../../selectors/geostory';
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
 import Message from '../../../I18N/Message';
@@ -65,19 +64,9 @@ export const handleMapUpdate = withHandlers({
     onChange: ({update, focusedContent = {}}) =>
         (path, value) => {
             update(focusedContent.path + `.${path}`, value, "merge");
-        }});
-/**
- * Connect and toggle advanced Editor
- */
-export const handleAdvancedMapEditor = compose(
-    connect(null, {toggleAdvancedEditing: show}),
-    withHandlers({
-        toggleAdvancedEditing: ({toggleAdvancedEditing = () => {}, map = {}}) => () => {
-            const {id, ...data} = map;
-            toggleAdvancedEditing('inlineEditor', {data, id});
         }
-    })
-);
+});
+
 /**
  * Handle edit map toggle, map rest and open AdvancedMapEditor.
  * Map reset restores the original resource map configuration by removing all content map configs
@@ -103,15 +92,11 @@ const ResetButton = (props) => (<ConfirmButton
 />);
 
 export const withToolbar = compose(
-    withProps(({disableReset, onReset, toggleAdvancedEditing = () => {}}) => ({
+    withProps(({disableReset, onReset, buttonItems = [], map}) => ({
         buttons: [{
             renderButton: <ResetButton disabled={disableReset} onClick={onReset}/>
         },
-        {
-            glyph: "pencil",
-            tooltipId: "geostory.contentToolbar.advancedMapEditor",
-            onClick: toggleAdvancedEditing
-        }]
+        ...buttonItems.map(({Component}) => ({renderButton: <Component map={map} />}))]
     })),
     withNodeSelection,      // Node selection
     withStateHandlers(() => ({'editNode': undefined}), { // Node enable editing
