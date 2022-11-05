@@ -80,6 +80,14 @@ class DateTimePicker extends Component {
         }
     }
 
+    constructor() {
+        super();
+        this.fallbackDate = new Date();
+        this.fallbackDate.setHours(0);
+        this.fallbackDate.setMinutes(0);
+        this.fallbackDate.setSeconds(0);
+    }
+
     state = {
         open: '',
         focused: false,
@@ -155,7 +163,7 @@ class DateTimePicker extends Component {
                 </div>
                 <div className={`rw-calendar-popup rw-popup-container ${popupPosition === 'top' ? 'rw-dropup' : ''} ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '285px' }}>
                     <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute' }}>
-                        <Calendar tabIndex="-1" ref={this.attachCalRef} onMouseDown={this.handleMouseDown} onChange={this.handleCalendarChange} {...props} />
+                        <Calendar tabIndex="-1" ref={this.attachCalRef} min={new Date(1500, 0, 1)} onMouseDown={this.handleMouseDown} onChange={this.handleCalendarChange} {...props} />
                     </div>
                 </div>
             </div>
@@ -303,7 +311,7 @@ class DateTimePicker extends Component {
             date = setTime(value, new Date());
         } else {
             // keep hours value defined by value in state or default date
-            date = setTime(value, this.state.date ?? this.props.value);
+            date = setTime(value, this.state.date ?? this.props.value ?? this.fallbackDate);
         }
         const inputValue = this.format(date);
         this.setState({ date, inputValue, open: '' });

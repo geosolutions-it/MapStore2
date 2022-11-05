@@ -58,7 +58,7 @@ class DateTimeEditor extends AttributeEditor {
     constructor() {
         super();
         this.state = {
-            date: new Date()
+            date: null
         };
     }
 
@@ -66,7 +66,9 @@ class DateTimeEditor extends AttributeEditor {
         const {dataType, value} = this.props;
         this.props.onTemporaryChanges?.(true);
         const convertedDate = moment.utc(value, formats[dataType]);
-        this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : new Date()});
+        if (value) {
+            this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : null});
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -75,7 +77,7 @@ class DateTimeEditor extends AttributeEditor {
 
         if (prevValue !== value || prevDataType !== dataType) {
             const convertedDate = moment.utc(value, formats[dataType]);
-            this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : new Date()});
+            this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : null});
         }
     }
 
