@@ -55,16 +55,37 @@ class DateTimeEditor extends AttributeEditor {
         shouldCalendarSetHours: false
     };
 
-    componentDidMount() {
-        this.props.onTemporaryChanges?.(true);
+    constructor() {
+        super();
+        this.state = {
+            date: new Date()
+        };
     }
+
+    componentDidMount() {
+        const {dataType, value} = this.props;
+        this.props.onTemporaryChanges?.(true);
+        const convertedDate = moment.utc(value, formats[dataType]);
+        this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : new Date()});
+    }
+
+    componentDidUpdate(prevProps) {
+        const { value: prevValue, dataType: prevDataType } = prevProps;
+        const { value, dataType } = this.props;
+
+        if (prevValue !== value || prevDataType !== dataType) {
+            const convertedDate = moment.utc(value, formats[dataType]);
+            this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : new Date()});
+        }
+    }
+
     componentWillUnmount() {
         this.props.onTemporaryChanges?.(false);
     }
 
     render() {
-        const {shouldCalendarSetHours, dataType, value, calendar, time} = this.props;
-        const date = moment.utc(value, formats[dataType]).toDate();
+        const {shouldCalendarSetHours, dataType, calendar, time} = this.props;
+        const { date } = this.state;
         return (<UTCDateTimePicker
             {...this.props}
             type={dataType}
