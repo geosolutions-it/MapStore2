@@ -52,7 +52,9 @@ class DateTimeEditor extends AttributeEditor {
         column: {},
         calendar: true,
         time: false,
-        shouldCalendarSetHours: false
+        shouldCalendarSetHours: false,
+        min: new Date(1500, 0, 1),
+        max: new Date(2099, 0, 1)
     };
 
     constructor() {
