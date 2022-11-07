@@ -20,7 +20,8 @@ import {
 } from '../actions/mapviews';
 import {
     TOGGLE_CONTROL,
-    SET_CONTROL_PROPERTY
+    SET_CONTROL_PROPERTY,
+    setControlProperty
 } from '../actions/controls';
 import {
     removeAdditionalLayer,
@@ -37,6 +38,8 @@ import {
     isMapViewsHidden,
     isMapViewsActive
 } from '../selectors/mapviews';
+import { BROWSE_DATA } from '../actions/layers';
+import { CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { layersSelector } from '../selectors/layers';
 import {
     isShallowEqualBy
@@ -202,20 +205,36 @@ export const removeMapViewsLayersWhenDeactivated = (action$) =>
 
 const controlsToCheck = ['drawer', 'metadataexplorer', 'print', 'queryPanel'];
 
+export const closePluginWhenMapViewsActivate = (action$, store) =>
+    action$.ofType(ACTIVATE_VIEWS)
+        .filter((action) => action.active)
+        .switchMap(() => {
+            const state = store.getState();
+            const shouldClosePlugins = !!controlsToCheck.find((key) => !!state?.controls?.[key]?.enabled);
+            return shouldClosePlugins
+                ? Observable.of(
+                    ...controlsToCheck.map((control) => setControlProperty(control, 'enabled', false))
+                )
+                : Observable.empty();
+        });
+
 export const hideMapViewsBasedOnLayoutChanges = (action$, store) =>
     action$.ofType(
         TOGGLE_CONTROL,
         SET_CONTROL_PROPERTY,
         CATALOG_CLOSE,
-        MAP_CONFIG_LOADED
+        MAP_CONFIG_LOADED,
+        BROWSE_DATA,
+        CLOSE_FEATURE_GRID
     )
         .filter((action) =>
-            [CATALOG_CLOSE, MAP_CONFIG_LOADED].includes(action.type)
+            [CATALOG_CLOSE, MAP_CONFIG_LOADED, BROWSE_DATA, CLOSE_FEATURE_GRID].includes(action.type)
             || controlsToCheck.includes(action.control)
         )
         .switchMap(() => {
             const state = store.getState();
-            const shouldBeHidden = !!controlsToCheck.find((key) => !!state?.controls?.[key]?.enabled);
+            const shouldBeHidden = !!controlsToCheck.find((key) => !!state?.controls?.[key]?.enabled)
+                || !!state?.featuregrid?.open;
             return shouldBeHidden
                 ? Observable.of(
                     removeAdditionalLayer({ owner: MAP_VIEWS_LAYERS_OWNER }),
@@ -230,5 +249,6 @@ export const hideMapViewsBasedOnLayoutChanges = (action$, store) =>
 export default {
     updateMapViewsLayers,
     removeMapViewsLayersWhenDeactivated,
+    closePluginWhenMapViewsActivate,
     hideMapViewsBasedOnLayoutChanges
 };
