@@ -94,7 +94,7 @@ const GeoStory = ({
 
     return (<BorderLayout
         className="ms-geostory"
-        columns={[<MapEditor {...props} add={addFunc} update={onUpdate} mode={mode} />]}>
+        columns={[<MapEditor {...props} buttonItems={props.items?.filter(item => item.target === 'mapEditorToolbar')} add={addFunc} update={onUpdate} mode={mode} />]}>
         <Story
             {...story}
             {...props} // add actions
