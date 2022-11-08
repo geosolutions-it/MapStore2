@@ -102,7 +102,11 @@ describe("geostory media map component enhancers", () => {
 
         const Component = withToolbar(Toolbar);
 
-        ReactDOM.render(<Component pendingChanges disableReset={false} {...actions}/>, document.getElementById("container"));
+        ReactDOM.render(<Component buttonItems={[{
+            name: 'MapEditor',
+            target: 'mapEditorToolbar',
+            Component: () => <button onClick={actions.toggleAdvancedEditing} />
+        }]} pendingChanges disableReset={false} {...actions}/>, document.getElementById("container"));
 
         const buttons = document.querySelectorAll("button");
         expect(buttons).toExist();
