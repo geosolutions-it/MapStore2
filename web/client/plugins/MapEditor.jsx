@@ -12,9 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import * as epics from '../epics/mapEditor';
-import * as geostoryEpics from '../epics/geostory';
 import mapEditor from '../reducers/mapEditor';
-import geostory from '../reducers/geostory';
 
 import { hide, save, show } from '../actions/mapEditor';
 import MapEditorModal from './mapEditor/MapEditorModal';
@@ -66,11 +64,7 @@ export default createPlugin('MapEditor', {
         }
     },
     reducers: {
-        mapEditor,
-        geostory
+        mapEditor
     },
-    epics: {
-        ...epics,
-        ...geostoryEpics
-    }
+    epics
 });
