@@ -2607,5 +2607,71 @@ describe('Test DrawSupport', () => {
         const snappingInteraction = !!support?.snapInteraction;
         expect(snappingInteraction).toBe(true);
     });
+
+    it('should complete the draw or edit events for point layers even if the current GeoJSON feature geometry is null', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const geoJSON = {
+            type: 'Feature',
+            geometry: null,
+            properties: {
+                'name': "some name"
+            }
+        };
+        const feature = new Feature({
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
+        });
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChange = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+
+        const support = ReactDOM.render(
+            <DrawSupport
+                features={[]}
+                map={fakeMap}
+            />,
+            document.getElementById("container")
+        );
+
+        expect(support).toBeTruthy();
+
+        ReactDOM.render(
+            <DrawSupport
+                features={[geoJSON]}
+                map={fakeMap}
+                drawStatus="drawOrEdit"
+                drawMethod="Point"
+                options={{ drawEnabled: true }}
+                onEndDrawing={testHandlers.onEndDrawing}
+                onChangeDrawingStatus={testHandlers.onStatusChange}
+                onGeometryChanged={testHandlers.onGeometryChanged}
+            />,
+            document.getElementById("container")
+        );
+
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: feature
+        });
+
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+        expect(spyChange.calls.length).toBe(1);
+    });
 });
 

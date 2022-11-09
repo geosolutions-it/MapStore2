@@ -706,19 +706,21 @@ export default class DrawSupport extends React.Component {
                 this.props.onEndDrawing(feature, this.props.drawOwner);
                 feature = reprojectGeoJson(feature, this.getMapCrs(), "EPSG:4326");
 
-                const newFeatures = isSimpleGeomType(this.props.drawMethod) && this.props.features[0].geometry.type !== "GeometryCollection" ?
-                    this.props.features.map(feat => ({
-                        ...feat,
-                        featureProjection: this.getMapCrs() // useful for reprojecting it after in replace method flow
-                    })).concat([{
-                        ...feature,
-                        type: "Feature",
-                        geometry: {
-                            type: feature.type,
-                            coordinates: feature.coordinates
-                        },
-                        featureProjection: this.getMapCrs(), // useful for reprojecting it after in replace method flow
-                        properties}]) :
+                const newFeatures = isSimpleGeomType(this.props.drawMethod) && this.props.features[0].geometry?.type !== "GeometryCollection" ?
+                    this.props.features
+                        .filter(feat => feat.geometry !== null)
+                        .map(feat => ({
+                            ...feat,
+                            featureProjection: this.getMapCrs() // useful for reprojecting it after in replace method flow
+                        })).concat([{
+                            ...feature,
+                            type: "Feature",
+                            geometry: {
+                                type: feature.type,
+                                coordinates: feature.coordinates
+                            },
+                            featureProjection: this.getMapCrs(), // useful for reprojecting it after in replace method flow
+                            properties}]) :
                     [{...feature, properties}];
                 if (this.props.options.stopAfterDrawing) {
                     this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, newFeatures);
