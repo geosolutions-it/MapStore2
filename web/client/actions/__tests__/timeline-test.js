@@ -97,11 +97,13 @@ describe('timeline actions', () => {
         expect(retval.endValuesSupport).toBe(true);
     });
     it('initTimeline', () => {
-        const retval = initTimeline(true, 20, "end");
-        expect(retval).toExist();
+        const retval = initTimeline({showHiddenLayers: true, expandLimit: 20, snapType: "end"});
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(INIT_TIMELINE);
-        expect(retval.showHiddenLayers).toBe(true);
-        expect(retval.expandLimit).toBe(20);
-        expect(retval.snapType).toBe("end");
+        expect(retval.config).toBeTruthy();
+        const config = retval.config;
+        expect(config.showHiddenLayers).toBe(true);
+        expect(config.expandLimit).toBe(20);
+        expect(config.snapType).toBe("end");
     });
 });

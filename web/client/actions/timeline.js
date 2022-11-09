@@ -95,14 +95,15 @@ export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
 /**
  * Action that is called upon Timeline plugin initialization,
  * the action sets up the component plugin with the default settings values
- * @param {Boolean} showHiddenLayers default false switch to show/hide layers on the timeline even if not visible on the TOC
- * @param {Number} expandLimit default 20 the number of occurences (instants or start/end points)
+ * @param {Boolean} config.showHiddenLayers default false switch to show/hide layers on the timeline even if not visible on the TOC
+ * @param {Number} config.expandLimit default 20 the number of occurences (instants or start/end points)
  * after which the visualisation of such time occurrences changes from histogram to points/bars and viceversa
- * @param {String} snapType default "start" where in time the interval snapping should happen (start or end)
- * @param {Boolean} endValuesSupport default undefined if time line plugin supports or not interval end snapping
+ * @param {String} config.snapType default "start" where in time the interval snapping should happen (start or end)
+ * @param {Boolean} config.endValuesSupport default undefined if timeline plugin supports or not interval end snapping
+ * @param {String} config.initialMode initial mode of the timeline. One of 'single|range'
+ * @param {String} config.initialSnap intial snap type of timeline. One of 'now|fullRange'
  */
-export const initTimeline = (showHiddenLayers, expandLimit, snapType, endValuesSupport) => ({type: INIT_TIMELINE, showHiddenLayers, expandLimit, snapType, endValuesSupport});
-/**
- * Actions for timeline
- * @module actions.timeline
- */
+export const initTimeline = (config) => ({type: INIT_TIMELINE, config});
+
+export const RESET_TIMELINE = "TIMELINE:RESET_TIMELINE";
+export const resetTimeline = () => ({type: RESET_TIMELINE});

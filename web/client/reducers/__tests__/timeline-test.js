@@ -11,7 +11,7 @@ import timeline from '../timeline';
 import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
 import { isCollapsed, isMapSync } from '../../selectors/timeline';
 import expect from 'expect';
-
+const initConfig = {showHiddenLayers: true, expandLimit: 20, snapType: 'start', endValuesSupport: true};
 describe('Test the timeline reducer', () => {
     it('change the layer histogram and rangedata', () => {
         const initialState = {
@@ -139,7 +139,7 @@ describe('Test the timeline reducer', () => {
     it('initTimeline with defaults', () => {
         const state = timeline(
             {settings: {autoLoad: true, collapsed: false}},
-            initTimeline(true, 20, 'start')
+            initTimeline({...initConfig, endValuesSupport: undefined})
         );
         expect(state.settings.autoLoad).toBeTruthy();
         expect(state.settings.collapsed).toBeFalsy();
@@ -148,21 +148,21 @@ describe('Test the timeline reducer', () => {
         expect(state.settings.snapType).toBe('start');
     });
     it('initTimeline with endValuesSupport set as undefined', () => {
-        const state = timeline({}, initTimeline(true, 20, 'start'));
+        const state = timeline({}, initTimeline({...initConfig, endValuesSupport: undefined}));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(undefined);
     });
     it('initTimeline with endValuesSupport set as false', () => {
-        const state = timeline({}, initTimeline(true, 20, 'start', false));
+        const state = timeline({}, initTimeline({...initConfig, endValuesSupport: false}));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(false);
     });
     it('initTimeline with endValuesSupport set as true', () => {
-        const state = timeline({}, initTimeline(true, 20, 'start', true));
+        const state = timeline({}, initTimeline(initConfig));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
@@ -173,7 +173,7 @@ describe('Test the timeline reducer', () => {
             settings: {
                 snapRadioButtonEnabled: true
             }
-        }, initTimeline(true, 20, 'start', true));
+        }, initTimeline(initConfig));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
@@ -185,7 +185,7 @@ describe('Test the timeline reducer', () => {
             settings: {
                 snapRadioButtonEnabled: false
             }
-        }, initTimeline(true, 20, 'start', true));
+        }, initTimeline(initConfig));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');

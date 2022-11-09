@@ -2476,6 +2476,7 @@
             "disablePlayBack": "Disable playback controls",
             "expand" : "Expand time slider",
             "collapse" : "Collapse time slider",
+            "reset" : "Reset timeline",
             "collapsed": {
                 "title": "Timeline has been collapsed",
                 "tooltip": "Click here to expand it again"

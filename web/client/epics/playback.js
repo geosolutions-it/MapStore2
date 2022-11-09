@@ -34,7 +34,7 @@ import { changeLayerProperties, CHANGE_LAYER_PROPERTIES, REMOVE_NODE } from '../
 import { error } from '../actions/notifications';
 
 import {
-    currentTimeSelector,
+    currentTimeSelector, layersVisibleWithTimeDataSelector,
     layersWithTimeDataSelector,
     layerTimeSequenceSelectorCreator
 } from '../selectors/dimension';
@@ -309,7 +309,7 @@ export const playbackToggleGuideLayerToFixedStep = (action$, { getState = () => 
                 // need to select first
                 : Rx.Observable.of(
                     selectLayer(
-                        get(timelineLayersSelector(getState()), "[0].id")
+                        get(layersVisibleWithTimeDataSelector(getState()), "[0].id")
                     )
                 )
         );

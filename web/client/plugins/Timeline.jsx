@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { head, isString } from 'lodash';
+import { head, isString, isEmpty } from 'lodash';
 import moment from 'moment';
 import assign from 'object-assign';
 import React, { useEffect } from 'react';
@@ -26,7 +26,14 @@ import { createSelector } from 'reselect';
 
 import { setCurrentOffset } from '../actions/dimension';
 import { selectPlaybackRange } from '../actions/playback';
-import { enableOffset, onRangeChanged, selectTime, setMapSync, initTimeline } from '../actions/timeline';
+import {
+    enableOffset,
+    onRangeChanged,
+    selectTime,
+    setMapSync,
+    initTimeline,
+    resetTimeline
+} from '../actions/timeline';
 import Message from '../components/I18N/Message';
 import tooltip from '../components/misc/enhancers/tooltip';
 import withResizeSpy from '../components/misc/enhancers/withResizeSpy';
@@ -64,7 +71,7 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
   * @static
   * @prop cfg.expandedPanel {boolean} false by default
   * @prop cfg.showHiddenLayers {boolean} false by default, when *false* the layers in timeline gets in sync with time layer's visibility (TOC)
-  * i.e when a time layer is hidden or removed, the timeline will not show the respective guide layer.
+  * i.e. when a time layer is hidden or removed, the timeline will not show the respective guide layer.
   * Furthermore, the timeline automatically selects the next available guide layer, if the **Snap to guide layer** option is enabled in the Timeline settings.
   * If set to *true*, the hidden layer will be shown in the timeline.
   *
@@ -74,6 +81,24 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
   *   "cfg": {
   *       "showHiddenLayers": false,
   *       "expandedPanel": true
+  *    }
+  * }
+  *
+  * @prop cfg.initialMode {string} the initial mode of the timeline. Can be one of 'single' or 'range'.
+  * When 'range', the time range(offset) is auto enabled upon plugin initialization and when 'single', the offset is disabled
+  * @prop cfg.initialSnap {string} the initial snap option of the timeline. Can be one of 'now' or 'fullRange'.
+  * When 'fullRange', and initialMode is 'range', the offset is enabled and plugin snaps to full range of the guide layer selected.
+  * and when 'now', the plugin snaps to the current time range
+  * @prop cfg.resetButton {boolean} false by default, when enabled a reset button is made available on the timeline toolbar.
+  * It allows to reset the state of timeline to initial state based on configuration (i.e. initialMode and initialSnap)
+  *
+  * @example
+  * {
+  *   "name": "TimeLine",
+  *   "cfg": {
+  *        "initialMode": "range",
+  *        "initialSnap": "fullRange",
+  *        "resetButton": true
   *    }
   * }
   *
@@ -107,7 +132,8 @@ const TimelinePlugin = compose(
             setOffset: setCurrentOffset,
             setPlaybackRange: selectPlaybackRange,
             moveRangeTo: onRangeChanged,
-            onInit: initTimeline
+            onInit: initTimeline,
+            reset: resetTimeline
         }),
     branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
 
@@ -198,11 +224,15 @@ const TimelinePlugin = compose(
         endValuesSupport,
         onInit = () => {},
         layers,
-        timelineIsReady
+        timelineIsReady,
+        initialMode,
+        initialSnap,
+        resetButton,
+        reset = () => {}
     }) => {
         useEffect(()=>{
             // update state with configs coming from configuration file like localConfig.json so that can be used as props initializer
-            onInit(showHiddenLayers, expandLimit, snapType, endValuesSupport);
+            onInit({showHiddenLayers, expandLimit, snapType, endValuesSupport, initialMode, initialSnap});
         }, [onInit]);
 
         const { hideLayersName, collapsed } = options;
@@ -315,11 +345,20 @@ const TimelinePlugin = compose(
                                 }
                             },
                             {
-                                glyph: "map-synch",
+                                glyph: "map-filter",
                                 tooltip: <Message msgId={mapSync ? "timeline.mapSyncOn" : "timeline.mapSyncOff"} />,
                                 bsStyle: mapSync ? 'success' : 'primary',
                                 active: mapSync,
                                 onClick: () => toggleMapSync(!mapSync)
+
+                            },
+                            {
+                                glyph: "refresh",
+                                visible: !!resetButton,
+                                disabled: isEmpty(initialMode) || isEmpty(initialSnap),
+                                tooltip: <Message msgId={"timeline.reset"} />,
+                                bsStyle: 'primary',
+                                onClick: reset
 
                             }
                         ]} />

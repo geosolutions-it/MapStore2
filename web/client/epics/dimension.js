@@ -16,9 +16,7 @@ import {
     SET_CURRENT_TIME,
     MOVE_TIME,
     SET_OFFSET_TIME,
-    updateLayerDimensionData,
-    setCurrentTime,
-    setCurrentOffset
+    updateLayerDimensionData
 } from '../actions/dimension';
 
 import { autoselect, initializeSelectLayer, setEndValuesSupport } from '../actions/timeline';
@@ -102,16 +100,13 @@ export const updateLayerDimensionDataOnMapLoad = (action$, {getState = () => {}}
 
         const selectedLayer = config.timelineData?.selectedLayer;
         const currentTime = config.dimensionData?.currentTime;
-        const offsetTime = config.dimensionData?.offsetTime;
 
         return (currentTime ?
             Observable.of(
                 // restore states of timeline and dimension from map config
                 ...(selectedLayer ? [
                     initializeSelectLayer(selectedLayer)
-                ] : []),
-                setCurrentTime(currentTime),
-                setCurrentOffset(offsetTime)
+                ] : [])
             ) : Observable.empty()
         )
             .concat(Observable.from(layersWithMultidim)

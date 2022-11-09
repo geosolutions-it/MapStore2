@@ -2466,6 +2466,7 @@
             "disablePlayBack": "Désactiver les contrôles de lecture",
             "expand": "Développer le curseur temporel",
             "collapse": "Réduire le curseur temporel",
+            "reset" : "Réinitialiser la chronologie",
             "collapsed": {
                 "title": "La timeline a été réduite",
                 "tooltip": "Cliquez ici pour la développer à nouveau"

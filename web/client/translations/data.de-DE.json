@@ -2503,6 +2503,7 @@
             "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
             "expand" : "Erweitern Sie den Zeitschieberegler",
             "collapse" : "Schieberegler für die Zeitspanne reduzieren",
+            "reset" : "Zeitleiste zurücksetzen",
             "collapsed": {
                 "title": "Zeitleiste wurde reduziert",
                 "tooltip": "Klicken Sie hier, um es erneut zu erweitern"

@@ -48,6 +48,13 @@ In order to observe the layers in a finite fixed time interval the user can set 
 
 <img src="../img/timeline/timeline-current-time-range.jpg" class="ms-docimage"/>
 
+**Reset timeline**
+
+Based on the timeline configuration, the reset button <img src="../img/button/reset.jpg" class="ms-docbutton"/> can be made visible on the timeline toolbar. It allows the user to reset the timeline to the configured state of initial mode and snap
+
+!!! Note
+    Reset button is made visible through plugin configuration i.e. `resetButton: true`. It is valid only when `initialMode` and `initialSnap` is configured in the Timeline plugin.
+
 ## Show times available on map
 
 Sometimes you might be interested to show in the timeline histogram only the times instants currently visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync** button <img src="../img/button/timeline-sync-button.jpg" class="ms-docbutton"/> . When this tool is active the timeline will show only the times of the features available in the current map viewport.

@@ -4,6 +4,7 @@ import { RESET_CONTROLS } from '../actions/controls';
 import { set } from '../utils/ImmutableUtils';
 import moment from 'moment';
 import { mapValues, pickBy } from 'lodash';
+import { MAP_CONFIG_LOADED } from "../actions/config";
 
 /**
  * Provide state for current time and dimension info.
@@ -57,6 +58,13 @@ export default (state = {}, action) => {
     }
     case RESET_CONTROLS: {
         return set('data', undefined, set('currentTime', undefined, set('offsetTime', undefined, state)));
+    }
+    case MAP_CONFIG_LOADED: {
+        const config = action?.config || {};
+        return {...state,
+            currentTime: config?.dimensionData?.currentTime,
+            offsetTime: config?.dimensionData?.offsetTime
+        };
     }
     default:
         return state;

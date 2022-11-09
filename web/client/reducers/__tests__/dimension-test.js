@@ -10,6 +10,7 @@ import expect from 'expect';
 import dimension from '../dimension';
 import { updateLayerDimensionData, setCurrentTime, setCurrentOffset, moveTime } from '../../actions/dimension';
 import { layerDimensionDataSelectorCreator } from '../../selectors/dimension';
+import { configureMap } from "../../actions/config";
 
 describe('Test the dimension reducer', () => {
     it('external action', () => {
@@ -109,5 +110,15 @@ describe('Test the dimension reducer', () => {
         // also offset time should shift of old offsetTime - currentTime from NEXT_TIME
         expect(state.offsetTime).toBe('2016-09-04T00:00:00.000Z');
     });
-
+    it('mapConfigLoad', () => {
+        const d = {
+            currentTime: '2012-09-01T00:00:00.000Z'
+        };
+        const config = {dimensionData: {currentTime: "2016-09-01T00:00:00.000Z", offsetTime: "2019-10-01T00:00:00.000Z"}};
+        const action = configureMap(config);
+        const state = dimension(d, action);
+        expect(state).toBeTruthy();
+        expect(state.currentTime).toBe(config.dimensionData.currentTime);
+        expect(state.offsetTime).toBe(config.dimensionData.offsetTime);
+    });
 });

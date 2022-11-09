@@ -129,13 +129,16 @@ export default (state = {
     case INIT_TIMELINE: {
         const endValuesSupport = state?.settings?.endValuesSupport;
         const snapRadioButtonEnabled = state?.settings?.snapRadioButtonEnabled;
+        const cfg = action?.config;
         return set(`settings`, {
             ...state.settings,
-            showHiddenLayers: action.showHiddenLayers,
-            expandLimit: action.expandLimit,
-            snapType: action.snapType,
-            endValuesSupport: endValuesSupport !== undefined ? endValuesSupport : action.endValuesSupport,
-            snapRadioButtonEnabled: snapRadioButtonEnabled !== undefined ? snapRadioButtonEnabled : action.snapRadioButtonEnabled
+            showHiddenLayers: cfg.showHiddenLayers,
+            expandLimit: cfg.expandLimit,
+            snapType: cfg.snapType,
+            endValuesSupport: endValuesSupport ?? cfg.endValuesSupport,
+            snapRadioButtonEnabled: snapRadioButtonEnabled ?? cfg.snapRadioButtonEnabled,
+            initialMode: cfg.initialMode,
+            initialSnap: cfg.initialSnap
         }, state);
     }
     case MAP_CONFIG_LOADED: {
