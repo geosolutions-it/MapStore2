@@ -34,7 +34,8 @@ import { changeLayerProperties, CHANGE_LAYER_PROPERTIES, REMOVE_NODE } from '../
 import { error } from '../actions/notifications';
 
 import {
-    currentTimeSelector, layersVisibleWithTimeDataSelector,
+    currentTimeSelector,
+    layersVisibleWithTimeDataSelector,
     layersWithTimeDataSelector,
     layerTimeSequenceSelectorCreator
 } from '../selectors/dimension';
@@ -60,7 +61,6 @@ import {
     selectedLayerTimeDimensionConfiguration,
     rangeSelector,
     snapTypeSelector,
-    timelineLayersSelector,
     multidimOptionsSelectorCreator,
     isVisible
 } from '../selectors/timeline';

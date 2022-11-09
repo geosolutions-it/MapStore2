@@ -303,7 +303,7 @@ describe('timeline Epics', () => {
         });
     });
     it('onInitTimeLine on single mode', done => {
-        testEpic(addTimeoutEpic(onInitTimeLine, 500), 2, initTimeline({initialSnap: 'now', initialMode: 'single'}), ([_, action]) => {
+        testEpic(addTimeoutEpic(onInitTimeLine, 500), 2, initTimeline({initialSnap: 'now', initialMode: 'single'}), ([, action]) => {
             const { type, layerId } = action;
             expect(type).toBe(INIT_SELECT_LAYER);
             expect(layerId).toBe('TEST_LAYER');
@@ -343,7 +343,7 @@ describe('timeline Epics', () => {
         });
     });
     it('onInitTimeLine on range mode', done => {
-        testEpic(addTimeoutEpic(onInitTimeLine, 500), 4, initTimeline({initialSnap: 'fullRange', initialMode: 'range'}), ([_, action1, action2, action3]) => {
+        testEpic(addTimeoutEpic(onInitTimeLine, 500), 4, initTimeline({initialSnap: 'fullRange', initialMode: 'range'}), ([, action1, action2, action3]) => {
             const { type: typeRange } = action1;
             const { time, type } = action2;
             const { offsetTime, type: typeOff} = action3;

@@ -19,8 +19,6 @@ import {
     AUTOSELECT
 } from '../../actions/timeline';
 import {
-    SET_CURRENT_TIME,
-    SET_OFFSET_TIME,
     UPDATE_LAYER_DIMENSION_DATA
 } from '../../actions/dimension';
 
