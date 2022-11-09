@@ -48,7 +48,7 @@ In order to observe the layers in a finite fixed time interval the user can set 
 
 <img src="../img/timeline/timeline-current-time-range.jpg" class="ms-docimage"/>
 
-**Reset timeline**
+### Reset timeline
 
 Based on the timeline configuration, the reset button <img src="../img/button/reset.jpg" class="ms-docbutton"/> can be made visible on the timeline toolbar. It allows the user to reset the timeline to the configured state of initial mode and snap
 
