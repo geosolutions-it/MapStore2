@@ -17,6 +17,12 @@ import { layerDimensionSelectorCreator } from './dimension';
 import { userRoleSelector } from './security';
 import { isCesium } from './maptype';
 import { attributesSelector, describeSelector } from './query';
+import {createShallowSelectorCreator} from "../utils/ReselectUtils";
+import isEqual from "lodash/isEqual";
+import {getMonitoredState} from "../utils/PluginsUtils";
+import ConfigUtils from "../utils/ConfigUtils";
+import {mapBboxSelector, projectionSelector} from "./map";
+import {bboxToFeatureGeometry} from "../utils/CoordinatesUtils";
 
 
 export const getLayerById = getLayerFromId;
@@ -186,3 +192,31 @@ export const isEditingAllowedSelector = state => {
 };
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);
+
+export const isViewportFilterActive = state => get(state, 'featuregrid.viewportFilter', null);
+
+export const viewportFilter = createShallowSelectorCreator(isEqual)(
+    isViewportFilterActive,
+    mapBboxSelector,
+    projectionSelector,
+    state => get(state, 'query.filterObj.spatialField'),
+    describeSelector,
+    state => getMonitoredState(state, ConfigUtils.getConfigProp('monitorState')),
+    (viewportFilterIsActive, box, projection, spatialField = [], describeLayer) => {
+        const attribute = findGeometryProperty(describeLayer)?.name;
+        return viewportFilterIsActive ? {
+            spatialField: [
+                ...(spatialField ? spatialField : []),
+                {
+                    geometry: {
+                        ...bboxToFeatureGeometry(box.bounds),
+                        projection
+                    },
+                    attribute: attribute,
+                    method: "Rectangle",
+                    operation: "INTERSECTS"
+                }
+            ]
+        } : {};
+    }
+);

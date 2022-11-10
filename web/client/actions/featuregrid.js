@@ -53,6 +53,7 @@ export const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
 export const UPDATE_EDITORS_OPTIONS = 'FEATUREGRID:UPDATE_EDITORS_OPTIONS';
 export const LAUNCH_UPDATE_FILTER_FUNC = 'FEATUREGRID:LAUNCH_UPDATE_FILTER_FUNC';
 export const SET_SYNC_TOOL = 'FEATUREGRID:SET_SYNC_TOOL';
+export const SET_VIEWPORT_FILTER = 'FEATUREGRID:SET_VIEWPORT_FILTER';
 
 export const MODES = {
     EDIT: "EDIT",
@@ -398,4 +399,13 @@ export const launchUpdateFilterFunc = (updateFilterAction) => ({
 export const setSyncTool = (syncWmsFilter) => ({
     type: SET_SYNC_TOOL,
     syncWmsFilter
+});
+
+/**
+ * Enables/Disables filter by viewport for grid records.
+ * @param {boolean} viewportFilter value to set
+ */
+export const setViewportFilter = (viewportFilter) => ({
+    type: SET_VIEWPORT_FILTER,
+    value: viewportFilter
 });

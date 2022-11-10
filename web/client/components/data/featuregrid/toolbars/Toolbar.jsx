@@ -251,7 +251,22 @@ const standardButtons = {
             </Col>
             <span className="clearfix" />
         </FormGroup>
-    </TSplitButton>)
+    </TSplitButton>),
+    viewportFilter: ({viewportFilter, pluginCfg, events = {}}) => (<TButton
+        id="viewportFilter-button"
+        keyProp="viewportFilter-button"
+        tooltipId={viewportFilter ? "featuregrid.toolbar.disableViewportFilter" : "featuregrid.toolbar.enableViewportFilter"}
+        visible={pluginCfg?.showFilterByViewportTool ?? false}
+        onClick={() => {
+            events.setViewportFilter && events.setViewportFilter(!viewportFilter);
+        }}
+        glyph="filter-layer"
+        tooltipPosition="top"
+        className="viewportFilter-tool"
+        buttonClassName="square-button-md no-border"
+        active={viewportFilter ?? pluginCfg?.filterByViewport}
+        pullLeft
+    />)
 };
 
 // standard buttons with position set to index in this array. shape {name, Component, position} is aligned with attributes expected from tools injected.
@@ -265,6 +280,7 @@ const buttons = [
     {name: "cancelEditing", Component: standardButtons.cancelEditing}, // EDITOR
     {name: "deleteGeometry", Component: standardButtons.deleteGeometry}, // EDITOR
     {name: "filter", Component: standardButtons.filter}, // GRID (needs query panel plugin)
+    {name: "viewportFilter", Component: standardButtons.viewportFilter},
     {name: "zoomAll", Component: standardButtons.zoomAll}, // GRID (should remove or hide? Is always disabled and not to much useful)
     {name: "gridSettings", position: 900, Component: standardButtons.gridSettings}, // GRID. (settings buttons are usually near the end of a toolbar)
     {name: "snap", position: 1300, Component: standardButtons.snapToFeature}, // GRID. (settings buttons are usually near the end of a toolbar)

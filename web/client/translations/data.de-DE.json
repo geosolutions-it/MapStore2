@@ -1765,7 +1765,9 @@
                     "edge": "Kante",
                     "pixelTolerance": "Toleranz (pixel)",
                     "loadingStrategy": "Ladestrategie"
-                  }
+                  },
+                "disableViewportFilter": "Ansichtsfensterfilter deaktivieren",
+                "enableViewportFilter": "Ansichtsfensterfilter aktivieren"
             }
         },
         "layerdownload": {

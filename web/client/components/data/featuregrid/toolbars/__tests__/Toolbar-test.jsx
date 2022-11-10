@@ -408,4 +408,30 @@ describe('Featuregrid toolbar component', () => {
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
     });
+    describe('viewportFilter tool button', () => {
+        it('visibility', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(true);
+            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
+        });
+        it('active/inactive state', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" viewportFilter pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-viewportFilter-button").className.split(' ')).toInclude('btn-success');
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-viewportFilter-button").className.split(' ')).toNotInclude('btn-success');
+        });
+        it('handler', () => {
+            const events = {
+                setViewportFilter: () => { }
+            };
+            const spy = spyOn(events, "setViewportFilter");
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} viewportFilter pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-viewportFilter-button").click();
+            expect(spy.calls[0].arguments[0]).toBe(false);
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-viewportFilter-button").click();
+            expect(spy.calls[1].arguments[0]).toBe(true);
+        });
+    });
 });

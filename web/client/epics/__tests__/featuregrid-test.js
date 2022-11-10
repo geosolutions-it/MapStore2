@@ -58,7 +58,9 @@ import {
     SELECT_FEATURES,
     SET_PAGINATION,
     launchUpdateFilterFunc,
-    LAUNCH_UPDATE_FILTER_FUNC, setLayer
+    LAUNCH_UPDATE_FILTER_FUNC,
+    setLayer,
+    setViewportFilter
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -136,7 +138,10 @@ import {
     launchUpdateFilterEpic,
     setDefaultSnappingLayerOnFeatureGridOpen,
     resetSnappingLayerOnFeatureGridClosed,
-    toggleSnappingOffOnFeatureGridViewMode, closeFeatureGridOnDrawingToolOpen
+    toggleSnappingOffOnFeatureGridViewMode,
+    closeFeatureGridOnDrawingToolOpen,
+    setViewportFilterEpic,
+    deactivateViewportFilterEpic
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -2393,5 +2398,19 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(TOGGLE_SNAPPING);
         }, {draw: { snapping: true }}, done);
+    });
+    it('setViewportFilterEpic', (done) => {
+        const startActions = [setViewportFilter(true)];
+        testEpic(setViewportFilterEpic, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+        }, {featuregrid: { open: true, viewportFilter: true }}, done);
+    });
+    it('deactivateViewportFilterEpic', (done) => {
+        const startActions = [setViewportFilter(false)];
+        testEpic(deactivateViewportFilterEpic, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+        }, {featuregrid: { open: true, viewportFilter: false }}, done);
     });
 });
