@@ -721,7 +721,9 @@ function msStyleToSymbolizer(style, feature) {
             fontWeight: style.fontWeight,
             color: style.fillColor,
             haloColor: style.color,
-            haloWidth: 1
+            haloWidth: 1,
+            msHeightReference: 'none',
+            msBringToFront: true
         });
     }
     if (style.symbolizerKind === 'Mark') {
@@ -734,7 +736,8 @@ function msStyleToSymbolizer(style, feature) {
             strokeWidth: style.weight,
             radius: style.radius ?? 10,
             wellKnownName: 'Circle',
-            msHeightReference: 'none'
+            msHeightReference: 'none',
+            msBringToFront: true
         });
     }
     if (isAttrPresent(style, ['iconUrl']) && !style.iconGlyph && !style.iconShape) {
@@ -744,7 +747,14 @@ function msStyleToSymbolizer(style, feature) {
             size: max(style.iconSize || [32]),
             opacity: 1,
             rotate: 0,
-            msHeightReference: 'none'
+            msHeightReference: 'none',
+            msBringToFront: true,
+            // only needed for get feature info marker
+            ...(style.leaderLine && {
+                msLeaderLineColor: '#333333',
+                msLeaderLineOpacity: 1,
+                msLeaderLineWidth: 1
+            })
         });
     }
     if (isMarkerStyle(style)) {
@@ -754,7 +764,8 @@ function msStyleToSymbolizer(style, feature) {
             size: 45,
             opacity: 1,
             rotate: 0,
-            msHeightReference: 'none'
+            msHeightReference: 'none',
+            msBringToFront: true
         });
     }
     if (isSymbolStyle(style)) {
@@ -771,7 +782,8 @@ function msStyleToSymbolizer(style, feature) {
                     size: style.size,
                     opacity: 1,
                     rotate: 0,
-                    msHeightReference: 'none'
+                    msHeightReference: 'none',
+                    msBringToFront: true
                 };
             })
             .catch(() => ({}));

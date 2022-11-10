@@ -121,10 +121,14 @@ export const clickedPointToGeoJson = (clickedPoint) => {
                         : [])
                 ]
             },
+            properties: {
+                id: 'get-feature-info-point'
+            },
             style: [{
                 iconUrl,
                 iconAnchor: [12, 41], // in leaflet there is no anchor in fraction
-                iconSize: [25, 41]
+                iconSize: [25, 41],
+                leaderLine: clickedPoint.height !== undefined
             }]
 
         }

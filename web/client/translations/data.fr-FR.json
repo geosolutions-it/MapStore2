@@ -2402,7 +2402,9 @@
             "pitch": "Rotation de l'axe X",
             "roll": "Rotation de l'axe Y",
             "color": "Couleur",
-            "pointHeight": "Hauteur du point"
+            "pointHeight": "Hauteur du point",
+            "leaderLineColor": "Couleur de la ligne de repère",
+            "leaderLineWidth": "Largeur de la ligne de repère"
         },
         "playback": {
             "settings": {
