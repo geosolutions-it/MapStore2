@@ -412,7 +412,7 @@ describe('Featuregrid toolbar component', () => {
         it('visibility', () => {
             ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
             expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(true);
-            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mode="VIEW" pluginCfg={{ showFilterByViewportTool: false }} disableZoomAll />, document.getElementById("container"));
             expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
         });
         it('active/inactive state', () => {
