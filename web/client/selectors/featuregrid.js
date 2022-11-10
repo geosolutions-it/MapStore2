@@ -204,9 +204,10 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
     state => getMonitoredState(state, ConfigUtils.getConfigProp('monitorState')),
     (viewportFilterIsActive, box, projection, spatialField = [], describeLayer) => {
         const attribute = findGeometryProperty(describeLayer)?.name;
+        const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
         return viewportFilterIsActive ? {
             spatialField: [
-                ...(spatialField ? spatialField : []),
+                ...existingFilter,
                 {
                     geometry: {
                         ...bboxToFeatureGeometry(box.bounds),
