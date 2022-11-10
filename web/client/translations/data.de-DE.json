@@ -1766,8 +1766,8 @@
                     "pixelTolerance": "Toleranz (pixel)",
                     "loadingStrategy": "Ladestrategie"
                   },
-                "disableViewportFilter": "Ansichtsfensterfilter deaktivieren",
-                "enableViewportFilter": "Ansichtsfensterfilter aktivieren"
+                "disableViewportFilter": "Daten nicht nach dem aktuellen Darstellungsbereich filtern",
+                "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster"
             }
         },
         "layerdownload": {

@@ -1728,8 +1728,8 @@
                   "pixelTolerance": "Tolerance (pixel)",
                   "loadingStrategy": "Loading strategy"
                 },
-                "disableViewportFilter": "Disable viewport filter",
-                "enableViewportFilter": "Activate viewport filter"
+                "disableViewportFilter": "Do not filter data by the current viewport",
+                "enableViewportFilter": "Filter data by the current viewport"
             }
         },
         "layerdownload": {

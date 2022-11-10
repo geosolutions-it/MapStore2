@@ -256,7 +256,7 @@ const standardButtons = {
         id="viewportFilter-button"
         keyProp="viewportFilter-button"
         tooltipId={viewportFilter ? "featuregrid.toolbar.disableViewportFilter" : "featuregrid.toolbar.enableViewportFilter"}
-        visible={pluginCfg?.showFilterByViewportTool ?? false}
+        visible={pluginCfg?.showFilterByViewportTool ?? true}
         onClick={() => {
             events.setViewportFilter && events.setViewportFilter(!viewportFilter);
         }}

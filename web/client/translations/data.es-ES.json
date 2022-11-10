@@ -1728,8 +1728,8 @@
                     "pixelTolerance": "Tolerancia (píxel)",
                     "loadingStrategy": "Estrategia de carga"
                   },
-                "disableViewportFilter": "Desactivar filtro de vista",
-                "enableViewportFilter": "Activar filtro de vista"
+                "disableViewportFilter": "No filtrar datos por la ventana gráfica actual",
+                "enableViewportFilter": "Filtrar datos por la ventana gráfica actual"
             }
         },
         "layerdownload": {
