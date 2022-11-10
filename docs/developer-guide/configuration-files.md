@@ -15,7 +15,7 @@ They are located in `java/web/src/main/resources` and they will be copied in  `M
 
 * `proxy.properties`: configuration for the internal proxy (for cross-origin requests). More information [here](https://github.com/geosolutions-it/http-proxy/wiki/Configuring-Http-Proxy).
 * `geostore-datasource-ovr.properties`: provides settings for the database.
-* `log4j.properties`: configuration for back-end logging
+* `log4j2.properties`: configuration for back-end logging
 * `sample-categories.xml`: initial set of categories for back-end resources (MAP, DASHBOARD, GEOSTORY...)
 * `mapstore.properties`: allow specific overrides to front-end files, See [externalization system](externalized-configuration.md#externalized-configuration) for more details
 
