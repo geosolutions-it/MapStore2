@@ -15,6 +15,7 @@ import FeatureEditorFallback from '../components/data/featuregrid/FeatureEditorF
 import withSuspense from '../components/misc/withSuspense';
 import {compose, lifecycle} from "recompose";
 import {setViewportFilter} from "../actions/featuregrid";
+import {isViewportFilterActive} from "../selectors/featuregrid";
 
 /**
   * @name FeatureEditor
@@ -140,7 +141,12 @@ import {setViewportFilter} from "../actions/featuregrid";
   *
 */
 const EditorPlugin = connect(
-    createSelector([state => state?.featuregrid?.open], (open) => ({ open })),
+    createSelector(
+        [
+            state => state?.featuregrid?.open,
+            isViewportFilterActive
+        ],
+        (open, viewportFilter) => ({ open, viewportFilterInitialized: viewportFilter !== null })),
     {
         setViewportFilter
     }
@@ -148,7 +154,7 @@ const EditorPlugin = connect(
     lifecycle({
         componentDidMount() {
             // Initialize configuration for viewportFilter once plugin is loaded
-            this.props.filterByViewport && this.props.setViewportFilter(true);
+            !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
         }
     }),
     withSuspense(
