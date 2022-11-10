@@ -15,7 +15,7 @@ import {
     layerDimensionRangeSelector,
     layerDimensionSelectorCreator,
     layerTimeSequenceSelectorCreator,
-    layersVisibleWithTimeDataSelector
+    visibleLayersWithTimeDataSelector
 } from '../dimension';
 
 describe('Test dimension selectors', () => {
@@ -153,7 +153,7 @@ describe('Test dimension selectors', () => {
                 }]
             }
         };
-        const layerDim = layersVisibleWithTimeDataSelector(state);
+        const layerDim = visibleLayersWithTimeDataSelector(state);
         expect(layerDim.length).toBe(1);
         expect(layerDim[0].id).toBe("LAYER_1");
     });

@@ -35,7 +35,7 @@ import { error } from '../actions/notifications';
 
 import {
     currentTimeSelector,
-    layersVisibleWithTimeDataSelector,
+    visibleLayersWithTimeDataSelector,
     layersWithTimeDataSelector,
     layerTimeSequenceSelectorCreator
 } from '../selectors/dimension';
@@ -309,7 +309,7 @@ export const playbackToggleGuideLayerToFixedStep = (action$, { getState = () => 
                 // need to select first
                 : Rx.Observable.of(
                     selectLayer(
-                        get(layersVisibleWithTimeDataSelector(getState()), "[0].id")
+                        get(visibleLayersWithTimeDataSelector(getState()), "[0].id")
                     )
                 )
         );

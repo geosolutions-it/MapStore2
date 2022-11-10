@@ -2465,7 +2465,7 @@
             "disablePlayBack": "Deshabilitar los controles de reproducción",
             "expand" : "Expandir el control deslizante de tiempo",
             "collapse" : "Minimizar el control deslizante de tiempo",
-            "reset" : "Restablecer línea de tiempo",
+            "reset" : "Restablecer",
             "collapsed": {
                 "title": "La línea de tiempo ha sido colapsada",
                 "tooltip": "Haga clic aquí para ampliarlo de nuevo."

@@ -46,7 +46,7 @@ import {
     timeDataSelector,
     offsetTimeSelector,
     currentTimeSelector,
-    layersVisibleWithTimeDataSelector
+    visibleLayersWithTimeDataSelector
 } from '../selectors/dimension';
 
 import { getNearestDate, roundRangeResolution, isTimeDomainInterval } from '../utils/TimeUtils';
@@ -385,7 +385,7 @@ export const onInitTimeLine = (action$, { getState = () => { } } = {}) =>
                     || (initialMode === "range" && !isEmpty(initialSnap)))
                 && isEmpty(selectedLayer)) {
                 // Set guide layer when snap is configured
-                return Rx.Observable.of(initializeSelectLayer(get(layersVisibleWithTimeDataSelector(getState()), "[0].id")));
+                return Rx.Observable.of(initializeSelectLayer(get(visibleLayersWithTimeDataSelector(getState()), "[0].id")));
             }
             if (initialMode === "range" && !isEmpty(initialSnap) && !isEmpty(selectedLayer)) {
                 return setRangeOnInit(getState);

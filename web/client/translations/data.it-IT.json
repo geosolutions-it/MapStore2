@@ -2467,7 +2467,7 @@
             "disablePlayBack": "Disabilita i controlli di riproduzione",
             "expand" : "Espandi",
             "collapse" : "Riduci",
-            "reset" : "Reimposta sequenza temporale",
+            "reset" : "Ripristina valore iniziale",
             "collapsed": {
                 "title": "La timeline è stata collassata",
                 "tooltip": "Clicca qui per espanderla di nuovo"
