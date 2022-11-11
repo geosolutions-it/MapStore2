@@ -8,7 +8,7 @@
 
 import timeline from '../timeline';
 
-import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
+import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline, setSnapRadioButtonEnabled } from '../../actions/timeline';
 import { isCollapsed, isMapSync } from '../../selectors/timeline';
 import expect from 'expect';
 const initConfig = {showHiddenLayers: true, expandLimit: 20, snapType: 'start', endValuesSupport: true};
@@ -192,25 +192,12 @@ describe('Test the timeline reducer', () => {
         expect(state.settings.endValuesSupport).toBe(true);
         expect(state.settings.snapRadioButtonEnabled).toBe(false);
     });
-    it('mapConfigLoaded', () => {
-        const initialState = {
-            selectedLayer: 'layer3',
+    it('setSnapRadioButtonEnabled', () => {
+        const state = timeline({
             settings: {
-                autoSelect: true,
-                collapsed: false,
-                snapType: "start",
-                endValuesSupport: false
+                snapRadioButtonEnabled: false
             }
-        };
-        const action = {
-            type: 'MAP_CONFIG_LOADED',
-            config: {
-                timelineData: {
-                    endValuesSupport: true
-                }
-            }
-        };
-        const state = timeline(initialState, action);
-        expect(state.settings.endValuesSupport).toBe(true);
+        }, setSnapRadioButtonEnabled(true));
+        expect(state.settings.snapRadioButtonEnabled).toBe(true);
     });
 });

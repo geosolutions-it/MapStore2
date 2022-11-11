@@ -33,7 +33,7 @@ import DOMAIN_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainV
 import DOMAIN_INTERVAL_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainIntervalValues.xml';
 import { removeNode, CHANGE_LAYER_PROPERTIES, changeLayerProperties } from '../../actions/layers';
 import { setCurrentTime, moveTime } from '../../actions/dimension';
-import { selectLayer, LOADING, setMapSync, SELECT_LAYER } from '../../actions/timeline';
+import { selectLayer, LOADING, setMapSync, SELECT_LAYER, initializeSelectLayer } from '../../actions/timeline';
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 const ANIMATION_MOCK_STATE = {
@@ -277,6 +277,24 @@ describe('playback Epics', () => {
         const currentTime = '2016-09-04T00:00:00.000Z';
         mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_VALUES_RESPONSE);
         testEpic(playbackCacheNextPreviousTimes, 1, stop(), ([ action ]) => {
+            try {
+                expect(action.type).toBe(UPDATE_METADATA);
+                expect(action.forTime).toBe(currentTime);
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }, {
+            ...ANIMATION_MOCK_STATE,
+            dimension: {
+                currentTime
+            }
+        });
+    });
+    it('playbackCacheNextPreviousTimes without time arg initializeSelectLayer() action', done => {
+        const currentTime = '2016-09-04T00:00:00.000Z';
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_VALUES_RESPONSE);
+        testEpic(playbackCacheNextPreviousTimes, 1, initializeSelectLayer(), ([ action ]) => {
             try {
                 expect(action.type).toBe(UPDATE_METADATA);
                 expect(action.forTime).toBe(currentTime);

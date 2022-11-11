@@ -9,7 +9,8 @@ import {
     SET_MAP_SYNC,
     INIT_TIMELINE,
     SET_SNAP_TYPE,
-    SET_END_VALUES_SUPPORT
+    SET_END_VALUES_SUPPORT,
+    SET_SNAP_RADIO_BUTTON_ENABLED
 } from '../actions/timeline';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { SET_INTERVAL_DATA } from '../actions/playback';
@@ -109,8 +110,10 @@ export default (state = {
         }, newState);
         return newState;
     }
+    case SET_SNAP_RADIO_BUTTON_ENABLED:
     case SET_INTERVAL_DATA: {
-        return set('settings.snapRadioButtonEnabled', action.timeIntervalData, state);
+        const snapRadioButtonEnabled = action.timeIntervalData ?? action.snapRadioButtonEnabled;
+        return set('settings.snapRadioButtonEnabled', snapRadioButtonEnabled, state);
     }
     case INIT_SELECT_LAYER: {
         return set('selectedLayer', action.layerId, state);

@@ -32,7 +32,9 @@ import {
     selectLayer,
     INIT_SELECT_LAYER,
     initializeSelectLayer,
-    SET_END_VALUES_SUPPORT
+    SET_END_VALUES_SUPPORT,
+    setSnapRadioButtonEnabled,
+    SET_SNAP_RADIO_BUTTON_ENABLED
 } from '../timeline';
 
 describe('timeline actions', () => {
@@ -105,5 +107,11 @@ describe('timeline actions', () => {
         expect(config.showHiddenLayers).toBe(true);
         expect(config.expandLimit).toBe(20);
         expect(config.snapType).toBe("end");
+    });
+    it('setSnapRadioButtonEnabled', () => {
+        const retval = setSnapRadioButtonEnabled(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_SNAP_RADIO_BUTTON_ENABLED);
+        expect(retval.snapRadioButtonEnabled).toBe(true);
     });
 });

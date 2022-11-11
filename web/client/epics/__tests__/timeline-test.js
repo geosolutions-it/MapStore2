@@ -18,7 +18,11 @@ import {
     settingInitialOffsetValue,
     syncTimelineGuideLayer,
     snapTimeGuideLayer,
-    setRangeOnInitSelectLayer, onInitTimeLine
+    rangeOnInit,
+    rangeOnInitSelectLayer,
+    updateTimelineDataOnMapLoad,
+    onUpdateLayerDimensionData,
+    onInitTimeLine
 } from '../timeline';
 
 import { changeMapView } from '../../actions/map';
@@ -32,10 +36,20 @@ import {
     SELECT_LAYER,
     autoselect,
     selectLayer,
-    initializeSelectLayer, initTimeline, INIT_SELECT_LAYER, resetTimeline
+    initializeSelectLayer,
+    initTimeline,
+    INIT_SELECT_LAYER,
+    resetTimeline,
+    SET_RANGE_INIT,
+    ENABLE_OFFSET,
+    setRangeOnInitialization,
+    SET_END_VALUES_SUPPORT,
+    SET_SNAP_RADIO_BUTTON_ENABLED,
+    AUTOSELECT
 } from '../../actions/timeline';
 import { removeNode } from '../../actions/layers';
 import { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } from '../../actions/dimension';
+import { configureMap } from "../../actions/config";
 
 
 describe('timeline Epics', () => {
@@ -257,16 +271,9 @@ describe('timeline Epics', () => {
             done();
         });
     });
-    it('setRangeOnInitSelectLayer', done => {
-        testEpic(setRangeOnInitSelectLayer, 3, initializeSelectLayer('TEST_LAYER'), ([action1, action2, action3]) => {
-            const { type: typeRange } = action1;
-            const { time, type } = action2;
-            const { offsetTime, type: typeOff} = action3;
-            expect(time).toBeTruthy();
-            expect(offsetTime).toBeTruthy();
-            expect(type).toBe(SET_CURRENT_TIME);
-            expect(typeOff).toBe(SET_OFFSET_TIME);
-            expect(typeRange).toBe(RANGE_CHANGED);
+    it('rangeOnInitSelectLayer', done => {
+        testEpic(rangeOnInitSelectLayer, 1, initializeSelectLayer('TEST_LAYER'), ([action]) => {
+            expect(action.type).toBe(SET_RANGE_INIT);
             done();
         }, {
             timeline: {
@@ -279,199 +286,402 @@ describe('timeline Epics', () => {
                     start: "2000-01-01T00:00:00.000Z",
                     end: "2001-12-31T00:00:00.000Z"
                 }
-            },
-            layers: {
-                flat: [{
-                    id: 'TEST_LAYER',
-                    name: 'TEST_LAYER',
-                    type: 'wms',
-                    url: 'base/web/client/test-resources/wmts/DomainValues.xml',
-                    dimensions: [
-                        {
-                            source: {
-                                type: 'multidim-extension',
-                                url: 'base/web/client/test-resources/wmts/DomainValues.xml'
-                            },
-                            name: 'time'
-                        }
-                    ],
-                    params: {
-                        time: '2000-06-08T00:00:00.000Z'
-                    }
-                }]
             }
         });
     });
-    it('onInitTimeLine on single mode', done => {
-        testEpic(addTimeoutEpic(onInitTimeLine, 500), 2, initTimeline({initialSnap: 'now', initialMode: 'single'}), ([, action]) => {
-            const { type, layerId } = action;
-            expect(type).toBe(INIT_SELECT_LAYER);
-            expect(layerId).toBe('TEST_LAYER');
-            done();
-        }, {
-            timeline: {
-                settings: {
-                    initialMode: 'single',
-                    initialSnap: 'now'
+    describe("onInitTimeLine", () => {
+        it('onInitTimeLine on single mode', done => {
+            testEpic(addTimeoutEpic(onInitTimeLine, 500), 2, initTimeline({initialSnap: 'now', initialMode: 'single'}), ([, action]) => {
+                const { type, layerId } = action;
+                expect(type).toBe(INIT_SELECT_LAYER);
+                expect(layerId).toBe('TEST_LAYER');
+                done();
+            }, {
+                timeline: {
+                    settings: {
+                        initialMode: 'single',
+                        initialSnap: 'now'
+                    },
+                    range: {
+                        start: "2000-01-01T00:00:00.000Z",
+                        end: "2001-12-31T00:00:00.000Z"
+                    }
                 },
-                range: {
-                    start: "2000-01-01T00:00:00.000Z",
-                    end: "2001-12-31T00:00:00.000Z"
-                }
-            },
-            layers: {
-                flat: [{
-                    id: 'TEST_LAYER',
-                    name: 'TEST_LAYER',
-                    type: 'wms',
-                    visibility: true,
-                    url: 'base/web/client/test-resources/wmts/DomainValues.xml',
-                    dimensions: [
-                        {
-                            source: {
-                                type: 'multidim-extension',
-                                url: 'base/web/client/test-resources/wmts/DomainValues.xml'
-                            },
-                            name: 'time'
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
                         }
-                    ],
-                    params: {
-                        time: '2000-06-08T00:00:00.000Z'
+                    }]
+                }
+            });
+        });
+        it('onInitTimeLine on range mode', done => {
+            testEpic(addTimeoutEpic(onInitTimeLine, 500), 2, initTimeline({initialSnap: 'fullRange', initialMode: 'range'}), ([, action]) => {
+                expect(action.type).toBe(SET_RANGE_INIT);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    },
+                    range: {
+                        start: "2000-01-01T00:00:00.000Z",
+                        end: "2001-12-31T00:00:00.000Z"
                     }
-                }]
-            }
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+        it('Reset timeline on single mode', done => {
+            testEpic(onInitTimeLine, 2, resetTimeline(), ([action1, action2]) => {
+                expect(action1.type).toBe(INIT_SELECT_LAYER);
+                expect(action1.layerId).toBe('TEST_LAYER');
+                expect(action2.type).toBe(ENABLE_OFFSET);
+                expect(action2.enabled).toBe(false);
+                done();
+            }, {
+                timeline: {
+                    settings: {
+                        initialMode: 'single',
+                        initialSnap: 'now'
+                    },
+                    range: {
+                        start: "2000-01-01T00:00:00.000Z",
+                        end: "2001-12-31T00:00:00.000Z"
+                    }
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+        it('Reset timeline on range mode with no layer selected', done => {
+            testEpic(onInitTimeLine, 1, resetTimeline(), ([action]) => {
+                expect(action.type).toBe(INIT_SELECT_LAYER);
+                done();
+            }, {
+                timeline: {
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    },
+                    range: {
+                        start: "2000-01-01T00:00:00.000Z",
+                        end: "2001-12-31T00:00:00.000Z"
+                    }
+                }
+            });
+        });
+        it('Reset timeline on range mode', done => {
+            testEpic(onInitTimeLine, 1, resetTimeline(), ([action]) => {
+                expect(action.type).toBe(SET_RANGE_INIT);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    },
+                    range: {
+                        start: "2000-01-01T00:00:00.000Z",
+                        end: "2001-12-31T00:00:00.000Z"
+                    }
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
         });
     });
-    it('onInitTimeLine on range mode', done => {
-        testEpic(addTimeoutEpic(onInitTimeLine, 500), 4, initTimeline({initialSnap: 'fullRange', initialMode: 'range'}), ([, action1, action2, action3]) => {
-            const { type: typeRange } = action1;
-            const { time, type } = action2;
-            const { offsetTime, type: typeOff} = action3;
-            expect(time).toBeTruthy();
-            expect(offsetTime).toBeTruthy();
-            expect(type).toBe(SET_CURRENT_TIME);
-            expect(typeOff).toBe(SET_OFFSET_TIME);
-            expect(typeRange).toBe(RANGE_CHANGED);
-            done();
-        }, {
-            timeline: {
+    describe("rangeOnInit", () => {
+        it("rangeOnInit on domain and current time", (done) => {
+            testEpic(rangeOnInit, 3, setRangeOnInitialization(), ([action1, action2, action3]) => {
+                const { type: typeRange } = action1;
+                const { time, type } = action2;
+                const { offsetTime, type: typeOff} = action3;
+                expect(time).toBeTruthy();
+                expect(offsetTime).toBeTruthy();
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    }
+                },
+                dimension: {
+                    currentTime: "2000-01-01T00:00:00.000Z",
+                    offsetTime: "2001-12-31T00:00:00.000Z",
+                    data: {
+                        time: {
+                            TEST_LAYER: {
+                                name: "time",
+                                domain: "2000-01-01T00:00:00.000Z--2001-12-31T00:00:00.000Z"
+                            }
+                        }
+                    }
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+        it("rangeOnInit on empty domain and current time", (done) => {
+            testEpic(rangeOnInit, 3, setRangeOnInitialization(), ([action1, action2, action3]) => {
+                const { type: typeRange } = action1;
+                const { time, type } = action2;
+                const { offsetTime, type: typeOff} = action3;
+                expect(time).toBeTruthy();
+                expect(offsetTime).toBeTruthy();
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    }
+                },
+                dimension: {
+                    currentTime: "2000-01-01T00:00:00.000Z",
+                    offsetTime: "2001-12-31T00:00:00.000Z"
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+        it("rangeOnInit on empty domain and empty current time", (done) => {
+            testEpic(rangeOnInit, 3, setRangeOnInitialization(), ([action1, action2, action3]) => {
+                const { type: typeRange } = action1;
+                const { time, type } = action2;
+                const { offsetTime, type: typeOff} = action3;
+                expect(time).toBeTruthy();
+                expect(offsetTime).toBeTruthy();
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(time).toBe("2016-09-01T00:00:00.000Z");
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'now'
+                    }
+                },
+                dimension: {},
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+    });
+    it("updateTimelineDataOnMapLoad", (done) =>{
+        const config = {
+            timelineData: {
                 selectedLayer: "TEST_LAYER",
-                settings: {
-                    initialMode: 'range',
-                    initialSnap: 'fullRange'
-                },
-                range: {
-                    start: "2000-01-01T00:00:00.000Z",
-                    end: "2001-12-31T00:00:00.000Z"
-                }
+                endValuesSupport: true,
+                snapRadioButtonEnabled: false
             },
-            layers: {
-                flat: [{
-                    id: 'TEST_LAYER',
-                    name: 'TEST_LAYER',
-                    type: 'wms',
-                    visibility: true,
-                    url: 'base/web/client/test-resources/wmts/DomainValues.xml',
-                    dimensions: [
-                        {
-                            source: {
-                                type: 'multidim-extension',
-                                url: 'base/web/client/test-resources/wmts/DomainValues.xml'
-                            },
-                            name: 'time'
-                        }
-                    ],
-                    params: {
-                        time: '2000-06-08T00:00:00.000Z'
-                    }
-                }]
+            dimensionData: {
+                currentTime: "2016-09-01T00:00:00.000Z"
             }
-        });
+        };
+        testEpic(updateTimelineDataOnMapLoad, 3, configureMap(config), ([action1, action2, action3]) => {
+            expect(action1.type).toBe(INIT_SELECT_LAYER);
+            expect(action1.layerId).toBe("TEST_LAYER");
+            expect(action2.type).toBe(SET_END_VALUES_SUPPORT);
+            expect(action2.endValuesSupport).toBe(true);
+            expect(action3.type).toBe(SET_SNAP_RADIO_BUTTON_ENABLED);
+            expect(action3.snapRadioButtonEnabled).toBe(false);
+            done();
+        }, {});
     });
-    it('Reset timline on single mode', done => {
-        testEpic(onInitTimeLine, 1, resetTimeline(), ([action]) => {
-            const { type, layerId } = action;
-            expect(type).toBe(INIT_SELECT_LAYER);
-            expect(layerId).toBe('TEST_LAYER');
-            done();
-            done();
-        }, {
-            timeline: {
-                settings: {
-                    initialMode: 'single',
-                    initialSnap: 'now'
-                },
-                range: {
-                    start: "2000-01-01T00:00:00.000Z",
-                    end: "2001-12-31T00:00:00.000Z"
-                }
-            },
-            layers: {
-                flat: [{
-                    id: 'TEST_LAYER',
-                    name: 'TEST_LAYER',
-                    type: 'wms',
-                    visibility: true,
-                    url: 'base/web/client/test-resources/wmts/DomainValues.xml',
-                    dimensions: [
-                        {
-                            source: {
-                                type: 'multidim-extension',
-                                url: 'base/web/client/test-resources/wmts/DomainValues.xml'
-                            },
-                            name: 'time'
-                        }
-                    ],
-                    params: {
-                        time: '2000-06-08T00:00:00.000Z'
-                    }
-                }]
-            }
-        });
-    });
-    it('Reset timline on range mode', done => {
-        testEpic(onInitTimeLine, 3, resetTimeline(), ([action1, action2, action3]) => {
-            const { type: typeRange } = action1;
-            const { time, type } = action2;
-            const { offsetTime, type: typeOff} = action3;
-            expect(time).toBeTruthy();
-            expect(offsetTime).toBeTruthy();
-            expect(type).toBe(SET_CURRENT_TIME);
-            expect(typeOff).toBe(SET_OFFSET_TIME);
-            expect(typeRange).toBe(RANGE_CHANGED);
-            done();
-        }, {
-            timeline: {
+    it("updateTimelineDataOnMapLoad with no dimension data", (done) =>{
+        const config = {
+            timelineData: {
                 selectedLayer: "TEST_LAYER",
+                endValuesSupport: true,
+                snapRadioButtonEnabled: false
+            }
+        };
+        testEpic(updateTimelineDataOnMapLoad, 4, configureMap(config), ([action1, action2, action3, action4]) => {
+            expect(action1.type).toBe(INIT_SELECT_LAYER);
+            expect(action1.layerId).toBe("TEST_LAYER");
+            expect(action2.type).toBe(SET_END_VALUES_SUPPORT);
+            expect(action2.endValuesSupport).toBe(true);
+            expect(action3.type).toBe(SET_SNAP_RADIO_BUTTON_ENABLED);
+            expect(action3.snapRadioButtonEnabled).toBe(false);
+            expect(action4.type).toBe(AUTOSELECT);
+            done();
+        }, {});
+    });
+    it("onUpdateLayerDimensionData", (done) => {
+        testEpic(onUpdateLayerDimensionData, 2, updateLayerDimensionData("TEST", {}, {name: "time"}), ([action1, action2]) => {
+            expect(action1.type).toBe(AUTOSELECT);
+            expect(action2.type).toBe(SET_END_VALUES_SUPPORT);
+            expect(action2.endValuesSupport).toBe(false);
+            done();
+        }, {
+            timeline: {}
+        });
+    });
+    it("onUpdateLayerDimensionData on time layer selected", (done) => {
+        testEpic(addTimeoutEpic(onUpdateLayerDimensionData, 10), 1, updateLayerDimensionData("TEST", {}, {name: "time"}), ([action1]) => {
+            expect(action1.type).toBe('EPICTEST:TIMEOUT');
+            done();
+        }, {
+            timeline: {
+                selectedLayer: "TEST_LAYER"
+            }
+        });
+    });
+    it("onUpdateLayerDimensionData with endValuesSupport", (done) => {
+        testEpic(onUpdateLayerDimensionData, 1, updateLayerDimensionData("TEST", {}, {name: "time"}), ([action1]) => {
+            expect(action1.type).toBe(AUTOSELECT);
+            done();
+        }, {
+            timeline: {
                 settings: {
-                    initialMode: 'range',
-                    initialSnap: 'fullRange'
-                },
-                range: {
-                    start: "2000-01-01T00:00:00.000Z",
-                    end: "2001-12-31T00:00:00.000Z"
+                    endValuesSupport: true
                 }
-            },
-            layers: {
-                flat: [{
-                    id: 'TEST_LAYER',
-                    name: 'TEST_LAYER',
-                    type: 'wms',
-                    visibility: true,
-                    url: 'base/web/client/test-resources/wmts/DomainValues.xml',
-                    dimensions: [
-                        {
-                            source: {
-                                type: 'multidim-extension',
-                                url: 'base/web/client/test-resources/wmts/DomainValues.xml'
-                            },
-                            name: 'time'
-                        }
-                    ],
-                    params: {
-                        time: '2000-06-08T00:00:00.000Z'
-                    }
-                }]
             }
         });
     });
@@ -544,6 +754,12 @@ describe('timeline Epics', () => {
                 expect(action.type).toBe(TEST_TIMEOUT); // Don't trigger a snap time when snap to guide layer settings is turned off
                 done();
             }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: false}}});
+        });
+        it('snapTimeGuideLayer when initialize select layer', done => {
+            testEpic(snapTimeGuideLayer, NUM_ACTIONS, [initializeSelectLayer('TEST_LAYER')], ([action]) => {
+                expect(action.type).toBe(SET_CURRENT_TIME);
+                done();
+            }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
         });
     });
     describe('updateRangeDataOnRangeChange', () => {

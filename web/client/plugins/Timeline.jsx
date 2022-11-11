@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { head, isString, isEmpty } from 'lodash';
+import { head, isString } from 'lodash';
 import moment from 'moment';
 import assign from 'object-assign';
 import React, { useEffect } from 'react';
@@ -61,6 +61,7 @@ const Button = tooltip(ButtonRB);
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
 const getPercent = (val) => parseInt(val, 10) / 100;
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
+const resetValid = (mode, snap) => (mode === 'single' && snap === "now") || (mode === "range" && ['now', 'fullRange'].includes(snap));
 
 /**
   * Timeline Plugin. Shows the timeline tool on the map.
@@ -355,7 +356,7 @@ const TimelinePlugin = compose(
                             {
                                 glyph: "refresh",
                                 visible: !!resetButton,
-                                disabled: isEmpty(initialMode) || isEmpty(initialSnap),
+                                disabled: !resetValid(initialMode, initialSnap),
                                 tooltip: <Message msgId={"timeline.reset"} />,
                                 bsStyle: 'primary',
                                 onClick: reset

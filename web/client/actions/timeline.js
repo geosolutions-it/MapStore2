@@ -7,6 +7,22 @@
  */
 
 export const SELECT_TIME = "TIMELINE:SELECT_TIME";
+export const RANGE_CHANGED = "TIMELINE:RANGE_CHANGE";
+export const RANGE_DATA_LOADED = "TIMELINE:RANGE_DATA_LOADED";
+export const LOADING = "TIMELINE:LOADING";
+export const INIT_SELECT_LAYER = "TIMELINE:INIT_SELECT_LAYER";
+export const SELECT_LAYER = "TIMELINE:SELECT_LAYER";
+export const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
+export const AUTOSELECT = "TIMELINE:AUTOSELECT";
+export const SET_SNAP_TYPE = "TIMELINE:SET_SNAP_TYPE";
+export const SET_END_VALUES_SUPPORT = "TIMELINE:SET_END_VALUES_SUPPORT";
+export const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
+export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
+export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
+export const RESET_TIMELINE = "TIMELINE:RESET_TIMELINE";
+export const SET_RANGE_INIT = "TIMELINE:SET_RANGE_INIT";
+export const SET_SNAP_RADIO_BUTTON_ENABLED = "TIMELINE:SNAP_RADIO_BUTTON_ENABLED";
+
 /**
  * Action creator for click event on timeline.
  * @memberof actions.timeline
@@ -17,7 +33,6 @@ export const SELECT_TIME = "TIMELINE:SELECT_TIME";
  * @return object of type `TIMELINE:SELECT_TIME` with `time` group` `what` `item`
  */
 export const selectTime = (time, group, what, item) => ({ type: SELECT_TIME, time, group, what, item});
-export const RANGE_CHANGED = "TIMELINE:RANGE_CHANGE";
 
 /**
  * Action creator for time range change event
@@ -26,7 +41,6 @@ export const RANGE_CHANGED = "TIMELINE:RANGE_CHANGE";
  * @return action of type `RANGE_CHANGED` with start and end.
  */
 export const onRangeChanged = ({start, end} = {}) => ({type: RANGE_CHANGED, start, end});
-export const RANGE_DATA_LOADED = "TIMELINE:RANGE_DATA_LOADED";
 
 /**
  * Action creator for time line's range data load event
@@ -38,8 +52,6 @@ export const RANGE_DATA_LOADED = "TIMELINE:RANGE_DATA_LOADED";
  */
 export const rangeDataLoaded = (layerId, range, histogram, domain) => ({ type: RANGE_DATA_LOADED, layerId, range, histogram, domain});
 
-export const LOADING = "TIMELINE:LOADING";
-
 /**
  * Action creator to trigger loading flag for a layer time data
  * @memberof actions.timeline
@@ -48,50 +60,49 @@ export const LOADING = "TIMELINE:LOADING";
  */
 export const timeDataLoading = (layerId, loading) => ({ type: LOADING, layerId, loading});
 
-export const INIT_SELECT_LAYER = "TIMELINE:INIT_SELECT_LAYER";
+/**
+ * Initialize selected layer
+ * @memberof actions.timeline
+ * @param {string} layerId id of the layer that is loading
+ * @param {boolean} snap skip/allow to snap time
+ */
+export const initializeSelectLayer = (layerId, snap = true) => ({type: INIT_SELECT_LAYER, layerId, snap});
 
-export const initializeSelectLayer = layerId => { return {type: INIT_SELECT_LAYER, layerId}; };
-
-export const SELECT_LAYER = "TIMELINE:SELECT_LAYER";
 /**
  * Triggered when a layer is selected from the timeline
  * @param {string} layerId the id of the selected layer
+ * @param {boolean} snap skip/allow to snap time
  */
-export const selectLayer = layerId => { return {type: SELECT_LAYER, layerId}; };
+export const selectLayer = (layerId, snap = true) => ({type: SELECT_LAYER, layerId, snap});
 
-export const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
 /**
  * Toggles ranged(offset) vs single time mode
  * @param {boolean} enabled if true, enables ranged mode
  */
 export const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
 
-export const AUTOSELECT = "TIMELINE:AUTOSELECT";
+
 /**
  * Triggers autoselect setup behaviour
  */
 export const autoselect = () => ({ type: AUTOSELECT });
 
-export const SET_SNAP_TYPE = "TIMELINE:SET_SNAP_TYPE";
 /**
  * Set snap to type (start, end) for dimensions with interval values
  * @param {string} snapType "start" or "end" where in time the interval snapping should happen
  */
 export const setTimelineSnapType = snapType => ({type: SET_SNAP_TYPE, snapType});
 
-export const SET_END_VALUES_SUPPORT = "TIMELINE:SET_END_VALUES_SUPPORT";
 /**
  * Set the state of the end values support, if snap to end interval is supported by the backend
  * @param {Boolean} endValuesSupport true false or undefined, if end values support is supported or initial state undefined
  */
 export const setEndValuesSupport = endValuesSupport =>  ({type: SET_END_VALUES_SUPPORT, endValuesSupport});
 
-export const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
 export const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
-export const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
+
 export const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
 
-export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
 /**
  * Action that is called upon Timeline plugin initialization,
  * the action sets up the component plugin with the default settings values
@@ -105,5 +116,8 @@ export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
  */
 export const initTimeline = (config) => ({type: INIT_TIMELINE, config});
 
-export const RESET_TIMELINE = "TIMELINE:RESET_TIMELINE";
 export const resetTimeline = () => ({type: RESET_TIMELINE});
+
+export const setRangeOnInitialization = () => ({type: SET_RANGE_INIT});
+
+export const setSnapRadioButtonEnabled = (snapRadioButtonEnabled) => ({type: SET_SNAP_RADIO_BUTTON_ENABLED, snapRadioButtonEnabled});
