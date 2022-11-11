@@ -909,6 +909,18 @@ The `symbolizer` could be of following `kinds`:
   - `haloWidth` halo width of the label
   - `offset` array of x and y values offset of the label
 
+- `Model` symbolizer properties (custom symbolizer to visualize 3D model as point geometries)
+  - `kind` must be equal to `Model`
+  - `model` url of a 3D .glb file
+  - `heading` heading rotation
+  - `pitch` pitch rotation
+  - `roll` roll rotation
+  - `scale` scale
+  - `color` color mixed with the mesh texture/material
+  - `opacity` color opacity
+  - `heightReference` height reference from ground, one of `none`, `relative` or `clamp`
+  - `height` a number that represent the height or undefined, it will use the point geometry height if undefined
+
 #### Legacy Vector Style (deprecated)
 
 The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style to the local data on the map.
