@@ -15,12 +15,10 @@ import { isSimpleGeomType } from '../utils/MapUtils';
 import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
 import { userRoleSelector } from './security';
-import { isCesium } from './maptype';
+import {isCesium, mapTypeSelector} from './maptype';
 import { attributesSelector, describeSelector } from './query';
 import {createShallowSelectorCreator} from "../utils/ReselectUtils";
 import isEqual from "lodash/isEqual";
-import {getMonitoredState} from "../utils/PluginsUtils";
-import ConfigUtils from "../utils/ConfigUtils";
 import {mapBboxSelector, projectionSelector} from "./map";
 import {bboxToFeatureGeometry} from "../utils/CoordinatesUtils";
 
@@ -201,11 +199,11 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
     projectionSelector,
     state => get(state, 'query.filterObj.spatialField'),
     describeSelector,
-    state => getMonitoredState(state, ConfigUtils.getConfigProp('monitorState')),
-    (viewportFilterIsActive, box, projection, spatialField = [], describeLayer) => {
+    mapTypeSelector,
+    (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, mapType) => {
         const attribute = findGeometryProperty(describeLayer)?.name;
         const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
-        return viewportFilterIsActive ? {
+        return viewportFilterIsActive && mapType !== 'cesium' ? {
             spatialField: [
                 ...existingFilter,
                 {

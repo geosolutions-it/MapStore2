@@ -155,6 +155,10 @@ const EditorPlugin = connect(
         componentDidMount() {
             // Initialize configuration for viewportFilter once plugin is loaded
             !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
+        },
+        componentDidUpdate() {
+            // Re-Initialize configuration
+            !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
         }
     }),
     withSuspense(

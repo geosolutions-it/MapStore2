@@ -110,7 +110,7 @@ import {
     setPagination,
     launchUpdateFilterFunc,
     LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER,
-    SET_VIEWPORT_FILTER
+    SET_VIEWPORT_FILTER, setViewportFilter
 } from '../actions/featuregrid';
 
 import {
@@ -167,6 +167,7 @@ import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
 import {dockPanelsSelector} from "../selectors/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
+import {mapTypeSelector} from "../selectors/maptype";
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -1249,7 +1250,7 @@ export const toggleSnappingOffOnFeatureGridViewMode = (action$, { getState } = {
 export const setViewportFilterEpic = (action$, { getState } = {}) =>
     action$
         .ofType(OPEN_FEATURE_GRID, SET_VIEWPORT_FILTER, CHANGE_MAP_VIEW)
-        .filter(() => isFeatureGridOpen(getState()) && isViewportFilterActive(getState()))
+        .filter(() => isFeatureGridOpen(getState()) && isViewportFilterActive(getState()) && mapTypeSelector(getState()) !== 'cesium')
         .switchMap(() => {
             return Rx.Observable.of(
                 updateFilter());
@@ -1263,3 +1264,9 @@ export const deactivateViewportFilterEpic = (action$) =>
         .switchMap( () => {
             return Rx.Observable.of(updateFilter());
         });
+
+export const resetViewportFilter = (action$, store) =>
+    action$.ofType(LOCATION_CHANGE).switchMap( () => {
+        return viewportFilter(store.getState()) !== null ? Rx.Observable.of(setViewportFilter(null))
+            : Rx.Observable.empty();
+    });

@@ -60,7 +60,7 @@ import {
     launchUpdateFilterFunc,
     LAUNCH_UPDATE_FILTER_FUNC,
     setLayer,
-    setViewportFilter
+    setViewportFilter, SET_VIEWPORT_FILTER
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -141,7 +141,7 @@ import {
     toggleSnappingOffOnFeatureGridViewMode,
     closeFeatureGridOnDrawingToolOpen,
     setViewportFilterEpic,
-    deactivateViewportFilterEpic
+    deactivateViewportFilterEpic, resetViewportFilter
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -2411,6 +2411,14 @@ describe('featuregrid Epics', () => {
         testEpic(deactivateViewportFilterEpic, 1, startActions, actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(UPDATE_FILTER);
+        }, {featuregrid: { open: true, viewportFilter: false }}, done);
+    });
+    it('resetViewportFilter', (done) => {
+        const startActions = [onLocationChanged({})];
+        testEpic(resetViewportFilter, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_VIEWPORT_FILTER);
+            expect(actions[0].value).toBe(null);
         }, {featuregrid: { open: true, viewportFilter: false }}, done);
     });
 });

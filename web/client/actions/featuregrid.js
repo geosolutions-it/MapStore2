@@ -403,7 +403,7 @@ export const setSyncTool = (syncWmsFilter) => ({
 
 /**
  * Enables/Disables filter by viewport for grid records.
- * @param {boolean} viewportFilter value to set
+ * @param {boolean|null} viewportFilter value to set
  */
 export const setViewportFilter = (viewportFilter) => ({
     type: SET_VIEWPORT_FILTER,
