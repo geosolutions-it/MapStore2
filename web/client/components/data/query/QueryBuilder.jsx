@@ -13,14 +13,12 @@ import React from 'react';
 import Spinner from 'react-spinkit';
 
 import BorderLayout from '../../layout/BorderLayout';
-import CrossLayerFilterComp from './CrossLayerFilter';
-import crossLayerFilterEnhancer from './enhancers/crossLayerFilter';
-import GroupField from './GroupField';
 import QueryToolbar from './QueryToolbar';
-import SpatialFilter from './SpatialFilter';
 import QueryPanelHeader from './QueryPanelHeader';
+import AttributeFilter from "../../../plugins/querypanel/AttributeFilter";
+import SpatialFilter from "../../../plugins/querypanel/SpatialFilter";
+import CrossLayerFilter from "../../../plugins/querypanel/CrossLayerFilter";
 
-const CrossLayerFilter = crossLayerFilterEnhancer(CrossLayerFilterComp);
 
 class QueryBuilder extends React.Component {
     static propTypes = {
@@ -193,39 +191,9 @@ class QueryBuilder extends React.Component {
             /></div>);
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
-                <GroupField
-                    buttonStyle={this.props.buttonStyle}
-                    removeGroupButtonIcon={this.props.removeGroupButtonIcon}
-                    autocompleteEnabled={this.props.autocompleteEnabled}
-                    maxFeaturesWPS={this.props.maxFeaturesWPS}
-                    attributes={this.props.attributes}
-                    groupLevels={this.props.groupLevels}
-                    filterFields={this.props.filterFields}
-                    groupFields={this.props.groupFields}
-                    removeButtonIcon={this.props.removeButtonIcon}
-                    addButtonIcon={this.props.addButtonIcon}
-                    attributePanelExpanded={this.props.attributePanelExpanded}
-                    actions={this.props.attributeFilterActions}/>
-                {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter
-                    useMapProjection={this.props.useMapProjection}
-                    spatialField={this.props.spatialField}
-                    clearFilterOptions={this.props.clearFilterOptions}
-                    spatialOperations={this.props.spatialOperations}
-                    spatialMethodOptions={this.props.spatialMethodOptions}
-                    showDetailsButton={this.props.showDetailsButton}
-                    spatialPanelExpanded={this.props.spatialPanelExpanded}
-                    showDetailsPanel={this.props.showDetailsPanel}
-                    actions={this.props.spatialFilterActions}
-                    zoom={this.props.zoom}
-                    projection={this.props.projection}/>}
-                {this.props.toolsOptions.hideCrossLayer ? null : <CrossLayerFilter
-                    spatialOperations={this.props.spatialOperations}
-                    crossLayerExpanded={this.props.crossLayerExpanded}
-                    searchUrl={this.props.searchUrl}
-                    featureTypeName={this.props.featureTypeName}
-                    {...this.props.crossLayerFilterOptions}
-                    {...this.props.crossLayerFilterActions}
-                />}
+                <AttributeFilter />
+                {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter spatialOperations={this.props.spatialOperations} spatialMethodOptions={this.props.spatialMethodOptions} />}
+                {this.props.toolsOptions.hideSpatialFilter ? null : <CrossLayerFilter spatialOperations={this.props.spatialOperations} />}
             </BorderLayout>
             : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
     }

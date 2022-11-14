@@ -86,6 +86,30 @@ import {
 import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
 
+function overrideItem(item, overrides = []) {
+    const replacement = overrides.find(i => i.target === item.id);
+    return replacement ?? item;
+}
+
+const EmptyComponent = () => {
+    return null;
+};
+
+function handleRemoved(item) {
+    return item.plugin ? item : {
+        ...item,
+        plugin: EmptyComponent
+    };
+}
+
+function mergeItems(standard, overrides) {
+    return standard
+        .map(item => overrideItem(item, overrides))
+        .map(handleRemoved);
+}
+
+const standardItems = {};
+
 // include application component
 
 
@@ -238,7 +262,8 @@ class QueryPanel extends React.Component {
         storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
         onSaveFilter: PropTypes.func,
-        onRestoreFilter: PropTypes.func
+        onRestoreFilter: PropTypes.func,
+        items: PropTypes.array
     };
 
     static defaultProps = {
@@ -263,7 +288,8 @@ class QueryPanel extends React.Component {
         layout: {},
         toolsOptions: {},
         onSaveFilter: () => {},
-        onRestoreFilter: () => {}
+        onRestoreFilter: () => {},
+        items: []
     };
     constructor(props) {
         super(props);
@@ -365,6 +391,29 @@ class QueryPanel extends React.Component {
                 </ResizableModal>
             </Portal>
         </div>);
+    };
+
+    getItems = (target) => {
+        const filtered = this.props.items.filter(i => !target || i.target === target);
+        const merged = mergeItems(standardItems[target], this.props.items)
+            .map(item => ({
+                ...item,
+                target
+            }));
+        return [...merged, ...filtered]
+            .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
+    };
+
+    renderItem = (item, opts) => {
+        const {validations, ...options } = opts;
+        const Comp = item.component ?? item.plugin;
+        const {style, ...other} = this.props;
+        const itemOptions = this.props[item.id + "Options"];
+        return <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
+    };
+    renderItems = (target, options) => {
+        return this.getItems(target)
+            .map(item => this.renderItem(item, options));
     };
 
     render() {
