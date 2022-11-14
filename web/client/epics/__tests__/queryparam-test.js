@@ -20,7 +20,10 @@ import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
 import {layerLoad} from "../../actions/layers";
 import {FEATURE_INFO_CLICK} from "../../actions/mapInfo";
-import {SEARCH_LAYER_WITH_FILTER} from "../../actions/search";
+import {
+    SCHEDULE_SEARCH_LAYER_WITH_FILTER,
+    SEARCH_LAYER_WITH_FILTER
+} from "../../actions/search";
 import {ADD_LAYERS_FROM_CATALOGS} from "../../actions/catalog";
 import {SYNC_CURRENT_BACKGROUND_LAYER} from "../../actions/backgroundselector";
 
@@ -47,6 +50,14 @@ const size = {
 
 const mapStateSource = 'map';
 const projection = "EPSG:900913";
+
+const viewerOptions = {
+    orientation: {
+        heading: 0,
+        pitch: 0,
+        roll: 0
+    }
+};
 
 describe('queryparam epics', () => {
     it('test readQueryParamsOnMapEpic without params in url search', (done) => {
@@ -468,13 +479,6 @@ describe('queryparam epics', () => {
             }, state);
     });
     it('Test readQueryParamsOnMapEpic / actions dispatched on Change View', (done)=>{
-        const viewerOptions = {
-            orientation: {
-                heading: 0.1,
-                pitch: -0.7,
-                roll: 6.2
-            }
-        };
         const state = {
             maptype: {
                 mapType: 'cesium'
@@ -501,13 +505,6 @@ describe('queryparam epics', () => {
             }, state);
     });
     it('Test readQueryParamsOnMapEpic / actions dispatched on Change View with POST parameters', (done)=>{
-        const viewerOptions = {
-            orientation: {
-                heading: 0.1,
-                pitch: -0.7,
-                roll: 6.2
-            }
-        };
         const state = {
             maptype: {
                 mapType: 'cesium'
@@ -543,13 +540,6 @@ describe('queryparam epics', () => {
     });
     //
     it('Test readQueryParamsOnMapEpic / changeMapView does not trigger orientateMap if map type is not cesium', (done)=>{
-        const viewerOptions = {
-            orientation: {
-                heading: 0.1,
-                pitch: -0.7,
-                roll: 6.2
-            }
-        };
         const state = {
             maptype: {
                 mapType: 'openlayer'
@@ -578,12 +568,6 @@ describe('queryparam epics', () => {
             }, state, false, true);
     });
     it('changeMapView does not trigger orientateMap if any of the viewerOptions values are undefined', (done)=>{
-        const viewerOptions = {
-            orientation: {
-                pitch: -0.7,
-                roll: 6.2
-            }
-        };
         const state = {
             maptype: {
                 mapType: 'cesium'
@@ -753,7 +737,7 @@ describe('queryparam epics', () => {
             }
         }, state);
     });
-    it('simplified featureinfo request', (done)=>{
+    it('simplified featureinfo request', (done) => {
         const NUMBER_OF_ACTIONS = 1;
         const state = {
             maptype: {
@@ -783,7 +767,7 @@ describe('queryparam epics', () => {
                 done();
             }, state);
     });
-    it('simplified mapInfo request', (done)=>{
+    it('simplified mapInfo request', (done) => {
         const NUMBER_OF_ACTIONS = 1;
         const state = {
             maptype: {
@@ -812,7 +796,7 @@ describe('queryparam epics', () => {
                 done();
             }, state);
     });
-    it('simplified addLayers request', (done)=>{
+    it('simplified addLayers request', (done) => {
         const NUMBER_OF_ACTIONS = 1;
         const state = {
             maptype: {
@@ -847,7 +831,7 @@ describe('queryparam epics', () => {
                 done();
             }, state);
     });
-    it('add background', (done)=>{
+    it('add background', (done) => {
         const NUMBER_OF_ACTIONS = 2;
         const state = {
             maptype: {
@@ -912,6 +896,239 @@ describe('queryparam epics', () => {
             NUMBER_OF_ACTIONS, [
                 onLocationChanged({}),
                 layerLoad()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(ADD_LAYERS_FROM_CATALOGS);
+                    expect(actions[0].layers[0]).toBe("Sentinel");
+                    expect(actions[0].sources[0]).toBe("service");
+                    expect(actions[0].options[0].group).toBe("background");
+                    expect(actions[0].options[0].visibility).toBe(true);
+                    expect(actions[1].type).toBe(SYNC_CURRENT_BACKGROUND_LAYER);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test readQueryParamsOnMapEpic / Cesium viewer - bbox', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?bbox=1,1,1,1"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 1000),
+            1, [
+                onLocationChanged({}),
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(1);
+                try {
+                    expect(actions[0].type).toBe(ZOOM_TO_EXTENT);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test readQueryParamsOnMapEpic / Cesium viewer - marker/zoom', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?marker=5,5&zoom=5"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 1000),
+            2, [
+                onLocationChanged({}),
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(2);
+                try {
+                    expect(actions[0].type).toBe(CHANGE_MAP_VIEW);
+                    expect(actions[0].center).toExist();
+                    expect(actions[0].center.x).toBe(5);
+                    expect(actions[0].center.y).toBe(5);
+                    expect(actions[0].zoom).toBe(5);
+                    expect(actions[1].type).toContain("ADD_MARKER");
+                    expect(actions[1].markerPosition).toExist();
+                    expect(actions[1].markerPosition.lat).toBe(5);
+                    expect(actions[1].markerPosition.lng).toBe(5);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test readQueryParamsOnMapEpic / Cesium viewer - mapInfo', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?addLayers=unesco:Unesco_point&mapInfo=unesco:Unesco_point&mapInfoFilter=cod_unesco='IT_830'"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 1000),
+            1, [
+                onLocationChanged({}),
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(1);
+                try {
+                    expect(actions[0].type).toBe(SCHEDULE_SEARCH_LAYER_WITH_FILTER);
+                    expect(actions[0].layer).toBe("unesco:Unesco_point");
+                    expect(actions[0].cql_filter).toBe("cod_unesco='IT_830'");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test readQueryParamsOnMapEpic / Cesium viewer - simplified featureinfo request', (done) => {
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?featureInfo=-95.625,38.72"
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                    expect(actions[0].point.latlng).toEqual({lng: '-95.625', lat: '38.72'});
+                    expect(actions[0].point.pixel).toBe(undefined);
+                    expect(actions[0].point.geometricFilter).toExist();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test readQueryParamsOnMapEpic / Cesium viewer - simplified addLayers request', (done) => {
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?addLayers=tiger:poly_landmarks;gs_stable_wms,anotherLayer&layerFilters=CFCC='H41'"
+                }
+            },
+            catalog: {
+                selectedService: 'service'
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe(ADD_LAYERS_FROM_CATALOGS);
+                    expect(actions[0].layers[0]).toBe("tiger:poly_landmarks");
+                    expect(actions[0].sources[0]).toBe("gs_stable_wms");
+                    expect(actions[0].layers[1]).toBe("anotherLayer");
+                    expect(actions[0].sources[1]).toBe("service");
+                    expect(actions[0].options[0].params.CQL_FILTER).toBe("CFCC='H41'");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+    });
+    it('Test readQueryParamsOnMapEpic / Cesium viewer - add background', (done) => {
+        const NUMBER_OF_ACTIONS = 2;
+        const state = {
+            maptype: {
+                mapType: 'cesium'
+            },
+            router: {
+                location: {
+                    search: "?background=Sentinel"
+                }
+            },
+            catalog: {
+                selectedService: 'service',
+                "staticServices": {
+                    "default_map_backgrounds": {
+                        "type": "backgrounds",
+                        "title": "Default Backgrounds",
+                        "titleMsgId": "defaultMapBackgroundsServiceTitle",
+                        "autoload": true,
+                        "backgrounds": [{
+                            "type": "osm",
+                            "title": "Open Street Map",
+                            "name": "mapnik",
+                            "source": "osm",
+                            "group": "background"
+                        }, {
+                            "type": "tileprovider",
+                            "title": "NASAGIBS Night 2012",
+                            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+                            "name": "Night2012",
+                            "source": "nasagibs",
+                            "group": "background"
+                        }, {
+                            "type": "tileprovider",
+                            "title": "OpenTopoMap",
+                            "provider": "OpenTopoMap",
+                            "name": "OpenTopoMap",
+                            "source": "OpenTopoMap",
+                            "group": "background"
+                        }, {
+                            "format": "image/jpeg",
+                            "group": "background",
+                            "name": "s2cloudless:s2cloudless",
+                            "opacity": 1,
+                            "title": "Sentinel 2 Cloudless",
+                            "type": "wms",
+                            "url": "https://1maps.geo-solutions.it/geoserver/wms",
+                            "source": "s2cloudless",
+                            "singleTile": false
+                        }, {
+                            "source": "ol",
+                            "group": "background",
+                            "title": "Empty Background",
+                            "fixed": true,
+                            "type": "empty"
+                        }]
+                    }
+                }
+            }
+        };
+        testEpic(
+            addTimeoutEpic(readQueryParamsOnMapEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                onLocationChanged({}),
+                changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions, '')
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {

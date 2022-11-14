@@ -337,7 +337,9 @@ describe('CesiumMap', () => {
                 </CesiumMap>
                 , document.getElementById("container"));
         });
-        waitFor(() => expect(ref.map.dataSourceDisplay.ready).toBe(true))
+        waitFor(() => expect(ref.map.dataSourceDisplay.ready).toBe(true), {
+            timeout: 5000
+        })
             .then(() => {
                 expect(ref.map.dataSources.length).toBe(1);
                 const dataSource = ref.map.dataSources.get(0);
