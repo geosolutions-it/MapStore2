@@ -858,69 +858,117 @@ example:
 
 Available logical operators:
 
-- `||` OR operator
-- `&&` AND operator
+| Operator | Description |
+| --- | --- |
+| `\|\|` | OR operator |
+| `&&` | AND operator |
 
 Available comparison operators:
 
-- `==` equal to
-- `*=` like (for string type)
-- `!=` is not
-- `<` less than
-- `<=` less and equal than
-- `>` grater than
-- `>=` grater and equal than
+| Operator | Description |
+| --- | --- |
+| `==` | equal to |
+| `*=` | like (for string type) |
+| `!=` | is not |
+| `<` | less than |
+| `<=` | less and equal than |
+| `>` | grater than |
+| `>=` | grater and equal than |
 
 The `symbolizer` could be of following `kinds`:
 
 - `Mark` symbolizer properties
-  - `kind` must be equal to `Mark`
-  - `color` fill color of the mark
-  - `fillOpacity` fill opacity of the mark
-  - `strokeColor` stroke color of the mark
-  - `strokeOpacity` stroke opacity of the mark
-  - `strokeWidth` stroke width of the mark
-  - `radius` radius size in px of the mark
-  - `msBringToFront` this boolean will allow setting the `disableDepthTestDistance` value for the feature. This would only apply on Cesium maps.
-  - `wellKnownName` rendered shape, one of Circle, Square, Triangle, Star, Cross, X, shape://vertline, shape://horline, shape://slash, shape://backslash, shape://dot, shape://plus, shape://times, shape://oarrow or shape://carrow
+
+  | Property | Description | 2D | 3D |
+  | --- | --- | --- | --- |
+  | `kind` | must be equal to **Mark** | x | x |
+  | `color` | fill color of the mark | x | x |
+  | `fillOpacity` | fill opacity of the mark | x | x |
+  | `strokeColor` | stroke color of the mark | x | x |
+  | `strokeOpacity` | stroke opacity of the mark | x | x |
+  | `strokeWidth` | stroke width of the mark | x | x |
+  | `radius` | radius size in px of the mark | x | x |
+  | `wellKnownName` | rendered shape, one of Circle, Square, Triangle, Star, Cross, X, shape://vertline, shape://horline, shape://slash, shape://backslash, shape://dot, shape://plus, shape://times, shape://oarrow or shape://carrow | x | x |
+  | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
+  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
+  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
+  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
+  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
+  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
 
 - `Icon` symbolizer properties
-  - `kind` must be equal to `Icon`
-  - `image` url of the image to use as icon
-  - `size` size of the icon
-  - `opacity` opacity of the icon
-  - `rotate` rotation of the icon
-  - `msBringToFront` this boolean will allow setting the `disableDepthTestDistance` value for the feature. This would only apply on Cesium maps.
+  | Property | Description | 2D | 3D |
+  | --- | --- | --- | --- |
+  | `kind` | must be equal to **Icon** | x | x |
+  | `image` | url of the image to use as icon | x | x |
+  | `size` | size of the icon | x | x |
+  | `opacity` | opacity of the icon | x | x |
+  | `rotate` | rotation of the icon | x | x |
+  | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
+  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
+  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
+  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
+  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
+  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
 
 - `Line` symbolizer properties
-  - `kind` must be equal to `Line`
-  - `color` stroke color of the line
-  - `opacity` stroke opacity of the line
-  - `width` stroke width of the line
-  - `dasharray` array that represent the dashed line intervals
-  - `msClampToGround` this boolean will allow setting the `clampToGround` value for the feature. This would only apply on Cesium maps.
+  | Property | Description | 2D | 3D |
+  | --- | --- | --- | --- |
+  | `kind` | must be equal to **Line** | x | x |
+  | `color` | stroke color of the line | x | x |
+  | `opacity` | stroke opacity of the line | x | x |
+  | `width` | stroke width of the line | x | x |
+  | `dasharray` | array that represent the dashed line intervals | x | x |
+  | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
 
 - `Fill` symbolizer properties
-  - `kind` must be equal to `Fill`
-  - `color` fill color of the polygon
-  - `fillOpacity` fill opacity of the polygon
-  - `outlineColor` outline color of the polygon
-  - `outlineOpacity` outline opacity of the polygon
-  - `outlineWidth` outline width of the polygon
-  - `msClassificationType` allow setting `classificationType` value for the feature. This would only apply on polygon graphics in Cesium maps.
-  - `msClampToGround` this boolean will allow setting the `clampToGround` value for the feature. This would only apply on Cesium maps.
+  | Property | Description | 2D | 3D |
+  | --- | --- | --- | --- |
+  | `kind` | must be equal to **Fill** | x | x |
+  | `color` | fill color of the polygon | x | x |
+  | `fillOpacity` | fill opacity of the polygon | x | x |
+  | `outlineColor` | outline color of the polygon | x | x |
+  | `outlineOpacity` | outline opacity of the polygon | x | x |
+  | `outlineWidth` | outline width of the polygon | x | x |
+  | `msClassificationType` | allow setting **classificationType** value for the feature. This would only apply on polygon graphics in Cesium maps. |  | x |
+  | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
 
 - `Text` symbolizer properties
-  - `kind` must be equal to `Text`
-  - `label` text to show in the label, the {{propertyKey}} notetion allow to access feature properties (eg. 'feature name is {{name}}')
-  - `font` array of font family names
-  - `size` font size of the label
-  - `fontStyle` font style of the label: normal or italic
-  - `fontWeight` font style of the label: normal or bold
-  - `color` font color of the label
-  - `haloColor` halo color of the label
-  - `haloWidth` halo width of the label
-  - `offset` array of x and y values offset of the label
+  | Property | Description | 2D | 3D |
+  | --- | --- | --- | --- |
+  | `kind` | must be equal to **Text** | x | x |
+  | `label` | text to show in the label, the {{propertyKey}} notetion allow to access feature properties (eg. 'feature name is {{name}}') | x | x |
+  | `font` | array of font family names | x | x |
+  | `size` | font size of the label | x | x |
+  | `fontStyle` | font style of the label: normal or italic | x | x |
+  | `fontWeight` | font style of the label: normal or bold | x | x |
+  | `color` | font color of the label | x | x |
+  | `haloColor` | halo color of the label | x | x |
+  | `haloWidth` | halo width of the label | x | x |
+  | `offset` | array of x and y values offset of the label | x | x |
+  | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
+  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
+  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
+  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
+  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
+  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
+
+- `Model` symbolizer properties (custom symbolizer to visualize 3D model as point geometries)
+  | Property | Description | 2D | 3D |
+  | --- | --- | --- | --- |
+  | `kind` | must be equal to **Model** |  | x |
+  | `model` | url of a 3D .glb file |  | x |
+  | `heading` | heading rotation |  | x |
+  | `pitch` | pitch rotation |  | x |
+  | `roll` | roll rotation |  | x |
+  | `scale` | scale factor |  | x |
+  | `color` | color mixed with the mesh texture/material |  | x |
+  | `opacity` | color opacity |  | x |
+  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
+  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
+  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
+  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
+  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
 
 #### Legacy Vector Style (deprecated)
 

@@ -60,7 +60,161 @@ const getNumberAttributeValue = (value, properties) => {
     return null;
 };
 
-function modifyPointHeight(map, entity, symbolizer, properties) {
+const isGlobalOpacityChanged = (entity, globalOpacity) => (entity._msGlobalOpacity ?? 1) !== globalOpacity;
+
+function getLeaderLinePositions({
+    map,
+    cartographic
+}) {
+    return new Promise(resolve => {
+        const drawLine = (zValue) => {
+            resolve(
+                zValue === cartographic.height
+                    ? undefined
+                    : Cesium.Cartesian3.fromRadiansArrayHeights([
+                        cartographic.longitude,
+                        cartographic.latitude,
+                        zValue,
+                        cartographic.longitude,
+                        cartographic.latitude,
+                        cartographic.height
+                    ])
+            );
+        };
+        const terrainProvider = map?.terrainProvider;
+        if (!terrainProvider) {
+            drawLine(0);
+            return;
+        }
+        const position = Cesium.Cartographic.fromRadians(
+            cartographic.longitude,
+            cartographic.latitude
+        );
+        const promise = terrainProvider?.availability
+            ? Cesium.sampleTerrainMostDetailed(
+                terrainProvider,
+                position
+            )
+            : Cesium.sampleTerrain(
+                terrainProvider,
+                terrainProvider?.sampleTerrainZoomLevel ?? 18,
+                position
+            );
+        if (Cesium.defined(promise)) {
+            promise
+                .then((updatedPositions) => drawLine(updatedPositions?.[0]?.height ?? 0))
+                .catch(() => drawLine(0));
+        } else {
+            drawLine(0);
+        }
+    });
+}
+
+const cachedLeaderLineCanvas = {};
+
+function createLeaderLineCanvas({
+    offset = [],
+    msLeaderLineWidth
+}) {
+    const lineWidth = msLeaderLineWidth ?? 1;
+    const width = Math.abs(offset[0] || 1);
+    const height = Math.abs(offset[1] || 1);
+    const isLeftTopDiagonal = Math.sign(offset[0]) === Math.sign(offset[1]);
+    const key = [width, height, lineWidth, isLeftTopDiagonal].join(';');
+    if (cachedLeaderLineCanvas[key]) {
+        return cachedLeaderLineCanvas[key];
+    }
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    ctx.moveTo(...(isLeftTopDiagonal ? [0, 0] : [width, 0]));
+    ctx.lineTo(...(isLeftTopDiagonal ? [width, height] : [0, height]));
+    ctx.stroke();
+    cachedLeaderLineCanvas[key] = canvas;
+    return canvas;
+}
+
+function addLeaderLineGraphic({
+    map,
+    symbolizer,
+    entity,
+    globalOpacity
+}) {
+    const compareKeys = [
+        'msLeaderLineColor',
+        'msLeaderLineOpacity',
+        'msLeaderLineWidth',
+        'msHeight',
+        'msHeightReference',
+        'offset'
+    ];
+    const shouldNotUpdateLeaderLine = entity._msSymbolizer
+        && !isGlobalOpacityChanged(entity, globalOpacity)
+        && isEqual(
+            pick(symbolizer, compareKeys),
+            pick(entity._msSymbolizer, compareKeys)
+        );
+    if (shouldNotUpdateLeaderLine) {
+        return Promise.resolve({
+            polyline: entity.polyline,
+            billboard: entity.billboard,
+            updated: false
+        });
+    }
+
+    if (!symbolizer.msLeaderLineWidth) {
+        return Promise.resolve({
+            updated: entity.polyline !== undefined
+        });
+    }
+
+    const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue(Cesium.JulianDate.now()));
+
+    return (
+        (
+            symbolizer?.msHeight !== entity._msSymbolizer?.msHeight
+            || symbolizer?.msHeightReference !== entity._msSymbolizer?.msHeightReference
+            || !entity.polyline
+        )
+            ? getLeaderLinePositions({ map, cartographic })
+                .then((positions) => new Cesium.PolylineGraphics({ positions }))
+            : Promise.resolve(entity.polyline)
+    )
+        .then((polyline) => {
+            const color = getCesiumColor({
+                color: symbolizer.msLeaderLineColor || '#000000',
+                opacity: (symbolizer.msLeaderLineOpacity ?? 1) * globalOpacity
+            });
+            if (polyline) {
+                polyline.material = color;
+                polyline.width = symbolizer.msLeaderLineWidth ?? 1;
+            }
+            if (symbolizer.offset && (symbolizer.offset[0] !== 0 || symbolizer.offset[1] !== 0)) {
+                const canvas = createLeaderLineCanvas(symbolizer);
+                const billboard = new Cesium.BillboardGraphics({
+                    image: canvas,
+                    scale: 1,
+                    pixelOffset: new Cesium.Cartesian2(
+                        (symbolizer.offset[0] || 0) / 2,
+                        (symbolizer.offset[1] || 0) / 2
+                    ),
+                    color
+                });
+                return {
+                    billboard,
+                    polyline,
+                    updated: true
+                };
+            }
+            return { polyline, updated: true };
+        });
+}
+
+function modifyPointHeight({ entity, symbolizer, properties }) {
     // store the initial position of the feature created from the GeoJSON feature
     if (!entity._msPosition) {
         entity._msPosition = entity.position.getValue(Cesium.JulianDate.now());
@@ -72,14 +226,10 @@ function modifyPointHeight(map, entity, symbolizer, properties) {
         entity.position.setValue(entity._msPosition);
         return;
     }
-    const ellipsoid = map?.scene?.globe?.ellipsoid;
-    if (!ellipsoid) {
-        return;
-    }
 
-    const cartographic = ellipsoid.cartesianToCartographic(entity._msPosition);
+    const cartographic = Cesium.Cartographic.fromCartesian(entity._msPosition);
     cartographic.height = height;
-    entity.position.setValue(ellipsoid.cartographicToCartesian(cartographic));
+    entity.position.setValue(Cesium.Cartographic.toCartesian(cartographic));
     return;
 }
 
@@ -130,12 +280,18 @@ const getGraphics = ({
     map
 }) => {
     if (symbolizer.kind === 'Mark') {
-        modifyPointHeight(map, entity, symbolizer, properties);
+        modifyPointHeight({ entity, symbolizer, properties });
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
         if (image) {
             const side = width > height ? width : height;
             const scale = (symbolizer.radius * 2) / side;
-            return {
+            return addLeaderLineGraphic({
+                map,
+                symbolizer,
+                entity,
+                globalOpacity
+            }).then(({ polyline }) => ({
+                polyline,
                 billboard: new Cesium.BillboardGraphics({
                     image,
                     scale,
@@ -147,16 +303,22 @@ const getGraphics = ({
                         opacity: 1 * globalOpacity
                     })
                 })
-            };
+            }));
         }
     }
     if (symbolizer.kind === 'Icon') {
-        modifyPointHeight(map, entity, symbolizer, properties);
+        modifyPointHeight({ entity, symbolizer, properties });
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
         if (image) {
             const side = width > height ? width : height;
             const scale = symbolizer.size / side;
-            return {
+            return addLeaderLineGraphic({
+                map,
+                symbolizer,
+                entity,
+                globalOpacity
+            }).then(({ polyline }) =>({
+                polyline,
                 billboard: new Cesium.BillboardGraphics({
                     image,
                     scale,
@@ -168,12 +330,19 @@ const getGraphics = ({
                         opacity: symbolizer.opacity * globalOpacity
                     })
                 })
-            };
+            }));
         }
     }
     if (symbolizer.kind === 'Text') {
-        modifyPointHeight(map, entity, symbolizer, properties);
-        return {
+        modifyPointHeight({ entity, symbolizer, properties });
+        return addLeaderLineGraphic({
+            map,
+            symbolizer,
+            entity,
+            globalOpacity
+        }).then(({ polyline, billboard }) => ({
+            billboard,
+            polyline,
             label: new Cesium.LabelGraphics({
                 text: parseLabel({ properties }, symbolizer.label),
                 font: [symbolizer.fontStyle, symbolizer.fontWeight,  `${symbolizer.size}px`, castArray(symbolizer.font || ['serif']).join(', ')]
@@ -196,17 +365,19 @@ const getGraphics = ({
                     outlineWidth: symbolizer.haloWidth
                 })
             })
-        };
+        }));
     }
     if (symbolizer.kind === 'Model') {
         if (!symbolizer?.model) {
-            return {};
+            return Promise.resolve({});
         }
         const compareKeys = ['model'];
-        const shouldNotUpdateGraphics = entity.model && entity._msSymbolizer && isEqual(
-            pick(symbolizer, compareKeys),
-            pick(entity._msSymbolizer, compareKeys)
-        );
+        const shouldNotUpdateGraphics = entity.model
+            && entity._msSymbolizer
+            && isEqual(
+                pick(symbolizer, compareKeys),
+                pick(entity._msSymbolizer, compareKeys)
+            );
 
         const model = shouldNotUpdateGraphics
             ? entity.model
@@ -216,7 +387,7 @@ const getGraphics = ({
                     url: symbolizer?.model
                 })
             });
-        modifyPointHeight(map, entity, symbolizer, properties);
+        modifyPointHeight({ entity, symbolizer, properties });
         const position = entity._msPosition;
         const heading = Cesium.Math.toRadians(symbolizer?.heading ?? 0);
         const pitch = Cesium.Math.toRadians(symbolizer?.pitch ?? 0);
@@ -233,12 +404,20 @@ const getGraphics = ({
 
         model.heightReference = Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'];
 
-        return {
-            ...(!shouldNotUpdateGraphics && { model })
-        };
+        return addLeaderLineGraphic({
+            map,
+            symbolizer,
+            entity,
+            globalOpacity
+        }).then(({ polyline, updated  }) => ({
+            ...((!shouldNotUpdateGraphics || updated) && {
+                model,
+                polyline
+            })
+        }));
     }
     if (symbolizer.kind === 'Line') {
-        return {
+        return Promise.resolve({
             polyline: new Cesium.PolylineGraphics({
                 material: symbolizer?.dasharray
                     ? getCesiumDashArray({
@@ -254,7 +433,7 @@ const getGraphics = ({
                 positions: entity._msStoredCoordinates.polyline,
                 clampToGround: symbolizer.msClampToGround
             })
-        };
+        });
     }
     if (symbolizer.kind === 'Fill') {
         const polygon = new Cesium.PolygonGraphics({
@@ -287,12 +466,12 @@ const getGraphics = ({
                 clampToGround: symbolizer.msClampToGround
             });
         }
-        return {
+        return Promise.resolve({
             polygon,
             ...(polyline && { polyline })
-        };
+        });
     }
-    return {};
+    return Promise.resolve({});
 };
 
 function getStyleFuncFromRules({
@@ -306,9 +485,8 @@ function getStyleFuncFromRules({
         entities,
         map,
         opacity: globalOpacity = 1
-    }) => {
-
-        (entities || []).forEach((entity) => {
+    }) => Promise.all(
+        (entities || []).map((entity) => new Promise(resolve => {
             let coordinates = {};
             GRAPHIC_KEYS.forEach((graphicKey) => {
                 if (!entity._msStoredCoordinates) {
@@ -337,8 +515,8 @@ function getStyleFuncFromRules({
                     || polylineGeometrySymbolizers[polylineGeometrySymbolizers.length - 1]
                     || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1];
 
-                if (symbolizer && !isEqual(symbolizer, entity._msSymbolizer)) {
-                    const graphics = getGraphics({
+                if (symbolizer && (!isEqual(symbolizer, entity._msSymbolizer) || isGlobalOpacityChanged(entity, globalOpacity))) {
+                    return getGraphics({
                         symbolizer,
                         images,
                         getImageIdFromSymbolizer,
@@ -346,31 +524,38 @@ function getStyleFuncFromRules({
                         globalOpacity,
                         properties,
                         map
+                    }).then((graphics) => {
+                        if (!isEmpty(graphics)) {
+                            GRAPHIC_KEYS.forEach((graphicKey) => {
+                                entity[graphicKey] = undefined;
+                            });
+                            Object.keys(graphics).forEach(graphicKey => {
+                                entity[graphicKey] = graphics[graphicKey];
+                            });
+                        }
+                        entity._msSymbolizer = symbolizer;
+                        entity._msGlobalOpacity = globalOpacity;
+                        resolve(entity);
                     });
-                    if (!isEmpty(graphics)) {
-                        GRAPHIC_KEYS.forEach((graphicKey) => {
-                            entity[graphicKey] = undefined;
-                        });
-                        Object.keys(graphics).forEach(graphicKey => {
-                            entity[graphicKey] = graphics[graphicKey];
-                        });
-                    }
-                    entity._msSymbolizer = symbolizer;
                 }
                 if (!symbolizer && entity._msSymbolizer) {
                     GRAPHIC_KEYS.forEach((graphicKey) => {
                         entity[graphicKey] = undefined;
                     });
                     entity._msSymbolizer = undefined;
+                    entity._msGlobalOpacity = undefined;
                 }
-            } else {
-                GRAPHIC_KEYS.forEach((graphicKey) => {
-                    entity[graphicKey] = undefined;
-                });
-                entity._msSymbolizer = undefined;
+                return resolve(entity);
             }
-        });
-    };
+
+            GRAPHIC_KEYS.forEach((graphicKey) => {
+                entity[graphicKey] = undefined;
+            });
+            entity._msSymbolizer = undefined;
+            entity._msGlobalOpacity = undefined;
+            return resolve(entity);
+        }))
+    );
 }
 
 class CesiumStyleParser {

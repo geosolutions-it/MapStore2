@@ -2412,7 +2412,9 @@
             "pitch": "X axis rotation",
             "roll": "Y axis rotation",
             "color": "Color",
-            "pointHeight": "Point height"
+            "pointHeight": "Point height",
+            "leaderLineColor": "Leader line color",
+            "leaderLineWidth": "Leader line width"
         },
         "playback": {
             "settings": {

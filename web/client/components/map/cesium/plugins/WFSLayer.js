@@ -60,8 +60,9 @@ const createLayer = (options, map) => {
                                             entities: dataSource?.entities?.values,
                                             map,
                                             opacity: options.opacity ?? 1
+                                        }).then(() => {
+                                            map.scene.requestRender();
                                         });
-                                        map.scene.requestRender();
                                     }
                                 });
                         });
@@ -110,8 +111,9 @@ Layers.registerType('wfs', {
                                     entities: layer.dataSource.entities.values,
                                     map,
                                     opacity: newOptions.opacity ?? 1
+                                }).then(() => {
+                                    map.scene.requestRender();
                                 });
-                                map.scene.requestRender();
                             }
                         });
                 });

@@ -40,6 +40,17 @@ const heightPoint3dOptions = {
                 ...numberAttributes
             ];
         }
+    }),
+    msLeaderLineColor: property.color({
+        key: 'msLeaderLineColor',
+        opacityKey: 'msLeaderLineOpacity',
+        label: 'styleeditor.leaderLineColor',
+        stroke: true
+    }),
+    msLeaderLineWidth: property.width({
+        key: 'msLeaderLineWidth',
+        label: 'styleeditor.leaderLineWidth',
+        fallbackValue: 0
     })
 };
 
