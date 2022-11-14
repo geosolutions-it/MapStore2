@@ -52,7 +52,7 @@ In order to observe the layers in a finite fixed time interval the user can set 
 
 Based on the timeline configuration, the reset button <img src="../img/button/reset.jpg" class="ms-docbutton"/> can be made visible on the timeline toolbar. It allows the user to reset the time data based on the current mode of the timeline
 
-* When the current mode is **single**, the icon is represented as <img src="../img/button/timeline-collapse-icon.jpg" class="ms-docbutton"/>, and the layer is selected in timeline, the time is set to `nearest of now` and when the layer is _not selected_, the time is set to `now`
+* When the current mode is **single**, the icon is represented as <img src="../img/button/timeline-collapse-icon.jpg" class="ms-docbutton"/>, and the layer is *selected* in timeline, the time is set to `nearest of now` and when the layer is *not selected*, the time is set to `now`
 
 * When the current mode is **range**, the icon is represented as <img src="../img/button/timeline-range.jpg" class="ms-docbutton"/>, the time is set to the full range of the layer
 
