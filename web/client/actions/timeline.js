@@ -28,8 +28,8 @@ export const SET_SNAP_RADIO_BUTTON_ENABLED = "TIMELINE:SNAP_RADIO_BUTTON_ENABLED
  * @memberof actions.timeline
  * @param {string} time current selected time (ISO8601)
  * @param {string} group the group of the selected time (typically the layer name)
- * @param {string} what clicked element. Can be 'timeline' or others
- * @param {object} item the effective clicked item, if any
+ * @param {string} [what] clicked element. Can be 'timeline' or others
+ * @param {object} [item] the effective clicked item, if any
  * @return object of type `TIMELINE:SELECT_TIME` with `time` group` `what` `item`
  */
 export const selectTime = (time, group, what, item) => ({ type: SELECT_TIME, time, group, what, item});
@@ -116,8 +116,19 @@ export const setMapSync = mapSync => ({type: SET_MAP_SYNC, mapSync});
  */
 export const initTimeline = (config) => ({type: INIT_TIMELINE, config});
 
+/**
+ * Toggle reset timeline action
+ */
 export const resetTimeline = () => ({type: RESET_TIMELINE});
 
-export const setRangeOnInitialization = () => ({type: SET_RANGE_INIT});
+/**
+ * Initialize the range to be applied on timeline for the layer
+ * @param value type of range `now|fullRange`
+ */
+export const initializeRange = (value) => ({type: SET_RANGE_INIT, value});
 
+/**
+ * Set snap radio button state
+ * @param {boolean} snapRadioButtonEnabled
+ */
 export const setSnapRadioButtonEnabled = (snapRadioButtonEnabled) => ({type: SET_SNAP_RADIO_BUTTON_ENABLED, snapRadioButtonEnabled});

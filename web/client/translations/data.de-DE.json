@@ -2503,7 +2503,11 @@
             "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
             "expand" : "Erweitern Sie den Zeitschieberegler",
             "collapse" : "Schieberegler für die Zeitspanne reduzieren",
-            "reset" : "Zurücksetzen auf Anfangszeit",
+            "reset" : {
+                "range": "Stellen Sie den Bereich so ein, dass er alle Daten umfasst",
+                "singleNow": "Stellen Sie die Zeit auf jetzt ein",
+                "singleNearest": "Stellen Sie die Zeit auf den nächsten Wert von jetzt ein"
+            },
             "collapsed": {
                 "title": "Zeitleiste wurde reduziert",
                 "tooltip": "Klicken Sie hier, um es erneut zu erweitern"

@@ -20,12 +20,12 @@ import {
     RESET_TIMELINE,
     initializeSelectLayer,
     INIT_SELECT_LAYER,
-    setRangeOnInitialization,
+    initializeRange,
     SET_RANGE_INIT,
     autoselect,
     setEndValuesSupport,
-    enableOffset,
-    setSnapRadioButtonEnabled
+    setSnapRadioButtonEnabled,
+    selectTime
 } from '../actions/timeline';
 
 import { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } from '../actions/dimension';
@@ -53,7 +53,9 @@ import {
     timeDataSelector,
     offsetTimeSelector,
     currentTimeSelector,
-    visibleLayersWithTimeDataSelector, layerDimensionDataSelectorCreator
+    visibleLayersWithTimeDataSelector,
+    layerDimensionDataSelectorCreator,
+    offsetEnabledSelector
 } from '../selectors/dimension';
 
 import { getNearestDate, roundRangeResolution, isTimeDomainInterval } from '../utils/TimeUtils';
@@ -105,6 +107,8 @@ const snapTime = (getState, group, time) => {
 const snap = true; // TODO: externalize to make this configurable.
 
 const toISOString = date => isString(date) ? date : date.toISOString();
+
+const RATIO = 5; // ratio of the size of the offset to set relative to the current viewport, if set
 
 /**
  * Creates a stream to retrieve histogram/domain values.
@@ -191,6 +195,48 @@ const loadRangeData = (id, timeData, getState) => {
             });
         });
 };
+
+/**
+ * Update timeline with current, offset and the range data
+ * on range initialization
+ * @param state
+ * @param {string} value
+ * @param {string} [currentTime]
+ * @returns {Observable}
+ */
+const updateRangeOnInit = (state, value, currentTime) => {
+    const { isFullRange, offsetTime } = state;
+    // The startTime and endTime is full range of the layer
+    let [startTime, endTime] = value?.filter(v => !!v) || [];
+    const start = isFullRange ? startTime : currentTime;
+
+    // Set the offset 1 day by default
+    const rangeDistance = moment(1000 * 60 * 60 * 24 * RATIO).diff(0);
+    const defaultOffset = moment(new Date()).add(rangeDistance / RATIO).toISOString();
+
+    const end = isFullRange ? endTime : (offsetTime ?? defaultOffset);
+    const difference = moment(end).diff(moment(start));
+    const nextEnd = moment(start).add(difference).toISOString();
+    // Set current, offset and the range of the timeline
+    return Rx.Observable.of(setCurrentTime(start))
+        .concat(Rx.Observable.of(setCurrentOffset(end)))
+        .concat(Rx.Observable.of(
+            onRangeChanged({
+                start: startTime,
+                end: nextEnd
+            })
+        ));
+};
+
+/**
+ * Initialize the layer selected
+ * with first layer from the list of time layers
+ * @param {object} state
+ * @param {boolean} allowSnap control the snap time operation
+ * @return {{layerId: string, type: string, snap: boolean}}
+ */
+const initializeSelectLayerWithSnap = (state, allowSnap) =>
+    initializeSelectLayer(get(visibleLayersWithTimeDataSelector(state), "[0].id"), allowSnap);
 
 /**
  * Updates timeline state for layers that has multidimensional extension
@@ -315,7 +361,6 @@ export const snapTimeGuideLayer = (action$, { getState = () => { } } = {}) =>
 export const settingInitialOffsetValue = (action$, {getState = () => {}} = {}) =>
     action$.ofType(ENABLE_OFFSET)
         .switchMap( (action) => {
-            const RATIO = 5; // ratio of the size of the offset to set relative to the current viewport, if set
             const state = getState();
             const time = currentTimeSelector(state);
             const currentViewRange = rangeSelector(state);
@@ -383,46 +428,22 @@ export const updateRangeDataOnRangeChange = (action$, { getState = () => { } } =
         });
 
 /**
- * Update timeline with current, offset and the range data
- * @param state
- * @param {string} value
- * @param {string} [currentTime]
- * @returns {Observable}
- */
-const updateRangeOnInit = (state, value, currentTime) => {
-    const { isFullRange, offsetTime } = state;
-    // The startTime and endTime is full range of the layer
-    let [startTime, endTime] = value?.filter(v => !!v) || [];
-    const start = isFullRange ? startTime : currentTime;
-    const end = isFullRange ? endTime : (offsetTime ?? moment(new Date()).toISOString());
-    const difference = moment(end).diff(moment(start));
-    const nextEnd = moment(start).add(difference).toISOString();
-    // Set current, offset and the range of the timeline
-    return Rx.Observable.of(
-        onRangeChanged({
-            start: startTime,
-            end: nextEnd
-        })
-    ).concat(Rx.Observable.of(
-        setCurrentTime(start),
-        setCurrentOffset(end)
-    ));
-};
-
-/**
  * Set range of the timeline on initialization
  * Triggered based on initial timeline configuration (i.e. mode and snap)
  * @param action$
  * @param {function} getState returns the state
  * @return {observable}
  */
-export const rangeOnInit = (action$, { getState = () => { } } = {}) =>
+export const setRangeOnInit = (action$, { getState = () => { } } = {}) =>
     action$.ofType(SET_RANGE_INIT)
-        .switchMap(() => {
+        .switchMap(({value: rangeType} = {}) => {
             const state = getState();
             const snapType = snapTypeSelector(state);
             const layerId = selectedLayerSelector(state);
-            const rangeState = { isFullRange: settingsSelector(state)?.initialSnap === 'fullRange', offsetTime: offsetTimeSelector(state) };
+            const rangeState = {
+                isFullRange: [rangeType, settingsSelector(state)?.initialSnap].includes('fullRange'),
+                offsetTime: offsetTimeSelector(state)
+            };
             const { domain } = layerDimensionDataSelectorCreator(layerId, "time")(state) || {};
             const currentTime = currentTimeSelector(state);
             const getTimeDomain = (time) => getTimeDomainsObservable(domainArgs, false, getState, snapType, time);
@@ -446,32 +467,64 @@ export const rangeOnInit = (action$, { getState = () => { } } = {}) =>
         });
 
 /**
+ * Reset timeline based on current mode and layer selection
+ * @param action$
+ * @param {function} getState returns the state
+ * @return {observable}
+ */
+export const resetTimeline = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(RESET_TIMELINE)
+        .switchMap(() => {
+            const state = getState();
+            const isRange = offsetEnabledSelector(state);
+            const selectedLayer = selectedLayerSelector(state);
+            if (isRange) {
+                // Set guide layer when snap is configured
+                return Rx.Observable.of(
+                    isEmpty(selectedLayer)
+                        ? initializeSelectLayerWithSnap(state, false)
+                        : initializeRange('fullRange')
+                );
+            }
+            const currentViewRange = rangeSelector(state) || {};
+            const nowTime = new Date();
+            const isInViewRange = moment(currentViewRange.end) > moment(nowTime);
+            return Rx.Observable.of(selectTime(nowTime.toISOString(), selectedLayer))
+                .concat(
+                    ...(isInViewRange ? []
+                        : [Rx.Observable.of(
+                            onRangeChanged({
+                                start: currentViewRange.start,
+                                end: moment(nowTime).add(1000 * 60 * 60 * 24 * RATIO)
+                            })
+                        )]
+                    )
+                );
+        });
+
+/**
  * Triggered on initialization of timeline with initial snap and mode
  * @param action$
  * @param {function} getState returns the state
  * @return {observable}
  */
 export const onInitTimeLine = (action$, { getState = () => { } } = {}) =>
-    action$.ofType(RESET_TIMELINE)
-        .merge(action$.ofType(INIT_TIMELINE).debounceTime(500))
+    action$.ofType(INIT_TIMELINE).debounceTime(500)
         .switchMap(({config} = {}) => {
-            const selectedLayer = selectedLayerName(getState());
-            const { initialMode, initialSnap } = config ?? (settingsSelector(getState()) || {});
+            const state = getState();
+            const selectedLayer = selectedLayerName(state);
+            const { initialMode, initialSnap } = config;
             const defaultSnapMode = initialMode === "single" && initialSnap === "now";
-            const isReset = isEmpty(config);
-            const initializeLayer = (_snap) =>
-                initializeSelectLayer(get(visibleLayersWithTimeDataSelector(getState()), "[0].id"), _snap);
             if (defaultSnapMode) {
-                return Rx.Observable.of(...(isEmpty(selectedLayer) ? [initializeLayer()] : []))
-                    .concat(Rx.Observable.of(...(defaultSnapMode && isReset ? [enableOffset(false)] : [])));
+                return Rx.Observable.of(...(isEmpty(selectedLayer) ? [initializeSelectLayerWithSnap(state)] : []));
             }
             if (initialMode === "range" && !isEmpty(initialSnap)) {
-                const allowSnap = !isReset && initialSnap !== 'fullRange';
+                const allowSnap = initialSnap !== 'fullRange';
                 // Set guide layer when snap is configured
                 return Rx.Observable.of(
                     isEmpty(selectedLayer)
-                        ? initializeLayer(allowSnap)
-                        : setRangeOnInitialization()
+                        ? initializeSelectLayerWithSnap(state, allowSnap)
+                        : initializeRange()
                 );
             }
             return Rx.Observable.empty();
@@ -486,11 +539,12 @@ export const onInitTimeLine = (action$, { getState = () => { } } = {}) =>
  */
 export const rangeOnInitSelectLayer = (action$, { getState = () => { } } = {}) =>
     action$.ofType(INIT_SELECT_LAYER)
-        .filter(() => {
-            const settings = settingsSelector(getState());
-            return settings?.initialMode === 'range' && !isEmpty(settings?.initialSnap);
-        })
-        .switchMap(() => Rx.Observable.of(setRangeOnInitialization()));
+        .filter(() =>
+            // Allow when range is active or init mode is 'range'
+            offsetEnabledSelector(getState()) || settingsSelector(getState())?.initialMode === "range"
+        ).switchMap(({snap: allowSnap} = {}) =>
+            Rx.Observable.of(initializeRange(!isNil(allowSnap) && !allowSnap ? "fullRange" : "now"))
+        );
 
 export default {
     updateTimelineDataOnMapLoad,
@@ -500,7 +554,8 @@ export default {
     syncTimelineGuideLayer,
     snapTimeGuideLayer,
     onInitTimeLine,
-    rangeOnInit,
+    setRangeOnInit,
     rangeOnInitSelectLayer,
-    onUpdateLayerDimensionData
+    onUpdateLayerDimensionData,
+    resetTimeline
 };

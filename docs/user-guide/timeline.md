@@ -50,14 +50,18 @@ In order to observe the layers in a finite fixed time interval the user can set 
 
 ### Reset timeline
 
-Based on the timeline configuration, the reset button <img src="../img/button/reset.jpg" class="ms-docbutton"/> can be made visible on the timeline toolbar. It allows the user to reset the timeline to the configured state of initial mode and snap
+Based on the timeline configuration, the reset button <img src="../img/button/reset.jpg" class="ms-docbutton"/> can be made visible on the timeline toolbar. It allows the user to reset the time data based on the current mode of the timeline
+
+* When the current mode is **single**, the icon is represented as <img src="../img/button/timeline-collapse-icon.jpg" class="ms-docbutton"/>, and the layer is selected in timeline, the time is set to `nearest of now` and when the layer is _not selected_, the time is set to `now`
+
+* When the current mode is **range**, the icon is represented as <img src="../img/button/timeline-range.jpg" class="ms-docbutton"/>, the time is set to the full range of the layer
 
 !!! Note
-    Reset button is made visible through plugin configuration i.e. `resetButton: true`. It is valid only when `initialMode` and `initialSnap` is configured in the Timeline plugin.
+    Reset button is made visible through plugin configuration i.e. `resetButton: true`
 
 ## Show times available on map
 
-Sometimes you might be interested to show in the timeline histogram only the times instants currently visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync** button <img src="../img/button/timeline-sync-button.jpg" class="ms-docbutton"/> . When this tool is active the timeline will show only the times of the features available in the current map viewport.
+Sometimes you might be interested to show in the timeline histogram only the times instants currently visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync** button <img src="../img/button/viewport-filter.jpg" class="ms-docbutton"/> . When this tool is active the timeline will show only the times of the features available in the current map viewport.
 
 <img src="../img/timeline/timeline-sync-example.jpg" class="ms-docimage"/>
 

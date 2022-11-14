@@ -34,7 +34,9 @@ import {
     initializeSelectLayer,
     SET_END_VALUES_SUPPORT,
     setSnapRadioButtonEnabled,
-    SET_SNAP_RADIO_BUTTON_ENABLED
+    SET_SNAP_RADIO_BUTTON_ENABLED,
+    initializeRange,
+    SET_RANGE_INIT
 } from '../timeline';
 
 describe('timeline actions', () => {
@@ -113,5 +115,11 @@ describe('timeline actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_SNAP_RADIO_BUTTON_ENABLED);
         expect(retval.snapRadioButtonEnabled).toBe(true);
+    });
+    it('initializeRange', () => {
+        const retval = initializeRange("now");
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_RANGE_INIT);
+        expect(retval.value).toBe("now");
     });
 });

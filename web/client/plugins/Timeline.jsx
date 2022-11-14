@@ -47,6 +47,7 @@ import {
     isMapSync,
     isVisible,
     rangeSelector,
+    selectedLayerSelector,
     timelineLayersSelector
 } from '../selectors/timeline';
 import Timeline from './timeline/Timeline';
@@ -61,7 +62,6 @@ const Button = tooltip(ButtonRB);
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
 const getPercent = (val) => parseInt(val, 10) / 100;
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
-const resetValid = (mode, snap) => (mode === 'single' && snap === "now") || (mode === "range" && ['now', 'fullRange'].includes(snap));
 
 /**
   * Timeline Plugin. Shows the timeline tool on the map.
@@ -85,13 +85,14 @@ const resetValid = (mode, snap) => (mode === 'single' && snap === "now") || (mod
   *    }
   * }
   *
-  * @prop cfg.initialMode {string} the initial mode of the timeline. Can be one of 'single' or 'range'.
+  * @prop cfg.initialMode {string} the initial mode of the timeline. Can be one of 'single' or 'range'. Default mode is 'single'
   * When 'range', the time range(offset) is auto enabled upon plugin initialization and when 'single', the offset is disabled
-  * @prop cfg.initialSnap {string} the initial snap option of the timeline. Can be one of 'now' or 'fullRange'.
+  * @prop cfg.initialSnap {string} the initial snap option of the timeline. Can be one of 'now' or 'fullRange'. Default snap is 'now'
   * When 'fullRange', and initialMode is 'range', the offset is enabled and plugin snaps to full range of the guide layer selected.
   * and when 'now', the plugin snaps to the current time range
   * @prop cfg.resetButton {boolean} false by default, when enabled a reset button is made available on the timeline toolbar.
-  * It allows to reset the state of timeline to initial state based on configuration (i.e. initialMode and initialSnap)
+  * Given current mode is single, when layer is selected, the time is set to nearest of now and when layer is unselected, the time is set to now
+  * Given current mode is range, the time is set to the full range of the layer
   *
   * @example
   * {
@@ -116,7 +117,8 @@ const TimelinePlugin = compose(
             statusSelector,
             rangeSelector,
             (state) => state.timeline?.loader !== undefined,
-            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady) => ({
+            selectedLayerSelector,
+            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady, selectedLayer) => ({
                 visible,
                 layers,
                 currentTime,
@@ -125,7 +127,8 @@ const TimelinePlugin = compose(
                 playbackRange,
                 status,
                 viewRange,
-                timelineIsReady
+                timelineIsReady,
+                selectedLayer
             })
         ), {
             setCurrentTime: selectTime,
@@ -226,10 +229,11 @@ const TimelinePlugin = compose(
         onInit = () => {},
         layers,
         timelineIsReady,
-        initialMode,
-        initialSnap,
+        initialMode = 'single',
+        initialSnap = 'now',
         resetButton,
-        reset = () => {}
+        reset = () => {},
+        selectedLayer
     }) => {
         useEffect(()=>{
             // update state with configs coming from configuration file like localConfig.json so that can be used as props initializer
@@ -346,21 +350,18 @@ const TimelinePlugin = compose(
                                 }
                             },
                             {
-                                glyph: "map-filter",
+                                glyph: "viewport-filter",
                                 tooltip: <Message msgId={mapSync ? "timeline.mapSyncOn" : "timeline.mapSyncOff"} />,
                                 bsStyle: mapSync ? 'success' : 'primary',
                                 active: mapSync,
                                 onClick: () => toggleMapSync(!mapSync)
-
                             },
                             {
-                                glyph: "refresh",
+                                glyph: offsetEnabled ? "resize-horizontal" : "time",
                                 visible: !!resetButton,
-                                disabled: !resetValid(initialMode, initialSnap),
-                                tooltip: <Message msgId={"timeline.reset"} />,
+                                tooltip: <Message msgId={`timeline.reset.${offsetEnabled ? "range" : !!selectedLayer ? "singleNearest" : "singleNow"}`} />,
                                 bsStyle: 'primary',
                                 onClick: reset
-
                             }
                         ]} />
                     {Playback && <Playback

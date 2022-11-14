@@ -2476,7 +2476,11 @@
             "disablePlayBack": "Disable playback controls",
             "expand" : "Expand time slider",
             "collapse" : "Collapse time slider",
-            "reset" : "Reset to initial time",
+            "reset" : {
+              "range": "Set range to include all data",
+              "singleNow": "Set time to now",
+              "singleNearest": "Set time to nearest value to now"
+            },
             "collapsed": {
                 "title": "Timeline has been collapsed",
                 "tooltip": "Click here to expand it again"
