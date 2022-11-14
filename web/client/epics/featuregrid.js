@@ -271,7 +271,6 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
 };
 
 const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
-    // Make sure that geometry filter is taken into account if it exists in state and active by the time initial query performed
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     const createInitialQuery = () => createQuery(url, filterObj || {
         featureTypeName: name,
