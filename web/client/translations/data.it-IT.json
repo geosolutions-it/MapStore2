@@ -2403,7 +2403,9 @@
             "pitch": "Rotazione asse X",
             "roll": "Rotazione asse Y",
             "color": "Colore",
-            "pointHeight": "Altezza punto"
+            "pointHeight": "Altezza punto",
+            "leaderLineColor": "Colore linea guida",
+            "leaderLineWidth": "Spessore linea guida"
         },
         "playback": {
             "settings": {

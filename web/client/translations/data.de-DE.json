@@ -2439,7 +2439,9 @@
             "pitch": "Rotation der X-Achse",
             "roll": "Drehung der Y-Achse",
             "color": "Farbe",
-            "pointHeight": "Punkthöhe"
+            "pointHeight": "Punkthöhe",
+            "leaderLineColor": "Farbe der Führungslinie",
+            "leaderLineWidth": "Breite der Führungslinie"
         },
         "playback": {
             "settings": {
