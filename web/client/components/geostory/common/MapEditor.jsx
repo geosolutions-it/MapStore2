@@ -17,8 +17,8 @@ import connectMap, {withFocusedContentMap,
     handleToolbar,
     withToolbar,
     withSaveChanges,
-    withConfirmClose,
-    handleAdvancedMapEditor} from './enhancers/map';
+    withConfirmClose
+} from './enhancers/map';
 
 import localizeStringMap from '../../misc/enhancers/localizeStringMap';
 import BorderLayout from '../../layout/BorderLayout';
@@ -91,7 +91,7 @@ const MapEditor = ({
                             bsStyle: "primary",
                             noTooltipWhenDisabled: true
                         }}
-                        buttons={buttons}/>
+                        buttons={buttons} />
                 </div>
             }>
             {!!editNode &&
@@ -130,7 +130,6 @@ export default branch(
         withSaveChanges,
         handleMapUpdate,
         handleToolbar,
-        handleAdvancedMapEditor,
         withToolbar,
         withConfirmClose
     )
