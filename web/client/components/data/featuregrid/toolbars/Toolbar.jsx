@@ -260,7 +260,7 @@ const standardButtons = {
         onClick={() => {
             events.setViewportFilter && events.setViewportFilter(!viewportFilter);
         }}
-        glyph="filter-layer"
+        glyph="viewport-filter"
         tooltipPosition="top"
         className="viewportFilter-tool"
         buttonClassName="square-button-md no-border"
