@@ -15,7 +15,35 @@ import Spinner from 'react-spinkit';
 import BorderLayout from '../../layout/BorderLayout';
 import QueryToolbar from './QueryToolbar';
 import QueryPanelHeader from './QueryPanelHeader';
+import {upperFirst} from "lodash/string";
 
+
+function overrideItem(item, overrides = [], layerName) {
+    let replacement;
+    replacement = overrides.find(i => i.target === item.id);
+    if (replacement?.layerNameRegex) {
+        const regexp = new RegExp(replacement.layerNameRegex);
+        if (!regexp.test(layerName)) replacement = null;
+    }
+    return replacement ?? item;
+}
+
+const EmptyComponent = () => {
+    return null;
+};
+
+function handleRemoved(item) {
+    return item.plugin ? item : {
+        ...item,
+        plugin: EmptyComponent
+    };
+}
+
+function mergeItems(standard = [], overrides, layerName) {
+    return standard
+        .map(item => overrideItem(item, overrides, layerName))
+        .map(handleRemoved);
+}
 
 class QueryBuilder extends React.Component {
     static propTypes = {
@@ -59,8 +87,10 @@ class QueryBuilder extends React.Component {
         advancedToolbar: PropTypes.bool,
         loadingError: PropTypes.bool,
         controlActions: PropTypes.object,
-        getItems: PropTypes.func,
-        renderItems: PropTypes.func
+        standardItems: PropTypes.object,
+        items: PropTypes.array,
+        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        style: PropTypes.object
     };
 
     static defaultProps = {
@@ -101,8 +131,36 @@ class QueryBuilder extends React.Component {
         controlActions: {
             onToggleQuery: () => {}
         },
-        renderItems: () => {},
-        getItems: () => {}
+        items: [],
+        selectedLayer: false,
+        standardItems: {},
+        style: {}
+    };
+
+    getItems = (target) => {
+        const layerName = this.props.selectedLayer;
+        const filtered = this.props.items.filter(this.filterItem(target, layerName));
+        const merged = mergeItems(this.props.standardItems[target], this.props.items, layerName)
+            .map(item => ({
+                ...item,
+                target
+            }));
+        return [...merged, ...filtered]
+            .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
+    };
+
+    renderItem = (item, opts) => {
+        const {validations, ...options } = opts;
+        const Comp = item.component ?? item.plugin;
+        const {style, ...other} = this.props;
+        const itemOptions = this.props[item.id + "Options"];
+        const hideItem = options[`hide${upperFirst(item.id)}`] === true;
+        return hideItem ? null : <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
+    };
+
+    renderItems = (target, options) => {
+        return this.getItems(target)
+            .map(item => this.renderItem(item, options));
     };
 
     render() {
@@ -146,15 +204,23 @@ class QueryBuilder extends React.Component {
         const { spatialMethodOptions, toolsOptions, spatialOperations} = this.props;
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
-                {this.props.renderItems('start', { spatialOperations, spatialMethodOptions, toolsOptions })}
-                {this.props.renderItems('attributes', { spatialOperations, spatialMethodOptions, toolsOptions })}
-                {this.props.renderItems('afterAttributes', { spatialOperations, spatialMethodOptions, toolsOptions })}
-                {this.props.renderItems('spatial', { spatialOperations, spatialMethodOptions, toolsOptions })}
-                {this.props.renderItems('afterSpatial', { spatialOperations, spatialMethodOptions, toolsOptions })}
-                {this.props.renderItems('crossLayer', { spatialOperations, spatialMethodOptions, toolsOptions })}
-                {this.props.renderItems('end', { spatialOperations, spatialMethodOptions, toolsOptions })}
+                {this.renderItems('start', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('attributes', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('afterAttributes', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('spatial', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('afterSpatial', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('crossLayer', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('end', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
             </BorderLayout>
             : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
+    }
+
+    filterItem = (target, layerName) => (el) => {
+        if (el.layerNameRegex) {
+            const regexp = new RegExp(el.layerNameRegex);
+            return (!target || el.target === target) && regexp.test(layerName);
+        }
+        return (!target || el.target === target);
     }
 }
 

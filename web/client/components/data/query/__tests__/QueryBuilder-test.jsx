@@ -12,6 +12,15 @@ import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
 import QueryBuilder from '../QueryBuilder';
+import standardItemsReference from "../../../../plugins/querypanel/index";
+import SwitchPanel from "../../../misc/switch/SwitchPanel";
+
+const standardItems = Object.keys(standardItemsReference).reduce((prev, cur) => {
+    return {...prev, [cur]: standardItemsReference[cur].map(el => ({
+        ...el,
+        plugin: () => <SwitchPanel key={el.id} />
+    }))};
+}, {});
 
 describe('QueryBuilder', () => {
 
@@ -120,13 +129,13 @@ describe('QueryBuilder', () => {
                 "attribute5"
             ]
         }];
-
         const querybuilder = ReactDOM.render(
             <QueryBuilder
                 filterFields={filterFields}
                 attributes={attributes}
                 groupFields={groupFields}
                 groupLevels={groupLevels}
+                standardItems={standardItems}
             />,
             document.getElementById("container")
         );
@@ -174,13 +183,14 @@ describe('QueryBuilder', () => {
         const querybuilder = ReactDOM.render(
             <QueryBuilder
                 toolsOptions={{
-                    hideCrossLayer: true,
+                    hideCrossLayerFilter: true,
                     hideSpatialFilter: true
                 }}
                 filterFields={filterFields}
                 attributes={attributes}
                 groupFields={groupFields}
                 groupLevels={groupLevels}
+                standardItems={standardItems}
             />,
             document.getElementById("container")
         );

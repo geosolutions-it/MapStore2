@@ -86,34 +86,6 @@ import {
 } from '../selectors/queryform';
 import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
-import {upperFirst} from "lodash/string";
-
-function overrideItem(item, overrides = [], layerName) {
-    let replacement;
-    replacement = overrides.find(i => i.target === item.id);
-    if (replacement?.layerNameRegex) {
-        const regexp = new RegExp(replacement.layerNameRegex);
-        if (!regexp.test(layerName)) replacement = null;
-    }
-    return replacement ?? item;
-}
-
-const EmptyComponent = () => {
-    return null;
-};
-
-function handleRemoved(item) {
-    return item.plugin ? item : {
-        ...item,
-        plugin: EmptyComponent
-    };
-}
-
-function mergeItems(standard, overrides, layerName) {
-    return standard
-        .map(item => overrideItem(item, overrides, layerName))
-        .map(handleRemoved);
-}
 
 // include application component
 
@@ -270,7 +242,8 @@ class QueryPanel extends React.Component {
         advancedToolbar: PropTypes.bool,
         onSaveFilter: PropTypes.func,
         onRestoreFilter: PropTypes.func,
-        items: PropTypes.array
+        items: PropTypes.array,
+        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
     };
 
     static defaultProps = {
@@ -296,7 +269,8 @@ class QueryPanel extends React.Component {
         toolsOptions: {},
         onSaveFilter: () => {},
         onRestoreFilter: () => {},
-        items: []
+        items: [],
+        selectedLayer: false
     };
     constructor(props) {
         super(props);
@@ -371,8 +345,9 @@ class QueryPanel extends React.Component {
                 storedFilter={this.props.storedFilter}
                 advancedToolbar={this.props.advancedToolbar}
                 loadingError={this.props.loadingError}
-                getItems={this.getItems}
-                renderItems={this.renderItems}
+                items={this.props.items}
+                selectedLayer={this.props.selectedLayer}
+                standardItems={standardItems}
             />
             <Portal>
                 <ResizableModal
@@ -403,38 +378,6 @@ class QueryPanel extends React.Component {
         </div>);
     };
 
-    filterItem = (target, layerName) => (el) => {
-        if (el.layerNameRegex) {
-            const regexp = new RegExp(el.layerNameRegex);
-            return (!target || el.target === target) && regexp.test(layerName);
-        }
-        return (!target || el.target === target);
-    }
-
-    getItems = (target) => {
-        const layerName = this.props.selectedLayer;
-        const filtered = this.props.items.filter(this.filterItem(target, layerName));
-        const merged = mergeItems(standardItems[target], this.props.items, layerName)
-            .map(item => ({
-                ...item,
-                target
-            }));
-        return [...merged, ...filtered]
-            .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
-    };
-
-    renderItem = (item, opts) => {
-        const {validations, ...options } = opts;
-        const Comp = item.component ?? item.plugin;
-        const {style, ...other} = this.props;
-        const itemOptions = this.props[item.id + "Options"];
-        const hideItem = options[`hide${upperFirst(item.id)}`] === true;
-        return hideItem ? null : <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
-    };
-    renderItems = (target, options) => {
-        return this.getItems(target)
-            .map(item => this.renderItem(item, options));
-    };
 
     render() {
         return this.renderSidebar();
@@ -465,7 +408,7 @@ class QueryPanel extends React.Component {
  *   - srsName {string} The projection of the requested features fetched via wfs
 
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
- * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.hideCrossLayerFilter force cross layer filter panel to hide (when is not used or not usable)
  * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
  *
  * @example
