@@ -23,6 +23,42 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- JUnit -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <version>4.13.1</version>
+            </dependency>
+            <!--  mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
+            </dependency>
+            <!-- servlet -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.0.1</version>
+            </dependency>
+            <!-- gzip compression filter -->
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-web</artifactId>
+                <version>2.0.4</version>
+            </dependency>
+            <!-- misc -->
+            <dependency>
+                <groupId>commons-pool</groupId>
+                <artifactId>commons-pool</artifactId>
+                <version>1.5.4</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.ws</groupId>
+                <artifactId>jaxws-api</artifactId>
+                <version>2.3.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -57,37 +93,30 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
-      <version>4.13.1</version>
     </dependency>
     <!--  mockito -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
-      <scope>test</scope>
     </dependency>
     <!-- servlet -->
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
-        <version>3.0.1</version>
     </dependency>
     <!-- gzip compression filter -->
     <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache-web</artifactId>
-        <version>2.0.4</version>
     </dependency>
     <!-- misc -->
     <dependency>
         <groupId>commons-pool</groupId>
         <artifactId>commons-pool</artifactId>
-        <version>1.5.4</version>
     </dependency>
     <dependency>
         <groupId>javax.xml.ws</groupId>
         <artifactId>jaxws-api</artifactId>
-        <version>2.3.1</version>
     </dependency>
   </dependencies>
 

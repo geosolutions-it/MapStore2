@@ -12,6 +12,7 @@
       <spring.security.version>5.3.10.RELEASE</spring.security.version>
       <spring.version>5.3.18</spring.version>
       <log4j-version>2.19.0</log4j-version>
+      <jackson-version>2.13.1</jackson-version>
   </properties>
 
     <dependencyManagement>
@@ -24,21 +25,27 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>com.github.java-json-tools</groupId>
+                <artifactId>json-patch</artifactId>
+                <version>1.12</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.13.1</version>
+                <version>${jackson-version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.13.1</version>
+                <version>${jackson-version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.13.1</version>
+                <version>${jackson-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -55,6 +62,61 @@
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j-version}</version>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <version>4.13.1</version>
+            </dependency>
+            <!--  mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- servlet -->
+            <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.0.1</version>
+            </dependency>
+
+            <!-- json-lib -->
+            <dependency>
+                <groupId>net.sf.json-lib</groupId>
+                <artifactId>json-lib</artifactId>
+                <version>2.4</version>
+                <classifier>jdk15</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.1</version>
+            </dependency>
+
+            <!-- Mime-Util -->
+            <dependency>
+                <groupId>eu.medsea.mimeutil</groupId>
+                <artifactId>mime-util</artifactId>
+                <version>2.1.3</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -64,28 +126,12 @@
     <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.1</version>
     </dependency>
 
     <!-- Mime-Util -->
     <dependency>
         <groupId>eu.medsea.mimeutil</groupId>
         <artifactId>mime-util</artifactId>
-        <version>2.1.3</version>
-        <exclusions>
-            <exclusion>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-            </exclusion>
-            <exclusion>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-            </exclusion>
-            <exclusion>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-            </exclusion>
-        </exclusions>
     </dependency>
       <dependency>
           <groupId>org.apache.logging.log4j</groupId>
@@ -138,13 +184,11 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
-      <version>4.13.1</version>
     </dependency>
     <!--  mockito -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
       <scope>test</scope>
     </dependency>
     <!-- servlet -->
@@ -152,14 +196,12 @@
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
-        <version>3.0.1</version>
     </dependency>
 
     <!-- json-lib -->
     <dependency>
         <groupId>net.sf.json-lib</groupId>
         <artifactId>json-lib</artifactId>
-        <version>2.4</version>
         <classifier>jdk15</classifier>
     </dependency>
 
@@ -181,7 +223,6 @@
     <dependency>
         <groupId>com.github.java-json-tools</groupId>
         <artifactId>json-patch</artifactId>
-        <version>1.12</version>
     </dependency>
 
   </dependencies>
