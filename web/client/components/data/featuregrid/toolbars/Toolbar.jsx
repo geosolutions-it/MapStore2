@@ -34,11 +34,11 @@ const standardButtons = {
         visible={mode === "VIEW" && isEditingAllowed}
         onClick={events.switchEditMode}
         glyph="pencil"/>),
-    filter: ({isFilterActive = false, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<TButton
+    filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<TButton
         id="search"
         keyProp="search"
         tooltipId="featuregrid.toolbar.advancedFilter"
-        active={isFilterActive}
+        active={isFilterActive || viewportFilter}
         disabled={disabled || !isSearchAllowed}
         visible={mode === "VIEW" && showAdvancedFilterButton}
         onClick={events.showQueryPanel}
