@@ -86,6 +86,7 @@ import {
 } from '../selectors/queryform';
 import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
+import {typeNameSelector} from "../selectors/query";
 
 // include application component
 
@@ -192,7 +193,7 @@ const tocSelector = createSelector(
         storedFilterSelector,
         (state) => state && state.query && state.query.isLayerFilter,
         selectedLayerLoadingErrorSelector,
-        (state) => state.layers && state.layers.selected && state.layers.selected[0]
+        typeNameSelector
     ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError, selectedLayer) => ({
         enabled,
         groups,
@@ -406,6 +407,9 @@ class QueryPanel extends React.Component {
  *   - typeName {string} the workspace + layer name on geoserver
  *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
  *   - srsName {string} The projection of the requested features fetched via wfs
+ * Plugin acts as container and by default it have three panels: "AttributesFilter", "SpatialFilter" and "CrossLayerFilter" (see "standardItems" variable)
+ * Panels can be customized by injection from another plugins (see example below).
+ * Targets available for injection: "start", "attributes", "afterAttributes", "spatial", "afterSpatial", "layers", "end".
 
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
  * @prop {boolean} cfg.toolsOptions.hideCrossLayerFilter force cross layer filter panel to hide (when is not used or not usable)
