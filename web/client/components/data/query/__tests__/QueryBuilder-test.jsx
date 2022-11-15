@@ -183,7 +183,7 @@ describe('QueryBuilder', () => {
         const querybuilder = ReactDOM.render(
             <QueryBuilder
                 toolsOptions={{
-                    hideCrossLayerFilter: true,
+                    hideCrossLayer: true,
                     hideSpatialFilter: true
                 }}
                 filterFields={filterFields}
