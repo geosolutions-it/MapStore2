@@ -2467,6 +2467,11 @@
             "disablePlayBack": "Deshabilitar los controles de reproducción",
             "expand" : "Expandir el control deslizante de tiempo",
             "collapse" : "Minimizar el control deslizante de tiempo",
+            "reset" : {
+                "range": "Establecer rango para incluir todos los datos",
+                "singleNow": "Establecer tiempo hasta ahora",
+                "singleNearest": "Establecer el tiempo al valor más cercano a ahora"
+            },
             "collapsed": {
                 "title": "La línea de tiempo ha sido colapsada",
                 "tooltip": "Haga clic aquí para ampliarlo de nuevo."

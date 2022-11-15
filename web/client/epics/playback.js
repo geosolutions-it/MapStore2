@@ -29,12 +29,21 @@ import {
 } from '../actions/playback';
 
 import { moveTime, SET_CURRENT_TIME, MOVE_TIME } from '../actions/dimension';
-import { selectLayer, onRangeChanged, timeDataLoading, SELECT_LAYER, SET_MAP_SYNC, SET_SNAP_TYPE } from '../actions/timeline';
+import {
+    selectLayer,
+    onRangeChanged,
+    timeDataLoading,
+    SELECT_LAYER,
+    SET_MAP_SYNC,
+    SET_SNAP_TYPE,
+    INIT_SELECT_LAYER
+} from '../actions/timeline';
 import { changeLayerProperties, CHANGE_LAYER_PROPERTIES, REMOVE_NODE } from '../actions/layers';
 import { error } from '../actions/notifications';
 
 import {
     currentTimeSelector,
+    visibleLayersWithTimeDataSelector,
     layersWithTimeDataSelector,
     layerTimeSequenceSelectorCreator
 } from '../selectors/dimension';
@@ -60,7 +69,6 @@ import {
     selectedLayerTimeDimensionConfiguration,
     rangeSelector,
     snapTypeSelector,
-    timelineLayersSelector,
     multidimOptionsSelectorCreator,
     isVisible
 } from '../selectors/timeline';
@@ -309,7 +317,7 @@ export const playbackToggleGuideLayerToFixedStep = (action$, { getState = () => 
                 // need to select first
                 : Rx.Observable.of(
                     selectLayer(
-                        get(timelineLayersSelector(getState()), "[0].id")
+                        get(visibleLayersWithTimeDataSelector(getState()), "[0].id")
                     )
                 )
         );
@@ -342,12 +350,12 @@ export const playbackMoveStep = (action$, { getState = () => { } } = {}) =>
  */
 export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } } = {}) =>
     action$
-        .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC, SET_SNAP_TYPE)
+        .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP, SET_MAP_SYNC, SET_SNAP_TYPE, INIT_SELECT_LAYER)
         .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
         .filter(() => selectedLayerSelector(getState()))
         .filter( t => !!t )
         .switchMap(({time: actionTime}) => {
-            // get current time in case of SELECT_LAYER
+            // get current time in case of SELECT_LAYER or INIT_SELECT_LAYER
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
             return getTimeDomainsObservable(domainArgs, false, getState, snapType, time).map(([next, previous]) => {

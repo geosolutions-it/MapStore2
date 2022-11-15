@@ -22,10 +22,10 @@ import { getBufferedTime } from '../utils/TimeUtils';
 export const getTimeDomainsObservable = (domainArgs, useBuffer, getState, snapType, time) => (
     // TODO: find out a way to optimize and do only one request
     Rx.Observable.forkJoin(
-        getDomainValues(...domainArgs(getState, { sort: "asc", fromValue: useBuffer ? getBufferedTime(time, 0.0001, 'remove') : time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
+        getDomainValues(...domainArgs(getState, { sort: "asc", ...(time && {fromValue: useBuffer ? getBufferedTime(time, 0.0001, 'remove') : time}), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
             .map(res => res.DomainValues.Domain.split(","))
             .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
-        getDomainValues(...domainArgs(getState, { sort: "desc", fromValue: useBuffer ? getBufferedTime(time, 0.0001, 'add') : time, ...(snapType === 'end' ? {fromEnd: true} : {}) }))
+        getDomainValues(...domainArgs(getState, { sort: "desc", ...(time && {fromValue: useBuffer ? getBufferedTime(time, 0.0001, 'add') : time}), ...(snapType === 'end' ? {fromEnd: true} : {}) }))
             .map(res => res.DomainValues.Domain.split(","))
             .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
     )

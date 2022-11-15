@@ -8,21 +8,32 @@
 
 import expect from 'expect';
 import {addTimeoutEpic, TEST_TIMEOUT, testEpic} from './epicTestUtils';
-import {UPDATE_METADATA, STOP, play, stop, FRAMES_LOADING, SET_FRAMES, SET_INTERVAL_DATA, TOGGLE_ANIMATION_MODE} from '../../actions/playback';
+import {
+    UPDATE_METADATA,
+    STOP,
+    play,
+    stop,
+    FRAMES_LOADING,
+    SET_FRAMES,
+    SET_INTERVAL_DATA,
+    TOGGLE_ANIMATION_MODE,
+    toggleAnimationMode
+} from '../../actions/playback';
 
 import {
     retrieveFramesForPlayback,
     playbackStopWhenDeleteLayer,
     playbackCacheNextPreviousTimes,
     setIsIntervalData,
-    switchOffSnapToLayer
+    switchOffSnapToLayer,
+    playbackToggleGuideLayerToFixedStep
 } from '../playback';
 
 import DOMAIN_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainValues.xml';
 import DOMAIN_INTERVAL_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainIntervalValues.xml';
 import { removeNode, CHANGE_LAYER_PROPERTIES, changeLayerProperties } from '../../actions/layers';
 import { setCurrentTime, moveTime } from '../../actions/dimension';
-import { selectLayer, LOADING, setMapSync } from '../../actions/timeline';
+import { selectLayer, LOADING, setMapSync, SELECT_LAYER, initializeSelectLayer } from '../../actions/timeline';
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 const ANIMATION_MOCK_STATE = {
@@ -280,6 +291,24 @@ describe('playback Epics', () => {
             }
         });
     });
+    it('playbackCacheNextPreviousTimes without time arg initializeSelectLayer() action', done => {
+        const currentTime = '2016-09-04T00:00:00.000Z';
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_VALUES_RESPONSE);
+        testEpic(playbackCacheNextPreviousTimes, 1, initializeSelectLayer(), ([ action ]) => {
+            try {
+                expect(action.type).toBe(UPDATE_METADATA);
+                expect(action.forTime).toBe(currentTime);
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }, {
+            ...ANIMATION_MOCK_STATE,
+            dimension: {
+                currentTime
+            }
+        });
+    });
     it('playbackStopWhenDeleteLayer', done => {
         testEpic(playbackStopWhenDeleteLayer, 1, removeNode(), ([action]) => {
             const { type } = action;
@@ -461,5 +490,99 @@ describe('playback Epics', () => {
                 done(e);
             }
         }, state, false, true);
+    });
+    it('playbackToggleGuideLayerToFixedStep with layer selected', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            layers: {
+                flat: [
+                    {
+                        id: 'playback:selected_layer',
+                        name: 'playback_layer',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    },
+                    {
+                        id: 'playback:not_selected_layer',
+                        name: 'playback_layer_not_selected',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    }
+                ]
+            },
+            timeline: {
+                selectedLayer: 'playback:selected_layer'
+            }};
+        testEpic(playbackToggleGuideLayerToFixedStep, 1, toggleAnimationMode(), (actions) => {
+            try {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(SELECT_LAYER);
+                expect(actions[0].layerId).toBe(undefined);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
+    });
+    it('playbackToggleGuideLayerToFixedStep with no layer selected', done => {
+        const state = {...ANIMATION_MOCK_STATE,
+            layers: {
+                flat: [
+                    {
+                        id: 'playback:selected_layer',
+                        name: 'playback_layer',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    },
+                    {
+                        id: 'playback:not_selected_layer',
+                        name: 'playback_layer_not_selected',
+                        dimensions: [
+                            {
+                                name: 'time',
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'MOCK_DOMAIN_VALUES'
+                                }
+                            }
+                        ],
+                        visibility: true
+                    }
+                ]
+            },
+            timeline: {}};
+        testEpic(playbackToggleGuideLayerToFixedStep, 1, toggleAnimationMode(), (actions) => {
+            try {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(SELECT_LAYER);
+                expect(actions[0].layerId).toBe('playback:selected_layer');
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
     });
 });

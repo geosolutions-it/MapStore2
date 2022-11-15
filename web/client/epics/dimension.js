@@ -21,9 +21,7 @@ import {
     setCurrentOffset
 } from '../actions/dimension';
 
-import { autoselect, initializeSelectLayer, setEndValuesSupport } from '../actions/timeline';
 import { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } from '../selectors/dimension';
-import { endValuesSupportSelector } from '../selectors/timeline';
 import { describeDomains, getMultidimURL } from '../api/MultiDim';
 import { domainsToDimensionsObject } from '../utils/TimeUtils';
 import { pick, find, get, flatten } from 'lodash';
@@ -52,7 +50,7 @@ export const updateLayerDimensionOnCurrentTimeSelection = (action$, { getState =
  * Check the presence of Multidimensional API extension, then setup layers properly.
  * Updates also current dimension state
  */
-export const queryMultidimensionalAPIExtensionOnAddLayer = (action$, { getState = () => { } } = {}) =>
+export const queryMultidimensionalAPIExtensionOnAddLayer = (action$) =>
     action$
         .ofType(ADD_LAYER)
         .filter(
@@ -79,12 +77,8 @@ export const queryMultidimensionalAPIExtensionOnAddLayer = (action$, { getState 
                                 changeLayerProperties(layer.id, {
                                     dimensions: newDimensions
                                 }),
-                                ...flatten(dimensions.map(d => [
-                                    updateLayerDimensionData(layer.id, d.name, d),
-                                    autoselect(),
-                                    ...(endValuesSupportSelector(getState()) === undefined ? [setEndValuesSupport(d.source.version === "1.2")] : [])
-                                ])
-                                ));
+                                ...flatten(dimensions.map(d => [updateLayerDimensionData(layer.id, d.name, d)]))
+                            );
                         }
                     }
                     return Observable.empty();
@@ -100,16 +94,11 @@ export const updateLayerDimensionDataOnMapLoad = (action$, {getState = () => {}}
         const layersWithMultidim = layers.filter(l =>
             l && l.dimensions && find(l.dimensions, d => d && d.source && d.source.type === "multidim-extension")); // layers with dimension and multidimensional extension
 
-        const selectedLayer = config.timelineData?.selectedLayer;
         const currentTime = config.dimensionData?.currentTime;
         const offsetTime = config.dimensionData?.offsetTime;
 
         return (currentTime ?
             Observable.of(
-                // restore states of timeline and dimension from map config
-                ...(selectedLayer ? [
-                    initializeSelectLayer(selectedLayer)
-                ] : []),
                 setCurrentTime(currentTime),
                 setCurrentOffset(offsetTime)
             ) : Observable.empty()
@@ -121,8 +110,7 @@ export const updateLayerDimensionDataOnMapLoad = (action$, {getState = () => {}}
                         .switchMap( domains =>
                             Observable.from(flatten(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
                                 .map(d => [
-                                    updateLayerDimensionData(l.id, d.name, d),
-                                    ...(!currentTime ? [autoselect()] : [])
+                                    updateLayerDimensionData(l.id, d.name, d)
                                 ]))
                             )
                         )

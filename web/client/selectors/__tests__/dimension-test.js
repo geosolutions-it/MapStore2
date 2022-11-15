@@ -14,7 +14,8 @@ import { updateLayerDimensionData } from '../../actions/dimension';
 import {
     layerDimensionRangeSelector,
     layerDimensionSelectorCreator,
-    layerTimeSequenceSelectorCreator
+    layerTimeSequenceSelectorCreator,
+    visibleLayersWithTimeDataSelector
 } from '../dimension';
 
 describe('Test dimension selectors', () => {
@@ -132,5 +133,28 @@ describe('Test dimension selectors', () => {
         expect(Object.keys(layerDim).length).toBe(2);
         expect(layerDim.start).toBe('2013-09-10T00:00:00.000Z');
         expect(layerDim.end).toBe('2017-04-11T00:00:00.000Z');
+    });
+    it('layersVisibleWithTimeDataSelector', () => {
+        const state = {
+            layers: {
+                flat: [{
+                    id: "LAYER_1",
+                    visibility: true,
+                    dimensions: [{
+                        name: "time"
+                    }]
+                },
+                {
+                    id: "LAYER_2",
+                    visibility: false,
+                    dimensions: [{
+                        name: "time"
+                    }]
+                }]
+            }
+        };
+        const layerDim = visibleLayersWithTimeDataSelector(state);
+        expect(layerDim.length).toBe(1);
+        expect(layerDim[0].id).toBe("LAYER_1");
     });
 });
