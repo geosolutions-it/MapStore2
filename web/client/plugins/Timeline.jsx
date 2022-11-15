@@ -70,29 +70,15 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
   * @class  Timeline
   * @memberof plugins
   * @static
-  * @prop cfg.expandedPanel {boolean} false by default
-  * @prop cfg.showHiddenLayers {boolean} false by default, when *false* the layers in timeline gets in sync with time layer's visibility (TOC)
-  * i.e. when a time layer is hidden or removed, the timeline will not show the respective guide layer.
-  * Furthermore, the timeline automatically selects the next available guide layer, if the **Snap to guide layer** option is enabled in the Timeline settings.
-  * If set to *true*, the hidden layer will be shown in the timeline.
-  *
-  * @example
-  * {
-  *   "name": "TimeLine",
-  *   "cfg": {
-  *       "showHiddenLayers": false,
-  *       "expandedPanel": true
-  *    }
-  * }
-  *
-  * @prop cfg.initialMode {string} the initial mode of the timeline. Can be one of 'single' or 'range'. Default mode is 'single'
-  * When 'range', the time range(offset) is auto enabled upon plugin initialization and when 'single', the offset is disabled
-  * @prop cfg.initialSnap {string} the initial snap option of the timeline. Can be one of 'now' or 'fullRange'. Default snap is 'now'
-  * When 'fullRange', and initialMode is 'range', the offset is enabled and plugin snaps to full range of the guide layer selected.
-  * and when 'now', the plugin snaps to the current time range
-  * @prop cfg.resetButton {boolean} false by default, when enabled a reset button is made available on the timeline toolbar.
-  * Given current mode is single, when layer is selected, the time is set to nearest of now and when layer is unselected, the time is set to now
-  * Given current mode is range, the time is set to the full range of the layer
+  * @prop {boolean} cfg.expandedPanel If `false`, the panel is collapsed by default. If true, the panel is expanded by default. `false` by default.
+  * @prop {boolean} cfg.showHiddenLayers  if `true`, shows a line for each layer with the time data, if `false`, shows only the visible layers. `false` by default.
+  * @prop {string} cfg.initialMode  One of `single` or `range`. Determines the initial mode of the timeline. To start the plugin by selecting a single time or a time range. Default mode is `single`
+  * @prop {string} cfg.initialSnap One of `now` or `fullRange`. Sets initial snap policy when the layer is added or the plugin is initialized (if no time selection is saved in the map). Default value is `now`.
+  * - When `fullRange` (and initialMode is `range`) the timeline select a time range that includes all the data of the guide layer.
+  * - When `now`, the plugin selects the current time, or if a guide layer is selected, the time entry of the guide layer nearest to the current time.
+  * @prop {boolean} cfg.resetButton shows a reset button that resets the timeline to the full range or to now, depending if mode is `single` or `range`. `false` by default.
+  * - If current mode is `single`, when the reset button is clicked the time is set to nearest of the current time and when layer is unselected, the time is set to now.
+  * - If current mode is `range`, when the reset button is clicked the time is set to the full range of the layer
   *
   * @example
   * {
