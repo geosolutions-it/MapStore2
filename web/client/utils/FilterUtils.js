@@ -1119,7 +1119,6 @@ export const isFilterValid = (f = {}) =>
     || (f.simpleFilterFields && f.simpleFilterFields.length > 0)
     || (f.spatialField && f.spatialField.geometry && f.spatialField.operation ||
         isArray(f.spatialField) && findIndex(f.spatialField, field => field.operation && field.geometry) > -1)
-    || (f.viewportFilter && f.viewportFilter.geometry && f.viewportFilter.operation)
     || (f.crossLayerFilter
         && f.crossLayerFilter.collectGeometries
         && f.crossLayerFilter.collectGeometries.queryCollection
