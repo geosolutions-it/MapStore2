@@ -14,6 +14,7 @@ import Sidebar from 'react-sidebar';
 import { bindActionCreators } from 'redux';
 import { createSelector } from 'reselect';
 
+import standardItems from './querypanel/index';
 import { toggleControl } from '../actions/controls';
 import { changeDrawingStatus } from '../actions/draw';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
@@ -85,6 +86,7 @@ import {
 } from '../selectors/queryform';
 import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
+import {upperFirst} from "lodash/string";
 
 function overrideItem(item, overrides = []) {
     const replacement = overrides.find(i => i.target === item.id);
@@ -107,8 +109,6 @@ function mergeItems(standard, overrides) {
         .map(item => overrideItem(item, overrides))
         .map(handleRemoved);
 }
-
-const standardItems = {};
 
 // include application component
 
@@ -363,7 +363,10 @@ class QueryPanel extends React.Component {
                 appliedFilter={this.props.appliedFilter}
                 storedFilter={this.props.storedFilter}
                 advancedToolbar={this.props.advancedToolbar}
-                loadingError={this.props.loadingError}/>
+                loadingError={this.props.loadingError}
+                getItems={this.getItems}
+                renderItems={this.renderItems}
+            />
             <Portal>
                 <ResizableModal
                     fade
@@ -409,7 +412,8 @@ class QueryPanel extends React.Component {
         const Comp = item.component ?? item.plugin;
         const {style, ...other} = this.props;
         const itemOptions = this.props[item.id + "Options"];
-        return <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
+        const hideItem = options[`hide${upperFirst(item.id)}`] === true;
+        return hideItem ? null : <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
     };
     renderItems = (target, options) => {
         return this.getItems(target)
@@ -445,7 +449,6 @@ class QueryPanel extends React.Component {
  *   - srsName {string} The projection of the requested features fetched via wfs
 
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
- * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer to hide
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
  * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
  *
@@ -484,6 +487,42 @@ class QueryPanel extends React.Component {
  *        },
  *        "customItemClassName": "customItemClassName"
  *    }
+ *
+ * @example
+ * // customize the QueryPanels UI via plugin(s)
+ * import {createPlugin} from "../utils/PluginsUtils";
+ *
+ * export default createPlugin('QueryPanelCustomizations', {
+ *     component: () => null,
+ *     containers: {
+ *         QueryPanel: [
+ *             {
+ *                 id: 'attributeFilter',
+ *                 component: () => null,
+ *                 target: 'attributeFilter',
+ *                 position: 0
+ *             },
+ *             {
+ *                 id: 'attributeFilterNew',
+ *                 component: () => 'Sample text',
+ *                 target: 'attributes',
+ *                 position: 0
+ *             },
+ *             {
+ *                 id: 'customPanel',
+ *                 component: () => 'Panel content; Added to attributeFilter target',
+ *                 target: 'attributes',
+ *                 position: 3
+ *             },
+ *             {
+ *                 id: 'customPanel2',
+ *                 component: () => 'Another panel added to start',
+ *                 target: 'start',
+ *                 position: 3
+ *             }
+ *         ]
+ *     }
+ * });
  */
 const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,

@@ -15,31 +15,20 @@ import Spinner from 'react-spinkit';
 import BorderLayout from '../../layout/BorderLayout';
 import QueryToolbar from './QueryToolbar';
 import QueryPanelHeader from './QueryPanelHeader';
-import AttributeFilter from "../../../plugins/querypanel/AttributeFilter";
-import SpatialFilter from "../../../plugins/querypanel/SpatialFilter";
-import CrossLayerFilter from "../../../plugins/querypanel/CrossLayerFilter";
 
 
 class QueryBuilder extends React.Component {
     static propTypes = {
         params: PropTypes.object,
-        featureTypeConfigUrl: PropTypes.string,
-        useMapProjection: PropTypes.bool,
         attributes: PropTypes.array,
         featureTypeError: PropTypes.string,
         featureTypeErrorText: PropTypes.node,
-        groupLevels: PropTypes.number,
-        maxFeaturesWPS: PropTypes.number,
         filterFields: PropTypes.array,
         groupFields: PropTypes.array,
         spatialField: PropTypes.object,
-        removeButtonIcon: PropTypes.string,
-        addButtonIcon: PropTypes.string,
         attributePanelExpanded: PropTypes.bool,
-        showDetailsButton: PropTypes.bool,
         spatialPanelExpanded: PropTypes.bool,
         crossLayerExpanded: PropTypes.bool,
-        showDetailsPanel: PropTypes.bool,
         toolbarEnabled: PropTypes.bool,
         searchUrl: PropTypes.string,
         showGeneratedFilter: PropTypes.oneOfType([
@@ -49,8 +38,6 @@ class QueryBuilder extends React.Component {
         filterType: PropTypes.string,
         featureTypeName: PropTypes.string,
         ogcVersion: PropTypes.string,
-        attributeFilterActions: PropTypes.object,
-        spatialFilterActions: PropTypes.object,
         queryToolbarActions: PropTypes.object,
         resultTitle: PropTypes.string,
         pagination: PropTypes.object,
@@ -58,14 +45,10 @@ class QueryBuilder extends React.Component {
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         crossLayerFilterOptions: PropTypes.object,
-        crossLayerFilterActions: PropTypes.object,
         hits: PropTypes.bool,
-        clearFilterOptions: PropTypes.object,
         buttonStyle: PropTypes.string,
-        removeGroupButtonIcon: PropTypes.string,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
-        autocompleteEnabled: PropTypes.bool,
         emptyFilterWarning: PropTypes.bool,
         header: PropTypes.node,
         zoom: PropTypes.number,
@@ -75,14 +58,13 @@ class QueryBuilder extends React.Component {
         storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
         loadingError: PropTypes.bool,
-        controlActions: PropTypes.object
+        controlActions: PropTypes.object,
+        getItems: PropTypes.func,
+        renderItems: PropTypes.func
     };
 
     static defaultProps = {
         params: {},
-        featureTypeConfigUrl: null,
-        useMapProjection: true,
-        groupLevels: 1,
         buttonStyle: "default",
         removeGroupButtonIcon: "trash",
         groupFields: [],
@@ -93,11 +75,8 @@ class QueryBuilder extends React.Component {
         featureTypeError: "",
         spatialField: {},
         crossLayerFilter: null,
-        removeButtonIcon: "trash",
-        addButtonIcon: "glyphicon glyphicon-plus",
         attributePanelExpanded: true,
         spatialPanelExpanded: true,
-        showDetailsPanel: false,
         toolbarEnabled: true,
         searchUrl: "",
         showGeneratedFilter: false,
@@ -107,37 +86,10 @@ class QueryBuilder extends React.Component {
         hits: false,
         maxHeight: 830,
         allowEmptyFilter: false,
-        autocompleteEnabled: true,
         emptyFilterWarning: false,
         advancedToolbar: false,
         loadingError: false,
-        attributeFilterActions: {
-            onAddGroupField: () => {},
-            onAddFilterField: () => {},
-            onRemoveFilterField: () => {},
-            onUpdateFilterField: () => {},
-            onUpdateExceptionField: () => {},
-            onUpdateLogicCombo: () => {},
-            onRemoveGroupField: () => {},
-            onChangeCascadingValue: () => {},
-            onExpandAttributeFilterPanel: () => {}
-        },
-        spatialFilterActions: {
-            onExpandSpatialFilterPanel: () => {},
-            onSelectSpatialMethod: () => {},
-            onSelectSpatialOperation: () => {},
-            onChangeDrawingStatus: () => {},
-            onRemoveSpatialSelection: () => {},
-            onShowSpatialSelectionDetails: () => {},
-            onSelectViewportSpatialMethod: () => {},
-            onChangeDwithinValue: () => {}
-        },
-        crossLayerFilterOptions: {
-
-        },
-        crossLayerFilterActions: {
-
-        },
+        crossLayerFilterOptions: {},
         queryToolbarActions: {
             onQuery: () => {},
             onReset: () => {},
@@ -148,7 +100,9 @@ class QueryBuilder extends React.Component {
         toolsOptions: {},
         controlActions: {
             onToggleQuery: () => {}
-        }
+        },
+        renderItems: () => {},
+        getItems: () => {}
     };
 
     render() {
@@ -189,11 +143,16 @@ class QueryBuilder extends React.Component {
                 advancedToolbar={this.props.advancedToolbar}
                 loadingError={this.props.loadingError}
             /></div>);
+        const { spatialMethodOptions, toolsOptions, spatialOperations} = this.props;
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
-                <AttributeFilter />
-                {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter spatialOperations={this.props.spatialOperations} spatialMethodOptions={this.props.spatialMethodOptions} />}
-                {this.props.toolsOptions.hideSpatialFilter ? null : <CrossLayerFilter spatialOperations={this.props.spatialOperations} />}
+                {this.props.renderItems('start', { spatialOperations, spatialMethodOptions, toolsOptions })}
+                {this.props.renderItems('attributes', { spatialOperations, spatialMethodOptions, toolsOptions })}
+                {this.props.renderItems('afterAttributes', { spatialOperations, spatialMethodOptions, toolsOptions })}
+                {this.props.renderItems('spatial', { spatialOperations, spatialMethodOptions, toolsOptions })}
+                {this.props.renderItems('afterSpatial', { spatialOperations, spatialMethodOptions, toolsOptions })}
+                {this.props.renderItems('crossLayer', { spatialOperations, spatialMethodOptions, toolsOptions })}
+                {this.props.renderItems('end', { spatialOperations, spatialMethodOptions, toolsOptions })}
             </BorderLayout>
             : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
     }
