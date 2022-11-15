@@ -22,9 +22,9 @@ const standardItems = {
         }
     ],
     afterSpatial: [],
-    crossLayer: [
+    layers: [
         {
-            id: "crossLayerFilter",
+            id: "crossLayer",
             plugin: CrossLayerFilter,
             cfg: {},
             position: 1

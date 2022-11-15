@@ -209,7 +209,7 @@ class QueryBuilder extends React.Component {
                 {this.renderItems('afterAttributes', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
                 {this.renderItems('spatial', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
                 {this.renderItems('afterSpatial', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
-                {this.renderItems('crossLayer', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('layers', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
                 {this.renderItems('end', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
             </BorderLayout>
             : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
