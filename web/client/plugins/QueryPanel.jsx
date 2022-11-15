@@ -455,6 +455,7 @@ class QueryPanel extends React.Component {
  *     component: () => null,
  *     containers: {
  *         QueryPanel: [
+ *             // Hide the attribute filter by injecting a `component: () => null` for one of the default targets, e.g. `attributeFilter`.
  *             {
  *                 id: 'attributeFilter',
  *                 component: () => null,
@@ -462,6 +463,7 @@ class QueryPanel extends React.Component {
  *                 position: 0,
  *                 layerNameRegex: "^gs:us_states__[0-9]*"
  *             },
+ *             // adds a panel after the attribute panel (if present) at position `0`
  *             {
  *                 id: 'attributeFilterNew',
  *                 component: () => 'Sample text',
