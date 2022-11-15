@@ -88,8 +88,13 @@ import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
 import {upperFirst} from "lodash/string";
 
-function overrideItem(item, overrides = []) {
-    const replacement = overrides.find(i => i.target === item.id);
+function overrideItem(item, overrides = [], layerName) {
+    let replacement;
+    replacement = overrides.find(i => i.target === item.id);
+    if (replacement?.layerNameRegex) {
+        const regexp = new RegExp(replacement.layerNameRegex);
+        if (!regexp.test(layerName)) replacement = null;
+    }
     return replacement ?? item;
 }
 
@@ -104,9 +109,9 @@ function handleRemoved(item) {
     };
 }
 
-function mergeItems(standard, overrides) {
+function mergeItems(standard, overrides, layerName) {
     return standard
-        .map(item => overrideItem(item, overrides))
+        .map(item => overrideItem(item, overrides, layerName))
         .map(handleRemoved);
 }
 
@@ -214,8 +219,9 @@ const tocSelector = createSelector(
         appliedFilterSelector,
         storedFilterSelector,
         (state) => state && state.query && state.query.isLayerFilter,
-        selectedLayerLoadingErrorSelector
-    ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError) => ({
+        selectedLayerLoadingErrorSelector,
+        (state) => state.layers && state.layers.selected && state.layers.selected[0]
+    ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError, selectedLayer) => ({
         enabled,
         groups,
         settings,
@@ -224,7 +230,8 @@ const tocSelector = createSelector(
         appliedFilter,
         storedFilter,
         advancedToolbar,
-        loadingError
+        loadingError,
+        selectedLayer
     })
 );
 
@@ -396,9 +403,18 @@ class QueryPanel extends React.Component {
         </div>);
     };
 
+    filterItem = (target, layerName) => (el) => {
+        if (el.layerNameRegex) {
+            const regexp = new RegExp(el.layerNameRegex);
+            return (!target || el.target === target) && regexp.test(layerName);
+        }
+        return (!target || el.target === target);
+    }
+
     getItems = (target) => {
-        const filtered = this.props.items.filter(i => !target || i.target === target);
-        const merged = mergeItems(standardItems[target], this.props.items)
+        const layerName = this.props.selectedLayer;
+        const filtered = this.props.items.filter(this.filterItem(target, layerName));
+        const merged = mergeItems(standardItems[target], this.props.items, layerName)
             .map(item => ({
                 ...item,
                 target
@@ -500,7 +516,8 @@ class QueryPanel extends React.Component {
  *                 id: 'attributeFilter',
  *                 component: () => null,
  *                 target: 'attributeFilter',
- *                 position: 0
+ *                 position: 0,
+ *                 layerNameRegex: "^gs:us_states__[0-9]*"
  *             },
  *             {
  *                 id: 'attributeFilterNew',
