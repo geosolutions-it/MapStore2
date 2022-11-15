@@ -67,7 +67,8 @@ const MapEditor = ({
     editNode,
     closeNodeEditor,
     CloseBtn = () => (null),
-    isDrawEnabled
+    isDrawEnabled,
+    hideIdentifyOptions
 }) => {
     return (mode === Modes.EDIT && isFocused ? <div
         key="left-column"
@@ -110,6 +111,7 @@ const MapEditor = ({
                         onChangeMap={onChangeMap}
                         selectedNodes={selectedNodes}
                         onSelect={onNodeSelect}
+                        hideIdentifyOptions={hideIdentifyOptions}
                     />
                 ]}
         </BorderLayout>}

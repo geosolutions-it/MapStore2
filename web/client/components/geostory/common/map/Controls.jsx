@@ -21,7 +21,8 @@ const SelectLocalized = localizedProps(["placeholder", "options"])(Select);
 
 export const Controls = ({
     map = {zoomControl: true, mapInfoControl: false},
-    onChangeMap = () => {}
+    onChangeMap = () => { },
+    ...props
 } = {}) => {
     const mapOptions = map && map.mapOptions || {};
     const options = applyDefaults({
@@ -84,7 +85,7 @@ export const Controls = ({
                 className="ms-geostory-map-controls-switch"
                 checked={options.mapInfoControl}
             />
-            {options.mapInfoControl && <FeatureInfoFormatSelector
+            {options.mapInfoControl && !props.hideIdentifyOptions && <FeatureInfoFormatSelector
                 disabled={!options.mapInfoControl}
                 popoverMessage="geostory.builder.settings.templateTooltip"
                 infoFormat={options.mapOptions && options.mapOptions.mapInfoFormat || "application/json"}
