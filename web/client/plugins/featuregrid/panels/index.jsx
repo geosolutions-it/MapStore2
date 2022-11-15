@@ -45,7 +45,8 @@ import {
     showPopoverSyncSelector,
     showTimeSync,
     timeSyncActive,
-    isViewportFilterActive
+    isViewportFilterActive,
+    isFilterByViewportSupported
 } from '../../../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
@@ -104,7 +105,8 @@ const Toolbar = connect(
         snappingConfig,
         mapType: mapTypeSelector,
         editorHeight: getDockSize,
-        viewportFilter: isViewportFilterActive
+        viewportFilter: isViewportFilterActive,
+        isFilterByViewportSupported
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);

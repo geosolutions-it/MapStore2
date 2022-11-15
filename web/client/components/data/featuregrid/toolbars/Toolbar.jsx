@@ -252,11 +252,11 @@ const standardButtons = {
             <span className="clearfix" />
         </FormGroup>
     </TSplitButton>),
-    viewportFilter: ({viewportFilter, mapType, pluginCfg, events = {}}) => (<TButton
+    viewportFilter: ({viewportFilter, isFilterByViewportSupported, pluginCfg, events = {}}) => (<TButton
         id="viewportFilter-button"
         keyProp="viewportFilter-button"
         tooltipId={viewportFilter ? "featuregrid.toolbar.disableViewportFilter" : "featuregrid.toolbar.enableViewportFilter"}
-        visible={(pluginCfg?.showFilterByViewportTool ?? true) && mapType !== 'cesium'}
+        visible={(pluginCfg?.showFilterByViewportTool ?? true) && isFilterByViewportSupported}
         onClick={() => {
             events.setViewportFilter && events.setViewportFilter(!viewportFilter);
         }}

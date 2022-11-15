@@ -37,7 +37,7 @@ import {
     queryOptionsSelector,
     showTimeSync,
     timeSyncActive,
-    multiSelect, isViewportFilterActive, viewportFilter
+    multiSelect, isViewportFilterActive, viewportFilter, isFilterByViewportSupported
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -622,5 +622,27 @@ describe('Test featuregrid selectors', () => {
         };
         const filter = viewportFilter(state);
         expect(filter).toEqual({});
+    });
+    it('isViewportFilterSupported', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            },
+            maptype: {
+                mapType: 'openlayers'
+            }
+        };
+        expect(isFilterByViewportSupported(state)).toBe(true);
+    });
+    it('isViewportFilterSupported - cesium', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            },
+            maptype: {
+                mapType: 'cesium'
+            }
+        };
+        expect(isFilterByViewportSupported(state)).toBe(false);
     });
 });

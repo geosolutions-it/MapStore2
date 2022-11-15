@@ -193,17 +193,19 @@ export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerF
 
 export const isViewportFilterActive = state => get(state, 'featuregrid.viewportFilter', null);
 
+export const isFilterByViewportSupported = state => mapTypeSelector(state) !== 'cesium';
+
 export const viewportFilter = createShallowSelectorCreator(isEqual)(
     isViewportFilterActive,
     mapBboxSelector,
     projectionSelector,
     state => get(state, 'query.filterObj.spatialField'),
     describeSelector,
-    mapTypeSelector,
-    (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, mapType) => {
+    isFilterByViewportSupported,
+    (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, viewportFilterIsSupported) => {
         const attribute = findGeometryProperty(describeLayer)?.name;
         const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
-        return viewportFilterIsActive && mapType !== 'cesium' ? {
+        return viewportFilterIsActive && viewportFilterIsSupported ? {
             spatialField: [
                 ...existingFilter,
                 {
