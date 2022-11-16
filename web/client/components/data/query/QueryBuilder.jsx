@@ -154,6 +154,7 @@ class QueryBuilder extends React.Component {
         const Comp = item.component ?? item.plugin;
         const {style, ...other} = this.props;
         const itemOptions = this.props[item.id + "Options"];
+        // this allows "hideSpatialFilter", "hideCrossLayer" options
         const hideItem = options[`hide${upperFirst(item.id)}`] === true;
         return hideItem ? null : <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
     };
