@@ -88,15 +88,17 @@ The following procedure allow you to migrate issues from zenhub release to githu
 - [ ] Release a stable `mapstore-services` and `mapstore-webapp`
   - [ ] Run `mvn clean install deploy -f java/pom.xml` to deploy `mapstore-services` and `mapstore-webapp` on maven.geo-solutions.it .
 
-## MapStore Stable publishing
+## MapStore Stable deploy
 - [ ] check if there are changes to be ported to STABLE branch of [mapstore-datadir](https://github.com/geosolutions-it/mapstore-datadir/tree/STABLE) repo
   - [ ] if so prepare a PR to be merged
   - [ ] merge the PR and move on with the steps otherwise stop here
 - [ ] Launch the [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/) and wait for the MapStore2-Stable-EndPointsTests to complete as well
   - [ ] When previous two jobs are green you can:
-    - [ ] Change [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/) to build on stable branch **YYYY.XX.xx**
-    - [ ] Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo
-- [ ] test the change has been applied, login on mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key).
+    - [ ] Lunch [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/) 
+      - [ ] `branch` build on stable branch `YYYY.XX.xx`
+      - [ ] `version`: `YYYY.XX.mm`
+    - [ ] After "MapStore2-Stable-Build" finished, Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo
+    - [ ] test the change has been applied, login on https://mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key).
 
 
 ## Build and publishing release
