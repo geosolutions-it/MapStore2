@@ -460,7 +460,7 @@ class QueryPanel extends React.Component {
  *     component: () => null,
  *     containers: {
  *         QueryPanel: [
- *             // Hide the attribute filter by injecting a `component: () => null` for one of the default targets, e.g. `attributeFilter`.
+ *             // Hide the attribute filter by injecting a `component: () => null` for one of the default panels, e.g. `attributeFilter`.
  *             {
  *                 id: 'attributeFilter',
  *                 component: () => null,
@@ -477,7 +477,7 @@ class QueryPanel extends React.Component {
  *             },
  *             {
  *                 id: 'customPanel',
- *                 component: () => 'Panel content; Added to attribute target',
+ *                 component: () => 'Panel content; Added to attributes target',
  *                 target: 'attributes',
  *                 position: 3
  *             },
