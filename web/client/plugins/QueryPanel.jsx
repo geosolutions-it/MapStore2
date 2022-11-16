@@ -412,7 +412,7 @@ class QueryPanel extends React.Component {
  * Targets available for injection: "start", "attributes", "afterAttributes", "spatial", "afterSpatial", "layers", "end".
 
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
- * @prop {boolean} cfg.toolsOptions.hideCrossLayerFilter force cross layer filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
  * @prop {boolean} cfg.toolsOptions.hideAttributeFilter force attribute filter panel to hide (when is not used or not usable). In general any `hide${CapitailizedItemId}` works to hide a particular panel of the query panel.
  * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
  *
