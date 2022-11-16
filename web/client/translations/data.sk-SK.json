@@ -2676,6 +2676,7 @@
             "titlePlaceholder": "Zadať zobrazované meno",
             "add": "Pridať",
             "thumbnailMessage": "Veľkosti obrázkov by mali tvoriť štvorec o veľkosti 98px x 98px alebo 128px x 128px, s maximálnou veľkosťou 500kb",
+            "imageUploadMessage": "Kliknite alebo drakate a pridajte obrázok",
             "additionalParameters": "Ďalšie parametre",
             "addAdditionalParameterTooltip": "Pridať parameter",
             "removeAdditionalParameterTooltip": "Odstrániť parameter",
