@@ -175,10 +175,18 @@ export const currentTimeRangeSelector = createSelector(
 );
 export const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
+export const timelineLayersSetting = state => get(state, 'timeline.layers');
 /**
  * Select layers visible in the timeline
  */
-export const timelineLayersSelector = layersWithTimeDataSelector; // TODO: allow exclusion.
+export const timelineLayersSelector = (state) => {
+    const layersWithTimeData = layersWithTimeDataSelector(state);
+    const timeLayers = timelineLayersSetting(state) || [];
+    return timeLayers.length
+        ? layersWithTimeData.filter(layer =>
+            timeLayers?.find(l => l.id === layer?.id)?.checked)
+        : layersWithTimeData;
+};
 
 export const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers.length > 0);
 export const isVisible = state => !isCollapsed(state) && hasLayers(state);

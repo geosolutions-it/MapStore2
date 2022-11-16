@@ -2410,7 +2410,14 @@
         "playback": {
             "settings": {
                 "tooltip": "Impostazioni",
-                "title": "Impostazioni Riproduzione",
+                "tab": {
+                    "playback": "Riproduzione",
+                    "layers": "Strati"
+                },
+                "layer": {
+                    "enabled": "Mostra o nascondi il livello dalla timeline",
+                    "disabled": "Il livello guida non può essere nascosto"
+                },
                 "frameDuration": "Durata Fotogramma",
                 "range": {
                     "title": "Intervallo di animazione",

@@ -2408,7 +2408,14 @@
         "playback": {
             "settings": {
                 "tooltip": "Configuraciones",
-                "title": "Ajustes de reproducción",
+                "tab": {
+                    "playback": "Reproducción",
+                    "layers": "Capas"
+                },
+                "layer": {
+                    "enabled": "Mostrar u ocultar capa de la línea de tiempo",
+                    "disabled": "La capa de guía no se puede ocultar"
+                },
                 "frameDuration": "Duración del marco",
                 "range": {
                     "title": "Intervalo de animación",

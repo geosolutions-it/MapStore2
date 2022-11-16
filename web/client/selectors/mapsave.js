@@ -14,7 +14,12 @@ import { servicesSelector, selectedServiceSelector } from './catalog';
 import { getFloatingWidgets, getCollapsedState, getFloatingWidgetsLayout } from './widgets';
 import { mapInfoConfigurationSelector } from './mapInfo';
 import { currentTimeSelector, offsetTimeSelector } from './dimension';
-import { endValuesSupportSelector, selectedLayerSelector, snapRadioButtonEnabledSelector } from './timeline';
+import {
+    endValuesSupportSelector,
+    selectedLayerSelector,
+    snapRadioButtonEnabledSelector,
+    timelineLayersSetting
+} from './timeline';
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
@@ -47,7 +52,8 @@ export const basicMapOptionsToSaveSelector = createStructuredSelector({
     timelineData: createStructuredSelector({
         selectedLayer: selectedLayerSelector,
         endValuesSupport: endValuesSupportSelector,
-        snapRadioButtonEnabled: snapRadioButtonEnabledSelector
+        snapRadioButtonEnabled: snapRadioButtonEnabledSelector,
+        layers: timelineLayersSetting
     })
 });
 

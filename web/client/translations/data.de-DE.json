@@ -2446,7 +2446,14 @@
         "playback": {
             "settings": {
                 "tooltip": "die Einstellungen",
-                "title": "Wiedergabeeinstellungen",
+                "tab": {
+                    "playback": "Wiedergabe",
+                    "layers": "Schichten"
+                },
+                "layer": {
+                    "enabled": "Blenden Sie die Ebene auf der Zeitleiste ein oder aus",
+                    "disabled": "Führungsebene kann nicht ausgeblendet werden"
+                },
                 "frameDuration": "Frame-Dauer",
                 "range": {
                     "title": "Animationsdauer",

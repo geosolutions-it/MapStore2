@@ -23,7 +23,8 @@ import {
     updateTimelineDataOnMapLoad,
     onUpdateLayerDimensionData,
     onInitTimeLine,
-    resetTimeline as resetTimelineEpic
+    resetTimeline as resetTimelineEpic,
+    setTimeLayersSetting
 } from '../timeline';
 
 import { changeMapView } from '../../actions/map';
@@ -46,9 +47,10 @@ import {
     SET_END_VALUES_SUPPORT,
     SET_SNAP_RADIO_BUTTON_ENABLED,
     AUTOSELECT,
-    SELECT_TIME
+    SELECT_TIME,
+    SET_TIME_LAYERS
 } from '../../actions/timeline';
-import { removeNode } from '../../actions/layers';
+import { changeLayerProperties, removeNode } from '../../actions/layers';
 import { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } from '../../actions/dimension';
 import { configureMap } from "../../actions/config";
 
@@ -928,4 +930,78 @@ describe('timeline Epics', () => {
             });
         });
     });
+    describe('setTimeLayersSetting', () => {
+        const NUM_ACTION = 1;
+        const STATE_TIMELINE = {
+            timeline: { settings: {autoSelect: true}},
+            layers: {
+                flat: [
+                    {
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        url: 'some url',
+                        dimensions: [{ source: { type: 'multidim-extension', url: 'some url'}, name: 'time'}],
+                        params: { time: '2000-06-08T00:00:00.000Z' },
+                        visibility: true
+                    },
+                    {
+                        id: 'TEST_LAYER1',
+                        name: 'TEST_LAYER1',
+                        type: 'wms',
+                        url: 'some url',
+                        dimensions: [{ source: { type: 'multidim-extension', url: 'some url'}, name: 'time'}],
+                        params: { time: '2000-06-08T00:00:00.000Z' },
+                        visibility: true
+                    }
+                ]
+            }
+        };
+        it('setTimeLayersSetting on initialize timeline', done => {
+            testEpic(setTimeLayersSetting, NUM_ACTION, initTimeline({showHiddenLayers: false}), ([action]) => {
+                expect(action.type).toBe(SET_TIME_LAYERS);
+                expect(action.layers).toBeTruthy();
+                expect(action.layers.length).toBe(2);
+                done();
+            }, {...STATE_TIMELINE});
+        });
+        it('setTimeLayersSetting on map config load', done => {
+            testEpic(addTimeoutEpic(setTimeLayersSetting), NUM_ACTION, initTimeline({showHiddenLayers: false}), ([action]) => {
+                expect(action.type).toBe(TEST_TIMEOUT);
+                done();
+            }, {...STATE_TIMELINE, timeline: {...STATE_TIMELINE.timeline, layers: [{id: "TEST_1", title: "TEST_1", checked: true}]}});
+        });
+        it('setTimeLayersSetting on layer remove', done => {
+            testEpic(setTimeLayersSetting, NUM_ACTION, removeNode('TEST_LAYER1', 'layers'), ([action]) => {
+                expect(action.type).toBe(SET_TIME_LAYERS);
+                expect(action.layers).toBeTruthy();
+                expect(action.layers.length).toBe(1);
+                done();
+            }, {...STATE_TIMELINE, layers: {flat: [STATE_TIMELINE.layers.flat[0]]} });
+        });
+        it('setTimeLayersSetting on change layer property', done => {
+            testEpic(setTimeLayersSetting, NUM_ACTION, changeLayerProperties('TEST_LAYER1', {visibility: false}), ([action]) => {
+                expect(action.type).toBe(SET_TIME_LAYERS);
+                expect(action.layers).toBeTruthy();
+                expect(action.layers.length).toBe(1);
+                done();
+            }, {...STATE_TIMELINE, layers: {flat: [STATE_TIMELINE.layers.flat[0], {
+                ...STATE_TIMELINE.layers.flat[1],
+                visibility: false
+            }]} });
+        });
+        it('setTimeLayersSetting on update layer setting', done => {
+            testEpic(setTimeLayersSetting, NUM_ACTION, removeNode('TEST_LAYER1', 'layers'), ([action]) => {
+                expect(action.type).toBe(SET_TIME_LAYERS);
+                expect(action.layers).toBeTruthy();
+                expect(action.layers.length).toBe(1);
+                expect(action.layers[0].checked).toBe(true);
+                done();
+            }, {...STATE_TIMELINE, layers: {
+                flat: [STATE_TIMELINE.layers.flat[0]]},
+            timeline: { ...STATE_TIMELINE.timeline, layers: [{id: 'TEST_LAYER', checked: false}]}
+            });
+        });
+    });
+
 });

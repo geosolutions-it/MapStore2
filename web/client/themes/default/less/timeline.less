@@ -989,7 +989,7 @@
         transform: ~"translateY(-100%)";
         padding: 8px;
         background-color: @ms-main-bg;
-        max-height: 466px;
+        max-height: 475px;
         max-width: 400px;
         min-width: 300px;
         .shadow-far;
@@ -1047,6 +1047,23 @@
         }
         .snap-type-radio-btn-label {
             margin-left: 5px;
+        }
+        #playback-settings-tabs {
+            .layer-setting {
+                display: flex;
+                justify-content: space-between;
+                padding: 2px 8px;
+                label {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-weight: normal;
+                    margin-right: 10px;
+                }
+                input {
+                    margin-top: 0;
+                }
+            }
         }
     }
 }

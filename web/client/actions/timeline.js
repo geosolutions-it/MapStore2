@@ -22,6 +22,8 @@ export const INIT_TIMELINE = "TIMELINE:INIT_TIMELINE";
 export const RESET_TIMELINE = "TIMELINE:RESET_TIMELINE";
 export const SET_RANGE_INIT = "TIMELINE:SET_RANGE_INIT";
 export const SET_SNAP_RADIO_BUTTON_ENABLED = "TIMELINE:SNAP_RADIO_BUTTON_ENABLED";
+export const SET_TIME_LAYERS = "TIMELINE:SET_LAYERS";
+export const UPDATE_TIME_LAYERS_SETTINGS = "TIMELINE:UPDATE_LAYERS_SETTINGS";
 
 /**
  * Action creator for click event on timeline.
@@ -132,3 +134,16 @@ export const initializeRange = (value) => ({type: SET_RANGE_INIT, value});
  * @param {boolean} snapRadioButtonEnabled
  */
 export const setSnapRadioButtonEnabled = (snapRadioButtonEnabled) => ({type: SET_SNAP_RADIO_BUTTON_ENABLED, snapRadioButtonEnabled});
+
+/**
+ * Set time layers with settings data
+ * @param {object[]} layers with settings data
+ */
+export const setTimeLayers = (layers) => ({ type: SET_TIME_LAYERS, layers});
+
+/**
+ * Update time layer setting
+ * @param {string} layer to be updated
+ * @param {boolean} checked status of the layer in timeline setting
+ */
+export const updateTimeLayersSetting = (layer, checked) => ({ type: UPDATE_TIME_LAYERS_SETTINGS, id: layer, checked});

@@ -36,7 +36,11 @@ import {
     setSnapRadioButtonEnabled,
     SET_SNAP_RADIO_BUTTON_ENABLED,
     initializeRange,
-    SET_RANGE_INIT
+    SET_RANGE_INIT,
+    setTimeLayers,
+    SET_TIME_LAYERS,
+    updateTimeLayersSetting,
+    UPDATE_TIME_LAYERS_SETTINGS
 } from '../timeline';
 
 describe('timeline actions', () => {
@@ -121,5 +125,21 @@ describe('timeline actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_RANGE_INIT);
         expect(retval.value).toBe("now");
+    });
+    it('setTimeLayers', () => {
+        const layers = [{
+            id: "TEST", title: "Test1", checked: true
+        }];
+        const retval = setTimeLayers(layers);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_TIME_LAYERS);
+        expect(retval.layers).toBe(layers);
+    });
+    it('updateTimeLayersSetting', () => {
+        const retval = updateTimeLayersSetting("TEST", true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_TIME_LAYERS_SETTINGS);
+        expect(retval.id).toBe("TEST");
+        expect(retval.checked).toBe(true);
     });
 });

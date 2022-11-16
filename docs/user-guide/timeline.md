@@ -121,3 +121,14 @@ In order to properly set the Animation Ranger, some controls are available to he
 * Extend the animation's *green range* until it fits the current view range of the histogram through the **Set to current view range** button <img src="../img/button/timeline-zoom-current-view-range.jpg" class="ms-docbutton"/>
 
 * Extend the animation's green range until it fits the guide layer time extension through the **Fit to selected layer's range** button <img src="../img/button/timeline-fit-layer-range.jpg" class="ms-docbutton"/>
+
+## Layers Setting
+
+The **layers** tab lists all the available time layers present in the map. The user can toggle a layer to be *shown/hidden* in the timeline by clicking on the checkbox next to the layer title.
+
+The layer checkbox is disabled in the following condition
+
+* When the layer is a guide layer
+* When only one layer is present
+
+<img src="../img/timeline/timeline-layers.jpg" class="ms-docimage"/>

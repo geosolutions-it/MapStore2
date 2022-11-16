@@ -17,7 +17,8 @@ import {
     itemsSelector,
     rangeDataSelector,
     multidimOptionsSelectorCreator,
-    timelineLayersSelector
+    timelineLayersSelector,
+    timelineLayersSetting
 } from '../timeline';
 
 import { set, compose } from '../../utils/ImmutableUtils';
@@ -148,6 +149,16 @@ describe('timeline selector', () => {
             const _state = {...state, timeline: {...state, settings: SHOW_HIDDEN_LAYER}};
             expect(timelineLayersSelector(_state).length).toBe(2);
         });
+        it('timelineLayersSelector with time layer settings', ()=>{
+            const _state = {...state, timeline: {...state, settings: SHOW_HIDDEN_LAYER, layers: [{id: "test", title: "test", checked: true}]}};
+            expect(timelineLayersSelector(_state).length).toBe(1);
+        });
+    });
+    it('timelineLayersSetting', () => {
+        const layers = [{id: "test", title: "test", checked: true}];
+        const _state = {...LAYERS_WITH_TIME, timeline: {settings: SHOW_HIDDEN_LAYER, layers}};
+        expect(timelineLayersSetting(_state).length).toBe(1);
+        expect(timelineLayersSetting(_state)).toEqual(layers);
     });
 
     it('itemsSelector', () => {

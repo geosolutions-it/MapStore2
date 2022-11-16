@@ -10,7 +10,9 @@ import {
     INIT_TIMELINE,
     SET_SNAP_TYPE,
     SET_END_VALUES_SUPPORT,
-    SET_SNAP_RADIO_BUTTON_ENABLED
+    SET_SNAP_RADIO_BUTTON_ENABLED,
+    SET_TIME_LAYERS,
+    UPDATE_TIME_LAYERS_SETTINGS
 } from '../actions/timeline';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { SET_INTERVAL_DATA } from '../actions/playback';
@@ -127,7 +129,7 @@ export default (state = {
         });
     }
     case RESET_CONTROLS: {
-        return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined});
+        return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined, layers: undefined});
     }
     case INIT_TIMELINE: {
         const endValuesSupport = state?.settings?.endValuesSupport;
@@ -154,6 +156,15 @@ export default (state = {
             }
         };
         return newState;
+    }
+    case SET_TIME_LAYERS: {
+        return set('layers', action.layers, state);
+    }
+    case UPDATE_TIME_LAYERS_SETTINGS: {
+        return set('layers',
+            (state.layers || []).map(l => l.id === action.id
+                ? ({...l, checked: action.checked}) : l),
+            state);
     }
     default:
         return state;

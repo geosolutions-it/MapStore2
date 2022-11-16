@@ -12,10 +12,18 @@ import { compose, withHandlers, withProps } from 'recompose';
 import { createSelector } from 'reselect';
 
 import { changeSetting, selectPlaybackRange, toggleAnimationMode } from '../../actions/playback';
-import { onRangeChanged, setTimelineSnapType } from '../../actions/timeline';
+import {onRangeChanged, setTimelineSnapType, updateTimeLayersSetting} from '../../actions/timeline';
 import Settings from "../../components/playback/Settings";
 import { playbackRangeSelector, playbackSettingsSelector } from '../../selectors/playback';
-import { rangeSelector, selectedLayerDataRangeSelector, selectedLayerSelector, snapTypeSelector, snapRadioButtonEnabledSelector, endValuesSupportSelector } from '../../selectors/timeline';
+import {
+    rangeSelector,
+    selectedLayerDataRangeSelector,
+    selectedLayerSelector,
+    snapTypeSelector,
+    snapRadioButtonEnabledSelector,
+    endValuesSupportSelector,
+    timelineLayersSetting
+} from '../../selectors/timeline';
 
 /**
  * Playback settings component connected to the state
@@ -28,19 +36,23 @@ export default compose(
         snapTypeSelector,
         snapRadioButtonEnabledSelector,
         endValuesSupportSelector,
-        (settings, selectedLayer, playbackRange, snapType, snapRadioButtonEnabled, endValuesSupport) => ({
+        timelineLayersSetting,
+        (settings, selectedLayer, playbackRange, snapType, snapRadioButtonEnabled, endValuesSupport, layers) => ({
             fixedStep: !selectedLayer,
             playbackRange,
             currentSnapType: snapType,
             snapRadioButtonEnabled,
             endValuesSupport,
+            selectedLayer,
+            layers,
             ...settings
         })
     ), {
         setPlaybackRange: selectPlaybackRange,
         onSettingChange: changeSetting,
         onChangeSnapType: setTimelineSnapType,
-        toggleAnimationMode
+        toggleAnimationMode,
+        changeLayerSetting: updateTimeLayersSetting
     }
 
     ),
