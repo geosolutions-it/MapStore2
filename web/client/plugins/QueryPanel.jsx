@@ -464,7 +464,7 @@ class QueryPanel extends React.Component {
  *             {
  *                 id: 'attributeFilter',
  *                 component: () => null,
- *                 target: 'attributeFilter',
+ *                 target: 'attributes',
  *                 position: 0,
  *                 layerNameRegex: "^gs:us_states__[0-9]*"
  *             },
@@ -477,7 +477,7 @@ class QueryPanel extends React.Component {
  *             },
  *             {
  *                 id: 'customPanel',
- *                 component: () => 'Panel content; Added to attributeFilter target',
+ *                 component: () => 'Panel content; Added to attribute target',
  *                 target: 'attributes',
  *                 position: 3
  *             },
