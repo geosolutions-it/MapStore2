@@ -1765,7 +1765,9 @@
                     "edge": "Kante",
                     "pixelTolerance": "Toleranz (pixel)",
                     "loadingStrategy": "Ladestrategie"
-                  }
+                  },
+                "disableViewportFilter": "Daten nicht nach dem aktuellen Darstellungsbereich filtern",
+                "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster"
             }
         },
         "layerdownload": {

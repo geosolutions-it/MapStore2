@@ -13,6 +13,9 @@ import * as epics from '../epics/featuregrid';
 import featuregrid from '../reducers/featuregrid';
 import FeatureEditorFallback from '../components/data/featuregrid/FeatureEditorFallback';
 import withSuspense from '../components/misc/withSuspense';
+import {compose, lifecycle} from "recompose";
+import {setViewportFilter} from "../actions/featuregrid";
+import {isViewportFilterActive} from "../selectors/featuregrid";
 
 /**
   * @name FeatureEditor
@@ -65,7 +68,9 @@ import withSuspense from '../components/misc/withSuspense';
   * @prop {number} cfg.snapConfig.pixelTolerance Pixel tolerance for considering the pointer close enough to a segment or vertex for snapping.
   * @prop {string} cfg.snapConfig.strategy defines strategy function for loading features. Supported values are "bbox" and "all".
   * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
-  * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
+  * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers".
+  * @prop {array} cfg.filterByViewport Activate filter by viewport tool by default.
+  * @prop {array} cfg.showFilterByViewportTool Show button to toggle filter by viewport in toolbar.
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
@@ -104,6 +109,8 @@ import withSuspense from '../components/misc/withSuspense';
  *      "strategy": "bbox",
  *      "maxFeatures": 4000
   *   },
+ *    "filterByViewport": true,
+ *    "showFilterByViewportTool": true
   *   }
   * }
   * ```
@@ -134,11 +141,31 @@ import withSuspense from '../components/misc/withSuspense';
   *
 */
 const EditorPlugin = connect(
-    createSelector([state => state?.featuregrid?.open], (open) => ({ open }))
-)(withSuspense(
-    props => !!props.open,
-    { fallback: <FeatureEditorFallback /> }
-)(lazy(() => import('./featuregrid/FeatureEditor'))));
+    createSelector(
+        [
+            state => state?.featuregrid?.open,
+            isViewportFilterActive
+        ],
+        (open, viewportFilter) => ({ open, viewportFilterInitialized: viewportFilter !== null })),
+    {
+        setViewportFilter
+    }
+)(compose(
+    lifecycle({
+        componentDidMount() {
+            // Initialize configuration for viewportFilter once plugin is loaded
+            !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
+        },
+        componentDidUpdate() {
+            // Re-Initialize configuration
+            !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
+        }
+    }),
+    withSuspense(
+        props => !!props.open,
+        { fallback: <FeatureEditorFallback /> }
+    )
+)((lazy(() => import('./featuregrid/FeatureEditor')))));
 
 export default createPlugin('FeatureEditor', {
     component: EditorPlugin,

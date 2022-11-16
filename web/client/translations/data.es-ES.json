@@ -1727,7 +1727,9 @@
                     "edge": "Borde",
                     "pixelTolerance": "Tolerancia (píxel)",
                     "loadingStrategy": "Estrategia de carga"
-                  }
+                  },
+                "disableViewportFilter": "No filtrar datos por la ventana gráfica actual",
+                "enableViewportFilter": "Filtrar datos por la ventana gráfica actual"
             }
         },
         "layerdownload": {

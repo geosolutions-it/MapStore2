@@ -47,7 +47,8 @@ import {
     SET_UP,
     SET_TIME_SYNC,
     UPDATE_EDITORS_OPTIONS,
-    SET_PAGINATION
+    SET_PAGINATION,
+    SET_VIEWPORT_FILTER
 } from '../actions/featuregrid';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsquery';
@@ -81,7 +82,8 @@ const emptyResultsState = {
     dockSize: 0.35,
     customEditorsOptions: {
         "rules": []
-    }
+    },
+    viewportFilter: null
 };
 const isSameFeature = (f1, f2) => f2 === f1 || (f1.id !== undefined && f1.id !== null && f1.id === f2.id);
 const isPresent = (f1, features = []) => features.filter( f2 => isSameFeature(f1, f2)).length > 0;
@@ -434,6 +436,9 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case SET_TIME_SYNC: {
         return assign({}, state, {timeSync: action.value});
+    }
+    case SET_VIEWPORT_FILTER: {
+        return assign({}, state, {viewportFilter: action.value});
     }
     default:
         return state;
