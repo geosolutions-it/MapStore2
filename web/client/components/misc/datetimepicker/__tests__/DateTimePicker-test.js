@@ -142,13 +142,14 @@ describe('DateTimePicker component', () => {
     });
 
     it('DateTimePicker test calendarSetHours disabled option', function(done) {
-        const date = '2010-01-01';
+        const date = '2010-01-01T00:00:00Z';
         const handleChange = (value) => {
             const hours = getUTCTimePart(value);
             expect(hours).toEqual('00:00:00');
             done();
         };
-        ReactDOM.render(<DateTimePicker format="'YYYY-MM-DDTHH:mm:ss[Z]'" options={{ shouldCalendarSetHours: false }} value={moment.utc(date, 'YYYY-MM-DD').toDate()} onChange={handleChange} />, document.getElementById("container"));
+        const dateObj = moment.utc(date, 'YYYY-MM-DDTHH:mm:ss[Z]').toDate();
+        ReactDOM.render(<DateTimePicker format="YYYY-MM-DDTHH:mm:ss[Z]" options={{ shouldCalendarSetHours: false }} value={dateObj} currentDate={dateObj} onChange={handleChange} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const calendar = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(calendar);
