@@ -346,3 +346,10 @@ export const getAttributesList = (attributes, customAttributesSettings) => {
 export const getAttributesNames = (attributes) => {
     return attributes?.map(attribute => isPlainObject(attribute) ? attribute.name : attribute);
 };
+
+export const dateFormats = {
+    'date-time': 'YYYY-MM-DDTHH:mm:ss[Z]',
+    'time': 'HH:mm:ss',
+    'date': 'YYYY-MM-DD[Z]'
+};
+
