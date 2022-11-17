@@ -50,6 +50,7 @@ export default pure(({
     editWidget = () => { },
     onLayoutChange = () => { },
     language,
+    currentLocale,
     env,
     ...actions
 } = {}) => {
@@ -122,6 +123,7 @@ export default pure(({
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)}
                 language={language}
+                currentLocale={currentLocale}
                 env={env} /></div>))
         }
     </ResponsiveReactGridLayout>);
