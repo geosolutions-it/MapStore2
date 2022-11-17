@@ -296,7 +296,7 @@ class Widgets extends React.Component {
  * @prop {boolean|string|array} [toolsOptions.showPin] show lock tool. By default is visible only to the admin
  * @prop {boolean|string|array} [toolsOptions.showHide] show the "hide tool" for the widget (the tool allows to hide the widget to users that have `seeHidden=false` ). By default is false, in the most common case it should be the same of `seeHidden`.
  * @prop {boolean|string|array} [toolsOptions.seeHidden] hides the widgets under particular conditions
- * @prop {object} [dateFormat] object containing custom formats for one of the date/time attribute types. Once specified, custom formats will be applied for specific attribute types in Table widget. Following keys are supported: "date-time", "date", "time".
+ * @prop {object} [dateFormats] object containing custom formats for one of the date/time attribute types. Once specified, custom formats will be applied for specific attribute types in Table widget. Following keys are supported: "date-time", "date", "time".
  *
  */
 const WidgetsPlugin = autoDisableWidgets(Widgets);

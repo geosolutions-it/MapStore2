@@ -129,7 +129,7 @@ const Dock = connect(createSelector(
   *       "strategy": "bbox",
   *       "maxFeatures": 4000
   *     },
-  *     "dateFormat": {
+  *     "dateFormats": {
   *       "date-time": "YYYY-MM-DDTHH:mm:ss[Z]",
   *       "date": "YYYY-MM-DD[Z]",
   *       "time": "HH:mm:ss[Z]"
@@ -244,7 +244,7 @@ const FeatureDock = (props = {
                         scrollDebounce={props.scrollDebounce}
                         size={props.size}
                         actionOpts={{maxZoom}}
-                        pluginCfg={props.pluginCfg}
+                        dateFormats={props.dateFormats}
                     />
                 </BorderLayout> }
 
