@@ -133,7 +133,8 @@ The following procedure allow you to migrate issues from zenhub release to githu
 
 ## Finalize Release
 - [ ] Prepare a PR MapStore **stable branch** **YYYY.XX.xx** in order to :
-    - [ ] reset versions of java modules to `-SNAPSHOT` (`mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`) where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT). Make sure that only mapstore-services has changed
+    - [ ] reset versions of java modules to `-SNAPSHOT` (`mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`) where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT). 
+    - [ ] Manually update project pom templates to use `mapstore-services` of `<SNAPSHOT_VERSION>`. `project/standard/templates/web/pom.xml`
     - [ ] on `package.json` increasing the minor "version" number. **0.x.&lt;number-of-minor-version&gt;**
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Optional - prepare a PR for updating release procedure, if needed
