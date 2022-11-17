@@ -26,7 +26,7 @@ export const getFormatter = (desc, dateFormats) => {
     } else if (desc.localType === 'Geometry') {
         return () => null;
     } else if (['date', 'date-time', 'time'].includes(desc.localType)) {
-        const format = dateFormats[desc.localType] ?? defaultDateFormats[desc.localType];
+        const format = get(dateFormats, desc.localType) ?? defaultDateFormats[desc.localType];
         return ({value} = {}) => {
             return !isNil(value) ? moment(value, defaultDateFormats[desc.localType]).format(format) : null;
         };
