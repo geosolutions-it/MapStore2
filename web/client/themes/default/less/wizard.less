@@ -15,19 +15,6 @@
 // **************
 // Layout
 // **************
-#ms-components-theme(@theme-vars) {
-    .ms-wizard.map-options {
-        .legend-widget{
-            .widget-legend-toc {
-                .toc-default-layer-head {
-                    .color-var(@theme-vars[main-color]);
-                    .background-color-var(@theme-vars[main-bg]);
-                }
-            }
-        }
-    }
-}
-
 
 .ms-wizard {
     position: absolute;
@@ -120,32 +107,6 @@
             width: 200px;
             .Select-option {
                 word-break: break-all;
-            }
-        }
-    }
-    .legend-widget {
-        .widget-legend-toc {
-            -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-            -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-            padding: 0;
-            margin-top: 10px;
-            .toc-default-layer-head {
-                height: 52px;
-                width: 100%;
-                margin-bottom: 0;
-                padding: 18px 0;
-                .toc-title {
-                    overflow: hidden;
-                    font-weight: 600;
-                    height: 15px;
-                    margin: 0 10px;
-                    width: 140px;
-                    line-height: 1;
-                }
-            }
-            .expanded-legend-view {
-                padding-bottom: 15px;
             }
         }
     }

@@ -32,7 +32,7 @@ import {
     isDashboardLoading,
     showConnectionsSelector
 } from '../selectors/dashboard';
-import { currentLocaleLanguageSelector } from '../selectors/locale';
+import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import {
     dependenciesSelector,
@@ -64,8 +64,9 @@ const WidgetsView = compose(
             isLocalizedLayerStylesEnabledSelector,
             localizedLayerStylesEnvSelector,
             getMaximizedState,
+            currentLocaleSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized) => ({
+                env, maximized, currentLocale) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -78,7 +79,8 @@ const WidgetsView = compose(
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
-                maximized
+                maximized,
+                currentLocale
             })
         ), {
             editWidget,
