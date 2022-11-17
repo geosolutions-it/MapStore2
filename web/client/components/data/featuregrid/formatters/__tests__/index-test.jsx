@@ -63,14 +63,14 @@ describe('Tests for the formatter functions', () => {
         expect(formatter({value: undefined})).toBe(null);
     });
     it('test getFormatter for date / date-time / time', () => {
-        const dateFormat = {
+        const dateFormats = {
             date: 'YYYY',
             "date-time": 'YYYY DD',
             time: 'HH:mm'
         };
-        const dateFormatter = getFormatter({localType: "date"}, {dateFormat});
-        const dateTimeFormatter = getFormatter({localType: "date-time"}, {dateFormat});
-        const timeFormatter = getFormatter({localType: "time"}, {dateFormat});
+        const dateFormatter = getFormatter({localType: "date"}, dateFormats);
+        const dateTimeFormatter = getFormatter({localType: "date-time"}, dateFormats);
+        const timeFormatter = getFormatter({localType: "time"}, dateFormats);
         expect(typeof dateFormatter).toBe("function");
         expect(dateFormatter()).toBe(null);
         expect(dateFormatter({value: '2015-02-01T12:45:00Z'})).toBe('2015');
