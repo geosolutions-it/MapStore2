@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
-import { Grid, Row, Col } from 'react-bootstrap';
 import WMSLegend from '../../TOC/fragments/WMSLegend';
 import OpacitySlider from "../../TOC/fragments/OpacitySlider";
 import Title from "../../TOC/fragments/Title";
@@ -39,7 +37,7 @@ export default ({
     );
 
     return (<div className={"legend-widget"}>
-        {layers.map((layer, index) => (<div key={index} className="widget-legend-toc">
+        {layers.map((layer, index) => (<div key={index} className={`widget-legend-toc${(layer.expanded || legendExpanded) ? ' expanded' : ''}`}>
             <div className="toc-default-layer-head">
                 {!disableVisibility && <LayersTool
                     tooltip={'toc.toggleLayerVisibility'}
@@ -48,7 +46,7 @@ export default ({
                     glyph={layer.visibility ? "eye-open" : "eye-close"}
                     onClick={()=> updateProperty('visibility', !layer.visibility, layer.id)}
                 />}
-                <Title node={layer} currentLocale={currentLocale}/>
+                <Title node={layer} currentLocale={currentLocale} tooltip/>
                 {!legendExpanded && layer.type === "wms" && <LayersTool
                     node={layer}
                     tooltip="toc.displayLegendAndTools"
@@ -56,23 +54,20 @@ export default ({
                     className={`toc-legend-icon ${layer.expanded ? 'expanded' : ''}`}
                     glyph="chevron-left"
                     onClick={()=> updateProperty('expanded', !layer.expanded, layer.id)} />}
-                {!layer.expanded && renderOpacitySlider(layer)}
             </div>
-            {(layer.expanded || legendExpanded) ? <div key="legend" className="expanded-legend-view">
-                <Grid fluid>
-                    <Row>
-                        <Col xs={12}>
-                            <WMSLegend
-                                node={{ ...layer }}
-                                currentZoomLvl={currentZoomLvl}
-                                scales={scales}
-                                language={language}
-                                {...legendProps} />
-                        </Col>
-                    </Row>
-                </Grid>
+            <div>
+                {(layer.expanded || legendExpanded)
+                    ? <div key="legend" className="expanded-legend-view">
+                        <WMSLegend
+                            node={{ ...layer }}
+                            currentZoomLvl={currentZoomLvl}
+                            scales={scales}
+                            language={language}
+                            {...legendProps} />
+                    </div>
+                    : null}
                 {renderOpacitySlider(layer)}
-            </div> : null}
+            </div>
         </div>))}
     </div>);
 };

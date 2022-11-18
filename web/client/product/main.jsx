@@ -7,6 +7,8 @@
  */
 
 import { connect } from 'react-redux';
+import { setObservableConfig } from 'recompose';
+import rxjsConfig from 'recompose/rxjsObservableConfig';
 
 import main from '../components/app/main';
 import StandardApp from '../components/app/StandardApp';
@@ -18,13 +20,17 @@ import { themeLoaded } from '../actions/theme';
 
 import { updateMapLayoutEpic, updateActiveDockEpic } from '../epics/maplayout';
 import { setSupportedLocales } from '../epics/localconfig';
-import { readQueryParamsOnMapEpic, switchMapType } from '../epics/queryparams';
+import { readQueryParamsOnMapEpic } from '../epics/queryparams';
 
 import maptype from '../reducers/maptype';
 import maps from '../reducers/maps';
 import maplayout from '../reducers/maplayout';
 import version from '../reducers/version';
 import mapPopups from '../reducers/mapPopups';
+import catalog from '../reducers/catalog';
+import security from '../reducers/security';
+import mousePosition from "../reducers/mousePosition";
+import annotations from "../reducers/annotations";
 
 import { versionSelector } from '../selectors/version';
 import { loadAfterThemeSelector } from '../selectors/config';
@@ -34,6 +40,8 @@ import {
     standardEpics,
     standardRootReducerFunc
 } from '../stores/defaultOptions';
+
+setObservableConfig(rxjsConfig);
 
 export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
 
@@ -72,6 +80,10 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 maplayout,
                 version,
                 mapPopups,
+                catalog,
+                security,
+                mousePosition,
+                annotations,
                 ...configAppReducers
             }),
 
@@ -86,7 +98,6 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 updateActiveDockEpic,
                 setSupportedLocales,
                 readQueryParamsOnMapEpic,
-                switchMapType,
                 ...configAppEpics
             }),
 

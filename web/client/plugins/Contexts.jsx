@@ -35,6 +35,7 @@ import { loadMaps } from '../actions/maps';
 import { setContextsAvailable } from '../actions/contexts';
 
 import * as contextsEpics from '../epics/contexts';
+import * as contextManagerEpics from '../epics/contextmanager';
 import maps from '../reducers/maps';
 import contexts from '../reducers/contexts';
 import {CONTEXT_DEFAULT_SHARE_OPTIONS} from "../utils/ShareUtils";
@@ -210,6 +211,7 @@ export default createPlugin('Contexts', {
         contexts
     },
     epics: {
-        ...contextsEpics
+        ...contextsEpics,
+        ...contextManagerEpics
     }
 });

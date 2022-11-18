@@ -8,10 +8,10 @@
 
 import timeline from '../timeline';
 
-import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
+import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline, setSnapRadioButtonEnabled } from '../../actions/timeline';
 import { isCollapsed, isMapSync } from '../../selectors/timeline';
 import expect from 'expect';
-
+const initConfig = {showHiddenLayers: true, expandLimit: 20, snapType: 'start', endValuesSupport: true};
 describe('Test the timeline reducer', () => {
     it('change the layer histogram and rangedata', () => {
         const initialState = {
@@ -136,22 +136,33 @@ describe('Test the timeline reducer', () => {
         expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
         expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
     });
+    it('initTimeline with defaults', () => {
+        const state = timeline(
+            {settings: {autoLoad: true, collapsed: false}},
+            initTimeline({...initConfig, endValuesSupport: undefined})
+        );
+        expect(state.settings.autoLoad).toBeTruthy();
+        expect(state.settings.collapsed).toBeFalsy();
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+    });
     it('initTimeline with endValuesSupport set as undefined', () => {
-        const state = timeline({}, initTimeline(true, 20, 'start'));
+        const state = timeline({}, initTimeline({...initConfig, endValuesSupport: undefined}));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(undefined);
     });
     it('initTimeline with endValuesSupport set as false', () => {
-        const state = timeline({}, initTimeline(true, 20, 'start', false));
+        const state = timeline({}, initTimeline({...initConfig, endValuesSupport: false}));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(false);
     });
     it('initTimeline with endValuesSupport set as true', () => {
-        const state = timeline({}, initTimeline(true, 20, 'start', true));
+        const state = timeline({}, initTimeline(initConfig));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
@@ -162,7 +173,7 @@ describe('Test the timeline reducer', () => {
             settings: {
                 snapRadioButtonEnabled: true
             }
-        }, initTimeline(true, 20, 'start', true));
+        }, initTimeline(initConfig));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
@@ -174,32 +185,19 @@ describe('Test the timeline reducer', () => {
             settings: {
                 snapRadioButtonEnabled: false
             }
-        }, initTimeline(true, 20, 'start', true));
+        }, initTimeline(initConfig));
         expect(state.settings.showHiddenLayers).toBe(true);
         expect(state.settings.expandLimit).toBe(20);
         expect(state.settings.snapType).toBe('start');
         expect(state.settings.endValuesSupport).toBe(true);
         expect(state.settings.snapRadioButtonEnabled).toBe(false);
     });
-    it('mapConfigLoaded', () => {
-        const initialState = {
-            selectedLayer: 'layer3',
+    it('setSnapRadioButtonEnabled', () => {
+        const state = timeline({
             settings: {
-                autoSelect: true,
-                collapsed: false,
-                snapType: "start",
-                endValuesSupport: false
+                snapRadioButtonEnabled: false
             }
-        };
-        const action = {
-            type: 'MAP_CONFIG_LOADED',
-            config: {
-                timelineData: {
-                    endValuesSupport: true
-                }
-            }
-        };
-        const state = timeline(initialState, action);
-        expect(state.settings.endValuesSupport).toBe(true);
+        }, setSnapRadioButtonEnabled(true));
+        expect(state.settings.snapRadioButtonEnabled).toBe(true);
     });
 });

@@ -737,7 +737,25 @@
             "selectTool": "Vyberte nástroj na meranie",
             "exportToGeoJSON": "Exportovať ako GeoJSON",
             "resetTooltip": "Obnoviť merania",
-            "addAsLayer": "Pridať ako vrstvu"
+            "addAsLayer": "Pridať ako vrstvu",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "layerMustBeVisible": "Cieľová vrstva je neaktívna",
@@ -1652,6 +1670,7 @@
         },
         "layerdownload": {
             "title": "Exportovať dáta",
+            "service": "Service",
             "format": "Formát súboru",
             "srs":  "Spatial Reference System",
             "export": "Exportovať",
@@ -2233,7 +2252,13 @@
             "imageSrcInvalidBase64": "Toto nie je platný obrázok base64. Niektoré vykresľovače štýlov nepodporujú tento typ zdroja, môžeš namiesto toho použiť externý zdroj adries URL",
             "imageSrcNotSupportedBase64Image": "Niektoré vykresľovače štýlov nepodporujú obrázky base64, aj keď je aktuálny zdroj platný",
             "warningTextOrderTitle": "Upozornenie",
-            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {

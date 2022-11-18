@@ -35,7 +35,12 @@
             "message": "Il livello non è stato ricaricato con un nome modificato"
         },
         "version": {
-            "label": "Versione"
+          "title": "Versione di Mapstore",
+          "label": "Versione",
+          "message": "Testo",
+          "commit": "Commit",
+          "date": "Data",
+          "githubUrl": "Apri Github in una nuova scheda"
         },
         "errorPage": {
             "title":"Ops, qualcosa è andato storto...",
@@ -422,6 +427,13 @@
             "renderingErrorTitle": "Errore di rendering",
             "renderingErrorMessage": "<p>Il rendering della mappa si è interrotto e ciò potrebbe essere dovuto a diversi motivi: </p><ul><li>Lo stile applicato contiene alcune regole o variabili non supportate dalle features</li>< li>Il livello non è configurato correttamente</li></ul><p>Puoi applicare le modifiche allo stile del layer e poi prenere il pulsante 'Ricarica mappa'. <br/> Per ulteriori informazioni:< /p>",
             "reloadMap": "Ricarica mappa",
+            "settings": {
+              "title": "Impostazioni della mappa",
+              "skyAtmosphere": "Mostra l'atmosfera del cielo",
+              "groundAtmosphere": "Mostra l'atmosfera del terreno",
+              "fog": "Mostra nebbia",
+              "depthTest": "Abilita il depthTest sul terreno"
+            },
             "thumbnailError": {
                 "error403": "Non disponi dei permessi per aggiornare la thumbnail",
                 "error404": "Non è stato possibile creare la thumbnail sul server",
@@ -729,7 +741,25 @@
             "exportToGeoJSON": "Esporta in GeoJSON",
             "saveMeasure": "Salva le misure nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
-            "addAsLayer": "Aggiungi come livello"
+            "addAsLayer": "Aggiungi come livello",
+            "polylineDistance3DMeasure": "Misurare la distanza nello spazio 3D",
+            "area3DMeasure": "Misurare l'area nello spazio 3D",
+            "pointCoordinatesMeasure": "Misurare le coordinate di un punto",
+            "heightFromTerrainMeasure": "Misurare altezza dal terreno",
+            "angle3DMeasure": "Misurare l'angolo nello spazio 3D",
+            "slopeMeasure": "Misurare la pendenza",
+            "tooltipPolylineDistance3DStart": "Click singolo per avviare la misurazione",
+            "tooltipPolylineDistance3DEnd": "Click singolo per aggiungere un segmento\no doppio click per terminare",
+            "tooltipArea3DStart": "Click singolo per avviare la misurazione",
+            "tooltipArea3DMissingVertex": "L'area necessita di almeno 3 vertici, \nclick singolo per aggiungere un vertice",
+            "tooltipArea3DEnd": "Click singolo per aggiungere un segmento\no doppio click per terminare",
+            "tooltipPointCoordinatesStart": "Click singolo per aggiungere una misurazione del punto di altitudine",
+            "tooltipHeightFromTerrainStart": "Click per aggiungere il valore della distanza dalla superficie del terreno",
+            "tooltipAngle3DStart": "Click singolo per disegnare 3 punti che rappresentano i vertici dell'angolo",
+            "tooltipSlopeStart": "Click singolo per disegnare 3 punti che rappresentano una superficie triangolare.\nIl valore della pendenza viene calcolato in base alla superficie triangolare disegnata",
+            "altitude": "Altitudine",
+            "latitude": "Latitudine",
+            "longitude": "Longitudine"
         },
         "search": {
             "layerMustBeVisible": "Il livello di destinazione è inattivo",
@@ -1194,6 +1224,8 @@
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
+            "signInWith": "Accedi con",
+            "orSignInWith": "O accedi con",
             "loginFail":"Login Fallito",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Per favore, Inserisci username e password",
@@ -1695,11 +1727,14 @@
                     "edge": "Bordo",
                     "pixelTolerance": "Tolleranza (pixel)",
                     "loadingStrategy": "Strategia di caricamento"
-                  }
+                  },
+                "disableViewportFilter": "Non filtrare i dati in base alla vista corrente",
+                "enableViewportFilter": "Filtra i dati in base alla vista corrente"
             }
         },
         "layerdownload": {
             "title": "Esporta dati",
+            "service": "Servizio",
             "format": "Formato file",
             "srs": "Sistema di riferimento",
             "export": "Esporta",
@@ -1765,7 +1800,8 @@
             },
             "selectWidgetType": "Seleziona il tipo di widget",
             "selectChartType": {
-                "title": "Seleziona il tipo di widget"
+                "title": "Tipo di grafico",
+                "noResults": "Nessun grafico trovato"
             },
             "selectMap": {
                 "TOC": {
@@ -1798,16 +1834,19 @@
                 "wizard": {
                     "backToTypeSelection": "Torna alla selezione del tipo di grafico",
                     "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
+                    "backToChartOptionConfiguration": "Torna alla configurazione delle opzioni del grafico",
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
                     "backToMapSelection": "Torna alla selezione della mappa",
                     "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "selectALayer": "Seleziona un livello",
+                    "selectLayers": "Seleziona uno o più livelli",
                     "selectAMap": "Seleziona una o più mappe",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
-                     "backToTableOptions": "Torna alle opzioni della tabella",
+                    "errorChart": "Uno o più grafici non sono validi",
+                    "backToTableOptions": "Torna alle opzioni della tabella",
                     "configureTableOptions": "Configura le opzioni della tabella",
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
@@ -1826,6 +1865,7 @@
                     "connectToTheMap": "Collegati alla mappa",
                     "selectMapToConnect": "Seleziona il widget da connettere",
                     "clearConnection": "Disconnetti",
+                    "disableConnectToMap": "Operazione non disponibile",
                     "classAttributes": {
                         "classColor": "Colore della Classe",
                         "classLabel": "Etichetta della Classe",
@@ -1857,11 +1897,14 @@
                     "noAttributesDescription": "Il layer selezonato non ha atrributi da mostrare. Selezionare un altro layer o un altro tipo di widget.",
                     "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
                     "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
+                    "attributesNotMatchingDescription": "<p><strong>Prova a selezionare un altro livello</strong></p><p>Gli attributi dei livelli selezionati non corrispondono al widget dipendente dal genitore</p>",
                     "checkAtLeastOneAttribute": "seleziona almeno un attributo",
                     "noMapAvailableForLegend": "Nessuna mappa disponibile",
                     "noMapAvailableForLegendDescription": "C'è bisogno almeno di una mappa per creare una lagenda"
                 },
-                "setupFilter": "Configura un filtro per il livello selezionato"
+                "setupFilter": "Configura un filtro per il livello selezionato",
+                "addNewLayers": "Aggiungi nuovi livelli",
+                "deleteChart": "Elimina il grafico corrente"
             },
             "widget": {
                 "menu": {
@@ -1887,6 +1930,13 @@
                 "placeholder": "Inserisci il nome della mappa",
                 "selectLabel": "Seleziona una mappa",
                 "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
+                "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Nessun livello trovato",
+                "placeholder": "Inserisci il nome del grafico",
+                "selectLabel": "Grafico",
+                "infoOnHide": "Espandi il widget per vedere il selettore del grafico",
                 "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
             },
             "chartType": {
@@ -2197,10 +2247,22 @@
             "addMarkRule": "Aggiungi regola marker",
             "shape": "Forma",
             "fill": "Colore riempimento",
+            "clampToGround": "Adattarsi al terreno",
+            "msBringToFront": "Portare in primo piano",
+            "heightReferenceFromGround": "Riferimento di altezza da terra",
+            "height": "Altezza",
+            "constantValue": "Valore costante",
+            "attributeValue": "Valore attributo",
             "strokeColor": "Colore linea",
             "strokeWidth": "Spessore linea",
             "radius": "Raggio",
             "rotation": "Rotazione",
+            "classificationtype": "Tipo di poligono",
+            "3dTile": "3D",
+            "terrain": "Terreno",
+            "both": "Ambedue",
+            "relative": "Parente",
+            "clamp": "Morsetto",
             "addIconSymbolizer": "Aggiungi stile icona",
             "addIconRule": "Aggiungi regola icona",
             "image": "Image",
@@ -2333,7 +2395,19 @@
             "warningTextOrderTitle": "Attenzione",
             "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole",
             "invalidProperty": "Il tipo della proprietà { key } non è valido",
-            "notSupportedVariable": "La variabile { key } non è supportata dal tileset"
+            "notSupportedVariable": "La variabile { key } non è supportata dal tileset",
+            "addModelRule": "Aggiungi regola modello 3D",
+            "model": "Modello 3D",
+            "placeholderEnterModelUrl": "Inserisci l'URL di un file .glb",
+            "invalidModelUrl": "L'URL fornito non è valido",
+            "scale": "Scala",
+            "heading": "Rotazione asse Z",
+            "pitch": "Rotazione asse X",
+            "roll": "Rotazione asse Y",
+            "color": "Colore",
+            "pointHeight": "Altezza punto",
+            "leaderLineColor": "Colore linea guida",
+            "leaderLineWidth": "Spessore linea guida"
         },
         "playback": {
             "settings": {
@@ -2397,6 +2471,11 @@
             "disablePlayBack": "Disabilita i controlli di riproduzione",
             "expand" : "Espandi",
             "collapse" : "Riduci",
+            "reset" : {
+                "range": "Imposta l'intervallo per includere tutti i dati",
+                "singleNow": "Imposta l'ora su adesso",
+                "singleNearest": "Imposta l'ora sul valore più vicino a adesso"
+            },
             "collapsed": {
                 "title": "La timeline è stata collassata",
                 "tooltip": "Clicca qui per espanderla di nuovo"
@@ -2995,6 +3074,10 @@
           "ZoomOut": {
             "description": "Pulsante che diminuisce il livello di zoom della mappa",
             "title": "Zoom Out"
+          },
+          "MapViews": {
+            "description": "Questo plugin permette di aggiungere una sequenza di viste differenti all'interno di una mappa",
+            "title": "MapViews"
           }
         },
         "contextCreator": {
@@ -3202,6 +3285,68 @@
                 "message": "Si è verificato un errore imprevisto durante la sincronizzazione dei livelli. Probabilmente c'è un bug in MapStore"
             },
             "layerType": "tipo: {type}"
+        },
+        "mapViews": {
+            "description": "Descrizione",
+            "position": "Posizione",
+            "animation": "Animazione",
+            "mask": "Maschera",
+            "globeTranslucency": "Traslucenza Globo",
+            "layersOptions": "Opzioni layers",
+            "cameraPosition": "Posizione camera",
+            "longitude": "Longitudine",
+            "latitude": "Latitudine",
+            "height": "Altezza (m)",
+            "centerPosition": "Posizione centro",
+            "captureThisViewPositions": "Cattura le posizioni di questa vista",
+            "durationLabel": "Durata (s)",
+            "flyToLabel": "Transizione animazione durante la navigazione",
+            "maskEnable": "Abilita maschera",
+            "maskLayer": "Layer",
+            "maskInverse": "Inverti",
+            "maskInverseOffset": "Offset (m)",
+            "globeTranslucencyEnable": "Abilita traslucenza",
+            "globeTranslucencyOpacity": "Opacità",
+            "globeTranslucencyFadeByDistance": "Dissolvenza traslucenza in base alla distanza",
+            "globeTranslucencyNearDistance": "Distanza minima (m)",
+            "globeTranslucencyFarDistance": "Distanza massima (m)",
+            "showClippingLayersGeometries": "Mostra le geometrie dei livelli di ritaglio",
+            "terrain": "Terreno",
+            "clippingSourceLayer": "Sorgente layer di ritaglio",
+            "clippingFeature": "Features di ritaglio",
+            "clippingInverse": "Ritaglio inverso",
+            "layerOpacity": "Opacità",
+            "showViewsGeometries": "Mostra le posizioni delle viste",
+            "addInitialView": "Fai clic sul pulsante più per aggiungere una nuova vista",
+            "removeView": "Rimuovi vista",
+            "resetLayerOverrides": "Ripristina le modifiche per allineare il livello al valore predefinito",
+            "hideLayer": "Nascondi layer",
+            "showLayer": "Mostra layer",
+            "undoChanges": "Annulla modifiche",
+            "redoChanges": "Ripeti modifiche",
+            "addNewView": "Aggiungi nuova vista",
+            "addNewViewBelowSelected": "Aggiungi una nuova vista sotto quella selezionata",
+            "hideDescription": "Nascondi descrizione",
+            "showDescription": "Mostra descrizione",
+            "copyCurrentView": "Copia vista corrente",
+            "edit": "Modifica",
+            "stopEdit": "Chiudi modifica",
+            "showViewsList": "Mostra elenco viste",
+            "hideViewsList": "Nascondi elenco viste",
+            "gotToFirstView": "Vai alla prima vista",
+            "gotToPreviousView": "Vai alla vista precedente",
+            "play": "Avvia navigazione",
+            "pause": "Pausa navigazione",
+            "gotToNextView": "Vai alla vista successiva",
+            "gotToLastView": "Vai all'ultima vista",
+            "maskWithGlobeTranslucencyWarning": "L'abilitazione simultanea della maschera e della traslucenza del globo potrebbe causare artefatti nella visualizzazione. Utilizzare solo una di queste due opzioni per vista",
+            "deactivateMapViews": "Disabilita viste",
+            "activateMapViews": "Attiva viste",
+            "maskOtherVisibleLayerWarning": "Sono visibili altri layer vettoriali, tutte le features poligonali visibili nella mappa verranno applicate a tutte le 3D tiles visibili",
+            "resourceLayerRequestError": "Non è stato possibile completare la richiesta al layer selezionato. Verifica se il layer è ancora disponibile",
+            "maskLayerPolygonError": "Il livello selezionato non contiene elementi poligonali quindi la maschera potrebbe non avere effetto",
+            "clipPolygonFeaturesNotAvailable": "Il livello selezionato non contiene elementi poligonali, seleziona un altro livello",
+            "addNewLayerToTheMap": "La mappa è vuota. Aggiungi nuovi layer all'interno della mappa per renderli disponibili nell'elenco della vista"
         },
         "tutorial": {
             "title": "Tutorial",

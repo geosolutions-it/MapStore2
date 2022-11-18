@@ -7,19 +7,22 @@
  */
 
 import { get } from 'lodash';
+import { isCesium } from '../selectors/maptype';
 export const createControlVariableSelector = (name, attribute) => state => get(state, `controls[${name}][${attribute}]`);
 export const createControlEnabledSelector = name => createControlVariableSelector(name, 'enabled');
 
 
+export const aboutSelector = (state) => get(state, "controls.about.enabled", false);
 /**
  * selects the showCoordinateEditor flag from state
  * @memberof selectors.controls
  * @param  {object} state the state
  * @return {boolean} the showCoordinateEditor in the state
  */
-export const showCoordinateEditorSelector = (state) => get(state, "controls.measure.showCoordinateEditor");
+export const showCoordinateEditorSelector = (state) => !isCesium(state) && get(state, "controls.measure.showCoordinateEditor");
 export const shareSelector = (state) => get(state, "controls.share.enabled");
 export const measureSelector = (state) => get(state, "controls.measure.enabled");
+export const versionInfoSelector = (state) => get(state, "controls.version.enabled");
 export const queryPanelSelector = (state) => get(state, "controls.queryPanel.enabled");
 export const printSelector = (state) => get(state, "controls.print.enabled");
 export const wfsDownloadSelector = state => !!get(state, "controls.layerdownload.enabled");

@@ -18,7 +18,7 @@ import {
 
 const createLayer = (options, map) => {
 
-    let dataSource = new Cesium.GeoJsonDataSource();
+    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
 
     const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
     const collection = {
@@ -45,8 +45,9 @@ const createLayer = (options, map) => {
                                     entities: dataSource?.entities?.values,
                                     map,
                                     opacity: options.opacity ?? 1
+                                }).then(() => {
+                                    map.scene.requestRender();
                                 });
-                                map.scene.requestRender();
                             }
                         });
                 });
@@ -54,6 +55,7 @@ const createLayer = (options, map) => {
     }
 
     dataSource.show = !!options.visibility;
+    dataSource.queryable = options.queryable === undefined || options.queryable;
 
     return {
         detached: true,
@@ -91,8 +93,9 @@ Layers.registerType('vector', {
                                     entities: layer.dataSource.entities.values,
                                     map,
                                     opacity: newOptions.opacity ?? 1
+                                }).then(() => {
+                                    map.scene.requestRender();
                                 });
-                                map.scene.requestRender();
                             }
                         });
                 });

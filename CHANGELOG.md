@@ -1,24 +1,44 @@
 # Change Log
 
+## [2022.02.01](https://github.com/geosolutions-it/MapStore2/tree/v2022.02.01) (2022-11-16)
+
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2022.02.00...v2022.02.01)**
+
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222022.02.01%22+is%3Aclosed+label%3Aenhancement)**
+
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222022.02.01%22+is%3Aclosed+label%3Abug)**
+
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222022.02.01%22+is%3Aclosed)**
+
+## [2022.02.00](https://github.com/geosolutions-it/MapStore2/tree/v2022.02.00) (2022-09-28)
+
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2022.01.00...v2022.02.00)**
+
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222022.02.00%22+is%3Aclosed+label%3Aenhancement)**
+
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222022.02.00%22+is%3Aclosed+label%3Abug)**
+
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222022.02.00%22+is%3Aclosed)**
+
 ## [2022.01.02](https://github.com/geosolutions-it/MapStore2/tree/v2022.01.02) (2022-06-09)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2022.01.01...v2022.01.02)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2022.01.01...v2022.01.02)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.02%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.02%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.02%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.02%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.02%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.02%22+is%3Aclosed)**
 
 ## [2022.01.01](https://github.com/geosolutions-it/MapStore2/tree/v2022.01.01) (2022-05-03)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2022.01.00...v2022.01.01)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2022.01.00...v2022.01.01)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.01%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.01%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.01%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.01%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.01%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22v2022.01.01%22+is%3Aclosed)**
 
 ## [2022.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2022.01.00) (2022-03-16)
 
@@ -52,13 +72,13 @@
 
 ## [2021.02.00](https://github.com/geosolutions-it/MapStore2/tree/v2021.02.00) (2021-10-28)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2021.01.00...v2021.02.00)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2021.01.00...v2021.02.00)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222021.02.00%22+is%3Aclosed)**
 
 ## [2021.01.04](https://github.com/geosolutions-it/MapStore2/tree/v2021.01.04) (2021-06-28)
 
@@ -144,13 +164,13 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 
 ## [2020.01.01](https://github.com/geosolutions-it/MapStore2/tree/v2020.01.01) (2020-03-04)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2020.01.00...v2020.01.01)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2020.01.00...v2020.01.01)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.01%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.01%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.010%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.010%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.01%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.01%22+is%3Aclosed)**
 
 ## [2020.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2020.01.00) (2020-01-23)
 
@@ -184,72 +204,66 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 
 ## [2019.01.01](https://github.com/geosolutions-it/MapStore2/tree/v2019.01.01) (2019-05-22)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2019.01.00...v2019.01.01)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2019.01.00...v2019.01.01)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.01%22+is%3Aclosed)**
 
 ## [2019.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2019.01.00) (2019-02-26)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.02.01...v2019.01.00)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.02.01...v2019.01.00)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.00%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.00%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.00%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.00%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.00%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222019.01.00%22+is%3Aclosed)**
 
 ## [2018.02.01](https://github.com/geosolutions-it/MapStore2/tree/2018.02.01) (2018-11-16)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.02.00...v2018.02.01)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.02.00...v2018.02.01)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.01%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.01%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.01%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.01%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.01%22+is%3Aclosed)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.01%22+is%3Aclosed)**
 
 ## [2018.02.00](https://github.com/geosolutions-it/MapStore2/tree/2018.02.00) (2018-09-11)
 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.01.00...v2018.02.00)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2018.01.00...v2018.02.00)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Aenhancement)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Abug)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Abug)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed)**
-
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed)**
 
 ## [2018.01.00](https://github.com/geosolutions-it/MapStore2/tree/2018.01.00) (2018-01-29)
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2017.05.00...2018.01.00)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.01.00+Hardening%22+is%3Aclosed+label%3Aenhancement)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2017.05.00...2018.01.00)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.01.00+Hardening%22+is%3Aclosed+label%3Abug)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.01.00+Hardening%22+is%3Aclosed+label%3Aenhancement)**
 
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.01.00+Hardening%22+is%3Aclosed)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.01.00+Hardening%22+is%3Aclosed+label%3Abug)**
 
-
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.01.00+Hardening%22+is%3Aclosed)**
 
 ## [2017.05.00](https://github.com/geosolutions-it/MapStore2/tree/2017.05.00) (2017-10-25)
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.04.00...2017.05.00)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed+label%3Aenhancement)**
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.04.00...2017.05.00)**
 
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed+label%3Aenhancement)**
 
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed+label%3Abug)**
 
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed+label%3Abug)**
-
-
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed)**
-
-
-
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed)**
 
 ## [2017.04.00](https://github.com/geosolutions-it/MapStore2/tree/2017.04.00) (2017-08-08)
+
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.03.02...2017.04.00)
 
 **Implemented enhancements:**
@@ -310,8 +324,8 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 - Fix \#2015 Update theme and icons for editing workflow [\#2032](https://github.com/geosolutions-it/MapStore2/pull/2032) ([allyoucanmap](https://github.com/allyoucanmap))
 - Add resources to Developer Guide [\#1985](https://github.com/geosolutions-it/MapStore2/pull/1985) ([Gnafu](https://github.com/Gnafu))
 
-
 ## [2017.03.01](https://github.com/geosolutions-it/MapStore2/tree/2017.03.01) (2017-05-30)
+
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.03.00...2017.03.01)
 
 **Implemented enhancements:**
@@ -459,8 +473,8 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 - Fix \#1750. Add smarter shareURLs generator and tests [\#1751](https://github.com/geosolutions-it/MapStore2/pull/1751) ([offtherailz](https://github.com/offtherailz))
 - fixed \#1616 removed language label [\#1749](https://github.com/geosolutions-it/MapStore2/pull/1749) ([MV88](https://github.com/MV88))
 
-
 ## [2017.03.00](https://github.com/geosolutions-it/MapStore2/tree/2017.03.00) (2017-04-10)
+
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.02.00...2017.03.00)
 
 **Implemented enhancements:**
@@ -575,6 +589,7 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 - Update README.md documentation site [\#1570](https://github.com/geosolutions-it/MapStore2/pull/1570) ([offtherailz](https://github.com/offtherailz))
 
 ## [2017.02.00](https://github.com/geosolutions-it/MapStore2/tree/2017.02.00) (2017-03-16)
+
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.01.00...2017.02.00)
 
 **Implemented enhancements:**
@@ -706,6 +721,7 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 - \#1438 Have binary package filename in accordance to release number [\#1439](https://github.com/geosolutions-it/MapStore2/pull/1439) ([fernandinand](https://github.com/fernandinand))
 
 ## [2017.01.00](https://github.com/geosolutions-it/MapStore2/tree/2017.01.00) (2017-02-16)
+
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2016.04.00...2017.01.00)
 
 **Implemented enhancements:**
@@ -865,6 +881,7 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 - Results panel is visible only if there are results [\#1351](https://github.com/geosolutions-it/MapStore2/pull/1351) ([Gnafu](https://github.com/Gnafu))
 
 ## [2016.04.00](https://github.com/geosolutions-it/MapStore2/tree/2016.04.00) (2016-12-05)
+
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/0.3.0...2016.04.00)
 
 **Implemented enhancements:**
@@ -1060,7 +1077,5 @@ This release contains hotfix for issue with CesiumJS certificate (#6838).
 - Fixes \#1074, openlayers support and fixes. [\#1099](https://github.com/geosolutions-it/MapStore2/pull/1099) ([offtherailz](https://github.com/offtherailz))
 - fix \#1079 added identifier [\#1098](https://github.com/geosolutions-it/MapStore2/pull/1098) ([saidaipparla](https://github.com/saidaipparla))
 - Refactor Measure component to use less state [\#1092](https://github.com/geosolutions-it/MapStore2/pull/1092) ([Gnafu](https://github.com/Gnafu))
-
-
 
 \* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*

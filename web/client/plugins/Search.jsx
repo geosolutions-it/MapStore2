@@ -40,7 +40,8 @@ import {
     searchItemSelected,
     searchOnStartEpic,
     textSearchShowGFIEpic,
-    zoomAndAddPointEpic
+    zoomAndAddPointEpic,
+    delayedSearchEpic
 } from '../epics/search';
 import mapInfoReducers from '../reducers/mapInfo';
 import searchReducers from '../reducers/search';
@@ -186,7 +187,9 @@ const SearchResultList = connect(selector, {
  *  "geomService": { optional service to retrieve the geometry }
  *
  * ```
- * A service may have nested services. This allows you to search in several steps,
+ * Search services configurations in `services` can be augmented or overridden by ones configured in the map. If the map JSON contains an array in `map.text_search_config.services` (containing the services edited using the UI of the plugin), the services in this array will be added to the ones listed
+ * in the plugin configuration. If the map has `map.text_search_config.override` set to `true` (it is set by checking the related checkbox in the UI), the services configured in the plugin will be overridden by the ones configured in the map.
+ * A service may also have nested services. This allows you to search in several steps,
  * </br> (e.g. *search for a street and in the next step search for the street number.*)
  * </br>When a service has nested services it needs some additional configurations, like `nestedPlaceholder` and `then`
 * @prop {string} cfg.searchOptions.services[].nestedPlaceholder the placeholder will be displayed in the input text, after you have performed the first search.
@@ -415,7 +418,7 @@ export default {
                 priority: 1
             }
         }),
-    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic, delayedSearchEpic},
     reducers: {
         search: searchReducers,
         mapInfo: mapInfoReducers

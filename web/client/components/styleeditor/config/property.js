@@ -57,22 +57,21 @@ const property = {
             };
         }
     }),
-    width: ({ key = 'width', label = 'Width', dasharrayKey = 'dasharray' }) => ({
-        type: 'slider',
+    width: ({ key = 'width', label = 'Width', fallbackValue = 1, dasharrayKey = 'dasharray' }) => ({
+        type: 'input',
         label,
         config: {
-            range: { min: 0, max: 20 },
-            format: {
-                from: value => Math.round(value),
-                to: value => Math.round(value) + ' px'
-            }
+            min: 0,
+            fallbackValue,
+            type: 'number',
+            maxWidth: 105,
+            uom: 'px'
         },
-        setValue: (value = 1) => {
-            return parseFloat(value);
+        setValue: (value) => {
+            return value === undefined ? fallbackValue : parseFloat(value);
         },
-        getValue: (value = [], properties) => {
-            const stringWidth = value[0] && value[0].split(' px')[0];
-            const width = parseFloat(stringWidth);
+        getValue: (value, properties) => {
+            const width = value === undefined ? fallbackValue : parseFloat(value);
             const dasharray = properties[dasharrayKey];
             const previousWidth = properties[key];
             return {
@@ -189,23 +188,43 @@ const property = {
         },
         isDisabled
     }),
-    size: ({ key = 'radius', label = 'Radius', range }) => ({
-        type: 'slider',
+    size: ({ key = 'radius', label = 'Radius', range, fallbackValue = 1 }) => ({
+        type: 'input',
         label,
         config: {
-            range: range || { min: 1, max: 100 },
-            format: {
-                from: value => Math.round(value),
-                to: value => Math.round(value) + ' px'
-            }
+            fallbackValue,
+            type: 'number',
+            maxWidth: 105,
+            uom: 'px',
+            min: range?.min ?? 0,
+            max: range?.max
         },
         setValue: (value = 1) => {
-            return parseFloat(value);
+            return value === undefined ? fallbackValue : parseFloat(value);
         },
-        getValue: (value = []) => {
-            const width = value[0] && value[0].split(' px')[0];
+        getValue: (value) => {
             return {
-                [key]: parseFloat(width)
+                [key]: value === undefined ? fallbackValue : parseFloat(value)
+            };
+        }
+    }),
+    number: ({ key = 'scale', label = 'Scale', min, max, fallbackValue, maxWidth, uom }) => ({
+        type: 'input',
+        label,
+        config: {
+            min,
+            max,
+            fallbackValue,
+            type: 'number',
+            maxWidth,
+            uom
+        },
+        setValue: (value) => {
+            return value === undefined ? fallbackValue : parseFloat(value);
+        },
+        getValue: (value) => {
+            return {
+                [key]: value === undefined ? undefined : parseFloat(value)
             };
         }
     }),
@@ -225,54 +244,132 @@ const property = {
             };
         }
     }),
-    offset: ({ key = 'offset', label = '', axis = '' }) => ({
+    offset: ({ key = 'offset', label = '', axis = '', fallbackValue = 0 }) => ({
         key,
-        type: 'slider',
+        type: 'input',
         label,
         config: {
-            range: { min: -100, max: 100 },
-            format: {
-                from: value => Math.round(value),
-                to: value => Math.round(value) + ' px'
-            }
+            fallbackValue,
+            type: 'number',
+            maxWidth: 105,
+            uom: 'px'
         },
         setValue: (value = []) => {
             const currentValue = axis === 'y' ? parseFloat(value[1]) : parseFloat(value[0]);
-            return  !isNaN(currentValue) ? currentValue : 0;
+            return  currentValue === undefined ? fallbackValue : parseFloat(currentValue);
         },
-        getValue: (value = [], properties) => {
-            const offset = value[0] && value[0].split(' px')[0];
+        getValue: (value, properties) => {
+            const offset = value === undefined ? fallbackValue : parseFloat(value);
             const currentOffset = properties[key] || [0, 0];
             return {
                 [key]: axis === 'y'
                     ? [
                         currentOffset[0],
-                        parseFloat(offset)
+                        offset
                     ]
                     : [
-                        parseFloat(offset),
+                        offset,
                         currentOffset[1]
                     ]
             };
         }
     }),
-    rotate: ({ key = 'rotate', label = 'Rotation (deg)' }) => ({
-        type: 'slider',
+    rotate: ({ key = 'rotate', label = 'Rotation (deg)', fallbackValue = 0 }) => ({
+        type: 'input',
         label,
         config: {
-            range: { min: 0, max: 360 },
-            format: {
-                from: value => Math.round(value),
-                to: value => Math.round(value) + '°'
-            }
+            fallbackValue,
+            type: 'number',
+            maxWidth: 105,
+            uom: '°'
         },
         setValue: (value = 0) => {
-            return parseFloat(value);
+            return value === undefined ? fallbackValue : parseFloat(value);
         },
-        getValue: (value = []) => {
-            const angle = value[0] && value[0].split('°')[0];
+        getValue: (value) => {
             return {
-                [key]: parseFloat(angle)
+                [key]: value === undefined ? fallbackValue : parseFloat(value)
+            };
+        }
+    }),
+    msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground' }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.boolTrue',
+                value: true
+            }, {
+                labelId: 'styleeditor.boolFalse',
+                value: false
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value
+            };
+        },
+        setValue: (value) => !!value
+    }),
+    msBringToFront: ({ key = 'msBringToFront', label = 'Arrange' }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.boolTrue',
+                value: true
+            }, {
+                labelId: 'styleeditor.boolFalse',
+                value: false
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value
+            };
+        },
+        setValue: (value) => !!value
+    }),
+    msClassificationType: ({ key = 'msClassificationType', label = 'PolygonType' }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.3dTile',
+                value: '3d'
+            }, {
+                labelId: 'styleeditor.terrain',
+                value: 'terrain'
+            }, {
+                labelId: 'styleeditor.both',
+                value: 'both'
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value
+            };
+        }
+    }),
+    msHeightReference: ({ key = 'msHeightReference', label = 'Height reference from ground' }) => ({
+        type: 'toolbar',
+        label,
+        config: {
+            options: [{
+                labelId: 'styleeditor.none',
+                value: 'none'
+            }, {
+                labelId: 'styleeditor.relative',
+                value: 'relative'
+            }, {
+                labelId: 'styleeditor.clamp',
+                value: 'clamp'
+            }]
+        },
+        getValue: (value) => {
+            return {
+                [key]: value,
+                ...(value === 'clamp' && { msHeight: undefined })
             };
         }
     }),
@@ -287,6 +384,16 @@ const property = {
     }),
     image: ({ label, key = 'image' }) => ({
         type: 'image',
+        label,
+        config: {},
+        getValue: (value = '') => {
+            return {
+                [key]: value
+            };
+        }
+    }),
+    model: ({ label, key = 'model' }) => ({
+        type: 'model',
         label,
         config: {},
         getValue: (value = '') => {
@@ -388,6 +495,44 @@ const property = {
             isValid
         },
         getValue: (value) => {
+            return {
+                [key]: value
+            };
+        },
+        isDisabled,
+        isVisible
+    }),
+    multiInput: ({ label, key = '', initialOptionValue, getSelectOptions = () => [], isDisabled, isVisible, fallbackValue = 0 }) => ({
+        type: 'multiInput',
+        label,
+        config: {
+            initialOptionValue,
+            getSelectOptions,
+            fallbackValue
+        },
+        setValue: (value) => {
+            if (value === undefined) {
+                return { type: 'initial' };
+            }
+            if (!isObject(value)) {
+                return {
+                    type: 'constant',
+                    value: value === undefined ? fallbackValue : parseFloat(value)
+                };
+            }
+            return value;
+        },
+        getValue: (value) => {
+            if (value?.type === 'initial') {
+                return {
+                    [key]: undefined
+                };
+            }
+            if (value?.type === 'constant') {
+                return {
+                    [key]: value?.value === undefined ? fallbackValue : parseFloat(value.value)
+                };
+            }
             return {
                 [key]: value
             };

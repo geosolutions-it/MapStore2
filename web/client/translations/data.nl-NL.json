@@ -728,7 +728,25 @@
             "selectTool": "Selecteer een meetinstrument",
             "exportToGeoJSON": "Exporteer naar GeoJSON",
             "resetTooltip": "Verwijder metingen",
-            "addAsLayer": "Voeg toe als laag"
+            "addAsLayer": "Voeg toe als laag",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "layerMustBeVisible": "De doellaag is inactief",
@@ -1637,6 +1655,7 @@
         },
         "layerdownload": {
             "title": "Exporteer Data",
+            "service": "Service",
             "format": "Bestandsformaat",
             "srs":  "Coördinaten ReferentieSysteem",
             "export": "Exporteer",
@@ -2063,7 +2082,7 @@
             "deletedStyleErrorMessage": "Kan huidige stijl niet verwijderen",
             "savedStyleTitle": "Stijl opgeslagen",
             "savedStyleMessage": "Stijl is succesvol opgeslagen",
-	    "errorTitle": "StyleEditor error",
+	        "errorTitle": "StyleEditor error",
             "parsingCapabilitiesError": "<h4>Mogelijke oorzaken:</h4> het was niet mogelijk de mogelijkheden te ontleden en de stijlen op te halen",
             "globalError": "<h4>Mogelijke oorzaken:</h4> het was niet mogelijk om verbinding te maken met de service",
             "missingAvailableStyles": "Ontbrekende stijlen",
@@ -2217,7 +2236,13 @@
             "imageSrcInvalidBase64": "Dit is geen geldige base64-image. Sommige stijlrenderers ondersteunen dit type bron niet, je zou in plaats daarvan een externe url-bron kunnen gebruiken",
             "imageSrcNotSupportedBase64Image": "Sommige stijlrenderers ondersteunen geen base64-afbeeldingen, zelfs niet als de huidige bron geldig is",
             "warningTextOrderTitle": "Waarschuwing",
-            "warningTextOrder": "De volgorde van de regel met de tekststijl kan niet overeenkomen met de weergavevolgorde op de kaart. Dit gedrag is gerelateerd aan een rendering-engine die een label boven andere regels plaatst"
+            "warningTextOrder": "De volgorde van de regel met de tekststijl kan niet overeenkomen met de weergavevolgorde op de kaart. Dit gedrag is gerelateerd aan een rendering-engine die een label boven andere regels plaatst",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {

@@ -107,6 +107,7 @@ export default ({
     onChange = () => { },
     options = [],
     typedOptions = [],
+    showTitle = true,
     formOptions = {
         showGroupBy: true,
         showUom: false,
@@ -163,7 +164,7 @@ export default ({
 
     return (
         <Row>
-            <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
+            {showTitle && <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />}
             {/* this sticky style helps to keep showing chart when scrolling*/}
             <Col xs={12} style={{ position: "sticky", top: 0, zIndex: 1}}>
                 <div style={{marginBottom: "30px"}}>

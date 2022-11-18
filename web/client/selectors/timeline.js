@@ -25,26 +25,29 @@ import { getLayerFromId } from '../selectors/layers';
 export const rangeSelector = state => get(state, 'timeline.range');
 export const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
-// items
+/**
+ * Timeline settings selectors
+ */
+export const settingsSelector = state => get(state, 'timeline.settings');
 const MAX_ITEMS = 50;
-export const expandLimitSelector = state => get(state, 'timeline.settings.expandLimit');
+export const expandLimitSelector = state => get(settingsSelector(state), 'expandLimit');
 
-export const isCollapsed = state => get(state, 'timeline.settings.collapsed');
+export const isCollapsed = state => get(settingsSelector(state), 'collapsed');
 
-export const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
+export const isAutoSelectEnabled = state => get(settingsSelector(state), 'autoSelect');
 
-export const snapTypeSelector = state => get(state, "timeline.settings.snapType") || "start";
+export const snapTypeSelector = state => get(settingsSelector(state), "snapType") || "start";
 
-export const snapRadioButtonEnabledSelector = state => get(state, "timeline.settings.snapRadioButtonEnabled") || false;
+export const snapRadioButtonEnabledSelector = state => get(settingsSelector(state), "snapRadioButtonEnabled") || false;
 
 // detects Geoserver version if fromEnd querystring parameter is supported
-export const endValuesSupportSelector = state => get(state, "timeline.settings.endValuesSupport");
+export const endValuesSupportSelector = state => get(settingsSelector(state), "endValuesSupport");
 
 /**
  * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
  * @return the flag of sync of the timeline with the map viewport
  */
-export const isMapSync = state => get(state, 'timeline.settings.mapSync'); // TODO: get live filter enabled flag
+export const isMapSync = state => get(settingsSelector(state), 'mapSync'); // TODO: get live filter enabled flag
 /**
  * Converts the list of timestamps into timeline items.
  * If a timestamp is a start/end/resolution, and items in viewRange are less than MAX_ITEMS, returns tha array of items,

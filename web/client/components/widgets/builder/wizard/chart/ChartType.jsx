@@ -8,59 +8,41 @@
 
 
 import React from 'react';
-import { Row } from 'react-bootstrap';
-import { shouldUpdate } from 'recompose';
 
-import SideGrid from '../../../../misc/cardgrids/SideGrid';
 import Message from '../../../../I18N/Message';
-import sampleData from '../../../enhancers/sampleChartData';
-import SimpleChart from '../../../../charts/SimpleChart';
-const SampleChart = sampleData(SimpleChart);
-
-const sampleProps = {
-    xAxisAngle: 0,
-    legend: false,
-    tooltip: false,
-    cartesian: false,
-    width: 100,
-    height: 100,
-    popup: false
-};
-import StepHeader from '../../../../misc/wizard/StepHeader';
+import ReactSelect from "react-select";
+import localizedProps from "../../../../misc/enhancers/localizedProps";
+import {Glyphicon} from "react-bootstrap";
+const Select = localizedProps(["noResultsText"])(ReactSelect);
 
 const ITEMS = [{
-    type: "bar"
+    type: "bar",
+    glyph: "stats"
 }, {
-    type: "pie"
+    type: "pie",
+    glyph: "pie-chart"
 }, {
-    type: "line"
-}].map( ({type}) => ({
-    type,
-    title: <Message msgId={`widgets.chartType.${type}.title`} />,
-    description: <Message msgId={`widgets.chartType.${type}.description`} />,
-    caption: <Message msgId={`widgets.chartType.${type}.caption`} />
-}));
-export default shouldUpdate(
-    ({ types, type }, { types: nextTypes, type: nextType}) => type !== nextType && types !== nextTypes
-)(({ onSelect = () => { }, onNextPage = () => { }, types = ITEMS, type} = {}) => (<Row>
-    <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
-    <SideGrid
-        key="content"
-        onItemClick={item => {onSelect(item.type); onNextPage(); }}
-        items={types &&
-            ITEMS.map( item =>
-                ({
-                    ...item,
-                    selected: item.type === type,
-                    preview: (<SampleChart
-                        {...sampleProps}
-                        type={item.type}
-                        autoColorOptions={item.type === type ? {
-                            base: 0,
-                            s: 0,
-                            v: 0
-                        } : undefined}
-                    />)
-                }))} />
-</Row>
-));
+    type: "line",
+    glyph: "line"
+}];
+const TypeRenderer = ({value, glyph})=>{
+    return <span><Glyphicon glyph={glyph}/>&nbsp;{`${value.charAt(0).toUpperCase() + value.slice(1)} Chart`}</span>;
+};
+export default ({ onSelect = () => { }, types = ITEMS, type} = {}) => (
+    <div className={"chart-type"}>
+        <strong>
+            <Message msgId={"widgets.selectChartType.title"}/>
+        </strong>
+        <div style={{marginTop: 4}}>
+            <Select
+                noResultsText="widgets.selectChartType.noResults"
+                optionRenderer={TypeRenderer}
+                valueRenderer={TypeRenderer}
+                options={types.map(({type: value, glyph}) =>({value, label: value, glyph}))}
+                onChange={(val) => val.value && onSelect(val.value)}
+                value={type}
+                clearable={false}
+            />
+        </div>
+    </div>
+);

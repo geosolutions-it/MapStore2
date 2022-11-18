@@ -39,13 +39,13 @@ describe('WidgetsBar component', () => {
         // charts
         ReactDOM.render(<WidgetsBar widgets={[{ widgetType: "chart" }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-stats')).toExist();
-        ReactDOM.render(<WidgetsBar widgets={[{ type: "pie" }]} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "pie"}] }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-pie-chart')).toExist();
-        ReactDOM.render(<WidgetsBar widgets={[{ type: "line" }]} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "line"}] }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-1-line')).toExist();
-        ReactDOM.render(<WidgetsBar widgets={[{ type: "bar" }]} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "bar"}] }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-stats')).toExist();
-        ReactDOM.render(<WidgetsBar widgets={[{ type: "counter" }]} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "counter"}] }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-counter')).toExist();
 
         // other widgets

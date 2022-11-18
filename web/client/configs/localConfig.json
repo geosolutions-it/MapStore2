@@ -10,7 +10,11 @@
           "https://gs-stable.geo-solutions.it/geoserver",
           "https://gs-stable.geo-solutions.it:443/geoserver",
           "http://gs-stable.geo-solutions.it/geoserver",
-          "http://gs-stable.geo-solutions.it:443/geoserver"
+          "http://gs-stable.geo-solutions.it:443/geoserver",
+          "https://gs-stable.geosolutionsgroup.com/geoserver",
+          "https://gs-stable.geosolutionsgroup.com:443/geoserver",
+          "http://gs-stable.geosolutionsgroup.com/geoserver",
+          "http://gs-stable.geosolutionsgroup.com:443/geoserver"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
@@ -27,6 +31,10 @@
       "cesium": {
           "flyTo": true,
           "navigationTools": true,
+          "showSkyAtmosphere": true,
+          "showGroundAtmosphere": false,
+          "enableFog": false,
+          "depthTestAgainstTerrain": false,
           "terrainProvider": {
               "type": "ellipsoid"
           }
@@ -42,12 +50,7 @@
       }, {
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
-      },
-      {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
-    }],
+      }],
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
@@ -188,7 +191,9 @@
                       }
                     }
                 }
-            }, "Version", "DrawerMenu",
+            }, {
+              "name": "About"
+            }, "DrawerMenu",
             {
                 "name": "BackgroundSelector",
                 "cfg": {
@@ -282,7 +287,9 @@
                 "declineUrl" : "http://www.google.com"
               }
             },
-            "FeedbackMask"
+            "FeedbackMask",
+            { "name": "Widgets" },
+            { "name": "WidgetsTray" }
         ],
         "desktop": ["Details",
           {
@@ -310,7 +317,7 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
             "cfg": {
               "measurementAnnotationEdit": false
@@ -379,7 +386,6 @@
                     }
                 }
             },
-          "SidebarMenu",
             "FilterLayer",
             "AddGroup",
             "TOCItemsSettings",
@@ -403,10 +409,9 @@
                     "wrap": true
                 }
             }, {
-              "name": "About",
-              "showIn": ["BurgerMenu"]
-            }
-            , {
+              "name": "About"
+            },
+            {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,
@@ -487,7 +492,9 @@
             "Playback",
             "FeedbackMask",
             "StyleEditor",
-            "DeleteMap"
+            "DeleteMap",
+            "SidebarMenu",
+            { "name": "MapViews" }
         ],
         "embedded": ["Details", {
                 "name": "Map",
@@ -660,6 +667,9 @@
           "Dashboard",
           "Notifications",
           "Login",
+          {
+            "name": "About"
+          },
           "Language",
           "NavMenu",
           "DashboardSave",
@@ -782,6 +792,9 @@
           },
           "Login",
           "BurgerMenu",
+          {
+            "name": "About"
+          },
           "Language",
           "NavMenu",
           "Attribution",

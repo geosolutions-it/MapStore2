@@ -1,4 +1,5 @@
 # Media Editor Window
+
 **********************
 
 The **Change media source**  button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> allows to access the Media Editor:
@@ -9,7 +10,7 @@ Through this window, you can add or edit three different types of media:
 
 * Images
 
-* Videos 
+* Videos
 
 * Maps
 
@@ -88,7 +89,7 @@ With a click on **Save** button <img src="../img/button/save_button.jpg" class="
 <img src="../img/media-editor-window/current-story.jpg" class="ms-docimage"/>
 
 !!! note
-    By default a drop down list on the top right corner of the Media Editor allows to switch between maps currently used in the story (so the story editor can use again a map already present in the story if needed) and existing maps already available inside the MapStore catalog (that means that also classic maps created in MapStore can be used inside a Story). 
+    By default a drop down list on the top right corner of the Media Editor allows to switch between maps currently used in the story (so the story editor can use again a map already present in the story if needed) and existing maps already available inside the MapStore catalog (that means that also classic maps created in MapStore can be used inside a Story).
     <img src="../img/media-editor-window/geostore-dev.jpg" class="ms-docimage" width="500px"/>
 
 Below is an example of a *Map* used as a background of a Title Section:

@@ -131,7 +131,8 @@ class RulesManagerPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         match: PropTypes.object,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -148,6 +149,7 @@ class RulesManagerPage extends React.Component {
             component={BorderLayout}
             plugins={this.props.plugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
         />) || <div style={{fontSize: 24, position: "absolute", top: 0, bottom: 0, right: 0, left: 0, justifyContent: "center", display: "flex", alignItems: "center"}}><label><Message msgId="rulesmanager.missingconfig"/></label></div>;
     }
 }

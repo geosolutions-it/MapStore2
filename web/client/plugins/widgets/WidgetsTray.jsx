@@ -21,9 +21,9 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import WidgetsBar from './WidgetsBar';
 import BButton from '../../components/misc/Button';
 import {mapLayoutValuesSelector} from "../../selectors/maplayout";
+import {withContainerDimensions} from "./withContainerDimensions";
 
 const Button = tooltip(BButton);
-
 
 /**
  * Button that allows collapse/Expand functionality of the tray.
@@ -80,7 +80,8 @@ class WidgetsTray extends React.Component {
         items: PropTypes.array,
         expanded: PropTypes.bool,
         setExpanded: PropTypes.func,
-        layout: PropTypes.object
+        layout: PropTypes.object,
+        isSingleWidgetLayout: PropTypes.bool
     };
     static defaultProps = {
         enabled: true,
@@ -101,11 +102,15 @@ class WidgetsTray extends React.Component {
                 }}>
                 <BorderLayout
                     columns={[
-                        <CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
+                        ...( !this.props.isSingleWidgetLayout
+                            ? [<CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />]
+                            : []
+                        ),
                         <CollapseAllButton key="collapse-all" toolsOptions={this.props.toolsOptions} />,
                         ...(this.props.items.map( i => i.tool) || [])
                     ]}
-                >{this.props.expanded ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
+                >
+                    {this.props.expanded && !this.props.isSingleWidgetLayout ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
                 </BorderLayout>
             </div>)
             : null;
@@ -113,11 +118,13 @@ class WidgetsTray extends React.Component {
 }
 
 export default compose(
+    withContainerDimensions,
     withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,
+        state => state.browser && state.browser.mobile,
         (state) => mapLayoutValuesSelector(state, { right: true }),
-        (widgets, layout = []) => ({ widgets, layout })
+        (widgets, isMobileAgent, layout = []) => ({ widgets, layout, isMobileAgent })
     ), {
         toggleTray
     }),
@@ -126,6 +133,11 @@ export default compose(
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
         hasTrayWidgets: widgets.length > 0
     })),
+    withProps(({ isMobileAgent, width, singleWidgetLayoutBreakpoint = 1024 }) => {
+        return {
+            isSingleWidgetLayout: isMobileAgent || width <= singleWidgetLayoutBreakpoint
+        };
+    }),
     // flag of plugin presence
     lifecycle({
         componentDidMount() {

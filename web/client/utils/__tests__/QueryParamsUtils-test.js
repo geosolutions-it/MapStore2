@@ -7,9 +7,15 @@
  */
 import expect from 'expect';
 
-import { paramActions } from '../../epics/queryparams';
 import { CHANGE_MAP_VIEW } from '../../actions/map';
-import { getRequestLoadValue, getRequestParameterValue, postRequestLoadValue, getParametersValues, getQueryActions } from "../QueryParamsUtils";
+import {
+    getRequestLoadValue,
+    getRequestParameterValue,
+    postRequestLoadValue,
+    getParametersValues,
+    getQueryActions,
+    paramActions
+} from "../QueryParamsUtils";
 
 describe('QueryParamsUtils', () => {
     it('test getRequestLoadValue', () => {
@@ -44,18 +50,19 @@ describe('QueryParamsUtils', () => {
         expect(center).toBe(null);
     });
     it('test postRequestLoadValue', () => {
-        sessionStorage.setItem('queryParams', JSON.stringify({featureinfo: {lat: 38.72, lng: -95.625, filterNameList: []}, zoom: 5, center: "41,0"}));
-        let featureinfo = postRequestLoadValue('featureinfo', sessionStorage);
+        const uuid = '8158d9c3-155d-44c0-834a-5274161c241e';
+        sessionStorage.setItem(`queryParams-${uuid}`, JSON.stringify({featureinfo: {lat: 38.72, lng: -95.625, filterNameList: []}, zoom: 5, center: "41,0"}));
+        let featureinfo = postRequestLoadValue('featureinfo', uuid, sessionStorage);
         expect(featureinfo.lat).toBe(38.72);
         expect(featureinfo.lng).toBe(-95.625);
         expect(featureinfo.filterNameList).toEqual([]);
 
-        const storageItem = sessionStorage.getItem('queryParams');
-        featureinfo = JSON.parse(storageItem)?.featureinfo;
+        const storageItem = sessionStorage.getItem(`queryParams-${uuid}`);
+        featureinfo = JSON.parse(storageItem)[uuid]?.featureinfo;
         expect(featureinfo).toBe(undefined);
 
-        const zoom = postRequestLoadValue('zoom', sessionStorage);
-        const center = postRequestLoadValue('center', sessionStorage);
+        const zoom = postRequestLoadValue('zoom', uuid, sessionStorage);
+        const center = postRequestLoadValue('center', uuid, sessionStorage);
         expect(zoom).toBe(5);
         expect(center).toBe("41,0");
     });
@@ -92,6 +99,19 @@ describe('QueryParamsUtils', () => {
         expect(heading).toBe(6.158556550454258);
         expect(pitch).toBe(-0.2123635014967287);
         expect(roll).toBe(0.000010414279262072055);
+    });
+    it('test getParametersValues - check that numeric zero values are processed properly', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?center=11.558466796428766,41.415232026624764&zoom=12.344643329999036&heading=6.158556550454258&pitch=0&roll=0'
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const { pitch, roll } = parameters;
+        expect(pitch).toBe(0);
+        expect(roll).toBe(0);
     });
     it('test getQueryActions with center querystring parameter', () => {
         const state = {

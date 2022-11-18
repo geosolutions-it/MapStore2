@@ -1,4 +1,5 @@
 # Filtering Layers
+
 ******************
 
 When using vector layers it might be useful to work with a subset of features. About that, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) let the user set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
@@ -11,11 +12,11 @@ The map will immediately update when a filter is applied.
 
 In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to apply filters on layers in three different ways:
 
-* With the *Layer Filter* tool available in [TOC](toc.md)
+* With the *Layer Filter* tool available in [TOC](toc.md#table-of-contents)
 
-* With the *Advanced Search* tool available from the [Attribute Table](attributes-table.md)
+* With the *Advanced Search* tool available from the [Attribute Table](attributes-table.md#attribute-table)
 
-* With the *Quick Filter* available in the [Attribute Table](attributes-table.md)
+* With the *Quick Filter* available in the [Attribute Table](attributes-table.md#attribute-table)
 
 ### Layer Filter
 
@@ -29,13 +30,13 @@ This filter is applicable from the **Filter layer** button <img src="../img/butt
 
 <img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage"/>
 
-* Opening the map next time (you need to Save the map from [Burger Menu](menu-bar.md#burger-menu) after applying a filter)
+* Opening the map next time (you need to Save the map from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) after applying a filter)
 
-Once a *Layer filter* is set, it is possible to enable/disable it simply by clicking on the button that will appear near the layer name in [TOC](toc.md):
+Once a *Layer filter* is set, it is possible to enable/disable it simply by clicking on the button that will appear near the layer name in [TOC](toc.md#table-of-contents):
 
 <img src="../img/filtering-layers/toogle-layer.jpg" class="ms-docimage" style="max-width:300px;"/>
 
-This filter is applied through the [Query Panel](filtering-layers.md#query-panel). Once the settings are chosen, it is possible to **Apply** <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> them. After that the user can:
+This filter is applied through the [Query Panel](#query-panel). Once the settings are chosen, it is possible to **Apply** <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> them. After that the user can:
 
 * **Undo** <img src="../img/button/undo_button.jpg" class="ms-docbutton"/> the last changes
 
@@ -45,9 +46,9 @@ This filter is applied through the [Query Panel](filtering-layers.md#query-panel
 
 ### Advanced Search
 
-This filter, applicable from **Advanced Search** button <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> in [Attribute Table](attributes-table.md), behaves as follows:
+This filter, applicable from **Advanced Search** button <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> in [Attribute Table](attributes-table.md#attribute-table), behaves as follows:
 
-* It can be used to apply a filter to a layer for search purposes in [Attribute Table](attributes-table.md): this filter is applied in `AND` to the *Layer Filter* if it is already been set.
+* It can be used to apply a filter to a layer for search purposes in [Attribute Table](attributes-table.md#attribute-table): this filter is applied in `AND` to the *Layer Filter* if it is already been set.
 
 <img src="../img/filtering-layers/filtered_features_grid.jpg" class="ms-docimage"/>
 
@@ -55,9 +56,9 @@ This filter, applicable from **Advanced Search** button <img src="../img/button/
 
 <img src="../img/filtering-layers/ar_sync.gif" class="ms-docimage" style="max-width:500px;"/>
 
-* It will be automatically removed/reapplied by closing/opening the [Attribute Table](attributes-table.md)
+* It will be automatically removed/reapplied by closing/opening the [Attribute Table](attributes-table.md#attribute-table)
 
-Also this filter is applied through the [Query Panel](filtering-layers.md#query-panel) but in this case it is not possible to Save it and make it persistent reopening the map the next time. The user is only allowed to apply it by clicking on **Search** <img src="../img/button/search.jpg" class="ms-docbutton"/> or eventually **Reset** <img src="../img/button/reset_button.jpg" class="ms-docbutton"/> it.
+Also this filter is applied through the [Query Panel](#query-panel) but in this case it is not possible to Save it and make it persistent reopening the map the next time. The user is only allowed to apply it by clicking on **Search** <img src="../img/button/search.jpg" class="ms-docbutton"/> or eventually **Reset** <img src="../img/button/reset_button.jpg" class="ms-docbutton"/> it.
 
 ### Quick Filter
 
@@ -69,11 +70,11 @@ The user can perform two type of quick filters:
 
 #### Quick Filter by attributes
 
-This filter is available for each colum in the [Attribute Table](attributes-table.md) just below the field names and it can be also used in combination with other filter applied:
+This filter is available for each colum in the [Attribute Table](attributes-table.md#attribute-table) just below the field names and it can be also used in combination with other filter applied:
 
 <img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"/>
 
-The user has the possibility to apply simple filters by attributes simply typing the filter's value in the available input fields (Date or Time pickers are available according to real attributes data types and a tooltip usually gives an information on how to fill the filter's input field). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md) are automatically filtered accordingly.
+The user has the possibility to apply simple filters by attributes simply typing the filter's value in the available input fields (Date or Time pickers are available according to real attributes data types and a tooltip usually gives an information on how to fill the filter's input field). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md#attribute-table) are automatically filtered accordingly.
 
 If the user wants to filter by an attribute of type String, he can simply write something inside the input box and the list of records in table will be automatically filtered by matching with the input text.
 
@@ -99,11 +100,11 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 #### Quick Filter by map interaction
 
-It is possible to filter records in the [Attribute Table](attributes-table.md) by clicking on the map or doing a selection directly in a map of multiple features. The user can activate the  **Filter on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (once clicked the button turns blue) and then:
+It is possible to filter records in the [Attribute Table](attributes-table.md#attribute-table) by clicking on the map or doing a selection directly in a map of multiple features. The user can activate the  **Filter on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (once clicked the button turns blue) and then:
 
 * Click on the map over the features he wants to select
 
-* Add multiple features to the selection by pressing Ctrl and clicking again over other features in map 
+* Add multiple features to the selection by pressing Ctrl and clicking again over other features in map
 
 <img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
 
@@ -114,7 +115,7 @@ It is possible to filter records in the [Attribute Table](attributes-table.md) b
 The list of records in the *Attribute Table* will be automatically filtered according to such user selection and then the user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
 
 !!! note
-    The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore if the [Attribute Table](attributes-table.md) is re-opened in a second time.
+    The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md#attribute-table) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md#attribute-table) it will not reappear anymore if the [Attribute Table](attributes-table.md#attribute-table) is re-opened in a second time.
 
 ## Query Panel
 
@@ -130,7 +131,7 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geos
 
 ### Attribute filter
 
-This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md) fields. <br>
+This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md#attribute-table) fields. <br>
 First of all it is possible to choose if the filter will match:
 
 * **Any** conditions
@@ -180,11 +181,11 @@ This tool allows to set [cross-layer filters](https://docs.geoserver.org/stable/
 
 In order to set up a cross-layer filter the options below are required:
 
-* *Target layer* (between those present in the [TOC](toc.md))
+* *Target layer* (between those present in the [TOC](toc.md#table-of-contents))
 
 * *Operation* to be chosen between **Intersects**, **Is contained** or **Contains**
 
-* Optionally some *Conditions* (see [Attribute filter](filtering-layers.md#attribute-filter))
+* Optionally some *Conditions* (see [Attribute filter](#attribute-filter))
 
 In order to better understand this type of filter, let's make an example. We suppose that the user want to filter the Italian Regions with the Unesco Item's one:
 
@@ -193,4 +194,3 @@ In order to better understand this type of filter, let's make an example. We sup
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
 <img src="../img/filtering-layers/layer_filter.gif" class="ms-docimage"/>
-

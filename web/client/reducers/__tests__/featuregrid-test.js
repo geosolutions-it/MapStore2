@@ -81,10 +81,10 @@ import {
     storeAdvancedSearchFilter,
     setUp,
     setTimeSync,
-    setPagination
+    setPagination, setViewportFilter
 } from '../../actions/featuregrid';
 
-import { paginationSelector, useLayerFilterSelector } from '../../selectors/featuregrid';
+import {isViewportFilterActive, paginationSelector, useLayerFilterSelector} from '../../selectors/featuregrid';
 
 
 import { featureTypeLoaded, createQuery, updateQuery } from '../../actions/wfsquery';
@@ -440,5 +440,10 @@ describe('Test the featuregrid reducer', () => {
             ).toEqual(false); // remains false
         });
 
+    });
+
+    it('setViewportFilter', () => {
+        const newState = featuregrid(undefined, setViewportFilter(true));
+        expect(isViewportFilterActive({ featuregrid: newState })).toEqual(true);
     });
 });

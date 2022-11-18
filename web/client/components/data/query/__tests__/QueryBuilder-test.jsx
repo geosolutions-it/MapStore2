@@ -12,6 +12,15 @@ import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
 import QueryBuilder from '../QueryBuilder';
+import standardItemsReference from "../../../../plugins/querypanel/index";
+import SwitchPanel from "../../../misc/switch/SwitchPanel";
+
+const standardItems = Object.keys(standardItemsReference).reduce((prev, cur) => {
+    return {...prev, [cur]: standardItemsReference[cur].map(el => ({
+        ...el,
+        plugin: () => <SwitchPanel key={el.id} />
+    }))};
+}, {});
 
 describe('QueryBuilder', () => {
 
@@ -120,13 +129,13 @@ describe('QueryBuilder', () => {
                 "attribute5"
             ]
         }];
-
         const querybuilder = ReactDOM.render(
             <QueryBuilder
                 filterFields={filterFields}
                 attributes={attributes}
                 groupFields={groupFields}
                 groupLevels={groupLevels}
+                standardItems={standardItems}
             />,
             document.getElementById("container")
         );
@@ -181,6 +190,7 @@ describe('QueryBuilder', () => {
                 attributes={attributes}
                 groupFields={groupFields}
                 groupLevels={groupLevels}
+                standardItems={standardItems}
             />,
             document.getElementById("container")
         );
@@ -290,5 +300,75 @@ describe('QueryBuilder', () => {
         const queryButton = document.getElementById('query-toolbar-query');
         expect(queryButton).toExist();
         expect(queryButton.getAttribute("disabled")).toNotExist();
+    });
+
+    it('creates the QueryBuilder component with custom panels support', () => {
+        const groupLevels = 5;
+        const groupFields = [];
+        const filterFields = [{
+            rowId: 100,
+            groupId: 1,
+            attribute: "",
+            operator: null,
+            value: null,
+            exception: null
+        }];
+
+        const attributes = [{
+            id: "Attribute",
+            type: "list",
+            values: [
+                "attribute1",
+                "attribute2",
+                "attribute3",
+                "attribute4",
+                "attribute5"
+            ]
+        }];
+
+        const querybuilder = ReactDOM.render(
+            <QueryBuilder
+                filterFields={filterFields}
+                attributes={attributes}
+                groupFields={groupFields}
+                groupLevels={groupLevels}
+                allowEmptyFilter
+                standardItems={standardItems}
+                selectedLayer="gs:us_states__25"
+                items={[
+                    {
+                        id: 'attributeFilter',
+                        component: () => null,
+                        target: 'attributeFilter',
+                        position: 0,
+                        layerNameRegex: "^gs:us_states__[0-9]*"
+                    },
+                    {
+                        id: 'attributeFilterNew',
+                        component: () => <span className="customPanel">1</span>,
+                        target: 'attributes',
+                        position: 0
+                    },
+                    {
+                        id: 'customPanel',
+                        component: () => <span className="customPanel">2</span>,
+                        target: 'attributes',
+                        position: 3
+                    },
+                    {
+                        id: 'customPanel2',
+                        component: () => <span className="customPanel">3</span>,
+                        target: 'start',
+                        position: 3
+                    }
+                ]}
+            />,
+            document.getElementById("container")
+        );
+
+        expect(querybuilder).toExist();
+        // only spatial filter and crossLayer filter should be shown
+        expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(2);
+        expect(document.querySelectorAll('.customPanel').length).toBe(3);
     });
 });

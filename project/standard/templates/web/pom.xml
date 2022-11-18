@@ -14,6 +14,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>8.5.69</tomcat.version>
+    <tomcat.port>8080</tomcat.port>
   </properties>
 
   <dependencies>
@@ -21,7 +22,7 @@
     <dependency>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-services</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.5-SNAPSHOT</version>
     </dependency>
 
     <!-- ================================================================ -->
@@ -30,14 +31,14 @@
     <dependency>
       <groupId>it.geosolutions.geostore</groupId>
       <artifactId>geostore-webapp</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <version>2.0-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>proxy</groupId>
       <artifactId>http_proxy</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <version>1.4-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -400,7 +401,7 @@
                         ${project.build.directory}/apache-tomcat-${tomcat.version}
                     </home>
                     <properties>
-                        <cargo.servlet.port>8080</cargo.servlet.port>
+                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
                     </properties>
                 </configuration>
@@ -419,6 +420,18 @@
     </plugins>
   </build>
     <profiles>
+        <profile>
+            <id>dev-custom-port</id>
+            <activation>
+                <property>
+                    <name>env.MAPSTORE_BACKEND_PORT</name>
+                </property>
+            </activation>
+            <properties>
+                <!-- Override only if necessary -->
+                <tomcat.port>${env.MAPSTORE_BACKEND_PORT}</tomcat.port>
+            </properties>
+        </profile>
         <profile>
             <id>printing</id>
             <activation>
@@ -447,12 +460,21 @@
                     </plugin>
                 </plugins>
             </build>
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpclient</artifactId>
+                        <version>4.5.13</version>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
             <dependencies>
                 <!-- mapfish-print -->
                 <dependency>
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
-                    <version>geosolutions-2.1-SNAPSHOT</version>
+                    <version>geosolutions-2.2-SNAPSHOT</version>
                     <exclusions>
                         <exclusion>
                             <groupId>commons-codec</groupId>

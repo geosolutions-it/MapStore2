@@ -6,18 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { get, find, isNumber, round, findIndex, includes, isEmpty, cloneDeep, omit, castArray} from 'lodash';
-
-import { MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
+import {
+    get,
+    find,
+    isNumber,
+    round,
+    findIndex,
+    includes,
+    isEmpty,
+    cloneDeep,
+    omit,
+    castArray,
+    pick
+} from 'lodash';
+import set from "lodash/fp/set";
+import { CHARTS_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
+import { arrayUpsert } from "../utils/ImmutableUtils";
 
 export const getDependentWidget = (k, widgets) => {
     const [match, id] = WIDGETS_REGEX.exec(k);
     if (match) {
-        const widget = find(widgets, { id });
-        return widget;
+        return find(widgets, { id });
     }
     return null;
 };
@@ -128,6 +140,8 @@ export const getDefaultAggregationOperations = () => {
     ];
 };
 
+export const CHART_PROPS = ["selectedChartId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description"];
+
 /**
  * Convert the dependenciesMapping to support maplist
  * widget for compatibility
@@ -137,7 +151,7 @@ export const getDefaultAggregationOperations = () => {
 export const convertDependenciesMappingForCompatibility = (data) => {
     const mapDependencies = ["layers", "viewport", "zoom", "center"];
     const _data = cloneDeep(data);
-    const widgets = _data.widgets || {};
+    const widgets = _data?.widgets || [];
     const tempWidgetMapDependency = [];
     return {
         ..._data,
@@ -147,6 +161,16 @@ export const convertDependenciesMappingForCompatibility = (data) => {
                 const mapId = uuidv1(); // Add mapId to existing map data
                 widget = omit({...w, selectedMapId: mapId, maps: castArray({...w.map, mapId})}, 'map');
                 tempWidgetMapDependency.push({widgetId: widget.id, mapId});
+            }
+            if (w.widgetType === 'chart' && w.layer) {
+                const chartId = uuidv1(); // Add chartId to existing chart data
+                const chartData = omit(widget, CHART_PROPS) || {};
+                const editorData = pick(widget, CHART_PROPS) || {};
+                widget = {
+                    ...editorData,
+                    selectedChartId: chartId,
+                    charts: castArray({...chartData, layer: w.layer, name: 'Chart-1', chartId })
+                };
             }
             if (!isEmpty(widget.dependenciesMap)) {
                 const widgetPath = Object.values(widget.dependenciesMap)[0];
@@ -210,4 +234,100 @@ export const updateDependenciesMapOfMapList = (allWidgets = [], widgetId, select
         });
     }
     return widgets;
+};
+
+/**
+ * Generate widget editor props
+ * @param {object} action
+ * @returns {object} updated editor change props
+ */
+export const editorChangeProps = (action) => {
+    let key = action.key;
+    let pathProp = key;
+    const value = action.value;
+    let regex = '';
+    let identifier = '';
+    if (key.includes('maps')) {
+        pathProp = 'maps';
+        regex = MAPS_REGEX;
+        identifier = 'mapId';
+    } else if (key.includes('charts')) {
+        pathProp = 'charts';
+        regex = CHARTS_REGEX;
+        identifier = 'chartId';
+    }
+    return { path: `builder.editor.${pathProp}`, value, key, regex, identifier };
+};
+
+/**
+ * Chart widget specific operation to perform multi chart management
+ * @param {object} editorData
+ * @param {string} key
+ * @param {any} value
+ * @param {object} state
+ * @returns {*}
+ */
+const chartWidgetOperation = ({editorData, key, value}, state) => {
+    const chartData = omit(editorData, CHART_PROPS) || {};
+    const editorProp = pick(editorData, CHART_PROPS) || {};
+    let datas = [];
+    let selectedChartId = null;
+    if (key.includes('layers')) {
+        datas = value?.map((v, i) => ({...chartData, name: `Chart-${i + 1}`, chartId: uuidv1(), type: 'bar', layer: v }));
+    } else if (key.includes('delete')) {
+        datas = value;
+    } else {
+        const multiData = value?.map(v => ({...chartData, chartId: uuidv1(), type: 'bar', layer: v }));
+        datas = editorProp?.charts?.concat(multiData)?.map((c, i) => ({...c, name: isEmpty(c.name) ? `Chart-${i + 1}` : c.name}));
+        selectedChartId = multiData?.[0]?.chartId;
+    }
+    return set('builder.editor', {...editorProp, charts: datas, selectedChartId: selectedChartId || datas?.[0]?.chartId }, state);
+};
+
+/**
+ * Perform state with widget editor changes
+ * @param {object} action
+ * @param {object} state object
+ * @returns {object|object[]} updated state
+ */
+export const editorChange = (action, state) => {
+    const { key, path, identifier, regex, value } = editorChangeProps(action);
+    // Update multi widgets (currently charts and maps)
+    if (['maps', 'charts'].some(k => key.includes(k))) {
+        if (key === 'maps' && value === undefined) {
+            return set(path, value, state);
+        }
+        const [, id, pathToUpdate] = regex.exec(key) || [];
+        let updatedValue = value;
+        if (id) {
+            const editorArray = get(state, path, []);
+            updatedValue = set(pathToUpdate, value, editorArray.find(m => m[identifier] === id));
+        }
+        return arrayUpsert(path, updatedValue, {[identifier]: id || value?.[identifier]}, state);
+    }
+    const editorData = { ...state?.builder?.editor };
+    // Widget specific editor changes
+    if (key.includes(`chart-`)) {
+        // TODO Allow to support all widget types that might support multi widget feature
+        return chartWidgetOperation({key, value, editorData}, state);
+    }
+    return set(path, value, state);
+};
+
+export const getDependantWidget = ({widgets = [], dependenciesMap = {}}) =>
+    widgets?.find(w => w.id === (WIDGETS_REGEX.exec(Object.values(dependenciesMap)?.[0]) || [])[1]) || {};
+
+/**
+ * Get editing widget from widget data with multi support
+ * @param {object} widget editing widget
+ * @returns {object} selected widget data
+ */
+export const getSelectedWidgetData = (widget = {}) => {
+    if (widget.widgetType === 'chart' || widget.charts) {
+        return widget?.charts?.find(c => c.chartId === widget?.selectedChartId) || {};
+    }
+    if (widget.widgetType === 'map' || widget.maps) {
+        return widget?.maps?.find(c => c.mapId === widget?.selectedMapId) || {};
+    }
+    return widget;
 };

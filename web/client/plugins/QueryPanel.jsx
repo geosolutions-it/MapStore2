@@ -14,6 +14,7 @@ import Sidebar from 'react-sidebar';
 import { bindActionCreators } from 'redux';
 import { createSelector } from 'reselect';
 
+import standardItems from './querypanel/index';
 import { toggleControl } from '../actions/controls';
 import { changeDrawingStatus } from '../actions/draw';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
@@ -85,6 +86,7 @@ import {
 } from '../selectors/queryform';
 import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
+import {typeNameSelector} from "../selectors/query";
 
 // include application component
 
@@ -190,8 +192,9 @@ const tocSelector = createSelector(
         appliedFilterSelector,
         storedFilterSelector,
         (state) => state && state.query && state.query.isLayerFilter,
-        selectedLayerLoadingErrorSelector
-    ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError) => ({
+        selectedLayerLoadingErrorSelector,
+        typeNameSelector
+    ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError, selectedLayer) => ({
         enabled,
         groups,
         settings,
@@ -200,7 +203,8 @@ const tocSelector = createSelector(
         appliedFilter,
         storedFilter,
         advancedToolbar,
-        loadingError
+        loadingError,
+        selectedLayer
     })
 );
 
@@ -238,7 +242,9 @@ class QueryPanel extends React.Component {
         storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
         onSaveFilter: PropTypes.func,
-        onRestoreFilter: PropTypes.func
+        onRestoreFilter: PropTypes.func,
+        items: PropTypes.array,
+        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
     };
 
     static defaultProps = {
@@ -263,7 +269,9 @@ class QueryPanel extends React.Component {
         layout: {},
         toolsOptions: {},
         onSaveFilter: () => {},
-        onRestoreFilter: () => {}
+        onRestoreFilter: () => {},
+        items: [],
+        selectedLayer: false
     };
     constructor(props) {
         super(props);
@@ -337,7 +345,11 @@ class QueryPanel extends React.Component {
                 appliedFilter={this.props.appliedFilter}
                 storedFilter={this.props.storedFilter}
                 advancedToolbar={this.props.advancedToolbar}
-                loadingError={this.props.loadingError}/>
+                loadingError={this.props.loadingError}
+                items={this.props.items}
+                selectedLayer={this.props.selectedLayer}
+                standardItems={standardItems}
+            />
             <Portal>
                 <ResizableModal
                     fade
@@ -367,6 +379,7 @@ class QueryPanel extends React.Component {
         </div>);
     };
 
+
     render() {
         return this.renderSidebar();
     }
@@ -394,10 +407,13 @@ class QueryPanel extends React.Component {
  *   - typeName {string} the workspace + layer name on geoserver
  *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
  *   - srsName {string} The projection of the requested features fetched via wfs
+ * Plugin acts as container and by default it have three panels: "AttributesFilter", "SpatialFilter" and "CrossLayerFilter" (see "standardItems" variable)
+ * Panels can be customized by injection from another plugins (see example below).
+ * Targets available for injection: "start", "attributes", "afterAttributes", "spatial", "afterSpatial", "layers", "end".
 
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
- * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer to hide
  * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.hideAttributeFilter force attribute filter panel to hide (when is not used or not usable). In general any `hide${CapitailizedItemId}` works to hide a particular panel of the query panel.
  * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
  *
  * @example
@@ -435,6 +451,45 @@ class QueryPanel extends React.Component {
  *        },
  *        "customItemClassName": "customItemClassName"
  *    }
+ *
+ * @example
+ * // customize the QueryPanels UI via plugin(s)
+ * import {createPlugin} from "../utils/PluginsUtils";
+ *
+ * export default createPlugin('QueryPanelCustomizations', {
+ *     component: () => null,
+ *     containers: {
+ *         QueryPanel: [
+ *             // Hide the attribute filter by injecting a `component: () => null` for one of the default panels, e.g. `attributeFilter`.
+ *             {
+ *                 id: 'attributeFilter',
+ *                 component: () => null,
+ *                 target: 'attributes',
+ *                 position: 0,
+ *                 layerNameRegex: "^gs:us_states__[0-9]*"
+ *             },
+ *             // adds a panel after the attribute panel (if present) at position `0`
+ *             {
+ *                 id: 'attributeFilterNew',
+ *                 component: () => 'Sample text',
+ *                 target: 'attributes',
+ *                 position: 0
+ *             },
+ *             {
+ *                 id: 'customPanel',
+ *                 component: () => 'Panel content; Added to attributes target',
+ *                 target: 'attributes',
+ *                 position: 3
+ *             },
+ *             {
+ *                 id: 'customPanel2',
+ *                 component: () => 'Another panel added to start',
+ *                 target: 'start',
+ *                 position: 3
+ *             }
+ *         ]
+ *     }
+ * });
  */
 const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,

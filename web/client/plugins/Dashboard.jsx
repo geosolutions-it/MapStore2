@@ -32,7 +32,7 @@ import {
     isDashboardLoading,
     showConnectionsSelector
 } from '../selectors/dashboard';
-import { currentLocaleLanguageSelector } from '../selectors/locale';
+import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import {
     dependenciesSelector,
@@ -64,8 +64,9 @@ const WidgetsView = compose(
             isLocalizedLayerStylesEnabledSelector,
             localizedLayerStylesEnvSelector,
             getMaximizedState,
+            currentLocaleSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized) => ({
+                env, maximized, currentLocale) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -78,7 +79,8 @@ const WidgetsView = compose(
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
-                maximized
+                maximized,
+                currentLocale
             })
         ), {
             editWidget,
@@ -108,7 +110,10 @@ const WidgetsView = compose(
                      * then make it non selectable
                     */
                     target.widgetType === "table" &&
-                        (editingWidget.widgetType !== "map" && (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
+                        (editingWidget.widgetType !== "map" &&
+                            editingWidget.widgetType === "chart"
+                            ? (target.layer && editingWidget && editingWidget?.charts?.map(c => c?.layer?.name)?.includes(target.layer.name))
+                            : (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
                         || editingWidget.widgetType === "map") && !target.mapSync
                 ) && target.id !== editingWidget.id
     })
@@ -125,13 +130,33 @@ const WidgetsView = compose(
  * @prop {object} cfg.cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
  * @prop {object} cfg.minLayoutWidth minimum size of the layout, below this size the widgets are listed in a single column
  * for more info about rowHeight and cols, see https://github.com/STRML/react-grid-layout#grid-layout-props
+ * @prop {object} cfg.widgetOpts can be used to configure widget specific options.
+ * Currently, it explicitly supports table widget with following options
+ * @example
+ * {
+ *   "name": "Dashboard",
+ *   "cfg": {
+ *      "rowHeight": 150,
+ *      "cols": { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 },
+ *      "widgetOpts": {
+ *          "table": {
+ *              gridOpts: {
+ *                  rowHeight: 20,
+ *                  headerRowHeight: 20,
+ *                  headerFiltersHeight: 20
+ *              }
+ *          }
+ *      }
+ *   }
+ * }
  */
 class DashboardPlugin extends React.Component {
     static propTypes = {
         enabled: PropTypes.bool,
         rowHeight: PropTypes.number,
         cols: PropTypes.object,
-        minLayoutWidth: PropTypes.number
+        minLayoutWidth: PropTypes.number,
+        widgetOpts: PropTypes.object
     };
     static defaultProps = {
         enabled: true,
@@ -145,6 +170,7 @@ class DashboardPlugin extends React.Component {
                 rowHeight={this.props.rowHeight}
                 cols={this.props.cols}
                 minLayoutWidth={this.props.minLayoutWidth}
+                widgetOpts={this.props.widgetOpts}
             />
             : null;
 

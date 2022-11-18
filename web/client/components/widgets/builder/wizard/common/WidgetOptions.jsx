@@ -11,8 +11,8 @@ import {Col, ControlLabel, Form, FormControl, FormGroup, Row} from 'react-bootst
 import Message from '../../../../I18N/Message';
 import StepHeader from '../../../../misc/wizard/StepHeader';
 
-export default ({data = {}, onChange = () => {}, sampleChart}) => (<Row>
-    <StepHeader title={<Message msgId={`widgets.widgetOptionsTitle`} />} />
+export default ({data = {}, onChange = () => {}, sampleChart, showTitle = true}) => (<Row>
+    {showTitle && <StepHeader title={<Message msgId={`widgets.widgetOptionsTitle`} />} />}
     <Col key="sample" xs={12}>
         <div style={{marginBottom: "30px"}}>
             {sampleChart}

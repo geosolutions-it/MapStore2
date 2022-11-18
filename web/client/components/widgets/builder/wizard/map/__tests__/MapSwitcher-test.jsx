@@ -27,9 +27,9 @@ describe('MapSwitcher component', () => {
     it('MapSwitcher render default', () => {
         ReactDOM.render(<MapSwitcher editorData={{maps}} withContainer/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-map-selector');
+        const el = container.querySelector('.widget-selector');
         expect(el).toBeTruthy();
-        const switcherLabel = container.querySelector('.widget-map-selector-label');
+        const switcherLabel = container.querySelector('.widget-selector-label');
         expect(switcherLabel).toBeTruthy();
         const switcherDropdown = container.querySelector('.Select');
         expect(switcherDropdown).toBeTruthy();
@@ -39,9 +39,9 @@ describe('MapSwitcher component', () => {
     it('MapSwitcher render without container', () => {
         ReactDOM.render(<MapSwitcher maps={maps}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-map-selector');
+        const el = container.querySelector('.widget-selector');
         expect(el).toBeFalsy();
-        const switcherLabel = container.querySelector('.widget-map-selector-label');
+        const switcherLabel = container.querySelector('.widget-selector-label');
         expect(switcherLabel).toBeFalsy();
         const switcherDropdown = container.querySelector('.Select');
         expect(switcherDropdown).toBeTruthy();
@@ -49,7 +49,7 @@ describe('MapSwitcher component', () => {
     it('MapSwitcher render icon when map size is small', () => {
         ReactDOM.render(<MapSwitcher maps={maps.map(m=> ({...m, size: {width: 400}}))} value={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-map-selector');
+        const el = container.querySelector('.widget-selector');
         expect(el).toBeFalsy();
         const switcherIcon = container.querySelector('.glyphicon-info-sign');
         expect(switcherIcon).toBeTruthy();
@@ -57,7 +57,7 @@ describe('MapSwitcher component', () => {
     it('MapSwitcher render empty map', () => {
         ReactDOM.render(<MapSwitcher withContainer emptyMap />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-map-selector');
+        const el = container.querySelector('.widget-selector');
         expect(el).toBeTruthy();
         const fcEmptyName = container.querySelector('.widget-empty-map');
         expect(fcEmptyName).toBeTruthy();
@@ -71,7 +71,7 @@ describe('MapSwitcher component', () => {
         const spyOnChange = expect.spyOn(action, 'onChange');
         ReactDOM.render(<MapSwitcher withContainer emptyMap onChange={action.onChange} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-map-selector');
+        const el = container.querySelector('.widget-selector');
         expect(el).toBeTruthy();
         const fcEmptyName = container.querySelector('.widget-empty-map');
         expect(fcEmptyName).toBeTruthy();
@@ -86,7 +86,7 @@ describe('MapSwitcher component', () => {
         const spyOnChange = expect.spyOn(action, 'onChange');
         ReactDOM.render(<MapSwitcher maps={maps} value={1} onChange={action.onChange} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-map-selector');
+        const el = container.querySelector('.widget-selector');
         expect(el).toBeFalsy();
 
         // Simulate selection

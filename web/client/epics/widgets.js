@@ -17,7 +17,8 @@ import {
     WIDGETS_REGEX,
     UPDATE_PROPERTY,
     replaceWidgets,
-    WIDGETS_MAPS_REGEX
+    WIDGETS_MAPS_REGEX,
+    EDITOR_CHANGE
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -25,19 +26,21 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import {
     availableDependenciesSelector,
     isWidgetSelectionActive,
-    getDependencySelectorConfig, getFloatingWidgets
+    getDependencySelectorConfig,
+    getFloatingWidgets,
+    getWidgetLayer
 } from '../selectors/widgets';
 
 import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } from '../actions/layers';
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
+import { isDashboardEditing } from '../selectors/dashboard';
 import { MAP_CREATED, SAVING_MAP, MAP_ERROR } from '../actions/maps';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
 import converter from 'json-2-csv';
-import canvg from 'canvg-browser';
 import { updateDependenciesMapOfMapList } from "../utils/WidgetsUtils";
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
@@ -218,17 +221,21 @@ export const exportWidgetImage = action$ =>
             // svgOffsetY = svgOffsetY ? svgOffsetY : 0;
             // svgCanv.setAttribute("width", Number.parseFloat(svgW) + left);
             // svgCanv.setAttribute("height", svgH);
-            canvg(canvas, svgString, {
-                renderCallback: () => {
-                    const context = canvas.getContext("2d");
-                    context.globalCompositeOperation = "destination-over";
-                    // set background color
-                    context.fillStyle = '#fff'; // <- background color
-                    // draw background / rect on entire canvas
-                    context.fillRect(0, 0, canvas.width, canvas.height);
-                    downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
-                }
-            });
+            import('canvg-browser')
+                .then((mod) => {
+                    const canvg = mod.default;
+                    canvg(canvas, svgString, {
+                        renderCallback: () => {
+                            const context = canvas.getContext("2d");
+                            context.globalCompositeOperation = "destination-over";
+                            // set background color
+                            context.fillStyle = '#fff'; // <- background color
+                            // draw background / rect on entire canvas
+                            context.fillRect(0, 0, canvas.width, canvas.height);
+                            downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
+                        }
+                    });
+                });
         })
         .filter( () => false);
 /**
@@ -284,6 +291,19 @@ export const updateDependenciesMapOnMapSwitch = (action$, store) =>
             return observable$;
         });
 
+export const onWidgetCreationFromMap = (action$, store) =>
+    action$.ofType(EDITOR_CHANGE)
+        .filter(({key, value}) => key === 'widgetType' && value === 'chart' && !isDashboardEditing(store.getState()))
+        .switchMap(() => {
+            let observable$ = Rx.Observable.empty();
+            const state = store.getState();
+            const layer = getWidgetLayer(state);
+            if (layer) {
+                observable$ = Rx.Observable.of(onEditorChange('chart-layers', [layer]));
+            }
+            return observable$;
+        });
+
 export default {
     exportWidgetData,
     alignDependenciesToWidgets,
@@ -292,5 +312,6 @@ export default {
     exportWidgetImage,
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
-    updateDependenciesMapOnMapSwitch
+    updateDependenciesMapOnMapSwitch,
+    onWidgetCreationFromMap
 };

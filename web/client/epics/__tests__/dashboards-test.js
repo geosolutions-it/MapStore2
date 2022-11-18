@@ -16,6 +16,8 @@ import {
     searchDashboards as searchDashboardsEpic,
     reloadOnDashboards
 } from '../dashboards';
+import { loginSuccess, logout } from '../../actions/security';
+
 
 import { dashboardSaved } from '../../actions/dashboard';
 import { SEARCH_DASHBOARDS, searchDashboards, LOADING, DASHBOARDS_LIST_LOADED } from '../../actions/dashboards';
@@ -72,6 +74,46 @@ describe('dashboards epics', () => {
     describe('reloadOnDashboards', () => {
         it('reload on dashboardSaved', (done) => {
             const startActions = [dashboardSaved("Search Text")];
+            testEpic(reloadOnDashboards, 1, startActions, ([a]) => {
+                expect(a.type).toBe(SEARCH_DASHBOARDS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                dashboards: {
+                    searchText: "test",
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
+        });
+        it('reload on loginSuccess', (done) => {
+            const startActions = [loginSuccess()];
+            testEpic(reloadOnDashboards, 1, startActions, ([a]) => {
+                expect(a.type).toBe(SEARCH_DASHBOARDS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                dashboards: {
+                    searchText: "test",
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
+        });
+        it('reload on logout', (done) => {
+            const startActions = [logout()];
             testEpic(reloadOnDashboards, 1, startActions, ([a]) => {
                 expect(a.type).toBe(SEARCH_DASHBOARDS);
                 expect(a.params.start).toBe(0);

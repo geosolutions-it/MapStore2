@@ -18,6 +18,7 @@ export const loadingSelector = state => state?.layerdownload?.loading;
 export const checkingWPSAvailabilitySelector = state => state?.layerdownload?.checkingWPSAvailability;
 export const wfsFormatsSelector = state => state?.layerdownload?.wfsFormats;
 export const formatsLoadingSelector = state => state?.layerdownload?.formatsLoading;
+export const wpsAvailableSelector = state => state?.layerdownload?.wpsAvailable;
 export const serviceSelector = state => state?.layerdownload?.service;
 export const wfsFilterSelector = createSelector(
     isFeatureGridOpen, wfsFilter, getSelectedLayer,

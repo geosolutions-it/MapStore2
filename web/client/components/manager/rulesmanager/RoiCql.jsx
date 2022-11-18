@@ -11,9 +11,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../misc/toolbar/ToolbarButton';
 import ContainerDimensions from 'react-container-dimensions';
-import { Controlled as Codemirror } from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/sql/sql';
+import CodeMirror from '../../../libs/codemirror/react-codemirror-suspense';
 import { getMessageById } from '../../../utils/LocaleUtils';
 
 
@@ -42,7 +40,7 @@ class RoiCql extends React.Component {
             <ContainerDimensions>
                 {({width}) =>
                     <div style={{width, display: "flex", flexDirection: "column"}}>
-                        <Codemirror
+                        <CodeMirror
                             value={this.state.cql}
                             onBeforeChange={this.onChange}
                             options={{

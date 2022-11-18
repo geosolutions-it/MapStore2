@@ -20,9 +20,228 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2022.01.00 to 2022.02.00
+## Migration from 2022.02.00 to 2022.02.01
+
+### Package.json scripts migration
+
+With this release we are refactoring a bit the naming of the scripts maintaining retro compatibility avoiding builds on ci/cd systems to break.
+Anyway we suggest to align them as listed [here](https://github.com/geosolutions-it/MapStore2/blob/master/utility/projects/projectScripts.json)
+
+The main changes are:
+
+- We have removed `travis` and `mvntest` scripts.
+- Most of the scripts are now prefixed with `app` or `fe` or `be` to make them more clear.
+- Now `npm start` is an alias of `npm run app:start` and starts both front-end and back-end.
+
+Although it is optional we suggest to align your project to these changes. In order to align your repository you should:
+
+- update your `package.json` to latest scripts, you can copy them from `utility/projects/projectScripts.json` in MapStore2 repository.
+- update your `build.sh` to use the latest scripts, instead of the old ones. See `project/standard/templates/build.sh` in MapStore2 repository.
+- update in your repository `web/pom.xml` of your project to receive the backend property from ENV variables.
+
+```diff
+@@ -14,6 +14,7 @@
+   <properties>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     <tomcat.version>8.5.69</tomcat.version>
++    <tomcat.port>8080</tomcat.port>
+   </properties>
+
+   <dependencies>
+@@ -400,7 +401,7 @@
+                         ${project.build.directory}/apache-tomcat-${tomcat.version}
+                     </home>
+                     <properties>
+-                        <cargo.servlet.port>8080</cargo.servlet.port>
++                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
+                         <cargo.logging>low</cargo.logging>
+                     </properties>
+                 </configuration>
+@@ -419,6 +420,18 @@
+     </plugins>
+   </build>
+     <profiles>
++        <profile>
++            <id>dev-custom-port</id>
++            <activation>
++                <property>
++                    <name>env.MAPSTORE_BACKEND_PORT</name>
++                </property>
++            </activation>
++            <properties>
++                <!-- Override only if necessary -->
++                <tomcat.port>${env.MAPSTORE_BACKEND_PORT}</tomcat.port>
++            </properties>
++        </profile>
+         <profile>
+             <id>printing</id>
+             <activation>
+```
+
+## Migration from 2022.01.02 to 2022.02.00
+
+### HTML pages optimization
+
+We removed script and css link to leaflet CDN in favor of a dynamic import of the libraries in the main bundle, now leaflet is only loaded when the library is selected as map type of the viewer. You can update the project HTML files by removing these tags:
+
+```diff
+- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
+- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="shortcut icon" type="image/png" href="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/favicon.ico" />
+<!--script src="https://maps.google.com/maps/api/js?v=3"></script-->
+- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+```
+
+We also made asynchronous the script to detect valid browser. This should slightly improve the initial requests time.
+ You can updated the script in your project as following:
+
+```html
+<script async type="text/javascript" src="https://unpkg.com/bowser@2.7.0/es5.js" onload="checkBrowser()"></script>
+<script type="text/javascript">
+    function checkBrowser() {
+        var browserInfo = bowser.getParser(window.navigator.userAgent);
+        var isValidBrowser = browserInfo.satisfies({
+            "edge": ">1",
+            "chrome": ">1",
+            "safari": ">1",
+            "firefox": ">1"
+        });
+        if (!isValidBrowser) {
+            window.location.href = "unsupportedBrowser.html"
+            document.querySelector("container").style.display = "none";
+        }
+    }
+</script>
+```
+
+### Update plugins.js to make upstream plugins use dynamic import
+
+We've updated `plugins.js` in MapStore to make most of the plugins use dynamic import. `plugins.js` of your project have to be updated separately.
+
+Please use `web\client\product\plugins.js` file as a reference listing plugins whose definition can be changed to support dynamic import.
+
+To use dynamic import for plugin, please update its definition to look like:
+
+```js
+{
+    ...
+    AnnotationsPlugin: toModulePlugin('Annotations', () => import(/* webpackChunkName: 'plugins/annotations' */ '../plugins/Annotations')),
+    ...
+}
+
+```
+
+See [Dynamic import of extension](../extensions/#dynamic-import-of-extension) to have more details about transforming extensions to use dynamic import.
+
+### Version plugin has been removed
+
+We no longer maintain the Version plugin since we have moved its content inside the About plugin (see [here](https://github.com/geosolutions-it/MapStore2/issues/7934#issuecomment-1201433942) for more details)
+
+We suggest you to clean up your project as well:
+
+- remove Version entry it from a local list of plugins.js
+- remove Version entries it from a localConfig.json and pluginConfig.json
+- add About entry into other pages of mapstore plugins array:
+
+  - dashboard
+  - geostory
+  - mobile
+- remove `DefinePlugin` entries dedicated to git revision retrieved by `git-revision-webpack-plugin`, if any, from `webpack-config.js` or `prod.webpack-config.js`, because they have been moved to the file `build/BuildUtils.js`
+- check that in your package.json you have this extends rule
+
+```js
+"eslintConfig": {
+    "extends": [
+      "@mapstore/eslint-config-mapstore"
+    ],
+    ...
+```
+
+- edit the version of the *@mapstore/eslint-config-mapstore* to **1.0.5** in your package.json so that the new globals config will be inherited
+
+!!! note
+    this may fail on gha workflows, in that case we suggest to edit directly your package.json with globals taken from mapstore framework
+
+### Support for OpenID
+
+MapStore introduced support for OpenID for google and keycloak. In order to have this functionalities and to be aligned with the latest version of MapStore you have to update the following files in your projects:
+
+- `geostore-spring-security.xml` (your custom spring security context) have to be updated adding the beans and the `security:custom-filter` entry in the `<security:http>` entry, as here below:
+
+```diff
+        <security:csrf disabled="true"/>
+        <security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
+        <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
++        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
++        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+        <security:anonymous />
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
+    </security:authentication-manager>
++
++
++    <bean id="preauthenticatedAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
++    </bean>
++
++    <!-- OAuth2 beans -->
++    <context:annotation-config/>
++
++    <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
++
++    <!-- Keycloak -->
++
++   <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
++
++    <!-- END OAuth2 beans-->
++
++    <!--  security integration inclusions  -->
++    <import resource="classpath*:security-integration-${security.integration:default}.xml"/>
+
+</beans>
+
+```
+
+- `web.xml`: add the following content to the file:
+
+```diff
+@@ -34,6 +34,17 @@
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
++    <!-- Allow to use RequestContextHolder -->
++    <filter>
++        <filter-name>springRequestContextFilter</filter-name>
++        <filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
++    </filter>
++    <filter-mapping>
++        <filter-name>springRequestContextFilter</filter-name>
++        <url-pattern>/*</url-pattern>
++    </filter-mapping>
++
++
+    <!-- Spring Security Servlet -->
+    <filter>
+```
+
+- `applicationContext.xml` for consistency, we added `mapstore-ovr.properties` files to be searched in class-path and in the data-dir, as for the other properties files:
+
+```diff
+@@ -49,6 +49,7 @@
+         <property name="order" value="10"/>
+         <property name="locations">
+             <list>
++                 <value>classpath:mapstore-ovr.properties</value>
+                 <value>file:${datadir.location:}/geostore-datasource-ovr.properties</value>
+                 <value>file:${datadir.location:}/mapstore-ovr.properties</value>
+             </list>
+```
 
 ### Upgrading the printing engine
+
 The mapfish-print based printing engine has been upgraded to align to the latest official 2.1.5 in term of functionalities.
 
 An update to the MapStore printing engine context file (`applicationContext-print.xml`) is needed for all projects built with the printing profile enabled. The following sections should be added to the file:
@@ -47,14 +266,14 @@ An update to the MapStore printing engine context file (`applicationContext-prin
 
 Also, remember to update your project pom.xml with the updated dependency:
 
- - locate the print-lib dependency in the pom.xml file
- - replace the dependency with the following snippet
+- locate the print-lib dependency in the pom.xml file
+- replace the dependency with the following snippet
 
 ```xml
 <dependency>
     <groupId>org.mapfish.print</groupId>
     <artifactId>print-lib</artifactId>
-    <version>geosolutions-2.1-SNAPSHOT</version>
+    <version>geosolutions-2.1.0</version>
     <exclusions>
         <exclusion>
             <groupId>commons-codec</groupId>
@@ -92,9 +311,12 @@ formats:
 ```
 
 ### Replacing BurgerMenu with SidebarMenu
+
 There were several changes applied to the application layout, one of them is the Sidebar Menu that comes to replace Burger menu on map viewer and in contexts.
 Following actions need to be applied to make a switch:
+
 - Update localConfig.json and add "SidebarMenu" entry to the "desktop" section:
+
 ```json
 {
     "desktop": [
@@ -104,13 +326,15 @@ Following actions need to be applied to make a switch:
     ]
 }
 ```
+
 - Remove "BurgerMenu" entry from "desktop" section.
 
-#### Updating contexts to use Sidebar Menu
+#### Using Sidebar Menu in new contexts
 
-Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "SidebarMenu" in contexts.
+Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "SidebarMenu" in new contexts.
+Existing contexts need to be updated separately, please refer to the next chapter for instructions.
 
-- Find "BurgerMenu" plugin confuguration in `pluginsConfig.json` and remove `"hidden": true` line from it:
+- Find "BurgerMenu" plugin configuration in `pluginsConfig.json` and remove `"hidden": true` line from it:
 
 ```json
     {
@@ -167,15 +391,52 @@ Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new 
 }
 ```
 
+#### Updating existing contexts to use Sidebar Menu
+
+Contexts created in previous versions of MapStore will maintain old Burger Menu. There are two options allowing to replace it with the new Sidebar Menu:
+
+- Using manual update.
+- Using SQL query to update all contexts at once.
+
+Before going with one of the approaches, please make sure that changes to `pluginsConfig.json` from previous chapter are applied.
+
+**To update context manually:**
+
+1. Go to the context manager (#/context-manager) and edit context you want to update.
+2. Move to the step 3: Configure Plugins.
+3. Find "Burger Menu" on the right side (enabled plugins) and move it to the left column.
+4. Save context
+
+**Note:** "Burger Menu" has higher priority over the "Sidebar Menu", so it will always be used if it's added to the list of enabled plugins of the context.
+
+**To update all contexts at once:**
+
+This is a sample SQL query that can be executed against the MapStore DB to replace the Burger Menu with the new Sidebar for existing application contexts previously created:
+
+```sql
+UPDATE geostore.gs_stored_data SET stored_data = regexp_replace(gs_stored_data.stored_data,'{"name":"BurgerMenu"},','{"name":"SidebarMenu"},')
+FROM geostore.gs_resource
+WHERE gs_stored_data.resource_id = gs_resource.id AND
+        gs_resource.category_id = (SELECT id FROM geostore.gs_category WHERE name = 'CONTEXT') AND
+        gs_stored_data.stored_data ~ '.*{"name":"BurgerMenu"},.*';
+```
+
+**Note:** Schema name could vary depending on your installation configuration.
+
 ### Updating extensions
+
 Please refer to the [extensions](../extensions/#managing-drawing-interactions-conflict-in-extension) documentation to know how to update your extensions.
 
 ### Using `terrain` layer type to define 3D map elevation profile
-A new `terrain` layer type has been created in order to provide more options and versatility when defining an elevation profile for the 3D map terrain. 
+
+A new `terrain` layer type has been created in order to provide more options and versatility when defining an elevation profile for the 3D map terrain.
 This `terrain` layer will substitute the former `wms` layer (with `useForElevation` attribute) used to define the elevation profile.
 
+!!! note
+    The `wms` layer (with `useForElevation` attribute) configuration is still needed to show the elevation data inside the MousePosition plugin and it will display the terrain at the same time. The `terrain` layer type allows a more versatile way of handling elevation but it will work only as terrain visualization in the 3D map viewer.
+
 The `additionalLayers` object on the `localConfig.json` file should adhere now to the [terrain layer configuration](../maps-configuration/#terrain).
-Serve the following code as an example: 
+Serve the following code as an example:
 
 ```json
 {
@@ -186,7 +447,6 @@ Serve the following code as an example:
             "provider": "wms",
             "url": "https://host-sample/geoserver/wms",
             "name": "workspace:layername",  // name of the geoserver resource
-            "format": "application/bil16",
             "littleendian": false,
             "visibility": true
         }]
@@ -194,12 +454,14 @@ Serve the following code as an example:
 }
 ```
 
+!!! note
+    When using `terrain` layer with `wms` provider, the format option in layer configuration is not needed anymore as Mapstore supports only `image/bil` format and is used by default
+
 ## Migration from 2022.01.00 to 2022.01.01
 
 ### MailingLists plugin has been removed
 
 `MailingLists` plugin has ben removed from the core of MapStore. This means you can remove it from your `localConfig.json` (if present, it will be anyway ignored by the plugin system).
-
 
 ## Migration from 2021.02.02 to 2022.01.00
 
@@ -340,6 +602,7 @@ Downstream project should update following configurations:
 - This step is needed only for custom project with a specific `publicPath` different from the default one. In this case you may need to specify what folder deliver the  cesium build ( by default `dist/cesium`). To do that, you can add the  `cesiumBaseUrl` parameter in the webpack dev and prod configs to the correct location of the cesium static assets, widgets and workers folder.
 
 ## Migration from 2021.02.01 to 2021.02.02
+
 ### Style parsers dynamic import
 
 The style parser libraries introduced a dynamic import to reduce the initial bundle size. This change reflects to the `getStyleParser` function provided by the VectorStyleUtils module. If a downstream project of MapStore is using `getStyleParser` it should update it to this new version:
@@ -806,6 +1069,7 @@ See [this pull request on GitHub](https://github.com/geosolutions-it/MapStore2/p
 Existing MapStore project could have an issue with the loading of map embedded page due to the impossibility to change some configuration such as localConfig.json or translations path in the javascript entry.
 This issue can be solved following these steps:
 1 - add a custom entry named `embedded.jsx` in the `js/` directory of the project with the content:
+
 ```js
 import {
     setConfigProp,
@@ -827,16 +1091,20 @@ setLocalConfigurationFile('MapStore2/web/client/localConfig.json');
 // async load of the standard embedded bundle
 import('@mapstore/product/embedded');
 ```
+
 2 - update the path of the embedded entry inside the `webpack.config.js` and `prod-webpack.config.js` files with:
+
 ```js
 // __PROJECTNAME__ is the name of the project used in the creation process
 '__PROJECTNAME__-embedded': path.join(__dirname, "js", "embedded"),
 ```
+
 ### Locate plugin configuration
 
 Configuration for Locate plugin has changed and it is not needed anymore inside the Map plugin
 
 - old localConfig.json configuration needed 'locate' listed as tool inside the Map plugin and as a separated Locate plugin
+
 ```js
 // ...
 {
@@ -854,6 +1122,7 @@ Configuration for Locate plugin has changed and it is not needed anymore inside 
 ```
 
 - new localConfig.json configuration removes 'locate' from tools array and it keeps only the plugin configuration
+
 ```js
 // ...
 {
@@ -875,7 +1144,7 @@ Embedded Dashboards and GeoStories need a new set of javascript entries, html te
 
 The steps described above assume this structure of the MapStore2 project for the files that need update:
 
-```
+```text
 MapStore2Project/
 |-- ...
 |-- js/
@@ -911,6 +1180,7 @@ MapStore2Project/
 3) update webpack configuration for development and production with the new entries and the related configuration:
 
     - webpack.config.js
+
     ```js
     module.exports = require('./MapStore2/build/buildConfig')(
         {
@@ -922,6 +1192,7 @@ MapStore2Project/
         // ...
     );
     ```
+
     - prod-webpack.config.js
 
     ```js
@@ -958,6 +1229,7 @@ MapStore2Project/
 
 4) Add configuration to localConfig.json in the plugins section related to Share functionalities (Only with custom localConfig.json in the project):
     - Dashboard share configuration
+
     ```js
     "dashboard": [
         // ...
@@ -979,6 +1251,7 @@ MapStore2Project/
     ```
 
     - Dashboard share configuration
+
     ```js
     "geostory": [
         // ...
@@ -1004,6 +1277,7 @@ MapStore2Project/
     ```
 
 5) update the web/pom.xml to copy all the related resources in the final *.war file with these new executions
+
 ```xml
 <!-- __PROJECTNAME__ should be equal to the one in use in the project, see other executions how they define the outputDirectory path  -->
 <execution>
@@ -1114,7 +1388,6 @@ If you have aproject that includes MapStore as a dependency, you can run `npm ru
 - dependencies:
   - update `"eslint": "7.8.1"
 
-
 ### App structure review
 
 From this version some base components of MapStore App (`StandardApp`, `StandardStore`...) has been restructured and better organized. Here a list of the breaking change you can find in a depending project
@@ -1141,7 +1414,6 @@ const appStore = (
 
 - Moved standard epics, standard reducers and standard rootReducer function from web/client/stores/StandardStore.js to a separated file web/client/stores/defaultOptions.js
 
-
 - loading extensions functionalities inside StandardApp has been moved to an specific withExtensions HOC, so if you are not using `main.js` but directly `StandardApp` and you need extensions you need to add this HOC to your StandardApp
 
 ## Migration from 2020.01.00 to 2020.02.00
@@ -1151,6 +1423,7 @@ const appStore = (
 With this new version the support for uploading extensions has been introduced. A new entry point needs administration authorization to allow the upload of new plugins by the administrator. So:
 
 - In `localConfig.json` add the following entry in the `authenticationRules` array:
+
 ```json
 {
     "urlPattern": ".*rest/config.*",
@@ -1158,6 +1431,7 @@ With this new version the support for uploading extensions has been introduced. 
   }
 
 ```
+
 the final entry should look like this
 
 ```json
@@ -1180,6 +1454,7 @@ Database schema has changed. To update your database you need to apply this SQL 
 
 - Update the user schema
 run the script available [here](https://github.com/geosolutions-it/geostore/tree/master/doc/sql/migration/postgresql):
+
 ```sql
 
 -- Update the geostore database from 1.4.2 model to 1.5.0
@@ -1202,7 +1477,6 @@ create index idx_security_groupname on gs_security (groupname);
 
 ```
 
-
 - Add new categories
 
 ```sql
@@ -1218,12 +1492,13 @@ INSERT into geostore.gs_category (id ,name) values ( nextval('geostore.hibernate
 ```
 
 ### Backend update
+
 For more details see [this](https://github.com/geosolutions-it/MapStore2/commit/4aa7b917abcb09571af5b9999a38e96f52eac4f3#diff-ac81cff563b78256ef26eca8a5103392592c7138987392a6fb3d79167d11bdcfR66) commit
 
 new files have been added:
 
--  `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml`
--  `web/src/main/resources/mapstore.properties`
+- `web/src/main/webapp/WEB-INF/dispatcher-servlet.xml`
+- `web/src/main/resources/mapstore.properties`
 
 some files has been changed:
 
@@ -1231,9 +1506,7 @@ some files has been changed:
 - `pom.xml`
 - `web/pom.xml`
 
-
 ## Migration from 2019.02.01 to 2020.01.00
-
 
 With MapStore **2020.01.00** some dependencies that were previously hosted on github, have now been published on the npm registry, and package.json has been updated accordingly.
 [Here](https://github.com/geosolutions-it/MapStore2/pull/4598) is the PR that documents how to update local package.json and local webpack if not using the mapstore buildConfig/testConfig common files.
@@ -1329,7 +1602,6 @@ const appConfig = {
 - Add to your `pom.xml` some execution steps to replace html files with the ones generated in 'dist' directory. ([example](https://github.com/geosolutions-it/MapStore2/pull/2538/files#diff-eef89535a29b4a95a42d9de83cb53681)). And copy `version.txt`
 - Override the version file in your build process (e.g. you can use the commit hash)
 
-
 ## Migration from 2017.05.00 to 2017.03.00 and previews
 
 In **2017.03.00** the `createProject.js` script created only a custom project. From version 2017.04.00 we changed the script to generate 2 kind of projects:
@@ -1348,7 +1620,7 @@ The version 2017.02.00 has many improvements and changes:
 - introduced `redux-observable`
 - updated `webpack` to version 2
 - updated `react-intl` to version 2.x
-- updated `react` to [version 15.4.2] (https://facebook.github.io/react/blog/2016/04/07/react-v15.html)
+- updated `react` to [version 15.4.2] (<https://facebook.github.io/react/blog/2016/04/07/react-v15.html>)
 - updated `react-bootstrap` to version 0.30.7
 
 We suggest you to:

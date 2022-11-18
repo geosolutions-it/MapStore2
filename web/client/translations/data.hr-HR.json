@@ -577,7 +577,25 @@
             "showLabel": "Prikaži oznaku mjerenja",
             "addAsAnnotation": "Dodaj kao pribilješku",
             "newMeasure": "Nova pribilješka",
-            "selectTool": "Odaberi alat za mjerenje"
+            "selectTool": "Odaberi alat za mjerenje",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "decimal": "Decimalne",
@@ -1369,6 +1387,7 @@
         },
         "layerdownload": {
             "title": "Izvezi podatke",
+            "service": "Service",
             "format": "Format datoteke",
             "srs":  "Koordinatni sustav",
             "export": "Izvoz",
@@ -1724,7 +1743,13 @@
             "setDefaultStyleSuccessTitle": "Uspješna primjena zadanog stila",
             "setDefaultStyleSuccessMessage": "Zadani stil je uspješno postavljen",
             "setDefaultStyleErrorTitle": "Greška pri postavljanju zadanog stila",
-            "setDefaultStyleErrorMessage": "Nije moguće postaviti odabrani stil kao zadani"
+            "setDefaultStyleErrorMessage": "Nije moguće postaviti odabrani stil kao zadani",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {

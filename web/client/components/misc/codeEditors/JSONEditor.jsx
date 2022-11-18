@@ -8,11 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import Message from '../../I18N/Message';
 
-import { Controlled as CodeMirror } from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/lint/lint';
-import 'codemirror/addon/lint/json-lint';
-import 'codemirror/mode/javascript/javascript';
+import CodeMirror from '../../../libs/codemirror/react-codemirror-suspense';
 
 export default ({onValid, onError, json = {}}) => {
     const [code, setCode] = useState(JSON.stringify(json, true, 2));

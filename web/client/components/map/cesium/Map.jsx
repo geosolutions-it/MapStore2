@@ -120,6 +120,10 @@ class CesiumMap extends React.Component {
             skyBox: false
         }, this.getMapOptions(this.props.mapOptions)));
 
+        // prevent default behavior
+        // such as lock the camera on model after double click
+        map.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
         if (this.props.errorPanel) {
             // override the default error message overlay
             map.cesiumWidget.showErrorPanel = (title, message, error) => {
@@ -195,6 +199,19 @@ class CesiumMap extends React.Component {
             };
             this.setView(position);
         }
+
+        if (prevProps && (this.props.mapOptions.showSkyAtmosphere !== prevProps?.mapOptions?.showSkyAtmosphere)) {
+            this.map.scene.skyAtmosphere.show = this.props.mapOptions.showSkyAtmosphere;
+        }
+        if (prevProps && (this.props.mapOptions.showGroundAtmosphere !== prevProps?.mapOptions?.showGroundAtmosphere)) {
+            this.map.scene.globe.showGroundAtmosphere = this.props.mapOptions.showGroundAtmosphere;
+        }
+        if (prevProps && (this.props.mapOptions.enableFog !== prevProps?.mapOptions?.enableFog)) {
+            this.map.scene.fog.enabled = this.props.mapOptions.enableFog;
+        }
+        if (prevProps && (this.props.mapOptions.depthTestAgainstTerrain !== prevProps?.mapOptions?.depthTestAgainstTerrain)) {
+            this.map.scene.globe.depthTestAgainstTerrain = this.props.mapOptions.depthTestAgainstTerrain;
+        }
     }
 
     componentWillUnmount() {
@@ -225,7 +242,9 @@ class CesiumMap extends React.Component {
                         x: x,
                         y: y
                     },
-                    height: this.props.mapOptions && this.props.mapOptions.terrainProvider ? cartographic.height : undefined,
+                    height: (this.props.mapOptions && this.props.mapOptions.terrainProvider) || intersectedFeatures.length > 0
+                        ? cartographic.height
+                        : undefined,
                     cartographic,
                     latlng: {
                         lat: latitude,
@@ -297,23 +316,35 @@ class CesiumMap extends React.Component {
     };
 
     getIntersectedFeatures = (map, position) => {
-        const features = map.scene.drillPick(position);
+        // for consistency with 2D view we allow to drill pick through the first feature
+        // and intersect all the features behind
+        const features = map.scene.drillPick(position).filter((aFeature) => {
+            return !(aFeature?.id?.entityCollection?.owner?.queryable === false);
+        });
         if (features) {
             const groupIntersectedFeatures = features.reduce((acc, feature) => {
+                let msId;
+                let properties;
                 if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
-                    const msId = feature.tileset.msId;
+                    msId = feature.tileset.msId;
                     // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
                     // it has content but refers to the whole tile model
                     const propertyNames = feature.getPropertyNames();
-                    const properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
-                    return {
-                        ...acc,
-                        [msId]: acc[msId]
-                            ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
-                            : [{ type: 'Feature', properties, geometry: null }]
-                    };
+                    properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
+                } else if (feature?.id instanceof Cesium.Entity && feature.id.id && feature.id.properties) {
+                    const {properties: {propertyNames}, entityCollection: {owner: {name}}} = feature.id;
+                    properties = Object.fromEntries(propertyNames.map(key => [key, feature.id.properties[key].getValue(0)]));
+                    msId = name;
                 }
-                return acc;
+                if (!properties || !msId) {
+                    return acc;
+                }
+                return {
+                    ...acc,
+                    [msId]: acc[msId]
+                        ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
+                        : [{ type: 'Feature', properties, geometry: null }]
+                };
             }, []);
             return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
         }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 -240 1200 1200"
+   id="svg6"
+   sodipodi:docname="viewport-filter.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="0.27812867"
+     inkscape:cx="-346.96171"
+     inkscape:cy="573.47558"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2"
+     showguides="false"
+     inkscape:pagecheckerboard="0" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="glyph">
+    <path
+       id="path823"
+       d="M 0 120 L 0 471 L 100 371 L 100 220 L 251 220 L 351 120 L 0 120 z M 849 120 L 949 220 L 1100 220 L 1100 371 L 1200 471 L 1200 120 L 849 120 z M 300.58789 320 C 292.06529 320 284.44122 323.58873 277.71289 330.76562 C 270.98456 337.94253 267.61914 346.01716 267.61914 354.98828 C 267.61914 376.96754 278.60862 387.95703 300.58789 387.95703 L 897.39258 387.95703 C 920.71751 387.95703 932.38086 376.96754 932.38086 354.98828 C 932.38086 346.01716 929.01544 337.94252 922.28711 330.76562 C 915.55878 323.58872 907.26084 320 897.39258 320 L 300.58789 320 z M 300.58789 453.89453 L 533.38867 787.61914 L 533.38867 1120 L 666.61133 986.7793 L 666.61133 787.61914 L 897.39258 453.89453 L 300.58789 453.89453 z M 0 969 L 0 1320 L 351 1320 L 251 1220 L 100 1220 L 100 1069 L 0 969 z M 1200 969 L 1100 1069 L 1100 1220 L 949 1220 L 849 1320 L 1200 1320 L 1200 969 z "
+       transform="translate(0,-240)" />
+  </g>
+</svg>

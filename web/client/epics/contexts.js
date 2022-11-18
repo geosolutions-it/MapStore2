@@ -11,6 +11,8 @@ import {wrapStartStop} from '../observables/epics';
 import {error} from '../actions/notifications';
 
 import {ATTRIBUTE_UPDATED, MAPS_LIST_LOADING} from '../actions/maps';
+import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
+
 
 import {
     SEARCH_CONTEXTS,
@@ -72,7 +74,7 @@ export const searchContextsEpic = (action$, { getState = () => { } }) => action$
     );
 
 export const reloadOnContexts = (action$, store) => action$
-    .ofType(CONTEXT_DELETED, RELOAD_CONTEXTS, ATTRIBUTE_UPDATED, CONTEXT_SAVED)
+    .ofType(CONTEXT_DELETED, RELOAD_CONTEXTS, ATTRIBUTE_UPDATED, CONTEXT_SAVED, LOGIN_SUCCESS, LOGOUT)
     .delay(1000)
     .switchMap(() => {
         const state = store.getState();

@@ -40,7 +40,7 @@ export default ({
         if (options.length === 1) {
             return null;
         }
-        const { size } = options.find(o => o.mapId === value) || {};
+        const { size } = options?.find(o => o?.mapId === value) || {};
         if (!withContainer && size?.width <= 400) {
             // Show info icon when widget width cannot contain Map Switcher
             return (<Button
@@ -51,7 +51,6 @@ export default ({
             </Button>);
         }
         return (<Select
-            style={{width: 200}}
             className={className}
             disabled={disabled}
             noResultsText="widgets.mapSwitcher.noResults"
@@ -101,7 +100,7 @@ export default ({
     ]);
 
     return (emptyMap || editorData.maps?.length > 1)
-        ? <div className="widget-map-selector">
+        ? <div className="widget-selector">
             {emptyMap ? <div style={{display: 'inline-flex'}}>
                 <FormControl
                     className={"widget-empty-map"}
@@ -124,7 +123,7 @@ export default ({
                 </Button>
             </div>
                 : (<>
-                    <div className="widget-map-selector-label">
+                    <div className="widget-selector-label">
                         <strong>
                             <Message msgId={"widgets.mapSwitcher.selectLabel"}/>
                         </strong>

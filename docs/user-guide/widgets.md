@@ -1,4 +1,5 @@
 # Widgets
+
 *********
 
 In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to create widgets from the layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide the user the opportunity to analyze information more effectively.
@@ -12,7 +13,7 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
 
 ## Add a Widget
 
-Once at least one layer is present in the map (see [Catalog](catalog.md) section for more information about adding layers), it is possible to create a widget by selecting that layer in the [TOC](toc.md) and by clicking on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button from the [Layer Toolbar](toc.md#toolbar-options) or from the [Attribute Table](attributes-table.md). Performing these operations the *Widget* panel appears:
+Once at least one layer is present in the map (see [Catalog](catalog.md#catalog-services) section for more information about adding layers), it is possible to create a widget by selecting that layer in the [TOC](toc.md#table-of-contents) and by clicking on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button from the [Layer Toolbar](toc.md#toolbar-options) or from the [Attribute Table](attributes-table.md#attribute-table). Performing these operations the *Widget* panel appears:
 
 <img src="../img/widgets/map-widgets-panel.jpg" class="ms-docimage" style="max-width:450px;"/>
 
@@ -28,14 +29,18 @@ From here the user can choose between four different types of widget:
 
 ### Chart
 
-Selecting *Chart* option the following window opens:
+Charts widget allow multi-selection of layer to create a widget that allows user to configure chart options for each layer. And switch between multiple charts in a widget.
 
-<img src="../img/widgets/chart-types.jpg" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/chart-layer-selection.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-From here it is possible to choose between *Bar Chart*, *Pie Chart* or *Line Chart*, or simply go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button. <br>
-If a chart type is selected, it can display similar the following (in this case a *Bar Chart*):
+Selecting a *Layer* or *Layers*, the following *Chart* options is presented to user:
 
-<img src="../img/widgets/configure-chart.jpg" class="ms-docimage"  style="max-width:450px;"/>
+<img src="../img/widgets/chart-options.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+From the chart configuration page, the user can perform the following operation
+
+* Edit chart name <img src="../img/button/edit_button.jpg" class="ms-docbutton"/>
+* Choose between *Bar Chart*, *Pie Chart* or *Line Chart*. By default, the bar chart is selected.
 
 From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> the user is allowed to:
 
@@ -43,9 +48,13 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the information displayed in the widget are automatically filtered with the map viewport. When a widget is not linked, it otherwise shows all the elements of that level regardless of the map viewport
 
-* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md) section)
+* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section).
 
-* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed
+* Add new layers <img src="../img/button/+++.jpg" class="ms-docbutton"/> to existing chart configuration
+
+* Delete the current layer <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> and it's related chart configuration from the wizard
+
+* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed. The button prohibits the user from proceeding further when some chart is invalid
 
 Just below the chart's preview, the following configurations are available:
 
@@ -57,33 +66,32 @@ Just below the chart's preview, the following configurations are available:
 
 !!! Note
     The *No operation* option is used when the aggregation method is not needed for the chart. If *No Operation* is selected, no aggregation will be carried out for the chart and the WFS service will be used to generate the chart without using the WPS process `gs:Aggregate` in GeoServer.
-    
-    
+
 * Enable the chart's legend by activating **Display Legend**
 
-* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*) or choose to **Customize the color**. 
+* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*) or choose to **Customize the color**.
 
 #### Color customization
 
 For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. From the **Color** option dropdown menu, the user can select the *Custom* option and open the **Custom Colors Settings** modal through the <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> button.
 
-<img src="../img/widgets/custom_colors_settings.jpg" class="ms-docimage"/> 
+<img src="../img/widgets/custom_colors_settings.jpg" class="ms-docimage"/>
 
 Inside this modal, the user is allowed to:
 
 * Change the default **Color** of bars or slices (depending on the chart type) through the *Color Picker*. This color will be applied for all values for which a *Class Color* has not been configured.
 
-<img src="../img/widgets/custom_colors.gif" class="ms-docimage"/> 
+<img src="../img/widgets/custom_colors.gif" class="ms-docimage"/>
 
 * Select an *Attribute* in the dropdown list as a **Classification attribute**.
 
-<img src="../img/widgets/classification-attribute.gif" class="ms-docimage"/> 
+<img src="../img/widgets/classification-attribute.gif" class="ms-docimage"/>
 
 Once the attribute is chosen, new options appear in the *Custom Color Settings* panel that allow the user to:
 
 * Enter a **Default Class Label** to be used in the legend for all values that will not be specifically classified in the following list.
 
-<img src="../img/widgets/default_class_label.jpg" class="ms-docimage"/> 
+<img src="../img/widgets/default_class_label.jpg" class="ms-docimage"/>
 
 !!! Note
     For both *Default Class Label* and  *Class Label* '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
@@ -94,11 +102,11 @@ Once the attribute is chosen, new options appear in the *Custom Color Settings* 
 
 When the values of a classification attribute are of type String, the user can:
 
-<img src="../img/widgets/alphanumeric.jpg" class="ms-docimage"/> 
+<img src="../img/widgets/alphanumeric.jpg" class="ms-docimage"/>
 
 * Choose the **Class Color** through the *Color Picker*.
 
-* Choose the value of the *Classification attribute* through the dropdown menu **Class Value** 
+* Choose the value of the *Classification attribute* through the dropdown menu **Class Value**
 
 * Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
 
@@ -107,15 +115,15 @@ When the values of a classification attribute are of type String, the user can:
 
 An example of *Bar charts* corresponding to this type of classification can be the following:
 
-<img src="../img/widgets/color-customization-alhanumeric-attribute.gif" class="ms-docimage"/> 
+<img src="../img/widgets/color-customization-alhanumeric-attribute.gif" class="ms-docimage"/>
 
-Through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button the user can add new values before through the <img src="../img/widgets/add-new-entry-before.jpg" class="ms-docimage"/> button or after through <img src="../img/widgets/add-new-entry-after.jpg" class="ms-docimage"/> button. 
+Through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button the user can add new values before through the <img src="../img/widgets/add-new-entry-before.jpg" class="ms-docimage"/> button or after through <img src="../img/widgets/add-new-entry-after.jpg" class="ms-docimage"/> button.
 
 #### Classification Attribute of type Number
 
 When the values of a classification attribute are numbers, the user can configure a color ramp and so:
 
-<img src="../img/widgets/numeric.jpg" class="ms-docimage" style="max-width:450px;"/> 
+<img src="../img/widgets/numeric.jpg" class="ms-docimage" style="max-width:450px;"/>
 
 * Choose the **Class Color** through the *Color Picker*
 
@@ -130,23 +138,23 @@ When the values of a classification attribute are numbers, the user can configur
 
 An example of Bar chart corresponding to this type of classification can be the following:
 
-<img src="../img/widgets/color-customization-numeric-attribute.gif" class="ms-docimage"/> 
+<img src="../img/widgets/color-customization-numeric-attribute.gif" class="ms-docimage"/>
 
 #### Bar Chart Type
 
-If the *Classification attribute* is added to the *Bar Chart*, in the [Advanced Options](widgets.md#advanced-options),  the **Bar Chart Type** option is displayed.
+If the *Classification attribute* is added to the *Bar Chart*, in the [Advanced Options](#advanced-options),  the **Bar Chart Type** option is displayed.
 
-<img src="../img/widgets/bar_type.jpg" class="ms-docimage"/> 
+<img src="../img/widgets/bar_type.jpg" class="ms-docimage"/>
 
 The user can customize the bars by choosing between:
 
 * **Grouped**. An example can be the following:
 
-<img src="../img/widgets/grouped_chart.jpg" class="ms-docimage" style="max-width:450px;"/> 
+<img src="../img/widgets/grouped_chart.jpg" class="ms-docimage" style="max-width:450px;"/>
 
 * **Stacked**. An example can be the following:
 
-<img src="../img/widgets/stacked-chart.jpg" class="ms-docimage" style="max-width:450px;"/> 
+<img src="../img/widgets/stacked-chart.jpg" class="ms-docimage" style="max-width:450px;"/>
 
 !!! Note
     By default, the bar chart type is **Stacked**
@@ -161,18 +169,18 @@ Through this section, the user is allowed to:
 
 * Show/Hide the chart's grid in backgroung with the **Hide Grid** control
 
-* Customize **Y axis** tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). The user can also choose to completely hide labels through the *Hide labels* control or customize them by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`). It is also possible to configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more) 
+* Customize **Y axis** tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). The user can also choose to completely hide labels through the *Hide labels* control or customize them by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`). It is also possible to configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more)
 
 <img src="../img/widgets/yaxis_options.jpg" class="ms-docimage"/>
 
 !!! Note
-    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation. 
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
 
-* Customize **X axis**  tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). As per **Y axis**, the user can completely hide labels through the *Hide labels* control or tune the rendering of tick labels with options like *Never skip labels* (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size) and *Label rotation* to better adapt X axis tick labels on the charts depending on the needs. 
+* Customize **X axis**  tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). As per **Y axis**, the user can completely hide labels through the *Hide labels* control or tune the rendering of tick labels with options like *Never skip labels* (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size) and *Label rotation* to better adapt X axis tick labels on the charts depending on the needs.
 
 <img src="../img/widgets/xaxis_options.jpg" class="ms-docimage"/>
 
-!!! Warning 
+!!! Warning
     The tick labels available for the X axis by enabling the option **Never skip label** cannot be more than 200 in order to provide a clear chart and for performance reasons.
 
 * Set the **Legend Label** name
@@ -193,7 +201,7 @@ The user can:
 
 * Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
-* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md) section)
+* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section)
 
 * Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
 
@@ -248,7 +256,7 @@ Here the user can:
 
 * Write the text of the widget
 
-* Format the text through the [Text Editor Toolbar](text-editor-toolbar.md)
+* Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
 
 !!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.
@@ -263,7 +271,7 @@ Adding a table widget to the map, a panel like the following opens:
 
 <img src="../img/widgets/table-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-The toolbar on the top of this panel is similar to the one present in [Chart section](widgets.md#chart). Here the user is allowed to select the layer fields that will be displayed in the widget.
+The toolbar on the top of this panel is similar to the one present in [Chart section](#chart). Here the user is allowed to select the layer fields that will be displayed in the widget.
 
 !!!warning
     At least one field must be selected in order to move to the next configuration step.
@@ -272,7 +280,7 @@ Once the desired fields are selected, a click on the <img src="../img/button/nex
 
 <img src="../img/widgets/table-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-In this last step of the widget creation, the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart). <br>
+In this last step of the widget creation, the toolbar and the information to be inserted are similar to the ones in [Chart section](#chart). <br>
 An example of table widget could be:
 
 <img src="../img/widgets/table-ex.jpg" class="ms-docimage"/>
@@ -283,7 +291,7 @@ Selecting the counter option, the following window opens:
 
 <img src="../img/widgets/counter-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-Also in this case the toolbar is similar to the one present in [Chart section](widgets.md#chart). The user is allowed to:
+Also in this case the toolbar is similar to the one present in [Chart section](#chart). The user is allowed to:
 
 * Select the attribute to **Use**
 
@@ -298,7 +306,7 @@ Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clic
 
 <img src="../img/widgets/counter-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-Also in this case the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart), with the only exception that the **Filtering** button <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> is missing. <br>
+Also in this case the toolbar and the information to be inserted are similar to the ones in [Chart section](#chart), with the only exception that the **Filtering** button <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> is missing. <br>
 An example of counter widget could be:
 
 <img src="../img/widgets/counter-ex.jpg" class="ms-docimage" style="max-width:600px;"/>
@@ -327,7 +335,7 @@ Through the buttons available on each widget the user can  perform the followin
     The *Widgets Tray* allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at once by using the <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/> button.
 
 !!!warning
-    When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
+    When both **[Timeline](timeline.md#timeline)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
 * Make the widget **Full screen** through the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 

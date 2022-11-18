@@ -32,7 +32,11 @@ import {
     selectLayer,
     INIT_SELECT_LAYER,
     initializeSelectLayer,
-    SET_END_VALUES_SUPPORT
+    SET_END_VALUES_SUPPORT,
+    setSnapRadioButtonEnabled,
+    SET_SNAP_RADIO_BUTTON_ENABLED,
+    initializeRange,
+    SET_RANGE_INIT
 } from '../timeline';
 
 describe('timeline actions', () => {
@@ -97,11 +101,25 @@ describe('timeline actions', () => {
         expect(retval.endValuesSupport).toBe(true);
     });
     it('initTimeline', () => {
-        const retval = initTimeline(true, 20, "end");
-        expect(retval).toExist();
+        const retval = initTimeline({showHiddenLayers: true, expandLimit: 20, snapType: "end"});
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(INIT_TIMELINE);
-        expect(retval.showHiddenLayers).toBe(true);
-        expect(retval.expandLimit).toBe(20);
-        expect(retval.snapType).toBe("end");
+        expect(retval.config).toBeTruthy();
+        const config = retval.config;
+        expect(config.showHiddenLayers).toBe(true);
+        expect(config.expandLimit).toBe(20);
+        expect(config.snapType).toBe("end");
+    });
+    it('setSnapRadioButtonEnabled', () => {
+        const retval = setSnapRadioButtonEnabled(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_SNAP_RADIO_BUTTON_ENABLED);
+        expect(retval.snapRadioButtonEnabled).toBe(true);
+    });
+    it('initializeRange', () => {
+        const retval = initializeRange("now");
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_RANGE_INIT);
+        expect(retval.value).toBe("now");
     });
 });

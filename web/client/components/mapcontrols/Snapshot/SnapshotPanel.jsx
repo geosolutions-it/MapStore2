@@ -9,14 +9,14 @@
 
 import './css/snapshot.css';
 
-import { isEqual } from 'lodash';
+import {isEqual} from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Alert, Col, Glyphicon, Grid, Image, Panel, Row, Table } from 'react-bootstrap';
+import {Alert, Col, Glyphicon, Grid, Image, Panel, Row, Table} from 'react-bootstrap';
 
 import ConfigUtils from '../../../utils/ConfigUtils';
 import Button from '../../misc/Button';
-import { DateFormat } from '../../I18N/I18N';
+import {DateFormat} from '../../I18N/I18N';
 import Message from '../../I18N/Message';
 import Dialog from '../../misc/Dialog';
 import Portal from '../../misc/Portal';
@@ -24,12 +24,13 @@ import BasicSpinner from '../../misc/spinners/BasicSpinner/BasicSpinner';
 import notAvailable from './not-available.png';
 import shotingImg from './shoting.gif';
 import snapshotSupportComp from './SnapshotSupport';
+import PanelHeader from "../../misc/panels/PanelHeader";
 
 let SnapshotSupport;
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a
  * preview of the snapshot, with some info about the map.
- * It prevent the user to Export snapshot with Google or Bing backgrounds.
+ * It prevents the user to Export snapshot with Google or Bing backgrounds.
  * It shows also the status of the current snapshot generation queue.
  */
 class SnapshotPanel extends React.Component {
@@ -53,8 +54,7 @@ class SnapshotPanel extends React.Component {
         downloadingMsg: PropTypes.node,
         timeout: PropTypes.number,
         mapType: PropTypes.string,
-        wrap: PropTypes.bool,
-        wrapWithPanel: PropTypes.bool,
+        floatingPanel: PropTypes.bool,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         toggleControl: PropTypes.func,
@@ -80,17 +80,17 @@ class SnapshotPanel extends React.Component {
         downloadingMsg: "snapshot.downloadingSnapshots",
         timeout: 1000,
         mapType: 'leaflet',
-        wrap: false,
-        wrapWithPanel: false,
+        floatingPanel: true,
         panelStyle: {
-            minWidth: "720px",
+            minWidth: "600px",
+            maxWidth: "100%",
             zIndex: 100,
             position: "absolute",
             overflow: "auto",
             top: "60px",
             right: "100px"
         },
-        panelClassName: "snapshot-panel",
+        panelClassName: "snapshot-panel ms-side-panel",
         closeGlyph: "1-close",
         buttonStyle: "primary",
         bounds: '#container'
@@ -111,13 +111,12 @@ class SnapshotPanel extends React.Component {
     }
 
     renderLayers = () => {
-        let items = this.props.layers.map((layer, i) => {
+        return this.props.layers.map((layer, i) => {
             if (layer.visibility) {
                 return <li key={i}>{layer.title}</li>;
             }
             return null;
         });
-        return items;
     };
 
     renderButton = (enabled) => {
@@ -194,12 +193,7 @@ class SnapshotPanel extends React.Component {
     };
 
     wrap = (panel) => {
-        if (this.props.wrap) {
-            if (this.props.wrapWithPanel) {
-                return (<Panel id={this.props.id} header={<span><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><span className="settings-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
-                    {panel}
-                </Panel>);
-            }
+        if (this.props.floatingPanel) {
             return (
                 <Portal>
                     <Dialog id="mapstore-snapshot-panel" style={this.props.panelStyle} bounds={this.props.bounds}>
@@ -209,7 +203,14 @@ class SnapshotPanel extends React.Component {
                 </Portal>
             );
         }
-        return panel;
+        return (
+            <Panel
+                id={this.props.id}
+                header={<PanelHeader position="right" bsStyle="primary" title={<Message msgId="snapshot.title"/>} glyph="camera" onClose={this.props.toggleControl} />}
+                style={this.props.panelStyle}
+                className={this.props.panelClassName}>
+                {panel}
+            </Panel>);
     };
 
     renderTaintedMessage = () => {
@@ -223,7 +224,7 @@ class SnapshotPanel extends React.Component {
         let bingOrGoogle = this.isBingOrGoogle();
         let snapshotReady = this.isSnapshotReady();
         return this.props.active ? this.wrap(
-            <Grid role="body" className="snapshot-panel" fluid>
+            <Grid role="body" className="snapshot-inner-panel" fluid>
                 <Row key="main">
                     <Col key="previewCol" xs={7} sm={7} md={7}>{this.renderPreview()}</Col>
                     <Col key="dataCol" xs={5} sm={5} md={5}>

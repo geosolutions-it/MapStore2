@@ -49,8 +49,8 @@ import { mapTypeSelector } from '../selectors/maptype';
  */
 export default {
     MapImportPlugin: assign({loadPlugin: (resolve) => {
-        require.ensure(['./import/Import'], () => {
-            const Import = require('./import/Import').default;
+        import('./import/Import').then((importMod) => {
+            const Import = importMod.default;
 
             const ImportPlugin = connect((state) => (
                 {
@@ -83,7 +83,6 @@ export default {
             resolve(ImportPlugin);
         });
     }, enabler: (state) => state.mapimport && state.mapimport.enabled || state.toolbar && state.toolbar.active === 'import'}, {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
             name: 'import',
             position: 4,

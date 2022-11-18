@@ -3,7 +3,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-services</artifactId>
   <packaging>jar</packaging>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.5-SNAPSHOT</version>
   <name>MapStore 2 - Backend Services</name>
   <url>http://www.geo-solutions.it</url>
 
@@ -21,6 +21,23 @@
                 <version>${spring.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.13.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.13.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.13.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -131,6 +148,21 @@
         <version>2.4</version>
         <classifier>jdk15</classifier>
     </dependency>
+
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-annotations</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+      </dependency>
     <!-- json-patch -->
     <dependency>
         <groupId>com.github.java-json-tools</groupId>

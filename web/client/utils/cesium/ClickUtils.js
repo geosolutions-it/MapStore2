@@ -18,11 +18,28 @@ export const getCartesian = function(viewer, event) {
     return null;
 };
 export const getMouseXYZ = (viewer, event) => {
-    var scene = viewer.scene;
+    const scene = viewer.scene;
     const mousePosition = event.position || event.endPosition;
     if (!mousePosition) {
         return null;
     }
+
+    const feature = viewer.scene.drillPick(mousePosition).find((aFeature) => {
+        return !(aFeature?.id?.entityCollection?.owner?.queryable === false);
+    });
+    if (feature) {
+        let currentDepthTestAgainstTerrain = scene.globe.depthTestAgainstTerrain;
+        let currentPickTranslucentDepth = scene.pickTranslucentDepth;
+        scene.globe.depthTestAgainstTerrain = true;
+        scene.pickTranslucentDepth = true;
+        const depthCartesian = scene.pickPosition(mousePosition);
+        scene.globe.depthTestAgainstTerrain = currentDepthTestAgainstTerrain;
+        scene.pickTranslucentDepth = currentPickTranslucentDepth;
+        if (depthCartesian) {
+            return Cesium.Cartographic.fromCartesian(depthCartesian);
+        }
+    }
+
     const ray = viewer.camera.getPickRay(mousePosition);
     const position = viewer.scene.globe.pick(ray, viewer.scene);
     const ellipsoid = scene._globe.ellipsoid;

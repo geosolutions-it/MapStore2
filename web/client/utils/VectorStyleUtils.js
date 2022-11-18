@@ -104,7 +104,7 @@ const paintCross = (ctx, cx, cy, r, p) => {
     ctx.closePath();
 };
 
-function getWellKnownNameImageFromSymbolizer(symbolizer) {
+export function getWellKnownNameImageFromSymbolizer(symbolizer) {
     const id = getImageIdFromSymbolizer(symbolizer);
     if (imagesCache[id]) {
         return Promise.resolve(imagesCache[id]);
@@ -721,7 +721,9 @@ function msStyleToSymbolizer(style, feature) {
             fontWeight: style.fontWeight,
             color: style.fillColor,
             haloColor: style.color,
-            haloWidth: 1
+            haloWidth: 1,
+            msHeightReference: 'none',
+            msBringToFront: true
         });
     }
     if (style.symbolizerKind === 'Mark') {
@@ -733,7 +735,9 @@ function msStyleToSymbolizer(style, feature) {
             strokeOpacity: style.opacity,
             strokeWidth: style.weight,
             radius: style.radius ?? 10,
-            wellKnownName: 'Circle'
+            wellKnownName: 'Circle',
+            msHeightReference: 'none',
+            msBringToFront: true
         });
     }
     if (isAttrPresent(style, ['iconUrl']) && !style.iconGlyph && !style.iconShape) {
@@ -742,7 +746,15 @@ function msStyleToSymbolizer(style, feature) {
             image: style.iconUrl,
             size: max(style.iconSize || [32]),
             opacity: 1,
-            rotate: 0
+            rotate: 0,
+            msHeightReference: 'none',
+            msBringToFront: true,
+            // only needed for get feature info marker
+            ...(style.leaderLine && {
+                msLeaderLineColor: '#333333',
+                msLeaderLineOpacity: 1,
+                msLeaderLineWidth: 1
+            })
         });
     }
     if (isMarkerStyle(style)) {
@@ -751,7 +763,9 @@ function msStyleToSymbolizer(style, feature) {
             image: MarkerUtils.extraMarkers.markerToDataUrl(style),
             size: 45,
             opacity: 1,
-            rotate: 0
+            rotate: 0,
+            msHeightReference: 'none',
+            msBringToFront: true
         });
     }
     if (isSymbolStyle(style)) {
@@ -767,7 +781,9 @@ function msStyleToSymbolizer(style, feature) {
                     image: symbolUrlCustomized,
                     size: style.size,
                     opacity: 1,
-                    rotate: 0
+                    rotate: 0,
+                    msHeightReference: 'none',
+                    msBringToFront: true
                 };
             })
             .catch(() => ({}));
@@ -970,7 +986,8 @@ export function applyDefaultStyleToLayer(layer) {
                                 strokeOpacity: 1,
                                 strokeWidth: 2,
                                 wellKnownName: 'Circle',
-                                radius: 10
+                                radius: 10,
+                                msBringToFront: true
                             }
                         ]
                     },

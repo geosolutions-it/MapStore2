@@ -4,13 +4,13 @@ name: checks
 
 on:
   push:
-    branches: 
+    branches:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
     - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
   pull_request:
-    branches: 
+    branches:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
@@ -53,14 +53,14 @@ jobs:
         run: npm run lint
 
       - name: Doc build
-        run: npm run doc
+        run: npm run jsdoc:build
 
       - name: Check i18n
         run: npm run i18n
 
       - name: Unit Tests
         run: npm test -- --reporters mocha,coverage,coveralls
-        
+
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
@@ -73,7 +73,7 @@ jobs:
         uses: actions/checkout@v2
 
       ###########
-      # SET UP 
+      # SET UP
       #########
       - name: "setting up Java"
         uses: actions/setup-java@v1
@@ -91,7 +91,7 @@ jobs:
       # JAVA CHECKS
       ##############
       - name: java
-        run: mvn --batch-mode --update-snapshots verify
+        run: mvn --batch-mode --update-snapshots verify -Pprintingbundle,binary
   build:
     runs-on: ubuntu-latest
     steps:
@@ -99,7 +99,7 @@ jobs:
         uses: actions/checkout@v2
 
       ###########
-      # SET UP 
+      # SET UP
       #########
       - name: "setting up Java"
         uses: actions/setup-java@v1
@@ -141,7 +141,7 @@ jobs:
         run: npm install
 
       - name: compile
-        run: npm run compile
+        run: npm run fe:build
       ################
       # JAVA CHECKS
       ##############

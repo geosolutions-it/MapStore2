@@ -15,10 +15,6 @@ import { testEpic } from './epicTestUtils';
 import { updateLayerDimensionDataOnMapLoad } from '../dimension';
 import { configureMap } from '../../actions/config';
 import {
-    INIT_SELECT_LAYER,
-    AUTOSELECT
-} from '../../actions/timeline';
-import {
     SET_CURRENT_TIME,
     SET_OFFSET_TIME,
     UPDATE_LAYER_DIMENSION_DATA
@@ -83,26 +79,24 @@ describe('dimension epics', () => {
         const startActions = [configureMap(testConfig, 10)];
 
         mockAxios.onGet('/sample/url').reply(200, domainsTestResponse);
-        testEpic(updateLayerDimensionDataOnMapLoad, 5, startActions, actions => {
-            expect(actions.length).toBe(5);
-            expect(actions[0].type).toBe(INIT_SELECT_LAYER);
-            expect(actions[0].layerId).toBe(testConfig.timelineData.selectedLayer);
-            expect(actions[1].type).toBe(SET_CURRENT_TIME);
-            expect(actions[1].time).toBe(testConfig.dimensionData.currentTime);
-            expect(actions[2].type).toBe(SET_OFFSET_TIME);
-            expect(actions[2].offsetTime).toBe(testConfig.dimensionData.offsetTime);
+        testEpic(updateLayerDimensionDataOnMapLoad, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(SET_CURRENT_TIME);
+            expect(actions[0].time).toBe(testConfig.dimensionData.currentTime);
+            expect(actions[1].type).toBe(SET_OFFSET_TIME);
+            expect(actions[1].offsetTime).toBe(testConfig.dimensionData.offsetTime);
+            expect(actions[2].type).toBe(UPDATE_LAYER_DIMENSION_DATA);
+            expect(actions[2].dimension).toBe('time');
+            expect(actions[2].layerId).toBe('timelineLayer2');
+            expect(actions[2].data).toExist();
+            expect(actions[2].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
+            expect(actions[2].data.name).toBe('time');
             expect(actions[3].type).toBe(UPDATE_LAYER_DIMENSION_DATA);
             expect(actions[3].dimension).toBe('time');
-            expect(actions[3].layerId).toBe('timelineLayer2');
+            expect(actions[3].layerId).toBe(testConfig.timelineData.selectedLayer);
             expect(actions[3].data).toExist();
             expect(actions[3].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
             expect(actions[3].data.name).toBe('time');
-            expect(actions[4].type).toBe(UPDATE_LAYER_DIMENSION_DATA);
-            expect(actions[4].dimension).toBe('time');
-            expect(actions[4].layerId).toBe(testConfig.timelineData.selectedLayer);
-            expect(actions[4].data).toExist();
-            expect(actions[4].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
-            expect(actions[4].data.name).toBe('time');
         }, STATE, done);
     });
     it('updateLayerDimensionDataOnMapLoad no timeline and dimension data', (done) => {
@@ -112,22 +106,20 @@ describe('dimension epics', () => {
         const startActions = [configureMap(testConfig, 10)];
 
         mockAxios.onGet('/sample/url').reply(200, domainsTestResponse);
-        testEpic(updateLayerDimensionDataOnMapLoad, 4, startActions, actions => {
-            expect(actions.length).toBe(4);
+        testEpic(updateLayerDimensionDataOnMapLoad, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
             expect(actions[0].type).toBe(UPDATE_LAYER_DIMENSION_DATA);
             expect(actions[0].dimension).toBe('time');
             expect(actions[0].layerId).toBe('timelineLayer2');
             expect(actions[0].data).toExist();
             expect(actions[0].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
             expect(actions[0].data.name).toBe('time');
-            expect(actions[1].type).toBe(AUTOSELECT);
-            expect(actions[2].type).toBe(UPDATE_LAYER_DIMENSION_DATA);
-            expect(actions[2].dimension).toBe('time');
-            expect(actions[2].layerId).toBe('timelineLayer');
-            expect(actions[2].data).toExist();
-            expect(actions[2].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
-            expect(actions[2].data.name).toBe('time');
-            expect(actions[3].type).toBe(AUTOSELECT);
+            expect(actions[1].type).toBe(UPDATE_LAYER_DIMENSION_DATA);
+            expect(actions[1].dimension).toBe('time');
+            expect(actions[1].layerId).toBe('timelineLayer');
+            expect(actions[1].data).toExist();
+            expect(actions[1].data.domain).toBe('1583-01-01T00:00:00.000Z--2101-01-01T00:00:00.000Z');
+            expect(actions[1].data.name).toBe('time');
         }, STATE, done);
     });
     it('updateLayerDimensionDataOnMapLoad no timeline data', (done) => {

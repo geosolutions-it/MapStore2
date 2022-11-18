@@ -9,8 +9,12 @@ import { compose, withPropsOnChange } from 'recompose';
 
 import Toolbar from '../../misc/toolbar/Toolbar';
 
-const getWidgetIcon = ({widgetType, type} = {}) => {
-    const iconType = !widgetType || widgetType === "chart" ? type : widgetType;
+const getWidgetIcon = ({widgetType, charts = []} = {}) => {
+    let iconType = widgetType;
+    if (!widgetType || widgetType === "chart") {
+        const [{type: chartType} = {}] = charts;
+        iconType = chartType;
+    }
     switch (iconType) {
     case "text":
         return "sheet";

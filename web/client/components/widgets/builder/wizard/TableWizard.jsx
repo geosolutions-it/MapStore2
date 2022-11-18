@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { lazy } from 'react';
 import { compose, lifecycle } from 'recompose';
 
 import { wizardHandlers } from '../../../misc/wizard/enhancers';
 import WizardContainer from '../../../misc/wizard/WizardContainer';
 import WidgetOptions from './common/WidgetOptions';
-import TableOptions from './table/TableOptions';
+import withSuspense from '../../../misc/withSuspense';
+
+const TableOptions = withSuspense()(lazy(() => import('./table/TableOptions')));
 
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 

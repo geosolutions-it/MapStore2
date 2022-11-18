@@ -13,8 +13,8 @@ import castArray from 'lodash/castArray';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
-import { augmentStore } from '../../utils/StateUtils';
 import { LOAD_EXTENSIONS, PLUGIN_UNINSTALLED } from '../../actions/contextcreator';
+import {reducersLoaded} from "../../actions/storemanager";
 
 /**
  * This HOC adds to StandardApp (or whatever customization) the
@@ -78,7 +78,8 @@ function withExtensions(AppComponent) {
                     if (action.type === LOAD_EXTENSIONS) {
                         this.loadExtensions(
                             ConfigUtils.getConfigProp('extensionsRegistry'),
-                            (plugins, translations) => this.onPluginsLoaded(plugins, translations, store)
+                            (plugins, translations) => this.onPluginsLoaded(plugins, translations, store),
+                            store
                         );
                     }
                     if (action.type === PLUGIN_UNINSTALLED) {
@@ -93,7 +94,7 @@ function withExtensions(AppComponent) {
                 } else {
                     afterInit(config);
                 }
-            });
+            }, store);
         };
 
         getAssetPath = (asset) => {
@@ -145,15 +146,26 @@ function withExtensions(AppComponent) {
             }, {});
         };
 
-        loadExtensions = (path, callback) => {
+        loadExtensions = (path, callback, store) => {
             if (this.props.enableExtensions) {
+                let reducersList = [];
                 return axios.get(path).then((response) => {
                     const plugins = response.data;
                     Promise.all(Object.keys(plugins).map((pluginName) => {
                         const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
                         return PluginsUtils.loadPlugin(bundlePath, pluginName).then((loaded) => {
                             const impl = loaded.plugin?.default ?? loaded.plugin;
-                            augmentStore({ reducers: impl?.reducers ?? {}, epics: impl?.epics ?? {} });
+
+                            if (impl?.isModulePlugin) {
+                                return { plugin: {[pluginName + 'Plugin']: impl}, translations: plugins[pluginName].translations || ""};
+                            }
+
+                            Object.keys(impl?.reducers ?? {}).forEach((name) => {
+                                store.storeManager.addReducer(name, impl.reducers[name]);
+                                reducersList.push(name);
+                            });
+                            store.storeManager.addEpics(impl.name, impl?.epics ?? {});
+                            store.storeManager.unmuteEpics(impl.name);
                             const pluginDef = {
                                 [pluginName + "Plugin"]: {
                                     [pluginName + "Plugin"]: {
@@ -170,6 +182,9 @@ function withExtensions(AppComponent) {
                             return null;
                         });
                     })).then((loaded) => {
+                        if (reducersList.length) {
+                            store.dispatch(reducersLoaded(reducersList));
+                        }
                         callback(
                             loaded
                                 .filter(l => l !== null) // exclude extensions that triggered errors

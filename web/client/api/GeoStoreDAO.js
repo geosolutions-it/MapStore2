@@ -137,7 +137,7 @@ const Api = {
             })
         ).then(response => response.data);
     },
-    getUserDetails: function(username, password, options) {
+    getUserDetailsBasic: function(username, password, options) {
         const url = "users/user/details";
         return axios.get(url, this.addBaseUrl(merge({
             auth: {
@@ -150,6 +150,39 @@ const Api = {
         }, options))).then(function(response) {
             return response.data;
         });
+    },
+    /**
+     * Gets the user details using the given access token.
+     * Can be used to finalize access with openID after redirect, using the token passed by the service to retrieve the
+     * remaining information.
+     * @param {object} params contains access_token to pass in the bearer header
+     * @returns {object} user details
+     */
+    getUserDetails: function({access_token: accessToken}) {
+        const url = "users/user/details";
+        return axios.get(url, {
+            baseURL: "rest/geostore",
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            },
+            params: {
+                includeattributes: true
+            }
+        }).then(function(response) {
+            return response.data;
+        });
+    },
+    /**
+     * Gets the tokens for a given identifier, created during openID login.
+     * @param {string} provider the provider name (e.g. keycloak)
+     * @param {string} identifier the identifier of the token
+     * @returns {object}
+     */
+    getTokens: function(provider, identifier) {
+        return axios.get(
+            `openid/${provider}/tokens`,
+            this.addBaseUrl({params: {identifier}})
+        ).then(response => response.data?.sessionToken);
     },
     login: function(username, password, options) {
         const url = "session/login";
@@ -172,6 +205,10 @@ const Api = {
         }).then((response) => {
             return { ...response.data, ...authData};
         });
+    },
+    logout: function() {
+        const url = "session/logout";
+        return axios.delete(url, this.addBaseUrl({}));
     },
     changePassword: function(user, newPassword, options) {
         return axios.put(
@@ -451,9 +488,13 @@ const Api = {
         });
     },
     refreshToken: function(accessToken, refreshToken, options) {
-        // accessToken is actually the sessionID
-        const url = "session/refresh/" + accessToken + "/" + refreshToken;
-        return axios.post(url, null, this.addBaseUrl(parseOptions(options))).then(function(response) {
+        const url = "session/refreshToken";
+        return axios.post(url, {
+            sessionToken: {
+                access_token: accessToken,
+                refresh_token: refreshToken
+            }
+        }, this.addBaseUrl(parseOptions(options))).then(function(response) {
             return response.data?.sessionToken ?? response.data;
         });
     },

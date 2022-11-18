@@ -109,5 +109,4 @@ describe('Test the dimension reducer', () => {
         // also offset time should shift of old offsetTime - currentTime from NEXT_TIME
         expect(state.offsetTime).toBe('2016-09-04T00:00:00.000Z');
     });
-
 });

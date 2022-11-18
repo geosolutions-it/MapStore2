@@ -15,6 +15,7 @@ import { read } from '../../../utils/ogc/Filter/CQL/parser';
 import filterBuilder from '../../../utils/ogc/Filter/FilterBuilder';
 import fromObject from '../../../utils/ogc/Filter/fromObject';
 import { composeFilterObject, getDependencyLayerParams } from './utils';
+import { getDependantWidget } from '../../../utils/WidgetsUtils';
 
 const getCqlFilter = (layer, dependencies) => {
     const params = getDependencyLayerParams(layer, dependencies);
@@ -23,6 +24,13 @@ const getCqlFilter = (layer, dependencies) => {
 };
 
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
+
+const testFilterMerging = ({dependencies = {}, widgets = [], dependenciesMap = {}, charts = []} = {}) => {
+    const { widgetType } = getDependantWidget({ widgets, dependenciesMap });
+    // When dependent widget is a table,
+    // check if multi charts of widget has some matching layer to allow filter merging
+    return widgetType === 'table' && !isEmpty(charts) && charts?.some(c => c?.layer?.name === dependencies?.layer?.name);
+};
 
 /**
  * Merges filter object and dependencies map into an ogc filter
@@ -40,7 +48,8 @@ export default compose(
             || quickFilters !== nextProps.quickFilters
             || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
             || getLayerFilter(layer) !== getLayerFilter(nextProps.layer),
-        ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options} = {}) => {
+        ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options, ...props} = {}) => {
+            const allowDependencyFilterMerging = testFilterMerging({dependencies, ...props});
             const viewport = dependencies.viewport;
             const fb = filterBuilder({ gmlVersion: "3.1.1" });
             const toFilter = fromObject(fb);
@@ -60,11 +69,11 @@ export default compose(
                 };
             }
             // merging filterObj with quickFilters coming from dependencies
-            if (layer && dependencies && dependencies.quickFilters && dependencies.layer && layer.name === dependencies.layer.name ) {
+            if (layer && dependencies && dependencies.quickFilters && dependencies.layer && (layer.name === dependencies.layer.name || allowDependencyFilterMerging) ) {
                 newFilterObj = {...newFilterObj, ...composeFilterObject(newFilterObj, dependencies.quickFilters, dependencies.options)};
             }
             // merging filterObj with attribute filter coming from dependencies
-            if (layer && dependencies && dependencies.filter && dependencies.layer && layer.name === dependencies.layer.name ) {
+            if (layer && dependencies && dependencies.filter && dependencies.layer && (layer.name === dependencies.layer.name || allowDependencyFilterMerging) ) {
                 newFilterObj = {...newFilterObj, ...composeAttributeFilters([newFilterObj, dependencies.filter])};
             }
             // generating a cqlFilter based viewport coming from dependencies
@@ -94,5 +103,4 @@ export default compose(
             };
         }
     )
-
 );

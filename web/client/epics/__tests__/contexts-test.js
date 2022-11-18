@@ -21,6 +21,8 @@ import { contextSaved } from '../../actions/contextcreator';
 import { SEARCH_CONTEXTS, searchContexts, LOADING, CONTEXTS_LIST_LOADED } from '../../actions/contexts';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { mapsLoading } from '../../actions/maps';
+import { loginSuccess, logout } from '../../actions/security';
+
 let getDefaults = ConfigUtils.getDefaults;
 describe('contexts epics', () => {
     beforeEach( () => {
@@ -89,29 +91,78 @@ describe('contexts epics', () => {
             done();
         }, {});
     });
-    it('reload on contextSaved', (done) => {
-        const startActions = [contextSaved("Search Text")];
-        testEpic(reloadOnContexts, 1, startActions, ([a]) => {
-            // eslint-disable-next-line no-console
-            console.log(a);
-            expect(a.type).toBe(SEARCH_CONTEXTS);
-            expect(a.params.start).toBe(0);
-            expect(a.params.limit).toBe(12);
-            expect(a.searchText).toBe("test");
-            done();
-        }, {
-            contexts: {
-                searchText: "test",
-                available: true,
-                options: {
-                    params: {
-                        start: 0,
-                        limit: 12
+    describe('realodOnContext', () => {
+        it('reload on contextSaved', (done) => {
+            const startActions = [contextSaved("Search Text")];
+            testEpic(reloadOnContexts, 1, startActions, ([a]) => {
+                // eslint-disable-next-line no-console
+                console.log(a);
+                expect(a.type).toBe(SEARCH_CONTEXTS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                contexts: {
+                    searchText: "test",
+                    available: true,
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
                     }
                 }
-            }
+            });
+        });
+        it('reload on login', (done) => {
+            const startActions = [loginSuccess()];
+            testEpic(reloadOnContexts, 1, startActions, ([a]) => {
+                // eslint-disable-next-line no-console
+                console.log(a);
+                expect(a.type).toBe(SEARCH_CONTEXTS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                contexts: {
+                    searchText: "test",
+                    available: true,
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
+        });
+        it('reload on logout', (done) => {
+            const startActions = [logout()];
+            testEpic(reloadOnContexts, 1, startActions, ([a]) => {
+                // eslint-disable-next-line no-console
+                console.log(a);
+                expect(a.type).toBe(SEARCH_CONTEXTS);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                contexts: {
+                    searchText: "test",
+                    available: true,
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
         });
     });
+
     it('searchContexts error', (done) => {
         const baseUrl = "base/web/client/test-resources/geostore/extjs/search/NODATA#";
         ConfigUtils.getDefaults = () => ({

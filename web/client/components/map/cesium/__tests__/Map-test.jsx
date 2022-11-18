@@ -18,7 +18,8 @@ import {
     createRegisterHooks, GET_PIXEL_FROM_COORDINATES_HOOK, GET_COORDINATES_FROM_PIXEL_HOOK
 } from '../../../../utils/MapUtils';
 import { act } from 'react-dom/test-utils';
-
+import { simulateClick } from './CesiumSimulate';
+import { waitFor } from '@testing-library/react';
 import '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
 
@@ -226,11 +227,6 @@ describe('CesiumMap', () => {
         }, 800);
     });
     it('click on layer should return intersected features', (done) => {
-        const testHandlers = {
-            handler: () => {}
-        };
-        const spy = expect.spyOn(testHandlers, 'handler');
-
         let ref;
         act(() => {
             ReactDOM.render(
@@ -238,19 +234,126 @@ describe('CesiumMap', () => {
                     ref={value => { ref = value; } }
                     center={{y: 43.9, x: 10.3}}
                     zoom={11}
-                    onClick={testHandlers.handler}
-                />
+                    onClick={({ intersectedFeatures }) => {
+                        try {
+                            expect(intersectedFeatures).toEqual(
+                                [
+                                    {
+                                        id: 'vector',
+                                        features: [
+                                            {
+                                                type: 'Feature', properties: { category: 'area' },
+                                                geometry: null
+                                            },
+                                            {
+                                                type: 'Feature', properties: { category: 'boundary' },
+                                                geometry: null
+                                            }
+                                        ]
+                                    }
+                                ]
+                            );
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    }}
+                >
+                    <CesiumLayer
+                        type="vector"
+                        options={{
+                            id: 'vector',
+                            visibility: true,
+                            features: [
+                                {
+                                    "type": "Feature",
+                                    "properties": {
+                                        "category": "boundary"
+                                    },
+                                    "geometry": {
+                                        "coordinates": [
+                                            [
+                                                [
+                                                    1.0975911519593637,
+                                                    48.583411572759644
+                                                ],
+                                                [
+                                                    1.0975911519593637,
+                                                    38.03615349112002
+                                                ],
+                                                [
+                                                    19.43550678615742,
+                                                    38.03615349112002
+                                                ],
+                                                [
+                                                    19.43550678615742,
+                                                    48.583411572759644
+                                                ],
+                                                [
+                                                    1.0975911519593637,
+                                                    48.583411572759644
+                                                ]
+                                            ]
+                                        ],
+                                        "type": "Polygon"
+                                    }
+                                },
+                                {
+                                    "type": "Feature",
+                                    "properties": {
+                                        "category": "area"
+                                    },
+                                    "geometry": {
+                                        "coordinates": [
+                                            [
+                                                [
+                                                    1.0975911519593637,
+                                                    48.583411572759644
+                                                ],
+                                                [
+                                                    1.0975911519593637,
+                                                    38.03615349112002
+                                                ],
+                                                [
+                                                    19.43550678615742,
+                                                    38.03615349112002
+                                                ],
+                                                [
+                                                    19.43550678615742,
+                                                    48.583411572759644
+                                                ],
+                                                [
+                                                    1.0975911519593637,
+                                                    48.583411572759644
+                                                ]
+                                            ]
+                                        ],
+                                        "type": "Polygon"
+                                    }
+                                }
+                            ]
+                        }}
+                    />
+                </CesiumMap>
                 , document.getElementById("container"));
         });
-        expect(ref.map).toBeTruthy();
-        ref.onClick(ref.map, {position: {x: 100, y: 100 }});
-        setTimeout(() => {
-            expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments.length).toEqual(1);
-            expect(spy.calls[0].arguments[0].intersectedFeatures).toEqual([]);
-            done();
-        }, 800);
-    });
+        waitFor(() => expect(ref.map.dataSourceDisplay.ready).toBe(true), {
+            timeout: 5000
+        })
+            .then(() => {
+                expect(ref.map.dataSources.length).toBe(1);
+                const dataSource = ref.map.dataSources.get(0);
+                expect(dataSource).toBeTruthy();
+                expect(dataSource.entities.values.length).toBe(2);
+                const mapCanvas = ref.map.canvas;
+                const { width, height } = mapCanvas.getBoundingClientRect();
+                simulateClick(mapCanvas, {
+                    clientX: width / 2,
+                    clientY: height / 2
+                });
+            })
+            .catch(done);
+    }).timeout(5000);
     it('check if the map changes when receive new props', () => {
         let ref;
         act(() => {

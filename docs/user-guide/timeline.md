@@ -1,4 +1,5 @@
 # Timeline
+
 **********
 
 The Timeline is a [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tool for managing layers with a time dimension.
@@ -9,13 +10,12 @@ It makes possible to observe the layers' evolution over time, to inspect the lay
     From now on, the layers that the Timeline can manage will be addressed as *time layers*.
     From now on, the layers that the Timeline can manage will be addressed as *time layers*.
 
-
 When a layer with a time dimension is added to the map, the Timeline panel becomes automatically visible and it allows the user to browse the layer over time.
 
 <img src="../img/timeline/timeline-base.jpg" class="ms-docimage"/>
 
 !!! Note
-    Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#widgets-tray) to learn more about this. 
+    Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#manage-existing-widgets) to learn more about this.
 
 ## Timeline histogram
 
@@ -48,9 +48,20 @@ In order to observe the layers in a finite fixed time interval the user can set 
 
 <img src="../img/timeline/timeline-current-time-range.jpg" class="ms-docimage"/>
 
+### Reset timeline
+
+Based on the timeline configuration, the reset button <img src="../img/button/reset.jpg" class="ms-docbutton"/> can be made visible on the timeline toolbar. It allows the user to reset the time data based on the current mode of the timeline
+
+* When the current mode is **single**, the icon is represented as <img src="../img/button/timeline-collapse-icon.jpg" class="ms-docbutton"/>, and the layer is *selected* in timeline, the time is set to `nearest of now` and when the layer is *not selected*, the time is set to `now`
+
+* When the current mode is **range**, the icon is represented as <img src="../img/button/timeline-range.jpg" class="ms-docbutton"/>, the time is set to the full range of the layer
+
+!!! Note
+    Reset button is made visible through plugin configuration i.e. `resetButton: true`
+
 ## Show times available on map
 
-Sometimes you might be interested to show in the timeline histogram only the times instants currently visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync** button <img src="../img/button/timeline-sync-button.jpg" class="ms-docbutton"/> . When this tool is active the timeline will show only the times of the features available in the current map viewport.
+Sometimes you might be interested to show in the timeline histogram only the times instants currently visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync** button <img src="../img/button/viewport-filter.jpg" class="ms-docbutton"/> . When this tool is active the timeline will show only the times of the features available in the current map viewport.
 
 <img src="../img/timeline/timeline-sync-example.jpg" class="ms-docimage"/>
 
@@ -73,19 +84,17 @@ The user can pause the animation through the **Pause** button <img src="../img/b
 
 <img src="../img/timeline/timeline-animation.gif" class="ms-docimage"  style="max-width:700px;" />
 
-
 !!! Note
     The user can also specify a *time range*. During the animation, the whole range will be shifted step by step along the time axis and, in each step, the layers in map will show data corresponding to that range of time.
     <img src="../img/timeline/timeline-animation-range.gif" class="ms-docimage"  style="max-width:700px;"/>
 
 ### Animation Settings
 
-The animation behavior can be customized through the **Settings** button <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/>. It allows the user to tune the *Timeline* and the *Playback* options. 
+The animation behavior can be customized through the **Settings** button <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/>. It allows the user to tune the *Timeline* and the *Playback* options.
 
 <img src="../img/timeline/timeline-animation-settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-
-By default, the **Snap to guide layer** is enabled. It allows to force the time cursor to snap to the selected layer's data. 
+By default, the **Snap to guide layer** is enabled. It allows to force the time cursor to snap to the selected layer's data.
 
 <img src="../img/timeline/snap-to-guide-layer.jpg" class="ms-docimage"/>
 
@@ -93,7 +102,7 @@ If the time dimension of the layer has time ranges defined (start/end time) inst
 
 <img src="../img/timeline/time-interval-snap-point.gif" class="ms-docimage"/>
 
-The user can disable *Snap to guide layer* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one: 
+The user can disable *Snap to guide layer* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one:
 
 <img src="../img/timeline/animation-passage.jpg" class="ms-docimage"/>
 

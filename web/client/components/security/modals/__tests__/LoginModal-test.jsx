@@ -11,7 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import LoginForm from '../LoginModal';
+import LoginModal from '../LoginModal';
 
 describe("Test the login modal", () => {
     beforeEach((done) => {
@@ -26,12 +26,12 @@ describe("Test the login modal", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<LoginForm options={{animation: false}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginModal options={{animation: false}}/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
     it('creates empty component with error', () => {
-        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show loginError={{status: 0}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginModal options={{animation: false}} show loginError={{status: 0}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let node = document.getElementsByClassName('alert-danger');
         expect(node.length).toBe(1);
@@ -49,7 +49,7 @@ describe("Test the login modal", () => {
 
         const spy = expect.spyOn(testHandlers, 'onSubmit');
         const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
-        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginModal options={{animation: false}} show key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let username = document.getElementsByTagName("input")[0];
         expect(username).toExist();
@@ -64,9 +64,43 @@ describe("Test the login modal", () => {
         let button = document.getElementsByTagName("button")[1];
         ReactTestUtils.Simulate.click(button);
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginForm options={{animation: false}} show key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
+        ReactDOM.render(<LoginModal options={{animation: false}} show key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
         expect(spySuccess.calls.length).toEqual(1);
-
-
+    });
+    describe('multi-providers', () => {
+        it('geostore only', () => {
+            const cmp = ReactDOM.render(<LoginModal show providers={[{type: "basic", provider: "geostore"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(cmp).toBeTruthy();
+            expect(document.querySelector('.modal-body form')).toBeTruthy();
+        });
+        it('google only', () => {
+            const cmp = ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(cmp).toBeTruthy();
+            expect(document.querySelector('.modal-body form')).toBeFalsy();
+            expect(document.querySelector('.modal-body > div > a > img')).toBeTruthy(); // google has a default image.
+        });
+        it('google + geostore', () => {
+            const cmp = ReactDOM.render(<LoginModal show providers={[{type: "basic", provider: "geostore"}, {type: "openID", provider: "google"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(cmp).toBeTruthy();
+            expect(document.querySelector('.modal-body form')).toBeTruthy();
+            expect(document.querySelector('.modal-body > div > a > img')).toBeTruthy(); // google has a default image.
+        });
+        it('custom openID', () => {
+            const cmp = ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "test", title: "test provider"}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(cmp).toBeTruthy();
+            expect(document.querySelector('.modal-body form')).toBeFalsy();
+            const link = document.querySelector('.modal-body > div > a');
+            expect(link).toBeTruthy();
+            expect(link.innerHTML).toEqual("test provider");
+        });
+        it('custom openID with image', () => {
+            const imageURL = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+            const cmp = ReactDOM.render(<LoginModal show providers={[{type: "openID", provider: "test", title: "test provider", imageURL}]} options={{animation: false}}/>, document.getElementById("container"));
+            expect(cmp).toBeTruthy();
+            expect(document.querySelector('.modal-body form')).toBeFalsy();
+            const img = document.querySelector('.modal-body > div > a > img');
+            expect(img).toBeTruthy();
+            expect(img.src).toEqual(imageURL);
+        });
     });
 });

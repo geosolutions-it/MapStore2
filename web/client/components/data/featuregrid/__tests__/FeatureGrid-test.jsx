@@ -156,4 +156,50 @@ describe('Test for FeatureGrid component', () => {
         expect(events.onTemporaryChanges).toHaveBeenCalled();
         expect(events.onTemporaryChanges).toHaveBeenCalledWith(true);
     });
+    it('Test grid with custom grid height props', () => {
+        ReactDOM.render(<FeatureGrid  virtualScroll={false}
+            gridOpts= {{
+                rowHeight: 28,
+                headerRowHeight: 28,
+                headerFiltersHeight: 28
+            }}
+            describeFeatureType={describePois} enableColumnFilters features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
+        const gridRow = document.getElementsByClassName('react-grid-Row');
+        expect(gridHeaderRows.length).toBe(2);
+        const headerRowHeight = gridHeaderRows[0]?.getAttribute('height');
+        expect(Number(headerRowHeight)).toBe(28);
+        const headerFiltersHeight = gridHeaderRows[1]?.getAttribute('height');
+        expect(Number(headerFiltersHeight)).toBe(28);
+        const rowHeight = gridRow[0]?.offsetHeight;
+        expect(rowHeight).toBe(28);
+    });
+    it('Test grid with custom grid height props with no filter', () => {
+        ReactDOM.render(<FeatureGrid  virtualScroll={false}
+            gridOpts= {{
+                rowHeight: 28,
+                headerRowHeight: 28
+            }}
+            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
+        const gridRow = document.getElementsByClassName('react-grid-Row');
+        expect(gridHeaderRows.length).toBe(1);
+        const headerRowHeight = gridHeaderRows[0]?.getAttribute('height');
+        expect(Number(headerRowHeight)).toBe(28);
+        const rowHeight = gridRow[0]?.offsetHeight;
+        expect(rowHeight).toBe(28);
+    });
+    it('Test grid with default header title', () => {
+        ReactDOM.render(<FeatureGrid virtualScroll={false}
+            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderCell = document.getElementsByClassName('react-grid-HeaderCell');
+        expect(gridHeaderCell[0].innerText).toBe('NAME');
+    });
+    it('Test grid with custom header title', () => {
+        ReactDOM.render(<FeatureGrid virtualScroll={false}
+            options={{propertyName: [{name: "NAME", title: "Some Name", description: "Some description"}]}}
+            describeFeatureType={describePois} enableColumnFilters={false} features={museam.features}/>, document.getElementById("container"));
+        const gridHeaderCell = document.getElementsByClassName('react-grid-HeaderCell');
+        expect(gridHeaderCell[0].innerText).toBe('Some Name');
+    });
 });

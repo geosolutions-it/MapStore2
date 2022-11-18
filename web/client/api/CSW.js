@@ -8,11 +8,11 @@
 
 import urlUtil from 'url';
 
-import { get, head, last, template, isNil, castArray } from 'lodash';
+import { get, head, last, template, isNil, castArray, isEmpty } from 'lodash';
 import assign from 'object-assign';
 
 import axios from '../libs/ajax';
-import { cleanDuplicatedQuestionMarks, getConfigProp } from '../utils/ConfigUtils';
+import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG } from '../utils/CoordinatesUtils';
 import WMS from "../api/WMS";
 
@@ -179,31 +179,39 @@ export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
 let capabilitiesCache = {};
 
 /**
- * Add capabilities data to CSW records if WMS url is found
+ * Add capabilities data to CSW records
+ * if corresponding capability flag is enabled and WMS url is found
  * Currently limited to only scale denominators (visibility limits)
  * @param {object[]} _dcRef dc.reference or dc.URI
  * @param {object} result csw results object
+ * @param {object} options csw service options
+ * @return {object} csw records
  */
-const addCapabilitiesToRecords = (_dcRef, result) => {
+const addCapabilitiesToRecords = (_dcRef, result, options) => {
+    // Currently, visibility limits is the only capability info added to the records
+    // hence `autoSetVisibilityLimits` flag is used to determine if `getCapabilities` is required
+    // This should be modified when additional capability info is required
+    const invokeCapabilities = get(options, "options.service.autoSetVisibilityLimits", false);
+
+    if (!invokeCapabilities) {
+        return result;
+    }
     const { value: _url } = _dcRef?.find(t =>
         REGEX_WMS_ALL.some(regex=> t?.scheme?.match(regex) || t?.protocol?.match(regex))) || {}; // Get WMS URL from references
     const [parsedUrl] = _url && _url.split('?') || [];
     if (!parsedUrl) return {...result}; // Return record when no url found
 
     const cached = capabilitiesCache[parsedUrl];
-    const isCached = cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000;
+    const isCached = !isEmpty(cached);
     return Promise.resolve(
         isCached
-            ? cached.data
+            ? cached
             : WMS.getCapabilities(parsedUrl + '?version=')
                 .then((caps)=> get(caps, 'capability.layer.layer', []))
                 .catch(()=> []))
         .then((layers) => {
             if (!isCached) {
-                capabilitiesCache[parsedUrl] = {
-                    timestamp: new Date().getTime(),
-                    data: layers
-                };
+                capabilitiesCache[parsedUrl] = layers;
             }
             // Add visibility limits scale data of the layer to the record
             return {
@@ -297,7 +305,7 @@ const Api = {
                     'Content-Type': 'application/xml'
                 }}).then(
                     (response) => {
-                        if (response ) {
+                        if (response) {
                             let json = unmarshaller.unmarshalString(response.data);
                             if (json && json.name && json.name.localPart === "GetRecordsResponse" && json.value && json.value.searchResults) {
                                 let rawResult = json.value;
@@ -357,6 +365,7 @@ const Api = {
                                                 crs: 'EPSG:4326'
                                             };
                                         }
+                                        // dcElement is an array of objects, each item is a dc tag in the XML
                                         let dcElement = rawRec.dcElement;
                                         if (dcElement) {
                                             let dc = {
@@ -364,6 +373,7 @@ const Api = {
                                             };
                                             for (let j = 0; j < dcElement.length; j++) {
                                                 let dcel = dcElement[j];
+                                                // here the element name is taken (i.e. "URI", "title", "description", etc)
                                                 let elName = dcel.name.localPart;
                                                 let finalEl = {};
                                                 /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
@@ -379,6 +389,10 @@ const Api = {
                                                 } else {
                                                     finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
                                                 }
+                                                /**
+                                                    grouping all tags with same property together (i.e <dc:subject>mobilità</dc:subject> <dc:subject>traffico</dc:subject>)
+                                                    will become { subject: ["mobilità", "traffico"] }
+                                                **/
                                                 if (dc[elName] && Array.isArray(dc[elName])) {
                                                     dc[elName].push(finalEl);
                                                 } else if (dc[elName]) {
@@ -387,7 +401,7 @@ const Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
-                                            const URIs = dc.references.length > 0 ? dc.references : dc.URI;
+                                            const URIs = castArray(dc.references.length > 0 ? dc.references : dc.URI);
                                             if (!_dcRef) {
                                                 _dcRef = URIs;
                                             } else {
@@ -399,7 +413,7 @@ const Api = {
                                     }
                                 }
                                 result.records = records;
-                                return addCapabilitiesToRecords(_dcRef, result);
+                                return addCapabilitiesToRecords(_dcRef, result, options);
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
                                 return {
                                     error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'

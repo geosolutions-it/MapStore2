@@ -4,6 +4,7 @@ const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('./moduleFederation').plugin;
+
 const paths = {
     base: path.join(__dirname, ".."),
     dist: path.join(__dirname, "..", "web", "client", "dist"),

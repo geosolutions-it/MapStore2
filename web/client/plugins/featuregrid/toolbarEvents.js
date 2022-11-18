@@ -12,7 +12,8 @@ import {
     startDrawingFeature,
     deleteGeometry,
     openAdvancedSearch,
-    zoomAll
+    zoomAll,
+    setViewportFilter
 } from '../../actions/featuregrid';
 
 import { toggleSyncWms } from '../../actions/wfsquery';
@@ -40,6 +41,7 @@ export default {
     hideSyncPopover: () => hideSyncPopover(),
     toggleShowAgain: () => toggleShowAgain(),
     toggleSnapping: () => toggleSnapping(),
+    setViewportFilter: (value) => setViewportFilter(value),
     setSnappingLayer: (layerId) => setSnappingLayer(layerId),
     setSnappingConfig: (value, prop, pluginCfg) => setSnappingConfig(value, prop, pluginCfg)
 };

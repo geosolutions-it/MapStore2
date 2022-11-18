@@ -12,6 +12,7 @@ import PropertiesViewer from './PropertiesViewer';
 import { getRowViewer } from '../../../../../utils/MapInfoUtils';
 import { ANNOTATIONS } from '../../../../../utils/AnnotationsUtils';
 import PropTypes from 'prop-types';
+import {omit} from "lodash/object";
 
 const defaultRowViewerOptions = {
     // we need some default options for annotations
@@ -41,7 +42,7 @@ function RowViewer({
     const Row = layerRowViewer || component || PropertiesViewer;
     return (
         <Row
-            {...feature.properties}
+            {...omit(feature.properties, ['ref'])}
             feature={feature}
             labelIds={labelIds}
             exclude={excludeProperties}

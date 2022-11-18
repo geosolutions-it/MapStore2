@@ -9,6 +9,10 @@ const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const castArray = require('lodash/castArray');
+const {
+    VERSION_INFO_DEFINE_PLUGIN
+} = require('./BuildUtils');
+const {devServer: DEV_SERVER, devtool: DEV_TOOL} = require('./devServer');
 /**
  * Webpack configuration builder.
  * Returns a webpack configuration object for the given parameters.
@@ -48,6 +52,7 @@ const castArray = require('lodash/castArray');
  * @param {object} config.resolveModules webpack resolve configuration object, available only with object syntax
  * @param {object} config.projectConfig config mapped to __MAPSTORE_PROJECT_CONFIG__, available only with object syntax
  * @param {string} config.cesiumBaseUrl (optional) url for cesium assets, workers and widgets. It is needed only for custom project where the structure of dist folder is not following the default one
+ * @param {string} config.devtool (optional) dev tool for webpack, available only with object syntax. Default is undefined.
  * @returns a webpack configuration object
  * @example
  * // It's possible to use a single object argument to pass the parameters.
@@ -114,7 +119,8 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     projectConfig = {},
     devServer,
     resolveModules,
-    cesiumBaseUrl
+    cesiumBaseUrl,
+    devtool = DEV_TOOL
 }) => ({
     target: "web",
     entry: assign({}, bundles, themeEntries),
@@ -157,6 +163,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             }
         }),
         new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
+        VERSION_INFO_DEFINE_PLUGIN,
         new DefinePlugin({
             // Define relative base path in cesium for loading assets
             'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
@@ -170,7 +177,6 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),
-        new NormalModuleReplacementPlugin(/leaflet$/, path.join(paths.framework, "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
         // see https://github.com/CesiumGS/cesium/issues/9212
@@ -299,43 +305,11 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         }] : [])
     },
     devServer: devServer || {
-        publicPath: "/dist/",
-        proxy: proxy || {
-            '/rest': {
-                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
-                secure: false,
-                headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
-                }
-            },
-            '/pdf': {
-                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
-                secure: false,
-                headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
-                }
-            },
-            '/mapstore/pdf': {
-                target: "https://dev-mapstore.geosolutionsgroup.com",
-                secure: false,
-                headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
-                }
-            },
-            '/proxy': {
-                target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
-                secure: false,
-                headers: {
-                    host: "dev-mapstore.geosolutionsgroup.com"
-                }
-            },
-            '/docs': {
-                target: "http://localhost:8081",
-                pathRewrite: {'/docs': '/mapstore/docs'}
-            }
-        }
+        publicPath: '/dist/', // default configuration for dev server
+        ...DEV_SERVER,
+        proxy: proxy || DEV_SERVER && DEV_SERVER.proxy // proxy has priority over devServer proxy configuration
     },
-
-    devtool: !prod ? 'eval' : undefined
-}));
+    devtool: !prod ? 'eval' : devtool || undefined
+})
+);
 

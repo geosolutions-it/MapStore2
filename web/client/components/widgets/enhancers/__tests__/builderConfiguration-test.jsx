@@ -40,6 +40,21 @@ describe('widgets builderConfiguration enhancer', () => {
                 onEditorChange={actions.onEditorChange} />),
             document.getElementById("container"));
     });
+    it('test chart widget builder describeFeatureType and describeProcess calls', (done) => {
+        const actions = {
+            onEditorChange: (key, value) => {
+                expect(key).toBe("charts[1].geomProp");
+                expect(value).toBe("the_geom");
+                done();
+            }
+        };
+        ReactDOM.render(
+            (<WidgetBuilder
+                editorData={{charts: [{chartId: 1}], selectedChartId: 1}}
+                layer={{ url: 'base/web/client/test-resources/widgetbuilder/wms', search: { url: 'base/web/client/test-resources/widgetbuilder/wfs' } }}
+                onEditorChange={actions.onEditorChange} />),
+            document.getElementById("container"));
+    });
     it('error management', (done) => {
         const actions = {
             onConfigurationError: () => {
