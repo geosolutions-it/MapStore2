@@ -77,12 +77,12 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = validator.getValidResponses(responses);
+        const validResponses = responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
         return {
-            validResponses,
+            responses,
             currResponse,
             emptyResponses,
             invalidResponses
@@ -96,6 +96,23 @@ class DefaultViewer extends React.Component {
         const validator = this.props.validator(this.props.format);
         return validator.getValidResponses([response]);
     }
+
+    /**
+     * Helper method to calculate panel index properly on mobile devices.
+     * Mobile
+     * @param index
+     * @param getFilteredIndex
+     * @returns {*|number}
+     */
+    getValidPanelIndexValue = (index, getFilteredIndex = true) => {
+        // Get complete list of responses, fetch response for passed index and then recalculate index value for filtered list of valid responses
+        const {responses} = this.getResponseProperties();
+        const validator = this.props.validator(this.props.format);
+        const validResponses = validator.getValidResponses(responses);
+
+        const response = getFilteredIndex ? responses[index] : validResponses[index];
+        return getFilteredIndex ? validResponses.findIndex(el => el === response) : responses.findIndex(el => el === response);
+    };
 
     renderEmptyLayers = () => {
         const {invalidResponses, emptyResponses} = this.getResponseProperties();
@@ -142,9 +159,11 @@ class DefaultViewer extends React.Component {
     }
 
     renderPages = () => {
-        const {validResponses: responses} = this.getResponseProperties();
+        const {responses} = this.getResponseProperties();
+        const validator = this.props.validator(this.props.format);
+        const validResponses = validator.getValidResponses(responses);
 
-        return responses.map((res, i) => {
+        return validResponses.map((res, i) => {
             const {response, layerMetadata} = res;
             const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
@@ -152,10 +171,8 @@ class DefaultViewer extends React.Component {
             if (layerMetadata?.viewer?.type) {
                 customViewer = getViewer(layerMetadata.viewer.type);
             }
-            const validator = this.props.validator(this.props.format);
-            const validResponse = !!validator.getValidResponses([res]).length;
             const size = responses.filter(resp => !startsWith(resp.response, "no features were found")).length;
-            return validResponse ? (<Panel
+            return (<Panel
                 eventKey={i}
                 key={i}
                 collapsible={this.props.collapsible}
@@ -173,8 +190,8 @@ class DefaultViewer extends React.Component {
                     format={format}
                     viewers={customViewer || this.props.viewers}
                     layer={layerMetadata}/>
-            </Panel>) : false;
-        }).filter(Boolean);
+            </Panel>);
+        });
     };
 
     render() {
@@ -183,10 +200,10 @@ class DefaultViewer extends React.Component {
         let componentOrder = [this.renderEmptyLayers(),
             <Container {...this.props.containerProps}
                 onChangeIndex={(index) => {
-                    this.props.setIndex(index);
+                    this.props.setIndex(this.getValidPanelIndexValue(index, false));
                 }}
                 ref="container"
-                index={this.props.index || 0}
+                index={this.getValidPanelIndexValue(this.props.index, true) || 0}
                 key={"swiper"}
                 style={this.containerStyle(currResponse)}
                 className="swipeable-view">

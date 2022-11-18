@@ -19,20 +19,18 @@ const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, e
     const [title, setTitle] = useState("");
 
     useEffect(()=>{
-        const validResponses = validator(format)?.getValidResponses(responses);
-        if (!isEmpty(validResponses)) {
-            setOptions(validResponses.map((opt, idx)=> {
+        if (!isEmpty(responses)) {
+            setOptions(responses.map((opt, idx)=> {
                 const value = opt?.layerMetadata?.title;
                 // Display only valid responses in the drop down
                 const valid = !!validator(format)?.getValidResponses([opt]).length;
-                return {label: value, value, idx, style: {display: valid ? 'block' : 'none'}};
-            }));
+                return valid ? {label: value, value, idx} : false;
+            }).filter(Boolean));
         }
     }, [responses]);
 
     useEffect(()=>{
-        const validResponses = validator(format)?.getValidResponses(responses) ?? [];
-        loaded && setTitle(validResponses[index]?.layerMetadata?.title || "");
+        loaded && setTitle(responses[index]?.layerMetadata?.title || "");
     }, [responses, index, loaded]);
 
     const onChange = (event) => {

@@ -108,7 +108,7 @@ function receiveResponse(state, action, type) {
         if (isHover) {
             indexObj = {loaded: true, index: 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
-            indexObj = {loaded: true, index: 0};
+            indexObj = {loaded: true, index: requestIndex};
         } else if (responses.length === requests.length && !indexObj?.loaded) {
             // if all responses are empty hence valid but with no valid index
             // then set loaded to true
