@@ -51,7 +51,7 @@ describe("LayerSelector component", () => {
         });
         const options = select.querySelectorAll(".Select-option");
         expect(options.length).toBe(1);
-        expect(options[0].style.display).toBe('block');
+        expect(options[0].textContent).toBe('Test2');
     });
     it('test LayerSelector with value and setIndex', (done) => {
 
