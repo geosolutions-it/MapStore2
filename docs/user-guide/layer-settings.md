@@ -285,6 +285,11 @@ The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Styl
 
 In [3D Navigation](side-bar.md#3d-navigation), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* with the same characteristics of the [Visual Style Editor](layer-settings.md#visual-editor-style) as described in the previous chapter.
 
+ In addition, the style of the *Vector layer* can also be customized with the **3D model** rule.
+From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model panel opens allows the style editor to add a 3D model (by specifying its *URL*) and customize the 3D model `Scale`, `Rotation` and `Color`. Take a look at the following example.
+
+<img src="../img/layer-settings/3d-model-style-ex.gif" class="ms-docimage">
+
 !!!Warning
     For the Vector layer, the *Cesium Style Editor* have some limitations:
 
@@ -297,6 +302,14 @@ Furthermore, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds
 * **Bring to front** to bring the Mark or the Icon in front of the **3d Tiles** layer (This option is available for Icon and Mark symbolizers).
 
 <img src="../img/layer-settings/bring-to-front.jpg" class="ms-docimage">
+
+* **Height reference from ground** to choose the height reference of the symbol from the ground between `None`, `Relative` or `Clamp`. The editor can also customize the **Height** of the symbols by choosing between the *Attribute Value*, selecting a value from the attribute table,  and a *Constant Value*.     (This option is available for Mark, Icon, 3D Model and Text symbolizers)
+
+<img src="../img/layer-settings/height-reference.jpg" class="ms-docimage">
+
+* **Leader line** to add a line to show the relation between the point and a position on the terrain. The editor can choose the **Width** of the line and the **Color** through the *color picker*. (This option is available for Mark, Icon, 3D Model and Text symbolizers)
+
+<img src="../img/layer-settings/leader-line.jpg" class="ms-docimage">
 
 * **Polygon type** to choose whether the classification, drape effect, should affect `3D`, `Terrain` or `Both`. (This option is available for Fill symbolizers)
 
