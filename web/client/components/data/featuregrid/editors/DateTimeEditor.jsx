@@ -4,6 +4,7 @@ import React from "react";
 import DateTimePicker from "../../../misc/datetimepicker";
 import utcDateWrapper from "../../../misc/enhancers/utcDateWrapper";
 import moment from "moment";
+import {dateFormats} from "../../../../utils/FeatureGridUtils";
 
 /**
  * Date time picker enhanced with UTC and timezone offset
@@ -15,12 +16,6 @@ const UTCDateTimePicker = utcDateWrapper({
     dateTypeProp: "dataType",
     setDateProp: "onBlur"
 })(DateTimePicker);
-
-const formats = {
-    'date-time': 'YYYY-MM-DDTHH:mm:ss[Z]',
-    'time': 'HH:mm:ss',
-    'date': 'YYYY-MM-DD[Z]'
-};
 
 /**
  * date, date-time, time editor for FeatureGrid
@@ -67,7 +62,7 @@ class DateTimeEditor extends AttributeEditor {
     componentDidMount() {
         const {dataType, value} = this.props;
         this.props.onTemporaryChanges?.(true);
-        const convertedDate = moment.utc(value, formats[dataType]);
+        const convertedDate = moment.utc(value, dateFormats[dataType]);
         if (value) {
             this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : null});
         }
@@ -78,7 +73,7 @@ class DateTimeEditor extends AttributeEditor {
         const { value, dataType } = this.props;
 
         if (prevValue !== value || prevDataType !== dataType) {
-            const convertedDate = moment.utc(value, formats[dataType]);
+            const convertedDate = moment.utc(value, dateFormats[dataType]);
             this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : null});
         }
     }
@@ -97,7 +92,7 @@ class DateTimeEditor extends AttributeEditor {
             value={date}
             calendar={calendar}
             time={time}
-            format={formats[dataType]}
+            format={dateFormats[dataType]}
             options={{
                 shouldCalendarSetHours
             }}

@@ -50,7 +50,8 @@ export default getWidgetFilterRenderers(({
     dataGrid = {},
     virtualScroll = true,
     gridOpts = defaultGridOpts,
-    options = {}
+    options = {},
+    dateFormats
 }) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
@@ -93,7 +94,8 @@ export default getWidgetFilterRenderers(({
                 describeFeatureType={describeFeatureType}
                 pagination={pagination}
                 gridOpts={gridOpts}
-                options={options}/>
+                options={options}
+                dateFormats={dateFormats}/>
         </BorderLayout>
     </WidgetContainer>
 
