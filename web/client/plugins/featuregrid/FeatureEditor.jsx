@@ -90,7 +90,7 @@ const Dock = connect(createSelector(
   * @prop {string} cfg.snapConfig.strategy defines strategy function for loading features. Supported values are "bbox" and "all".
   * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
   * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
-  * @prop {object} cfg.dateFormat object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
+  * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
