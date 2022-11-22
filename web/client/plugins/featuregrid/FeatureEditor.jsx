@@ -90,6 +90,7 @@ const Dock = connect(createSelector(
   * @prop {string} cfg.snapConfig.strategy defines strategy function for loading features. Supported values are "bbox" and "all".
   * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
   * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
+  * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
@@ -116,18 +117,23 @@ const Dock = connect(createSelector(
   *         }
   *       }]
   *     },
-  *   "editingAllowedRoles": ["ADMIN"],
-  *   "snapTool": true,
-  *   "snapConfig": {
-  *     "vertex": true,
-  *     "edge": true,
-  *     "pixelTolerance": 10,
- *      "additionalLayers": [
- *         "ADDITIONAL_LAYER_ID"
- *      ],
- *      "strategy": "bbox",
- *      "maxFeatures": 4000
-  *   },
+  *     "editingAllowedRoles": ["ADMIN"],
+  *     "snapTool": true,
+  *     "snapConfig": {
+  *       "vertex": true,
+  *       "edge": true,
+  *       "pixelTolerance": 10,
+  *       "additionalLayers": [
+  *         "ADDITIONAL_LAYER_ID"
+  *       ],
+  *       "strategy": "bbox",
+  *       "maxFeatures": 4000
+  *     },
+  *     "dateFormats": {
+  *       "date-time": "YYYY-MM-DDTHH:mm:ss[Z]",
+  *       "date": "YYYY-MM-DD[Z]",
+  *       "time": "HH:mm:ss[Z]"
+  *     }
   *   }
   * }
   * ```
@@ -238,6 +244,7 @@ const FeatureDock = (props = {
                         scrollDebounce={props.scrollDebounce}
                         size={props.size}
                         actionOpts={{maxZoom}}
+                        dateFormats={props.dateFormats}
                     />
                 </BorderLayout> }
 
