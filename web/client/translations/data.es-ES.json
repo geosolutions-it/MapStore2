@@ -2401,7 +2401,9 @@
             "pitch": "Rotación del eje X",
             "roll": "Rotación del eje Y",
             "color": "Color",
-            "pointHeight": "Altura del punto"
+            "pointHeight": "Altura del punto",
+            "leaderLineColor": "Color de línea de guía",
+            "leaderLineWidth": "Ancho de la línea guía"
         },
         "playback": {
             "settings": {
