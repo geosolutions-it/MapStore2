@@ -486,9 +486,7 @@
             {
               "name": "Timeline",
               "cfg": {
-                "expandLimit": 20,
-                "endValuesSupport": true,
-                "snapRadioButtonEnabled": true
+                "expandLimit": 20
               }
             },
             "Playback",
