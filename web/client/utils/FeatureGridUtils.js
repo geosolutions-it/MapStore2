@@ -349,7 +349,7 @@ export const getAttributesNames = (attributes) => {
 
 export const dateFormats = {
     'date-time': 'YYYY-MM-DDTHH:mm:ss[Z]',
-    'time': 'HH:mm:ss',
+    'time': 'HH:mm:ss[Z]',
     'date': 'YYYY-MM-DD[Z]'
 };
 

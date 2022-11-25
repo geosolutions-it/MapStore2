@@ -13,8 +13,8 @@ const types = {
         <AutocompleteEditor dataType="string" {...props}/> :
         <Editor dataType="string" {...props}/>,
     "boolean": (props) => <DropDownEditor dataType="string" {...props} value={props.value && props.value.toString()} filter={false} values={["true", "false"]}/>,
-    "date-time": (props) => <DateTimeEditor dataType="date-time" time popupPosition="top" {...props} />,
-    "date": (props) => <DateTimeEditor dataType="date" popupPosition="top" {...props} />,
+    "date-time": (props) => <DateTimeEditor dataType="date-time" calendar time popupPosition="top" {...props} />,
+    "date": (props) => <DateTimeEditor dataType="date"time={false} calendar popupPosition="top" {...props} />,
     "time": (props) => <DateTimeEditor dataType="time" calendar={false} time popupPosition="top" {...props} />
 };
 export default (type, props) => types[type] ? types[type](props) : types.defaultEditor(props);

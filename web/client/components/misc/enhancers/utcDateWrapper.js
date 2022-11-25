@@ -15,6 +15,8 @@ import {
     getUTCDatePart
 } from '../../../utils/TimeUtils';
 
+const DEFAULT_DATE_PART = "1970-01-01";
+const DEFAULT_TIME_PART = "00:00:00";
 /**
  * Converts local date as it was UTC.
  * Useful wrapper for calendar tools that internally use date object localized,
@@ -23,6 +25,7 @@ import {
  * @param {string} options.dateTypeProp type choosed from ("date", "time", "date-time")
  * @param {string} options.dateProp date to use, it must be a UTC date, it can assume partial values like (02:00:00Z or 2019-02-03Z)
  * @param {string} options.setDateProp function to use to update the date
+ * @param {string} options.datePropFormat format of the dateProp. 'full-iso' ( e.g. 2019-02-03T02:00:00Z), 'short' (e.g. 2019-02-03Z or 02:00:00Z). default is short
  * useUTCOffset is used to translate the data as it is defined in UTC.
  * for example when using the useUTCOffset=true 20 March 2019 will correspond to 2019-03-20T00:00:00.000Z
  * instead without it will be used as 2019-03-19T23:00:00.000Z (in cql filter), but in the UI it will be used the
@@ -32,20 +35,22 @@ import {
 export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetDate'} = {}) => compose(
     withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) => {
         let dateToParse = date;
-        let datePart = "1970-01-01";
-        let timePart = "00:00:00";
+        let datePart = DEFAULT_DATE_PART;
+        let timePart = DEFAULT_TIME_PART;
         if (!isDate(date) && isString(date)) {
             if (type === "time") {
                 // if time attribute, the prop 'date' has already the Z to the end, 00:00:00Z
-                dateToParse = new Date(`${datePart}T${date}`);
+                const tt = date.split("T")?.[1] || date;
+                dateToParse = new Date(`${datePart}T${tt}`);
             }
 
             if (type === "date") {
+                let dd = date.split("T")?.[0] || date;
                 // if date attribute, the prop 'date' has already the Z to the end, 1970-01-01Z
                 if (date.indexOf("Z") !== -1) {
-                    dateToParse = date.substr(0, date.length - 1);
+                    dd = date.substr(0, date.length - 1);
                 }
-                dateToParse = new Date(`${dateToParse}T${timePart}Z`);
+                dateToParse = new Date(`${dd}T${timePart}Z`);
             }
             if (type === "date-time") {
                 dateToParse = new Date(date);
@@ -62,6 +67,7 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
                 datePart = getUTCDatePart(dateToParse);
                 break;
             }
+            case "date-time":
             default: { // both
                 timePart = getUTCTimePart(dateToParse);
                 datePart = getUTCDatePart(dateToParse);
@@ -69,8 +75,8 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
             }
             resultDate = new Date(`${datePart}T${timePart}Z`);
             resultDate.setUTCMilliseconds(dateToParse.getUTCMilliseconds());
-            const tzoffset = useUTCOffset ? getTimezoneOffsetMillis(resultDate) : 0;
-            resultDate = new Date(resultDate.getTime() + tzoffset);
+            const timeZoneOffset = useUTCOffset ? getTimezoneOffsetMillis(resultDate) : 0;
+            resultDate = new Date(resultDate.getTime() + timeZoneOffset);
         }
         return {
             [dateProp]: resultDate,
@@ -81,7 +87,7 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
         };
     }),
     withHandlers({
-        [setDateProp]: ({[setDateProp]: changeVal, [dateTypeProp]: type, useUTCOffset = true} = {}) => (date, stringDate) => {
+        [setDateProp]: ({[setDateProp]: changeVal,  datePropFormat = "short", [dateTypeProp]: type, useUTCOffset = true} = {}) => (date, stringDate) => {
             if (!date) {
                 changeVal(null);
             } else {
@@ -94,22 +100,39 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
                     date.getUTCSeconds(),
                     date.getUTCMilliseconds()
                 ));
-                const tzoffset = useUTCOffset ? getTimezoneOffsetMillis(date) : 0;
-                const resultDate = new Date(newDate.getTime() - tzoffset);
-                let retVal = resultDate;
-                switch (type) {
-                case "time": {
-                    retVal = `${getUTCTimePart(retVal)}Z`;
+                const timeZoneOffset = useUTCOffset ? getTimezoneOffsetMillis(date) : 0;
+                const resultDate = new Date(newDate.getTime() - timeZoneOffset);
+
+                switch (datePropFormat) {
+                case "full-iso": {
+                    changeVal(resultDate.toISOString(), stringDate);
                     break;
                 }
-                case "date": {
-                    retVal = `${getUTCDatePart(retVal)}Z`;
+                case "short": {
+                    switch (type) {
+                    case "time": {
+                        changeVal(`${getUTCTimePart(resultDate)}Z`, stringDate);
+                        break;
+                    }
+                    case "date": {
+                        changeVal(`${getUTCDatePart(resultDate)}Z`, stringDate);
+                        break;
+                    }
+                    case "date-time": {
+                        changeVal(resultDate.toISOString(), stringDate);
+                        break;
+                    }
+                    default: {
+                        changeVal(resultDate, stringDate);
+                        break;
+                    }
+                    }
                     break;
                 }
-                default: { break; }
+                default: {
+                    break;
                 }
-                changeVal(retVal, stringDate);
+                }
             }
-        }
-    })
+        }})
 );
