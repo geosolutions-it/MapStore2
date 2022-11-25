@@ -72,7 +72,7 @@ describe('utcDateWrapper enhancher', () => {
         expect(inputs[0].value).toBe('02/01/2018 03:00:00');
     });
 
-    it.only('UTCDateWrapper calls onSetDate', (done) => {
+    it('UTCDateWrapper calls onSetDate', (done) => {
         const actions = {
             onSetDate: () => { }
         };
