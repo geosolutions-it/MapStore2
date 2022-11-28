@@ -20,6 +20,83 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2022.02.02 to 2023.01.00
+
+### Log4j file migration
+
+With this release Log4j has been updated to Log4j2. The Log4j API has changed with version 2. To have logging properly work on MapStore then it is needed to:
+
+- Rename `log4j.properties` file to `log4j2.properties`.
+
+- Edit the `properties` to configure it according to the log4j2 syntax. See the `Configuration with Properties` section on the [official documentation page](https://logging.apache.org/log4j/2.x/manual/configuration.html). Below the old and the new default log4j configuration files are juxtaposed:
+
+`log4j.properties`
+
+```properties
+log4j.rootLogger=INFO, fileAppender
+
+log4j.appender.consoleAppender=org.apache.log4j.ConsoleAppender
+log4j.appender.consoleAppender.layout=org.apache.log4j.PatternLayout
+log4j.appender.consoleAppender.layout.ConversionPattern=%p %d{yyyy-MM-dd HH:mm:ss.SSS} %c::%M:%L - %m%n
+
+log4j.logger.it.geosolutions.geostore.services.rest=INFO
+log4j.logger.org.hibernate=INFO
+log4j.logger.com.trg=INFO
+
+# File appender
+log4j.appender.fileAppender=org.apache.log4j.RollingFileAppender
+log4j.appender.fileAppender.layout=org.apache.log4j.PatternLayout
+log4j.appender.fileAppender.layout.ConversionPattern=%p   %d{yyyy-MM-dd HH:mm:ss.SSS}   %C{1}.%M() - %m %n
+log4j.appender.fileAppender.File=${catalina.base}/logs/mapstore.log
+```
+
+`log42.properties`
+
+```properties
+rootLogger.level = INFO
+appenders= console, file
+
+
+appender.console.type = Console
+appender.console.name = LogToConsole
+appender.console.layout.type = PatternLayout
+appender.console.layout.pattern = %p %d{yyyy-MM-dd HH:mm:ss.SSS} %c::%M:%L - %m%n
+rootLogger.appenderRef.stdout.ref = LogToConsole
+rootLogger.appenderRef.console.ref = LogToConsole
+
+appender.file.type = File
+appender.file.name = LogToFile
+appender.file.fileName=${sys:catalina.base}/logs/mapstore.log
+appender.file.layout.type=PatternLayout
+appender.file.layout.pattern=%p   %d{yyyy-MM-dd HH:mm:ss.SSS}   %C{1}.%M() - %m %n
+rootLogger.appenderRef.file.ref = LogToFile
+
+
+logger.restsrv.name=it.geosolutions.geostore.services.rest
+logger.restsrv.level=  INFO
+logger.hibernate1.name=org.hibernate
+logger.hibernate1.level=INFO
+logger.trg1.name=com.trg
+logger.trg1.level=INFO
+```
+
+The main difference applies to how define the Log level on a per package basis. If in previous version of log4j a single property was defining both the package and the level now we need two separe properties one to define the name (the package) and the other for the level:
+
+- before
+
+```properties
+log4j.logger.it.geosolutions.geostore.services.rest=INFO
+```
+
+- now
+
+```properties
+logger.restsrv.name=it.geosolutions.geostore.services.rest
+logger.restsrv.level=  INFO
+```
+
+Note that the second part of the property key in the log4j2 (`restsrv` in the example) can be whatever string of choice, with the only requirment to be the same for the `name` and the `level` property.
+
 ## Migration from 2022.02.00 to 2022.02.01
 
 ### Package.json scripts migration
