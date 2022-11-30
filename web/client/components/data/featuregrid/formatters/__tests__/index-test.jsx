@@ -80,5 +80,6 @@ describe('Tests for the formatter functions', () => {
         expect(typeof timeFormatter).toBe("function");
         expect(timeFormatter()).toBe(null);
         expect(timeFormatter({value: '12:45:00Z'})).toBe('12:45');
+        expect(timeFormatter({ value: '1970-01-01T02:30:00Z' })).toBe('02:30'); // still able to format time even when found a full date (sometimes GeoServer returns full date instead of time only)
     });
 });
