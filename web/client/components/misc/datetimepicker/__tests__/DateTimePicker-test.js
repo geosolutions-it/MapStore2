@@ -149,7 +149,7 @@ describe('DateTimePicker component', () => {
             done();
         };
         const dateObj = moment.utc(date, 'YYYY-MM-DDTHH:mm:ss[Z]').toDate();
-        ReactDOM.render(<DateTimePicker format="YYYY-MM-DDTHH:mm:ss[Z]" options={{ shouldCalendarSetHours: false }} value={dateObj} currentDate={dateObj} onChange={handleChange} />, document.getElementById("container"));
+        ReactDOM.render(<DateTimePicker format="YYYY-MM-DDTHH:mm:ss[Z]" value={dateObj} currentDate={dateObj} onChange={handleChange} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const calendar = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(calendar);

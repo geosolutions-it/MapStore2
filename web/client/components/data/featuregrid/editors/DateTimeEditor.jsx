@@ -3,7 +3,6 @@ import AttributeEditor from "./AttributeEditor";
 import React from "react";
 import DateTimePicker from "../../../misc/datetimepicker";
 import utcDateWrapper from "../../../misc/enhancers/utcDateWrapper";
-import moment from "moment";
 import {dateFormats} from "../../../../utils/FeatureGridUtils";
 
 /**
@@ -14,7 +13,7 @@ import {dateFormats} from "../../../../utils/FeatureGridUtils";
 const UTCDateTimePicker = utcDateWrapper({
     dateProp: "value",
     dateTypeProp: "dataType",
-    setDateProp: "onBlur"
+    setDateProp: "onChange"
 })(DateTimePicker);
 
 /**
@@ -35,7 +34,8 @@ class DateTimeEditor extends AttributeEditor {
         onTemporaryChanges: PropTypes.func,
         calendar: PropTypes.bool,
         time: PropTypes.bool,
-        shouldCalendarSetHours: PropTypes.bool
+        onChange: PropTypes.func,
+        onBlur: PropTypes.func
     };
 
     static contextTypes = {
@@ -47,9 +47,8 @@ class DateTimeEditor extends AttributeEditor {
         column: {},
         calendar: true,
         time: false,
-        shouldCalendarSetHours: false,
-        min: new Date(1500, 0, 1),
-        max: new Date(2099, 0, 1)
+        onChange: () => {},
+        onBlur: () => {}
     };
 
     constructor() {
@@ -58,44 +57,38 @@ class DateTimeEditor extends AttributeEditor {
             date: null
         };
     }
-
     componentDidMount() {
-        const {dataType, value} = this.props;
+        this.date = this.props.value;
         this.props.onTemporaryChanges?.(true);
-        const convertedDate = moment.utc(value, dateFormats[dataType]);
-        if (value) {
-            this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : null});
-        }
     }
-
-    componentDidUpdate(prevProps) {
-        const { value: prevValue, dataType: prevDataType } = prevProps;
-        const { value, dataType } = this.props;
-
-        if (prevValue !== value || prevDataType !== dataType) {
-            const convertedDate = moment.utc(value, dateFormats[dataType]);
-            this.setState({ date: convertedDate.isValid() ? convertedDate.toDate() : null});
-        }
-    }
-
     componentWillUnmount() {
         this.props.onTemporaryChanges?.(false);
     }
+    onChange = (date) => {
+        this.date = date;
+    };
+
+    getValue = () => {
+        return {
+            [this.props.column.key]: this.date
+        };
+    };
 
     render() {
-        const {shouldCalendarSetHours, dataType, calendar, time} = this.props;
-        const { date } = this.state;
+        const {dataType, calendar, time} = this.props;
+        const { value } = this.props;
         return (<UTCDateTimePicker
             {...this.props}
             type={dataType}
-            defaultValue={date}
-            value={date}
+            defaultValue={value}
+            value={value}
+            onChange={this.onChange}
             calendar={calendar}
             time={time}
-            format={dateFormats[dataType]}
             options={{
-                shouldCalendarSetHours
+                shouldCalendarSetHours: false
             }}
+            format={dateFormats[dataType]}
         />);
     }
 }
