@@ -13,7 +13,9 @@ const devServer = {
         '/rest': {
             target: MAPSTORE_BACKEND_URL,
             secure: false,
-            logLevel: "debug"
+            headers: {
+                host: domain
+            }
         },
         '/pdf': {
             target: MAPSTORE_BACKEND_URL,
