@@ -271,7 +271,7 @@ url: https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png
 ## Sample custom with advanced options
 
  ```text
-url: https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg    
+url: https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg
 ```
 
 ```json
@@ -307,7 +307,7 @@ When saved this, the user will be allowed to browse and add to the map the TMS l
 ```text
 https://public.sig.rennesmetropole.fr/geowebcache/service/tms/1.0.0
 https://osm.geobretagne.fr/gwc01/service/tms/1.0.0
-http://gs-stable.geo-solutions.it/geoserver/gwc/service/tms/1.0.0
+https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/tms/1.0.0
 ```
 
 #### TMS Known Services

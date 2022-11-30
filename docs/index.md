@@ -3,7 +3,7 @@
 
 # MapStore
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is an highly modular **Open Source** WebGIS framework developed by [GeoSolutions](https://www.geo-solutions.it/) to create, manage and securely
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is an highly modular **Open Source** WebGIS framework developed by [GeoSolutions](https://www.geosolutionsgroup.com/) to create, manage and securely
 share maps and mashups. This simple and intuitive framework is able to mix map contents provided by Google Maps, OpenStreetMap,
 Bing or other servers compliant to OGC standards like WFS, CSW, WMC, WMS, WMTS and TMS.
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) is used to find, view and query published geospatial data and to integrate multiple remote sources into a single map; the result is

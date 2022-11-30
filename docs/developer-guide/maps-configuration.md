@@ -225,12 +225,12 @@ Some other feature will break, for example the layer properties will stop workin
 {
   "type": "wms",
   "url": [
-    "https://a.maps.geo-solutions.it/geoserver/wms",
-    "https://b.maps.geo-solutions.it/geoserver/wms",
-    "https://c.maps.geo-solutions.it/geoserver/wms",
-    "https://d.maps.geo-solutions.it/geoserver/wms",
-    "https://e.maps.geo-solutions.it/geoserver/wms",
-    "https://f.maps.geo-solutions.it/geoserver/wms"
+    "https://a.maps.geosolutionsgroup.com/geoserver/wms",
+    "https://b.maps.geosolutionsgroup.com/geoserver/wms",
+    "https://c.maps.geosolutionsgroup.com/geoserver/wms",
+    "https://d.maps.geosolutionsgroup.com/geoserver/wms",
+    "https://e.maps.geosolutionsgroup.com/geoserver/wms",
+    "https://f.maps.geosolutionsgroup.com/geoserver/wms"
   ],
   "visibility": true,
   "opacity": 1,
@@ -1198,7 +1198,7 @@ In order to create a `wms` based mesh there are some requirements that need to b
           "type": "terrain",
           "provider": "wms",
           "url": "http://hot-sample/geoserver/wms",
-          "name": "workspace:layername", 
+          "name": "workspace:layername",
           "littleEndian": false,
           "visibility": true,
           "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
@@ -1220,7 +1220,7 @@ In order to create a `wms` based mesh there are some requirements that need to b
     3. Layer configuration of geoserver layer with layer name *not prefixed with workspace* then `getCapabilities` is requested in global scope.
 
     ```json
-    { 
+    {
       "type": "terrain",
       "provider": "wms",
       "url": "https://host-sample/geoserver/wms",
@@ -1236,7 +1236,7 @@ Generic layer configuration of type `terrain` and provide `wms` as follows.
 The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider, here all available properties:
 
 ```json
-{ 
+{
   "type": "terrain",
   "provider": "wms",
   "url": "https://host-sample/geoserver/wms",
@@ -1253,7 +1253,7 @@ The layer configuration needs to point to the geoserver resource and define the 
   "highest": 12000, // highest altitude in the tiles (in meters)
   "lowest": -500, // lowest altitude in the tiles
   "sampleTerrainZoomLevel": 18 // zoom level used to perform sampleTerrain and get the height value given a point, used by measure components
-  
+
 }
 ```
 
@@ -1404,21 +1404,21 @@ MapStore specific:
 - `GroupList` defines a mapstore group list. Contains `Group` elements that describe a particular layer group:
 
 ```xml
-<ms:GroupList xmlns:ms="http://geo-solutions.it/mapstore/context">
-    <ms:Group xmlns:ms="http://geo-solutions.it/mapstore/context" id="Default" title="Default" expanded="true"/>
+<ms:GroupList xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context">
+    <ms:Group xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context" id="Default" title="Default" expanded="true"/>
 </ms:GroupList>
 ```
 
 - `center` defines a center of map view
 
 ```xml
-<ms:center xmlns:ms="http://geo-solutions.it/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
+<ms:center xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
 ```
 
 - `zoom` map zoom level
 
 ```xml
-<ms:zoom xmlns:ms="http://geo-solutions.it/mapstore/context">7</ms:zoom>
+<ms:zoom xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context">7</ms:zoom>
 ```
 
 Supported extensions for each `Layer` element are:
@@ -1453,24 +1453,24 @@ Currently supports dimensions of ***multidim-extension*** type:
 - `CatalogServices` contains `Service` elements that describe services available for use in Catalog.
 
 ```xml
-<ms:DimensionList xmlns:ms="http://geo-solutions.it/mapstore/context">
-    <ms:Dimension xmlns:ms="http://geo-solutions.it/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://cloudsdi.geo-solutions.it/geoserver/gwc/service/wmts"/>
+<ms:DimensionList xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context">
+    <ms:Dimension xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://cloudsdi.geo-solutions.it/geoserver/gwc/service/wmts"/>
 </ms:DimensionList>
 <ms:CatalogServices selectedService="gs_stable_csw">
     <ms:Service serviceName="gs_stable_csw">
-        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/csw</ms:Attribute>
+        <ms:Attribute name="url" type="string">https://gs-stable.geosolutionsgroup.com/geoserver/csw</ms:Attribute>
         <ms:Attribute name="type" type="string">csw</ms:Attribute>
         <ms:Attribute name="title" type="string">GeoSolutions GeoServer CSW</ms:Attribute>
         <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
     </ms:Service>
     <ms:Service serviceName="gs_stable_wms">
-        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/wms</ms:Attribute>
+        <ms:Attribute name="url" type="string">https://gs-stable.geosolutionsgroup.com/geoserver/wms</ms:Attribute>
         <ms:Attribute name="type" type="string">wms</ms:Attribute>
         <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMS</ms:Attribute>
         <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
     </ms:Service>
     <ms:Service serviceName="gs_stable_wmts">
-        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts</ms:Attribute>
+        <ms:Attribute name="url" type="string">https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/wmts</ms:Attribute>
         <ms:Attribute name="type" type="string">wmts</ms:Attribute>
         <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMTS</ms:Attribute>
         <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
@@ -1486,7 +1486,7 @@ imported back into MapStore, the values of dimensions inside extensions will ove
 Also note, that the extension elements would be read correctly only if they belong to appropriate XML namespaces:
 
 - `http://openlayers.org/context` for openlayers extensions
-- `http://geo-solutions.it/mapstore/context` for mapstore specific extensions
+- `https://mapstore2.geosolutionsgroup.com/mapstore/context` for mapstore specific extensions
 
 #### Usage inside MapTemplates plugin
 

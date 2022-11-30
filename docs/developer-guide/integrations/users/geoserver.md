@@ -162,7 +162,7 @@ The last step is to configure MapStore to use the authkey with the configured in
 
 Integrating the user/groups database with GeoServer you can allow some users to:
 
-- Execute some processes (via [WPS security](http://gs-stable.geo-solutions.it/geoserver/web/wicket/bookmarkable/org.geoserver.wps.web.WPSAccessRulePage?25&filter=false))
+- Execute some processes (via [WPS security](https://gs-stable.geosolutionsgroup.com/geoserver/web/wicket/bookmarkable/org.geoserver.wps.web.WPSAccessRulePage?25&filter=false))
 
 - Download data (setting up the WPS download extension to allow/deny certain users to download data)
 
