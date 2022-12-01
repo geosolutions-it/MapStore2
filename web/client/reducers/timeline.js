@@ -162,8 +162,9 @@ export default (state = {
     }
     case UPDATE_TIME_LAYERS_SETTINGS: {
         return set('layers',
-            (state.layers || []).map(l => l.id === action.id
-                ? ({...l, checked: action.checked}) : l),
+            (state.layers || []).map(l =>
+                Object.keys(l)?.find(id => id === action.id)
+                    ? set(`${action.id}`, { hideInTimeline: !action.checked }, l) : l),
             state);
     }
     default:

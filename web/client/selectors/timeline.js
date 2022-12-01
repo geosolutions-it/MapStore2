@@ -20,7 +20,7 @@ import {
 } from '../selectors/dimension';
 
 import { mapSelector, projectionSelector } from '../selectors/map';
-import { getLayerFromId } from '../selectors/layers';
+import { getLayerFromId, getTitleSelector } from '../selectors/layers';
 
 export const rangeSelector = state => get(state, 'timeline.range');
 export const rangeDataSelector = state => get(state, 'timeline.rangeData');
@@ -176,15 +176,29 @@ export const currentTimeRangeSelector = createSelector(
 export const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
 export const timelineLayersSetting = state => get(state, 'timeline.layers');
+
+/**
+ * Get the timeline layers parsed settings
+ * @param  {object} state the application's state
+ * @return {object} parsed timeline layers setting
+ */
+export const timelineLayersParsedSettings = state => {
+    const layers = timelineLayersSetting(state);
+    return (layers || []).map(layer => {
+        const id = get(Object.keys(layer), "[0]");
+        const title = getTitleSelector(state, id);
+        return {...layer[id], title, id };
+    });
+};
 /**
  * Select layers visible in the timeline
  */
 export const timelineLayersSelector = (state) => {
     const layersWithTimeData = layersWithTimeDataSelector(state);
-    const timeLayers = timelineLayersSetting(state) || [];
+    const timeLayers = timelineLayersParsedSettings(state) || [];
     return timeLayers.length
         ? layersWithTimeData.filter(layer =>
-            timeLayers?.find(l => l.id === layer?.id)?.checked)
+            !timeLayers?.find(l => l.id === layer?.id)?.hideInTimeline)
         : layersWithTimeData;
 };
 

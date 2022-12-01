@@ -205,9 +205,9 @@ const Settings = ({
                 overflowY: "auto",
                 paddingTop: 8
             }}>
-            {layers.map(({title, id, checked} = {}) => {
-                const checkedLayer = layers?.filter(l=> l.checked);
-                const disable = (checkedLayer.length === 1 && checkedLayer?.[0]?.title === title) || selectedLayer === id;
+            {layers.map(({title, id, hideInTimeline: hide} = {}) => {
+                const checkedLayer = layers?.filter(l=> !l.hideInTimeline);
+                const disable = (checkedLayer.length === 1 && checkedLayer?.[0]?.id === id) || (selectedLayer === id && !hide);
                 return (
                     <div className={"layer-setting"}>
                         <label key={id}>{title}</label>
@@ -218,7 +218,7 @@ const Settings = ({
                             onChange={(event) =>
                                 changeLayerSetting(id, event.target.checked)
                             }
-                            checked={checked}/>
+                            checked={!hide}/>
                     </div>
                 );
             })}

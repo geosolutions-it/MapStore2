@@ -2412,7 +2412,7 @@
                 "tooltip": "Impostazioni",
                 "tab": {
                     "playback": "Riproduzione",
-                    "layers": "Strati"
+                    "layers": "Livelli"
                 },
                 "layer": {
                     "enabled": "Mostra o nascondi il livello dalla timeline",

@@ -991,15 +991,17 @@ describe('timeline Epics', () => {
             }]} });
         });
         it('setTimeLayersSetting on update layer setting', done => {
+            const LAYER_ID = 'TEST_LAYER';
             testEpic(setTimeLayersSetting, NUM_ACTION, removeNode('TEST_LAYER1', 'layers'), ([action]) => {
                 expect(action.type).toBe(SET_TIME_LAYERS);
                 expect(action.layers).toBeTruthy();
                 expect(action.layers.length).toBe(1);
-                expect(action.layers[0].checked).toBe(true);
+                expect(action.layers[0][LAYER_ID]).toBeTruthy();
+                expect(action.layers[0][LAYER_ID].hideInTimeline).toBe(false);
                 done();
             }, {...STATE_TIMELINE, layers: {
                 flat: [STATE_TIMELINE.layers.flat[0]]},
-            timeline: { ...STATE_TIMELINE.timeline, layers: [{id: 'TEST_LAYER', checked: false}]}
+            timeline: { ...STATE_TIMELINE.timeline, layers: [{[LAYER_ID]: { hideInTimeline: true}}]}
             });
         });
     });

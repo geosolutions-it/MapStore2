@@ -15,10 +15,11 @@ import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
 import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
-import { flattenGroups } from '../utils/TOCUtils';
+import { flattenGroups, getTitle } from '../utils/TOCUtils';
 import { mapSelector } from './map';
 import { getSelectedMapView } from './mapviews';
 import { mergeViewLayers } from '../utils/MapViewsUtils';
+import { currentLocaleSelector } from "../selectors/locale";
 
 export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -168,3 +169,14 @@ export const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(stat
  * @return {array} the queriable selected layers
  */
 export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter((layer) => isLayerQueryable(state, layer));
+
+/**
+ * Get the title of the layer
+ * @param  {object} state the application's state
+ * @param {string} id layer id for which the title has to be obtained
+ * @returns {string} title of the layer
+ */
+export const getTitleSelector = (state, id) => {
+    const locale = currentLocaleSelector(state);
+    return getTitle(get(getLayerFromId(state, id), 'title', ''), locale);
+};

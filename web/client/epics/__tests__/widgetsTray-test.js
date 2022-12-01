@@ -82,7 +82,9 @@ const SAMPLE_TIMELINE_STATE = {
 // SAMPLE STATE WITH TIMELINE COLLAPSED
 const SAMPLE_COLLAPSED_TIMELINE_STATE = {
     ...SAMPLE_TIMELINE_STATE,
-    timeline: timeline(SAMPLE_TIMELINE_STATE, setCollapsed(true))
+    timeline: timeline({
+        ...SAMPLE_TIMELINE_STATE, layers: SAMPLE_TIMELINE_STATE.layers.flat
+    }, setCollapsed(true))
 };
 // SAMPLE STATE WITH NO TIMELINE (NO TIME DATA)
 const NO_TIMELINE_STATE = {

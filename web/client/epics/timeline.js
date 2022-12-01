@@ -573,13 +573,18 @@ export const setTimeLayersSetting = (action$, { getState = () => { } } = {}) =>
             if (!isEmpty(layers)) {
                 let layersSetting = layers.map(layer => {
                     const id = layer.id;
-                    const timeLayer = timeLayers.find(l => l.id === id);
-                    return {title: layer.title, id, checked: isEmpty(timeLayer) ? true : timeLayer.checked};
+                    const timeLayer = timeLayers.find(l => l[id]);
+                    // Set flag on initialization also upon saved timeline layers
+                    // Support for other layer props too for future usage in timeline settings
+                    return {[id]: { hideInTimeline: isEmpty(timeLayer) ? false : get(timeLayer, `${id}.hideInTimeline`)}};
                 });
                 // Enable the time layer when only one layer present,
                 // can happen when layer is deleted
                 if (layersSetting.length === 1) {
-                    layersSetting = layersSetting.map(l => ({...l, checked: true}));
+                    layersSetting = layersSetting.map(l => {
+                        const id = get(Object.keys(l), "[0]");
+                        return {[id]: { hideInTimeline: false}};
+                    });
                 }
                 $observable =  Rx.Observable.of(setTimeLayers(layersSetting));
             }

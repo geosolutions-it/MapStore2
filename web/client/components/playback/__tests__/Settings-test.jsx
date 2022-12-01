@@ -224,7 +224,7 @@ describe('Timeline/Playback Settings component', () => {
     });
 
     it('Test layers', () => {
-        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", checked: true}]} />, document.getElementById("container"));
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const settingsTabs = container.querySelector('#playback-settings-tabs');
         expect(settingsTabs).toExist();
@@ -233,7 +233,7 @@ describe('Timeline/Playback Settings component', () => {
         expect(layers.length).toBe(1);
     });
     it('Test layers disable checkbox if only one layer present', () => {
-        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", checked: true}]} />, document.getElementById("container"));
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const settingsTabs = container.querySelector('#playback-settings-tabs');
         expect(settingsTabs).toExist();
@@ -242,7 +242,7 @@ describe('Timeline/Playback Settings component', () => {
         expect(input.disabled).toBe(true);
     });
     it('Test layers disable guide layer', () => {
-        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", checked: true}, {id: "TEST1", title: "TEST1", checked: true}]} selectedLayer={"TEST"} />, document.getElementById("container"));
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}, {id: "TEST1", title: "TEST1", hideInTimeline: false}]} selectedLayer={"TEST"} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const settingsTabs = container.querySelector('#playback-settings-tabs');
         expect(settingsTabs).toExist();
@@ -256,7 +256,7 @@ describe('Timeline/Playback Settings component', () => {
         };
         const spyOn = expect.spyOn(action, 'changeLayerSetting');
         ReactDOM.render(<Settings
-            layers={[{id: "TEST", title: "TEST", checked: true}, {id: "TEST1", title: "TEST1", checked: true}]}
+            layers={[{id: "TEST", title: "TEST", hideInTimeline: false}, {id: "TEST1", title: "TEST1", hideInTimeline: false}]}
             changeLayerSetting={action.changeLayerSetting} />,
         document.getElementById("container"));
         const container = document.getElementById('container');

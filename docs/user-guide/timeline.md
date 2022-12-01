@@ -126,9 +126,4 @@ In order to properly set the Animation Ranger, some controls are available to he
 
 The **layers** tab lists all the available time layers present in the map. The user can toggle a layer to be *shown/hidden* in the timeline by clicking on the checkbox next to the layer title.
 
-The layer checkbox is disabled in the following condition
-
-* When the layer is a guide layer
-* When only one layer is present
-
 <img src="../img/timeline/timeline-layers.jpg" class="ms-docimage"/>

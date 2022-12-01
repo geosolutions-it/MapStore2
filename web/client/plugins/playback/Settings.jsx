@@ -22,7 +22,7 @@ import {
     snapTypeSelector,
     snapRadioButtonEnabledSelector,
     endValuesSupportSelector,
-    timelineLayersSetting
+    timelineLayersParsedSettings
 } from '../../selectors/timeline';
 
 /**
@@ -36,7 +36,7 @@ export default compose(
         snapTypeSelector,
         snapRadioButtonEnabledSelector,
         endValuesSupportSelector,
-        timelineLayersSetting,
+        timelineLayersParsedSettings,
         (settings, selectedLayer, playbackRange, snapType, snapRadioButtonEnabled, endValuesSupport, layers) => ({
             fixedStep: !selectedLayer,
             playbackRange,

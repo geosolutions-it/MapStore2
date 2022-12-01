@@ -221,8 +221,9 @@ describe('Test the timeline reducer', () => {
         expect(state.layers).toBeTruthy();
         expect(state.layers).toEqual(layers);
     });
-    it('setTimeLayers', () => {
-        const layers = [{id: "TEST_LAYER", title: "TEST_LAYER", checked: true}];
+    it('updateTimeLayersSetting', () => {
+        const LAYER_ID = "TEST_LAYER";
+        const layers = [{ [LAYER_ID]: { hideInTimeline: false}}];
         const state = timeline({
             settings: {
                 snapRadioButtonEnabled: false
@@ -230,7 +231,7 @@ describe('Test the timeline reducer', () => {
             layers
         }, updateTimeLayersSetting("TEST_LAYER", false));
         expect(state.layers).toBeTruthy();
-        expect(state.layers[0].id).toBe("TEST_LAYER");
-        expect(state.layers[0].checked).toBe(false);
+        expect(state.layers[0][LAYER_ID]).toBeTruthy();
+        expect(state.layers[0][LAYER_ID].hideInTimeline).toBe(true);
     });
 });
