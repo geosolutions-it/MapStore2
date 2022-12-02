@@ -2283,7 +2283,7 @@
             "addMarkRule": "Markerregel hinzufügen",
             "shape": "Form",
             "fill": "Füllfarbe",
-            "clampToGround": "Klemme an Masse",
+            "clampToGround": "Umriss auf Masse klemmen",
             "msBringToFront": "In den Vordergrund bringen",
             "heightReferenceFromGround": "Höhenbezug vom boden",
             "height": "Höhe",
