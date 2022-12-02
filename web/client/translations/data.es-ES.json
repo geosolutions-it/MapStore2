@@ -15,7 +15,7 @@
         "about_h20": "Licencia",
         "about_p3": "MapStore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
         "about_p5-0": "Para más información, consulte",
-        "about_a0": "esta",
+        "about_a0": "esta",Klemmen Sie den Umriss an den Boden
         "about_p5-1": "página.",
         "about_h21": "Créditos",
         "about_p6": "MapStore está hecho por:",
@@ -2245,7 +2245,7 @@
             "addMarkRule": "Agregar regla de marca",
             "shape": "Forma",
             "fill": "Color de relleno",
-            "clampToGround": "Adaptar al terreno",
+            "clampToGround": "Adaptar el contorno al suelo",
             "msBringToFront": "Traer al frente",
             "heightReferenceFromGround": "Referencia de altura desde el suelo",
             "height": "Altura",
