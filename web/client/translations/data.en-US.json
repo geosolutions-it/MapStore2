@@ -2246,7 +2246,7 @@
             "addMarkRule": "Add mark rule",
             "shape": "Shape",
             "fill": "Fill color",
-            "clampToGround": "Clamp to ground",
+            "clampToGround": "Clamp outline to ground",
             "msBringToFront": "Bring to front",
             "heightReferenceFromGround": "Height reference from ground",
             "height": "Height",
