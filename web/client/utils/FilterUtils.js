@@ -30,6 +30,14 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 import { get, isNil, isUndefined, isArray, find, findIndex, isString, flatten } from 'lodash';
 let FilterUtils;
 
+const wrapValueWithWildcard = (value, condition) => {
+    return condition(value) ? '*' + value + '*' : value;
+};
+
+export const wrapIfNoWildcards = (value) => {
+    return !/(^|[^!])[*.]/.test(value);
+};
+
 export const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
 
 export const checkOperatorValidity = (value, operator) => {
@@ -163,7 +171,7 @@ export const  ogcStringField = (attribute, operator, value, nsplaceholder) => {
                     propertyTagReference[nsplaceholder].startTag +
                         attribute +
                     propertyTagReference[nsplaceholder].endTag +
-                    "<" + nsplaceholder + ":Literal>*" + value + "*</" + nsplaceholder + ":Literal>"
+                    "<" + nsplaceholder + ":Literal>" + wrapValueWithWildcard(value, wrapIfNoWildcards) + "</" + nsplaceholder + ":Literal>"
                 );
         }
     }
