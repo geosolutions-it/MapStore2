@@ -2246,7 +2246,7 @@
             "addMarkRule": "Ajouter une règle de marque",
             "shape": "Forme",
             "fill": "Fill color",
-            "clampToGround": "S'adapter au terrain",
+            "clampToGround": "Fixer le contour au sol",
             "msBringToFront": "Mettre en avant",
             "heightReferenceFromGround": "Référence de hauteur à partir du sol",
             "height": "Hauteur",
