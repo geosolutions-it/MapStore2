@@ -1418,7 +1418,7 @@ MapStore specific:
 - `zoom` map zoom level
 
 ```xml
-<ms:zoom xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context">7</ms:zoom>
+<ms:zoom xmlns:ms="https://mapstore.geosolutionsgroup.com/mapstore/context">7</ms:zoom>
 ```
 
 Supported extensions for each `Layer` element are:
