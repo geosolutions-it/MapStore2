@@ -30,6 +30,7 @@ class MapThumbnail extends React.Component {
         withLabel: PropTypes.bool,
         map: PropTypes.object,
         maxFileSize: PropTypes.number,
+        thumbnailOptions: PropTypes.object,
         // CALLBACKS
         onDrop: PropTypes.func,
         onError: PropTypes.func,
@@ -64,7 +65,8 @@ class MapThumbnail extends React.Component {
         message: <Message msgId="map.message"/>,
         suggestion: <Message msgId="map.suggestion"/>,
         map: {},
-        thumbnailErrors: []
+        thumbnailErrors: [],
+        thumbnailOptions: null
     };
 
     state = {};
@@ -141,6 +143,7 @@ class MapThumbnail extends React.Component {
                     this.props.onRemoveThumbnail();
                     this.props.onError([], this.props.map.id);
                 }}
+                {...(this.props.thumbnailOptions && {thumbnailOptions: this.props.thumbnailOptions})}
             />
         );
     }

@@ -2642,6 +2642,7 @@
             "titlePlaceholder": "Voer de weergavenaam naam in",
             "add": "Toevoegen",
             "thumbnailMessage": "De grootte van de afbeeldingen moet een vierkant zijn van 98px x 98px of 128px x 128px, max. 500kb",
+            "imageUploadMessage": "Klik of sleep en drop om een ​​afbeelding toe te voegen",
             "additionalParameters": "Aanvullende parameters",
             "addAdditionalParameterTooltip": "Parameter toevoegen",
             "removeAdditionalParameterTooltip": "Verwijder parameter",
