@@ -1404,8 +1404,8 @@ MapStore specific:
 - `GroupList` defines a mapstore group list. Contains `Group` elements that describe a particular layer group:
 
 ```xml
-<ms:GroupList xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context">
-    <ms:Group xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context" id="Default" title="Default" expanded="true"/>
+<ms:GroupList xmlns:ms="https://mapstore.geosolutionsgroup.com/mapstore/context">
+    <ms:Group xmlns:ms="https://mapstore.geosolutionsgroup.com/mapstore/context" id="Default" title="Default" expanded="true"/>
 </ms:GroupList>
 ```
 
