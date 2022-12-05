@@ -1453,8 +1453,8 @@ Currently supports dimensions of ***multidim-extension*** type:
 - `CatalogServices` contains `Service` elements that describe services available for use in Catalog.
 
 ```xml
-<ms:DimensionList xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context">
-    <ms:Dimension xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://cloudsdi.geo-solutions.it/geoserver/gwc/service/wmts"/>
+<ms:DimensionList xmlns:ms="https://mapstore.geosolutionsgroup.com/mapstore/context">
+    <ms:Dimension xmlns:ms="https://mapstore.geosolutionsgroup.com/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://cloudsdi.geo-solutions.it/geoserver/gwc/service/wmts"/>
 </ms:DimensionList>
 <ms:CatalogServices selectedService="gs_stable_csw">
     <ms:Service serviceName="gs_stable_csw">
