@@ -1486,7 +1486,7 @@ imported back into MapStore, the values of dimensions inside extensions will ove
 Also note, that the extension elements would be read correctly only if they belong to appropriate XML namespaces:
 
 - `http://openlayers.org/context` for openlayers extensions
-- `https://mapstore2.geosolutionsgroup.com/mapstore/context` for mapstore specific extensions
+- `https://mapstore.geosolutionsgroup.com/mapstore/context` for mapstore specific extensions
 
 #### Usage inside MapTemplates plugin
 
