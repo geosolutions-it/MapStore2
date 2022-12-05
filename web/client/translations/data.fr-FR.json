@@ -2860,6 +2860,7 @@
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",
             "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px ou 128px x 128px, maximum 500kb",
+            "imageUploadMessage": "Cliquez ou faites glisser et déposez pour ajouter une image",
             "additionalParameters": "Paramètres additionnels",
             "addAdditionalParameterTooltip": "Ajouter un paramètre",
             "removeAdditionalParameterTooltip": "Supprimer le paramètre",

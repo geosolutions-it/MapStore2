@@ -60,10 +60,17 @@ export default (props) => {
                 <Thumbnail
                     onUpdate={(data, url) => setThumbnail({data, url})}
                     onError={(errors) => setThumbnailErrors(errors)}
-                    message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
+                    message={<Message msgId="backgroundDialog.imageUploadMessage"/>}
                     suggestion=""
                     map={{
                         newThumbnail: get(thumbnail, 'url') || props.thumbnail?.image || "NODATA"
+                    }}
+                    thumbnailOptions={{
+                        contain: false,
+                        width: 128,
+                        height: 128,
+                        quality: 1,
+                        type: 'image/jpeg'
                     }}
                 />
                 <FormGroup>
