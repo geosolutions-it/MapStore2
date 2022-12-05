@@ -1412,7 +1412,7 @@ MapStore specific:
 - `center` defines a center of map view
 
 ```xml
-<ms:center xmlns:ms="https://mapstore2.geosolutionsgroup.com/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
+<ms:center xmlns:ms="https://mapstore.geosolutionsgroup.com/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
 ```
 
 - `zoom` map zoom level
