@@ -2248,6 +2248,7 @@
             "shape": "Forma",
             "fill": "Colore riempimento",
             "clampToGround": "Adattarsi al terreno",
+            "clampOutlineToGround": "Adattare il contorno al terreno",
             "msBringToFront": "Portare in primo piano",
             "heightReferenceFromGround": "Riferimento di altezza da terra",
             "height": "Altezza",
