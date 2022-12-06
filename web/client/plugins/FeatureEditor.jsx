@@ -71,7 +71,7 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers".
   * @prop {array} cfg.filterByViewport Activate filter by viewport tool by default.
   * @prop {array} cfg.showFilterByViewportTool Show button to toggle filter by viewport in toolbar.
-  * @prop {object} cfg.dateFormats Allows to specify the date formats to display in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
+  * @prop {object} cfg.dateFormats Allows to specify custom date formats ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format) to use to display dates in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
   * ```
   * "dateFormats": {
   *    "date-time": "MM DD YYYY - HH:mm:ss",
