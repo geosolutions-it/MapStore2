@@ -16,7 +16,7 @@ In order to create a new dashboard, the **New Dashboard** button <img src="../im
 
 Through the *Topbar* it is possible to:
 
-* Access [GeoSolutions website](https://www.geo-solutions.it/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
+* Access [GeoSolutions website](https://www.geosolutionsgroup.com/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
 * Set the language, with the *Language switcher*:
 
