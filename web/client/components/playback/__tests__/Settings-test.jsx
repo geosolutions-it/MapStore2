@@ -17,7 +17,9 @@ describe('Timeline/Playback Settings component', () => {
         ReactDOM.render(<Settings />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
         expect(el).toExist();
+        expect(settingsTabs).toExist();
     });
     it('rendering with values', () => {
         ReactDOM.render(<Settings following stepUnit="days" timeStep={1} frameDuration={1} fixedStep />, document.getElementById("container"));
@@ -221,5 +223,49 @@ describe('Timeline/Playback Settings component', () => {
         expect(spyClick.calls[0].arguments[1]).toBe(true);
     });
 
-
+    it('Test layers', () => {
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const layers = container.querySelectorAll('.layer-setting');
+        expect(layers.length).toBe(1);
+    });
+    it('Test layers disable checkbox if only one layer present', () => {
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const input = container.querySelector('.layer-setting input');
+        expect(input.disabled).toBe(true);
+    });
+    it('Test layers disable guide layer', () => {
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}, {id: "TEST1", title: "TEST1", hideInTimeline: false}]} selectedLayer={"TEST"} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const input = container.querySelector('.layer-setting input');
+        expect(input.disabled).toBe(true);
+    });
+    it('Test layers on changeLayerSetting', () => {
+        const action = {
+            changeLayerSetting: () => { }
+        };
+        const spyOn = expect.spyOn(action, 'changeLayerSetting');
+        ReactDOM.render(<Settings
+            layers={[{id: "TEST", title: "TEST", hideInTimeline: false}, {id: "TEST1", title: "TEST1", hideInTimeline: false}]}
+            changeLayerSetting={action.changeLayerSetting} />,
+        document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const layersCheckbox = container.querySelectorAll('.layer-setting input');
+        ReactTestUtils.Simulate.change(layersCheckbox[0], {target: {checked: false}});
+        expect(spyOn.calls[0].arguments[0]).toBe("TEST");
+        expect(spyOn.calls[0].arguments[1]).toBe(false);
+    });
 });

@@ -2412,7 +2412,14 @@
         "playback": {
             "settings": {
                 "tooltip": "Paramètres",
-                "title": "Paramètres de lecture",
+                "tab": {
+                    "playback": "Relecture",
+                    "layers": "Couches"
+                },
+                "layer": {
+                    "enabled": "Afficher ou masquer le calque de la chronologie",
+                    "disabled": "Guide layer cannot be hidden"
+                },
                 "frameDuration": "Durée de la trame",
                 "range": {
                     "title": "Plage d'animations",

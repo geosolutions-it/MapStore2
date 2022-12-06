@@ -2422,7 +2422,14 @@
         "playback": {
             "settings": {
                 "tooltip": "Settings",
-                "title": "Playback Settings",
+                "tab": {
+                  "playback": "Playback",
+                  "layers": "Layers"
+                },
+                "layer": {
+                  "enabled": "Display or hide layer from the timeline",
+                  "disabled": "Guide layer cannot be hidden"
+                },
                 "frameDuration": "Frame Duration",
                 "range": {
                     "title": "Animation Range",

@@ -26,7 +26,9 @@ import {
     centerToMarkerSelector,
     getLayersWithDimension,
     elementSelector,
-    queryableSelectedLayersSelector, getAdditionalLayerFromId
+    queryableSelectedLayersSelector,
+    getAdditionalLayerFromId,
+    getTitleSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -848,4 +850,53 @@ describe('Test layers selectors', () => {
         };
         expect(getSelectedLayers(state)).toEqual(queryableSelectedLayers);
     });
+    describe('getTitleSelector', () => {
+        it('getTitleSelector with non localized title', () =>{
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'TEST_LAYER',
+                            type: 'osm',
+                            visibility: true,
+                            title: 'TITLE_LAYER'
+                        },
+                        {
+                            id: 'TEST_LAYER_2',
+                            type: 'osm',
+                            visibility: true
+                        }
+                    ]
+                }
+            };
+            expect(getTitleSelector(state, 'TEST_LAYER')).toBe('TITLE_LAYER');
+        });
+        it('getTitleSelector with localized title', () =>{
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'TEST_LAYER',
+                            type: 'osm',
+                            visibility: true,
+                            title: {
+                                "default": 'TITLE_LAYER',
+                                "it-IT": 'Livel'
+                            }
+                        },
+                        {
+                            id: 'TEST_LAYER_2',
+                            type: 'osm',
+                            visibility: true
+                        }
+                    ]
+                },
+                locale: {
+                    current: "it-IT"
+                }
+            };
+            expect(getTitleSelector(state, 'TEST_LAYER')).toBe('Livel');
+        });
+    });
+
 });

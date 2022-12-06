@@ -25,11 +25,12 @@ import {
     autoselect,
     setEndValuesSupport,
     setSnapRadioButtonEnabled,
-    selectTime
+    selectTime,
+    setTimeLayers
 } from '../actions/timeline';
 
 import { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } from '../actions/dimension';
-import { REMOVE_NODE, CHANGE_LAYER_PROPERTIES } from '../actions/layers';
+import { REMOVE_NODE, CHANGE_LAYER_PROPERTIES, UPDATE_NODE } from '../actions/layers';
 import { error } from '../actions/notifications';
 import { getLayerFromId } from '../selectors/layers';
 
@@ -45,7 +46,8 @@ import {
     multidimOptionsSelectorCreator,
     isMapSync,
     settingsSelector,
-    endValuesSupportSelector
+    endValuesSupportSelector,
+    timelineLayersSetting
 } from '../selectors/timeline';
 
 import {
@@ -55,7 +57,8 @@ import {
     currentTimeSelector,
     visibleLayersWithTimeDataSelector,
     layerDimensionDataSelectorCreator,
-    offsetEnabledSelector
+    offsetEnabledSelector,
+    layersWithTimeDataSelector
 } from '../selectors/dimension';
 
 import { getNearestDate, roundRangeResolution, isTimeDomainInterval } from '../utils/TimeUtils';
@@ -251,10 +254,12 @@ export const updateTimelineDataOnMapLoad = (action$) =>
             const currentTime = config?.dimensionData?.currentTime;
             const endValuesSupport = config?.timelineData?.endValuesSupport;
             const snapRadioButtonEnabled = config?.timelineData?.snapRadioButtonEnabled;
+            const layers = config?.timelineData?.layers;
             return Rx.Observable.of(
                 ...(!isEmpty(selectedLayer) ? [initializeSelectLayer(selectedLayer)] : []),
                 ...(!isNil(endValuesSupport) ? [setEndValuesSupport(endValuesSupport)] : []),
-                ...(!isNil(snapRadioButtonEnabled) ? [setSnapRadioButtonEnabled(snapRadioButtonEnabled)] : [])
+                ...(!isNil(snapRadioButtonEnabled) ? [setSnapRadioButtonEnabled(snapRadioButtonEnabled)] : []),
+                ...(!isEmpty(layers) ? [setTimeLayers(layers)] : [])
             ).concat(Rx.Observable.of(...(isEmpty(currentTime) ? [autoselect()] : [])));
         });
 
@@ -546,6 +551,46 @@ export const rangeOnInitSelectLayer = (action$, { getState = () => { } } = {}) =
             Rx.Observable.of(initializeRange(!isNil(allowSnap) && !allowSnap ? "fullRange" : "now"))
         );
 
+/**
+ * Set time layers with settings
+ * on change of action with respect to the layers
+ * @param action$
+ * @param {function} getState returns the state
+ * @return {observable}
+ */
+export const setTimeLayersSetting = (action$, { getState = () => { } } = {}) =>
+    action$.ofType(INIT_TIMELINE, REMOVE_NODE, CHANGE_LAYER_PROPERTIES, UPDATE_NODE)
+        .switchMap(({config} = {}) => {
+            const state = getState();
+            let $observable = Rx.Observable.empty();
+            const timeLayers = timelineLayersSetting(state) || [];
+            if (!isEmpty(config) && !isEmpty(timeLayers)) {
+                // Skip time layer update on initialization
+                // as layer data is updated from map config
+                return $observable;
+            }
+            const layers = layersWithTimeDataSelector(state)?.filter(l => l.visibility);
+            if (!isEmpty(layers)) {
+                let layersSetting = layers.map(layer => {
+                    const id = layer.id;
+                    const timeLayer = timeLayers.find(l => l[id]);
+                    // Set flag on initialization also upon saved timeline layers
+                    // Support for other layer props too for future usage in timeline settings
+                    return {[id]: { hideInTimeline: isEmpty(timeLayer) ? false : get(timeLayer, `${id}.hideInTimeline`)}};
+                });
+                // Enable the time layer when only one layer present,
+                // can happen when layer is deleted
+                if (layersSetting.length === 1) {
+                    layersSetting = layersSetting.map(l => {
+                        const id = get(Object.keys(l), "[0]");
+                        return {[id]: { hideInTimeline: false}};
+                    });
+                }
+                $observable =  Rx.Observable.of(setTimeLayers(layersSetting));
+            }
+            return $observable;
+        });
+
 export default {
     updateTimelineDataOnMapLoad,
     setTimelineCurrentTime,
@@ -557,5 +602,6 @@ export default {
     setRangeOnInit,
     rangeOnInitSelectLayer,
     onUpdateLayerDimensionData,
-    resetTimeline
+    resetTimeline,
+    setTimeLayersSetting
 };

@@ -17,7 +17,9 @@ import {
     itemsSelector,
     rangeDataSelector,
     multidimOptionsSelectorCreator,
-    timelineLayersSelector
+    timelineLayersSelector,
+    timelineLayersSetting,
+    timelineLayersParsedSettings
 } from '../timeline';
 
 import { set, compose } from '../../utils/ImmutableUtils';
@@ -145,9 +147,27 @@ describe('timeline selector', () => {
             expect(timelineLayersSelector(state).length).toBe(2);
         });
         it('timelineLayersSelector with showHiddenLayers', ()=>{
-            const _state = {...state, timeline: {...state, settings: SHOW_HIDDEN_LAYER}};
+            const _state = {...state, timeline: {layers: state.layers.flat, settings: SHOW_HIDDEN_LAYER}};
             expect(timelineLayersSelector(_state).length).toBe(2);
         });
+        it('timelineLayersSelector with time layer settings', ()=>{
+            const _state = {...state, timeline: {...state, settings: SHOW_HIDDEN_LAYER, layers: [{"test": { hideInTimeline: true }}]}};
+            expect(timelineLayersSelector(_state).length).toBe(1);
+        });
+    });
+    it('timelineLayersSetting', () => {
+        const layers = [{ [TEST_LAYER_ID]: { hideInTimeline: true}}];
+        const _state = {...LAYERS_WITH_TIME, timeline: {settings: SHOW_HIDDEN_LAYER, layers}};
+        expect(timelineLayersSetting(_state).length).toBe(1);
+        expect(timelineLayersSetting(_state)).toEqual(layers);
+    });
+    it('timelineLayersParsedSettings', () => {
+        const layers = [{ [TEST_LAYER_ID]: { hideInTimeline: true}}];
+        const _state = {...LAYERS_WITH_TIME, timeline: {settings: SHOW_HIDDEN_LAYER, layers}};
+        const timelayer = timelineLayersParsedSettings(_state);
+        expect(timelayer.length).toBe(1);
+        expect(timelayer[0].id).toEqual(TEST_LAYER_ID);
+        expect(timelayer[0].hideInTimeline).toEqual(true);
     });
 
     it('itemsSelector', () => {
