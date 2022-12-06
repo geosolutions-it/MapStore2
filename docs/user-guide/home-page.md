@@ -18,7 +18,7 @@ Accessing [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) as anon
 
 The anonymous user is allowed to:
 
-* Access [GeoSolutions website](https://www.geo-solutions.it/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
+* Access [GeoSolutions website](https://www.geosolutionsgroup.com/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
 * Navigate through the *Featured* and *Contents* sections
 
