@@ -87,7 +87,10 @@ The `config.yaml` is by default in the `printing` folder of the webapp root. You
 
 ```sh
 -Dmapfish-print-config=/etc/mapstore/datadir/printing/config.yaml
+```
 
+We suggest to put your customizations for printing inside the data directory in a folder named `printing`, using the same structure of the `printing` folder of the application. (`config.yaml`, images and so on...). 
+Doing it this way makes the application ready for future updates.
 ### Database Connection
 
 If you create a file in the datadir called `geostore-datasource-ovr.properties` , it will be used and override the current
