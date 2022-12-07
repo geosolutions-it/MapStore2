@@ -12,11 +12,11 @@ import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
-const vector3dStyleOptions = {
+const vector3dStyleOptions = ({ label = 'styleeditor.clampToGround' }) => ({
     msClampToGround: property.msClampToGround({
-        label: 'styleeditor.clampToGround'
+        label
     })
-};
+});
 
 const INITIAL_OPTION_VALUE = '__height_mode_original__';
 const billboard3dStyleOptions = {
@@ -195,7 +195,7 @@ const getBlocks = ({
                     label: 'styleeditor.lineJoin',
                     key: 'join'
                 }),
-                ...(enable3dStyleOptions ? vector3dStyleOptions : {})
+                ...(enable3dStyleOptions ? vector3dStyleOptions({ label: 'styleeditor.clampToGround' }) : {})
             },
             defaultProperties: {
                 kind: 'Line',
@@ -243,7 +243,7 @@ const getBlocks = ({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
                 }),
-                ...(enable3dStyleOptions ? {...polygon3dStyleOptions, ...vector3dStyleOptions} : {})
+                ...(enable3dStyleOptions ? {...polygon3dStyleOptions, ...vector3dStyleOptions({ label: 'styleeditor.clampOutlineToGround' })} : {})
             },
             defaultProperties: {
                 kind: 'Fill',
