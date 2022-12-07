@@ -81,13 +81,12 @@ Logging has not been externalized yet, You can manually do this change in `WEB-I
 
 ### Print Configuration
 
-The `config.yaml` is by default in the `printing` folder of the webapp root. You can externalize the path to this resource (and all relative files) by setting the system variable `mapfish-print-config`. Make you sure the file exists and all the required files (header, images ...) are also available (typically they are the same directory, identified by relative paths. For more information, see mapfish-print documentation ). 
+The `config.yaml` is by default in the `printing` folder of the webapp root. You can externalize the path to this resource (and all relative files) by setting the system variable `mapfish-print-config`. Make you sure the file exists and all the required files (header, images ...) are also available (typically they are the same directory, identified by relative paths. For more information, see mapfish-print documentation ).
 
 *Example*:
 
 ```sh
 -Dmapfish-print-config=/etc/mapstore/datadir/printing/config.yaml
-```
 
 ### Database Connection
 
