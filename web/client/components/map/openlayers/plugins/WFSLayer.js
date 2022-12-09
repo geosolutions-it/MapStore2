@@ -16,6 +16,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { getFeature, describeFeatureType } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { needsReload, extractGeometryType } from '../../../../utils/WFSLayerUtils';
+import { applyDefaultStyleToLayer } from '../../../../utils/VectorStyleUtils';
 
 const createLoader = (source, options) => (extent, resolution, projection) => {
     const params = optionsToVendorParams(options);
@@ -45,9 +46,15 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
  * Generate the OL style from options and geometryType. It workarounds some issues
  * @param {object} options MapStore's layer options
  * @param {string} geometryType the geometry type
+ * @param {object} layer the openlayers layer
  */
-const getWFSStyle = (options, geometryType) => {
-    return getStyle({ ...options, style: { ...(options.style || {}), type: geometryType } });
+const getWFSStyle = (layer, options, geometryType) => {
+    return getStyle(applyDefaultStyleToLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
+        .then((style) => {
+            if (style) {
+                layer.setStyle(style);
+            }
+        });
 };
 
 /**
@@ -56,13 +63,10 @@ const getWFSStyle = (options, geometryType) => {
  * @param {object} options MapStore layer configuration
  */
 const updateStyle = (layer, options) => layer.geometryType
-    ? layer.setStyle(getWFSStyle(options, layer.geometryType))
+    ? getWFSStyle(layer, options, layer.geometryType)
     : describeFeatureType(options.url, options.name)
         .then(extractGeometryType)
-        .then(geometryType => {
-            layer.geometryType = geometryType;
-            layer.setStyle(getWFSStyle(options, geometryType));
-        });
+        .then(geometryType => getWFSStyle(layer, options, geometryType));
 
 /**
  * WFS Layer for MapStore. Openlayers implementation.
@@ -77,14 +81,12 @@ Layers.registerType('wfs', {
             format: new GeoJSON()
         });
         source.setLoader(createLoader(source, options));
-        const style = getStyle(options);
 
         const layer = new VectorLayer({
             msId: options.id,
             source: source,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
-            style,
             opacity: options.opacity,
             minResolution: options.minResolution,
             maxResolution: options.maxResolution

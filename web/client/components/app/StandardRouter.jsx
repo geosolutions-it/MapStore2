@@ -35,7 +35,8 @@ class StandardRouter extends React.Component {
         version: PropTypes.string,
         loadAfterTheme: PropTypes.bool,
         themeLoaded: PropTypes.bool,
-        onThemeLoaded: PropTypes.func
+        onThemeLoaded: PropTypes.func,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -55,6 +56,7 @@ class StandardRouter extends React.Component {
             const pageConfig = page.pageConfig || {};
             const Component = connect(() => ({
                 plugins: this.props.plugins,
+                loaderComponent: this.props.loaderComponent,
                 ...pageConfig
             }))(page.component);
             return <Route key={(page.name || page.path) + i} exact path={page.path} component={Component}/>;

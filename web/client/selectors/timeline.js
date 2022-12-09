@@ -20,23 +20,34 @@ import {
 } from '../selectors/dimension';
 
 import { mapSelector, projectionSelector } from '../selectors/map';
-import { getLayerFromId } from '../selectors/layers';
+import { getLayerFromId, getTitleSelector } from '../selectors/layers';
 
 export const rangeSelector = state => get(state, 'timeline.range');
 export const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
-// items
+/**
+ * Timeline settings selectors
+ */
+export const settingsSelector = state => get(state, 'timeline.settings');
 const MAX_ITEMS = 50;
+export const expandLimitSelector = state => get(settingsSelector(state), 'expandLimit');
 
-export const isCollapsed = state => get(state, 'timeline.settings.collapsed');
+export const isCollapsed = state => get(settingsSelector(state), 'collapsed');
 
-export const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
+export const isAutoSelectEnabled = state => get(settingsSelector(state), 'autoSelect');
+
+export const snapTypeSelector = state => get(settingsSelector(state), "snapType") || "start";
+
+export const snapRadioButtonEnabledSelector = state => get(settingsSelector(state), "snapRadioButtonEnabled") || false;
+
+// detects Geoserver version if fromEnd querystring parameter is supported
+export const endValuesSupportSelector = state => get(settingsSelector(state), "endValuesSupport");
 
 /**
  * Selector of mapSync. If mapSync is true, the timeline shows only data in the current viewport.
  * @return the flag of sync of the timeline with the map viewport
  */
-export const isMapSync = state => get(state, 'timeline.settings.mapSync'); // TODO: get live filter enabled flag
+export const isMapSync = state => get(settingsSelector(state), 'mapSync'); // TODO: get live filter enabled flag
 /**
  * Converts the list of timestamps into timeline items.
  * If a timestamp is a start/end/resolution, and items in viewRange are less than MAX_ITEMS, returns tha array of items,
@@ -70,7 +81,8 @@ export const timeStampToItems = (ISOString, viewRange) => {
         return [{
             start: new Date(start),
             end: new Date(end || start),
-            type: end ? 'range' : 'point'
+            type: end ? 'range' : 'point',
+            ...(end && { className: 'interval'})
         }];
     }
     return null;
@@ -163,10 +175,32 @@ export const currentTimeRangeSelector = createSelector(
 );
 export const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
+export const timelineLayersSetting = state => get(state, 'timeline.layers');
+
+/**
+ * Get the timeline layers parsed settings
+ * @param  {object} state the application's state
+ * @return {object} parsed timeline layers setting
+ */
+export const timelineLayersParsedSettings = state => {
+    const layers = timelineLayersSetting(state);
+    return (layers || []).map(layer => {
+        const id = get(Object.keys(layer), "[0]");
+        const title = getTitleSelector(state, id);
+        return {...layer[id], title, id };
+    });
+};
 /**
  * Select layers visible in the timeline
  */
-export const timelineLayersSelector = layersWithTimeDataSelector; // TODO: allow exclusion.
+export const timelineLayersSelector = (state) => {
+    const layersWithTimeData = layersWithTimeDataSelector(state);
+    const timeLayers = timelineLayersParsedSettings(state) || [];
+    return timeLayers.length
+        ? layersWithTimeData.filter(layer =>
+            !timeLayers?.find(l => l.id === layer?.id)?.hideInTimeline)
+        : layersWithTimeData;
+};
 
 export const hasLayers = createSelector(timelineLayersSelector, (layers = []) => layers.length > 0);
 export const isVisible = state => !isCollapsed(state) && hasLayers(state);
@@ -193,7 +227,7 @@ export const multidimOptionsSelectorCreator = layerId => state => {
     if (!bounds || !isMapSync(state)) { // TODO: optional filtering
         return {};
     }
-    if (sourceVersion !== "1.1") {
+    if (sourceVersion !== "1.2") {
         const spaceDimension = layerDimensionDataSelectorCreator(layerId, "space")(state);
         const crs = get(spaceDimension, 'domain.CRS');
 

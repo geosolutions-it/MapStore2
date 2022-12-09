@@ -66,8 +66,8 @@ export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = 
     }));
 };
 
-export const getFeature = (url, typeName, params ) => {
-    return axios.get(getFeatureURL(url, typeName, params));
+export const getFeature = (url, typeName, params, config) => {
+    return axios.get(getFeatureURL(url, typeName, params), config);
 };
 
 export const getCapabilities = function(url) {

@@ -15,6 +15,7 @@
 // **************
 // Layout
 // **************
+
 .ms-wizard {
     position: absolute;
     width: 100%;
@@ -26,7 +27,7 @@
                 &.line {
                     display: none;
                 }
-            } 
+            }
             .custom-color {
                 padding-left: 10px;
             }
@@ -46,6 +47,9 @@
                     margin: 0;
                 }
             }
+            .radio-btn:not(:first-child) {
+                padding-left: 10px;
+            }
             span {
                 margin-left: 5px;
             }
@@ -59,7 +63,60 @@
     }
 }
 .ms-wizard > .row{
-    margin: 15px;
+    margin: 15px -5px;
+}
+.ms-wizard.map-options, .ms-wizard.chart-options {
+    padding: 8px 6px;
+    .widget-selector {
+        padding-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .widget-selector-label {
+            margin-right: 8px;
+        }
+        .widget-empty-map {
+            width: 250px;
+        }
+        .Select {
+            width: 200px;
+        }
+        .Select-option {
+            word-break: break-all;
+        }
+    }
+    .chart-option-title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .chart-type, .chart-switcher {
+        display: flex;
+        align-items: center;
+        padding: 0 10px 10px;
+        justify-content: space-between;
+        .Select {
+            width: 200px;
+        }
+        .Select-option {
+            word-break: break-all;
+        }
+        .chart-fields {
+            display: inline-flex;
+            width: 200px;
+            .Select-option {
+                word-break: break-all;
+            }
+        }
+    }
+    .react-grid-Grid {
+        .react-grid-Viewport{
+            .react-grid-Canvas {
+                overflow-x: hidden !important;
+            }
+        }
+    }
 }
 .mapstore-step-title {
     font-size: 20px;
@@ -98,6 +155,19 @@
                 width: 510px;
             }
             height: 50%;
+        }
+    }
+    &.menu-open.range-class {
+        #ms-resizable-modal {
+            @media (min-width: 800px) {
+                height: 60%;
+                width: 700px;
+                left: calc((100% - 700px) / 2);
+            }
+            height: 50%;
+            .thema-classes-editor {
+                padding-left: 10px;
+            }
         }
     }
     #chart-color-class-form {

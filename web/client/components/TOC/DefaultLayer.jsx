@@ -22,6 +22,7 @@ import ToggleFilter from './fragments/ToggleFilter';
 import tooltip from '../misc/enhancers/tooltip';
 import localizedProps from '../misc/enhancers/localizedProps';
 import { isInsideResolutionsLimits } from '../../utils/LayersUtils';
+import StyleBasedLegend from './fragments/StyleBasedLegend';
 
 const GlyphIndicator = localizedProps('tooltip')(tooltip(Glyphicon));
 
@@ -96,6 +97,7 @@ class DefaultLayer extends React.Component {
     };
 
     getVisibilityMessage = () => {
+        if (this.props.node.exclusiveMapType) return this.props.node?.type === '3dtiles' && 'toc.notVisibleSwitchTo3D';
         const maxResolution = this.props.node.maxResolution || Infinity;
         return this.props.resolution >=  maxResolution
             ? 'toc.notVisibleZoomIn'
@@ -103,7 +105,7 @@ class DefaultLayer extends React.Component {
     };
 
     renderOpacitySlider = (hideOpacityTooltip) => {
-        return this.props.activateOpacityTool ? (
+        return (this.props.activateOpacityTool && this.props.node?.type !== '3dtiles') ? (
             <OpacitySlider
                 opacity={this.props.node.opacity}
                 disabled={!this.props.node.visibility}
@@ -117,12 +119,15 @@ class DefaultLayer extends React.Component {
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
                     {this.props.showFullTitleOnExpand ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
-                    {this.props.activateLegendTool ?
+                    {this.props.activateLegendTool && this.props.node.type === 'wms' &&
                         <Row>
                             <Col xs={12}>
                                 <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} language={this.props.language} {...this.props.legendOptions} />
                             </Col>
-                        </Row> : null}
+                        </Row>}
+                    {this.props.activateLegendTool && ['wfs', 'vector'].includes(this.props.node.type) &&
+                        <StyleBasedLegend style={this.props.node.style}/>
+                    }
                 </Grid>
                 {this.renderOpacitySlider(this.props.hideOpacityTooltip)}
             </div>);
@@ -163,8 +168,13 @@ class DefaultLayer extends React.Component {
                 : null);
     }
     renderNode = (grab, hide, selected, error, warning, isDummy, other) => {
-        const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
-        || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
+        const isEmpty = !(
+            this.props.showFullTitleOnExpand
+            || this.props.activateLegendTool && (
+                this.props.node.type === 'wms'
+                || ['wfs', 'vector'].includes(this.props.node.type) && this.props.node?.style?.format === 'geostyler'
+            )
+        );
         const head = (isDummy ?
             <div style={{padding: 0, height: 10}} className="toc-default-layer-head"/> :
             <div className="toc-default-layer-head">
@@ -181,7 +191,7 @@ class DefaultLayer extends React.Component {
                     onContextMenu={this.props.onContextMenu}
                 />
                 {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
-                {!isInsideResolutionsLimits(this.props.node, this.props.resolution) && <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/>}
+                {!isInsideResolutionsLimits(this.props.node, this.props.resolution) || this.props.node.exclusiveMapType ? <GlyphIndicator glyph="info-sign" tooltipId={this.getVisibilityMessage()} style={{ 'float': 'right' }}/> : null}
                 {this.props.indicators ? this.renderIndicators() : null}
             </div>
         );
@@ -196,7 +206,7 @@ class DefaultLayer extends React.Component {
 
     render() {
         let {children, propertiesChangeHandler, onToggle, connectDragSource, connectDropTarget, ...other } = this.props;
-        const hide = !this.props.node.visibility || this.props.node.invalid || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
+        const hide = !this.props.node.visibility || this.props.node.invalid || this.props.node.exclusiveMapType || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
         const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';

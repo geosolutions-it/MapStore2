@@ -10,7 +10,11 @@
           "https://gs-stable.geo-solutions.it/geoserver",
           "https://gs-stable.geo-solutions.it:443/geoserver",
           "http://gs-stable.geo-solutions.it/geoserver",
-          "http://gs-stable.geo-solutions.it:443/geoserver"
+          "http://gs-stable.geo-solutions.it:443/geoserver",
+          "https://gs-stable.geosolutionsgroup.com/geoserver",
+          "https://gs-stable.geosolutionsgroup.com:443/geoserver",
+          "http://gs-stable.geosolutionsgroup.com/geoserver",
+          "http://gs-stable.geosolutionsgroup.com:443/geoserver"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
@@ -18,6 +22,7 @@
     "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
     "mapquestApiKey": "__API_KEY_MAPQUEST__",
+    "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
     "initialMapFilter": "",
     "ignoreMobileCss": false,
     "useAuthenticationRules": true,
@@ -26,6 +31,10 @@
       "cesium": {
           "flyTo": true,
           "navigationTools": true,
+          "showSkyAtmosphere": true,
+          "showGroundAtmosphere": false,
+          "enableFog": false,
+          "depthTestAgainstTerrain": false,
           "terrainProvider": {
               "type": "ellipsoid"
           }
@@ -41,12 +50,7 @@
       }, {
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
-      },
-      {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it(\\:443|\\:80)?\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
-    }],
+      }],
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
@@ -187,7 +191,9 @@
                       }
                     }
                 }
-            }, "Version", "DrawerMenu",
+            }, {
+              "name": "About"
+            }, "DrawerMenu",
             {
                 "name": "BackgroundSelector",
                 "cfg": {
@@ -208,6 +214,8 @@
                 "cfg": {
                     "showFullscreen": true,
                     "position": "bottom",
+                    "disableInfoAlert": true,
+                    "disableCoordinatesRow": true,
                     "size": 0.5,
                     "fluid": true,
                     "viewerOptions": {
@@ -279,7 +287,9 @@
                 "declineUrl" : "http://www.google.com"
               }
             },
-            "FeedbackMask"
+            "FeedbackMask",
+            { "name": "Widgets" },
+            { "name": "WidgetsTray" }
         ],
         "desktop": ["Details",
           {
@@ -307,7 +317,7 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Swipe", {
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Notifications", "BackgroundSelector", "Swipe", {
             "name": "Annotations",
             "cfg": {
               "measurementAnnotationEdit": false
@@ -399,10 +409,9 @@
                     "wrap": true
                 }
             }, {
-              "name": "About",
-              "showIn": ["BurgerMenu"]
-            }
-            , {
+              "name": "About"
+            },
+            {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,
@@ -472,12 +481,20 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
+            "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
             "WidgetsTray",
-            "Timeline",
+            {
+              "name": "Timeline",
+              "cfg": {
+                "expandLimit": 20
+              }
+            },
             "Playback",
             "FeedbackMask",
-            "StyleEditor"
+            "StyleEditor",
+            "DeleteMap",
+            "SidebarMenu",
+            { "name": "MapViews" }
         ],
         "embedded": ["Details", {
                 "name": "Map",
@@ -638,86 +655,101 @@
               "fluid": true
             }
           }
-          , "MailingLists", "Footer", {
+          , "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",
             "declineUrl" : "http://www.google.com"
           }
         }],
-        "dashboard": [{
-            "name": "OmniBar",
+        "dashboard": [
+          "BurgerMenu",
+          "Dashboard",
+          "Notifications",
+          "Login",
+          {
+            "name": "About"
+          },
+          "Language",
+          "NavMenu",
+          "DashboardSave",
+          "DashboardSaveAs",
+          "Attribution",
+          "Home",
+          { "name": "DeleteDashboard" },
+          { "name": "DashboardExport" },
+          { "name": "DashboardImport" },
+          { "name": "OmniBar",
             "cfg": {
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
-          "name": "Share",
-          "cfg": {
-            "showAPI": false,
-            "advancedSettings": false,
-            "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
-            "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
-            "embedOptions": {
-              "showTOCToggle": false,
-              "showConnectionsParamToggle": true,
-              "allowFullScreen": false,
-              "sizeOptions": {
-                "Small": { "width": 600, "height": 500 },
-                "Medium": { "width": 800, "height": 600},
-                "Large": { "width": 1000, "height": 800},
-                "Custom": {"width": 0, "height": 0}
-            },
-            "selectedOption": "Small"
-            }
-          }
-        },
-          {
-          "name": "DashboardEditor",
-          "cfg": {
-            "selectedService": "GeoSolutions GeoServer CSW",
-            "services": {
-              "GeoSolutions GeoServer CSW": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
-                "type": "csw",
-                "title": "GeoSolutions GeoServer CSW"
+          },
+          { "name": "Share",
+            "cfg": {
+              "showAPI": false,
+              "advancedSettings": false,
+              "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+              "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+              "embedOptions": {
+                "showTOCToggle": false,
+                "showConnectionsParamToggle": true,
+                "allowFullScreen": false,
+                "sizeOptions": {
+                  "Small": { "width": 600, "height": 500 },
+                  "Medium": { "width": 800, "height": 600},
+                  "Large": { "width": 1000, "height": 800},
+                  "Custom": {"width": 0, "height": 0}
               },
-              "GeoSolutions GeoServer WMS": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
-                "type": "wms",
-                "title": "GeoSolutions GeoServer WMS"
-              },
-              "GeoSolutions GeoServer WMTS": {
-                "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
-                "type": "wmts",
-                "title": "GeoSolutions GeoServer WMTS"
+              "selectedOption": "Small"
               }
-            },
-            "containerPosition": "columns"
-          }
-        }, {
-          "name": "QueryPanel",
-          "cfg": {
-            "toolsOptions": {
-              "hideCrossLayer": true,
-              "hideSpatialFilter": true
-            },
-            "containerPosition": "columns"
-          }
-        }, "BurgerMenu", "Dashboard", "Notifications", {
-            "name": "Tutorial",
+            }
+          },
+          {"name": "DashboardEditor",
+            "cfg": {
+              "selectedService": "GeoSolutions GeoServer CSW",
+              "services": {
+                "GeoSolutions GeoServer CSW": {
+                  "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
+                  "type": "csw",
+                  "title": "GeoSolutions GeoServer CSW"
+                },
+                "GeoSolutions GeoServer WMS": {
+                  "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+                  "type": "wms",
+                  "title": "GeoSolutions GeoServer WMS"
+                },
+                "GeoSolutions GeoServer WMTS": {
+                  "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+                  "type": "wmts",
+                  "title": "GeoSolutions GeoServer WMTS"
+                }
+              },
+              "containerPosition": "columns"
+            }
+          },
+          { "name": "QueryPanel",
+            "cfg": {
+              "toolsOptions": {
+                "hideCrossLayer": true,
+                "hideSpatialFilter": true
+              },
+              "containerPosition": "columns"
+            }
+          },
+          { "name": "Tutorial",
             "cfg": {
                 "allowClicksThruHole": false,
                 "containerPosition": "header",
                 "preset": "dashboard_tutorial"
             }
-        },
-        {
-            "name": "FeedbackMask",
+          },
+          { "name": "FeedbackMask",
             "cfg": {
                 "containerPosition": "header"
             }
-        }],
+          }
+        ],
       "geostory-embedded": [
         "GeoStory",
         {
@@ -760,6 +792,9 @@
           },
           "Login",
           "BurgerMenu",
+          {
+            "name": "About"
+          },
           "Language",
           "NavMenu",
           "Attribution",
@@ -767,6 +802,9 @@
           {
             "name": "GeoStory"
           },
+          { "name": "DeleteGeoStory" },
+          { "name": "GeoStoryExport" },
+          { "name": "GeoStoryImport" },
           "GeoStorySave",
           "GeoStorySaveAs",
           "MapEditor",

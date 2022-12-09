@@ -45,3 +45,4 @@ export const isLoggedIn = state => state && state.security && state.security.use
 export const securityTokenSelector = state => state.security && state.security.token;
 export const isAdminUserSelector = (state) => userRoleSelector(state) === "ADMIN";
 export const isUserSelector = (state) => userRoleSelector(state) === "USER";
+export const authProviderSelector = state => state.security && state.security.authProvider;

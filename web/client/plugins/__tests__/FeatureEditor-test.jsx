@@ -8,9 +8,9 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { waitFor } from '@testing-library/react';
 
 import { getPluginForTest } from './pluginsTestUtils';
-import featuregrid from '../../reducers/featuregrid';
 import FeatureEditor from "../FeatureEditor";
 
 describe('FeatureEditor Plugin', () => {
@@ -24,28 +24,35 @@ describe('FeatureEditor Plugin', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('render FeatureEditor plugin', () => {
-        const {Plugin, store} = getPluginForTest(FeatureEditor, {featuregrid: {...featuregrid, open: true}});
+    it('render FeatureEditor plugin', (done) => {
+        const {Plugin, store} = getPluginForTest(FeatureEditor, {featuregrid: { open: true }});
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
-        const container = document.querySelector('.feature-grid-container');
-        expect(container).toBeTruthy();
-        const state = store.getState().featuregrid;
-        expect(state.virtualScroll).toBe(true);
+        waitFor(() => expect(document.querySelector('.feature-grid-container')).toBeTruthy())
+            .then(() => {
+                const state = store.getState().featuregrid;
+                expect(state.virtualScroll).toBe(true);
+                done();
+            });
     });
-    it('onInit FeatureEditor plugin', () => {
+    it('onInit FeatureEditor plugin', (done) => {
         const props = {
             virtualScroll: false,
             editingAllowedRoles: ['USER', 'ADMIN'],
             maxStoredPages: 5
         };
-        const {Plugin, store} = getPluginForTest(FeatureEditor, {featuregrid});
+        const {Plugin, store} = getPluginForTest(FeatureEditor, { featuregrid: { open: true } });
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
-        const state = store.getState().featuregrid;
-        expect(state.virtualScroll).toBeFalsy();
-        expect(state.editingAllowedRoles).toEqual(props.editingAllowedRoles);
-        expect(state.maxStoredPages).toBe(props.maxStoredPages);
+
+        waitFor(() => expect(document.querySelector('.feature-grid-container')).toBeTruthy())
+            .then(() => {
+                const state = store.getState().featuregrid;
+                expect(state.virtualScroll).toBeFalsy();
+                expect(state.editingAllowedRoles).toEqual(props.editingAllowedRoles);
+                expect(state.maxStoredPages).toBe(props.maxStoredPages);
+                done();
+            });
     });
-    it('onInit FeatureEditor plugin be-recalled when props change', () => {
+    it('onInit FeatureEditor plugin be-recalled when props change', (done) => {
         const props = {
             virtualScroll: false,
             editingAllowedRoles: ['ADMIN'],
@@ -59,19 +66,23 @@ describe('FeatureEditor Plugin', () => {
             editingAllowedRoles: ['USER', 'ADMIN'],
             maxStoredPages: 5
         };
-        const {Plugin, store} = getPluginForTest(FeatureEditor, {featuregrid});
+        const {Plugin, store} = getPluginForTest(FeatureEditor, { featuregrid: { open: true } });
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
-        const state = store.getState().featuregrid;
-        expect(state.virtualScroll).toBeFalsy();
-        expect(state.editingAllowedRoles).toEqual(props.editingAllowedRoles);
-        expect(state.maxStoredPages).toBe(props.maxStoredPages);
-        ReactDOM.render(<Plugin {...props2}/>, document.getElementById("container"));
-        const state2 = store.getState().featuregrid;
-        expect(state2.virtualScroll).toBeTruthy(); // the default
-        expect(state2.editingAllowedRoles).toEqual(props2.editingAllowedRoles); // changed
-        expect(state2.maxStoredPages).toBe(props2.maxStoredPages);
-        ReactDOM.render(<Plugin {...props3}/>, document.getElementById("container"));
-        const state3 = store.getState().featuregrid;
-        expect(state2.editingAllowedRoles === state3.editingAllowedRoles).toBeTruthy(); // no double call
+        waitFor(() => expect(document.querySelector('.feature-grid-container')).toBeTruthy())
+            .then(() => {
+                const state = store.getState().featuregrid;
+                expect(state.virtualScroll).toBeFalsy();
+                expect(state.editingAllowedRoles).toEqual(props.editingAllowedRoles);
+                expect(state.maxStoredPages).toBe(props.maxStoredPages);
+                ReactDOM.render(<Plugin {...props2}/>, document.getElementById("container"));
+                const state2 = store.getState().featuregrid;
+                expect(state2.virtualScroll).toBeTruthy(); // the default
+                expect(state2.editingAllowedRoles).toEqual(props2.editingAllowedRoles); // changed
+                expect(state2.maxStoredPages).toBe(props2.maxStoredPages);
+                ReactDOM.render(<Plugin {...props3}/>, document.getElementById("container"));
+                const state3 = store.getState().featuregrid;
+                expect(state2.editingAllowedRoles === state3.editingAllowedRoles).toBeTruthy(); // no double call
+                done();
+            });
     });
 });

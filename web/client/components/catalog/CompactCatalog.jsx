@@ -12,7 +12,6 @@ import { compose, mapPropsStream, withPropsOnChange } from 'recompose';
 import Rx from 'rxjs';
 import uuid from 'uuid';
 import API from '../../api/catalog';
-import { getCatalogRecords } from '../../utils/CatalogUtils';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
 import SideGridComp from '../misc/cardgrids/SideGrid';
@@ -85,10 +84,15 @@ const loadPage = ({text, catalog = {}}, page = 0) => {
     }
     return Rx.Observable
         .fromPromise(API[type].textSearch(catalog.url, page * PAGE_SIZE + (type === "csw" ? 1 : 0), PAGE_SIZE, text, options))
-        .map((result) => ({ result, records: getCatalogRecords(type, result || [], { url: catalog && catalog.url, service: catalog })}))
+        .map((result) => ({ result, records: API[type].getCatalogRecords(result || [], { url: catalog && catalog.url, service: catalog })}))
         .map(({records, result}) => resToProps({records, result, catalog}));
 };
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body .ms2-border-layout-content", pageSize: PAGE_SIZE};
+const getCatalogItems = (items = [], selected = {}) => items.map(i =>
+    (i === selected || selected && i && i.record && selected.identifier === i.record?.identifier)
+        ? {...i, selected: true}
+        : i
+);
 /**
  * Compat catalog : Reusable catalog component, with infinite scroll.
  * You can simply pass the catalog to browse and the handler onRecordSelected.
@@ -117,14 +121,16 @@ export default compose(
                 .ignoreElements() // don't want to emit props
         ))),
     withPropsOnChange(['selectedService'], props => {
-        const service = props.services[props.selectedService];
+        const service = props.services?.[props.selectedService];
         if (!isEmpty(service)) {
             props.loadFirst({text: props.searchText || "", catalog: service});
         }
     })
-)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector = true, error,
+)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services = {}, title, showCatalogSelector = true, error,
     onChangeSelectedService = () => {},
-    selectedService, onChangeCatalogMode = () => {}}) => {
+    selectedService, onChangeCatalogMode = () => {},
+    getItems = (_items) => getCatalogItems(_items, selected),
+    onItemClick = ({record} = {}) => onRecordSelected(record, catalog)}) => {
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
@@ -138,15 +144,9 @@ export default compose(
             {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
         </div>}>
         <SideGrid
-            items={items.map(i =>
-                i === selected
-                        || selected
-                        && i && i.record
-                        && selected.identifier === i.record.identifier
-                    ? {...i, selected: true}
-                    : i)}
+            items={getItems(items)}
             loading={loading}
             error={error}
-            onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
+            onItemClick={onItemClick}/>
     </BorderLayout>);
 });

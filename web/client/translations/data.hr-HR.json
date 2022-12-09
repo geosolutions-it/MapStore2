@@ -91,6 +91,7 @@
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
             "templatePreview": "Pregled predloška",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Info oblačić",
                 "title": "Naslov",
@@ -193,15 +194,7 @@
             "Examples": "Primjeri",
             "LinkedinGroup": "Mapstore Linkedin grupa",
             "scrollTop": "Pomakni gore na vrh stranice",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-            "ml": {
-                "title": "Ostanite u kontaktu i informirani putem E-mail lista",
-                "subscribe_users": "Pretplati se na korisničku E-mail listu",
-                "subscribe_devel": "Pretplati se na razvojnu E-mail listu",
-                "visit_group": "Posjeti ovu grupu",
-                "subscribe": "Pretplata",
-                "email": "E-mail:"
-            },
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "examples":{
                 "viewer":{
                     "html":"<h3>Preglednik</h3><p>Jednostavni preglednik</p>"
@@ -584,7 +577,25 @@
             "showLabel": "Prikaži oznaku mjerenja",
             "addAsAnnotation": "Dodaj kao pribilješku",
             "newMeasure": "Nova pribilješka",
-            "selectTool": "Odaberi alat za mjerenje"
+            "selectTool": "Odaberi alat za mjerenje",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "decimal": "Decimalne",
@@ -1065,7 +1076,15 @@
             "advancedOptions": "Napredne mogućnosti",
             "addBboxParam": "Dodaj bbox parametar na poveznicu za dijeljenje",
             "wrongBboxParamTitle": "Neispravan bbox parametar",
-            "wrongBboxParamMessage": "bbox parametri moraju biti u EPSG:4326 i napisani kao bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox parametri moraju biti u EPSG:4326 i napisani kao bbox=minx,miny,maxx,maxy",
+            "zoom": "Zum",
+            "heading": "Smjer smjera",
+            "roll": "Kut kotrljanja",
+            "pitch": "Kut nagiba",
+            "zoomToolTip": "Min: 0 i Max: 35",
+            "headingToolTip": "Min: 0° i Max: 360°",
+            "rollToolTip": "Min: -90° i Max: 90°",
+            "pitchToolTip": "Min: -90° i Max: 90°"
         },
         "snapshot": {
             "title": "Pregled snimke",
@@ -1368,6 +1387,7 @@
         },
         "layerdownload": {
             "title": "Izvezi podatke",
+            "service": "Service",
             "format": "Format datoteke",
             "srs":  "Koordinatni sustav",
             "export": "Izvoz",
@@ -1723,7 +1743,13 @@
             "setDefaultStyleSuccessTitle": "Uspješna primjena zadanog stila",
             "setDefaultStyleSuccessMessage": "Zadani stil je uspješno postavljen",
             "setDefaultStyleErrorTitle": "Greška pri postavljanju zadanog stila",
-            "setDefaultStyleErrorMessage": "Nije moguće postaviti odabrani stil kao zadani"
+            "setDefaultStyleErrorMessage": "Nije moguće postaviti odabrani stil kao zadani",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {

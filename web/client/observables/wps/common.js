@@ -63,11 +63,17 @@ export const literalData = (literal) => `<wps:LiteralData>${literal}</wps:Litera
 export const complexData = (data, mimeType, encoding) => `<wps:ComplexData${mimeType ? ` mimeType="${mimeType}"` : ''}${encoding ? ` encoding="${encoding}"` : ''}>${data}</wps:ComplexData>`;
 /**
  * Wrap data in CDATA
+ * Avoids wrapping data if it already contains CDATA
  * @memberof observables.wps.common
  * @param {string} data data to wrap
  * @returns {string}
  */
-export const cdata = (data) => `<![CDATA[${data}]]>`;
+export const cdata = (data) => {
+    const regex = /\bCDATA\b/;
+    const isCdataIncluded = regex.test(data);
+    if (isCdataIncluded) return data;
+    return `<![CDATA[${data}]]>`;
+};
 
 /**
  * Wrap XML in wps:ResponseForm

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { layersSelector } from './layers';
+import { getLowestAndHighestDates } from '../utils/TimeUtils';
 
 import { createSelector } from 'reselect';
 import { get, find } from 'lodash';
@@ -43,6 +44,14 @@ export const timeDataSelector = state => layersSelector(state).reduce((timeDataM
  */
 export const layersWithTimeDataSelector = state => layersSelector(state).filter(l => {
     return getLayerStaticDimension(l, "time");
+});
+
+/**
+ * Returns a visible list of layers with time data
+ * @param {object} state application state
+ */
+export const visibleLayersWithTimeDataSelector = state => layersSelector(state).filter(l => {
+    return l.visibility && getLayerStaticDimension(l, "time");
 });
 export const currentTimeSelector = state => {
     const currentTime = get(state, 'dimension.currentTime');
@@ -85,9 +94,10 @@ export const layerDimensionRangeSelector = (state, layerId) => {
     }
     const values = timeRange && timeRange.domain && timeRange.domain.split(",");
     if (values && values.length > 0) {
+        const [start, end] = getLowestAndHighestDates(values);
         return {
-            start: values[0],
-            end: values[values.length - 1]
+            start,
+            end
         };
     }
     return null;

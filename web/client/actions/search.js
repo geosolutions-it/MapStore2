@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 export const SEARCH_LAYER_WITH_FILTER = 'SEARCH:SEARCH_WITH_FILTER';
+export const SCHEDULE_SEARCH_LAYER_WITH_FILTER = 'SEARCH:SCHEDULE_SEARCH_WITH_FILTER';
 export const TEXT_SEARCH_STARTED = 'TEXT_SEARCH_STARTED';
 export const TEXT_SEARCH_RESULTS_LOADED = 'TEXT_SEARCH_RESULTS_LOADED';
 export const TEXT_SEARCH_PERFORMED = 'TEXT_SEARCH_PERFORMED';
@@ -53,6 +54,25 @@ export function searchLayerWithFilter({layer, cql_filter} = {}) {
         cql_filter: cql_filter
     };
 }
+
+/**
+ * used to trigger two wfs requests GetFeature and then GetFeatureInfo
+ * does not execute requests immediately, rely on epic to await for the time when layer is added to the map
+ * and only then actual 'searchLayerWithFilter' action is dispatched
+ * @memberof actions.search
+ * @prop {object} options {layer, cql_filter}
+ * @prop {string} options.cql_filter optional filter to apply for both requests
+ * @prop {string} options.layer name of the layer with workspace
+ */
+// eslint-disable-next-line camelcase
+export function scheduleSearchLayerWithFilter({layer, cql_filter} = {}) {
+    return {
+        type: SCHEDULE_SEARCH_LAYER_WITH_FILTER,
+        layer,
+        cql_filter: cql_filter
+    };
+}
+
 /**
  * zoom to a specific point
  * @memberof actions.search

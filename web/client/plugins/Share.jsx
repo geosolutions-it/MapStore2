@@ -7,8 +7,7 @@
  */
 
 import React from 'react';
-import { connect } from '../utils/PluginsUtils';
-import assign from 'object-assign';
+import {connect, createPlugin} from '../utils/PluginsUtils';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
@@ -25,8 +24,10 @@ import { get } from 'lodash';
 import controls from '../reducers/controls';
 import { changeFormat } from '../actions/mapInfo';
 import { addMarker, hideMarker } from '../actions/search';
+import { updateMapView } from '../actions/map';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
 import { shareSelector } from "../selectors/controls";
+import {mapTypeSelector} from "../selectors/maptype";
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedIn)
@@ -64,17 +65,21 @@ const Share = connect(createSelector([
     shareSelector,
     versionSelector,
     mapSelector,
+    mapTypeSelector,
     currentContextSelector,
     state => get(state, 'controls.share.settings', {}),
     (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     state => state.search && state.search.markerPosition || {},
-    updateUrlOnScrollSelector
-], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
+    updateUrlOnScrollSelector,
+    state => get(state, 'map.present.viewerOptions')
+], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: getApiUrl(location.href),
     shareConfigUrl: getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
+    viewerOptions,
+    mapType,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
     center: map && map.center && ConfigUtils.getCenter(map.center),
     zoom: map && map.zoom,
@@ -92,34 +97,53 @@ const Share = connect(createSelector([
     isScrollPosition})), {
     onClose: toggleControl.bind(null, 'share', null),
     hideMarker,
+    updateMapView,
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
     onChangeFormat: changeFormat,
     addMarker: addMarker
 })(SharePanel);
 
-export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}",
-    BurgerMenu: {
-        name: 'share',
-        position: 1000,
-        priority: 1,
-        doNotHide: true,
-        text: <Message msgId="share.title"/>,
-        tooltip: "share.tooltip",
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
+
+const SharePlugin = createPlugin('Share', {
+    component: Share,
+    options: {
+        disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}"
     },
-    Toolbar: {
-        name: 'share',
-        alwaysVisible: true,
-        position: 2,
-        priority: 0,
-        doNotHide: true,
-        tooltip: "share.title",
-        icon: <Glyphicon glyph="share-alt"/>,
-        action: toggleControl.bind(null, 'share', null)
-    }
+    containers: {
+        BurgerMenu: {
+            name: 'share',
+            position: 1000,
+            priority: 2,
+            doNotHide: true,
+            text: <Message msgId="share.title"/>,
+            tooltip: "share.tooltip",
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null)
+        },
+        SidebarMenu: {
+            name: 'share',
+            position: 1000,
+            priority: 1,
+            doNotHide: true,
+            tooltip: "share.tooltip",
+            text: <Message msgId="share.title"/>,
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null),
+            toggle: true
+        },
+        Toolbar: {
+            name: 'share',
+            alwaysVisible: true,
+            position: 2,
+            priority: 0,
+            doNotHide: true,
+            tooltip: "share.title",
+            icon: <Glyphicon glyph="share-alt"/>,
+            action: toggleControl.bind(null, 'share', null)
+        }
+    },
+    epics: shareEpics,
+    reducers: { controls }
 });
 
-export const reducers = { controls };
-export const epics = shareEpics;
+export default SharePlugin;

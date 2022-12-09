@@ -236,9 +236,9 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
     const spec = {...baseSpec, ...params};
     const mapProjection = mapProjectionSelector(state);
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
-    const projectedZoom = reprojectZoom(spec.scaleZoom, mapProjection, spec.projection);
-    const scales = getScales(spec.projection);
-    const reprojectedScale = scales[projectedZoom] || defaultScales[Math.round(projectedZoom)];
+    const projectedZoom = Math.round(reprojectZoom(spec.scaleZoom, mapProjection, spec.projection));
+    const scales = spec.scales || getScales(spec.projection);
+    const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
 
     const projectedSpec = {
         ...spec,
@@ -442,12 +442,12 @@ export function addValidator(id, name, validator) {
  */
 export const getDefaultPrintingService = () => {
     return {
-        print: (layers) => {
+        print: (extra) => {
             const state = getStore().getState();
             const printSpec = printSpecificationSelector(state);
-            const intialSpec = layers ? {
+            const intialSpec = extra ? {
                 ...printSpec,
-                layers
+                ...extra
             } : printSpec;
             return getSpecTransformerChain().map(t => t.transformer).reduce((previous, f) => {
                 return previous.then(spec=> f(state, spec));
@@ -479,16 +479,17 @@ export const getDefaultPrintingService = () => {
 /**
  * Default screen DPI (96) to Print DPI (72). Used to calculate correct resolution for
  * screen preview and printed map.
+ * @memberof utils.PrintUtils
  */
 export const DEFAULT_PRINT_RATIO = 96.0 / 72.0;
 
 /**
  * Returns the correct multiplier to sync the screen resolution and the printed map resolution.
- *
  * @param {number} printSize printed map size (in print points (1/72"))
  * @param {number} screenSize screen preview size (in pixels)
  * @param {number} dpiRatio ratio screen_dpi / printed_dpi
- * @returns the resolution multiplier to apply to the screen preview
+ * @return {number} the resolution multiplier to apply to the screen preview
+ * @memberof utils.PrintUtils
  */
 export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAULT_PRINT_RATIO) {
     return printSize / screenSize * dpiRatio;
@@ -578,8 +579,8 @@ export const specCreators = {
             },
             geoJson: reprojectGeoJson({
                 type: "FeatureCollection",
-                features: isAnnotationLayer(layer) && annotationsToPrint(layer.features) ||
-                                layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
+                features: (isAnnotationLayer(layer) || !layer.style) ? annotationsToPrint(layer.features)
+                    : layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
             },
             "EPSG:4326",
             spec.projection)
@@ -772,9 +773,12 @@ export const specCreators = {
                     throw Error("No base URL found for this layer");
                 }
                 // transform in xyz format for mapfish-print.
+                const queryIndex = validURL.indexOf("?");
                 const firstBracketIndex = validURL.indexOf('{');
                 const baseURL = validURL.slice(0, firstBracketIndex);
-                const pathSection = validURL.slice(firstBracketIndex);
+                const pathSection = queryIndex < 0
+                    ? validURL.slice(firstBracketIndex)
+                    : validURL.slice(firstBracketIndex, queryIndex);
                 const pathFormat = pathSection
                     .replace("{x}", "${x}")
                     .replace("{y}", "${y}")
@@ -784,7 +788,7 @@ export const specCreators = {
                     baseURL,
                     path_format: pathFormat,
                     "type": 'xyz',
-                    "extension": validURL.split('.').pop() || "png",
+                    "extension": pathSection.split('.').pop() || "png",
                     "opacity": getOpacity(layer),
                     "tileSize": [256, 256],
                     "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
@@ -814,7 +818,8 @@ export const specCreators = {
                             isIncluded = isIncluded && i <= layerConfig.maxNativeZoom;
                         }
                         return isIncluded;
-                    })
+                    }),
+                    "customParams": Object.fromEntries((new URL(validURL)).searchParams)
                 };
             }
             return {};

@@ -8,10 +8,21 @@
 
 import timeline from '../timeline';
 
-import { rangeDataLoaded, selectLayer, initializeSelectLayer, timeDataLoading, setCollapsed, setMapSync, initTimeline } from '../../actions/timeline';
+import {
+    rangeDataLoaded,
+    selectLayer,
+    initializeSelectLayer,
+    timeDataLoading,
+    setCollapsed,
+    setMapSync,
+    initTimeline,
+    setSnapRadioButtonEnabled,
+    setTimeLayers,
+    updateTimeLayersSetting
+} from '../../actions/timeline';
 import { isCollapsed, isMapSync } from '../../selectors/timeline';
 import expect from 'expect';
-
+const initConfig = {showHiddenLayers: true, expandLimit: 20, snapType: 'start', endValuesSupport: true};
 describe('Test the timeline reducer', () => {
     it('change the layer histogram and rangedata', () => {
         const initialState = {
@@ -36,6 +47,7 @@ describe('Test the timeline reducer', () => {
         const state = timeline(initialState, selectLayer('layer1'));
         expect(state).toExist();
         expect(state.selectedLayer).toBe('layer1');
+        expect(state.settings.snapType).toBe('start');
     });
     it('initialize select a layer', () => {
         const initialState = {
@@ -135,8 +147,91 @@ describe('Test the timeline reducer', () => {
         expect(isMapSync({timeline: timeline({}, setMapSync(true))})).toBe(true);
         expect(isMapSync({ timeline: timeline({}, setMapSync(false)) })).toBe(false);
     });
-    it('initTimeline', () => {
-        const state = timeline({}, initTimeline(true));
+    it('initTimeline with defaults', () => {
+        const state = timeline(
+            {settings: {autoLoad: true, collapsed: false}},
+            initTimeline({...initConfig, endValuesSupport: undefined})
+        );
+        expect(state.settings.autoLoad).toBeTruthy();
+        expect(state.settings.collapsed).toBeFalsy();
         expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+    });
+    it('initTimeline with endValuesSupport set as undefined', () => {
+        const state = timeline({}, initTimeline({...initConfig, endValuesSupport: undefined}));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(undefined);
+    });
+    it('initTimeline with endValuesSupport set as false', () => {
+        const state = timeline({}, initTimeline({...initConfig, endValuesSupport: false}));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(false);
+    });
+    it('initTimeline with endValuesSupport set as true', () => {
+        const state = timeline({}, initTimeline(initConfig));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(true);
+    });
+    it('initTimeline with snapRadioButtonEnabled set as true', () => {
+        const state = timeline({
+            settings: {
+                snapRadioButtonEnabled: true
+            }
+        }, initTimeline(initConfig));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(true);
+        expect(state.settings.snapRadioButtonEnabled).toBe(true);
+    });
+    it('initTimeline with snapRadioButtonEnabled set as false', () => {
+        const state = timeline({
+            settings: {
+                snapRadioButtonEnabled: false
+            }
+        }, initTimeline(initConfig));
+        expect(state.settings.showHiddenLayers).toBe(true);
+        expect(state.settings.expandLimit).toBe(20);
+        expect(state.settings.snapType).toBe('start');
+        expect(state.settings.endValuesSupport).toBe(true);
+        expect(state.settings.snapRadioButtonEnabled).toBe(false);
+    });
+    it('setSnapRadioButtonEnabled', () => {
+        const state = timeline({
+            settings: {
+                snapRadioButtonEnabled: false
+            }
+        }, setSnapRadioButtonEnabled(true));
+        expect(state.settings.snapRadioButtonEnabled).toBe(true);
+    });
+    it('setTimeLayers', () => {
+        const layers = [{id: "TEST_LAYER", title: "TEST_LAYER", checked: true}];
+        const state = timeline({
+            settings: {
+                snapRadioButtonEnabled: false
+            }
+        }, setTimeLayers(layers));
+        expect(state.layers).toBeTruthy();
+        expect(state.layers).toEqual(layers);
+    });
+    it('updateTimeLayersSetting', () => {
+        const LAYER_ID = "TEST_LAYER";
+        const layers = [{ [LAYER_ID]: { hideInTimeline: false}}];
+        const state = timeline({
+            settings: {
+                snapRadioButtonEnabled: false
+            },
+            layers
+        }, updateTimeLayersSetting("TEST_LAYER", false));
+        expect(state.layers).toBeTruthy();
+        expect(state.layers[0][LAYER_ID]).toBeTruthy();
+        expect(state.layers[0][LAYER_ID].hideInTimeline).toBe(true);
     });
 });

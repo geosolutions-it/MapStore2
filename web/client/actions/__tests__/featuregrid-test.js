@@ -90,7 +90,7 @@ import {
     toggleShowAgain,
     TOGGLE_SHOW_AGAIN_FLAG,
     setSyncTool,
-    SET_SYNC_TOOL
+    SET_SYNC_TOOL, setViewportFilter, SET_VIEWPORT_FILTER
 } from '../featuregrid';
 
 const idFeature = "2135";
@@ -362,5 +362,14 @@ describe('Test correctness of featurgrid actions', () => {
     it('setSyncTool', () => {
         expect(setSyncTool(true)).toEqual({ type: SET_SYNC_TOOL, syncWmsFilter: true });
         expect(setSyncTool(false)).toEqual({ type: SET_SYNC_TOOL, syncWmsFilter: false });
+    });
+    it('Test setViewportFilter action creator', () => {
+        const retval = setViewportFilter(true);
+        const retval2 = setViewportFilter(false);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_VIEWPORT_FILTER);
+        expect(retval.value).toExist();
+        expect(retval.value).toBe(true);
+        expect(retval2.value).toBe(false);
     });
 });

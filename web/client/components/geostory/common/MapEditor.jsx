@@ -17,8 +17,8 @@ import connectMap, {withFocusedContentMap,
     handleToolbar,
     withToolbar,
     withSaveChanges,
-    withConfirmClose,
-    handleAdvancedMapEditor} from './enhancers/map';
+    withConfirmClose
+} from './enhancers/map';
 
 import localizeStringMap from '../../misc/enhancers/localizeStringMap';
 import BorderLayout from '../../layout/BorderLayout';
@@ -67,7 +67,8 @@ const MapEditor = ({
     editNode,
     closeNodeEditor,
     CloseBtn = () => (null),
-    isDrawEnabled
+    isDrawEnabled,
+    hideIdentifyOptions
 }) => {
     return (mode === Modes.EDIT && isFocused ? <div
         key="left-column"
@@ -91,7 +92,7 @@ const MapEditor = ({
                             bsStyle: "primary",
                             noTooltipWhenDisabled: true
                         }}
-                        buttons={buttons}/>
+                        buttons={buttons} />
                 </div>
             }>
             {!!editNode &&
@@ -110,6 +111,7 @@ const MapEditor = ({
                         onChangeMap={onChangeMap}
                         selectedNodes={selectedNodes}
                         onSelect={onNodeSelect}
+                        hideIdentifyOptions={hideIdentifyOptions}
                     />
                 ]}
         </BorderLayout>}
@@ -130,7 +132,6 @@ export default branch(
         withSaveChanges,
         handleMapUpdate,
         handleToolbar,
-        handleAdvancedMapEditor,
         withToolbar,
         withConfirmClose
     )

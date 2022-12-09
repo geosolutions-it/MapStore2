@@ -12,10 +12,11 @@ import assign from 'object-assign';
 import DrawSupport from '../DrawSupport';
 import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
-
+import {IMAGE} from '../../../../utils/openlayers/DrawSupportUtils';
 import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
+import VectorSource from "ol/source/Vector";
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -1139,7 +1140,8 @@ describe('Test DrawSupport', () => {
                 drawEnabled: true}}
             />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
-        expect(spyAddInteraction.calls.length).toBe(1);
+        expect(spyAddInteraction.calls.length).toBe(2); // draw and hole are added
+        expect(support.drawHoleInteraction.getActive()).toBe(false);
     });
 
     it('draw or edit, both', () => {
@@ -1190,7 +1192,8 @@ describe('Test DrawSupport', () => {
             }}
             />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
-        expect(spyAddInteraction.calls.length).toBe(3);
+        expect(spyAddInteraction.calls.length).toBe(4); // draw, draw hole and other interactions are added
+        expect(support.drawHoleInteraction.getActive()).toBe(false);
     });
 
     it('draw or edit, endevent', () => {
@@ -2458,4 +2461,330 @@ describe('Test DrawSupport', () => {
 
         done();
     });
+    it('test snapping interaction creation', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            }),
+            getLayers: () => ({
+                getArray: () => [{
+                    get: () => 'snap_layer_1',
+                    getSource: () => new VectorSource(),
+                    type: 'VECTOR'
+                }]
+            })
+        };
+
+        let support = renderDrawSupport({ map: fakeMap});
+        support = renderDrawSupport({
+            map: fakeMap,
+            snapping: true,
+            options: {geodesic: true},
+            snappingLayerInstance: { id: 'snap_layer_1' },
+            snapConfig: { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'},
+            features: []
+        });
+        const snappingInteraction = !!support?.snapInteraction;
+        expect(snappingInteraction).toBe(true);
+    });
+    it('test drawend with editEnabled', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                    [13, 43],
+                    [15, 43],
+                    [15, 44],
+                    [13, 44]
+                ]]
+            },
+            properties: {
+                'name': "some name"
+            }
+        };
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChange = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon"
+                options={{drawEnabled: true, editEnabled: false, stopAfterDrawing: true}}
+                onEndDrawing={testHandlers.onEndDrawing}
+                onChangeDrawingStatus={testHandlers.onStatusChange}
+                onGeometryChanged={testHandlers.onGeometryChanged}
+            />, document.getElementById("container")
+        );
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new Polygon([[[12, 43], [15, 43], [15, 44], [12, 44]]]),
+                name: 'Poly1'
+            })
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+        expect(spyChange.calls.length).toBe(1);
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon"
+                options={{drawEnabled: false, editEnabled: true, stopAfterDrawing: false}}
+                onEndDrawing={testHandlers.onEndDrawing}
+                onChangeDrawingStatus={testHandlers.onStatusChange}
+                onGeometryChanged={testHandlers.onGeometryChanged}
+            />, document.getElementById("container")
+        );
+        expect(support.drawInteraction).toBeFalsy();
+    });
+
+    it('Draw Hole support with polygon', () => {
+        const POLYGON_COORDINATES_OUTER_RING = [[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]];
+        const feature = { "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [POLYGON_COORDINATES_OUTER_RING] }, "properties": { "id": "1", "isValidFeature": false, "canEdit": true, "isCircle": true, "isDrawing": true } };
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+        document.getElementById('map').style.width = '100px';
+        document.getElementById('map').style.height = '100px';
+        const olFeature = new Feature({geometry: new Polygon([POLYGON_COORDINATES_OUTER_RING])});
+        olMap.forEachFeatureAtPixel = (opts, callback) => {
+            callback.call(null, olFeature);
+        };
+        renderDrawSupport({features: [feature], drawStatus: "drawOrEdit", drawMethod: "Polygon"});
+        const support = renderDrawSupport({
+
+            features: [feature],
+            drawStatus: "drawOrEdit",
+            drawMethod: "Polygon",
+            options: {
+                stopAfterDrawing: true, // needed for append workflow or support returns a not valid geometry
+                editEnabled: false,
+                drawEnabled: true,
+                featureProjection: 'EPSG:4326',
+                hole: true // enables draw hole interaction
+            },
+            onEndDrawing: testHandlers.onEndDrawing,
+            onChangeDrawingStatus: testHandlers.onStatusChange
+        });
+        expect(support.drawHoleInteraction.getActive()).toBe(true);
+        const HOLE_COORDINATES = [[2, 2], [2, 3], [3, 3], [3, 2], [2, 2]];
+        const olHoleFeature = new Feature({
+            geometry: new Polygon([HOLE_COORDINATES])
+        });
+        expect(support).toExist();
+        // emulate events triggered by map when active
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        const resultFeatures = spyEnd.calls[0].arguments[0];
+        const resultGeometry = resultFeatures[0].geometry;
+        expect(resultGeometry.type).toBe("Polygon");
+        expect(resultGeometry.coordinates).toEqual([POLYGON_COORDINATES_OUTER_RING, HOLE_COORDINATES]);
+        expect(spyChangeStatus.calls.length).toBe(1);
+
+    });
+    it('Draw hole support with multipolygon', () => {
+        const POLYGON_COORDINATES_OUTER_RING = [[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]];
+        const SECOND_POLYGON_OUTER_RING = [[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]];
+        const featureMulti = { "type": "Feature", "geometry": { "type": "MultiPolygon", "coordinates": [[[POLYGON_COORDINATES_OUTER_RING]]] }, "properties": { "id": "1", "isValidFeature": false, "canEdit": true, "isCircle": true, "isDrawing": true } };
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+        document.getElementById('map').style.width = '100px';
+        document.getElementById('map').style.height = '100px';
+        const olFeature = new Feature({ geometry: new MultiPolygon([[POLYGON_COORDINATES_OUTER_RING], [SECOND_POLYGON_OUTER_RING]]) });
+        olMap.forEachFeatureAtPixel = (opts, callback) => {
+            callback.call(null, olFeature);
+        };
+        renderDrawSupport({ features: [featureMulti], drawStatus: "drawOrEdit", drawMethod: "Polygon" });
+        const support = renderDrawSupport({
+
+            features: [featureMulti],
+            drawStatus: "drawOrEdit",
+            drawMethod: "Polygon",
+            options: {
+                stopAfterDrawing: true, // needed for append workflow or support returns a not valid geometry
+                editEnabled: false,
+                drawEnabled: true,
+                featureProjection: 'EPSG:4326',
+                hole: true // activates the interaction
+
+            },
+            onEndDrawing: testHandlers.onEndDrawing,
+            onChangeDrawingStatus: testHandlers.onStatusChange
+        });
+        expect(support.drawHoleInteraction.getActive()).toBe(true);
+        const HOLE_COORDINATES = [[2, 2], [2, 3], [3, 3], [3, 2], [2, 2]];
+        const olHoleFeature = new Feature({
+            geometry: new Polygon([HOLE_COORDINATES])
+        });
+        expect(support).toExist();
+        // emulate events triggered by map when active
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+
+        support.drawHoleInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: olHoleFeature,
+            features: [olHoleFeature]
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        const resultFeatures = spyEnd.calls[0].arguments[0];
+        const resultGeometry = resultFeatures[0].geometry;
+        expect(resultGeometry.type).toBe("MultiPolygon");
+        expect(resultGeometry.coordinates).toEqual([[POLYGON_COORDINATES_OUTER_RING, HOLE_COORDINATES], [SECOND_POLYGON_OUTER_RING]]);
+        expect(spyChangeStatus.calls.length).toBe(1);
+
+    });
+
+
+    it('test snapping interaction creation when single tile option is checked', () => {
+        const fakeMap = {
+            ol_uid: "1",
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            }),
+            getLayers: () => ({
+                getArray: () => [{
+                    get: () => 'snap_layer_1',
+                    getSource: () => new VectorSource(),
+                    type: IMAGE
+                }]
+            })
+        };
+
+        let support = renderDrawSupport({ map: fakeMap});
+        support = renderDrawSupport({
+            map: fakeMap,
+            snapping: true,
+            options: {geodesic: true},
+            snappingLayer: "snap_layer_1",
+            snappingLayerInstance: { id: 'snap_layer_1', type: "wms" },
+            snapConfig: { edge: true, vertex: true, pixelTolerance: 10, strategy: 'bbox'},
+            features: []
+        });
+        const snappingInteraction = !!support?.snapInteraction;
+        expect(snappingInteraction).toBe(true);
+    });
+
+    it('should complete the draw or edit events for point layers even if the current GeoJSON feature geometry is null', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const geoJSON = {
+            type: 'Feature',
+            geometry: null,
+            properties: {
+                'name': "some name"
+            }
+        };
+        const feature = new Feature({
+            geometry: new Point(13.0, 43.0),
+            name: 'My Point'
+        });
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChange = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+
+        const support = ReactDOM.render(
+            <DrawSupport
+                features={[]}
+                map={fakeMap}
+            />,
+            document.getElementById("container")
+        );
+
+        expect(support).toBeTruthy();
+
+        ReactDOM.render(
+            <DrawSupport
+                features={[geoJSON]}
+                map={fakeMap}
+                drawStatus="drawOrEdit"
+                drawMethod="Point"
+                options={{ drawEnabled: true }}
+                onEndDrawing={testHandlers.onEndDrawing}
+                onChangeDrawingStatus={testHandlers.onStatusChange}
+                onGeometryChanged={testHandlers.onGeometryChanged}
+            />,
+            document.getElementById("container")
+        );
+
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: feature
+        });
+
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+        expect(spyChange.calls.length).toBe(1);
+    });
 });
+

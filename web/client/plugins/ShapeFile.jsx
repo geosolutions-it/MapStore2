@@ -27,8 +27,8 @@ import { createPlugin } from '../utils/PluginsUtils';
 import Message from './locale/Message';
 
 const loader = () => new Promise((resolve) => {
-    require.ensure(['./shapefile/ShapeFile'], () => {
-        const ShapeFile = require('./shapefile/ShapeFile').default;
+    import('./shapefile/ShapeFile').then((shapefileMod) => {
+        const ShapeFile = shapefileMod.default;
 
         const ShapeFilePlugin = connect((state) => (
             {
@@ -85,6 +85,16 @@ export default createPlugin(
                 text: <Message msgId="shapefile.title" />,
                 icon: <Glyphicon glyph="upload" />,
                 action: toggleControl.bind(null, 'shapefile', null),
+                priority: 3,
+                doNotHide: true
+            },
+            SidebarMenu: {
+                name: 'shapefile',
+                position: 4,
+                text: <Message msgId="shapefile.title" />,
+                icon: <Glyphicon glyph="upload" />,
+                action: toggleControl.bind(null, 'shapefile', null),
+                toggle: true,
                 priority: 2,
                 doNotHide: true
             }

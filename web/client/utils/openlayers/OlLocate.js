@@ -167,8 +167,13 @@ OlLocate.prototype._updatePosFt = function() {
     this.p = p;
     let point = new Point([parseFloat(p[0]), parseFloat(p[1])]);
     if (this.options.drawCircle) {
-        let accuracy = new Circle([parseFloat(p[0]), parseFloat(p[1])], this.geolocate.getAccuracy());
-        this.posFt.setGeometry(new GeometryCollection([point, accuracy]));
+        if (this.geolocate.getAccuracyGeometry() === null) {
+            const accuracy = new Circle([parseFloat(p[0]), parseFloat(p[1])], this.geolocate.getAccuracy());
+            this.posFt.setGeometry(new GeometryCollection([point, accuracy]));
+        } else {
+            const accuracyPolygon = this.geolocate.getAccuracyGeometry();
+            this.posFt.setGeometry(new GeometryCollection([point, accuracyPolygon]));
+        }
     } else {
         this.posFt.setGeometry(new GeometryCollection([point]));
     }

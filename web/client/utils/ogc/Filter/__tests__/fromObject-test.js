@@ -100,6 +100,12 @@ const LOGICAL = [
     }
 ];
 
+// NOTE: INCLUDE and PROP = VALUE is not supported by the parser
+const CQL_SPECIFIC = [{
+    cql: "INCLUDE",
+    expected: ""
+}];
+
 const REAL_WORLD = [
     // real world example
     {
@@ -143,6 +149,11 @@ describe('Convert CQL filter to OGC Filter', () => {
     it('logical operators', () => {
         const toOGCFilter = fromObject(filterBuilder({ gmlVersion: "3.1.1" }));
         testRules(LOGICAL, toOGCFilter);
+
+    });
+    it('cql_specific operators (include)', () => {
+        const toOGCFilter = fromObject(filterBuilder({ gmlVersion: "3.1.1" }));
+        testRules(CQL_SPECIFIC, toOGCFilter);
 
     });
     it('more real world examples', () => {

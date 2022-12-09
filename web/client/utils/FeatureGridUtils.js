@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { identity, trim, fill, findIndex, get, isArray, isNil, isString } from 'lodash';
+import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlainObject } from 'lodash';
 
 import {
     findGeometryProperty,
@@ -117,20 +117,26 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
 export const featureTypeToGridColumns = (
     describe,
     columnSettings = {},
-    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200} = {},
+    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
     {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}} = {}) =>
-    getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
-        sortable,
-        key: desc.name,
-        width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
-        name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
-        resizable,
-        editable,
-        filterable,
-        editor: getEditor(desc),
-        formatter: getFormatter(desc),
-        filterRenderer: getFilterRenderer(desc, desc.name)
-    }));
+    getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
+        const option = options.find(o => o.name === desc.name);
+        return {
+            sortable,
+            key: desc.name,
+            width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
+            name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
+            description: option?.description || '',
+            title: option?.title || desc.name,
+            showTitleTooltip: !!option?.description,
+            resizable,
+            editable,
+            filterable,
+            editor: getEditor(desc),
+            formatter: getFormatter(desc),
+            filterRenderer: getFilterRenderer(desc, desc.name)
+        };
+    });
 /**
  * Create a column from the configruation. Maps the events to call a function with the whole property
  * @param  {array} toolColumns Array of the tools configurations
@@ -308,3 +314,42 @@ export const updatePages = (result, { endPage, startPage } = {}, { pages, featur
     }
     return { pages: oldPages.concat(pagesLoaded), features: oldFeatures.concat(fts) };
 };
+
+/**
+ * Process custom attributes settings of feature grid and returns array of feature attributes to be used in a query
+ * to limit results of WFS "getFeature" request
+ * undefined - all attributes to be fetched
+ * array - listed attributes to be fetched
+ * @param {array} attributes complete list of attributes available for export, see attributesSelector
+ * @param {object} customAttributesSettings object containing information about deactivated attributes, see getCustomAttributesSettings
+ * @returns undefined|array
+ */
+export const getAttributesList = (attributes, customAttributesSettings) => {
+    let result = undefined;
+    if (customAttributesSettings && attributes) {
+        result = attributes.filter((element) => {
+            const hide = customAttributesSettings[element.attribute]?.hide ?? false;
+            return !hide;
+        }).map((element) => element.attribute);
+        if (result.length === attributes.length) {
+            result = undefined;
+        }
+    }
+    return result;
+};
+
+/**
+ * Get attributes names based on prop type
+ * @param {object[] | string[]} attributes
+ * @returns {object[]} attribute names
+ */
+export const getAttributesNames = (attributes) => {
+    return attributes?.map(attribute => isPlainObject(attribute) ? attribute.name : attribute);
+};
+
+export const dateFormats = {
+    'date-time': 'YYYY-MM-DDTHH:mm:ss[Z]',
+    'time': 'HH:mm:ss[Z]',
+    'date': 'YYYY-MM-DD[Z]'
+};
+

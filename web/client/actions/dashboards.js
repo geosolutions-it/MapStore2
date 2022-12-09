@@ -13,6 +13,7 @@ export const DELETE_DASHBOARD = "DASHBOARDS:DELETE_DASHBOARD";
 export const DASHBOARD_DELETED = "DASHBOARDS:DASHBOARD_DELETED";
 export const RELOAD = "DASHBOARDS:RELOAD_DASHBOARDS";
 export const LOADING = "DASHBOARDS:LOADING";
+export const SET_CONTROL = "DASHBOARDS:SET_CONTROL";
 
 
 export const setDashboardsAvailable = (available) => ({ type: SET_DASHBOARDS_AVAILABLE, available });
@@ -30,3 +31,11 @@ export const dashboardListLoaded = ({ results, success, totalCount }, { searchTe
 export const deleteDashboard = id => ({type: DELETE_DASHBOARD, id});
 export const reloadDashboards = () => ({ type: RELOAD});
 export const dashboardDeleted = id => ({type: DASHBOARD_DELETED, id});
+
+/**
+ * Sets the variables for the controls of Dashboard. Can be used for dialogs or other tools
+ * specific of Dashboard.
+ * @param {string} control path to the control or control value to set
+ * @param {object} value any value you want to set for the control
+ */
+export const setControl = (control, value) => ({ type: SET_CONTROL, control, value });

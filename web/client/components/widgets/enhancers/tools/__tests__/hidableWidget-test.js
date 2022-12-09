@@ -59,14 +59,16 @@ describe('hidableWidget enhancer', () => {
             expect(widgetTools[0]).toExist();
             widgetTools[0].onClick();
         }));
-        ReactDOM.render(<Sink updateProperty={actions.updateProperty}/>, document.getElementById("container"));
+        ReactDOM.render(<Sink id={"some_id"} updateProperty={actions.updateProperty}/>, document.getElementById("container"));
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[0].arguments[0]).toBe("hide");
-        expect(spy.calls[0].arguments[1]).toBe(true);
-        ReactDOM.render(<Sink hide updateProperty={actions.updateProperty} />, document.getElementById("container"));
+        expect(spy.calls[0].arguments[0]).toBe("some_id");
+        expect(spy.calls[0].arguments[1]).toBe("hide");
+        expect(spy.calls[0].arguments[2]).toBe(true);
+        ReactDOM.render(<Sink id={"some_id"} hide updateProperty={actions.updateProperty} />, document.getElementById("container"));
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[1].arguments[0]).toBe("hide");
-        expect(spy.calls[1].arguments[1]).toBe(false);
+        expect(spy.calls[1].arguments[0]).toBe("some_id");
+        expect(spy.calls[1].arguments[1]).toBe("hide");
+        expect(spy.calls[1].arguments[2]).toBe(false);
 
     });
 });

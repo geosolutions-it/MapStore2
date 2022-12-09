@@ -9,6 +9,7 @@
 import expect from 'expect';
 
 import {
+    getSelectedLayers,
     getLayerFromName,
     getLayerFromId,
     layersSelector,
@@ -25,7 +26,9 @@ import {
     centerToMarkerSelector,
     getLayersWithDimension,
     elementSelector,
-    queryableSelectedLayersSelector
+    queryableSelectedLayersSelector,
+    getAdditionalLayerFromId,
+    getTitleSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -787,4 +790,113 @@ describe('Test layers selectors', () => {
         };
         expect(queryableSelectedLayersSelector(state)).toEqual(queryableSelectedLayers);
     });
+    it('test getAdditionalLayerFromId selector', () => {
+        const state = {
+            additionallayers: [
+                {
+                    id: 'layer_001',
+                    options: {
+                        id: 'layer_001'
+                    }
+                }
+            ]
+        };
+        const props = getAdditionalLayerFromId(state, 'layer_001');
+        expect(props.id).toBe('layer_001');
+    });
+
+    it('test getSelectedLayers selector', () => {
+        const queryableSelectedLayers = [
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:states__7'
+            },
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:Types__6'
+            }
+        ];
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'mapnik__0',
+                        group: 'background',
+                        type: 'osm',
+                        visibility: true
+                    },
+                    {
+                        id: 'Night2012__1',
+                        group: 'background',
+                        type: 'tileprovider',
+                        visibility: false
+                    },
+                    {
+                        type: 'wms',
+                        visibility: true,
+                        id: 'mapstore:DE_USNG_UTM18__8'
+                    },
+                    ...queryableSelectedLayers
+                ],
+                selected: [
+                    'mapstore:states__7',
+                    'mapstore:Types__6',
+                    'mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal__5',
+                    'Default'
+                ]
+            }
+        };
+        expect(getSelectedLayers(state)).toEqual(queryableSelectedLayers);
+    });
+    describe('getTitleSelector', () => {
+        it('getTitleSelector with non localized title', () =>{
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'TEST_LAYER',
+                            type: 'osm',
+                            visibility: true,
+                            title: 'TITLE_LAYER'
+                        },
+                        {
+                            id: 'TEST_LAYER_2',
+                            type: 'osm',
+                            visibility: true
+                        }
+                    ]
+                }
+            };
+            expect(getTitleSelector(state, 'TEST_LAYER')).toBe('TITLE_LAYER');
+        });
+        it('getTitleSelector with localized title', () =>{
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'TEST_LAYER',
+                            type: 'osm',
+                            visibility: true,
+                            title: {
+                                "default": 'TITLE_LAYER',
+                                "it-IT": 'Livel'
+                            }
+                        },
+                        {
+                            id: 'TEST_LAYER_2',
+                            type: 'osm',
+                            visibility: true
+                        }
+                    ]
+                },
+                locale: {
+                    current: "it-IT"
+                }
+            };
+            expect(getTitleSelector(state, 'TEST_LAYER')).toBe('Livel');
+        });
+    });
+
 });

@@ -30,8 +30,9 @@ import {
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
 import { poi as TMS110_1 } from '../../test-resources/layers/tms';
-import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
+import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL, LINZ_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
 import { setStore } from '../StateUtils';
+import { getGoogleMercatorScales } from '../MapUtils';
 
 const layer = {
     url: "http://mygeoserver",
@@ -496,6 +497,23 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.custom).toBe("customvalue");
     });
+    it('getMapfishPrintSpecification with fixed scales', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2000000, 1000000, 500000, 100000, 50000]
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(100000);
+    });
+    it('getMapfishPrintSpecification with standard scales', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(getGoogleMercatorScales(0, 21)[3]);
+    });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();
@@ -597,7 +615,7 @@ describe('PrintUtils', () => {
                 expect(layerSpec.resolutions).toExist();
                 expect(layerSpec.extension).toBe("png");
                 expect(layerSpec.resolutions.length).toBe(19);
-
+                expect(Object.keys(layerSpec.customParams).length).toBe(0);
             });
             it('NASAGIBS', () => {
                 const testLayer = NASAGIBS;
@@ -615,7 +633,7 @@ describe('PrintUtils', () => {
                 expect(layerSpec.resolutions).toExist();
                 expect(layerSpec.extension).toBe("jpg");
                 expect(layerSpec.resolutions.length).toBe(9);
-
+                expect(Object.keys(layerSpec.customParams).length).toBe(0);
             });
             it('tileprovider with custom URL', () => {
                 const testLayer = NLS_CUSTOM_URL;
@@ -633,7 +651,26 @@ describe('PrintUtils', () => {
                 expect(layerSpec.resolutions).toExist();
                 expect(layerSpec.extension).toBe("jpg");
                 expect(layerSpec.resolutions.length).toBe(19);
-
+                expect(Object.keys(layerSpec.customParams).length).toBe(0);
+            });
+            it('tileprovider with params', () => {
+                const testLayer = LINZ_CUSTOM_URL;
+                const layerSpec = specCreators.tileprovider.map(testLayer, { projection: "EPSG:3857" });
+                expect(layerSpec.type).toEqual("xyz");
+                // string with params
+                expect(layerSpec.baseURL).toEqual("https://basemaps.linz.govt.nz/v1/tiles/aerial/EPSG:3857/");
+                // parameter    s should be passed in pathSpec
+                expect(layerSpec.baseURL.indexOf(/\{[x,y,z]\}/)).toBeLessThan(0);
+                expect(layerSpec.path_format).toBe("${z}/${x}/${y}.png"); // use the format of mapfish print for variables
+                // mandatory values
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.maxExtent).toExist();
+                expect(layerSpec.tileSize).toExist();
+                expect(layerSpec.resolutions).toExist();
+                expect(layerSpec.extension).toBe("png");
+                expect(layerSpec.resolutions.length).toBe(19);
+                expect(layerSpec.customParams.api).toBe('myapikey');
+                expect(Object.keys(layerSpec.customParams).length).toBe(1);
             });
         });
         describe('TMS', () => {

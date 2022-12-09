@@ -92,6 +92,7 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -194,15 +195,7 @@
             "Examples": "例子",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "滚动到页面顶部",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-            "ml": {
-                "title": "Keep in touch and stay up-to-date with the mailing lists",
-                "subscribe_users": "Subscribe Users Mailing List",
-                "subscribe_devel": "Subscribe Developers Mailing List",
-                "visit_group": "Visit this group",
-                "subscribe": "Subscribe",
-                "email": "Email:"
-            },
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
@@ -551,7 +544,25 @@
             "showLabel": "Show measurement label",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
-            "selectTool": "Select a measurement tool"
+            "selectTool": "Select a measurement tool",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "decimal": "十进制",
@@ -1021,7 +1032,15 @@
             "addBboxParam": "Add bbox param to sharing link",
             "wrongBboxParamTitle": "Invalid bbox param",
             "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
-            "showSectionId": "Include scroll position"
+            "showSectionId": "Include scroll position",
+            "zoom": "Fēizhàng",
+            "heading": "Hángxiàng jiǎo",
+            "roll": "Cè qīngjiǎo",
+            "pitch": "Fǔyǎng jiǎo",
+            "zoomToolTip": "Zuìxiǎo zhí:1 Hé zuìdà zhí:35",
+            "headingToolTip": "Zuìxiǎo zhí:0° Hé zuìdà zhí:360°",
+            "rollToolTip": "Zuìxiǎo zhí:-90° Hé zuìdà zhí:90°",
+            "pitchToolTip": "Zuìxiǎo zhí:-90° Hé zuìdà zhí:90°"
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -1318,6 +1337,7 @@
         },
         "layerdownload": {
             "title": "Export Data",
+            "service": "Service",
             "format": "File Format",
             "srs":  "Spatial Reference System",
             "export": "Export",
@@ -1666,7 +1686,13 @@
             "setDefaultStyleSuccessTitle": "Success on set default style",
             "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
             "setDefaultStyleErrorTitle": "Error on set default style",
-            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {

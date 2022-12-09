@@ -7,7 +7,7 @@
  */
 
 import expect from 'expect';
-import {allTemplatesSelector} from '../maptemplates';
+import {allTemplatesSelector, isActiveSelector} from '../maptemplates';
 
 describe('maptemplates selectors', () => {
     it('should return allowed templates when they are provided', () => {
@@ -36,5 +36,15 @@ describe('maptemplates selectors', () => {
             }
         };
         expect(allTemplatesSelector(state)[0]).toBe("CONTEXT TEST TEMPLATE");
+    });
+    it('test isActiveSelector ', () => {
+        const toolState = isActiveSelector({
+            controls: {
+                mapTemplates: {
+                    enabled: true
+                }
+            }
+        });
+        expect(toolState).toBe(true);
     });
 });

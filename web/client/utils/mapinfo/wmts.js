@@ -17,9 +17,13 @@ import {
 import {getLayerUrl} from '../LayersUtils';
 import {optionsToVendorParams} from '../VendorParamsUtils';
 
-import {isObject, isNil} from 'lodash';
+import {isObject, isNil, get} from 'lodash';
 
 import assign from 'object-assign';
+import Rx, {Observable} from "rxjs";
+import axios from "../../libs/ajax";
+import {parseString} from "xml2js";
+import {stripPrefix} from "xml2js/lib/processors";
 
 export default {
     buildRequest: (layer, props) => {
@@ -78,5 +82,25 @@ export default {
             },
             url: getLayerUrl(layer).replace(/[?].*$/g, '')
         };
-    }
+    },
+    getIdentifyFlow: (layer, basePath, params) =>
+        Observable.defer(() => axios.get(basePath, { params }))
+            .catch((e) => {
+                if (e.data.indexOf("ExceptionReport") > 0) {
+                    return Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
+                        tagNameProcessors: [stripPrefix],
+                        explicitArray: false,
+                        mergeAttrs: true
+                    }, callback))(e.data).map(data => {
+                        const code = get(data, "ExceptionReport.Exception.exceptionCode");
+                        if (code === 'TileOutOfRange') {
+                            return params.infoformat === 'text/plain' ? {data: 'no features were found'} : { data: { features: []}};
+                        }
+                        return e;
+                    });
+
+                }
+                return e;
+            })
+
 };

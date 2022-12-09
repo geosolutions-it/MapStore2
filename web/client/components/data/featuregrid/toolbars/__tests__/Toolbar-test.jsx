@@ -382,4 +382,60 @@ describe('Featuregrid toolbar component', () => {
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
     });
+    describe('snap tool button', () => {
+        it('visibility', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button")).toExist();
+            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button")).toNotExist();
+        });
+        it('active/inactive state', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button").className.split(' ')).toInclude('btn-success');
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("snap-button").className.split(' ')).toNotInclude('btn-success');
+        });
+        it('handler', () => {
+            const events = {
+                toggleSnapping: () => { }
+            };
+            const spy = spyOn(events, "toggleSnapping");
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("snap-button").click();
+            expect(spy.calls[0].arguments[0]).toBe(false);
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("snap-button").click();
+            expect(spy.calls[1].arguments[0]).toBe(true);
+        });
+    });
+    describe('viewportFilter tool button', () => {
+        it('visibility', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} isFilterByViewportSupported mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(true);
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: false }} isFilterByViewportSupported mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
+            ReactDOM.render(<Toolbar mode="VIEW" pluginCfg={{ showFilterByViewportTool: false }} disableZoomAll />, document.getElementById("container"));
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
+        });
+        it('active/inactive state', () => {
+            ReactDOM.render(<Toolbar mapType="openlayers" viewportFilter pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-viewportFilter-button").className.split(' ')).toInclude('btn-success');
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            expect(document.getElementById("fg-viewportFilter-button").className.split(' ')).toNotInclude('btn-success');
+        });
+        it('handler', () => {
+            const events = {
+                setViewportFilter: () => { }
+            };
+            const spy = spyOn(events, "setViewportFilter");
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} viewportFilter pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-viewportFilter-button").click();
+            expect(spy.calls[0].arguments[0]).toBe(false);
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            document.getElementById("fg-viewportFilter-button").click();
+            expect(spy.calls[1].arguments[0]).toBe(true);
+        });
+    });
 });

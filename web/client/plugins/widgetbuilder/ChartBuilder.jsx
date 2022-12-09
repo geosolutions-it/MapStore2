@@ -9,23 +9,41 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import { compose, renameProps, branch, renderComponent} from 'recompose';
+import {compose, renameProps, branch, renderComponent, withState, withProps} from 'recompose';
 
 import BorderLayout from '../../components/layout/BorderLayout';
-import {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} from '../../actions/widgets';
+import {
+    insertWidget,
+    onEditorChange,
+    setPage,
+    openFilterEditor,
+    changeEditorSetting
+} from '../../actions/widgets';
 import builderConfiguration from '../../components/widgets/enhancers/builderConfiguration';
 import chartLayerSelector from './enhancers/chartLayerSelector';
 import viewportBuilderConnect from './enhancers/connection/viewportBuilderConnect';
 import viewportBuilderConnectMask from './enhancers/connection/viewportBuilderConnectMask';
-import withExitButton from './enhancers/withExitButton';
+import withExitButton from './enhancers/withChartExitButton';
 import withConnectButton from './enhancers/connection/withConnectButton';
-import {wizardStateToProps, wizardSelector} from './commons';
+import { wizardStateToProps, wizardSelector } from './commons';
 import ChartWizard from '../../components/widgets/builder/wizard/ChartWizard';
-import LayerSelector from './LayerSelector';
+import LayerSelector from './ChartLayerSelector';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
+import { getDependantWidget } from "../../utils/WidgetsUtils";
 
+
+const setMultiDependencySupport = ({editorData = {}, disableMultiDependencySupport: disableSupport, widgets = []} = {}) => {
+    let disableMultiDependencySupport = disableSupport || editorData?.charts?.some(f => !f.geomProp);
+    const dependantWidget = getDependantWidget({widgets, dependenciesMap: editorData?.dependenciesMap});
+    if (dependantWidget?.widgetType === 'table') {
+        // Disable dependency support when some layers in multi chart
+        // doesn't match dependant table widget
+        disableMultiDependencySupport = disableMultiDependencySupport || editorData?.charts?.some(c => c.layer.name !==  dependantWidget?.layer?.name);
+    }
+    return { disableMultiDependencySupport };
+};
 
 const Builder = connect(
     wizardSelector,
@@ -46,18 +64,20 @@ const Builder = connect(
 
 
 const ChartToolbar = compose(
-    connect(wizardSelector, {
-        openFilterEditor,
-        setPage,
-        onChange: onEditorChange,
-        insertWidget
-    },
-    wizardStateToProps
+    connect(
+        wizardSelector,
+        {
+            openFilterEditor,
+            setPage,
+            onChange: onEditorChange,
+            insertWidget
+        },
+        wizardStateToProps
     ),
     viewportBuilderConnect,
     withExitButton(),
-    withConnectButton(({step}) => step === 1)
-
+    withProps((props) => setMultiDependencySupport(props)),
+    withConnectButton(({step}) => step === 0)
 )(Toolbar);
 
 /*
@@ -65,11 +85,14 @@ const ChartToolbar = compose(
  * prompts a catalog view to allow layer selection
  */
 const chooseLayerEnhancer = compose(
-    connect(wizardSelector),
+    withState('showLayers', "toggleLayerSelector", false),
+    withState('errors', 'setErrors', {}),
+    withState('noAttributes', 'setNoAttributes', false),
+    connect(wizardSelector, null, wizardStateToProps),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
     branch(
-        ({layer} = {}) => !layer,
+        ({layer, showLayers} = {}) => !layer || showLayers,
         renderComponent(chartLayerSelector(LayerSelector))
     )
 );
@@ -84,9 +107,14 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
                     editorData={editorData}
                     toggleConnection={toggleConnection}
                     availableDependencies={availableDependencies}
-                    onClose={onClose}/>
+                    onClose={onClose}
+                    toggleLayerSelector={props.toggleLayerSelector}
+                    errors={props.errors}
+                    noAttributes={props.noAttributes}
+                    dashboardEditing={props.dashboardEditing}
+                />
             </BuilderHeader>}
         >
-            {enabled ? <Builder dependencies={dependencies} {...props}/> : null}
+            {enabled ? <Builder dependencies={dependencies}  {...props}/> : null}
         </BorderLayout>
     </div>));

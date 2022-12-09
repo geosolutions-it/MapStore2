@@ -9,7 +9,7 @@ import expect from 'expect';
 
 import { round } from 'lodash';
 import mapConfig from '../map';
-import { changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } from '../../actions/map';
+import { updateMapOptions, changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } from '../../actions/map';
 
 describe('Test the map reducer', () => {
     it('returns original state on unrecognized action', () => {
@@ -257,5 +257,33 @@ describe('Test the map reducer', () => {
         expect(state.center).toEqual({...pos, srs: crs, crs});
         expect(state.zoom).toEqual(zoom);
         expect(state.mapStateSource).toEqual(null);
+    });
+
+    it('3D Orientation reducers', () => {
+        const orientation =  { x: '1', y: '3', z: 1, heading: 1, pitch: 1, roll: 1 };
+        const action = {
+            type: 'MAP:ORIENTATION',
+            orientation: {
+                center: '1,3',
+                zoom: 1,
+                heading: 1,
+                pitch: 1,
+                roll: 1
+            }
+        };
+        const state = mapConfig({}, action);
+        expect(state.orientate).toEqual(orientation);
+    });
+
+    it('Updates scene config', () => {
+        const action = updateMapOptions({
+            skyAtmosphere: false
+        });
+        let state = mapConfig({
+            mapOptions: {
+                skyAtmosphere: true
+            }
+        }, action);
+        expect(state.mapOptions.skyAtmosphere).toBe(false);
     });
 });

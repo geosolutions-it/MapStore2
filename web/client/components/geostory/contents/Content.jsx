@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import Text from './Text';
+import React, { lazy } from 'react';
+import withSuspense from '../../misc/withSuspense';
+const Text = withSuspense()(lazy(() => import('./Text')));
 import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
 import Media from '../media';
 import WebPage from './WebPageWrapper';

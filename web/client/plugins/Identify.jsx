@@ -89,7 +89,7 @@ const selector = createStructuredSelector({
     reverseGeocodeData: (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     warning: (state) => state.mapInfo && state.mapInfo.warning,
     currentLocale: currentLocaleSelector,
-    dockStyle: state => mapLayoutValuesSelector(state, { height: true }),
+    dockStyle: (state) => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp('defaultCoordinateFormat'),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
@@ -104,7 +104,7 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, isLoadedResponseSelector, (state) => state.browser && state.browser.mobile, (index, loaded, isMobile) => ({ index, loaded, isMobile })),
+        createSelector(indexSelector, isLoadedResponseSelector, (state) => state.browser && state.browser.mobile,  (index, loaded, isMobile) => ({ index, loaded, isMobile })),
         {
             setIndex: changePage
         }
@@ -164,7 +164,7 @@ const identifyDefaultProps = defaultProps({
     showMoreInfo: true,
     showEdit: false,
     position: 'right',
-    size: 660,
+    size: 550,
     getToolButtons,
     getFeatureButtons,
     showFullscreen: false,
@@ -201,6 +201,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  * @prop cfg.zIndex {number} component z index order
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
+ * @prop cfg.maxItems {number} the number of features returned by this tool
  * @prop cfg.showMoreInfo {boolean} if true shows the more info icon which allow user to show/hide Geocode viewer as popup (true by default)
  * @prop cfg.showEdit {boolean} if true, and when the FeatureEditor plugin is present, shows and edit button to edit the current feature(s) clicked in the grid.
  * @prop cfg.enableInfoForSelectedLayers {boolean} if true, if some layer is selected in the TOC, the feature info is performed only on the selected ones. if false, the info is queried for all the layers, independently from selection. (default is true).

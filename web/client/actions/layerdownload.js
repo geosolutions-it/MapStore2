@@ -14,6 +14,7 @@ export const DOWNLOAD_OPTIONS_CHANGE = "LAYERDOWNLOAD:FORMAT_SELECTED";
 export const CLEAR_DOWNLOAD_OPTIONS = "LAYERDOWNLOAD:CLEAR_DOWNLOAD_OPTIONS";
 export const FORMAT_OPTIONS_FETCH = "LAYERDOWNLOAD:FORMAT_FETCH";
 export const FORMAT_OPTIONS_UPDATE = "LAYERDOWNLOAD:FORMAT_UPDATE";
+export const SET_WPS_AVAILABILITY = "LAYERDOWNLOAD:SET_WPS_AVAILABLE";
 export const SET_SERVICE = "LAYERDOWNLOAD:SET_SERVICE";
 export const SET_EXPORT_DATA_RESULTS = "LAYERDOWNLOAD:SET_EXPORT_DATA_RESULTS";
 export const ADD_EXPORT_DATA_RESULT = "LAYERDOWNLOAD:ADD_EXPORT_DATA_RESULT";
@@ -33,9 +34,10 @@ export const SET_INFO_BUBBLE_MESSAGE = "LAYERDOWNLOAD:SET_INFO_BUBBLE_MESSAGE";
  * @name layerdownload
  * @type {Object}
  */
-export const checkWPSAvailability = (url) => ({
+export const checkWPSAvailability = (url, selectedService) => ({
     type: CHECK_WPS_AVAILABILITY,
-    url
+    url,
+    selectedService
 });
 export const checkingWPSAvailability = (checking) => ({
     type: CHECKING_WPS_AVAILABILITY,
@@ -102,6 +104,16 @@ export const updateFormats = (wfsFormats) => ({
  */
 export const onDownloadFinished = () => ({
     type: DOWNLOAD_FINISHED
+});
+
+/**
+ * action that sets if WPS available for download requests
+ * @memberof actions.layerdownload
+ * @returns {action} action of type `SET_WPS_AVAILABILITY`
+ */
+export const setWPSAvailability = (value) => ({
+    type: SET_WPS_AVAILABILITY,
+    value
 });
 
 /**

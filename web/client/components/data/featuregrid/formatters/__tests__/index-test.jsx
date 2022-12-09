@@ -12,10 +12,6 @@ import NumberFormat from '../../../../I18N/Number';
 import {getFormatter} from '../index';
 
 describe('Tests for the formatter functions', () => {
-    it('test getFormatter for strings', () => {
-        const formatter = getFormatter({localType: "string"});
-        expect(formatter).toBe(null);
-    });
     it('test getFormatter for booleans', () => {
         const formatter = getFormatter({localType: "boolean"});
         expect(typeof formatter).toBe("function");
@@ -23,6 +19,18 @@ describe('Tests for the formatter functions', () => {
         expect(formatter({value: true}).type).toBe("span");
         expect(formatter({value: true}).props.children).toBe("true");
         expect(formatter({value: false}).props.children).toBe("false");
+        expect(formatter({value: null})).toBe(null);
+        expect(formatter({value: undefined})).toBe(null);
+    });
+    it('test getFormatter for strings', () => {
+        const value = 'Test https://google.com with google link';
+        const formatter = getFormatter({localType: "string"});
+        expect(typeof formatter).toBe("function");
+        expect(formatter()).toBe(null);
+        expect(formatter({value: 'Test no links'})[0]).toBe('Test no links');
+        expect(formatter({value})[0]).toBe('Test ');
+        expect(formatter({value})[1].props.href).toBe('https://google.com');
+        expect(formatter({value})[2]).toBe(' with google link');
         expect(formatter({value: null})).toBe(null);
         expect(formatter({value: undefined})).toBe(null);
     });
@@ -45,5 +53,33 @@ describe('Tests for the formatter functions', () => {
         expect(formatter({value: null})).toBe(null);
         expect(formatter({value: undefined})).toBe(null);
         expect(formatter({value: 0}).props.value).toBe(0);
+    });
+    it('test getFormatter for geometry', () => {
+        const formatter = getFormatter({localType: "Geometry"});
+        expect(typeof formatter).toBe("function");
+        expect(formatter()).toBe(null);
+        expect(formatter({value: {properties: {}, geometry: {type: "Point", coordinates: [1, 2]}}})).toBe(null);
+        expect(formatter({value: null})).toBe(null);
+        expect(formatter({value: undefined})).toBe(null);
+    });
+    it('test getFormatter for date / date-time / time', () => {
+        const dateFormats = {
+            date: 'YYYY',
+            "date-time": 'YYYY DD',
+            time: 'HH:mm'
+        };
+        const dateFormatter = getFormatter({localType: "date"}, dateFormats);
+        const dateTimeFormatter = getFormatter({localType: "date-time"}, dateFormats);
+        const timeFormatter = getFormatter({localType: "time"}, dateFormats);
+        expect(typeof dateFormatter).toBe("function");
+        expect(dateFormatter()).toBe(null);
+        expect(dateFormatter({value: '2015-02-01T12:45:00Z'})).toBe('2015');
+        expect(typeof dateTimeFormatter).toBe("function");
+        expect(dateTimeFormatter()).toBe(null);
+        expect(dateTimeFormatter({value: '2015-02-01Z'})).toBe('2015 01');
+        expect(typeof timeFormatter).toBe("function");
+        expect(timeFormatter()).toBe(null);
+        expect(timeFormatter({value: '12:45:00Z'})).toBe('12:45');
+        expect(timeFormatter({ value: '1970-01-01T02:30:00Z' })).toBe('02:30'); // still able to format time even when found a full date (sometimes GeoServer returns full date instead of time only)
     });
 });

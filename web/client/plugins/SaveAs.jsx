@@ -58,7 +58,28 @@ export default createPlugin('SaveAs', {
                     return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
                 }
                 return { style: isLoggedIn(state) ? {} : {display: "none"} };
-            }
+            },
+            priority: 2,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'saveAs',
+            position: 31,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            text: <Message msgId="saveAs"/>,
+            action: toggleControl.bind(null, 'mapSaveAs', null),
+            tooltip: "saveDialog.saveAsTooltip",
+            // display the button only if the map can be edited
+            selector: (state) => {
+                return {
+                    style: isLoggedIn(state) ? {} : {display: "none"},
+                    bsStyle: state.controls.mapSaveAs && state.controls.mapSaveAs.enabled ? 'primary' : 'tray',
+                    active: state.controls.mapSaveAs && state.controls.mapSaveAs.enabled || false
+
+                };
+            },
+            priority: 1,
+            doNotHide: true
         }
     }
 });

@@ -20,19 +20,23 @@ import Message from '../../I18N/Message';
 import EmptyView from '../../misc/EmptyView';
 import DownloadOptions from './DownloadOptions';
 import Button from '../../misc/Button';
+import {getAttributesList} from "../../../utils/FeatureGridUtils";
 
 class DownloadDialog extends React.Component {
     static propTypes = {
         filterObj: PropTypes.object,
         closeGlyph: PropTypes.string,
         url: PropTypes.string,
+        wpsAvailable: PropTypes.bool,
         service: PropTypes.string,
+        defaultSelectedService: PropTypes.string,
         enabled: PropTypes.bool,
         loading: PropTypes.bool,
         checkingWPSAvailability: PropTypes.bool,
         onClose: PropTypes.func,
         onExport: PropTypes.func,
         onCheckWPSAvailability: PropTypes.func,
+        setService: PropTypes.func,
         onDownloadOptionChange: PropTypes.func,
         onClearDownloadOptions: PropTypes.func,
         onFormatOptionsFetch: PropTypes.func,
@@ -43,20 +47,25 @@ class DownloadDialog extends React.Component {
         defaultSrs: PropTypes.string,
         layer: PropTypes.object,
         formatsLoading: PropTypes.bool,
-        virtualScroll: PropTypes.bool
+        virtualScroll: PropTypes.bool,
+        customAttributeSettings: PropTypes.object,
+        attributes: PropTypes.array
     };
 
     static defaultProps = {
         onExport: () => {},
         onClose: () => {},
         onCheckWPSAvailability: () => {},
+        setService: () => {},
         onDownloadOptionChange: () => {},
         onClearDownloadOptions: () => {},
         onFormatOptionsFetch: () => {},
         checkingWPSAvailability: false,
         layer: {},
         closeGlyph: "1-close",
+        wpsAvailable: false,
         service: 'wfs',
+        defaultSelectedService: 'wps',
         wfsFormats: [],
         formats: [
             {name: 'application/json', label: 'GeoJSON', type: 'vector', validServices: ['wps']},
@@ -82,7 +91,10 @@ class DownloadDialog extends React.Component {
         if (this.props.enabled !== oldProps.enabled && this.props.enabled) {
             this.props.onClearDownloadOptions();
             if (this.props.layer.type === 'wms') {
-                this.props.onCheckWPSAvailability(this.props.url || this.props.layer.url);
+                this.props.onCheckWPSAvailability(
+                    this.props.url || this.props.layer.url,
+                    this.props.defaultSelectedService
+                );
             }
         }
     }
@@ -104,6 +116,7 @@ class DownloadDialog extends React.Component {
         const wfsFormats = validWFSFormats.length > 0 ?
             validWFSFormats.filter(f => this.props.wfsFormats.find(wfsF => wfsF.name.toLowerCase() === f.name.toLowerCase())) :
             this.props.wfsFormats;
+        const wfsAvailable = Boolean(this.props.layer.search?.url);
 
         return this.props.enabled ? (<Portal><Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
@@ -113,10 +126,14 @@ class DownloadDialog extends React.Component {
             <div role="body">
                 {this.props.checkingWPSAvailability ?
                     <Loader size={100} style={{margin: '0 auto'}}/> :
-                    this.props.service === 'wfs' && !this.props.layer.search?.url ?
+                    !this.props.wpsAvailable && !wfsAvailable ?
                         <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/> :
                         <DownloadOptions
+                            wpsAvailable={this.props.wpsAvailable}
+                            wfsAvailable={wfsAvailable}
+                            service={this.props.service}
                             downloadOptions={this.props.downloadOptions}
+                            setService={this.props.setService}
                             onChange={this.props.onDownloadOptionChange}
                             formatOptionsFetch={this.props.service === 'wfs' ? this.props.onFormatOptionsFetch : () => {}}
                             formatsLoading={this.props.formatsLoading}
@@ -127,7 +144,10 @@ class DownloadDialog extends React.Component {
                             wpsAdvancedOptionsVisible={!this.props.layer.search?.url}
                             downloadFilteredVisible={!!this.props.layer.search?.url}
                             layer={this.props.layer}
-                            virtualScroll={this.props.virtualScroll}/>}
+                            virtualScroll={this.props.virtualScroll}
+                            customAttributesSettings={this.props.customAttributeSettings}
+                            attributes={this.props.attributes}
+                        />}
             </div>
             {!this.props.checkingWPSAvailability && <div role="footer">
                 <Button
@@ -141,9 +161,10 @@ class DownloadDialog extends React.Component {
         </Dialog></Portal>) : null;
     }
     handleExport = () => {
-        const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport, layer} = this.props;
+        const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport, layer, attributes, customAttributeSettings} = this.props;
         const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (srsList[0] || {}).name;
-        onExport(url || layer.url, filterObj, assign({}, downloadOptions, {selectedSrs}));
+        const propertyName = getAttributesList(attributes, customAttributeSettings);
+        onExport(url || layer.url, filterObj, assign({}, downloadOptions, {selectedSrs}, {propertyName}));
     }
 }
 

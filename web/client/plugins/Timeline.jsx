@@ -26,7 +26,14 @@ import { createSelector } from 'reselect';
 
 import { setCurrentOffset } from '../actions/dimension';
 import { selectPlaybackRange } from '../actions/playback';
-import { enableOffset, onRangeChanged, selectTime, setMapSync, initTimeline } from '../actions/timeline';
+import {
+    enableOffset,
+    onRangeChanged,
+    selectTime,
+    setMapSync,
+    initTimeline,
+    resetTimeline
+} from '../actions/timeline';
 import Message from '../components/I18N/Message';
 import tooltip from '../components/misc/enhancers/tooltip';
 import withResizeSpy from '../components/misc/enhancers/withResizeSpy';
@@ -40,13 +47,17 @@ import {
     isMapSync,
     isVisible,
     rangeSelector,
+    selectedLayerSelector,
     timelineLayersSelector
 } from '../selectors/timeline';
 import Timeline from './timeline/Timeline';
 import TimelineToggle from './timeline/TimelineToggle';
 import ButtonRB from '../components/misc/Button';
-import {isTimelineVisible} from "../utils/LayersUtils";
+import { isTimelineVisible } from "../utils/LayersUtils";
+import Loader from '../components/misc/Loader';
+
 const Button = tooltip(ButtonRB);
+
 
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
 const getPercent = (val) => parseInt(val, 10) / 100;
@@ -59,16 +70,23 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
   * @class  Timeline
   * @memberof plugins
   * @static
-  * @prop cfg.showHiddenLayers {boolean} false by default, when *false* the layers in timeline gets in sync with time layer's visibility (TOC)
-  * i.e when a time layer is hidden or removed, the timeline will not show the respective guide layer.
-  * Furthermore, the timeline automatically selects the next available guide layer, if the **Snap to guide layer** option is enabled in the Timeline settings.
-  * If set to *true*, the hidden layer will be shown in the timeline.
+  * @prop {boolean} cfg.expandedPanel If `false`, the panel is collapsed by default. If true, the panel is expanded by default. `false` by default.
+  * @prop {boolean} cfg.showHiddenLayers  if `true`, shows a line for each layer with the time data, if `false`, shows only the visible layers. `false` by default.
+  * @prop {string} cfg.initialMode  One of `single` or `range`. Determines the initial mode of the timeline. To start the plugin by selecting a single time or a time range. Default mode is `single`
+  * @prop {string} cfg.initialSnap One of `now` or `fullRange`. Sets initial snap policy when the layer is added or the plugin is initialized (if no time selection is saved in the map). Default value is `now`.
+  * - When `fullRange` (and initialMode is `range`) the timeline select a time range that includes all the data of the guide layer.
+  * - When `now`, the plugin selects the current time, or if a guide layer is selected, the time entry of the guide layer nearest to the current time.
+  * @prop {boolean} cfg.resetButton shows a reset button that resets the timeline to the full range or to now, depending if mode is `single` or `range`. `false` by default.
+  * - If current mode is `single`, when the reset button is clicked the time is set to nearest of the current time and when layer is unselected, the time is set to now.
+  * - If current mode is `range`, when the reset button is clicked the time is set to the full range of the layer
   *
   * @example
   * {
   *   "name": "TimeLine",
   *   "cfg": {
-  *       "showHiddenLayers": false
+  *        "initialMode": "range",
+  *        "initialSnap": "fullRange",
+  *        "resetButton": true
   *    }
   * }
   *
@@ -84,7 +102,9 @@ const TimelinePlugin = compose(
             playbackRangeSelector,
             statusSelector,
             rangeSelector,
-            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange) => ({
+            (state) => state.timeline?.loader !== undefined,
+            selectedLayerSelector,
+            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady, selectedLayer) => ({
                 visible,
                 layers,
                 currentTime,
@@ -92,7 +112,9 @@ const TimelinePlugin = compose(
                 offsetEnabled,
                 playbackRange,
                 status,
-                viewRange
+                viewRange,
+                timelineIsReady,
+                selectedLayer
             })
         ), {
             setCurrentTime: selectTime,
@@ -100,10 +122,14 @@ const TimelinePlugin = compose(
             setOffset: setCurrentOffset,
             setPlaybackRange: selectPlaybackRange,
             moveRangeTo: onRangeChanged,
-            onInit: initTimeline
+            onInit: initTimeline,
+            reset: resetTimeline
         }),
     branch(({ visible = true, layers = [] }) => !visible || Object.keys(layers).length === 0, renderNothing),
-    withState('options', 'setOptions', {collapsed: true}),
+
+    withState('options', 'setOptions', ({expandedPanel}) => {
+        return { collapsed: !expandedPanel };
+    }),
     // add mapSync button handler and value
     connect(
         createSelector(isMapSync, mapSync => ({mapSync})),
@@ -126,6 +152,9 @@ const TimelinePlugin = compose(
         ),
         defaultProps({
             showHiddenLayers: false,
+            expandLimit: 20,
+            snapType: "start",
+            endValuesSupport: undefined,
             style: {
                 marginBottom: 35,
                 marginLeft: 100,
@@ -180,11 +209,21 @@ const TimelinePlugin = compose(
         moveRangeTo,
         compactToolbar,
         showHiddenLayers,
+        expandLimit,
+        snapType,
+        endValuesSupport,
         onInit = () => {},
-        layers
+        layers,
+        timelineIsReady,
+        initialMode = 'single',
+        initialSnap = 'now',
+        resetButton,
+        reset = () => {},
+        selectedLayer
     }) => {
         useEffect(()=>{
-            onInit(showHiddenLayers);
+            // update state with configs coming from configuration file like localConfig.json so that can be used as props initializer
+            onInit({showHiddenLayers, expandLimit, snapType, endValuesSupport, initialMode, initialSnap});
         }, [onInit]);
 
         const { hideLayersName, collapsed } = options;
@@ -221,12 +260,12 @@ const TimelinePlugin = compose(
                 }
             }
         };
+
         return (<div
             style={{
                 position: "absolute",
                 marginBottom: 35,
                 marginLeft: 100,
-                background: "transparent",
                 ...style,
                 right: collapsed ? 'auto' : (style.right || 0)
             }}
@@ -297,12 +336,18 @@ const TimelinePlugin = compose(
                                 }
                             },
                             {
-                                glyph: "map-synch",
+                                glyph: "viewport-filter",
                                 tooltip: <Message msgId={mapSync ? "timeline.mapSyncOn" : "timeline.mapSyncOff"} />,
                                 bsStyle: mapSync ? 'success' : 'primary',
                                 active: mapSync,
                                 onClick: () => toggleMapSync(!mapSync)
-
+                            },
+                            {
+                                glyph: offsetEnabled ? "resize-horizontal" : "time",
+                                visible: !!resetButton,
+                                tooltip: <Message msgId={`timeline.reset.${offsetEnabled ? "range" : !!selectedLayer ? "singleNearest" : "singleNow"}`} />,
+                                bsStyle: 'primary',
+                                onClick: reset
                             }
                         ]} />
                     {Playback && <Playback
@@ -321,6 +366,9 @@ const TimelinePlugin = compose(
                 </Button>
 
             </div>
+            {!timelineIsReady && <div className="timeline-loader">
+                <Loader size={50} />
+            </div>}
             {!collapsed &&
                 <Timeline
                     offsetEnabled={offsetEnabled}

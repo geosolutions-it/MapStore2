@@ -1,5 +1,6 @@
 import {includes, isNil} from 'lodash';
 const logical = ["and", "or", "not"];
+const cql = ["include"];
 const operators = {
     '=': "equalTo",
     "<>": "notEqualTo",
@@ -30,6 +31,9 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], value, property
         return filterBuilder[type](
             ...filters.map(fromObject(filterBuilder))
         );
+    }
+    if (includes(cql, type)) {
+        return "";
     }
     return filterBuilder.property(property)[operators[type]](isNil(value) ? lowerBoundary : value, upperBoundary);
 };

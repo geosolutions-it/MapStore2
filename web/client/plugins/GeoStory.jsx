@@ -94,7 +94,7 @@ const GeoStory = ({
 
     return (<BorderLayout
         className="ms-geostory"
-        columns={[<MapEditor {...props} add={addFunc} update={onUpdate} mode={mode} />]}>
+        columns={[<MapEditor {...props} buttonItems={props.items?.filter(item => item.target === 'mapEditorToolbar')} add={addFunc} update={onUpdate} mode={mode} hideIdentifyOptions={props.hideIdentifyOptions} />]}>
         <Story
             {...story}
             {...props} // add actions
@@ -137,6 +137,7 @@ GeoStory.defaultProps = {
  * @prop {object} cfg.mediaEditorSettings.sources[sourceId].addMediaEnabled[mediaType] enable add button (supported service types: geostory)
  * @prop {object} cfg.mediaEditorSettings.sources[sourceId].editMediaEnabled[mediaType] enable edit button (supported service types: geostory and geostore)
  * @prop {object} cfg.mediaEditorSettings.sources[sourceId].removeMediaEnabled[mediaType] enable remove button (supported service types: geostory)
+ * @prop {object} cfg.hideIdentifyOptions allow the exclusion of Identify drop down in map configuration
  * @example
  * // example of mediaEditorSettings configuration with only the geostory service
  * {

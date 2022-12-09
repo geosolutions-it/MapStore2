@@ -58,12 +58,14 @@ class DateTimePicker extends Component {
         placeholder: PropTypes.string,
         onChange: PropTypes.func,
         calendar: PropTypes.bool,
+        popupPosition: PropTypes.oneOf(['top', 'bottom']),
         time: PropTypes.bool,
         value: PropTypes.any,
         operator: PropTypes.string,
         culture: PropTypes.string,
         toolTip: PropTypes.string,
-        tabIndex: PropTypes.string
+        tabIndex: PropTypes.string,
+        options: PropTypes.object
     }
 
     static defaultProps = {
@@ -71,7 +73,8 @@ class DateTimePicker extends Component {
         calendar: true,
         time: true,
         onChange: () => { },
-        value: null
+        value: null,
+        popupPosition: 'bottom'
     }
 
     state = {
@@ -111,7 +114,7 @@ class DateTimePicker extends Component {
 
     render() {
         const { open, inputValue, operator, focused } = this.state;
-        const { calendar, time, toolTip, placeholder, tabIndex } = this.props;
+        const { calendar, time, toolTip, placeholder, tabIndex, popupPosition } = this.props;
         const props = Object.keys(this.props).reduce((acc, key) => {
             if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
                 // remove these props because they might have undesired effects to the subsequent components
@@ -142,14 +145,14 @@ class DateTimePicker extends Component {
                     </span>
                     : ''
                 }
-                <div className={`rw-popup-container rw-popup-animating`} style={{ display: timeVisible ? "block" : "none", overflow: timeVisible ? "visible" : "hidden", height: "216px" }}>
+                <div className={`rw-popup-container rw-popup-animating ${popupPosition === 'top' ? 'rw-dropup' : ''}`} style={{ display: timeVisible ? "block" : "none", overflow: timeVisible ? "visible" : "hidden", height: "216px" }}>
                     <div className={`rw-popup rw-widget`} style={{ transform: timeVisible ? 'translateY(0)' : 'translateY(-100%)', position: timeVisible ? '' : 'absolute' }}>
                         <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
                     </div>
                 </div>
-                <div className={`rw-calendar-popup rw-popup-container ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '375px' }}>
+                <div className={`rw-calendar-popup rw-popup-container ${popupPosition === 'top' ? 'rw-dropup' : ''} ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '285px' }}>
                     <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute' }}>
-                        <Calendar tabIndex="-1" ref={this.attachCalRef} onMouseDown={this.handleMouseDown} onChange={this.handleCalendarChange} {...props} />
+                        <Calendar tabIndex="-1" ref={this.attachCalRef} onMouseDown={this.handleMouseDown} onChange={this.handleCalendarChange} {...props} value={new Date(this.props.value)}/>
                     </div>
                 </div>
             </div>
@@ -292,7 +295,7 @@ class DateTimePicker extends Component {
     }
 
     handleCalendarChange = value => {
-        const date = setTime(value, new Date());
+        const date = setTime(value, this.state.date || new Date());
         const inputValue = this.format(date);
         this.setState({ date, inputValue, open: '' });
         this.props.onChange(date, `${this.state.operator}${inputValue}`);

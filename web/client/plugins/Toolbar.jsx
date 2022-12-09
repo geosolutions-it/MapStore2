@@ -123,7 +123,7 @@ class Toolbar extends React.Component {
             tools={this.getTools()}
             panels={this.getPanels()}
             activePanel={this.props.active}
-            style={this.props.style}
+            style={this.props.layout !== 'vertical' ? {...this.props.style, display: 'flex'} : this.props.style}
             panelStyle={this.props.panelStyle}
             panelClassName={this.props.panelClassName}
         />);

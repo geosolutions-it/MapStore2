@@ -8,10 +8,15 @@
 
 import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
+import { getRecordLinks, extractOGCServicesReferences } from '../../utils/CatalogUtils';
 
 import { getCapabilities, getCapabilitiesURL } from '../WFS';
 import xml2js from 'xml2js';
-
+import {
+    validate as commonValidate,
+    testService as commonTestService,
+    preprocess as commonPreprocess
+} from './common';
 
 import { get, castArray } from 'lodash';
 
@@ -71,7 +76,34 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     };
 };
 
-export const parseUrl = getCapabilitiesURL;
+const recordToLayer = (record) => {
+    const DEFAULT_VECTOR_STYLE = {
+        "weight": 1,
+        "color": "rgba(0, 0, 255, 1)",
+        "opacity": 1,
+        "fillColor": "rgba(0, 0, 255, 0.1)",
+        "fillOpacity": 0.1,
+        radius: 10
+    };
+    return {
+        type: record.type || "wfs",
+        search: {
+            url: record.url,
+            type: "wfs"
+        },
+        url: record.url,
+        queryable: record.queryable,
+        visibility: true,
+        name: record.name,
+        title: record.title || record.name,
+        description: record.description || "",
+        bbox: record.boundingBox,
+        links: getRecordLinks(record),
+        style: DEFAULT_VECTOR_STYLE,
+        ...record.layerOptions
+    };
+};
+
 export const getRecords = (url, startPosition, maxRecords, text, info) => {
     const cached = capabilitiesCache[url];
     if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
@@ -91,4 +123,36 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
         return searchAndPaginate(json, startPosition, maxRecords, text, info);
     });
 };
+
+export const preprocess = commonPreprocess;
+export const validate = commonValidate;
+export const testService = commonTestService({ parseUrl: getCapabilitiesURL });
 export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
+export const getCatalogRecords = ({records} = {}) => {
+    if (records) {
+        return records.map(record => {
+            const references = [{
+                type: "OGC:WFS-1.1.0-http-get-capabilities",
+                url: record.url
+            },
+            {
+                type: "OGC:WFS-1.1.0-http-get-feature",
+                url: record.url
+            }];
+            const { wfs: ogcReferences } = extractOGCServicesReferences({ references });
+            return {
+                ...record,
+                serviceType: 'wfs',
+                isValid: !!ogcReferences,
+                references,
+                ogcReferences
+            };
+        });
+    }
+    return null;
+};
+
+export const getLayerFromRecord = (record, options, asPromise) => {
+    const layer = recordToLayer(record, options);
+    return asPromise ? Promise.resolve(layer) : layer;
+};

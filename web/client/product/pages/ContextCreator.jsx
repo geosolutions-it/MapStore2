@@ -32,7 +32,8 @@ class ContextCreator extends React.Component {
         match: PropTypes.object,
         loadContext: PropTypes.func,
         reset: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        loaderComponent: PropTypes.func
     };
 
     static defaultProps = {
@@ -42,15 +43,12 @@ class ContextCreator extends React.Component {
         reset: () => {}
     };
 
-    UNSAFE_componentWillMount() {
-        const contextId = get(this.props, "match.params.contextId");
-        this.props.reset();
-        this.props.loadContext(contextId);
-    }
+    state = {};
+
     componentDidUpdate(oldProps) {
         const contextId = get(this.props, "match.params.contextId");
         const oldContextId = get(oldProps, "match.params.contextId");
-        if (contextId !== oldContextId) {
+        if (contextId !== oldContextId && this.state.pluginsAreLoaded) {
             this.props.reset();
             this.props.loadContext(contextId);
         }
@@ -58,6 +56,17 @@ class ContextCreator extends React.Component {
     componentWillUnmount() {
         this.props.reset();
     }
+
+    onLoaded = (pluginsAreLoaded) => {
+        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
+            this.setState({pluginsAreLoaded: true}, () => {
+                const contextId = get(this.props, "match.params.contextId");
+                this.props.reset();
+                this.props.loadContext(contextId);
+            });
+        }
+    }
+
     render() {
         return (<Page
             id="context-creator"
@@ -65,6 +74,8 @@ class ContextCreator extends React.Component {
             includeCommon={false}
             plugins={this.props.plugins}
             params={this.props.match.params}
+            loaderComponent={this.props.loaderComponent}
+            onLoaded={this.onLoaded}
         />);
     }
 }

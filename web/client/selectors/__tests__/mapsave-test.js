@@ -27,6 +27,16 @@ const state = {
                 }
             }
         }
+    },
+    timeline: {
+        selectedLayer: "timelineTestLayer",
+        settings: {
+            endValuesSupport: true,
+            snapRadioButtonEnabled: true
+        },
+        layers: [{
+            id: "TEST", title: "Test1", checked: true
+        }]
     }
 };
 describe('Test mapsave selectors', () => {
@@ -40,7 +50,17 @@ describe('Test mapsave selectors', () => {
         expect(retVal.widgetsConfig.layouts).toBe(state.widgets.containers.floating.layouts);
         expect(retVal.widgetsConfig.collapsed).toBe(state.widgets.containers.floating.collapsed);
     });
-
+    it('check timeline state is correctly selected', () => {
+        const retVal = mapOptionsToSaveSelector(state);
+        expect(retVal.timelineData).toExist();
+        expect(retVal.timelineData.endValuesSupport).toBe(true);
+        expect(retVal.timelineData.selectedLayer).toBe("timelineTestLayer");
+        expect(retVal.timelineData.snapRadioButtonEnabled).toBe(true);
+        expect(retVal.timelineData.layers).toBeTruthy();
+        expect(retVal.timelineData.layers).toEqual([{
+            id: "TEST", title: "Test1", checked: true
+        }]);
+    });
     it('check custom save handlers', () => {
         registerCustomSaveHandler('custom', (s) => s.custom);
         const retVal = mapOptionsToSaveSelector(state);

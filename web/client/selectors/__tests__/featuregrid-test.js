@@ -37,7 +37,7 @@ import {
     queryOptionsSelector,
     showTimeSync,
     timeSyncActive,
-    multiSelect
+    multiSelect, isViewportFilterActive, viewportFilter, isFilterByViewportSupported
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -574,5 +574,75 @@ describe('Test featuregrid selectors', () => {
             }
         };
         expect(multiSelect(state)).toBe(true);
+    });
+    it('isViewportFilterActive', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            }
+        };
+        expect(isViewportFilterActive(state)).toBe(true);
+    });
+    it('viewportFilter', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857',
+                    bbox: {
+                        bounds: [0, 0, 1, 1]
+                    }
+                }
+            }
+        };
+        const filter = viewportFilter(state);
+        expect(filter.spatialField.length).toBe(1);
+        expect(filter.spatialField[0].geometry.projection).toBe('EPSG:3857');
+        expect(filter.spatialField[0].method).toBe('Rectangle');
+        expect(filter.spatialField[0].operation).toBe('INTERSECTS');
+    });
+    it('viewportFilter - cesium', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857',
+                    bbox: {
+                        bounds: [0, 0, 1, 1]
+                    }
+                }
+            },
+            maptype: {
+                mapType: 'cesium'
+            }
+        };
+        const filter = viewportFilter(state);
+        expect(filter).toEqual({});
+    });
+    it('isViewportFilterSupported', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            },
+            maptype: {
+                mapType: 'openlayers'
+            }
+        };
+        expect(isFilterByViewportSupported(state)).toBe(true);
+    });
+    it('isViewportFilterSupported - cesium', () => {
+        const state = {
+            featuregrid: {
+                viewportFilter: true
+            },
+            maptype: {
+                mapType: 'cesium'
+            }
+        };
+        expect(isFilterByViewportSupported(state)).toBe(false);
     });
 });

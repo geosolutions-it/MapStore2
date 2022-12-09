@@ -71,7 +71,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -128,7 +127,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -183,7 +181,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -242,7 +239,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -296,7 +292,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -349,7 +344,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -404,7 +398,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -470,7 +463,6 @@ describe('RulesEditor', () => {
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
             'glyphicon glyphicon-filter',
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -507,7 +499,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -556,7 +547,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -625,7 +615,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 
@@ -701,7 +690,7 @@ describe('RulesEditor', () => {
         expect(symbolizersNode.length).toBe(1);
 
         const inputNodes = symbolizersNode[0].querySelectorAll('input');
-        expect(inputNodes.length).toBe(2);
+        expect(inputNodes.length).toBe(4);
         TestUtils.act(() => {
             TestUtils.Simulate.change(inputNodes[0], { target: { value: 'new-url' }});
         });
@@ -830,7 +819,6 @@ describe('RulesEditor', () => {
 
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-1-ruler',
             'glyphicon glyphicon-trash'
         ]);
 

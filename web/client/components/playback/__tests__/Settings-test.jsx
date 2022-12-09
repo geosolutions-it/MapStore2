@@ -17,7 +17,9 @@ describe('Timeline/Playback Settings component', () => {
         ReactDOM.render(<Settings />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
         expect(el).toExist();
+        expect(settingsTabs).toExist();
     });
     it('rendering with values', () => {
         ReactDOM.render(<Settings following stepUnit="days" timeStep={1} frameDuration={1} fixedStep />, document.getElementById("container"));
@@ -32,10 +34,69 @@ describe('Timeline/Playback Settings component', () => {
         expect(document.querySelector('select#formPlaybackStep').value).toBe('days');
     });
     it('test guide layer switch value', () => {
-        ReactDOM.render(<Settings fixedStep={false} />, document.getElementById("container"));
+        const snapTypes = [{
+            id: 'start',
+            value: 'start',
+            label: 'timeline.settings.snapToStart'
+        }, {
+            id: 'end',
+            value: 'end',
+            label: 'timeline.settings.snapToEnd'
+        }];
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
         expect(document.querySelectorAll('input[type=checkbox]')[0].checked).toBe(true);
+        let radioButtonInputs = document.getElementsByClassName('snap-type-radio-btn');
+        expect(radioButtonInputs).toExist();
+        expect(radioButtonInputs.length).toBe(2);
+        const snapToStartBtn = radioButtonInputs[0];
+        const snapToEndBtn = radioButtonInputs[1];
+        expect(snapToStartBtn.checked).toBe(true);
+        expect(snapToEndBtn.checked).toBe(false);
         ReactDOM.render(<Settings fixedStep />, document.getElementById("container"));
         expect(document.querySelectorAll('input[type=checkbox]')[0].checked).toBe(false);
+        radioButtonInputs = document.getElementsByClassName('snap-type-radio-btn');
+        expect(radioButtonInputs.length).toBe(0);
+    });
+    it('test toggle snap moment radio button', () => {
+        const snapTypes = [{
+            id: 'start',
+            value: 'start',
+            label: 'timeline.settings.snapToStart'
+        }, {
+            id: 'end',
+            value: 'end',
+            label: 'timeline.settings.snapToEnd'
+        }];
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport snapRadioButtonEnabled/>, document.getElementById("container"));
+        const radioButtonInputs = document.querySelectorAll('input[type=radio]');
+        expect(radioButtonInputs).toExist();
+        expect(radioButtonInputs.length).toBe(2);
+        const snapToStartBtn = radioButtonInputs[0];
+        const snapToEndBtn = radioButtonInputs[1];
+        expect(snapToStartBtn.checked).toBe(true);
+        expect(snapToEndBtn.checked).toBe(false);
+        snapToEndBtn.checked = true;
+        expect(snapToStartBtn.checked).toBe(false);
+        expect(snapToEndBtn.checked).toBe(true);
+    });
+    it('test snap type radio button disabled', () => {
+        const snapTypes = [{
+            id: 'start',
+            value: 'start',
+            label: 'timeline.settings.snapToStart'
+        }, {
+            id: 'end',
+            value: 'end',
+            label: 'timeline.settings.snapToEnd'
+        }];
+        ReactDOM.render(<Settings fixedStep={false} snapTypes={snapTypes} endValuesSupport/>, document.getElementById("container"));
+        const radioButtonInputs = document.querySelectorAll('input[type=radio]');
+        expect(radioButtonInputs).toExist();
+        expect(radioButtonInputs.length).toBe(2);
+        const snapToStartBtn = radioButtonInputs[0];
+        const snapToEndBtn = radioButtonInputs[1];
+        expect(snapToStartBtn.classList.contains('disabled')).toBe(true);
+        expect(snapToEndBtn.classList.contains('disabled')).toBe(true);
     });
     it('Test toggleAnimationMode', () => {
         const actions = {
@@ -162,5 +223,49 @@ describe('Timeline/Playback Settings component', () => {
         expect(spyClick.calls[0].arguments[1]).toBe(true);
     });
 
-
+    it('Test layers', () => {
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const layers = container.querySelectorAll('.layer-setting');
+        expect(layers.length).toBe(1);
+    });
+    it('Test layers disable checkbox if only one layer present', () => {
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const input = container.querySelector('.layer-setting input');
+        expect(input.disabled).toBe(true);
+    });
+    it('Test layers disable guide layer', () => {
+        ReactDOM.render(<Settings layers={[{id: "TEST", title: "TEST", hideInTimeline: false}, {id: "TEST1", title: "TEST1", hideInTimeline: false}]} selectedLayer={"TEST"} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const input = container.querySelector('.layer-setting input');
+        expect(input.disabled).toBe(true);
+    });
+    it('Test layers on changeLayerSetting', () => {
+        const action = {
+            changeLayerSetting: () => { }
+        };
+        const spyOn = expect.spyOn(action, 'changeLayerSetting');
+        ReactDOM.render(<Settings
+            layers={[{id: "TEST", title: "TEST", hideInTimeline: false}, {id: "TEST1", title: "TEST1", hideInTimeline: false}]}
+            changeLayerSetting={action.changeLayerSetting} />,
+        document.getElementById("container"));
+        const container = document.getElementById('container');
+        const settingsTabs = container.querySelector('#playback-settings-tabs');
+        expect(settingsTabs).toExist();
+        ReactTestUtils.Simulate.click(document.querySelector("#playback-settings-tabs-tab-2"));
+        const layersCheckbox = container.querySelectorAll('.layer-setting input');
+        ReactTestUtils.Simulate.change(layersCheckbox[0], {target: {checked: false}});
+        expect(spyOn.calls[0].arguments[0]).toBe("TEST");
+        expect(spyOn.calls[0].arguments[1]).toBe(false);
+    });
 });

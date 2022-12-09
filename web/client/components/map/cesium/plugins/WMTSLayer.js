@@ -7,13 +7,13 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from 'cesium';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {
     getProxyUrl,
     needProxy
 } from '../../../../utils/ProxyUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
-import Cesium from '../../../../libs/cesium';
 import { getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
 import assign from 'object-assign';
 import { isObject, isArray, slice, get, head} from 'lodash';
@@ -113,10 +113,14 @@ function wmtsToCesiumOptions(options) {
     }
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSetID]);
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
-
+    const cr = options.credits;
+    const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : '';
     return assign({
         // TODO: multi-domain support, if use {s} switches to RESTFul mode
-        url: head(getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString)),
+        url: new Cesium.Resource({
+            url: head(getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString)),
+            proxy: proxy && new WMTSProxy(proxy) || new NoProxy()
+        }),
         // set image format to png if vector to avoid errors while switching between map type
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         isValid,
@@ -124,11 +128,11 @@ function wmtsToCesiumOptions(options) {
         //    isReady: () => true,
         //    shouldDiscardImage: ({x, y, level}) => !isValid(x, y, level)
         // }, // not supported yet
+        credit,
         layer: options.name,
         style: options.style || "",
         tileMatrixLabels: matrixIds,
         tilingScheme: getTilingSchema(srs, options.matrixIds[tileMatrixSetID]),
-        proxy: proxy && new WMTSProxy(proxy) || new NoProxy(),
         enablePickFeatures: false,
         tileWidth: options.tileWidth || options.tileSize || 256,
         tileHeight: options.tileHeight || options.tileSize || 256,
@@ -155,7 +159,8 @@ const createLayer = options => {
 
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (newOptions.securityToken !== oldOptions.securityToken
-    || oldOptions.format !== newOptions.format) {
+    || oldOptions.format !== newOptions.format
+    || oldOptions.credits !== newOptions.credits) {
         return createLayer(newOptions);
     }
     return null;

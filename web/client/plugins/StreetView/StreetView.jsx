@@ -72,6 +72,22 @@ export default createPlugin(
                 tooltip: "streetView.tooltip",
                 icon: <Glyphicon glyph="road" />,
                 action: () => toggleStreetView()
+            },
+            SidebarMenu: {
+                position: 40,
+                priority: 1,
+                doNotHide: true,
+                name: CONTROL_NAME,
+                text: <Message msgId="streetView.title"/>,
+                tooltip: "streetView.tooltip",
+                icon: <Glyphicon glyph="road" />,
+                action: () => toggleStreetView(),
+                selector: (state) => {
+                    return {
+                        bsStyle: state.controls["street-view"] && state.controls["street-view"].enabled ? 'primary' : 'tray',
+                        active: state.controls["street-view"] && state.controls["street-view"].enabled || false
+                    };
+                }
             }
         }
     }

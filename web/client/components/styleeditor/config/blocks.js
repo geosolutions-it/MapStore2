@@ -12,14 +12,74 @@ import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
-const getBlocks = (/* config = {} */) => {
+const vector3dStyleOptions = ({ label = 'styleeditor.clampToGround' }) => ({
+    msClampToGround: property.msClampToGround({
+        label
+    })
+});
+
+const INITIAL_OPTION_VALUE = '@ms-INITIAL_OPTION_VALUE';
+
+const heightPoint3dOptions = {
+    msHeightReference: property.msHeightReference({
+        label: "styleeditor.heightReferenceFromGround"
+    }),
+    msHeight: property.multiInput({
+        label: "styleeditor.height",
+        key: "msHeight",
+        isDisabled: (value, properties) => properties?.msHeightReference === 'clamp',
+        initialOptionValue: INITIAL_OPTION_VALUE,
+        getSelectOptions: ({ attributes }) => {
+            const numberAttributes = attributes
+                .map(({ label, attribute, type }) =>
+                    type === "number" ? { label, value: attribute } : null
+                )
+                .filter((x) => !!x);
+            return [
+                { labelId: 'styleeditor.pointHeight', value: INITIAL_OPTION_VALUE },
+                ...numberAttributes
+            ];
+        }
+    }),
+    msLeaderLineColor: property.color({
+        key: 'msLeaderLineColor',
+        opacityKey: 'msLeaderLineOpacity',
+        label: 'styleeditor.leaderLineColor',
+        stroke: true
+    }),
+    msLeaderLineWidth: property.width({
+        key: 'msLeaderLineWidth',
+        label: 'styleeditor.leaderLineWidth',
+        fallbackValue: 0
+    })
+};
+
+const point3dStyleOptions = {
+    msBringToFront: property.msBringToFront({
+        label: "styleeditor.msBringToFront"
+    }),
+    ...heightPoint3dOptions
+};
+
+const polygon3dStyleOptions = {
+    msClassificationType: property.msClassificationType({
+        label: 'styleeditor.classificationtype'
+    })
+};
+
+const getBlocks = ({
+    exactMatchGeometrySymbol,
+    enable3dStyleOptions
+} = {}) => {
     const symbolizerBlock = {
         Mark: {
             kind: 'Mark',
             glyph: '1-point',
             glyphAdd: '1-point-add',
             tooltipAddId: 'styleeditor.addMarkRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['point', 'vector']
+                : ['point', 'linestring', 'polygon', 'vector'],
             params: {
                 wellKnownName: property.shape({
                     label: 'styleeditor.shape'
@@ -45,7 +105,8 @@ const getBlocks = (/* config = {} */) => {
                 }),
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
-                })
+                }),
+                ...(enable3dStyleOptions ? point3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Mark',
@@ -56,7 +117,9 @@ const getBlocks = (/* config = {} */) => {
                 strokeOpacity: 1,
                 strokeWidth: 1,
                 radius: 16,
-                rotate: 0
+                rotate: 0,
+                msBringToFront: false,
+                msHeightReference: 'none'
             }
         },
         Icon: {
@@ -64,7 +127,10 @@ const getBlocks = (/* config = {} */) => {
             glyph: 'point',
             glyphAdd: 'point-plus',
             tooltipAddId: 'styleeditor.addIconRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['point', 'vector']
+                : ['point', 'linestring', 'polygon', 'vector'],
+            hideMenu: true,
             params: {
                 image: property.image({
                     label: 'styleeditor.image',
@@ -89,14 +155,17 @@ const getBlocks = (/* config = {} */) => {
                 }),
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
-                })
+                }),
+                ...(enable3dStyleOptions ? point3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Icon',
                 image: '',
                 opacity: 1,
                 size: 32,
-                rotate: 0
+                rotate: 0,
+                msBringToFront: false,
+                msHeightReference: 'none'
             }
         },
         Line: {
@@ -104,7 +173,9 @@ const getBlocks = (/* config = {} */) => {
             glyph: 'line',
             glyphAdd: 'line-plus',
             tooltipAddId: 'styleeditor.addLineRule',
-            supportedTypes: ['linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['linestring', 'vector']
+                : ['linestring', 'polygon', 'vector'],
             params: {
                 color: property.color({
                     label: 'styleeditor.strokeColor',
@@ -139,7 +210,8 @@ const getBlocks = (/* config = {} */) => {
                 join: property.join({
                     label: 'styleeditor.lineJoin',
                     key: 'join'
-                })
+                }),
+                ...(enable3dStyleOptions ? vector3dStyleOptions({ label: 'styleeditor.clampToGround' }) : {})
             },
             defaultProperties: {
                 kind: 'Line',
@@ -147,7 +219,8 @@ const getBlocks = (/* config = {} */) => {
                 width: 1,
                 opacity: 1,
                 cap: 'round',
-                join: 'round'
+                join: 'round',
+                msClampToGround: true
             }
         },
         Fill: {
@@ -185,21 +258,145 @@ const getBlocks = (/* config = {} */) => {
                 outlineWidth: property.width({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
-                })
+                }),
+                ...(enable3dStyleOptions ? {...polygon3dStyleOptions, ...vector3dStyleOptions({ label: 'styleeditor.clampOutlineToGround' })} : {})
             },
             defaultProperties: {
                 kind: 'Fill',
                 color: '#dddddd',
                 fillOpacity: 1,
                 outlineColor: '#777777',
-                outlineWidth: 1
+                outlineWidth: 1,
+                msClassificationType: 'both',
+                msClampToGround: true
+            }
+        },
+        PointCloud: {
+            kind: 'Mark',
+            glyph: '1-point',
+            glyphAdd: '1-point-add',
+            tooltipAddId: 'styleeditor.addMarkRule',
+            supportedTypes: ['pointcloud'],
+            hideMenu: true,
+            params: {
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'fillOpacity',
+                    label: 'styleeditor.fill'
+                }),
+                radius: property.size({
+                    key: 'radius',
+                    label: 'styleeditor.radius',
+                    range: {
+                        min: 1,
+                        max: 10
+                    }
+                })
+            },
+            defaultProperties: {
+                kind: 'Mark',
+                wellKnownName: 'Circle',
+                color: '#dddddd',
+                fillOpacity: 1,
+                radius: 1
+            }
+        },
+        Polyhedron: {
+            kind: 'Fill',
+            glyph: 'polygon',
+            glyphAdd: 'polygon-plus',
+            tooltipAddId: 'styleeditor.addFillRule',
+            supportedTypes: ['polyhedron'],
+            hideMenu: true,
+            params: {
+                color: property.color({
+                    label: 'styleeditor.fill',
+                    key: 'color',
+                    opacityKey: 'fillOpacity',
+                    pattern: true,
+                    graphicKey: 'graphicFill',
+                    getGroupParams: (kind) => symbolizerBlock[kind],
+                    getGroupConfig: (kind) => {
+                        if (kind === 'Mark') {
+                            return {};
+                        }
+                        if (kind === 'Icon') {
+                            return {
+                                omittedKeys: ['rotate', 'opacity']
+                            };
+                        }
+                        return {};
+                    }
+                })
+            },
+            defaultProperties: {
+                kind: 'Fill',
+                color: '#dddddd',
+                fillOpacity: 1
+            }
+        },
+        Model: {
+            kind: 'Model',
+            glyph: 'model',
+            glyphAdd: 'model-plus',
+            tooltipAddId: 'styleeditor.addModelRule',
+            supportedTypes: enable3dStyleOptions ? ['point', 'vector'] : [],
+            hideMenu: true,
+            params: {
+                model: property.model({
+                    label: 'styleeditor.model',
+                    key: 'model'
+                }),
+                scale: property.number({
+                    key: 'scale',
+                    label: 'styleeditor.scale',
+                    fallbackValue: 1,
+                    maxWidth: 80
+                }),
+                pitch: property.number({
+                    key: 'pitch',
+                    label: 'styleeditor.pitch',
+                    fallbackValue: 0,
+                    maxWidth: 105,
+                    uom: '°'
+                }),
+                roll: property.number({
+                    key: 'roll',
+                    label: 'styleeditor.roll',
+                    fallbackValue: 0,
+                    maxWidth: 105,
+                    uom: '°'
+                }),
+                heading: property.number({
+                    key: 'heading',
+                    label: 'styleeditor.heading',
+                    fallbackValue: 0,
+                    maxWidth: 105,
+                    uom: '°'
+                }),
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'opacity',
+                    label: 'styleeditor.color'
+                }),
+                ...(enable3dStyleOptions ? heightPoint3dOptions : {})
+            },
+            defaultProperties: {
+                kind: 'Model',
+                model: '',
+                scale: 1,
+                color: '#ffffff',
+                opacity: 1,
+                msHeightReference: 'none'
             }
         },
         Text: {
             kind: 'Text',
             glyph: 'font',
             tooltipAddId: 'styleeditor.addTextRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: exactMatchGeometrySymbol
+                ? ['point', 'vector']
+                : ['point', 'linestring', 'polygon', 'vector'],
             params: {
                 label: property.select({
                     key: 'label',
@@ -264,7 +461,8 @@ const getBlocks = (/* config = {} */) => {
                 offsetY: property.offset({
                     label: 'styleeditor.offsetY',
                     axis: 'y'
-                })
+                }),
+                ...(enable3dStyleOptions ? point3dStyleOptions : {})
             },
             defaultProperties: {
                 kind: 'Text',
@@ -275,7 +473,9 @@ const getBlocks = (/* config = {} */) => {
                 haloColor: '#ffffff',
                 haloWidth: 1,
                 allowOverlap: true,
-                offset: [0, 0]
+                offset: [0, 0],
+                msBringToFront: false,
+                msHeightReference: 'none'
             }
         },
         Raster: {

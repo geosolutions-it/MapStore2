@@ -104,6 +104,7 @@
             "templateFormatInfoAlert2": "Gebruik ${ attribute } om de eigenschappen die je wenst te tonen aan te duiden.",
             "templateFormatInfoAlertExample": "Het id van het object is ${ properties }",
             "templatePreview": "Sjabloon voorbeeld",
+            "heightOffset": "Height offset (m)",
 	    "visibilityLimits": {
                 "title": "Zichtbaarheidslimieten",
                 "serverValuesUpdateUndefined": "De server heeft geen limieten voor de zichtbaarheid van de schaal voor deze laag opgegeven",
@@ -275,15 +276,7 @@
             "Examples": "Voorbeelden",
             "LinkedinGroup": "Mapstore Linkedin groep",
             "scrollTop": "Terug naar boven",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-            "ml": {
-                "title": "Blijf op de hoogte van de laatste ontwikkelingen via mailinglijsten",
-                "subscribe_users": "Abonneer u op de gebruikers mailinglijsten",
-                "subscribe_devel": "Abonneer je op de mailinglijsten van ontwikkelaars",
-                "visit_group": "Ga naar deze groep",
-                "subscribe": "Abonneren",
-                "email": "E-mail:"
-            },
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Eenvoudige viewer</p>"
@@ -735,7 +728,25 @@
             "selectTool": "Selecteer een meetinstrument",
             "exportToGeoJSON": "Exporteer naar GeoJSON",
             "resetTooltip": "Verwijder metingen",
-            "addAsLayer": "Voeg toe als laag"
+            "addAsLayer": "Voeg toe als laag",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "layerMustBeVisible": "De doellaag is inactief",
@@ -1272,12 +1283,15 @@
             "msgToCopyUrl": "Klik om te kopiëren",
             "sharedTitle": "Bekijk mijn nieuwe kaart: ",
             "addCenterAndZoomParam": "Voeg centrum en zoom toe aan link voor delen",
-	    "addMarkerAndZoomParam": "Voeg plaatsmarkering toe en zoom in op link voor delen",
+	          "addMarkerAndZoomParam": "Voeg plaatsmarkering toe en zoom in op link voor delen",
             "zoom": "Zoom",
             "marker": "Voeg marker toe op geladen kaart",
             "coordinate": "Coordinaat",
             "coordTooltip": "Klik op de kaart om de coördinaten te pakken",
             "zoomToolTip": "Min: 1 en Max: 35",
+            "headingToolTip": "Min: 0° en Max: 360°",
+            "rollToolTip": "Min: -90° en Max: 90°",
+            "pitchToolTip": "Min: -90° en Max: 90°",
             "wrongCenterAndZoomParamTitle": "Ongeldige centrum- en zoomparameter",
             "wrongCenterAndZoomParamMessage": "Centrum en zoomparameters moeten centrum = lon, lat & zoom = waarde en (+ | - 90 ° lat, + | -180 ° lon, <= + 35 zoom) zijn",
             "wrongMarkerAndZoomParamTitle": "Ongeldige marker en zoomparameter",
@@ -1288,7 +1302,10 @@
             "wrongBboxParamMessage": "Bounding box params moeten in EPSG: 4326 staan en geschreven zijn als bbox = minx, miny, maxx, maxy",
             "showHomeButton": "Link naar MapStore-startpagina",
             "showSectionId": "Inclusief scroll-positie",
-	    "showConnections": "Show connections"
+	          "showConnections": "Show connections",
+            "heading": "Koershoek",
+            "roll": "Rolhoek",
+            "pitch": "Hellingshoek"
         },
         "snapshot": {
             "title": "momentopname-voorbeeld",
@@ -1638,6 +1655,7 @@
         },
         "layerdownload": {
             "title": "Exporteer Data",
+            "service": "Service",
             "format": "Bestandsformaat",
             "srs":  "Coördinaten ReferentieSysteem",
             "export": "Exporteer",
@@ -2064,7 +2082,7 @@
             "deletedStyleErrorMessage": "Kan huidige stijl niet verwijderen",
             "savedStyleTitle": "Stijl opgeslagen",
             "savedStyleMessage": "Stijl is succesvol opgeslagen",
-	    "errorTitle": "StyleEditor error",
+	        "errorTitle": "StyleEditor error",
             "parsingCapabilitiesError": "<h4>Mogelijke oorzaken:</h4> het was niet mogelijk de mogelijkheden te ontleden en de stijlen op te halen",
             "globalError": "<h4>Mogelijke oorzaken:</h4> het was niet mogelijk om verbinding te maken met de service",
             "missingAvailableStyles": "Ontbrekende stijlen",
@@ -2218,7 +2236,13 @@
             "imageSrcInvalidBase64": "Dit is geen geldige base64-image. Sommige stijlrenderers ondersteunen dit type bron niet, je zou in plaats daarvan een externe url-bron kunnen gebruiken",
             "imageSrcNotSupportedBase64Image": "Sommige stijlrenderers ondersteunen geen base64-afbeeldingen, zelfs niet als de huidige bron geldig is",
             "warningTextOrderTitle": "Waarschuwing",
-            "warningTextOrder": "De volgorde van de regel met de tekststijl kan niet overeenkomen met de weergavevolgorde op de kaart. Dit gedrag is gerelateerd aan een rendering-engine die een label boven andere regels plaatst"
+            "warningTextOrder": "De volgorde van de regel met de tekststijl kan niet overeenkomen met de weergavevolgorde op de kaart. Dit gedrag is gerelateerd aan een rendering-engine die een label boven andere regels plaatst",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {
@@ -2636,6 +2660,7 @@
             "titlePlaceholder": "Voer de weergavenaam naam in",
             "add": "Toevoegen",
             "thumbnailMessage": "De grootte van de afbeeldingen moet een vierkant zijn van 98px x 98px of 128px x 128px, max. 500kb",
+            "imageUploadMessage": "Klik of sleep en drop om een ​​afbeelding toe te voegen",
             "additionalParameters": "Aanvullende parameters",
             "addAdditionalParameterTooltip": "Parameter toevoegen",
             "removeAdditionalParameterTooltip": "Verwijder parameter",

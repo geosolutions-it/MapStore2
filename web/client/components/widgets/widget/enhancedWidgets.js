@@ -1,7 +1,7 @@
 import { compose } from 'recompose';
 
 // enhancers for base menus and functionalities
-import chartWidget from '../enhancers/chartWidget';
+import chartWidget, { chartWidgetProps } from '../enhancers/chartWidget';
 import counterWidget from '../enhancers/counterWidget';
 import tableWidget from '../enhancers/tableWidget';
 import legendWidget from '../enhancers/legendWidget';
@@ -41,9 +41,10 @@ import BaseLegendWidget from './LegendWidget';
  * @prop {boolean} mapSync if true, this is in sync with a map
  * @prop {string} geomProp the geometry, required to generate spatial filter
  * @prop {object} layer The layer object where to perform the requests
- * @prop {object} options options for the backing service. E.g. for WPS `{groupByAttributes: "STATE_NAME", aggregationAttribute: "LAND_KM", aggregateFunction: "Sum"}`
+ * @prop {object} options for the backing service. E.g. for WPS `{groupByAttributes: "STATE_NAME", aggregationAttribute: "LAND_KM", aggregateFunction: "Sum"}`
  */
 export const ChartWidget = compose(
+    chartWidgetProps,
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,
@@ -99,7 +100,7 @@ export const TableWidget = compose(
  * @prop {object} dependenciesMap a map of dependencies that provides the needed props to the widget
  * @prop {string} geomProp the geometry, required to generate spatial filter
  * @prop {object} layer The layer object where to perform the requests
- * @prop {object} options options for the backing service. E.g. for WPS `{groupByAttributes: "STATE_NAME", aggregationAttribute: "LAND_KM", aggregateFunction: "Sum"}`
+ * @prop {object} options for the backing service. E.g. for WPS `{groupByAttributes: "STATE_NAME", aggregationAttribute: "LAND_KM", aggregateFunction: "Sum"}`
  */
 export const CounterWidget = compose(
     dependenciesToWidget,
@@ -113,7 +114,7 @@ export const CounterWidget = compose(
  * Legend widgets with dependencies management and all base enhancers. Adds to the base component the following props.
  * @prop {object} dependencies values for dependenciesMap.
  * @prop {object} dependenciesMap a map of dependencies that provides the needed props to the widget
- * @prop {object} env env parameter for legend localization
+ * @prop {object} env parameter for legend localization
  */
 export const LegendWidget = compose(
     dependenciesToWidget,

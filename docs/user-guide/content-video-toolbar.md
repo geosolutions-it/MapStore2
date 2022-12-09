@@ -1,13 +1,14 @@
 # Video Content Toolbar
+
 **********************
 
-As soon as a video content is added, the Video Content Toolbar appears on top of the video: 
+As soon as a video content is added, the Video Content Toolbar appears on top of the video:
 
 <img src="../img/content-video-toolbar/c-video-toolbar.jpg" class="ms-docimage"/>
 
 Through this toolbar, the story editor is able to perform the following operation:
 
-* **Change media source** <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> to open the [Media Editor](media-editor-window.md) and change (or configure) the media content
+* **Change media source** <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> to open the [Media Editor](media-editor-window.md#media-editor-window) and change (or configure) the media content
 
 * **Mute video** <img src="../img/button/mute-video-button.jpg" class="ms-docbutton"/> to disable the video audio
 
@@ -15,7 +16,7 @@ Through this toolbar, the story editor is able to perform the following operatio
 
 * **Enable Loop** <img src="../img/button/loop-botton.jpg" class="ms-docbutton"/> to continuously repeat the video
 
-* **Hide caption** button <img src="../img/button/hide-caption.jpg" class="ms-docbutton"/> to show/hide the description under the video: this button is present only if a description has been provided for the video resource (see the [Media Editor](media-editor-window.md) tool for example)
+* **Hide caption** button <img src="../img/button/hide-caption.jpg" class="ms-docbutton"/> to show/hide the description under the video: this button is present only if a description has been provided for the video resource (see the [Media Editor](media-editor-window.md#media-editor-window) tool for example)
 
 * **Remove** <img src="../img/button/remove2.jpg" class="ms-docbutton"/> the video content
 

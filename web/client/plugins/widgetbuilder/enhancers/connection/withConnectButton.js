@@ -22,16 +22,18 @@ export default (showCondition = () => true) => compose(
         ...props
     }) => ({
         stepButtons: [...stepButtons, {
-            onClick: () => toggleConnection(availableDependencies),
+            onClick: () => toggleConnection(availableDependencies, props.widgets),
             disabled: disableMultiDependencySupport,
-            visible: !!showCondition(props) && !!canConnect && availableDependencies.length > 0,
-            bsStyle: connected ? "success" : "primary",
+            visible: !!showCondition(props) && availableDependencies.length > 0,
+            bsStyle: (!disableMultiDependencySupport && connected) ? "success" : "primary",
             glyph: connected ? "plug" : "unplug",
-            tooltipId: connected
-                ? "widgets.builder.wizard.clearConnection"
-                : availableDependencies.length === 1
-                    ? "widgets.builder.wizard.connectToTheMap"
-                    : "widgets.builder.wizard.connectToAMap"
+            tooltipId: (disableMultiDependencySupport || !canConnect)
+                ? "widgets.builder.wizard.disableConnectToMap"
+                : connected
+                    ? "widgets.builder.wizard.clearConnection"
+                    : availableDependencies.length === 1
+                        ? "widgets.builder.wizard.connectToTheMap"
+                        : "widgets.builder.wizard.connectToAMap"
         }
         ]
     }))

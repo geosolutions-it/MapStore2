@@ -16,6 +16,7 @@ import {
     searchGeostories as searchGeostoriesEpic,
     reloadOnGeostories
 } from '../geostories';
+import { loginSuccess, logout } from '../../actions/security';
 
 import { storySaved } from '../../actions/geostory';
 import { SEARCH_GEOSTORIES, searchGeostories, LOADING, GEOSTORIES_LIST_LOADED } from '../../actions/geostories';
@@ -72,6 +73,46 @@ describe('geostories epics', () => {
     describe('reloadOnGeostories', () => {
         it('reload on storySaved', (done) => {
             const startActions = [storySaved("Search Text")];
+            testEpic(reloadOnGeostories, 1, startActions, ([a]) => {
+                expect(a.type).toBe(SEARCH_GEOSTORIES);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                geostories: {
+                    searchText: "test",
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
+        });
+        it('reload on login', (done) => {
+            const startActions = [loginSuccess()];
+            testEpic(reloadOnGeostories, 1, startActions, ([a]) => {
+                expect(a.type).toBe(SEARCH_GEOSTORIES);
+                expect(a.params.start).toBe(0);
+                expect(a.params.limit).toBe(12);
+                expect(a.searchText).toBe("test");
+                done();
+            }, {
+                geostories: {
+                    searchText: "test",
+                    options: {
+                        params: {
+                            start: 0,
+                            limit: 12
+                        }
+                    }
+                }
+            });
+        });
+        it('reload on logout', (done) => {
+            const startActions = [logout()];
             testEpic(reloadOnGeostories, 1, startActions, ([a]) => {
                 expect(a.type).toBe(SEARCH_GEOSTORIES);
                 expect(a.params.start).toBe(0);

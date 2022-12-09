@@ -10,7 +10,8 @@ import './settings/css/settings.css';
 
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { cloneElement } from 'react';
+import { castArray } from 'lodash';
 import { Col, FormGroup, Glyphicon, Panel, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ActionCreators } from 'redux-undo';
@@ -118,8 +119,10 @@ class SettingsButton extends React.Component {
         return Object.keys(settingsFirst)
             .filter(this.isEnabled)
             .map((setting) => settingsFirst[setting])
-            // TODO: here every item (item.tool) we emit should have a "key" property
-            .concat(this.props.items.map((item) => item.tool))
+            .concat(this.props.items.map((item) =>
+                castArray(item.tool)
+                    .map((tool, idx) => cloneElement(tool, { ...item.cfg, key: `${item.name}-${idx}` }))
+            ))
             .concat(
                 Object.keys(settingsLast)
                     .filter(this.isEnabled)
@@ -206,6 +209,17 @@ export default {
             text: <Message msgId="settings"/>,
             tooltip: "settingsTooltip",
             icon: <Glyphicon glyph="cog"/>,
+            action: toggleControl.bind(null, 'settings', null),
+            priority: 4,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            name: 'settings',
+            position: 100,
+            tooltip: "settingsTooltip",
+            text: <Message msgId="settings"/>,
+            icon: <Glyphicon glyph="cog"/>,
+            toggle: true,
             action: toggleControl.bind(null, 'settings', null),
             priority: 3,
             doNotHide: true

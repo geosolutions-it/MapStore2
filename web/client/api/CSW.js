@@ -8,11 +8,11 @@
 
 import urlUtil from 'url';
 
-import { get, head, last, template, isNil } from 'lodash';
+import { get, head, last, template, isNil, castArray, isEmpty } from 'lodash';
 import assign from 'object-assign';
 
 import axios from '../libs/ajax';
-import {cleanDuplicatedQuestionMarks, getConfigProp} from '../utils/ConfigUtils';
+import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG } from '../utils/CoordinatesUtils';
 import WMS from "../api/WMS";
 
@@ -82,38 +82,146 @@ export const constructXMLBody = (startPosition, maxRecords, searchText, {filter}
     return template(cswGetRecordsXml)({filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords});
 };
 
+// Extract the relevant information from the wms URL for (RNDT / INSPIRE)
+const extractWMSParamsFromURL = wms => {
+    const lowerCaseParams = new Map(Array.from(new URLSearchParams(wms.value)).map(([key, value]) => [key.toLowerCase(), value]));
+    const layerName = lowerCaseParams.get('layers');
+    const wmsVersion = lowerCaseParams.get('version');
+    if (layerName) {
+        return {
+            ...wms,
+            protocol: 'OGC:WMS',
+            name: layerName,
+            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERVICE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
+        };
+    }
+    return false;
+};
+
+const toReference = (layerType, data, options) => {
+    if (!data.name) {
+        return null;
+    }
+    switch (layerType) {
+    case 'wms':
+        const urlValue = !(data.value.indexOf("http") === 0)
+            ? (options && options.catalogURL || "") + "/" + data.value
+            : data.value;
+        return {
+            type: data.protocol || data.scheme,
+            url: urlValue,
+            SRS: [],
+            params: {
+                name: data.name
+            }
+        };
+    case 'arcgis':
+        return {
+            type: 'arcgis',
+            url: data.value,
+            SRS: [],
+            params: {
+                name: data.name
+            }
+        };
+    default:
+        return null;
+    }
+};
+
+const REGEX_WMS_EXPLICIT = [/^OGC:WMS-(.*)-http-get-map/g, /^OGC:WMS/g];
+const REGEX_WMS_EXTRACT = /serviceType\/ogc\/wms/g;
+const REGEX_WMS_ALL = REGEX_WMS_EXPLICIT.concat(REGEX_WMS_EXTRACT);
+
+export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
+    const URI = dc?.URI && castArray(dc.URI);
+    // look in URI objects for wms and thumbnail
+    if (URI) {
+        const wms = head(URI.map( uri => {
+            if (uri.protocol) {
+                if (REGEX_WMS_EXPLICIT.some(regex => uri.protocol.match(regex))) {
+                    /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
+                    return uri;
+                }
+                if (uri.protocol.match(REGEX_WMS_EXTRACT)) {
+                    /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                    return extractWMSParamsFromURL(uri);
+                }
+            }
+            return false;
+        }).filter(item => item));
+        if (wms) {
+            return toReference('wms', wms, options);
+        }
+    }
+    // look in references objects
+    if (dc?.references?.length) {
+        const refs = castArray(dc.references);
+        const wms = head(refs.filter((ref) => { return ref.scheme && REGEX_WMS_EXPLICIT.some(regex => ref.scheme.match(regex)); }));
+        if (wms) {
+            let urlObj = urlUtil.parse(wms.value, true);
+            let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
+            return toReference('wms', { ...wms, name: layerName }, options);
+        }
+        if (checkEsri) {
+            // checks for esri arcgis in geonode csw
+            const esri = head(refs.filter((ref) => {
+                return ref.scheme && ref.scheme === "WWW:DOWNLOAD-REST_MAP";
+            }));
+            if (esri) {
+                return toReference('arcgis', {...esri, name: dc.alternative}, options);
+            }
+        }
+    }
+    return null;
+};
+
 let capabilitiesCache = {};
 
 /**
  * Add capabilities data to CSW records
+ * if corresponding capability flag is enabled and WMS url is found
  * Currently limited to only scale denominators (visibility limits)
- * @param {string} url wms url
+ * @param {object[]} _dcRef dc.reference or dc.URI
  * @param {object} result csw results object
+ * @param {object} options csw service options
+ * @return {object} csw records
  */
-const addCapabilitiesToRecords = (url, result) => {
-    const cached = capabilitiesCache[url];
-    const isCached = cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000;
+const addCapabilitiesToRecords = (_dcRef, result, options) => {
+    // Currently, visibility limits is the only capability info added to the records
+    // hence `autoSetVisibilityLimits` flag is used to determine if `getCapabilities` is required
+    // This should be modified when additional capability info is required
+    const invokeCapabilities = get(options, "options.service.autoSetVisibilityLimits", false);
+
+    if (!invokeCapabilities) {
+        return result;
+    }
+    const { value: _url } = _dcRef?.find(t =>
+        REGEX_WMS_ALL.some(regex=> t?.scheme?.match(regex) || t?.protocol?.match(regex))) || {}; // Get WMS URL from references
+    const [parsedUrl] = _url && _url.split('?') || [];
+    if (!parsedUrl) return {...result}; // Return record when no url found
+
+    const cached = capabilitiesCache[parsedUrl];
+    const isCached = !isEmpty(cached);
     return Promise.resolve(
         isCached
-            ? cached.data
-            : WMS.getCapabilities(url + '?version=')
+            ? cached
+            : WMS.getCapabilities(parsedUrl + '?version=')
                 .then((caps)=> get(caps, 'capability.layer.layer', []))
                 .catch(()=> []))
         .then((layers) => {
             if (!isCached) {
-                capabilitiesCache[url] = {
-                    timestamp: new Date().getTime(),
-                    data: layers
-                };
+                capabilitiesCache[parsedUrl] = layers;
             }
             // Add visibility limits scale data of the layer to the record
             return {
                 ...result,
                 records: result?.records?.map(record=> {
+                    const name = get(getLayerReferenceFromDc(record?.dc, null, false), 'params.name', '');
                     const {
                         minScaleDenominator: MinScaleDenominator,
                         maxScaleDenominator: MaxScaleDenominator
-                    } = layers.find(l=> l.name === record?.dc?.identifier) || {};
+                    } = layers.find(l=> l.name === name) || {};
                     return {
                         ...record,
                         ...((!isNil(MinScaleDenominator) || !isNil(MaxScaleDenominator))
@@ -123,10 +231,11 @@ const addCapabilitiesToRecords = (url, result) => {
             };
         });
 };
+
 /**
  * API for local config
  */
-var Api = {
+const Api = {
     parseUrl,
     getRecordById: function(catalogURL) {
         return new Promise((resolve) => {
@@ -196,7 +305,7 @@ var Api = {
                     'Content-Type': 'application/xml'
                 }}).then(
                     (response) => {
-                        if (response ) {
+                        if (response) {
                             let json = unmarshaller.unmarshalString(response.data);
                             if (json && json.name && json.name.localPart === "GetRecordsResponse" && json.value && json.value.searchResults) {
                                 let rawResult = json.value;
@@ -256,6 +365,7 @@ var Api = {
                                                 crs: 'EPSG:4326'
                                             };
                                         }
+                                        // dcElement is an array of objects, each item is a dc tag in the XML
                                         let dcElement = rawRec.dcElement;
                                         if (dcElement) {
                                             let dc = {
@@ -263,6 +373,7 @@ var Api = {
                                             };
                                             for (let j = 0; j < dcElement.length; j++) {
                                                 let dcel = dcElement[j];
+                                                // here the element name is taken (i.e. "URI", "title", "description", etc)
                                                 let elName = dcel.name.localPart;
                                                 let finalEl = {};
                                                 /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
@@ -278,6 +389,10 @@ var Api = {
                                                 } else {
                                                     finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
                                                 }
+                                                /**
+                                                    grouping all tags with same property together (i.e <dc:subject>mobilità</dc:subject> <dc:subject>traffico</dc:subject>)
+                                                    will become { subject: ["mobilità", "traffico"] }
+                                                **/
                                                 if (dc[elName] && Array.isArray(dc[elName])) {
                                                     dc[elName].push(finalEl);
                                                 } else if (dc[elName]) {
@@ -286,8 +401,11 @@ var Api = {
                                                     dc[elName] = finalEl;
                                                 }
                                             }
+                                            const URIs = castArray(dc.references.length > 0 ? dc.references : dc.URI);
                                             if (!_dcRef) {
-                                                _dcRef = dc.references;
+                                                _dcRef = URIs;
+                                            } else {
+                                                _dcRef = _dcRef.concat(URIs);
                                             }
                                             obj.dc = dc;
                                         }
@@ -295,9 +413,7 @@ var Api = {
                                     }
                                 }
                                 result.records = records;
-                                const {value: _url} = _dcRef?.find(t=> t.scheme === 'OGC:WMS') || {}; // Get WMS URL from references
-                                const [parsedUrl] = _url && _url.split('?') || [];
-                                return addCapabilitiesToRecords(parsedUrl, result);
+                                return addCapabilitiesToRecords(_dcRef, result, options);
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
                                 return {
                                     error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'

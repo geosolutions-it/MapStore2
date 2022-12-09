@@ -29,7 +29,12 @@ import {
     formatJSONStyle,
     validateImageSrc,
     updateExternalGraphicNode,
-    detectStyleCodeChanges
+    detectStyleCodeChanges,
+    getVectorLayerAttributes,
+    getVectorLayerGeometryType,
+    getVectorDefaultStyle,
+    styleValidation,
+    getAttributes
 } from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
@@ -1083,5 +1088,186 @@ describe('StyleEditorUtils test', () => {
                     done();
                 });
         });
+    });
+
+    it('should return a list of attributes with getVectorLayerAttributes function given a vector layer config', () => {
+        const layer = {
+            type: 'vector',
+            properties: {
+                name: 'Value',
+                count: 0
+            }
+        };
+        const attributes = getVectorLayerAttributes(layer);
+        expect(attributes).toEqual([
+            {
+                attribute: 'name',
+                label: 'name',
+                type: 'string'
+            },
+            {
+                attribute: 'count',
+                label: 'count',
+                type: 'number'
+            }
+        ]);
+    });
+    it('should return a list of attributes with getVectorLayerAttributes function given a wfs layer config', () => {
+        const layer = {
+            type: 'wfs',
+            properties: {
+                geom: {
+                    localType: 'Point',
+                    prefix: 'gml'
+                },
+                name: {
+                    localType: 'string',
+                    prefix: 'xsd'
+                },
+                count: {
+                    localType: 'int',
+                    prefix: 'xsd'
+                }
+            }
+        };
+        const attributes = getVectorLayerAttributes(layer);
+        expect(attributes).toEqual([
+            {
+                attribute: 'name',
+                label: 'name',
+                type: 'string'
+            },
+            {
+                attribute: 'count',
+                label: 'count',
+                type: 'number'
+            }
+        ]);
+    });
+    it('should return a list of attributes with getVectorLayerAttributes function given a 3d tiles layer config', () => {
+        const layer = {
+            type: '3dtiles',
+            properties: {
+                property1: {
+                    minimum: 0,
+                    maximum: 1
+                },
+                property2: {},
+                property3: {
+                    type: 'number'
+                }
+            }
+        };
+        const attributes = getVectorLayerAttributes(layer);
+        expect(attributes).toEqual([
+            {
+                attribute: 'property1',
+                label: 'property1',
+                type: 'number'
+            },
+            {
+                attribute: 'property2',
+                label: 'property2',
+                type: 'string'
+            },
+            {
+                attribute: 'property3',
+                label: 'property3',
+                type: 'number'
+            }
+        ]);
+    });
+    it('should return the geometry type with getVectorLayerGeometryType function given a 3d tiles layer config with format', () => {
+        expect(getVectorLayerGeometryType({ type: '3dtiles', format: 'pnts' })).toBe('pointcloud');
+        expect(getVectorLayerGeometryType({ type: '3dtiles' })).toBe('polyhedron');
+        expect(getVectorLayerGeometryType({ type: 'wfs' })).toBe('vector');
+        expect(getVectorLayerGeometryType({ type: 'vector' })).toBe('vector');
+        expect(getVectorLayerGeometryType({ type: 'vector', geometryType: 'point' })).toBe('point');
+    });
+    it('should return the default style with getVectorDefaultStyle function given a 3d tiles layer config', () => {
+        expect(getVectorDefaultStyle({ type: '3dtiles' })).toEqual({
+            format: '3dtiles',
+            body: {},
+            metadata: {
+                editorType: 'visual'
+            }
+        });
+    });
+    it('should detect if a variable in the style is not supported', () => {
+        const body = {
+            show: "${Height} > 0 && ${Latitude}",
+            color: "${CustomColor}",
+            defines: {
+                CustomColor: "color('#ff0000')"
+            }
+        };
+        const options = {
+            properties: {
+                Height: {}
+            }
+        };
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.notSupportedVariable', messageParams: { key: '${Latitude}' } }
+        );
+    });
+    it('should detect if color is a valid type', () => {
+        const body = {
+            color: true
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'color', type: 'string' } }
+        );
+    });
+    it('should detect if color object contains a valid conditions array', () => {
+        const body = {
+            color: {
+                conditions: []
+            }
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'color', type: 'string' } }
+        );
+    });
+    it('should detect if pointSize is a valid type', () => {
+        const body = {
+            pointSize: true
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'pointSize', type: 'number' } }
+        );
+    });
+    it('should detect if pointSize object contains a valid conditions array', () => {
+        const body = {
+            pointSize: {
+                conditions: []
+            }
+        };
+        const options = {};
+        expect(styleValidation['3dtiles'](body, options)).toEqual(
+            { messageId: 'styleeditor.invalidProperty', messageParams: { key: 'pointSize', type: 'number' } }
+        );
+    });
+    it('should parse string or number attributes from properties', () => {
+        const properties = {
+            "the_geom": {
+                "localType": "Point",
+                "prefix": "gml"
+            },
+            "name": {
+                "localType": "string",
+                "prefix": "xsd"
+            },
+            "count": {
+                "localType": "int",
+                "prefix": "xsd"
+            }
+        };
+        expect(getAttributes(properties)).toEqual([
+            { attribute: 'name', label: 'name', type: 'string' },
+            { attribute: 'count', label: 'count', type: 'number' }
+        ]);
     });
 });

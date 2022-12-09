@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect, createPlugin } from '../utils/PluginsUtils';
 import { loadFont } from '../utils/AgentUtils';
-import assign from 'object-assign';
 import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
@@ -18,6 +17,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import { setMapResolutions, mapPluginLoad } from '../actions/map';
 import { isString } from 'lodash';
 import selector from './map/selector';
+import MapSettings from './map/mapsettings/MapSettings';
 import mapReducer from "../reducers/map";
 import layersReducer from "../reducers/layers";
 import drawReducer from "../reducers/draw";
@@ -29,18 +29,21 @@ import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
 import { createFeatureFilter } from '../utils/FilterUtils';
+import ErrorPanel from '../components/map/ErrorPanel';
+import catalog from "../epics/catalog";
+import backgroundSelector from "../epics/backgroundselector";
+import API from '../api/catalog';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
  * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
- * An example is the MeasurementSupport tool that allows implementing measurement on a map.
  * The list of enabled tools can be configured using the tools property, as in the following example:
  *
  * ```
  * {
  * "name": "Map",
  * "cfg": {
- *     "tools": ["measurement", "locate", "overview", "scalebar", "draw", "highlight"]
+ *     "tools": ["overview", "scalebar", "draw", "highlight"]
  *   ...
  *  }
  * }
@@ -105,7 +108,7 @@ import { createFeatureFilter } from '../utils/FilterUtils';
  *      "cfg": {
  *        "shouldLoadFont": true,
  *        "fonts": ['FontAwesome'],
- *        "tools": ["measurement", "locate", "overview", "scalebar", "draw", {
+ *        "tools": ["overview", "scalebar", "draw", {
  *          "leaflet": {
  *            "name": "test",
  *            "impl": "{context.TestSupportLeaflet}"
@@ -164,6 +167,13 @@ import { createFeatureFilter } from '../utils/FilterUtils';
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
+ * @prop {object} mapOptions map options grouped by map type
+ * @prop {object} mapOptions[mapType] this object contains configuration specific for a map type. The mapType could be `openlayers`, `leaflet` or `cesium`
+ * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
+ * @prop {boolean} mapOptions.cesium.showSkyAtmosphere enable sky atmosphere of the globe (default true)
+ * @prop {boolean} mapOptions.cesium.showGroundAtmosphere enable ground atmosphere of the globe (default false)
+ * @prop {boolean} mapOptions.cesium.enableFog enable fog in the view (default false)
+ * @prop {boolean} mapOptions.cesium.depthTestAgainstTerrain if true all primitive 3d features will be tested against the terrain while if false they will be drawn on top of the terrain even if hidden by it (default true)
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
@@ -223,7 +233,7 @@ class MapPlugin extends React.Component {
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
-        tools: ["measurement", "scalebar", "draw", "highlight", "popup", "box"],
+        tools: ["scalebar", "draw", "highlight", "popup", "box"],
         options: {},
         mapOptions: {},
         fonts: ['FontAwesome'],
@@ -318,9 +328,9 @@ class MapPlugin extends React.Component {
         return tool[this.props.mapType] || tool;
     };
 
-    getMapOptions = () => {
+    getConfigMapOptions = () => {
         return this.props.mapOptions && this.props.mapOptions[this.props.mapType] ||
-            ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[this.props.mapType];
+            ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[this.props.mapType] || {};
     };
 
     renderLayers = () => {
@@ -396,9 +406,10 @@ class MapPlugin extends React.Component {
                     {...this.props.options}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
-                    mapOptions={assign({}, mapOptions, this.getMapOptions())}
+                    mapOptions={{...this.getConfigMapOptions(), ...mapOptions}}
                     zoomControl={this.props.zoomControl}
                     onResolutionsChange={this.props.onResolutionsChange}
+                    errorPanel={ErrorPanel}
                 >
                     {this.renderLayers()}
                     {this.renderSupportTools()}
@@ -462,5 +473,15 @@ export default createPlugin('Map', {
         maptype: mapTypeReducer,
         additionallayers: additionalLayersReducer
     },
-    epics: mapEpics
+    epics: {
+        ...mapEpics,
+        ...backgroundSelector,
+        ...catalog(API)
+    },
+    containers: {
+        Settings: () => ({
+            tool: <MapSettings />,
+            position: 2
+        })
+    }
 });

@@ -6,12 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import assign from 'object-assign';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
+
 import tooltip from "../components/misc/enhancers/tooltip";
+import ToolsContainer from './containers/ToolsContainer';
+import Message from './locale/Message';
+import { createPlugin } from '../utils/PluginsUtils';
+import {setControlProperty} from "../actions/controls";
+import {burgerMenuSelector} from "../selectors/controls";
+
+import './burgermenu/burgermenu.css';
 
 const TDropdownButton = tooltip(DropdownButton);
 const Container = ({children, ...props}) => (
@@ -34,14 +41,9 @@ const InnerContainer = ({children, ...props}) => (
     </div>
 );
 
-const AnchorElement = ({children, href, onClick}) => (
-    <a href={href} onClick={onClick}>{children}</a>
+const AnchorElement = ({children, href, target, onClick}) => (
+    <a href={href} target={target} onClick={onClick}>{children}</a>
 );
-
-import ToolsContainer from './containers/ToolsContainer';
-import Message from './locale/Message';
-import { createPlugin } from '../utils/PluginsUtils';
-import './burgermenu/burgermenu.css';
 
 class BurgerMenu extends React.Component {
     static propTypes = {
@@ -50,6 +52,8 @@ class BurgerMenu extends React.Component {
         items: PropTypes.array,
         title: PropTypes.node,
         onItemClick: PropTypes.func,
+        onInit: PropTypes.func,
+        onDetach: PropTypes.func,
         controls: PropTypes.object,
         mapType: PropTypes.string,
         panelStyle: PropTypes.object,
@@ -75,8 +79,26 @@ class BurgerMenu extends React.Component {
             position: "absolute",
             overflow: "auto"
         },
-        panelClassName: "toolbar-panel"
+        panelClassName: "toolbar-panel",
+        onInit: () => {},
+        onDetach: () => {}
     };
+
+    componentDidMount() {
+        const { onInit } = this.props;
+        onInit();
+    }
+
+    componentDidUpdate(prevProps) {
+        const { onInit } = this.props;
+        prevProps.isActive === false && onInit();
+    }
+
+    componentWillUnmount() {
+        const { onDetach } = this.props;
+        onDetach();
+    }
+
 
     getPanels = items => {
         return items.filter((item) => item.panel)
@@ -177,8 +199,12 @@ export default createPlugin(
     'BurgerMenu',
     {
         component: connect((state) =>({
-            controls: state.controls
-        }))(BurgerMenu),
+            controls: state.controls,
+            active: burgerMenuSelector(state)
+        }), {
+            onInit: setControlProperty.bind(null, 'burgermenu', 'enabled', true),
+            onDetach: setControlProperty.bind(null, 'burgermenu', 'enabled', false)
+        })(BurgerMenu),
         containers: {
             OmniBar: {
                 name: "burgermenu",

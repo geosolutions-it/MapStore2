@@ -1,11 +1,12 @@
 # Managing Groups
+
 *****************
 
 The *Groups Manager* section displays like the following:
 
 <img src="../img/managing-groups/groups-man.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-Similar to what happens for the [Users Manager](managing-users.md), in this page the Admin can:
+Similar to what happens for the [Users Manager](managing-users.md#managing-users), in this page the Admin can:
 
 * Perform a search among the existing groups
 

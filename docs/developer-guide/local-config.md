@@ -92,6 +92,13 @@ This is the main structure:
           ...
       }
   },
+  // allows to apply map options configuration to all the Map plugins instances defined in the plugins configuration.
+  // The mapOptions in the plugin configuration have priority so they will overrides this global config
+  "defaultMapOptions": {
+    "openlayers": { ... },
+    "leaflet": { ... },
+    "cesium": { ... }
+  },
   "plugins": {
       // plugins to load for the mobile mode
       "mobile": [...]
@@ -107,9 +114,9 @@ This is the main structure:
 
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
 
-For adding a new locale or configuring currently supported locales, go check [this](internationalization.md) out.
+For adding a new locale or configuring currently supported locales, go check [this](internationalization.md#internationalization) out.
 
-For configuring plugins, see the [Configuring Plugins Section](plugins-documentation.md) and the [plugin reference page](plugins-architecture.md)
+For configuring plugins, see the [Configuring Plugins Section](plugins-documentation.md#configuring-plugins) and the [plugin reference page](plugins-architecture.md#plugins-architecture)
 
 ## Explanation of some config properties
 
@@ -191,9 +198,11 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   }
 }
 ```
+
 CSW service
 <br> `filter` - For both static and dynamic filter, input only xml element contained within <ogc:Filter> (i.e. Do not enclose the filter value in <ogc:Filter>)<br>
 <br>Example:<br>
+
 ```javascript
 {
     "filter": { // Default filter values
@@ -208,49 +217,6 @@ CSW service
 <br>newService is used internally as the starting object for an empty service.
 
 <br>
-
-### Measure Tool configuration
-
-Inside defaultState you can set lengthFormula, showLabel, uom:
-
-- you can customize the formula used for length calculation from "haversine" or "vincenty" (default haversine)
-- show or not the measurement label on the map after drawing a measurement (default true)
-- set the default uom used for measure tool (default m and sqm)
-<br>For the label you can choose whatever value you want.
-<br>For the unit you can choose between:
-- unit length values : ft, m, km, mi, nm standing for feets, meters, kilometers, miles, nautical miles
-- unit area values : sqft, sqm, sqkm, sqmi, sqnm standing for square feets, square meters, square kilometers, square miles, square nautical miles
-- Customize the style for the start/endPoint for the measure features. You can set *startEndPoint* to:
-  - false if you want to disable it
-  - true (defaults will be used)
-  - object for customizing styles by placing *startPointOptions* and/or *endPointOptions*<br>
-- You can either change the radius or set the fillColor or decide to apply this customization to the first and second-last point for polygons<br>
-For lineString endPointOptions refers to the last point of the polyline
-
-Example:<br>
-
-```javascript
-"measurement": {
-  "lengthFormula": "vincenty",
-  "showLabel": true,
-  "uom": {
-    "length": {"unit": "m", "label": "m"},
-    "area": {"unit": "sqm", "label": "m²"}
-  },
-  "startEndPoint": {
-    "startPointOptions": {
-        "radius": 3,
-        "fillColor": "green",
-        "applyToPolygon": false
-    },
-    "endPointOptions": {
-        "radius": 3,
-        "fillColor": "red",
-        "applyToPolygon": false
-    }
-  }
-}
-```
 
 #### Annotations Editor configuration
 
@@ -345,7 +311,8 @@ with the following properties:
 
 ### Search plugin configuration
 
-The search plugin provides several configurations to customize the services behind the search bar in the map: 
+The search plugin provides several configurations to customize the services behind the search bar in the map:
+
 - Allow to configure more many services to use in parallel, in the `services` array.
 - Natively supports nominatim and WFS protcols
 - Allows to register **your own** custom services to develop and use in your custom project
@@ -354,6 +321,7 @@ The search plugin provides several configurations to customize the services behi
 Following you can find some examples of the various configurations. For more details about the properties, please check to plugin API documentation: [https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.Search)
 
 Nominatim configuration:
+
 ```javascript
 {
    "type": "nominatim",
@@ -365,6 +333,7 @@ Nominatim configuration:
 ```
 
 WFS configuration:
+
 ```javascript
 "plugins": {
   ...
@@ -398,6 +367,7 @@ WFS configuration:
 ```
 
 WFS configuration with nested services:
+
 ```javascript
 "plugins": {
   ...
@@ -450,6 +420,7 @@ WFS configuration with nested services:
 ```
 
 Custom services configuration:
+
 ```javascript
 {
   "type": "custom Service Name",

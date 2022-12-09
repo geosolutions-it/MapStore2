@@ -103,6 +103,7 @@
             "templateFormatInfoAlert2": "Použi ${ attribute } pre zoskupenie vlastností, ktoré potrebuješ na zobrazenie",
             "templateFormatInfoAlertExample": "ID tejto funkcie je ${ properties }",
             "templatePreview": "Náhľad šablóny",
+            "heightOffset": "Height offset (m)",
             "visibilityLimits": {
                 "title": "Limity viditeľnosti",
                 "serverValuesUpdateUndefined": "Server pre túto vrstvu neposkytol obmedzenia mierky viditeľnosti",
@@ -284,15 +285,7 @@
             "Examples": "Ukážky",
             "LinkedinGroup": "Linkedin skupina MapStore",
             "scrollTop": "Prejsť do hornej časti stránky",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
-            "ml": {
-                "title": "Dostávaj vždy aktuálne informácie cez mailing list",
-                "subscribe_users": "Odoberať Users Mailing List",
-                "subscribe_devel": "Odoberať Developers Mailing List",
-                "visit_group": "Navštív túto skupinu",
-                "subscribe": "Odoberať",
-                "email": "Email:"
-            },
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
@@ -744,7 +737,25 @@
             "selectTool": "Vyberte nástroj na meranie",
             "exportToGeoJSON": "Exportovať ako GeoJSON",
             "resetTooltip": "Obnoviť merania",
-            "addAsLayer": "Pridať ako vrstvu"
+            "addAsLayer": "Pridať ako vrstvu",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "search":{
             "layerMustBeVisible": "Cieľová vrstva je neaktívna",
@@ -1288,6 +1299,9 @@
             "coordinate": "Súradnice",
             "coordTooltip": "Klikni na mapu pre získanie súradníc",
             "zoomToolTip": "Minimálna hodnota: 1 and Maximálna hodnota: 35",
+            "headingToolTip": "Minimálna hodnota: 0° e Maximálna hodnota: 360°",
+            "rollToolTip": "Minimálna hodnota: -90° e Maximálna hodnota: 90°",
+            "pitchToolTip": "Minimálna hodnota: -90° e Maximálna hodnota: 90°",
             "wrongCenterAndZoomParamTitle": "Neplatný parameter pre stred a priblíženie",
             "wrongCenterAndZoomParamMessage": "Parametre pre stred a priblíženie musí byť vo formáte center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "wrongMarkerAndZoomParamTitle": "Neplatný parameter pre značku a priblíženie",
@@ -1298,7 +1312,10 @@
             "wrongBboxParamMessage": "Parametre pre bounding box musia byť v súradnicovom systéme EPSG:4326 a vo formáte bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Odkaz na domovskú stránku MapStore",
             "showSectionId": "Include scroll position",
-            "showConnections": "Zobraziť pripojenia"
+            "showConnections": "Zobraziť pripojenia",
+            "heading": "Uhol smerovania",
+            "roll": "Uhol natočenia",
+            "pitch": "Uhol sklonu"
         },
         "snapshot": {
             "title": "Ukážka snímky",
@@ -1653,6 +1670,7 @@
         },
         "layerdownload": {
             "title": "Exportovať dáta",
+            "service": "Service",
             "format": "Formát súboru",
             "srs":  "Spatial Reference System",
             "export": "Exportovať",
@@ -2234,7 +2252,13 @@
             "imageSrcInvalidBase64": "Toto nie je platný obrázok base64. Niektoré vykresľovače štýlov nepodporujú tento typ zdroja, môžeš namiesto toho použiť externý zdroj adries URL",
             "imageSrcNotSupportedBase64Image": "Niektoré vykresľovače štýlov nepodporujú obrázky base64, aj keď je aktuálny zdroj platný",
             "warningTextOrderTitle": "Upozornenie",
-            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "playback": {
             "settings": {
@@ -2652,6 +2676,7 @@
             "titlePlaceholder": "Zadať zobrazované meno",
             "add": "Pridať",
             "thumbnailMessage": "Veľkosti obrázkov by mali tvoriť štvorec o veľkosti 98px x 98px alebo 128px x 128px, s maximálnou veľkosťou 500kb",
+            "imageUploadMessage": "Kliknite alebo drakate a pridajte obrázok",
             "additionalParameters": "Ďalšie parametre",
             "addAdditionalParameterTooltip": "Pridať parameter",
             "removeAdditionalParameterTooltip": "Odstrániť parameter",

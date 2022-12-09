@@ -11,7 +11,6 @@ const paths = {
     framework: path.join(__dirname, "MapStore2", "web", "client"),
     code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
 };
-
 module.exports = require('./MapStore2/build/buildConfig')({
     bundles: {
         '__PROJECTNAME__': path.join(__dirname, "js", "app"),
@@ -46,7 +45,7 @@ module.exports = require('./MapStore2/build/buildConfig')({
             template: path.join(__dirname, 'apiTemplate.html'),
             chunks: ['__PROJECTNAME__-api'],
             publicPath: 'dist/',
-            inject: 'head',
+            inject: 'body',
             hash: true,
             filename: 'api.html'
         }),

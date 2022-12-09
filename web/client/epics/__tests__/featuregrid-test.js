@@ -11,7 +11,12 @@ import expect from 'expect';
 import assign from 'object-assign';
 import { set } from '../../utils/ImmutableUtils';
 import CoordinatesUtils from '../../utils/CoordinatesUtils';
-import { CLOSE_IDENTIFY, hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER } from '../../actions/mapInfo';
+import {
+    CLOSE_IDENTIFY,
+    hideMapinfoMarker,
+    featureInfoClick,
+    HIDE_MAPINFO_MARKER
+} from '../../actions/mapInfo';
 
 import {
     toggleEditMode,
@@ -53,14 +58,21 @@ import {
     SELECT_FEATURES,
     SET_PAGINATION,
     launchUpdateFilterFunc,
-    LAUNCH_UPDATE_FILTER_FUNC
+    LAUNCH_UPDATE_FILTER_FUNC,
+    setLayer,
+    setViewportFilter, SET_VIEWPORT_FILTER
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
-import { CHANGE_DRAWING_STATUS, geometryChanged } from '../../actions/draw';
+import {CHANGE_DRAWING_STATUS, geometryChanged, SET_SNAPPING_LAYER, TOGGLE_SNAPPING} from '../../actions/draw';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import { TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl } from '../../actions/controls';
-import { ZOOM_TO_EXTENT, clickOnMap } from '../../actions/map';
+import {
+    TOGGLE_CONTROL,
+    RESET_CONTROLS,
+    SET_CONTROL_PROPERTY,
+    toggleControl
+} from '../../actions/controls';
+import {ZOOM_TO_EXTENT, clickOnMap, registerEventListener} from '../../actions/map';
 import { boxEnd, CHANGE_BOX_SELECTION_STATUS } from '../../actions/box';
 import { CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData } from '../../actions/layers';
 
@@ -123,7 +135,13 @@ import {
     activateBoxSelectionTool,
     deactivateBoxSelectionTool,
     deactivateSyncWmsFilterOnFeatureGridClose,
-    launchUpdateFilterEpic
+    launchUpdateFilterEpic,
+    setDefaultSnappingLayerOnFeatureGridOpen,
+    resetSnappingLayerOnFeatureGridClosed,
+    toggleSnappingOffOnFeatureGridViewMode,
+    closeFeatureGridOnDrawingToolOpen,
+    setViewportFilterEpic,
+    deactivateViewportFilterEpic, resetViewportFilter
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -915,21 +933,21 @@ describe('featuregrid Epics', () => {
                 case SET_CONTROL_PROPERTY: {
                     switch (i) {
                     case 0: {
-                        expect(action.control).toBe('metadataexplorer');
+                        expect(action.control).toBe('mapCatalog');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
                         break;
                     }
                     case 1: {
-                        expect(action.control).toBe('annotations');
+                        expect(action.control).toBe('mapTemplates');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
                         break;
                     }
                     case 2: {
-                        expect(action.control).toBe('details');
+                        expect(action.control).toBe('metadataexplorer');
                         expect(action.property).toBe('enabled');
                         expect(action.value).toBe(false);
                         expect(action.toggle).toBe(undefined);
@@ -944,7 +962,33 @@ describe('featuregrid Epics', () => {
                 }
             });
             done();
-        }, {});
+        }, {
+            maplayout: {
+                dockPanels: {
+                    right: ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details']
+                }
+            },
+            controls: {
+                metadataexplorer: { enabled: true},
+                mapCatalog: { enabled: true},
+                mapTemplates: { enabled: true}
+            }
+        });
+    });
+
+    it('test closeFeatureGridOnDrawingToolOpen', (done) => {
+        testEpic(addTimeoutEpic(closeFeatureGridOnDrawingToolOpen, 100), 1, registerEventListener("click", "anotherPlugin"), actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CLOSE_FEATURE_GRID);
+            done();
+        }, {
+            featuregrid: {
+                open: true
+            },
+            controls: {
+                measure: { enabled: true}
+            }
+        });
     });
 
     it('test deleteGeometryFeature', (done) => {
@@ -2328,5 +2372,53 @@ describe('featuregrid Epics', () => {
                 syncWmsFilter: true
             }
         }, done);
+    });
+    it('setDefaultSnappingLayerOnFeatureGridOpen', (done) => {
+        const startActions = [setLayer('some_layer')];
+        testEpic(setDefaultSnappingLayerOnFeatureGridOpen, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
+        }, {}, done);
+    });
+    it('resetSnappingLayerOnFeatureGridClosed', (done) => {
+        const startActions = [closeFeatureGrid()];
+        testEpic(resetSnappingLayerOnFeatureGridClosed, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
+        }, {draw: { snapping: false }}, done);
+        testEpic(resetSnappingLayerOnFeatureGridClosed, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_SNAPPING_LAYER);
+            expect(actions[1].type).toBe(TOGGLE_SNAPPING);
+        }, {draw: { snapping: true }}, done);
+    });
+    it('toggleSnappingOffOnFeatureGridViewMode', (done) => {
+        const startActions = [toggleViewMode()];
+        testEpic(toggleSnappingOffOnFeatureGridViewMode, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TOGGLE_SNAPPING);
+        }, {draw: { snapping: true }}, done);
+    });
+    it('setViewportFilterEpic', (done) => {
+        const startActions = [setViewportFilter(true)];
+        testEpic(setViewportFilterEpic, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+        }, {featuregrid: { open: true, viewportFilter: true }}, done);
+    });
+    it('deactivateViewportFilterEpic', (done) => {
+        const startActions = [setViewportFilter(false)];
+        testEpic(deactivateViewportFilterEpic, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+        }, {featuregrid: { open: true, viewportFilter: false }}, done);
+    });
+    it('resetViewportFilter', (done) => {
+        const startActions = [onLocationChanged({})];
+        testEpic(resetViewportFilter, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SET_VIEWPORT_FILTER);
+            expect(actions[0].value).toBe(null);
+        }, {featuregrid: { open: true, viewportFilter: false }}, done);
     });
 });

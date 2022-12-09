@@ -1,4 +1,5 @@
 # Requirements
+
 In this section you can have a glance of the minimum and recommended versions of the tools needed to build/debug/install MapStore
 
 ## War Installation
@@ -14,13 +15,13 @@ You can download a java web container like *Apache Tomcat* from and *Java JRE*
 
 These tools needs to be installed (other than **Java** in versions above above):
 
-| Tool       | Link                                                       | Minimum | Recommended | Maximum     |
-|------------|------------------------------------------------------------|---------|-------------|-------------|
-| npm        | [link](https://www.npmjs.com/get-npm")                     | 5       | 6           | 6.14.13²    |
-| NodeJS     | [link](https://nodejs.org/en/")                            | 10      | 12          | 14.17.0²    |
+| Tool       | Link                                                   | Minimum | Recommended | Maximum     |
+|------------|--------------------------------------------------------|---------|-------------|-------------|
+| npm        | [link](https://www.npmjs.com/get-npm)                  | 5       | 6           | 6.14.13²    |
+| NodeJS     | [link](https://nodejs.org/en/)                         | 10      | 12          | 14.17.0²    |
 | Java (JDK) | [link](https://www.java.com/en/download/help/develop.html) | 8       | 9           | 11¹         |
-| Maven      | [link](https://maven.apache.org/download.cgi")             | 3.1.0   | 3.6         |             |
-| python³    | [link](https://www.python.org/downloads/")                 | 2.7.9   | 3.7         |             |
+| Maven      | [link](https://maven.apache.org/download.cgi)          | 3.1.0   | 3.6         |             |
+| python³    | [link](https://www.python.org/downloads/)              | 2.7.9   | 3.7         |             |
 
 !!! notes
     Here some notes about some requirements and reasons for max version indicated, for future improvements and maintenance :
@@ -34,10 +35,9 @@ These tools needs to be installed (other than **Java** in versions above above):
         - NPM 6.14.15 causes [this issue](https://github.com/geosolutions-it/mapstore-project/issues/18) on MapStore project system. No other know issues.
         - *If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the `compile` script*
     - ³ Python is only needed for building documentation.
-    
- 
-## Running in Production 
- 
+
+## Running in Production
+
 ### System requirements
 
 | Resource  | Minimum | Recommended |
@@ -47,7 +47,7 @@ These tools needs to be installed (other than **Java** in versions above above):
 
 ### Database
 
-In production a PostgreSQL database is recommended: 
+In production a PostgreSQL database is recommended:
 
 | Tool     | Link                                               | Minimum | Recommended | Maximum    |
 |----------|----------------------------------------------------|---------|-------------|------------|

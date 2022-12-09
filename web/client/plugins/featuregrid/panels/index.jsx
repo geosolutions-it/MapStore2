@@ -27,7 +27,7 @@ import FooterComp from '../../../components/data/featuregrid/Footer';
 import HeaderComp from '../../../components/data/featuregrid/Header';
 import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
 import {
-    getAttributeFilter,
+    getAttributeFilter, getDockSize,
     getTitleSelector,
     hasChangesSelector,
     hasGeometrySelector,
@@ -44,10 +44,12 @@ import {
     showAgainSelector,
     showPopoverSyncSelector,
     showTimeSync,
-    timeSyncActive
+    timeSyncActive,
+    isViewportFilterActive,
+    isFilterByViewportSupported
 } from '../../../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
-import { isCesium } from '../../../selectors/maptype';
+import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
 import {
     featureCollectionResultSelector,
     featureLoadingSelector,
@@ -60,6 +62,12 @@ import {
 import { getFeatureTypeProperties, isGeometryType } from '../../../utils/ogc/WFS/base';
 import { pageEvents, toolbarEvents } from '../index';
 import settings from './AttributeSelector';
+import {
+    availableSnappingLayers,
+    isSnappingActive,
+    isSnappingLoading,
+    snappingConfig
+} from "../../../selectors/draw";
 
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
@@ -90,7 +98,15 @@ const Toolbar = connect(
         hasSupportedGeometry,
         isFilterActive,
         showTimeSyncButton: showTimeSync,
-        timeSync: timeSyncActive
+        timeSync: timeSyncActive,
+        snapping: isSnappingActive,
+        availableSnappingLayers,
+        isSnappingLoading,
+        snappingConfig,
+        mapType: mapTypeSelector,
+        editorHeight: getDockSize,
+        viewportFilter: isViewportFilterActive,
+        isFilterByViewportSupported
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);
@@ -158,8 +174,8 @@ export const getPanels = (tools = {}) =>
             const Panel = panels[t];
             return <Panel key={t} {...(panelDefaultProperties[t] || {})} />;
         });
-export const getHeader = ({ hideCloseButton, hideLayerTitle, toolbarItems }) => {
-    return <Header hideCloseButton={hideCloseButton} hideLayerTitle={hideLayerTitle} ><Toolbar toolbarItems={toolbarItems}/></Header>;
+export const getHeader = ({ hideCloseButton, hideLayerTitle, toolbarItems, pluginCfg }) => {
+    return <Header hideCloseButton={hideCloseButton} hideLayerTitle={hideLayerTitle} ><Toolbar pluginCfg={pluginCfg} toolbarItems={toolbarItems}/></Header>;
 };
 export const getFooter = (props) => {
     return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;

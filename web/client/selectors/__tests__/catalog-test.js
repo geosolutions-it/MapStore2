@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import {
-    activeSelector,
+    isActiveSelector,
     authkeyParamNameSelector,
     delayAutoSearchSelector,
     groupSelector,
@@ -37,7 +37,8 @@ import {
 } from '../catalog';
 
 import { set } from '../../utils/ImmutableUtils';
-import {DEFAULT_FORMAT_WMS, getUniqueInfoFormats} from "../../utils/CatalogUtils";
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../../api/WMS';
+
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
@@ -216,8 +217,8 @@ describe('Test catalog selectors', () => {
         const retVal = layerErrorSelector(state);
         expect(retVal).toBe(null);
     });
-    it('test activeSelector', () => {
-        const retVal = activeSelector(state);
+    it('test isActiveSelector', () => {
+        const retVal = isActiveSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBeTruthy();
     });
@@ -325,5 +326,15 @@ describe('Test catalog selectors', () => {
             }
         });
         expect(urlUsed).toBe(url);
+    });
+    it('test isActiveSelector ', () => {
+        const toolState = isActiveSelector({
+            controls: {
+                metadataexplorer: {
+                    enabled: true
+                }
+            }
+        });
+        expect(toolState).toBe(true);
     });
 });

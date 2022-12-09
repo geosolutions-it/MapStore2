@@ -18,6 +18,7 @@ export const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
 export const UPDATE_LAYER = "WIDGETS:UPDATE_LAYER";
 export const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 export const DELETE = "WIDGETS:DELETE";
+export const REPLACE = "WIDGETS:REPLACE";
 export const CLEAR_WIDGETS = "WIDGETS:CLEAR_WIDGETS";
 export const ADD_DEPENDENCY = "WIDGETS:ADD_DEPENDENCY";
 export const REMOVE_DEPENDENCY = "WIDGETS:REMOVE_DEPENDENCY";
@@ -33,6 +34,9 @@ export const NEW_CHART = "WIDGETS:NEW_CHART";
 export const DEFAULT_TARGET = "floating";
 export const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
 export const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
+export const MAPS_REGEX = /^maps\["?([^"\]]*)"?\]\.?(.*)$/;
+export const CHARTS_REGEX = /^charts\["?([^"\]]*)"?\]\.?(.*)$/;
+export const WIDGETS_MAPS_REGEX = /^widgets\["?([^"\]]*)"?\]\.maps\["?([^"\]]*)"?\]\.?(.*)$/;
 
 export const TOGGLE_COLLAPSE = "WIDGET:TOGGLE_COLLAPSE";
 export const TOGGLE_COLLAPSE_ALL = "WIDGET:TOGGLE_COLLAPSE_ALL";
@@ -80,6 +84,18 @@ export const updateWidget = (widget, target = DEFAULT_TARGET) => ({
     type: UPDATE,
     target,
     widget
+});
+
+/**
+ * Replace widgets in the provided target
+ * @param  {object[]} widgets The widget template to start with
+ * @param {string} [target=floating] the target container of the widget
+ * @return {object}        action with type `WIDGETS:REPLACE`, the widget and the target
+ */
+export const replaceWidgets = (widgets, target = DEFAULT_TARGET) => ({
+    type: REPLACE,
+    target,
+    widgets
 });
 /**
  * Update a widget property in the provided target

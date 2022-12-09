@@ -83,7 +83,17 @@ li.md-tabs__item:hover{
     font-size: 70%;
 
 }
-.ms-docbutton {
+.ms-docbutton, .md-typeset .ms-docbutton {
     vertical-align: middle;
     height: 30px;
+}
+.md-content__button.md-icon svg {
+    fill: #009688;
+    height: 1.8rem !important;
+    width: 1.8rem !important;
+    float: right;
+}
+
+.md-tabs__item:nth-child(2){
+    display: none;
 }

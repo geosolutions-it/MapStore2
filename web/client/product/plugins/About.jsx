@@ -14,9 +14,23 @@ import { connect } from 'react-redux';
 import { toggleControl } from '../../actions/controls';
 import Message from '../../components/I18N/Message';
 import AboutComp from '../components/viewer/about/About';
+import version from '../../reducers/version';
+import { aboutSelector } from '../../selectors/controls';
+import {
+    versionSelector,
+    githubUrlSelector,
+    commitSelector,
+    messageSelector,
+    dateSelector
+} from '../../selectors/version';
 
 const About = connect((state) => ({
-    enabled: state.controls && state.controls.about && state.controls.about.enabled || false,
+    version: versionSelector(state),
+    githubUrl: githubUrlSelector(state),
+    commit: commitSelector(state),
+    message: messageSelector(state),
+    date: dateSelector(state),
+    enabled: aboutSelector(state),
     withButton: false
 }), {
     onClose: toggleControl.bind(null, 'about', null)
@@ -39,9 +53,22 @@ export default {
                 text: <Message msgId="about_title"/>,
                 icon: <Glyphicon glyph="info-sign"/>,
                 action: toggleControl.bind(null, 'about', null),
-                priority: 1,
+                priority: 2,
                 doNotHide: true
+            },
+            SidebarMenu: {
+                name: 'about',
+                position: 1500,
+                tooltip: "aboutTooltip",
+                text: <Message msgId="about_title"/>,
+                icon: <Glyphicon glyph="info-sign"/>,
+                action: toggleControl.bind(null, 'about', null),
+                priority: 1,
+                doNotHide: true,
+                toggle: true
             }
         }),
-    reducers: {}
+    reducers: {
+        version
+    }
 };

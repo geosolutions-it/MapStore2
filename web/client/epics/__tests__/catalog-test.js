@@ -7,14 +7,7 @@
  */
 
 import expect from 'expect';
-import csw from '../../api/CSW';
-import wms from '../../api/WMS';
-import wmts from '../../api/WMTS';
-const API = {
-    csw,
-    wms,
-    wmts
-};
+import API from '../../api/catalog';
 import catalog from '../catalog';
 const {
     addLayersFromCatalogsEpic,
@@ -24,11 +17,11 @@ const {
     openCatalogEpic,
     recordSearchEpic,
     getSupportedFormatsEpic,
-    updateGroupSelectedMetadataExplorerEpic
+    updateGroupSelectedMetadataExplorerEpic,
+    newCatalogServiceAdded
 } = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
-import {CLOSE_FEATURE_GRID} from '../../actions/featuregrid';
-import {setControlProperty, SET_CONTROL_PROPERTY} from '../../actions/controls';
+import {SET_CONTROL_PROPERTY, toggleControl} from '../../actions/controls';
 import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode} from '../../actions/layers';
 import {PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER} from '../../actions/mapInfo';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
@@ -36,13 +29,21 @@ import {
     addLayersMapViewerUrl,
     getMetadataRecordById as initAction,
     changeText,
-    textSearch, TEXT_SEARCH,
+    textSearch,
+    TEXT_SEARCH,
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     SET_LOADING,
     formatOptionsFetch,
     FORMAT_OPTIONS_LOADING,
-    SET_FORMAT_OPTIONS, ADD_LAYER_AND_DESCRIBE, addLayerAndDescribe, DESCRIBE_ERROR
+    SET_FORMAT_OPTIONS,
+    ADD_LAYER_AND_DESCRIBE,
+    addLayerAndDescribe,
+    DESCRIBE_ERROR,
+    SAVING_SERVICE,
+    NEW_SERVICE_STATUS,
+    ADD_CATALOG_SERVICE,
+    addService
 } from '../../actions/catalog';
 
 
@@ -70,7 +71,14 @@ describe('catalog Epics', () => {
         testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
-            expect(actions[0].options).toEqual({filter: "test"});
+            expect(actions[0].options).toEqual({
+                filter: "test",
+                service: {
+                    type: "csw",
+                    url: "url",
+                    filter: "test"
+                }
+            });
             done();
         }, {
             catalog: {
@@ -95,14 +103,13 @@ describe('catalog Epics', () => {
         });
     });
     it('openCatalogEpic', (done) => {
-        const NUM_ACTIONS = 3;
-        testEpic(openCatalogEpic, NUM_ACTIONS, setControlProperty("metadataexplorer", "enabled", true), (actions) => {
+        const NUM_ACTIONS = 2;
+        testEpic(openCatalogEpic, NUM_ACTIONS, toggleControl("metadataexplorer", "enabled"), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
-            expect(actions[0].type).toBe(CLOSE_FEATURE_GRID);
-            expect(actions[1].type).toBe(PURGE_MAPINFO_RESULTS);
-            expect(actions[2].type).toBe(HIDE_MAPINFO_MARKER);
+            expect(actions[0].type).toBe(PURGE_MAPINFO_RESULTS);
+            expect(actions[1].type).toBe(HIDE_MAPINFO_MARKER);
             done();
-        }, { });
+        }, { controls: { metadataexplorer: { enabled: true } }});
     });
 
     it('recordSearchEpic with two layers', (done) => {
@@ -145,6 +152,82 @@ describe('catalog Epics', () => {
             });
             done();
         }, { });
+    });
+    it('recordSearchEpic with new service', (done) => {
+        const NUM_ACTIONS = 7;
+        const service = {type: "csw", url: "some_url"};
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+            format: "csw",
+            url: "base/web/client/test-resources/csw/getRecordsResponseDC.xml",
+            startPosition: 1,
+            maxRecords: 1,
+            text: "a",
+            options: {service, isNewService: true}
+        }), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case RECORD_LIST_LOADED:
+                    expect(action.result.records.length).toBe(4);
+                    const [rec0, rec1, rec2, rec3] = action.result.records;
+                    expect(rec0.boundingBox).toExist();
+                    expect(rec0.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec0.boundingBox.extent).toEqual([45.542, 11.874, 46.026, 12.718]);
+                    expect(rec1.boundingBox).toExist();
+                    expect(rec1.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec1.boundingBox.extent).toEqual([12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
+                    expect(rec2.boundingBox).toExist();
+                    expect(rec2.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec2.boundingBox.extent).toEqual([ -4.14168, 47.93257, -4.1149, 47.959353362144 ]);
+                    expect(rec3.boundingBox).toExist();
+                    expect(rec3.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec3.boundingBox.extent).toEqual([ 12.56, 47.46, 13.27, 48.13 ]);
+                    break;
+                case NEW_SERVICE_STATUS:
+                    expect(action.status).toBeTruthy();
+                    break;
+                case ADD_CATALOG_SERVICE:
+                    expect(action.service).toEqual(service);
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.level).toEqual('success');
+                    break;
+                case SAVING_SERVICE:
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, { });
+    });
+    it('newCatalogServiceAdded', (done) => {
+        const NUM_ACTIONS = 2;
+        const service = {type: "csw", url: "base/web/client/test-resources/csw/getRecordsResponseDC.xml"};
+        testEpic(addTimeoutEpic(newCatalogServiceAdded), NUM_ACTIONS, addService(), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case TEXT_SEARCH:
+                    expect(action.format).toBe(service.type);
+                    expect(action.url).toBe(service.url);
+                    expect(action.startPosition).toBe(1);
+                    expect(action.maxRecords).toBe(4);
+                    expect(action.text).toBe("");
+                    expect(action.options).toEqual({service, isNewService: true});
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, { catalog: {
+            newService: service
+        } });
     });
     it('recordSearchEpic with exception', (done) => {
         const NUM_ACTIONS = 2;

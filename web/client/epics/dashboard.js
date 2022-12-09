@@ -7,7 +7,7 @@
  */
 import Rx from 'rxjs';
 
-import { NEW, INSERT, EDIT, OPEN_FILTER_EDITOR, editNewWidget, onEditorChange } from '../actions/widgets';
+import { NEW, INSERT, EDIT, OPEN_FILTER_EDITOR, editNewWidget, onEditorChange} from '../actions/widgets';
 
 import {
     setEditing,
@@ -19,22 +19,26 @@ import {
     loadDashboard,
     dashboardSaveError,
     SAVE_DASHBOARD,
+    DASHBOARD_EXPORT,
     LOAD_DASHBOARD,
+    DASHBOARD_IMPORT,
     dashboardLoadError
 } from '../actions/dashboard';
 
-import { setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
+import { setControlProperty, TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { featureTypeSelected } from '../actions/wfsquery';
 import { show, error } from '../actions/notifications';
 import { loadFilter, QUERY_FORM_SEARCH } from '../actions/queryform';
 import { CHECK_LOGGED_USER, LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 import { isDashboardEditing, isDashboardAvailable } from '../selectors/dashboard';
 import { isLoggedIn } from '../selectors/security';
-import { getEditingWidgetLayer, getEditingWidgetFilter } from '../selectors/widgets';
+import { getEditingWidgetLayer, getEditingWidgetFilter, getSelectedChartId } from '../selectors/widgets';
 import { pathnameSelector } from '../selectors/router';
+import { download, readJson } from '../utils/FileUtils';
 import { createResource, updateResource, getResource } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
+import { convertDependenciesMappingForCompatibility } from "../utils/WidgetsUtils";
 const getFTSelectedArgs = (state) => {
     let layer = getEditingWidgetLayer(state);
     let url = layer.search && layer.search.url;
@@ -70,6 +74,15 @@ export const closeDashboardEditorOnExit = (action$, {getState = () => {}} = {}) 
     .filter( () => isDashboardAvailable(getState()))
     .filter( () => isDashboardEditing(getState()) )
     .switchMap(() => Rx.Observable.of(setEditing(false)));
+
+/**
+ * Get editor change key for updating filter object
+ */
+const getFilterKey = (state) => {
+    const selectedChartId = getSelectedChartId(state);
+    // Set chart key if editor widget type is chart
+    return selectedChartId ? `charts[${selectedChartId}].filter` : "filter";
+};
 /**
      * Manages interaction with QueryPanel and Dashboard
      */
@@ -90,7 +103,7 @@ export const handleDashboardWidgetsFilterPanel = (action$, {getState = () => {}}
             // then close the query panel, open widget form and update the current filter for the widget in editing
                 .switchMap( action =>
                     (action.filterObj
-                        ? Rx.Observable.of(onEditorChange("filter", action.filterObj))
+                        ? Rx.Observable.of(onEditorChange(getFilterKey(getState()), action.filterObj))
                         : Rx.Observable.empty()
                     )
                         .merge(Rx.Observable.of(
@@ -113,12 +126,13 @@ export const filterAnonymousUsersForDashboard = (actions$, store) => actions$
     .switchMap( ({}) => {
         return !isLoggedIn(store.getState()) ? Rx.Observable.of(dashboardLoadError({status: 403})) : Rx.Observable.empty();
     });
+
 // dashboard loading from resource ID.
 export const loadDashboardStream = (action$, {getState = () => {}}) => action$
     .ofType(LOAD_DASHBOARD)
     .switchMap( ({id}) =>
         getResource(id)
-            .map(({ data, ...resource }) => dashboardLoaded(resource, data))
+            .map(({ data, ...resource }) => dashboardLoaded(resource, convertDependenciesMappingForCompatibility(data)))
             .let(wrapStartStop(
                 dashboardLoading(true, "loading"),
                 dashboardLoading(false, "loading"),
@@ -180,6 +194,28 @@ export const saveDashboard = action$ => action$
             )
     );
 
+export const exportDashboard = action$ => action$
+    .ofType(DASHBOARD_EXPORT)
+    .switchMap(({data, fileName}) =>
+        Rx.Observable.of([JSON.stringify({...data}), fileName, 'application/json'])
+            .do((downloadArgs) => download(...downloadArgs))
+            .map(() => toggleControl('export'))
+    );
+
+export const importDashboard = action$ => action$
+    .ofType(DASHBOARD_IMPORT)
+    .switchMap(({file, resource}) => (
+        Rx.Observable.defer(() => readJson(file[0]).then((data) => data))
+            .switchMap((dashboard) => Rx.Observable.of(
+                dashboardLoaded(resource, dashboard),
+                toggleControl('import')
+            ))
+            .catch((e) => Rx.Observable.of(
+                error({ title: "dashboard.errors.loading.title" }),
+                dashboardLoadError({...e})
+            ))
+    ));
+
 export default {
     openDashboardWidgetEditor,
     closeDashboardWidgetEditorOnFinish,
@@ -189,5 +225,7 @@ export default {
     filterAnonymousUsersForDashboard,
     loadDashboardStream,
     reloadDashboardOnLoginLogout,
-    saveDashboard
+    saveDashboard,
+    exportDashboard,
+    importDashboard
 };

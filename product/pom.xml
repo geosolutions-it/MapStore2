@@ -1,15 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-product</artifactId>
   <packaging>war</packaging>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.5-SNAPSHOT</version>
   <name>MapStore Product Web Application</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>8.5.69</tomcat.version>
+    <tomcat.port>8080</tomcat.port>
   </properties>
 
   <dependencies>
@@ -17,7 +17,7 @@
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
       <artifactId>mapstore-webapp</artifactId>
-      <version>1.3-SNAPSHOT</version>
+      <version>1.5-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
@@ -167,7 +167,6 @@
                                 <excludes>
                                     <exclude>node_modules/*</exclude>
                                     <exclude>node_modules/**/*</exclude>
-                                    <exclude>**/libs/Cesium/**/*</exclude>
                                     <exclude>**/test-resources/*</exclude>
                                 </excludes>
                             </resource>
@@ -226,22 +225,6 @@
                     </configuration>
                 </execution>
                 <execution>
-                    <id>CesiumJS-navigation</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/../web/client/libs/cesium-navigation</directory>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
                     <id>printing templates</id>
                     <phase>process-classes</phase>
                     <goals>
@@ -275,6 +258,7 @@
         <plugin>
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-maven3-plugin</artifactId>
+            <version>1.10.2</version>
             <configuration>
                 <container>
                     <containerId>tomcat8x</containerId>
@@ -288,8 +272,12 @@
                         ${project.build.directory}/apache-tomcat-${tomcat.version}
                     </home>
                     <properties>
-                        <cargo.servlet.port>8080</cargo.servlet.port>
+                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
+<!-- setting javax.xml.parsers.SAXParserFactory is a workaround for issue https://github.com/geosolutions-it/geostore/issues/311 and can be removed when solved -->
+                        <cargo.jvmargs>
+                            -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"
+                        </cargo.jvmargs>
                     </properties>
                 </configuration>
                 <deployables>
@@ -307,6 +295,18 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+        <id>dev-custom-port</id>
+        <activation>
+            <property>
+                <name>env.MAPSTORE_BACKEND_PORT</name>
+            </property>
+        </activation>
+        <properties>
+            <!-- Override only if necessary -->
+            <tomcat.port>${env.MAPSTORE_BACKEND_PORT}</tomcat.port>
+        </properties>
+    </profile>
     <profile>
       <id>printing</id>
       <activation>
@@ -335,16 +335,37 @@
             </plugin>
         </plugins>
        </build>
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                    <version>4.5.13</version>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
        <dependencies>
         <!-- mapfish-print -->
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>geosolutions-2.0-SNAPSHOT</version>
+            <version>geosolutions-2.2-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>

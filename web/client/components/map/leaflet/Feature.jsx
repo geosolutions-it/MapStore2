@@ -15,7 +15,7 @@ import axios from 'axios';
 import {geometryToLayer} from '../../../utils/leaflet/Vector';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
 
-class Feature extends React.Component {
+class FeatureComponent extends React.Component {
     static propTypes = {
         msId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         type: PropTypes.string,
@@ -96,6 +96,8 @@ class Feature extends React.Component {
             styleName: props.styleName
         });
         props.container.addLayer(layer);
+        // probably this event should be manage at Map level
+        // if possible using the intersected features event
         layer.on('click', (event) => {
             if (props.onClick) {
                 let rawPos = [event.latlng.lat, event.latlng.lng];
@@ -155,6 +157,27 @@ class Feature extends React.Component {
             });
             this._layers = [];
         }
+    }
+}
+
+// the _msLegacyGeoJSON flag has been added in case a vector layer is using the feature component to manage style and click action
+// in case of this key is missing the layer will be in charge to manage the styling content of the features
+// layers that are still using _msLegacyGeoJSON are annotations, highlights or vector layer with default legacy style
+class Feature extends React.Component {
+    static propTypes = {
+        container: PropTypes.object
+    }
+    render() {
+        return this.props.container._msLegacyGeoJSON
+            ? <FeatureComponent
+                {...this.props}
+                ref={(cmp) => {
+                    if (cmp) {
+                        this._layers = cmp._layers;
+                    }
+                }}
+            />
+            : null;
     }
 }
 

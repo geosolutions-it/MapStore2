@@ -14,7 +14,9 @@ import {
     alignDependenciesToWidgets,
     toggleWidgetConnectFlow,
     updateLayerOnLayerPropertiesChange,
-    updateLayerOnLoadingErrorChange
+    updateLayerOnLoadingErrorChange,
+    updateDependenciesMapOnMapSwitch,
+    onWidgetCreationFromMap
 } from '../widgets';
 
 import {
@@ -26,7 +28,10 @@ import {
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
     LOAD_DEPENDENCIES,
-    DEPENDENCY_SELECTOR_KEY
+    DEPENDENCY_SELECTOR_KEY,
+    updateWidgetProperty,
+    REPLACE,
+    onEditorChange
 } from '../../actions/widgets';
 
 import { savingMap, mapCreated } from '../../actions/maps';
@@ -177,6 +182,51 @@ describe('widgets Epics', () => {
             {});
     });
 
+    it('alignDependenciesToWidgets triggered on insertWidget of type map', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(LOAD_DEPENDENCIES);
+            expect(action.dependencies).toExist();
+            expect(action.dependencies.center).toBe("map.center");
+            expect(action.dependencies.viewport).toBe("map.bbox");
+            expect(action.dependencies.zoom).toBe("map.zoom");
+            expect(action.dependencies["map.mapSync"]).toBe("map.mapSync");
+            expect(action.dependencies["map.dependenciesMap"]).toBe("map.dependenciesMap");
+            Object.keys(action.dependencies)
+                .filter(d=> d.includes('widgets'))
+                .forEach((dep)=>{
+                    if (dep.includes('viewport')) {
+                        expect(dep.replace('viewport', 'bbox')).toBe(action.dependencies[dep]);
+                    } else {
+                        expect(dep).toBe(action.dependencies[dep]);
+                    }
+                });
+            done();
+        };
+        testEpic(alignDependenciesToWidgets,
+            1,
+            [insertWidget({id: 'test'})],
+            checkActions,
+            {
+                widgets: {
+                    containers: {
+                        floating: {
+                            widgets: [{
+                                id: 'w1',
+                                selectedMapId: 'm1',
+                                widgetType: 'map',
+                                maps: [
+                                    {center: {x: 0, y: 0, crs: 'EPSG:4236'}, zoom: 4, mapId: 'm1', layers: ['layer_1']},
+                                    {center: {x: 1, y: 1, crs: 'EPSG:4236'}, zoom: 5, mapId: 'm2', layers: ['layer_2']}
+                                ]
+                            }]
+                        }
+                    }
+                }
+            });
+    });
+
     it('toggleWidgetConnectFlow with only map', (done) => {
         const checkActions = actions => {
             expect(actions.length).toBe(2);
@@ -211,15 +261,15 @@ describe('widgets Epics', () => {
             expect(action.type).toBe(EDITOR_CHANGE);
             expect(action.key).toExist();
             expect(action.key).toBe("dependenciesMap");
-            expect(action.value.center).toBe("widgets[a].map.center");
-            expect(action.value.zoom).toBe("widgets[a].map.zoom");
+            expect(action.value.center).toBe("widgets[a].maps[m].center");
+            expect(action.value.zoom).toBe("widgets[a].maps[m].zoom");
             done();
         };
         testEpic(toggleWidgetConnectFlow,
             2,
             [toggleConnection(
                 true,
-                ["widgets[a].map"],
+                ["widgets[a].maps[m].map"],
                 { mappings: { "center": "center", "zoom": "zoom" } }
             )],
             checkActions,
@@ -239,8 +289,8 @@ describe('widgets Epics', () => {
             expect(action.type).toBe(EDITOR_CHANGE);
             expect(action.key).toExist();
             expect(action.key).toBe("dependenciesMap");
-            expect(action.value.center).toBe("widgets[w1].map.center");
-            expect(action.value.zoom).toBe("widgets[w1].map.zoom");
+            expect(action.value.center).toBe("widgets[w1].maps[m1].center");
+            expect(action.value.zoom).toBe("widgets[w1].maps[m1].zoom");
             expect(actions[3].type).toBe(EDITOR_SETTING_CHANGE);
             expect(actions[3].key).toBe(DEPENDENCY_SELECTOR_KEY);
             expect(actions[3].value.active).toBe(false);
@@ -254,7 +304,8 @@ describe('widgets Epics', () => {
                 { mappings: { "center": "center", "zoom": "zoom" } }
             ), selectWidget({
                 id: "w1",
-                widgetType: "map"
+                widgetType: "map",
+                selectedMapId: "m1"
             })],
             checkActions,
             {
@@ -264,8 +315,8 @@ describe('widgets Epics', () => {
                             [DEPENDENCY_SELECTOR_KEY]: { active: true,
                                 availableDependencies: [
                                     "map.zoom",
-                                    "widgets[w1].map",
-                                    "widgets[w2].map"
+                                    "widgets[w1].maps[m1].map",
+                                    "widgets[w2].maps[m1].map"
                                 ] }
                         }
                     }
@@ -291,7 +342,7 @@ describe('widgets Epics', () => {
             [toggleConnection(
                 false,
                 ["map"],
-                { mappings: { "center": "widgets[a].map.center", "zoom": "widgets[a].map.zoom" } }
+                { mappings: { "center": "widgets[a].maps[m].center", "zoom": "widgets[a].maps[m].zoom" } }
             )],
             checkActions,
             {});
@@ -449,5 +500,138 @@ describe('widgets Epics', () => {
         updateLayerOnLoadingErrorChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
             .toArray()
             .subscribe(checkActions);
+    });
+
+    it('updateDependenciesMapOnMapSwitch on mode="replace"', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(REPLACE);
+            expect(actions[0].widgets.length).toBe(2);
+            expect(actions[0].widgets[1].dependenciesMap.layers).toBe("widgets[w1].maps[m2].layers");
+            expect(actions[0].widgets[1].dependenciesMap.zoom).toBe("widgets[w1].maps[m2].zoom");
+            expect(actions[0].widgets[1].dependenciesMap.viewport).toBe("widgets[w1].maps[m2].bbox");
+            expect(actions[0].widgets[1].dependenciesMap.dependenciesMap).toBe("widgets[w1].dependenciesMap");
+            expect(actions[0].widgets[1].dependenciesMap.mapSync).toBe("widgets[w1].mapSync");
+            done();
+        };
+        testEpic(updateDependenciesMapOnMapSwitch,
+            1,
+            [updateWidgetProperty(
+                "w1",
+                "selectedMapId",
+                "m2"
+            )],
+            checkActions,
+            {
+                widgets: {
+                    containers: {
+                        floating: {
+                            widgets: [{
+                                id: 'w1',
+                                selectedMapId: 'm1',
+                                widgetType: 'map',
+                                maps: [
+                                    {center: {x: 0, y: 0, crs: 'EPSG:4236'}, zoom: 4, mapId: 'm1', layers: ['layer_1']},
+                                    {center: {x: 1, y: 1, crs: 'EPSG:4236'}, zoom: 5, mapId: 'm2', layers: ['layer_2']}
+                                ]
+                            },
+                            {
+                                id: 'w2',
+                                widgetType: 'legend',
+                                dependenciesMap: {
+                                    zoom: "widgets[w1].maps[m1].zoom",
+                                    layers: "widgets[w1].maps[m1].layers",
+                                    viewport: "widgets[w1].maps[m1].bbox",
+                                    dependenciesMap: "widgets[w1].dependenciesMap",
+                                    mapSync: "widgets[w1].mapSync"
+                                }
+                            }]
+                        }
+                    }
+                }
+            });
+    });
+    it('updateDependenciesMapOnMapSwitch on mode="merge"', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(REPLACE);
+            expect(actions[0].widgets.length).toBe(2);
+            expect(actions[0].widgets[1].dependenciesMap.layers).toBe("widgets[w1].maps[m2].layers");
+            expect(actions[0].widgets[1].dependenciesMap.zoom).toBe("widgets[w1].maps[m2].zoom");
+            expect(actions[0].widgets[1].dependenciesMap.viewport).toBe("widgets[w1].maps[m2].bbox");
+            expect(actions[0].widgets[1].dependenciesMap.dependenciesMap).toBe("widgets[w1].dependenciesMap");
+            expect(actions[0].widgets[1].dependenciesMap.mapSync).toBe("widgets[w1].mapSync");
+            done();
+        };
+        testEpic(updateDependenciesMapOnMapSwitch,
+            1,
+            [updateWidgetProperty(
+                "w1",
+                "maps",
+                {center: {x: 1, y: 1, crs: 'EPSG:4236'}, zoom: 8, mapId: 'm2', layers: ['layer_2']},
+                "merge"
+            )],
+            checkActions,
+            {
+                widgets: {
+                    containers: {
+                        floating: {
+                            widgets: [{
+                                id: 'w1',
+                                selectedMapId: 'm1',
+                                widgetType: 'map',
+                                maps: [
+                                    {center: {x: 0, y: 0, crs: 'EPSG:4236'}, zoom: 4, mapId: 'm1', layers: ['layer_1']}
+                                ]
+                            },
+                            {
+                                id: 'w2',
+                                widgetType: 'legend',
+                                dependenciesMap: {
+                                    zoom: "widgets[w1].maps[m1].zoom",
+                                    layers: "widgets[w1].maps[m1].layers",
+                                    viewport: "widgets[w1].maps[m1].bbox",
+                                    dependenciesMap: "widgets[w1].dependenciesMap",
+                                    mapSync: "widgets[w1].mapSync"
+                                }
+                            }]
+                        }
+                    }
+                }
+            });
+    });
+    it('onWidgetCreationFromMap', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(EDITOR_CHANGE);
+            expect(actions[0].key).toBe("chart-layers");
+            expect(actions[0].value).toEqual([{id: "1", name: "layer"}]);
+            done();
+        };
+        const state = {
+            layers: {
+                flat: [{
+                    id: "1",
+                    name: "layer"
+                }, {
+                    id: "2",
+                    name: "layer2"
+                }, {
+                    id: "3",
+                    name: "layer3"
+                }],
+                selected: ["1"]
+            },
+            dashboard: {
+                editor: {
+                    available: false
+                },
+                editing: false
+            }
+        };
+        testEpic(onWidgetCreationFromMap,
+            1,
+            [onEditorChange("widgetType", "chart")],
+            checkActions, state);
     });
 });

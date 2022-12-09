@@ -1,6 +1,6 @@
 # Printing a Map
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to print a map by selecting the <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> option from [Burger Menu](menu-bar.md#burger-menu). The print process is composed by two main steps:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible to print a map by selecting the **Print** <img src="../img/button/print2.jpg" class="ms-docbutton"  style="max-height:20px;"/> button from [Side Toolbar](mapstore-toolbars.md#side-toolbar). The print process is composed by two main steps:
 
 * *Print Settings* definition
 
@@ -8,7 +8,7 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
 
 ## Print settings
 
-As soon as the <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> option is chosen, the following window opens:
+As soon as the *Print* <img src="../img/button/print2.jpg" class="ms-docbutton"  style="max-height:20px;"/> button is chosen, the following window opens:
 
 <img src="../img/print/print-page.jpg" class="ms-docimage"/>
 
@@ -16,7 +16,11 @@ Through this window it is possible to:
 
 * Enter a **Title** and a **Description**, that will be shown on the print page
 
-* Change the **Resolution** of the print (choosing between 96, 150 and 300 dpi)
+* Change the **Format** (`PDF`, `PNG`, `JPEG`)
+
+* Change the **Coordinates System** (`EPSG:3857`, `EPSG:4326`)
+
+* Change the **Resolution** of the print (`96 dpi`, `150 dpi`, `300 dpi`)
 
 * Accessing **Layout** settings
 

@@ -15,6 +15,8 @@ import {
     LegendWidget
 } from './enhancedWidgets';
 
+const getWidgetOpts = (w) => w?.widgetOpts?.[w.widgetType];
+
 /**
  * Renders proper widget by widgetType, binding props and methods
  */
@@ -33,6 +35,7 @@ const DefaultWidget = ({
         onEdit={onEdit}/>)
     : w.widgetType === "table"
         ? <TableWidget {...w}
+            {...getWidgetOpts(w)}
             toggleCollapse={toggleCollapse}
             exportCSV={exportCSV}
             dependencies={dependencies}
@@ -41,23 +44,27 @@ const DefaultWidget = ({
         />
         : w.widgetType === "counter"
             ? <CounterWidget {...w}
+                {...getWidgetOpts(w)}
                 toggleCollapse={toggleCollapse}
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />
             : w.widgetType === "map"
                 ? <MapWidget {...w}
+                    {...getWidgetOpts(w)}
                     toggleCollapse={toggleCollapse}
                     dependencies={dependencies}
                     onDelete={onDelete}
                     onEdit={onEdit} />
                 : w.widgetType === "legend"
                     ? <LegendWidget {...w}
+                        {...getWidgetOpts(w)}
                         toggleCollapse={toggleCollapse}
                         dependencies={dependencies}
                         onDelete={onDelete}
                         onEdit={onEdit} />
                     : (<ChartWidget {...w}
+                        {...getWidgetOpts(w)}
                         toggleCollapse={toggleCollapse}
                         exportCSV={exportCSV}
                         dependencies={dependencies}

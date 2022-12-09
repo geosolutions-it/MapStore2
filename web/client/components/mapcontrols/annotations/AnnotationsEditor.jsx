@@ -22,7 +22,7 @@ import {
     NavItem,
     Row
 } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
+import ReactQuill from '../../../libs/quill/react-quill-suspense';
 
 import {
     coordToArray,
@@ -550,7 +550,10 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onToggleUnsavedGeometryModal}
-                onConfirm={() => { this.props.onResetCoordEditor(); }}
+                onConfirm={() => {
+                    this.props.onResetCoordEditor();
+                    this.props.onCancelEdit(this.props.editing?.properties);
+                }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 title={<Message msgId="annotations.titleUndoGeom" />}

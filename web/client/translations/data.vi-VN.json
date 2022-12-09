@@ -560,16 +560,8 @@
                     "html": "<h3>Trình xem</h3><p>Trình xem đơn giản</p>"
                 }
             },
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:info@geosolutionsgroup.com\">info@geosolutionsgroup.com</a> <strong>US</strong> +1 (301) 337-7055 -  <strong>Italy</strong>: +39 0584 962313",
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "forkMeOnGitHub": "Chia đôi tôi trên GitHub",
-            "ml": {
-                "email": "E-mail:",
-                "subscribe": "Đăng ký",
-                "subscribe_devel": "Đăng ký vào danh sách nhận thư của nhà phát triển",
-                "subscribe_users": "Đăng ký danh sách nhận thư của người dùng",
-                "title": "Giữ liên lạc và cập nhật với danh sách gửi thư",
-                "visit_group": "Ghé thăm nhóm này"
-            },
             "open": "Mở",
             "scrollTop": "Cuộn lên đầu trang",
             "shortDescription": "Lập bản đồ web hiện đại với OpenLayers, Tờ rơi và Phản ứng<br/><small>truy cập tài liệu <a href=\"https://mapstore.readthedocs.io/en/latest/\"></a> trang</small>"
@@ -697,6 +689,7 @@
             "textFormatTitle": "VĂN BẢN",
             "title": "Tiêu đề",
             "titleTranslations": "Bản dịch tiêu đề",
+            "heightOffset": "Height offset (m)",
             "tooltip": {
                 "both": "Tiêu đề và mô tả",
                 "bottom": "Dưới cùng",
@@ -875,7 +868,25 @@
             "selectTool": "Chọn một công cụ đo lường",
             "showLabel": "Hiển thị nhãn đo lường",
             "title": "Đo",
-            "tooltip": "Đo chiều dài và diện tích"
+            "tooltip": "Đo chiều dài và diện tích",
+            "polylineDistance3DMeasure": "Measure distance in 3D space",
+            "area3DMeasure": "Measure area in 3D space",
+            "pointCoordinatesMeasure": "Measure point coordinates",
+            "heightFromTerrainMeasure": "Measure height from terrain",
+            "angle3DMeasure": "Measure angle in 3D space",
+            "slopeMeasure": "Measure slope",
+            "tooltipPolylineDistance3DStart": "Click to start measurement",
+            "tooltipPolylineDistance3DEnd": "Single click to add a segment\nor double click to end",
+            "tooltipArea3DStart": "Click to start measurement",
+            "tooltipArea3DMissingVertex": "Area needs at least 3 vertices, \nsingle click to add a vertex",
+            "tooltipArea3DEnd": "Single click to add a vertex\nor double click to end",
+            "tooltipPointCoordinatesStart": "Click to add an altitude point measurement",
+            "tooltipHeightFromTerrainStart": "Click to add the distance value from terrain surface",
+            "tooltipAngle3DStart": "Single click to draw 3 points that represent the angle vertices",
+            "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
+            "altitude": "Altitude",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
         },
         "measureSupport": {
             "continueLine": "Nhấn vào đây để tiếp tục vẽ đường",
@@ -1313,7 +1324,15 @@
             "title": "Chia sẻ",
             "titlePanel": "Chia sẻ bản đồ",
             "wrongBboxParamMessage": "thông số bbox phải ở trong EPSG: 4326 và được viết dưới dạng bbox = minx, miny, maxx, maxy",
-            "wrongBboxParamTitle": "Thông số bbox không hợp lệ"
+            "wrongBboxParamTitle": "Thông số bbox không hợp lệ",
+            "heading": "Góc tiêu đề",
+            "zoom": "Phóng",
+            "roll": "Góc cuộn",
+            "pitch": "Góc sân",
+            "zoomToolTip": "Tối thiểu: 0 và Tối đa: 35",
+            "headingToolTip": "Tối thiểu: 0° và Tối: 360°",
+            "rollToolTip": "Tối thiểu: -90° và Tối: 90°",
+            "pitchToolTip": "Tối thiểu: -90° và Tối: 90°"
         },
         "showEmptyMessageGFI": "Hiển thị thông báo kết quả trống trong bảng GetFeatureInfo",
         "showMore": "Hiển thị nhiều hơn...",
@@ -1381,7 +1400,13 @@
             "updateStyleErrorTitle": "Chỉnh sửa kiểu",
             "updateTmpErrorTitle": "Cập nhật kiểu tạm thời",
             "updateTmpStyleErrorMessage": "Kiểu tạm thời không thể được cập nhậ, có thể do định dạng kiểu không được hỗ trợ hoặc vấn đề kết nối.",
-            "validationErrorTitle": "Lỗi xác nhận"
+            "validationErrorTitle": "Lỗi xác nhận",
+            "heightReferenceFromGround": "Height reference from ground",
+            "height": "Height",
+            "constantValue": "Constant value",
+            "attributeValue": "Attribute value",
+            "relative": "Relative",
+            "clamp": "Clamp"
         },
         "styler": {
             "layerlabel": "Lớp",
@@ -1754,6 +1779,7 @@
         },
         "warning": "Cảnh báo",
         "layerdownload": {
+            "service": "Service",
             "downloadonlycurrentpage": "Chỉ tải xuống trang hiện tại",
             "error": {
                 "invalidOutputFormat": "Định dạng xuất đã chọn không khả dụng",

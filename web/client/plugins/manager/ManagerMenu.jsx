@@ -54,7 +54,7 @@ class ManagerMenu extends React.Component {
     };
 
     static defaultProps = {
-        id: "mapstore-burger-menu",
+        id: "mapstore-manager-menu",
         entries: [{
             "msgId": "users.title",
             "glyph": "1-group-mod",

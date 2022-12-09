@@ -100,6 +100,7 @@
         {
           "framework": [
             "web/client/api/SLDService.js",
+            "web/client/api/ThreeDTiles.js",
             "web/client/api/usersession/index.js",
             "web/client/components/index.jsdoc",
             "web/client/components/app/main.jsx",
@@ -214,6 +215,7 @@
             "web/client/utils/ogc/WFS/RequestBuilder.js",
             "web/client/utils/ogc/WFST/RequestBuilder.js",
             "web/client/utils/ShareUtils.js",
+            "web/client/utils/StateUtils.js",
             "web/client/utils/ThumbnailUtils.js"
           ],
           "jsapi": "web/client/jsapi/MapStore2.js",
@@ -268,6 +270,7 @@
                 "web/client/plugins/Maps.jsx",
                 "web/client/plugins/MapSearch.jsx",
                 "web/client/plugins/MapTemplates.jsx",
+                "web/client/plugins/MapViews.jsx",
                 "web/client/plugins/Measure.jsx",
                 "web/client/plugins/MeasurePanel.jsx",
                 "web/client/plugins/MeasureResults.jsx",
@@ -334,8 +337,7 @@
                 "web/client/product/plugins/Fork.jsx",
                 "web/client/product/plugins/Header.jsx",
                 "web/client/product/plugins/NavMenu.jsx",
-                "web/client/product/plugins/HomeDescription.jsx",
-                "web/client/product/plugins/MailingLists.jsx"
+                "web/client/product/plugins/HomeDescription.jsx"
             ]
         }
     ]

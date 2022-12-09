@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { Col, Form, FormControl, FormGroup } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
+import ReactQuill from '../../../../../libs/quill/react-quill-suspense';
 
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 

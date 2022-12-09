@@ -26,10 +26,14 @@ import DownloadWPSOptions from './DownloadWPSOptions';
  */
 class DownloadOptions extends React.Component {
     static propTypes = {
+        wpsAvailable: PropTypes.bool,
+        wfsAvailable: PropTypes.bool,
+        service: PropTypes.string,
         downloadOptions: PropTypes.object,
         formatOptionsFetch: PropTypes.func,
         formats: PropTypes.array,
         srsList: PropTypes.array,
+        setService: PropTypes.func,
         onChange: PropTypes.func,
         defaultSrs: PropTypes.string,
         wpsOptionsVisible: PropTypes.bool,
@@ -37,10 +41,14 @@ class DownloadOptions extends React.Component {
         downloadFilteredVisible: PropTypes.bool,
         layer: PropTypes.object,
         formatsLoading: PropTypes.bool,
-        virtualScroll: PropTypes.bool
+        virtualScroll: PropTypes.bool,
+        services: PropTypes.arrayOf(PropTypes.object)
     };
 
     static defaultProps = {
+        wpsAvailable: false,
+        wfsAvailable: true,
+        service: 'wps',
         downloadOptions: {},
         formatsLoading: false,
         formats: [],
@@ -48,8 +56,16 @@ class DownloadOptions extends React.Component {
         wpsOptionsVisible: false,
         wpsAdvancedOptionsVisible: false,
         downloadFilteredVisible: false,
-        virtualScroll: true
+        virtualScroll: true,
+        services: [
+            { value: "wps", label: "WPS" },
+            { value: "wfs", label: "WFS" }
+        ]
     };
+
+    constructor(props) {
+        super(props);
+    }
 
     getSelectedFormat = () => {
         return get(this.props, "downloadOptions.selectedFormat");
@@ -60,6 +76,16 @@ class DownloadOptions extends React.Component {
 
     render() {
         return (<form>
+            {this.props.wpsAvailable && this.props.wfsAvailable &&
+                <>
+                    <label><Message msgId="layerdownload.service" /></label>
+                    <Select
+                        clearable={false}
+                        value={this.props.service}
+                        onChange={(sel) => this.props.setService(sel.value)}
+                        options={this.props.services} />
+                </>
+            }
             <label><Message msgId="layerdownload.format" /></label>
             <Select
                 clearable={false}

@@ -47,6 +47,8 @@ export default ({
         onDelete={onDelete}
         toggleDeleteConfirm = {toggleDeleteConfirm}
         headerStyle={headerStyle}
-        topRightItems={topRightItems}>
+        topRightItems={topRightItems}
+        options={props?.options}
+    >
         <CounterView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />
     </WidgetContainer>);

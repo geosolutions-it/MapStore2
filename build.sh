@@ -2,13 +2,19 @@
 #
 # Builds MapStore2, doing all needed clean-ups tests and checks and adding documentation.
 # You should use this script to generate a full valid MapStore2 package.
-# Use the `release` profile to build also the binary package
+# Use the `binary` profile to build also the binary package
 #
 # Usage:
-#  $ ./build.sh [version] [profiles]
+# $ ./build.sh [version] [profiles]
 # * version: The version for the final package
-# * profiles: profiles for mvn build. (use `release` to build also the binary package)
+# * profiles: profiles for mvn build.
 #
+# use `binary` to build also the binary package
+# use `printing` to include printing module in the ware
+# use `printing-bundle` to build also the zip bundle
+#
+# Example
+# $ ./build.sh 2022.02.00 binary
 
 set -e
 
@@ -18,11 +24,11 @@ npm install
 
 echo "Building MS2 bundles"
 echo `date`
-npm run compile
+npm run fe:build
 
 echo "Cleanup Documentation"
 echo `date`
-npm run cleandoc
+npm run jsdoc:clean
 
 echo "Checking syntax"
 echo `date`
@@ -34,7 +40,7 @@ npm test
 
 echo "Creating Documentation"
 echo `date`
-npm run doc
+npm run jsdoc:build
 
 echo "Building final WAR package"
 echo `date`
@@ -59,4 +65,4 @@ fi
 
 echo "Final Cleanup"
 echo `date`
-npm run cleandoc
+npm run jsdoc:clean

@@ -18,6 +18,7 @@ import wfs from './mapinfo/wfs';
 import wms from './mapinfo/wms';
 import wmts from './mapinfo/wmts';
 import vector from './mapinfo/vector';
+import threeDTiles from './mapinfo/threeDTiles';
 
 let MapInfoUtils;
 /**
@@ -112,12 +113,22 @@ export const clickedPointToGeoJson = (clickedPoint) => {
             type: "Feature",
             geometry: {
                 type: 'Point',
-                coordinates: [parseFloat(clickedPoint.lng), parseFloat(clickedPoint.lat)]
+                coordinates: [
+                    parseFloat(clickedPoint.lng),
+                    parseFloat(clickedPoint.lat),
+                    ...(clickedPoint.height !== undefined
+                        ? [parseFloat(clickedPoint.height)]
+                        : [])
+                ]
+            },
+            properties: {
+                id: 'get-feature-info-point'
             },
             style: [{
                 iconUrl,
                 iconAnchor: [12, 41], // in leaflet there is no anchor in fraction
-                iconSize: [25, 41]
+                iconSize: [25, 41],
+                leaderLine: clickedPoint.height !== undefined
             }]
 
         }
@@ -127,6 +138,7 @@ export const getMarkerLayer = (name, clickedMapPoint, styleName, otherParams, ma
     return {
         type: 'vector',
         visibility: true,
+        queryable: false,
         name: name || "GetFeatureInfo",
         styleName: styleName || "marker",
         label: markerLabel,
@@ -221,10 +233,11 @@ export const defaultQueryableFilter = (l) => {
     ;
 };
 export const services = {
-    wfs,
-    wms,
-    wmts,
-    vector
+    'wfs': wfs,
+    'wms': wms,
+    'wmts': wmts,
+    'vector': vector,
+    '3dtiles': threeDTiles
 };
 /**
  * To get the custom viewer with the given type

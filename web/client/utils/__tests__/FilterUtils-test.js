@@ -23,7 +23,9 @@ import {
     cqlArrayField,
     processOGCFilterFields,
     processOGCSimpleFilterField,
-    processCQLFilterFields
+    processCQLFilterFields,
+    wrapIfNoWildcards,
+    mergeFiltersToOGC
 } from '../FilterUtils';
 
 
@@ -1198,6 +1200,18 @@ describe('FilterUtils', () => {
         expect(cqlStringField("attribute_1", "ilike", "A")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
         // test LIKE
         expect(cqlStringField("attribute_1", "like", "A")).toBe("\"attribute_1\" LIKE '%A%'");
+        // test ilike with wildcard at the beginning
+        expect(cqlStringField("attribute_1", "ilike", "*A")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a'");
+        // test LIKE with wildcard at the beginning
+        expect(cqlStringField("attribute_1", "like", "*A")).toBe("\"attribute_1\" LIKE '%A'");
+        // test ilike with wildcard at the end
+        expect(cqlStringField("attribute_1", "ilike", "A*")).toBe("strToLowerCase(\"attribute_1\") LIKE 'a%'");
+        // test LIKE with wildcard at the end
+        expect(cqlStringField("attribute_1", "like", "A*")).toBe("\"attribute_1\" LIKE 'A%'");
+        // test ilike wrapped with wildcard
+        expect(cqlStringField("attribute_1", "ilike", "*A*")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
+        // test LIKE wrapped with wildcard
+        expect(cqlStringField("attribute_1", "like", "*A*")).toBe("\"attribute_1\" LIKE '%A%'");
     });
     it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
         // testing operators
@@ -1249,7 +1263,7 @@ describe('FilterUtils', () => {
                     groupId: 1,
                     attribute: "attribute3",
                     exception: null,
-                    operator: "LIKE",
+                    operator: "like",
                     rowId: "3",
                     type: "string",
                     value: "val"
@@ -1412,7 +1426,7 @@ describe('FilterUtils', () => {
                             groupId: 1,
                             attribute: "attribute3",
                             exception: null,
-                            operator: "LIKE",
+                            operator: "like",
                             rowId: "3",
                             type: "string",
                             value: "val"
@@ -1926,5 +1940,86 @@ describe('FilterUtils', () => {
         };
         filter = processCQLFilterFields(group, objFilter);
         expect(filter).toEqual("");
+    });
+
+    it('wrapIfNoWildcards', () => {
+        const testCases = [
+            // True if no unescaped wildcards
+            ["testString", true],
+            ["*testString", false],
+            ["!*testString", true],
+            ["!*test.String", false],
+            ["!te*st!.String", false],
+            ["!te!*st!.String*", false],
+            ["!te!*st!.String!*", true],
+            ["*!te!*st!.String!*", false],
+            ["!*!te!**st!.String!*", false]
+        ];
+        testCases.forEach(([value, expected]) => {
+            expect(wrapIfNoWildcards(value)).toBe(expected);
+        });
+    });
+    it('mergeFiltersToOGC', () => {
+        let ogcVersion = "1.0.0";
+        let filterObj = {
+            featureTypeName: "test",
+            groupFields: [{id: 1, logic: "OR", index: 0}],
+            filterFields: [],
+            spatialField: {
+                method: "BBOX",
+                operation: "INTERSECTS",
+                geometry: {
+                    id: "some_id",
+                    type: "Polygon",
+                    extent: [-189291.52323397118, 6127042.8962688595, -189157.75843447214, 6127162.329125555],
+                    center: [-189224.64083422167, 6127102.612697207],
+                    coordinates: [[[-189291.52323397118, 6127162.329125555], [-189291.52323397118, 6127042.8962688595], [-189157.75843447214, 6127042.8962688595], [-189157.75843447214, 6127162.329125555], [-189291.52323397118, 6127162.329125555]]],
+                    style: {},
+                    projection: "EPSG:3857"
+                },
+                attribute: "shape"
+            },
+            pagination: { startIndex: 0, maxFeatures: 20 },
+            filterType: "OGC",
+            ogcVersion,
+            sortOptions: null,
+            crossLayerFilter: null,
+            hits: false
+        };
+        let filter = mergeFiltersToOGC({
+            ogcVersion,
+            addXmlnsToRoot: true,
+            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+        }, undefined, filterObj);
+        let expectedFilter = '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"><ogc:And><ogc:Intersects><ogc:PropertyName>shape</ogc:PropertyName><gml:Polygon srsName="EPSG:3857"><gml:outerBoundaryIs><gml:LinearRing><gml:coordinates>-189291.52323397118,6127162.329125555 -189291.52323397118,6127042.8962688595 -189157.75843447214,6127042.8962688595 -189157.75843447214,6127162.329125555 -189291.52323397118,6127162.329125555</gml:coordinates></gml:LinearRing></gml:outerBoundaryIs></gml:Polygon></ogc:Intersects></ogc:And></ogc:Filter>';
+        expect(filter).toEqual(expectedFilter);
+
+        // ogcVersion - 1.1.0
+        ogcVersion = '1.1.0';
+        filter = mergeFiltersToOGC({
+            ogcVersion,
+            addXmlnsToRoot: true,
+            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+        }, undefined, {...filterObj, ogcVersion});
+        expectedFilter = '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"><ogc:And><ogc:Intersects><ogc:PropertyName>shape</ogc:PropertyName><gml:Polygon srsName="EPSG:3857"><gml:exterior><gml:LinearRing><gml:posList>-189291.52323397118 6127162.329125555 -189291.52323397118 6127042.8962688595 -189157.75843447214 6127042.8962688595 -189157.75843447214 6127162.329125555 -189291.52323397118 6127162.329125555</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogc:Intersects></ogc:And></ogc:Filter>';
+        expect(filter).toEqual(expectedFilter);
+
+        // ogcVersion - 2.0
+        ogcVersion = '2.0';
+        filter = mergeFiltersToOGC({
+            ogcVersion,
+            addXmlnsToRoot: true,
+            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+        }, undefined, {...filterObj, ogcVersion});
+        expect(filter).toEqual(expectedFilter);
+
+        // ogcVersion - 2.0.0
+        ogcVersion = '2.0.0';
+        filter = mergeFiltersToOGC({
+            ogcVersion,
+            addXmlnsToRoot: true,
+            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+        }, undefined, {...filterObj, ogcVersion});
+        expect(filter).toEqual(expectedFilter);
     });
 });

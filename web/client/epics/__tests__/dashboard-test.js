@@ -17,7 +17,10 @@ import  {
     TRIGGER_SAVE_MODAL,
     LOAD_DASHBOARD,
     SAVE_ERROR,
-    saveDashboard
+    DASHBOARD_LOADED,
+    saveDashboard,
+    dashboardExport as dashboardExportAction,
+    dashboardImport as dashboardImportAction
 } from '../../actions/dashboard';
 import {
     handleDashboardWidgetsFilterPanel,
@@ -25,7 +28,9 @@ import {
     initDashboardEditorOnNew,
     closeDashboardWidgetEditorOnFinish,
     filterAnonymousUsersForDashboard,
-    saveDashboard as saveDashboardMethod
+    saveDashboard as saveDashboardMethod,
+    exportDashboard as exportDashboardEpic,
+    importDashboard as importDashboardEpic
 } from '../dashboard';
 
 import {
@@ -43,7 +48,8 @@ import { LOAD_FILTER, search } from '../../actions/queryform';
 import {
     CHANGE_DRAWING_STATUS
 } from '../../actions/draw';
-import { SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../../actions/controls';
+// import it from "react-intl/locale-data/it";
 
 const BASE_STATE = {
     controls: {
@@ -366,5 +372,56 @@ describe('saveDashboard', () => {
             expect(actions[2].type).toBe(DASHBOARD_LOADING);
             expect(actions[2].value).toBe(false);
         }, BASE_STATE, done);
+    });
+});
+
+
+describe('Dashboard export/import flow', () => {
+    it('export dashboard epic', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(TOGGLE_CONTROL);
+            expect(action.control).toBe('export');
+            done();
+        };
+        const state = {
+            originalData: {
+                widgets: [],
+                layouts: {
+                    md: []
+                }
+            },
+            resource: { }
+        };
+        const startActions = [dashboardExportAction(state)];
+        testEpic(exportDashboardEpic, 1, startActions, epicResult, state, done);
+    });
+
+    it('import dashboard epic with file data', (done) => {
+        const jsonFile = new File(["[]"], "file.json", {
+            type: "application/json"
+        });
+        const startActions = [dashboardImportAction([jsonFile])];
+        const epicResult = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(DASHBOARD_LOADED);
+            expect(actions[1].type).toBe(TOGGLE_CONTROL);
+            expect(actions[1].control).toBe('import');
+            done();
+        };
+        testEpic(importDashboardEpic, 2, startActions, epicResult, BASE_STATE, done);
+    });
+
+    it('import dashboard epic throws if no file data is provided', (done) => {
+        const startActions = [dashboardImportAction(null)];
+        const epicResult = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(typeof(actions[0].title) === 'string').toBeTruthy();
+            expect(actions[1].type).toBe(DASHBOARD_LOAD_ERROR);
+            done();
+        };
+        testEpic(importDashboardEpic, 2, startActions, epicResult, BASE_STATE, done);
     });
 });

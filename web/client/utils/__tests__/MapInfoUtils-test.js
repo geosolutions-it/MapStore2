@@ -22,6 +22,7 @@ import {
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
     getLayerFeatureInfo,
+    getMarkerLayer,
     defaultQueryableFilter,
     filterRequestParams
 } from '../MapInfoUtils';
@@ -304,6 +305,23 @@ describe('MapInfoUtils', () => {
         let req1 = buildIdentifyRequest(layer, props);
         expect(req1.request).toExist();
         expect(req1.request.lat).toBe(25);
+    });
+
+    it('buildIdentifyRequest works for 3d tiles', () => {
+        const layer = {
+            type: "3dtiles"
+        };
+        const req = buildIdentifyRequest(layer, {});
+        expect(req).toEqual({
+            request: {
+                features: [],
+                outputFormat: 'application/json'
+            },
+            metadata: {
+                title: layer.title
+            },
+            url: 'client'
+        });
     });
 
     it('getViewer and setViewer test', () => {
@@ -708,4 +726,56 @@ describe('MapInfoUtils', () => {
         expect(results).toEqual(false);
     });
 
+    it("getMarkerLayer should return layer config", () => {
+        let features;
+        let styleName;
+        let markerLabel;
+        let results = getMarkerLayer(
+            "GetFeatureInfoHighLight",
+            { features },
+            styleName,
+            {
+                overrideOLStyle: true,
+                style: {
+                    iconUrl:
+                        "data:image/png;base64,iVBORw...",
+                    shadowUrl:
+                        "data:image/png;base64,iVBORw...",
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41],
+                    color: "#3388ff",
+                    weight: 4,
+                    dashArray: "",
+                    fillColor: "#3388ff",
+                    fillOpacity: 0.2
+                }
+            },
+            markerLabel
+        );
+        expect(results).toEqual({
+            type: "vector",
+            visibility: true,
+            queryable: false,
+            name: "GetFeatureInfoHighLight",
+            styleName: "marker",
+            label: undefined,
+            features: [],
+            overrideOLStyle: true,
+            style: {
+                iconUrl: "data:image/png;base64,iVBORw...",
+                shadowUrl: "data:image/png;base64,iVBORw...",
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41],
+                color: "#3388ff",
+                weight: 4,
+                dashArray: "",
+                fillColor: "#3388ff",
+                fillOpacity: 0.2
+            }
+        });
+    });
 });

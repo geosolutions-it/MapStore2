@@ -18,7 +18,6 @@ import { TOGGLE_CONTROL, toggleControl, setControlProperty } from '../actions/co
 import { addLayer, updateNode, removeLayer, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES } from '../actions/layers';
 import { changeMeasurement } from '../actions/measurement';
 import { error } from '../actions/notifications';
-import { closeFeatureGrid } from '../actions/featuregrid';
 import { hideMapinfoMarker, purgeMapInfoResults, closeIdentify, PURGE_MAPINFO_RESULTS } from '../actions/mapInfo';
 import {
     updateAnnotationGeometry,
@@ -79,14 +78,13 @@ import {
 import { MEASURE_TYPE } from '../utils/MeasurementUtils';
 import { createSvgUrl } from '../utils/VectorStyleUtils';
 
-import { isFeatureGridOpen } from '../selectors/featuregrid';
-import { queryPanelSelector, measureSelector } from '../selectors/controls';
 import { annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector, editingSelector } from '../selectors/annotations';
 import { mapNameSelector } from '../selectors/map';
 import { groupsSelector } from '../selectors/layers';
 
 
 import symbolMissing from '../product/assets/symbols/symbolMissing.svg';
+import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 /**
     * Epics for annotations
     * @name epics.annotations
@@ -121,8 +119,8 @@ const validateFeatureCollection = (feature) => {
  * @param drawMethod
  * @return {boolean}
  */
-const getGeodesicProperty = (state, drawMethod = "Circle") => {
-    return drawMethod === "Circle" && get(state.annotations, "config.geodesic", false);
+const getGeodesicProperty = (state) => {
+    return get(state.annotations, "config.geodesic", false);
 };
 
 const getSelectDrawStatus = (state) => {
@@ -136,7 +134,7 @@ const getSelectDrawStatus = (state) => {
         drawEnabled: false,
         translateEnabled: false,
         transformToFeatureCollection: true,
-        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
+        geodesic: getGeodesicProperty(state)
     };
 
     feature = validateFeatureCollection(feature);
@@ -153,7 +151,7 @@ const getReadOnlyDrawStatus = (state) => {
         translateEnabled: false,
         drawEnabled: false,
         transformToFeatureCollection: true,
-        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
+        geodesic: getGeodesicProperty(state)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, ANNOTATIONS, [feature], drawOptions, feature.style);
@@ -172,7 +170,7 @@ const getEditingGeomDrawStatus = (state) => {
         addClickCallback: true,
         useSelectedStyle: true,
         transformToFeatureCollection: true,
-        geodesic: getGeodesicProperty(state, state.draw.drawMethod)
+        geodesic: getGeodesicProperty(state)
     };
     feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, ANNOTATIONS, [feature], drawOptions, feature.style);
@@ -263,7 +261,7 @@ export default {
                 selectEnabled: true,
                 drawEnabled: false,
                 transformToFeatureCollection: true,
-                geodesic: getGeodesicProperty(state, type)
+                geodesic: getGeodesicProperty(state)
             };
             const isMeasureType = feature.properties?.type === MEASURE_TYPE || false;
             let actions = [
@@ -326,7 +324,7 @@ export default {
                     useSelectedStyle: true,
                     transformToFeatureCollection: true,
                     addClickCallback: true,
-                    geodesic: getGeodesicProperty(state, type)
+                    geodesic: getGeodesicProperty(state)
                 };
 
                 return Rx.Observable.from([
@@ -390,6 +388,7 @@ export default {
             ]);
         }),
     purgeMapInfoEpic: (action$, store) => action$.ofType( PURGE_MAPINFO_RESULTS)
+        .filter(() => get(store.getState(), 'draw.drawOwner', '') === ANNOTATIONS)
         .switchMap(() => {
             return Rx.Observable.from([
                 changeDrawingStatus("clean", store.getState().annotations.featureType || '', ANNOTATIONS, [], {})
@@ -413,7 +412,7 @@ export default {
                 defaultTextAnnotation,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic: getGeodesicProperty(state, type)
+                geodesic: getGeodesicProperty(state)
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, ANNOTATIONS, [feature], drawOptions, assign({}, feature.style, {highlight: false})));
         }),
@@ -524,24 +523,10 @@ export default {
             return Rx.Observable.empty();
         }),
     /**
-        this epic closes the measure tool becasue can conflict with the draw interaction in others
+        this epic closes annotation once other tools takes control over drawing
         */
-    closeMeasureToolEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
-        .filter((action) => action.control === ANNOTATIONS && store.getState().controls.annotations.enabled)
-        .switchMap(() => {
-            const state = store.getState();
-            let actions = [];
-            if (queryPanelSelector(state)) { // if query panel is open, close it
-                actions.push(setControlProperty('queryPanel', "enabled", false));
-            }
-            if (isFeatureGridOpen(state)) { // if FeatureGrid is open, close it
-                actions.push(closeFeatureGrid());
-            }
-            if (measureSelector(state)) { // if measure is open, close it
-                actions.push(toggleControl("measure"));
-            }
-            return actions.length ? Rx.Observable.from(actions) : Rx.Observable.empty();
-        }),
+    tearDownByDrawingToolsEpic: (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'annotations',
+        () => Rx.Observable.of(purgeMapInfoResults())),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === ANNOTATIONS && !store.getState().controls.annotations.enabled)
         .switchMap(() => {
@@ -614,7 +599,7 @@ export default {
                 drawEnabled: false,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic: getGeodesicProperty(state, method)
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -739,7 +724,7 @@ export default {
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
                 addClickCallback: true,
-                geodesic: getGeodesicProperty(state, method)
+                geodesic: getGeodesicProperty(state)
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),

@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import { compose, branch, withPropsOnChange } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 
@@ -64,8 +63,10 @@ import { isObject, head, find, round } from 'lodash';
 import { setControlProperties, setControlProperty } from '../actions/controls';
 import { createWidget } from '../actions/widgets';
 import { getMetadataRecordById } from '../actions/catalog';
-import { activeSelector } from '../selectors/catalog';
+import { isActiveSelector } from '../selectors/catalog';
 import { isCesium } from '../selectors/maptype';
+import { createShallowSelectorCreator } from '../utils/ReselectUtils';
+import isEqual from 'lodash/isEqual';
 
 const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
@@ -91,28 +92,27 @@ const filterLayersByTitle = (layer, filterText, currentLocale) => {
     return title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
 };
 
-const tocSelector = createSelector(
-    [
-        (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
-        groupsSelector,
-        layerSettingSelector,
-        layerSwipeSettingsSelector,
-        layerMetadataSelector,
-        wfsDownloadSelector,
-        mapSelector,
-        currentLocaleSelector,
-        currentLocaleLanguageSelector,
-        selectedNodesSelector,
-        layerFilterSelector,
-        layersSelector,
-        mapNameSelector,
-        activeSelector,
-        widgetBuilderAvailable,
-        generalInfoFormatSelector,
-        isCesium,
-        userSelector,
-        isLocalizedLayerStylesEnabledSelector
-    ], (enabled, groups, settings, swipeSettings, layerMetadata, layerdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
+const tocSelector = createShallowSelectorCreator(isEqual)(
+    (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
+    groupsSelector,
+    layerSettingSelector,
+    layerSwipeSettingsSelector,
+    layerMetadataSelector,
+    wfsDownloadSelector,
+    mapSelector,
+    currentLocaleSelector,
+    currentLocaleLanguageSelector,
+    selectedNodesSelector,
+    layerFilterSelector,
+    layersSelector,
+    mapNameSelector,
+    isActiveSelector,
+    widgetBuilderAvailable,
+    generalInfoFormatSelector,
+    isCesium,
+    userSelector,
+    isLocalizedLayerStylesEnabledSelector,
+    (enabled, groups, settings, swipeSettings, layerMetadata, layerdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
         enabled,
         groups,
         settings,
@@ -129,6 +129,7 @@ const tocSelector = createSelector(
         selectedNodes,
         filterText,
         generalInfoFormat,
+        layers,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         updatableLayersCount: layers.filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length,
@@ -149,11 +150,11 @@ const tocSelector = createSelector(
             },
             {
                 options: { showComponent: false },
-                func: (node) => head((node.nodes || []).filter(l => l.hidden || l.id === "annotations" && isCesiumActive)) && node.nodes.length === 1
+                func: (node) => head((node.nodes || []).filter(l => l.hidden)) && node.nodes.length === 1
             },
             {
-                options: { showComponent: false },
-                func: (node) => node.id === "annotations" && isCesiumActive
+                options: { exclusiveMapType: true },
+                func: (node) => node.type === "3dtiles" && !isCesiumActive
             }
         ]),
         catalogActive,
@@ -174,6 +175,7 @@ class LayerTree extends React.Component {
     static propTypes = {
         id: PropTypes.number,
         items: PropTypes.array,
+        layers: PropTypes.array,
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
@@ -268,6 +270,7 @@ class LayerTree extends React.Component {
 
     static defaultProps = {
         items: [],
+        layers: [],
         groupPropertiesChangeHandler: () => {},
         layerPropertiesChangeHandler: () => {},
         retrieveLayerData: () => {},
@@ -415,6 +418,7 @@ class LayerTree extends React.Component {
                         <Toolbar
                             items={this.props.items.filter(({ target }) => target === "toolbar")}
                             groups={this.props.groups}
+                            layers={this.props.layers}
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}

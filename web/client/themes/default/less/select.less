@@ -15,6 +15,11 @@
         .color-var(@theme-vars[primary], true);
         .background-color-var(@theme-vars[main-bg], true);
         .border-color-var(@theme-vars[main-border-color], true);
+        &.rw-state-disabled {
+            .color-var(@theme-vars[disabled-color], true);
+            .background-color-var(@theme-vars[disabled-bg], true);
+            .border-color-var(@theme-vars[main-border-color], true);
+        }
     }
 
     .rw-list-option:hover {

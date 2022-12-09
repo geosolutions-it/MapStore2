@@ -55,19 +55,37 @@ describe('Test the widgets reducer', () => {
     it('editWidget', () => {
         const state = widgets(undefined, editWidget({type: "bar"}));
         expect(state.builder.editor.type).toBe("bar");
-        expect(state.builder.settings.step).toBe(1);
+        expect(state.builder.settings.step).toBe(0);
     });
     it('editWidget initial by kind of widget', () => {
         // default chart
-        expect(widgets(undefined, editWidget({ type: "bar" })).builder.settings.step).toBe(1);
+        expect(widgets(undefined, editWidget({ type: "bar" })).builder.settings.step).toBe(0);
         // chart explicit
-        expect(widgets(undefined, editWidget({ widgetType: "chart" })).builder.settings.step).toBe(1);
+        expect(widgets(undefined, editWidget({ widgetType: "chart" })).builder.settings.step).toBe(0);
         // text explicit
         expect(widgets(undefined, editWidget({ widgetType: "text" })).builder.settings.step).toBe(0);
     });
     it('onEditorChange', () => {
         const state = widgets(undefined, onEditorChange("type", "bar"));
         expect(state.builder.editor.type).toBe("bar");
+    });
+    it('onEditorChange maps', () => {
+        const maps = ["map1", "map2"];
+        const state = widgets({}, onEditorChange("maps", maps));
+        expect(state.builder.editor.maps).toEqual(maps);
+    });
+    it('onEditorChange maps with id', () => {
+        const state = widgets({builder: {editor: {selectedMapId: '1', maps: [{mapId: '1', value: "some"}]}}}, onEditorChange(`maps[1].value`, "updated"));
+        expect(state.builder.editor.maps[0].value).toBe("updated");
+    });
+    it('onEditorChange charts', () => {
+        const charts = ["chart1", "chart2"];
+        const state = widgets({}, onEditorChange("charts", charts));
+        expect(state.builder.editor.charts).toEqual(charts);
+    });
+    it('onEditorChange charts with id', () => {
+        const state = widgets({builder: {editor: {selectedChartId: '1', charts: [{chartId: '1', value: "some"}]}}}, onEditorChange(`charts[1].value`, "updated"));
+        expect(state.builder.editor.charts[0].value).toBe("updated");
     });
     it('insertWidget', () => {
         const state = widgets(undefined, insertWidget({id: "1"}));
@@ -130,9 +148,45 @@ describe('Test the widgets reducer', () => {
         const newState = widgets(state, deleteWidget({id: "1"}));
         expect(newState.containers[DEFAULT_TARGET].widgets.length).toBe(0);
     });
+    it('deleteWidget remove dependenciesMap', () => {
+        const state = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [{
+                        id: "1",
+                        maps: [{mapId: 1, layers: [1, 2]}]
+                    }, {
+                        id: "2",
+                        mapSync: true,
+                        dependenciesMap: {
+                            layers: "widgets[1].maps[1].layers"
+                        }
+                    }]
+                }
+            }
+        };
+        const newState = widgets(state, deleteWidget({id: "1"}));
+        const uWidgets = newState.containers[DEFAULT_TARGET].widgets;
+        expect(uWidgets.length).toBe(1);
+        expect(uWidgets[0].mapSync).toBeFalsy();
+        expect(uWidgets[0].dependenciesMap).toBeFalsy();
+        expect(uWidgets[0].id).toBe("2");
+    });
     it('configureMap', () => {
         const state = widgets(undefined, configureMap({widgetsConfig: {widgets: [{id: "1"}]}}));
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
+    });
+    it('configureMap with no widgetsConfig', () => {
+        const state = widgets(undefined, configureMap({}));
+        expect(state.containers[DEFAULT_TARGET].widgets).toBeFalsy();
+    });
+    it('configureMap with empty object widgetsConfig', () => {
+        const state = widgets(undefined, configureMap({widgetsConfig: {}}));
+        expect(state.containers[DEFAULT_TARGET].widgets).toBeFalsy({});
+    });
+    it('configureMap with empty widgets in widgetsConfig', () => {
+        const state = widgets(undefined, configureMap({widgetsConfig: { widgets: []}}));
+        expect(state.containers[DEFAULT_TARGET].widgets).toEqual([]);
     });
     it('changeLayout', () => {
         const L = {lg: []};

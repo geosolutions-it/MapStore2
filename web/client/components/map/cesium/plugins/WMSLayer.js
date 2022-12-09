@@ -7,49 +7,16 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import Cesium from '../../../../libs/cesium';
-import createBILTerrainProvider from '../../../../utils/cesium/BILTerrainProvider';
-const BILTerrainProvider = createBILTerrainProvider(Cesium);
-import ConfigUtils from '../../../../utils/ConfigUtils';
-import {getProxyUrl, needProxy} from "../../../../utils/ProxyUtils";
+import * as Cesium from 'cesium';
+import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTerrainProvider';
 import assign from 'object-assign';
 import {isArray, isEqual} from 'lodash';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
-import {getAuthenticationParam, getURLs} from '../../../../utils/LayersUtils';
+import { getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
-import {addAuthenticationToSLD, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
+import { addAuthenticationToSLD, getAuthenticationHeaders } from '../../../../utils/SecurityUtils';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-
-function splitUrl(originalUrl) {
-    let url = originalUrl;
-    let queryString = "";
-    if (originalUrl.indexOf('?') !== -1) {
-        url = originalUrl.substring(0, originalUrl.indexOf('?') + 1);
-        if (originalUrl.indexOf('%') !== -1) {
-            url = decodeURIComponent(url);
-        }
-        queryString = originalUrl.substring(originalUrl.indexOf('?') + 1);
-    }
-    return {url, queryString};
-}
-
-function WMSProxy(proxy) {
-    this.proxy = proxy;
-}
-
-WMSProxy.prototype.getURL = function(resource) {
-    let {url, queryString} = splitUrl(resource);
-    return getProxyUrl() + encodeURIComponent(url + queryString);
-};
-
-function NoProxy() {
-}
-
-NoProxy.prototype.getURL = function(resource) {
-    let {url, queryString} = splitUrl(resource);
-    return url + queryString;
-};
 
 function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
@@ -77,7 +44,8 @@ function wmsToCesiumOptionsSingleTile(options) {
     return {
         url: new Cesium.Resource({
             url,
-            headers
+            headers,
+            proxy: WMSUtils.getProxy(options)
         })
     };
 }
@@ -85,11 +53,6 @@ function wmsToCesiumOptionsSingleTile(options) {
 function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
-    let proxyUrl = ConfigUtils.getProxyUrl({});
-    let proxy;
-    if (proxyUrl) {
-        proxy = needProxy(options.url) && proxyUrl;
-    }
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
@@ -100,7 +63,7 @@ function wmsToCesiumOptions(options) {
         url: new Cesium.Resource({
             url: "{s}",
             headers,
-            proxy: proxy && new WMSProxy(proxy) || new NoProxy()
+            proxy: WMSUtils.getProxy(options)
         }),
         // #7516 this helps Cesium to use CORS requests in a proper way, even when headers are not
         // present in the Resource
@@ -129,30 +92,10 @@ function wmsToCesiumOptions(options) {
     });
 }
 
-function wmsToCesiumOptionsBIL(options) {
-
-    let url = options.url;
-    let proxyUrl = ConfigUtils.getProxyUrl({});
-    let proxy;
-    if (proxyUrl) {
-        proxy = options.noCors || needProxy(url);
-    }
-    const headers = getAuthenticationHeaders(url, options.securityToken);
-    return assign({
-        url: new Cesium.Resource({
-            url,
-            headers,
-            proxy: proxy ? new WMSProxy(proxyUrl) : new NoProxy()
-        }),
-        littleEndian: options.littleendian || false,
-        layerName: options.name
-    });
-}
-
 const createLayer = (options) => {
     let layer;
     if (options.useForElevation) {
-        return new BILTerrainProvider(wmsToCesiumOptionsBIL(options));
+        return new GeoServerBILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(options));
     }
     if (options.singleTile) {
         layer = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(options));

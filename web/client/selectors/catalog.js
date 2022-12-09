@@ -10,7 +10,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { get } from 'lodash';
 
 import { projectionSelector } from './map';
-import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from "../utils/CatalogUtils";
+import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../api/WMS';
 
 export const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
 export const servicesSelector = (state) => get(state, "catalog.services");
@@ -45,7 +45,7 @@ export const selectedServiceSelector = (state) => get(state, "catalog.selectedSe
 export const modeSelector = (state) => get(state, "catalog.mode", "view");
 export const layerErrorSelector = (state) => get(state, "catalog.layerError");
 export const searchTextSelector = (state) => get(state, "catalog.searchOptions.text", "");
-export const activeSelector = (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled");
+export const isActiveSelector = (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled");
 export const authkeyParamNameSelector = (state) => {
     return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
 };
@@ -59,3 +59,4 @@ export const formatsLoadingSelector = (state) => get(state, "catalog.formatsLoad
 export const getSupportedFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.imageFormats", DEFAULT_FORMAT_WMS);
 export const getSupportedGFIFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.infoFormats", getUniqueInfoFormats());
 export const getFormatUrlUsedSelector = (state) => get(state, "catalog.newService.formatUrlUsed", '');
+export const getNewServiceStatusSelector = (state) => get(state, "catalog.isNewServiceAdded", false);

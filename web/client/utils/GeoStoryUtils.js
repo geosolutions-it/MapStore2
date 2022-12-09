@@ -64,6 +64,7 @@ export const Modes = {
 
 export const Controls = {
     SHOW_SAVE: 'save.show',
+    SHOW_DELETE: 'delete.show',
     LOADING: 'loading'
 };
 

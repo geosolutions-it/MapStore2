@@ -23,17 +23,25 @@ import {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_TEXT_CHANGE,
     TEXT_SEARCH_ERROR,
-    zoomAndAddPoint,
+    SEARCH_LAYER_WITH_FILTER,
     ZOOM_ADD_POINT,
+    zoomAndAddPoint,
     searchLayerWithFilter,
-    showGFI
+    showGFI, scheduleSearchLayerWithFilter
 } from '../../actions/search';
 
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { FEATURE_INFO_CLICK, SHOW_MAPINFO_MARKER, loadFeatureInfo, UPDATE_CENTER_TO_MARKER } from '../../actions/mapInfo';
 import { ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../actions/map';
 import { UPDATE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
-import { searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, textSearchShowGFIEpic } from '../search';
+import {
+    searchEpic,
+    searchItemSelected,
+    zoomAndAddPointEpic,
+    searchOnStartEpic,
+    textSearchShowGFIEpic,
+    delayedSearchEpic
+} from '../search';
 const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, textSearchShowGFIEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -43,6 +51,8 @@ const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
 const STATE_NAME = 'STATE_NAME';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import {addLayer} from "../../actions/layers";
+import { ADD_MAP_POPUP } from '../../actions/mapPopups';
 
 const nestedService = {
     nestedPlaceholder: TEST_NESTED_PLACEHOLDER
@@ -590,6 +600,22 @@ describe('search Epics', () => {
         }, {layers: {flat: [{name: "layerName", url: "clearlyNotAUrl", visibility: true, queryable: true, type: "wms"}]}});
     });
     it('searchOnStartEpic, that sends a Getfeature and a GFI requests', (done) => {
+        const testStore = {
+            map: {
+                projection: "EPSG:3857"
+            },
+            layers: {
+                flat: [
+                    {
+                        name: "layerName",
+                        url: "base/web/client/test-resources/wms/GetFeature.json",
+                        visibility: true,
+                        queryable: true,
+                        type: "wms"
+                    }
+                ]
+            }
+        };
         let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
         const NUM_ACTIONS = 2;
         testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
@@ -598,7 +624,48 @@ describe('search Epics', () => {
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
             done();
-        }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, queryable: true, type: "wms"}]}});
+        }, testStore);
+    });
+    it('searchOnStartEpic, that adds popup', (done) => {
+        const testStore = {
+            mapInfo: { showInMapPopup: true },
+            map: {
+                projection: "EPSG:3857"
+            },
+            layers: {
+                flat: [
+                    {
+                        name: "layerName",
+                        url: "base/web/client/test-resources/wms/GetFeature.json",
+                        visibility: true,
+                        queryable: true,
+                        type: "wms"
+                    }
+                ]
+            }
+        };
+        let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
+        const NUM_ACTIONS = 2;
+        testEpic(
+            searchOnStartEpic,
+            NUM_ACTIONS,
+            action,
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                const popupAction = actions[1];
+                expect(popupAction.type).toBe(ADD_MAP_POPUP);
+                expect(popupAction.popup?.position?.coordinates?.[0]).toBe(
+                    968346.2286324208
+                );
+                expect(popupAction.popup?.position?.coordinates?.[1]).toBe(
+                    5538315.133325616
+                );
+                done();
+            },
+            testStore
+        );
     });
     it('textSearchShowGFIEpic, it sends info format taken from layer', (done) => {
         let action = showGFI(
@@ -669,5 +736,60 @@ describe('search Epics', () => {
             expect(actions[5].status).toBe(true);
             done();
         }, { mapInfo: {centerToMarker: true}, layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
+    });
+
+    it('delayedSearchEpic', (done) => {
+        const NUM_ACTIONS = 1;
+        testEpic(delayedSearchEpic, NUM_ACTIONS,
+            [
+                scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "MM='nn'"}),
+                addLayer({ name: 'layer1'})
+            ],
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
+                expect(actions[0].layer).toBe('layer1');
+                expect(actions[0].cql_filter).toBe("MM='nn'");
+                done();
+            }, {});
+    });
+
+    it('delayedSearchEpic - do not dispatch action once layer was added', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(delayedSearchEpic, 100), NUM_ACTIONS,
+            [
+                scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "MM='nn'"}),
+                addLayer({ name: 'layer1'}),
+                addLayer({ name: 'layer1'})
+            ],
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
+                expect(actions[0].layer).toBe('layer1');
+                expect(actions[0].cql_filter).toBe("MM='nn'");
+                expect(actions[1].type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+    });
+
+    it('delayedSearchEpic - dispatch action if another layer was added prior to the expected', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(delayedSearchEpic, 100), NUM_ACTIONS,
+            [
+                scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "MM='nn'"}),
+                addLayer({ name: 'layer2'}),
+                addLayer({ name: 'layer1'})
+            ],
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toBe(NUM_ACTIONS);
+                expect(actions[0].type).toBe(SEARCH_LAYER_WITH_FILTER);
+                expect(actions[0].layer).toBe('layer1');
+                expect(actions[0].cql_filter).toBe("MM='nn'");
+                expect(actions[1].type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
     });
 });

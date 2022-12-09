@@ -13,11 +13,12 @@ import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ConfigUtils from '../utils/ConfigUtils';
+import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer').default);
+}))(ModulePluginsContainer);
 
 class Page extends React.Component {
     static propTypes = {
@@ -27,7 +28,9 @@ class Page extends React.Component {
         pluginsConfig: PropTypes.object,
         params: PropTypes.object,
         onMount: PropTypes.func,
+        onLoaded: PropTypes.func,
         plugins: PropTypes.object,
+        loaderComponent: PropTypes.func,
         component: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         includeCommon: PropTypes.bool
     };
@@ -35,6 +38,7 @@ class Page extends React.Component {
     static defaultProps = {
         mode: 'desktop',
         onMount: () => {},
+        onLoaded: () => {},
         className: '',
         includeCommon: true
     };
@@ -66,6 +70,8 @@ class Page extends React.Component {
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.params}
+            loaderComponent={this.props.loaderComponent}
+            onLoaded={this.props.onLoaded}
         />);
     }
 }

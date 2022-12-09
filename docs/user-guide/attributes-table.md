@@ -1,4 +1,5 @@
 # Attribute Table
+
 *****************
 
 In GIS, the Attribute Table associated to a vector layer is a table that stores tabular information related to the layer. The columns of the table are called fields and the rows are called records. Each record of the attribute table corresponds to a feature geometry of the layer. This relation allows to find records in the table (information) by selecting features on the map and viceversa.<br>
@@ -8,23 +9,23 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), through the <
 
 Accessing this panel the user can perform the following main operations:
 
-* [Edit records](attributes-table.md#editing-and-removing-existing-features) through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button 
+* [Edit records](#editing-and-removing-existing-features) through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* Filter records in Attribute Table in different ways as described in the [Set filter](attributes-table.md#set-filters) section below
+* Filter records in Attribute Table in different ways as described in the [Set filter](#set-filters) section below
 
 * Opening the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button
 
-* Activating the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button 
+* Activating the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
 
 * Using the [quick filter by attribute](filtering-layers.md#quick-filter-by-attributes)
 
-* Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button 
+* Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button
 
 * Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
 
-* Create [Widgets](widgets.md) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
+* Create [Widgets](widgets.md#widgets) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
 
-* Zoom to features through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record or zoom to the page max extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton"/> button (available only if the virtual scrolling is disabled, it is enabled by default in MapStore). 
+* Zoom to features through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record or zoom to the page max extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton"/> button (available only if the virtual scrolling is disabled, it is enabled by default in MapStore).
 
 !!!warning
     When GeoServer is set to strict CITE compliance for WFS (by default), the feature grid do not work correctly.
@@ -76,11 +77,34 @@ Once a new record is created, it's possible to draw a geometry for it, by clicki
 
 <img src="../img/attributes-table/drawing-line-shape.gif" class="ms-docimage"/>
 
-For *Points* layers a point is drawn for each click on the map
+* For *Points* layers a point is drawn for each click on the map
 
 <img src="../img/attributes-table/drawing-point-shape.gif" class="ms-docimage"/>
 
 The user is always allowed to delete the drawn shape through the <img src="../img/button/delete-geometry-button.jpg" class="ms-docbutton"/> button.
+
+#### Create new geometry with Snapping
+
+To fine tune the vertex position while editing or creating a new feature geometry, it is possible to leverage on the Snapping functionality. Through this function <img src="../img/button/snapping.jpg" class="ms-docbutton"/> it is possible to snap to other vertices of features belonging to the same layer or to others while editing a feature.
+
+<img src="../img/attributes-table/add-new-snapping-geometry.gif" class="ms-docimage"/>
+
+The tool provides the ability to tune the snapping function so that the user can:
+
+* Choose one of the visible map layers in TOC to be used for the snapping
+
+<img src="../img/attributes-table/snap-new-layer.gif" class="ms-docimage"/>
+
+* Choose where to snap the layer, enabling/disabling the **Edge** or/and the **Vertex**
+
+* Set **Tolerance** for considering the pointer close enough to a segment or vertex for snapping
+
+* Choose the **Loading strategy** of features to snap with by choosing one of the available options from the dropdown menu. Available options are:</p>
+  * *bbox*: only features in the current viewport are loaded</p>
+  * *all*: all layer features are loaded
+
+!!! note
+    The snapping functionality is by default set to work with the same layer in editing mode. By default, the **Edge** and the **Vertex** are enabled, the **Tolerance** is set to 10 `pixel` and the **Loading strategy** is set to *bbox*.
 
 ### Editing and removing existing features
 
@@ -96,7 +120,7 @@ With a click on **Save changes** <img src="../img/button/save-changes.jpg" class
 
 ## Set filters
 
-In the Attribute table it is possible to apply filters in three ways (as explained in the [Filtering layers](filtering-layers.md) section):
+In the Attribute table it is possible to apply filters in three ways (as explained in the [Filtering layers](filtering-layers.md#filtering-layers) section):
 
 * [Advanced search](filtering-layers.md#advanced-search)
 

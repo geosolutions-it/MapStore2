@@ -6,27 +6,34 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import { find, get, castArray, isArray } from 'lodash';
+import { find, get, castArray, isArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
 import { getSelectedLayer } from './layers';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
-import { getWidgetsGroups, getWidgetDependency } from '../utils/WidgetsUtils';
+import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
+import { getAttributesNames } from "../utils/FeatureGridUtils";
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
 export const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k => getDependenciesMap(s)[k]);
 export const getEditingWidget = state => get(state, "widgets.builder.editor");
+export const getSelectedChartId = state => get(getEditingWidget(state), 'selectedChartId');
+export const getEditingWidgetLayer = state => {
+    const { layer, charts, selectedChartId } = getEditingWidget(state) || {};
+    return layer ? layer : charts?.find(c => c.chartId === selectedChartId)?.layer;
+};
 export const getWidgetLayer = createSelector(
-    getEditingWidget,
+    getEditingWidgetLayer,
     getSelectedLayer,
     state => isDashboardAvailable(state) && isDashboardEditing(state),
-    ({layer} = {}, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
+    (layer, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
 );
+export const getChartWidgetLayers = (state) => getEditingWidget(state)?.charts?.map(c => c.layer) || [];
 
 export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 export const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
@@ -50,7 +57,7 @@ export const getWidgetAttributeFilter = (id, attributeName) => createSelector(
     getVisibleFloatingWidgets,
     (widgets) => {
         const widget = find(widgets, {id});
-        return widget && widget.quickFilters && widget.options && find(widget.options.propertyName, f => f === attributeName) && widget.quickFilters[attributeName] || {};
+        return widget && widget.quickFilters && widget.options && find(getAttributesNames(widget.options?.propertyName), f => f === attributeName) && widget.quickFilters[attributeName] || {};
     });
 
 export const getCollapsedIds = createSelector(
@@ -65,7 +72,7 @@ export const getTableWidgets = state => (getFloatingWidgets(state) || []).filter
  *
  * Note: table widgets are excluded from selection when viewer is present,
  * because there were conflict between map and other widgets
- * (the map were containing other widgets) .
+ * (the map contains other widgets)
  */
 export const availableDependenciesSelector = createSelector(
     getMapWidgets,
@@ -74,8 +81,8 @@ export const availableDependenciesSelector = createSelector(
     pathnameSelector,
     (ws = [], tableWidgets = [], map = [], pathname) => ({
         availableDependencies:
-            ws
-                .map(({id}) => `widgets[${id}].map`)
+            flatten(ws
+                .map(({id, maps = []}) => maps.map(({mapId} = {})=> `widgets[${id}].maps[${mapId}].map`)))
                 .concat(castArray(map).map(() => "map"))
                 .concat(castArray(tableWidgets).filter(() => pathname.indexOf("viewer") === -1).map(({id}) => `widgets[${id}]`))
     })
@@ -91,17 +98,18 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
     pathnameSelector,
     getEditingWidget,
     (ws = [], tableWidgets = [], map = {}, pathname, editingWidget) => {
-        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
+        const isChart = editingWidget && editingWidget.widgetType === 'chart';
+        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? isChart ? (editingWidget?.charts?.map(c => c?.layer?.name) || []) : editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
         return {
             availableDependencies:
-                ws
-                    .map(({id}) => `widgets[${id}].map`)
+                flatten(ws
+                    .map(({id, maps = []}) => maps.map(({mapId} = {})=> `widgets[${id}].maps[${mapId}].map`)))
                     .concat(castArray(map).map(() => map ? "map" : null))
                     .filter(w => w)
                     .concat(
                         castArray(tableWidgets)
                             .filter(() => pathname.indexOf("viewer") === -1)
-                            .filter((w) => isArray(editingLayer) || editingLayer.name === w.layer.name)
+                            .filter((w) => (!isChart && isArray(editingLayer)) || (isChart ? editingLayer.includes(w.layer.name) : editingLayer.name === w.layer.name))
                             .filter((w) => editingWidget && editingWidget.id !== w.id)
                             .map(({id}) => `widgets[${id}]`)
                     )
@@ -133,9 +141,11 @@ export const isTrayEnabled = state => get(state, "widgets.tray");
 // let's use the same container for the moment
 export const dashboardHasWidgets = state => (getDashboardWidgets(state) || []).length > 0;
 export const getDashboardWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
-export const getEditingWidgetLayer = state => get(getEditingWidget(state), "layer");
 export const returnToFeatureGridSelector = (state) => get(state, "widgets.builder.editor.returnToFeatureGrid", false);
-export const getEditingWidgetFilter = state => get(getEditingWidget(state), "filter");
+export const getEditingWidgetFilter = state => {
+    const editingWidget = getSelectedWidgetData(getEditingWidget(state));
+    return get(editingWidget, "filter");
+};
 export const dashBoardDependenciesSelector = () => ({}); // TODO dashboard dependencies
 /**
  * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
@@ -151,7 +161,7 @@ export const dependenciesSelector = createShallowSelector(
         k.indexOf("map.") === 0
             ? get(mapSelector(state), k.slice(4))
             : k.match(WIDGETS_REGEX)
-                ? getWidgetDependency(k, getFloatingWidgets(state))
+                ? getWidgetDependency(k, getFloatingWidgets(state), getMapWidgets(state))
                 : get(state, k) ),
     // iterate the dependencies keys to set the dependencies values in a map
     (map, keys, values) => keys.reduce((acc, k, i) => ({

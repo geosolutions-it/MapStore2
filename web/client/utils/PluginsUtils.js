@@ -8,12 +8,12 @@
 
 import React from 'react';
 import assign from 'object-assign';
-import { omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith } from 'lodash';
+import {endsWith, get, head, isArray, isFunction, isObject, isString, memoize, omit, size} from 'lodash';
 import {connect as originalConnect} from 'react-redux';
 import url from 'url';
 import curry from 'lodash/curry';
-import { combineEpics as originalCombineEpics } from 'redux-observable';
-import { combineReducers as originalCombineReducers } from 'redux';
+import {combineEpics as originalCombineEpics} from 'redux-observable';
+import {combineReducers as originalCombineReducers} from 'redux';
 import {wrapEpics} from "./EpicsUtils";
 
 /**
@@ -59,7 +59,7 @@ function loadScript(src) {
         },
         shared
     })],
- * @param {sting} scope the scope
+ * @param {string} scope the scope
  * @param {string} module the module
  */
 /* eslint-disable */
@@ -80,9 +80,14 @@ const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name
 export const getFromPlugins = curry((selector, plugins) => Object.keys(plugins).map((name) => plugins[name][selector])
     .reduce((previous, current) => ({ ...previous, ...current }), {}));
 
+export const getGroupedFromPlugins = curry((selector, plugins) => Object.keys(plugins)
+    .reduce((previous, current) => ({ ...previous, ...(plugins[current][selector] && size(plugins[current][selector]) ? {[current]: plugins[current][selector]} : {}) }), {}));
+
 export const getReducers = getFromPlugins('reducers');
 
 export const getEpics = getFromPlugins('epics');
+
+export const getGroupedEpics = getGroupedFromPlugins('epics');
 
 /**
 * Produces the reducers from the plugins, combined with other plugins
@@ -134,7 +139,7 @@ export const filterState = memoize((state, monitor) => {
 
 const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.substring(0, plugin.length - 6) || plugin;
 
-const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
+export const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugin");
 
 export const getPluginsConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
@@ -233,22 +238,39 @@ const includeLoaded = (name, loadedPlugins, plugin, stateSelector) => {
     return plugin;
 };
 
+const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
+    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
+    pluginImpl;
+
+const alwaysRender = (plugin, override = {}, container) => {
+    const pluginImpl = executeDeferredProp(plugin.impl, plugin.config, container);
+    return (
+        get(override, container + ".alwaysRender") ||
+        get(pluginImpl, container + ".alwaysRender") ||
+        false
+    );
+};
+
 const getPriority = (plugin, override = {}, container) => {
+    const pluginImpl = executeDeferredProp(plugin.impl, plugin.config, container);
     return (
         get(override, container + ".priority") ||
-        get(plugin, container + ".priority") ||
+        get(pluginImpl, container + ".priority") ||
         0
     );
 };
 
-export const getMorePrioritizedContainer = (pluginImpl, override = {}, plugins, priority) => {
+export const getMorePrioritizedContainer = (plugin, override = {}, plugins, priority) => {
+    const pluginImpl = plugin.impl;
     return plugins.reduce((previous, current) => {
         const containerName = current.name || current;
-        const pluginPriority = getPriority(pluginImpl, override, containerName);
+        const pluginPriority = getPriority(plugin, override, containerName);
         return pluginPriority > previous.priority ? {
             plugin: {
                 name: containerName,
-                impl: assign({}, pluginImpl[containerName], override[containerName])
+                impl: {
+                    ...(isFunction(pluginImpl[containerName]) ? pluginImpl[containerName](plugin.config) : pluginImpl[containerName]),
+                    ...(override[containerName] ?? {})}
             },
             priority: pluginPriority} : previous;
     }, {plugin: null, priority: priority});
@@ -271,8 +293,8 @@ const canContain = (container, plugin, override = {}) => {
     return plugin[container] || override[container] || false;
 };
 
-const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => {
-    return getMorePrioritizedContainer(pluginImpl,
+const isMorePrioritizedContainer = (plugin, override, plugins, priority) => {
+    return getMorePrioritizedContainer(plugin,
         override,
         plugins,
         priority).plugin === null;
@@ -281,10 +303,6 @@ const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => 
 const isValidConfiguration = (cfg) => {
     return cfg && isString(cfg) || (isObject(cfg) && cfg.name);
 };
-
-const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
-    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
-    pluginImpl;
 
 export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containerName, containerId, isDefault, loadedPlugins = {}, filter) => {
     return Object.keys(plugins)
@@ -324,9 +342,13 @@ export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containe
             }
             return [...acc, curr];
         }, [])
-    // include only plugins for which container is the preferred container
-        .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
-            getPriority(plugin.impl, plugin.config.override, containerName)))
+        // include only plugins for which container is the preferred container
+        .filter((plugin) =>
+            alwaysRender(plugin, plugin.config.override, containerName)
+            || isMorePrioritizedContainer(plugin, plugin.config.override, pluginsConfig,
+                getPriority(plugin, plugin.config.override, containerName)
+            )
+        )
         .map((plugin) => {
             const pluginName = getPluginSimpleName(plugin.name);
             const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
@@ -410,8 +432,11 @@ export const mapPluginsPosition = (pluginsConfig = []) =>
         };
     }, {});
 
-export const getPlugins = (plugins) => Object.keys(plugins).map((name) => plugins[name])
-    .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {});
+export const getPlugins = (plugins) => Object.keys(plugins)
+    .reduce((previous, current) => ({
+        ...previous,
+        ...(isFunction(plugins[current]) ? {[current]: plugins[current]} : omit(plugins[current], 'reducers', 'epics'))
+    }), {});
 
 /**
  * provide the pluginDescriptor for a given plugin, with a state and a configuration

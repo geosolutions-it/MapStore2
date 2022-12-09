@@ -15,14 +15,19 @@ import { isSimpleGeomType } from '../utils/MapUtils';
 import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
 import { userRoleSelector } from './security';
-import { isCesium } from './maptype';
+import {isCesium, mapTypeSelector} from './maptype';
 import { attributesSelector, describeSelector } from './query';
+import {createShallowSelectorCreator} from "../utils/ReselectUtils";
+import isEqual from "lodash/isEqual";
+import {mapBboxSelector, projectionSelector} from "./map";
+import {bboxToFeatureGeometry} from "../utils/CoordinatesUtils";
 
 
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
 export const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
 export const getCustomAttributeSettings = (state, att) => get(state, `featuregrid.attributes[${att.name || att.attribute}]`);
+export const customAttributesSettingsSelector = (state) => get(state, `featuregrid.attributes`);
 export const selectedFeaturesSelector = state => state && state.featuregrid && state.featuregrid.select;
 export const changesSelector = state => state && state.featuregrid && state.featuregrid.changes;
 export const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
@@ -185,3 +190,34 @@ export const isEditingAllowedSelector = state => {
 };
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);
+
+export const isViewportFilterActive = state => get(state, 'featuregrid.viewportFilter', null);
+
+export const isFilterByViewportSupported = state => mapTypeSelector(state) !== 'cesium';
+
+export const viewportFilter = createShallowSelectorCreator(isEqual)(
+    isViewportFilterActive,
+    mapBboxSelector,
+    projectionSelector,
+    state => get(state, 'query.filterObj.spatialField'),
+    describeSelector,
+    isFilterByViewportSupported,
+    (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, viewportFilterIsSupported) => {
+        const attribute = findGeometryProperty(describeLayer)?.name;
+        const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
+        return viewportFilterIsActive && viewportFilterIsSupported ? {
+            spatialField: [
+                ...existingFilter,
+                {
+                    geometry: {
+                        ...bboxToFeatureGeometry(box.bounds),
+                        projection
+                    },
+                    attribute: attribute,
+                    method: "Rectangle",
+                    operation: "INTERSECTS"
+                }
+            ]
+        } : {};
+    }
+);

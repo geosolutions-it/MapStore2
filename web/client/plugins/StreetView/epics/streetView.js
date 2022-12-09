@@ -1,20 +1,26 @@
 
 import Rx from 'rxjs';
 
-import { RESET_CONTROLS, TOGGLE_CONTROL } from "../../../actions/controls";
+import {
+    RESET_CONTROLS,
+    SET_CONTROL_PROPERTIES,
+    SET_CONTROL_PROPERTY,
+    TOGGLE_CONTROL
+} from "../../../actions/controls";
 import { info, error } from '../../../actions/notifications';
 
 import { updateAdditionalLayer, removeAdditionalLayer } from '../../../actions/additionallayers';
-import { CLICK_ON_MAP } from '../../../actions/map';
+import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../../../actions/map';
 
 
-import { hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from '../../../actions/mapInfo';
+import {hideMapinfoMarker, toggleMapInfoState} from '../../../actions/mapInfo';
 import { mapInfoEnabledSelector } from "../../../selectors/mapInfo";
 
 import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "../constants";
 import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "../selectors/streetView";
-import { setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
+import {setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
 import { getLocation } from '../api/gMaps';
+import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
 
 const getNavigationArrowSVG = function({rotation = 0}) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
@@ -42,7 +48,7 @@ const getNavigationArrowSVG = function({rotation = 0}) {
  */
 export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =>
     action$
-        .ofType(TOGGLE_CONTROL)
+        .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
         .filter(({control}) => control === CONTROL_NAME)
         // if the enable event happens when the mapInfo is active
         .filter(() => enabledSelector(getState()))
@@ -50,11 +56,10 @@ export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =
         .switchMap(() => {
             // deactivate feature info
             return Rx.Observable.of(hideMapinfoMarker(),
-                purgeMapInfoResults(),
                 toggleMapInfoState()
             ).merge(
                 // restore feature info on close
-                action$.ofType(TOGGLE_CONTROL)
+                action$.ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
                     .filter(({control}) => control === CONTROL_NAME)
                     .take(1)
                     .filter(() => !enabledSelector(getState()))
@@ -71,12 +76,13 @@ export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =
  */
 export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
     action$
-        .ofType(TOGGLE_CONTROL)
+        .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
         .filter(({control}) => control === CONTROL_NAME)
         .filter(() => enabledSelector(getState()))
         .switchMap(() => {
             // setup
             return Rx.Observable.from([
+                registerEventListener('click', CONTROL_NAME),
                 ...(useStreetViewDataLayerSelector(getState())
                     ? [updateAdditionalLayer(
                         STREET_VIEW_DATA_LAYER_ID,
@@ -105,12 +111,13 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
             ]).concat(
                 // tear down
                 action$
-                    .ofType(TOGGLE_CONTROL)
+                    .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
                     .filter(({control}) => control === CONTROL_NAME)
                     .filter(() => !enabledSelector(getState()))
                     .take(1)
                     .switchMap(() => {
                         return  Rx.Observable.from([
+                            unRegisterEventListener('click', CONTROL_NAME),
                             ...(useStreetViewDataLayerSelector(getState()) ? [removeAdditionalLayer({id: STREET_VIEW_DATA_LAYER_ID, owner: STREET_VIEW_OWNER})] : []),
                             removeAdditionalLayer({id: MARKER_LAYER_ID, owner: STREET_VIEW_OWNER})
                         ]);
@@ -197,3 +204,11 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
         });
     });
 };
+
+/**
+ * Closes street-view tool when one of the drawing tools takes control
+ * @param action$
+ * @param store
+ * @returns {Observable<unknown>}
+ */
+export const tearDownStreetViewOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, CONTROL_NAME);

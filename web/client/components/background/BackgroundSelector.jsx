@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { lazy } from 'react';
 
 import assign from 'object-assign';
 import Message from '../I18N/Message';
@@ -14,9 +14,11 @@ import PreviewButton from './PreviewButton';
 import PreviewList from './PreviewList';
 import PreviewIcon from './PreviewIcon';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
-import BackgroundDialog from './BackgroundDialog';
+
 import ConfirmDialog from '../misc/ConfirmDialog';
 import PropTypes from 'prop-types';
+import withSuspense from '../misc/withSuspense';
+const BackgroundDialog = withSuspense()(lazy(() => import('./BackgroundDialog')));
 
 class BackgroundSelector extends React.Component {
     static propTypes = {
@@ -216,6 +218,7 @@ class BackgroundSelector extends React.Component {
             format: editedLayer.format,
             style: editedLayer.style,
             additionalParameters: editedLayer.params,
+            credits: editedLayer?.credits || {},
             thumbnail: {
                 data: backgroundListEntry && backgroundListEntry.thumbnail,
                 url: this.getThumb(editedLayer)

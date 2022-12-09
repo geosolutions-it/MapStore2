@@ -18,7 +18,7 @@ import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../legend/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import Select from 'react-select';
-import { DEFAULT_FORMAT_WMS, getSupportedFormat } from '../../../../utils/CatalogUtils';
+import { DEFAULT_FORMAT_WMS, getSupportedFormat } from '../../../../api/WMS';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -29,6 +29,7 @@ export default class extends React.Component {
         containerWidth: PropTypes.number,
         currentLocaleLanguage: PropTypes.string,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
+        isCesiumActive: PropTypes.bool,
         projection: PropTypes.string,
         resolutions: PropTypes.array,
         zoom: PropTypes.number
@@ -167,7 +168,7 @@ export default class extends React.Component {
                     </Col>
                 </Row>}
 
-                <Row>
+                {this.props.element.type !== "3dtiles" && <Row>
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel>{this.props.opacityText} %</ControlLabel>
@@ -180,7 +181,7 @@ export default class extends React.Component {
                                 onChange={(val)=> this.onChange("opacity", val)}/>
                         </FormGroup>
                     </Col>
-                </Row>
+                </Row>}
 
                 <Row>
                     <Col xs={12}>
@@ -196,6 +197,19 @@ export default class extends React.Component {
                         </FormGroup>
                     </Col>
                 </Row>
+
+                {this.props.element.type === "3dtiles" && <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.heightOffset"/></ControlLabel>
+                            <IntlNumberFormControl
+                                type="number"
+                                name={"heightOffset"}
+                                value={this.props.element.heightOffset || 0}
+                                onChange={(val)=> this.props.onChange("heightOffset", parseFloat(val))}/>
+                        </FormGroup>
+                    </Col>
+                </Row>}
 
                 {this.props.element.type === "wms" &&
                 <Row>
@@ -222,6 +236,14 @@ export default class extends React.Component {
                                     onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
                                     <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
                                 </Checkbox>))}
+                            {!this.props.isCesiumActive && (<Checkbox
+                                data-qa="display-forceProxy-option"
+                                value="forceProxy"
+                                key="forceProxy"
+                                onChange={(e) => this.props.onChange("forceProxy", e.target.checked)}
+                                checked={this.props.element.forceProxy} >
+                                <Message msgId="layerProperties.forceProxy"/>
+                            </Checkbox>)}
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>

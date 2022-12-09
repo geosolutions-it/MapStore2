@@ -13,35 +13,50 @@ import React from 'react';
 import Spinner from 'react-spinkit';
 
 import BorderLayout from '../../layout/BorderLayout';
-import CrossLayerFilterComp from './CrossLayerFilter';
-import crossLayerFilterEnhancer from './enhancers/crossLayerFilter';
-import GroupField from './GroupField';
 import QueryToolbar from './QueryToolbar';
-import SpatialFilter from './SpatialFilter';
 import QueryPanelHeader from './QueryPanelHeader';
+import {upperFirst} from "lodash/string";
 
-const CrossLayerFilter = crossLayerFilterEnhancer(CrossLayerFilterComp);
+
+function overrideItem(item, overrides = [], layerName) {
+    let replacement;
+    replacement = overrides.find(i => i.target === item.id);
+    if (replacement?.layerNameRegex) {
+        const regexp = new RegExp(replacement.layerNameRegex);
+        if (!regexp.test(layerName)) replacement = null;
+    }
+    return replacement ?? item;
+}
+
+const EmptyComponent = () => {
+    return null;
+};
+
+function handleRemoved(item) {
+    return item.plugin ? item : {
+        ...item,
+        plugin: EmptyComponent
+    };
+}
+
+function mergeItems(standard = [], overrides, layerName) {
+    return standard
+        .map(item => overrideItem(item, overrides, layerName))
+        .map(handleRemoved);
+}
 
 class QueryBuilder extends React.Component {
     static propTypes = {
         params: PropTypes.object,
-        featureTypeConfigUrl: PropTypes.string,
-        useMapProjection: PropTypes.bool,
         attributes: PropTypes.array,
         featureTypeError: PropTypes.string,
         featureTypeErrorText: PropTypes.node,
-        groupLevels: PropTypes.number,
-        maxFeaturesWPS: PropTypes.number,
         filterFields: PropTypes.array,
         groupFields: PropTypes.array,
         spatialField: PropTypes.object,
-        removeButtonIcon: PropTypes.string,
-        addButtonIcon: PropTypes.string,
         attributePanelExpanded: PropTypes.bool,
-        showDetailsButton: PropTypes.bool,
         spatialPanelExpanded: PropTypes.bool,
         crossLayerExpanded: PropTypes.bool,
-        showDetailsPanel: PropTypes.bool,
         toolbarEnabled: PropTypes.bool,
         searchUrl: PropTypes.string,
         showGeneratedFilter: PropTypes.oneOfType([
@@ -51,8 +66,6 @@ class QueryBuilder extends React.Component {
         filterType: PropTypes.string,
         featureTypeName: PropTypes.string,
         ogcVersion: PropTypes.string,
-        attributeFilterActions: PropTypes.object,
-        spatialFilterActions: PropTypes.object,
         queryToolbarActions: PropTypes.object,
         resultTitle: PropTypes.string,
         pagination: PropTypes.object,
@@ -60,14 +73,10 @@ class QueryBuilder extends React.Component {
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         crossLayerFilterOptions: PropTypes.object,
-        crossLayerFilterActions: PropTypes.object,
         hits: PropTypes.bool,
-        clearFilterOptions: PropTypes.object,
         buttonStyle: PropTypes.string,
-        removeGroupButtonIcon: PropTypes.string,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
-        autocompleteEnabled: PropTypes.bool,
         emptyFilterWarning: PropTypes.bool,
         header: PropTypes.node,
         zoom: PropTypes.number,
@@ -77,14 +86,15 @@ class QueryBuilder extends React.Component {
         storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
         loadingError: PropTypes.bool,
-        controlActions: PropTypes.object
+        controlActions: PropTypes.object,
+        standardItems: PropTypes.object,
+        items: PropTypes.array,
+        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        style: PropTypes.object
     };
 
     static defaultProps = {
         params: {},
-        featureTypeConfigUrl: null,
-        useMapProjection: true,
-        groupLevels: 1,
         buttonStyle: "default",
         removeGroupButtonIcon: "trash",
         groupFields: [],
@@ -95,11 +105,8 @@ class QueryBuilder extends React.Component {
         featureTypeError: "",
         spatialField: {},
         crossLayerFilter: null,
-        removeButtonIcon: "trash",
-        addButtonIcon: "glyphicon glyphicon-plus",
         attributePanelExpanded: true,
         spatialPanelExpanded: true,
-        showDetailsPanel: false,
         toolbarEnabled: true,
         searchUrl: "",
         showGeneratedFilter: false,
@@ -109,37 +116,10 @@ class QueryBuilder extends React.Component {
         hits: false,
         maxHeight: 830,
         allowEmptyFilter: false,
-        autocompleteEnabled: true,
         emptyFilterWarning: false,
         advancedToolbar: false,
         loadingError: false,
-        attributeFilterActions: {
-            onAddGroupField: () => {},
-            onAddFilterField: () => {},
-            onRemoveFilterField: () => {},
-            onUpdateFilterField: () => {},
-            onUpdateExceptionField: () => {},
-            onUpdateLogicCombo: () => {},
-            onRemoveGroupField: () => {},
-            onChangeCascadingValue: () => {},
-            onExpandAttributeFilterPanel: () => {}
-        },
-        spatialFilterActions: {
-            onExpandSpatialFilterPanel: () => {},
-            onSelectSpatialMethod: () => {},
-            onSelectSpatialOperation: () => {},
-            onChangeDrawingStatus: () => {},
-            onRemoveSpatialSelection: () => {},
-            onShowSpatialSelectionDetails: () => {},
-            onSelectViewportSpatialMethod: () => {},
-            onChangeDwithinValue: () => {}
-        },
-        crossLayerFilterOptions: {
-
-        },
-        crossLayerFilterActions: {
-
-        },
+        crossLayerFilterOptions: {},
         queryToolbarActions: {
             onQuery: () => {},
             onReset: () => {},
@@ -150,7 +130,38 @@ class QueryBuilder extends React.Component {
         toolsOptions: {},
         controlActions: {
             onToggleQuery: () => {}
-        }
+        },
+        items: [],
+        selectedLayer: false,
+        standardItems: {},
+        style: {}
+    };
+
+    getItems = (target) => {
+        const layerName = this.props.selectedLayer;
+        const filtered = this.props.items.filter(this.filterItem(target, layerName));
+        const merged = mergeItems(this.props.standardItems[target], this.props.items, layerName)
+            .map(item => ({
+                ...item,
+                target
+            }));
+        return [...merged, ...filtered]
+            .sort((i1, i2) => (i1.position ?? 0) - (i2.position ?? 0));
+    };
+
+    renderItem = (item, opts) => {
+        const {validations, ...options } = opts;
+        const Comp = item.component ?? item.plugin;
+        const {style, ...other} = this.props;
+        const itemOptions = this.props[item.id + "Options"];
+        // this allows "hideSpatialFilter", "hideCrossLayer" options
+        const hideItem = options[`hide${upperFirst(item.id)}`] === true;
+        return hideItem ? null : <Comp role="body" {...other} {...item.cfg} {...options} {...itemOptions} validation={validations?.[item.id ?? item.name]}/>;
+    };
+
+    renderItems = (target, options) => {
+        return this.getItems(target)
+            .map(item => this.renderItem(item, options));
     };
 
     render() {
@@ -191,43 +202,26 @@ class QueryBuilder extends React.Component {
                 advancedToolbar={this.props.advancedToolbar}
                 loadingError={this.props.loadingError}
             /></div>);
+        const { spatialMethodOptions, toolsOptions, spatialOperations} = this.props;
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
-                <GroupField
-                    buttonStyle={this.props.buttonStyle}
-                    removeGroupButtonIcon={this.props.removeGroupButtonIcon}
-                    autocompleteEnabled={this.props.autocompleteEnabled}
-                    maxFeaturesWPS={this.props.maxFeaturesWPS}
-                    attributes={this.props.attributes}
-                    groupLevels={this.props.groupLevels}
-                    filterFields={this.props.filterFields}
-                    groupFields={this.props.groupFields}
-                    removeButtonIcon={this.props.removeButtonIcon}
-                    addButtonIcon={this.props.addButtonIcon}
-                    attributePanelExpanded={this.props.attributePanelExpanded}
-                    actions={this.props.attributeFilterActions}/>
-                {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter
-                    useMapProjection={this.props.useMapProjection}
-                    spatialField={this.props.spatialField}
-                    clearFilterOptions={this.props.clearFilterOptions}
-                    spatialOperations={this.props.spatialOperations}
-                    spatialMethodOptions={this.props.spatialMethodOptions}
-                    showDetailsButton={this.props.showDetailsButton}
-                    spatialPanelExpanded={this.props.spatialPanelExpanded}
-                    showDetailsPanel={this.props.showDetailsPanel}
-                    actions={this.props.spatialFilterActions}
-                    zoom={this.props.zoom}
-                    projection={this.props.projection}/>}
-                {this.props.toolsOptions.hideCrossLayer ? null : <CrossLayerFilter
-                    spatialOperations={this.props.spatialOperations}
-                    crossLayerExpanded={this.props.crossLayerExpanded}
-                    searchUrl={this.props.searchUrl}
-                    featureTypeName={this.props.featureTypeName}
-                    {...this.props.crossLayerFilterOptions}
-                    {...this.props.crossLayerFilterActions}
-                />}
+                {this.renderItems('start', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('attributes', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('afterAttributes', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('spatial', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('afterSpatial', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('layers', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+                {this.renderItems('end', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
             </BorderLayout>
             : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
+    }
+
+    filterItem = (target, layerName) => (el) => {
+        if (el.layerNameRegex) {
+            const regexp = new RegExp(el.layerNameRegex);
+            return (!target || el.target === target) && regexp.test(layerName);
+        }
+        return (!target || el.target === target);
     }
 }
 

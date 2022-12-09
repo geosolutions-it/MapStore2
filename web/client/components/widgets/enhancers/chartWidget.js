@@ -42,3 +42,10 @@ export default compose(
         withHeaderTools()
     )
 );
+
+export const chartWidgetProps = compose(
+    withProps(({charts = [], selectedChartId, options = {}})=> {
+        const chartData = charts?.find(c => c.chartId === selectedChartId) || {};
+        return { ...chartData, options: {...options, ...(chartData?.options ?? {})}, charts, selectedChartId };
+    })
+);

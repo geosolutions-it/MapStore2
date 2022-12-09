@@ -44,6 +44,10 @@
             }
         }
 
+        &.disabled {
+            .color-var(@theme-vars[disabled-color]);
+        }
+
         &.ms-dragging {
             border: 1px dashed @ms-main-border-color;
             .border-color-var(@theme-vars[main-border-color]);
@@ -85,7 +89,7 @@
         border-width: 1px;
         border-style: dashed;
         &.ms-sm {
-            height: @square-btn-size;
+            min-height: @card-height;
         }
     }
 
@@ -114,7 +118,7 @@
     flex-direction: column;
     .ms-head {
         display: flex;
-        height: @square-btn-size * 2;
+        min-height: @card-height * 2;
     }
     .mapstore-side-card-container {
         display: flex;
@@ -229,11 +233,11 @@
     &.ms-sm {
 
         .ms-head {
-            height: @square-btn-size;
+            min-height: @card-height;
         }
         .mapstore-side-preview {
-            width: @square-btn-size;
-            height: @square-btn-size;
+            width: @card-height;
+            height: @card-height;
             padding: 8px;
             > .glyphicon {
                 text-align: center;
@@ -290,6 +294,9 @@
                 }
             }
         }
+    }
+    &.disabled {
+        pointer-events: none;
     }
 }
 

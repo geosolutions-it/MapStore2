@@ -15,8 +15,11 @@ import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
 import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
-import { flattenGroups } from '../utils/TOCUtils';
+import { flattenGroups, getTitle } from '../utils/TOCUtils';
 import { mapSelector } from './map';
+import { getSelectedMapView } from './mapviews';
+import { mergeViewLayers } from '../utils/MapViewsUtils';
+import { currentLocaleSelector } from "../selectors/locale";
 
 export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -31,6 +34,8 @@ export const geoColderSelector = state => state.search && state.search;
 
 export const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
 export const additionalLayersSelector = state => get(state, "additionallayers", []);
+export const getAdditionalLayerFromId = (state, id) => head(additionalLayersSelector(state).filter(l => l.id === id))?.options;
+
 
 export const layerSelectorWithMarkers = createSelector(
     [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector,
@@ -59,7 +64,7 @@ export const layerSelectorWithMarkers = createSelector(
                 }}
             }));
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
-            newLayers.push(getMarkerLayer("GetFeatureInfo", coords));
+            newLayers.push(getMarkerLayer("GetFeatureInfo", { ...coords, height: markerPosition.height }));
         }
         if ( highlightPoint ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(highlightPoint.latlng) : highlightPoint.latlng;
@@ -88,10 +93,18 @@ export const rawGroupsSelector = (state) => state.layers && state.layers.flat &&
 export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 export const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
+
+/**
+* Layers selected by the user on the TOC
+* @param {object} state the state
+* @return {array} array with the selected layers data obects
+*/
 export const getSelectedLayers = state => {
     const selectedIds = selectedNodesSelector(state);
-    return selectedIds.map((id) => find(layersSelector(state), {id}));
+    // We need to exclude undefined values from the result
+    return selectedIds.map((id) => find(layersSelector(state), {id})).filter(l => l !== undefined);
 };
+
 export const getSelectedLayer = state => {
     const selected = getSelectedLayers(state) || [];
     return selected && selected[0];
@@ -143,7 +156,7 @@ const isLayerQueryable = (state, layer) => {
 * @param {object} state the state
 * @return {array} the queriable layers
 */
-export const queryableLayersSelector = state => layersSelector(state).filter((layer) => isLayerQueryable(state, layer));
+export const queryableLayersSelector = state => mergeViewLayers(layersSelector(state), getSelectedMapView(state)).filter((layer) => isLayerQueryable(state, layer));
 /**
  * Return loading error state for selected layer
  * @param {object} state the state
@@ -156,3 +169,14 @@ export const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(stat
  * @return {array} the queriable selected layers
  */
 export const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter((layer) => isLayerQueryable(state, layer));
+
+/**
+ * Get the title of the layer
+ * @param  {object} state the application's state
+ * @param {string} id layer id for which the title has to be obtained
+ * @returns {string} title of the layer
+ */
+export const getTitleSelector = (state, id) => {
+    const locale = currentLocaleSelector(state);
+    return getTitle(get(getLayerFromId(state, id), 'title', ''), locale);
+};

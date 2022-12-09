@@ -13,7 +13,8 @@ export const OutputFormat = ({
     spec,
     onChangeParameter,
     defaultFormat = "pdf",
-    allowedFormats
+    allowedFormats,
+    enabled = true
 }, context) => {
     function filterNotAllowed(formats) {
         return allowedFormats ?
@@ -21,12 +22,14 @@ export const OutputFormat = ({
             formats;
     }
     useEffect(() => {
-        addTransformer("outputFormat", (state, printSpec) => Promise.resolve({
-            ...printSpec,
-            outputFormat: state.print?.spec?.outputFormat ?? defaultFormat
-        }));
+        if (enabled) {
+            addTransformer("outputFormat", (state, printSpec) => Promise.resolve({
+                ...printSpec,
+                outputFormat: state.print?.spec?.outputFormat ?? defaultFormat
+            }));
+        }
     }, []);
-    return (
+    return enabled ? (
         <>
             <Choice
                 selected={spec?.outputFormat ?? defaultFormat}
@@ -35,7 +38,7 @@ export const OutputFormat = ({
                 label={getMessageById(context.messages, "print.outputFormat")}
             />
         </>
-    );
+    ) : null;
 };
 
 OutputFormat.contextTypes = {
@@ -48,13 +51,18 @@ OutputFormat.contextTypes = {
  * to export the printed map into additional formats, other than PDF.
  *
  * The default mapfish-print engine can be enabled to support many (image) formats.
- * When that happens (by configuring the formats property in config.yaml), this plugin
- * shows a combo box to choose between them.
+ * When that happens (by configuring the formats property in config.yml), this plugin
+ * shows a combo box to choose between them. To enable all supported formats, just add the
+ * following at the top level of the file:
+ *
+ * formats:
+ *  - '*'
  *
  * @class PrintOutputFormat
  * @memberof plugins.print
  * @static
  *
+ * @prop {boolean} cfg.enabled  allows disabling the widget in a very simple way (true by default)
  * @prop {string} cfg.defaultFormat initially selected format
  * @prop {string[]} cfg.allowedFormats optional list of supported formats (with descriptions),
  * filters the one configured in config.yaml

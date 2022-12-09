@@ -25,7 +25,7 @@ import {
     availableDependenciesForEditingWidgetSelector,
     returnToFeatureGridSelector,
     isTrayEnabled,
-    getVisibleFloatingWidgets
+    getVisibleFloatingWidgets, getChartWidgetLayers
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -68,6 +68,10 @@ describe('widgets selectors', () => {
         const state = set(`widgets.builder.editor`, { filter: { name: "TEST" } }, {});
         expect(getEditingWidgetFilter(state)).toExist();
     });
+    it('getEditingWidgetFilter - chart', () => {
+        const state = set(`widgets.builder.editor`, {widgetType: "chart", charts: [{chartId: "1", filter: { name: "TEST" } }], selectedChartId: "1" }, {});
+        expect(getEditingWidgetFilter(state)).toBeTruthy();
+    });
     it('getEditorSettings', () => {
         const state = set(`widgets.builder.settings`, { flag: true }, {});
         expect(getEditorSettings(state)).toExist();
@@ -108,6 +112,35 @@ describe('widgets selectors', () => {
         expect(widgetFilter).toEqual({ rawValue: 'y', value: 'y', operator: 'ilike', type: 'string', attribute: 'state' });
 
     });
+    it('getWidgetAttributeFilter propertyName with array of objects', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    floating: {
+                        widgets: [{
+                            id: "wId",
+                            quickFilters: {
+                                state: {
+                                    rawValue: 'y',
+                                    value: 'y',
+                                    operator: 'ilike',
+                                    type: 'string',
+                                    attribute: 'state'
+                                }
+                            },
+                            options: {
+                                propertyName: [{name: 'state'}]
+                            }
+                        }]
+                    }
+                }
+            }
+        };
+        const widgetFilter = getWidgetAttributeFilter("wId", "state")(state);
+        expect(widgetFilter).toExist();
+        expect(widgetFilter).toEqual({ rawValue: 'y', value: 'y', operator: 'ilike', type: 'string', attribute: 'state' });
+
+    });
     it('getWidgetLayer', () => {
         const tocLayerState = {'layers': { selected: ["TEST1"], flat: [{id: "TEST1", name: "TEST1"}] }};
         expect(getWidgetLayer(tocLayerState)).toExist();
@@ -116,6 +149,23 @@ describe('widgets selectors', () => {
         expect(getWidgetLayer(dashboardNoLayer)).toNotExist();
         const widgetLayer = set(`widgets.builder.editor`, { layer: { name: "TEST2" } }, dashboardNoLayer);
         expect(getWidgetLayer(widgetLayer).name).toBe("TEST2");
+        const chartWidgetLayer = set(`widgets.builder.editor`,
+            { selectedChartId: "1", charts: [{ chartId: "1", layer: {name: "TEST2"} }] }, dashboardNoLayer);
+        expect(getWidgetLayer(chartWidgetLayer).name).toBe("TEST2");
+    });
+    it('getEditingWidgetLayer charts', () => {
+        const chartWidgetLayer =
+            getEditingWidgetLayer(set(`widgets.builder.editor`, { selectedChartId: "1", charts: [{ chartId: "1", layer: {name: "TEST2"} }] }, {}));
+        expect(chartWidgetLayer.name).toBe("TEST2");
+    });
+    it('getWidgetLayers charts', () => {
+        const chartWidgetLayer =
+            getChartWidgetLayers(set(`widgets.builder.editor`, {
+                selectedChartId: "1",
+                charts: [{ chartId: "1", layer: {name: "TEST1"} },
+                    { chartId: "2", layer: {name: "TEST2"} }]}, {})
+            );
+        expect(chartWidgetLayer.length).toBe(2);
     });
     it('availableDependenciesSelector', () => {
         const state = {
@@ -124,6 +174,7 @@ describe('widgets selectors', () => {
                     [DEFAULT_TARGET]: {
                         widgets: [{
                             id: "WIDGET",
+                            maps: [{mapId: "MAPS"}],
                             widgetType: "map"
                         }, {
 
@@ -135,7 +186,7 @@ describe('widgets selectors', () => {
             }
         };
         expect(availableDependenciesSelector(state)).toExist();
-        expect(availableDependenciesSelector(state).availableDependencies[0]).toBe('widgets[WIDGET].map');
+        expect(availableDependenciesSelector(state).availableDependencies[0]).toBe('widgets[WIDGET].maps[MAPS].map');
         expect(availableDependenciesSelector(state).availableDependencies[1]).toBe('map');
     });
     it('availableDependenciesForEditingWidgetSelector for map', () => {
@@ -176,6 +227,55 @@ describe('widgets selectors', () => {
         expect(availableDeps[0]).toBe('widgets[tableId]');
         expect(availableDeps[1]).toBe('widgets[otherTableId]');
     });
+    it('availableDependenciesForEditingWidgetSelector for chart', () => {
+        const stateInput = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            widgetType: "table",
+                            id: "tableId",
+                            layer: {
+                                name: "layername"
+                            }
+                        }, {
+                            widgetType: "table",
+                            id: "otherTableId",
+                            layer: {
+                                name: "layername"
+                            }
+                        },
+                        {
+                            id: "WIDGET",
+                            maps: [{mapId: "MAPS"}],
+                            widgetType: "map"
+                        }]
+                    }
+                },
+                builder: {
+                    editor: {
+                        charts: [
+                            {
+                                chartId: "1",
+                                layer: {
+                                    name: "layername"
+                                }
+                            }
+                        ],
+                        widgetType: "chart",
+                        id: "chartId"
+                    }
+                }
+            }
+        };
+        const state = availableDependenciesForEditingWidgetSelector(stateInput);
+        const availableDeps = state.availableDependencies;
+        expect(availableDeps).toExist();
+        expect(availableDeps.length).toBe(3);
+        expect(availableDeps[0]).toBe('widgets[WIDGET].maps[MAPS].map');
+        expect(availableDeps[1]).toBe('widgets[tableId]');
+        expect(availableDeps[2]).toBe('widgets[otherTableId]');
+    });
     it('availableDependenciesForEditingWidgetSelector for counter', () => {
         const stateInput = {
             widgets: {
@@ -196,7 +296,8 @@ describe('widgets selectors', () => {
                         },
                         {
                             widgetType: "map",
-                            id: "mapId",
+                            id: "WIDGET",
+                            maps: [{mapId: "MAPS"}],
                             layer: {
                                 name: "layername"
                             }
@@ -218,7 +319,7 @@ describe('widgets selectors', () => {
         const availableDeps = state.availableDependencies;
         expect(availableDeps).toExist();
         expect(availableDeps.length).toBe(2);
-        expect(availableDeps[0]).toBe('widgets[mapId].map');
+        expect(availableDeps[0]).toBe('widgets[WIDGET].maps[MAPS].map');
         expect(availableDeps[1]).toBe('widgets[tableId]');
     });
     it('dependenciesSelector', () => {
@@ -228,7 +329,9 @@ describe('widgets selectors', () => {
                     [DEFAULT_TARGET]: {
                         widgets: [{
                             id: "WIDGET_ID",
-                            map: {
+                            widgetType: "map",
+                            maps: [{
+                                mapId: "MAP_ID",
                                 center: {
                                     x: -4.866943359375001,
                                     y: 43.96119063892024,
@@ -242,7 +345,7 @@ describe('widgets selectors', () => {
                                         maxy: 5792092.255337515
                                     }
                                 }
-                            }
+                            }]
                         }]
                     }
                 },
@@ -252,8 +355,8 @@ describe('widgets selectors', () => {
                     // special map path
                     c: "map.abc",
                     // special widgets path
-                    d: "widgets[\"WIDGET_ID\"].map.center",
-                    e: "widgets[WIDGET_ID].map.center",
+                    d: "widgets[\"WIDGET_ID\"].maps[\"MAP_ID\"].center",
+                    e: "widgets[WIDGET_ID].maps[MAP_ID].center",
                     f: "widgets[NO_ID].map.center",
                     g: "widgets.otherStateSlice"
                 },
@@ -273,8 +376,8 @@ describe('widgets selectors', () => {
         expect(dependencies.a).toBe("A");
         expect(dependencies.b).toBe("B");
         expect(dependencies.c).toBe("ABC");
-        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
-        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
+        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].maps[0].center);
+        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].maps[0].center);
         expect(dependencies.f).toBeFalsy();
         expect(dependencies.g).toBe(state.widgets.otherStateSlice);
     });

@@ -12,6 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import {
     downloadFeatures,
     checkWPSAvailability,
+    setService,
     onDownloadOptionChange,
     onFormatOptionsFetch,
     clearDownloadOptions,
@@ -26,6 +27,7 @@ import {
     loadingSelector,
     wfsFormatsSelector,
     formatsLoadingSelector,
+    wpsAvailableSelector,
     serviceSelector,
     checkingWPSAvailabilitySelector,
     wfsFilterSelector,
@@ -35,17 +37,18 @@ import {
     infoBubbleMessageSelector,
     checkingExportDataEntriesSelector
 } from '../selectors/layerdownload';
-import { wfsURL } from '../selectors/query';
+import {attributesSelector, wfsURL} from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
+import { customAttributesSettingsSelector } from "../selectors/featuregrid";
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
 import ExportDataResultsComponent from '../components/data/download/ExportDataResultsComponent';
+
 import FeatureEditorButton from '../components/data/download/FeatureEditorButton';
-
 import * as epics from '../epics/layerdownload';
-import layerdownload from '../reducers/layerdownload';
 
+import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
@@ -57,6 +60,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @prop {object[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
  * @prop {string} defaultSrs Default selected srs
  * @prop {string} closeGlyph The icon to use for close the dialog
+ * @prop {string} defaultSelectedService The service that should be used by default for donwloading. Valid values: "wfs", "wps"
  * @example
  * {
  *  "name": "LayerDownload",
@@ -68,11 +72,12 @@ import { createPlugin } from '../utils/PluginsUtils';
  *            {"name": "excel2007", "label": "excel2007"},
  *            {"name": "dxf-zip", "label": "dxf-zip"}
  *    ],
- *     "srsList": [
+ *    "srsList": [
  *            {"name": "native", "label": "Native"},
  *            {"name": "EPSG:4326", "label": "WGS84"}
  *    ],
- *     "defaultSrs": "native"
+ *    "defaultSrs": "native",
+ *    "defaultSelectedService": "wfs"
  *  }
  * }
  * // it is possible to support GeoPackage format when the targeted GeoServer uses wps download extensions
@@ -108,11 +113,15 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         wfsFormats: wfsFormatsSelector,
         formatsLoading: formatsLoadingSelector,
         layer: getSelectedLayer,
+        wpsAvailable: wpsAvailableSelector,
         service: serviceSelector,
         checkingWPSAvailability: checkingWPSAvailabilitySelector,
-        virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll
+        virtualScroll: state => state && state.featuregrid && state.featuregrid.virtualScroll,
+        customAttributeSettings: customAttributesSettingsSelector,
+        attributes: attributesSelector
     }), {
         onExport: downloadFeatures,
+        setService,
         onDownloadOptionChange,
         onClearDownloadOptions: clearDownloadOptions,
         onFormatOptionsFetch,

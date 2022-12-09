@@ -12,10 +12,18 @@ import { compose, withHandlers, withProps } from 'recompose';
 import { createSelector } from 'reselect';
 
 import { changeSetting, selectPlaybackRange, toggleAnimationMode } from '../../actions/playback';
-import { onRangeChanged } from '../../actions/timeline';
+import {onRangeChanged, setTimelineSnapType, updateTimeLayersSetting} from '../../actions/timeline';
 import Settings from "../../components/playback/Settings";
 import { playbackRangeSelector, playbackSettingsSelector } from '../../selectors/playback';
-import { rangeSelector, selectedLayerDataRangeSelector, selectedLayerSelector } from '../../selectors/timeline';
+import {
+    rangeSelector,
+    selectedLayerDataRangeSelector,
+    selectedLayerSelector,
+    snapTypeSelector,
+    snapRadioButtonEnabledSelector,
+    endValuesSupportSelector,
+    timelineLayersParsedSettings
+} from '../../selectors/timeline';
 
 /**
  * Playback settings component connected to the state
@@ -25,18 +33,42 @@ export default compose(
         playbackSettingsSelector,
         selectedLayerSelector,
         playbackRangeSelector,
-        (settings, selectedLayer, playbackRange) => ({
+        snapTypeSelector,
+        snapRadioButtonEnabledSelector,
+        endValuesSupportSelector,
+        timelineLayersParsedSettings,
+        (settings, selectedLayer, playbackRange, snapType, snapRadioButtonEnabled, endValuesSupport, layers) => ({
             fixedStep: !selectedLayer,
             playbackRange,
+            currentSnapType: snapType,
+            snapRadioButtonEnabled,
+            endValuesSupport,
+            selectedLayer,
+            layers,
             ...settings
         })
     ), {
         setPlaybackRange: selectPlaybackRange,
         onSettingChange: changeSetting,
-        toggleAnimationMode
+        onChangeSnapType: setTimelineSnapType,
+        toggleAnimationMode,
+        changeLayerSetting: updateTimeLayersSetting
     }
 
     ),
+    withProps(()=> {
+        return {
+            snapTypes: [{
+                id: 'start',
+                value: 'start',
+                label: 'timeline.settings.snapToStart'
+            }, {
+                id: 'end',
+                value: 'end',
+                label: 'timeline.settings.snapToEnd'
+            }]
+        };
+    }),
     // playback buttons
     compose(
         connect(createSelector(

@@ -6,6 +6,7 @@ import moment from 'moment';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
 import DateTimePicker from '../index';
+import {getUTCTimePart} from "../../../../utils/TimeUtils";
 
 describe('DateTimePicker component', () => {
     beforeEach((done) => {
@@ -130,5 +131,29 @@ describe('DateTimePicker component', () => {
         TestUtils.Simulate.change(input, { target: { value: `!== ${date}` } });
         TestUtils.Simulate.keyDown(input, {key: 'Enter'});
     });
+    it('DateTimePicker test popup position', function(done) {
+        ReactDOM.render(<DateTimePicker popupPosition="top" />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const calendar = container.querySelector('.rw-btn-calendar');
+        TestUtils.Simulate.click(calendar);
+        const dropUp = container.querySelector('.rw-dropup');
+        expect(dropUp).toExist();
+        done();
+    });
 
+    it('DateTimePicker test calendarSetHours disabled option', function(done) {
+        const date = '2010-01-01T00:00:00Z';
+        const handleChange = (value) => {
+            const hours = getUTCTimePart(value);
+            expect(hours).toEqual('00:00:00');
+            done();
+        };
+        const dateObj = moment.utc(date, 'YYYY-MM-DDTHH:mm:ss[Z]').toDate();
+        ReactDOM.render(<DateTimePicker format="YYYY-MM-DDTHH:mm:ss[Z]" value={dateObj} currentDate={dateObj} onChange={handleChange} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const calendar = container.querySelector('.rw-btn-calendar');
+        TestUtils.Simulate.click(calendar);
+        const day = container.querySelector('.rw-calendar-grid tbody tr td:first-child .rw-btn');
+        TestUtils.Simulate.click(day);
+    });
 });

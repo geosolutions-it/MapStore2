@@ -37,7 +37,8 @@ class WizardComponent extends React.Component {
        onPrevPage: PropTypes.func,
        buttonType: PropTypes.node,
        onFinish: PropTypes.func,
-       isStepValid: PropTypes.func
+       isStepValid: PropTypes.func,
+       className: PropTypes.string
    };
    static defaultProps = {
        step: 0,
@@ -50,14 +51,14 @@ class WizardComponent extends React.Component {
    renderButtons = () => {
        let buttons = [];
        const {isStepValid, children = []} = this.props;
-       const childrenLenght = children.length >= 0 ? children.length : 1;
+       const childrenLength = children.length >= 0 ? children.length : 1;
        if (this.props.hideButtons) return null;
        if (this.props.step > 0) {
            buttons.push(<Button key="prev" className="ms-wizard-prev" onClick={() => this.props.onPrevPage()} ><Message msgId="wizard.prev" /></Button>);
        }
-       if ( this.props.step >= childrenLenght - 1) {
+       if ( this.props.step >= childrenLength - 1) {
            buttons.push(<Button key="finish" className="ms-wizard-finish" onClick={() => this.props.onFinish()} ><Message msgId="wizard.finish" /></Button>);
-       } else if (this.props.step < childrenLenght - 1 && childrenLenght > 1) {
+       } else if (this.props.step < childrenLength - 1 && childrenLength > 1) {
            buttons.push(<Button key="next" className="ms-wizard-next" disabled={!isStepValid(this.props.step)} onClick={() => this.props.onNextPage()} ><Message msgId="wizard.next" /></Button>);
        }
        return buttons;
@@ -65,14 +66,14 @@ class WizardComponent extends React.Component {
    };
    render() {
        const children = this.props.children || [];
-       const childrenLenght = children.length >= 0 ? children.length : 1;
+       const childrenLength = children.length >= 0 ? children.length : 1;
        return (
-           <div key="wizard-pages" className="ms-wizard">
+           <div key="wizard-pages" className={`ms-wizard ${this.props.className || ''}`}>
                {React.Children.map(children, (child, i) => {
                    if (i === this.props.step) {
                        return React.cloneElement(child, {
                            key: `wizard-component-${i}`,
-                           onNextPage: this.props.step === childrenLenght - 1 ? this.props.onFinish : this.props.onNextPage,
+                           onNextPage: this.props.step === childrenLength - 1 ? this.props.onFinish : this.props.onNextPage,
                            onPrevPage: this.props.onPrevPage
                        });
                    }

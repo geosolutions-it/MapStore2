@@ -24,7 +24,7 @@ export const updateLayerDimensionData = (layerId, dimension, data) => ({ type: U
 export const setCurrentTime = time => ({ type: SET_CURRENT_TIME, time });
 /**
  * Set the current offset.
- * @param {string} time the current offset time in ISO format. If undefined, the current time is implicit set to single time mode. (against range)
+ * @param {string|date} offsetTime the current offset time in ISO format. If undefined, the current time is implicit set to single time mode. (against range)
  */
 export const setCurrentOffset = offsetTime => ({ type: SET_OFFSET_TIME, offsetTime });
 /**

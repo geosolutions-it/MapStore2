@@ -38,21 +38,25 @@ describe('handleMapZoomLayer enhancer', function() {
     });
 
     it('test zoom map to layer', (done) => {
-        const editorData = {map: {
-            size: {
-                width: 518,
-                height: 351
-            },
-            layers: [{id: 1, bbox: {
-                crs: 'EPSG:4326',
-                bounds: {
-                    minx: -12,
-                    miny: 24,
-                    maxx: -66,
-                    maxy: 49
-                }
-            }}]
-        }};
+        const editorData = {
+            selectedMapId: 'MAP_ID',
+            maps: [{
+                mapId: 'MAP_ID',
+                size: {
+                    width: 518,
+                    height: 351
+                },
+                layers: [{id: 1, bbox: {
+                    crs: 'EPSG:4326',
+                    bounds: {
+                        minx: -12,
+                        miny: 24,
+                        maxx: -66,
+                        maxy: 49
+                    }
+                }}]
+            }]
+        };
         const Sink = handleMapZoomLayer(createSink(props => {
             props.zoomTo([1]);
             done();
@@ -61,30 +65,34 @@ describe('handleMapZoomLayer enhancer', function() {
     });
 
     it('test zoom map to group', (done) => {
-        const editorData = {map: {
-            size: {
-                width: 518,
-                height: 351
-            },
-            layers: [{id: "layer.id1", bbox: {
-                crs: 'EPSG:4326',
-                bounds: {
-                    minx: -12,
-                    miny: 24,
-                    maxx: -66,
-                    maxy: 49
-                }
-            }},
-            {id: "layer.id2", bbox: {
-                crs: 'EPSG:4326',
-                bounds: {
-                    minx: -12,
-                    miny: 24,
-                    maxx: -66,
-                    maxy: 49
-                }
-            }}]
-        }};
+        const editorData = {
+            selectedMapId: 'MAP_ID',
+            maps: [{
+                mapId: 'MAP_ID',
+                size: {
+                    width: 518,
+                    height: 351
+                },
+                layers: [{id: "layer.id1", bbox: {
+                    crs: 'EPSG:4326',
+                    bounds: {
+                        minx: -12,
+                        miny: 24,
+                        maxx: -66,
+                        maxy: 49
+                    }
+                }},
+                {id: "layer.id2", bbox: {
+                    crs: 'EPSG:4326',
+                    bounds: {
+                        minx: -12,
+                        miny: 24,
+                        maxx: -66,
+                        maxy: 49
+                    }
+                }}]
+            }]
+        };
         const selectedNodes = ["layer.id1", "layer.id2", "Default"];
         const Sink = handleMapZoomLayer(createSink(props => {
             props.zoomTo(selectedNodes);

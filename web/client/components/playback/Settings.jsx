@@ -7,15 +7,18 @@
  */
 import React from 'react';
 
+import PropTypes from "prop-types";
 import moment from 'moment';
 import { isNaN } from 'lodash';
-import { Form, FormGroup, ControlLabel, FormControl, InputGroup } from 'react-bootstrap';
+import { Form, FormGroup, ControlLabel, FormControl, InputGroup, Tab, Tabs } from 'react-bootstrap';
+import classnames from 'classnames';
 import Message from '../I18N/Message';
 import InfoPopover from '../widgets/widget/InfoPopover';
 import InlineDateTimeSelector from '../time/InlineDateTimeSelector';
 import SwitchButton from '../misc/switch/SwitchButton';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import IntlNumberFormControl from '../I18N/IntlNumberFormControl';
+import { getMessageById } from "../../utils/LocaleUtils";
 
 /**
  *
@@ -49,7 +52,7 @@ const getPlaybackRange = ({ startPlaybackTime, endPlaybackTime }) => {
 /**
  * Form div for settings of the playback
  */
-export default ({
+const Settings = ({
     following,
     frameDuration,
     timeStep,
@@ -65,6 +68,11 @@ export default ({
     playbackRange = {
 
     },
+    snapTypes = [],
+    currentSnapType = "start",
+    snapRadioButtonEnabled = false,
+    endValuesSupport,
+    onChangeSnapType = () => { },
     setPlaybackRange = () => { },
     playbackButtons,
     dateSelectorStyle = {
@@ -72,86 +80,153 @@ export default ({
         margin: 0,
         border: 'none'
     },
-    style = {}
-
-}) => (<div className="ms-playback-settings" style={style}>
+    style = {},
+    layers = [],
+    changeLayerSetting = () => { },
+    selectedLayer
+}, context) => (<div className="ms-playback-settings" style={style}>
     <h4><Message msgId="timeline.settings.title" /></h4>
     <FormGroup controlId="timelineSettings">
-        <Form componentClass="fieldset" inline>
+        <Form componentClass="fieldset" inline className="snap-guide-form">
             <ControlLabel>
                 <Message msgId="timeline.settings.snapToGuideLayer" />&nbsp;
                 <InfoPopover text={<Message msgId="timeline.settings.snapToGuideLayerTooltip" />} />
             </ControlLabel>
             <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
         </Form>
+        {!fixedStep && endValuesSupport && (
+            <Form componentClass="fieldset" inline className="snap-type-form" disabled={!snapRadioButtonEnabled}>
+                <div className="snap-type-form-title">
+                    <ControlLabel>
+                        <Message msgId="timeline.settings.snapType" />&nbsp;
+                        <InfoPopover text={<Message msgId="timeline.settings.snapTypeTooltip" />} />
+                    </ControlLabel>
+                </div>
+                <div className="snap-type-container">
+                    {snapTypes.map(snapType => (
+                        <div className="snap-type-item">
+                            <input
+                                type="radio"
+                                className={classnames('snap-type-radio-btn', {'disabled': !snapRadioButtonEnabled})}
+                                value={snapType.value}
+                                name="snapType"
+                                checked={currentSnapType === snapType.value}
+                                onChange={ e => {
+                                    const { value } = e.target;
+                                    onChangeSnapType(value);
+                                }}
+                            />
+                            <div className="snap-type-radio-btn-label">
+                                <Message msgId={snapType.label}/>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </Form>
+        )}
     </FormGroup>
-    <h4><Message msgId="playback.settings.title" /></h4>
-    <FormGroup controlId="frameDuration" >
-        <ControlLabel><Message msgId="playback.settings.frameDuration" /></ControlLabel>
-        <InputGroup>
-            <IntlNumberFormControl
-                componentClass="input"
-                type="number"
-                value={frameDuration}
-                onChange={(val = "") => onValidInteger(
-                    val,
-                    v => {
-                        onSettingChange("frameDuration", v);
-                    }
-                )} /><InputGroup.Addon>s</InputGroup.Addon>
-        </InputGroup>
+    <Tabs defaultActiveKey={1} id="playback-settings-tabs">
+        <Tab eventKey={1} title={<Message msgId="playback.settings.tab.playback" />} style={{paddingTop: 8}}>
+            <>
+                <FormGroup controlId="frameDuration" >
+                    <ControlLabel><Message msgId="playback.settings.frameDuration" /></ControlLabel>
+                    <InputGroup>
+                        <IntlNumberFormControl
+                            componentClass="input"
+                            type="number"
+                            value={frameDuration}
+                            onChange={(val = "") => onValidInteger(
+                                val,
+                                v => {
+                                    onSettingChange("frameDuration", v);
+                                }
+                            )} /><InputGroup.Addon>s</InputGroup.Addon>
+                    </InputGroup>
 
-    </FormGroup>
-    <ControlLabel>
-        <Message msgId="playback.settings.step.label" />
-        &nbsp;<InfoPopover text={<Message msgId="playback.settings.step.tooltip" />} />
-    </ControlLabel>
-    <FormGroup controlId="formPlaybackStep">
-        <Form componentClass="fieldset" inline>
-            <IntlNumberFormControl
-                disabled={!fixedStep}
-                componentClass="input"
-                type="number"
-                style={{input: {maxWidth: 120}}}
-                value={timeStep}
-                onChange={(val = "") => onValidInteger(
-                    val,
-                    v => {
-                        onSettingChange("timeStep", v);
-                    }
-                )} />
-            <FormControl disabled={!fixedStep} componentClass="select" value={stepUnit} onChange={({ target = {} }) => onSettingChange("stepUnit", target.value)} >
-                <Message msgId="playback.settings.step.year" msgParams={{ number: timeStep || 1 }}>{msg => <option value="years">{msg}</option>}</Message>
-                <Message msgId="playback.settings.step.week" msgParams={{ number: timeStep || 1 }}>{msg => <option value="weeks">{msg}</option>}</Message>
-                <Message msgId="playback.settings.step.day" msgParams={{ number: timeStep || 1 }}>{msg => <option value="days">{msg}</option>}</Message>
-                <Message msgId="playback.settings.step.hour" msgParams={{ number: timeStep || 1 }}>{msg => <option value="hour">{msg}</option>}</Message>
-                <Message msgId="playback.settings.step.minute" msgParams={{ number: timeStep || 1 }}>{msg => <option value="minutes">{msg}</option>}</Message>
-                <Message msgId="playback.settings.step.second" msgParams={{ number: timeStep || 1 }}>{msg => <option value="seconds">{msg}</option>}</Message>
-            </FormControl>
-        </Form>
-    </FormGroup>
-    <SwitchPanel onSwitch={(enabled) => toggleAnimationRange(enabled)} expanded={playbackRange.startPlaybackTime && playbackRange.endPlaybackTime} title={<Message msgId="playback.settings.range.title" />} buttons={playbackButtons}>
-        <FormGroup controlId="formPlaybackMode" style={{margin: 10}}>
-            <InlineDateTimeSelector
-                tooltipId="playback.settings.range.animationStart"
-                glyph="play"
-                date={playbackRange.startPlaybackTime}
-                onUpdate={startPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, startPlaybackTime }))}
-                style={dateSelectorStyle}
-                showButtons />
-            <InlineDateTimeSelector
-                glyph="stop"
-                tooltipId="playback.settings.range.animationEnd"
-                date={playbackRange.endPlaybackTime}
-                onUpdate={endPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, endPlaybackTime }))}
-                style={dateSelectorStyle}
-                showButtons />
-        </FormGroup>
-    </SwitchPanel>
-    <FormGroup controlId="formPlaybackFollowingMode">
-        <Form componentClass="fieldset" inline>
-            <ControlLabel><Message msgId="playback.settings.mode.following" />&nbsp;<InfoPopover text={<Message msgId="playback.settings.mode.followingDescription" />} /></ControlLabel>
-            <span><SwitchButton checked={following} onChange={v => onSettingChange("following", v)}/></span>
-        </Form>
-    </FormGroup>
+                </FormGroup>
+                <ControlLabel>
+                    <Message msgId="playback.settings.step.label" />
+                        &nbsp;<InfoPopover text={<Message msgId="playback.settings.step.tooltip" />} />
+                </ControlLabel>
+                <FormGroup controlId="formPlaybackStep">
+                    <Form componentClass="fieldset" inline>
+                        <IntlNumberFormControl
+                            disabled={!fixedStep}
+                            componentClass="input"
+                            type="number"
+                            style={{input: {maxWidth: 120}}}
+                            value={timeStep}
+                            onChange={(val = "") => onValidInteger(
+                                val,
+                                v => {
+                                    onSettingChange("timeStep", v);
+                                }
+                            )} />
+                        <FormControl disabled={!fixedStep} componentClass="select" value={stepUnit} onChange={({ target = {} }) => onSettingChange("stepUnit", target.value)} >
+                            <Message msgId="playback.settings.step.year" msgParams={{ number: timeStep || 1 }}>{msg => <option value="years">{msg}</option>}</Message>
+                            <Message msgId="playback.settings.step.week" msgParams={{ number: timeStep || 1 }}>{msg => <option value="weeks">{msg}</option>}</Message>
+                            <Message msgId="playback.settings.step.day" msgParams={{ number: timeStep || 1 }}>{msg => <option value="days">{msg}</option>}</Message>
+                            <Message msgId="playback.settings.step.hour" msgParams={{ number: timeStep || 1 }}>{msg => <option value="hour">{msg}</option>}</Message>
+                            <Message msgId="playback.settings.step.minute" msgParams={{ number: timeStep || 1 }}>{msg => <option value="minutes">{msg}</option>}</Message>
+                            <Message msgId="playback.settings.step.second" msgParams={{ number: timeStep || 1 }}>{msg => <option value="seconds">{msg}</option>}</Message>
+                        </FormControl>
+                    </Form>
+                </FormGroup>
+                <SwitchPanel onSwitch={(enabled) => toggleAnimationRange(enabled)} expanded={playbackRange.startPlaybackTime && playbackRange.endPlaybackTime} title={<Message msgId="playback.settings.range.title" />} buttons={playbackButtons}>
+                    <FormGroup controlId="formPlaybackMode" style={{margin: 10}}>
+                        <InlineDateTimeSelector
+                            tooltipId="playback.settings.range.animationStart"
+                            glyph="play"
+                            date={playbackRange.startPlaybackTime}
+                            onUpdate={startPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, startPlaybackTime }))}
+                            style={dateSelectorStyle}
+                            showButtons />
+                        <InlineDateTimeSelector
+                            glyph="stop"
+                            tooltipId="playback.settings.range.animationEnd"
+                            date={playbackRange.endPlaybackTime}
+                            onUpdate={endPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, endPlaybackTime }))}
+                            style={dateSelectorStyle}
+                            showButtons />
+                    </FormGroup>
+                </SwitchPanel>
+                <FormGroup controlId="formPlaybackFollowingMode">
+                    <Form componentClass="fieldset" inline>
+                        <ControlLabel><Message msgId="playback.settings.mode.following" />&nbsp;<InfoPopover text={<Message msgId="playback.settings.mode.followingDescription" />} /></ControlLabel>
+                        <span><SwitchButton checked={following} onChange={v => onSettingChange("following", v)}/></span>
+                    </Form>
+                </FormGroup>
+            </>
+        </Tab>
+        <Tab eventKey={2} title={<Message msgId="playback.settings.tab.layers" />}
+            style={{
+                height: 250,
+                width: 280,
+                overflowY: "auto",
+                paddingTop: 8
+            }}>
+            {layers.map(({title, id, hideInTimeline: hide} = {}) => {
+                const checkedLayer = layers?.filter(l=> !l.hideInTimeline);
+                const disable = (checkedLayer.length === 1 && checkedLayer?.[0]?.id === id) || (selectedLayer === id && !hide);
+                return (
+                    <div className={"layer-setting"}>
+                        <label key={id}>{title}</label>
+                        <input
+                            title={getMessageById(context.messages, `playback.settings.layer.${disable ? 'disabled' : 'enabled'}`)}
+                            disabled={disable}
+                            type="checkbox"
+                            onChange={(event) =>
+                                changeLayerSetting(id, event.target.checked)
+                            }
+                            checked={!hide}/>
+                    </div>
+                );
+            })}
+        </Tab>
+    </Tabs>
 </div>);
+
+Settings.contextTypes = {
+    messages: PropTypes.object
+};
+export default Settings;

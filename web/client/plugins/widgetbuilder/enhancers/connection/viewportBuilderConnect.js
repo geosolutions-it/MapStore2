@@ -17,9 +17,10 @@ const isTargetForOtherWidgets = (allDependenciesMap, widgetType, editorData) => 
  */
 export default compose(
     withProps(({ editorData = {}, widgets = [] }) => {
+        const geomProp = editorData.widgetType === 'chart' && editorData?.selectedChartId ? editorData?.charts?.find(c => c.chartId === editorData?.selectedChartId)?.geomProp : editorData.geomProp;
         const allDependenciesMap = widgets.filter(({mapSync, dependenciesMap}) => mapSync && dependenciesMap).map(({dependenciesMap}) => dependenciesMap);
         return {
-            canConnect: editorData.geomProp && editorData.widgetType !== "table" || isTargetForOtherWidgets(allDependenciesMap, editorData.widgetType, editorData),
+            canConnect: geomProp && editorData.widgetType !== "table" || isTargetForOtherWidgets(allDependenciesMap, editorData.widgetType, editorData),
             connected: editorData.mapSync
         };
     }),

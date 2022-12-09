@@ -28,6 +28,7 @@ export default ({
         icons={icons}
         topRightItems={topRightItems}
         isDraggable={dataGrid.isDraggable}
+        options={props?.options}
     >
         <LegendView {...props} />
     </WidgetContainer>

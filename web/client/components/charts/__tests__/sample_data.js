@@ -13,9 +13,7 @@ export const DATASET_1 = {
 export const DATASET_2 = {
     data: [
         { name: 'Page A', value: 0, classValue: 'class1'},
-        { name: 'Page B', value: 1, classValue: 'class2'},
-        { name: 'Page C', value: 2, classValue: 'class2'},
-        { name: 'Page D', value: 3, classValue: 'class1'}
+        { name: 'Page B', value: 1, classValue: 'class2'}
     ],
     xAxis: { dataKey: "name" },
     series: [{ dataKey: "value" }]
@@ -58,9 +56,101 @@ export const SPLIT_DATASET_3 = {
     series: [{ dataKey: "value" }]
 };
 
+export const DATASET_4 = {
+    data: [
+        { name: 'Page A', value: 0, classValue: 'class1'},
+        { name: 'Page B', value: 100, classValue: 'class2'},
+        { name: 'Page C', value: 500, classValue: 'class2'},
+        { name: 'Page D', value: 900, classValue: 'class1'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const SPLIT_DATASET_4 = {
+    data: [
+        [
+            { name: 'Page A', value: 0, classValue: 'class1'}
+        ],
+        [
+            { name: 'Page B', value: 100, classValue: 'class2'},
+            { name: 'Page C', value: 500, classValue: 'class2'},
+            { name: 'Page D', value: 900, classValue: 'class1'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const DATASET_5_UNORDERED = {
+    data: [
+        { name: 'Page A', value: 1, classValue: '2'},
+        { name: 'Page A', value: 1, classValue: '3'},
+        { name: 'Page A', value: 1, classValue: '1'},
+        { name: 'Page B', value: 10, classValue: '2'},
+        { name: 'Page B', value: 0, classValue: '1'},
+        { name: 'Page B', value: 100, classValue: '3'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const DATASET_5_ORDERED = {
+    data: [
+        { name: 'Page A', value: 1, classValue: '1'},
+        { name: 'Page B', value: 0, classValue: '1'},
+        { name: 'Page A', value: 1, classValue: '2'},
+        { name: 'Page B', value: 10, classValue: '2'},
+        { name: 'Page A', value: 1, classValue: '3'},
+        { name: 'Page B', value: 100, classValue: '3'}
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const SPLIT_DATASET_5_ORDERED = {
+    data: [
+        [
+            { name: 'Page A', value: 1, classValue: '1'},
+            { name: 'Page B', value: 0, classValue: '1'}
+        ],
+        [
+            { name: 'Page A', value: 1, classValue: '2'},
+            { name: 'Page B', value: 10, classValue: '2'}
+        ],
+        [
+            { name: 'Page A', value: 1, classValue: '3'},
+            { name: 'Page B', value: 100, classValue: '3'}
+        ]
+    ],
+    xAxis: { dataKey: "name" },
+    series: [{ dataKey: "value" }]
+};
+
+export const UNLABELLED_CLASSIFICATION_5_ORDERED = [
+    {
+        color: '#0000ff',
+        value: '1',
+        unique: '1'
+    },
+    {
+        color: '#00FF00',
+        value: '2',
+        unique: '2'
+    },
+    {
+        color: '#ff0000',
+        value: '3',
+        unique: '3'
+    }
+];
 
 export const CLASSIFICATIONS = {
     dataKey: 'classValue'
+};
+
+export const RANGE_CLASSIFICATIONS = {
+    dataKey: 'value'
 };
 
 export const LABELLED_CLASSIFICATION = [
@@ -75,6 +165,21 @@ export const LABELLED_CLASSIFICATION = [
         color: '#0000ff',
         value: 'class2',
         unique: 'class2'
+    }
+];
+
+export const LABELLED_RANGE_CLASSIFICATION = [
+    {
+        title: 'Between 0 and 100',
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        title: 'Between 100 and 1000',
+        color: '#0000ff',
+        min: 100,
+        max: 1000
     }
 ];
 
@@ -93,6 +198,21 @@ export const TEMPLATE_LABELS_CLASSIFICATION = [
     }
 ];
 
+export const TEMPLATE_LABELS_RANGE_CLASSIFICATION = [
+    {
+        title: '${legendValue} - Between ${minValue} and ${maxValue}',
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        title: '${legendValue} - Between ${minValue} and ${maxValue}',
+        color: '#00ff00',
+        min: 100,
+        max: 1000
+    }
+];
+
 export const PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION = [
     {
         title: '${groupByValue} - Class 1',
@@ -108,6 +228,21 @@ export const PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION = [
     }
 ];
 
+export const PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION = [
+    {
+        title: '${groupByValue} - ${legendValue}: Between ${minValue} and ${maxValue}',
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        title: '${groupByValue} - ${legendValue}: Between ${minValue} and ${maxValue}',
+        color: '#00ff00',
+        min: 100,
+        max: 1000
+    }
+];
+
 export const UNLABELLED_CLASSIFICATION = [
     {
         color: '#ff0000',
@@ -118,6 +253,27 @@ export const UNLABELLED_CLASSIFICATION = [
         color: '#0000ff',
         value: 'class2',
         unique: 'class2'
+    }
+];
+export const UNLABELLED_CLASSIFICATION_3 = [
+    ...UNLABELLED_CLASSIFICATION,
+    {
+        color: '#00FF00',
+        value: 'class3',
+        unique: 'class3'
+    }
+];
+
+export const UNLABELLED_RANGE_CLASSIFICATION = [
+    {
+        color: '#ff0000',
+        min: 0,
+        max: 100
+    },
+    {
+        color: '#0000ff',
+        min: 100,
+        max: 1000
     }
 ];
 

@@ -39,7 +39,8 @@ class DefaultViewer extends React.Component {
         showEmptyMessageGFI: PropTypes.bool,
         renderValidOnly: PropTypes.bool,
         loaded: PropTypes.bool,
-        isMobile: PropTypes.bool
+        isMobile: PropTypes.bool,
+        disableInfoAlert: PropTypes.bool
     };
 
     static defaultProps = {
@@ -62,7 +63,8 @@ class DefaultViewer extends React.Component {
         onNext: () => {},
         onPrevious: () => {},
         setIndex: () => {},
-        isMobile: false
+        isMobile: false,
+        disableInfoAlert: false
     };
 
     shouldComponentUpdate(nextProps) {
@@ -109,7 +111,7 @@ class DefaultViewer extends React.Component {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
             });
-            return this.props.showEmptyMessageGFI ? (
+            return this.props.showEmptyMessageGFI && !this.props.disableInfoAlert ? (
                 <Alert bsStyle={"info"}>
                     <Message msgId={"noInfoForLayers"} />
                     <b>{titles.join(', ')}</b>

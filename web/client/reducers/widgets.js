@@ -26,15 +26,21 @@ import {
     TOGGLE_MAXIMIZE,
     TOGGLE_COLLAPSE_ALL,
     TOGGLE_TRAY,
-    toggleCollapse
+    toggleCollapse,
+    REPLACE,
+    WIDGETS_REGEX
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
 import assign from 'object-assign';
 import set from 'lodash/fp/set';
-import { get, find, omit, mapValues, castArray } from 'lodash';
+import { get, find, omit, mapValues, castArray, isEmpty } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
+import {
+    convertDependenciesMappingForCompatibility as convertToCompatibleWidgets,
+    editorChange
+} from "../utils/WidgetsUtils";
 
 const emptyState = {
     dependencies: {
@@ -87,25 +93,32 @@ function widgetsReducer(state = emptyState, action) {
             ...action.widget,
             // for backward compatibility widgets without widgetType are charts
             widgetType: action.widget && action.widget.widgetType || 'chart'
-        }, set("builder.settings.step",
-            (action.widget && action.widget.widgetType || 'chart') === 'chart'
-                ? 1
-                : 0
-            , state));
+        }, set("builder.settings.step", 0, state));
     }
     case EDITOR_CHANGE: {
-        return set(`builder.editor.${action.key}`, action.value, state);
+        return editorChange(action, state);
     }
-    case INSERT:
-        let tempState = arrayUpsert(`containers[${action.target}].widgets`, {
+    case INSERT: {
+        let widget = {...action.widget};
+        if (widget.widgetType === 'chart') {
+            widget = omit(widget, ["layer", "url"]);
+        }
+        return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
-            ...action.widget,
+            ...widget,
             dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
         }, {
             id: action.widget.id || action.id
         }, state);
+    }
 
-        return tempState;
+    case REPLACE:
+        const widgetsPath = `containers[${action.target}].widgets`;
+        const widgets = get(state, widgetsPath);
+        if (widgets) {
+            return set(widgetsPath, action.widgets, state);
+        }
+        return state;
     case UPDATE_PROPERTY:
         // if "merge" update map by merging a partial map object coming from
         // onMapViewChanges handler for MapWidget
@@ -113,35 +126,53 @@ function widgetsReducer(state = emptyState, action) {
         const oldWidget = find(get(state, `containers[${action.target}].widgets`), {
             id: action.id
         });
+        let uValue = action.value;
+        if (action.mode === "merge") {
+            uValue = action.key === "maps"
+                ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
+                : assign({}, oldWidget[action.key], action.value);
+        }
         return arrayUpsert(`containers[${action.target}].widgets`,
-            set(
-                action.key,
-                action.mode === "merge" ? assign({}, oldWidget[action.key], action.value) : action.value,
-                oldWidget
-            ), {
-                id: action.id
-            }, state);
+            set(action.key, uValue, oldWidget), { id: action.id },
+            state
+        );
     case UPDATE_LAYER: {
         if (action.layer) {
-            const widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
-            if (widgets) {
+            const _widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
+            if (_widgets) {
                 return set(`containers[${DEFAULT_TARGET}].widgets`,
-                    widgets.map(w => get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w), state);
+                    _widgets.map(w => get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w), state);
             }
         }
         return state;
     }
     case DELETE:
-        return arrayDelete(`containers[${action.target}].widgets`, {
+        const path = `containers[${DEFAULT_TARGET}].widgets`;
+        const updatedState = arrayDelete(`containers[${action.target}].widgets`, {
             id: action.widget.id
         }, state);
+        const allWidgets = get(updatedState, path, []);
+        return set(path, allWidgets.map(m => {
+            if (m.dependenciesMap) {
+                const [, dependentWidgetId] = WIDGETS_REGEX.exec((Object.values(m.dependenciesMap) || [])[0]);
+                if (dependentWidgetId) {
+                    if (action.widget.id === dependentWidgetId) {
+                        return {...omit(m, "dependenciesMap"), mapSync: false};
+                    }
+                }
+            }
+            return m;
+        }), state);
     case DASHBOARD_LOADED:
         const { data } = action;
         return set(`containers[${DEFAULT_TARGET}]`, {
             ...data
         }, state);
     case MAP_CONFIG_LOADED:
-        const { widgetsConfig } = (action.config || {});
+        let { widgetsConfig } = (action.config || {});
+        if (!isEmpty(widgetsConfig)) {
+            widgetsConfig = convertToCompatibleWidgets(widgetsConfig);
+        }
         return set(`containers[${DEFAULT_TARGET}]`, {
             ...widgetsConfig
         }, state);
@@ -304,10 +335,10 @@ function widgetsReducer(state = emptyState, action) {
     }
     case TOGGLE_COLLAPSE_ALL: {
         // get widgets excluding static widgets
-        const widgets = get(state, `containers[${action.target}].widgets`, [])
+        const widgetsStatic = get(state, `containers[${action.target}].widgets`, [])
             .filter( w => !w.dataGrid || !w.dataGrid.static );
-        const collapsedWidgets = widgets.filter(w => get(state, `containers[${action.target}].collapsed[${w.id}]`));
-        const expandedWidgets = widgets.filter(w => !get(state, `containers[${action.target}].collapsed[${w.id}]`));
+        const collapsedWidgets = widgetsStatic.filter(w => get(state, `containers[${action.target}].collapsed[${w.id}]`));
+        const expandedWidgets = widgetsStatic.filter(w => !get(state, `containers[${action.target}].collapsed[${w.id}]`));
         const shouldExpandAll = expandedWidgets.length === 0;
         if (shouldExpandAll) {
             return collapsedWidgets.reduce((acc, w) => widgetsReducer(

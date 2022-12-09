@@ -6,59 +6,68 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
-import { isNil, isObject } from 'lodash';
-import SideGrid from '../../misc/cardgrids/SideGrid';
-import { Glyphicon, Grid, Row, Col } from 'react-bootstrap';
-import Slider from '../../misc/Slider';
 import WMSLegend from '../../TOC/fragments/WMSLegend';
+import OpacitySlider from "../../TOC/fragments/OpacitySlider";
+import Title from "../../TOC/fragments/Title";
+import LayersTool from "../../TOC/fragments/LayersTool";
 
 export default ({
     layers = [],
-    onChange = () => {},
+    updateProperty = () => {},
     legendProps = {},
     currentZoomLvl,
-    disableOpacitySlider = true,
-    disableVisibility = true,
+    disableOpacitySlider = false,
+    disableVisibility = false,
+    legendExpanded = false,
     scales,
     language,
     currentLocale
-}) => <SideGrid
-    className="compact-legend-grid"
-    size="sm"
-    items={layers.map(layer => ({
-        title: layer.title && isObject(layer.title) && (layer.title[currentLocale] || layer.title.default) || layer.title,
-        preview: disableVisibility
-            ? null
-            : <Glyphicon className="text-primary"
-                glyph={layer.visibility ? 'eye-open' : 'eye-close'}
-            />, // TODO: manage onClick
-        style: {
-            opacity: layer.visibility ? 1 : 0.4
-        },
-        body: !layer.visibility ? null
-            : (
-                <div>
-                    <Grid fluid>
-                        <Row>
-                            <Col xs={12} className="ms-legend-container">
-                                <WMSLegend
-                                    node={{ ...layer }}
-                                    currentZoomLvl={currentZoomLvl}
-                                    scales={scales}
-                                    language={language}
-                                    {...legendProps} />
-                            </Col>
-                        </Row>
-                    </Grid>
-                    {!disableOpacitySlider && <div className="mapstore-slider" onClick={(e) => { e.stopPropagation(); }}>
-                        <Slider
-                            disabled={!layer.visibility}
-                            start={[isNil(layer.opacity) ? 100 : Math.round(layer.opacity * 100)]}
-                            range={{ min: 0, max: 100 }}
-                            onChange={(value) => onChange(layer.id, 'layers', { opacity: parseFloat((value[0] / 100).toFixed(2)) })} />
-                    </div>}
-                </div>
-            )
-    })
-    )} />;
+}) => {
+
+    const renderOpacitySlider = (layer) => (
+        !disableOpacitySlider && layer?.type !== '3dtiles' && <div
+            className="mapstore-slider"
+            onClick={(e) => { e.stopPropagation(); }}>
+            <OpacitySlider
+                opacity={layer.opacity}
+                disabled={!layer.visibility}
+                hideTooltip={false}
+                onChange={opacity => updateProperty('opacity', opacity, layer.id)}/>
+        </div>
+    );
+
+    return (<div className={"legend-widget"}>
+        {layers.map((layer, index) => (<div key={index} className={`widget-legend-toc${(layer.expanded || legendExpanded) ? ' expanded' : ''}`}>
+            <div className="toc-default-layer-head">
+                {!disableVisibility && <LayersTool
+                    tooltip={'toc.toggleLayerVisibility'}
+                    className={"visibility-check" + (layer.visibility ? " checked" : "")}
+                    data-position={layer.storeIndex}
+                    glyph={layer.visibility ? "eye-open" : "eye-close"}
+                    onClick={()=> updateProperty('visibility', !layer.visibility, layer.id)}
+                />}
+                <Title node={layer} currentLocale={currentLocale} tooltip/>
+                {!legendExpanded && layer.type === "wms" && <LayersTool
+                    node={layer}
+                    tooltip="toc.displayLegendAndTools"
+                    key="toollegend"
+                    className={`toc-legend-icon ${layer.expanded ? 'expanded' : ''}`}
+                    glyph="chevron-left"
+                    onClick={()=> updateProperty('expanded', !layer.expanded, layer.id)} />}
+            </div>
+            <div>
+                {(layer.expanded || legendExpanded)
+                    ? <div key="legend" className="expanded-legend-view">
+                        <WMSLegend
+                            node={{ ...layer }}
+                            currentZoomLvl={currentZoomLvl}
+                            scales={scales}
+                            language={language}
+                            {...legendProps} />
+                    </div>
+                    : null}
+                {renderOpacitySlider(layer)}
+            </div>
+        </div>))}
+    </div>);
+};

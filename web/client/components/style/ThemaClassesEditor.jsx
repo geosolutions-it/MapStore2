@@ -22,6 +22,7 @@ import { createPagedUniqueAutompleteStream } from '../../observables/autocomplet
 import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { generateRandomHexColor } from '../../utils/ColorUtils';
+import uuid from 'uuid';
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
@@ -32,7 +33,7 @@ class ThemaClassesEditor extends React.Component {
         uniqueValuesClasses: PropTypes.bool,
         autoCompleteOptions: PropTypes.object,
         dropUpMenu: PropTypes.bool,
-        usePreSetColors: PropTypes.bool
+        usePresetColors: PropTypes.bool
     };
 
     static defaultProps = {
@@ -108,7 +109,7 @@ class ThemaClassesEditor extends React.Component {
     renderClasses = () => {
         return this.props.classification.map((classItem, index, classification) => (
             <FormGroup
-                key={index}>
+                key={classItem.id ?? index}>
                 <ColorSelector
                     key={classItem.color}
                     color={classItem.color}
@@ -140,7 +141,7 @@ class ThemaClassesEditor extends React.Component {
                             return  (
                                 <MenuItem
                                     key={option.value}
-                                    onClick={() => this.updateClassification(index, option.value, classification)}>
+                                    onClick={() => this.updateClassification(index, option.value, classification, this.props.customLabels)}>
                                     <><Glyphicon glyph={option.glyph}/>
                                         <Message msgId={option.labelId} />
                                     </>
@@ -227,7 +228,7 @@ class ThemaClassesEditor extends React.Component {
         }
     };
 
-    updateClassification = (classIndex, type, classification) => {
+    updateClassification = (classIndex, type, classification, customLabels) => {
         let updateIndex;
         let updateMinMax;
         let deleteCount = 0;
@@ -249,16 +250,16 @@ class ThemaClassesEditor extends React.Component {
         }
         let args = [updateIndex, deleteCount];
         if (type !== 'remove') {
-            const color = this.props.usePreSetColors ?  generateRandomHexColor(currentColors) : '#ffffff';
+            const color = this.props.usePresetColors ?  generateRandomHexColor(currentColors) : '#ffffff';
             let classifyObj;
             if (!isNil(currentRule.unique)) {
                 const uniqueValue = isNumber(currentRule.unique) ? 0 : '';
-                classifyObj = { ...currentRule, color, title: uniqueValue, unique: uniqueValue };
+                classifyObj = { ...currentRule, id: uuid.v1(), color, title: uniqueValue, unique: uniqueValue };
             } else if (!isNil(currentRule.quantity)) {
-                classifyObj = { ...currentRule, color, label: '0', quantity: 0 };
+                classifyObj = { ...currentRule, id: uuid.v1(), color, label: '0', quantity: 0 };
             } else {
-                classifyObj = { ...currentRule, ...updateMinMax, color,
-                    title: ` >= ${updateMinMax.min} AND <${updateMinMax.max}`
+                classifyObj = { ...currentRule, id: uuid.v1(), ...updateMinMax, color,
+                    title: !customLabels ? ` >= ${updateMinMax.min} AND <${updateMinMax.max}` : ""
                 };
             }
             args = args.concat(classifyObj);

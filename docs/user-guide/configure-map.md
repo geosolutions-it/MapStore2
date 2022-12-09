@@ -1,11 +1,12 @@
 # Configure the map
+
 **********************
 
 With the Edit map configuration button <img src="../img/button/configure-map-button.jpg" class="ms-docbutton"/> the **Map Inline Editor** opens to give the opportunity to do quick customizations (like basic map settings, layer opacity and something more) to the map (more advanced customizations then, are allowed only through the *Advanced Map Editor*).
 
 <img src="../img/configure-map/configure-map.jpg" class="ms-docimage"/>
 
-## Layers 
+## Layers
 
 The Map Inline Editor opens with the Layers section available, where it is possible to edit the layers settings (by selecting a layer in the TOC) and the visibility of layers present in the map:
 
@@ -15,7 +16,7 @@ The Map Inline Editor opens with the Layers section available, where it is possi
 
 * Toggle the layer visibility by switching off <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> and on <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> the "eye" icon.
 
-## Setting 
+## Setting
 
 The *Setting section* allows the user to:
 
@@ -44,15 +45,15 @@ Inside the Map Inline Editor Toolbar the **Advanced map editor** button <img src
 
 The available tools to modify the map are the following:
 
-* Adding the **Layers** by using the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Catalog Services](catalog.md).
+* Adding the **Layers** by using the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Catalog Services](catalog.md#catalog-services).
 
-* Adding  **Annotations** by clicking on the <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Adding Annotations](annotations.md).
+* Adding  **Annotations** by clicking on the <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Adding Annotations](annotations.md#add-new-annotation).
 
-* **Import** a map or a vectorial file by clicking on the <img src="../img/button/import-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Import files](import.md).
+* **Import** a map or a vectorial file by clicking on the <img src="../img/button/import-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Import files](import.md#import-files).
 
-* **Change Background** as it is explained in the [Background Selector](background.md)
+* **Change Background** as it is explained in the [Background Selector](background.md#background-selector)
 
-* **Edit Layers** by clicking on the Layers button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> as it is explained in the [Table of Contents](toc.md)
+* **Edit Layers** by clicking on the Layers button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> as it is explained in the [Table of Contents](toc.md#table-of-contents)
 
 Once the advanced map editing is complete, it is possible click on **Apply** to see the final result in the story.
 

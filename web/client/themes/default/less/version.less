@@ -16,6 +16,30 @@
 // Layout
 // **************
 
-.application-version-label {
-    font-weight: bold;
+@media only screen and (max-width: 600px) {
+    #mapstore-about {
+        width: 100% !important;
+        left: auto !important;
+        .version-info {
+            display: block !important;
+        }
+    }
+}
+.version-panel {
+    margin-top: -30px;
+
+    .application-version-label {
+        font-weight: bold;
+    }
+
+    .version-info {
+        display: grid;
+        grid-template-columns: 0.5fr 2fr;
+        font-size: 14px;
+        margin: 10px 0px;
+    }
+
+    .info-label {
+        font-weight: bold;
+    }
 }

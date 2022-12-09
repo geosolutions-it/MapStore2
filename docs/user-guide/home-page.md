@@ -1,4 +1,5 @@
 # Home Page
+
 ***********
 
 In order to get started, let's take a look at the portal interface and get an idea of how to navigate around it. First of all it's necessary to specify that the user can take advantage of different tools and sections according to his authentication in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/). In particular, a user can access the [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) application by:
@@ -17,7 +18,7 @@ Accessing [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) as anon
 
 The anonymous user is allowed to:
 
-* Access [GeoSolutions website](https://www.geo-solutions.it/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
+* Access [GeoSolutions website](https://www.geosolutionsgroup.com/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
 * Navigate through the *Featured* and *Contents* sections
 
@@ -27,13 +28,13 @@ The anonymous user is allowed to:
 
 <img src="../img/home-page/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
-* Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/> (more information about Login can be found in [Managing Users and Groups](managing-users-and-groups.md) section)
+* Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/> (more information about Login can be found in [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
 
 * Perform a search for resources, through the *Search bar*:
 
 <img src="../img/home-page/search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-* [Share](share.md) a resource <img src="../img/button/share.jpg" class="ms-docbutton"/>
+* [Share](share.md#sharing-resources) a resource <img src="../img/button/share.jpg" class="ms-docbutton"/>
 
 * Take a look at map [Details](resources-properties.md#details) when available <img src="../img/button/details_button.jpg" class="ms-docbutton"/>
 
@@ -61,8 +62,8 @@ Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsg
 
 The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator can also:
 
-* Access the **Manager** button <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> for [Manage Accounts](managing-users-and-groups.md) and [Manage Contexts](managing-contexts.md)
+* Access the **Manager** button <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> for [Manage Accounts](managing-users-and-groups.md#managing-users-and-groups) and [Manage Contexts](managing-contexts.md#managing-contexts)
 
-* Menage the resources by including <img src="../img/button/featured.jpg" class="ms-docbutton"/> or excluding <img src="../img/button/unfeatured.jpg" class="ms-docbutton"/> them from *Featured* section
+* Manage the resources by including <img src="../img/button/featured.jpg" class="ms-docbutton"/> or excluding <img src="../img/button/unfeatured.jpg" class="ms-docbutton"/> them from *Featured* section
 
 * View, edit and remove any resource

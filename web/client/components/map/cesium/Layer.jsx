@@ -103,21 +103,29 @@ class CesiumLayer extends React.Component {
 
     updateZIndex = (position) => {
         const layerPos = position || this.props.position;
-        const actualPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
-            return this.provider === current ? index : previous;
-        }, -1);
-        let newPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
-            return previous === -1 && layerPos < current._position ? index : previous;
-        }, -1);
-        if (newPos === -1) {
-            newPos = actualPos;
-        }
-        const diff = newPos - actualPos;
-        if (diff !== 0) {
-            Array.apply(null, {length: Math.abs(diff)}).map(Number.call, Number)
-                .forEach(() => {
-                    this.props.map.imageryLayers[diff > 0 ? 'raise' : 'lower'](this.provider);
-                });
+        // in some cases the position index inside layer state
+        // does not match the one inside imagery layers of Cesium
+        // because a 3D environment could contain others entities that does not follow the imagery z index
+        // (eg: terrain or meshes)
+        if (this.provider) {
+            // take the current index of the image layer
+            const previousIndex = this.props.map.imageryLayers._layers.indexOf(this.provider);
+            // sort list of imagery layers by new positions
+            const nextImageryLayersOrder = [...this.props.map.imageryLayers._layers].sort((a, b) => {
+                const aPosition = a === this.provider ? layerPos : a._position;
+                const bPosition = b === this.provider ? layerPos : b._position;
+                return aPosition - bPosition;
+            });
+            // take the next index of the image layer
+            const nextIndex = nextImageryLayersOrder.indexOf(this.provider);
+            const diff = nextIndex - previousIndex;
+            if (diff !== 0) {
+                [...new Array(Math.abs(diff)).keys()]
+                    .forEach(() => {
+                        this.props.map.imageryLayers[diff > 0 ? 'raise' : 'lower'](this.provider);
+                    });
+            }
+            this.props.map.scene.requestRender();
         }
     };
 
@@ -125,12 +133,17 @@ class CesiumLayer extends React.Component {
         const oldVisibility = this.getVisibilityOption(this.props);
         const newVisibility = this.getVisibilityOption(newProps);
         if (newVisibility !== oldVisibility) {
-            if (newVisibility) {
-                this.addLayer(newProps);
-                this.updateZIndex();
+            if (this.layer?.detached && this.layer?.setVisible) {
+                this.layer.setVisible(newVisibility);
             } else {
-                this.removeLayer();
+                if (newVisibility) {
+                    this.addLayer(newProps);
+                    this.updateZIndex();
+                } else {
+                    this.removeLayer();
+                }
             }
+            newProps.map.scene.requestRender();
         }
     };
 
@@ -161,6 +174,7 @@ class CesiumLayer extends React.Component {
         var oldOpacity = this.props.options && this.props.options.opacity !== undefined ? this.props.options.opacity : 1.0;
         if (opacity !== oldOpacity && this.layer && this.provider) {
             this.provider.alpha = opacity;
+            this.props.map.scene.requestRender();
         }
     };
 
@@ -176,7 +190,7 @@ class CesiumLayer extends React.Component {
             if (this.layer === null) {
                 this.props.onCreationError(options);
             }
-
+            this.props.map.scene.requestRender();
         }
     };
 
@@ -185,8 +199,11 @@ class CesiumLayer extends React.Component {
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;
-            this.addLayer(newProps);
+            if (newProps.options.visibility) {
+                this.addLayer(newProps);
+            }
         }
+        newProps.map.scene.requestRender();
     };
 
     addLayerInternal = (newProps) => {
@@ -199,6 +216,7 @@ class CesiumLayer extends React.Component {
                 this.provider.alpha = newProps.options.opacity;
             }
         }
+        newProps.map.scene.requestRender();
     };
 
     addLayer = (newProps) => {
@@ -213,6 +231,7 @@ class CesiumLayer extends React.Component {
                     this.removeLayer();
                     this.layer = newLayer;
                     this.addLayerInternal(newProps);
+                    this.props.map.scene.requestRender();
                 }, this.props.options.refresh);
             }
         }
@@ -225,9 +244,10 @@ class CesiumLayer extends React.Component {
         }
         // detached layers are layers that do not work through a provider
         // for this reason they cannot be added or removed from the map imageryProviders
-        if (this.layer.detached && this.layer?.remove) {
+        if (this.layer?.detached && this.layer?.remove) {
             this.layer.remove();
         }
+        this.props.map.scene.requestRender();
     };
 }
 

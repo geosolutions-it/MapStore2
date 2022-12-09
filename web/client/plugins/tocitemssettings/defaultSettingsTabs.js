@@ -19,6 +19,7 @@ import HTMLViewer from '../../components/data/identify/viewers/HTMLViewer';
 import TextViewer from '../../components/data/identify/viewers/TextViewer';
 import JSONViewer from '../../components/data/identify/viewers/JSONViewer';
 import HtmlRenderer from '../../components/misc/HtmlRenderer';
+import { isCesium } from '../../selectors/maptype';
 
 import {getAvailableInfoFormat} from '../../utils/MapInfoUtils';
 import {getConfiguredPlugin as getConfiguredPluginUtil } from '../../utils/PluginsUtils';
@@ -32,7 +33,7 @@ import LoadingView from '../../components/misc/LoadingView';
 import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
 import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
 import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
-import SimpleVectorStyleEditor from './SimpleVectorStyleEditor';
+import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
 import { mapSelector } from '../../selectors/map';
 
 const responses = {
@@ -44,13 +45,20 @@ const responses = {
 import { StyleSelector } from '../styleeditor/index';
 
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
+
 const ConnectedDisplay = connect(
     createSelector([mapSelector], ({ zoom, projection }) => ({ zoom, projection }))
 )(Display);
 
+const ConnectedVectorStyleEditor = connect(
+    createSelector([isCesium], (enable3dStyleOptions) => ({ enable3dStyleOptions }))
+)(VectorStyleEditor);
+
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
-const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "vector" && element.id !== "annotations";
+const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "3dtiles" || element.type === "vector" && element.id !== "annotations";
 const isWMS = ({element = {}} = {}) => element.type === "wms";
+const isWFS = ({element = {}} = {}) => element.type === "wfs";
+
 const isStylableLayer = (props) =>
     isLayerNode(props)
     && (isWMS(props) || isVectorStylableLayer(props));
@@ -146,10 +154,9 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 };
 
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
+
     if (isVectorStylableLayer({element})) {
-        return {
-            Component: SimpleVectorStyleEditor
-        };
+        return { Component: ConnectedVectorStyleEditor };
     }
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =
@@ -243,7 +250,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.featureInfo',
             tooltipId: 'layerProperties.featureInfo',
             glyph: 'map-marker',
-            visible: showFeatureInfoTab && isLayerNode(props) && isWMS(props) && !(props.element.featureInfo && props.element.featureInfo.viewer),
+            visible: showFeatureInfoTab && isLayerNode(props) && (isWMS(props) || isWFS(props)) && !(props.element.featureInfo && props.element.featureInfo.viewer),
             Component: FeatureInfo,
             toolbar: [
                 {

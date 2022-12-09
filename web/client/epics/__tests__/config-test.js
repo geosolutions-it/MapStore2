@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import {head} from 'lodash';
-import { loadMapConfigAndConfigureMap, loadMapInfoEpic } from '../config';
+import {loadMapConfigAndConfigureMap, loadMapInfoEpic} from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,

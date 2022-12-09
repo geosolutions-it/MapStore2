@@ -16,6 +16,7 @@ const Button = tooltip(RButton);
 export default ({
     accept,
     children,
+    style,
     onRef = () => {},
     onClose = () => {},
     onDrop = () => {},
@@ -25,7 +26,7 @@ export default ({
     disableClick
     ref={onRef}
     id="DRAGDROP_IMPORT_ZONE"
-    style={{ position: "relative", height: '100%' }}
+    style={{ position: "relative", height: '100%', ...style }}
     accept={accept}
     onDrop={onDrop}
     onDragEnter={onDragEnter}
