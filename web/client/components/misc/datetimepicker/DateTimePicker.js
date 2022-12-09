@@ -153,7 +153,7 @@ class DateTimePicker extends Component {
                 </div>
                 <div className={`rw-calendar-popup rw-popup-container ${popupPosition === 'top' ? 'rw-dropup' : ''} ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '285px' }}>
                     <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute' }}>
-                        <Calendar 
+                        <Calendar
                             tabIndex="-1"
                             ref={this.attachCalRef}
                             onMouseDown={this.handleMouseDown}
