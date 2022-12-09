@@ -160,7 +160,6 @@ class DateTimePicker extends Component {
                             onChange={this.handleCalendarChange}
                             {...props}
                             value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
-                            currentDate={!isNil(this.props.value) ? new Date(this.props.value) : new Date() }
                         />
                     </div>
                 </div>
