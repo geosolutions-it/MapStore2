@@ -50,7 +50,10 @@ jobs:
         run: npm install
 
       - name: ESlint
-        run: npm run lint
+        run: npm run es:lint
+
+      - name: Markdown lint
+        run: npm run md:lint
 
       - name: Doc build
         run: npm run jsdoc:build
