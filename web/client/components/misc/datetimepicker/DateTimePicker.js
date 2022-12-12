@@ -7,12 +7,13 @@
  */
 
 import React, { Component } from 'react';
+
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Calendar } from 'react-widgets';
 import localizer from 'react-widgets/lib/localizers/moment';
 import { Tooltip } from 'react-bootstrap';
-import { isDate } from 'lodash';
+import { isDate, isNil } from 'lodash';
 import OverlayTrigger from '../OverlayTrigger';
 import Hours from './Hours';
 
@@ -152,7 +153,14 @@ class DateTimePicker extends Component {
                 </div>
                 <div className={`rw-calendar-popup rw-popup-container ${popupPosition === 'top' ? 'rw-dropup' : ''} ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '285px' }}>
                     <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute' }}>
-                        <Calendar tabIndex="-1" ref={this.attachCalRef} onMouseDown={this.handleMouseDown} onChange={this.handleCalendarChange} {...props} value={new Date(this.props.value)}/>
+                        <Calendar
+                            tabIndex="-1"
+                            ref={this.attachCalRef}
+                            onMouseDown={this.handleMouseDown}
+                            onChange={this.handleCalendarChange}
+                            {...props}
+                            value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
+                        />
                     </div>
                 </div>
             </div>
