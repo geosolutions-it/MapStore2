@@ -263,20 +263,20 @@ Adding a table widget to the map, a panel like the following opens:
 
 <img src="../img/widgets/table-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-The toolbar on the top of this panel is similar to the one present in [Chart section](#chart).Here the user is allowed to:
+The toolbar on the top of this panel is similar to the one present in [Chart section](#chart). Here the user is allowed to:
 
-* **Enable/Disable** the layer fields that will be displayed in the widget.
+* **Enable/Disable** the layer fields that will be displayed in the widget as columns.
 
 <img src="../img/widgets/table-attribute.gif" class="ms-docimage"/>
 
 !!!warning
     At least one field must be selected in order to move to the next configuration step.
 
-* Enter a **Title** for each column to be displayed in the table header in place of the *Name* of the layer field
+* Enter a **Title** for each column to be displayed as the table header in place of the *Name* of the layer field
 
 <img src="../img/widgets/table-title.gif" class="ms-docimage"/>
 
-* Enter a **Description** for each fields to be displayed in the table through a tooltip
+* Enter a **Description** for each field to be displayed as a tooltip, visible moving the mouse on the column header. 
 
 <img src="../img/widgets/table-description.gif" class="ms-docimage"/>
 
