@@ -71,8 +71,6 @@ class DownloadDialog extends React.Component {
             {name: 'application/json', label: 'GeoJSON', type: 'vector', validServices: ['wps']},
             {name: 'application/arcgrid', label: 'ArcGrid', type: 'raster', validServices: ['wps']},
             {name: 'image/tiff', label: 'TIFF', type: 'raster', validServices: ['wps']},
-            {name: 'image/png', label: 'PNG', type: 'raster', validServices: ['wps']},
-            {name: 'image/jpeg', label: 'JPEG', type: 'raster', validServices: ['wps']},
             {name: 'application/wfs-collection-1.0', label: 'wfs-collection-1.0', type: 'vector', validServices: ['wps']},
             {name: 'application/wfs-collection-1.1', label: 'wfs-collection-1.1', type: 'vector', validServices: ['wps']},
             {name: 'application/zip', label: 'Shapefile', type: 'vector', validServices: ['wps']},
