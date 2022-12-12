@@ -333,8 +333,7 @@ const property = {
             return {
                 [key]: value
             };
-        },
-        setValue: (value) => !!value
+        }
     }),
     msHeightReference: ({ key = 'msHeightReference', label = 'Height reference from ground' }) => ({
         type: 'toolbar',
