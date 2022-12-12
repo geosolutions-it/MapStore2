@@ -58,7 +58,7 @@ describe("Test UserDialog Component", () => {
 
     it('Test enabled user rendering', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={enabledUser}/>, document.getElementById("container"));
+            <UserDialog show user={enabledUser}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.getElementsByName("newPassword").length).toBe(1);
         expect(document.getElementsByName("confirmPassword").length).toBe(1);
@@ -67,62 +67,62 @@ describe("Test UserDialog Component", () => {
     });
     it('Test disabled user rendering', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={disabledUser}/>, document.getElementById("container"));
+            <UserDialog show user={disabledUser}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.getElementsByName("enabled").length).toBe(1);
         expect(document.getElementsByName("enabled").item(0).checked).toBe(false);
     });
     it('Test admin user rendering', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={adminUser}/>, document.getElementById("container"));
+            <UserDialog show user={adminUser}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.getElementsByName("role").length).toBe(1);
         expect(document.getElementsByName("role").item(0).value).toBe("ADMIN");
     });
     it('Test user loading', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{...adminUser, status: "loading"}}/>, document.getElementById("container"));
+            <UserDialog show user={{...adminUser, status: "loading"}}/>, document.getElementById("container"));
         expect(comp).toExist();
     });
     it('Test user error', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{...enabledUser, lastError: {statusText: "ERROR"}}}/>, document.getElementById("container"));
+            <UserDialog show user={{...enabledUser, lastError: {statusText: "ERROR"}}}/>, document.getElementById("container"));
         expect(comp).toExist();
     });
     it('Test isValidPassword', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{...enabledUser, newPassword: "testPassword"}}/>, document.getElementById("container"));
+            <UserDialog show user={{...enabledUser, newPassword: "testPassword"}}/>, document.getElementById("container"));
         expect(comp).toExist();
         // valid password, wrong confirm
         comp = ReactDOM.render(
-            <UserDialog user={{...enabledUser, newPassword: "aaabbb", confirmPassword: "bbbccc"}}/>, document.getElementById("container"));
+            <UserDialog show user={{...enabledUser, newPassword: "aaabbb", confirmPassword: "bbbccc"}}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(comp.isValidPassword()).toBe(false);
         // Valid password
         comp = ReactDOM.render(
-            <UserDialog user={{name: "user", newPassword: "aA1!@#$%&*_", confirmPassword: "aA1!@#$%&*_"}}/>, document.getElementById("container"));
+            <UserDialog show user={{name: "user", newPassword: "aA1!@#$%&*_", confirmPassword: "aA1!@#$%&*_"}}/>, document.getElementById("container"));
         expect(comp.isValidPassword()).toBe(true);
         // Invalid password, correct confirm
         comp = ReactDOM.render(
-            <UserDialog user={{...enabledUser, newPassword: "aaabbbà", confirmPassword: "aaabbbà"}}/>, document.getElementById("container"));
+            <UserDialog show user={{...enabledUser, newPassword: "aaabbbà", confirmPassword: "aaabbbà"}}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(comp.isValidPassword()).toBe(true);
         // New user, empty password
         comp = ReactDOM.render(
-            <UserDialog user={{...newUser, newPassword: "", confirmPassword: ""}}/>, document.getElementById("container"));
+            <UserDialog show user={{...newUser, newPassword: "", confirmPassword: ""}}/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(comp.isValidPassword()).toBe(false);
     });
     it('Test without password fields', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={enabledUser} hidePasswordFields/>, document.getElementById("container"));
+            <UserDialog show user={enabledUser} hidePasswordFields/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.getElementsByName("newPassword").length).toBe(0);
         expect(document.getElementsByName("confirmPassword").length).toBe(0);
     });
     it('Test new user', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={newUser} />, document.getElementById("container"));
+            <UserDialog show user={newUser} />, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.getElementsByName("newPassword").length).toBe(1);
         expect(document.getElementsByName("confirmPassword").length).toBe(1);
@@ -134,7 +134,7 @@ describe("Test UserDialog Component", () => {
     });
     it('Test empty user', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={null} />, document.getElementById("container"));
+            <UserDialog show user={null} />, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.getElementsByName("name").length).toBe(1);
         expect(document.getElementsByName("newPassword").length).toBe(1);
@@ -150,12 +150,12 @@ describe("Test UserDialog Component", () => {
         };
         let spy = expect.spyOn(handlers, "onChange");
         let comp = ReactDOM.render(
-            <UserDialog user={null} onChange={handlers.onChange} />, document.getElementById("container"));
+            <UserDialog show user={null} onChange={handlers.onChange} />, document.getElementById("container"));
         expect(comp).toExist();
         document.getElementsByName("enabled").item(0).click();
 
         comp = ReactDOM.render(
-            <UserDialog user={newUser} onChange={handlers.onChange} />, document.getElementById("container"));
+            <UserDialog show user={newUser} onChange={handlers.onChange} />, document.getElementById("container"));
         document.getElementsByName("enabled").item(0).click();
         expect(spy.calls.length).toBe(2);
     });
@@ -165,7 +165,7 @@ describe("Test UserDialog Component", () => {
         };
         let spy = expect.spyOn(handlers, "onSave");
         let comp = ReactDOM.render(
-            <UserDialog user={{
+            <UserDialog show user={{
                 id: 1,
                 name: "USER1",
                 role: "USER",
@@ -180,7 +180,7 @@ describe("Test UserDialog Component", () => {
     });
     it('displays the spinner', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{
+            <UserDialog show user={{
                 id: 1,
                 name: "USER1",
                 role: "USER",
@@ -194,7 +194,7 @@ describe("Test UserDialog Component", () => {
     });
     it('displays the success style', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{
+            <UserDialog show user={{
                 id: 1,
                 name: "USER1",
                 role: "USER",
@@ -207,7 +207,7 @@ describe("Test UserDialog Component", () => {
     });
     it('Testing selected user-dialog-tab is highlighted', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{
+            <UserDialog show user={{
                 id: 1,
                 name: "USER1",
                 role: "USER",
@@ -226,7 +226,7 @@ describe("Test UserDialog Component", () => {
 
     it('Testing asterisk inside mandatory fields', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{
+            <UserDialog show user={{
                 id: 1,
                 name: "USER1",
                 role: "USER",
@@ -258,7 +258,7 @@ describe("Test UserDialog Component", () => {
 
     it('Test on close dialog using form close btn, reset password field', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={newUser} />, document.getElementById("container"));
+            <UserDialog show user={newUser} />, document.getElementById("container"));
         expect(comp).toExist();
         const passwordField = document.querySelector("input[name='newPassword']");
         const closeBtn = document.querySelector(".btn-default");
@@ -269,7 +269,7 @@ describe("Test UserDialog Component", () => {
 
     it('Test on close dialog using dialog header close btn, reset password field', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={newUser} />, document.getElementById("container"));
+            <UserDialog show user={newUser} />, document.getElementById("container"));
         expect(comp).toExist();
         const passwordField = document.querySelector("input[name='newPassword']");
         const closeBtn = document.querySelector(".login-panel-close");
@@ -287,6 +287,7 @@ describe("Test UserDialog Component", () => {
 
             const userDlg = ReactDOM.render(
                 <UserDialog
+                    show
                     user={{...newUser, status: "modified"}}
                     onClose={actions.onClose}
                 />, document.getElementById("container"));

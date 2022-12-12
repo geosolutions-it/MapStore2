@@ -275,10 +275,12 @@ class GroupDialog extends React.Component {
                         </Tab>
                         : null
                     }
-                    {/** new tab */}
-                    <Tab eventKey={3} title={<Glyphicon glyph="list-alt" style={{ display: 'block', padding: 8 }} />} >
-                        {this.renderAttributes()}
-                    </Tab>
+                    {this.props.showAttributesTab
+                        ? <Tab eventKey={3} title={<Glyphicon glyph="list-alt" style={{ display: 'block', padding: 8 }} />} >
+                            {this.renderAttributes()}
+                        </Tab>
+                        : null
+                    }
                 </Tabs>
             </div>
             <div role="footer">

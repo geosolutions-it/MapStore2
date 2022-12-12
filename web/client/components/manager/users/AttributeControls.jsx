@@ -1,8 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import axios from '../../../libs/ajax';
-import {get, castArray, isArray} from 'lodash';
+import { get, castArray, isArray, isNil } from 'lodash';
 import Select from 'react-select';
 import { FormControl } from 'react-bootstrap';
+import { DateTimePicker } from 'react-widgets';
+
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+momentLocalizer(moment);
+
 
 // new accessory selector for attribute editor
 
@@ -11,7 +17,8 @@ export const CONTROL_TYPES = { // note: from server can be "optional", anc can h
     STRING: "string", // text line
     TEXT: "text", // text area
     // new type to implement our tools
-    SELECT: "select"
+    SELECT: "select",
+    DATE: "date"
 
 };
 
@@ -74,6 +81,22 @@ const MultiValueControl = ({name, value, onChange = () => {}, disabled, multiAtt
         {...props} />);
 };
 
+export const DateControl = ({ name, value, onChange = () => { }, format, ...props}) => {
+    const handleChange = (date) => {
+        const newValue = moment(date).isValid() ? moment(date).format(format) : undefined;
+        onChange(newValue);
+    };
+    const date = !isNil(value) && !isNil(moment(value, format).toDate()) && moment(value, format).isValid() ? moment(value, format).toDate() : undefined;
+    return (<DateTimePicker
+        format={format}
+        time={false}
+        calendar
+        value={date}
+        onChange={handleChange}
+        name={name}
+        {...props} />);
+};
+
 
 export default {
     [CONTROL_TYPES.SELECT]: ({name, value, options, source, controlAttributes = {}, onChange = () => {}}) =>
@@ -81,7 +104,8 @@ export default {
             ? <RemoteSelect name={name} value={value} onChange={onChange} {...controlAttributes} source={source}  />
             : <MultiValueSelect  name={name} value={value} onChange={onChange}  {...controlAttributes} options={options ?? [{ value: value, label: value }]}/>,
     [CONTROL_TYPES.TEXT]: ({name, value, onChange = () => {}, disabled, controlAttributes = {} }) => <MultiValueControl componentClass="textarea" disabled={disabled} onChange={onChange} value={value} name={name}  {...controlAttributes} />,
-    [CONTROL_TYPES.STRING]: ({name, value, onChange = () => {}, disabled, controlAttributes = {} }) => <MultiValueControl type="text" disabled={disabled} onChange={onChange} value={value} name={name}  {...controlAttributes} />
+    [CONTROL_TYPES.STRING]: ({name, value, onChange = () => {}, disabled, controlAttributes = {} }) => <MultiValueControl type="text" disabled={disabled} onChange={onChange} value={value} name={name}  {...controlAttributes} />,
+    [CONTROL_TYPES.DATE]: ({ name, value, onChange = () => { }, disabled, controlAttributes = {} }) => <DateControl disabled={disabled} onChange={onChange} value={value} name={name}  {...controlAttributes} />
 };
 
 
