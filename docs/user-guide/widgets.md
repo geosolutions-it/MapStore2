@@ -276,7 +276,7 @@ The toolbar on the top of this panel is similar to the one present in [Chart sec
 
 <img src="../img/widgets/table-title.gif" class="ms-docimage"/>
 
-* Enter a **Description** for each field to be displayed as a tooltip, visible moving the mouse on the column header. 
+* Enter a **Description** for each field to be displayed as a tooltip, visible moving the mouse on the column header.
 
 <img src="../img/widgets/table-description.gif" class="ms-docimage"/>
 
