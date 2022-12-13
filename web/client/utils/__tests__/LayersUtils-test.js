@@ -333,17 +333,7 @@ describe('LayersUtils', () => {
                 tileMatrixSet: {
                     'custom': {
                         TileMatrix: [{
-                            'ows:Identifier': 'custom:0',
-                            ranges: {
-                                cols: {
-                                    min: 0,
-                                    max: 1
-                                },
-                                rows: {
-                                    min: 0,
-                                    max: 1
-                                }
-                            }
+                            'ows:Identifier': 'custom:0'
                         }],
                         'ows:Identifier': "custom",
                         'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
@@ -480,17 +470,7 @@ describe('LayersUtils', () => {
                 tileMatrixSet: {
                     'custom': {
                         TileMatrix: [{
-                            'ows:Identifier': 'custom:0',
-                            ranges: {
-                                cols: {
-                                    min: 0,
-                                    max: 1
-                                },
-                                rows: {
-                                    min: 0,
-                                    max: 1
-                                }
-                            }
+                            'ows:Identifier': 'custom:0'
                         }],
                         'ows:Identifier': "custom",
                         'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
@@ -567,29 +547,30 @@ describe('LayersUtils', () => {
             {
                 id: 'layer:001',
                 url: 'http:url001',
-                matrixIds: {
-                    'EPSG:4326': [{
-                        identifier: 'EPSG:4326:0',
-                        ranges: undefined
-                    }],
-                    'custom': [{
-                        identifier: 'custom:0',
-                        ranges: undefined
-                    }]
-                },
-                tileMatrixSet: [{
-                    TileMatrix: [{
-                        'ows:Identifier': 'EPSG:4326:0'
-                    }],
-                    'ows:Identifier': "EPSG:4326",
-                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                }, {
-                    TileMatrix: [{
-                        'ows:Identifier': 'custom:0'
-                    }],
-                    'ows:Identifier': "custom",
-                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                }]
+                tileMatrixSet: true,
+                matrixIds: [ 'EPSG:4326', 'custom' ],
+                availableTileMatrixSets: {
+                    'EPSG:4326': {
+                        crs: 'EPSG:4326',
+                        tileMatrixSet: {
+                            TileMatrix: [{
+                                'ows:Identifier': 'EPSG:4326:0'
+                            }],
+                            'ows:Identifier': "EPSG:4326",
+                            'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    },
+                    'custom': {
+                        crs: 'EPSG:900913',
+                        tileMatrixSet: {
+                            TileMatrix: [{
+                                'ows:Identifier': 'custom:0'
+                            }],
+                            'ows:Identifier': "custom",
+                            'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                        }
+                    }
+                }
             }
         ]);
     });
@@ -601,7 +582,7 @@ describe('LayersUtils', () => {
         expect( LayersUtils.extractTileMatrixFromSources({}, {})).toEqual({});
     });
 
-    it('extract matrix from sources', () => {
+    it('extract availableTileMatrixSets from sources', () => {
         const sources = {
             'http:url001': {
                 tileMatrixSet: {
@@ -630,45 +611,37 @@ describe('LayersUtils', () => {
             matrixIds: ['EPSG:4326', 'custom']
         };
 
-        const {matrixIds, tileMatrixSet} = LayersUtils.extractTileMatrixFromSources(sources, layer);
+        const { availableTileMatrixSets } = LayersUtils.extractTileMatrixFromSources(sources, layer);
 
-        expect(matrixIds).toEqual({
-            'EPSG:4326': [
-                {
-                    identifier: 'EPSG:4326:0',
-                    ranges: undefined
+        expect(availableTileMatrixSets).toEqual({
+            'EPSG:4326': {
+                crs: 'EPSG:4326',
+                tileMatrixSet: {
+                    TileMatrix: [
+                        {
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }
+                    ],
+                    'ows:Identifier': "EPSG:4326",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
                 }
-            ],
-            'custom': [
-                {
-                    identifier: 'custom:0',
-                    ranges: undefined
+            },
+            'custom': {
+                crs: 'EPSG:900913',
+                tileMatrixSet: {
+                    TileMatrix: [
+                        {
+                            'ows:Identifier': 'custom:0'
+                        }
+                    ],
+                    'ows:Identifier': "custom",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
                 }
-            ]
-        });
-
-        expect(tileMatrixSet).toEqual([
-            {
-                TileMatrix: [
-                    {
-                        'ows:Identifier': 'EPSG:4326:0'
-                    }
-                ],
-                'ows:Identifier': "EPSG:4326",
-                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-            }, {
-                TileMatrix: [
-                    {
-                        'ows:Identifier': 'custom:0'
-                    }
-                ],
-                'ows:Identifier': "custom",
-                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
             }
-        ]);
+        });
     });
 
-    it('extract matrix from sources with object matrixIds', () => {
+    it('extract availableTileMatrixSets from sources with object matrixIds', () => {
         const sources = {
             'http:url001': {
                 tileMatrixSet: {
@@ -697,42 +670,34 @@ describe('LayersUtils', () => {
             matrixIds: {'EPSG:4326': [], 'custom': []}
         };
 
-        const {matrixIds, tileMatrixSet} = LayersUtils.extractTileMatrixFromSources(sources, layer);
+        const { availableTileMatrixSets } = LayersUtils.extractTileMatrixFromSources(sources, layer);
 
-        expect(matrixIds).toEqual({
-            'EPSG:4326': [
-                {
-                    identifier: 'EPSG:4326:0',
-                    ranges: undefined
+        expect(availableTileMatrixSets).toEqual({
+            'EPSG:4326': {
+                crs: 'EPSG:4326',
+                tileMatrixSet: {
+                    TileMatrix: [
+                        {
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }
+                    ],
+                    'ows:Identifier': "EPSG:4326",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
                 }
-            ],
-            'custom': [
-                {
-                    identifier: 'custom:0',
-                    ranges: undefined
+            },
+            'custom': {
+                crs: 'EPSG:900913',
+                tileMatrixSet: {
+                    TileMatrix: [
+                        {
+                            'ows:Identifier': 'custom:0'
+                        }
+                    ],
+                    'ows:Identifier': "custom",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
                 }
-            ]
-        });
-
-        expect(tileMatrixSet).toEqual([
-            {
-                TileMatrix: [
-                    {
-                        'ows:Identifier': 'EPSG:4326:0'
-                    }
-                ],
-                'ows:Identifier': "EPSG:4326",
-                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-            }, {
-                TileMatrix: [
-                    {
-                        'ows:Identifier': 'custom:0'
-                    }
-                ],
-                'ows:Identifier': "custom",
-                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
             }
-        ]);
+        });
     });
 
     it('extract matrix from sources no wmts layer', () => {

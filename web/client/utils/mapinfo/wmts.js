@@ -6,13 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {getCurrentResolution, getResolutions} from '../MapUtils';
-import {reproject, normalizeSRS} from '../CoordinatesUtils';
+import {getCurrentResolution, getResolutions, METERS_PER_UNIT} from '../MapUtils';
+import {
+    reproject,
+    normalizeSRS,
+    determineCrs
+} from '../CoordinatesUtils';
 import {
     getTileMatrixSet,
     limitMatrix,
     getMatrixIds,
-    getDefaultMatrixId
+    getDefaultMatrixId,
+    parseTileMatrixSetOption
 } from '../WMTSUtils';
 import {getLayerUrl} from '../LayersUtils';
 import {optionsToVendorParams} from '../VendorParamsUtils';
@@ -26,17 +31,11 @@ import {parseString} from "xml2js";
 import {stripPrefix} from "xml2js/lib/processors";
 
 export default {
-    buildRequest: (layer, props) => {
+    buildRequest: (_layer, props) => {
+        const layer = parseTileMatrixSetOption(_layer);
         const resolution = isNil(props.map.resolution)
             ? getCurrentResolution(Math.round(props.map.zoom), 0, 21, 96)
             : props.map.resolution;
-        const resolutions = layer.resolutions || getResolutions();
-        const tileSize = layer.tileSize || 256; // tilegrid.getTileSize(props.map.zoom);
-        const tileOrigin = [
-            layer.originX || -20037508.3428,
-            layer.originY || 20037508.3428
-        ];
-
         const wrongLng = props.point.latlng.lng;
         // longitude restricted to the [-180°,+180°] range
         const lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
@@ -44,16 +43,45 @@ export default {
         let centerProjected = reproject(center, 'EPSG:4326', props.map.projection);
 
         const srs = normalizeSRS(layer.srs || props.map.projection || 'EPSG:3857', layer.allowedSRS);
+        const projection = determineCrs(srs);
+        const metersPerUnit = METERS_PER_UNIT[projection?.units] ? METERS_PER_UNIT[projection.units] : 1;
         const tileMatrixSet = getTileMatrixSet(layer.tileMatrixSet, srs, layer.allowedSRS, layer.matrixIds);
-
-        const fx = (centerProjected.x - tileOrigin[0]) / (resolution * tileSize);
-        const fy = (tileOrigin[1] - centerProjected.y) / (resolution * tileSize);
+        /*
+        * WMTS assumes a DPI 90.7 instead of 96 as documented in the WMTSCapabilities document:
+        * "The tile matrix set that has scale values calculated based on the dpi defined by OGC specification
+        * (dpi assumes 0.28mm as the physical distance of a pixel)."
+        */
+        const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
+        const availableTileMatrix = layer?.availableTileMatrixSets?.[tileMatrixSet]?.tileMatrixSet;
+        const resolutions = availableTileMatrix?.TileMatrix
+            ? availableTileMatrix.TileMatrix.map((matrix) => scaleToResolution(Number(matrix.ScaleDenominator)))
+            : layer.resolutions || getResolutions();
+        const matrixIds = limitMatrix(layer.matrixIds && getMatrixIds(layer.matrixIds, tileMatrixSet || srs) || getDefaultMatrixId(layer), resolutions.length);
+        const closestResolution = resolutions.reduce((prev, curr) =>
+            (Math.abs(curr - resolution) < Math.abs(prev - resolution) ? curr : prev)
+        );
+        const matrixIdIndex = resolutions.indexOf(closestResolution);
+        const currentTileMatrixId = matrixIds[matrixIdIndex];
+        const currentTileMatrixInfo = (availableTileMatrix?.TileMatrix || [])
+            .find((level) => level['ows:Identifier'] === currentTileMatrixId?.identifier);
+        const tileSize = (currentTileMatrixInfo?.TileWidth && currentTileMatrixInfo?.TileHeight) ?
+            [parseInt(currentTileMatrixInfo.TileWidth, 10), parseInt(currentTileMatrixInfo.TileHeight, 10)]
+            : layer.tileSize
+                ? [layer.tileSize, layer.tileSize]
+                : [256, 256];
+        const topLeftCorner = currentTileMatrixInfo?.TopLeftCorner
+            ? currentTileMatrixInfo.TopLeftCorner.split(' ').map(parseFloat)
+            : undefined;
+        const tileOrigin = topLeftCorner || [
+            layer.originX || -20037508.3428,
+            layer.originY || 20037508.3428
+        ];
+        const fx = (centerProjected.x - tileOrigin[0]) / (resolution * tileSize[0]);
+        const fy = (tileOrigin[1] - centerProjected.y) / (resolution * tileSize[1]);
         const tileCol = Math.floor(fx);
         const tileRow = Math.floor(fy);
-        const tileI = Math.floor((fx - tileCol) * tileSize);
-        const tileJ = Math.floor((fy - tileRow) * tileSize);
-
-        const matrixIds = limitMatrix(layer.matrixIds && getMatrixIds(layer.matrixIds, tileMatrixSet || srs) || getDefaultMatrixId(layer), resolutions.length);
+        const tileI = Math.floor((fx - tileCol) * tileSize[0]);
+        const tileJ = Math.floor((fy - tileRow) * tileSize[1]);
 
         const params = optionsToVendorParams({
             layerFilter: layer.layerFilter,
@@ -71,7 +99,7 @@ export default {
                 ...assign({}, params),
                 tilecol: tileCol,
                 tilerow: tileRow,
-                tilematrix: matrixIds[Math.round(props.map.zoom)].identifier,
+                tilematrix: currentTileMatrixId?.identifier,
                 tilematrixset: tileMatrixSet,
                 i: tileI,
                 j: tileJ

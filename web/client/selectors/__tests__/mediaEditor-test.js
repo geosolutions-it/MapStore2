@@ -201,18 +201,18 @@ describe('mediaEditor selectors', () => {
                                             "http://localhost/geoserver/gwc/service/wmts": {
                                                 tileMatrixSet: {
                                                     'EPSG:4326': {
-                                                        tileMatrixSet: {
-                                                            "ows:Identifier": "EPSG:4326",
-                                                            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::4326"
-                                                        },
-                                                        TileMatrix: []
+                                                        "ows:Identifier": "EPSG:4326",
+                                                        "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::4326",
+                                                        'TileMatrix': [{
+                                                            'ows:Identifier': 'EPSG:4326:0'
+                                                        }]
                                                     },
                                                     "EPSG:900913": {
-                                                        tileMatrixSet: {
-                                                            'ows:Identifier': 'EPSG:900913',
-                                                            'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
-                                                        },
-                                                        TileMatrix: []
+                                                        'ows:Identifier': 'EPSG:900913',
+                                                        'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913',
+                                                        'TileMatrix': [{
+                                                            'ows:Identifier': 'EPSG:900913:0'
+                                                        }]
                                                     }
                                                 }
                                             }
@@ -242,10 +242,24 @@ describe('mediaEditor selectors', () => {
             }
         });
         expect(selectedMapMedia.id).toBe("id");
-        expect(selectedMapMedia.data.layers[0].tileMatrixSet).toExist();
-        expect(selectedMapMedia.data.layers[0].tileMatrixSet.length).toBe(2);
-        expect(selectedMapMedia.data.layers[0].tileMatrixSet[0].tileMatrixSet['ows:Identifier']).toBe("EPSG:4326");
-        expect(selectedMapMedia.data.layers[0].tileMatrixSet[1].tileMatrixSet['ows:Identifier']).toBe("EPSG:900913");
+        expect(selectedMapMedia.data.layers[0].availableTileMatrixSets).toEqual({
+            'EPSG:4326': {
+                crs: 'EPSG:4326',
+                tileMatrixSet: {
+                    'ows:Identifier': 'EPSG:4326',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::4326',
+                    'TileMatrix': [ { 'ows:Identifier': 'EPSG:4326:0' } ]
+                }
+            },
+            'EPSG:900913': {
+                crs: 'EPSG:900913',
+                tileMatrixSet: {
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913',
+                    'TileMatrix': [ { 'ows:Identifier': 'EPSG:900913:0' } ]
+                }
+            }
+        });
     });
     it('getCurrentMediaResourcesParams', () => {
         const params = { page: 1 };

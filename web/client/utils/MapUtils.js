@@ -34,7 +34,9 @@ import {
     saveLayer,
     getGroupNodes,
     getNode,
-    extractSourcesFromLayers
+    extractSourcesFromLayers,
+    updateAvailableTileMatrixSetsOptions,
+    getTileMatrixSetLink
 } from './LayersUtils';
 import assign from 'object-assign';
 
@@ -506,9 +508,31 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
     // extract sources map
     const sources = extractSourcesFromLayers(layers);
 
-    /* removes tilematrixset from layers and reduced matrix ids to a list */
-    const formattedLayers = layers.map(l => {
-        return assign({}, l, {tileMatrixSet: l.tileMatrixSet && l.tileMatrixSet.length > 0, matrixIds: l.matrixIds && Object.keys(l.matrixIds)});
+    // removes tile matrix set from layers and replace it with a link if available in sources
+    const formattedLayers = layers.map(layer => {
+        const { availableTileMatrixSets, ...updatedLayer } = updateAvailableTileMatrixSetsOptions(layer);
+        return availableTileMatrixSets
+            ? {
+                ...updatedLayer,
+                availableTileMatrixSets: Object.keys(availableTileMatrixSets)
+                    .reduce((acc, tileMatrixSetId) => {
+                        const tileMatrixSetLink = getTileMatrixSetLink(layer, tileMatrixSetId);
+                        if (get({ sources }, tileMatrixSetLink)) {
+                            return {
+                                ...acc,
+                                [tileMatrixSetId]: {
+                                    ...omit(availableTileMatrixSets[tileMatrixSetId], 'tileMatrixSet'),
+                                    tileMatrixSetLink
+                                }
+                            };
+                        }
+                        return {
+                            ...acc,
+                            [tileMatrixSetId]: availableTileMatrixSets[tileMatrixSetId]
+                        };
+                    }, {})
+            }
+            : updatedLayer;
     });
 
     /* removes the geometryGeodesic property from the features in the annotations layer*/

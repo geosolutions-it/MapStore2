@@ -45,7 +45,8 @@ function getWMSURLs(urls) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-const createLayer = options => {
+const createLayer = _options => {
+    const options = WMTSUtils.parseTileMatrixSetOption(_options);
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmtsToLeafletOptions(options) || {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
