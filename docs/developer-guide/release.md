@@ -78,25 +78,27 @@ The following procedure allow you to migrate issues from zenhub release to githu
 ## Release
 
 - [ ] on **master branch** do and merge a PR for updating:
-    - [ ] "default stable branch" used in `createProject.js` script , in particular the utility/projects/projectLib.js file and commit
-    - [ ] `CHANGELOG.md` for **master** and **stable** [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
-- [ ] On **stable**branch, do and merge a PR for updating:
- - [ ] "default stable branch" used in `createProject.js` script , in particular the utility/projects/projectLib.js file and commit
- - [ ] Check `pom.xml` dependencies stable versions ( no `-SNAPSHOT` usage release).
- - [ ] Update the version of java modules on the stable branch to a stable, incremental version. Run `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false` to update package version, where `<VERSION>` is the version of the java packages (e.g. `1.3.1`). (`mvn:release:prepare` may also work. TODO: check this command)
- - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`. `project/standard/templates/web/pom.xml`
-- [ ] Release a stable `mapstore-services`. (from `2022.01.xx` also mapstore-webapp (java/web) should be deployed for new project system).
-  - [ ] Use `mvn clean install deploy -f java/pom.xml` to deploy `mapstore-services` and `mapstore-webapp`.
+  - [ ] **Only on major release** `stableBranch` in particular the `utility/projects/projectLib.js` file and commit (used in `createProject.js`)
+  - [ ] Update `CHANGELOG.md` [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
+- [ ] On **stable** branch, do and merge a PR for updating:
+  - [ ] **Only on major release** `stableBranch` in particular the `utility/projects/projectLib.js` file (used in `createProject.js`)
+  - [ ] Update `CHANGELOG.md` [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
+  - [ ] Update the version of java modules on the stable branch to a stable, incremental version. Run `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false` to update package version, where `<VERSION>` is the version of the java packages (e.g. `1.3.1`). (`mvn:release:prepare` may also work. TODO: check this command)
+  - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`. `project/standard/templates/web/pom.xml`
+- [ ] Release a stable `mapstore-services` and `mapstore-webapp`
+  - [ ] Run `mvn clean install deploy -f java/pom.xml` to deploy `mapstore-services` and `mapstore-webapp` on maven.geo-solutions.it .
 
-## MapStore Stable publishing
+## MapStore Stable deploy
 - [ ] check if there are changes to be ported to STABLE branch of [mapstore-datadir](https://github.com/geosolutions-it/mapstore-datadir/tree/STABLE) repo
   - [ ] if so prepare a PR to be merged
   - [ ] merge the PR and move on with the steps otherwise stop here
 - [ ] Launch the [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/) and wait for the MapStore2-Stable-EndPointsTests to complete as well
   - [ ] When previous two jobs are green you can:
-    - [ ] Change [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/) to build on stable branch **YYYY.XX.xx**
-    - [ ] Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo
-- [ ] test the change has been applied, login on mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key).
+    - [ ] Lunch [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/) 
+      - [ ] `branch` build on stable branch `YYYY.XX.xx`
+      - [ ] `version`: `YYYY.XX.mm`
+    - [ ] After "MapStore2-Stable-Build" finished, Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo
+    - [ ] test the change has been applied, login on https://mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key).
 
 
 ## Build and publishing release
@@ -131,7 +133,8 @@ The following procedure allow you to migrate issues from zenhub release to githu
 
 ## Finalize Release
 - [ ] Prepare a PR MapStore **stable branch** **YYYY.XX.xx** in order to :
-    - [ ] reset versions of java modules to `-SNAPSHOT` (`mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`) where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT). Make sure that only mapstore-services has changed
+    - [ ] reset versions of java modules to `-SNAPSHOT` (`mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`) where `<SNAPSHOT_VERSION>` is the version to set. (e.g. 1.2-SNAPSHOT). 
+    - [ ] Manually update project pom templates to use `mapstore-services` of `<SNAPSHOT_VERSION>`. `project/standard/templates/web/pom.xml`
     - [ ] on `package.json` increasing the minor "version" number. **0.x.&lt;number-of-minor-version&gt;**
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Optional - prepare a PR for updating release procedure, if needed
