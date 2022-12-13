@@ -54,6 +54,68 @@ describe('Test the WMTSUtils', () => {
             done();
         });
     });
+    it('parseTileMatrixSetOption', () => {
+        const layer = WMTSUtils.parseTileMatrixSetOption({
+            availableTileMatrixSets: {
+                'EPSG:4326': {
+                    crs: 'EPSG:4326',
+                    limits: [
+                        {
+                            "identifier": "EPSG:4326:0",
+                            "ranges": {
+                                "cols": {
+                                    "min": "0",
+                                    "max": "0"
+                                },
+                                "rows": {
+                                    "min": "0",
+                                    "max": "0"
+                                }
+                            }
+                        }
+                    ],
+                    tileMatrixSet: {
+                        'TileMatrix': [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    }
+                },
+                'custom': {
+                    crs: 'EPSG::900913',
+                    tileMatrixSet: {
+                        'TileMatrix': [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }
+                }
+            }
+        });
+        expect(layer.matrixIds).toEqual({
+            'EPSG:4326': [ { identifier: 'EPSG:4326:0', ranges: { cols: { min: '0', max: '0' }, rows: { min: '0', max: '0' } } } ],
+            'custom': [ { identifier: 'custom:0' } ],
+            'EPSG::900913': [ { identifier: 'custom:0' } ]
+        });
+        expect(layer.tileMatrixSet).toEqual([
+            {
+                'TileMatrix': [{
+                    'ows:Identifier': 'EPSG:4326:0'
+                }],
+                'ows:Identifier': "EPSG:4326",
+                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+            },
+            {
+                'TileMatrix': [{
+                    'ows:Identifier': 'custom:0'
+                }],
+                'ows:Identifier': "custom",
+                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+            }
+        ]);
+    });
     describe('getDefaultStyleIdentifier', () => {
         it('tests fetching the style when it is missing', () => {
             let style = WMTSUtils.getDefaultStyleIdentifier({});
