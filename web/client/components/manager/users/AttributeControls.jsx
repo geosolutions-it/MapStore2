@@ -22,7 +22,7 @@ export const CONTROL_TYPES = { // note: from server can be "optional", anc can h
 
 };
 
-const MultiValueSelect = ({onChange, options = [], value: currentValue, multiAttribute, separator = ",", isMulti, ...props}) => {
+export const MultiValueSelect = ({onChange, options = [], value: currentValue, multiAttribute, separator = ",", isMulti, ...props}) => {
     let wrapValue = [ ];
     if (multiAttribute) {
         wrapValue = castArray(currentValue);
