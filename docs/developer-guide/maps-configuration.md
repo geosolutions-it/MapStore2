@@ -297,7 +297,7 @@ in `localConfig.json`
 
 #### WMTS
 
-WMTS Layer require a source object in the `sources` object of the map configuration where to retrieve the `tileMatrixSet`. The source is identified by the `capabilitiesURL`. (if `capabilitiesURL` is not present it will use the `url`, in case of multiple URLs, the first one.).
+WMTS Layer require a source object in the `sources` object of the map configuration where to retrieve the `availableTileMatrixSets`. The source is identified by the `capabilitiesURL`. (if `capabilitiesURL` is not present it will use the `url`, in case of multiple URLs, the first one.).
 
 A WMTS layer can have a `requestEncoding` that is RESTful or KVP. In case of RESTful the URL is a template where to place the request parameters ( see the example below ), while in the KVP the request parameters are in the query string. See the WMTS standard for more details.
 
@@ -327,11 +327,12 @@ e.g. (RESTful):
         "allowedSRS": {
           "EPSG:3857": true
         },
-        "matrixIds": [
-          "google3857",
-          "EPSG:3857"
-        ],
-        "tileMatrixSet": true,
+        "availableTileMatrixSets": {
+          "google3857": {
+            "crs": "EPSG:3857",
+            "tileMatrixSetLink": "sources['https://sampleServer.org/wmts/1.0.0/WMTSCapabilities.xml'].tileMatrixSet['EPSG:3857']"
+          }
+        },
         // KVP (By default) or RESTful
         "requestEncoding": "RESTful",
         // identifier for the source
@@ -417,16 +418,74 @@ e.g. (KVP)
           "EPSG:3857": true,
           "EPSG:900913": true
         },
-        // list of the available matrixes for the layer
-        "matrixIds": [
-          "EPSG:3395",
-          "EPSG:32761",
-          "EPSG:3857",
-          "EPSG:4326",
-          "EPSG:900913",
-          "EPSG:32661"
-        ],
-        "tileMatrixSet": true
+        "availableTileMatrixSets": {
+          "EPSG:32761": {
+            "crs": "EPSG:32761",
+            "tileMatrixSetLink": "sources['http://some.domain/geoserver/gwc/service/wmts'].tileMatrixSet['EPSG:32761']"
+          },
+          "EPSG:3857": {
+            "crs": "EPSG:3857",
+            "tileMatrixSetLink": "sources['http://some.domain/geoserver/gwc/service/wmts'].tileMatrixSet['EPSG:3857']"
+          },
+          "EPSG:4326": {
+            "crs": "EPSG:4326",
+            "tileMatrixSetLink": "sources['http://some.domain/geoserver/gwc/service/wmts'].tileMatrixSet['EPSG:4326']"
+          },
+          "EPSG:32661": {
+            "crs": "EPSG:32661",
+            "tileMatrixSetLink": "sources['http://some.domain/geoserver/gwc/service/wmts'].tileMatrixSet['EPSG:32661']"
+          },
+          "EPSG:3395": {
+            "crs": "EPSG:3395",
+            "tileMatrixSetLink": "sources['http://some.domain/geoserver/gwc/service/wmts'].tileMatrixSet['EPSG:3395']"
+          },
+          "EPSG:900913": {
+            "crs": "EPSG:900913",
+            // these ranges limit the tiles available for the grid level
+            "limits": [
+              {
+                "identifier": "EPSG:900913:0",
+                "ranges": {
+                  "cols": {
+                    "min": "0",
+                    "max": "0"
+                  },
+                  "rows": {
+                    "min": "0",
+                    "max": "0"
+                  }
+                }
+              },
+              {
+                "identifier": "EPSG:900913:1",
+                "ranges": {
+                  "cols": {
+                    "min": "0",
+                    "max": "1"
+                  },
+                  "rows": {
+                    "min": "0",
+                    "max": "1"
+                  }
+                }
+              },
+              {
+                "identifier": "EPSG:900913:2",
+                "ranges": {
+                  "cols": {
+                    "min": "0",
+                    "max": "3"
+                  },
+                  "rows": {
+                    "min": "0",
+                    "max": "3"
+                  }
+                }
+              }
+            ],
+            "tileMatrixSetLink": "sources['http://some.domain/geoserver/gwc/service/wmts'].tileMatrixSet['EPSG:900913']"
+          }
+        }
       }
     ],
     // ...
@@ -450,18 +509,7 @@ e.g. (KVP)
                 "TileWidth": "256",
                 "TileHeight": "256",
                 "MatrixWidth": "1",
-                "MatrixHeight": "1",
-
-                "ranges": {
-                  "cols": {
-                    "min": "0",
-                    "max": "0"
-                  },
-                  "rows": {
-                    "min": "0",
-                    "max": "0"
-                  }
-                }
+                "MatrixHeight": "1"
               },
               {
                 "ows:Identifier": "EPSG:900913:1",
@@ -470,18 +518,7 @@ e.g. (KVP)
                 "TileWidth": "256",
                 "TileHeight": "256",
                 "MatrixWidth": "2",
-                "MatrixHeight": "2",
-                // these ranges limit the tiles available for the grid level
-                "ranges": {
-                  "cols": {
-                    "min": "0",
-                    "max": "1"
-                  },
-                  "rows": {
-                    "min": "0",
-                    "max": "1"
-                  }
-                }
+                "MatrixHeight": "2"
               },
               {
                 "ows:Identifier": "EPSG:900913:2",
@@ -490,23 +527,90 @@ e.g. (KVP)
                 "TileWidth": "256",
                 "TileHeight": "256",
                 "MatrixWidth": "4",
-                "MatrixHeight": "4",
-                "ranges": {
-                  "cols": {
-                    "min": "0",
-                    "max": "3"
-                  },
-                  "rows": {
-                    "min": "0",
-                    "max": "3"
-                  }
-                }
+                "MatrixHeight": "4"
               }
             ]
           }
         }
       }
     }
+  }
+```
+
+e.g. (embed tileMatrixSet without link to sources)
+
+```javascript
+{
+  "version": 2,
+  "map": {
+    // ...
+    "projection": "EPSG:900913",
+    "layers": [
+      // ...
+      {
+        // requestEncoding is KVP by default
+        "id": "EMSA:S52 Standard__6",
+        "name": "EMSA:S52 Standard",
+        "description": "S52 Standard",
+        "title": "S52 Standard",
+        "type": "wmts",
+        // if the capabilitiesURL is not present, the `url` will be used to identify the source.
+        // (for retro-compatibility with existing layers)
+        "url": "http://some.domain/geoserver/gwc/service/wmts",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": "-180.0",
+            "miny": "-79.99999999999945",
+            "maxx": "180.0",
+            "maxy": "83.99999999999999"
+          }
+        },
+        // list of allowed SRS
+        "allowedSRS": {
+          "EPSG:3857": true,
+          "EPSG:900913": true
+        },
+        "availableTileMatrixSets": {
+          "EPSG:900913": {
+            "crs": "EPSG:900913",
+            "tileMatrixSet": {
+              "ows:Identifier": "EPSG:900913",
+              "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913",
+              "TileMatrix": [
+                {
+                  "ows:Identifier": "EPSG:900913:0",
+                  "ScaleDenominator": "5.590822639508929E8",
+                  "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                  "TileWidth": "256",
+                  "TileHeight": "256",
+                  "MatrixWidth": "1",
+                  "MatrixHeight": "1"
+                },
+                {
+                  "ows:Identifier": "EPSG:900913:1",
+                  "ScaleDenominator": "2.7954113197544646E8",
+                  "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                  "TileWidth": "256",
+                  "TileHeight": "256",
+                  "MatrixWidth": "2",
+                  "MatrixHeight": "2"
+                },
+                {
+                  "ows:Identifier": "EPSG:900913:2",
+                  "ScaleDenominator": "1.3977056598772323E8",
+                  "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                  "TileWidth": "256",
+                  "TileHeight": "256",
+                  "MatrixWidth": "4",
+                  "MatrixHeight": "4"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
   }
 ```
 
