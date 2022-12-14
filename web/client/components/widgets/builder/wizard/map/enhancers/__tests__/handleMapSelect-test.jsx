@@ -11,7 +11,7 @@ import {createSink} from 'recompose';
 import expect from 'expect';
 import handleMapSelect from "../handleMapSelect";
 import axios from '../../../../../../../libs/ajax';
-import {isBoolean, isEmpty, isArray, omit} from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import MockAdapter from "axios-mock-adapter";
 
 describe('handleMapSelect enhancer', () => {
@@ -61,6 +61,7 @@ describe('handleMapSelect enhancer', () => {
                     "tileMatrixSet": {
                         "EPSG:4326": {
                             "ows:Identifier": "EPSG:4326",
+                            "ows:SupportedCRS": "EPSG:4326",
                             "TileMatrix": [
                                 {
                                     "ows:Identifier": "EPSG:4326:0"
@@ -89,23 +90,34 @@ describe('handleMapSelect enhancer', () => {
 
         const actions = {
             onMapSelected: ({maps}) => {
-                const [map] = maps;
-                expect(map.sources).toExist();
-                expect(isEmpty(map.sources)).toBe(false);
-                expect(map.layers).toExist();
-                expect(map.layers.length > 0).toBe(true);
-                expect(map.layers[0].tileMatrixSet).toExist();
-                expect(isBoolean(map.layers[0].tileMatrixSet)).toBe(false);
-                expect(map.layers[0].tileMatrixSet).toExist();
-                expect(isArray(map.layers[0].tileMatrixSet)).toBe(true);
+                try {
+                    const [map] = maps;
+                    expect(map.sources).toExist();
+                    expect(isEmpty(map.sources)).toBe(false);
+                    expect(map.layers).toExist();
+                    expect(map.layers.length > 0).toBe(true);
+                    expect(map.layers[0].availableTileMatrixSets).toBeTruthy();
+                    expect(map.layers[0].availableTileMatrixSets).toEqual({
+                        'EPSG:4326': {
+                            crs: 'EPSG:4326',
+                            tileMatrixSet: {
+                                'ows:Identifier': 'EPSG:4326',
+                                'ows:SupportedCRS': 'EPSG:4326',
+                                'TileMatrix': [ { 'ows:Identifier': 'EPSG:4326:0' } ]
+                            }
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
                 done();
             }
         };
 
         const sink = createSink( props => {
-            expect(props).toExist();
-            expect(props.map.id).toExist();
-            expect(props.onMapChoice).toExist();
+            expect(props).toBeTruthy();
+            expect(props.map.id).toBeTruthy();
+            expect(props.onMapChoice).toBeTruthy();
             props.onMapChoice(props.map);
             expect(['number', 'string'].includes(typeof props.map.id)).toBe(true);
         });
