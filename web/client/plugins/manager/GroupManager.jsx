@@ -95,7 +95,7 @@ class GroupManager extends React.Component {
  * Allows an administrator to browse user groups.
  * Renders in {@link #plugins.Manager|Manager} plugin.
  * @name GroupManager
- * @property {object[]} attributeFields attributes that should be shown in attributes tab of group manager.
+ * @property {object[]} [attributeFields] attributes that should be shown in attributes tab of group manager.
  * @property {boolean} [showMembersTab=true] shows/hides group members tab
  * @property {boolean} [showAttributesTab=false] shows/hides group attributes tab
  * @memberof plugins
