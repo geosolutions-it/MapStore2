@@ -44,6 +44,22 @@ const newUser = {
     "enabled": true
 };
 
+const attributeUser = {
+    id: 4,
+    name: "USER3",
+    role: "USER",
+    enabled: true,
+    groups: [{
+        groupName: "GROUP1"
+    }],
+    attribute: [{
+        name: "attribute1",
+        value: "value1"
+    }, {
+        name: "attribute2",
+        value: "value2"
+    }]
+};
 describe("Test UserDialog Component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -276,6 +292,27 @@ describe("Test UserDialog Component", () => {
         passwordField.value = 'password';
         ReactTestUtils.Simulate.click(closeBtn);
         expect(passwordField.value).toEqual('');
+    });
+    it('user attributes tab', () => {
+        let comp = ReactDOM.render(
+            <UserDialog show user={attributeUser} showAttributesTab attributeFields={[{ name: "attribute1" }, { name: "attribute2", controlType: "text" }]} />,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const tabs = document.querySelectorAll('.nav.nav-justified > li');
+        expect(tabs[0].getAttribute('class')).toBe('active');
+        const groupAttributesButton = tabs[2].children[0];
+        ReactTestUtils.Simulate.click(groupAttributesButton);
+        expect(tabs[2].getAttribute('class')).toBe('active');
+        const groupAttributesTab = document.querySelector('.tab-content > div:nth-child(2)');
+        const controlLabel = groupAttributesTab.querySelectorAll('.control-label')[0];
+        expect(controlLabel.innerHTML).toBe('attribute1');
+        const input = groupAttributesTab.querySelectorAll('input')[0];
+        expect(input.getAttribute('type')).toBe('text');
+        expect(input.value).toBe('value1');
+        const controlLabel2 = groupAttributesTab.querySelectorAll('.control-label')[1];
+        expect(controlLabel2.innerHTML).toBe('attribute2');
+        const input2 = groupAttributesTab.querySelectorAll('textarea')[0];
+        expect(input2.value).toBe('value2');
     });
 
     describe('unsaved changes modal', () => {
