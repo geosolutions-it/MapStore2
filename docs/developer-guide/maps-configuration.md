@@ -299,7 +299,7 @@ in `localConfig.json`
 
 WMTS Layer require a source object in the `sources` object of the map configuration where to retrieve the `availableTileMatrixSets`. The source is identified by the `capabilitiesURL`. (if `capabilitiesURL` is not present it will use the `url`, in case of multiple URLs, the first one.).
 
-A WMTS layer can have a `requestEncoding` that is RESTful or KVP. In case of RESTful the URL is a template where to place the request parameters ( see the example below ), while in the KVP the request parameters are in the query string. See the WMTS standard for more details.
+A WMTS layer has also a `requestEncoding` entry that can be valued with `RESTful` or `KVP`. In case of `RESTful` the URL is a template where to place the request parameters ( see the example below ), while in the `KVP` case the request parameters will be passed in the query string. See the WMTS standard for more details.
 
 e.g. (RESTful):
 
