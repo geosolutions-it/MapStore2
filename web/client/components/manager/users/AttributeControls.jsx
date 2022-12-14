@@ -48,7 +48,7 @@ export const MultiValueSelect = ({onChange, options = [], value: currentValue, m
     />);
 };
 
-const RemoteSelect = ({source, ...props}) => {
+export const RemoteSelect = ({source, ...props}) => {
     const {url, path, valueAttribute = "value", labelAttribute = "label"} = source;
     const [options, setOptions] = useState();
     const loadOptions = () => axios.get(url).then(({data}) => {
@@ -105,7 +105,7 @@ export default {
             : <MultiValueSelect  name={name} value={value} onChange={onChange}  {...controlAttributes} options={options ?? [{ value: value, label: value }]}/>,
     [CONTROL_TYPES.TEXT]: ({name, value, onChange = () => {}, disabled, controlAttributes = {} }) => <MultiValueControl componentClass="textarea" disabled={disabled} onChange={onChange} value={value} name={name}  {...controlAttributes} />,
     [CONTROL_TYPES.STRING]: ({name, value, onChange = () => {}, disabled, controlAttributes = {} }) => <MultiValueControl type="text" disabled={disabled} onChange={onChange} value={value} name={name}  {...controlAttributes} />,
-    [CONTROL_TYPES.DATE]: ({ name, value, onChange = () => { }, disabled, controlAttributes = {} }) => <DateControl disabled={disabled} onChange={onChange} value={value} name={name}  {...controlAttributes} />
+    [CONTROL_TYPES.DATE]: ({ name, value, onChange = () => { }, disabled, controlAttributes = {} }) => <DateControl disabled={disabled} onChange={onChange} value={value} name={name} {...controlAttributes} />
 };
 
 
