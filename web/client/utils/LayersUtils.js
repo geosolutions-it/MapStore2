@@ -18,7 +18,9 @@ import isEmpty from 'lodash/isEmpty';
 import findIndex from 'lodash/findIndex';
 import pick from 'lodash/pick';
 import isNil from 'lodash/isNil';
-import {addAuthenticationParameter} from './SecurityUtils';
+import get from 'lodash/get';
+import { addAuthenticationParameter } from './SecurityUtils';
+import { getEPSGCode } from './CoordinatesUtils';
 
 let LayersUtils;
 
@@ -206,11 +208,38 @@ export const deepChange = (nodes, findValue, propName, propValue) => {
     return [];
 };
 
+export const updateAvailableTileMatrixSetsOptions = ({ tileMatrixSet, matrixIds,  ...layer }) => {
+    if (!layer.availableTileMatrixSets && tileMatrixSet && matrixIds) {
+        const matrixIdsKeys = isArray(matrixIds) ? matrixIds : Object.keys(matrixIds);
+        const availableTileMatrixSets = matrixIdsKeys
+            .reduce((acc, key) => {
+                const tileMatrix = (tileMatrixSet || []).find((matrix) => matrix['ows:Identifier'] === key);
+                if (!tileMatrix) {
+                    return acc;
+                }
+                const limits = isObject(matrixIds) ? matrixIds[key] : null;
+                const isLayerLimit = !!(limits || []).find(({ ranges }) => !!ranges);
+                const tileMatrixCRS = getEPSGCode(tileMatrix['ows:SupportedCRS'] || '');
+                return {
+                    ...acc,
+                    [key]: {
+                        crs: tileMatrixCRS,
+                        ...(isLayerLimit && { limits }),
+                        tileMatrixSet: tileMatrix
+                    }
+                };
+            }, {});
+        return { ...layer, availableTileMatrixSets };
+    }
+    return layer;
+};
+
 /**
  * Extracts the sourceID of a layer.
  * @param {object} layer the layer object
  */
 export const getSourceId = (layer = {}) => layer.capabilitiesURL || head(castArray(layer.url));
+export const getTileMatrixSetLink = (layer = {}, tileMatrixSetId) => `sources['${getSourceId(layer)}'].tileMatrixSet['${tileMatrixSetId}']`;
 /**
  * It extracts tile matrix set from sources and add them to the layer
  *
@@ -218,54 +247,80 @@ export const getSourceId = (layer = {}) => layer.capabilitiesURL || head(castArr
  * @param layer {object} layer to check
  * @return {object} new layers with tileMatrixSet and matrixIds (if needed)
  */
-export const  extractTileMatrixFromSources = (sources, layer) => {
+export const extractTileMatrixFromSources = (sources, layer) => {
     if (!sources || !layer) {
         return {};
+    }
+    if (layer.availableTileMatrixSets) {
+        const availableTileMatrixSets =  Object.keys(layer.availableTileMatrixSets)
+            .reduce((acc, tileMatrixSetId) => {
+                const tileMatrixSetLink = getTileMatrixSetLink(layer, tileMatrixSetId);
+                const tileMatrixSet = get({ sources }, tileMatrixSetLink);
+                if (tileMatrixSet) {
+                    return {
+                        ...acc,
+                        [tileMatrixSetId]: {
+                            ...layer.availableTileMatrixSets[tileMatrixSetId],
+                            tileMatrixSet
+                        }
+                    };
+                }
+                return {
+                    ...acc,
+                    [tileMatrixSetId]: layer.availableTileMatrixSets[tileMatrixSetId]
+                };
+            }, {});
+        return { availableTileMatrixSets };
     }
     if (!isArray(layer.matrixIds) && isObject(layer.matrixIds)) {
         layer.matrixIds = [...Object.keys(layer.matrixIds)];
     }
     const sourceId = getSourceId(layer);
-    const matrixIds = layer.matrixIds && layer.matrixIds.reduce((a, mI) => {
-        const ids = sources[sourceId] && sources[sourceId].tileMatrixSet && sources[sourceId].tileMatrixSet[mI] && sources[sourceId].tileMatrixSet[mI].TileMatrix.map(i => ({identifier: i['ows:Identifier'], ranges: i.ranges})) || [];
-        return ids.length === 0 ? assign({}, a) : assign({}, a, {[mI]: [...ids]});
+    const matrixIds = layer.matrixIds && layer.matrixIds.reduce((acc, mI) => {
+        const ids = (sources?.[sourceId]?.tileMatrixSet?.[mI]?.TileMatrix || [])
+            .map(i => ({
+                identifier: i['ows:Identifier'],
+                ranges: i.ranges
+            }));
+        return ids.length === 0 ? acc : { ...acc, [mI]: [...ids] };
     }, {}) || null;
     const tileMatrixSet = layer.tileMatrixSet && layer.matrixIds.map(mI => sources[sourceId].tileMatrixSet[mI]).filter(v => v) || null;
-    return tileMatrixSet && matrixIds && {tileMatrixSet, matrixIds} || {};
+    const newTileMatrixOptions = updateAvailableTileMatrixSetsOptions((tileMatrixSet && matrixIds) ? { tileMatrixSet, matrixIds } : {});
+    return newTileMatrixOptions;
 };
 
 /**
  * It extracts tile matrix set from layers and add them to sources map object
  *
- * @param  {object} sourcesFromLayers layers grouped by url
+ * @param  {object} groupedLayersByUrl layers grouped by url
  * @param {object} [sources] current sources map object
  * @return {object} new sources object with data from layers
  */
-export const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) => {
-    return sourcesFromLayers && Object.keys(sourcesFromLayers).reduce((src, url) => {
-        const matrixIds = sourcesFromLayers[url].reduce((a, b) => {
-            return assign(a, { [b.id || b.name]: { srs: [...Object.keys(b.matrixIds)], matrixIds: assign({}, b.matrixIds) } });
-        }, {});
-
-        const newMatrixSet = sourcesFromLayers[url].reduce((nMS, l) => {
-
-            const matrixSetObject = l.tileMatrixSet.reduce((i, tM) => assign({}, i, { [tM['ows:Identifier']]: assign({}, tM) }), {});
-
-            const matrixFilteredByLayers = Object.keys(matrixSetObject).reduce((mFBL, key) => {
-
-                const layers = Object.keys(matrixIds)
-                    .filter(layerId => head(matrixIds[layerId].srs.filter(mId => mId === key)))
-                    .map(layerId => matrixIds[layerId].matrixIds[key]);
-
-                const TileMatrix = layers[0] && matrixSetObject[key].TileMatrix.map((m, idx) => layers[0][idx] && layers[0][idx].ranges ? assign({}, m, { ranges: layers[0][idx].ranges }) : assign({}, m));
-
-                return !head(layers) ? assign({}, mFBL) : assign({}, mFBL, { [key]: assign({}, matrixSetObject[key], { TileMatrix }) });
+export const extractTileMatrixSetFromLayers = (groupedLayersByUrl, sources = {}) => {
+    return Object.keys(groupedLayersByUrl || [])
+        .reduce((acc, url) => {
+            const layers = groupedLayersByUrl[url];
+            const tileMatrixSet = layers.reduce((layerAcc, layer) => {
+                const { availableTileMatrixSets } = updateAvailableTileMatrixSetsOptions(layer);
+                return {
+                    ...layerAcc,
+                    ...Object.keys(availableTileMatrixSets).reduce((tileMatrixSetAcc, tileMatrixSetId) => ({
+                        ...tileMatrixSetAcc,
+                        [tileMatrixSetId]: availableTileMatrixSets[tileMatrixSetId].tileMatrixSet
+                    }), {})
+                };
             }, {});
-
-            return assign({}, nMS, matrixFilteredByLayers);
-        }, {});
-        return assign({}, src, { [url]: assign({}, sources[url] || {}, { tileMatrixSet: assign({}, src[url] && src[url].tileMatrixSet || {}, newMatrixSet) }) });
-    }, assign({}, sources)) || sources;
+            return {
+                ...acc,
+                [url]: {
+                    ...sources?.[url],
+                    tileMatrixSet: {
+                        ...sources?.[url]?.tileMatrixSet,
+                        ...tileMatrixSet
+                    }
+                }
+            };
+        }, { ...sources });
 };
 
 /**
@@ -274,12 +329,19 @@ export const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) 
  */
 export const extractSourcesFromLayers = layers => {
     /* layers grouped by url to create the source object */
-    const groupByUrl = layers.filter(l => l.tileMatrixSet).reduce((a, l) => {
-        const sourceId = getSourceId(l);
-        return a[sourceId] ? assign({}, a, { [sourceId]: [...a[sourceId], l] }) : assign({}, a, { [sourceId]: [l] });
-    }, {});
+    const groupByUrl = layers
+        .filter(layer => layer.tileMatrixSet || layer.availableTileMatrixSets)
+        .reduce((acc, layer) => {
+            const sourceId = getSourceId(layer);
+            return {
+                ...acc,
+                [sourceId]: acc[sourceId]
+                    ? [...acc[sourceId], layer]
+                    : [layer]
+            };
+        }, {});
 
-    /* extract and add tilematrixset to sources object  */
+    /* extract and add tile matrix sets to sources object  */
     return extractTileMatrixSetFromLayers(groupByUrl);
 };
 
@@ -552,6 +614,7 @@ export const saveLayer = (layer) => {
         allowedSRS: layer.allowedSRS,
         matrixIds: layer.matrixIds,
         tileMatrixSet: layer.tileMatrixSet,
+        availableTileMatrixSets: layer.availableTileMatrixSets,
         requestEncoding: layer.requestEncoding,
         dimensions: layer.dimensions || [],
         maxZoom: layer.maxZoom,
@@ -577,7 +640,6 @@ export const saveLayer = (layer) => {
     },
     layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},
-    layer.credits ? { credits: layer.credits } : {},
     layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
     layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {},
     layer.options ? { options: layer.options } : {},

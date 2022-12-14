@@ -7,15 +7,14 @@
  */
 
 import { getConfigProp, cleanDuplicatedQuestionMarks } from '../../utils/ConfigUtils';
-import assign from 'object-assign';
-
-import { castArray, isObject, head, isArray, isNil } from 'lodash';
+import { castArray, isObject, isArray, isNil } from 'lodash';
 import { getEPSGCode } from '../../utils/CoordinatesUtils';
 
 import {
     getTileMatrixSet,
     getGetTileURL,
-    getCapabilitiesURL
+    getCapabilitiesURL,
+    parseTileMatrixSetOption
 } from '../../utils/WMTSUtils';
 
 import {
@@ -102,9 +101,8 @@ const recordToLayer = (record, {
         dimensions: record.dimensions || [],
         name: ogcServiceReference.params && ogcServiceReference.params.name,
         title: record.title || ogcServiceReference.params && ogcServiceReference.params.name,
-        matrixIds: record.matrixIds || [],
         description: record.description || "",
-        tileMatrixSet: record.tileMatrixSet || [],
+        availableTileMatrixSets: record.availableTileMatrixSets || [],
         credits: !getConfigProp("noCreditsFromCatalog") && record.credits,
         bbox: {
             crs: record.boundingBox.crs,
@@ -136,30 +134,40 @@ export const getCatalogRecords = (records, options) => {
             if (urls.length === 1) {
                 urls = urls[0];
             }
+
             const capabilitiesURL = getCapabilitiesURL(record);
-            const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
-                const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
-                const tileMatrixSRS = tileMatrix && getEPSGCode(tileMatrix["ows:SupportedCRS"]);
-                const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
-                    identifier: limit.TileMatrix,
-                    ranges: {
-                        cols: {
-                            min: limit.MinTileCol,
-                            max: limit.MaxTileCol
-                        },
-                        rows: {
-                            min: limit.MinTileRow,
-                            max: limit.MaxTileRow
+            const availableTileMatrixSets = castArray(record?.TileMatrixSetLink || [])
+                .reduce((acc, tileMatrixSetLink) => {
+                    const tileMatrix = castArray(record?.TileMatrixSet || [])
+                        .find((matrix) => matrix['ows:Identifier'] === tileMatrixSetLink.TileMatrixSet);
+                    const tileMatrixSRS = tileMatrix && getEPSGCode(tileMatrix['ows:SupportedCRS']);
+                    const limits = tileMatrixSetLink?.TileMatrixSetLimits
+                        ? castArray(tileMatrixSetLink?.TileMatrixSetLimits?.TileMatrixLimits || [])
+                            .map((limit) => ({
+                                identifier: limit.TileMatrix,
+                                ranges: {
+                                    cols: {
+                                        min: limit.MinTileCol,
+                                        max: limit.MaxTileCol
+                                    },
+                                    rows: {
+                                        min: limit.MinTileRow,
+                                        max: limit.MaxTileRow
+                                    }
+                                }
+                            }))
+                        : null;
+                    return {
+                        ...acc,
+                        [tileMatrix['ows:Identifier']]: {
+                            crs: tileMatrixSRS,
+                            ...(limits && { limits }),
+                            tileMatrixSet: tileMatrix
                         }
-                    }
-                })) || tileMatrix.TileMatrix.map((matrix) => ({
-                    identifier: matrix["ows:Identifier"]
-                }));
-                return assign(previous, {
-                    [tileMatrix["ows:Identifier"]]: levels,
-                    [tileMatrixSRS]: levels
-                });
-            }, {});
+                    };
+                }, {});
+
+            const { matrixIds } = parseTileMatrixSetOption({ availableTileMatrixSets });
 
             const bbox = getWMTSBBox(record);
             const references = [{
@@ -183,8 +191,7 @@ export const getCatalogRecords = (records, options) => {
                 capabilitiesURL: capabilitiesURL,
                 queryable: record.queryable,
                 requestEncoding: record.requestEncoding,
-                tileMatrixSet: record.TileMatrixSet,
-                matrixIds,
+                availableTileMatrixSets,
                 format: record.format,
                 TileMatrixSetLink: castArray(record.TileMatrixSetLink),
                 boundingBox: {

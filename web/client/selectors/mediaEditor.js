@@ -45,7 +45,7 @@ export const selectedItemSelector = createSelector(
                 data: {
                     ...item.data,
                     layers: item.data.layers.map(layer => {
-                        if (layer.tileMatrixSet && item.data.sources) {
+                        if ((layer.tileMatrixSet || layer.availableTileMatrixSets) && item.data.sources) {
                             const tileMatrix = extractTileMatrixFromSources(item.data.sources, layer);
                             return {...layer, ...tileMatrix};
                         }

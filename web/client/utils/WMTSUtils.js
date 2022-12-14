@@ -143,11 +143,34 @@ export const sortTileMatrix = (tileMatrixSet, ids)  => {
                 .filter(t => ids ? ids.map(({ identifier } = {}) => identifier).indexOf(t["ows:Identifier"]) >= 0 : true)
     };
 };
+
+export const parseTileMatrixSetOption = (options) => {
+    if (options?.availableTileMatrixSets) {
+        const tileMatrixSetKeys = Object.keys(options.availableTileMatrixSets);
+        const matrixIds = tileMatrixSetKeys.reduce((acc, key) => {
+            const limits = options.availableTileMatrixSets[key].limits
+                ? options.availableTileMatrixSets[key].limits
+                : options.availableTileMatrixSets[key].tileMatrixSet.TileMatrix
+                    .map((matrix) => ({ identifier: matrix['ows:Identifier'] }));
+            return {
+                ...acc,
+                [key]: limits,
+                [options.availableTileMatrixSets[key].crs]: limits
+            };
+        }, {});
+        const tileMatrixSet = tileMatrixSetKeys
+            .map((key) => options.availableTileMatrixSets[key].tileMatrixSet);
+        return { ...options, matrixIds, tileMatrixSet };
+    }
+    return options;
+};
+
 /**
  * Parse layer options to get back the tile matrix sub-set that can be used.
  * This allows to have matrixIds and tileMatrixSet correctly sorted and filtered to match
  */
-export const getTileMatrix = (options, srs) => {
+export const getTileMatrix = (_options, srs) => {
+    const options = parseTileMatrixSetOption(_options);
     const tileMatrixSetName = getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     const ids = options.matrixIds && getMatrixIds(options.matrixIds, tileMatrixSetName || srs);
     const tileMatrixSet = sortTileMatrix(

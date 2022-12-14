@@ -95,7 +95,8 @@ const getMatrixOptions = (options, srs) => {
     return {tileMatrixSet, matrixIds};
 };
 
-function wmtsToCesiumOptions(options) {
+function wmtsToCesiumOptions(_options) {
+    const options = WMTSUtils.parseTileMatrixSetOption(_options);
     let srs = 'EPSG:4326';
     let { tileMatrixSet: tileMatrixSetID, matrixIds} = getMatrixOptions(options, srs);
     if (matrixIds.length === 0) {
