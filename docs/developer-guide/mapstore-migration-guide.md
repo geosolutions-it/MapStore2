@@ -20,6 +20,17 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2022.02.xx to 2023.01.00
+
+### Update database schema
+
+This new version introduced the attributes for user groups. This requires an update to your database applying the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc/sql/migration). You have to apply the script `*-migration-from-v.1.5.0-to-v2.0.0` of your database. For instance on postgreSQL, you will have to execute the script `postgresql/postgresql-migration-from-v.1.5.0-to-v2.0.0`.
+
+!!! note:
+    The script assumes you set the search path for your db schema. Usually in postgres it is `geostore`. So make you sure to set the proper search path before to execute the script in postgres. (e.g. `SET search_path TO geostore;` )
+
+
+
 ## Migration from 2022.02.00 to 2022.02.01
 
 ### Package.json scripts migration
