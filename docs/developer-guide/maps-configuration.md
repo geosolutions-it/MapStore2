@@ -297,7 +297,22 @@ in `localConfig.json`
 
 #### WMTS
 
-WMTS Layer require a source object in the `sources` object of the map configuration where to retrieve the `availableTileMatrixSets`. The source is identified by the `capabilitiesURL`. (if `capabilitiesURL` is not present it will use the `url`, in case of multiple URLs, the first one.).
+The WMTS Layer configuration has a `availableTileMatrixSets` object that lists all the available tile matrix sets for the specific layer.
+Every entry of `availableTileMatrixSets`, identified by the ID of the tile matrix set, contains the `crs` and one of `tileMatrixSet` or `tileMatrixSetLink`. The first contains the definition of the tile matrix set, while the second contain the path to the tile matrix set definition in the JSON of the map configuration.
+This object can also optionally contain a `limits` entry, containing the specific limits of the layer inside the tile matrix set.
+
+```json
+{
+   "type": "wmts",
+    "availableTileMatrixSets": {
+          "google3857": {
+            "crs": "EPSG:3857",
+            "tileMatrixSetLink": "sources['https://sampleServer.org/wmts/1.0.0/WMTSCapabilities.xml'].tileMatrixSet['EPSG:3857']"
+          }
+        }
+```
+
+The `sources` entry of the map configuration usually contains the tile matrix sets definitions of the layers of the map, stored by their `capabilitiesURL` (if `capabilitiesURL` is not present it will use the `url` of the layer, in case of multiple URLs, the first one.).
 
 A WMTS layer has also a `requestEncoding` entry that can be valued with `RESTful` or `KVP`. In case of `RESTful` the URL is a template where to place the request parameters ( see the example below ), while in the `KVP` case the request parameters will be passed in the query string. See the WMTS standard for more details.
 
