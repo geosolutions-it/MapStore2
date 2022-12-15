@@ -271,4 +271,33 @@ describe('Test correctness of the GeoStore APIs', () => {
             expect(data).toBe(1);
         });
     });
+    it('updateGroup with attributes', (done) => {
+        const sampleResponse = {
+            "UserGroup": {
+                "description": "description",
+                "enabled": true,
+                "groupName": "testGroup1",
+                "id": 10,
+                "attributes": [
+                    {
+                        "name": "notes",
+                        "value": "test"
+                    }
+                ]
+            }
+        };
+
+        mockAxios.onPut().reply((data) => {
+            expect(JSON.parse(data.data)).toEqual(sampleResponse);
+            return [200, "10"];
+        });
+        API.updateGroup({ id: 10, groupName: 'testGroup1', description: "description", enabled: true, attributes: [{name: "notes", value: "test"}]})
+            .then(data => {
+                expect(data).toEqual("10");
+                done();
+            })
+            .catch(e => {
+                done(e);
+            });
+    });
 });

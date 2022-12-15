@@ -31,6 +31,7 @@ This new version introduced the attributes for user groups. This requires an upd
 
 !!! node
     If you don't want to or you can not execute the migration script, you can set in `geostore-datasource-ovr.properities` the following property to make MapStore update the database for you
+
     ```properties
     geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=update
     ```
