@@ -29,7 +29,7 @@ This new version introduced the attributes for user groups. This requires an upd
 !!! note:
     The script assumes you set the search path for your db schema. Usually in postgres it is `geostore`. So make you sure to set the proper search path before to execute the script in postgres. (e.g. `SET search_path TO geostore;` )
 
-!!! node
+!!! note
     If you don't want to or you can not execute the migration script, you can set in `geostore-datasource-ovr.properities` the following property to make MapStore update the database for you
 
     ```properties
