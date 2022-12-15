@@ -288,12 +288,97 @@ describe('Test correctness of the GeoStore APIs', () => {
         };
 
         mockAxios.onPut().reply((data) => {
+            expect(data.baseURL).toEqual("/rest/geostore/");
+            expect(data.url).toEqual("usergroups/group/10");
             expect(JSON.parse(data.data)).toEqual(sampleResponse);
             return [200, "10"];
         });
         API.updateGroup({ id: 10, groupName: 'testGroup1', description: "description", enabled: true, attributes: [{name: "notes", value: "test"}]})
             .then(data => {
                 expect(data).toEqual("10");
+                done();
+            })
+            .catch(e => {
+                done(e);
+            });
+    });
+    it('updateGroup with usergroups', (done) => {
+        const group = {
+            "status": "modified",
+            "description": "test",
+            "enabled": true,
+            "groupName": "testGroup1",
+            "id": 10,
+            "attributes": [
+                {
+                    "name": "notes",
+                    "value": "asdasd"
+                }
+            ],
+            "restUsers": {
+                "User": {
+                    "groupsNames": [
+                        "everyone",
+                        "testGroup1"
+                    ],
+                    "id": 13,
+                    "name": "user",
+                    "role": "ADMIN"
+                }
+            },
+            "users": [
+                {
+                    "groupsNames": [
+                        "everyone",
+                        "testGroup1"
+                    ],
+                    "id": 13,
+                    "name": "user",
+                    "role": "ADMIN"
+                }
+            ],
+            "newUsers": [
+                {
+                    "enabled": true,
+                    "groups": {
+                        "group": {
+                            "enabled": true,
+                            "groupName": "everyone",
+                            "id": 9
+                        }
+                    },
+                    "id": 14,
+                    "name": "test",
+                    "role": "USER"
+                }
+            ]
+        };
+        const checks = {};
+
+        mockAxios.onPut().reply((data) => {
+            expect(data.baseURL).toEqual("/rest/geostore/");
+            expect(data.url).toEqual("usergroups/group/10");
+            checks.put = true;
+            return [200, "10"];
+        });
+        mockAxios.onDelete().reply((data) => {
+            expect(data.baseURL).toEqual("/rest/geostore/");
+            expect(data.url).toEqual("/usergroups/group/13/10/");
+            checks.delete = true;
+            return [204, ""];
+        });
+        mockAxios.onPost().reply((data) => {
+            expect(data.baseURL).toEqual("/rest/geostore/");
+            expect(data.url).toEqual("/usergroups/group/14/10/");
+            checks.post = true;
+            return [204, "10"];
+        });
+        API.updateGroup(group)
+            .then(data => {
+                expect(data).toEqual("10");
+                expect(checks.put).toBe(true);
+                expect(checks.delete).toBe(true);
+                expect(checks.post).toBe(true);
                 done();
             })
             .catch(e => {

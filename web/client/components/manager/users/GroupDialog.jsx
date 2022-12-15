@@ -63,10 +63,13 @@ class GroupDialog extends React.Component {
     static defaultProps = {
         group: {},
         availableUsers: [],
-        attributeFields: [],
+        attributeFields: [{
+            name: 'notes',
+            controlType: "text"
+        }],
         searchUsers: () => {},
         showMembersTab: true,
-        showAttributesTab: false,
+        showAttributesTab: true,
         onClose: () => {},
         onChange: () => {},
         onSave: () => {},
@@ -125,7 +128,6 @@ class GroupDialog extends React.Component {
                     key="description"
                     name="description"
                     maxLength={this.props.descLimit}
-                    readOnly={this.props.group && this.props.group.id}
                     style={this.props.inputStyle}
                     onChange={this.handleChange}
                     value={this.props.group && this.props.group.description || ""}/>
