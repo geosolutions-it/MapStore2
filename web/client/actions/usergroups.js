@@ -31,7 +31,6 @@ export const USERGROUPMANAGER_SEARCH_TEXT_CHANGED = 'USERGROUPMANAGER_SEARCH_TEX
 import API from '../api/GeoStoreDAO';
 
 import { get } from 'lodash';
-import assign from 'object-assign';
 
 export function getUserGroupsLoading(text, start, limit) {
     return {
@@ -204,15 +203,17 @@ export function createError(group, error) {
         error
     };
 }
+
 export function saveGroup(group, options = {}) {
     return (dispatch) => {
-        let newGroup = assign({}, {...group});
+        let newGroup =  {...group};
         if (newGroup && newGroup.lastError) {
             delete newGroup.lastError;
         }
+        // update group
         if (newGroup && newGroup.id) {
             dispatch(savingGroup(newGroup));
-            return API.updateGroupMembers(newGroup, options).then((groupDetails) => {
+            return API.updateGroup(newGroup, options).then((groupDetails) => {
                 dispatch(savedGroup(groupDetails));
                 dispatch(getUserGroups());
             }).catch((error) => {

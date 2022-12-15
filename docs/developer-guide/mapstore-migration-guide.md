@@ -97,6 +97,20 @@ logger.restsrv.level=  INFO
 
 Note that the second part of the property key in the log4j2 (`restsrv` in the example) can be whatever string of choice, with the only requirment to be the same for the `name` and the `level` property.
 
+### Update database schema
+
+This new version introduced the attributes for user groups. This requires an update to your database applying the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc/sql/migration). You have to apply the script `*-migration-from-v.1.5.0-to-v2.0.0` of your database. For instance on postgreSQL, you will have to execute the script `postgresql/postgresql-migration-from-v.1.5.0-to-v2.0.0`.
+
+!!! note:
+    The script assumes you set the search path for your db schema. Usually in postgres it is `geostore`. So make you sure to set the proper search path before to execute the script in postgres. (e.g. `SET search_path TO geostore;` )
+
+!!! note:
+    If you don't want to or you can not execute the migration script, you can set in `geostore-datasource-ovr.properities` the following property to make MapStore update the database for you
+
+    ```properties
+    geostoreEntityManagerFactory.jpaPropertyMap[hibernate.hbm2ddl.auto]=update
+    ``
+
 ## Migration from 2022.02.00 to 2022.02.01
 
 ### Package.json scripts migration

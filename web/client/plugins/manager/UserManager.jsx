@@ -23,6 +23,7 @@ import Button from '../../components/misc/Button';
 
 class UserManager extends React.Component {
     static propTypes = {
+        attributeFields: PropTypes.array,
         onNewUser: PropTypes.func,
         splitTools: PropTypes.bool,
         isSearchClickable: PropTypes.bool,
@@ -76,7 +77,7 @@ class UserManager extends React.Component {
                 <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>&nbsp;<span><Glyphicon glyph="1-user-add" /><Message msgId="users.newUser" /></span></Button>
             </Grid>
             <UserGrid />
-            <UserDialog />
+            <UserDialog attributeFields={this.props.attributeFields} />
             <UserDeleteConfirm />
         </div>);
     }
@@ -87,6 +88,7 @@ class UserManager extends React.Component {
  * Renders in {@link #plugins.Manager|Manager} plugin.
  * @name UserManager
  * @memberof plugins
+ * @property {object[]} attributeFields attributes that should be shown in attributes tab of user dialog.
  * @class
  */
 export default {

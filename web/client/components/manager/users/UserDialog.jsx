@@ -7,7 +7,6 @@
 */
 
 import PropTypes from 'prop-types';
-
 import React from 'react';
 
 import {
@@ -25,13 +24,14 @@ import tooltip from '../../../components/misc/enhancers/tooltip';
 const GlyphiconTooltip = tooltip(Glyphicon);
 import Dialog from '../../../components/misc/Dialog';
 import UserGroups from './UserGroups';
-import assign from 'object-assign';
 import Message from '../../../components/I18N/Message';
 import Spinner from 'react-spinkit';
-import { findIndex } from 'lodash';
+import { findIndex, castArray } from 'lodash';
 import CloseConfirmButton from './CloseConfirmButton';
 import './style/userdialog.css';
 import Button from '../../../components/misc/Button';
+import controls from './AttributeControls';
+
 /**
  * A Modal window to show password reset form
  */
@@ -50,7 +50,7 @@ class UserDialog extends React.Component {
         style: PropTypes.object,
         buttonSize: PropTypes.string,
         inputStyle: PropTypes.object,
-        attributes: PropTypes.array,
+        attributeFields: PropTypes.array,
         minPasswordSize: PropTypes.number,
         hidePasswordFields: PropTypes.bool,
         buttonTooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
@@ -67,12 +67,13 @@ class UserDialog extends React.Component {
         style: {},
         buttonSize: "small",
         includeCloseButton: true,
-        attributes: [{
+        attributeFields: [{
             name: "email"
         }, {
             name: "company"
         }, {
-            name: "notes"
+            name: "notes",
+            controlType: "text"
         }],
         inputStyle: {
             height: "32px",
@@ -90,9 +91,11 @@ class UserDialog extends React.Component {
         key: 1
     };
     // Only to keep the selected button, not for the modal window
-
+    getAttributes = () => {
+        return this.props.user?.attribute || [];
+    }
     getAttributeValue = (name) => {
-        let attrs = this.props.user && this.props.user.attribute;
+        let attrs = this.getAttributes();
         if (attrs) {
             let index = findIndex(attrs, a => a.name === name);
             return attrs[index] && attrs[index].value;
@@ -191,19 +194,29 @@ class UserDialog extends React.Component {
             <div style={{ fontStyle: 'italic' }}><Message msgId="users.requiredFiedsMessage"/></div>
         </div>);
     };
-
     renderAttributes = () => {
-        return this.props.attributes.map((attr, index) => {
-            return (<FormGroup key={"form-n-" + index} style={{marginTop: "10px"}}>
-                <ControlLabel>{attr.name}</ControlLabel>
-                <FormControl ref={"attribute." + attr.name}
-                    key={"attribute." + attr.name}
-                    name={"attribute." + attr.name}
-                    type="text"
-                    style={this.props.inputStyle}
-                    onChange={this.handleChange}
-                    value={this.getAttributeValue(attr.name) || ""} /></FormGroup>);
-        });
+        const byName = attrName => ({ name }) => attrName === name;
+        const attributes = this.getAttributes();
+        return <>
+            {
+                this.props.attributeFields.map(({ name, title, controlType, ...rest }) => {
+                    const value = this.getAttributeValue(name);
+                    const Control = controls[controlType ?? "string"];
+                    return (<div style={{ marginTop: "10px" }}>
+                        <label key="member-label" className="control-label">{title ?? name}</label>
+                        <Control
+                            name={"attribute." + name}
+                            {...rest}
+                            value={value}
+                            onChange={(newValue) => {
+                                // newValue can be an array or a single value to support multiple attributes of the same name.
+                                const newAttributes = attributes.filter(v => !byName(name)(v)).concat(castArray(newValue).map(vv => ({ name, value: vv })));
+                                this.props.onChange("attribute", newAttributes);
+                            }} />
+                    </div>);
+                })
+            }
+        </>;
     };
 
     renderSaveButtonContent = () => {
@@ -249,7 +262,7 @@ class UserDialog extends React.Component {
     };
 
     render() {
-        return (<Dialog modal draggable={false} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+        return (!this.props.show ? null : <Dialog modal draggable={false} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={this.props.style}>
 
             <span role="header">
                 <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
@@ -278,9 +291,14 @@ class UserDialog extends React.Component {
     }
 
     close = () => {
+        if (this.newPasswordField) {
+            this.newPasswordField.value = '';
+        }
+        if (this.confirmPasswordField) {
+            this.confirmPasswordField.value = '';
+        }
+
         this.props.onClose();
-        this.newPasswordField.value = '';
-        this.confirmPasswordField.value = '';
     }
 
     isMainPasswordValid = (password) => {
