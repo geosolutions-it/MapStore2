@@ -20,7 +20,7 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2022.02.xx to 2023.01.00
+## Migration from 2022.02.02 to 2023.01.00
 
 ### Update database schema
 
@@ -29,7 +29,7 @@ This new version introduced the attributes for user groups. This requires an upd
 !!! note:
     The script assumes you set the search path for your db schema. Usually in postgres it is `geostore`. So make you sure to set the proper search path before to execute the script in postgres. (e.g. `SET search_path TO geostore;` )
 
-!!! note
+!!! note:
     If you don't want to or you can not execute the migration script, you can set in `geostore-datasource-ovr.properities` the following property to make MapStore update the database for you
 
     ```properties
