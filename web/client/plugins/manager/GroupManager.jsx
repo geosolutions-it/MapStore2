@@ -20,6 +20,7 @@ import SearchBar from '../../components/search/SearchBar';
 import GroupDeleteConfirm from './users/GroupDeleteConfirm';
 import GroupDialog from './users/GroupDialog';
 import GroupsGrid from './users/GroupGrid';
+import usergroups from '../../reducers/usergroups';
 
 class GroupManager extends React.Component {
     static propTypes = {
@@ -35,7 +36,10 @@ class GroupManager extends React.Component {
         onSearchReset: PropTypes.func,
         onSearchTextChange: PropTypes.func,
         start: PropTypes.number,
-        limit: PropTypes.number
+        limit: PropTypes.number,
+        showMembersTab: PropTypes.bool,
+        showAttributesTab: PropTypes.bool,
+        attributeFields: PropTypes.array
     };
 
     static defaultProps = {
@@ -78,7 +82,10 @@ class GroupManager extends React.Component {
                 </Button>
             </Grid>
             <GroupsGrid />
-            <GroupDialog />
+            <GroupDialog
+                showMembersTab={this.props.showMembersTab}
+                showAttributesTab={this.props.showAttributesTab}
+                attributeFields={this.props.attributeFields}/>
             <GroupDeleteConfirm />
         </div>);
     }
@@ -88,8 +95,97 @@ class GroupManager extends React.Component {
  * Allows an administrator to browse user groups.
  * Renders in {@link #plugins.Manager|Manager} plugin.
  * @name GroupManager
+ * @property {object[]} [attributeFields] attributes that should be shown in attributes tab of group manager. By default this array contains one `notes` attribute with `controlType`: `text`. Every object in this array can contain:
+ * - `name`: the name of the attribute
+ * - `title`: the string to show as label for the attribute.  If not present, `name` property will be used.
+ * - `controlType`: The input control to use. can be : `string` (input), `text` (text area), `date` (date picker) and `select`. By default it is `string`
+ * - `controlAttributes`: attributes specific of the `controlType`. For instance the `options` for the `select` control. See the examples for more details.
+ * @property {boolean} [showMembersTab=true] shows/hides group members tab
+ * @property {boolean} [showAttributesTab=false] shows/hides group attributes tab
  * @memberof plugins
  * @class
+ * @example
+ * { "name": "GroupManager",
+ *   "cfg": {
+ *        "showMembersTab": false,
+ *        "showAttributesTab": true,
+ *        "attributeFields": [
+ *             {
+ *                 "title": "Simple text",
+ *                 "name": "normalString",
+ *                 "controlType": "string"
+ *             },
+ *             {
+ *                 "title": "Input creates different attributes entries, separated by ;",
+ *                 "name": "multistring",
+ *                 "controlType": "string",
+ *                 "controlAttributes": {
+ *                     "multiAttribute": true,
+ *                     "separator": ";"
+ *                 }
+ *             },
+ *             {
+ *                 "title": "Notes",
+ *                 "name": "notes",
+ *                 "controlType": "text"
+ *             },
+ *             {
+ *                 "title": "Notes, multiple entries, separated by new-line",
+ *                 "name": "multiple-notes",
+ *                 "controlType": "text",
+ *                 "controlAttributes": {
+ *                     "multiAttribute": true,
+ *                     "separator": "\n"
+ *                 }
+ *             },
+ *             {
+ *                 "title": "Single select with options in",
+ *                 "name": "select",
+ *                 "controlType": "select",
+ *                 "options": [
+ *                     {
+ *                         "label": "Option 1",
+ *                         "value": "opt1"
+ *                     },
+ *                     {
+ *                         "label": "Option 2",
+ *                         "value": "opt2"
+ *                     }
+ *                 ]
+ *             },
+ *             {
+ *                 "title": "Multiple selections in multiple attributes (using remote service)",
+ *                 "name": "organizations",
+ *                 "controlType": "select",
+ *                 "source": {
+ *                     "url": "assets/json/organizations.json",
+ *                     "path": "organizations",
+ *                     "valueAttribute": "value",
+ *                     "labelAttribute": "label"
+ *                 },
+ *                 "controlAttributes": {
+ *                     "multiAttribute": true,
+ *                     "isMulti": true
+ *                 }
+ *             },
+ *             {
+ *                 "title": "Multiple selections in single attribute, concatenated (using remote service)",
+ *                 "name": "organizations_dependent",
+ *                 "controlType": "select",
+ *                 "source": {
+ *                     "url": "assets/json/organizations.json",
+ *                     "path": "organizations",
+ *                     "valueAttribute": "value",
+ *                     "labelAttribute": "label"
+ *                 },
+ *                     "controlAttributes": {
+ *                     "separator": ";",
+ *                     "isMulti": true
+ *                 }
+ *             }
+ *         ]
+ *     }
+ * }
  */
 export default {
     GroupManagerPlugin: assign(
@@ -131,6 +227,6 @@ export default {
                 glyph: "1-group-mod"
             }}),
     reducers: {
-        usergroups: require('../../reducers/usergroups').default
+        usergroups
     }
 };
