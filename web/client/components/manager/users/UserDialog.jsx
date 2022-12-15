@@ -73,7 +73,8 @@ class UserDialog extends React.Component {
         }, {
             name: "company"
         }, {
-            name: "notes"
+            name: "notes",
+            controlType: "text"
         }],
         inputStyle: {
             height: "32px",
