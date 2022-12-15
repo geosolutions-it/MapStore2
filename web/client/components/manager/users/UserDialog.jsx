@@ -24,7 +24,6 @@ import tooltip from '../../../components/misc/enhancers/tooltip';
 const GlyphiconTooltip = tooltip(Glyphicon);
 import Dialog from '../../../components/misc/Dialog';
 import UserGroups from './UserGroups';
-import assign from 'object-assign';
 import Message from '../../../components/I18N/Message';
 import Spinner from 'react-spinkit';
 import { findIndex, castArray } from 'lodash';
