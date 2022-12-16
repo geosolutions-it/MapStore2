@@ -169,11 +169,11 @@ with
 
 ```java
 private static final Logger LOGGER = LogManager.getLogger(MyClass.class);
-```java
+```
 
 where `LogManager` can be imported as:
 
-```
+```java
 import org.apache.logging.log4j.LogManager;
 ```
 
