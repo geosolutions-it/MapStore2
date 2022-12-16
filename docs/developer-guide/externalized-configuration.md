@@ -79,6 +79,19 @@ Logging has not been externalized yet, You can manually do this change in `WEB-I
 </context-param>
 ```
 
+### Print Configuration
+
+The `config.yaml` is by default in the `printing` folder of the webapp root. You can externalize the path to this resource (and all relative files) by setting the system variable `mapfish-print-config`. Make you sure the file exists and all the required files (header, images ...) are also available (typically they are the same directory, identified by relative paths. For more information, see [mapfish-print](http://www.mapfish.org/doc/print/) documentation ).
+
+*Example*:
+
+```sh
+-Dmapfish-print-config=/etc/mapstore/datadir/printing/config.yaml
+```
+
+We suggest to put your customizations for printing inside the data directory in a folder named `printing`, using the same structure of the `printing` folder of the application. (`config.yaml`, images and so on...).
+Doing it this way makes the application ready for future updates.
+
 ### Database Connection
 
 If you create a file in the datadir called `geostore-datasource-ovr.properties` , it will be used and override the current
