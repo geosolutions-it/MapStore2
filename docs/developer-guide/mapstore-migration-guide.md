@@ -28,6 +28,8 @@ With this release Log4j has been updated to Log4j2. The Log4j API has changed wi
 
 If you have a downstream project, you will have also to update your dependencies in `pom.xml` and your Java code, following the suggestions in `log4j2 dependencies and code update` section. 
 
+For more information or more details about how to migrate, follow the [official documentation](https://logging.apache.org/log4j/2.x/manual/migration.html). 
+
 !!! note:
     A compatiblility tier has been added in order to allow to use old configruations. Anyway it is strongly suggested to update your configurtions, build files and code as soon as possible. 
     
@@ -157,7 +159,23 @@ with
 !!! note: 
     of course you can use `properties` of maven to not repeat the version numbers everytime, or dependency management. 
     
+Moreover, if you have some custom code, you will hae to replace  the use of `getLogger`. Example: 
 
+```java
+private static final Logger LOGGER = Logger.getLogger(MyClass.class);
+```
+
+with 
+
+```
+private static final Logger LOGGER = LogManager.getLogger(ExpiringTask.class);
+```
+
+where `LogManager` can be imported as: 
+
+```
+import org.apache.logging.log4j.LogManager;
+```
 
 ### Update database schema
 
