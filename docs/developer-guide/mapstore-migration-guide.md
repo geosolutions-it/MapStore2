@@ -22,17 +22,17 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2022.02.02 to 2023.01.00
 
-### Log4j update to Log4j2 
+### Log4j update to Log4j2
 
-With this release Log4j has been updated to Log4j2. The Log4j API has changed with version 2. Basically if you customized logging properties, you have to update the properties file folloing the `log4j properties file migration` section. 
+With this release Log4j has been updated to Log4j2. The Log4j API has changed with version 2. Basically if you customized logging properties, you have to update the properties file following the `log4j properties file migration` section.
 
-If you have a downstream project, you will have also to update your dependencies in `pom.xml` and your Java code, following the suggestions in `log4j2 dependencies and code update` section. 
+If you have a downstream project, you will have also to update your dependencies in `pom.xml` and your Java code, following the suggestions in `log4j2 dependencies and code update` section.
 
-For more information or more details about how to migrate, follow the [official documentation](https://logging.apache.org/log4j/2.x/manual/migration.html). 
+For more information or more details about how to migrate, follow the [official documentation](https://logging.apache.org/log4j/2.x/manual/migration.html).
 
 !!! note:
-    A compatiblility tier has been added in order to allow to use old configruations. Anyway it is strongly suggested to update your configurtions, build files and code as soon as possible. 
-    
+    A compatibility tier has been added in order to allow to use old configurations. Anyway it is strongly suggested to update your files as soon as possible.
+
 #### log4j2 properties file migration
 
 To have logging properly work on MapStore then it is needed to:
@@ -91,7 +91,7 @@ logger.trg1.name=com.trg
 logger.trg1.level=INFO
 ```
 
-The main difference applies to how define the Log level on a per package basis. If in previous version of log4j a single property was defining both the package and the level now we need two separe properties one to define the name (the package) and the other for the level:
+The main difference applies to how define the Log level on a per package basis. If in previous version of log4j a single property was defining both the package and the level now we need two distinct properties, one to define the name (the package) and the other for the level:
 
 - before
 
@@ -106,11 +106,11 @@ logger.restsrv.name=it.geosolutions.geostore.services.rest
 logger.restsrv.level=  INFO
 ```
 
-Note that the second part of the property key in the log4j2 (`restsrv` in the example) can be whatever string of choice, with the only requirment to be the same for the `name` and the `level` property.
+Note that the second part of the property key in the log4j2 (`restsrv` in the example) can be whatever string of choice, with the only requirement to be the same for the `name` and the `level` property.
 
 #### log4j2 dependencies and code update
 
-In your downstream project you will have to replace, where you used (typically in `backend` and `web` folders) the following dependencies:  
+In your downstream project you will have to replace, where you used (typically in `backend` and `web` folders) the following dependencies:
 
 ```xml
             <dependency>
@@ -135,7 +135,7 @@ In your downstream project you will have to replace, where you used (typically i
             </dependency>
 ```
 
-with 
+with
 
 ```xml
  <dependency>
@@ -149,29 +149,29 @@ with
     <version>2.19.0</version>
  </dependency>
  <dependency>
-    <groupId>org.apache.logging.log4j</groupId> 
+    <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-slf4j-impl</artifactId>
     <version>1.7.2</version>
  </dependency>
 
 ```
 
-!!! note: 
-    of course you can use `properties` of maven to not repeat the version numbers everytime, or dependency management. 
-    
-Moreover, if you have some custom code, you will hae to replace  the use of `getLogger`. Example: 
+!!! note:
+    of course you can use `properties` of maven to not repeat the version numbers everytime, or dependency management.
+
+Moreover, if you have some custom code, you will hae to replace  the use of `getLogger`. Example:
 
 ```java
 private static final Logger LOGGER = Logger.getLogger(MyClass.class);
 ```
 
-with 
+with
 
 ```
 private static final Logger LOGGER = LogManager.getLogger(MyClass.class);
 ```
 
-where `LogManager` can be imported as: 
+where `LogManager` can be imported as:
 
 ```
 import org.apache.logging.log4j.LogManager;
