@@ -15,4 +15,4 @@ jobs:
           # Project number 10 is MapStore Board
           project-url: https://github.com/orgs/geosolutions-it/projects/10
           # This secret is organization secret
-          github-token: ${{ secrets.ADD_TO_PROJECT }}
+          github-token: ${{ secrets.ADD_ISSUE_TO_PROJECT }}
