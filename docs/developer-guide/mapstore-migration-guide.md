@@ -22,9 +22,18 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2022.02.02 to 2023.01.00
 
-### Log4j file migration
+### Log4j update to Log4j2 
 
-With this release Log4j has been updated to Log4j2. The Log4j API has changed with version 2. To have logging properly work on MapStore then it is needed to:
+With this release Log4j has been updated to Log4j2. The Log4j API has changed with version 2. Basically if you customized logging properties, you have to update the properties file folloing the `log4j properties file migration` section. 
+
+If you have a downstream project, you will have also to update your dependencies in `pom.xml` and your Java code, following the suggestions in `log4j2 dependencies and code update` section. 
+
+!!! note:
+    A compatiblility tier has been added in order to allow to use old configruations. Anyway it is strongly suggested to update your configurtions, build files and code as soon as possible. 
+    
+#### log4j2 properties file migration
+
+To have logging properly work on MapStore then it is needed to:
 
 - Rename `log4j.properties` file to `log4j2.properties`.
 
@@ -96,6 +105,59 @@ logger.restsrv.level=  INFO
 ```
 
 Note that the second part of the property key in the log4j2 (`restsrv` in the example) can be whatever string of choice, with the only requirment to be the same for the `name` and the `level` property.
+
+#### log4j2 dependencies and code update
+
+In your downstream project you will have to replace, where you used (typically in `backend` and `web` folders) the following dependencies:  
+
+```xml
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+```
+
+with 
+
+```
+ <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>2.19.0</version>
+ </dependency>
+ <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.19.0</version>
+ </dependency>
+ <dependency>
+    <groupId>org.apache.logging.log4j</groupId> 
+    <artifactId>log4j-slf4j-impl</artifactId>
+    <version>1.7.2</version>
+ </dependency>
+
+```
+
+!!! note: 
+    of course you can use `properties` of maven to not repeat the version numbers everytime, or dependency management. 
+    
+
 
 ### Update database schema
 
