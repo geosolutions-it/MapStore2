@@ -22,7 +22,7 @@
       <param-value>/proxy.properties,${datadir.location}/proxy.properties</param-value>
     </context-param>
 
-	<!-- <context-param> <param-name>log4jConfigLocation</param-name> <param-value>file:${config.dir}/log4j.xml</param-value>
+	<!-- <context-param> <param-name>log4jConfigLocation</param-name> <param-value>file:${config.dir}/log4j2.xml</param-value>
 		</context-param> -->
 
 	<!--

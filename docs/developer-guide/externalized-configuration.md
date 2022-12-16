@@ -75,7 +75,7 @@ Logging has not been externalized yet, You can manually do this change in `WEB-I
 ```xml
 <context-param>
     <param-name>log4jConfigLocation</param-name>
-    <param-value>file:${datadir.location}/log4j.properties</param-value>
+    <param-value>file:${datadir.location}/log4j2.properties</param-value>
 </context-param>
 ```
 
