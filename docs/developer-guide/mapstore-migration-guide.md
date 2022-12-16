@@ -167,9 +167,9 @@ private static final Logger LOGGER = Logger.getLogger(MyClass.class);
 
 with
 
-```
+```java
 private static final Logger LOGGER = LogManager.getLogger(MyClass.class);
-```
+```java
 
 where `LogManager` can be imported as:
 
