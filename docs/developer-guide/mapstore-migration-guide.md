@@ -137,7 +137,7 @@ In your downstream project you will have to replace, where you used (typically i
 
 with 
 
-```
+```xml
  <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
@@ -168,7 +168,7 @@ private static final Logger LOGGER = Logger.getLogger(MyClass.class);
 with 
 
 ```
-private static final Logger LOGGER = LogManager.getLogger(ExpiringTask.class);
+private static final Logger LOGGER = LogManager.getLogger(MyClass.class);
 ```
 
 where `LogManager` can be imported as: 
