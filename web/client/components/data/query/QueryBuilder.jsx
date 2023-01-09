@@ -63,6 +63,7 @@ class QueryBuilder extends React.Component {
             PropTypes.bool,
             PropTypes.string
         ]),
+        filters: PropTypes.array,
         filterType: PropTypes.string,
         featureTypeName: PropTypes.string,
         ogcVersion: PropTypes.string,
@@ -99,6 +100,7 @@ class QueryBuilder extends React.Component {
         removeGroupButtonIcon: "trash",
         groupFields: [],
         filterFields: [],
+        filters: [],
         attributes: [],
         spatialMethodOptions: [],
         spatialOperations: [],
@@ -179,6 +181,7 @@ class QueryBuilder extends React.Component {
                     spatialFilter: this.props.spatialPanelExpanded,
                     crossLayerFilter: this.props.crossLayerExpanded
                 }}
+                filters={this.props.filters}
                 params={this.props.params}
                 filterFields={this.props.filterFields}
                 groupFields={this.props.groupFields}

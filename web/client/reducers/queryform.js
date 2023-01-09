@@ -47,7 +47,9 @@ import {
     SET_AUTOCOMPLETE_MODE,
     TOGGLE_AUTOCOMPLETE_MENU,
     LOAD_FILTER,
-    UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS
+    UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS,
+    UPSERT_FILTERS,
+    DELETE_FILTERS
 } from '../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -200,7 +202,8 @@ function queryform(state = initialState, action) {
             id: new Date().getTime(),
             logic: "OR",
             groupId: action.groupId,
-            index: action.index + 1
+            index: action.index + 1,
+            ...action.props
         };
         return assign({}, state, {groupFields: (state.groupFields ? [...state.groupFields, newGroupField] : [newGroupField])});
     }
@@ -514,6 +517,48 @@ function queryform(state = initialState, action) {
             return pr;
         }, []);
         return {...state, simpleFilterFields: newSimpleFilterFields};
+    }
+    case UPSERT_FILTERS: {
+        // insert filters in the state if not present, update if present
+
+        // this replaces the filters with the same id
+        const filters = (state.filters ?? []).reduce((pr, f) => {
+            const newFilter = action.filters.find((newF) => { return newF.id === f.id; });
+            if (newFilter) {
+                pr.push(newFilter);
+            } else {
+                pr.push(f);
+            }
+            return pr;
+        }, []);
+
+        // this adds the new filters
+        action.filters.forEach((f) => {
+            const newFilter = filters.find((newF) => { return newF.id === f.id; });
+            if (!newFilter) {
+                filters.push(f);
+            }
+        });
+
+        return {
+            ...state,
+            filters
+        };
+    }
+    case DELETE_FILTERS: {
+        // delete filters from the state
+        const filters = (state.filters ?? []).reduce((pr, f) => {
+            const newFilter = action.filters.find((newF) => { return newF.id === f.id; });
+            if (!newFilter) {
+                pr.push(f);
+            }
+            return pr;
+        }
+        , []);
+        return {
+            ...state,
+            filters
+        };
     }
     case ADD_SIMPLE_FILTER_FIELD: {
         const field = ( action.properties.fieldId) ? action.properties : {...action.properties, fieldId: new Date().getTime()};

@@ -55,6 +55,9 @@ export const SET_AUTOCOMPLETE_MODE = 'SET_AUTOCOMPLETE_MODE';
 export const TOGGLE_AUTOCOMPLETE_MENU = 'TOGGLE_AUTOCOMPLETE_MENU';
 export const LOAD_FILTER = 'QUERYFORM:LOAD_FILTER';
 
+export const UPSERT_FILTERS = 'QUERYFORM:UPSERT_FILTERS';
+export const DELETE_FILTERS = 'QUERYFORM:DELETE_FILTERS';
+
 import axios from '../libs/ajax';
 
 export function addFilterField(groupId) {
@@ -64,11 +67,19 @@ export function addFilterField(groupId) {
     };
 }
 
-export function addGroupField(groupId, index) {
+/**
+ * Action for add a new group field
+ * @param {string|number} groupId the Id of the parent group
+ * @param {number} index the last index of in the parent group.
+ * @param {object} props a set or properties to set to the group field (useful to customize the `id` property)
+ * @returns {object}
+ */
+export function addGroupField(groupId, index, props = {}) {
     return {
         type: ADD_GROUP_FIELD,
         groupId: groupId,
-        index: index
+        index: index,
+        props
     };
 }
 
@@ -426,5 +437,29 @@ export function updateCrossLayerFilterFieldOptions(filterField, options, valuesC
         filterField,
         options,
         valuesCount
+    };
+}
+
+/**
+ * Insert or update filters in the query form state. If a filter with the same id already exists, it will be updated.
+ * @param {object} filter the filters to insert or update
+ * @returns the action
+ */
+export function upsertFilters(...filters) {
+    return {
+        type: UPSERT_FILTERS,
+        filters
+    };
+}
+
+/**
+ * Delete filters from the query form state (by id)
+ * @param {object} filters the filters to delete
+ * @returns the action
+ */
+export function deleteFilters(...filters) {
+    return {
+        type: DELETE_FILTERS,
+        filters
     };
 }

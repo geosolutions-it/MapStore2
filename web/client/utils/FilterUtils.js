@@ -14,6 +14,8 @@ import {
     closePolygon
 } from './ogc/GML';
 
+import converters from './Filter/converters';
+
 import { wfsToGmlVersion } from './ogc/WFS/base';
 import { ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators } from './ogc/Filter/operators';
 import { read } from './ogc/Filter/CQL/parser';
@@ -388,7 +390,10 @@ export const toOGCFilterParts = function(objFilter, versionOGC, nsplaceholder) {
             }))
         );
     }
-
+    // this should be the standard form of the filter.
+    if (objFilter.filters) {
+        filters = FilterUtils.convertFiltersToOGC(objFilter.filters, {nsplaceholder, versionOGC});
+    }
     return filters;
 };
 export const toOGCFilter = function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null, srsName = "EPSG:4326") {
@@ -719,6 +724,10 @@ export const toCQLFilter = function(json) {
             const cg = cqlCollectGeometries(cqlQueryCollection({typeName, geometryName, cqlFilter}));
             filters.push(`${operation}(${attribute},${cg})`);
         }
+     }
+    // this should be the standard form of the filter.
+    if( objFilter.filters) {
+        filters.concat(convertFiltersToCQL(objFilter.filters));
     }
     if (filters.length) {
         return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
@@ -1262,7 +1271,31 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
 
     return filterString;
 };
+const convertFiltersToOGC = (filters, options) => {
+    const convertFilter = (filter) => {
+        const isLegacyFilterFormat = ({filterFormat = "mapstore", filterVersion = "1.0.0"} = {}) => filterFormat === "mapstore" && filterVersion === "1.0.0";
+            if (isLegacyFilterFormat(filter)) {
+                return toCQLFilterParts(filter, options?.versionOGC, options?.nsplaceholder);
+            }
+            if (converters[filter.filterFormat].toOGC()) {
+                return converters[filter.filterFormat](filter, options?.versionOGC, options?.nsplaceholder);
+            }
+        };
+    return flatten(filters.map(convertFilter));
+}
 
+const convertFiltersToCQL = (filters) => {
+    const convertFilter = (filter) => {
+        const isLegacyFilterFormat = ({filterFormat = "mapstore", filterVersion = "1.0.0"} = {}) => filterFormat === "mapstore" && filterVersion === "1.0.0";
+        if (isLegacyFilterFormat(filter)) {
+            return toCQLFilter(filter);
+        }
+        if (converters[filter.filterFormat].toCQL()) {
+            return converters[filter.filterFormat](filter);
+        }
+    };
+    return flatten(filters.map(convertFilter));
+};
 FilterUtils = {
     processOGCFilterGroup,
     processOGCFilterFields,
@@ -1287,5 +1320,6 @@ FilterUtils = {
     reprojectFilterInNativeCrs,
     processOGCSpatialFilter,
     createFeatureFilter,
-    mergeFiltersToOGC
+    mergeFiltersToOGC,
+    convertFiltersToOGC
 };

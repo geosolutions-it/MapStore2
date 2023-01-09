@@ -28,6 +28,7 @@ class QueryToolbar extends React.Component {
         filterFields: PropTypes.array,
         groupFields: PropTypes.array,
         spatialField: PropTypes.object,
+        filters: PropTypes.array,
         sendFilters: PropTypes.object,
         crossLayerFilter: PropTypes.object,
         toolbarEnabled: PropTypes.bool,
@@ -58,7 +59,8 @@ class QueryToolbar extends React.Component {
         sendFilters: {
             attributeFilter: true,
             spatialFilter: true,
-            crossLayerFilter: true
+            crossLayerFilter: true,
+            filters: true
         },
         filterType: "OGC",
         params: {},
@@ -113,7 +115,8 @@ class QueryToolbar extends React.Component {
             crossLayerFilter: this.props.sendFilters
                 && this.props.sendFilters.crossLayerFilter
                 && setupCrossLayerFilterDefaults(this.props.crossLayerFilter) || null,
-            hits: this.props.hits
+            hits: this.props.hits,
+            filters: this.props.filters
         };
     }
     render() {
