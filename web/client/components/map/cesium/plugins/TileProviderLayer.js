@@ -42,15 +42,22 @@ function NoProxy() {
 
 NoProxy.prototype.getURL = (r) => r;
 
-function template(str, data) {
+/**
+ * Returns the URL passed as parameter, replacing all the variables with the values in the data object, except for the variables x, y, z and s, that are reserved for the tile coordinates and server.
+ * @param {string} URL the string to replace
+ * @param {object} data data to use for replacement
+ * @returns {string}
+ */
+export function template(str, data) {
 
-    return str.replace(/(?!(\{?[zyxs]?\}))\{*([\w_]+)*\}/g, function() {
-        let st = arguments[0];
-        let key = arguments[1] ? arguments[1] : arguments[2];
+    return str.replace(/{([^{}]+)}/g, function(textMatched, key) {
+        if (['x', 'y', 'z', 's'].includes(key)) {
+            return textMatched;
+        }
         let value = data[key];
 
         if (value === undefined) {
-            throw new Error('No value provided for variable ' + st);
+            throw new Error('No value provided for variable ' + key);
 
         } else if (typeof value === 'function') {
             value = value(data);
