@@ -24,6 +24,8 @@ Both the **New Group** <img src="../img/button/new-group.jpg" class="ms-docbutto
 
 * *Members manager*
 
+* *>Attributes*
+
 ## Group ID
 
 As soon as the *New Group* window opens, the *Group ID* section is displayed:
@@ -44,3 +46,9 @@ In this section the Admin is allowed to:
 Through the *Members manager* section it is possible to choose which users are part of the group:
 
 <img src="../img/managing-groups/sel-users.gif" class="ms-docimage"/>
+
+## Attributes
+
+On the *Attributes* tab the admin can associate attributes to user group. By default [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to enter a notes as attribute for a group.
+
+<img src="../img/managing-groups/notes.jpg" class="ms-docimage"/>
