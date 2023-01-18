@@ -62,8 +62,8 @@ const StyleList = ({
     availableStyles = [],
     onSelect,
     formatColors = {
-        sld: '#33ffaa',
-        css: '#ffaa33'
+        sld: "#33ffaa",
+        css: "#ffaa33"
     },
     filterText,
     onFilter = () => {}
@@ -74,39 +74,65 @@ const StyleList = ({
             <Filter
                 filterPlaceholder="styleeditor.styleListfilterPlaceholder"
                 filterText={filterText}
-                onFilter={onFilter}/>
-        }>
+                onFilter={onFilter}
+            />
+        }
+    >
         <SideGrid
             size="sm"
             onItemClick={({ name }) => onSelect({ style: name }, true)}
             items={availableStyles
-                .filter(({name = '', title = '', _abstract = '', metadata = {} }) => !filterText
-                    || filterText && (
-                        name.indexOf(filterText) !== -1
-                        || metadata?.title?.indexOf(filterText) !== -1
-                        || metadata?.description?.indexOf(filterText) !== -1
-                        || title.indexOf(filterText) !== -1
-                        || _abstract.indexOf(filterText) !== -1
-                    ))
-                .map(style => ({
+                .filter(
+                    ({
+                        title = "",
+                        _abstract = ""
+                    }) =>
+                        title
+                            .toLowerCase()
+                            .includes(filterText.toLowerCase()) ||
+                        _abstract
+                            .toLowerCase()
+                            .includes(filterText.toLowerCase())
+                )
+                .map((style) => ({
                     ...style,
-                    title: style?.metadata?.title || style.label || style.title || style.name,
-                    description: style?.metadata?.description || style._abstract,
+                    title:
+                        style?.metadata?.title ||
+                        style.label ||
+                        style.title ||
+                        style.name,
+                    description:
+                        style?.metadata?.description || style._abstract,
                     selected: enabledStyle === style.name,
-                    preview: style.format &&
-                            <SVGPreview
-                                backgroundColor="#333333"
-                                texts={[
-                                    {
-                                        text: getFormatText(style.format).toUpperCase(),
-                                        fill: formatColors[style.format] || '#f2f2f2',
-                                        style: {
-                                            fontSize: 70,
-                                            fontWeight: 'bold'
-                                        }
-                                    }]}/> || <Glyphicon glyph="geoserver" />,
-                    tools: showDefaultStyleIcon && defaultStyle === style.name ? <Glyphicon glyph="star" tooltipId="styleeditor.defaultStyle"/> : null
-                }))} />
+                    preview: (style.format && (
+                        <SVGPreview
+                            backgroundColor="#333333"
+                            texts={[
+                                {
+                                    text: getFormatText(
+                                        style.format
+                                    ).toUpperCase(),
+                                    fill:
+                                        formatColors[style.format] ||
+                                        "#f2f2f2",
+                                    style: {
+                                        fontSize: 70,
+                                        fontWeight: "bold"
+                                    }
+                                }
+                            ]}
+                        />
+                    )) || <Glyphicon glyph="geoserver" />,
+                    tools:
+                        showDefaultStyleIcon &&
+                        defaultStyle === style.name ? (
+                                <Glyphicon
+                                    glyph="star"
+                                    tooltipId="styleeditor.defaultStyle"
+                                />
+                            ) : null
+                }))}
+        />
     </BorderLayout>
 );
 
