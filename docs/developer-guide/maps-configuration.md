@@ -1003,6 +1003,7 @@ The `symbolizer` could be of following `kinds`:
   | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
 
 - `Icon` symbolizer properties
+
   | Property | Description | 2D | 3D |
   | --- | --- | --- | --- |
   | `kind` | must be equal to **Icon** | x | x |
@@ -1018,6 +1019,7 @@ The `symbolizer` could be of following `kinds`:
   | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
 
 - `Line` symbolizer properties
+
   | Property | Description | 2D | 3D |
   | --- | --- | --- | --- |
   | `kind` | must be equal to **Line** | x | x |
@@ -1028,6 +1030,7 @@ The `symbolizer` could be of following `kinds`:
   | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
 
 - `Fill` symbolizer properties
+
   | Property | Description | 2D | 3D |
   | --- | --- | --- | --- |
   | `kind` | must be equal to **Fill** | x | x |
@@ -1040,6 +1043,7 @@ The `symbolizer` could be of following `kinds`:
   | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
 
 - `Text` symbolizer properties
+
   | Property | Description | 2D | 3D |
   | --- | --- | --- | --- |
   | `kind` | must be equal to **Text** | x | x |
@@ -1060,6 +1064,7 @@ The `symbolizer` could be of following `kinds`:
   | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
 
 - `Model` symbolizer properties (custom symbolizer to visualize 3D model as point geometries)
+
   | Property | Description | 2D | 3D |
   | --- | --- | --- | --- |
   | `kind` | must be equal to **Model** |  | x |
