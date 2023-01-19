@@ -65,7 +65,7 @@ const StyleList = ({
         sld: "#33ffaa",
         css: "#ffaa33"
     },
-    filterText,
+    filterText = "",
     onFilter = () => {}
 }) => (
     <BorderLayout
@@ -84,9 +84,16 @@ const StyleList = ({
             items={availableStyles
                 .filter(
                     ({
+                        name = "",
                         title = "",
-                        _abstract = ""
+                        _abstract = "",
+                        metadata = {}
                     }) =>
+                        name.toLowerCase().includes(filterText.toLowerCase())
+                        ||
+                        metadata?.title?.toLowerCase().includes(filterText.toLowerCase()) ||
+                        metadata?.description?.toLowerCase().includes(filterText.toLowerCase())
+                        ||
                         title
                             .toLowerCase()
                             .includes(filterText.toLowerCase()) ||
@@ -113,8 +120,7 @@ const StyleList = ({
                                         style.format
                                     ).toUpperCase(),
                                     fill:
-                                        formatColors[style.format] ||
-                                        "#f2f2f2",
+                                        formatColors[style.format] || "#f2f2f2",
                                     style: {
                                         fontSize: 70,
                                         fontWeight: "bold"
@@ -124,13 +130,12 @@ const StyleList = ({
                         />
                     )) || <Glyphicon glyph="geoserver" />,
                     tools:
-                        showDefaultStyleIcon &&
-                        defaultStyle === style.name ? (
-                                <Glyphicon
-                                    glyph="star"
-                                    tooltipId="styleeditor.defaultStyle"
-                                />
-                            ) : null
+                        showDefaultStyleIcon && defaultStyle === style.name ? (
+                            <Glyphicon
+                                glyph="star"
+                                tooltipId="styleeditor.defaultStyle"
+                            />
+                        ) : null
                 }))}
         />
     </BorderLayout>
