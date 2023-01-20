@@ -50,7 +50,7 @@ In particular the admin can configure the context map using the following MapSto
 
 * [CRS Selector](footer.md#crs-selector), through the <img src="../img/button/crs_selector_icon.jpg" class="ms-docbutton" /> button at the bottom right of the *Footer*, to switch the Coordinate Reference System of the map
 
-* The [Side Bar](side-bar.md#sidebar), at the bottom right of the viewer, is useful to the admin to explore the map.
+* The [Navigation Toolbar](navigation-toolbar.md), at the bottom right of the viewer, is useful to the admin to explore the map.
 
 An example of a context viewer with a new background and a layer, added to the map, can be the following:
 
