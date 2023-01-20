@@ -249,4 +249,41 @@ describe('test StyleList module component', () => {
         const cards = document.querySelectorAll('.mapstore-side-card');
         expect(cards.length).toBe(2);
     });
+
+    it('test styleList onFilter for metadata', () => {
+
+        ReactDOM.render(<StyleList
+            filterText="main"
+            defaultStyle="point"
+            enabledStyle="square"
+            showDefaultStyleIcon
+            availableStyles={
+                [
+                    {
+                        name: 'point',
+                        filename: 'default_point.sld',
+                        format: 'sld',
+                        title: 'A boring default style',
+                        _abstract: 'A sample style that just prints out a purple square',
+                        metadata: {
+                            title: 'main style',
+                            describe: 'It can control the layout of multiple web pages all at once.'
+                        }
+                    },
+                    {
+                        name: 'points',
+                        filename: 'default_point.sld',
+                        format: 'css',
+                        title: 'A cool style',
+                        _abstract: 'simple and cool',
+                        metadata: {
+                            title: 'alternative styles',
+                            describe: 'Used to apply a unique style to a single HTML element.'
+                        }
+                    }
+                ]
+            }/>, document.getElementById("container"));
+        const cards = document.querySelectorAll('.mapstore-side-card');
+        expect(cards.length).toBe(1);
+    });
 });
