@@ -42,7 +42,7 @@ import {
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { RESET_CONTROLS } from '../actions/controls';
-import { MAP_TYPE_CHANGED } from './../actions/maptype';
+import { MAP_TYPE_CHANGED } from '../actions/maptype';
 
 import { getValidator } from '../utils/MapInfoUtils';
 
