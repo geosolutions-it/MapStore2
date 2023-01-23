@@ -315,7 +315,7 @@ Furthermore, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds
 
 <img src="../img/layer-settings/polygon-type.jpg" class="ms-docimage">
 
-* **Clap to ground** to enable/disable the boolean Property specifying whether the polyline should be clamped to the ground (This option is available for Line and Fill symbolizers).
+* **Clamp to ground/Clamp outline to ground** to enable/disable the boolean Property specifying whether the polyline should be clamped to the ground (This option is available for Line and Fill symbolizers).
 
 <img src="../img/layer-settings/clamp-to-ground.jpg" class="ms-docimage">
 
