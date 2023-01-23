@@ -113,6 +113,8 @@ Through this toolbar it is possible to:
 
 * **Add sub group to the selected group** <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/>: it is possible to add one or more sub-groups to the selected group
 
+* **Zoom to selected layers extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to all layers belonging to the group
+
 * Open the **Selected group settings** <img src="../img/button/properties.jpg" class="ms-docbutton"/> where it is possible to change the group's title, the title translations and see the group name (its ID). It is also possible to add/customize the description of the group and configure the tooltips placement in the UI (more information can be found in [Layer Settings](layer-settings.md#layer-settings) section)
 
 <img src="../img/toc/group-settings.jpg" class="ms-docimage" style="max-width:400px;"/>
