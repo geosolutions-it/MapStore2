@@ -109,11 +109,19 @@ export default createPlugin(pluginName, {
         SidebarMenu: {
             name: 'mapViews',
             position: 2000,
-            tool: ConnectedMapViewsButton
+            tool: ConnectedMapViewsButton,
+            priority: 1
+        },
+        BurgerMenu: {
+            name: 'mapviews',
+            position: 9,
+            tool: () => <ConnectedMapViewsButton menuItem />,
+            priority: 2
         },
         Map: {
             name: pluginName,
-            Tool: MapViewsPlugin
+            Tool: MapViewsPlugin,
+            alwaysRender: true
         }
     }
 });
