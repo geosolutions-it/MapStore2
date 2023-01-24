@@ -22,7 +22,7 @@ In particular:
 
 * The [MapStore Toolbars](mapstore-toolbars.md) includes the [Search Bar](mapstore-toolbars.md#search-bar) and the [Side Toolbar](mapstore-toolbars.md#side-toolbar), an important list of options that contains several functions and information
 
-* The [Sidebar](side-bar.md#sidebar) that is mainly a navigation panel
+* The [Navigation Toolbar](navigation-toolbar.md) that is mainly a navigation panel
 
 * The [Background Selector](background.md#background-selector) allows to add, remove or edit map's background
 
