@@ -1,13 +1,13 @@
 # Map Views
 
-The **Map Views** is a [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tool useful to configure multiple views differently configured and switch between. A navigation functionality is also provided to automatically activate each view one after the other in temporal sequence.
+The **Map Views** is a [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tool useful to set up multiple map views differently configured and switch between them. A navigation functionality is also provided to automatically activate each view one after the other in temporal sequence.
 
 !!! note
-    The *Map views* works in both 2D and 3D modes, but the 3D mode has advanced options including the *Mask*, the *Globe Translucency* and the *Clipping* (see next paragraph).
+     The *Map Views* plugin works both in 2D and 3D modes, but the 3D mode has advanced options including the *Mask*, the *Globe Translucency* and the *Clipping* (see next paragraph).
 
 ## Add new view
 
-Once the user opens a map, the *Map Views* tools can be open through the <img src="../img/button/map-views-button.jpg" class="ms-docbutton" /> button available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar).
+Once the user opens a map, the *Map Views* tools can be opened through the <img src="../img/button/map-views-button.jpg" class="ms-docbutton" /> button available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar).
 
 <img src="../img/map-views/map-views-panel.jpg" class="ms-docimage"/>
 
@@ -17,54 +17,50 @@ To create a new simple view the user can simply move the map to the interested a
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize and edit the new view by opening the Edit panel through the <img src="../img/button/editing-button.jpg" class="ms-docbutton" /> button. Here the user is allowed to:
 
-* Add a text, images, videos or hyperlinks by clicking **Description** section. The *description* is visible during the [Views Navigation](map-views.md#3d-views-navigations). Take a look at the following example.
+* Add a text, images, videos or hyperlinks through the **Description** section. The *description* is visible during the [Views Navigation](map-views.md#3d-views-navigations). Take a look at the following example.
 
 <img src="../img/map-views/description.jpg" class="ms-docimage"/>
 
-* *Capture the view positions* through the <img src="../img/button/capture-view-position-button.jpg" class="ms-docbutton" /> button or change the longitude, latitude and height of the *Camera Position* and *Center Position*  (only available for the *3D* mode) by clicking on **Position** section.
+* *Capture the view positions* through the <img src="../img/button/capture-view-position-button.jpg" class="ms-docbutton" /> button or change the longitude, latitude and height of the *Camera Position* and *Center Position*  (only available for the *3D* mode) by using the **Position** section.
 
 <img src="../img/map-views/position.jpg" class="ms-docimage"/>
 
-* Modify the duration of the animation and enable/disable the transition during the [Views Navigation](map-views.md#3d-views-navigations) by clicking on **Animation** section.
+* Modify the duration of the animation and enable/disable the transition effect during the [Views Navigation](map-views.md#3d-views-navigations) by using the **Animation** section.
 
 <img src="../img/map-views/animation.jpg" class="ms-docimage"/>
 
-* Select a WFS or Vector layer available in the map to create a mask on all the 3D tiles visible in the map by clicking **Mask** section. The WFS or Vector layer is added to the map by the user and then used the layers features in a transparent way to create the clipping area.
+* When in 3D mode, use the **Mask** section to select a WFS or Vector layer available in TOC to create a mask on all the 3D tiles visible in map. The mask layer need to be added to the map before using this functionality so that it is possible to use the layer features as masking areas: if multiple WFS or Vector layers (with polygonal features) are present in the map, these are used all merged together to represent the final masking areas.
 
 <img src="../img/map-views/mask-panel.jpg" class="ms-docimage"/>
 
-If the user enables the **Inverse** option, a hole is created inside the 3D Tile layers. This hole can be filled by only 3D objects (3D Tiles cannot be used to fill these holes because all 3D tiles will be masked).
+If the user enables the **Inverse** option, simply the inverse mask is applied using the same layer so that each feature is used to produce an hole on all visible 3D Tiles.
 
 <img src="../img/map-views/mask-inverse.jpg" class="ms-docimage"/>
 
-If the user disables the **Inverse** option the clipping style is used for the view, then the selected WFS layer masks the 3D Tile layers outside its polygon.
-
-<img src="../img/map-views/mask.jpg" class="ms-docimage"/>
-
-* Enable the translucency of the globe in **Globe Translucency** section so that it is possible to see layers beneath the globe's surface.
+* Enable the translucency of the globe through **Globe Translucency** section so that it is possible to see layers under the globe's surface.
 
 <img src="../img/map-views/translucency.jpg" class="ms-docimage"/>
 
-* Customize the layer present on the view by clicking **Layer Options** section. The user can simply enable or disable all the layers present on [TOC](toc.md#table-of-contents) and change the opacity of the layer.
+* Choose which layer should be visible when the view is active through the **Layer Options** section. In 2D mode the user can simply enable or disable all the layers present on [TOC](toc.md#table-of-contents) and change the opacity.
 
 <img src="../img/map-views/layer-options-tool.jpg" class="ms-docimage"/>
 
 !!! warning
-    In the *2D mode*, the *3D Tiles* layer and the *Terrain* are not displayed in the *Layer Options*.
+    In *2D mode*, the *3D Tiles* and the *Terrain* layers are not displayed in the *Layer Options*.
 
-For the *3D mode*, it is also possible to clip each layer of 3D tiles using another layer. For this operation, the user can select a WFS or Vector layer available in the map from the *Clipping layer source* dropdown menu and choose a *Clipping feature* of the layer from the dropdown list where the hole on the 3D Tiles will be created.
+In *3D mode*, using the same logic described above for the Masking option, it is also possible to Clip (not Mask) each 3D Tiles or Terrain layers using a WFS or a vector layer as a clipping source. Furthermore, in this case the user can also choose which layer feature can be used as *Clipping feature*.
 
 <img src="../img/map-views/clipping.gif" class="ms-docimage"/>
 
 !!! warning
-    The WFS layer can be only polygon feature and concave polygon are not supported by this type of clipping, only convex layers can be used from this purpose.
+    The clipping layer must have polygon convex features. Concave polygons are not supported by this type of clipping.
 
 !!! note
-    Unlike the *Mask* option, described above, the *Clipping* area is a more narrowly focused tool because:
+    Unlike the *Mask* option, described above, the *Clip function* is a more narrowly focused tool because:
 
     * The clipping are is visible only on the selected 3D Tiles layer and not on the whole view
 
-    * It is possible, using the *Clip function*, to select the feature of the WFS or Vector layer's attribute table that you want to use to do the clipping
+    * It is possible to select the feature of the WFS or Vector layer that you want to use for the clipping
 
 ## 3D Views navigations
 
