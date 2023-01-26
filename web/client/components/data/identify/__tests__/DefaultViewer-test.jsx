@@ -266,6 +266,7 @@ describe('DefaultViewer', () => {
         expect(gfiViewer.childNodes.length).toBe(2);
         expect(gfiViewer.childNodes[0]).toEqual(alertInfo);
         expect(gfiViewer.childNodes[1]).toEqual(swipeableView);
+        expect(gfiViewer.childNodes[1].childNodes.length).toBe(1);
 
     });
 });

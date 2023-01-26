@@ -74,14 +74,15 @@ class DefaultViewer extends React.Component {
     /**
      * Get validation properties of the responses
      */
-    getResponseProperties = () => {
+    getResponseProperties = (renderValidOnly = this.props.renderValidOnly) => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = this.props.renderValidOnly ? validator.getValidResponses(responses) : responses;
+        const validResponses = renderValidOnly ? validator.getValidResponses(responses) : responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
         return {
+            responses,
             validResponses,
             currResponse,
             emptyResponses,
@@ -96,6 +97,20 @@ class DefaultViewer extends React.Component {
         const validator = this.props.validator(this.props.format);
         return validator.getValidResponses([response]);
     }
+
+    /**
+     * Helper method to calculate panel index properly on mobile devices.
+     */
+    getPanelIndex = (index, filterIndex = true) => {
+        // Recalculate index value of valid responses when mode is mobile
+        const { responses, validResponses } = this.getResponseProperties(this.props.isMobile);
+        const response = filterIndex ? responses[index] : validResponses[index];
+        return !this.props.isMobile
+            ? index
+            : filterIndex
+                ? validResponses.findIndex(el => el === response)
+                : responses.findIndex(el => el === response);
+    };
 
     renderEmptyLayers = () => {
         const {invalidResponses, emptyResponses} = this.getResponseProperties();
@@ -142,7 +157,7 @@ class DefaultViewer extends React.Component {
     }
 
     renderPages = () => {
-        const {validResponses: responses} = this.getResponseProperties();
+        const {validResponses: responses} = this.getResponseProperties(this.props.isMobile || this.props.renderValidOnly);
         return responses.map((res, i) => {
             const {response, layerMetadata} = res;
             const format = getFormatForResponse(res, this.props);
@@ -180,10 +195,10 @@ class DefaultViewer extends React.Component {
         let componentOrder = [this.renderEmptyLayers(),
             <Container {...this.props.containerProps}
                 onChangeIndex={(index) => {
-                    this.props.setIndex(index);
+                    this.props.setIndex(this.getPanelIndex(index, false));
                 }}
                 ref="container"
-                index={this.props.index || 0}
+                index={this.getPanelIndex(this.props.index) || 0}
                 key={"swiper"}
                 style={this.containerStyle(currResponse)}
                 className="swipeable-view">
