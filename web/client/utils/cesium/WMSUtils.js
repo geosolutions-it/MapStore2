@@ -9,6 +9,7 @@
 import { getAuthenticationHeaders } from "../SecurityUtils";
 import { getProxyUrl, needProxy } from "../ProxyUtils";
 import ConfigUtils from "../ConfigUtils";
+import {getAuthenticationParam} from "../LayersUtils";
 
 const PARAM_OPTIONS = ["layers", "styles", "style", "format", "transparent", "version", "tiled", "opacity", "zindex", "srs", "singletile", "_v_", "filterobj" ];
 
@@ -60,6 +61,7 @@ export const getProxy = (options) => {
 export const wmsToCesiumOptionsBIL = (options) => {
     let url = options.url;
     const headers = getAuthenticationHeaders(url, options.securityToken);
+    const params = getAuthenticationParam(options);
     // MapStore only supports "image/bil" format for WMS provider
     return {
         url,
@@ -75,7 +77,8 @@ export const wmsToCesiumOptionsBIL = (options) => {
         waterMask: options.waterMask,
         offset: options.offset,
         highest: options.highest,
-        lowest: options.lowest
+        lowest: options.lowest,
+        params
     };
 };
 
