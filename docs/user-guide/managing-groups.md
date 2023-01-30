@@ -49,6 +49,6 @@ Through the *Members manager* section it is possible to choose which users are p
 
 ## Attributes
 
-On the *Attributes* tab the admin can associate attributes to user group. By default MapStore allows to enter a "notes" attribute for each group.
+On the *Attributes* tab the admin can associate some attributes to user groups. By default MapStore allows to enter a "notes" attribute for each group. The attributes list can be configured by editing the [plugin configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.GroupManager) in `localConfig.json`.
 
 <img src="../img/managing-groups/notes.jpg" class="ms-docimage"/>
