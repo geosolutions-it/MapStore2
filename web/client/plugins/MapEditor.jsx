@@ -20,7 +20,7 @@ import ToolbarButton from '../components/misc/toolbar/ToolbarButton';
 
 import {openSelector, ownerSelector} from '../selectors/mapEditor';
 
-/**
+/*
  * Connect and toggle advanced Editor
  */
 const mapEditorButton = ({ toggleAdvancedEditing = () => { }, map = {} }) => {
