@@ -22,7 +22,7 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
 
 This filter is applicable from the **Filter layer** button <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> in TOC's [Layers Toolbar](toc.md#toolbar-options) and it will persist in the following situations:
 
-* Using other tools like the [Identify tool](side-bar.md#identify-tool):
+* Using other tools like the [Identify tool](navigation-toolbar.md#identify-tool):
 
 <img src="../img/filtering-layers/get_filtered_features_info.gif" class="ms-docimage"/>
 
