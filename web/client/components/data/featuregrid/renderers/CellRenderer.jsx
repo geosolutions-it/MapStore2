@@ -24,7 +24,7 @@ class CellRenderer extends React.Component {
     }
     render() {
         const isProperty = this.context.isProperty(this.props.column.key);
-        const isModified = (this.props.rowData._new && isProperty) || this.context.isModified(this.props.rowData.id, this.props.column.key);
+        const isModified = (this.props.rowData._new && isProperty);
         const isValid = isProperty ? this.context.isValid(this.props.rowData.get(this.props.column.key), this.props.column.key) : true;
         const className = (isModified ? ['modified'] : [])
             .concat(isValid ? [] : ['invalid']).join(" ");
