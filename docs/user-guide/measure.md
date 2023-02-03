@@ -23,7 +23,7 @@ Through this window it is possible to:
 !!! note
     The user can perform more than one measurement simultaneously on the map and then cancel it with the **Clear Measures** button <img src="../img/button/delete_button.jpg" class="ms-docbutton"/>
 
-### Measure distance
+## Measure distance
 
 As soon as the measure window opens, by default the measure distance option is selected <img src="../img/button/measure-distance-green.jpg" class="ms-docbutton"/>. In order to perform a distance measure, each click on the map correspond to a segment of the line (at least one segment is needed) while the double click inserts the last line segment and ends the drawing session.
 
@@ -36,7 +36,7 @@ The available units of measure are:
 !!! note
     The length of a line segment is shown on the map together with the measurement of the overall distance of all segments.
 
-### Measure area
+## Measure area
 
 Once the **Measure Area** button is selected <img src="../img/button/measure-area-green.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case at least 3 vertices need to be indicated). Same as measuring the distance, each click correspond to a vertex and the double click will indicate the last one.
 
@@ -49,7 +49,7 @@ In this case the available units of measure are:
 !!! note
     Each side's length of the polygon is reported in map along with its perimeter and the area.
 
-### Measure bearing
+## Measure bearing
 
 The Bearing measurements allows you to measure directions and angles. In the quadrant bearing system, the bearing of a line is measured as an angle from the reference meridian, either the north or the south, toward the east or the west. Bearings in the quadrant bearing system are written as a meridian, an angle and a direction. For example, a bearing of N 30 W defines an angle of 30 degrees west measured from north. A bearing of S 15 E defines an angle of 15 degrees east measured from the south.<br>
 After selecting the **Measure Bearing** button <img src="../img/button/measure-bearing-green.jpg" class="ms-docbutton"/> the user can draw a line with only two vertices that indicates respectively the starting and the ending point.
