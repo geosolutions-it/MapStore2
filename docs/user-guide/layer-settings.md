@@ -283,26 +283,39 @@ The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Styl
 
 #### Styling of Vector layer
 
-In [3D Navigation](side-bar.md#3d-navigation), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* with the same characteristics of the [Visual Style Editor](layer-settings.md#visual-editor-style) as described in the previous chapter.
+In 3D mode [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* through the [Visual Style Editor](layer-settings.md#visual-editor-style) using the same styling options available in 2D mode as described in the previous chapter.
+
+  In addition the **3D model** rule type is also available.
+From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model symbolizer panel opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `Rotation` and `Color`. Take a look at the following example.
+
+<img src="../img/layer-settings/3d-model-style-ex.gif" class="ms-docimage">
 
 !!!Warning
-    For the Vector layer, the *Cesium Style Editor* have some limitations:
+    For the Vector layer, the *Visual Style Editor* have some limitations:
 
     * It's possible to apply only one type of symbolizer at the time, so if the rule editor shows multiple rule with the same filter, only the first one is used.
     
     * For the *Line symbolizers*: the *Line cap* and *Line join* options are not available as properties in Cesium
 
-Furthermore, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds some customization options, for **WFS layers**, in the *Cesium Style Editor* which are:
+Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds some additional styling options in the *Visual Style Editor* such as:
 
-* **Bring to front** to bring the Mark or the Icon in front of the **3d Tiles** layer (This option is available for Icon and Mark symbolizers).
+* **Bring to front** (available for Icon, Mark and 3D model symbolizers) to bring in front and so to make visible (if set to *true*) all features covered by 3D Tile layers and the Terrain layer (for this last case when the *depth test against terrain* option is enabled in Global Settings).
 
 <img src="../img/layer-settings/bring-to-front.jpg" class="ms-docimage">
+
+* **Height reference from ground** (available for Mark, Icon, 3D Model and Text symbolizers) to indicate the reference for the point height between `None` (to the absolute zero of the ground), `Relative` (to the terrain layer level) or `Clamp` (the feature is clamped to the Terrain, if present, or to the ground). It is also possible to finely configure the **Height** value of the point symbols by choosing between one of the attributes of the feature (where *Point height* indicates the intrinsic height of the feature geometry) selecting *Attribute Value* or choosing *Constant Value* that allows to set the raw value of the height.
+
+<img src="../img/layer-settings/height-reference.jpg" class="ms-docimage">
+
+* **Leader line** (available for Mark, Icon, 3D Model and Text symbolizers) to add a line to connect the point symbol with the Terrain/Ground to have a more clear reference of the effective point position when the camera orientation change. The editor can choose the **Width** of the line and the **Color** through the usual *color picker*.
+
+<img src="../img/layer-settings/leader-line.jpg" class="ms-docimage">
 
 * **Polygon type** to choose whether the classification, drape effect, should affect `3D`, `Terrain` or `Both`. (This option is available for Fill symbolizers)
 
 <img src="../img/layer-settings/polygon-type.jpg" class="ms-docimage">
 
-* **Clap to ground** to enable/disable the boolean Property specifying whether the polyline should be clamped to the ground (This option is available for Line and Fill symbolizers).
+* **Clamp to ground/Clamp outline to ground** to enable/disable the boolean Property specifying whether the polyline should be clamped to the ground (This option is available for Line and Fill symbolizers).
 
 <img src="../img/layer-settings/clamp-to-ground.jpg" class="ms-docimage">
 
