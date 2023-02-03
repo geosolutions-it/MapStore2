@@ -1,5 +1,5 @@
 {
-    "proxyUrl": {
+    "proxyUrl"    : {
         "url": "proxy/?url=",
         "useCORS": [
           "http://demo.geo-solutions.it/geoserver",
