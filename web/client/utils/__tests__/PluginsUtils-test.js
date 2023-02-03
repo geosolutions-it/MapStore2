@@ -634,4 +634,31 @@ describe('PluginsUtils', () => {
         const items3 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container3", "Container3", true, []);
         expect(items3.length).toBe(1);
     });
+    it('getPagePluginsConfig', () => {
+        // check default behaviour
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: [{ name: 'Map' }]
+        })).toEqual([{ name: 'Map' }]);
+        // check default mode with pluginsConfig defined for desktop
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: {
+                desktop: [{ name: 'Map' }]
+            }
+        })).toEqual([{ name: 'Map' }]);
+        // check when mode selected is not present, use the default one
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: {
+                desktop: [{ name: 'Map' }]
+            },
+            mode: 'mobile'
+        })).toEqual([{ name: 'Map' }]);
+        // check if mobile mode is present, it is used instead of the default one
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: {
+                desktop: [{ name: 'Map' }, { name: 'TOC' }],
+                mobile: [{ name: 'Map' }]
+            },
+            mode: 'mobile'
+        })).toEqual([{ name: 'Map' }]);
+    });
 });
