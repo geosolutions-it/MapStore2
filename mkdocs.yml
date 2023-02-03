@@ -76,6 +76,7 @@ nav:
       - Catalog Services: 'user-guide/catalog.md'
       - Performing Measurments: 'user-guide/measure.md'
       - Annotations: 'user-guide/annotations.md'
+      - Map Views: 'user-guide/map-views.md'
       - Street View: 'user-guide/street-view.md'
       - Navigation Toolbar: 'user-guide/navigation-toolbar.md'
       - Background Selector: 'user-guide/background.md'
