@@ -506,6 +506,30 @@ export const setRefToWrappedComponent = (name) => {
 };
 
 /**
+ * Extract the list of plugins from a pluginsConfig property
+ * @param {object} [options]
+ * @param {object|array} [options.pluginsConfig] list of plugins or an object where every key represents a mode that list plugins
+ * @param {string} [options.mode] mode to detect correct list of plugins in a pluginsConfig object
+ * @param {string} [options.defaultMode] default mode to use if the mode is not available
+ * @returns {array} list of plugins
+ */
+export const getPagePluginsConfig = ({
+    pluginsConfig,
+    mode = 'desktop',
+    defaultMode = 'desktop'
+}) => {
+    if (pluginsConfig) {
+        if (isArray(pluginsConfig)) {
+            return pluginsConfig;
+        }
+        if (isObject(pluginsConfig)) {
+            return pluginsConfig[mode] || pluginsConfig[defaultMode] || [];
+        }
+    }
+    return [];
+};
+
+/**
  * Custom react-redux connect function that can override state property with plugin config.
  * The plugin config properties are taken from the **pluginCfg** property.
  * @param {function} [mapStateToProps] state to properties selector
@@ -640,5 +664,6 @@ export default {
     handleExpression,
     getMorePrioritizedContainer,
     getPluginConfiguration,
-    isMapStorePlugin
+    isMapStorePlugin,
+    getPagePluginsConfig
 };

@@ -10,8 +10,6 @@ import PropTypes from 'prop-types';
 import PluginsUtils from '../../utils/PluginsUtils';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
-import isObject from 'lodash/isObject';
-import isArray from 'lodash/isArray';
 import { componentFromProp } from 'recompose';
 
 const Component = componentFromProp('component');
@@ -119,15 +117,7 @@ class PluginsContainer extends React.Component {
     };
 
     getPluginsConfig = (props) => {
-        if (props.pluginsConfig) {
-            if (isArray(props.pluginsConfig)) {
-                return props.pluginsConfig;
-            }
-            if (isObject(props.pluginsConfig)) {
-                return props.pluginsConfig[this.props.mode] || props.pluginsConfig[props.defaultMode] || [];
-            }
-        }
-        return [];
+        return PluginsUtils.getPagePluginsConfig(props);
     };
 
     renderPlugins = (plugins) => {

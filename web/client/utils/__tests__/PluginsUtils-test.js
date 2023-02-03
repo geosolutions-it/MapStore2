@@ -634,4 +634,27 @@ describe('PluginsUtils', () => {
         const items3 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container3", "Container3", true, []);
         expect(items3.length).toBe(1);
     });
+    it('getPagePluginsConfig', () => {
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: [{ name: 'Map' }]
+        })).toEqual([{ name: 'Map' }]);
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: {
+                desktop: [{ name: 'Map' }]
+            }
+        })).toEqual([{ name: 'Map' }]);
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: {
+                desktop: [{ name: 'Map' }]
+            },
+            mode: 'mobile'
+        })).toEqual([{ name: 'Map' }]);
+        expect(PluginsUtils.getPagePluginsConfig({
+            pluginsConfig: {
+                desktop: [{ name: 'Map' }, { name: 'TOC' }],
+                mobile: [{ name: 'Map' }]
+            },
+            mode: 'mobile'
+        })).toEqual([{ name: 'Map' }]);
+    });
 });
