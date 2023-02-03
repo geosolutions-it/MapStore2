@@ -9,24 +9,13 @@
 import React, { useEffect, useMemo } from 'react';
 import useModulePlugins from "../../../hooks/useModulePlugins";
 import {getPlugins} from "../../../utils/ModulePluginsUtils";
-
-const getPluginsConfig = ({pluginsConfig: config, mode = 'desktop', defaultMode}) => {
-    if (config) {
-        if (Array.isArray(config)) {
-            return config;
-        }
-        if (typeof config === 'object') {
-            return config[mode] || config[defaultMode] || [];
-        }
-    }
-    return [];
-};
+import {getPagePluginsConfig} from '../../../utils/PluginsUtils';
 
 /**
  * HOC to provide additional logic layer for module plugins loading and caching
  * @param {function(): string[]} getPluginsConfigCallback - callback to extract proper part of plugins configuration passed with `pluginsConfig` prop
  */
-const withModulePlugins = (getPluginsConfigCallback = getPluginsConfig) => (Component) => ({ onLoaded = () => {
+const withModulePlugins = (getPluginsConfigCallback = getPagePluginsConfig) => (Component) => ({ onLoaded = () => {
 }, pluginsConfig, plugins = {}, loaderComponent, ...props }) => {
     const config = getPluginsConfigCallback({pluginsConfig, ...props});
     const { plugins: loadedPlugins, pending } = useModulePlugins({
