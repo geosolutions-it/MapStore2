@@ -76,7 +76,7 @@ In this case, the user can define the following settings:
 
 * The **Priority**, a parameter which determines the position of the records in the results list. Lower values imply a higher positions in the results list and vice versa. By default the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, therefore in order to see the custom results in a higher position a lower priority value is needed
 
-* The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](side-bar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up once a record from the search results is selected. Selecting *All Layers* or *Single Layer* the Identify tool is triggered, and the related panel opens displaying the information of all/single layer(s) visible in the map. With *Single Layer* instead, the Identify tool is triggered only for the layer (if it is present and visible in the map) related to the selected record in the search result list.
+* The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](navigation-toolbar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up once a record from the search results is selected. Selecting *All Layers* or *Single Layer* the Identify tool is triggered, and the related panel opens displaying the information of all/single layer(s) visible in the map. With *Single Layer* instead, the Identify tool is triggered only for the layer (if it is present and visible in the map) related to the selected record in the search result list.
 
 <img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -165,12 +165,12 @@ In particular, with these options it is possible to:
 
 * **Delete Map** in order to delete the current map by clicking the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button
 
-* Access the map **Settings** by clicking the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, where the user can change the current **Language** and select the [Identify](side-bar.md#identify-tool) options
+* Access the map **Settings** by clicking the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, where the user can change the current **Language** and select the [Identify](navigation-toolbar.md#identify-tool) options
 
 <img src="../img/menu-bar/settings-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 !!!Note
-    When the [3D navigation](side-bar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*.
+    When the [3D navigation](navigation-toolbar.md#3d-navigation) is enabled, opening the **Settings** panel, the editor is allowed to configure some options related to the *Cesium viewer*.
     <img src="../img/menu-bar/cesium-settings.jpg" class="ms-docimage" style="max-width:500px;"/>
 
     In particular, from the *Map Settings* it is possible to:

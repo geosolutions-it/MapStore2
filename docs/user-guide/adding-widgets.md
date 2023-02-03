@@ -74,7 +74,7 @@ Here, the user is allowed to:
 
 * **Remove** layers through the <img src="../img/button/delete.jpg" class="ms-docbutton"/> button
 
-* Disable/Enable the [Floating Identify Tool](side-bar.md#floating-identify-tool) to retrieve Identify information about layers available on the map through the <img src="../img/button/identify_green_burron.jpg" class="ms-docbutton"/> button
+* Disable/Enable the [Floating Identify Tool](navigation-toolbar.md#floating-identify-tool) to retrieve Identify information about layers available on the map through the <img src="../img/button/identify_green_burron.jpg" class="ms-docbutton"/> button
 
 !!!warning
     The *Floating Identify* tool is active by default (the button is green)

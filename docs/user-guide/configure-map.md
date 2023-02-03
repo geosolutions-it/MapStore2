@@ -30,7 +30,7 @@ The *Setting section* allows the user to:
 
 * Enable/disable the **Pan interaction** on the map
 
-* Enable/disable the **Identify** on the map. As reported in the [Identify tool](side-bar.md#identify-tool) section, also for map sections in a story it is possible to enable the *Identify tool* in one of the format supported by MapStore (*TEXT*, *HTML* or *PROPERTIES*)
+* Enable/disable the **Identify** on the map. As reported in the [Identify tool](navigation-toolbar.md#identify-tool) section, also for map sections in a story it is possible to enable the *Identify tool* in one of the format supported by MapStore (*TEXT*, *HTML* or *PROPERTIES*)
 
 <img src="../img/configure-map/identify-format.jpg" class="ms-docimage"/>
 
