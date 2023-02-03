@@ -34,7 +34,7 @@ The anonymous user is allowed to:
 
 <img src="../img/home-page/search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-* Open the **Advanced Filters**, through the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button, to select a [Context](managing-contexts.md) from the dropdown menu and find which map uses that context
+* Open the **Advanced Filters**, through the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button, to select one or more [Contexts](managing-contexts.md) from the dropdown menu and find all maps created from them
 
 <img src="../img/home-page/advanced-search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
