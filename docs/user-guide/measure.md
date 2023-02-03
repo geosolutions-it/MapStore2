@@ -1,6 +1,6 @@
 # Performing Measurements
 
-The Measure tool in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to perform different kind of measurements (like distance, area and bearing etc.) on the map. It also provides some additional functionalities that are described in this section of the documentation. The tool is accessible from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) by selecting the <img src="../img/button/measurament.jpg" class="ms-docbutton" style="max-height:20px;"/> button that opens the following window:
+The Measure tool in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to perform different kind of measurements (like distance, area and bearing etc.) on the map. It also provides some additional functionalities that are described in this section of the documentation. The tool is accessible from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) by selecting the <img src="../img/button/measurament.jpg" class="ms-docbutton" style="max-height:20px;"/> button that opens the following toolbar bar:
 
 <img src="../img/measure/measure.jpg" class="ms-docimage" style="max-width:600px;"/>
 
@@ -76,7 +76,7 @@ From this step the creation process is the same described in the [Annotations se
 
 ## Measurement on the 3D navigation
 
-When the [3D Navigation](side-bar.md#3d-navigation) is enabled, the editor has the ability to perform distance, area, point coordinates, height from terrain, angle and slope measurements on the 3D map.
+When the [3D Navigation](side-bar.md#3d-navigation) is enabled, the user has the ability to perform distance, area, point coordinates, height from terrain, angle and slope measurements on the 3D map.
 
 ### Measure distance on the 3D navigation
 
@@ -86,7 +86,7 @@ As soon as the measure window opens, by default the **Measure distance in 3D spa
 
 ### Measure area on the 3D navigation
 
-Once the **Measure Area in 3D space** button is selected <img src="../img/button/measure-area-on-3d.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case, at least 3 vertices need to be indicated). Same as measuring the distance, each click correspond to a vertex and the double click will indicate the last one.
+Once the **Measure Area in 3D space** button is selected <img src="../img/button/measure-area-on-3d.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case, at least 3 vertices need to be indicated). Same as measuring the distance, each click corresponds to a vertex and the double click will indicate the last one.
 
 <img src="../img/measure/measure-area-3d-ex.gif" class="ms-docimage" style="max-width:600px;"/>
 
