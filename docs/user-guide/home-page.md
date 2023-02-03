@@ -34,6 +34,10 @@ The anonymous user is allowed to:
 
 <img src="../img/home-page/search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
+* Open the **Advanced Filters**, through the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button, to select one or more [Contexts](managing-contexts.md) from the dropdown menu and find all maps created from them
+
+<img src="../img/home-page/advanced-search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
 * [Share](share.md#sharing-resources) a resource <img src="../img/button/share.jpg" class="ms-docbutton"/>
 
 * Take a look at map [Details](resources-properties.md#details) when available <img src="../img/button/details_button.jpg" class="ms-docbutton"/>
