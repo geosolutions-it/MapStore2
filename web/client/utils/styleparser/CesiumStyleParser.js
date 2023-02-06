@@ -62,12 +62,18 @@ const getNumberAttributeValue = (value, properties) => {
 
 const isGlobalOpacityChanged = (entity, globalOpacity) => (entity._msGlobalOpacity ?? 1) !== globalOpacity;
 
-function getLeaderLinePositions({
+export function getLeaderLinePositions({
     map,
-    cartographic
+    cartographic,
+    heightReference
 }) {
     return new Promise(resolve => {
         const drawLine = (zValue) => {
+            const computedHeight = {
+                none: cartographic.height,
+                relative: cartographic.height + zValue,
+                clamp: zValue
+            };
             resolve(
                 zValue === cartographic.height
                     ? undefined
@@ -77,7 +83,7 @@ function getLeaderLinePositions({
                         zValue,
                         cartographic.longitude,
                         cartographic.latitude,
-                        cartographic.height
+                        computedHeight[heightReference ?? "none"]
                     ])
             );
         };
@@ -86,27 +92,30 @@ function getLeaderLinePositions({
             drawLine(0);
             return;
         }
-        const position = Cesium.Cartographic.fromRadians(
-            cartographic.longitude,
-            cartographic.latitude
-        );
-        const promise = terrainProvider?.availability
-            ? Cesium.sampleTerrainMostDetailed(
-                terrainProvider,
-                position
-            )
-            : Cesium.sampleTerrain(
-                terrainProvider,
-                terrainProvider?.sampleTerrainZoomLevel ?? 18,
-                position
-            );
-        if (Cesium.defined(promise)) {
-            promise
-                .then((updatedPositions) => drawLine(updatedPositions?.[0]?.height ?? 0))
-                .catch(() => drawLine(0));
-        } else {
-            drawLine(0);
-        }
+
+        const readyPromise = terrainProvider.ready
+            ? Promise.resolve(true)
+            : terrainProvider.readyPromise;
+
+        readyPromise.then(() => {
+            const promise = terrainProvider?.availability
+                ? Cesium.sampleTerrainMostDetailed(
+                    terrainProvider,
+                    [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
+                )
+                : Cesium.sampleTerrain(
+                    terrainProvider,
+                    terrainProvider?.sampleTerrainZoomLevel ?? 18,
+                    [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
+                );
+            if (Cesium.defined(promise)) {
+                promise
+                    .then((updatedPositions) => drawLine(updatedPositions?.[0]?.height ?? 0))
+                    .catch(() => drawLine(0));
+            } else {
+                drawLine(0);
+            }
+        });
     });
 }
 
@@ -173,14 +182,14 @@ function addLeaderLineGraphic({
     }
 
     const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue(Cesium.JulianDate.now()));
-
+    const heightReference = symbolizer.msHeightReference;
     return (
         (
             symbolizer?.msHeight !== entity._msSymbolizer?.msHeight
             || symbolizer?.msHeightReference !== entity._msSymbolizer?.msHeightReference
             || !entity.polyline
         )
-            ? getLeaderLinePositions({ map, cartographic })
+            ? getLeaderLinePositions({ map, cartographic, heightReference })
                 .then((positions) => new Cesium.PolylineGraphics({ positions }))
             : Promise.resolve(entity.polyline)
     )
