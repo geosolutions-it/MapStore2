@@ -8,8 +8,9 @@
 
 import * as Cesium from 'cesium';
 import expect from 'expect';
-import CesiumStyleParser from '../CesiumStyleParser';
+import CesiumStyleParser, { getLeaderLinePositions } from '../CesiumStyleParser';
 import { getImageIdFromSymbolizer, geoStylerStyleFilter } from '../../VectorStyleUtils';
+
 
 let images = [];
 
@@ -378,7 +379,6 @@ describe('CesiumStyleParser', () => {
                     });
                 });
         });
-
         it('should add leader line to all point geometries symbolizer', (done) => {
 
             const leaderLineOptions = {
@@ -536,6 +536,40 @@ describe('CesiumStyleParser', () => {
                             .catch(done);
                     }).catch(done);
                 });
+        });
+
+
+        // eslint-disable-next-line no-only-tests/no-only-tests
+        it.only('should add leader line for relative height Reference', (done) => {
+
+            const map = {};
+            const cartographic = {
+                height: 5000,
+                latitude: 0.7763247989914425,
+                longitudes: -1.8117186716869715
+            };
+            const heightReference = "relative";
+            const zValue = 1;
+            const computedHeight = {
+                none: cartographic.height,
+                relative: cartographic.height + zValue,
+                clamp: zValue
+            };
+
+            const expectedValue = Cesium.Cartesian3.fromRadiansArrayHeights([
+                cartographic.longitudes,
+                cartographic.latitude,
+                zValue,
+                cartographic.longitudes,
+                cartographic.latitude,
+                computedHeight[heightReference ?? "none"]
+            ]);
+
+            const parse = getLeaderLinePositions(map, cartographic, heightReference);
+            parse.then((res) => {
+                expect(res).toBe(expectedValue);
+                done();
+            }).catch(done());
         });
     });
 });
