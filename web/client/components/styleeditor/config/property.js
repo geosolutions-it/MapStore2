@@ -22,7 +22,8 @@ const property = {
         pattern,
         disableAlpha,
         getGroupParams,
-        getGroupConfig
+        getGroupConfig,
+        isDisabled
     }) => ({
         type: 'color',
         label,
@@ -55,9 +56,10 @@ const property = {
                 [opacityKey]: a,
                 ...(pattern && {[graphicKey]: undefined})
             };
-        }
+        },
+        isDisabled
     }),
-    width: ({ key = 'width', label = 'Width', fallbackValue = 1, dasharrayKey = 'dasharray' }) => ({
+    width: ({ key = 'width', label = 'Width', fallbackValue = 1, dasharrayKey = 'dasharray', isDisabled }) => ({
         type: 'input',
         label,
         config: {
@@ -83,7 +85,8 @@ const property = {
                         : undefined
                 })
             };
-        }
+        },
+        isDisabled
     }),
     dasharray: ({ key = 'dasharray', label = 'Dash array' }) => ({
         type: 'dash',
@@ -124,7 +127,7 @@ const property = {
             };
         }
     }),
-    cap: ({ key = 'cap', label = 'Line cap' }) => ({
+    cap: ({ key = 'cap', label = 'Line cap', isDisabled }) => ({
         type: 'toolbar',
         label,
         config: {
@@ -143,9 +146,10 @@ const property = {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
-    join: ({ key = 'join', label = 'Line join' }) => ({
+    join: ({ key = 'join', label = 'Line join', isDisabled }) => ({
         type: 'toolbar',
         label,
         config: {
@@ -164,7 +168,8 @@ const property = {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
     colorMapType: ({ key = 'colorMapType', label = 'Color map type', isDisabled }) => ({
         type: 'toolbar',
@@ -208,7 +213,7 @@ const property = {
             };
         }
     }),
-    number: ({ key = 'scale', label = 'Scale', min, max, fallbackValue, maxWidth, uom }) => ({
+    number: ({ key = 'scale', label = 'Scale', min, max, fallbackValue, maxWidth, uom, isDisabled }) => ({
         type: 'input',
         label,
         config: {
@@ -226,7 +231,8 @@ const property = {
             return {
                 [key]: value === undefined ? undefined : parseFloat(value)
             };
-        }
+        },
+        isDisabled
     }),
     opacity: ({ key = 'opacity', label = 'Opacity' }) => ({
         type: 'slider',
@@ -292,7 +298,7 @@ const property = {
             };
         }
     }),
-    msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground' }) => ({
+    msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground', isDisabled }) => ({
         type: 'toolbar',
         label,
         config: {
@@ -309,9 +315,10 @@ const property = {
                 [key]: value
             };
         },
-        setValue: (value) => !!value
+        setValue: (value) => !!value,
+        isDisabled
     }),
-    msBringToFront: ({ key = 'msBringToFront', label = 'Arrange' }) => ({
+    msBringToFront: ({ key = 'msBringToFront', label = 'Arrange', isDisabled }) => ({
         type: 'toolbar',
         label,
         config: {
@@ -328,9 +335,10 @@ const property = {
                 [key]: value
             };
         },
-        setValue: (value) => !!value
+        setValue: (value) => !!value,
+        isDisabled
     }),
-    msClassificationType: ({ key = 'msClassificationType', label = 'PolygonType' }) => ({
+    msClassificationType: ({ key = 'msClassificationType', label = 'PolygonType', isDisabled }) => ({
         type: 'toolbar',
         label,
         config: {
@@ -349,9 +357,10 @@ const property = {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
-    msHeightReference: ({ key = 'msHeightReference', label = 'Height reference from ground' }) => ({
+    msHeightReference: ({ key = 'msHeightReference', label = 'Height reference from ground', isDisabled }) => ({
         type: 'toolbar',
         label,
         config: {
@@ -371,7 +380,8 @@ const property = {
                 [key]: value,
                 ...(value === 'clamp' && { msHeight: undefined })
             };
-        }
+        },
+        isDisabled
     }),
     shape: ({ label, key = 'wellKnownName' }) => ({
         type: 'mark',
@@ -392,7 +402,7 @@ const property = {
             };
         }
     }),
-    model: ({ label, key = 'model' }) => ({
+    model: ({ label, key = 'model', isDisabled }) => ({
         type: 'model',
         label,
         config: {},
@@ -400,7 +410,7 @@ const property = {
             return {
                 [key]: value
             };
-        }
+        }, isDisabled
     }),
     fontStyle: ({ label, key = 'fontStyle' }) => ({
         type: 'toolbar',

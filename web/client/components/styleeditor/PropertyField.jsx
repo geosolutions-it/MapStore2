@@ -16,13 +16,13 @@ function PropertyField({ children, label, tools, divider, invalid, warning, disa
     }
     const warningClassName = warning ? ' ms-symbolizer-value-warning' : '';
     const validationClassName = invalid ? ' ms-symbolizer-value-invalid' : '';
-    const disabledClassName = disabled ? ' ms-symbolizer-value-disabled' : '';
+    const disabledClassName = disabled ? ' ms-symbolizer-field-disabled' : '';
     return (
         <div
-            className="ms-symbolizer-field">
+            className={'ms-symbolizer-field' + disabledClassName}>
             <div className="ms-symbolizer-label"><Message msgId={label} /></div>
             <div
-                className={'ms-symbolizer-value' + validationClassName + disabledClassName + warningClassName}
+                className={'ms-symbolizer-value' + validationClassName + warningClassName}
                 // prevent drag and drop when interacting with property input
                 onDragStart={(event) => {
                     event.stopPropagation();

@@ -598,6 +598,10 @@ Ported to CodeMirror by Peter Kroon
     > .ms-symbolizer-label {
         flex: 1;
     }
+    &.ms-symbolizer-field-disabled {
+        opacity: 0.4;
+        filter: saturate(0%);
+    }
     .ms-symbolizer-value {
         display: flex;
         align-items: center;
@@ -621,9 +625,6 @@ Ported to CodeMirror by Peter Kroon
         }
         &.ms-symbolizer-value-warning {
             outline: 1px solid @ms-warning;
-        }
-        &.ms-symbolizer-value-disabled {
-            opacity: 0.4;
         }
     }
 }

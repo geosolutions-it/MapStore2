@@ -211,6 +211,7 @@ const RulesEditor = forwardRef(({
                                     glyph: block.glyphAdd || block.glyph,
                                     visible: block.supportedTypes.indexOf(geometryType) !== -1,
                                     tooltipId: block.tooltipAddId,
+                                    disabled: block?.disableAdd ? block.disableAdd() : false,
                                     onClick: () => handleAdd({
                                         name: '',
                                         ruleId: uuidv1(),

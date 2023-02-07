@@ -19,11 +19,13 @@ const Glyphicon = tooltip(GlyphiconRB);
  * @memberof components.styleeditor
  * @name ModelInput
  * @class
+ * @prop {string} disabled href of the image
  * @prop {string} value href of the image
  * @prop {function} onChange returns the updated href value of the model
  * @prop {function} onError callback to check if the url is valid
  */
 function ModelInput({
+    disabled,
     value,
     onChange = () => {},
     onError = () => {}
@@ -49,6 +51,7 @@ function ModelInput({
             style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             <FormGroup style={{ flex: 1 }}>
                 <DebouncedFormControl
+                    disabled={disabled}
                     placeholder="styleeditor.placeholderEnterModelUrl"
                     style={{ paddingRight: 26 }}
                     value={moduleUrl}
