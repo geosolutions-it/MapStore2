@@ -1493,7 +1493,7 @@
                 "dynamic": {
                     "label": "Dynamic Filter",
                     "info": "Filter is used when search text is present and is applied in 'AND' with static filter",
-                    "helpText": "Use template with ${searchText} placeholder to capture search string"
+                    "helpText": "Use template with $\\{searchText\\} placeholder to capture search string"
                 },
                 "error": "Invalid xml syntax"
             },

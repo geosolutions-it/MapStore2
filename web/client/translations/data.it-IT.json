@@ -1493,7 +1493,7 @@
                 "dynamic": {
                     "label": "Filtro dinamico",
                     "info": "Il filtro viene utilizzato quando è presente il testo di ricerca e viene applicato in 'AND' con filtro statico",
-                    "helpText": "Usa il segnaposto ${searchText} nel modello per inserire la stringa di ricerca"
+                    "helpText": "Usa il segnaposto $\\{searchText\\} nel modello per inserire la stringa di ricerca"
                 },
                 "error": "Sintassi xml non valida"
             },
