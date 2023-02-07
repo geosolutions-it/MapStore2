@@ -727,7 +727,7 @@ export const toCQLFilter = function(json) {
      }
     // this should be the standard form of the filter.
     if( objFilter.filters) {
-        filters.concat(convertFiltersToCQL(objFilter.filters));
+        filters = filters.concat(convertFiltersToCQL(objFilter.filters));
     }
     if (filters.length) {
         return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
@@ -1119,10 +1119,11 @@ export const getWFSFilterData = (filterObj, options) => {
     return data;
 };
 export const isLikeOrIlike = (operator) => operator === "ilike" || operator === "like";
-export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {} } = {}) =>
+export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) =>
     !(filterFields.filter((field) => field.value || field.value === 0).length > 0)
     && !spatialField.geometry
-    && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation);
+    && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation)
+    && !(filters && filters.length > 0);
 export const isFilterValid = (f = {}) =>
     (f.filterFields && f.filterFields.length > 0)
     || (f.simpleFilterFields && f.simpleFilterFields.length > 0)
@@ -1132,7 +1133,8 @@ export const isFilterValid = (f = {}) =>
         && f.crossLayerFilter.collectGeometries
         && f.crossLayerFilter.collectGeometries.queryCollection
         && f.crossLayerFilter.collectGeometries.queryCollection.geometryName
-        && f.crossLayerFilter.collectGeometries.queryCollection.typeName);
+        && f.crossLayerFilter.collectGeometries.queryCollection.typeName)
+    || (f.filters && f.filters.length > 0);
 const composeSpatialFields = (...spatialFields) => {
     return flatten(spatialFields.filter(v => !!v));
 };
@@ -1271,27 +1273,41 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
 
     return filterString;
 };
-const convertFiltersToOGC = (filters, options) => {
+export const convertFiltersToOGC = (filters, options) => {
     const convertFilter = (filter) => {
-        const isLegacyFilterFormat = ({filterFormat = "mapstore", filterVersion = "1.0.0"} = {}) => filterFormat === "mapstore" && filterVersion === "1.0.0";
-            if (isLegacyFilterFormat(filter)) {
-                return toCQLFilterParts(filter, options?.versionOGC, options?.nsplaceholder);
+        const isLegacyFormat = ({format = "mapstore", version = "1.0.0"} = {}) => format === "mapstore" && version === "1.0.0";
+            if (isLegacyFormat(filter)) {
+                return toOGCFilterParts(filter, options?.versionOGC, options?.nsplaceholder);
             }
-            if (converters[filter.filterFormat].toOGC()) {
-                return converters[filter.filterFormat](filter, options?.versionOGC, options?.nsplaceholder);
+            if (filter.format === "logic" && filter.logic)  {
+                const logic = (filter.logic.toUpperCase()) === "AND" ? "And" : "Or";
+                return  `<${options?.nsplaceholder}:${logic}>${filter.filters.map(convertFilter).join("")}</${options?.nsplaceholder}:${logic}>`
+            }
+            if (converters[filter.format].toOGC) {
+                return converters[filter.format].toOGC(filter, {filterNS: options?.nsplaceholder}); // TODO: handle version OGC, if needed (maybe change gml version)
             }
         };
     return flatten(filters.map(convertFilter));
 }
 
-const convertFiltersToCQL = (filters) => {
+export const convertFiltersToCQL = (filters) => {
     const convertFilter = (filter) => {
-        const isLegacyFilterFormat = ({filterFormat = "mapstore", filterVersion = "1.0.0"} = {}) => filterFormat === "mapstore" && filterVersion === "1.0.0";
-        if (isLegacyFilterFormat(filter)) {
+        const isLegacyFormat = ({format = "mapstore", version = "1.0.0"} = {}) => format === "mapstore" && version === "1.0.0";
+        if (isLegacyFormat(filter)) {
             return toCQLFilter(filter);
         }
-        if (converters[filter.filterFormat].toCQL()) {
-            return converters[filter.filterFormat](filter);
+        if (filter.format === "logic" && filter.logic) {
+                const logic = filter.logic.toUpperCase();
+                if(!filter.filters || filter.filters.length === 0) {
+                    return []; // TODO: check consistency
+                }
+                else if (filter.filters.length === 1) {
+                    return convertFilter(filter.filters[0]);
+                }
+                return `((${filter.filters.map(convertFilter).join(`) ${logic} (`)}))`
+            }
+        if (converters?.[filter.format]?.toCQL) {
+            return converters[filter.format].toCQL(filter);
         }
     };
     return flatten(filters.map(convertFilter));

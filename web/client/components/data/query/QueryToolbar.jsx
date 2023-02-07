@@ -134,7 +134,9 @@ class QueryToolbar extends React.Component {
         // TODO: use isFilterValid
         const isCurrentFilterValid = hasValidAttributeFields
             || this.props.spatialField.geometry
-            || isCrossLayerFilterValid(this.props.crossLayerFilter);
+            || isCrossLayerFilterValid(this.props.crossLayerFilter)
+            // a special invalid field can be added to filter if they are invalid to hide the apply button
+            || this.props.filters && this.props.filters.length > 0 && this.props.filters.map(({invalid} = {}) => !invalid);
         const isAppliedFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
         // submit for empty filter is allowed when
         // - it is forced to be allowed by outside
@@ -226,7 +228,8 @@ class QueryToolbar extends React.Component {
             groupFields: currentFilter.groupFields,
             filterFields: currentFilter.filterFields,
             spatialField: currentFilter.spatialField,
-            crossLayerFilter: currentFilter.crossLayerFilter
+            crossLayerFilter: currentFilter.crossLayerFilter,
+            filters: currentFilter.filters
         };
         const appliedFilter = this.props.appliedFilter || {};
         const applied = {
@@ -235,6 +238,7 @@ class QueryToolbar extends React.Component {
             spatialField: appliedFilter.spatialPanelExpanded && appliedFilter.spatialField || {
                 attribute: this.props.spatialField && this.props.spatialField.attribute
             },
+            filters: appliedFilter.filters,
             crossLayerFilter: appliedFilter.crossLayerExpanded && appliedFilter.crossLayerFilter && appliedFilter.crossLayerFilter.operation ? setupCrossLayerFilterDefaults(appliedFilter.crossLayerFilter) : null
         };
 

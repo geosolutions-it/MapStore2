@@ -8,7 +8,7 @@
  * @prop {function} toCql
  * @prop {function} toOgc
  */
-import * as cql from './cql';
+import cql from './cql';
 
 export default {
     cql
