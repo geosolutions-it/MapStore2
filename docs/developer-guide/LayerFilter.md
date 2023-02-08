@@ -55,7 +55,7 @@ Moreover they can be of `mapstore` format too.
                     "coordinates": [[[12.5,41.5], [12.5,  42.5], [13.5,42.5], [13.5, 41.5], [12.5,41.5]]]
                 }
             },
-            "attributeFields": [{
+            "filterFields": [{
                 "attribute": "name",
                 "operator": "=",
                 "type": "string",
@@ -90,6 +90,9 @@ The `cql` format is a JSON object that has this shape:
 }
 ```
 
+!!! Note:
+    MapStore actually supports only a subset of CQL, that is the one used by GeoServer. In particular can not parse WKT geometries yet.
+
 ### `mapstore-query-panel` format
 
 The `mapstore-query-panel` format is a JSON object that has this shape:
@@ -100,7 +103,7 @@ The `mapstore-query-panel` format is a JSON object that has this shape:
     "version": "1.0.0",
     "groupFields": [],
     "spatialField": {},
-    "attributeFields": [],
+    "filterFields": [],
     "crossLayerFilter": {},
 
 }
@@ -130,3 +133,192 @@ Example:
 
 These methods will translate the JSON object (or in same cases the effective body of the filter) in the format specified in the method name.
 Future converters (maybe with a more generic method) will be added to support other formats, if needed.
+
+## Appendix A: `mapstore` format legacy fields
+
+`mapstore-query-panel` will include all the legacy fields of the `mapstore` format, that will be deprecated in the future.
+For backward compatibility, the `mapstore` format will be still supported, but needs tp be converted into `mapstore-query-panel` format.
+
+Here a full example of the current content stored in `layerFilter` object, with all the legacy fields:
+
+```json
+"layerFilter": {
+    "searchUrl": null,
+    "featureTypeConfigUrl": null,
+    "showGeneratedFilter": false,
+    "attributePanelExpanded": true,
+    "spatialPanelExpanded": true,
+    "crossLayerExpanded": true,
+    "showDetailsPanel": false,
+    "groupLevels": 5,
+    "useMapProjection": false,
+    "toolbarEnabled": true,
+    "groupFields": [
+        {
+            "id": 1,
+            "logic": "OR",
+            "index": 0
+        },
+        {
+            "id": 1671785737915,
+            "logic": "OR",
+            "groupId": 1,
+            "index": 1
+        }
+    ],
+    "maxFeaturesWPS": 5,
+    "filterFields": [
+        {
+            "rowId": 1671785736331,
+            "groupId": 1,
+            "attribute": "LAND_KM",
+            "operator": ">",
+            "value": 1000000,
+            "type": "number",
+            "fieldOptions": {
+                "valuesCount": 0,
+                "currentPage": 1
+            },
+            "exception": null
+        },
+        {
+            "rowId": 1671785739355,
+            "groupId": 1671785737915,
+            "attribute": "STATE_NAME",
+            "operator": "=",
+            "value": "Alabama",
+            "type": "string",
+            "fieldOptions": {
+                "valuesCount": 0,
+                "currentPage": 1
+            },
+            "exception": null,
+            "loading": false,
+            "options": {
+                "STATE_NAME": []
+            },
+            "openAutocompleteMenu": false
+        },
+        {
+            "rowId": 1671785746696,
+            "groupId": 1671785737915,
+            "attribute": "STATE_NAME",
+            "operator": "=",
+            "value": "Arizona",
+            "type": "string",
+            "fieldOptions": {
+                "valuesCount": 0,
+                "currentPage": 1
+            },
+            "exception": null,
+            "loading": false,
+            "options": {
+                "STATE_NAME": []
+            },
+            "openAutocompleteMenu": false
+        }
+    ],
+    "spatialField": {
+        "method": "BBOX",
+        "operation": "INTERSECTS",
+        "geometry": {
+            "id": "aefadb00-829f-11ed-b555-8bd9209cf0fa",
+            "type": "Polygon",
+            "extent": [
+                -13188750.608437454,
+                3135752.6483710706,
+                -8795761.718831802,
+                4671831.168789972
+            ],
+            "center": [
+                -10992256.163634628,
+                3903791.908580521
+            ],
+            "coordinates": [
+                [
+                    [
+                        -13188750.608437454,
+                        4671831.168789972
+                    ],
+                    [
+                        -13188750.608437454,
+                        3135752.6483710706
+                    ],
+                    [
+                        -8795761.718831802,
+                        3135752.6483710706
+                    ],
+                    [
+                        -8795761.718831802,
+                        4671831.168789972
+                    ],
+                    [
+                        -13188750.608437454,
+                        4671831.168789972
+                    ]
+                ]
+            ],
+            "style": {},
+            "projection": "EPSG:3857"
+        },
+        "attribute": "the_geom"
+    },
+    "simpleFilterFields": [],
+    "crossLayerFilter": {
+        "attribute": "the_geom",
+        "collectGeometries": {
+            "queryCollection": {
+                "typeName": "gs:us_states",
+                "filterFields": [
+                    {
+                        "rowId": 1671785795624,
+                        "groupId": 1,
+                        "attribute": "STATE_NAME",
+                        "operator": "=",
+                        "value": "Alabama",
+                        "type": "string",
+                        "fieldOptions": {
+                            "valuesCount": 0,
+                            "currentPage": 1
+                        },
+                        "exception": null,
+                        "loading": false,
+                        "openAutocompleteMenu": false,
+                        "options": {
+                            "STATE_NAME": []
+                        }
+                    },
+                    {
+                        "rowId": 1671785801840,
+                        "groupId": 1,
+                        "attribute": "STATE_NAME",
+                        "operator": "=",
+                        "value": "Arizona",
+                        "type": "string",
+                        "fieldOptions": {
+                            "valuesCount": 0,
+                            "currentPage": 1
+                        },
+                        "exception": null,
+                        "loading": false,
+                        "openAutocompleteMenu": false,
+                        "options": {
+                            "STATE_NAME": []
+                        }
+                    }
+                ],
+                "geometryName": "the_geom",
+                "groupFields": [
+                    {
+                        "id": 1,
+                        "index": 0,
+                        "logic": "OR"
+                    }
+                ]
+            }
+        },
+        "operation": "INTERSECTS"
+    },
+    "autocompleteEnabled": true
+}
+```
