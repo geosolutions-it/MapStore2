@@ -230,7 +230,6 @@ Details:
 - `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs'}`.
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
 
-
 ##### Multiple URLs
 
 This feature is not yet fully supported by all the plugins, but OpenLayers supports it so if you put an array of urls instead of a single string in the layer url.
