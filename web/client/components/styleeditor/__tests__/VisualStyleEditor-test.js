@@ -13,6 +13,7 @@ import expect from 'expect';
 import { Simulate, act } from 'react-dom/test-utils';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import testBackend from 'react-dnd-test-backend';
+import { waitFor } from '@testing-library/react';
 
 const VisualStyleEditor = dragDropContext(testBackend)(VisualStyleEditorComponent);
 
@@ -287,4 +288,389 @@ describe('VisualStyleEditor', () => {
             'glyphicon glyphicon-redo'
         ]);
     });
+    it('should disable add model symbolizer when enable3dStyleOptions is false', () => {
+        ReactDOM.render(<VisualStyleEditor
+            format="geostyler"
+            geometryType="vector"
+            code={{ name: '', rules: [] }}
+            enable3dStyleOptions={false}
+            defaultStyleJSON={null}
+            exactMatchGeometrySymbol
+            config={{
+                simple: true,
+                fonts: []
+            }}
+            debounceTime={1}
+        />, document.getElementById('container'));
+        const disabledButtons = document.querySelectorAll('.ms-style-rules-editor-right button.disabled');
+        expect([...disabledButtons].map(node => node.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-model-plus'
+        ]);
+    });
+    it('should disable mark symbolizer properties when enable3dStyleOptions is false and not undefined', (done) => {
+        const styleBody = {
+            "name": "",
+            "rules": [
+                {
+                    "name": "",
+                    "ruleId": "1",
+                    "symbolizers": [
+                        {
+                            "kind": "Mark",
+                            "wellKnownName": "Star",
+                            "color": "#ffe500",
+                            "fillOpacity": 1,
+                            "strokeColor": "#050505",
+                            "strokeOpacity": 1,
+                            "strokeWidth": 2,
+                            "radius": 19,
+                            "rotate": 0,
+                            "msBringToFront": true,
+                            "msHeightReference": "none",
+                            "symbolizerId": "1",
+                            "msHeight": {
+                                "type": "attribute",
+                                "name": "height"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="geostyler"
+                code={styleBody}
+                enable3dStyleOptions={false}
+                geometryType="vector"
+                defaultStyleJSON={styleBody}
+                exactMatchGeometrySymbol
+                config={{
+                    simple: true,
+                    fonts: []
+                }}
+                debounceTime={1}
+            />, document.getElementById('container'));
+        });
+        waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
+            .then(() => {
+                const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([
+                    'styleeditor.msBringToFront',
+                    'styleeditor.heightReferenceFromGround',
+                    'styleeditor.height',
+                    'styleeditor.leaderLineColor',
+                    'styleeditor.leaderLineWidth'
+                ]);
+                done();
+            }).catch(done);
+    });
+    it('should disable icon symbolizer properties when enable3dStyleOptions is false and not undefined', (done) => {
+        const styleBody = {
+            "name": "",
+            "rules": [
+                {
+                    "name": "",
+                    "ruleId": "1",
+                    "symbolizers": [
+                        {
+                            "kind": "Icon",
+                            "image": "http://path/to/img.png",
+                            "opacity": 1,
+                            "size": 32,
+                            "rotate": 0,
+                            "msBringToFront": false,
+                            "msHeightReference": "none",
+                            "symbolizerId": "1"
+                        }
+                    ]
+                }
+            ]
+        };
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="geostyler"
+                code={styleBody}
+                enable3dStyleOptions={false}
+                geometryType="vector"
+                defaultStyleJSON={styleBody}
+                exactMatchGeometrySymbol
+                config={{
+                    simple: true,
+                    fonts: []
+                }}
+                debounceTime={1}
+            />, document.getElementById('container'));
+        });
+        waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
+            .then(() => {
+                const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([
+                    'styleeditor.msBringToFront',
+                    'styleeditor.heightReferenceFromGround',
+                    'styleeditor.height',
+                    'styleeditor.leaderLineColor',
+                    'styleeditor.leaderLineWidth'
+                ]);
+                done();
+            }).catch(done);
+    });
+    it('should disable text symbolizer properties when enable3dStyleOptions is false and not undefined', (done) => {
+        const styleBody = {
+            "name": "",
+            "rules": [
+                {
+                    "name": "",
+                    "ruleId": "1",
+                    "symbolizers": [
+                        {
+                            "kind": "Text",
+                            "color": "#333333",
+                            "size": 14,
+                            "fontStyle": "normal",
+                            "fontWeight": "normal",
+                            "haloColor": "#ffffff",
+                            "haloWidth": 1,
+                            "allowOverlap": true,
+                            "offset": [
+                                0,
+                                0
+                            ],
+                            "msBringToFront": false,
+                            "msHeightReference": "none",
+                            "symbolizerId": "1",
+                            "label": "{{name}}",
+                            "font": [
+                                "Arial"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="geostyler"
+                code={styleBody}
+                enable3dStyleOptions={false}
+                geometryType="vector"
+                defaultStyleJSON={styleBody}
+                exactMatchGeometrySymbol
+                config={{
+                    simple: true,
+                    fonts: ["Arial"]
+                }}
+                debounceTime={1}
+            />, document.getElementById('container'));
+        });
+        waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
+            .then(() => {
+                const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([
+                    'styleeditor.msBringToFront',
+                    'styleeditor.heightReferenceFromGround',
+                    'styleeditor.height',
+                    'styleeditor.leaderLineColor',
+                    'styleeditor.leaderLineWidth'
+                ]);
+                done();
+            }).catch(done);
+    });
+    it('should disable model symbolizer properties when enable3dStyleOptions is false and not undefined', (done) => {
+        const styleBody = {
+            "name": "",
+            "rules": [
+                {
+                    "name": "",
+                    "ruleId": "1",
+                    "symbolizers": [
+                        {
+                            "kind": "Model",
+                            "model": "https://path/to/model.glb",
+                            "scale": 3,
+                            "color": "#ffffff",
+                            "opacity": 1,
+                            "msHeightReference": "none",
+                            "symbolizerId": "1",
+                            "msHeight": 0,
+                            "heading": 67
+                        }
+                    ]
+                }
+            ]
+        };
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="geostyler"
+                code={styleBody}
+                enable3dStyleOptions={false}
+                geometryType="vector"
+                defaultStyleJSON={styleBody}
+                exactMatchGeometrySymbol
+                config={{
+                    simple: true,
+                    fonts: []
+                }}
+                debounceTime={1}
+            />, document.getElementById('container'));
+        });
+        waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
+            .then(() => {
+                const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([
+                    'styleeditor.model',
+                    'styleeditor.scale',
+                    'styleeditor.pitch',
+                    'styleeditor.roll',
+                    'styleeditor.heading',
+                    'styleeditor.color',
+                    'styleeditor.heightReferenceFromGround',
+                    'styleeditor.height',
+                    'styleeditor.leaderLineColor',
+                    'styleeditor.leaderLineWidth'
+                ]);
+                done();
+            }).catch(done);
+    });
+    it('should disable line symbolizer properties when enable3dStyleOptions is false and not undefined', (done) => {
+        const styleBody = {
+            "name": "",
+            "rules": [
+                {
+                    "name": "",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": "#252525",
+                            "opacity": 1,
+                            "width": 1,
+                            "symbolizerId": "1",
+                            "dasharray": [
+                                8,
+                                8
+                            ],
+                            "msClampToGround": false
+                        }
+                    ],
+                    "ruleId": "1"
+                }
+            ]
+        };
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="geostyler"
+                code={styleBody}
+                enable3dStyleOptions={false}
+                geometryType="vector"
+                defaultStyleJSON={styleBody}
+                exactMatchGeometrySymbol
+                config={{
+                    simple: true,
+                    fonts: []
+                }}
+                debounceTime={1}
+            />, document.getElementById('container'));
+        });
+        waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
+            .then(() => {
+                const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([ 'styleeditor.clampToGround' ]);
+                done();
+            }).catch(done);
+    });
+    it('should disable line symbolizer properties when enable3dStyleOptions is true and not undefined', (done) => {
+        const styleBody = {
+            "name": "",
+            "rules": [
+                {
+                    "name": "",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": "#252525",
+                            "opacity": 1,
+                            "width": 1,
+                            "symbolizerId": "1",
+                            "dasharray": [
+                                8,
+                                8
+                            ],
+                            "msClampToGround": false
+                        }
+                    ],
+                    "ruleId": "1"
+                }
+            ]
+        };
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="geostyler"
+                code={styleBody}
+                enable3dStyleOptions
+                geometryType="vector"
+                defaultStyleJSON={styleBody}
+                exactMatchGeometrySymbol
+                config={{
+                    simple: true,
+                    fonts: []
+                }}
+                debounceTime={1}
+            />, document.getElementById('container'));
+        });
+        waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
+            .then(() => {
+                const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([
+                    'styleeditor.lineCap',
+                    'styleeditor.lineJoin'
+                ]);
+                done();
+            }).catch(done);
+    });
+    it('should disable fill symbolizer properties when enable3dStyleOptions is false and not undefined', (done) => {
+        const styleBody = {
+            "name": "",
+            "rules": [
+                {
+                    "name": "",
+                    "symbolizers": [
+                        {
+                            "kind": "Fill",
+                            "color": "#ff8e00",
+                            "opacity": 0.1,
+                            "fillOpacity": 0.63,
+                            "symbolizerId": "1",
+                            "msClassificationType": "terrain"
+                        }
+                    ],
+                    "ruleId": "1"
+                }
+            ]
+        };
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="geostyler"
+                code={styleBody}
+                enable3dStyleOptions={false}
+                geometryType="vector"
+                defaultStyleJSON={styleBody}
+                exactMatchGeometrySymbol
+                config={{
+                    simple: true,
+                    fonts: []
+                }}
+                debounceTime={1}
+            />, document.getElementById('container'));
+        });
+        waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
+            .then(() => {
+                const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([
+                    'styleeditor.classificationtype',
+                    'styleeditor.clampOutlineToGround'
+                ]);
+                done();
+            }).catch(done);
+    });
+
 });

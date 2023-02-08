@@ -12,29 +12,31 @@ import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
-const vector3dStyleOptions = ({ label = 'styleeditor.clampToGround' }) => ({
+const vector3dStyleOptions = ({ label = 'styleeditor.clampToGround', isDisabled }) => ({
     msClampToGround: property.msClampToGround({
-        label
+        label,
+        isDisabled
     })
 });
 
 const INITIAL_OPTION_VALUE = '@ms-INITIAL_OPTION_VALUE';
 
-const heightPoint3dOptions = {
+const heightPoint3dOptions = ({ isDisabled }) =>  ({
     msHeightReference: property.msHeightReference({
-        label: "styleeditor.heightReferenceFromGround"
+        label: "styleeditor.heightReferenceFromGround",
+        isDisabled
     }),
     msHeight: property.multiInput({
         label: "styleeditor.height",
         key: "msHeight",
-        isDisabled: (value, properties) => properties?.msHeightReference === 'clamp',
+        isDisabled: (value, properties) => isDisabled() || properties?.msHeightReference === 'clamp',
         initialOptionValue: INITIAL_OPTION_VALUE,
         getSelectOptions: ({ attributes }) => {
             const numberAttributes = attributes
-                .map(({ label, attribute, type }) =>
+                ?.map(({ label, attribute, type }) =>
                     type === "number" ? { label, value: attribute } : null
                 )
-                .filter((x) => !!x);
+                .filter((x) => !!x) || [];
             return [
                 { labelId: 'styleeditor.pointHeight', value: INITIAL_OPTION_VALUE },
                 ...numberAttributes
@@ -45,32 +47,39 @@ const heightPoint3dOptions = {
         key: 'msLeaderLineColor',
         opacityKey: 'msLeaderLineOpacity',
         label: 'styleeditor.leaderLineColor',
-        stroke: true
+        stroke: true,
+        isDisabled
     }),
     msLeaderLineWidth: property.width({
         key: 'msLeaderLineWidth',
         label: 'styleeditor.leaderLineWidth',
-        fallbackValue: 0
+        fallbackValue: 0,
+        isDisabled
     })
-};
+});
 
-const point3dStyleOptions = {
+const point3dStyleOptions = ({ isDisabled }) =>  ({
     msBringToFront: property.msBringToFront({
-        label: "styleeditor.msBringToFront"
+        label: "styleeditor.msBringToFront",
+        isDisabled
     }),
-    ...heightPoint3dOptions
-};
+    ...heightPoint3dOptions({ isDisabled })
+});
 
-const polygon3dStyleOptions = {
+const polygon3dStyleOptions = ({ isDisabled }) =>  ({
     msClassificationType: property.msClassificationType({
-        label: 'styleeditor.classificationtype'
+        label: 'styleeditor.classificationtype',
+        isDisabled
     })
-};
+});
 
 const getBlocks = ({
     exactMatchGeometrySymbol,
     enable3dStyleOptions
 } = {}) => {
+    // if enable3dStyleOptions is undefined means we are using the WMS style editor
+    // so we do not need to show the properties because there are no differences between 2D/3D
+    const shouldHide3DOptions = enable3dStyleOptions === undefined;
     const symbolizerBlock = {
         Mark: {
             kind: 'Mark',
@@ -106,7 +115,9 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
-                ...(enable3dStyleOptions ? point3dStyleOptions : {})
+                ...(!shouldHide3DOptions && point3dStyleOptions({
+                    isDisabled: () => !enable3dStyleOptions
+                }))
             },
             defaultProperties: {
                 kind: 'Mark',
@@ -156,7 +167,9 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
-                ...(enable3dStyleOptions ? point3dStyleOptions : {})
+                ...(!shouldHide3DOptions && point3dStyleOptions({
+                    isDisabled: () => !enable3dStyleOptions
+                }))
             },
             defaultProperties: {
                 kind: 'Icon',
@@ -205,13 +218,18 @@ const getBlocks = ({
                 }),
                 cap: property.cap({
                     label: 'styleeditor.lineCap',
-                    key: 'cap'
+                    key: 'cap',
+                    isDisabled: () => !!enable3dStyleOptions
                 }),
                 join: property.join({
                     label: 'styleeditor.lineJoin',
-                    key: 'join'
+                    key: 'join',
+                    isDisabled: () => !!enable3dStyleOptions
                 }),
-                ...(enable3dStyleOptions ? vector3dStyleOptions({ label: 'styleeditor.clampToGround' }) : {})
+                ...(!shouldHide3DOptions && vector3dStyleOptions({
+                    label: 'styleeditor.clampToGround',
+                    isDisabled: () => !enable3dStyleOptions
+                }))
             },
             defaultProperties: {
                 kind: 'Line',
@@ -259,7 +277,13 @@ const getBlocks = ({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
                 }),
-                ...(enable3dStyleOptions ? {...polygon3dStyleOptions, ...vector3dStyleOptions({ label: 'styleeditor.clampOutlineToGround' })} : {})
+                ...(!shouldHide3DOptions && polygon3dStyleOptions({
+                    isDisabled: () => !enable3dStyleOptions
+                })),
+                ...(!shouldHide3DOptions && vector3dStyleOptions({
+                    label: 'styleeditor.clampOutlineToGround',
+                    isDisabled: () => !enable3dStyleOptions
+                }))
             },
             defaultProperties: {
                 kind: 'Fill',
@@ -339,47 +363,56 @@ const getBlocks = ({
             kind: 'Model',
             glyph: 'model',
             glyphAdd: 'model-plus',
+            disableAdd: () => !enable3dStyleOptions,
             tooltipAddId: 'styleeditor.addModelRule',
-            supportedTypes: enable3dStyleOptions ? ['point', 'vector'] : [],
+            supportedTypes: ['point', 'vector'],
             hideMenu: true,
             params: {
                 model: property.model({
                     label: 'styleeditor.model',
-                    key: 'model'
+                    key: 'model',
+                    isDisabled: () => !enable3dStyleOptions
                 }),
                 scale: property.number({
                     key: 'scale',
                     label: 'styleeditor.scale',
                     fallbackValue: 1,
-                    maxWidth: 80
+                    maxWidth: 80,
+                    isDisabled: () => !enable3dStyleOptions
                 }),
                 pitch: property.number({
                     key: 'pitch',
                     label: 'styleeditor.pitch',
                     fallbackValue: 0,
                     maxWidth: 105,
-                    uom: '°'
+                    uom: '°',
+                    isDisabled: () => !enable3dStyleOptions
                 }),
                 roll: property.number({
                     key: 'roll',
                     label: 'styleeditor.roll',
                     fallbackValue: 0,
                     maxWidth: 105,
-                    uom: '°'
+                    uom: '°',
+                    isDisabled: () => !enable3dStyleOptions
                 }),
                 heading: property.number({
                     key: 'heading',
                     label: 'styleeditor.heading',
                     fallbackValue: 0,
                     maxWidth: 105,
-                    uom: '°'
+                    uom: '°',
+                    isDisabled: () => !enable3dStyleOptions
                 }),
                 color: property.color({
                     key: 'color',
                     opacityKey: 'opacity',
-                    label: 'styleeditor.color'
+                    label: 'styleeditor.color',
+                    isDisabled: () => !enable3dStyleOptions
                 }),
-                ...(enable3dStyleOptions ? heightPoint3dOptions : {})
+                ...heightPoint3dOptions({
+                    isDisabled: () => !enable3dStyleOptions
+                })
             },
             defaultProperties: {
                 kind: 'Model',
@@ -462,7 +495,9 @@ const getBlocks = ({
                     label: 'styleeditor.offsetY',
                     axis: 'y'
                 }),
-                ...(enable3dStyleOptions ? point3dStyleOptions : {})
+                ...(!shouldHide3DOptions && point3dStyleOptions({
+                    isDisabled: () => !enable3dStyleOptions
+                }))
             },
             defaultProperties: {
                 kind: 'Text',

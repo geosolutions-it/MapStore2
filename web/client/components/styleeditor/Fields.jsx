@@ -35,7 +35,8 @@ export const fields = {
         value,
         onChange = () => {},
         disableAlpha,
-        format
+        format,
+        disabled
     }) => {
 
         // needed for slider
@@ -72,10 +73,12 @@ export const fields = {
 
         return (
             <PropertyField
-                label={label}>
+                label={label}
+                disabled={disabled}>
                 <ColorSelector
                     color={value}
                     line={config.stroke}
+                    disabled={disabled}
                     disableAlpha={config.disableAlpha || disableAlpha}
                     onChangeColor={(color) => color && onChange(color)}/>
             </PropertyField>
@@ -109,7 +112,8 @@ export const fields = {
     input: ({ label, value, config = {}, onChange = () => {}, disabled, placeholderId }) => {
         return (
             <PropertyField
-                label={label}>
+                label={label}
+                disabled={disabled}>
                 <FormGroup>
                     <InputGroup style={config?.maxWidth ? { maxWidth: config?.maxWidth } : {}}>
                         <DebouncedFormControl
@@ -133,7 +137,8 @@ export const fields = {
     multiInput: (props) => {
         return (
             <PropertyField
-                label={props.label}>
+                label={props.label}
+                disabled={props.disabled}>
                 <MultiInput {...props} />
             </PropertyField>
         );
@@ -206,15 +211,18 @@ export const fields = {
     model: ({
         label,
         value,
-        onChange
+        onChange,
+        disabled
     }) => {
         const [error, setError] = useState(false);
         return (
             <PropertyField
                 label={label}
                 invalid={error}
+                disabled={disabled}
             >
                 <ModelInput
+                    disabled={disabled}
                     label={label}
                     value={value}
                     onChange={onChange}
