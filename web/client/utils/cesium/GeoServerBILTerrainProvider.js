@@ -302,7 +302,7 @@ function parseOptions(options) {
             severUrl = severUrl.substring(0, index);
         }
         const urlGetCapabilities = `${severUrl}?SERVICE=WMS&REQUEST=GetCapabilities&tiled=true`;
-        let updatedCapabilitiesUrl = getCapabilitiesUrl({ url: urlGetCapabilities, name: options.layerName, authKey: options.authkey });
+        let updatedCapabilitiesUrl = getCapabilitiesUrl({ url: urlGetCapabilities, name: options.layerName});
         const isWorkSpaceCapabilities = updatedCapabilitiesUrl !== urlGetCapabilities;
 
         return Resource.fetchXML({
