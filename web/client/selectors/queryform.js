@@ -42,6 +42,11 @@ export const spatialFieldGeomCoordSelector = state => spatialFieldGeomSelector(s
  * @param {object} state
  * @returns {object[]} the inner filters from the queryform
  */
-export const innerFiltersSelector = state => get(state, "queryform.filters") || [];
+export const filtersSelector = state => get(state, "queryform.filters") || [];
 
-export const innerFilterSelectorCreator = (id) => state => innerFiltersSelector(state).find(({id: filterId}) => filterId === id);
+/**
+ * Creates a selector that returns the filter with the given id from the queryform.
+ * @param {string} id the id of the filter to get
+ * @returns {function} a selector that returns the filter with the given id from the queryform.
+ */
+export const filtersSelectorCreator = (id) => state => filtersSelector(state).find(({id: filterId}) => filterId === id);

@@ -21,7 +21,9 @@ import {
     addCrossLayerFilterField,
     updateCrossLayerFilterField,
     removeCrossLayerFilterField,
-    changeSpatialFilterValue
+    changeSpatialFilterValue,
+    upsertFilters,
+    removeFilters
 } from '../../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../../actions/draw';
@@ -1074,6 +1076,23 @@ describe('Test the queryform reducer', () => {
         expect(newState.spatialField.attribute).toBe("GEOMETRY");
         expect(newState.spatialField.operation).toBe("INTERSECTS");
     });
+    it('test upsertFilters', () => {
+        const action = upsertFilters({id: "test", format: "cql", body: 'prop = 1'});
+        const newState = queryform(undefined, action);
+        expect(newState.filters.length).toBe(1);
+        expect(newState.filters[0].id).toBe("test");
+        expect(newState.filters[0].format).toBe("cql");
+        expect(newState.filters[0].body).toBe('prop = 1');
+    });
+    it('test removeFilters', () => {
+        const action1 = upsertFilters({id: "test", format: "cql", body: 'prop = 1'});
+        const newState1 = queryform(undefined, action1);
+        const action2 = removeFilters({id: "test"});
+        const newState2 = queryform(newState1, action2);
+        expect(newState2.filters.length).toBe(0);
+    });
+
+
     /* it('Open Zones Menu', () => {
         let testAction = {
             type: "OPEN_MENU",

@@ -49,7 +49,7 @@ import {
     LOAD_FILTER,
     UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS,
     UPSERT_FILTERS,
-    DELETE_FILTERS
+    REMOVE_FILTERS
 } from '../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -202,8 +202,7 @@ function queryform(state = initialState, action) {
             id: new Date().getTime(),
             logic: "OR",
             groupId: action.groupId,
-            index: action.index + 1,
-            ...action.props
+            index: action.index + 1
         };
         return assign({}, state, {groupFields: (state.groupFields ? [...state.groupFields, newGroupField] : [newGroupField])});
     }
@@ -545,7 +544,7 @@ function queryform(state = initialState, action) {
             filters
         };
     }
-    case DELETE_FILTERS: {
+    case REMOVE_FILTERS: {
         // delete filters from the state
         const filters = (state.filters ?? []).reduce((pr, f) => {
             const newFilter = action.filters.find((newF) => { return newF.id === f.id; });

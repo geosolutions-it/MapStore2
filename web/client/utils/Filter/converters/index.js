@@ -48,6 +48,9 @@ converters.logic = {
                 return []; // TODO: check consistency
             }
             else if (filter.filters.length === 1) {
+                if(logic === 'NOT') {
+                    return `(${logic} (${convertFilter(filter.filters[0])}))`;
+                }
                 return convertFilter(filter.filters[0]);
             }
             return `((${filter.filters.map(convertFilter).join(`) ${logic} (`)}))`
@@ -66,10 +69,16 @@ converters.logic = {
                 return []; // TODO: check consistency
             }
             else if (filter.filters.length === 1) {
+                if(logic === 'NOT') {
+                    return `<ogc:Not>${convertFilter(filter.filters[0])}</ogc:Not>`;
+                }
                 return convertFilter(filter.filters[0]);
             } else {
-            const logic = (filter.logic.toUpperCase()) === "AND" ? "And" : "Or";
-            return  `<${options?.nsplaceholder}:${logic}>${filter.filters.map(convertFilter).join("")}</${options?.nsplaceholder}:${logic}>`
+            // capitalize logic first letter, to have And or Or
+            const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+            const logic = capitalizeFirstLetter(filter.logic);
+            const options = opts[0] ?? {filterNS: "ogc"};
+            return  `<${options?.filterNS}:${logic}>${filter.filters.map(convertFilter).join("")}</${options?.filterNS}:${logic}>`
             }
         }
     }

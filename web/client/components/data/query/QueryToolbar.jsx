@@ -132,11 +132,19 @@ class QueryToolbar extends React.Component {
         const isAppliedFilterEmpty = isFilterEmpty(this.props.appliedFilter);
         const isCurrentFilterChanged = this.isCurrentFilterChanged();
         // TODO: use isFilterValid
+        /* TODO: this logic is a little inconsistent, because if one filter is valid, the apply button is always enabled
+         * this means that empty attribute filter like prop = '' is not allowed (see hasValidAttributeFields)
+         * but if crossLayer or spatialFilter is valid, this is allowed.
+         * We should not enable the apply button if some filters are invalid
+         * (and avoid from the UI to make them invalid as much as possible)
+         */
         const isCurrentFilterValid = hasValidAttributeFields
             || this.props.spatialField.geometry
             || isCrossLayerFilterValid(this.props.crossLayerFilter)
             // a special invalid field can be added to filter if they are invalid to hide the apply button
-            || this.props.filters && this.props.filters.length > 0 && this.props.filters.map(({invalid} = {}) => !invalid);
+            || this.props.filters
+                && this.props.filters.length > 0
+                && this.props.filters.map(({invalid} = {}) => !invalid).reduce((a, b) => a && b, true);
         const isAppliedFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
         // submit for empty filter is allowed when
         // - it is forced to be allowed by outside

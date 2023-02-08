@@ -56,7 +56,7 @@ export const TOGGLE_AUTOCOMPLETE_MENU = 'TOGGLE_AUTOCOMPLETE_MENU';
 export const LOAD_FILTER = 'QUERYFORM:LOAD_FILTER';
 
 export const UPSERT_FILTERS = 'QUERYFORM:UPSERT_FILTERS';
-export const DELETE_FILTERS = 'QUERYFORM:DELETE_FILTERS';
+export const REMOVE_FILTERS = 'QUERYFORM:REMOVE_FILTERS';
 
 import axios from '../libs/ajax';
 
@@ -67,19 +67,11 @@ export function addFilterField(groupId) {
     };
 }
 
-/**
- * Action for add a new group field
- * @param {string|number} groupId the Id of the parent group
- * @param {number} index the last index of in the parent group.
- * @param {object} props a set or properties to set to the group field (useful to customize the `id` property)
- * @returns {object}
- */
-export function addGroupField(groupId, index, props = {}) {
+export function addGroupField(groupId, index) {
     return {
         type: ADD_GROUP_FIELD,
         groupId: groupId,
-        index: index,
-        props
+        index: index
     };
 }
 
@@ -453,13 +445,13 @@ export function upsertFilters(...filters) {
 }
 
 /**
- * Delete filters from the query form state (by id)
- * @param {object} filters the filters to delete
+ * Removes filters from the query form state (by `id`)
+ * @param {object} filters the filters to remove
  * @returns the action
  */
-export function deleteFilters(...filters) {
+export function removeFilters(...filters) {
     return {
-        type: DELETE_FILTERS,
+        type: REMOVE_FILTERS,
         filters
     };
 }
