@@ -302,13 +302,14 @@ function parseOptions(options) {
             severUrl = severUrl.substring(0, index);
         }
         const urlGetCapabilities = `${severUrl}?SERVICE=WMS&REQUEST=GetCapabilities&tiled=true`;
-        let updatedCapabilitiesUrl = getCapabilitiesUrl({ url: urlGetCapabilities, name: options.layerName });
-        if (defined(options.proxy)) {
-            updatedCapabilitiesUrl = options.proxy.getURL(updatedCapabilitiesUrl);
-        }
+        let updatedCapabilitiesUrl = getCapabilitiesUrl({ url: urlGetCapabilities, name: options.layerName});
         const isWorkSpaceCapabilities = updatedCapabilitiesUrl !== urlGetCapabilities;
 
-        return Resource.fetchXML(updatedCapabilitiesUrl)
+        return Resource.fetchXML({
+            url: updatedCapabilitiesUrl,
+            proxy: options.proxy,
+            queryParameters: options.params
+        })
             .then((xml) => {
                 return getMetadataDescription(
                     fromWSMCapabilitiesToOptions(xml, { ...options, isWorkSpaceCapabilities })
@@ -406,8 +407,10 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
         }
         const proxy = this._options.proxy || { getURL: v => v };
         requestPromise = Resource.fetchArrayBuffer({
-            url: proxy.getURL(urlValue),
+            url: urlValue,
+            proxy: proxy,
             headers: this._options.headers,
+            queryParameters: this._options.params,
             request: new Request({
                 // we need to disable throttle
                 // if the current level matches the zoom used by sample terrain
