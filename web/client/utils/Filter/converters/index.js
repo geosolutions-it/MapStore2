@@ -42,6 +42,7 @@ converters.logic = {
                 if (canConvert(f.format, 'cql')) {
                     return getConverter(f.format, 'cql')(f);
                 }
+                return null;
             };
 
             if (!filter.filters || filter.filters.length === 0) {
@@ -64,6 +65,7 @@ converters.logic = {
                 if (canConvert(f.format, 'ogc')) {
                     return getConverter(f.format, 'ogc')(f, ...opts);
                 }
+                return null;
             };
 
             if (!filter.filters || filter.filters.length === 0) {
