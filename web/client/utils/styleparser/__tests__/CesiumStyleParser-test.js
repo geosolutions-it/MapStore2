@@ -503,8 +503,6 @@ describe('CesiumStyleParser', () => {
                         const entities = dataSource?.entities?.values;
                         return styleFunc({ entities })
                             .then((styledEntities) => {
-                                // eslint-disable-next-line no-console
-                                console.log(styledEntities.msHeight);
                                 expect(styledEntities.length).toBe(4);
                                 const [
                                     markKind,
