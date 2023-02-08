@@ -396,6 +396,7 @@ export const toOGCFilterParts = function(objFilter, versionOGC, nsplaceholder) {
     }
     return filters;
 };
+// TODO: toOGCFilter returns in fact the full query, not only the filter. Properly rename and move it in the right place
 export const toOGCFilter = function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null, srsName = "EPSG:4326") {
     let objFilter;
     try {

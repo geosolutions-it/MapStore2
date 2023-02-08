@@ -1703,7 +1703,73 @@ describe('FilterUtils', () => {
         expect(filters[0]).toBe('<ogc:Intersects><ogc:PropertyName>the_geom</ogc:PropertyName><gml:Point srsDimension="2" srsName="EPSG:4326"><gml:pos>2,2 4,1</gml:pos></gml:Point></ogc:Intersects>');
         expect(filters[1]).toBe('<ogc:PropertyIsEqualTo><ogc:PropertyName>name</ogc:PropertyName><ogc:Literal>test</ogc:Literal></ogc:PropertyIsEqualTo>');
     });
-    it('toOGCFilterParts with spatialField array and filterFields', () => {
+    it('toOGCFilter with filters array', () => {
+        const query = toOGCFilter("test", {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "list",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            filters: [{
+                format: "cql",
+                body: "prop = 'test'"
+            }]
+        }, "1.1.0", "ogc");
+        expect(query).toExist();
+        // toOGCFilter returns an entire WFS, wrapping into the `<ogc:Filter>` tag the filters. We have to extract the filter part
+        const filterPart = query.split('<ogc:Filter>')[1].split('</ogc:Filter>')[0];
+        expect(filterPart).toEqual(
+            '<ogc:And>' +
+                '<ogc:Or>' +
+                    '<ogc:PropertyIsEqualTo>' +
+                        '<ogc:PropertyName>attribute1</ogc:PropertyName>' +
+                        '<ogc:Literal>value1</ogc:Literal>' +
+                    '</ogc:PropertyIsEqualTo>' +
+                '</ogc:Or>' +
+                '<ogc:PropertyIsEqualTo>' +
+                    '<ogc:PropertyName>prop</ogc:PropertyName>' +
+                    '<ogc:Literal>test</ogc:Literal>' +
+                '</ogc:PropertyIsEqualTo>' +
+            '</ogc:And>'
+        );
+    });
+    it('toCQLFilter includes also filters', () => {
+        const filters = toCQLFilter({
+            spatialField: [{
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[2, 2], [4, 1]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }],
+            filterFields: [{
+                attribute: "name",
+                operator: "=",
+                value: "test"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            filters: [{
+                format: "cql",
+                body: "name = 'test'"
+            }]
+        });
+        expect(filters).toExist();
+        expect(filters).toBe('(INTERSECTS("the_geom",SRID=4326;Point(2,2 4,1))) AND (name = \'test\')');
     });
 
     it('Check if toOGCFilter bbox overrides with spatialField array', () => {
