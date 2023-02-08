@@ -29,7 +29,7 @@ export const getConverter = (from, to) => {
  * @returns {boolean} true if the conversion is possible
  */
 export const canConvert = (from, to) => {
-    return !!getConverter(from, to)
+    return !!getConverter(from, to);
 };
 
 converters.cql = cql;
@@ -42,44 +42,44 @@ converters.logic = {
                 if (canConvert(f.format, 'cql')) {
                     return getConverter(f.format, 'cql')(f);
                 }
-            }
+            };
 
-            if(!filter.filters || filter.filters.length === 0) {
+            if (!filter.filters || filter.filters.length === 0) {
                 return []; // TODO: check consistency
-            }
-            else if (filter.filters.length === 1) {
-                if(logic === 'NOT') {
+            } else if (filter.filters.length === 1) {
+                if (logic === 'NOT') {
                     return `(${logic} (${convertFilter(filter.filters[0])}))`;
                 }
                 return convertFilter(filter.filters[0]);
             }
-            return `((${filter.filters.map(convertFilter).join(`) ${logic} (`)}))`
+            return `((${filter.filters.map(convertFilter).join(`) ${logic} (`)}))`;
         }
+        return null;
     },
     ogc: (filter, ...opts) => {
         if (filter.logic) {
-            const logic = filter.logic.toUpperCase();
+            const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+            const logic = capitalizeFirstLetter(filter.logic);
             const convertFilter = (f) => {
                 if (canConvert(f.format, 'ogc')) {
                     return getConverter(f.format, 'ogc')(f, ...opts);
                 }
-            }
+            };
 
-            if(!filter.filters || filter.filters.length === 0) {
+            if (!filter.filters || filter.filters.length === 0) {
                 return []; // TODO: check consistency
-            }
-            else if (filter.filters.length === 1) {
-                if(logic === 'NOT') {
+            } else if (filter.filters.length === 1) {
+                if (logic === 'Not') {
                     return `<ogc:Not>${convertFilter(filter.filters[0])}</ogc:Not>`;
                 }
                 return convertFilter(filter.filters[0]);
-            } else {
-            // capitalize logic first letter, to have And or Or
-            const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-            const logic = capitalizeFirstLetter(filter.logic);
-            const options = opts[0] ?? {filterNS: "ogc"};
-            return  `<${options?.filterNS}:${logic}>${filter.filters.map(convertFilter).join("")}</${options?.filterNS}:${logic}>`
             }
+
+
+            const options = opts[0] ?? {filterNS: "ogc"};
+            return  `<${options?.filterNS}:${logic}>${filter.filters.map(convertFilter).join("")}</${options?.filterNS}:${logic}>`;
+
         }
+        return null;
     }
 };

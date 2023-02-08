@@ -13,7 +13,7 @@ describe('Filter converters', () => {
         expect(canConvert('cql', 'ogc')).toBe(true, "cql to ogc conversion not allowed");
         expect(canConvert('logic', 'ogc')).toBe(true, "logic to ogc conversion not allowed");
         expect(canConvert('logic', 'cql')).toBe(true, "logic to cql conversion not allowed");
-        expect(canConvert('ogc', 'logic')).toBe(false), "ogc to logic conversion allowed, but it shouldn't";
+        expect(canConvert('ogc', 'logic')).toBe(false, "ogc to logic conversion allowed, but it shouldn't");
         expect(canConvert('cql', 'logic')).toBe(false, "cql to logic conversion allowed, but it shouldn't");
     });
     const SAMPLES = [
