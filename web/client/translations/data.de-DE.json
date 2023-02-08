@@ -1531,7 +1531,7 @@
                 "dynamic": {
                     "label": "Dynamischer Filter",
                     "info": "Filter wird verwendet, wenn Suchtext vorhanden ist und wird in 'UND' mit statischem Filter angewendet",
-                    "helpText": "Verwenden Sie eine Vorlage mit dem Platzhalter ${searchText}, um die Suchzeichenfolge zu erfassen"
+                    "helpText": "Verwenden Sie eine Vorlage mit dem Platzhalter $\\{searchText\\}, um die Suchzeichenfolge zu erfassen"
                 },
               "error": "Ungültige XML-Syntax"
             },

@@ -60,7 +60,7 @@ export default ({
         </Col>
     ));
     return (
-        <FormGroup controlId="domain-aliases" key="domain-aliases" className="mapstore-catalog-domain-aliases">
+        <FormGroup key="domain-aliases" className="mapstore-catalog-domain-aliases">
             <Col xs={12}>
                 <ControlLabel><Message msgId="catalog.domainAliases.title" /></ControlLabel>
                 &nbsp;
