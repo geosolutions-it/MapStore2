@@ -12,17 +12,17 @@ import { isString } from 'lodash';
 export const ogc = (cqlFilter, fOpts) => {
     const fb = filterBuilder(fOpts);
     const toFilter = fromObject(fb);
-    if(isString(cqlFilter)) {
+    if (isString(cqlFilter)) {
         return toFilter(read(cqlFilter));
     }
     return toFilter(read(cqlFilter.body));
 };
 export const cql = (ogcFilter) => {
-    if(isString(ogcFilter)) {
+    if (isString(ogcFilter)) {
         return ogcFilter;
     }
     return ogcFilter?.body;
-}
+};
 
 export default {
     cql,

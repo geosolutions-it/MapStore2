@@ -392,7 +392,7 @@ export const toOGCFilterParts = function(objFilter, versionOGC, nsplaceholder) {
     }
     // this should be the standard form of the filter.
     if (objFilter.filters) {
-        filters = FilterUtils.convertFiltersToOGC(objFilter.filters, {nsplaceholder, versionOGC});
+        filters = filters.concat(FilterUtils.convertFiltersToOGC(objFilter.filters, {nsplaceholder, versionOGC}) ?? []);
     }
     return filters;
 };
@@ -724,9 +724,9 @@ export const toCQLFilter = function(json) {
             const cg = cqlCollectGeometries(cqlQueryCollection({typeName, geometryName, cqlFilter}));
             filters.push(`${operation}(${attribute},${cg})`);
         }
-     }
+    }
     // this should be the standard form of the filter.
-    if(objFilter.filters) {
+    if (objFilter.filters) {
         filters = filters.concat(convertFiltersToCQL(objFilter.filters));
     }
     if (filters.length) {
@@ -1276,16 +1276,16 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
 const isLegacyFormat = ({format = "mapstore", version = "1.0.0"} = {}) => format === "mapstore" && version === "1.0.0";
 export const convertFiltersToOGC = (filters, options) => {
     const convertFilter = (filter) => {
-
-            if (isLegacyFormat(filter)) {
-                return toOGCFilterParts(filter, options?.versionOGC, options?.nsplaceholder);
-            }
-            if (canConvert(filter.format, 'ogc')) {
-                return getConverter(filter.format, 'ogc')(filter,  {filterNS: options?.nsplaceholder}); // TODO: handle version OGC, if needed (maybe change gml version)
-            }
-        };
+        if (isLegacyFormat(filter)) {
+            return toOGCFilterParts(filter, options?.versionOGC, options?.nsplaceholder);
+        }
+        if (canConvert(filter.format, 'ogc')) {
+            return getConverter(filter.format, 'ogc')(filter,  {filterNS: options?.nsplaceholder}); // TODO: handle version OGC, if needed (maybe change gml version)
+        }
+        return []; // do not convert if not supported
+    };
     return flatten(filters.map(convertFilter));
-}
+};
 
 export const convertFiltersToCQL = (filters) => {
     const convertFilter = (filter) => {
@@ -1295,6 +1295,7 @@ export const convertFiltersToCQL = (filters) => {
         if (canConvert(filter.format, 'cql')) {
             return getConverter(filter.format, 'cql')(filter);
         }
+        return []; // do not convert if not supported
     };
     return flatten(filters.map(convertFilter));
 };

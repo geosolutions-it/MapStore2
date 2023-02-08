@@ -367,7 +367,8 @@ function queryform(state = initialState, action) {
         let crossLayerFilter = { attribute: state.crossLayerFilter && state.crossLayerFilter.attribute };
         return assign({}, state, initialState, {
             spatialField,
-            crossLayerFilter
+            crossLayerFilter,
+            filters: []
         });
     }
     case SHOW_GENERATED_FILTER: {

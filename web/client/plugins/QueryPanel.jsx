@@ -18,6 +18,7 @@ import standardItems from './querypanel/index';
 import { toggleControl } from '../actions/controls';
 import { changeDrawingStatus } from '../actions/draw';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
+import { queryPanelSelector } from '../selectors/controls';
 import { applyFilter, discardCurrentFilter, storeCurrentFilter } from '../actions/layerFilter';
 import {
     changeGroupProperties,
@@ -186,8 +187,8 @@ const tocSelector = createSelector(
     [
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
-        (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
-        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
+        (state) => state.layers && state.layers.settings,
+        queryPanelSelector,
         state => mapLayoutValuesSelector(state, {height: true}),
         isDashboardAvailable,
         appliedFilterSelector,
@@ -195,11 +196,11 @@ const tocSelector = createSelector(
         (state) => state && state.query && state.query.isLayerFilter,
         selectedLayerLoadingErrorSelector,
         typeNameSelector
-    ], (enabled, groups, settings, querypanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError, selectedLayer) => ({
+    ], (enabled, groups, settings, queryPanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError, selectedLayer) => ({
         enabled,
         groups,
         settings,
-        querypanelEnabled,
+        queryPanelEnabled,
         layout: !dashboardAvailable ? layoutHeight : {},
         appliedFilter,
         storedFilter,
@@ -215,7 +216,7 @@ class QueryPanel extends React.Component {
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
-        querypanelEnabled: PropTypes.bool,
+        queryPanelEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
         groupPropertiesChangeHandler: PropTypes.func,
         layerPropertiesChangeHandler: PropTypes.func,
@@ -266,7 +267,7 @@ class QueryPanel extends React.Component {
         activateRemoveLayer: true,
         visibilityCheckType: "checkbox",
         settingsOptions: {},
-        querypanelEnabled: false,
+        queryPanelEnabled: false,
         layout: {},
         toolsOptions: {},
         onSaveFilter: () => {},
@@ -279,7 +280,7 @@ class QueryPanel extends React.Component {
         this.state = {showModal: false};
     }
     UNSAFE_componentWillReceiveProps(newProps) {
-        if (newProps.querypanelEnabled === true && this.props.querypanelEnabled === false) {
+        if (newProps.queryPanelEnabled === true && this.props.queryPanelEnabled === false) {
             this.props.onInit();
         }
     }
@@ -290,7 +291,7 @@ class QueryPanel extends React.Component {
     renderSidebar = () => {
         return (
             <Sidebar
-                open={this.props.querypanelEnabled}
+                open={this.props.queryPanelEnabled}
                 sidebar={this.renderQueryPanel()}
                 sidebarClassName="query-form-panel-container"
                 touch={false}
@@ -305,7 +306,7 @@ class QueryPanel extends React.Component {
                         width: 0
                     },
                     root: {
-                        right: this.props.querypanelEnabled ? 0 : 'auto',
+                        right: this.props.queryPanelEnabled ? 0 : 'auto',
                         width: '0',
                         overflow: 'visible'
                     },
@@ -338,6 +339,7 @@ class QueryPanel extends React.Component {
     renderQueryPanel = () => {
         return (<div className="mapstore-query-builder">
             <SmartQueryForm
+                queryPanelEnabled={this.props.queryPanelEnabled}
                 header={<QueryPanelHeader loadingError={this.props.loadingError} onToggleQuery={this.onToggle} />}
                 spatialOperations={this.props.spatialOperations}
                 spatialMethodOptions={this.props.spatialMethodOptions}

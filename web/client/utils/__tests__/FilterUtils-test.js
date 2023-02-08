@@ -1672,6 +1672,40 @@ describe('FilterUtils', () => {
         expect(parts.length).toBe(1);
         expect(parts[0]).toBe('<ogc:And>' + point1OGC + point2OGC + '</ogc:And>');
     });
+    it('toOGCFilterParts returns also filters from filter objects', () => {
+        const filters = toOGCFilterParts({
+            spatialField: [{
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[2, 2], [4, 1]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }],
+            filterFields: [{
+                attribute: "name",
+                operator: "=",
+                value: "test"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            filters: [{
+                format: "cql",
+                body: "name = 'test'"
+            }]
+        }, "1.1.0", "ogc");
+        expect(filters).toExist();
+        expect(filters.length).toBe(2);
+        expect(filters[0]).toBe('<ogc:Intersects><ogc:PropertyName>the_geom</ogc:PropertyName><gml:Point srsDimension="2" srsName="EPSG:4326"><gml:pos>2,2 4,1</gml:pos></gml:Point></ogc:Intersects>');
+        expect(filters[1]).toBe('<ogc:PropertyIsEqualTo><ogc:PropertyName>name</ogc:PropertyName><ogc:Literal>test</ogc:Literal></ogc:PropertyIsEqualTo>');
+    });
+    it('toOGCFilterParts with spatialField array and filterFields', () => {
+    });
+
     it('Check if toOGCFilter bbox overrides with spatialField array', () => {
         const filterObj = {
             featureTypeName: 'feature',
@@ -2061,7 +2095,7 @@ describe('FilterUtils', () => {
                 ogc: '', // not needed to produce this but it is the result
                 cql: ''
             }
-        ]
+        ];
         it('convertFiltersToOGC', () => {
             TESTS.forEach((test) => {
                 const ogc = convertFiltersToOGC(test.filters, {nsplaceholder: 'ogc'});
