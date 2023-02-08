@@ -503,6 +503,8 @@ describe('CesiumStyleParser', () => {
                         const entities = dataSource?.entities?.values;
                         return styleFunc({ entities })
                             .then((styledEntities) => {
+                                // eslint-disable-next-line no-console
+                                console.log(styledEntities.msHeight);
                                 expect(styledEntities.length).toBe(4);
                                 const [
                                     markKind,
@@ -537,10 +539,7 @@ describe('CesiumStyleParser', () => {
                     }).catch(done);
                 });
         });
-
-
-        // eslint-disable-next-line no-only-tests/no-only-tests
-        it.only('should add leader line for relative height Reference', (done) => {
+        it('should add leader line for relative height Reference', (done) => {
 
             const map = {};
             const cartographic = {
