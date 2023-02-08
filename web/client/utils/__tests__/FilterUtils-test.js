@@ -25,7 +25,9 @@ import {
     processOGCSimpleFilterField,
     processCQLFilterFields,
     wrapIfNoWildcards,
-    mergeFiltersToOGC
+    mergeFiltersToOGC,
+    convertFiltersToOGC,
+    convertFiltersToCQL
 } from '../FilterUtils';
 
 
@@ -2021,5 +2023,56 @@ describe('FilterUtils', () => {
             xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
         }, undefined, {...filterObj, ogcVersion});
         expect(filter).toEqual(expectedFilter);
+    });
+    // sub function to convert filters from other formats
+    describe('sub function to convert filters from other formats', () => {
+        const TESTS = [
+            {
+                filters: [],
+                ogc: '',
+                cql: ''
+            }, {
+                filters: [{
+                    format: 'cql',
+                    body: 'prop = 1'
+                }],
+                ogc: '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>',
+                cql: 'prop = 1'
+            }, {
+                filters: [{
+                    format: 'cql',
+                    body: 'prop = 1'
+                }, {
+                    format: 'cql',
+                    body: 'prop = 2'
+                }],
+                ogc: [
+                    '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>',
+                    '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>2</ogc:Literal></ogc:PropertyIsEqualTo>'
+                ],
+                cql: ['prop = 1', 'prop = 2']
+            },
+            {
+                filters: [{format: 'logic', logic: 'AND', filters: []}],
+                ogc: '', // not needed to produce this but it is the result
+                cql: ''
+            }, {
+                filters: [{format: 'logic', logic: 'OR', filters: []}],
+                ogc: '', // not needed to produce this but it is the result
+                cql: ''
+            }
+        ]
+        it('convertFiltersToOGC', () => {
+            TESTS.forEach((test) => {
+                const ogc = convertFiltersToOGC(test.filters, {nsplaceholder: 'ogc'});
+                expect(ogc).toEqual(test.ogc);
+            });
+        });
+        it('convertFiltersToCQL', () => {
+            TESTS.forEach((test) => {
+                const cql = convertFiltersToCQL(test.filters);
+                expect(cql).toEqual(test.cql);
+            });
+        });
     });
 });

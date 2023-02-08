@@ -11,7 +11,9 @@ Mapstore filtering system is trying to allow to accomplish the following goals:
 For this reason, MapStore stores internally a filter object that is a JSON object that can be serialized in different formats (CQL, OGC, etc.) and can be used to filter data sources.
 This is the internal filtering system used by mapstore, that can be for instance in `layerFilters` in the layer object
 
-## `mapstore` Format
+## Formats
+
+### `mapstore` Format
 
 This JSON object is a container that has this shape:
 
@@ -62,22 +64,7 @@ Moreover they can be of `mapstore` format too.
         }
         ```
 
-## `mapstore-query-panel` format
-
-The `mapstore-query-panel` format is a JSON object that has this shape:
-
-```json
-{
-    "format": "mapstore-query-panel",
-    "version": "1.0.0",
-    "groupFields": [],
-    "spatialField": {},
-    "attributeFields": [],
-
-}
-```
-
-## `logic` format
+### `logic` format
 
 In order to allow to create complex filters, MapStore allows to combine filters with a logic operator (`AND`, `OR`).
 The `logic` format is a JSON object that has this shape:
@@ -91,7 +78,7 @@ The `logic` format is a JSON object that has this shape:
 }
 ```
 
-## `cql` format
+### `cql` format
 
 The `cql` format is a JSON object that has this shape:
 
@@ -99,21 +86,47 @@ The `cql` format is a JSON object that has this shape:
 {
     "format": "cql",
     "version": "1.0.0",
-    "value": "..."
+    "body": "..."
 }
 ```
+
+### `mapstore-query-panel` format
+
+The `mapstore-query-panel` format is a JSON object that has this shape:
+
+```json
+{
+    "format": "mapstore-query-panel",
+    "version": "1.0.0",
+    "groupFields": [],
+    "spatialField": {},
+    "attributeFields": [],
+    "crossLayerFilter": {},
+
+}
+```
+
+Now it do not have an implementation yet, but this format will replace the old legacy 'mapstore' fields in the future.
 
 ## Supporting new formats
 
-In order to support new formats, you can add a new entry in the `converters` object in `MapStore2/web/client/utils/Filter/filter/converters/index.js` file.
-The converter object must implement at least the following methods:
+In order to support new formats, you can add a new entry, named with the name of the format in the `converters` object in `MapStore2/web/client/utils/Filter/filter/converters/index.js` file.
+The converter object is an object that implements a method for each format that you want to support, with the following signature:
 
 ```js
 {
-    toOGC: (filter::Object) => filter::String,
-    toCQL: (filter::Object) => filter::String
+    [format]: (filter::Object, options) => filter
 }
 ```
 
-These methods will translate the JSON object in the format specified in the method name.
+Example:
+
+```js
+{
+    ogc: (filter::Object, options) => filter::String,
+    cql: (filter::Object, options) => filter::String
+}
+```
+
+These methods will translate the JSON object (or in same cases the effective body of the filter) in the format specified in the method name.
 Future converters (maybe with a more generic method) will be added to support other formats, if needed.

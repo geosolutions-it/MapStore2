@@ -14,7 +14,7 @@ import {
     closePolygon
 } from './ogc/GML';
 
-import converters from './Filter/converters';
+import {canConvert, getConverter} from './Filter/converters';
 
 import { wfsToGmlVersion } from './ogc/WFS/base';
 import { ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators } from './ogc/Filter/operators';
@@ -726,7 +726,7 @@ export const toCQLFilter = function(json) {
         }
      }
     // this should be the standard form of the filter.
-    if( objFilter.filters) {
+    if(objFilter.filters) {
         filters = filters.concat(convertFiltersToCQL(objFilter.filters));
     }
     if (filters.length) {
@@ -1273,18 +1273,15 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
 
     return filterString;
 };
+const isLegacyFormat = ({format = "mapstore", version = "1.0.0"} = {}) => format === "mapstore" && version === "1.0.0";
 export const convertFiltersToOGC = (filters, options) => {
     const convertFilter = (filter) => {
-        const isLegacyFormat = ({format = "mapstore", version = "1.0.0"} = {}) => format === "mapstore" && version === "1.0.0";
+
             if (isLegacyFormat(filter)) {
                 return toOGCFilterParts(filter, options?.versionOGC, options?.nsplaceholder);
             }
-            if (filter.format === "logic" && filter.logic)  {
-                const logic = (filter.logic.toUpperCase()) === "AND" ? "And" : "Or";
-                return  `<${options?.nsplaceholder}:${logic}>${filter.filters.map(convertFilter).join("")}</${options?.nsplaceholder}:${logic}>`
-            }
-            if (converters[filter.format].toOGC) {
-                return converters[filter.format].toOGC(filter, {filterNS: options?.nsplaceholder}); // TODO: handle version OGC, if needed (maybe change gml version)
+            if (canConvert(filter.format, 'ogc')) {
+                return getConverter(filter.format, 'ogc')(filter,  {filterNS: options?.nsplaceholder}); // TODO: handle version OGC, if needed (maybe change gml version)
             }
         };
     return flatten(filters.map(convertFilter));
@@ -1292,22 +1289,11 @@ export const convertFiltersToOGC = (filters, options) => {
 
 export const convertFiltersToCQL = (filters) => {
     const convertFilter = (filter) => {
-        const isLegacyFormat = ({format = "mapstore", version = "1.0.0"} = {}) => format === "mapstore" && version === "1.0.0";
         if (isLegacyFormat(filter)) {
             return toCQLFilter(filter);
         }
-        if (filter.format === "logic" && filter.logic) {
-                const logic = filter.logic.toUpperCase();
-                if(!filter.filters || filter.filters.length === 0) {
-                    return []; // TODO: check consistency
-                }
-                else if (filter.filters.length === 1) {
-                    return convertFilter(filter.filters[0]);
-                }
-                return `((${filter.filters.map(convertFilter).join(`) ${logic} (`)}))`
-            }
-        if (converters?.[filter.format]?.toCQL) {
-            return converters[filter.format].toCQL(filter);
+        if (canConvert(filter.format, 'cql')) {
+            return getConverter(filter.format, 'cql')(filter);
         }
     };
     return flatten(filters.map(convertFilter));
