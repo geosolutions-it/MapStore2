@@ -7,9 +7,9 @@
 */
 
 
-export const forceSelection = ( {oldValue, changedValue, data, allowEmpty}) => {
+export const forceSelection = ( {oldValue, changedValue, data, allowEmpty, emptyValue = ""}) => {
     if (allowEmpty && changedValue === "") {
-        return null;
+        return emptyValue;
     }
     return data.indexOf(changedValue) !== -1 ? changedValue : oldValue;
 };
