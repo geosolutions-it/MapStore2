@@ -62,10 +62,11 @@ const getNumberAttributeValue = (value, properties) => {
 
 const isGlobalOpacityChanged = (entity, globalOpacity) => (entity._msGlobalOpacity ?? 1) !== globalOpacity;
 
-export function getLeaderLinePositions({
+function getLeaderLinePositions({
     map,
     cartographic,
-    heightReference
+    heightReference,
+    sampleTerrain
 }) {
     return new Promise(resolve => {
         const drawLine = (zValue) => {
@@ -103,7 +104,7 @@ export function getLeaderLinePositions({
                     terrainProvider,
                     [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
                 )
-                : Cesium.sampleTerrain(
+                : sampleTerrain(
                     terrainProvider,
                     terrainProvider?.sampleTerrainZoomLevel ?? 18,
                     [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
@@ -151,7 +152,8 @@ function addLeaderLineGraphic({
     map,
     symbolizer,
     entity,
-    globalOpacity
+    globalOpacity,
+    sampleTerrain
 }) {
     const compareKeys = [
         'msLeaderLineColor',
@@ -189,7 +191,7 @@ function addLeaderLineGraphic({
             || symbolizer?.msHeightReference !== entity._msSymbolizer?.msHeightReference
             || !entity.polyline
         )
-            ? getLeaderLinePositions({ map, cartographic, heightReference })
+            ? getLeaderLinePositions({ map, cartographic, heightReference, sampleTerrain })
                 .then((positions) => new Cesium.PolylineGraphics({ positions }))
             : Promise.resolve(entity.polyline)
     )
@@ -286,7 +288,8 @@ const getGraphics = ({
     entity,
     globalOpacity,
     properties,
-    map
+    map,
+    sampleTerrain
 }) => {
     if (symbolizer.kind === 'Mark') {
         modifyPointHeight({ entity, symbolizer, properties });
@@ -298,7 +301,8 @@ const getGraphics = ({
                 map,
                 symbolizer,
                 entity,
-                globalOpacity
+                globalOpacity,
+                sampleTerrain
             }).then(({ polyline }) => ({
                 polyline,
                 billboard: new Cesium.BillboardGraphics({
@@ -493,7 +497,8 @@ function getStyleFuncFromRules({
     return ({
         entities,
         map,
-        opacity: globalOpacity = 1
+        opacity: globalOpacity = 1,
+        sampleTerrain = Cesium.sampleTerrain
     }) => Promise.all(
         (entities || []).map((entity) => new Promise(resolve => {
             let coordinates = {};
@@ -532,7 +537,8 @@ function getStyleFuncFromRules({
                         entity,
                         globalOpacity,
                         properties,
-                        map
+                        map,
+                        sampleTerrain
                     }).then((graphics) => {
                         if (!isEmpty(graphics)) {
                             GRAPHIC_KEYS.forEach((graphicKey) => {

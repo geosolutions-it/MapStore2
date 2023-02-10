@@ -653,7 +653,7 @@ describe('CesiumStyleParser', () => {
             }).catch(done);
         });
 
-        it.only('should add leader line where HeightReference is clamp', (done) => {
+        it('should add leader line where HeightReference is clamp', (done) => {
             const style = {
                 "name": "",
                 "rules": [
