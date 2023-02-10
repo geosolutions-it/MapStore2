@@ -8,7 +8,7 @@
 
 import * as Cesium from 'cesium';
 import expect from 'expect';
-import CesiumStyleParser, { getLeaderLinePositions } from '../CesiumStyleParser';
+import CesiumStyleParser from '../CesiumStyleParser';
 import { getImageIdFromSymbolizer, geoStylerStyleFilter } from '../../VectorStyleUtils';
 
 
@@ -537,36 +537,178 @@ describe('CesiumStyleParser', () => {
                     }).catch(done);
                 });
         });
-        it('should add leader line for relative height Reference', (done) => {
-
-            const map = {};
-            const cartographic = {
-                height: 5000,
-                latitude: 0.7763247989914425,
-                longitudes: -1.8117186716869715
+        it('should add leader line where HeightReference is Reference', (done) => {
+            const style = {
+                "name": "",
+                "rules": [
+                    {
+                        "name": "",
+                        "symbolizers": [
+                            {
+                                "kind": "Mark",
+                                "color": "#ffea00",
+                                "fillOpacity": 1,
+                                "strokeColor": "#3f3f3f",
+                                "strokeOpacity": 1,
+                                "strokeWidth": 1,
+                                "radius": 32,
+                                "wellKnownName": "Star",
+                                "msHeightReference": "relative",
+                                "msBringToFront": false,
+                                "symbolizerId": "ea1db421-980f-11ed-a8e7-c1b9d44be36c",
+                                "msHeight": 5000,
+                                "msLeaderLineWidth": 4,
+                                "msLeaderLineColor": "#ff0000",
+                                "msLeaderLineOpacity": 1
+                            }
+                        ],
+                        "ruleId": "ea1db420-980f-11ed-a8e7-c1b9d44be36c"
+                    }
+                ]
             };
-            const heightReference = "relative";
-            const zValue = 1;
-            const computedHeight = {
-                none: cartographic.height,
-                relative: cartographic.height + zValue,
-                clamp: zValue
+            const canvas = document.createElement('canvas');
+            images.push({
+                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
+                image: canvas,
+                width: 32,
+                height: 32
+            });
+            const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
+            parser.writeStyle(style).then((styleFunc) => {
+                return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
+                    .then((dataSource) => {
+                        const entities = dataSource.entities.values;
+                        const mockMap = {terrainProvider: {ready: true}};
+                        return styleFunc({entities, map: mockMap, sampleTerrain: sampleTerrainTest }).then((styledEntities) => {
+                            expect(styledEntities.length).toBe(1);
+                            expect(styledEntities[0].billboard).toBeTruthy();
+                            expect(styledEntities[0].polyline).toBeTruthy();
+                            const cartographicPosition = Cesium.Cartographic.fromCartesian(styledEntities[0].position._value);
+                            const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[0]);
+                            const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[1]);
+                            expect(Math.round(cartographicPosition.height)).toBe(5000);
+                            expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
+                            expect(Math.round(leaderLineCartographicPositionB.height)).toBe(6000);
+                            done();
+                        });
+                    });
+            }).catch(done);
+        });
+
+        it('should add leader line where HeightReference is none', (done) => {
+            const style = {
+                "name": "",
+                "rules": [
+                    {
+                        "name": "",
+                        "symbolizers": [
+                            {
+                                "kind": "Mark",
+                                "color": "#ffea00",
+                                "fillOpacity": 1,
+                                "strokeColor": "#3f3f3f",
+                                "strokeOpacity": 1,
+                                "strokeWidth": 1,
+                                "radius": 32,
+                                "wellKnownName": "Star",
+                                "msHeightReference": "none",
+                                "msBringToFront": false,
+                                "symbolizerId": "ea1db421-980f-11ed-a8e7-c1b9d44be36c",
+                                "msHeight": 5000,
+                                "msLeaderLineWidth": 4,
+                                "msLeaderLineColor": "#ff0000",
+                                "msLeaderLineOpacity": 1
+                            }
+                        ],
+                        "ruleId": "ea1db420-980f-11ed-a8e7-c1b9d44be36c"
+                    }
+                ]
             };
+            const canvas = document.createElement('canvas');
+            images.push({
+                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
+                image: canvas,
+                width: 32,
+                height: 32
+            });
+            const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
+            parser.writeStyle(style).then((styleFunc) => {
+                return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
+                    .then((dataSource) => {
+                        const entities = dataSource.entities.values;
+                        const mockMap = {terrainProvider: {ready: true}};
+                        return styleFunc({entities, map: mockMap, sampleTerrain: sampleTerrainTest }).then((styledEntities) => {
+                            expect(styledEntities.length).toBe(1);
+                            expect(styledEntities[0].billboard).toBeTruthy();
+                            expect(styledEntities[0].polyline).toBeTruthy();
+                            const cartographicPosition = Cesium.Cartographic.fromCartesian(styledEntities[0].position._value);
+                            const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[0]);
+                            const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[1]);
+                            expect(Math.round(cartographicPosition.height)).toBe(5000);
+                            expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
+                            expect(Math.round(leaderLineCartographicPositionB.height)).toBe(5000);
+                            done();
+                        });
+                    });
+            }).catch(done);
+        });
 
-            const expectedValue = Cesium.Cartesian3.fromRadiansArrayHeights([
-                cartographic.longitudes,
-                cartographic.latitude,
-                zValue,
-                cartographic.longitudes,
-                cartographic.latitude,
-                computedHeight[heightReference ?? "none"]
-            ]);
-
-            const parse = getLeaderLinePositions(map, cartographic, heightReference);
-            parse.then((res) => {
-                expect(res).toBe(expectedValue);
-                done();
-            }).catch(done());
+        it.only('should add leader line where HeightReference is clamp', (done) => {
+            const style = {
+                "name": "",
+                "rules": [
+                    {
+                        "name": "",
+                        "symbolizers": [
+                            {
+                                "kind": "Mark",
+                                "color": "#ffea00",
+                                "fillOpacity": 1,
+                                "strokeColor": "#3f3f3f",
+                                "strokeOpacity": 1,
+                                "strokeWidth": 1,
+                                "radius": 32,
+                                "wellKnownName": "Star",
+                                "msHeightReference": "clamp",
+                                "msBringToFront": false,
+                                "symbolizerId": "ea1db421-980f-11ed-a8e7-c1b9d44be36c",
+                                "msHeight": 5000,
+                                "msLeaderLineWidth": 4,
+                                "msLeaderLineColor": "#ff0000",
+                                "msLeaderLineOpacity": 1
+                            }
+                        ],
+                        "ruleId": "ea1db420-980f-11ed-a8e7-c1b9d44be36c"
+                    }
+                ]
+            };
+            const canvas = document.createElement('canvas');
+            images.push({
+                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
+                image: canvas,
+                width: 32,
+                height: 32
+            });
+            const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
+            parser.writeStyle(style).then((styleFunc) => {
+                return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
+                    .then((dataSource) => {
+                        const entities = dataSource.entities.values;
+                        const mockMap = {terrainProvider: {ready: true}};
+                        return styleFunc({entities, map: mockMap, sampleTerrain: sampleTerrainTest }).then((styledEntities) => {
+                            expect(styledEntities.length).toBe(1);
+                            expect(styledEntities[0].billboard).toBeTruthy();
+                            expect(styledEntities[0].polyline).toBeTruthy();
+                            const cartographicPosition = Cesium.Cartographic.fromCartesian(styledEntities[0].position._value);
+                            const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[0]);
+                            const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[1]);
+                            expect(Math.round(cartographicPosition.height)).toBe(5000);
+                            expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
+                            expect(Math.round(leaderLineCartographicPositionB.height)).toBe(1000);
+                            done();
+                        });
+                    });
+            }).catch(done);
         });
     });
 });
