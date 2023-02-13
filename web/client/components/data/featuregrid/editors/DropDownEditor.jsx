@@ -22,6 +22,7 @@ import assign from 'object-assign';
  * @prop {boolean} forceSelection forces the editor to use a `defaultOption` as value
  * @prop {string} defaultOption value used as default if forceSelection is true
  * @prop {boolean} allowEmpty if true it accept empty string as value
+ * @prop {string} emptyValue is an empty string
  *
  */
 class DropDownEditor extends AttributeEditor {
@@ -38,7 +39,8 @@ class DropDownEditor extends AttributeEditor {
         value: PropTypes.string,
         filter: PropTypes.string,
         values: PropTypes.array,
-        labels: PropTypes.array
+        labels: PropTypes.array,
+        emptyValue: PropTypes.string
     };
     static defaultProps = {
         isValid: () => true,
@@ -46,7 +48,8 @@ class DropDownEditor extends AttributeEditor {
         filter: "contains",
         values: [],
         forceSelection: true,
-        allowEmpty: true
+        allowEmpty: true,
+        emptyValue: ""
     };
     constructor(props) {
         super(props);
@@ -71,7 +74,9 @@ class DropDownEditor extends AttributeEditor {
                     oldValue: this.props.defaultOption,
                     changedValue: this.getValueByLabel(updated[this.props.column && this.props.column.key]),
                     data: this.props.values,
-                    allowEmpty: this.props.allowEmpty})};
+                    allowEmpty: this.props.allowEmpty,
+                    emptyValue: this.props.emptyValue
+                })};
             }
             if (this.props.allowEmpty) {
                 return updated;
@@ -81,7 +86,9 @@ class DropDownEditor extends AttributeEditor {
                 oldValue: this.props.defaultOption,
                 changedValue: this.getValueByLabel(updated[this.props.column && this.props.column.key]),
                 data: this.props.values,
-                allowEmpty: this.props.allowEmpty})};
+                allowEmpty: this.props.allowEmpty,
+                emptyValue: this.props.emptyValue
+            })};
         };
     }
     render() {

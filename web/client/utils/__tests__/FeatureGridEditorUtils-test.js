@@ -27,6 +27,15 @@ describe('FeatureGridEditorUtils', () => {
         const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
         expect(newVal).toBe("");
     });
+    it('forceSelection allowEmpty=true with no change at all and the emptyValue is null ', () => {
+        const oldValue = "";
+        const changedValue = "";
+        const data = ["new", "old", "agile"];
+        const allowEmpty = true;
+        const emptyValue = null;
+        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty, emptyValue});
+        expect(newVal).toBe(null);
+    });
     it('forceSelection allowEmpty=false with "" value', () => {
         const oldValue = "old";
         const changedValue = "";

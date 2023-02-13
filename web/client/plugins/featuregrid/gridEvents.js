@@ -14,7 +14,6 @@ export default {
     onAddFilter: (update = {}) => updateFilter(update),
     onTemporaryChanges: (v) => activateTemporaryChanges(v),
     onGridRowsUpdated: ({fromRow, toRow, updated}, rowGetter) => {
-
         let features = range(fromRow, toRow).map(r => rowGetter(r)).filter(f =>
             Object.keys(updated || {}).filter(k => f.properties[k] !== updated[k]).length > 0
         );
