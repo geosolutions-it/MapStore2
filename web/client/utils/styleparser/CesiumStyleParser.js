@@ -329,7 +329,8 @@ const getGraphics = ({
                 map,
                 symbolizer,
                 entity,
-                globalOpacity
+                globalOpacity,
+                sampleTerrain
             }).then(({ polyline }) =>({
                 polyline,
                 billboard: new Cesium.BillboardGraphics({
@@ -352,7 +353,8 @@ const getGraphics = ({
             map,
             symbolizer,
             entity,
-            globalOpacity
+            globalOpacity,
+            sampleTerrain
         }).then(({ polyline, billboard }) => ({
             billboard,
             polyline,
@@ -421,7 +423,8 @@ const getGraphics = ({
             map,
             symbolizer,
             entity,
-            globalOpacity
+            globalOpacity,
+            sampleTerrain
         }).then(({ polyline, updated  }) => ({
             ...((!shouldNotUpdateGraphics || updated) && {
                 model,
