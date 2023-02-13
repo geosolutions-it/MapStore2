@@ -42,7 +42,8 @@ class DownloadOptions extends React.Component {
         layer: PropTypes.object,
         formatsLoading: PropTypes.bool,
         virtualScroll: PropTypes.bool,
-        services: PropTypes.arrayOf(PropTypes.object)
+        services: PropTypes.arrayOf(PropTypes.object),
+        hideServiceSelector: PropTypes.bool
     };
 
     static defaultProps = {
@@ -60,7 +61,8 @@ class DownloadOptions extends React.Component {
         services: [
             { value: "wps", label: "WPS" },
             { value: "wfs", label: "WFS" }
-        ]
+        ],
+        hideServiceSelector: false
     };
 
     constructor(props) {
@@ -76,7 +78,7 @@ class DownloadOptions extends React.Component {
 
     render() {
         return (<form>
-            {this.props.wpsAvailable && this.props.wfsAvailable &&
+            {!this.props.hideServiceSelector && this.props.wpsAvailable && this.props.wfsAvailable &&
                 <>
                     <label><Message msgId="layerdownload.service" /></label>
                     <Select
