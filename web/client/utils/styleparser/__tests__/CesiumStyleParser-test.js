@@ -537,7 +537,7 @@ describe('CesiumStyleParser', () => {
                     }).catch(done);
                 });
         });
-        it('should add leader line where HeightReference is Reference', (done) => {
+        it('should add leader line where HeightReference is Relative', (done) => {
             const style = {
                 "name": "",
                 "rules": [
