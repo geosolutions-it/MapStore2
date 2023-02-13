@@ -64,10 +64,17 @@ const isGlobalOpacityChanged = (entity, globalOpacity) => (entity._msGlobalOpaci
 
 function getLeaderLinePositions({
     map,
-    cartographic
+    cartographic,
+    heightReference,
+    sampleTerrain
 }) {
     return new Promise(resolve => {
         const drawLine = (zValue) => {
+            const computedHeight = {
+                none: cartographic.height,
+                relative: cartographic.height + zValue,
+                clamp: zValue
+            };
             resolve(
                 zValue === cartographic.height
                     ? undefined
@@ -77,7 +84,7 @@ function getLeaderLinePositions({
                         zValue,
                         cartographic.longitude,
                         cartographic.latitude,
-                        cartographic.height
+                        computedHeight[heightReference ?? "none"]
                     ])
             );
         };
@@ -86,27 +93,30 @@ function getLeaderLinePositions({
             drawLine(0);
             return;
         }
-        const position = Cesium.Cartographic.fromRadians(
-            cartographic.longitude,
-            cartographic.latitude
-        );
-        const promise = terrainProvider?.availability
-            ? Cesium.sampleTerrainMostDetailed(
-                terrainProvider,
-                position
-            )
-            : Cesium.sampleTerrain(
-                terrainProvider,
-                terrainProvider?.sampleTerrainZoomLevel ?? 18,
-                position
-            );
-        if (Cesium.defined(promise)) {
-            promise
-                .then((updatedPositions) => drawLine(updatedPositions?.[0]?.height ?? 0))
-                .catch(() => drawLine(0));
-        } else {
-            drawLine(0);
-        }
+
+        const readyPromise = terrainProvider.ready
+            ? Promise.resolve(true)
+            : terrainProvider.readyPromise;
+
+        readyPromise.then(() => {
+            const promise = terrainProvider?.availability
+                ? Cesium.sampleTerrainMostDetailed(
+                    terrainProvider,
+                    [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
+                )
+                : sampleTerrain(
+                    terrainProvider,
+                    terrainProvider?.sampleTerrainZoomLevel ?? 18,
+                    [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
+                );
+            if (Cesium.defined(promise)) {
+                promise
+                    .then((updatedPositions) => drawLine(updatedPositions?.[0]?.height ?? 0))
+                    .catch(() => drawLine(0));
+            } else {
+                drawLine(0);
+            }
+        });
     });
 }
 
@@ -142,7 +152,8 @@ function addLeaderLineGraphic({
     map,
     symbolizer,
     entity,
-    globalOpacity
+    globalOpacity,
+    sampleTerrain
 }) {
     const compareKeys = [
         'msLeaderLineColor',
@@ -173,14 +184,14 @@ function addLeaderLineGraphic({
     }
 
     const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue(Cesium.JulianDate.now()));
-
+    const heightReference = symbolizer.msHeightReference;
     return (
         (
             symbolizer?.msHeight !== entity._msSymbolizer?.msHeight
             || symbolizer?.msHeightReference !== entity._msSymbolizer?.msHeightReference
             || !entity.polyline
         )
-            ? getLeaderLinePositions({ map, cartographic })
+            ? getLeaderLinePositions({ map, cartographic, heightReference, sampleTerrain })
                 .then((positions) => new Cesium.PolylineGraphics({ positions }))
             : Promise.resolve(entity.polyline)
     )
@@ -277,7 +288,8 @@ const getGraphics = ({
     entity,
     globalOpacity,
     properties,
-    map
+    map,
+    sampleTerrain
 }) => {
     if (symbolizer.kind === 'Mark') {
         modifyPointHeight({ entity, symbolizer, properties });
@@ -289,7 +301,8 @@ const getGraphics = ({
                 map,
                 symbolizer,
                 entity,
-                globalOpacity
+                globalOpacity,
+                sampleTerrain
             }).then(({ polyline }) => ({
                 polyline,
                 billboard: new Cesium.BillboardGraphics({
@@ -316,7 +329,8 @@ const getGraphics = ({
                 map,
                 symbolizer,
                 entity,
-                globalOpacity
+                globalOpacity,
+                sampleTerrain
             }).then(({ polyline }) =>({
                 polyline,
                 billboard: new Cesium.BillboardGraphics({
@@ -339,7 +353,8 @@ const getGraphics = ({
             map,
             symbolizer,
             entity,
-            globalOpacity
+            globalOpacity,
+            sampleTerrain
         }).then(({ polyline, billboard }) => ({
             billboard,
             polyline,
@@ -408,7 +423,8 @@ const getGraphics = ({
             map,
             symbolizer,
             entity,
-            globalOpacity
+            globalOpacity,
+            sampleTerrain
         }).then(({ polyline, updated  }) => ({
             ...((!shouldNotUpdateGraphics || updated) && {
                 model,
@@ -484,7 +500,8 @@ function getStyleFuncFromRules({
     return ({
         entities,
         map,
-        opacity: globalOpacity = 1
+        opacity: globalOpacity = 1,
+        sampleTerrain = Cesium.sampleTerrain
     }) => Promise.all(
         (entities || []).map((entity) => new Promise(resolve => {
             let coordinates = {};
@@ -523,7 +540,8 @@ function getStyleFuncFromRules({
                         entity,
                         globalOpacity,
                         properties,
-                        map
+                        map,
+                        sampleTerrain
                     }).then((graphics) => {
                         if (!isEmpty(graphics)) {
                             GRAPHIC_KEYS.forEach((graphicKey) => {
