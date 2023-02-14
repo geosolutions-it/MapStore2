@@ -49,7 +49,8 @@ class DownloadDialog extends React.Component {
         formatsLoading: PropTypes.bool,
         virtualScroll: PropTypes.bool,
         customAttributeSettings: PropTypes.object,
-        attributes: PropTypes.array
+        attributes: PropTypes.array,
+        hideServiceSelector: PropTypes.bool
     };
 
     static defaultProps = {
@@ -82,7 +83,8 @@ class DownloadDialog extends React.Component {
             {name: "EPSG:4326", label: "WGS84"}
         ],
         virtualScroll: true,
-        downloadOptions: {}
+        downloadOptions: {},
+        hideServiceSelector: false
     };
 
     componentDidUpdate(oldProps) {
@@ -145,6 +147,7 @@ class DownloadDialog extends React.Component {
                             virtualScroll={this.props.virtualScroll}
                             customAttributesSettings={this.props.customAttributeSettings}
                             attributes={this.props.attributes}
+                            hideServiceSelector={this.props.hideServiceSelector}
                         />}
             </div>
             {!this.props.checkingWPSAvailability && <div role="footer">

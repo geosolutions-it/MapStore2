@@ -52,4 +52,20 @@ describe('Test for DownloadDialog component', () => {
         expect(dialog).toBeTruthy();
         expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
     });
+    it('should not render service selector with true hideServiceSelector prop', () => {
+        const selectedLayer = {
+            type: 'wms',
+            visibility: true,
+            id: 'mapstore:states__7',
+            search: {
+                url: '/geoserver/wfs'
+            }
+        };
+        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable layer={selectedLayer} hideServiceSelector />, document.getElementById("container"));
+        const dialog = document.getElementById('mapstore-export');
+        expect(dialog).toBeTruthy();
+        expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
+        const selectors = dialog.querySelectorAll('.Select');
+        expect(selectors.length).toBe(2);
+    });
 });
