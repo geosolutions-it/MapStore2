@@ -14,7 +14,7 @@ import {
     closePolygon
 } from './ogc/GML';
 
-import {canConvert, getConverter} from './Filter/converters';
+import {canConvert, getConverter} from './filter/converters';
 
 import { wfsToGmlVersion } from './ogc/WFS/base';
 import { ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators } from './ogc/Filter/operators';

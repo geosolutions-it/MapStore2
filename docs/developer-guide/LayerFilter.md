@@ -113,8 +113,9 @@ Now it do not have an implementation yet, but this format will replace the old l
 
 ## Supporting new formats
 
-In order to support new formats, you can add a new entry, named with the name of the format in the `converters` object in `MapStore2/web/client/utils/Filter/filter/converters/index.js` file.
-The converter object is an object that implements a method for each format that you want to support, with the following signature:
+At the moment the filter conversion system is a work in progress. The API may change in the future, keeping the `canConvert` and `getConverter` functions as external API.
+We actually support `cql` and `ogc` as output formats (as strings), and `cql` (partially, cannot parse spatial filters in cql yet), `mapstore` and `logic` as input formats (as JSON objects with `format` as written above).  At the moment we don't have an internal model for a filter to use as intermediate model, but a set of `converters` in `MapStore2/web/client/utils/filter/converters/index.js` file.
+The `converter` object is an object that implements a method for each format that you want to support, with the following signature:
 
 ```js
 {
@@ -131,8 +132,27 @@ Example:
 }
 ```
 
-These methods will translate the JSON object (or in same cases the effective body of the filter) in the format specified in the method name.
+`options` depends on the specific output format, but it can be used to pass additional parameters to the converter. For instance the `cql` convert has no options, but the `ogc` converter has an `options` object that can contain the `nsFilter` field, that is the srs of the geometry to be used in the filter. See the JSDoc of the `ogc` converter for more details.
+
+These methods will translate the JSON objects received as input (or in same cases the effective body of the filter) in the format specified in the method name.
 Future converters (maybe with a more generic method) will be added to support other formats, if needed.
+
+Javascript API exposed by MapStore to manage filters is in `MapStore2/web/client/utils/filter/converters`.
+
+the functions are:
+
+```js
+getConverter(format::String) // return the converter for the specified format
+```
+
+The converter depends on the specific output format, but
+
+```js
+canConvert(from::Object|String, to::Object) // return true if the filter can be converted in the specified format
+```
+
+!!! note
+    Because there is not a generic converter, the `from` parameter can be a string or an object. If it is a string, it is considered as the format of the filter, otherwise it is considered as the filter object.
 
 ## Appendix A: `mapstore` format legacy fields
 
