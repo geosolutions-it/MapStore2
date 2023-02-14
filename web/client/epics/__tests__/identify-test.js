@@ -485,11 +485,9 @@ describe('identify Epics', () => {
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
                 expect(a1.type).toBe(GET_VECTOR_INFO);
-                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a2.reqId).toExist();
-                expect(a2.request).toExist();
+                expect(a2.type).toBe(FORCE_UPDATE_MAP_LAYOUT);
+                expect(a3.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a3).toExist();
-                expect(a3.type).toBe(LOAD_FEATURE_INFO);
                 done();
             } catch (ex) {
                 done(ex);
@@ -1193,6 +1191,36 @@ describe('identify Epics', () => {
         });
     });
     describe('setMapTriggerEpic', () => {
+        it('should register event if hover is trigger in mapInfo', (done) => {
+            const epicResponse = actions => {
+                expect(actions[0].type).toBe(REGISTER_EVENT_LISTENER);
+                done();
+            };
+            testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {mapInfo: {configuration: {trigger: 'hover'}}});
+        });
+        it('should unregister event if no mapInfo or no trigger is present in mapInfo', (done) => {
+            const epicResponse = actions => {
+                expect(actions[0].type).toBe(UNREGISTER_EVENT_LISTENER);
+                done();
+            };
+            testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {});
+        });
+        it('should unregister identifyFloatingTool event if mapType is changed to cesium', (done) => {
+            const epicResponse = actions => {
+                expect(actions[0].type).toBe(UNREGISTER_EVENT_LISTENER);
+                done();
+            };
+            testEpic(setMapTriggerEpic, 1, changeMapType("cesium"), epicResponse, {
+                mapInfo: {
+                    configuration: {
+                        trigger: "click"
+                    }
+                }
+            });
+        });
+    });
+
+    describe('setMapTriggerEpi', () => {
         it('should register event if hover is trigger in mapInfo', (done) => {
             const epicResponse = actions => {
                 expect(actions[0].type).toBe(REGISTER_EVENT_LISTENER);
