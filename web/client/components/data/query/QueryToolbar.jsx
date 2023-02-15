@@ -28,6 +28,7 @@ class QueryToolbar extends React.Component {
         filterFields: PropTypes.array,
         groupFields: PropTypes.array,
         spatialField: PropTypes.object,
+        filters: PropTypes.array,
         sendFilters: PropTypes.object,
         crossLayerFilter: PropTypes.object,
         toolbarEnabled: PropTypes.bool,
@@ -58,7 +59,8 @@ class QueryToolbar extends React.Component {
         sendFilters: {
             attributeFilter: true,
             spatialFilter: true,
-            crossLayerFilter: true
+            crossLayerFilter: true,
+            filters: true
         },
         filterType: "OGC",
         params: {},
@@ -113,7 +115,8 @@ class QueryToolbar extends React.Component {
             crossLayerFilter: this.props.sendFilters
                 && this.props.sendFilters.crossLayerFilter
                 && setupCrossLayerFilterDefaults(this.props.crossLayerFilter) || null,
-            hits: this.props.hits
+            hits: this.props.hits,
+            filters: this.props.filters
         };
     }
     render() {
@@ -129,9 +132,19 @@ class QueryToolbar extends React.Component {
         const isAppliedFilterEmpty = isFilterEmpty(this.props.appliedFilter);
         const isCurrentFilterChanged = this.isCurrentFilterChanged();
         // TODO: use isFilterValid
+        /* TODO: this logic is a little inconsistent, because if one filter is valid, the apply button is always enabled
+         * this means that empty attribute filter like prop = '' is not allowed (see hasValidAttributeFields)
+         * but if crossLayer or spatialFilter is valid, this is allowed.
+         * We should not enable the apply button if some filters are invalid
+         * (and avoid from the UI to make them invalid as much as possible)
+         */
         const isCurrentFilterValid = hasValidAttributeFields
             || this.props.spatialField.geometry
-            || isCrossLayerFilterValid(this.props.crossLayerFilter);
+            || isCrossLayerFilterValid(this.props.crossLayerFilter)
+            // a special invalid field can be added to filter if they are invalid to hide the apply button
+            || this.props.filters
+                && this.props.filters.length > 0
+                && this.props.filters.map(({invalid} = {}) => !invalid).reduce((a, b) => a && b, true);
         const isAppliedFilterChanged = !isEqual(this.props.appliedFilter, this.props.storedFilter);
         // submit for empty filter is allowed when
         // - it is forced to be allowed by outside
@@ -223,7 +236,8 @@ class QueryToolbar extends React.Component {
             groupFields: currentFilter.groupFields,
             filterFields: currentFilter.filterFields,
             spatialField: currentFilter.spatialField,
-            crossLayerFilter: currentFilter.crossLayerFilter
+            crossLayerFilter: currentFilter.crossLayerFilter,
+            filters: currentFilter.filters
         };
         const appliedFilter = this.props.appliedFilter || {};
         const applied = {
@@ -232,6 +246,7 @@ class QueryToolbar extends React.Component {
             spatialField: appliedFilter.spatialPanelExpanded && appliedFilter.spatialField || {
                 attribute: this.props.spatialField && this.props.spatialField.attribute
             },
+            filters: appliedFilter.filters,
             crossLayerFilter: appliedFilter.crossLayerExpanded && appliedFilter.crossLayerFilter && appliedFilter.crossLayerFilter.operation ? setupCrossLayerFilterDefaults(appliedFilter.crossLayerFilter) : null
         };
 

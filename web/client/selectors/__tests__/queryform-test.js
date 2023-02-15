@@ -18,7 +18,9 @@ import {
     spatialFieldMethodSelector,
     queryFormUiStateSelector,
     storedFilterSelector,
-    appliedFilterSelector
+    appliedFilterSelector,
+    filtersSelector,
+    filtersSelectorCreator
 } from '../queryform';
 
 const circle = "Circle";
@@ -77,7 +79,16 @@ const initialState = {
                 radius: 424941.79896156304,
                 projection
             }
-        }
+        },
+        filters: [{
+            id: "test",
+            format: 'cql',
+            body: 'prop1 = 1'
+        }, {
+            id: "test2",
+            format: 'cql',
+            body: 'prop2 = 2'
+        }]
     },
     layerFilter: {
         persisted: {id: 1},
@@ -86,56 +97,56 @@ const initialState = {
 };
 
 describe('Test queryform selectors', () => {
-    it(' 1) - spatialFieldSelector', () => {
+    it('spatialFieldSelector', () => {
         const spatialfield = spatialFieldSelector(initialState);
         expect(spatialfield).toExist();
         expect(spatialfield.method).toBe(circle);
         expect(spatialfield.attribute).toBe(attribute);
     });
-    it(' 2) - spatialFieldGeomSelector', () => {
+    it('spatialFieldGeomSelector', () => {
         const geom = spatialFieldGeomSelector(initialState);
         expect(geom).toExist();
         expect(geom.type).toBe(type);
     });
-    it(' 3) - spatialFieldGeomTypeSelector', () => {
+    it('spatialFieldGeomTypeSelector', () => {
         const geomType = spatialFieldGeomTypeSelector(initialState);
         expect(type).toExist();
         expect(type).toBe(geomType);
     });
-    it(' 4) - spatialFieldGeomProjSelector', () => {
+    it('spatialFieldGeomProjSelector', () => {
         const geomProj = spatialFieldGeomProjSelector(initialState);
         expect(geomProj).toExist();
         expect(geomProj).toBe(projection);
     });
-    it(' 5) - spatialFieldGeomCoordSelector', () => {
+    it('spatialFieldGeomCoordSelector', () => {
         const geomCoord = spatialFieldGeomCoordSelector(initialState);
         expect(geomCoord).toExist();
         expect(geomCoord.length).toBe(1);
         expect(geomCoord[0].length).toBe(6);
     });
-    it(' 6) - spatialFieldMethodSelector', () => {
+    it('spatialFieldMethodSelector', () => {
         const method = spatialFieldMethodSelector(initialState);
         expect(method).toExist();
         expect(method).toBe(circle);
     });
-    it(' 7) - queryFormUiStateSelector', () => {
+    it('queryFormUiStateSelector', () => {
         const queryFormUiState = queryFormUiStateSelector(initialState);
         expect(queryFormUiState).toExist();
         expect(queryFormUiState.attributePanelExpanded).toBe(false);
         expect(queryFormUiState.spatialPanelExpanded).toBe(true);
         expect(queryFormUiState.crossLayerExpanded).toBe(true);
     });
-    it(' 8) - storedFilterSelector', () => {
+    it('storedFilterSelector', () => {
         const storedFilter = storedFilterSelector(initialState);
         expect(storedFilter).toExist();
         expect(storedFilter.id).toBe(1);
     });
-    it(' 9) - appliedFilterSelector', () => {
+    it('appliedFilterSelector', () => {
         const appliedFilter = appliedFilterSelector(initialState);
         expect(appliedFilter).toExist();
         expect(appliedFilter.id).toBe(2);
     });
-    it(' 10) - availableCrossLayerFilterLayersSelector', () => {
+    it('availableCrossLayerFilterLayersSelector', () => {
         const layers = availableCrossLayerFilterLayersSelector({layers: [
             {type: "wms", group: "group name"},
             {type: "csw", group: "group name"},
@@ -145,5 +156,18 @@ describe('Test queryform selectors', () => {
         expect(layers.length).toBe(1);
         expect(layers[0].group).toBe("group name");
         expect(layers[0].type).toBe("wms");
+    });
+    it('filtersSelector', () => {
+        const filters = filtersSelector(initialState);
+        expect(filters).toExist();
+        expect(filters.length).toBe(2);
+    });
+    it('filtersSelectorCreator', () => {
+        const filter = filtersSelectorCreator("test_not_exists")(initialState);
+        expect(filter).toNotExist();
+        const filter2 = filtersSelectorCreator("test")(initialState);
+        expect(filter2).toExist();
+        expect(filter2.id).toBe("test");
+        expect(filter2.body).toBe("prop1 = 1");
     });
 });

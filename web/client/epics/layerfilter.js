@@ -29,10 +29,11 @@ import { getSelectedLayer } from '../selectors/layers';
 import { changeDrawingStatus } from '../actions/draw';
 import {setupCrossLayerFilterDefaults} from '../utils/FilterUtils';
 
-const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields} = {}) => {
+const isNotEmptyFilter = ({crossLayerFilter, spatialField, filterFields, filters } = {}) => {
     return !!(filterFields && head(filterFields)
     || spatialField && spatialField.method && spatialField.operation && spatialField.geometry
-    || crossLayerFilter && crossLayerFilter.collectGeometries && crossLayerFilter.operation);
+    || crossLayerFilter && crossLayerFilter.collectGeometries && crossLayerFilter.operation)
+    || filters && filters.length > 0;
 };
 
 const endLayerFilterEpic = (action$) => ob$ => ob$.takeUntil(action$.ofType(TOGGLE_CONTROL).

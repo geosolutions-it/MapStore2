@@ -55,6 +55,9 @@ export const SET_AUTOCOMPLETE_MODE = 'SET_AUTOCOMPLETE_MODE';
 export const TOGGLE_AUTOCOMPLETE_MENU = 'TOGGLE_AUTOCOMPLETE_MENU';
 export const LOAD_FILTER = 'QUERYFORM:LOAD_FILTER';
 
+export const UPSERT_FILTERS = 'QUERYFORM:UPSERT_FILTERS';
+export const REMOVE_FILTERS = 'QUERYFORM:REMOVE_FILTERS';
+
 import axios from '../libs/ajax';
 
 export function addFilterField(groupId) {
@@ -426,5 +429,29 @@ export function updateCrossLayerFilterFieldOptions(filterField, options, valuesC
         filterField,
         options,
         valuesCount
+    };
+}
+
+/**
+ * Insert or update filters in the query form state. If a filter with the same id already exists, it will be updated.
+ * @param {object} filter the filters to insert or update
+ * @returns the action
+ */
+export function upsertFilters(...filters) {
+    return {
+        type: UPSERT_FILTERS,
+        filters
+    };
+}
+
+/**
+ * Removes filters from the query form state (by `id`)
+ * @param {object} filters the filters to remove
+ * @returns the action
+ */
+export function removeFilters(...filters) {
+    return {
+        type: REMOVE_FILTERS,
+        filters
     };
 }

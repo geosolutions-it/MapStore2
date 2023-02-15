@@ -44,6 +44,8 @@ import {
     SET_AUTOCOMPLETE_MODE,
     CHANGE_SPATIAL_FILTER_VALUE,
     UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS,
+    UPSERT_FILTERS,
+    REMOVE_FILTERS,
     setAutocompleteMode,
     toggleMenu,
     changeDwithinValue,
@@ -79,7 +81,9 @@ import {
     removeSimpleFilterField,
     removeAllSimpleFilterFields,
     changeSpatialFilterValue,
-    updateCrossLayerFilterFieldOptions
+    updateCrossLayerFilterFieldOptions,
+    upsertFilters,
+    removeFilters
 } from '../queryform';
 
 describe('Test correctness of the queryform actions', () => {
@@ -474,5 +478,27 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval.srsName).toBe(arg.srsName);
         expect(retval.style).toBe(arg.style);
 
+    });
+    it('upsertFilters', () => {
+        let retval = upsertFilters({id: "my", format: 'cql', body: 'prop = 1'});
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPSERT_FILTERS);
+        expect(retval.filters).toExist();
+        expect(retval.filters.length).toBe(1);
+        expect(retval.filters[0].id).toBe("my");
+        expect(retval.filters[0].format).toBe('cql');
+        expect(retval.filters[0].body).toBe('prop = 1');
+    });
+    it('removeFilters', () => {
+        let retval = removeFilters({id: "my", format: 'cql', body: 'prop = 1'});
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_FILTERS);
+        expect(retval.filters).toExist();
+        expect(retval.filters.length).toBe(1);
+        expect(retval.filters[0].id).toBe("my");
+        expect(retval.filters[0].format).toBe('cql');
+        expect(retval.filters[0].body).toBe('prop = 1');
     });
 });

@@ -14,6 +14,8 @@ import {
     closePolygon
 } from './ogc/GML';
 
+import {canConvert, getConverter} from './filter/converters';
+
 import { wfsToGmlVersion } from './ogc/WFS/base';
 import { ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators } from './ogc/Filter/operators';
 import { read } from './ogc/Filter/CQL/parser';
@@ -305,7 +307,25 @@ export const processOGCSimpleFilterField = (field, nsplaceholder) => {
 
 const cqlQueryCollection = ({typeName, geometryName, cqlFilter = "INCLUDE"} = {}) => `queryCollection('${typeName}', '${geometryName}','${escapeCQLStrings(cqlFilter)}')`;
 const cqlCollectGeometries = (content) => `collectGeometries(${content})`;
+export const convertFiltersToOGC = (filters, options) => {
+    const convertFilter = (filter) => {
+        if (canConvert(filter.format, 'ogc')) {
+            return getConverter(filter.format, 'ogc')(filter,  {filterNS: options?.nsplaceholder}); // TODO: handle version OGC, if needed (maybe change gml version)
+        }
+        return []; // do not convert if not supported
+    };
+    return flatten(filters.map(convertFilter));
+};
 
+export const convertFiltersToCQL = (filters) => {
+    const convertFilter = (filter) => {
+        if (canConvert(filter.format, 'cql')) {
+            return getConverter(filter.format, 'cql')(filter);
+        }
+        return []; // do not convert if not supported
+    };
+    return flatten(filters.map(convertFilter));
+};
 
 export const toOGCFilterParts = function(objFilter, versionOGC, nsplaceholder) {
     let filters = [];
@@ -388,9 +408,13 @@ export const toOGCFilterParts = function(objFilter, versionOGC, nsplaceholder) {
             }))
         );
     }
-
+    // this should be the standard form of the filter.
+    if (objFilter.filters) {
+        filters = filters.concat(convertFiltersToOGC(objFilter.filters, {nsplaceholder, versionOGC}) ?? []);
+    }
     return filters;
 };
+// TODO: toOGCFilter returns in fact the full query, not only the filter. Properly rename and move it in the right place
 export const toOGCFilter = function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null, srsName = "EPSG:4326") {
     let objFilter;
     try {
@@ -719,6 +743,10 @@ export const toCQLFilter = function(json) {
             const cg = cqlCollectGeometries(cqlQueryCollection({typeName, geometryName, cqlFilter}));
             filters.push(`${operation}(${attribute},${cg})`);
         }
+    }
+    // this should be the standard form of the filter.
+    if (objFilter.filters) {
+        filters = filters.concat(convertFiltersToCQL(objFilter.filters));
     }
     if (filters.length) {
         return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
@@ -1110,10 +1138,11 @@ export const getWFSFilterData = (filterObj, options) => {
     return data;
 };
 export const isLikeOrIlike = (operator) => operator === "ilike" || operator === "like";
-export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {} } = {}) =>
+export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) =>
     !(filterFields.filter((field) => field.value || field.value === 0).length > 0)
     && !spatialField.geometry
-    && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation);
+    && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation)
+    && !(filters && filters.length > 0);
 export const isFilterValid = (f = {}) =>
     (f.filterFields && f.filterFields.length > 0)
     || (f.simpleFilterFields && f.simpleFilterFields.length > 0)
@@ -1123,7 +1152,8 @@ export const isFilterValid = (f = {}) =>
         && f.crossLayerFilter.collectGeometries
         && f.crossLayerFilter.collectGeometries.queryCollection
         && f.crossLayerFilter.collectGeometries.queryCollection.geometryName
-        && f.crossLayerFilter.collectGeometries.queryCollection.typeName);
+        && f.crossLayerFilter.collectGeometries.queryCollection.typeName)
+    || (f.filters && f.filters.length > 0);
 const composeSpatialFields = (...spatialFields) => {
     return flatten(spatialFields.filter(v => !!v));
 };
@@ -1287,5 +1317,6 @@ FilterUtils = {
     reprojectFilterInNativeCrs,
     processOGCSpatialFilter,
     createFeatureFilter,
-    mergeFiltersToOGC
+    mergeFiltersToOGC,
+    convertFiltersToOGC
 };

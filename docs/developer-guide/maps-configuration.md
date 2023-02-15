@@ -162,6 +162,25 @@ title: {
     },
 ```
 
+The layers can belong to the `background` group, in this case they will be available in the background switcher, and only one layer of this group can be visible at the same time.
+
+```javascript
+    {
+        "format": "image/jpeg",
+        "name": "workspace:layername",
+        "params": {},
+        "singleTile": false,
+        "title": "My WMS Background",
+        "type": "wms",
+        "group": "background",
+        "thumbURL": "http://some.wms.service/geoserver/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=rv%3Arv1&STYLES=&FORMAT=image%2Fjpeg&TRANSPARENT=true&HEIGHT=256&WIDTH=256&TILED=true&ZINDEX=2&SRS=EPSG%3A3857&CRS=EPSG%3A3857&BBOX=3757032.814272983,5009377.08569731,5009377.085697311,6261721.35712164",
+        "url": "http://some.wms.service/geoserver/ows",
+        "visibility": false
+    },
+```
+
+In the case of the background the `thumbURL` is used to show a preview of the layer in the background switcher.
+
 ### Layer types
 
 - `wms`: WMS - Web Mapping Service layers
@@ -191,6 +210,8 @@ i.e.
     "group": "background",
     "visibility": false,
     "params": {}, // can be used to add parameters to the request, or override the default ones
+    "layerFilter": {} // a layer filter object, to filter the layer
+    "search": {}, // object to configure the features URL in the layer
     "credits": { // optional
         "imageUrl": "somePic.png", // URL for the image to put in attribution
         "link": "http://someURL.org", // URL where attribution have to link to
@@ -199,22 +220,15 @@ i.e.
 }
 ```
 
-You can also configure a WMS layer also as background, like this:
+Details:
 
-```javascript
-    {
-        "format": "image/jpeg",
-        "name": "workspace:layername",
-        "params": {},
-        "singleTile": false,
-        "title": "My WMS Background",
-        "type": "wms",
-        "group": "background",
-        "thumbURL": "http://some.wms.service/geoserver/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=rv%3Arv1&STYLES=&FORMAT=image%2Fjpeg&TRANSPARENT=true&HEIGHT=256&WIDTH=256&TILED=true&ZINDEX=2&SRS=EPSG%3A3857&CRS=EPSG%3A3857&BBOX=3757032.814272983,5009377.08569731,5009377.085697311,6261721.35712164",
-        "url": "http://some.wms.service/geoserver/ows",
-        "visibility": false
-    },
-```
+- `url`: the URL of the WMS service
+- `name`: name of the layer
+- `format`: the format of the WMS requests to use
+- `params`: an object with additional parameters to add to the WMS request
+- `layerFilter`: an object to filter the layer. See [LayerFilter](LayerFilter.md) for details.
+- `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs'}`.
+- `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
 
 ##### Multiple URLs
 

@@ -25,7 +25,9 @@ import {
     processOGCSimpleFilterField,
     processCQLFilterFields,
     wrapIfNoWildcards,
-    mergeFiltersToOGC
+    mergeFiltersToOGC,
+    convertFiltersToOGC,
+    convertFiltersToCQL
 } from '../FilterUtils';
 
 
@@ -1670,6 +1672,106 @@ describe('FilterUtils', () => {
         expect(parts.length).toBe(1);
         expect(parts[0]).toBe('<ogc:And>' + point1OGC + point2OGC + '</ogc:And>');
     });
+    it('toOGCFilterParts returns also filters from filter objects', () => {
+        const filters = toOGCFilterParts({
+            spatialField: [{
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[2, 2], [4, 1]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }],
+            filterFields: [{
+                attribute: "name",
+                operator: "=",
+                value: "test"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            filters: [{
+                format: "cql",
+                body: "name = 'test'"
+            }]
+        }, "1.1.0", "ogc");
+        expect(filters).toExist();
+        expect(filters.length).toBe(2);
+        expect(filters[0]).toBe('<ogc:Intersects><ogc:PropertyName>the_geom</ogc:PropertyName><gml:Point srsDimension="2" srsName="EPSG:4326"><gml:pos>2,2 4,1</gml:pos></gml:Point></ogc:Intersects>');
+        expect(filters[1]).toBe('<ogc:PropertyIsEqualTo><ogc:PropertyName>name</ogc:PropertyName><ogc:Literal>test</ogc:Literal></ogc:PropertyIsEqualTo>');
+    });
+    it('toOGCFilter with filters array', () => {
+        const query = toOGCFilter("test", {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "list",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            filters: [{
+                format: "cql",
+                body: "prop = 'test'"
+            }]
+        }, "1.1.0", "ogc");
+        expect(query).toExist();
+        // toOGCFilter returns an entire WFS, wrapping into the `<ogc:Filter>` tag the filters. We have to extract the filter part
+        const filterPart = query.split('<ogc:Filter>')[1].split('</ogc:Filter>')[0];
+        expect(filterPart).toEqual(
+            '<ogc:And>' +
+                '<ogc:Or>' +
+                    '<ogc:PropertyIsEqualTo>' +
+                        '<ogc:PropertyName>attribute1</ogc:PropertyName>' +
+                        '<ogc:Literal>value1</ogc:Literal>' +
+                    '</ogc:PropertyIsEqualTo>' +
+                '</ogc:Or>' +
+                '<ogc:PropertyIsEqualTo>' +
+                    '<ogc:PropertyName>prop</ogc:PropertyName>' +
+                    '<ogc:Literal>test</ogc:Literal>' +
+                '</ogc:PropertyIsEqualTo>' +
+            '</ogc:And>'
+        );
+    });
+    it('toCQLFilter includes also filters', () => {
+        const filters = toCQLFilter({
+            spatialField: [{
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[2, 2], [4, 1]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }],
+            filterFields: [{
+                attribute: "name",
+                operator: "=",
+                value: "test"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            filters: [{
+                format: "cql",
+                body: "name = 'test'"
+            }]
+        });
+        expect(filters).toExist();
+        expect(filters).toBe('(INTERSECTS("the_geom",SRID=4326;Point(2,2 4,1))) AND (name = \'test\')');
+    });
+
     it('Check if toOGCFilter bbox overrides with spatialField array', () => {
         const filterObj = {
             featureTypeName: 'feature',
@@ -2021,5 +2123,56 @@ describe('FilterUtils', () => {
             xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
         }, undefined, {...filterObj, ogcVersion});
         expect(filter).toEqual(expectedFilter);
+    });
+    // sub function to convert filters from other formats
+    describe('sub function to convert filters from other formats', () => {
+        const TESTS = [
+            {
+                filters: [],
+                ogc: '',
+                cql: ''
+            }, {
+                filters: [{
+                    format: 'cql',
+                    body: 'prop = 1'
+                }],
+                ogc: '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>',
+                cql: 'prop = 1'
+            }, {
+                filters: [{
+                    format: 'cql',
+                    body: 'prop = 1'
+                }, {
+                    format: 'cql',
+                    body: 'prop = 2'
+                }],
+                ogc: [
+                    '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>',
+                    '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>2</ogc:Literal></ogc:PropertyIsEqualTo>'
+                ],
+                cql: ['prop = 1', 'prop = 2']
+            },
+            {
+                filters: [{format: 'logic', logic: 'AND', filters: []}],
+                ogc: '', // not needed to produce this but it is the result
+                cql: ''
+            }, {
+                filters: [{format: 'logic', logic: 'OR', filters: []}],
+                ogc: '', // not needed to produce this but it is the result
+                cql: ''
+            }
+        ];
+        it('convertFiltersToOGC', () => {
+            TESTS.forEach((test) => {
+                const ogc = convertFiltersToOGC(test.filters, {nsplaceholder: 'ogc'});
+                expect(ogc).toEqual(test.ogc);
+            });
+        });
+        it('convertFiltersToCQL', () => {
+            TESTS.forEach((test) => {
+                const cql = convertFiltersToCQL(test.filters);
+                expect(cql).toEqual(test.cql);
+            });
+        });
     });
 });

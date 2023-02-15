@@ -126,7 +126,8 @@ function query(state = initialState, action) {
             isNew: false,
             result: null,
             filterObj: null,
-            searchUrl: null
+            searchUrl: null,
+            filters: null
         });
     case RESET_QUERY: {
         return assign({}, state, {

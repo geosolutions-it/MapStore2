@@ -33,3 +33,20 @@ export const maxFeaturesWPSSelector = state => get(state, "queryform.maxFeatures
 export const spatialFieldGeomTypeSelector = state => spatialFieldGeomSelector(state) && spatialFieldGeomSelector(state).type || "Polygon";
 export const spatialFieldGeomProjSelector = state => spatialFieldGeomSelector(state) && spatialFieldGeomSelector(state).projection || "EPSG =4326";
 export const spatialFieldGeomCoordSelector = state => spatialFieldGeomSelector(state) && spatialFieldGeomSelector(state).coordinates || [];
+
+/**
+ * This selector returns the "inner" filters from the queryform.
+ * The inner filters are the filters that are inside the queryForm but not associated to `attributeFields` `spatialField` or `crossLayerFilter`.
+ * These are additional filters that can be added to the queryform by external plugins.
+ * TODO: move the attributeFields, spatialField and crossLayerFilter inside the queryform state in a future version of MapStore with a new standard format.
+ * @param {object} state
+ * @returns {object[]} the inner filters from the queryform
+ */
+export const filtersSelector = state => get(state, "queryform.filters") || [];
+
+/**
+ * Creates a selector that returns the filter with the given id from the queryform.
+ * @param {string} id the id of the filter to get
+ * @returns {function} a selector that returns the filter with the given id from the queryform.
+ */
+export const filtersSelectorCreator = (id) => state => filtersSelector(state).find(({id: filterId}) => filterId === id);
