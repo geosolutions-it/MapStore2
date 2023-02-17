@@ -146,7 +146,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                             }))
                             .startWith(newMapInfoRequest(reqId, param));
                     }
-                    return Rx.Observable.of(getVectorInfo(layer, request, metadata, queryableLayers));
+                    return Rx.Observable.of(getVectorInfo(layer, request, metadata, queryableLayers), forceUpdateMapLayout());
                 });
             // NOTE: multiSelection is inside the event
             // TODO: move this flag in the application state
