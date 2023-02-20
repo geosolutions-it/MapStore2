@@ -19,6 +19,8 @@ In a standard project is possible to use aliases for directories:
 
 ### js/plugins/Sample.jsx
 
+Plugins are react component exported with the [createPlugin](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/framework#createPlugin) function
+
 ```javascript
 import React from "react";
 import { createPlugin } from "@mapstore/utils/PluginsUtils";
