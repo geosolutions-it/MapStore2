@@ -51,4 +51,10 @@ describe('Test for DownloadOptions component', () => {
         const selectors = form.querySelectorAll('.Select');
         expect(selectors.length).toBe(2);
     });
+    it('should not render service selector if hideServiceSelector is true', () => {
+        ReactDOM.render(<DownloadOptions wpsAvailable wfsAvailable hideServiceSelector service="wps" />, document.getElementById("container"));
+        const form = document.getElementsByTagName('form')[0];
+        const selectors = form.querySelectorAll('.Select');
+        expect(selectors.length).toBe(2);
+    });
 });

@@ -60,7 +60,8 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @prop {object[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
  * @prop {string} defaultSrs Default selected srs
  * @prop {string} closeGlyph The icon to use for close the dialog
- * @prop {string} defaultSelectedService The service that should be used by default for donwloading. Valid values: "wfs", "wps"
+ * @prop {string} defaultSelectedService The service that should be used by default for downloading. Valid values: "wfs", "wps"
+ * @prop {bool} hideServiceSelector hide service selector input from the user interface
  * @example
  * {
  *  "name": "LayerDownload",
@@ -77,7 +78,8 @@ import { createPlugin } from '../utils/PluginsUtils';
  *            {"name": "EPSG:4326", "label": "WGS84"}
  *    ],
  *    "defaultSrs": "native",
- *    "defaultSelectedService": "wfs"
+ *    "defaultSelectedService": "wfs",
+ *    "hideServiceSelector": true
  *  }
  * }
  * // it is possible to support GeoPackage format when the targeted GeoServer uses wps download extensions
