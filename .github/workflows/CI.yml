@@ -147,7 +147,56 @@ jobs:
       ##############
       - name: java
         run: mvn --batch-mode --update-snapshots verify
+  build-publish:
+    runs-on: ubuntu-latest
+    if:  ${{ github.event_name == 'push' && github.repository == 'geosolutions-it/geosolutions-it' }}
+    needs: [test-front-end, test-back-end, build]
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v2
+      - name: "setting up npm"
+        uses: actions/setup-node@v2
+        with:
+            node-version: '12.x'
+      - name: "setting up Java"
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+      ############
+      # Build
+      ##########
+      - run : "npm install"
+      - run: "npm run fe:build"
+      - run: "npm run jsdoc:build"
+      - run: "mvn clean install -Dmapstore2.version=$GITHUB_REF_NAME -Pprintingbundle"
+      ############
+      # Publish
+      ##########
+      - name: Publish artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+            name: MapStore-Artifacts${{ github.sha }}
+            path: |
+                product/target/mapstore.war
+                printing/target/mapstore-printing.zip  
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          server-id: geosolutions
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+      - name: Publish package
+        run: mvn -B clean install deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
 
-
+      - name: Publish package on Gs maven repository
+        run: mvn -B clean install -Dmapstore2.version=$GITHUB_REF_NAME deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
 
 
