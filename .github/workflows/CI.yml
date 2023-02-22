@@ -1,6 +1,6 @@
 # This workflow will run tests for npm and java
 
-name: checks
+name: CI
 
 on:
   push:
@@ -147,7 +147,37 @@ jobs:
       ##############
       - name: java
         run: mvn --batch-mode --update-snapshots verify
-
+  build-publish:
+    runs-on: ubuntu-latest
+    if:  ${{ github.event_name == 'push' && github.repository == 'geosolutions-it/geosolutions-it' }}
+    needs: [test-front-end, test-back-end, build]
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v2
+      - name: "setting up npm"
+        uses: actions/setup-node@v2
+        with:
+            node-version: '12.x'
+      - name: "setting up Java"
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.x'
+      ############
+      # Publish
+      ##########
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          server-id: geosolutions
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+      - name: Publish maven packages
+        run: mvn clean install deploy -f java/pom.xml
+        env:
+          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
 
 
 
