@@ -44,7 +44,7 @@ describe("test the MeasureComponent", () => {
         expect(domNode).toExist();
         const domButtons = domNode.getElementsByTagName('button');
         expect(domButtons).toExist();
-        expect(domButtons.length).toBe(7);
+        expect(domButtons.length).toBe(6);
         const disabledButtons = domNode.querySelectorAll('button.disabled');
         expect(disabledButtons.length).toBe(2);
     });
@@ -80,7 +80,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(7);
+        expect(buttons.length).toBe(6);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
         expect(disabledButtons.length).toBe(2);
 
@@ -110,7 +110,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(7);
+        expect(buttons.length).toBe(6);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
         expect(disabledButtons.length).toBe(2);
 
@@ -140,7 +140,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(7);
+        expect(buttons.length).toBe(6);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
         expect(disabledButtons.length).toBe(2);
 
@@ -171,7 +171,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(7);
+        expect(buttons.length).toBe(6);
         const disabledButtons = cmpDom.querySelectorAll('button.disabled');
         expect(disabledButtons.length).toBe(2);
 
@@ -467,7 +467,7 @@ describe("test the MeasureComponent", () => {
         expect(toolBarGroup.length).toBe(3);
 
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(8);
+        expect(buttons.length).toBe(7);
         expect(buttons[0].classList.contains('disabled')).toBe(false);
         expect(buttons[1].classList.contains('disabled')).toBe(false);
         expect(buttons[2].classList.contains('disabled')).toBe(false);
@@ -523,7 +523,7 @@ describe("test the MeasureComponent", () => {
         expect(toolBarGroup.length).toBe(3);
 
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(8);
+        expect(buttons.length).toBe(7);
         // By default LineString is selected
         expect(buttons[0].className).toContain('active');
 
