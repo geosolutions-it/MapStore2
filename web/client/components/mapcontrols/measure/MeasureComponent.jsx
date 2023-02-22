@@ -153,8 +153,7 @@ class MeasureComponent extends React.Component {
         onChangeFormat: () => {},
         onMount: () => {},
         onUpdateOptions: () => {},
-        onAddAsLayer: () => {},
-        onClose: () => {}
+        onAddAsLayer: () => {}
     };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
