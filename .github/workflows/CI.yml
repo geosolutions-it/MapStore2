@@ -165,13 +165,6 @@ jobs:
       ############
       # Publish
       ##########
-      - name: Publish artifact
-        uses: actions/upload-artifact@v3.1.0
-        with:
-            name: MapStore-Artifacts${{ github.sha }}
-            path: |
-                product/target/mapstore.war
-                printing/target/mapstore-printing.zip
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
         with:
