@@ -1,6 +1,6 @@
 # MapStore
 
-![Build Checks](https://github.com/geosolutions-it/MapStore2/actions/workflows/tests.yml/badge.svg?branch=master)
+![Build Checks](https://github.com/geosolutions-it/MapStore2/actions/workflows/CI.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/geosolutions-it/MapStore2/badge.svg?branch=master)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/mapstore2/badge/?version=latest)](https://docs.mapstore.geosolutionsgroup.com/en/latest/?badge=latest)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
