@@ -1,6 +1,6 @@
 # This workflow will run tests for npm and java
 
-name: checks
+name: CI
 
 on:
   push:
@@ -171,7 +171,7 @@ jobs:
             name: MapStore-Artifacts${{ github.sha }}
             path: |
                 product/target/mapstore.war
-                printing/target/mapstore-printing.zip  
+                printing/target/mapstore-printing.zip
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
         with:
