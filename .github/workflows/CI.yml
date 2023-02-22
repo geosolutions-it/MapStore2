@@ -161,14 +161,7 @@ jobs:
       - name: "setting up Java"
         uses: actions/setup-java@v1
         with:
-          java-version: '8.x'
-      ############
-      # Build
-      ##########
-      - run : "npm install"
-      - run: "npm run fe:build"
-      - run: "npm run jsdoc:build"
-      - run: "mvn clean install -Dmapstore2.version=$GITHUB_REF_NAME -Pprintingbundle"
+          java-version: '11.x'
       ############
       # Publish
       ##########
