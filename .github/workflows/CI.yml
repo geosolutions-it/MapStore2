@@ -180,16 +180,11 @@ jobs:
           server-id: geosolutions
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-      - name: Publish package
-        run: mvn -B clean install deploy
+      - name: Publish maven packages
+        run: mvn install deploy --projects \!product
         env:
           MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
 
-      - name: Publish package on Gs maven repository
-        run: mvn -B clean install -Dmapstore2.version=$GITHUB_REF_NAME deploy
-        env:
-          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
 
 
