@@ -76,6 +76,13 @@ describe('LeafletMap', () => {
         expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
     });
 
+    it('creates a div for leaflet map with a numerical id', () => {
+        const map = ReactDOM.render(<LeafletMap id="7" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
+        expect(map).toExist();
+        expect(ReactDOM.findDOMNode(map).id).toBe('7');
+    });
+
+
     it('creates a div for leaflet map with default id (map)', () => {
         const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
         expect(map).toExist();
