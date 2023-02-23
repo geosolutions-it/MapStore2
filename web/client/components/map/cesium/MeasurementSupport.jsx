@@ -55,7 +55,8 @@ function MeasurementSupport({
         MeasureTypes.HEIGHT_FROM_TERRAIN,
         MeasureTypes.ANGLE_3D,
         MeasureTypes.SLOPE
-    ]
+    ],
+    onClose
 }, { messages }) {
 
     const [clearId, setClearId] = useState(0);
@@ -141,6 +142,7 @@ function MeasurementSupport({
                         valueField="value"
                     />
                 }
+                onClose={onClose}
             >
                 <ButtonToolbar>
                     <ButtonGroup>
