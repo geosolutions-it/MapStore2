@@ -23,7 +23,7 @@ import {
     setCurrentFeature
 } from '../actions/measurement';
 import { measureSelector, showCoordinateEditorSelector } from '../selectors/controls';
-import { isOpenlayers } from '../selectors/maptype';
+import { isOpenlayers, mapTypeSelector } from '../selectors/maptype';
 import {
     isCoordinateEditorEnabledSelector,
     isTrueBearingEnabledSelector,
@@ -160,11 +160,18 @@ const Measure = connect(
         onAddAsLayer: addAsLayer
     }, null, {pure: false})(MeasureDialog);
 
-function MeasurePlugin(props) {
+// the connect for mapType is needed in case the mapType is not provided by the hash pathname
+const MeasurePlugin = connect(
+    createSelector([
+        mapTypeSelector
+    ], (mapType) => ({
+        mapType
+    }))
+)((props) => {
     return props.mapType === 'cesium'
         ? null
         : <Measure {...props} />;
-}
+});
 
 export default createPlugin('Measure', {
     component: MeasurePlugin,
