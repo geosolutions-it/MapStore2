@@ -124,8 +124,8 @@ class LeafletMap extends React.Component {
             minZoom: limits && limits.minZoom,
             maxZoom: limits && limits.maxZoom || 23
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
-
-        const map = L.map(this.getDocument().querySelector(`#${this.props.id} > .map-viewport`), assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        // it is not possible to use #<id> in a query selector if the id starts with a number
+        const map = L.map(this.getDocument().querySelector(`[id='${this.props.id}'] > .map-viewport`), assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
             Math.round(this.props.zoom));
 
         this.map = map;
