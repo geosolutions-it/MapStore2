@@ -11,6 +11,7 @@ import MeasureComponentComp from '../../components/mapcontrols/measure/MeasureCo
 import MeasureDialogComp from '../../components/mapcontrols/measure/MeasureDialog';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import { setControlProperty } from '../../actions/controls';
 import {
     toggleMeasurement,
     changeMeasurementState,
@@ -31,6 +32,9 @@ import {
     defaultUnitOfMeasure
 } from '../../utils/MeasureUtils';
 import addI18NProps from '../../components/I18N/enhancers/addI18NProps';
+import Loader from '../../components/misc/Loader';
+import MeasureToolbar from '../../components/mapcontrols/measure/MeasureToolbar';
+
 // number format localization for measurements
 const addFormatNumber = addI18NProps(['formatNumber']);
 
@@ -51,7 +55,7 @@ const MeasureSupportWithFormatNumber = addFormatNumber(({
 }) => {
     const Support = measureSupports[mapType];
     return Support
-        ? (<Suspense fallback={<div/>}>
+        ? (<Suspense fallback={<MeasureToolbar onClose={props.onClose}><Loader size={20} /></MeasureToolbar>}>
             <Support
                 {...props}
                 {...defaultOptions}
@@ -119,7 +123,8 @@ export const MeasureSupport = connect(
         changeGeometry,
         setTextLabels,
         changeMeasurement,
-        onChangeUnitOfMeasure: changeUom
+        onChangeUnitOfMeasure: changeUom,
+        onClose: setControlProperty.bind(null, 'measure', 'enabled', false)
     }
 )(MeasureSupportComponent);
 

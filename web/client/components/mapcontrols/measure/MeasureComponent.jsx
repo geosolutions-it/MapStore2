@@ -92,7 +92,8 @@ class MeasureComponent extends React.Component {
         onMount: PropTypes.func,
         onUpdateOptions: PropTypes.func,
         showCoordinateEditor: PropTypes.bool,
-        isCoordinateEditorEnabled: PropTypes.bool
+        isCoordinateEditorEnabled: PropTypes.bool,
+        onClose: PropTypes.func
     };
 
     static contextTypes = {
@@ -291,6 +292,7 @@ class MeasureComponent extends React.Component {
                 header={
                     <MeasureToolbar
                         info={this.renderPanel(isFeatureInvalid)}
+                        onClose={this.props.onClose}
                     >
                         <ButtonToolbar>
                             <Toolbar

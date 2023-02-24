@@ -7,16 +7,18 @@
  */
 
 import React from 'react';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, Button } from 'react-bootstrap';
 
 /**
  * Wrapper to apply similar style to measure toolbars
  * @name MeasureToolbar
  * @prop {node} info include this node content under the measure div info container
+ * @prop {function} onClose callback to apply to the close button, the button will not be displayed if undefined
  */
 function MeasureToolbar({
     children,
-    info
+    info,
+    onClose
 }) {
     return (
         <div
@@ -29,6 +31,16 @@ function MeasureToolbar({
             <div className="ms-measure-info">
                 {info}
             </div>
+            {onClose ?
+                <Button
+                    className="square-button-md no-border"
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        onClose();
+                    }}
+                >
+                    <Glyphicon glyph="1-close"/>
+                </Button> : null}
         </div>
     );
 }
