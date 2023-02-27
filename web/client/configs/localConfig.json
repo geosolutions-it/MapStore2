@@ -360,6 +360,7 @@
               "name": "QueryPanel",
               "cfg": {
                   "activateQueryTool": true,
+                  "hideServiceSelector": true,
                   "spatialOperations": [
                       {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
                       {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},

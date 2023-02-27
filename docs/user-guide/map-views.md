@@ -71,3 +71,80 @@ Once multiple views are added to the *Map Views* tool it allows to visualize the
 The user can also choose to navigate each view manually using the navigation toolbar provided by the tool.
 
 <img src="../img/map-views/views-navigation-toolbar.jpg" class="ms-docimage"/>
+
+## Map View case studies
+
+This chapter gives some examples of use cases of the *Map View* on projects planned in urban areas, indicating which data and which map view tools have been used for each case.
+
+The urban renewal project of some areas of the city of Genoa is taken as an example and the use cases examined are:
+
+* The overview of the area that includes the project we want highlight
+
+* Two views of an urban project area to show a view highlight the current situation and a view of the area with the new project
+
+* The view of an underground project
+
+* The study of the land before and after an urbanization intervention
+
+### Overview
+
+In the case of a large-scale overview of new intervention projects, the following data are needed:
+
+* the *3D Tiles* of the city
+* the *Points layer* with the position of the projects (can be WFS or Vector layer)
+* the *Mask layer* with the geometry of the projects
+
+<img src="../img/map-views/.jpg" class="ms-docimage"/>
+
+In this view the color of the *3D Tiles* is uniformed, in order to highlight the project areas of the *Mask layer*. For both layers a color is chosen using the *Fill Color* tool present in the [Visual Editor Style] of each layer.
+The *Points layer* is used to add a label with the name of the projects through the *Text Rule* present in the [Visual Style Editor]
+
+### Setting project
+
+In this case there are two views:
+
+1_The first view highlight the area and the current location of the waterfront project area with the following data:
+
+* the *3D Tiles* of the city
+
+* the *Mask layer* with the geometry of the project
+
+<img src="../img/map-views/.jpg" class="ms-docimage"/>
+
+For the construction of the view the *3D Tiles* of the city is used without adding color but the zoom on the project area is increased.
+
+2_ The second view show the new project of the waterfront with the following data:
+
+* the *3D Tiles* of the city
+
+* the *Mask layer* with the geometry of the projects
+
+* the *Model layer* a point layer with the position of the project
+
+<img src="../img/map-views/.jpg" class="ms-docimage"/>
+
+Here for the *Model Layer* a 3D model is added using the [3D Model] adjust tool present in the *Visual Editor Style* and a clipping mask is created with the [Mask] tool using the *Mask Layer*.
+
+### Underwater
+
+This project concerns the construction of an underwater tunnel. The *Map View*'s [Globe Transparency] tool is then used so that the 3D model of the tunnel is visible even if placed below sea level.The following dates are needed:
+
+* the *3D Tiles* of the city
+
+* the *Model layer* a point layer with the position of the project
+
+<img src="../img/map-views/.jpg" class="ms-docimage"/>
+
+Here for the *Model layer* a 3D model will be added using the [3D model] rule tool present in the *Visual Editor Style* and the globe transparency is enabled with the [Globe Translucency] tool.
+
+### Intersection
+
+The following dates are needed:
+
+* the *3D Tiles* of the city
+
+* the *Mask layer* with the geometry of the hill
+
+* the *Model layer* a point layer with the position of the hill
+
+<img src="../img/map-views/.jpg" class="ms-docimage"/>
