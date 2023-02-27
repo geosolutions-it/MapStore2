@@ -486,7 +486,7 @@ export default createPlugin("Sample", {
 });
 ```
 
-## Plugins that are containers of other plugins
+## Plugin Containers
 
 It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dynamically configure their items / tools from the configuration.
 
