@@ -17,7 +17,7 @@ In a standard project is possible to use aliases for directories:
 
 ## A plugin example
 
-### js/plugins/Sample.jsx
+*js/plugins/Sample.jsx*
 
 Plugins are react component exported with the [createPlugin](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/framework#createPlugin) function
 
@@ -46,7 +46,7 @@ export default createPlugin("Sample", {
 
 Being a component with a name (**Sample** in our case) you can include it in your project by creating a *plugins.js* file.
 
-### js/plugins.js
+*js/plugins.js*
 
 ```javascript
 
@@ -68,7 +68,7 @@ export default {
 
 Include the plugin.js from your app.jsx either replacing the plugins import from the product or extending it:
 
-### js/app.jsx
+*js/app.jsx*
 
 ```javascript
 ...
@@ -90,7 +90,7 @@ main(appConfig, allPlugins);
 
 Then you have to configure it properly so that is enabled in one or more application modes / pages:
 
-### localConfig.json
+*localConfig.json*
 
 ```javascript
 {
@@ -112,7 +112,7 @@ To globally remove a plugin from your project the preferred way is removing it f
 
 You can also specify plugins properties in the configuration, using the **cfg** property:
 
-### localConfig.json (2)
+*localConfig.json (2)*
 
 ```javascript
 {
@@ -133,7 +133,7 @@ You can also specify plugins properties in the configuration, using the **cfg** 
 
 A plugin component is a **smart component** (connected to the Redux store) so that properties can be taken from the global state, as needed.
 
-### js/plugins/Sample.jsx (1)
+*js/plugins/Sample.jsx (1)*
 
 ```javascript
 import React from "react";
@@ -181,7 +181,7 @@ export default createPlugin("Sample", {
 
 A plugin can use actions to update the global state.
 
-### js/plugins/Sample.jsx (2)
+*js/plugins/Sample.jsx (2)*
 
 ```javascript
 
@@ -241,7 +241,7 @@ export default createPlugin("Sample", {
 A plugin can define its own state fragments and the related reducers.
 You will also be able to define your own actions.
 
-### js/actions/sample.js
+*js/actions/sample.js*
 
 ```javascript
 export const UPDATE_SOMETHING = "SAMPLE:UPDATE_SOMETHING";
@@ -251,7 +251,7 @@ export const updateSomething = (payload) => ({
 });
 ```
 
-### js/reducers/sample.js
+*js/reducers/sample.js*
 
 ```javascript
 import { UPDATE_SOMETHING } from "@js/actions/sample";
@@ -271,7 +271,7 @@ function sample(
 export default sample;
 ```
 
-### js/plugins/Sample.jsx (3)
+*js/plugins/Sample.jsx (3)*
 
 ```javascript
 import React from "react";
@@ -342,7 +342,7 @@ In particular we need to asynchronously load the data from external web services
 
 To handle data fetching a plugin can define Epics. To have more detail about epics look at the [Epics developers guide](./writing-epics) section of this documentation.
 
-### js/actions/sample.js
+*js/actions/sample.js*
 
 ```javascript
 // custom action
@@ -364,7 +364,7 @@ export const loadError = (error) => ({
 });
 ```
 
-### js/reducers/sample.js
+*js/reducers/sample.js*
 
 ```javascript
 import { LOADED_DATA, LOAD_ERROR } from "@js/actions/sample";
@@ -388,7 +388,7 @@ function sample(
 export default sample;
 ```
 
-### js/epics/sample.js
+*js/epics/sample.js*
 
 ```javascript
 import { Observable } from "rxjs";
@@ -423,7 +423,7 @@ export default {
 };
 ```
 
-### js/plugins/Sample.jsx
+*js/plugins/Sample.jsx*
 
 ```javascript
 import React from "react";
@@ -492,7 +492,7 @@ It is possible to define **Container** plugins, that are able to receive a list 
 
 In addition to those "user defined" containers, there is always a **root container**. When no container is specified for a plugin, it will be included in the root container.
 
-### js/plugins/Container.jsx
+*js/plugins/Container.jsx*
 
 ```javascript
 import React from "react";
@@ -545,7 +545,7 @@ export default createPlugin("Container", {
 
 Since we have containers, we can build plugins that can be contained in one or more container plugins.
 
-### js/plugins/Sample.jsx
+*js/plugins/Sample.jsx*
 
 ```javascript
 import React from "react";
@@ -607,7 +607,7 @@ items = [{ plugin: Sample, name: "Sample", id: "sample-tool", ... }]
 
 Notice that also container related properties can be overridden in the application configuration, using the override property:
 
-### localConfig.json
+*localConfig.json*
 
 ```javascript
 {
@@ -631,7 +631,7 @@ Notice that also container related properties can be overridden in the applicati
 We have already mentioned that plugins can be configured through the localConfig.json file.
 The simplest configuration needed to include the plugin in a particular application mode is accomplished by listing a JSON object specifying the **name** property of the plugin in the plugins array of the chosen mode/page:
 
-### localConfig.json
+*localConfig.json*
 
 ```javascript
 {
@@ -804,7 +804,7 @@ There is also a set of options to (dynamically) add/exclude containers:
 
 Note that also these properties accept dynamic expressions.
 
-#### js/plugins/Container.jsx
+*js/plugins/Container.jsx*
 
 ```javascript
 import React from "react";
@@ -854,7 +854,7 @@ export default createPlugin("Container", {
 });
 ```
 
-#### js/plugins/ContainerOther.jsx
+*js/plugins/ContainerOther.jsx*
 
 ```javascript
 import React from "react";
@@ -904,7 +904,7 @@ export default createPlugin("ContainerOther", {
 });
 ```
 
-#### js/plugins/Sample.jsx
+*js/plugins/Sample.jsx*
 
 ```javascript
 import React from "react";
@@ -1023,7 +1023,7 @@ The plugin will be disabled in 3D mode.
 
 You can lazy load your plugins components using the react lazy and Suspense API. This is especially useful for plugins that include components with big external libraries.
 
-### js/plugins/Sample.jsx
+*js/plugins/Sample.jsx*
 
 ```javascript
 import React, { useState, lazy, Suspense } from "react";
@@ -1075,7 +1075,7 @@ To ease writing a plugin unit test, an helper is available (pluginsTestUtils) th
 
 ### Examples
 
-#### `js/__tests__/MyPlugin-test.js`
+*js/__tests__/MyPlugin-test.js*
 
 ```javascript
 import expect from "expect";
