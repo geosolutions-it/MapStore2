@@ -62,11 +62,13 @@ Also this filter is applied through the [Query Panel](#query-panel) but in this 
 
 ### Quick Filter
 
-The user can perform two type of quick filters:
+The user can perform three type of quick filters:
 
 * Filter by **attributes**
 
 * Filter by **clicked point in the map**
+
+* Filter by **the current viewport**
 
 #### Quick Filter by attributes
 
@@ -113,6 +115,14 @@ It is possible to filter records in the [Attribute Table](attributes-table.md#at
  <img src="../img/filtering-layers/filter_geometries.gif" class="ms-docimage"/>
 
 The list of records in the *Attribute Table* will be automatically filtered according to such user selection and then the user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
+
+#### Quick Filter by viewport
+
+On the [Attribute Table](attributes-table.md#attribute-table) the user can filter data by the current viewport, to activating the  **Filter by viewport** <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button. Once clicked, the button turns green and the list of records in the *Attribute Table* shows which records of the layer are in the current viewport. Browsing in the map view, the records visible in the *Attribute Table* change automatically.
+
+<img src="../img/filtering-layers/filter_viewport.gif" class="ms-docimage" style="max-width:500px;"/>
+
+Browsing in the map view, the records visible in the *Attribute Table* change automatically and then the user can disable the filter to turn off the **Filter by viewport** <img src="../img/button/filter-by-viewport-enable.jpg" class="ms-docbutton"/> button.
 
 !!! note
     The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md#attribute-table) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md#attribute-table) it will not reappear anymore if the [Attribute Table](attributes-table.md#attribute-table) is re-opened in a second time.
