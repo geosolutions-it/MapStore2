@@ -118,7 +118,7 @@ The list of records in the *Attribute Table* will be automatically filtered acco
 
 #### Quick Filter by viewport
 
-On the [Attribute Table](attributes-table.md#attribute-table) the user can filter data by map viewport through the **Filter by viewport** <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button. Once clicked, the toggle button turns its state to green and the list of records in the *Attribute Table* is filtered by showing only records corresponding to layer features present in the current map viewport.
+From the [Attribute Table](attributes-table.md#attribute-table) the user can filter data by map viewport through the **Filter by viewport** <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button. Once clicked, the toggle button turns its state to green and the list of records in the *Attribute Table* is filtered by showing only records corresponding to layer features present in the current map viewport.
 
 <img src="../img/filtering-layers/filter_viewport.gif" class="ms-docimage" style="max-width:500px;"/>
 
