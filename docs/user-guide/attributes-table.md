@@ -13,17 +13,19 @@ Accessing this panel the user can perform the following main operations:
 
 * Filter records in Attribute Table in different ways as described in the [Set filter](#set-filters) section below
 
-* Opening the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button
+* Open the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
 
-* Activating the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
+* Activate the [filter by the current viewport](filtering-layers.md#quick-filter-by-viewport), through the <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button
+
+* Activate the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
 
 * Using the [quick filter by attribute](filtering-layers.md#quick-filter-by-attributes)
 
 * Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button
 
-* Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
-
 * Create [Widgets](widgets.md#widgets) through the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button
+
+* Customize the attribute table display through the <img src="../img/button/customize_attribute_table.jpg" class="ms-docbutton"/> button
 
 * Zoom to features through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record or zoom to the page max extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton"/> button (available only if the virtual scrolling is disabled, it is enabled by default in MapStore).
 
@@ -120,13 +122,15 @@ With a click on **Save changes** <img src="../img/button/save-changes.jpg" class
 
 ## Set filters
 
-In the Attribute table it is possible to apply filters in three ways (as explained in the [Filtering layers](filtering-layers.md#filtering-layers) section):
+In the Attribute table it is possible to apply filters in four ways (as explained in the [Filtering layers](filtering-layers.md#filtering-layers) section):
 
 * [Advanced search](filtering-layers.md#advanced-search)
 
 * [Click on map](filtering-layers.md#quick-filter-by-map-interaction)
 
 * [Quick filter](filtering-layers.md#quick-filter-by-attributes)
+
+* [Filter by viewport](filtering-layers.md#quick-filter-by-viewport)
 
 Those filters, once applied, can be visible on the map by enabling the <img src="../img/button/sync.jpg" class="ms-docbutton"/> button.
 
