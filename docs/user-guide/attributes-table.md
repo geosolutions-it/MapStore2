@@ -13,11 +13,11 @@ Accessing this panel the user can perform the following main operations:
 
 * Filter records in Attribute Table in different ways as described in the [Set filter](#set-filters) section below
 
-* Opening the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
+* Open the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
 
-* Activating the [filter by the current viewport](filtering-layers.md#quick-filter-by-viewport), through the <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button
+* Activate the [filter by the current viewport](filtering-layers.md#quick-filter-by-viewport), through the <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button
 
-* Activating the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
+* Activate the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
 
 * Using the [quick filter by attribute](filtering-layers.md#quick-filter-by-attributes)
 
