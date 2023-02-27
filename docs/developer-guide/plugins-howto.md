@@ -10,11 +10,6 @@ During this tutorial, you will learn how to create and configure plugins in a Ma
 If you don't know how to work with MapStore projects, please read the [Projects Guide](mapstore-projects.md#mapstore-projects).
 For this tutorial, a "standard project" is used.
 
-In a standard project is possible to use aliases for directories:
-
-- `@js/` is an alias for the `js/` folder with custom plugins and files
-- `@mapstore/` is an alias for the `MapStore2/web/client/` submodule folder for MapStore framework components and utils
-
 ## A plugin example
 
 *js/plugins/Sample.jsx*
@@ -23,7 +18,7 @@ Plugins are react component exported with the [createPlugin](https://mapstore.ge
 
 ```javascript
 import React from "react";
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
 const Sample = () => {
     const style = {
@@ -50,7 +45,7 @@ Being a component with a name (**Sample** in our case) you can include it in you
 
 ```javascript
 
-import SamplePlugin from "@js/plugins/Sample";
+import SamplePlugin from "./plugins/Sample";
 
 export const plugins = {
     // ...
@@ -73,9 +68,9 @@ Include the plugin.js from your app.jsx either replacing the plugins import from
 ```javascript
 ...
 
-import m2Plugins from "@mapstore/product/plugins";
+import m2Plugins from "../MapStore2/web/client/product/plugins";
 import customPlugins from "./plugins";
-import main from "@mapstore/product/main";
+import main from "../MapStore2/web/client/product/main";
 
 const allPlugins = {
     ...m2Plugins,
@@ -140,7 +135,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
 const SampleComponent = ({
     style,
@@ -189,8 +184,8 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
-import { changeZoomLevel } from "@mapstore/actions/map";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
+import { changeZoomLevel } from "../../MapStore2/web/client/actions/map";
 
 const SampleComponent = ({
     style,
@@ -254,7 +249,7 @@ export const updateSomething = (payload) => ({
 *js/reducers/sample.js*
 
 ```javascript
-import { UPDATE_SOMETHING } from "@js/actions/sample";
+import { UPDATE_SOMETHING } from "../actions/sample";
 function sample(
     state = { text: "Initial Text" },
     action
@@ -278,10 +273,10 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
-import { updateSomething } from "@js/actions/sample";
-import sample from "@js/reducers/sample";
+import { updateSomething } from "../actions/sample";
+import sample from "../reducers/sample";
 
 const SampleComponent = ({
     style,
@@ -367,7 +362,7 @@ export const loadError = (error) => ({
 *js/reducers/sample.js*
 
 ```javascript
-import { LOADED_DATA, LOAD_ERROR } from "@js/actions/sample";
+import { LOADED_DATA, LOAD_ERROR } from "../actions/sample";
 function sample(
     state = { text: "Initial Text" },
     action
@@ -398,7 +393,7 @@ import {
     LOAD_DATA,
     loadedData,
     loadError
-} from "@js/actions/sample";
+} from "../actions/sample";
 
 export const loadDataEpic = (action$) => 
     action$.ofType(LOAD_DATA)
@@ -430,11 +425,11 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
-import { loadData } from "@js/actions/sample";
-import sampleEpics from "@js/epics/sample";
-import sample from "@js/reducers/sample";
+import { loadData } from "../actions/sample";
+import sampleEpics from "../epics/sample";
+import sample from "../reducers/sample";
 
 const SideEffectComponent = ({
     style,
@@ -498,7 +493,7 @@ In addition to those "user defined" containers, there is always a **root contain
 import React from "react";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
 const Container = ({
     style,
@@ -552,9 +547,9 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
-import sample from "@js/reducers/sample";
+import sample from "../reducers/sample";
 
 const SampleComponent = ({
     text
@@ -737,7 +732,7 @@ Each plugin can define a list of supported containers, but it's the plugin syste
 ```javascript
 // ...
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
 // ...
 
@@ -810,7 +805,7 @@ Note that also these properties accept dynamic expressions.
 import React from "react";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
 const Container = ({
     items
@@ -860,7 +855,7 @@ export default createPlugin("Container", {
 import React from "react";
 import PropTypes from "prop-types";
 
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
 const ContainerOther = ({
     items
@@ -908,7 +903,7 @@ export default createPlugin("ContainerOther", {
 
 ```javascript
 import React from "react";
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
 
 const Sample = () => {
     return (
@@ -1027,8 +1022,8 @@ You can lazy load your plugins components using the react lazy and Suspense API.
 
 ```javascript
 import React, { useState, lazy, Suspense } from "react";
-import { createPlugin } from "@mapstore/utils/PluginsUtils";
-const LazySampleComponent = lazy(() => import("@js/components/LazySampleComponent"));
+import { createPlugin } from "../../MapStore2/web/client/utils/PluginsUtils";
+const LazySampleComponent = lazy(() => import("../components/LazySampleComponent"));
 
 const Sample = () => {
     // this local state could be moved to redux state
@@ -1075,7 +1070,7 @@ To ease writing a plugin unit test, an helper is available (pluginsTestUtils) th
 
 ### Examples
 
-*js/__tests__/MyPlugin-test.js*
+*js/plugins/__tests__/MyPlugin-test.js*
 
 ```javascript
 import expect from "expect";
@@ -1083,7 +1078,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import MyPlugin from "../MyPlugin";
-import { getPluginForTest } from "@mapstore/plugins/__tests__/pluginsTestUtils";
+import { getPluginForTest } from "../../../MapStore2/web/client/plugins/__tests__/pluginsTestUtils";
 
 const initialState = {};
 
