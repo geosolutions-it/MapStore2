@@ -23,20 +23,20 @@ feel to your project, in particular:
 * You can **add your own translation files**. Setting an array of paths in the `translationsPath`, the resources will be loaded in cascade from every directory of the array. So you can keep all the original translations from MapStore (first element of the array) and add your own files in the directory `translations`, overriding original values of the json or adding new ones (for instance, for your custom plugins). The files in the new directory must follow the same naming convention of the files in the oridinal directory.
 
 ```javascript
-ConfigUtils.setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
+ConfigUtils.setConfigProp("translationsPath", ["./MapStore2/web/client/translations", "./translations"]);
 
 ```
 
 * **Use your own configuration file** for plugins and other configurations. You can copy the original `localConfig.json` in the root of the project and configure the application to load it (instead of the default one, located in `MapStore2/web/client/localConfig.json`).
 
 ```javascript
-ConfigUtils.setLocalConfigurationFile('localConfig.json');
+ConfigUtils.setLocalConfigurationFile("localConfig.json");
 ```
 
 or you can apply some patch files defining an array of configurations, where the first is the main json file, and the rest are the patch files which must end with "patch.json" in the filename
 
 ```javascript
-ConfigUtils.setLocalConfigurationFile(['localConfig.json', 'production.patch.json']);
+ConfigUtils.setLocalConfigurationFile(["localConfig.json", "production.patch.json"]);
 ```
 
 the patch will be applied using [this](https://github.com/geosolutions-it/Patcher) package
@@ -44,20 +44,24 @@ the patch will be applied using [this](https://github.com/geosolutions-it/Patche
 * Configure your own pages:
 
 ```javascript
-const appConfig = assign({}, require('../MapStore2/web/client/product/appConfig'), {
-     pages: [{
-         name: "mapviewer",
-         path: "/",
-         component: require('../MapStore2/web/client/product/pages/MapViewer')
-     }]
-});
 
+import productAppConfig from "@mapstore/product/appConfig";
+import MapViewer from "@mapstore/product/pages/MapViewer";
+
+const appConfig = {
+    ...productAppConfig,
+    pages: [{
+        name: "mapviewer",
+        path: "/",
+        component: MapViewer
+    }]
+};
 ```
 
 * Include the plugins you want in the app (either MapStore plugins or your own):
 
 ```javascript
-const plugins = require('./plugins');
+import plugins from "./plugins";
 
 ```
 

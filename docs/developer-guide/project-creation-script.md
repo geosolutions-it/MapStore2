@@ -25,7 +25,7 @@ git checkout <stable-branch>
 or
 
 ```sh
-git checkout v2022.01.02
+git checkout v2022.02.02
 ```
 
 Install dependencies for MapStore:
