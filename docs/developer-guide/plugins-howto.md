@@ -1135,14 +1135,18 @@ describe("MyPlugin Test", () => {
 
 ## General Guidelines
 
-- Components
-  - define the plugin component(s) into dedicated JSX file(s), so that they can be reused outside of the plugin
-  - connect the component(s) in the plugin JSX file
-- State
-  - define your own state fragment (and related actions and reducers) to handle internal state, and use existing actions and state fragments from MapStore2 to interact with the framework
-- Selectors
-  - use existing selectors when possible to connect the state, eventually using reselect to compose them together or with your own selectors
+### Components
+- Define the plugin component(s) into dedicated JSX file(s), so that they can be reused outside of the plugin
+- Connect the component(s) in the plugin JSX file
+
+### State
+- Define your own state fragment (and related actions and reducers) to handle internal state, and use existing actions and state fragments from MapStore2 to interact with the framework
+
+### Selectors
+- Use existing selectors when possible to connect the state, eventually using reselect to compose them together or with your own selectors
+
+### General
 - Avoid as much as possible direct interactions between different plugins; plugins are meant to be independent modules, so they should be able to work if other plugins appear / disappear from the application configuration
-  - interact with other plugins and the application itself using actions and state sharing
-  - creating side effects to make plugins interact in more strict ways should not be done at the plugin level, orchestrating different plugins should be delegated at the top (application) level
-  - use containers configuration to combine plugins in containers
+- Interact with other plugins and the application itself using actions and state sharing
+- Creating side effects to make plugins interact in more strict ways should not be done at the plugin level, orchestrating different plugins should be delegated at the top (application) level
+- Use containers configuration to combine plugins in containers
