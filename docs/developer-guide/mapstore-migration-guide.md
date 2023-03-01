@@ -27,7 +27,7 @@ This is a list of things to check if you want to update from a previous version 
 The map configuration stores the information related to the visualization mode 2D or 3D after saving a map.
 This update include also following changes:
 
-- maptype configuration inside the initialState of localConfig needs to be removed in favor of the global mapType configuration
+- `maptype` configuration inside the initialState of localConfig needs to be removed in favor of the global mapType configuration
 
 ```diff
 {
@@ -49,7 +49,7 @@ This update include also following changes:
 
 - the application does not expose the pathname of the viewer with `mapType` anymore. Example: the old path `/viewer/openlayers/1` becomes `/viewer/1`
 
-- it is possible to change the map library based on the device using the new mapType configuration in localConfig.json. This configuration is only needed for project with custom map library settings. The downstream project based on the MapStore product don't need this update
+- it is possible to change the map library based on the device using the new `mapType` configuration in localConfig.json. This configuration is only needed for project with custom map library settings. The downstream projects based on the MapStore product don't need this update
 
 ```diff
 {
@@ -67,7 +67,6 @@ This update include also following changes:
     // ...
 }
 ```
-
 
 ## Migration from 2022.02.02 to 2023.01.00
 
