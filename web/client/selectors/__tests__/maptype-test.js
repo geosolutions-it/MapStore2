@@ -14,7 +14,10 @@ import {
     isCesium,
     isOpenlayers,
     isLeaflet,
-    mapTypeLoadedSelector
+    mapTypeLoadedSelector,
+    visualizationModeSelector,
+    is3DMode,
+    is2DMode
 } from '../maptype';
 
 describe('Test maptype', () => {
@@ -63,5 +66,56 @@ describe('Test maptype', () => {
         });
         expect(state).toExist();
         expect(state).toEqual({"openlayers": true});
+    });
+    it('test visualizationModeSelector', () => {
+        expect(visualizationModeSelector({
+            maptype: {
+                mapType: "openlayers"
+            }
+        })).toBe("2D");
+        expect(visualizationModeSelector({
+            maptype: {
+                mapType: "leaflet"
+            }
+        })).toBe("2D");
+        expect(visualizationModeSelector({
+            maptype: {
+                mapType: "cesium"
+            }
+        })).toBe("3D");
+    });
+    it('test is2DMode', () => {
+        expect(is2DMode({
+            maptype: {
+                mapType: "openlayers"
+            }
+        })).toBe(true);
+        expect(is2DMode({
+            maptype: {
+                mapType: "leaflet"
+            }
+        })).toBe(true);
+        expect(is2DMode({
+            maptype: {
+                mapType: "cesium"
+            }
+        })).toBe(false);
+    });
+    it('test is3DMode', () => {
+        expect(is3DMode({
+            maptype: {
+                mapType: "openlayers"
+            }
+        })).toBe(false);
+        expect(is3DMode({
+            maptype: {
+                mapType: "leaflet"
+            }
+        })).toBe(false);
+        expect(is3DMode({
+            maptype: {
+                mapType: "cesium"
+            }
+        })).toBe(true);
     });
 });
