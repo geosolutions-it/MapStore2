@@ -24,7 +24,7 @@ import { setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
 import { ADD_LAYER } from '../actions/layers';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { featureTypeSelected } from '../actions/wfsquery';
-import { getWidgetLayer, getEditingWidgetFilter } from '../selectors/widgets';
+import { getWidgetLayer, getEditingWidgetFilter, getWidgetFilterKey } from '../selectors/widgets';
 import { wfsFilter } from '../selectors/query';
 import { widgetBuilderAvailable } from '../selectors/controls';
 const getFTSelectedArgs = (state) => {
@@ -90,7 +90,7 @@ export const handleWidgetsFilterPanel = (action$, {getState = () => {}} = {}) =>
                 // then close the query panel, open widget form and update the current filter for the widget in editing
                     .switchMap( action =>
                         (action.filterObj
-                            ? Rx.Observable.of(onEditorChange("filter", action.filterObj))
+                            ? Rx.Observable.of(onEditorChange(getWidgetFilterKey(getState()), action.filterObj))
                             : Rx.Observable.empty()
                         )
                             .merge(Rx.Observable.of(

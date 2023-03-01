@@ -174,3 +174,14 @@ export const widgetsConfig = createStructuredSelector({
     layouts: getFloatingWidgetsLayout,
     catalogs: dashboardServicesSelector
 });
+
+
+/**
+ * Get editor change key for updating filter object
+ * @param {object} state the state
+ */
+export const getWidgetFilterKey = (state) => {
+    const selectedChartId = getSelectedChartId(state);
+    // Set chart key if editor widget type is chart
+    return selectedChartId ? `charts[${selectedChartId}].filter` : "filter";
+};
