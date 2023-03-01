@@ -552,46 +552,23 @@ export const connect = (mapStateToProps, mapDispatchToProps, mergeProps, options
  * @param {object} config.containers: object with supported containers (key=container name, value=container config)
  * @param {object} config.reducers: reducers the plugin will need
  * @param {object} config.epics: epics the plugin will need to work
- * @param {boolean} config.lazy: true if the plugin implements on-demand loading,
- * @param {function} config.enabler: function used in lazy mode to decide when plugin needs to be loaded (receives redux state as the only param)
- * @param {promise} config.loader: promise that will return the loaded implementation
+ * @param {boolean} config.lazy: (deprecated) true if the plugin implements on-demand loading,
+ * @param {function} config.enabler: (deprecated) function used in lazy mode to decide when plugin needs to be loaded (receives redux state as the only param)
+ * @param {promise} config.loader: (deprecated) promise that will return the loaded implementation
  *
  * @example statically loaded plugin
  * createPlugin('My', {
- *  component: MyPluginComponent,
- *  options: {...},
- *  containers: {
- *      Toolbar: {
- *          priority: 1,
- *          tool: true,
- *          ...
- *      }
- *  },
- *  reducers: {my: require('...')},
- *  epics: {myEpic: require('...')}
- * });
- *
- * @example lazy loaded plugin
- * createPlugin('My', {
- *  enabler: (state) => state.my.enabled || false,
- *  loader: () => new Promise((resolve) => {
- *    require.ensure(['...'], () => {
- *        const MyComponent = require('...');
- *        ...
- *        const MyPlugin = connect(...)(MyComponent);
- *        resolve(MyPlugin);
- *    });
- *  },
- *  options: {...},
- *  containers: {
- *      Toolbar: {
- *          priority: 1,
- *          tool: true,
- *          ...
- *      }
- *  },
- *  reducers: {my: require('...')},
- *  epics: {myEpic: require('...')}
+ *      component: MyPluginComponent,
+ *      options: { ... },
+ *      containers: {
+ *          Toolbar: {
+ *              priority: 1,
+ *              tool: true,
+ *              ...
+ *          }
+ *      },
+ *      reducers: { my },
+ *      epics: myEpic
  * });
  */
 export const createPlugin = (name, { component, options = {}, containers = {}, reducers = {}, epics = {}, lazy = false, enabler = () => true, loader }) => {

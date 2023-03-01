@@ -12,66 +12,86 @@ For this tutorial, a "standard project" is used.
 
 ## A plugin example
 
-A plugin is a ReactJS *component with a name*. The chosen name is always suffixed with **Plugin**.
+`js/plugins/Sample.jsx`
 
-### js/plugins/Sample.jsx
+Plugins are react component exported with the [createPlugin](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/framework#createPlugin) function
 
 ```javascript
-import React from 'react';
+import React from "react";
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
 
-class SampleComponent extends React.Component {
-    render() {
-        const style = {position: "absolute", top: "100px", left: "100px", zIndex: 10000000};
-        return <div style={style}>Sample</div>;
-    }
-}
+const Sample = () => {
+    const style = {
+        position: "absolute",
+        top: 100,
+        left: 100,
+        zIndex: 2000
+    };
+    return (
+        <div style={style}>
+            Sample
+        </div>
+    );
+};
 
-export const SamplePlugin = SampleComponent;
-// the Plugin postfix is mandatory, avoid bugs by calling all your descriptors
-// <Something>Plugin
+export default createPlugin("Sample", {
+    component: Sample
+});
 ```
 
-Being a component with a name (**Sample** in our case) you can include it in your project by creating a *plugins.js* file:
+Being a component with a name (**Sample** in our case) you can include it in your project by creating a *plugins.js* file.
 
-### js/plugins.js
+`js/plugins.js`
 
 ```javascript
-module.exports = {
-    plugins: {
-        ...
-        SamplePlugin: require('./plugins/Sample'),
-        ...
-    }
+
+import SamplePlugin from "./plugins/Sample";
+
+export const plugins = {
+    // ...
+    SamplePlugin,
+    // ...
+};
+
+export default {
+    plugins
 };
 
 ```
 
-**Note** that SamplePlugin in plugins.js must be called with the same name used when exporting it.
+**Note** The chosen component name is always suffixed with **Plugin** when imported in the *plugins.js* file.
 
 Include the plugin.js from your app.jsx either replacing the plugins import from the product or extending it:
 
-### js/app.jsx
+`js/app.jsx`
 
 ```javascript
 ...
 
-const m2Plugins = require('@mapstore/product/plugins');
-const customPlugins = require('./plugins');
-const allPlugins = {...m2Plugins, plugins: {...customPlugins.plugins, ...m2Plugins.plugins}};
-require('@mapstore/product/main')(appConfig, allPlugins);
+import m2Plugins from "@mapstore/product/plugins";
+import customPlugins from "./plugins";
+import main from "@mapstore/product/main";
 
+const allPlugins = {
+    ...m2Plugins,
+    plugins: {
+        ...customPlugins.plugins,
+        ...m2Plugins.plugins
+    }
+};
 
+main(appConfig, allPlugins);
 ```
 
 Then you have to configure it properly so that is enabled in one or more application modes / pages:
 
-### localConfig.json
+`localConfig.json`
 
 ```javascript
 {
     ...
     "plugins": {
-        "desktop": ["Sample", ...],
+        "desktop": [{ "name": "Sample" }, ...],
         ...
     }
 }
@@ -79,7 +99,7 @@ Then you have to configure it properly so that is enabled in one or more applica
 
 Note: to enable a plugin you need to do two things:
 
-- require it in the plugins.js file
+- import it in the plugins.js file
 - configure it in localConfig.json (remove the Plugins suffix here)
 
 If one is missing, the plugin won't appear.
@@ -87,7 +107,7 @@ To globally remove a plugin from your project the preferred way is removing it f
 
 You can also specify plugins properties in the configuration, using the **cfg** property:
 
-### localConfig.json (2)
+`localConfig.json (2)`
 
 ```javascript
 {
@@ -108,91 +128,132 @@ You can also specify plugins properties in the configuration, using the **cfg** 
 
 A plugin component is a **smart component** (connected to the Redux store) so that properties can be taken from the global state, as needed.
 
-### js/plugins/ConnectedSample.jsx (1)
+`js/plugins/Sample.jsx (1)`
 
 ```javascript
-import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import {get} from 'lodash';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-class SampleComponent extends React.Component {
-    static propTypes = {
-        zoom: PropTypes.number
-    };
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
 
-    render() {
-        const style = {position: "absolute", top: "100px", left: "100px", zIndex: 1000000};
-        return <div style={style}>Zoom: {this.props.zoom}</div>;
+const SampleComponent = ({
+    style,
+    zoom
+}) => {
+    return (
+        <div style={style}>
+            Zoom: {zoom}
+        </div>
+    );
+};
+
+SampleComponent.propTypes = {
+    style: PropTypes.object,
+    zoom: PropTypes.number
+};
+
+SampleComponent.defaultProps = {
+    style: {
+        position: "absolute",
+        top: 100,
+        left: 100,
+        zIndex: 2000
     }
-}
+};
 
-const ConnectedSample = connect((state) => {
+const Sample = connect((state) => {
     return {
-        zoom: get(state, 'map.present.zoom') // connected property
+        // connected property
+        zoom: state?.map?.present?.zoom
     };
 })(SampleComponent);
 
-export const ConnectedSamplePlugin = ConnectedSample;
+export default createPlugin("Sample", {
+    component: Sample
+});
 ```
 
 A plugin can use actions to update the global state.
 
-### js/plugins/ConnectedSample.jsx (2)
+`js/plugins/Sample.jsx (2)`
 
 ```javascript
 
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import {get} from 'lodash';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import { changeZoomLevel } from '../../MapStore2/web/client/actions/map';
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
+import { changeZoomLevel } from "@mapstore/actions/map";
 
-class SampleComponent extends React.Component {
-    static propTypes = {
-        zoom: PropTypes.number,
-        onZoom: PropTypes.func
-    };
+const SampleComponent = ({
+    style,
+    zoom,
+    onZoom
+}) => {
+    return (
+        <div style={style}>
+            Zoom: {zoom}
+            <button onClick={() => onZoom(zoom + 1)}>
+                Increase
+            </button>
+        </div>
+    );
+};
 
-    render() {
-        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
-        return <div style={style}>Zoom: {this.props.zoom} <button onClick={() => this.props.onZoom(this.props.zoom + 1)}>Increase</button></div >;
-    }
-}
+SampleComponent.propTypes = {
+    style: PropTypes.object,
+    zoom: PropTypes.number,
+    onZoom: PropTypes.func
+};
 
-const ConnectedSample = connect((state) => {
+SampleComponent.defaultProps = {
+    style: {
+        position: "absolute",
+        top: 100,
+        left: 100,
+        zIndex: 2000
+    },
+    onZoom: () => {}
+};
+
+const Sample = connect((state) => {
     return {
-        zoom: get(state, 'map.present.zoom')
+        zoom: state?.map?.present?.zoom
     };
 }, {
-        onZoom: changeZoomLevel // connected action
-    })(SampleComponent);
+    // connected action
+    onZoom: changeZoomLevel
+})(SampleComponent);
 
-export const ConnectedSamplePlugin = ConnectedSample;
+export default createPlugin("Sample", {
+    component: Sample
+});
 
 ```
 
 A plugin can define its own state fragments and the related reducers.
-Obviously you will also be able to define your own actions.
+You will also be able to define your own actions.
 
-### js/actions/sample.js
+`js/actions/sample.js`
 
 ```javascript
-export const UPDATE_SOMETHING = 'SAMPLE:UPDATE_SOMETHING';
-export const updateSomething = (payload) => {
-    return {
-        type: UPDATE_SOMETHING,
-        payload
-    };
-};
+export const UPDATE_SOMETHING = "SAMPLE:UPDATE_SOMETHING";
+export const updateSomething = (payload) => ({
+    type: UPDATE_SOMETHING,
+    payload
+});
 ```
 
-### js/reducers/sample.js
+`js/reducers/sample.js`
 
 ```javascript
-import { UPDATE_SOMETHING } from '../actions/sample';
-export default function(state = { text: 'Initial Text' }, action) {
+import { UPDATE_SOMETHING } from "@js/actions/sample";
+function sample(
+    state = { text: "Initial Text" },
+    action
+) {
     switch (action.type) {
         case UPDATE_SOMETHING:
             return {
@@ -202,83 +263,110 @@ export default function(state = { text: 'Initial Text' }, action) {
             return state;
     }
 }
+export default sample;
 ```
 
-### js/plugins/ConnectedSample.jsx (3)
+`js/plugins/Sample.jsx (3)`
 
 ```javascript
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import {get} from 'lodash';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import { updateSomething } from '../actions/sample';
-import sample from '../reducers/sample';
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
 
-class SampleComponent extends React.Component {
-    static propTypes = {
-        text: PropTypes.string,
-        onUpdate: PropTypes.func
-    };
+import { updateSomething } from "@js/actions/sample";
+import sample from "@js/reducers/sample";
 
-    render() {
-        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
-        return <div style={style}>Text: {this.props.text} <button onClick={() => this.props.onUpdate('Updated Text')}>Update</button></div >;
-    }
-}
+const SampleComponent = ({
+    style,
+    text,
+    onUpdate
+}) => {
+    return (
+        <div style={style}>
+            Text: {text}
+            <button
+                onClick={() => onUpdate("Updated Text")}
+            >
+            Update
+            </button>
+        </div>
+    );
+};
 
-const ConnectedSample = connect((state) => {
+SampleComponent.propTypes = {
+    style: PropTypes.object,
+    text: PropTypes.string,
+    onUpdate: PropTypes.func
+};
+
+SampleComponent.defaultProps = {
+    style: {
+        position: "absolute",
+        top: 100,
+        left: 100,
+        zIndex: 2000
+    },
+    text: "",
+    onUpdate: () => {}
+};
+
+const Sample = connect((state) => {
     return {
-        text: get(state, 'sample.text')
+        // connected property
+        text: state?.sample?.text
     };
 }, {
-        onUpdate: updateSomething // connected action
-    })(SampleComponent);
+    // connected action
+    onUpdate: updateSomething
+})(SampleComponent);
 
-export const ConnectedSamplePlugin = ConnectedSample;
-export const reducers = {sample};
+export default createPlugin("Sample", {
+    component: Sample,
+    reducers: {
+        sample
+    }
+});
 ```
 
 ## Data fetching and side effects
 
 Side effects should be limited as much as possible, but there are cases where a side effect cannot be avoided.
-In particular all asynchronous operations are side effects in Redux, but we obviously need to handle them, in particular we need to asynchronously load the data that we need from ore or more web services.
+In particular we need to asynchronously load the data from external web services or files.
 
-To handle data fetching a plugin can define Epics. To have more detail about epics look at the [Epics developers guide](../writing-epics/#writing-epics) section of this documentation.
+To handle data fetching a plugin can define Epics. To have more detail about epics look at the [Epics developers guide](./writing-epics) section of this documentation.
 
-### js/actions/sample.js
+`js/actions/sample.js`
 
 ```javascript
 // custom action
-export const LOAD_DATA = 'SAMPLE:LOAD_DATA';
-export const LOADED_DATA = 'SAMPLE:LOADED_DATA';
-export const LOAD_ERROR = 'SAMPLE:LOAD_ERROR';
-export const loadData = () => {
-    return {
-        type: LOAD_DATA
-    };
-};
+export const LOAD_DATA = "SAMPLE:LOAD_DATA";
+export const LOADED_DATA = "SAMPLE:LOADED_DATA";
+export const LOAD_ERROR = "SAMPLE:LOAD_ERROR";
+export const loadData = () => ({
+    type: LOAD_DATA
+});
 
-export const loadedData = (payload) => {
-    return {
-        type: LOADED_DATA,
-        payload
-    };
-};
+export const loadedData = (payload) => ({
+    type: LOADED_DATA,
+    payload
+});
 
-export const loadError = (error) => {
-    return {
-        type: LOAD_ERROR,
-        error
-    };
-};
+export const loadError = (error) => ({
+    type: LOAD_ERROR,
+    error
+});
 ```
 
-### js/reducers/sample.js
+`js/reducers/sample.js`
 
 ```javascript
-import { LOADED_DATA, LOAD_ERROR } from '../actions/sample';
-export default function(state = { text: 'Initial Text' }, action) {
+import { LOADED_DATA, LOAD_ERROR } from "@js/actions/sample";
+function sample(
+    state = { text: "Initial Text" },
+    action
+) {
     switch (action.type) {
         case LOADED_DATA:
             return {
@@ -292,141 +380,216 @@ export default function(state = { text: 'Initial Text' }, action) {
             return state;
     }
 }
+export default sample;
 ```
 
-### js/epics/sample.js
+`js/epics/sample.js`
 
 ```javascript
-import * as Rx from 'rxjs';
-import axios from 'axios';
+import { Observable } from "rxjs";
+import axios from "axios";
 
-import { LOAD_DATA, loadedData, loadError } from '../actions/sample';
+import {
+    LOAD_DATA,
+    loadedData,
+    loadError
+} from "@js/actions/sample";
 
-export const loadDataEpic = (action$) => {
-    return action$.ofType(LOAD_DATA)
+export const loadDataEpic = (action$) =>
+    action$.ofType(LOAD_DATA)
         .switchMap(() => {
-            return Rx.Observable.defer(() => axios.get('version.txt'))
-                .switchMap((response) => Rx.Observable.of(loadedData(response.data)))
-                .catch(e => Rx.Observable.of(loadError(e.message)));
+            return Observable.defer(() =>
+                axios.get("version.txt")
+            )
+                .switchMap((response) =>
+                    Observable.of(
+                        loadedData(response.data)
+                    )
+                )
+                .catch(e =>
+                    Observable.of(
+                        loadError(e.message)
+                    )
+                );
         });
-};
 
 export default {
     loadDataEpic
 };
 ```
 
-### js/plugins/SideEffectComponent.jsx
+`js/plugins/Sample.jsx`
 
 ```javascript
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import {get} from 'lodash';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import { loadData } from '../actions/sample';
-import sampleEpics from '../epics/sample';
-import sample from '../reducers/sample';
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
 
-class SideEffectComponent extends React.Component {
-    static propTypes = {
-        text: PropTypes.string,
-        onLoad: PropTypes.func
-    };
+import { loadData } from "@js/actions/sample";
+import sampleEpics from "@js/epics/sample";
+import sample from "@js/reducers/sample";
 
-    render() {
-        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
-        return <div style={style}>Text: {this.props.text} <button onClick={this.props.onLoad}>Load</button></div >;
-    }
-}
+const SideEffectComponent = ({
+    style,
+    text,
+    onLoad
+}) => {
+    return (
+        <div style={style}>
+            Text: {text}
+            <button onClick={() => onLoad()}>
+                Load
+            </button>
+        </div>
+    );
+};
 
-const ConnectedSideEffect = connect((state) => {
+SideEffectComponent.propTypes = {
+    style: PropTypes.object,
+    text: PropTypes.string,
+    onLoad: PropTypes.func
+};
+
+SideEffectComponent.defaultProps = {
+    style: {
+        position: "absolute",
+        top: 100,
+        left: 100,
+        zIndex: 2000
+    },
+    text: "",
+    onLoad: () => {}
+};
+
+const Sample = connect((state) => {
     return {
-        text: get(state, 'sample.text')
+        text: state?.sample?.text
     };
 }, {
-        onLoad: loadData // connected action
-    })(SideEffectComponent);
+    // connected action
+    onLoad: loadData
+})(SideEffectComponent);
 
-export const SideEffectPlugin = ConnectedSideEffect;
-export const reducers = {sample};
-export const epics = sampleEpics;
+export default createPlugin("Sample", {
+    component: Sample,
+    reducers: {
+        sample
+    },
+    epics: sampleEpics
+});
 ```
 
-## Plugins that are containers of other plugins
+## Plugin Containers
 
 It is possible to define **Container** plugins, that are able to receive a list of *items* from the plugins system automatically. Think of menus or toolbars that can dynamically configure their items / tools from the configuration.
 
 In addition to those "user defined" containers, there is always a **root container**. When no container is specified for a plugin, it will be included in the root container.
 
-### js/plugins/ContainerComponent.jsx
+`js/plugins/Container.jsx`
 
 ```javascript
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-class SampleContainer extends React.Component {
-    static propTypes = {
-        items: PropTypes.array
-    };
-    renderItems = () => {
-        return this.props.items.map(item => {
-            const Item = item.plugin; // item.plugin is the plugin ReactJS component
-            return <Item id={item.id} name={item.name} />;
-        });
-    };
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
 
-    render() {
-        const style = { zIndex: 1000, border: "solid black 1px", width: "200px", height: "200px", position: "absolute", top: "100px", left: "100px" };
-        return <div style={style}>{this.renderItems()}</div>;
-    }
-}
+const Container = ({
+    style,
+    items
+}) => {
+    return (
+        <div style={style}>
+            {items.map(item => {
+                // item.plugin is the plugin ReactJS component
+                const Item = item.plugin;
+                return (
+                    <Item
+                        key={item.id}
+                        id={item.id}
+                        name={item.name}
+                    />
+                );
+            })}
+        </div>
+    );
+};
 
-export const ContainerPlugin = SampleContainer;
+Container.propTypes = {
+    style: PropTypes.object,
+    items: PropTypes.array
+};
+
+Container.defaultProps = {
+    style: {
+        position: "absolute",
+        top: 100,
+        left: 100,
+        zIndex: 2000
+    },
+    items: []
+};
+
+export default createPlugin("Container", {
+    component: Container
+});
 ```
 
 ## Plugins for other plugins
 
 Since we have containers, we can build plugins that can be contained in one or more container plugins.
 
-### js/plugins/ContainedComponent.jsx
+`js/plugins/Sample.jsx`
 
 ```javascript
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import {get} from 'lodash';
-import assign from 'object-assign';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import sample from '../reducers/sample';
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
 
-class SampleComponent extends React.Component {
-    static propTypes = {
-        text: PropTypes.string
-    };
+import sample from "@js/reducers/sample";
 
-    render() {
-        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
-        return <div style={style}>Text: {this.props.text}</div >;
-    }
-}
+const SampleComponent = ({
+    text
+}) => {
+    return (
+        <div>
+            Text: {text}
+        </div>
+    );
+};
 
-const ConnectedSample = connect((state) => {
+SampleComponent.propTypes = {
+    text: PropTypes.string
+};
+
+SampleComponent.defaultProps = {
+    text: ""
+};
+
+const Sample = connect((state) => {
     return {
-        text: get(state, 'sample.text')
+        text: state?.sample?.text
     };
 })(SampleComponent);
 
-export const ContainedPlugin = assign(ConnectedSample, {
-    // we support the previously defined Container Plugin as a
-    // possible container for this plugin
-    Container: {
-        name: "Sample",
-        id: "sample_tool",
-        priority: 1
+export default createPlugin("Sample", {
+    component: Sample,
+    reducers: {
+        sample
+    },
+    containers: {
+        // we support the previously defined Container Plugin as a
+        // possible container for this plugin
+        Container: {
+            name: "Sample",
+            id: "sample-tool",
+            priority: 1
+        }
     }
 });
-export const reducers = {sample};
 ```
 
 Each section defines a possible container for the plugin, as the name of another plugin (*Container* in the example). The properties in it define the plugin behaviour in relation to the container (e.g. id of the item).
@@ -434,12 +597,12 @@ Each section defines a possible container for the plugin, as the name of another
 Containers will receive a list of items similar to this:
 
 ```javascript
-items = [{plugin: ConnectedSample, name: "Sample", id: "sample_tool", ...}]
+items = [{ plugin: Sample, name: "Sample", id: "sample-tool", ... }]
 ```
 
 Notice that also container related properties can be overridden in the application configuration, using the override property:
 
-### localConfig.json
+`localConfig.json`
 
 ```javascript
 {
@@ -461,21 +624,21 @@ Notice that also container related properties can be overridden in the applicati
 ## Plugins Configuration
 
 We have already mentioned that plugins can be configured through the localConfig.json file.
-The simplest configuration is needed to include the plugin in a particular application mode, and is accomplished by listing the plugin name in the plugins array of the chosen mode:
+The simplest configuration needed to include the plugin in a particular application mode is accomplished by listing a JSON object specifying the **name** property of the plugin in the plugins array of the chosen mode/page:
 
-### localConfig.json
+`localConfig.json`
 
 ```javascript
 {
     ...
     "plugins": {
-        "desktop": ["Sample", ...],
+        "desktop": [{ "name": "Sample" }, ...],
         ...
     }
 }
 ```
 
-To customize a plugin style and behaviour a JSON object can be used instead, specifying the plugin name in the **name** property, and the plugin configuration in the **cfg** property.
+It is possible to customize a plugin configuration adding a **cfg** property to the plugin JSON object. All the **cfg** properties are passed as props to the main component of the plugin.
 
 ```javascript
 {
@@ -498,7 +661,7 @@ To customize a plugin style and behaviour a JSON object can be used instead, spe
 Configuration can also dynamically change when the application state changes. This is accomplished by using expressions in configuration values. An expression is a value of the following form:
 
 ```javascript
-"property: "{expression}"
+"property": "{expression}"
 ```
 
 The expression itself is javascript code (supported by the browser, babel transpiled code is not supported here) where you can use the following variables:
@@ -513,9 +676,10 @@ Note that not all the application state is available through the state function,
 {
     ...,
     "monitorState": [
-      {"name": "router", "path": "router.location.pathname"},
-      {"name": "browser", "path": "browser"},
-      {"name": "featuregridmode", "path": "featuregrid.mode"}],
+        {"name": "router", "path": "router.location.pathname"},
+        {"name": "browser", "path": "browser"},
+        {"name": "featuregridmode", "path": "featuregrid.mode"}
+    ],
     ...
 }
 ```
@@ -523,7 +687,18 @@ Note that not all the application state is available through the state function,
 The default monitored state is:
 
 ```javascript
-{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}
+{
+    ...,
+    "monitorState": [
+        {"name": "router", "path": "router.location.pathname"},
+        {"name": "browser", "path": "browser"},
+        {"name": "geostorymode", "path": "geostory.mode"},
+        {"name": "featuregridmode", "path": "featuregrid.mode"},
+        {"name": "userrole", "path": "security.user.role"},
+        {"name": "printEnabled", "path": "print.capabilities"}
+    ],
+    ...
+}
 ```
 
 #### Example
@@ -549,35 +724,41 @@ The default monitored state is:
 
 Each plugin can define a list of supported containers, but it's the plugin system that decides which ones will be used at runtime based on:
 
-- container existance: if a container is not configured, it will not be used (obviously)
+- container existence: if a container is not configured, it will not be used
 - between the existing ones, the ones with the highest priority property value will be chosen; note that a plugin can be included in more than one container if they have the same priority
 
 #### Example
 
 ```javascript
-...
+// ...
 
-module.exports = {
-    ContainedSamplePlugin: ConnectedSample,
-    Container1: {
-        name: "Sample",
-        id: "sample_tool",
-        priority: 1,
-        ...
-    },
-    Container2: {
-        name: "Sample",
-        id: "sample_tool",
-        priority: 2,
-        ...
-    },
-    Container3: {
-        name: "Sample",
-        id: "sample_tool",
-        priority: 3,
-        ...
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
+
+// ...
+
+export default createPlugin("Sample", {
+    component: Sample,
+    containers: {
+        Container1: {
+            name: "Sample",
+            id: "sample-tool",
+            priority: 1,
+            // ...
+        },
+        Container2: {
+            name: "Sample",
+            id: "sample-tool",
+            priority: 2,
+            // ...
+        },
+        Container3: {
+            name: "Sample",
+            id: "sample-tool",
+            priority: 3,
+            // ...
+        }
     }
-};
+});
 ```
 
 If all the containers exist, Container3 will be chosen, the one with highest priority,if not Container2 will be used, and so on.
@@ -618,86 +799,133 @@ There is also a set of options to (dynamically) add/exclude containers:
 
 Note that also these properties accept dynamic expressions.
 
-#### js/plugins/Container.jsx
+`js/plugins/Container.jsx`
 
 ```javascript
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-class SampleContainer extends React.Component {
-    static propTypes = {
-        items: PropTypes.array
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
+
+const Container = ({
+    items
+}) => {
+    const style = {
+        zIndex: 1000,
+        border: "solid black 1px",
+        width: "200px",
+        height: "200px",
+        position: "absolute",
+        top: "100px",
+        left: "100px"
     };
-    renderItems = () => {
-        return this.props.items.map(item => {
-            const Item = item.plugin; // item.plugin is the plugin ReactJS component
-            return <Item id={item.id} name={item.name} />;
-        });
-    };
+    return (
+        <div style={style}>
+            {items.map(item => {
+                // item.plugin is the plugin ReactJS component
+                const Item = item.plugin;
+                return (
+                    <Item
+                        key={item.id}
+                        id={item.id}
+                        name={item.name}
+                    />
+                );
+            })}
+        </div>
+    );
+};
 
-    render() {
-        const style = { zIndex: 1000, border: "solid black 1px", width: "200px", height: "200px", position: "absolute", top: "100px", left: "100px" };
-        return <div style={style}>{this.renderItems()}</div>;
-    }
-}
+Container.propTypes = {
+    items: PropTypes.array
+};
 
-export const ContainerPlugin = SampleContainer;
+Container.defaultProps = {
+    items: []
+};
 
+export default createPlugin("Container", {
+    component: Container
+});
 ```
 
-#### js/plugins/ContainerOther.jsx
+`js/plugins/ContainerOther.jsx`
 
 ```javascript
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-class SampleContainer extends React.Component {
-    static propTypes = {
-        items: PropTypes.array
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
+
+const ContainerOther = ({
+    items
+}) => {
+    const style = {
+        zIndex: 1000,
+        border: "solid red 1px",
+        width: "200px",
+        height: "200px",
+        position: "absolute",
+        top: "100px",
+        left: "100px"
     };
-    renderItems = () => {
-        return this.props.items.map(item => {
-            const Item = item.plugin; // item.plugin is the plugin ReactJS component
-            return <Item id={item.id} name={item.name} />;
-        });
-    };
+    return (
+        <div style={style}>
+            {items.map(item => {
+                // item.plugin is the plugin ReactJS component
+                const Item = item.plugin;
+                return (
+                    <Item
+                        key={item.id}
+                        id={item.id}
+                        name={item.name}
+                    />
+                );
+            })}
+        </div>
+    );
+};
 
-    render() {
-        const style = { zIndex: 1000, border: "solid red 1px", width: "200px", height: "200px", position: "absolute", top: "100px", left: "100px" };
-        return <div style={style}>{this.renderItems()}</div>;
-    }
-}
+ContainerOther.propTypes = {
+    items: PropTypes.array
+};
 
-export const ContainerOtherPlugin = SampleContainer;
+ContainerOther.defaultProps = {
+    items: []
+};
 
+export default createPlugin("ContainerOther", {
+    component: ContainerOther
+});
 ```
 
-#### js/plugins/Sample.jsx
+`js/plugins/Sample.jsx`
 
 ```javascript
-import React from 'react';
-import assign from 'object-assign';
+import React from "react";
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
 
-class SampleComponent extends React.Component {
-    render() {
-        const style = { position: "absolute", top: "100px", left: "100px", zIndex: 1000000 };
-        return <div style={style}>Hello</div >;
-    }
-}
+const Sample = () => {
+    return (
+        <div>Hello</div>
+    );
+};
 
-export const SamplePlugin = assign(SampleComponent, {
-    Container: {
-        name: "Sample",
-        id: "sample_tool",
-        priority: 1
-    },
-    ContainerOther: {
-        name: "Sample",
-        id: "sample_tool",
-        priority: 1
+export default createPlugin("Sample", {
+    component: Sample,
+    containers: {
+        Container: {
+            name: "Sample",
+            id: "sample-tool",
+            priority: 1
+        },
+        ContainerOther: {
+            name: "Sample",
+            id: "sample-tool",
+            priority: 1
+        }
     }
 });
-
 ```
 
 With this configuration the sample plugin will be shown in both Container and ContainerOther plugins (they have the same priority, so both are picked).
@@ -788,27 +1016,40 @@ The plugin will be disabled in 3D mode.
 
 ## Lazy loading plugins
 
-You can lazy load your plugins (load them on demand), but only if you define a loading mechanism for your plugin. This is expecially useful for plugins that include big external libraries.
+You can lazy load your plugins components using the react lazy and Suspense API. This is especially useful for plugins that include components with big external libraries.
 
-A lazy loaded plugin is not defined by its component, but with a lazy descriptor with:
-
-- a **loadPlugin** function that loads the plugin code and calls the given **resolve** when the plugin is loaded
-- an **enabler** function that triggers plugin loading on a specific state change
+`js/plugins/Sample.jsx`
 
 ```javascript
-module.exports = {
-    LazySamplePlugin: {
-        loadPlugin: (resolve) => {
-            // require.ensure allows code splitting through webpack and
-            // creates a different js bundle for the plugin
-            require.ensure(['./LazySampleComponent'], () => {
-                const LazySamplePlugin = connect(...)(require('./LazySampleComponent'));
-                resolve(LazySamplePlugin);
-            });
-        },
-        enabler: (state) => state.controls.lazyplugin && state.controls.lazyplugin.enabled || false
-    }
+import React, { useState, lazy, Suspense } from "react";
+import { createPlugin } from "@mapstore/utils/PluginsUtils";
+const LazySampleComponent = lazy(() => import("@js/components/LazySampleComponent"));
+
+const Sample = () => {
+    // this local state could be moved to redux state
+    // as explained in previous sections
+    const [enabled, setEnabled] = useState(false);
+    const style = {
+        position: "absolute",
+        top: 100,
+        left: 100,
+        zIndex: 2000
+    };
+    return (
+        <div style={style}>
+            <button onClick={() => setEnabled(enabled)}>Load plugin</button>
+            {enabled
+                ? <Suspense fallback="Loading...">
+                    <LazySampleComponent />
+                </Suspense>
+                : null}
+        </div>
+    );
 };
+
+export default createPlugin("Sample", {
+    component: Sample
+});
 ```
 
 ## Testing plugins
@@ -829,48 +1070,48 @@ To ease writing a plugin unit test, an helper is available (pluginsTestUtils) th
 
 ### Examples
 
-#### `js/__tests__/myplugin-test.js`
+`js/plugins/__tests__/MyPlugin-test.js`
 
 ```javascript
-import expect from 'expect';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import expect from "expect";
+import React from "react";
+import ReactDOM from "react-dom";
 
-import MyPlugin from '../MyPlugin';
-import { getPluginForTest } from '../../MapStore2/web/client/plugins/__tests__/pluginsTestUtils';
+import MyPlugin from "../MyPlugin";
+import { getPluginForTest } from "@mapstore/plugins/__tests__/pluginsTestUtils";
 
 const initialState = {};
 
-describe('MyPlugin Test', () => {
+describe("MyPlugin Test", () => {
     beforeEach((done) => {
-        document.body.innerHTML = '<div id="container"></div>';
+        document.body.innerHTML = "<div id=\"container\"></div>";
         setTimeout(done);
     });
 
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
-        document.body.innerHTML = '';
+        document.body.innerHTML = "";
         setTimeout(done);
     });
 
-    it('creates MyPlugin with default configuration', () => {
+    it("creates MyPlugin with default configuration", () => {
         const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState);
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('<my plugin id>')).toExist();
+        expect(document.getElementById("<my plugin id>")).toBeTruthy();
         expect(...);
     });
     // use pluginCfg to override plugins properties
-    it('creates MyPlugin with custom configuration', () => {
+    it("creates MyPlugin with custom configuration", () => {
         const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState);
         ReactDOM.render(<Plugin pluginCfg={{
-            property: 'value'
+            property: "value"
         }}/>, document.getElementById("container"));
-        expect(document.getElementById('<my plugin id>')).toExist();
+        expect(document.getElementById("<my plugin id>")).toBeTruthy();
         expect(...);
     });
 
     // test connected epics looking at the actions array
-    it('test plugin epics', () => {
+    it("test plugin epics", () => {
         const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState);
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
         store.dispatch({
@@ -881,12 +1122,12 @@ describe('MyPlugin Test', () => {
     });
 
     // test supported containers
-    it('test containers', () => {
+    it("test containers", () => {
         const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, {
             MyContainerPlugin: {}
         });
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
-        expect(Object.keys(containers)).toContain('MyContainer');
+        expect(Object.keys(containers)).toContain("MyContainer");
     });
 });
 
@@ -894,14 +1135,22 @@ describe('MyPlugin Test', () => {
 
 ## General Guidelines
 
-- Components
-  - define the plugin component(s) into dedicated JSX file(s), so that they can be reused outside of the plugin
-  - connect the component(s) in the plugin JSX file
-- State
-  - define your own state fragment (and related actions and reducers) to handle internal state, and use existing actions and state fragments from MapStore2 to interact with the framework
-- Selectors
-  - use existing selectors when possible to connect the state, eventually using reselect to compose them together or with your own selectors
+### Components
+
+- Define the plugin component(s) into dedicated JSX file(s), so that they can be reused outside of the plugin
+- Connect the component(s) in the plugin JSX file
+
+### State
+
+- Define your own state fragment (and related actions and reducers) to handle internal state, and use existing actions and state fragments from MapStore2 to interact with the framework
+
+### Selectors
+
+- Use existing selectors when possible to connect the state, eventually using reselect to compose them together or with your own selectors
+
+### General
+
 - Avoid as much as possible direct interactions between different plugins; plugins are meant to be independent modules, so they should be able to work if other plugins appear / disappear from the application configuration
-  - interact with other plugins and the application itself using actions and state sharing
-  - creating side effects to make plugins interact in more strict ways should not be done at the plugin level, orchestrating different plugins should be delegated at the top (application) level
-  - use containers configuration to combine plugins in containers
+- Interact with other plugins and the application itself using actions and state sharing
+- Creating side effects to make plugins interact in more strict ways should not be done at the plugin level, orchestrating different plugins should be delegated at the top (application) level
+- Use containers configuration to combine plugins in containers
