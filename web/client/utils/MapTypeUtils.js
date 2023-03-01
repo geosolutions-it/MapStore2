@@ -35,11 +35,21 @@ const DEFAULT_MAP_TYPE_CONFIG = {
     }
 };
 
-export const getVisualizationModeFromMapLibrary = (mapType) => {
-    const { visualizationMode = VisualizationModes._2D } = mapLibrariesConfiguration[mapType] || {};
+/**
+ * Return the visualization mode given a map library
+ * @param {string} mapLibrary the name of the map library, one of "leaflet", "openlayers" or "cesium"
+ * @returns {string} "2D" or "3D" value
+ */
+export const getVisualizationModeFromMapLibrary = (mapLibrary) => {
+    const { visualizationMode = VisualizationModes._2D } = mapLibrariesConfiguration[mapLibrary] || {};
     return visualizationMode;
 };
 
+/**
+ * Return the map library given a visualization mode
+ * @param {string} visualizationMode the name of the visualization mode, one of "2D" or "3D"
+ * @returns {string} leaflet", "openlayers" or "cesium" value
+ */
 export const getMapLibraryFromVisualizationMode = (visualizationMode = VisualizationModes._2D) => {
     const { mobile } = getBrowserProperties();
     const customMapTypeConfig = getConfigProp('mapType') || {};
@@ -79,6 +89,11 @@ export function replaceMapType(path, newMapType) {
     return path;
 }
 
+/**
+ * Remove the mapType given a path
+ * @param {string} path the pathname to check
+ * @returns {string} the pathname without mapType part
+ */
 export function removeMapType(path) {
     // check context new regex  first
     const contextMatch = path.match(contextMapRegex);

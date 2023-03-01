@@ -20,6 +20,55 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2023.01.xx to 2023.02.00
+
+### Visualization mode in map configuration
+
+The map configuration stores the information related to the visualization mode 2D or 3D after saving a map.
+This update include also following changes:
+
+- maptype configuration inside the initialState of localConfig needs to be removed in favor of the global mapType configuration
+
+```diff
+{
+    // ...
+    "initialState": {
+        "defaultState": {
+            // ...
+-           "maptype": {
+-               "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
+-           },
+            // ...
+        }
+    }
+    // ...
+}
+```
+
+- the `changeMapType` action has been deprecated in favor of the `changeVisualizationMode` action
+
+- the application does not expose the pathname of the viewer with `mapType` anymore. Example: the old path `/viewer/openlayers/1` becomes `/viewer/1`
+
+- it is possible to change the map library based on the device using the new mapType configuration in localConfig.json. This configuration is only needed for project with custom map library settings. The downstream project based on the MapStore product don't need this update
+
+```diff
+{
+    // ...
++    "mapType": {
++       "2D": {
++           "desktop": "openlayers",
++           "mobile": "leaflet"
++       },
++       "3D": {
++           "desktop": "cesium",
++           "mobile": "cesium"
++       }
++   },
+    // ...
+}
+```
+
+
 ## Migration from 2022.02.02 to 2023.01.00
 
 ### Log4j update to Log4j2

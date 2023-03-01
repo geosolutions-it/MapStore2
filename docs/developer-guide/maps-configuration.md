@@ -3,12 +3,11 @@
 By default MapStore is able to open maps with this path in the URL:
 
 ```http
-http://localhost:8081/#viewer/<maptype>/<mapId>
+http://localhost:8081/#viewer/<mapId>
 ```
 
 Where:
 
-- `maptype` can be `leaflet` `openlayers` or `cesium`.
 - `mapId` can be a number or a string.
   - A **number** represents standard maps, stored on the database.
   - A **string** instead represents a static json file in the root of the application.
@@ -1659,6 +1658,7 @@ Map configuration also contains the following additional options:
 - `timelineData` timeline options
 - `selectedLayer` selected layer id; if not present time cursor will be unlocked
 - `mapViews` map views options
+- `visualizationMode` defines if the map should be visualized in "2D" or "3D"
 
 ### mapViews
 
