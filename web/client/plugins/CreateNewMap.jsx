@@ -28,6 +28,7 @@ import {mapTypeSelector} from '../selectors/maptype';
 
 import createnewmap from '../reducers/createnewmap';
 import * as epics from '../epics/createnewmap';
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const Button = tooltip(ButtonB);
 const SplitButton = tooltip(SplitButtonB);
@@ -57,7 +58,7 @@ class CreateNewMap extends React.Component {
     static defaultProps = {
         loading: false,
         loadFlags: {},
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         showNewDashboard: true,
         showNewGeostory: true,
         isLoggedIn: false,
@@ -129,7 +130,7 @@ class CreateNewMap extends React.Component {
     }
 
     createNewEmptyMap = () => {
-        this.context.router.history.push("/viewer/" + this.props.mapType + "/new");
+        this.context.router.history.push("/viewer/new");
     };
 
     isAllowed = () => this.props.isLoggedIn && this.props.allowedRoles.indexOf(this.props.user && this.props.user.role) >= 0;

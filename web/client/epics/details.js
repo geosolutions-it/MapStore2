@@ -15,7 +15,8 @@ import {
     NO_DETAILS_AVAILABLE,
     updateDetails,
     detailsLoaded,
-    openDetailsPanel
+    openDetailsPanel,
+    closeDetailsPanel
 } from '../actions/details';
 import { MAP_INFO_LOADED } from '../actions/config';
 import { toggleControl, setControlProperty } from '../actions/controls';
@@ -29,6 +30,7 @@ import GeoStoreApi from '../api/GeoStoreDAO';
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
 import { getIdFromUri } from '../utils/MapUtils';
 import { basicError } from '../utils/NotificationUtils';
+import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 
 export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
@@ -88,4 +90,10 @@ export const storeDetailsInfoEpic = (action$, store) =>
                             ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
                         );
                     });
+        });
+
+export const closeDetailsPanelOn3DToggle = (action$) =>
+    action$.ofType(VISUALIZATION_MODE_CHANGED)
+        .switchMap(() => {
+            return Rx.Observable.of(closeDetailsPanel());
         });

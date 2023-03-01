@@ -10,6 +10,7 @@ import { getApi } from '../../../../api/userPersistedStorage';
 import TSplitButtonComp from "./TSplitButton";
 import Spinner from "react-spinkit";
 import Select from "react-select";
+import { MapLibraries } from '../../../../utils/MapTypeUtils';
 
 const TButton = withHint(TButtonComp);
 const TSplitButton = withHint(TSplitButtonComp);
@@ -172,7 +173,7 @@ const standardButtons = {
         id="snap-button"
         keyProp="snap-button"
         tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
-        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === 'openlayers'}
+        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === MapLibraries.OPENLAYERS}
         onClick={() => {
             events.toggleSnapping && events.toggleSnapping(!snapping);
         }}

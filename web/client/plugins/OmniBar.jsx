@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import './omnibar/omnibar.css';
 import ToolsContainer from './containers/ToolsContainer';
 import {createPlugin} from "../utils/PluginsUtils";
-
+import { MapLibraries } from '../utils/MapTypeUtils';
 class OmniBar extends React.Component {
     static propTypes = {
         className: PropTypes.string,
@@ -28,7 +28,7 @@ class OmniBar extends React.Component {
         style: {},
         containerWrapperStyle: {},
         id: "mapstore-navbar",
-        mapType: "leaflet"
+        mapType: MapLibraries.LEAFLET
     };
 
     getPanels = () => {

@@ -10,6 +10,7 @@ import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 
 import Toolbar from '../../../../misc/toolbar/Toolbar';
+import { VisualizationModes } from '../../../../../utils/MapTypeUtils';
 
 const getSaveTooltipId = (step, { id } = {}) => {
     if (id) {
@@ -20,6 +21,7 @@ const getSaveTooltipId = (step, { id } = {}) => {
 
 export default ({ step = 0, buttons, tocButtons = [], stepButtons = [], dashBoardEditing = false, editorData = {}, setPage = () => { }, onFinish = () => { }, toggleLayerSelector = () => { }, onChange = () => {} } = {}) => {
     const map = (editorData?.maps || []).find(m => m.mapId === editorData?.selectedMapId) || {};
+    const is3D = map?.visualizationMode === VisualizationModes._3D;
     const isEmptyMap = editorData?.widgetType === "map" && isEmpty(map);
     return (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
@@ -34,7 +36,7 @@ export default ({ step = 0, buttons, tocButtons = [], stepButtons = [], dashBoar
     ...stepButtons,
     {
         onClick: () => onChange(`maps[${editorData?.selectedMapId}].mapInfoControl`, !map?.mapInfoControl),
-        visible: !isEmptyMap && dashBoardEditing && editorData?.widgetType === "map",
+        visible: !is3D && !isEmptyMap && dashBoardEditing && editorData?.widgetType === "map",
         glyph: "info-sign",
         bsStyle: map?.mapInfoControl ? "success" : "primary",
         tooltipId: map?.mapInfoControl ? "widgets.builder.wizard.disableIdentifyTool" : "widgets.builder.wizard.enableIdentifyTool"

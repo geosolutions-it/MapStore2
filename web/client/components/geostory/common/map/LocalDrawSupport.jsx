@@ -9,7 +9,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import DrawSupport from '../../../map/openlayers/DrawSupport';
-
+import { MapLibraries } from '../../../../utils/MapTypeUtils';
 /**
  * A draw support interface to use as component instead of plugin
  * @prop {object} map map library instance object
@@ -37,7 +37,7 @@ function LocalDrawSupport({
         setStatus(active ? 'drawOrEdit' : 'clean');
     }, [active]);
 
-    if (mapType !== 'openlayers') {
+    if (mapType !== MapLibraries.OPENLAYERS) {
         return null;
     }
 

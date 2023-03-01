@@ -31,6 +31,7 @@ import {
 import Button from '../misc/Button';
 import SelectShape from './SelectShape';
 import { Promise } from 'es6-promise';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 class ShapeFileUploadAndStyle extends React.Component {
     static propTypes = {
@@ -98,7 +99,7 @@ class ShapeFileUploadAndStyle extends React.Component {
             }
             return null;
         }),
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         stylers: {},
         buttonSize: "small",
         uploadOptions: {},

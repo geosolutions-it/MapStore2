@@ -15,6 +15,7 @@ import { getMapZoom, getResolutionMultiplier } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
 import Button from '../misc/Button';
 import isNil from 'lodash/isNil';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 let PMap;
 let Layer;
@@ -46,7 +47,7 @@ class MapPreview extends React.Component {
     static defaultProps = {
         map: null,
         layers: [],
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         style: {display: "block", border: "1px solid black", position: "relative"},
         onChangeZoomLevel: () => {},
         onMapViewChanges: () => {},

@@ -11,6 +11,7 @@ import React from 'react';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 import ToolsContainer from './containers/ToolsContainer';
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 /**
  * GridContainerPlugin. This is a plugin that works as container
@@ -30,7 +31,7 @@ class GridContainer extends React.Component {
         className: "grid-home-container",
         style: {},
         id: "mapstore-grid-home",
-        mapType: "leaflet"
+        mapType: MapLibraries.LEAFLET
     };
 
     getPanels = () => {

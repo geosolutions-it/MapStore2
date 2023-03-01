@@ -25,6 +25,10 @@ export default {
         component: require('./pages/MapViewer').default
     }, {
         name: "mapviewer",
+        path: "/viewer/:mapId/context/:contextId",
+        component: require('./pages/MapViewer').default
+    }, {
+        name: "mapviewer",
         path: "/viewer/:mapId",
         component: require('./pages/MapViewer').default
     }, {

@@ -18,6 +18,7 @@ import { toVectorStyle } from '../../../utils/StyleUtils';
 
 import Button from '../../misc/Button';
 import { checkFeaturesStyle } from '../../../utils/ImporterUtils';
+import { MapLibraries } from '../../../utils/MapTypeUtils';
 
 class StylePanel extends React.Component {
     static propTypes = {
@@ -53,7 +54,7 @@ class StylePanel extends React.Component {
     };
 
     static defaultProps = {
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         buttonSize: "small",
         setLayers: () => {},
         addLayer: () => {},

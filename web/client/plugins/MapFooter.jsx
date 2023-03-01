@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ToolsContainer from './containers/ToolsContainer';
 import { lifecycle } from 'recompose';
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 let fixedElements = {};
 const fix = lifecycle({
@@ -56,7 +57,7 @@ class MapFooter extends React.Component {
         className: "mapstore-map-footer",
         style: {},
         id: "mapstore-map-footer",
-        mapType: "leaflet"
+        mapType: MapLibraries.LEAFLET
     };
 
     getPanels = () => {

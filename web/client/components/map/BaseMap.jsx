@@ -123,10 +123,14 @@ class BaseMap extends React.Component {
     };
 
     renderTools = () => {
-        return this.props.tools.map((tool) => {
-            const {impl: Tool, name, ...options} = this.getTool(tool);
-            return <Tool key={name} {...options} />;
-        });
+        return this.props.tools
+            .filter((tool) => {
+                return this.props?.plugins?.tools?.[isString(tool) ? tool : tool?.name];
+            })
+            .map((tool) => {
+                const {impl: Tool, name, ...options} = this.getTool(tool);
+                return <Tool key={name} {...options} />;
+            });
     };
 
     render() {

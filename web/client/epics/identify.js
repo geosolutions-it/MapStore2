@@ -61,7 +61,7 @@ const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureGridOpen(state) && (gridEditingSelector(state) || gridGeometryQuickFilter(state));
 
 import {getFeatureInfo} from '../api/identify';
-import { MAP_TYPE_CHANGED } from '../actions/maptype';
+import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 
 /**
@@ -405,7 +405,7 @@ export const removeMapInfoMarkerOnRemoveMapPopupEpic = (action$, {getState}) =>
 * Sets which trigger to use on the map
 */
 export const setMapTriggerEpic = (action$, store) =>
-    action$.ofType(SET_MAP_TRIGGER, MAP_CONFIG_LOADED, MAP_TYPE_CHANGED)
+    action$.ofType(SET_MAP_TRIGGER, MAP_CONFIG_LOADED, VISUALIZATION_MODE_CHANGED)
         .switchMap(() => {
             return Rx.Observable.of(
                 mapTriggerSelector(store.getState()) === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')

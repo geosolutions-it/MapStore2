@@ -21,7 +21,7 @@ import {createShallowSelectorCreator} from "../utils/ReselectUtils";
 import isEqual from "lodash/isEqual";
 import {mapBboxSelector, projectionSelector} from "./map";
 import {bboxToFeatureGeometry} from "../utils/CoordinatesUtils";
-
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
@@ -193,7 +193,7 @@ export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerF
 
 export const isViewportFilterActive = state => get(state, 'featuregrid.viewportFilter', null);
 
-export const isFilterByViewportSupported = state => mapTypeSelector(state) !== 'cesium';
+export const isFilterByViewportSupported = state => mapTypeSelector(state) !== MapLibraries.CESIUM;
 
 export const viewportFilter = createShallowSelectorCreator(isEqual)(
     isViewportFilterActive,

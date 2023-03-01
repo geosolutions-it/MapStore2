@@ -12,6 +12,7 @@ import Message from '../../../I18N/Message';
 import Select from "react-select";
 import {isNil} from "lodash";
 import { applyDefaults } from '../../../../utils/GeoStoryUtils';
+import { VisualizationModes } from '../../../../utils/MapTypeUtils';
 
 import SwitchButton from '../../../misc/switch/SwitchButton';
 import localizedProps from '../../../misc/enhancers/localizedProps';
@@ -30,8 +31,9 @@ export const Controls = ({
         zoomControl: !isNil(map.zoomControl) ? map.zoomControl : true,
         mapInfoControl: !isNil(map.mapInfoControl) ? map.mapInfoControl : false
     });
+    const is3D = map?.visualizationMode === VisualizationModes._3D;
     return (<Form className="ms-geostory-map-controls">
-        <FormGroup>
+        {!is3D && <FormGroup>
             <ControlLabel><Message msgId="geostory.mapEditor.zoom"/></ControlLabel>
             <SwitchButton
                 onChange={() => {
@@ -60,7 +62,7 @@ export const Controls = ({
                 onChange={(val) => onChangeMap("mapOptions.zoomPosition", val && val.value ? val.value : "topLeft")}
                 placeholder="geostory.builder.settings.titlePlaceholder"
             />
-        </FormGroup>
+        </FormGroup>}
         <FormGroup>
             <ControlLabel><Message msgId="geostory.mapEditor.pan"/></ControlLabel>
             <SwitchButton
@@ -75,7 +77,7 @@ export const Controls = ({
                 checked={options.mapOptions && options.mapOptions.interactions && options.mapOptions.interactions.dragPan}
             />
         </FormGroup>
-        <FormGroup>
+        {!is3D && <FormGroup>
             <ControlLabel><Message msgId="geostory.mapEditor.identify"/></ControlLabel>
             <SwitchButton
                 onChange={() => {
@@ -93,7 +95,7 @@ export const Controls = ({
                 selectProps={{
                     wrapperStyle: { marginTop: 10 }
                 }}/>}
-        </FormGroup>
+        </FormGroup>}
     </Form>);
 };
 

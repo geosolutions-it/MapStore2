@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import snapshotSupportComp from './SnapshotSupport';
+import { MapLibraries } from '../../../utils/MapTypeUtils';
 
 let SnapshotSupport;
 
@@ -37,7 +38,7 @@ class SnapshotQueue extends React.Component {
     static defaultProps = {
         onRemoveSnapshot: () => {},
         onSnapshotError: () => {},
-        mapType: 'leaflet'
+        mapType: MapLibraries.LEAFLET
     };
 
     UNSAFE_componentWillMount() {

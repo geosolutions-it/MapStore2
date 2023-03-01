@@ -12,6 +12,7 @@ import axios from '../../../../../../libs/ajax';
 import ConfigUtils from '../../../../../../utils/ConfigUtils';
 import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../../../../../utils/LayersUtils';
 import { EMPTY_MAP } from "../../../../../../utils/MapUtils";
+import { VisualizationModes } from "../../../../../../utils/MapTypeUtils";
 import { getResource } from '../../../../../../api/persistence';
 import '../../../../../../libs/bindings/rxjsRecompose';
 import uuidv1 from 'uuid/v1';
@@ -42,7 +43,8 @@ const handleMapSelect = compose(
                                     l.type = "empty";
                                 }
                                 return l;
-                            }))
+                            })),
+                            visualizationMode: config?.visualizationMode || VisualizationModes._2D
                         };
                     }).then(res => {
                         // Extract tileMatrix from source and update layers
@@ -50,7 +52,7 @@ const handleMapSelect = compose(
                             const tileMatrix = extractTileMatrixFromSources(res.sources, l);
                             return {...l, ...tileMatrix};
                         }) : res.layers;
-                        return {...res, mapInfoControl: true}; // enable identify tool on map widgets
+                        return {...res, mapInfoControl: res?.visualizationMode !== VisualizationModes._3D }; // enable identify tool on map widgets
                     }))
             ).then((results)=> onMapSelected({ maps: results }));
         }

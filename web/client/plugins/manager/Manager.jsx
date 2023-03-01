@@ -13,6 +13,7 @@ import { Nav, NavItem, Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Message } from '../../components/I18N/I18N';
 import './style/manager.css';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 class Manager extends React.Component {
     static propTypes = {
@@ -28,7 +29,7 @@ class Manager extends React.Component {
 
     static defaultProps = {
         items: [],
-        mapType: "openlayers",
+        mapType: MapLibraries.OPENLAYERS,
         selectedTool: "importer",
         itemSelected: () => {},
         navStyle: {

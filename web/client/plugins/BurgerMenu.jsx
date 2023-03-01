@@ -17,6 +17,7 @@ import Message from './locale/Message';
 import { createPlugin } from '../utils/PluginsUtils';
 import {setControlProperty} from "../actions/controls";
 import {burgerMenuSelector} from "../selectors/controls";
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 import './burgermenu/burgermenu.css';
 
@@ -71,7 +72,7 @@ class BurgerMenu extends React.Component {
         onItemClick: () => {},
         title: <MenuItem header><Message msgId="options"/></MenuItem>,
         controls: [],
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         panelStyle: {
             minWidth: "300px",
             right: "52px",

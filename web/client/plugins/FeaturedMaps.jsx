@@ -36,6 +36,7 @@ import {
     GEOSTORY_DEFAULT_SHARE_OPTIONS
 } from '../utils/ShareUtils';
 import { editContext } from "../actions/contextmanager";
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const ToolTipedNavItem = tooltip(NavItem);
 
@@ -144,7 +145,7 @@ class FeaturedMaps extends React.Component {
         return {
             url: res.contextName ?
                 "context/" + res.contextName + "/" + res.id :
-                "viewer/" + this.props.mapType + "/" + res.id,
+                "viewer/" + res.id,
             shareApi: this.props.showAPIShare
 
         };
@@ -222,7 +223,7 @@ const FeaturedMapsPlugin = compose(
         }
     }),
     defaultProps({
-        mapType: 'leaflet',
+        mapType: MapLibraries.LEAFLET,
         onGoToMap: () => {},
         fluid: false,
         mapsOptions: {start: 0, limit: 12},

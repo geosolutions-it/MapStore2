@@ -42,9 +42,10 @@ import {
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { RESET_CONTROLS } from '../actions/controls';
-import { MAP_TYPE_CHANGED } from '../actions/maptype';
+import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 
 import { getValidator } from '../utils/MapInfoUtils';
+import { VisualizationModes } from '../utils/MapTypeUtils';
 
 /**
  * Identifies when to update a index when the display information trigger is click (GFI panel)
@@ -470,8 +471,8 @@ function mapInfo(state = initState, action) {
             showInMapPopup: action.value // this is global, actually not saved in map configuration (configuration part)
         };
     }
-    case MAP_TYPE_CHANGED: {
-        if (action.mapType === "cesium") {
+    case VISUALIZATION_MODE_CHANGED: {
+        if (action.visualizationMode === VisualizationModes._3D) {
             return {
                 ...state,
                 configuration: {

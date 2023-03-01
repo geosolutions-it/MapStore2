@@ -80,7 +80,7 @@ const onClickHandler = (map, router, mapType, toggleCatalog, reloadFunction) => 
     } else {
         router.history.push(map.contextName ?
             "/context/" + map.contextName + "/" + map.id :
-            "/viewer/" + mapType + "/" + map.id
+            "/viewer/" + map.id
         );
     }
 };

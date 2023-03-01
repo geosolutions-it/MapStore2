@@ -34,6 +34,7 @@ import {
 import addI18NProps from '../../components/I18N/enhancers/addI18NProps';
 import Loader from '../../components/misc/Loader';
 import MeasureToolbar from '../../components/mapcontrols/measure/MeasureToolbar';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 // number format localization for measurements
 const addFormatNumber = addI18NProps(['formatNumber']);
@@ -42,9 +43,9 @@ export const MeasureComponent = MeasureComponentComp;
 export const MeasureDialog = MeasureDialogComp;
 
 const measureSupports = {
-    leaflet: lazy(() => import(/* webpackChunkName: 'supports/leafletMeasure' */ '../../components/map/leaflet/MeasurementSupport')),
-    openlayers: lazy(() => import(/* webpackChunkName: 'supports/olMeasure' */ '../../components/map/openlayers/MeasurementSupport')),
-    cesium: lazy(() => import(/* webpackChunkName: 'supports/cesiumMeasure' */ '../../components/map/cesium/MeasurementSupport'))
+    [MapLibraries.LEAFLET]: lazy(() => import(/* webpackChunkName: 'supports/leafletMeasure' */ '../../components/map/leaflet/MeasurementSupport')),
+    [MapLibraries.OPENLAYERS]: lazy(() => import(/* webpackChunkName: 'supports/olMeasure' */ '../../components/map/openlayers/MeasurementSupport')),
+    [MapLibraries.CESIUM]: lazy(() => import(/* webpackChunkName: 'supports/cesiumMeasure' */ '../../components/map/cesium/MeasurementSupport'))
 };
 
 const MeasureSupportWithFormatNumber = addFormatNumber(({

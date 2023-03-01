@@ -29,7 +29,7 @@ import {
 } from '../actions/additionallayers';
 import { CATALOG_CLOSE } from '../actions/catalog';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import { MAP_TYPE_CHANGED } from '../actions/maptype';
+import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import {
     getSelectedMapView,
     getResourceById,
@@ -107,7 +107,7 @@ export const updateMapViewsLayers = (action$, store) =>
         HIDE_VIEWS,
         SETUP_VIEWS,
         MAP_CONFIG_LOADED,
-        MAP_TYPE_CHANGED
+        VISUALIZATION_MODE_CHANGED
     )
         .filter(() => {
             const state = store.getState();
@@ -119,7 +119,7 @@ export const updateMapViewsLayers = (action$, store) =>
             const currentView =  getSelectedMapView(state);
             const { layers = [], mask = {}, id: viewId } = currentView || {};
             const shouldUpdate = !!(
-                action.type === MAP_TYPE_CHANGED
+                action.type === VISUALIZATION_MODE_CHANGED
                 || !deepCompare(previousView?.layers || [], layers)
                 || !deepCompare(previousView?.mask || {}, mask)
             );

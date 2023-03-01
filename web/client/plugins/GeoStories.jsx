@@ -26,6 +26,7 @@ import EmptyGeostoriesView from './geostories/EmptyGeostoriesView';
 import GeostoryGrid from './geostories/GeostoriesGrid';
 import PaginationToolbar from './geostories/PaginationToolbar';
 import {GEOSTORY_DEFAULT_SHARE_OPTIONS} from "../utils/ShareUtils";
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const geostoriesCountSelector = createSelector(
     totalCountSelector,
@@ -64,7 +65,7 @@ class Geostories extends React.Component {
     };
 
     static defaultProps = {
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         onMount: () => {},
         loadGeostories: () => {},
         fluid: false,

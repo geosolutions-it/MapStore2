@@ -17,8 +17,6 @@ import {
 } from '../actions/createnewmap';
 import { MAPS_LOAD_MAP } from '../actions/maps';
 
-import { mapTypeSelector } from '../selectors/maptype';
-
 import { getResources } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 
@@ -41,14 +39,11 @@ export const checkContextsOnMapLoad = (action$) => action$
         ))
     );
 
-export const createNewMapEpic = (action$, store) => action$
+export const createNewMapEpic = (action$) => action$
     .ofType(CREATE_NEW_MAP)
     .switchMap(({context}) => {
-        const state = store.getState();
-        const mapType = mapTypeSelector(state);
-
         return Rx.Observable.of(
             showNewMapDialog(false),
-            push("/viewer/" + mapType + "/new" + (context ? `/context/${context.id}` : ''))
+            push("/viewer/new" + (context ? `/context/${context.id}` : ''))
         );
     });

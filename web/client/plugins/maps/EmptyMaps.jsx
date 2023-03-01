@@ -30,7 +30,7 @@ class EmptyMaps extends React.Component {
 
     render() {
         return (<div style={{ width: "100%", textAlign: "center", marginBottom: '20px' }}>{this.props.loggedIn && this.props.showCreateButton
-            ? (<Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
+            ? (<Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/new"); }}>
                 <Message msgId="resources.maps.createNewOne" />
             </Button>)
             : null}</div>);

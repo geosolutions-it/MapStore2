@@ -29,6 +29,7 @@ import ToolsContainer from '../containers/ToolsContainer';
 import Message from '../locale/Message';
 import { itemSelected } from '../../actions/manager';
 import '../burgermenu/burgermenu.css';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 class ManagerMenu extends React.Component {
     static propTypes = {
@@ -80,7 +81,7 @@ class ManagerMenu extends React.Component {
         itemSelected: () => {},
         title: <MenuItem header>Manager</MenuItem>,
         controls: [],
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         panelStyle: {
             minWidth: "300px",
             right: "52px",

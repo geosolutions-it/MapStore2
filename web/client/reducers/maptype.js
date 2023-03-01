@@ -6,9 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { MAP_TYPE_CHANGED, UPDATE_LAST_2D_MAPTYPE } from '../actions/maptype';
+import { MAP_TYPE_CHANGED, VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import { MAP_PLUGIN_LOAD } from '../actions/map';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
+import {
+    getMapLibraryFromVisualizationMode,
+    VisualizationModes
+} from '../utils/MapTypeUtils';
 
 /**
  * stores state for the mapType to use (typically one of leaflet, openlayers, cesium... )
@@ -21,26 +26,26 @@ import { MAP_PLUGIN_LOAD } from '../actions/map';
  *  mapType: "leaflet"
  * }
  */
-function maptype(state = { mapType: "leaflet" }, action) {
+function maptype(state = {
+    mapType: getMapLibraryFromVisualizationMode(VisualizationModes._2D)
+}, action) {
     switch (action.type) {
+    case MAP_CONFIG_LOADED:
+        const visualizationMode = action?.config?.visualizationMode || VisualizationModes._2D;
+        return {
+            ...state,
+            mapType: getMapLibraryFromVisualizationMode(visualizationMode)
+        };
     case MAP_TYPE_CHANGED:
         return {
             ...state,
-            mapType: action.mapType,
-            last2dMapType: action.mapType && action.mapType !== "cesium"
-                ? action.mapType
-                : state.mapType !== 'cesium'
-                    ? state.mapType
-                    : state.last2dMapType
+            mapType: action.mapType
         };
-    case UPDATE_LAST_2D_MAPTYPE:
-        if (action.mapType && action.mapType !== "cesium" && action.mapType !== state.last2dMapType) {
-            return {
-                ...state,
-                last2dMapType: action.mapType
-            };
-        }
-        return state;
+    case VISUALIZATION_MODE_CHANGED:
+        return {
+            ...state,
+            mapType: getMapLibraryFromVisualizationMode(action.visualizationMode)
+        };
     case MAP_PLUGIN_LOAD:
         return {
             ...state,

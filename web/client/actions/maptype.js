@@ -7,13 +7,14 @@
  */
 
 export const MAP_TYPE_CHANGED = 'MAP_TYPE_CHANGED';
-export const UPDATE_LAST_2D_MAPTYPE = "MAP_TYPE:UPDATE_LAST_2D_MAPTYPE";
+export const VISUALIZATION_MODE_CHANGED = 'MAP_TYPE:VISUALIZATION_MODE_CHANGED';
 
 /**
  * changes the map type
+ * @deprecated
  * @memberof actions.maptype
  * @param  {string} mapType the mapType.
- * @return {action}         the action of type `MAP_TYPE_CHANGED` with mapType
+ * @return {action} the action of type `MAP_TYPE_CHANGED` with mapType
  */
 export function changeMapType(mapType) {
     return {
@@ -22,24 +23,17 @@ export function changeMapType(mapType) {
     };
 }
 /**
- * Saves the last 2d map
- * @memberof actions.globeswitcher
- * @param  {string} mapType last maptype
- * @return {object}         action
- * ```
- * {
- *   type: MAPTYPE_2D_SELECTED,
- *   mapType
- * }
- * ```
+ * changes the visualization mode
+ * @memberof actions.maptype
+ * @param  {string} visualizationMode eg: 2D or 3D.
+ * @return {action} the action of type `VISUALIZATION_MODE_CHANGED` with visualizationMode
  */
-export function updateLast2dMapType(mapType) {
+export function changeVisualizationMode(visualizationMode) {
     return {
-        type: UPDATE_LAST_2D_MAPTYPE,
-        mapType
+        type: VISUALIZATION_MODE_CHANGED,
+        visualizationMode
     };
 }
-
 /**
  * Actions for map type management.Allow to manage the default map type.
  * @name actions.maptype

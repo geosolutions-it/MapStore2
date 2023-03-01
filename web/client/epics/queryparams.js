@@ -10,7 +10,8 @@ import * as Rx from 'rxjs';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import {get, head, isUndefined} from 'lodash';
 
-import {CHANGE_MAP_VIEW, CLICK_ON_MAP, INIT_MAP} from '../actions/map';
+import { CHANGE_MAP_VIEW, CLICK_ON_MAP } from '../actions/map';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addMarker, hideMarker, resetSearch} from '../actions/search';
 import {setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 
@@ -19,9 +20,10 @@ import {hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../act
 import {clickPointSelector, isMapInfoOpen, mapInfoEnabledSelector} from '../selectors/mapInfo';
 import {shareSelector} from "../selectors/controls";
 import {LAYER_LOAD} from "../actions/layers";
-import {changeMapType} from '../actions/maptype';
+import { changeVisualizationMode } from '../actions/maptype';
 import {getCesiumViewerOptions, getParametersValues, getQueryActions, paramActions} from "../utils/QueryParamsUtils";
 import {semaphore} from "../utils/EpicsUtils";
+import { VisualizationModes, MapLibraries } from '../utils/MapTypeUtils';
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
@@ -45,7 +47,7 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
         .switchMap(() => {
             const parameters = getParametersValues(paramActions, store.getState());
             return Rx.Observable.merge(
-                action$.ofType(INIT_MAP)
+                action$.ofType(MAP_CONFIG_LOADED)
                     .take(1)
                     .switchMap(() => {
                         // On map initialization, query params containing cesium viewer options
@@ -53,7 +55,7 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                         const cesiumViewerOptions = getCesiumViewerOptions(parameters);
                         if (cesiumViewerOptions) {
                             skipProcessing = true;
-                            return Rx.Observable.of(changeMapType('cesium'));
+                            return Rx.Observable.of(changeVisualizationMode(VisualizationModes._3D));
                         }
                         return Rx.Observable.empty();
                     }),
@@ -69,7 +71,7 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                     .take(1)
                     .switchMap(() => {
                         const mapType = get(store.getState(), 'maptype.mapType') || '';
-                        if (mapType === 'cesium') {
+                        if (mapType === MapLibraries.CESIUM) {
                             const queryActions = getQueryActions(parameters, paramActions, store.getState());
                             return head(queryActions)
                                 ? Rx.Observable.of(...queryActions)

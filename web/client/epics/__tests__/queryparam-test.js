@@ -13,8 +13,9 @@ import {
     onMapClickForShareEpic,
     readQueryParamsOnMapEpic
 } from '../queryparams';
-import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap, initMap } from '../../actions/map';
-import { MAP_TYPE_CHANGED } from '../../actions/maptype';
+import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../../actions/map';
+import { configureMap } from '../../actions/config';
+import { VISUALIZATION_MODE_CHANGED } from '../../actions/maptype';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
@@ -608,12 +609,12 @@ describe('queryparam epics', () => {
         const NUMBER_OF_ACTIONS = 2;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
-            initMap(true)
+            configureMap()
         ], (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
-                expect(actions[0].type).toBe(MAP_TYPE_CHANGED);
-                expect(actions[0].mapType).toBe('cesium');
+                expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
+                expect(actions[0].visualizationMode).toBe('3D');
                 done();
             } catch (e) {
                 done(e);
@@ -641,12 +642,12 @@ describe('queryparam epics', () => {
         const NUMBER_OF_ACTIONS = 2;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
-            initMap(true)
+            configureMap()
         ], (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
-                expect(actions[0].type).toBe(MAP_TYPE_CHANGED);
-                expect(actions[0].mapType).toBe('cesium');
+                expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
+                expect(actions[0].visualizationMode).toBe('3D');
                 done();
             } catch (e) {
                 done(e);
@@ -676,7 +677,7 @@ describe('queryparam epics', () => {
         const NUMBER_OF_ACTIONS = 1;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
-            initMap(true)
+            configureMap()
         ], (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
@@ -701,7 +702,7 @@ describe('queryparam epics', () => {
         const NUMBER_OF_ACTIONS = 1;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
-            initMap(true)
+            configureMap()
         ], (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
@@ -726,7 +727,7 @@ describe('queryparam epics', () => {
         const NUMBER_OF_ACTIONS = 1;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
-            initMap(true)
+            configureMap()
         ], (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {

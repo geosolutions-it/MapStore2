@@ -26,6 +26,7 @@ import DashboardGrid from './dashboard/DashboardsGrid';
 import EmptyDashboardsView from './dashboard/EmptyDashboardsView';
 import PaginationToolbar from './dashboard/PaginationToolbar';
 import { DASHBOARD_DEFAULT_SHARE_OPTIONS } from '../utils/ShareUtils';
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const dashboardsCountSelector = createSelector(
     totalCountSelector,
@@ -65,7 +66,7 @@ class Dashboards extends React.Component {
     };
 
     static defaultProps = {
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         onMount: () => {},
         loadDashboards: () => {},
         fluid: false,

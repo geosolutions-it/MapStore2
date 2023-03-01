@@ -32,6 +32,7 @@ import {loadMaps} from '../actions/maps';
 
 import mapsReducer from '../reducers/maps';
 import maptypeReducer from '../reducers/maptype';
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const mapsCountSelector = createSelector(
     totalCountSelector,
@@ -89,7 +90,7 @@ class Maps extends React.Component {
     };
 
     static defaultProps = {
-        mapType: "leaflet",
+        mapType: MapLibraries.LEAFLET,
         onGoToMap: () => {},
         loadMaps: () => {},
         fluid: false,
@@ -118,10 +119,10 @@ class Maps extends React.Component {
                 if (map.contextName) {
                     this.context.router.history.push("/context/" + map.contextName + "/" + map.id);
                 } else {
-                    this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id);
+                    this.context.router.history.push("/viewer/" + map.id);
                 }
             }}
-            getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${this.props.mapType}/${map.id}`}
+            getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${map.id}`}
             shareApi={this.props.showAPIShare}
             version={this.props.version}
             shareToolEnabled={this.props.shareToolEnabled}

@@ -26,6 +26,7 @@ import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -53,7 +54,7 @@ class SidebarMenu extends React.Component {
         items: [],
         style: {},
         id: "mapstore-sidebar-menu",
-        mapType: "openlayers",
+        mapType: MapLibraries.OPENLAYERS,
         onInit: () => {},
         onDetach: () => {},
         eventSelector: "onClick",

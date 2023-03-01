@@ -14,8 +14,7 @@ import {
     isCesium,
     isOpenlayers,
     isLeaflet,
-    mapTypeLoadedSelector,
-    last2dMapTypeSelector
+    mapTypeLoadedSelector
 } from '../maptype';
 
 describe('Test maptype', () => {
@@ -64,23 +63,5 @@ describe('Test maptype', () => {
         });
         expect(state).toExist();
         expect(state).toEqual({"openlayers": true});
-    });
-    it('test default last2dMapTypeSelector', () => {
-        const state = last2dMapTypeSelector({
-            maptype: {
-                last2dMapType: null
-            }
-        });
-        expect(state).toExist();
-        expect(state).toEqual("openlayers");
-    });
-    it('test last2dMapTypeSelector', () => {
-        const state = last2dMapTypeSelector({
-            maptype: {
-                last2dMapType: "leaflet"
-            }
-        });
-        expect(state).toExist();
-        expect(state).toEqual("leaflet");
     });
 });

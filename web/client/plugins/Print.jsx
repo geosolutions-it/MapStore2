@@ -33,6 +33,7 @@ import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_S
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { has, includes } from 'lodash';
 import {additionalLayersSelector} from "../selectors/additionallayers";
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -304,7 +305,7 @@ export default {
                         getZoomForExtent: defaultGetZoomForExtent,
                         pdfUrl: null,
                         mapWidth: 370,
-                        mapType: "leaflet",
+                        mapType: MapLibraries.LEAFLET,
                         minZoom: 1,
                         maxZoom: 23,
                         usePreview: true,

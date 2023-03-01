@@ -7,12 +7,12 @@
  */
 import { connect } from 'react-redux';
 
-import assign from 'object-assign';
-import epics from '../epics/globeswitcher';
-import { toggle3d } from '../actions/globeswitcher';
-import { mapTypeSelector, isCesium } from '../selectors/maptype';
+import { changeVisualizationMode } from '../actions/maptype';
+import { mapTypeSelector } from '../selectors/maptype';
 import { createSelector } from 'reselect';
 import GlobeViewSwitcherButton from '../components/buttons/GlobeViewSwitcherButton';
+import { VisualizationModes, getVisualizationModeFromMapLibrary } from '../utils/MapTypeUtils';
+import { createPlugin } from '../utils/PluginsUtils';
 
 /**
   * GlobeViewSwitcher Plugin. A button that toggles to 3d mode
@@ -24,19 +24,22 @@ import GlobeViewSwitcherButton from '../components/buttons/GlobeViewSwitcherButt
   *
   */
 
-let globeSelector = createSelector([mapTypeSelector, isCesium], (mapType = "leaflet", cesium) => ({
-    active: cesium,
-    options: {
-        originalMapType: mapType
-    }
-}));
+const globeSelector = createSelector(
+    [mapTypeSelector],
+    (mapType) => ({
+        active: getVisualizationModeFromMapLibrary(mapType) === VisualizationModes._3D
+    })
+);
 const GlobeViewSwitcher = connect(globeSelector, {
-    onClick: (pressed, options) => toggle3d(pressed, options.originalMapType)
+    onClick: (pressed) => changeVisualizationMode(pressed ? VisualizationModes._3D : VisualizationModes._2D)
 })(GlobeViewSwitcherButton);
 
-export default {
-    GlobeViewSwitcherPlugin: assign(GlobeViewSwitcher, {
-        disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
+export default createPlugin('GlobeViewSwitcher', {
+    component: GlobeViewSwitcher,
+    options: {
+        disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
+    },
+    containers: {
         Toolbar: {
             name: '3d',
             position: 10,
@@ -44,6 +47,5 @@ export default {
             tool: true,
             priority: 1
         }
-    }),
-    epics
-};
+    }
+});

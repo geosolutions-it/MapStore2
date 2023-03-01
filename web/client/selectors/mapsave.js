@@ -23,6 +23,8 @@ import {
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
+import { mapTypeSelector } from './maptype';
+import { getVisualizationModeFromMapLibrary } from '../utils/MapTypeUtils';
 
 const customSaveHandlers = {};
 
@@ -54,7 +56,8 @@ export const basicMapOptionsToSaveSelector = createStructuredSelector({
         endValuesSupport: endValuesSupportSelector,
         snapRadioButtonEnabled: snapRadioButtonEnabledSelector,
         layers: timelineLayersSetting
-    })
+    }),
+    visualizationMode: (state) => getVisualizationModeFromMapLibrary(mapTypeSelector(state))
 });
 
 export const mapOptionsToSaveSelector = (state) => {
