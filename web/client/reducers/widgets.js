@@ -141,7 +141,17 @@ function widgetsReducer(state = emptyState, action) {
             const _widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
             if (_widgets) {
                 return set(`containers[${DEFAULT_TARGET}].widgets`,
-                    _widgets.map(w => get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w), state);
+                    _widgets.map(w => {
+                        if (w.widgetType === "chart" && w?.charts) {
+                            // every chart stores the layer object configuration
+                            // so we need to loop around them to update correctly the layer properties
+                            // including the layerFilter
+                            return set("charts", w.charts.map((chart) =>
+                                get(chart, "layer.id") === action.layer.id ? set("layer", action.layer, chart) : chart
+                            ), w);
+                        }
+                        return get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w;
+                    }), state);
             }
         }
         return state;

@@ -120,6 +120,22 @@ describe('Test the widgets reducer', () => {
                     }, {
                         id: "widget4",
                         layer: Object.assign({}, targetLayer)
+                    },
+                    {
+                        id: "widget5",
+                        widgetType: "chart",
+                        charts: [
+                            {
+                                layer: Object.assign({}, targetLayer)
+                            },
+                            {
+                                layer: {
+                                    visibility: false,
+                                    name: "layer3",
+                                    id: "3"
+                                }
+                            }
+                        ]
                     }]
                 }
             }
@@ -129,11 +145,13 @@ describe('Test the widgets reducer', () => {
         const newState = widgets(state, updateWidgetLayer(newTargetLayer));
 
         const widgetObjects = newState.containers[DEFAULT_TARGET].widgets;
-        expect(widgetObjects.length).toBe(4);
+        expect(widgetObjects.length).toBe(5);
         expect(widgetObjects[0].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[0].layer);
         expect(widgetObjects[1].layer).toEqual(newTargetLayer);
         expect(widgetObjects[2].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[2].layer);
         expect(widgetObjects[3].layer).toEqual(newTargetLayer);
+        expect(widgetObjects[4].charts[0].layer).toEqual(newTargetLayer);
+        expect(widgetObjects[4].charts[1].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[1].layer);
     });
     it('deleteWidget', () => {
         const state = {
