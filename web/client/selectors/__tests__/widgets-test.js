@@ -25,7 +25,9 @@ import {
     availableDependenciesForEditingWidgetSelector,
     returnToFeatureGridSelector,
     isTrayEnabled,
-    getVisibleFloatingWidgets, getChartWidgetLayers
+    getVisibleFloatingWidgets,
+    getChartWidgetLayers,
+    getWidgetFilterKey
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -638,4 +640,13 @@ describe('widgets selectors', () => {
         expect(result[1].id).toBe('widget2');
         expect(result[2].id).toBe('widget3');
     });
+    it('getWidgetFilterKey without chart', () => {
+        const state = set("widgets.builder.editor", { widgetType: "table" }, {});
+        expect(getWidgetFilterKey(state)).toBe("filter");
+    });
+    it('getWidgetFilterKey with chart', () => {
+        const state = set("widgets.builder.editor", { widgetType: "chart", selectedChartId: "chart-01" }, {});
+        expect(getWidgetFilterKey(state)).toBe("charts[chart-01].filter");
+    });
+
 });
