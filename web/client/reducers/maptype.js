@@ -31,7 +31,7 @@ function maptype(state = {
 }, action) {
     switch (action.type) {
     case MAP_CONFIG_LOADED:
-        const visualizationMode = action?.config?.visualizationMode || VisualizationModes._2D;
+        const visualizationMode = action?.config?.map?.visualizationMode || VisualizationModes._2D;
         return {
             ...state,
             mapType: getMapLibraryFromVisualizationMode(visualizationMode)

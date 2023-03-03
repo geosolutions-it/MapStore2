@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import castArray from 'lodash/castArray';
 import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../utils/LayersUtils';
 import { convertFromLegacy, normalizeConfig } from '../../utils/ConfigUtils';
-import { VisualizationModes } from "../../utils/MapTypeUtils";
 import { getResource, getResources } from '../persistence';
 import uuid from 'uuid';
 
@@ -88,8 +87,7 @@ export const getData = ({ selectedItem }) => {
                             const tileMatrix = extractTileMatrixFromSources(mapState.map.sources, layer);
                             return { ...layer, ...tileMatrix };
                         })
-                        : layers,
-                    visualizationMode: config?.visualizationMode || VisualizationModes._2D
+                        : layers
                 };
 
                 return Observable.of({

@@ -168,8 +168,7 @@ describe('GeoStore media api', () => {
                         canEdit: true,
                         name: 'Name',
                         description: 'Description',
-                        type: 'map',
-                        visualizationMode: '2D'
+                        type: 'map'
                     });
                     done();
                 },

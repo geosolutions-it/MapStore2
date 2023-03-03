@@ -43,8 +43,7 @@ const handleMapSelect = compose(
                                     l.type = "empty";
                                 }
                                 return l;
-                            })),
-                            visualizationMode: config?.visualizationMode || VisualizationModes._2D
+                            }))
                         };
                     }).then(res => {
                         // Extract tileMatrix from source and update layers
