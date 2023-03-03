@@ -68,6 +68,24 @@ This update include also following changes:
 }
 ```
 
+- the app pages inside a MapStore project must be updated with a new entry, only for projects with custom pages and that are using context applications, here an example:
+
+```js
+import MapViewer from '@mapstore/product/pages/MapViewer';
+import productAppConfig from "@mapstore/product/appConfig";
+
+const appConfig = {
+    ...productAppConfig,
+    pages: [
+        // my custom pages ...,
+        {
+            name: "mapviewer",
+            path: "/viewer/:mapId/context/:contextId",
+            component: MapViewer
+        }
+    ]
+};
+```
 ## Migration from 2022.02.02 to 2023.01.00
 
 ### Log4j update to Log4j2
