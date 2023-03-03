@@ -10,7 +10,7 @@ import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 
 import Toolbar from '../../../../misc/toolbar/Toolbar';
-import { VisualizationModes } from '../../../../../utils/MapTypeUtils';
+import { is3DVisualizationMode } from '../../../../../utils/MapTypeUtils';
 
 const getSaveTooltipId = (step, { id } = {}) => {
     if (id) {
@@ -21,7 +21,7 @@ const getSaveTooltipId = (step, { id } = {}) => {
 
 export default ({ step = 0, buttons, tocButtons = [], stepButtons = [], dashBoardEditing = false, editorData = {}, setPage = () => { }, onFinish = () => { }, toggleLayerSelector = () => { }, onChange = () => {} } = {}) => {
     const map = (editorData?.maps || []).find(m => m.mapId === editorData?.selectedMapId) || {};
-    const is3D = map?.visualizationMode === VisualizationModes._3D;
+    const is3D = is3DVisualizationMode(map);
     const isEmptyMap = editorData?.widgetType === "map" && isEmpty(map);
     return (<Toolbar btnDefaultProps={{
         bsStyle: "primary",

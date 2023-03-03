@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import castArray from 'lodash/castArray';
 import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../utils/LayersUtils';
 import { convertFromLegacy, normalizeConfig } from '../../utils/ConfigUtils';
+
 import { getResource, getResources } from '../persistence';
 import uuid from 'uuid';
 
