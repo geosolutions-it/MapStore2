@@ -13,6 +13,7 @@ import { onLocationChanged } from 'connected-react-router';
 import { syncMapType, restore2DMapTypeOnLocationChange  } from '../maptype';
 import { changeVisualizationMode, VISUALIZATION_MODE_CHANGED } from '../../actions/maptype';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { VisualizationModes } from '../../utils/MapTypeUtils';
 
 const NUM_ACTIONS = 1;
 
@@ -28,7 +29,7 @@ describe('maptype epics', () => {
         testEpic(syncMapType, NUM_ACTIONS, onLocationChanged({ pathname: "/viewer/cesium/10358" }, "PUSH"), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             expect(actions[0].type).toEqual(VISUALIZATION_MODE_CHANGED);
-            expect(actions[0].visualizationMode).toEqual("3D");
+            expect(actions[0].visualizationMode).toEqual(VisualizationModes._3D);
             done();
         }, STATE);
     });
@@ -53,7 +54,7 @@ describe('maptype epics', () => {
         testEpic(restore2DMapTypeOnLocationChange, NUM_ACTIONS, onLocationChanged({pathname: "/"}, "PUSH" ), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             expect(actions[0].type).toEqual(VISUALIZATION_MODE_CHANGED);
-            expect(actions[0].visualizationMode).toEqual("2D");
+            expect(actions[0].visualizationMode).toEqual(VisualizationModes._2D);
             done();
         }, STATE_3D);
     });
@@ -68,7 +69,7 @@ describe('maptype epics', () => {
                 }
             }
         };
-        testEpic(syncMapType, NUM_ACTIONS, changeVisualizationMode('3D'), ([a1]) => {
+        testEpic(syncMapType, NUM_ACTIONS, changeVisualizationMode(VisualizationModes._3D), ([a1]) => {
             expect(a1.type).toBe("@@router/CALL_HISTORY_METHOD");
             expect(a1.payload.args[0]).toEqual("/viewer/123");
             expect(a1.payload.method).toEqual("replace");
@@ -87,7 +88,7 @@ describe('maptype epics', () => {
                 }
             }
         };
-        testEpic(addTimeoutEpic(syncMapType, 20), NUM_ACTIONS, changeVisualizationMode('3D'), ([a1]) => {
+        testEpic(addTimeoutEpic(syncMapType, 20), NUM_ACTIONS, changeVisualizationMode(VisualizationModes._3D), ([a1]) => {
             expect(a1.type).toBe(TEST_TIMEOUT);
             done();
         }, STATE);

@@ -27,6 +27,7 @@ import {
 } from "../../actions/search";
 import {ADD_LAYERS_FROM_CATALOGS} from "../../actions/catalog";
 import {SYNC_CURRENT_BACKGROUND_LAYER} from "../../actions/backgroundselector";
+import { VisualizationModes } from '../../utils/MapTypeUtils';
 
 const center = {
     x: -74.2,
@@ -614,7 +615,7 @@ describe('queryparam epics', () => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
                 expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
-                expect(actions[0].visualizationMode).toBe('3D');
+                expect(actions[0].visualizationMode).toBe(VisualizationModes._3D);
                 done();
             } catch (e) {
                 done(e);
@@ -647,7 +648,7 @@ describe('queryparam epics', () => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
                 expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
-                expect(actions[0].visualizationMode).toBe('3D');
+                expect(actions[0].visualizationMode).toBe(VisualizationModes._3D);
                 done();
             } catch (e) {
                 done(e);

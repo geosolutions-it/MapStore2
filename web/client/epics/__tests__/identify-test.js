@@ -73,6 +73,7 @@ import { BROWSE_DATA } from '../../actions/layers';
 import { configureMap } from '../../actions/config';
 import { changeVisualizationMode } from './../../actions/maptype';
 import { FORCE_UPDATE_MAP_LAYOUT } from '../../actions/maplayout';
+import { VisualizationModes } from '../../utils/MapTypeUtils';
 
 const TEST_MAP_STATE = {
     present: {
@@ -1212,7 +1213,7 @@ describe('identify Epics', () => {
                 expect(actions[0].type).toBe(UNREGISTER_EVENT_LISTENER);
                 done();
             };
-            testEpic(setMapTriggerEpic, 1, changeVisualizationMode("3D"), epicResponse, {
+            testEpic(setMapTriggerEpic, 1, changeVisualizationMode(VisualizationModes._3D), epicResponse, {
                 mapInfo: {
                     configuration: {
                         trigger: "click"

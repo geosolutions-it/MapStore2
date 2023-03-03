@@ -11,10 +11,9 @@ import { loadMapConfig, configureMap } from '../actions/config';
 import {removeAllAdditionalLayers} from '../actions/additionallayers';
 import {clearLayers} from '../actions/layers';
 import {resetControls} from '../actions/controls';
-import {changeVisualizationMode} from '../actions/maptype';
 import isObject from 'lodash/isObject';
 import { getConfigUrl } from '../utils/ConfigUtils';
-import { VisualizationModes } from '../utils/MapTypeUtils';
+
 
 /**
  * On plugins show, handles the configuration of the map in the app state.
@@ -25,17 +24,16 @@ import { VisualizationModes } from '../utils/MapTypeUtils';
 export const mapEditorConfigureMapState = (action$) =>
     action$.ofType(SHOW)
         .switchMap(({ map}) => {
-            let loadActions = [];
+            let loadAction;
             if (isObject(map)) {
-                const { visualizationMode = VisualizationModes._2D, ...clonedMap } = JSON.parse(JSON.stringify(map.data));
+                const clonedMap = JSON.parse(JSON.stringify(map.data));
                 // If not cloned gives an invariant violation because of ConfigUtils layer configuration modification
-                loadActions.push(configureMap({map: clonedMap, version: 2}, map.id));
-                loadActions.push(changeVisualizationMode(visualizationMode));
+                loadAction = configureMap({map: clonedMap, version: 2}, map.id);
             } else {
                 let mapId = !!map && map || "new";
                 const { configUrl } = getConfigUrl({ mapId, config: null });
                 mapId = mapId === "new" ? null : mapId;
-                loadActions.push(loadMapConfig(configUrl, mapId));
+                loadAction = loadMapConfig(configUrl, mapId);
             }
-            return Observable.from([removeAllAdditionalLayers(), resetControls(), clearLayers(), ...loadActions]);
+            return Observable.from([removeAllAdditionalLayers(), resetControls(), clearLayers(), loadAction]);
         });

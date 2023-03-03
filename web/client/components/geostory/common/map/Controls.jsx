@@ -12,7 +12,7 @@ import Message from '../../../I18N/Message';
 import Select from "react-select";
 import {isNil} from "lodash";
 import { applyDefaults } from '../../../../utils/GeoStoryUtils';
-import { VisualizationModes } from '../../../../utils/MapTypeUtils';
+import { is3DVisualizationMode } from '../../../../utils/MapTypeUtils';
 
 import SwitchButton from '../../../misc/switch/SwitchButton';
 import localizedProps from '../../../misc/enhancers/localizedProps';
@@ -31,7 +31,7 @@ export const Controls = ({
         zoomControl: !isNil(map.zoomControl) ? map.zoomControl : true,
         mapInfoControl: !isNil(map.mapInfoControl) ? map.mapInfoControl : false
     });
-    const is3D = map?.visualizationMode === VisualizationModes._3D;
+    const is3D = is3DVisualizationMode(map);
     return (<Form className="ms-geostory-map-controls">
         {!is3D && <FormGroup>
             <ControlLabel><Message msgId="geostory.mapEditor.zoom"/></ControlLabel>

@@ -24,6 +24,7 @@ import {
 import {changeVisualizationMode} from '../../actions/maptype';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
+import { VisualizationModes } from '../../utils/MapTypeUtils';
 import assign from 'object-assign';
 import 'babel-polyfill';
 
@@ -899,13 +900,13 @@ describe('Test the mapInfo reducer', () => {
         expect(state.configuration.trigger).toBe('hover');
     });
     it('test the result of changeVisualizationMode action - VISUALIZATION_MODE_CHANGED when passing to 3D', () => {
-        const action = changeVisualizationMode('3D');
+        const action = changeVisualizationMode(VisualizationModes._3D);
         const initialState = {configuration: {}};
         const state = mapInfo(initialState, action);
         expect(state.configuration.trigger).toBe("click");
     });
     it('test the result of changeVisualizationMode action - VISUALIZATION_MODE_CHANGED when passing to 2D', () => {
-        const action = changeVisualizationMode('2D');
+        const action = changeVisualizationMode(VisualizationModes._2D);
         const initialState = {configuration: {trigger: "click"}};
         const state = mapInfo(initialState, action);
         expect(state.configuration.trigger).toBe("click");

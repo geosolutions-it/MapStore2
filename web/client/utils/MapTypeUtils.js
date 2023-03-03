@@ -36,6 +36,13 @@ const DEFAULT_MAP_TYPE_CONFIG = {
 };
 
 /**
+ * Check if a map configuration is in 3D mode
+ * @param {object} map map configuration
+ * @returns {boolean}
+ */
+export const is3DVisualizationMode = (map) => map?.visualizationMode === VisualizationModes._3D;
+
+/**
  * Return the visualization mode given a map library
  * @param {string} mapLibrary the name of the map library, one of "leaflet", "openlayers" or "cesium"
  * @returns {string} "2D" or "3D" value
