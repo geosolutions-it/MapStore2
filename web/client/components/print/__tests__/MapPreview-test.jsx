@@ -35,6 +35,7 @@ describe("Test the MapPreview component", () => {
     it('creates a leaflet map', (done) => {
         const cmp = ReactDOM.render(<MapPreview
             map={{center: {x: 10.0, y: 40.0}, zoom: 5}}
+            mapType="leaflet"
             onLoadingMapPlugins={(loading) => {
                 if (!loading) {
                     expect(cmp).toExist();
@@ -98,6 +99,7 @@ describe("Test the MapPreview component", () => {
         }];
         const cmp = ReactDOM.render(<MapPreview
             layers={layers}
+            mapType="leaflet"
             map={{center: {x: 10.0, y: 40.0}, zoom: 5}}
             onLoadingMapPlugins={(loading) => {
                 if (!loading) {

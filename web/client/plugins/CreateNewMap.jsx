@@ -24,11 +24,9 @@ import {
     loadingSelector,
     loadFlagsSelector
 } from '../selectors/createnewmap';
-import {mapTypeSelector} from '../selectors/maptype';
 
 import createnewmap from '../reducers/createnewmap';
 import * as epics from '../epics/createnewmap';
-import { MapLibraries } from '../utils/MapTypeUtils';
 
 const Button = tooltip(ButtonB);
 const SplitButton = tooltip(SplitButtonB);
@@ -37,7 +35,6 @@ class CreateNewMap extends React.Component {
     static propTypes = {
         loading: PropTypes.bool,
         loadFlags: PropTypes.object,
-        mapType: PropTypes.string,
         showNewDashboard: PropTypes.bool,
         showNewGeostory: PropTypes.bool,
         colProps: PropTypes.object,
@@ -58,7 +55,6 @@ class CreateNewMap extends React.Component {
     static defaultProps = {
         loading: false,
         loadFlags: {},
-        mapType: MapLibraries.LEAFLET,
         showNewDashboard: true,
         showNewGeostory: true,
         isLoggedIn: false,
@@ -150,7 +146,6 @@ export default {
     CreateNewMapPlugin: connect((state) => ({
         loading: loadingSelector(state),
         loadFlags: loadFlagsSelector(state),
-        mapType: mapTypeSelector(state),
         isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && !(state.browser && state.browser.mobile) && true || false,
         user: state && state.security && state.security.user,
         hasContexts: hasContextsSelector(state),

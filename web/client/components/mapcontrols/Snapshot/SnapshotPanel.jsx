@@ -80,7 +80,7 @@ class SnapshotPanel extends React.Component {
         googleBingErrorMsg: "snapshot.googleBingError",
         downloadingMsg: "snapshot.downloadingSnapshots",
         timeout: 1000,
-        mapType: MapLibraries.LEAFLET,
+        mapType: MapLibraries.OPENLAYERS,
         floatingPanel: true,
         panelStyle: {
             minWidth: "600px",

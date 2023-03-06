@@ -38,7 +38,7 @@ class SnapshotQueue extends React.Component {
     static defaultProps = {
         onRemoveSnapshot: () => {},
         onSnapshotError: () => {},
-        mapType: MapLibraries.LEAFLET
+        mapType: MapLibraries.OPENLAYERS
     };
 
     UNSAFE_componentWillMount() {

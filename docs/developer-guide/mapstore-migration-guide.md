@@ -86,6 +86,7 @@ const appConfig = {
     ]
 };
 ```
+
 ## Migration from 2022.02.02 to 2023.01.00
 
 ### Log4j update to Log4j2

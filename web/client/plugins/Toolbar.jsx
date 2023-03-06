@@ -39,7 +39,6 @@ class Toolbar extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         tools: PropTypes.array,
-        mapType: PropTypes.string,
         style: PropTypes.object,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
@@ -115,7 +114,6 @@ class Toolbar extends React.Component {
         return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout}
             toolCfg={this.props.btnConfig}
             container={Container}
-            mapType={this.props.mapType}
             toolStyle={this.props.buttonStyle}
             activeStyle={this.props.pressedButtonStyle}
             toolSize={this.props.buttonSize}

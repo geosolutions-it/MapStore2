@@ -26,7 +26,6 @@ import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
-import { MapLibraries } from '../utils/MapTypeUtils';
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -36,7 +35,6 @@ class SidebarMenu extends React.Component {
         style: PropTypes.object,
         items: PropTypes.array,
         id: PropTypes.string,
-        mapType: PropTypes.string,
         onInit: PropTypes.func,
         onDetach: PropTypes.func,
         sidebarWidth: PropTypes.number,
@@ -54,7 +52,6 @@ class SidebarMenu extends React.Component {
         items: [],
         style: {},
         id: "mapstore-sidebar-menu",
-        mapType: MapLibraries.OPENLAYERS,
         onInit: () => {},
         onDetach: () => {},
         eventSelector: "onClick",
@@ -237,7 +234,6 @@ class SidebarMenu extends React.Component {
                     { ({ height }) =>
                         <ToolsContainer id={this.props.id}
                             className={this.props.className}
-                            mapType={this.props.mapType}
                             container={(props) => <>{props.children}</>}
                             toolStyle="tray"
                             activeStyle="primary"

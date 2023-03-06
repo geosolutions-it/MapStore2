@@ -305,7 +305,7 @@ export default {
                         getZoomForExtent: defaultGetZoomForExtent,
                         pdfUrl: null,
                         mapWidth: 370,
-                        mapType: MapLibraries.LEAFLET,
+                        mapType: MapLibraries.OPENLAYERS,
                         minZoom: 1,
                         maxZoom: 23,
                         usePreview: true,

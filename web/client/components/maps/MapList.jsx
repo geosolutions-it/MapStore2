@@ -23,7 +23,7 @@ class MapList extends React.Component {
 
     static defaultProps = {
         onChangeMapType: function() {},
-        mapType: MapLibraries.LEAFLET,
+        mapType: MapLibraries.OPENLAYERS,
         maps: []
     };
 

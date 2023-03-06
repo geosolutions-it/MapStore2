@@ -17,7 +17,6 @@ import Message from './locale/Message';
 import { createPlugin } from '../utils/PluginsUtils';
 import {setControlProperty} from "../actions/controls";
 import {burgerMenuSelector} from "../selectors/controls";
-import { MapLibraries } from '../utils/MapTypeUtils';
 
 import './burgermenu/burgermenu.css';
 
@@ -56,7 +55,6 @@ class BurgerMenu extends React.Component {
         onInit: PropTypes.func,
         onDetach: PropTypes.func,
         controls: PropTypes.object,
-        mapType: PropTypes.string,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string
     };
@@ -72,7 +70,6 @@ class BurgerMenu extends React.Component {
         onItemClick: () => {},
         title: <MenuItem header><Message msgId="options"/></MenuItem>,
         controls: [],
-        mapType: MapLibraries.LEAFLET,
         panelStyle: {
             minWidth: "300px",
             right: "52px",
@@ -162,7 +159,6 @@ class BurgerMenu extends React.Component {
         return (
             <ToolsContainer id={this.props.id} className="square-button"
                 container={Container}
-                mapType={this.props.mapType}
                 toolStyle="primary"
                 activeStyle="default"
                 stateSelector="burgermenu"

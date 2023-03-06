@@ -20,13 +20,11 @@ import dashboards from '../epics/dashboards';
 import dashboardsReducers from '../reducers/dashboards';
 import { totalCountSelector } from '../selectors/dashboards';
 import { isFeaturedMapsEnabled } from '../selectors/featuredmaps';
-import { mapTypeSelector } from '../selectors/maptype';
 import { userRoleSelector } from '../selectors/security';
 import DashboardGrid from './dashboard/DashboardsGrid';
 import EmptyDashboardsView from './dashboard/EmptyDashboardsView';
 import PaginationToolbar from './dashboard/PaginationToolbar';
 import { DASHBOARD_DEFAULT_SHARE_OPTIONS } from '../utils/ShareUtils';
-import { MapLibraries } from '../utils/MapTypeUtils';
 
 const dashboardsCountSelector = createSelector(
     totalCountSelector,
@@ -47,7 +45,6 @@ const dashboardsCountSelector = createSelector(
  */
 class Dashboards extends React.Component {
     static propTypes = {
-        mapType: PropTypes.string,
         title: PropTypes.any,
         onMount: PropTypes.func,
         loadDashboards: PropTypes.func,
@@ -66,7 +63,6 @@ class Dashboards extends React.Component {
     };
 
     static defaultProps = {
-        mapType: MapLibraries.LEAFLET,
         onMount: () => {},
         loadDashboards: () => {},
         fluid: false,
@@ -105,13 +101,11 @@ class Dashboards extends React.Component {
 }
 
 const dashboardsPluginSelector = createSelector([
-    mapTypeSelector,
     state => state.dashboards && state.dashboards.searchText,
     state => state.dashboards && state.dashboards.results ? state.dashboards.results : [],
     isFeaturedMapsEnabled,
     userRoleSelector
-], (mapType, searchText, resources, featuredEnabled, role) => ({
-    mapType,
+], (searchText, resources, featuredEnabled, role) => ({
     searchText,
     resources: resources.map(res => ({...res, featuredEnabled: featuredEnabled && role === 'ADMIN'})) // TODO: remove false to enable featuredEnabled
 }));

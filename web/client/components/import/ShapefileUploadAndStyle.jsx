@@ -31,7 +31,6 @@ import {
 import Button from '../misc/Button';
 import SelectShape from './SelectShape';
 import { Promise } from 'es6-promise';
-import { MapLibraries } from '../../utils/MapTypeUtils';
 
 class ShapeFileUploadAndStyle extends React.Component {
     static propTypes = {
@@ -52,7 +51,6 @@ class ShapeFileUploadAndStyle extends React.Component {
         updateShapeBBox: PropTypes.func,
         error: PropTypes.string,
         success: PropTypes.string,
-        mapType: PropTypes.string,
         buttonSize: PropTypes.string,
         uploadMessage: PropTypes.object,
         cancelMessage: PropTypes.object,
@@ -99,7 +97,6 @@ class ShapeFileUploadAndStyle extends React.Component {
             }
             return null;
         }),
-        mapType: MapLibraries.LEAFLET,
         stylers: {},
         buttonSize: "small",
         uploadOptions: {},

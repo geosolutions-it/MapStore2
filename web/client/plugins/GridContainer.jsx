@@ -11,7 +11,6 @@ import React from 'react';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 import ToolsContainer from './containers/ToolsContainer';
-import { MapLibraries } from '../utils/MapTypeUtils';
 
 /**
  * GridContainerPlugin. This is a plugin that works as container
@@ -22,16 +21,14 @@ class GridContainer extends React.Component {
         className: PropTypes.string,
         style: PropTypes.object,
         items: PropTypes.array,
-        id: PropTypes.string,
-        mapType: PropTypes.string
+        id: PropTypes.string
     };
 
     static defaultProps = {
         items: [],
         className: "grid-home-container",
         style: {},
-        id: "mapstore-grid-home",
-        mapType: MapLibraries.LEAFLET
+        id: "mapstore-grid-home"
     };
 
     getPanels = () => {
@@ -55,7 +52,6 @@ class GridContainer extends React.Component {
             id={this.props.id}
             style={this.props.style}
             className={this.props.className}
-            mapType={this.props.mapType}
             container={(props) => (<Grid fluid><Row>
                 {props.children.map( (item, idx) => <Col key={idx} xs={12} xsOffset={0} sm={6} smOffset={3}>{item}</Col>)}
             </Row></Grid>)}

@@ -10,7 +10,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ToolsContainer from './containers/ToolsContainer';
 import { lifecycle } from 'recompose';
-import { MapLibraries } from '../utils/MapTypeUtils';
 
 let fixedElements = {};
 const fix = lifecycle({
@@ -56,8 +55,7 @@ class MapFooter extends React.Component {
         items: [],
         className: "mapstore-map-footer",
         style: {},
-        id: "mapstore-map-footer",
-        mapType: MapLibraries.LEAFLET
+        id: "mapstore-map-footer"
     };
 
     getPanels = () => {
@@ -82,7 +80,6 @@ class MapFooter extends React.Component {
             <ToolsContainer id={this.props.id}
                 style={this.props.style}
                 className={this.props.className}
-                mapType={this.props.mapType}
                 container={(props) => <div {...props}>{props.children}</div>}
                 toolStyle="primary"
                 activeStyle="default"

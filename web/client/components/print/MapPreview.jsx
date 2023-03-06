@@ -47,7 +47,7 @@ class MapPreview extends React.Component {
     static defaultProps = {
         map: null,
         layers: [],
-        mapType: MapLibraries.LEAFLET,
+        mapType: MapLibraries.OPENLAYERS,
         style: {display: "block", border: "1px solid black", position: "relative"},
         onChangeZoomLevel: () => {},
         onMapViewChanges: () => {},

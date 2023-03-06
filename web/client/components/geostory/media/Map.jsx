@@ -39,7 +39,7 @@ export default compose(
     size,
     showCaption,
     caption: contentCaption,
-    mapType = MapLibraries.LEAFLET, // default for when map MediaViewer is not connected to redux
+    mapType = MapLibraries.OPENLAYERS, // default for when map MediaViewer is not connected to redux
     onMapTypeLoaded,
     layers: geoStoryLayers,
     children,

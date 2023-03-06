@@ -25,7 +25,7 @@ import {
  * @param  {object} state the state
  * @return {string}       the maptype in the state
  */
-export const mapTypeSelector = (state) => state?.maptype?.mapType || MapLibraries.LEAFLET;
+export const mapTypeSelector = (state) => state?.maptype?.mapType || MapLibraries.OPENLAYERS;
 export const mapTypeLoadedSelector = (state) => state?.maptype?.loaded;
 
 export const visualizationModeSelector = (state) => getVisualizationModeFromMapLibrary(mapTypeSelector(state));

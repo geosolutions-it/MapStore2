@@ -229,7 +229,7 @@ class MapPlugin extends React.Component {
     };
 
     static defaultProps = {
-        mapType: MapLibraries.LEAFLET,
+        mapType: MapLibraries.OPENLAYERS,
         actions: {},
         zoomControl: false,
         mapLoadingMessage: "map.loading",

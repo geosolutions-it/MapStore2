@@ -18,7 +18,6 @@ import { toVectorStyle } from '../../../utils/StyleUtils';
 
 import Button from '../../misc/Button';
 import { checkFeaturesStyle } from '../../../utils/ImporterUtils';
-import { MapLibraries } from '../../../utils/MapTypeUtils';
 
 class StylePanel extends React.Component {
     static propTypes = {
@@ -39,7 +38,6 @@ class StylePanel extends React.Component {
         updateBBox: PropTypes.func,
         errors: PropTypes.array,
         success: PropTypes.string,
-        mapType: PropTypes.string,
         buttonSize: PropTypes.string,
         cancelMessage: PropTypes.object,
         addMessage: PropTypes.object,
@@ -54,7 +52,6 @@ class StylePanel extends React.Component {
     };
 
     static defaultProps = {
-        mapType: MapLibraries.LEAFLET,
         buttonSize: "small",
         setLayers: () => {},
         addLayer: () => {},
