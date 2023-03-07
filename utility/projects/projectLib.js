@@ -64,11 +64,11 @@ const createFirstCommit = (outFolder) => {
  * @param {string} outFolder the folder where to apply the checkout
  * @return {Promise} the promise to continue the flow of project creation
  */
-const updateSubmoduleBranch = (outFolder) => {
+const updateSubmoduleBranch = (outFolder, branch) => {
     const git = require('simple-git')();
     const gitProjectMs2 = require('simple-git')(`${outFolder}/MapStore2`);
 
-    const stableBranch = "2022.02.xx";
+    const stableBranch = branch || "2023.01.xx";
 
     return new Promise((resolve, reject) => {
         try {

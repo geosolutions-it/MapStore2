@@ -14,6 +14,11 @@ const paramsDesc = [{
     "default": 'standard',
     validate: () => true
 }, {
+    label: 'MapStore base branch (master):',
+    name: 'branch',
+    "default": 'master',
+    validate: () => true
+}, {
     label: 'Project Name: ',
     name: 'projectName',
     "default": '',
@@ -95,7 +100,7 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('git init\n');
-            return project.updateSubmoduleBranch(params.outFolder);
+            return project.updateSubmoduleBranch(params.outFolder, params.branch);
         })
         .then(() => {
             return project.createFirstCommit(params.outFolder);
