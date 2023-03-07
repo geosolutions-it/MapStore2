@@ -68,7 +68,7 @@ const updateSubmoduleBranch = (outFolder) => {
     const git = require('simple-git')();
     const gitProjectMs2 = require('simple-git')(`${outFolder}/MapStore2`);
 
-    const stableBranch = "2022.02.xx";
+    const stableBranch = "2023.01.xx";
 
     return new Promise((resolve, reject) => {
         try {
