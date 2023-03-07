@@ -3,7 +3,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-print</artifactId>
   <packaging>pom</packaging>
-  <version>1.5-SNAPSHOT</version>
+  <version>1.5.0</version>
   <name>MapStore 2 - Printing extension bundle</name>
   <url>http://www.geo-solutions.it</url>
 
@@ -17,7 +17,7 @@
     <dependency>
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
-        <version>geosolutions-2.2-SNAPSHOT</version>
+        <version>geosolutions-2.2.0</version>
     </dependency>
   </dependencies>
 
