@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 ## Description
-<!-- Add here a few sentences describing the bug. -->
+<!-- Add here a few sentences describing the issue -->
 Steps listed below must be followed for a complete functional test procedure in QA as expected for a new MS release.
 
 ## How to reproduce
@@ -26,4 +26,4 @@ Steps listed below must be followed for a complete functional test procedure in 
 
 
 ## Other useful information
-<!-- error stack trace, screenshot, videos, or link to repository code are welcome -->
+<!-- other relevant information to report -->
