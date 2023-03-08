@@ -33,6 +33,7 @@ import ErrorPanel from '../components/map/ErrorPanel';
 import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -228,7 +229,7 @@ class MapPlugin extends React.Component {
     };
 
     static defaultProps = {
-        mapType: 'leaflet',
+        mapType: MapLibraries.OPENLAYERS,
         actions: {},
         zoomControl: false,
         mapLoadingMessage: "map.loading",
@@ -241,7 +242,7 @@ class MapPlugin extends React.Component {
             measurement: {},
             locate: {},
             scalebar: {
-                leaflet: {
+                [MapLibraries.LEAFLET]: {
                     position: "bottomright"
                 }
             },

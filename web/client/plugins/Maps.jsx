@@ -18,7 +18,6 @@ import mapsEpics from '../epics/maps';
 import {userRoleSelector} from '../selectors/security';
 import {versionSelector} from '../selectors/version';
 import { totalCountSelector } from '../selectors/maps';
-import { mapTypeSelector } from '../selectors/maptype';
 import { isFeaturedMapsEnabled } from '../selectors/featuredmaps';
 import emptyState from '../components/misc/enhancers/emptyState';
 import {createSelector} from 'reselect';
@@ -31,7 +30,6 @@ import EmptyMaps from './maps/EmptyMaps';
 import {loadMaps} from '../actions/maps';
 
 import mapsReducer from '../reducers/maps';
-import maptypeReducer from '../reducers/maptype';
 
 const mapsCountSelector = createSelector(
     totalCountSelector,
@@ -68,7 +66,6 @@ const PaginationToolbar = connect((state) => {
 
 class Maps extends React.Component {
     static propTypes = {
-        mapType: PropTypes.string,
         title: PropTypes.any,
         onGoToMap: PropTypes.func,
         loadMaps: PropTypes.func,
@@ -89,7 +86,6 @@ class Maps extends React.Component {
     };
 
     static defaultProps = {
-        mapType: "leaflet",
         onGoToMap: () => {},
         loadMaps: () => {},
         fluid: false,
@@ -118,10 +114,10 @@ class Maps extends React.Component {
                 if (map.contextName) {
                     this.context.router.history.push("/context/" + map.contextName + "/" + map.id);
                 } else {
-                    this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id);
+                    this.context.router.history.push("/viewer/" + map.id);
                 }
             }}
-            getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${this.props.mapType}/${map.id}`}
+            getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${map.id}`}
             shareApi={this.props.showAPIShare}
             version={this.props.version}
             shareToolEnabled={this.props.shareToolEnabled}
@@ -131,15 +127,13 @@ class Maps extends React.Component {
 }
 
 const mapsPluginSelector = createSelector([
-    mapTypeSelector,
     state => state.maps && state.maps.searchText,
     state => state.maps && state.maps.results ? state.maps.results : [],
     state => state.maps && state.maps.loading,
     isFeaturedMapsEnabled,
     userRoleSelector,
     versionSelector
-], (mapType, searchText, maps, loading, featuredEnabled, role, version) => ({
-    mapType,
+], (searchText, maps, loading, featuredEnabled, role, version) => ({
     searchText,
     version,
     maps: maps.map(map => ({...map, featuredEnabled: featuredEnabled && role === 'ADMIN'})),
@@ -197,7 +191,6 @@ export default {
         ...mapsEpics
     },
     reducers: {
-        maps: mapsReducer,
-        maptype: maptypeReducer
+        maps: mapsReducer
     }
 };

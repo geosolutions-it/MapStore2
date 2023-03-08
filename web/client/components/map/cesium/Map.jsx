@@ -53,7 +53,9 @@ class CesiumMap extends React.Component {
         orientate: PropTypes.object,
         zoomControl: PropTypes.bool,
         errorPanel: PropTypes.func,
-        onReload: PropTypes.func
+        onReload: PropTypes.func,
+        style: PropTypes.object,
+        interactive: PropTypes.bool
     };
 
     static defaultProps = {
@@ -78,7 +80,8 @@ class CesiumMap extends React.Component {
                 roll: 0
             }
         },
-        onReload: () => {}
+        onReload: () => {},
+        interactive: true
     };
 
     state = {
@@ -134,10 +137,12 @@ class CesiumMap extends React.Component {
         if (this.props.registerHooks) {
             this.registerHooks();
         }
-        if (this.props.mapOptions?.navigationTools || this.props.zoomControl) {
+        if (this.props.mapOptions?.navigationTools !== false) {
             map.extend(viewerCesiumNavigationMixin, {
                 enableCompass: this.props.mapOptions?.navigationTools,
-                enableZoomControls: this.props.zoomControl,
+                // the default zoom controls inside CesiumNavigation are not working
+                // when the enableZoom is false
+                enableZoomControls: false,
                 enableDistanceLegend: false
             });
         }
@@ -160,6 +165,8 @@ class CesiumMap extends React.Component {
 
         this.map = map;
         const scene = this.map.scene;
+        // update interactions after this.map is defined
+        this.updateInteractions(this.props);
 
         // configure the sky environment
         scene.skyAtmosphere.show = this.props.mapOptions?.showSkyAtmosphere ?? true;
@@ -211,6 +218,11 @@ class CesiumMap extends React.Component {
         }
         if (prevProps && (this.props.mapOptions.depthTestAgainstTerrain !== prevProps?.mapOptions?.depthTestAgainstTerrain)) {
             this.map.scene.globe.depthTestAgainstTerrain = this.props.mapOptions.depthTestAgainstTerrain;
+        }
+
+        if (prevProps?.interactive !== this.props.interactive
+        || !isEqual(prevProps?.mapOptions?.interactions, this.props?.mapOptions?.interactions)) {
+            this.updateInteractions(this.props);
         }
     }
 
@@ -364,7 +376,7 @@ class CesiumMap extends React.Component {
         }) : null;
         const ErrorPanel = this.props.errorPanel;
         return (
-            <div id={this.props.id}>
+            <div id={this.props.id} style={this.props.style}>
                 {children}
                 {ErrorPanel ? <ErrorPanel
                     show={!!this.state.renderError}
@@ -512,6 +524,9 @@ class CesiumMap extends React.Component {
             height: Math.round(this.props.standardWidth * (zoom + 1)),
             width: Math.round(this.props.standardHeight * (zoom + 1))
         };
+
+        const viewRectangle = this.map.camera.computeViewRectangle();
+
         this.props.onMapViewChanges(
             {
                 x: center.longitude,
@@ -520,12 +535,19 @@ class CesiumMap extends React.Component {
             },
             zoom,
             {
-                bounds: {
-                    minx: -180.0,
-                    miny: -90.0,
-                    maxx: 180.0,
-                    maxy: 90.0
-                },
+                bounds: viewRectangle
+                    ? {
+                        minx: Cesium.Math.toDegrees(viewRectangle.west),
+                        miny: Cesium.Math.toDegrees(viewRectangle.south),
+                        maxx: Cesium.Math.toDegrees(viewRectangle.east),
+                        maxy: Cesium.Math.toDegrees(viewRectangle.north)
+                    }
+                    : {
+                        minx: -180.0,
+                        miny: -90.0,
+                        maxx: 180.0,
+                        maxy: 90.0
+                    },
                 crs: 'EPSG:4326',
                 rotation: 0
             },
@@ -542,6 +564,20 @@ class CesiumMap extends React.Component {
             getResolutions()[zoom]
         );
     };
+
+    updateInteractions = (props) => {
+        const interactionsOptions = {
+            ...props.mapOptions?.interactions,
+            ...(!props.interactive && {
+                dragPan: false,
+                mouseWheelZoom: false
+            })
+        };
+        this.map.scene.screenSpaceCameraController.enableZoom = !(interactionsOptions.mouseWheelZoom === false);
+        this.map.scene.screenSpaceCameraController.enableRotate = !(interactionsOptions.dragPan === false);
+        this.map.scene.screenSpaceCameraController.enableTranslate = !(interactionsOptions.dragPan === false);
+        this.map.scene.screenSpaceCameraController.enableTilt = !(interactionsOptions.dragPan === false);
+    }
 }
 
 const ReloadCesiumMap = forwardRef((props, ref) => {

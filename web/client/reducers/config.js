@@ -19,11 +19,16 @@ import {
 
 import { MAP_CREATED } from '../actions/maps';
 import { DETAILS_LOADED } from '../actions/details';
+import { MAP_TYPE_CHANGED, VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import assign from 'object-assign';
 import ConfigUtils from '../utils/ConfigUtils';
 import { set, unset } from '../utils/ImmutableUtils';
 import { transformLineToArcs } from '../utils/CoordinatesUtils';
 import { findIndex, castArray } from 'lodash';
+import {
+    getVisualizationModeFromMapLibrary,
+    VisualizationModes
+} from '../utils/MapTypeUtils';
 
 function mapConfig(state = null, action) {
     let map;
@@ -139,6 +144,14 @@ function mapConfig(state = null, action) {
         map = state?.map?.present || state?.map;
         map = unset('mapSaveErrors', map);
         return {...state, map};
+    case VISUALIZATION_MODE_CHANGED:
+    case MAP_TYPE_CHANGED:
+        map = state && state.map && state.map.present ? state.map.present : state && state.map;
+        const visualizationMode = action.mapType !== undefined
+            ? getVisualizationModeFromMapLibrary(action.mapType)
+            : action.visualizationMode || VisualizationModes._2D;
+        map = set('visualizationMode', visualizationMode, map);
+        return { ...state, map };
     default:
         return state;
     }

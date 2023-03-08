@@ -35,7 +35,6 @@ class SidebarMenu extends React.Component {
         style: PropTypes.object,
         items: PropTypes.array,
         id: PropTypes.string,
-        mapType: PropTypes.string,
         onInit: PropTypes.func,
         onDetach: PropTypes.func,
         sidebarWidth: PropTypes.number,
@@ -53,7 +52,6 @@ class SidebarMenu extends React.Component {
         items: [],
         style: {},
         id: "mapstore-sidebar-menu",
-        mapType: "openlayers",
         onInit: () => {},
         onDetach: () => {},
         eventSelector: "onClick",
@@ -236,7 +234,6 @@ class SidebarMenu extends React.Component {
                     { ({ height }) =>
                         <ToolsContainer id={this.props.id}
                             className={this.props.className}
-                            mapType={this.props.mapType}
                             container={(props) => <>{props.children}</>}
                             toolStyle="tray"
                             activeStyle="primary"

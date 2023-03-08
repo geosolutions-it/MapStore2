@@ -11,9 +11,10 @@ import PropTypes from 'prop-types';
 
 import { reprojectBbox, reproject } from '../../../../utils/CoordinatesUtils';
 import Point from 'ol/geom/Point';
+import { MapLibraries } from '../../../../utils/MapTypeUtils';
 
 const zoomTo = {
-    openlayers: {
+    [MapLibraries.OPENLAYERS]: {
         fit: ({ map, geometry, padding, geometryProjection, fixedZoom, maxZoom, duration }) => {
             const view = map.getView();
             const mapProjection = view.getProjection().getCode();
@@ -32,7 +33,7 @@ const zoomTo = {
             });
         }
     },
-    leaflet: {
+    [MapLibraries.LEAFLET]: {
         fit: ({ map, geometry, padding, geometryProjection, fixedZoom, maxZoom, duration }) => {
             const zoom = fixedZoom ? map.getZoom() : maxZoom;
             const { top = 0, right = 0, bottom = 0, left = 0 } = padding;

@@ -39,6 +39,7 @@ import {mapLayoutValuesSelector} from "../selectors/maplayout";
 import measurement from '../reducers/measurement';
 import measurementEpics from '../epics/measurement';
 import { defaultUnitOfMeasure } from '../utils/MeasureUtils';
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const selector = (state) => {
     return {
@@ -168,7 +169,7 @@ const MeasurePlugin = connect(
         mapType
     }))
 )((props) => {
-    return props.mapType === 'cesium'
+    return props.mapType === MapLibraries.CESIUM
         ? null
         : <Measure {...props} />;
 });

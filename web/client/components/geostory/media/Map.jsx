@@ -16,6 +16,8 @@ import Portal from '../../../components/misc/Portal';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import { withResizeDetector } from 'react-resize-detector';
 
+import { MapLibraries } from '../../../utils/MapTypeUtils';
+
 import ButtonRB from '../../misc/Button';
 const Button = tooltip(ButtonRB);
 
@@ -37,7 +39,7 @@ export default compose(
     size,
     showCaption,
     caption: contentCaption,
-    mapType = "leaflet", // default for when map MediaViewer is not connected to redux
+    mapType = MapLibraries.OPENLAYERS, // default for when map MediaViewer is not connected to redux
     onMapTypeLoaded,
     layers: geoStoryLayers,
     children,

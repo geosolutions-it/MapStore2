@@ -34,6 +34,7 @@ import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import ResizableModal from '../misc/ResizableModal';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -173,7 +174,7 @@ class SharePanel extends React.Component {
             let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
             settings.markerEnabled ? addMarker(newPoint) : hideMarker();
         }
-        if (this.props.mapType === 'cesium' && this.props.settings.markerEnabled) {
+        if (this.props.mapType === MapLibraries.CESIUM && this.props.settings.markerEnabled) {
             this.props.onUpdateSettings({
                 ...this.props.settings,
                 markerEnabled: !this.props.settings.markerEnabled
@@ -215,7 +216,7 @@ class SharePanel extends React.Component {
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
-            if (mapType === 'cesium' && viewerOptions && viewerOptions.orientation) {
+            if (mapType === MapLibraries.CESIUM && viewerOptions && viewerOptions.orientation) {
                 return `${shareUrl}?center=${this.state.coordinate}&zoom=${this.state.zoom}&heading=${convertDegreesToRadian(this.state.heading)}&pitch=${convertDegreesToRadian(this.state.pitch)}&roll=${convertDegreesToRadian(this.state.roll)}`;
             }
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
@@ -317,7 +318,7 @@ class SharePanel extends React.Component {
                 title={<Message msgId="share.advancedOptions"/>}
                 expanded={this.state.showAdvanced}
                 onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
-                {this.props.advancedSettings.bbox && this.props.mapType !== 'cesium' && <Checkbox
+                {this.props.advancedSettings.bbox && this.props.mapType !== MapLibraries.CESIUM && <Checkbox
                     checked={this.props.settings.bboxEnabled}
                     onChange={() =>
                         this.props.onUpdateSettings({
@@ -401,7 +402,7 @@ class SharePanel extends React.Component {
                             }}/>
                     </FormGroup>
                     {
-                        this.props.mapType && this.props.mapType === 'cesium' && (
+                        this.props.mapType && this.props.mapType === MapLibraries.CESIUM && (
                             <React.Fragment>
                                 <FormGroup>
                                     <ControlLabel><Message msgId="share.heading" /></ControlLabel>
@@ -477,7 +478,7 @@ class SharePanel extends React.Component {
                             </React.Fragment>)
                     }
                     {
-                        this.props.mapType !== 'cesium' && ( <Checkbox
+                        this.props.mapType !== MapLibraries.CESIUM && ( <Checkbox
                             checked={this.props.settings && this.props.settings.markerEnabled}
                             onChange={() => {
                                 this.props.onUpdateSettings({

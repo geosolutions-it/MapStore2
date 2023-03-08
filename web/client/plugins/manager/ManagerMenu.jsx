@@ -40,7 +40,6 @@ class ManagerMenu extends React.Component {
         onItemClick: PropTypes.func,
         itemSelected: PropTypes.func,
         controls: PropTypes.object,
-        mapType: PropTypes.string,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         enableRulesManager: PropTypes.bool,
@@ -80,7 +79,6 @@ class ManagerMenu extends React.Component {
         itemSelected: () => {},
         title: <MenuItem header>Manager</MenuItem>,
         controls: [],
-        mapType: "leaflet",
         panelStyle: {
             minWidth: "300px",
             right: "52px",
@@ -125,7 +123,6 @@ class ManagerMenu extends React.Component {
             return (
                 <ToolsContainer id={this.props.id} className="square-button"
                     container={Container}
-                    mapType={this.props.mapType}
                     toolStyle="primary"
                     activeStyle="default"
                     stateSelector="burgermenu"

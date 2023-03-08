@@ -20,6 +20,8 @@ import HelpBadgeComp from '../../components/help/HelpBadge';
 import Message from '../../components/I18N/Message';
 import OverlayTrigger from '../../components/misc/OverlayTrigger';
 import Button from '../../components/misc/Button';
+import { MapLibraries } from '../../utils/MapTypeUtils';
+import { mapTypeSelector } from "../../selectors/maptype";
 
 const HelpBadge = connect((state) => ({
     isVisible: state.controls && state.controls.help && state.controls.help.enabled
@@ -81,7 +83,7 @@ class ToolsContainer extends React.Component {
         tools: [],
         panels: [],
         tool: Button,
-        mapType: "leaflet",
+        mapType: MapLibraries.OPENLAYERS,
         eventSelector: "onClick",
         panelStyle: {},
         panelClassName: "tools-container-panel",
@@ -209,4 +211,6 @@ class ToolsContainer extends React.Component {
     };
 }
 
-export default ToolsContainer;
+export default connect(state => ({
+    mapType: mapTypeSelector(state)
+}))(ToolsContainer);

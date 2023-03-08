@@ -15,8 +15,6 @@ import {LOAD_MAP_CONFIG} from "../../actions/config";
 import mapInfoReducers from "../../reducers/mapInfo";
 import browserReducers from "../../reducers/browser";
 import { CHANGE_BROWSER_PROPERTIES } from '../../actions/browser';
-import MapType from '../../product/plugins/MapType';
-
 
 describe('Test StandardStore', () => {
     it('storeOpts notify is true by default', () => {
@@ -46,52 +44,6 @@ describe('Test StandardStore', () => {
         store.dispatch({
             type: LOAD_MAP_CONFIG
         });
-    });
-    it("tests applying the maptype reducer and an override from config", () => {
-        // this tests is valid also for when in the url there is not maptype
-        const store = createStore({
-            initialState: {
-                defaultState: {},
-                mobile: {}
-            }
-        }, {
-            MapTypePlugin: MapType
-        }, {
-            initialState: {
-                defaultState: {
-                    maptype: {
-                        mapType: "openlayers"
-                    }
-                },
-                mobile: {}
-            }
-        });
-        const maptype = store.getState().maptype.mapType;
-        expect(maptype).toBe("openlayers");
-    });
-    it("tests applying the maptype reducer and an override from config", () => {
-        const oldHash = window.location.hash;
-        window.location.hash = "#/viewer/leaflet/1";
-        const store = createStore({
-            initialState: {
-                defaultState: {},
-                mobile: {}
-            }
-        }, {
-            MapTypePlugin: MapType
-        }, {
-            initialState: {
-                defaultState: {
-                    maptype: {
-                        mapType: "openlayers"
-                    }
-                },
-                mobile: {}
-            }
-        });
-        const maptype = store.getState().maptype.mapType;
-        expect(maptype).toBe("leaflet");
-        window.location.hash = oldHash;
     });
     it("tests that mobile overrides don't merge on desktop", () => {
         const store = createStore({

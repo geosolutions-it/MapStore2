@@ -3,12 +3,11 @@
 By default MapStore is able to open maps with this path in the URL:
 
 ```http
-http://localhost:8081/#viewer/<maptype>/<mapId>
+http://localhost:8081/#viewer/<mapId>
 ```
 
 Where:
 
-- `maptype` can be `leaflet` `openlayers` or `cesium`.
 - `mapId` can be a number or a string.
   - A **number** represents standard maps, stored on the database.
   - A **string** instead represents a static json file in the root of the application.
@@ -67,6 +66,7 @@ The following options define the map options (projection, position, layers):
 - `maxExtent: {number[]}` max bbox of the map expressed [minx, miny, maxx, maxy]
 - `layers: {object[]}` list of layers to be loaded on the map
 - `groups {object[]}`: contains information about the layer groups
+- `visualizationMode: {string}` defines if the map should be visualized in "2D" or "3D"
 
 i.e.
 
@@ -77,6 +77,7 @@ i.e.
     "units": "m",
     "center": {"x": 1000000.000000, "y": 5528000.000000, "crs": "EPSG:900913"},
     "zoom": 15,
+    "visualizationMode": "2D",
     "mapOptions": {
       "view": {
         "scales": [175000, 125000, 100000, 75000, 50000, 25000, 10000, 5000, 2500],

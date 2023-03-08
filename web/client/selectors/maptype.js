@@ -5,7 +5,12 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import { get } from 'lodash';
+
+import {
+    MapLibraries,
+    getVisualizationModeFromMapLibrary,
+    VisualizationModes
+} from '../utils/MapTypeUtils';
 
 /**
  * selects maptype state
@@ -20,8 +25,10 @@ import { get } from 'lodash';
  * @param  {object} state the state
  * @return {string}       the maptype in the state
  */
-export const mapTypeSelector = (state) => state && state.maptype && state.maptype.mapType || 'leaflet';
-export const mapTypeLoadedSelector = (state) => state && state.maptype && state.maptype.loaded;
+export const mapTypeSelector = (state) => state?.maptype?.mapType || MapLibraries.OPENLAYERS;
+export const mapTypeLoadedSelector = (state) => state?.maptype?.loaded;
+
+export const visualizationModeSelector = (state) => getVisualizationModeFromMapLibrary(mapTypeSelector(state));
 
 /**
  * Check if the mapType is cesium
@@ -30,8 +37,10 @@ export const mapTypeLoadedSelector = (state) => state && state.maptype && state.
  * @param  {object} state the state
  * @return {boolean}
  */
-export const isCesium = state => mapTypeSelector(state) === "cesium";
-export const isLeaflet = state => mapTypeSelector(state) === "leaflet";
-export const isOpenlayers = state => mapTypeSelector(state) === "openlayers";
+export const isCesium = state => mapTypeSelector(state) === MapLibraries.CESIUM;
+export const isLeaflet = state => mapTypeSelector(state) === MapLibraries.LEAFLET;
+export const isOpenlayers = state => mapTypeSelector(state) === MapLibraries.OPENLAYERS;
 
-export const last2dMapTypeSelector = state => get(state, "maptype.last2dMapType") || 'openlayers';
+
+export const is3DMode = state => visualizationModeSelector(state) === VisualizationModes._3D;
+export const is2DMode = state => visualizationModeSelector(state) === VisualizationModes._2D;

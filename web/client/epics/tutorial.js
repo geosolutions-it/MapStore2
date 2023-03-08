@@ -20,7 +20,6 @@ import {
 import { openDetailsPanel } from '../actions/details';
 import { CHANGE_MAP_VIEW } from '../actions/map';
 import { MAPS_LIST_LOADED } from '../actions/maps';
-import { TOGGLE_3D } from '../actions/globeswitcher';
 import { modeSelector } from '../selectors/geostory';
 import { CHANGE_MODE } from '../actions/geostory';
 import { creationStepSelector } from '../selectors/contextcreator';
@@ -30,6 +29,7 @@ import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
 import { mapSelector } from '../selectors/map';
 import {REDUCERS_LOADED} from "../actions/storemanager";
+import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
@@ -44,7 +44,7 @@ const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.re
 
 export const closeTutorialEpic = (action$) =>
     action$.ofType(START_TUTORIAL)
-        .audit(() => action$.ofType(TOGGLE_3D))
+        .audit(() => action$.ofType(VISUALIZATION_MODE_CHANGED))
         .switchMap( () => Rx.Observable.of(closeTutorial()));
 
 /**

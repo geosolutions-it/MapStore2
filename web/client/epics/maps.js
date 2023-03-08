@@ -36,7 +36,6 @@ import {
     contextsSelector,
     searchFilterSelector
 } from '../selectors/maps';
-import { mapTypeSelector } from '../selectors/maptype';
 import { userRoleSelector } from '../selectors/security';
 import {
     LOGIN_SUCCESS,
@@ -301,7 +300,7 @@ export const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
 /**
  * Create or update map resource with persistence api
  */
-export const mapSaveMapResourceEpic = (action$, store) =>
+export const mapSaveMapResourceEpic = (action$) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => {
             // convert to json if attribute is an object
@@ -345,7 +344,7 @@ export const mapSaveMapResourceEpic = (action$, store) =>
                             // if we got a valid context information redirect to a context, instead of the default viewer
                             push(contextResource ?
                                 `/context/${contextResource.name}/${rid}` :
-                                `/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
+                                `/viewer/${rid}`)]
                             : [])
                     ])
                         .merge(

@@ -7,13 +7,13 @@
  */
 
 import expect from 'expect';
-import { localConfigLoaded } from '../../actions/localConfig';
 
 import { onLocationChanged } from 'connected-react-router';
 
-import { syncMapType, updateLast2dMapTypeOnChangeEvents, restore2DMapTypeOnLocationChange  } from '../maptype';
-import { changeMapType, MAP_TYPE_CHANGED, UPDATE_LAST_2D_MAPTYPE } from '../../actions/maptype';
+import { syncMapType, restore2DMapTypeOnLocationChange  } from '../maptype';
+import { changeVisualizationMode, VISUALIZATION_MODE_CHANGED } from '../../actions/maptype';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { VisualizationModes } from '../../utils/MapTypeUtils';
 
 const NUM_ACTIONS = 1;
 
@@ -23,22 +23,20 @@ describe('maptype epics', () => {
     it('test to switch to cesium when passing to 3d mode', (done) => {
         const STATE = {
             maptype: {
-                mapType: "openlayers",
-                last2dMapType: "openlayers"
+                mapType: "openlayers"
             }
         };
         testEpic(syncMapType, NUM_ACTIONS, onLocationChanged({ pathname: "/viewer/cesium/10358" }, "PUSH"), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
-            expect(actions[0].type).toEqual(MAP_TYPE_CHANGED);
-            expect(actions[0].mapType).toEqual("cesium");
+            expect(actions[0].type).toEqual(VISUALIZATION_MODE_CHANGED);
+            expect(actions[0].visualizationMode).toEqual(VisualizationModes._3D);
             done();
         }, STATE);
     });
-    it('no-op when the URL do not contain maptype', (done) => { // restore of last2d type delegated to another epic
+    it('no-op when the URL do not contain maptype', (done) => {
         const STATE = {
             maptype: {
-                mapType: "cesium",
-                last2dMapType: "openlayers"
+                mapType: "cesium"
             }
         };
         testEpic(addTimeoutEpic(syncMapType, 20), NUM_ACTIONS, onLocationChanged({ pathname: "/viewer/10358" }, "PUSH"), (actions) => {
@@ -47,46 +45,34 @@ describe('maptype epics', () => {
         }, STATE);
     });
 
-    it('restore last2d cesium when changing location from a 3d mode', (done) => {
+    it('restore 2D map when changing location from a 3d mode', (done) => {
         const STATE_3D = {
             maptype: {
-                mapType: "cesium",
-                last2dMapType: "openlayers"
+                mapType: "cesium"
             }
         };
         testEpic(restore2DMapTypeOnLocationChange, NUM_ACTIONS, onLocationChanged({pathname: "/"}, "PUSH" ), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
-            expect(actions[0].type).toEqual(MAP_TYPE_CHANGED);
-            expect(actions[0].mapType).toEqual("openlayers");
+            expect(actions[0].type).toEqual(VISUALIZATION_MODE_CHANGED);
+            expect(actions[0].visualizationMode).toEqual(VisualizationModes._2D);
             done();
         }, STATE_3D);
     });
-    it('restore default last2d cesium when changing location from a 3d mode', (done) => {
-        const STATE_3D = {
-            maptype: {
-                mapType: "cesium",
-                last2dMapType: null
-            }
-        };
-        testEpic(restore2DMapTypeOnLocationChange, NUM_ACTIONS, onLocationChanged({pathname: "/"}, "PUSH" ), (actions) => {
-            expect(actions.length).toEqual(NUM_ACTIONS);
-            expect(actions[0].type).toEqual(MAP_TYPE_CHANGED);
-            expect(actions[0].mapType).toEqual("openlayers");
-            done();
-        }, STATE_3D);
-    });
-    it('update location when map type changes', (done) => {
+    it('update location when visualization mode changes', (done) => {
         const STATE = {
             maptype: {
-                mapType: "cesium",
-                last2dMapType: "openlayers"
+                mapType: "cesium"
+            },
+            router: {
+                location: {
+                    pathname: '/viewer/cesium/123'
+                }
             }
         };
-        // fake location.hash with hash in action
-        testEpic(syncMapType, NUM_ACTIONS, {... changeMapType('cesium'), hash: '/viewer/openlayers/123'}, ([a1]) => {
+        testEpic(syncMapType, NUM_ACTIONS, changeVisualizationMode(VisualizationModes._3D), ([a1]) => {
             expect(a1.type).toBe("@@router/CALL_HISTORY_METHOD");
-            expect(a1.payload.args[0]).toEqual("/viewer/cesium/123");
-            expect(a1.payload.method).toEqual("push");
+            expect(a1.payload.args[0]).toEqual("/viewer/123");
+            expect(a1.payload.method).toEqual("replace");
             done();
         }, STATE);
     });
@@ -94,32 +80,17 @@ describe('maptype epics', () => {
     it('no-op when the URL is one with mapType', (done) => {
         const STATE = {
             maptype: {
-                mapType: "cesium",
-                last2dMapType: "openlayers"
+                mapType: "cesium"
+            },
+            router: {
+                location: {
+                    pathname: '/viewer/123'
+                }
             }
         };
-        // fake location.hash with hash in action
-        testEpic(addTimeoutEpic(syncMapType, 20), NUM_ACTIONS, { ...changeMapType('cesium'), hash: '/viewer/123' }, ([a1]) => {
+        testEpic(addTimeoutEpic(syncMapType, 20), NUM_ACTIONS, changeVisualizationMode(VisualizationModes._3D), ([a1]) => {
             expect(a1.type).toBe(TEST_TIMEOUT);
             done();
         }, STATE);
     });
-    it('updateLast2dMapTypeOnChangeEvents', (done) => {
-        const STATE = {
-            maptype: {
-                mapType: "openlayers",
-                last2dMapType: "openlayers"
-            }
-        };
-        testEpic(updateLast2dMapTypeOnChangeEvents, 3, [localConfigLoaded(), changeMapType("cesium"), changeMapType("leaflet"), changeMapType("cesium"), changeMapType("openlayers")],
-            ([a1, a2, a3]) => {
-                [a1, a2, a3].map((action) => expect(action.type).toEqual(UPDATE_LAST_2D_MAPTYPE));
-                expect(a1.mapType).toEqual('openlayers');
-                expect(a2.mapType).toEqual('leaflet');
-                expect(a3.mapType).toEqual('openlayers');
-                done();
-            }, STATE);
-
-    });
-
 });

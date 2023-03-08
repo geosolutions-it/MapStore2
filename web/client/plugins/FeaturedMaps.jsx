@@ -19,7 +19,6 @@ import Message from "../components/I18N/Message";
 import mapsEpics from '../epics/maps';
 import {userRoleSelector} from '../selectors/security';
 import {versionSelector} from '../selectors/version';
-import {mapTypeSelector} from '../selectors/maptype';
 import {invalidationSelector, searchTextSelector, isFeaturedMapsEnabled} from '../selectors/featuredmaps';
 import {loadPage, updateItemsLifecycle} from '../components/maps/enhancers/featuredMaps';
 import gridPagination from '../components/misc/enhancers/gridPagination';
@@ -29,7 +28,6 @@ import MapsGrid from './maps/MapsGrid';
 import {scrollIntoViewId} from '../utils/DOMUtil';
 
 import featuredmaps from '../reducers/featuredmaps';
-import maptype from '../reducers/maptype';
 import {
     CONTEXT_DEFAULT_SHARE_OPTIONS,
     DASHBOARD_DEFAULT_SHARE_OPTIONS,
@@ -44,7 +42,6 @@ const PAGE_SIZE = 4;
 class FeaturedMaps extends React.Component {
 
     static propTypes = {
-        mapType: PropTypes.string,
         items: PropTypes.array,
         colProps: PropTypes.object,
         fluid: PropTypes.bool,
@@ -144,7 +141,7 @@ class FeaturedMaps extends React.Component {
         return {
             url: res.contextName ?
                 "context/" + res.contextName + "/" + res.id :
-                "viewer/" + this.props.mapType + "/" + res.id,
+                "viewer/" + res.id,
             shareApi: this.props.showAPIShare
 
         };
@@ -152,15 +149,13 @@ class FeaturedMaps extends React.Component {
 }
 
 const featuredMapsPluginSelector = createSelector([
-    mapTypeSelector,
     userRoleSelector,
     state => state.browser && state.browser.mobile,
     searchTextSelector,
     invalidationSelector,
     isFeaturedMapsEnabled,
     versionSelector
-], (mapType, role, isMobile, searchText, invalidate, isFeaturedEnabled, version) => ({
-    mapType,
+], (role, isMobile, searchText, invalidate, isFeaturedEnabled, version) => ({
     role,
     permission: role === 'ADMIN',
     pagination: isMobile ? 'virtual-scroll-horizontal' : 'show-more',
@@ -222,7 +217,6 @@ const FeaturedMapsPlugin = compose(
         }
     }),
     defaultProps({
-        mapType: 'leaflet',
         onGoToMap: () => {},
         fluid: false,
         mapsOptions: {start: 0, limit: 12},
@@ -281,7 +275,6 @@ export default {
         ...mapsEpics
     },
     reducers: {
-        featuredmaps,
-        maptype
+        featuredmaps
     }
 };

@@ -168,6 +168,7 @@ import MapUtils from '../utils/MapUtils';
 import {dockPanelsSelector} from "../selectors/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {mapTypeSelector} from "../selectors/maptype";
+import { MapLibraries } from '../utils/MapTypeUtils';
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -1249,7 +1250,7 @@ export const toggleSnappingOffOnFeatureGridViewMode = (action$, { getState } = {
 export const setViewportFilterEpic = (action$, { getState } = {}) =>
     action$
         .ofType(OPEN_FEATURE_GRID, SET_VIEWPORT_FILTER, CHANGE_MAP_VIEW)
-        .filter(() => isFeatureGridOpen(getState()) && isViewportFilterActive(getState()) && mapTypeSelector(getState()) !== 'cesium')
+        .filter(() => isFeatureGridOpen(getState()) && isViewportFilterActive(getState()) && mapTypeSelector(getState()) !== MapLibraries.CESIUM)
         .switchMap(() => {
             return Rx.Observable.of(
                 updateFilter());

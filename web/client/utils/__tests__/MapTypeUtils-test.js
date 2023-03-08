@@ -7,7 +7,13 @@
 */
 import expect from 'expect';
 
-import { findMapType, replaceMapType } from '../MapTypeUtils';
+import {
+    findMapType,
+    replaceMapType,
+    removeMapType,
+    getVisualizationModeFromMapLibrary,
+    getMapLibraryFromVisualizationMode
+} from '../MapTypeUtils';
 
 const testHashes = [
     ["/viewer/openlayers/1234", "openlayers"],
@@ -85,5 +91,44 @@ describe('MapTypeUtils', () => {
             expect(replaceMapType(url, newMapType)).toBe(expected);
         });
     });
-
+    it('testing removeMapType with viewer regex', () => {
+        const urls = [
+            {
+                url: "/viewer/openlayers/123",
+                expected: "/viewer/123"
+            },
+            {
+                url: "/viewer/openlayers/new/context/123",
+                expected: "/viewer/new/context/123"
+            },
+            {
+                url: "/viewer/cesium/123",
+                expected: "/viewer/123"
+            },
+            {
+                url: "/viewer/10/context/123",
+                expected: "/viewer/10/context/123"
+            },
+            {
+                url: "/viewer/123",
+                expected: "/viewer/123"
+            },
+            {
+                url: "/context/ctxName/123",
+                expected: "/context/ctxName/123"
+            }
+        ];
+        urls.forEach(({ url, expected }) => {
+            expect(removeMapType(url)).toBe(expected);
+        });
+    });
+    it('testing getVisualizationModeFromMapLibrary', () => {
+        expect(getVisualizationModeFromMapLibrary('leaflet')).toBe('2D');
+        expect(getVisualizationModeFromMapLibrary('openlayers')).toBe('2D');
+        expect(getVisualizationModeFromMapLibrary('cesium')).toBe('3D');
+    });
+    it('testing getMapLibraryFromVisualizationMode (default)', () => {
+        expect(getMapLibraryFromVisualizationMode('2D')).toBe('openlayers');
+        expect(getMapLibraryFromVisualizationMode('3D')).toBe('cesium');
+    });
 });

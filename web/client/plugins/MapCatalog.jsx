@@ -107,7 +107,7 @@ class MapCatalogComponent extends React.Component {
                     onSave={onSave}
                     getShareUrl={(map) => map.contextName ?
                         `context/${map.contextName}/${map.id}` :
-                        `viewer/${mapType}/${map.id}`
+                        `viewer/${map.id}`
                     }
                     toggleCatalog={() => onToggleControl()}
                     shareApi/>

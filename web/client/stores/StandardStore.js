@@ -16,9 +16,6 @@ import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
 import { getApi } from '../api/userPersistedStorage';
-import url from "url";
-import { findMapType } from '../utils/MapTypeUtils';
-import { set } from '../utils/ImmutableUtils';
 import {getPlugins} from "../utils/ModulePluginsUtils";
 const standardEpics = {};
 
@@ -55,12 +52,6 @@ const appStore = (
     const allReducers = storeManager.reduce;
     const optsState = storeOpts.initialState || { defaultState: {}, mobile: {} };
     let defaultState = { ...initialState.defaultState, ...optsState.defaultState };
-    const urlData = url.parse(window.location.href, true);
-    const mapType = findMapType(urlData.href);
-    if (mapType) {
-        defaultState = set("maptype.mapType", mapType, defaultState);
-    }
-
     const mobileOverride = { ...initialState.mobile, ...optsState.mobile };
     const rootReducer = (state, action) => {
         return rootReducerFunc({

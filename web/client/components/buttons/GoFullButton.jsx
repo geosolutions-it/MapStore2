@@ -38,7 +38,7 @@ class GoFullButton extends React.Component {
         glyph: "share",
         tooltip: "fullscreen.viewLargerMap",
         urlRegex: "^(.*?)embedded.html.*?#\\/(\\d?)",
-        urlReplaceString: "$1#/viewer/leaflet/$2"
+        urlReplaceString: "$1#/viewer/$2"
     };
 
     render() {

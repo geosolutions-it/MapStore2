@@ -11,15 +11,13 @@ import PropTypes from 'prop-types';
 import './omnibar/omnibar.css';
 import ToolsContainer from './containers/ToolsContainer';
 import {createPlugin} from "../utils/PluginsUtils";
-
 class OmniBar extends React.Component {
     static propTypes = {
         className: PropTypes.string,
         style: PropTypes.object,
         containerWrapperStyle: PropTypes.object,
         items: PropTypes.array,
-        id: PropTypes.string,
-        mapType: PropTypes.string
+        id: PropTypes.string
     };
 
     static defaultProps = {
@@ -27,8 +25,7 @@ class OmniBar extends React.Component {
         className: "navbar-dx shadow",
         style: {},
         containerWrapperStyle: {},
-        id: "mapstore-navbar",
-        mapType: "leaflet"
+        id: "mapstore-navbar"
     };
 
     getPanels = () => {
@@ -53,7 +50,6 @@ class OmniBar extends React.Component {
             style={this.props.style}
             containerWrapperStyle={this.props.containerWrapperStyle}
             className={this.props.className}
-            mapType={this.props.mapType}
             container={(props) => <div {...props}>{props.children}</div>}
             toolStyle="primary"
             activeStyle="default"

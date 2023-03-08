@@ -26,12 +26,13 @@ import Message from '../I18N/Message';
 import Loader from '../misc/Loader';
 import ButtonMS from '../misc/Button';
 import tooltip from '../misc/enhancers/tooltip';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 const Button = tooltip(ButtonMS);
 
 const mapViewSupports = {
-    leaflet: lazy(() => import(/* webpackChunkName: 'supports/leafletMapViews' */ '../map/leaflet/MapViewsSupport')),
-    openlayers: lazy(() => import(/* webpackChunkName: 'supports/olMapViews' */ '../map/openlayers/MapViewsSupport')),
-    cesium: lazy(() => import(/* webpackChunkName: 'supports/cesiumMapViews' */ '../map/cesium/MapViewsSupport'))
+    [MapLibraries.LEAFLET]: lazy(() => import(/* webpackChunkName: 'supports/leafletMapViews' */ '../map/leaflet/MapViewsSupport')),
+    [MapLibraries.OPENLAYERS]: lazy(() => import(/* webpackChunkName: 'supports/olMapViews' */ '../map/openlayers/MapViewsSupport')),
+    [MapLibraries.CESIUM]: lazy(() => import(/* webpackChunkName: 'supports/cesiumMapViews' */ '../map/cesium/MapViewsSupport'))
 };
 
 const MapViewSettings = lazy(() => import('./MapViewSettings'));

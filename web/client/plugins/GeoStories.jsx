@@ -20,7 +20,6 @@ import epics from '../epics/geostories';
 import geostories from '../reducers/geostories';
 import { isFeaturedMapsEnabled } from '../selectors/featuredmaps';
 import { totalCountSelector } from '../selectors/geostories';
-import { mapTypeSelector } from '../selectors/maptype';
 import { userRoleSelector } from '../selectors/security';
 import EmptyGeostoriesView from './geostories/EmptyGeostoriesView';
 import GeostoryGrid from './geostories/GeostoriesGrid';
@@ -45,7 +44,6 @@ const geostoriesCountSelector = createSelector(
  */
 class Geostories extends React.Component {
     static propTypes = {
-        mapType: PropTypes.string,
         title: PropTypes.any,
         onMount: PropTypes.func,
         loadGeostories: PropTypes.func,
@@ -64,7 +62,6 @@ class Geostories extends React.Component {
     };
 
     static defaultProps = {
-        mapType: "leaflet",
         onMount: () => {},
         loadGeostories: () => {},
         fluid: false,
@@ -103,13 +100,11 @@ class Geostories extends React.Component {
 }
 
 const geostoriesPluginSelector = createSelector([
-    mapTypeSelector,
     state => state.geostories && state.geostories.searchText,
     state => state.geostories && state.geostories.results ? state.geostories.results : [],
     isFeaturedMapsEnabled,
     userRoleSelector
-], (mapType, searchText, resources, featuredEnabled, role) => ({
-    mapType,
+], (searchText, resources, featuredEnabled, role) => ({
     searchText,
     resources: resources.map(res => ({...res, featuredEnabled: featuredEnabled && role === 'ADMIN'})) // TODO: remove false to enable featuredEnabled
 }));

@@ -51,7 +51,6 @@ class ShapeFileUploadAndStyle extends React.Component {
         updateShapeBBox: PropTypes.func,
         error: PropTypes.string,
         success: PropTypes.string,
-        mapType: PropTypes.string,
         buttonSize: PropTypes.string,
         uploadMessage: PropTypes.object,
         cancelMessage: PropTypes.object,
@@ -98,7 +97,6 @@ class ShapeFileUploadAndStyle extends React.Component {
             }
             return null;
         }),
-        mapType: "leaflet",
         stylers: {},
         buttonSize: "small",
         uploadOptions: {},

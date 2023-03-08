@@ -38,7 +38,6 @@ class StylePanel extends React.Component {
         updateBBox: PropTypes.func,
         errors: PropTypes.array,
         success: PropTypes.string,
-        mapType: PropTypes.string,
         buttonSize: PropTypes.string,
         cancelMessage: PropTypes.object,
         addMessage: PropTypes.object,
@@ -53,7 +52,6 @@ class StylePanel extends React.Component {
     };
 
     static defaultProps = {
-        mapType: "leaflet",
         buttonSize: "small",
         setLayers: () => {},
         addLayer: () => {},

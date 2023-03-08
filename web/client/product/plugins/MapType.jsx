@@ -15,6 +15,7 @@ import { changeMapType } from '../../actions/maptype';
 import { mapTypeSelector } from '../../selectors/maptype';
 import { connect } from 'react-redux';
 import assign from 'object-assign';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 class MapType extends React.Component {
     static propTypes = {
@@ -26,12 +27,12 @@ class MapType extends React.Component {
     };
 
     static defaultProps = {
-        mapType: 'leaflet',
+        mapType: MapLibraries.LEAFLET,
         onChangeMapType: () => {},
         mapTypes: [
-            { key: "leaflet", label: "Leaflet"},
-            { key: "openlayers", label: "OpenLayers"},
-            { key: "cesium", label: "Cesium"}
+            { key: MapLibraries.LEAFLET, label: "Leaflet"},
+            { key: MapLibraries.OPENLAYERS, label: "OpenLayers"},
+            { key: MapLibraries.CESIUM, label: "Cesium"}
         ]
     };
 

@@ -28,7 +28,6 @@ class Manager extends React.Component {
 
     static defaultProps = {
         items: [],
-        mapType: "openlayers",
         selectedTool: "importer",
         itemSelected: () => {},
         navStyle: {

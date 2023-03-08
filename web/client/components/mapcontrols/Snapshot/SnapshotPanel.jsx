@@ -25,6 +25,7 @@ import notAvailable from './not-available.png';
 import shotingImg from './shoting.gif';
 import snapshotSupportComp from './SnapshotSupport';
 import PanelHeader from "../../misc/panels/PanelHeader";
+import { MapLibraries } from '../../../utils/MapTypeUtils';
 
 let SnapshotSupport;
 /**
@@ -79,7 +80,7 @@ class SnapshotPanel extends React.Component {
         googleBingErrorMsg: "snapshot.googleBingError",
         downloadingMsg: "snapshot.downloadingSnapshots",
         timeout: 1000,
-        mapType: 'leaflet',
+        mapType: MapLibraries.OPENLAYERS,
         floatingPanel: true,
         panelStyle: {
             minWidth: "600px",

@@ -55,7 +55,6 @@ class BurgerMenu extends React.Component {
         onInit: PropTypes.func,
         onDetach: PropTypes.func,
         controls: PropTypes.object,
-        mapType: PropTypes.string,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string
     };
@@ -71,7 +70,6 @@ class BurgerMenu extends React.Component {
         onItemClick: () => {},
         title: <MenuItem header><Message msgId="options"/></MenuItem>,
         controls: [],
-        mapType: "leaflet",
         panelStyle: {
             minWidth: "300px",
             right: "52px",
@@ -161,7 +159,6 @@ class BurgerMenu extends React.Component {
         return (
             <ToolsContainer id={this.props.id} className="square-button"
                 container={Container}
-                mapType={this.props.mapType}
                 toolStyle="primary"
                 activeStyle="default"
                 stateSelector="burgermenu"

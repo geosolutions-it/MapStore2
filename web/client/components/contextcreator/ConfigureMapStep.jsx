@@ -11,11 +11,12 @@ import React from 'react';
 import Message from '../I18N/Message';
 import ConfirmDialog from '../misc/ConfirmDialog';
 import MapViewer from '../../containers/MapViewer';
+import { MapLibraries } from '../../utils/MapTypeUtils';
 
 export default ({
     pluginsConfig = {},
     plugins = {},
-    mapType = 'openlayers',
+    mapType = MapLibraries.OPENLAYERS,
     className = 'viewer context-creator-viewer',
     showConfirm = false,
     confirmMessage = 'contextCreator.configureMap.confirm',

@@ -8,20 +8,24 @@
 
 import expect from 'expect';
 
-import { MAP_TYPE_CHANGED, changeMapType, updateLast2dMapType, UPDATE_LAST_2D_MAPTYPE } from '../maptype';
+import {
+    MAP_TYPE_CHANGED,
+    changeMapType,
+    VISUALIZATION_MODE_CHANGED,
+    changeVisualizationMode
+} from '../maptype';
 
 describe('Test correctness of the maptype actions', () => {
-
     it('changeMapType', () => {
         const retVal = changeMapType('maptype');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(MAP_TYPE_CHANGED);
         expect(retVal.mapType).toBe('maptype');
     });
-    it('updateLast2dMapType', () => {
-        const retVal = updateLast2dMapType("leaflet");
-        expect(retVal).toExist();
-        expect(retVal.type).toBe(UPDATE_LAST_2D_MAPTYPE);
-        expect(retVal.mapType).toBe('leaflet');
+    it('changeVisualizationMode', () => {
+        const retVal = changeVisualizationMode('3D');
+        expect(retVal).toBeTruthy();
+        expect(retVal.type).toBe(VISUALIZATION_MODE_CHANGED);
+        expect(retVal.visualizationMode).toBe('3D');
     });
 });

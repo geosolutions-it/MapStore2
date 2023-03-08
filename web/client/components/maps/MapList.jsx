@@ -12,7 +12,7 @@ import React from 'react';
 
 import { ListGroup, Panel } from 'react-bootstrap';
 import MapItem from './MapItem';
-
+import { MapLibraries } from '../../utils/MapTypeUtils';
 class MapList extends React.Component {
     static propTypes = {
         panelProps: PropTypes.object,
@@ -23,7 +23,7 @@ class MapList extends React.Component {
 
     static defaultProps = {
         onChangeMapType: function() {},
-        mapType: 'leaflet',
+        mapType: MapLibraries.OPENLAYERS,
         maps: []
     };
 

@@ -55,8 +55,7 @@ class MapFooter extends React.Component {
         items: [],
         className: "mapstore-map-footer",
         style: {},
-        id: "mapstore-map-footer",
-        mapType: "leaflet"
+        id: "mapstore-map-footer"
     };
 
     getPanels = () => {
@@ -81,7 +80,6 @@ class MapFooter extends React.Component {
             <ToolsContainer id={this.props.id}
                 style={this.props.style}
                 className={this.props.className}
-                mapType={this.props.mapType}
                 container={(props) => <div {...props}>{props.children}</div>}
                 toolStyle="primary"
                 activeStyle="default"

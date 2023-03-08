@@ -15,6 +15,7 @@ import { getPluginForTest } from './pluginsTestUtils';
 import { INIT_MAP } from '../../actions/map';
 import { RESET_CONTROLS } from '../../actions/controls';
 import MapUtils from '../../utils/MapUtils';
+import { waitFor } from '@testing-library/react';
 
 const map = {
     center: {
@@ -37,14 +38,14 @@ describe('Map Plugin', () => {
         MapUtils.clearHooks();
     });
 
-    it('creates a Map plugin with default configuration (leaflet)', (done) => {
+    it('creates a Map plugin with default configuration', (done) => {
         const { Plugin } = getPluginForTest(MapPlugin, {map});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        setTimeout(() => {
-            expect(document.getElementById('map')).toExist();
-            expect(document.getElementsByClassName('leaflet-container').length).toBe(1);
-            done();
-        }, 200);
+        waitFor(() => expect(document.querySelector('.mapLoadingMessage')).toBeTruthy())
+            .then(() => {
+                done();
+            })
+            .catch(done);
     });
 
     it('creates a Map plugin with specified mapType configuration (openlayers)', (done) => {

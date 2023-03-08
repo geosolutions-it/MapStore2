@@ -233,7 +233,8 @@ export default class ContextCreator extends React.Component {
             "Undo",
             "Redo",
             "Expander",
-            "FilterLayer"
+            "FilterLayer",
+            "GlobeViewSwitcher"
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
