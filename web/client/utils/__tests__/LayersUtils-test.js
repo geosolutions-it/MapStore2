@@ -1405,4 +1405,8 @@ describe('LayersUtils', () => {
             expect(flattenedGroups.length).toBe(7);
         });
     });
+    it('removeWorkspace', ()=>{
+        expect(LayersUtils.removeWorkspace('workspace:layerName')).toBe('layerName');
+        expect(LayersUtils.removeWorkspace('layerName')).toBe('layerName');
+    });
 });
