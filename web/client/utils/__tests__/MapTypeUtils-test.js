@@ -12,8 +12,12 @@ import {
     replaceMapType,
     removeMapType,
     getVisualizationModeFromMapLibrary,
-    getMapLibraryFromVisualizationMode
+    getMapLibraryFromVisualizationMode,
+    VisualizationModes,
+    MapLibraries
 } from '../MapTypeUtils';
+
+import { setConfigProp } from '../ConfigUtils';
 
 const testHashes = [
     ["/viewer/openlayers/1234", "openlayers"],
@@ -123,12 +127,24 @@ describe('MapTypeUtils', () => {
         });
     });
     it('testing getVisualizationModeFromMapLibrary', () => {
-        expect(getVisualizationModeFromMapLibrary('leaflet')).toBe('2D');
-        expect(getVisualizationModeFromMapLibrary('openlayers')).toBe('2D');
-        expect(getVisualizationModeFromMapLibrary('cesium')).toBe('3D');
+        expect(getVisualizationModeFromMapLibrary()).toBe(VisualizationModes._2D);
+        expect(getVisualizationModeFromMapLibrary(MapLibraries.LEAFLET)).toBe(VisualizationModes._2D);
+        expect(getVisualizationModeFromMapLibrary(MapLibraries.OPENLAYERS)).toBe(VisualizationModes._2D);
+        expect(getVisualizationModeFromMapLibrary(MapLibraries.CESIUM)).toBe(VisualizationModes._3D);
+        setConfigProp('mapType', {
+            defaultVisualizationMode: VisualizationModes._3D
+        });
+        expect(getVisualizationModeFromMapLibrary()).toBe(VisualizationModes._3D);
+        setConfigProp('mapType', undefined);
     });
     it('testing getMapLibraryFromVisualizationMode (default)', () => {
-        expect(getMapLibraryFromVisualizationMode('2D')).toBe('openlayers');
-        expect(getMapLibraryFromVisualizationMode('3D')).toBe('cesium');
+        expect(getMapLibraryFromVisualizationMode()).toBe(MapLibraries.OPENLAYERS);
+        expect(getMapLibraryFromVisualizationMode(VisualizationModes._2D)).toBe(MapLibraries.OPENLAYERS);
+        expect(getMapLibraryFromVisualizationMode(VisualizationModes._3D)).toBe(MapLibraries.CESIUM);
+        setConfigProp('mapType', {
+            defaultVisualizationMode: VisualizationModes._3D
+        });
+        expect(getMapLibraryFromVisualizationMode()).toBe(MapLibraries.CESIUM);
+        setConfigProp('mapType', undefined);
     });
 });

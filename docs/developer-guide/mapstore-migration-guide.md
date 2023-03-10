@@ -55,13 +55,16 @@ This update include also following changes:
 {
     // ...
 +    "mapType": {
-+       "2D": {
-+           "desktop": "openlayers",
-+           "mobile": "leaflet"
-+       },
-+       "3D": {
-+           "desktop": "cesium",
-+           "mobile": "cesium"
++       "defaultVisualizationMode": "2D",
++       "visualizationModes": {
++           "2D": {
++               "desktop": "openlayers",
++               "mobile": "leaflet"
++           },
++           "3D": {
++               "desktop": "cesium",
++               "mobile": "cesium"
++           }
 +       }
 +   },
     // ...
