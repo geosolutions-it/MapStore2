@@ -49,28 +49,6 @@ This update include also following changes:
 
 - the application does not expose the pathname of the viewer with `mapType` anymore. Example: the old path `/viewer/openlayers/1` becomes `/viewer/1`
 
-- it is possible to change the map library based on the device using the new `mapType` configuration in localConfig.json. This configuration is only needed for project with custom map library settings. The downstream projects based on the MapStore product don't need this update
-
-```diff
-{
-    // ...
-+    "mapType": {
-+       "defaultVisualizationMode": "2D",
-+       "visualizationModes": {
-+           "2D": {
-+               "desktop": "openlayers",
-+               "mobile": "leaflet"
-+           },
-+           "3D": {
-+               "desktop": "cesium",
-+               "mobile": "cesium"
-+           }
-+       }
-+   },
-    // ...
-}
-```
-
 - the app pages inside a MapStore project must be updated with a new entry, only for projects with custom pages and that are using context applications, here an example:
 
 ```js
