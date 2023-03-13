@@ -24,7 +24,7 @@ const mapLibrariesConfiguration = {
     }
 };
 
-const DEFAULT_MAP_TYPE_CONFIG = {
+const DEFAULT_VISUALIZATION_MODES_CONFIG = {
     [VisualizationModes._2D]: {
         mobile: MapLibraries.LEAFLET,
         desktop: MapLibraries.OPENLAYERS
@@ -33,6 +33,12 @@ const DEFAULT_MAP_TYPE_CONFIG = {
         mobile: MapLibraries.CESIUM,
         desktop: MapLibraries.CESIUM
     }
+};
+
+const getDefaultVisualizationMode = () => {
+    const customMapTypeConfig = getConfigProp('mapType') || {};
+    const { defaultVisualizationMode = VisualizationModes._2D } = customMapTypeConfig;
+    return defaultVisualizationMode;
 };
 
 /**
@@ -48,7 +54,7 @@ export const is3DVisualizationMode = (map) => map?.visualizationMode === Visuali
  * @returns {string} "2D" or "3D" value
  */
 export const getVisualizationModeFromMapLibrary = (mapLibrary) => {
-    const { visualizationMode = VisualizationModes._2D } = mapLibrariesConfiguration[mapLibrary] || {};
+    const { visualizationMode = getDefaultVisualizationMode() } = mapLibrariesConfiguration[mapLibrary] || {};
     return visualizationMode;
 };
 
@@ -57,12 +63,13 @@ export const getVisualizationModeFromMapLibrary = (mapLibrary) => {
  * @param {string} visualizationMode the name of the visualization mode, one of "2D" or "3D"
  * @returns {string} leaflet", "openlayers" or "cesium" value
  */
-export const getMapLibraryFromVisualizationMode = (visualizationMode = VisualizationModes._2D) => {
+export const getMapLibraryFromVisualizationMode = (visualizationMode = getDefaultVisualizationMode()) => {
     const { mobile } = getBrowserProperties();
     const customMapTypeConfig = getConfigProp('mapType') || {};
+    const { visualizationModes = {} } = customMapTypeConfig;
     const config = {
-        ...DEFAULT_MAP_TYPE_CONFIG[visualizationMode],
-        ...customMapTypeConfig[visualizationMode]
+        ...DEFAULT_VISUALIZATION_MODES_CONFIG[visualizationMode],
+        ...visualizationModes[visualizationMode]
     };
     const device = mobile ? 'mobile' : 'desktop';
     return config[device];
