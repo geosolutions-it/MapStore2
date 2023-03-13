@@ -155,10 +155,11 @@ class CesiumMap extends React.Component {
         this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
-                this.props.center.x,
-                this.props.center.y,
-                this.getHeightFromZoom(this.props.zoom)
-            )
+                this.props.viewerOptions?.cameraPosition?.longitude ?? this.props.center.x,
+                this.props.viewerOptions?.cameraPosition?.latitude ?? this.props.center.y,
+                this.props.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(this.props.zoom)
+            ),
+            orientation: this.props.viewerOptions?.orientation
         });
 
         this.setMousePointer(this.props.mousePointer);
@@ -311,10 +312,25 @@ class CesiumMap extends React.Component {
     };
 
     getCenter = () => {
-        const center = this.map.camera.positionCartographic;
+        // the center should be computed based on where the camera is looking at and not the current camera position
+
+        // we can start to compute with the pick functionality on the globe
+        let target = this.map.scene.globe.pick(new Cesium.Ray(this.map.camera.position, this.map.camera.direction), this.map.scene);
+        if (!target) {
+            // if the pick fails in case the camera is looking at the sky
+            // we compute the center position at a 100000 meter distance following the camera direction vector
+            target = Cesium.Cartesian3.add(
+                Cesium.Cartesian3.clone(this.map.camera.position),
+                Cesium.Cartesian3.multiplyByScalar(Cesium.Cartesian3.clone(this.map.camera.direction), 100000, new Cesium.Cartesian3() ),
+                new Cesium.Cartesian3()
+            );
+        }
+        const center = Cesium.Cartographic.fromCartesian(
+            new Cesium.Cartesian3(target.x, target.y, target.z)
+        );
         return {
-            longitude: center.longitude * 180 / Math.PI,
-            latitude: center.latitude * 180 / Math.PI,
+            longitude: Cesium.Math.toDegrees(center.longitude),
+            latitude: Cesium.Math.toDegrees(center.latitude),
             height: center.height
         };
     };
@@ -401,7 +417,8 @@ class CesiumMap extends React.Component {
     _updateMapPositionFromNewProps = (newProps) => {
         // Do the change at the same time, to avoid glitches
         const currentCenter = this.getCenter();
-        const currentZoom = this.getZoomFromHeight(currentCenter.height);
+        const cameraPosition = this.map.camera.positionCartographic;
+        const currentZoom = this.getZoomFromHeight(cameraPosition.height);
         // current implementation will update the map only if the movement
         // between 12 decimals in the reference system to avoid rounded value
         // changes due to float mathematic operations.
@@ -420,17 +437,18 @@ class CesiumMap extends React.Component {
         if (centerIsUpdate || zoomChanged) {
             const position = {
                 destination: Cesium.Cartesian3.fromDegrees(
-                    newProps.center.x,
-                    newProps.center.y,
-                    this.getHeightFromZoom(newProps.zoom)
+                    newProps.viewerOptions?.cameraPosition?.longitude ?? newProps.center.x,
+                    newProps.viewerOptions?.cameraPosition?.latitude ?? newProps.center.y,
+                    newProps.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(newProps.zoom)
                 ),
-                orientation: newProps.viewerOptions.orientation
+                orientation: newProps.viewerOptions?.orientation
             };
             this.setView(position);
         }
     };
 
     setView = (position) => {
+        this.map.camera.cancelFlight();
         if (this.props.mapOptions && this.props.mapOptions.flyTo) {
             this.map.camera.flyTo(position, this.props.mapOptions.defaultFlightOptions);
         } else {
@@ -519,7 +537,8 @@ class CesiumMap extends React.Component {
     }
     updateMapInfoState = () => {
         const center = this.getCenter();
-        const zoom = this.getZoomFromHeight(center.height);
+        const cameraPosition = this.map.camera.positionCartographic;
+        const zoom = this.getZoomFromHeight(cameraPosition.height);
         const size = {
             height: Math.round(this.props.standardWidth * (zoom + 1)),
             width: Math.round(this.props.standardHeight * (zoom + 1))
@@ -555,6 +574,11 @@ class CesiumMap extends React.Component {
             this.props.id,
             this.props.projection,
             {
+                cameraPosition: {
+                    longitude: Cesium.Math.toDegrees(cameraPosition.longitude),
+                    latitude: Cesium.Math.toDegrees(cameraPosition.latitude),
+                    height: cameraPosition.height
+                },
                 orientation: {
                     heading: this.map.camera.heading,
                     pitch: this.map.camera.pitch,

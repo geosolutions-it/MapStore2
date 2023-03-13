@@ -164,8 +164,8 @@ describe('CesiumMap', () => {
                     zoom={5}
                     onMapViewChanges={(center, zoom, bbox, size, id, projection, options) => {
                         try {
-                            expect(Math.round(center.y * precision) / precision).toBe(30);
-                            expect(Math.round(center.x * precision) / precision).toBe(20);
+                            expect(Math.round(Math.round(center.y * precision) / precision)).toBe(30);
+                            expect(Math.round(Math.round(center.x * precision) / precision)).toBe(20);
                             expect(zoom).toBe(5);
                             expect(bbox.bounds).toBeTruthy();
                             expect(bbox.crs).toBeTruthy();
@@ -468,6 +468,38 @@ describe('CesiumMap', () => {
         expect(ref.map).toBeTruthy();
         expect(ref.map.cesiumNavigation).toBeTruthy();
         expect(ref.map.cesiumNavigation.destroy).toBeTruthy();
+    });
+    it('should set correct orientation on mount', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{
+                        x: 14,
+                        y: 42
+                    }}
+                    zoom={9}
+                    viewerOptions={{
+                        cameraPosition: {
+                            longitude: 12.390726809383557,
+                            latitude: 41.71232944851886,
+                            height: 352553
+                        },
+                        orientation: {
+                            heading: 5.677102807289052,
+                            pitch: -0.6948024901340912,
+                            roll: 0.000016578416068391277
+                        }
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        expect(ref.map.camera).toBeTruthy();
+        expect(Math.round(ref.map.camera.heading)).toBe(6);
+        expect(Math.round(ref.map.camera.pitch)).toBe(-1);
+        expect(Math.round(ref.map.camera.roll)).toBe(0);
     });
     describe("hookRegister", () => {
         it("default", () => {
