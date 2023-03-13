@@ -27,7 +27,7 @@ This is a list of things to check if you want to update from a previous version 
 The map configuration stores the information related to the visualization mode 2D or 3D after saving a map.
 This update include also following changes:
 
-- `maptype` default state configuration inside the initialState of localConfig.json needs to be removed. If a MapStore project needs a particular setup (eg. use only OpenLayers for 2D maps, initialize the app in 3D, ...) it is possible to override the default map libraries configuration with the new `mapType` property in the localConfig.json file, see documentation [here](local-config.md#application-configuration).
+- `maptype` default state configuration inside the initialState of `localConfig.json` needs to be removed. If a MapStore project needs a particular setup (eg. use only OpenLayers for 2D maps, initialize the app in 3D, ...) it is possible to override the default map libraries configuration with the new `mapType` property in the `localConfig.json` file, see documentation [here](local-config.md#application-configuration).
 
 ```diff
 {
