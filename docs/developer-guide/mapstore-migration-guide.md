@@ -27,7 +27,7 @@ This is a list of things to check if you want to update from a previous version 
 The map configuration stores the information related to the visualization mode 2D or 3D after saving a map.
 This update include also following changes:
 
-- `maptype` configuration inside the initialState of localConfig needs to be removed in favor of the global mapType configuration
+- `maptype` configuration inside the initialState of localConfig needs to be removed in favor of the global mapType configuration. The global mapType configuration is only needed for project with custom map library settings.
 
 ```diff
 {
@@ -41,6 +41,30 @@ This update include also following changes:
             // ...
         }
     }
+    // ...
+}
+```
+an example of global mapType configuration where OpenLayers is used for mobile and desktop devices:
+
+!!! note:
+    The downstream projects based on the MapStore product don't need this update
+
+```diff
+{
+    // ...
++    "mapType": {
++       "defaultVisualizationMode": "2D",
++       "visualizationModes": {
++           "2D": {
++               "desktop": "openlayers",
++               "mobile": "openlayers"
++           },
++           "3D": {
++               "desktop": "cesium",
++               "mobile": "cesium"
++           }
++       }
++    },
     // ...
 }
 ```
