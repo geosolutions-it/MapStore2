@@ -27,7 +27,7 @@ import { addMarker, hideMarker } from '../actions/search';
 import { updateMapView } from '../actions/map';
 import { updateUrlOnScrollSelector } from '../selectors/geostory';
 import { shareSelector } from "../selectors/controls";
-import {mapTypeSelector} from "../selectors/maptype";
+import { mapTypeSelector } from "../selectors/maptype";
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedIn)
@@ -71,8 +71,17 @@ const Share = connect(createSelector([
     (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     state => state.search && state.search.markerPosition || {},
     updateUrlOnScrollSelector,
-    state => get(state, 'map.present.viewerOptions')
-], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions) => ({
+    state => get(state, 'map.present.viewerOptions'),
+    state => {
+        const map = mapSelector(state);
+        // get the camera position available in the 3D mode
+        const cameraPosition = map?.viewerOptions?.cameraPosition;
+        const center = cameraPosition
+            ? [cameraPosition.longitude, cameraPosition.latitude]
+            : map?.center;
+        return center && ConfigUtils.getCenter(center);
+    }
+], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions, center) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: getApiUrl(location.href),
@@ -81,7 +90,7 @@ const Share = connect(createSelector([
     viewerOptions,
     mapType,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
-    center: map && map.center && ConfigUtils.getCenter(map.center),
+    center,
     zoom: map && map.zoom,
     showAPI: !context,
     embedOptions: {

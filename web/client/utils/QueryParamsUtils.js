@@ -187,6 +187,9 @@ export const paramActions = {
             })
         ];
     },
+    // In 2D mode the camera position and the center match the same latitude and longitude
+    // while in 3D mode the center represents the position of the camera and not the actual targeted center on the globe
+    // because it could differ based on the camera orientation (heading, pitch and roll)
     center: (parameters, state) => {
         const map = mapSelector(state);
         const mapType = mapTypeSelector(state);

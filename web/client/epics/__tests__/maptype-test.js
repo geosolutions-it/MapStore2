@@ -10,10 +10,12 @@ import expect from 'expect';
 
 import { onLocationChanged } from 'connected-react-router';
 
-import { syncMapType, restore2DMapTypeOnLocationChange  } from '../maptype';
+import { syncMapType, restoreDefaultVisualizationMode  } from '../maptype';
 import { changeVisualizationMode, VISUALIZATION_MODE_CHANGED } from '../../actions/maptype';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { VisualizationModes } from '../../utils/MapTypeUtils';
+import { resetDashboard } from '../../actions/dashboard';
+import { loadGeostory } from '../../actions/geostory';
 
 const NUM_ACTIONS = 1;
 
@@ -45,13 +47,26 @@ describe('maptype epics', () => {
         }, STATE);
     });
 
-    it('restore 2D map when changing location from a 3d mode', (done) => {
+    it('restore default mode when reset dashboard', (done) => {
         const STATE_3D = {
             maptype: {
                 mapType: "cesium"
             }
         };
-        testEpic(restore2DMapTypeOnLocationChange, NUM_ACTIONS, onLocationChanged({pathname: "/"}, "PUSH" ), (actions) => {
+        testEpic(restoreDefaultVisualizationMode, NUM_ACTIONS, resetDashboard(), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            expect(actions[0].type).toEqual(VISUALIZATION_MODE_CHANGED);
+            expect(actions[0].visualizationMode).toEqual(VisualizationModes._2D);
+            done();
+        }, STATE_3D);
+    });
+    it('restore default mode when load geostory', (done) => {
+        const STATE_3D = {
+            maptype: {
+                mapType: "cesium"
+            }
+        };
+        testEpic(restoreDefaultVisualizationMode, NUM_ACTIONS, loadGeostory(), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             expect(actions[0].type).toEqual(VISUALIZATION_MODE_CHANGED);
             expect(actions[0].visualizationMode).toEqual(VisualizationModes._2D);

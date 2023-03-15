@@ -10,13 +10,16 @@ import { replace, LOCATION_CHANGE } from 'connected-react-router';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { changeVisualizationMode, VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
-import { is3DMode } from '../selectors/maptype';
+import { visualizationModeSelector } from '../selectors/maptype';
 import {
     findMapType,
     removeMapType,
-    VisualizationModes,
-    getVisualizationModeFromMapLibrary
+    getVisualizationModeFromMapLibrary,
+    getDefaultVisualizationMode
 } from '../utils/MapTypeUtils';
+
+import { DASHBOARD_RESET } from '../actions/dashboard';
+import { LOAD_GEOSTORY } from '../actions/geostory';
 
 /**
  * Keep in sync mapType in state with mapType in URL.
@@ -72,20 +75,13 @@ export const syncMapType = (action$, store) =>
     );
 
 /**
- * Restores last 2D map type when switch to a context where maptype is not
- * in the URL.
+ * Restores default visualization mode for dashboard and geostories
  */
-export const restore2DMapTypeOnLocationChange = (action$, store) => {
-    return action$.ofType(LOCATION_CHANGE)
-        // NOTE: this do not conflict with syncMapType LOCATION_CHANGE intercept, they are mutually esclusive
-        // because of the `findMapType` check
-        .filter(action =>
-            action?.payload?.action !== 'REPLACE'
-            && !findMapType(action?.payload?.location?.pathname)
-            && is3DMode(store.getState())
-        )
+export const restoreDefaultVisualizationMode = (action$, store) => {
+    return action$.ofType(DASHBOARD_RESET, LOAD_GEOSTORY)
+        .filter(() => visualizationModeSelector(store.getState()) !== getDefaultVisualizationMode())
         .switchMap(() => {
-            return Rx.Observable.of(changeVisualizationMode(VisualizationModes._2D));
+            return Rx.Observable.of(changeVisualizationMode(getDefaultVisualizationMode()));
         });
 };
 /**
@@ -95,5 +91,5 @@ export const restore2DMapTypeOnLocationChange = (action$, store) => {
  */
 export default {
     syncMapType,
-    restore2DMapTypeOnLocationChange
+    restoreDefaultVisualizationMode
 };
