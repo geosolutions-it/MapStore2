@@ -91,6 +91,15 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>
+        {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="singleTile" key="singleTile">
+            <Col xs={12}>
+                <Checkbox
+                    onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, singleTile: e.target.checked })}
+                    checked={!isNil(service?.layerOptions?.singleTile) ? service.layerOptions.singleTile : false}>
+                    <Message msgId="catalog.singleTile.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
+                </Checkbox>
+            </Col>
+        </FormGroup>}
         {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
             <Col xs={12}>
                 <Checkbox
@@ -167,7 +176,7 @@ export default ({
                 <Select
                     value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
                     options={tileSelectOptions}
-                    onChange={event => onChangeServiceProperty("layerOptions", { tileSize: event && event.value })} />
+                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
             </Col >
         </FormGroup>
         {!isNil(service.type) && service.type === "csw" &&

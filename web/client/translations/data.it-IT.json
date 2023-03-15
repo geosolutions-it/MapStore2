@@ -1501,6 +1501,10 @@
                 "label": "Imposta limite di visibilità",
                 "tooltip": "Applica automaticamente i limiti di visibilità suggeriti dal server"
             },
+            "singleTile": {
+                "label": "Single Tile",
+                "tooltip": "Il layer viene renderizzato come immagine a singola tile quando aggiunto alla mappa con questa opzione abilitata"
+            },
             "domainAliases": {
               "title": "Alias di dominio",
               "helpTooltip": "Questa opzione viene utilizzata per suddividere il contenuto in più sottodomini",

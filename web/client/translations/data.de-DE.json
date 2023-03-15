@@ -1539,6 +1539,10 @@
                 "label": "Sichtbarkeitsgrenze festlegen",
                 "tooltip": "Wendet automatisch die vom Server vorgeschlagenen Sichtbarkeitsgrenzen an"
             },
+            "singleTile": {
+                "label": "Single Tile",
+                "tooltip": "Die Ebene wird als einzelnes Kachelbild gerendert, wenn sie mit aktivierter Option zur Karte hinzugefügt wird."
+            },
           "domainAliases": {
             "title": "Domain-Aliasse",
             "helpTooltip": "Diese Option wird verwendet, um Inhalte auf mehrere Subdomains aufzuteilen",
