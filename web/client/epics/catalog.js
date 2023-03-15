@@ -68,8 +68,10 @@ import { getSupportedFormat, getCapabilities, describeLayers } from '../api/WMS'
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCapabilitiesUrl, getLayerId, getLayerUrl} from '../utils/LayersUtils';
+import { VisualizationModes } from '../utils/MapTypeUtils';
 import { wrapStartStop } from '../observables/epics';
 import {zoomToExtent} from "../actions/map";
+import {changeVisualizationMode} from "../actions/maptype";
 import CSW from '../api/CSW';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
@@ -151,7 +153,7 @@ export default (API) => ({
                 const state = store.getState();
                 const services = servicesSelectorWithBackgrounds(state);
                 const actions = layers
-                    .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
+                    .filter((l, i) => !!services?.[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
                         const layerOptions = get(options, i, searchOptionsSelector(state));
                         const source = sources[i];
@@ -160,7 +162,7 @@ export default (API) => ({
                         const url = service.url;
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, {...layerOptions, ...service}).catch(() => ({ results: [] }))
+                            API[format].textSearch(url, startPosition, maxRecords, text, { ...layerOptions, ...service, options: { service } }).catch(() => ({ results: [] }))
                         ).map(r => ({ ...r, format, url, text, layerOptions }));
                     });
                 return Rx.Observable.forkJoin(actions)
@@ -206,12 +208,22 @@ export default (API) => ({
                         // return one notification for all records that have not been found
                         actions = [recordsNotFound(allRecordsNotFound)];
                     }
+
+                    const layers = results
+                        .filter(r => isObject(r[0]))
+                        .map(r => merge({}, r[0], r[1]));
+
+                    const needs3DMode = !!layers.find(r => r.type === "3dtiles");
+                    if (needs3DMode) {
+                        actions = [
+                            ...actions,
+                            changeVisualizationMode(VisualizationModes._3D)
+                        ];
+                    }
                     // add all layers found to the map
                     actions = [
                         ...actions,
-                        ...results.filter(r => isObject(r[0])).map(r => {
-                            return addLayer(merge({}, r[0], r[1]));
-                        })
+                        ...layers.map(layer => addLayer(layer))
                     ];
                     return Rx.Observable.from(actions);
                 }

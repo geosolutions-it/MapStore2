@@ -53,7 +53,11 @@ const getRecords = (url, startPosition, maxRecords, text, info) => {
                 type: '3dtiles',
                 tileset,
                 ...properties
-            }].filter(({ title }) => !text || title?.toLowerCase().includes(text?.toLowerCase() || ''));
+            }].filter(({ title }) =>
+                !text
+                || title?.toLowerCase().includes(text?.toLowerCase() || '')
+                || url?.toLowerCase().includes(text?.toLowerCase() || '')
+            );
             return {
                 numberOfRecordsMatched: records.length,
                 numberOfRecordsReturned: records.length,

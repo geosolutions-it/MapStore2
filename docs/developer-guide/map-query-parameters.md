@@ -343,7 +343,7 @@ Requirements:
 - The number of layers should match the number of sources
 - The source name can be a string that must match a catalog service name present in the map or an object that defines an external catalog (see example)
 
-Supported layer types are WMS, WMTS and WFS.
+Supported layer types are WMS, WMTS, WFS and 3D Tiles.
 
 Example:
 
@@ -371,3 +371,29 @@ Data of resulting layer can be additionally filtered by passing "CQL_FILTER" int
 GET `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]`
 
 Number of objects passed to the options can be different to the number of layers, in this case options will be applied to the first X layers, where X is the length of options array.
+
+The 3D tiles service endpoint does not contain a default property for the name of the layer and it returns only a single layer. Below some ways to correctly request the layer contained inside 3D tiles service:
+
+- Use the `url` property to get the layer
+
+```json
+{
+    "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
+    "layers": ["https://example.com/tileset-pathname/tileset.json"],
+    "sources": [{ "type":"3dtiles", "url":"https://example.com/tileset-pathname/tileset.json" }]
+}
+```
+
+GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["https://example.com/tileset-pathname/tileset.json"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json"}]}]`
+
+- Use the `title` property in the source object to assign the name to the layer
+
+```json
+{
+    "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
+    "layers": ["My Layer"],
+    "sources": [{ "type":"3dtiles", "url":"https://example.com/tileset-pathname/tileset.json", "title": "My Layer" }]
+}
+```
+
+GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My Layer"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json","title":"My Layer"}]}]`
