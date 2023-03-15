@@ -205,7 +205,8 @@ class CesiumMap extends React.Component {
                     roll: parseFloat(this.props.orientate.roll)
                 }
             };
-            this.setView(position);
+            this.map.camera.cancelFlight();
+            this.map.camera.flyTo(position, this.props.mapOptions.defaultFlightOptions);
         }
 
         if (prevProps && (this.props.mapOptions.showSkyAtmosphere !== prevProps?.mapOptions?.showSkyAtmosphere)) {
@@ -449,11 +450,7 @@ class CesiumMap extends React.Component {
 
     setView = (position) => {
         this.map.camera.cancelFlight();
-        if (this.props.mapOptions && this.props.mapOptions.flyTo) {
-            this.map.camera.flyTo(position, this.props.mapOptions.defaultFlightOptions);
-        } else {
-            this.map.camera.setView(position);
-        }
+        this.map.camera.setView(position);
     };
 
     subscribeClickEvent = (map) => {

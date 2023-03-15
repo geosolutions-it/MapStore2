@@ -68,31 +68,6 @@ const appConfig = {
 };
 ```
 
-### Remove flyTo from the default map options
-
-The localConfig.json provides configuration for the default map options including the flyTo boolean that add a transition animation when the camera change positions for Cesium maps. While this feature could be useful for presentations such as in the map views plugin or zoom to extent actions, it does not work well with the default behavior of the map that should avoid transition similarly to the 2D maps.
-For this reason it is suggested to remove the flyTo property from the default map options inside the localConfig.json file:
-
-```diff
-{
-    "defaultMapOptions": {
-        "cesium": {
--           "flyTo": true,
-            "navigationTools": true,
-            "showSkyAtmosphere": true,
-            "showGroundAtmosphere": false,
-            "enableFog": false,
-            "depthTestAgainstTerrain": false,
-            "terrainProvider": {
-                "type": "ellipsoid"
-            }
-        },
-        "floatingIdentifyDelay": 1000
-    },
-}
-
-```
-
 ## Migration from 2022.02.02 to 2023.01.00
 
 ### Log4j update to Log4j2

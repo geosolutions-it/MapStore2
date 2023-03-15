@@ -35,7 +35,7 @@ const DEFAULT_VISUALIZATION_MODES_CONFIG = {
     }
 };
 
-const getDefaultVisualizationMode = () => {
+export const getDefaultVisualizationMode = () => {
     const customMapTypeConfig = getConfigProp('mapType') || {};
     const { defaultVisualizationMode = VisualizationModes._2D } = customMapTypeConfig;
     return defaultVisualizationMode;
