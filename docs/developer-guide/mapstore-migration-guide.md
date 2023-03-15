@@ -27,7 +27,7 @@ This is a list of things to check if you want to update from a previous version 
 The map configuration stores the information related to the visualization mode 2D or 3D after saving a map.
 This update include also following changes:
 
-- `maptype` configuration inside the initialState of localConfig needs to be removed in favor of the global mapType configuration
+- `maptype` default state configuration inside the initialState of `localConfig.json` needs to be removed. If a MapStore project needs a particular setup (eg. use only OpenLayers for 2D maps, initialize the app in 3D, ...) it is possible to override the default map libraries configuration with the new `mapType` property in the `localConfig.json` file, see documentation [here](local-config.md#application-configuration).
 
 ```diff
 {
@@ -48,25 +48,6 @@ This update include also following changes:
 - the `changeMapType` action has been deprecated in favor of the `changeVisualizationMode` action
 
 - the application does not expose the pathname of the viewer with `mapType` anymore. Example: the old path `/viewer/openlayers/1` becomes `/viewer/1`
-
-- it is possible to change the map library based on the device using the new `mapType` configuration in localConfig.json. This configuration is only needed for project with custom map library settings. The downstream projects based on the MapStore product don't need this update
-
-```diff
-{
-    // ...
-+    "mapType": {
-+       "2D": {
-+           "desktop": "openlayers",
-+           "mobile": "leaflet"
-+       },
-+       "3D": {
-+           "desktop": "cesium",
-+           "mobile": "cesium"
-+       }
-+   },
-    // ...
-}
-```
 
 - the app pages inside a MapStore project must be updated with a new entry, only for projects with custom pages and that are using context applications, here an example:
 

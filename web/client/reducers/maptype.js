@@ -11,8 +11,7 @@ import { MAP_PLUGIN_LOAD } from '../actions/map';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 
 import {
-    getMapLibraryFromVisualizationMode,
-    VisualizationModes
+    getMapLibraryFromVisualizationMode
 } from '../utils/MapTypeUtils';
 
 /**
@@ -27,11 +26,11 @@ import {
  * }
  */
 function maptype(state = {
-    mapType: getMapLibraryFromVisualizationMode(VisualizationModes._2D)
+    mapType: getMapLibraryFromVisualizationMode()
 }, action) {
     switch (action.type) {
     case MAP_CONFIG_LOADED:
-        const visualizationMode = action?.config?.map?.visualizationMode || VisualizationModes._2D;
+        const visualizationMode = action?.config?.map?.visualizationMode;
         return {
             ...state,
             mapType: getMapLibraryFromVisualizationMode(visualizationMode)

@@ -7,11 +7,11 @@
  */
 
 import React from 'react';
-import { getMapLibraryFromVisualizationMode, VisualizationModes } from '../../../utils/MapTypeUtils';
+import { getMapLibraryFromVisualizationMode } from '../../../utils/MapTypeUtils';
 
 const autoMapType = (Component) => props => (
     <Component
-        mapType={getMapLibraryFromVisualizationMode(props?.map?.visualizationMode || VisualizationModes._2D)}
+        mapType={getMapLibraryFromVisualizationMode(props?.map?.visualizationMode)}
         {...props}
     />
 );

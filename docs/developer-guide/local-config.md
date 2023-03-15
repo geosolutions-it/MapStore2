@@ -99,18 +99,24 @@ This is the main structure:
     "leaflet": { ... },
     "cesium": { ... }
   },
-  // allow to define which 2D or 3D map library should be used based on the device
+  // allow to define the default visualization mode of the app and
+  // which 2D or 3D map library should be used based on the device
   // the configuration below is the default one
-  // structure -> { mapType: { [visualizationMode]: { [deviceType]: mapLibrary } } }
   // note: this configuration does not support expressions
   "mapType": {
-    "2D": {
-      "desktop": "openlayers",
-      "mobile": "leaflet"
-    },
-    "3D": {
-      "desktop": "cesium",
-      "mobile": "cesium"
+    // the default visualization mode of the app, it could be "2D" or "3D"
+    "defaultVisualizationMode": "2D",
+    // map library to use based on the visualization mode and device
+    // structure -> { visualizationModes: { [visualizationMode]: { [deviceType]: mapLibrary } } }
+    "visualizationModes": {
+      "2D": {
+        "desktop": "openlayers",
+        "mobile": "leaflet"
+      },
+      "3D": {
+        "desktop": "cesium",
+        "mobile": "cesium"
+      }
     }
   },
   "plugins": {

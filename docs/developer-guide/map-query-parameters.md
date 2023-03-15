@@ -13,7 +13,7 @@ The parameters can be passed in a query-string-like section, after the `#<path>?
 Example:
 
 ```text
-#/viewer/openlayers/new?center=0,0&zoom=5
+#/viewer/new?center=0,0&zoom=5
 ```
 
 !!! note
@@ -23,8 +23,8 @@ Example:
 
 Sometimes the request parameters can be too big to be passed in the URL, for instance when dealing with an entire map, or complex data. To overcome this kind of situations, an adhoc `POST` service available at `<mapstore-base-path>/rest/config/setParams` allows to pass the parameters in the request payload `application/x-www-form-urlencoded`.
 The parameters will be then passed to the client (using a temporary `queryParams-{random-UUID}` variable in `sessionStorage`).
-Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/openlayers/config`.
-The UUID used in the `queryParams-{random-UUID}` variable name is being added to the redirect URL in a query parameter named `queryParamsID=`. Assuming to use the default redirect value, the url will then look like the following: `#/viewer/openlayers/config?queryParamsID={random-UUID}`.
+Near the parameters, an additional `page` value can be passed together with the params to specify to which url be redirect. If no page attribute is specified by default redirection happens to `#/viewer/config`.
+The UUID used in the `queryParams-{random-UUID}` variable name is being added to the redirect URL in a query parameter named `queryParamsID=`. Assuming to use the default redirect value, the url will then look like the following: `#/viewer/config?queryParamsID={random-UUID}`.
 
 Example `application/x-www-form-urlencoded` request payload (URL encoded):
 
@@ -39,7 +39,7 @@ Here a sample page you can create to test the service:
     <script>
         const POST_PATH = "rest/config/setParams";
         const queryParameters = {
-            "page": '../../#/viewer/openlayers/config',
+            "page": '../../#/viewer/config',
             "map": {"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}},
             "featureinfo": '',
             "bbox": '',
@@ -121,7 +121,7 @@ Here a sample page you can create to test the service:
     <fieldset>
         <legend>Params:</legend>
         <label for="map">map:</label><br/><textarea id="map" name="map"></textarea><br/>
-        <label for="page">page:</label><br/><input type="text" id="page" name="page" value="../../#/viewer/openlayers/config"></input><br/>
+        <label for="page">page:</label><br/><input type="text" id="page" name="page" value="../../#/viewer/config"></input><br/>
         <label for="featureinfo">featureinfo:</label><br/><textarea id="featureinfo" name="featureinfo"></textarea><br/>
         <label for="bbox">bbox:</label><br/><input type="text" id="bbox" name="bbox"></input><br/>
         <label for="center">center:</label><br/><input type="text" id="center" name="center"></input><br/>
@@ -145,13 +145,13 @@ Optional parameter "filterNameList" allows limiting request to the specific laye
 It will be effectively used only if it's passed as non-empty array of layer names.
 Omitting or passing an empty array will have the same effect.
 
-GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}`
+GET: `#/viewer/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": []}`
 
-GET: `#/viewer/openlayers/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": ["layerName1", "layerName2"]}`
+GET: `#/viewer/config?featureinfo={"lat": 43.077, "lng": 12.656, "filterNameList": ["layerName1", "layerName2"]}`
 
 #### Simplified syntax
 
-GET: `#/viewer/openlayers/config?featureInfo=38.72,-95.625`
+GET: `#/viewer/config?featureInfo=38.72,-95.625`
 
 Where lon,lat values are comma-separated respecting order.
 
@@ -162,7 +162,7 @@ Allows to pass the entire map JSON definition (see the map configuration format 
 GET:
 
 ```text
-#/viewer/openlayers/config?map={"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}
+#/viewer/config?map={"version":2,"map":{"projection":"EPSG:900913","units":"m","center":{"x":1250000,"y":5370000,"crs":"EPSG:900913"},"zoom":5,"maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"layers":[{"type":"osm","title":"Open Street Map","name":"mapnik","source":"osm","group":"background","visibility":true}]}}
 ```
 
 It also allows partial overriding of existing map configuration by passing only specific properties of the root object and/or the internal "map" object.
@@ -170,24 +170,24 @@ It also allows partial overriding of existing map configuration by passing only 
 Following example will override "catalogServices" and "mapInfoConfiguration":
 
 ```text
-#/viewer/openlayers/config?map={"mapInfoConfiguration":{"trigger":"click","infoFormat":"text/html"},"catalogServices":{"services": {"wms": {"url": "http://example.com/geoserver/wms","type": "wms","title": "WMS","autoload": true}},"selectedService": "wms"}}
+#/viewer/config?map={"mapInfoConfiguration":{"trigger":"click","infoFormat":"text/html"},"catalogServices":{"services": {"wms": {"url": "http://example.com/geoserver/wms","type": "wms","title": "WMS","autoload": true}},"selectedService": "wms"}}
 ```
 
 ### Center / Zoom
 
-GET: `#/viewer/openlayers/config?center=0,0&zoom=5`
+GET: `#/viewer/config?center=0,0&zoom=5`
 
 Where lon,lat values are comma-separated respecting order.
 
 ### Marker / Zoom
 
-GET: `#/viewer/openlayers/config?marker=0,0&zoom=5`
+GET: `#/viewer/config?marker=0,0&zoom=5`
 
 Where lon,lat values are comma-separated respecting order.
 
 ### Bbox
 
-GET: `#/viewer/openlayers/config?bbox=8,8,53,53`
+GET: `#/viewer/config?bbox=8,8,53,53`
 
 Where values are `minLongitude, minLatitude, maxLongitude, maxLatitude` respecting order.
 
@@ -195,7 +195,7 @@ Where values are `minLongitude, minLatitude, maxLongitude, maxLatitude` respecti
 
 This is a shortened syntax for `CATALOG:ADD_LAYERS_FROM_CATALOGS` action described down below.
 
-GET: `#/viewer/openlayers/config?addLayers=layer1;service,layer2&layerFilters=attributeLayer1='value';attributeLayer2='value2'`
+GET: `#/viewer/config?addLayers=layer1;service,layer2&layerFilters=attributeLayer1='value';attributeLayer2='value2'`
 
 `addLayers` parameter is a comma separated list of `<layerName>;<service>` (`service` is optional, and if present is separated
 from the layerName by a `;`.
@@ -217,7 +217,7 @@ In this case search execution will be postponed up to the moment when layer is a
 If so, it will postpone search to ensure that layer is added to the map. Otherwise, in case of no matches, search will execute
 immediately.
 
-GET: `#/viewer/openlayers/new?addLayers=layer1;service&mapinfo=layer1&mapInfoFilter=BB='cc'`
+GET: `#/viewer/new?addLayers=layer1;service&mapinfo=layer1&mapInfoFilter=BB='cc'`
 
 Where:
 
@@ -231,11 +231,11 @@ Allows to dynamically add background to the map and activate it.
 Supports default backgrounds provided by static service defined in `localConfig.json` (`default_map_backgrounds`) as well
 as other layers:
 
-`#/viewer/openlayers/new?background=Sentinel;default_map_backgrounds`
+`#/viewer/new?background=Sentinel;default_map_backgrounds`
 
-`#/viewer/openlayers/new?background=layer1;service`
+`#/viewer/new?background=layer1;service`
 
-`#/viewer/openlayers/new?background=layer2`
+`#/viewer/new?background=layer2`
 
 Where:
 
@@ -275,7 +275,7 @@ Example:
 }
 ```
 
-GET: `#/viewer/openlayers/config?actions=[{"type": "ZOOM_TO_EXTENT","extent": [1,2,3,4],"crs": "EPSG:4326","maxZoom": 8}]`
+GET: `#/viewer/config?actions=[{"type": "ZOOM_TO_EXTENT","extent": [1,2,3,4],"crs": "EPSG:4326","maxZoom": 8}]`
 
 For more details check out the [zoomToExtent](https://mapstore.geosolutionsgroup.com/mapstore/docs/#actions.map.zoomToExtent) in the framework documentation.
 
@@ -302,12 +302,12 @@ Example:
 }
 ```
 
-GET: `#/viewer/openlayers/config?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]`
+GET: `#/viewer/config?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"}]`
 
 The sample request below illustrates how two actions can be concatenated:
 
 ```text
-https://dev-mapstore.geosolutionsgroup.com/mapstore/#/viewer/openlayers/4093?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"STATE_FIPS=34","layer":"topp:states"},{"type":"ZOOM_TO_EXTENT","extent":[-77.48202256347649,38.74612266051003,-72.20858506347648,40.66664704515103],"crs":"EPSG:4326","maxZoom":8}]
+https://dev-mapstore.geosolutionsgroup.com/mapstore/#/viewer/4093?actions=[{"type":"SEARCH:SEARCH_WITH_FILTER","cql_filter":"STATE_FIPS=34","layer":"topp:states"},{"type":"ZOOM_TO_EXTENT","extent":[-77.48202256347649,38.74612266051003,-72.20858506347648,40.66664704515103],"crs":"EPSG:4326","maxZoom":8}]
 ```
 
 The MapStore invocation URL above executes the following operations:
@@ -332,7 +332,7 @@ Example:
 }
 ```
 
-GET: `#/viewer/openlayers/config?actions=[{"type":"SEARCH:SCHEDULE_SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"},{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["WORKSPACE:LAYER_NAME"],"sources":["catalog1"]}]`
+GET: `#/viewer/config?actions=[{"type":"SEARCH:SCHEDULE_SEARCH_WITH_FILTER","cql_filter":"ID=75","layer":"WORKSPACE:LAYER_NAME"},{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["WORKSPACE:LAYER_NAME"],"sources":["catalog1"]}]`
 
 #### Add Layers
 
@@ -355,7 +355,7 @@ Example:
 }
 ```
 
-GET: `#/viewer/openlayers/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]`
+GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1", "layer2", "workspace:externallayername"],"sources":["catalog1", "catalog2", {"type":"WMS","url":"https://example.com/wms"}]}]`
 
 Data of resulting layer can be additionally filtered by passing "CQL_FILTER" into the options array. Each element of array corresponds to the layer defined in action:
 
@@ -368,6 +368,6 @@ Data of resulting layer can be additionally filtered by passing "CQL_FILTER" int
 }
 ```
 
-GET `#/viewer/openlayers/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]`
+GET `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["layer1","layer2","workspace:externallayername"],"sources":["catalog1","catalog2",{"type":"WMS","url":"https://example.com/wms"}],"options": [{"params":{"CQL_FILTER":"NAME='value'"}}, {}, {"params":{"CQL_FILTER":"NAME='value2'"}}]}]`
 
 Number of objects passed to the options can be different to the number of layers, in this case options will be applied to the first X layers, where X is the length of options array.
