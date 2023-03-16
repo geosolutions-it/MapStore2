@@ -83,6 +83,9 @@ In particular, the user is allowed to:
 
 !!!Warning
     The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
+    
+!!!note
+    Cached tiles works with WMS only with standard gridsets (exponential). When MapStore uses custom scales, the tile cache can not be used.
 
 ## Style
 
