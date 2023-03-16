@@ -1,0 +1,1843 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<WMS_Capabilities version="1.3.0" xmlns="http://www.opengis.net/wms" xmlns:sld="http://www.opengis.net/sld" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd  http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd  http://mapserver.gis.umn.edu/mapserver https://wms.craig.fr/ortho?language=fra&amp;service=WMS&amp;version=1.3.0&amp;request=GetSchemaExtension">
+
+<!-- MapServer version 7.6.4 OUTPUT=PNG OUTPUT=JPEG OUTPUT=KML SUPPORTS=PROJ SUPPORTS=AGG SUPPORTS=FREETYPE SUPPORTS=CAIRO SUPPORTS=SVG_SYMBOLS SUPPORTS=RSVG SUPPORTS=ICONV SUPPORTS=FRIBIDI SUPPORTS=WMS_SERVER SUPPORTS=WMS_CLIENT SUPPORTS=WFS_SERVER SUPPORTS=WFS_CLIENT SUPPORTS=WCS_SERVER SUPPORTS=SOS_SERVER SUPPORTS=FASTCGI SUPPORTS=THREADS SUPPORTS=GEOS SUPPORTS=POINT_Z_M SUPPORTS=PBF INPUT=JPEG INPUT=POSTGIS INPUT=OGR INPUT=GDAL INPUT=SHAPEFILE -->
+
+<Service>
+  <Name>WMS</Name>
+  <Title>Service de consultation (WMS) des orthophotographies 1996/2020 du CRAIG et de ses partenaires</Title>
+  <Abstract>Ce service wms permet de co-visualiser l'ensemble des orthophotographies produites par le CRAIG et ses partenaires entre 1996 et 2020 sur la région Auvergne-Rhône-Alpes. Projet co-financé par l'Union européenne - fonds européen de développement régional FEDER - L'Europe s'engage en Auvergne-Rhône-Alpes. Pour les données de 2009/2010, 2013, 2016, 2018, 2019 et 2020, il est conseillé d'utiliser le service de flux tuilé sur http://tiles.craig.fr/ortho/service?</Abstract>
+  <KeywordList>
+      <Keyword>OrthoImagery</Keyword>
+      <Keyword>imageryBaseMapsEarthCover</Keyword>
+      <Keyword>Orthophotographie</Keyword>
+      <Keyword>OpenData</Keyword>
+      <Keyword>OGC:WMS</Keyword>
+      <Keyword>WMS 1.1.1</Keyword>
+      <Keyword>WMS 1.3.0</Keyword>
+      <Keyword>wms.craig.fr</Keyword>
+      <Keyword>wms.craig.fr/ortho</Keyword>
+      <Keyword vocabulary="ISO">infoMapAccessService</Keyword>
+  </KeywordList>
+  <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/>
+  <ContactInformation>
+    <ContactPersonPrimary>
+      <ContactPerson>Landry BREUIL</ContactPerson>
+      <ContactOrganization>CRAIG</ContactOrganization>
+    </ContactPersonPrimary>
+      <ContactPosition>root</ContactPosition>
+    <ContactAddress>
+        <AddressType>postal</AddressType>
+        <Address>7, avenue Blaise Pascal</Address>
+        <City>Aubière</City>
+        <StateOrProvince>Auvergne</StateOrProvince>
+        <PostCode>63117</PostCode>
+        <Country>France</Country>
+    </ContactAddress>
+      <ContactVoiceTelephone>04 73 40 54 09</ContactVoiceTelephone>
+      <ContactFacsimileTelephone>04 73 40 54 06</ContactFacsimileTelephone>
+  <ContactElectronicMailAddress>admin@craig.fr</ContactElectronicMailAddress>
+  </ContactInformation>
+  <Fees>None</Fees>
+  <AccessConstraints>Accès Libre</AccessConstraints>
+  <MaxWidth>3600</MaxWidth>
+  <MaxHeight>3600</MaxHeight>
+</Service>
+
+<Capability>
+  <Request>
+    <GetCapabilities>
+      <Format>text/xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetCapabilities>
+    <GetMap>
+      <Format>image/png</Format>
+      <Format>image/jpeg</Format>
+      <Format>image/png; mode=8bit</Format>
+      <Format>image/vnd.jpeg-png</Format>
+      <Format>image/vnd.jpeg-png8</Format>
+      <Format>application/x-pdf</Format>
+      <Format>image/svg+xml</Format>
+      <Format>image/tiff</Format>
+      <Format>application/vnd.google-earth.kml+xml</Format>
+      <Format>application/vnd.google-earth.kmz</Format>
+      <Format>application/x-protobuf</Format>
+      <Format>application/json</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetMap>
+    <GetFeatureInfo>
+      <Format>application/json</Format>
+      <Format>application/vnd.ogc.gml</Format>
+      <Format>text/plain</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetFeatureInfo>
+    <sld:DescribeLayer>
+      <Format>text/xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Post>
+        </HTTP>
+      </DCPType>
+    </sld:DescribeLayer>
+    <sld:GetLegendGraphic>
+      <Format>image/png</Format>
+      <Format>image/jpeg</Format>
+      <Format>image/png; mode=8bit</Format>
+      <Format>image/vnd.jpeg-png</Format>
+      <Format>image/vnd.jpeg-png8</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Post>
+        </HTTP>
+      </DCPType>
+    </sld:GetLegendGraphic>
+    <ms:GetStyles>
+      <Format>text/xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;"/></Post>
+        </HTTP>
+      </DCPType>
+    </ms:GetStyles>
+  </Request>
+  <Exception>
+    <Format>XML</Format>
+    <Format>INIMAGE</Format>
+    <Format>BLANK</Format>
+  </Exception>
+  <sld:UserDefinedSymbolization SupportSLD="1" UserLayer="0" UserStyle="1" RemoteWFS="0" InlineFeature="0" RemoteWCS="0"/>
+  <Layer queryable="1">
+    <Name>ortho_craig_partenaires_1996_2018</Name>
+    <Title>Service de consultation (WMS) des orthophotographies 1996/2020 du CRAIG et de ses partenaires</Title>
+    <Abstract>Ce service wms permet de co-visualiser l'ensemble des orthophotographies produites par le CRAIG et ses partenaires entre 1996 et 2020 sur la région Auvergne-Rhône-Alpes. Projet co-financé par l'Union européenne - fonds européen de développement régional FEDER - L'Europe s'engage en Auvergne-Rhône-Alpes. Pour les données de 2009/2010, 2013, 2016, 2018, 2019 et 2020, il est conseillé d'utiliser le service de flux tuilé sur http://tiles.craig.fr/ortho/service?</Abstract>
+    <KeywordList>
+        <Keyword>OrthoImagery</Keyword>
+        <Keyword>imageryBaseMapsEarthCover</Keyword>
+        <Keyword>Orthophotographie</Keyword>
+        <Keyword>OpenData</Keyword>
+        <Keyword>OGC:WMS</Keyword>
+        <Keyword>WMS 1.1.1</Keyword>
+        <Keyword>WMS 1.3.0</Keyword>
+        <Keyword>wms.craig.fr</Keyword>
+        <Keyword>wms.craig.fr/ortho</Keyword>
+        <Keyword vocabulary="ISO">infoMapAccessService</Keyword>
+    </KeywordList>
+    <CRS>EPSG:2154</CRS>
+    <CRS>EPSG:4326</CRS>
+    <CRS>EPSG:3785</CRS>
+    <CRS>EPSG:3857</CRS>
+    <CRS>EPSG:900913</CRS>
+    <CRS>EPSG:4171</CRS>
+    <CRS>EPSG:4258</CRS>
+    <CRS>EPSG:3945</CRS>
+    <CRS>EPSG:3946</CRS>
+    <EX_GeographicBoundingBox>
+        <westBoundLongitude>1.94095</westBoundLongitude>
+        <eastBoundLongitude>6.50183</eastBoundLongitude>
+        <southBoundLatitude>44.5039</southBoundLatitude>
+        <northBoundLatitude>46.8512</northBoundLatitude>
+    </EX_GeographicBoundingBox>
+    <BoundingBox CRS="EPSG:2154" minx="619300" miny="6.384e+06" maxx="967000" maxy="6.639e+06"/>
+    <Attribution>
+        <Title>©CRAIG</Title>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://www.craig.fr"/>
+        <LogoURL width="274" height="100">
+             <Format>image/svg</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://www.craig.fr/sites/www.craig.fr/files/images/logo_craig_2018.svg"/>
+          </LogoURL>
+    </Attribution>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho</Name>
+        <Title>Orthophotographies 2018-2020</Title>
+        <Abstract>Orthophotographies à 20 cm de résolution (2020 sur le Cantal, 2019 sur l'Allier/Haute-Loire/Loire/Puy-de-Dôme, 2018 sur l'Ain et l'Isère)</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.49405</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966550" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=ortho"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_irc</Name>
+        <Title>Orthophotographies IRC 2018-2020</Title>
+        <Abstract>Orthophotographies IRC à 20 cm de résolution (2020 sur le Cantal, 2019 sur l'Allier/Haute-Loire/Loire/Puy-de-Dôme, 2018 sur l'Ain et l'Isère)</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.49405</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966550" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=ortho_irc"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_wmst</Name>
+        <Title>Orthophotographies 1996-2020 (WMS TIME)</Title>
+        <Abstract>Orthophotographies à diverses résolutions sur l'Auvergne (ainsi que la Loire pour 2016 et 2019, et l'Ain et l'Isère pour 2018): Clermont Communauté 1996, 2001 et 2007, BD Ortho Auvergne IGN 1999-2002 et 2004-2009, Orthophotographie Auvergne CRAIG 2009-2010, 2013, 2016 et 2020. Utiliser le paramètre TIME du protocole WMS pour sélectionner un millésime</Abstract>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.49405</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966550" maxy="6.63575e+06"/>
+        <Dimension name="time" units="ISO8601" default="2019-07-01" nearestValue="0">1996-06-01,2000-07-01,2001-06-01,2005-07-01,2007-06-01,2009-07-01,2013-07-01,2016-07-01,2018-07-01,2019-07-01,2020-07-01</Dimension>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=ortho_wmst"/>
+        </MetadataURL>
+        <MaxScaleDenominator>25000</MaxScaleDenominator>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_irc_wmst</Name>
+        <Title>Orthophotographies IRC 2009-2019 (WMS TIME)</Title>
+        <Abstract>Orthophotographies infrarouge à diverses résolutions sur l'Auvergne (ainsi que la Loire pour 2016 et 2019, et l'Ain et l'Isère pour 2018): 2009-2010, 2013, 2016, 2019 et 2020. Utiliser le paramètre TIME du protocole WMS pour sélectionner un millésime</Abstract>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.49405</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966550" maxy="6.63575e+06"/>
+        <Dimension name="time" units="ISO8601" default="2019-07-01" nearestValue="0">2009-07-01,2013-07-01,2016-07-01,2018-07-01,2019-07-01,2020-07-01</Dimension>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=ortho_irc_wmst"/>
+        </MetadataURL>
+        <MaxScaleDenominator>25000</MaxScaleDenominator>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_2020</Name>
+        <Title>Orthophotographie Cantal 20cm 2020</Title>
+        <Abstract>Orthophotographie à 20cm de résolution sur le Cantal</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.03984</westBoundLongitude>
+            <eastBoundLongitude>3.38408</eastBoundLongitude>
+            <southBoundLatitude>44.605</southBoundLatitude>
+            <northBoundLatitude>45.4915</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="625000" miny="6.39e+06" maxx="730000" maxy="6.488e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/a03705d7-db7c-446f-af5e-d57b8f80e149/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_irc_2020</Name>
+        <Title>Orthophotographie Cantal IRC 50cm 2020</Title>
+        <Abstract>Orthophotographie infrarouge à 50cm de résolution sur le Cantal</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.03984</westBoundLongitude>
+            <eastBoundLongitude>3.38408</eastBoundLongitude>
+            <southBoundLatitude>44.605</southBoundLatitude>
+            <northBoundLatitude>45.4915</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="625000" miny="6.39e+06" maxx="730000" maxy="6.488e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/327fe3d2-ed97-4351-aeaa-9e86da08abf2/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_2019</Name>
+        <Title>Orthophotographie 20cm 2019</Title>
+        <Abstract>Orthophotographie à 20cm de résolution sur l'Allier, la Loire, la Haute-Loire et le Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.26568</westBoundLongitude>
+            <eastBoundLongitude>4.8093</eastBoundLongitude>
+            <southBoundLatitude>44.7304</southBoundLatitude>
+            <northBoundLatitude>46.8061</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="644000" miny="6.405e+06" maxx="838000" maxy="6.634e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/f3e8d3c6-0293-4372-a385-87b1cb56eb5c/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_irc_2019</Name>
+        <Title>Orthophotographie IRC 20cm 2019</Title>
+        <Abstract>Orthophotographie infrarouge à 20cm de résolution sur l'Allier, la Loire, la Haute-Loire et le Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.26568</westBoundLongitude>
+            <eastBoundLongitude>4.8093</eastBoundLongitude>
+            <southBoundLatitude>44.7304</southBoundLatitude>
+            <northBoundLatitude>46.8061</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="644000" miny="6.405e+06" maxx="838000" maxy="6.634e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/b3081552-f11b-4a66-bfe1-63d712ffb901/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_2018</Name>
+        <Title>Orthophotographie 25cm 2018</Title>
+        <Abstract>Orthophotographie à 25cm de résolution sur l'Ain et l'Isère</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>4.67923</westBoundLongitude>
+            <eastBoundLongitude>6.47595</eastBoundLongitude>
+            <southBoundLatitude>44.6705</southBoundLatitude>
+            <northBoundLatitude>46.5364</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="833000" miny="6.4025e+06" maxx="966500" maxy="6.6055e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/25ac1422-8988-478a-8d7f-35275cbe1374/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_irc_2018</Name>
+        <Title>Orthophotographie IRC 25cm 2018</Title>
+        <Abstract>Orthophotographie infrarouge à 25cm de résolution sur l'Ain et l'Isère</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>4.67923</westBoundLongitude>
+            <eastBoundLongitude>6.47595</eastBoundLongitude>
+            <southBoundLatitude>44.6705</southBoundLatitude>
+            <northBoundLatitude>46.5364</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="833000" miny="6.4025e+06" maxx="966500" maxy="6.6055e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/1e89b460-22c0-46e8-9c5c-1780cc122962/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_2016</Name>
+        <Title>Orthophotographie 25cm 2016</Title>
+        <Abstract>Orthophotographie à 25cm de résolution sur l'Auvergne et la Loire</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.82622</eastBoundLongitude>
+            <southBoundLatitude>44.5929</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="839250" maxy="6.63575e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/e37c057b-5884-429b-8bec-5db0baef0ee1/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>ortho_irc_2016</Name>
+        <Title>Orthophotographie IRC 25cm 2016</Title>
+        <Abstract>Orthophotographie infrarouge à 25cm de résolution sur l'Auvergne et la Loire</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.82622</eastBoundLongitude>
+            <southBoundLatitude>44.5929</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="839250" maxy="6.63575e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/f1f9167e-ddb8-4bab-b899-93cfe8d2de3c/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>auvergne</Name>
+        <Title>Auvergne 25cm 2013</Title>
+        <Abstract>Orthophotographie à 25cm de resolution sur la région Auvergne</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/8cabc987-829c-4c9f-943b-6a0e255cd738/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>auvergne_irc</Name>
+        <Title>Auvergne IRC 25cm 2013</Title>
+        <Abstract>Orthophotographie infrarouge à 25cm de resolution sur la région Auvergne</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/9f3196ce-9160-442c-afcc-a80c836e7c19/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>agglos_2013</Name>
+        <Title>Agglos 10cm 2013</Title>
+        <Abstract>Orthophotographie à 10cm de résolution sur les agglomérations d'Aurillac, Clermont Communauté, Moulins, Montlucon, le Puy en Velay et Vichy</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.20128</westBoundLongitude>
+            <eastBoundLongitude>4.09656</eastBoundLongitude>
+            <southBoundLatitude>44.7638</southBoundLatitude>
+            <northBoundLatitude>46.7274</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="639000" miny="6.40775e+06" maxx="783750" maxy="6.62525e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/8cabc987-829c-4c9f-943b-6a0e255cd738/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>auvergne_2009_2010</Name>
+        <Title>Auvergne 30cm 2009/2010</Title>
+        <Abstract>Orthophotographie à 30cm de résolution sur la region Auvergne</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/6f09b1ae-b64c-4a04-a2de-c8e6db14d32a/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>auvergne_irc_2009_2010</Name>
+        <Title>Auvergne IRC 30cm 2009/2010</Title>
+        <Abstract>Orthophotographie infrarouge à 30cm de résolution sur la région Auvergne</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/37fa41ca-2da2-4b11-9b79-c5b37788bccb/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>agglos_2009_2010</Name>
+        <Title>Agglomérations 15cm 2009/2010</Title>
+        <Abstract>Orthophotographie à 15cm de résolution sur les Agglomérations de Montlucon, Moulins, du Puy en Velay et de Vichy</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.39768</westBoundLongitude>
+            <eastBoundLongitude>4.09656</eastBoundLongitude>
+            <southBoundLatitude>44.8651</southBoundLatitude>
+            <northBoundLatitude>46.7274</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="654000" miny="6.419e+06" maxx="783750" maxy="6.62525e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://ids.craig.fr/geocat/srv/api/records/6f09b1ae-b64c-4a04-a2de-c8e6db14d32a/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>site_puy_de_dome_2011</Name>
+        <Title>Site du Puy de Dôme 10cm Mars 2011</Title>
+        <Abstract>Orthophotographie à 10cm de résolution sur le site du Puy de Dôme, Montaudoux et Colombier (projet Lidarverne)</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.92274</westBoundLongitude>
+            <eastBoundLongitude>3.09014</eastBoundLongitude>
+            <southBoundLatitude>45.7391</southBoundLatitude>
+            <northBoundLatitude>45.8111</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="694000" miny="6.5155e+06" maxx="707000" maxy="6.5235e+06"/>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ids.craig.fr/geocat/srv/api/records/1550d5b8-8fbc-4876-a649-62b08746a318/formatters/xml"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>clermontco_1996</Name>
+        <Title>Clermont Communauté 25cm 1996</Title>
+        <Abstract>Orthophotographie à 25cm de résolution sur Clermont Communauté</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>3.01698</westBoundLongitude>
+            <eastBoundLongitude>3.21422</eastBoundLongitude>
+            <southBoundLatitude>45.6836</southBoundLatitude>
+            <northBoundLatitude>45.8525</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="701322" miny="6.50936e+06" maxx="716624" maxy="6.5281e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=clermontco_1996"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>clermontco_2001</Name>
+        <Title>Clermont Communauté 16cm 2001</Title>
+        <Abstract>Orthophotographie à 16cm de résolution sur Clermont Communauté</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.94471</westBoundLongitude>
+            <eastBoundLongitude>3.30541</eastBoundLongitude>
+            <southBoundLatitude>45.6697</southBoundLatitude>
+            <northBoundLatitude>45.8752</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="695711" miny="6.50784e+06" maxx="723691" maxy="6.53062e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=clermontco_2001"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>clermontco_2007</Name>
+        <Title>Clermont Communauté 16cm 2007</Title>
+        <Abstract>Orthophotographie à 16cm de résolution sur Clermont Communauté</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.93818</westBoundLongitude>
+            <eastBoundLongitude>3.29882</eastBoundLongitude>
+            <southBoundLatitude>45.6748</southBoundLatitude>
+            <northBoundLatitude>45.8695</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="695204" miny="6.5084e+06" maxx="723182" maxy="6.52999e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=clermontco_2007"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>scot_rr_2020</Name>
+        <Title>SCOT Rives du Rhône 2020 20cm</Title>
+        <Abstract>Orthophotographie à 20cm de résolution sur le territoire du SCOT des rives du Rhône</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>4.4236</westBoundLongitude>
+            <eastBoundLongitude>5.16875</eastBoundLongitude>
+            <southBoundLatitude>45.0746</southBoundLatitude>
+            <northBoundLatitude>45.6264</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="812000" miny="6.444e+06" maxx="869000" maxy="6.504e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=scot_rr_2020"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>scot_rr_2015</Name>
+        <Title>SCOT Rives du Rhône 2015 20cm</Title>
+        <Abstract>Orthophotographie à 20cm de résolution sur le territoire du SCOT des rives du Rhône</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>4.42452</westBoundLongitude>
+            <eastBoundLongitude>5.36113</eastBoundLongitude>
+            <southBoundLatitude>45.1067</southBoundLatitude>
+            <northBoundLatitude>45.6264</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="812000" miny="6.448e+06" maxx="884000" maxy="6.504e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=scot_rr_2015"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="0" opaque="0" cascaded="0">
+        <Name>scot_rr_2009</Name>
+        <Title>SCOT Rives du Rhône 2009 25cm</Title>
+        <Abstract>Orthophotographie à 25cm de résolution sur le territoire du SCOT des rives du Rhône</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>4.55317</westBoundLongitude>
+            <eastBoundLongitude>5.10462</eastBoundLongitude>
+            <southBoundLatitude>45.1658</southBoundLatitude>
+            <northBoundLatitude>45.6246</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="822000" miny="6.454e+06" maxx="864000" maxy="6.504e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=scot_rr_2009"/>
+        </MetadataURL>
+    </Layer>
+    <Layer queryable="1">
+      <Name>Dallages</Name>
+      <Title>Dallages</Title>
+      <Layer queryable="1">
+        <Name>Région</Name>
+        <Title>Région</Title>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-all-ortho-rvb</Name>
+        <Title>Dallage des campagnes d'orthophotographie</Title>
+        <Abstract>Dallage de toutes les orthophotographies disponibles en flux - par millésimes et provenance</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-all-ortho-rvb"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="209" height="172">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;version=1.3.0&amp;service=WMS&amp;request=GetLegendGraphic&amp;sld_version=1.1.0&amp;layer=dallage-all-ortho-rvb&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-all-ortho-irc</Name>
+        <Title>Dallage des campagnes d'orthophotographie infrarouge</Title>
+        <Abstract>Dallage de toutes les orthophotographies infrarouge disponibles en flux - par millésimes et provenance</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-all-ortho-irc"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="207" height="73">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;version=1.3.0&amp;service=WMS&amp;request=GetLegendGraphic&amp;sld_version=1.1.0&amp;layer=dallage-all-ortho-irc&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-auvergne-2009</Name>
+        <Title>Dallage Ortho Auvergne 2009/2010</Title>
+        <Abstract>Dallage de l'orthophotographie 2009/2010 sur la région complète</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-auvergne-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-auvergne-irc-2009</Name>
+        <Title>Dallage Ortho Infrarouge Auvergne 2009/2010</Title>
+        <Abstract>Dallage de l'orthophotographie infrarouge 2009/2010 sur la région complète</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-auvergne-irc-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-auvergne-2013</Name>
+        <Title>Dallage Ortho Auvergne 2013</Title>
+        <Abstract>Dallage de l'orthophotographie 2013 sur la région complète</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-auvergne-2013"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-auvergne-irc-2013</Name>
+        <Title>Dallage Ortho Infrarouge Auvergne 2013</Title>
+        <Abstract>Dallage de l'orthophotographie infrarouge 2013 sur la région complète</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-auvergne-irc-2013"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-2016</Name>
+        <Title>Dallage Ortho Auvergne + Loire 2016</Title>
+        <Abstract>Dallage de l'orthophotographie 2016 sur la région auvergne et la loire</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-2016"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-irc-2016</Name>
+        <Title>Dallage Ortho Infrarouge Auvergne + Loire 2016</Title>
+        <Abstract>Dallage de l'orthophotographie infrarouge 2016 sur la région auvergne et la loire</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-irc-2016"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-2018</Name>
+        <Title>Dallage Ortho Isère + Ain 2018</Title>
+        <Abstract>Dallage de l'orthophotographie 2018 sur les départements de l'isère et de l'ain</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-2018"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-irc-2018</Name>
+        <Title>Dallage Ortho Infrarouge Isère + Ain 2018</Title>
+        <Abstract>Dallage de l'orthophotographie infrarouge 2018 sur les départements de l'isère et de l'ain</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-irc-2018"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-2019</Name>
+        <Title>Dallage Ortho 03/42/43/63 2019</Title>
+        <Abstract>Dallage de l'orthophotographie 2019 sur les départements de l'Allier, la Loire, la Haute-Loire et le Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-2019"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-irc-2019</Name>
+        <Title>Dallage Ortho Infrarouge 03/42/43/63 2019</Title>
+        <Abstract>Dallage de l'orthophotographie infrarouge 2019 sur les départements de l'Allier, la Loire, la Haute-Loire et le Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-irc-2019"/>
+        </MetadataURL>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>Départements</Name>
+        <Title>Départements</Title>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-2020</Name>
+        <Title>Dallage Ortho 15 2020</Title>
+        <Abstract>Dallage de l'orthophotographie 2020 sur le département du Cantal</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-2020"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-ortho-irc-2020</Name>
+        <Title>Dallage Ortho Infrarouge 15 2020</Title>
+        <Abstract>Dallage de l'orthophotographie infrarouge 2020 sur le département du Cantal</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>6.4934</eastBoundLongitude>
+            <southBoundLatitude>44.5558</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="966500" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-ortho-irc-2020"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-allier-2009</Name>
+        <Title>Dallage Allier</Title>
+        <Abstract>Dallage de l'orthophotographie 2009 sur l'Allier</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.24907</westBoundLongitude>
+            <eastBoundLongitude>4.03946</eastBoundLongitude>
+            <southBoundLatitude>45.9123</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="642750" miny="6.53525e+06" maxx="779250" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-allier-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-cantal-2010</Name>
+        <Title>Dallage Cantal</Title>
+        <Abstract>Dallage de l'orthophotographie 2010 sur le Cantal</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.03652</westBoundLongitude>
+            <eastBoundLongitude>3.40013</eastBoundLongitude>
+            <southBoundLatitude>44.6028</southBoundLatitude>
+            <northBoundLatitude>45.4982</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="731250" maxy="6.48875e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-cantal-2010"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-haute-loire-2010</Name>
+        <Title>Dallage Haute-Loire</Title>
+        <Abstract>Dallage de l'orthophotographie 2010 sur la Haute-Loire</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>3.05367</westBoundLongitude>
+            <eastBoundLongitude>4.51245</eastBoundLongitude>
+            <southBoundLatitude>44.7183</southBoundLatitude>
+            <northBoundLatitude>45.4442</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="704250" miny="6.40325e+06" maxx="818250" maxy="6.48275e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-haute-loire-2010"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-pdd-2009</Name>
+        <Title>Dallage Puy de Dome</Title>
+        <Abstract>Dallage de l'orthophotographie 2009 sur le Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.35404</westBoundLongitude>
+            <eastBoundLongitude>4.02895</eastBoundLongitude>
+            <southBoundLatitude>45.264</southBoundLatitude>
+            <northBoundLatitude>46.2681</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="650250" miny="6.46325e+06" maxx="779250" maxy="6.57425e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-pdd-2009"/>
+        </MetadataURL>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>Agglos</Name>
+        <Title>Agglos</Title>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-agglos-2009</Name>
+        <Title>Dallage Ortho Agglos 2009/2010</Title>
+        <Abstract>Dallage de l'orthophotographie 2009/2010 sur les agglomérations</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-agglos-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-agglos-2013</Name>
+        <Title>Dallage Ortho Agglos 2013</Title>
+        <Abstract>Dallage de l'orthophotographie 2013 sur les agglomérations</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-agglos-2013"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-montlucon-2009</Name>
+        <Title>Dallage Montlucon 2009</Title>
+        <Abstract>Dallage de l'orthophotographie 2009 sur Montlucon</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.40103</westBoundLongitude>
+            <eastBoundLongitude>2.6659</eastBoundLongitude>
+            <southBoundLatitude>46.226</southBoundLatitude>
+            <northBoundLatitude>46.423</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="654000" miny="6.56975e+06" maxx="674250" maxy="6.5915e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-montlucon-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-moulins-2009</Name>
+        <Title>Dallage Moulins 2009</Title>
+        <Abstract>Dallage de l'orthophotographie 2009 sur Moulins</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>3.11384</westBoundLongitude>
+            <eastBoundLongitude>3.58595</eastBoundLongitude>
+            <southBoundLatitude>46.3747</southBoundLatitude>
+            <northBoundLatitude>46.7273</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="708750" miny="6.58625e+06" maxx="744750" maxy="6.62525e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-moulins-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-vichy-2009</Name>
+        <Title>Dallage Vichy 2009</Title>
+        <Abstract>Dallage de l'orthophotographie 2009 sur Vichy</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>3.24872</westBoundLongitude>
+            <eastBoundLongitude>3.57123</eastBoundLongitude>
+            <southBoundLatitude>45.9966</southBoundLatitude>
+            <northBoundLatitude>46.2611</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="719250" miny="6.54425e+06" maxx="744000" maxy="6.5735e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-vichy-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-le-puy-2010</Name>
+        <Title>Dallage Le Puy 2010</Title>
+        <Abstract>Dallage de l'orthophotographie 2010 sur Le Puy</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>3.61405</westBoundLongitude>
+            <eastBoundLongitude>4.06556</eastBoundLongitude>
+            <southBoundLatitude>44.8651</southBoundLatitude>
+            <northBoundLatitude>45.1453</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="748500" miny="6.419e+06" maxx="783750" maxy="6.44975e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-le-puy-2010"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-clerco-1996</Name>
+        <Title>Dallage Ortho Clerco 1996</Title>
+        <Abstract>Dallage de l'orthophotographie 1996 sur Clermont Communauté</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-clerco-1996"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-clerco-2001</Name>
+        <Title>Dallage Ortho Clerco 2001</Title>
+        <Abstract>Dallage de l'orthophotographie 2001 sur Clermont Communauté</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-clerco-2001"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-clerco-2007</Name>
+        <Title>Dallage Ortho Clerco 2007</Title>
+        <Abstract>Dallage de l'orthophotographie 2007 sur Clermont Communauté</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-clerco-2007"/>
+        </MetadataURL>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>Autres</Name>
+        <Title>Autres</Title>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-site-puy-de-dome-2011</Name>
+        <Title>Dallage Ortho Site Puy de Dome / Montaudoux / Colombier 2011</Title>
+        <Abstract>Dallage de l'orthophotographie 2011 sur le site du Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.0123</westBoundLongitude>
+            <eastBoundLongitude>6.49586</eastBoundLongitude>
+            <southBoundLatitude>44.5131</southBoundLatitude>
+            <northBoundLatitude>46.8602</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.385e+06" maxx="966500" maxy="6.64e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-site-puy-de-dome-2011"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-mnt-site-puy-de-dome-2011</Name>
+        <Title>Dallage MNT Site Puy de Dome / Montaudoux / Colombier 2011</Title>
+        <Abstract>Dallage du MNT 2011 sur le site du Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.9163</westBoundLongitude>
+            <eastBoundLongitude>3.0837</eastBoundLongitude>
+            <southBoundLatitude>45.7391</southBoundLatitude>
+            <northBoundLatitude>45.8111</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="693500" miny="6.5155e+06" maxx="706500" maxy="6.5235e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-mnt-site-puy-de-dome-2011"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-lidar-site-puy-de-dome-2011</Name>
+        <Title>Dallage LIDAR Site Puy de Dome / Montaudoux / Colombier 2011</Title>
+        <Abstract>Dallage des données brutes LIDAR 2011 sur le site du Puy de Dôme</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.91952</westBoundLongitude>
+            <eastBoundLongitude>3.09014</eastBoundLongitude>
+            <southBoundLatitude>45.7368</southBoundLatitude>
+            <northBoundLatitude>45.8111</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="693750" miny="6.51525e+06" maxx="707000" maxy="6.5235e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-lidar-site-puy-de-dome-2011"/>
+        </MetadataURL>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>MNT</Name>
+        <Title>MNT</Title>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-mnt-auvergne-2009</Name>
+        <Title>Dallage MNT Région</Title>
+        <Abstract>Dallage du MNT 2009/2010 sur la région complète</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-mnt-auvergne-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-mnt-agglos-2009</Name>
+        <Title>Dallage MNT Agglos</Title>
+        <Abstract>Dallage du MNT sur les agglomérations</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.39768</westBoundLongitude>
+            <eastBoundLongitude>4.09656</eastBoundLongitude>
+            <southBoundLatitude>44.8651</southBoundLatitude>
+            <northBoundLatitude>46.7274</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="654000" miny="6.419e+06" maxx="783750" maxy="6.62525e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-mnt-agglos-2009"/>
+        </MetadataURL>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>Images Brutes</Name>
+        <Title>Images Brutes</Title>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-raw-auvergne-2009</Name>
+        <Title>Dallage Images Brutes Région 2009/2010</Title>
+        <Abstract>Dallage des images brutes 2009/2010 sur la région complète</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>1.97852</westBoundLongitude>
+            <eastBoundLongitude>4.58041</eastBoundLongitude>
+            <southBoundLatitude>44.572</southBoundLatitude>
+            <northBoundLatitude>46.8275</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="622129" miny="6.38704e+06" maxx="820489" maxy="6.63637e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-raw-auvergne-2009"/>
+        </MetadataURL>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>dallage-raw-agglos-2009</Name>
+        <Title>Dallage Images Brutes Agglos 2009/2010</Title>
+        <Abstract>Dallage des images brutes 2009/2010 sur les agglomérations</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.38647</westBoundLongitude>
+            <eastBoundLongitude>4.09656</eastBoundLongitude>
+            <southBoundLatitude>44.8651</southBoundLatitude>
+            <northBoundLatitude>46.7274</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="653144" miny="6.419e+06" maxx="783750" maxy="6.62525e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=dallage-raw-agglos-2009"/>
+        </MetadataURL>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>Open data</Name>
+        <Title>Open data</Title>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>opendata_ortho</Name>
+        <Title>Ortho en open data</Title>
+        <Abstract>Dallages des orthophotographies en open data</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=opendata_ortho"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="193" height="347">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;version=1.3.0&amp;service=WMS&amp;request=GetLegendGraphic&amp;sld_version=1.1.0&amp;layer=opendata_ortho&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>opendata_irc</Name>
+        <Title>Ortho infrarouge en open data</Title>
+        <Abstract>Dallages des orthophotographies infrarouge en open data</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=opendata_irc"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="136" height="245">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;version=1.3.0&amp;service=WMS&amp;request=GetLegendGraphic&amp;sld_version=1.1.0&amp;layer=opendata_irc&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>opendata_mnt</Name>
+        <Title>MNT en open data</Title>
+        <Abstract>Dallages des MNT en open data</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>2.013</westBoundLongitude>
+            <eastBoundLongitude>4.55088</eastBoundLongitude>
+            <southBoundLatitude>44.5968</southBoundLatitude>
+            <northBoundLatitude>46.8219</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="624750" miny="6.38975e+06" maxx="818250" maxy="6.63575e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=opendata_mnt"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="213" height="191">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;version=1.3.0&amp;service=WMS&amp;request=GetLegendGraphic&amp;sld_version=1.1.0&amp;layer=opendata_mnt&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>opendata_lidar</Name>
+        <Title>LIDAR en open data</Title>
+        <Abstract>Dallage des LIDAR en open data</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>1.96036</westBoundLongitude>
+            <eastBoundLongitude>4.64145</eastBoundLongitude>
+            <southBoundLatitude>44.5767</southBoundLatitude>
+            <northBoundLatitude>45.8764</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="619354" miny="6.3877e+06" maxx="827340" maxy="6.53075e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;request=GetMetadata&amp;layer=opendata_lidar"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="149" height="103">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;version=1.3.0&amp;service=WMS&amp;request=GetLegendGraphic&amp;sld_version=1.1.0&amp;layer=opendata_lidar&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        </Layer>
+        <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>opendata_raw</Name>
+        <Title>Images brutes en open data</Title>
+        <Abstract>Dallage des images brutes en open data</Abstract>
+        <CRS>EPSG:2154</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3785</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:900913</CRS>
+        <CRS>EPSG:4171</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:3945</CRS>
+        <CRS>EPSG:3946</CRS>
+        <EX_GeographicBoundingBox>
+            <westBoundLongitude>1.97405</westBoundLongitude>
+            <eastBoundLongitude>4.5907</eastBoundLongitude>
+            <southBoundLatitude>44.548</southBoundLatitude>
+            <northBoundLatitude>46.8437</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:2154" minx="621812" miny="6.38439e+06" maxx="821238" maxy="6.63817e+06"/>
+        <MetadataURL type="TC211">
+          <Format>text/xml</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="base/web/client/test-resources/csw/mapserver-metadata.xml"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="237" height="185">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://wms.craig.fr/ortho?language=fra&amp;version=1.3.0&amp;service=WMS&amp;request=GetLegendGraphic&amp;sld_version=1.1.0&amp;layer=opendata_raw&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        </Layer>
+      </Layer>
+    </Layer>
+  </Layer>
+</Capability>
+</WMS_Capabilities>
