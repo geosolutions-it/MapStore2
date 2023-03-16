@@ -18,7 +18,7 @@ npm run fe:build
 mvn clean install -Dmapstore2.version=[version_identifier] [profiles] 
 ```
 
-In this case we have 2 separated commands that can be run separately, for instance if you are working on back-end only, so you don't need to re-compile the front-end part every time. 
+In this case we have 2 separated commands that can be run separately, for instance if you are working on back-end only, so you don't need to re-compile the front-end part every time.
 
 ## Building the documentation
 
