@@ -1,27 +1,24 @@
 # Building and deploying
 
-Maven is the main tool for building and deploying a complete application. It takes care of:
-
-* building the java libraries and webapp(s)
-* calling NPM as needed to take care of the frontend builds
-* launching both backend and frontend test suites
-* creating the final war for deploy into a J2EE container (e.g. Tomcat)
-
 To create the final war, you have several options:
 
-* full build, including submodules and frontend (e.g. GeoStore)
+* full build (including all tests, syntax checks, frontend, backend and documentation):
 
  `./build.sh [version_identifier] [profiles]`
 
- Where `version_identifier` is an optional identifier of the generated war that will be shown in the settings panel of the application and profiles is an optional list of comma delimited building profiles (e.g. `printing`, `ldap`)
+ Where `version_identifier` is an optional identifier of the generated war that will be shown in the settings panel of the application and profiles is an optional list of comma delimited building profiles (e.g. `printing`, `ldap`, `binary`)
 
-* fast build (will use the last compiled version of submodules and compiled frontend)
+* separated builds (skipping all the tests and checks, mainly for development purposes):
 
-`mvn clean install -Dmapstore2.version=[version_identifier] [profiles]`
+```bin sh
+# build the front-end
+npm run fe:build 
 
-* binary build (produces also the binary)
+# build the back-end, including the front-end parts build in the previous command
+mvn clean install -Dmapstore2.version=[version_identifier] [profiles] 
+```
 
-`mvn clean install -Dmapstore2.version=[version_identifier] -Pbinary`
+In this case we have 2 separated commands that can be run separately, for instance if you are working on back-end only, so you don't need to re-compile the front-end part every time.
 
 ## Building the documentation
 
