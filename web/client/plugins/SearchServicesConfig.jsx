@@ -213,12 +213,12 @@ class SearchServicesConfigPanel extends React.Component {
 }
 
 const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
-    enabled: controls.searchservicesconfig && controls.searchservicesconfig.enabled || false,
+    enabled: get(controls, "searchservicesconfig.enabled", false),
     pages: [ServiceList, WFSServiceProps, ResultsProps, WFSOptionalProps],
-    page: searchconfig && searchconfig.page || 0,
-    service: searchconfig && searchconfig.service,
-    initServiceValues: searchconfig && searchconfig.init_service_values,
-    textSearchConfig: searchconfig && searchconfig.textSearchConfig,
+    page: get(searchconfig, "page", 0),
+    service: get(searchconfig, "service", {}),
+    initServiceValues: get(searchconfig, "init_service_values", {}),
+    textSearchConfig: get(searchconfig, "textSearchConfig", {}),
     editIdx: searchconfig && searchconfig.editIdx
 }), {
     toggleControl,
