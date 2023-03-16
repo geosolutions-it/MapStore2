@@ -63,12 +63,23 @@ export const extractCredits = attribution => {
     };
 };
 
-
 export const flatLayers = (root) => {
-    return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
-        return previous.concat(flatLayers(current)).concat(current.Layer && current.Name ? [current] : []);
-    }, []) : root.Name && [root] || [];
+    const rootLayer = root.Layer ?? root.layer;
+    const rootName = root.Name ?? root.name;
+    return rootLayer
+        ? (castArray(rootLayer))
+            .reduce((acc, current) => {
+                const currentLayer = current.Layer ?? current.layer;
+                const currentName = current.Name ?? current.name;
+                return [
+                    ...acc,
+                    ...flatLayers(current),
+                    ...(currentLayer && currentName ? [current] : [])
+                ];
+            }, [])
+        : rootName && [root] || [];
 };
+
 export const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };

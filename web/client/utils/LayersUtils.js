@@ -825,6 +825,18 @@ export const isTimelineVisible = (layers)=>{
     return false;
 };
 
+/**
+ * Remove the workspace prefix from a geoserver layer name
+ * @param {string} full layer name with workspace
+ * @returns {string} layer name without workspace prefix
+ */
+export const removeWorkspace = (layer) => {
+    if (layer.indexOf(':') !== -1) {
+        return layer.split(':')[1];
+    }
+    return layer;
+};
+
 LayersUtils = {
     getGroupByName,
     getLayerId,
