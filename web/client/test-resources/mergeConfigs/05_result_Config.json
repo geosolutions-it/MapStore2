@@ -18,7 +18,6 @@
     "loadAfterTheme": true,
     "defaultMapOptions": {
       "cesium": {
-          "flyTo": true,
           "navigationTools": true,
           "terrainProvider": {
               "type": "ellipsoid"

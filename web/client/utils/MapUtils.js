@@ -487,7 +487,8 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
         mapInfoControl: currentMap.mapInfoControl,
         zoom: currentMap.zoom,
         mapOptions: currentMap.mapOptions || {},
-        ...(currentMap.visualizationMode && { visualizationMode: currentMap.visualizationMode })
+        ...(currentMap.visualizationMode && { visualizationMode: currentMap.visualizationMode }),
+        ...(currentMap.viewerOptions && { viewerOptions: currentMap.viewerOptions })
     };
 
     const layers = currentLayers.map((layer) => {

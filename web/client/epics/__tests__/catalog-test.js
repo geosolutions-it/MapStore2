@@ -22,7 +22,7 @@ const {
 } = catalog(API);
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {SET_CONTROL_PROPERTY, toggleControl} from '../../actions/controls';
-import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode} from '../../actions/layers';
+import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode, SHOW_LAYER_METADATA} from '../../actions/layers';
 import {PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER} from '../../actions/mapInfo';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
 import {
@@ -69,7 +69,101 @@ describe('catalog Epics', () => {
             }
         });
     });
+    it('should return metadata TC211 with getMetadataRecordById (mapserver)', (done) => {
 
+        testEpic(getMetadataRecordById, 2, initAction({
+            xmlNamespaces: {
+                gmd: 'http://www.isotc211.org/2005/gmd',
+                srv: 'http://www.isotc211.org/2005/srv',
+                gco: 'http://www.isotc211.org/2005/gco',
+                gmx: 'http://www.isotc211.org/2005/gmx',
+                gfc: 'http://www.isotc211.org/2005/gfc',
+                gts: 'http://www.isotc211.org/2005/gts',
+                gml: 'http://www.opengis.net/gml'
+            },
+            extractors: [{
+                layersRegex: '^opendata_raw$',
+                properties: {
+                    title: '/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString'
+                }
+            }]
+        }), (actions) => {
+            try {
+                const [
+                    showLayerMetadataEmptyAction,
+                    showLayerMetadataResponseAction
+                ] = actions;
+                expect(showLayerMetadataEmptyAction.type).toBe(SHOW_LAYER_METADATA);
+                expect(showLayerMetadataEmptyAction.maskLoading).toBe(true);
+                expect(showLayerMetadataEmptyAction.metadataRecord).toEqual({});
+                expect(showLayerMetadataResponseAction.type).toBe(SHOW_LAYER_METADATA);
+                expect(showLayerMetadataResponseAction.maskLoading).toBe(false);
+                expect(showLayerMetadataResponseAction.metadataRecord).toEqual({ title: 'Images brutes en open data' });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }, {
+            layers: {
+                selected: ["opendata_raw"],
+                flat: [{
+                    id: "opendata_raw",
+                    name: "opendata_raw",
+                    type: "wms",
+                    url: "base/web/client/test-resources/wms/getCapabilities-mapserver.xml"
+                }]
+            }
+        });
+    });
+
+    it('should return metadata TC211 with getMetadataRecordById (mapproxy single)', (done) => {
+        testEpic(getMetadataRecordById, 2, initAction({
+            xmlNamespaces: {
+                gmd: 'http://www.isotc211.org/2005/gmd',
+                srv: 'http://www.isotc211.org/2005/srv',
+                gco: 'http://www.isotc211.org/2005/gco',
+                gmx: 'http://www.isotc211.org/2005/gmx',
+                gfc: 'http://www.isotc211.org/2005/gfc',
+                gts: 'http://www.isotc211.org/2005/gts',
+                gml: 'http://www.opengis.net/gml'
+            },
+            extractors: [{
+                layersRegex: '^cadastre$',
+                properties: {
+                    title: '/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString'
+                }
+            }]
+        }), (actions) => {
+            try {
+                const [
+                    showLayerMetadataEmptyAction,
+                    showLayerMetadataResponseAction
+                ] = actions;
+                expect(showLayerMetadataEmptyAction.type).toBe(SHOW_LAYER_METADATA);
+                expect(showLayerMetadataEmptyAction.maskLoading).toBe(true);
+                expect(showLayerMetadataEmptyAction.metadataRecord).toEqual({});
+                expect(showLayerMetadataResponseAction.type).toBe(SHOW_LAYER_METADATA);
+                expect(showLayerMetadataResponseAction.maskLoading).toBe(false);
+                expect(showLayerMetadataResponseAction.metadataRecord).toEqual({
+                    metadataUrl: 'https://ids.craig.fr/geocat/srv/api/records/3bedb35a-a9ba-4f48-8796-de127becd578',
+                    title: 'Plan Cadastral Informatisé (PCI) au format vecteur - Auvergne-Rhône-Alpes - 01/2022'
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }, {
+            layers: {
+                selected: ["cadastre"],
+                flat: [{
+                    id: "cadastre",
+                    name: "cadastre",
+                    type: "wms",
+                    url: "base/web/client/test-resources/wms/getCapabilities-mapproxy-singlelayer.xml"
+                }]
+            }
+        });
+    });
     it('autoSearchEpic', (done) => {
         const NUM_ACTIONS = 1;
         testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {

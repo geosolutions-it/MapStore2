@@ -207,6 +207,54 @@ describe('Test correctness of the WMS APIs', () => {
         const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
         expect(capability).toExist();
     });
+    it('should parse nested layers from capabilities', () => {
+        expect(API.flatLayers({
+            Layer: {
+                Name: 'layer1',
+                Layer: {
+                    Name: 'layer2',
+                    Layer: {
+                        Name: 'layer3',
+                        Layer: {
+                            Name: 'layer4',
+                            Layer: {
+                                Name: 'layer5'
+                            }
+                        }
+                    }
+                }
+            }
+        })).toEqual([
+            { Name: 'layer5' },
+            { Name: 'layer4', Layer: { Name: 'layer5' } },
+            { Name: 'layer3', Layer: { Name: 'layer4', Layer: { Name: 'layer5' } } },
+            { Name: 'layer2', Layer: { Name: 'layer3', Layer: { Name: 'layer4', Layer: { Name: 'layer5' } } } },
+            { Name: 'layer1', Layer: { Name: 'layer2', Layer: { Name: 'layer3', Layer: { Name: 'layer4', Layer: { Name: 'layer5' } } } } }
+        ]);
+        expect(API.flatLayers({
+            layer: {
+                name: 'layer1',
+                layer: {
+                    name: 'layer2',
+                    layer: {
+                        name: 'layer3',
+                        layer: {
+                            name: 'layer4',
+                            layer: {
+                                name: 'layer5'
+                            }
+                        }
+                    }
+                }
+            }
+        })).toEqual([
+            { name: 'layer5' },
+            { name: 'layer4', layer: { name: 'layer5' } },
+            { name: 'layer3', layer: { name: 'layer4', layer: { name: 'layer5' } } },
+            { name: 'layer2', layer: { name: 'layer3', layer: { name: 'layer4', layer: { name: 'layer5' } } } },
+            { name: 'layer1', layer: { name: 'layer2', layer: { name: 'layer3', layer: { name: 'layer4', layer: { name: 'layer5' } } } } }
+        ]);
+    });
 });
 
 describe('Test correctness of the WMS APIs (mock axios)', () => {

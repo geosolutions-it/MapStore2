@@ -67,6 +67,7 @@ The following options define the map options (projection, position, layers):
 - `layers: {object[]}` list of layers to be loaded on the map
 - `groups {object[]}`: contains information about the layer groups
 - `visualizationMode: {string}` defines if the map should be visualized in "2D" or "3D"
+- `viewerOptions: {object}` could contain viewer specific properties, eg. camera orientation and camera position for 3D visualization mode
 
 i.e.
 
@@ -78,6 +79,18 @@ i.e.
     "center": {"x": 1000000.000000, "y": 5528000.000000, "crs": "EPSG:900913"},
     "zoom": 15,
     "visualizationMode": "2D",
+    "viewerOptions": {
+      "cameraPosition": {
+        "longitude": 0,
+        "latitude": 0,
+        "height": 0
+      },
+      "orientation": {
+        "heading": 0,
+        "pitch": 0,
+        "roll": 0
+      }
+    },
     "mapOptions": {
       "view": {
         "scales": [175000, 125000, 100000, 75000, 50000, 25000, 10000, 5000, 2500],

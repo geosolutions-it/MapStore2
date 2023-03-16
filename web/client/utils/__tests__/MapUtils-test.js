@@ -42,6 +42,7 @@ import {
     getZoomFromResolution,
     getResolutionObject
 } from '../MapUtils';
+import { VisualizationModes } from '../MapTypeUtils';
 
 const POINT = "Point";
 const CIRCLE = "Circle";
@@ -2425,6 +2426,66 @@ describe('Test the MapUtils', () => {
                     },
                     units: 'm',
                     zoom: 10
+                },
+                version: 2
+            });
+        });
+        it('save map configuration with viewerOptions and visualizationMode', () => {
+
+            const flat = [];
+
+            const groups = [];
+
+            const mapConfig = {
+                center: { x: 9, y: 44, crs: 'EPSG:4326' },
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                units: 'm',
+                mapInfoControl: true,
+                zoom: 10,
+                visualizationMode: VisualizationModes._3D,
+                viewerOptions: {
+                    cameraPosition: {
+                        longitude: 12,
+                        latitude: 41,
+                        height: 352553
+                    },
+                    orientation: {
+                        heading: 5.35,
+                        pitch: -0.50,
+                        roll: 0.00
+                    }
+                }
+            };
+
+            const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
+            expect(saved).toEqual({
+                map: {
+                    center: { x: 9, y: 44, crs: 'EPSG:4326' },
+                    backgrounds: [],
+                    mapInfoControl: true,
+                    groups: [],
+                    layers: [],
+                    mapOptions: {},
+                    maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                    projection: 'EPSG:900913',
+                    text_search_config: '',
+                    bookmark_search_config: {},
+                    units: 'm',
+                    zoom: 10,
+                    visualizationMode: VisualizationModes._3D,
+                    viewerOptions: {
+                        cameraPosition: {
+                            longitude: 12,
+                            latitude: 41,
+                            height: 352553
+                        },
+                        orientation: {
+                            heading: 5.35,
+                            pitch: -0.50,
+                            roll: 0.00
+                        }
+                    }
                 },
                 version: 2
             });
