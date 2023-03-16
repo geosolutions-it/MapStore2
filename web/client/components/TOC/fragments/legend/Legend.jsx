@@ -51,6 +51,14 @@ class Legend extends React.Component {
     onImgError = () => {
         this.setState(() => ({error: true}));
     }
+    getScale = (props) => {
+        if (props.scales && props.currentZoomLvl !== undefined && props.scaleDependent) {
+            const zoom = Math.round(props.currentZoomLvl);
+            const scale = props.scales[zoom] ?? props.scales[props.scales.length - 1];
+            return Math.round(scale);
+        }
+        return null;
+    };
     getUrl = (props, urlIdx) => {
         if (props.layer && props.layer.type === "wms" && props.layer.url) {
             const layer = props.layer;
@@ -63,6 +71,7 @@ class Legend extends React.Component {
             let urlObj = urlUtil.parse(url);
 
             const cleanParams = clearNilValuesForParams(layer.params);
+            const scale = this.getScale(props);
             let query = assign({}, {
                 service: "WMS",
                 request: "GetLegendGraphic",
@@ -78,7 +87,7 @@ class Legend extends React.Component {
             props.language && layer.localizedLayerStyles ? {LANGUAGE: props.language} : {},
             addAuthenticationToSLD(cleanParams || {}, props.layer),
             cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
-            props.scales && props.currentZoomLvl && props.scaleDependent ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
+            scale !== null ? { SCALE: scale } : {});
             addAuthenticationParameter(url, query);
 
             return urlUtil.format({
