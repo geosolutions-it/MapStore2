@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Spinner from "react-spinkit";
 
 import { FormGroup, Form, Col } from "react-bootstrap";
@@ -52,9 +52,6 @@ export default ({
     autoSetVisibilityLimits = false
 }) => {
     const [valid, setValid] = useState(true);
-    useEffect(() => {
-        return () => onChangeCatalogMode("view");
-    }, []);
     return (<BorderLayout
         bodyClassName="ms2-border-layout-body catalog"
         header={
