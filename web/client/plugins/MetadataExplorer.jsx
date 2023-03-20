@@ -207,6 +207,9 @@ class MetadataExplorerComponent extends React.Component {
         servicesWithBackgrounds: {}
     };
 
+    componentWillUnmount() {
+        this.props.closeCatalog();
+    }
     render() {
         // TODO: separate catalog props from Container props (and handlers)
         const layerBaseConfig = {

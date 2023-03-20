@@ -152,13 +152,4 @@ describe('Test CatalogServiceEditor', () => {
         let placeholder = defaultPlaceholder(service);
         expect(placeholder).toBe("e.g. https://mydomain.com/geoserver/wms");
     });
-    it('test reset view mode of catalog on unmount', (done) => {
-        ReactDOM.render(<CatalogServiceEditor onChangeCatalogMode={(value) => {
-            expect(value).toBe("view");
-            done();
-        }
-        } />, document.getElementById("container"));
-
-        ReactDOM.render(<div/>, document.getElementById("container"));
-    });
 });
