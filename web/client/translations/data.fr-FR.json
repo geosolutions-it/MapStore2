@@ -1504,7 +1504,7 @@
             },
             "singleTile": {
                 "label": "Single Tile",
-                "tooltip": "La couche est rendue sous la forme d'une seule image de tuile lorsqu'elle est ajoutée à la carte avec cette option activée"
+                "tooltip": "Lorsque cette option est activée, la couche ajoutée à la carte est rendue sous la forme d'une seule image"
             },
             "domainAliases": {
               "title": "Alias de domaine",
