@@ -9,8 +9,8 @@
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { lazy } from 'react';
-// require('./css/modals.css');
 import { Grid } from 'react-bootstrap';
+import isEqual from 'lodash/isEqual';
 
 import Message from '../../I18N/Message';
 import Portal from '../../misc/Portal';
@@ -127,11 +127,24 @@ class SaveModal extends React.Component {
         dialogClassName: '',
         detailsComponent: require('./enhancers/handleDetails').default((DetailsComp))
     };
+
+    componentDidUpdate(prevProps) {
+        if (
+            this.props.errors &&
+            this.props.errors.length > 0 &&
+            !isEqual(this.props.errors, prevProps.errors) &&
+            this.state?.loading
+        ) {
+            this.setState({ loading: false });
+        }
+    }
+
     onCloseMapPropertiesModal = () => {
         this.props.onClose();
     }
 
     onSave = () => {
+        this.setState({loading: true});
         this.props.onSave({...this.props.resource, permission: this.props.rules});
     };
 
@@ -144,7 +157,7 @@ class SaveModal extends React.Component {
 
         return (<Portal key="saveDialog">
             <ResizableModal
-                loading={this.props.loading}
+                loading={this.props.loading || this.state?.loading}
                 title={<Message msgId={this.props.title}/>}
                 show={this.props.show}
                 clickOutEnabled={this.props.clickOutEnabled}
@@ -154,13 +167,13 @@ class SaveModal extends React.Component {
                 buttons={[{
                     text: <Message msgId="close"/>,
                     onClick: this.onCloseMapPropertiesModal,
-                    disabled: this.props.resource.loading
+                    disabled: this.isLoading()
                 }, {
                     text: <span><Message msgId={this.props.saveButtonLabel}/></span>,
                     onClick: () => { this.onSave(); },
-                    disabled: !this.isValidForm() || this.props.loading || !this.props.canSave
+                    disabled: this.isSaveDisabled()
                 }]}
-                showClose={!this.props.resource.loading}
+                showClose={!this.isLoading()}
                 onClose={this.onCloseMapPropertiesModal}>
                 <Grid fluid>
                     <div className="ms-map-properties">
@@ -202,7 +215,19 @@ class SaveModal extends React.Component {
             </ResizableModal>
         </Portal>);
     }
-    isValidForm = () => get(this.props.resource, "metadata.name") && (!this.props.enableFileDrop || this.props.fileDropStatus === 'accepted')
+    isValidForm = () =>
+        get(this.props.resource, "metadata.name") &&
+        (!this.props.enableFileDrop || this.props.fileDropStatus === "accepted");
+
+    isLoading = () => {
+        return (
+            this.props.loading || this.props.resource?.loading || this.state?.loading
+        );
+    };
+
+    isSaveDisabled = () => {
+        return !this.isValidForm() || this.isLoading() || !this.props.canSave;
+    };
 }
 
 export default SaveModal;
