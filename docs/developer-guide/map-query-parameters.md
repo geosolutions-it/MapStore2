@@ -372,28 +372,14 @@ GET `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers
 
 Number of objects passed to the options can be different to the number of layers, in this case options will be applied to the first X layers, where X is the length of options array.
 
-The 3D tiles service endpoint does not contain a default property for the name of the layer and it returns only a single layer. Below some ways to correctly request the layer contained inside 3D tiles service:
-
-- Use the `url` property to get the layer
+The 3D tiles service endpoint does not contain a default property for the name of the layer and it returns only a single record for this reason the name used in the layers array will be used to apply the title to the added 3D Tiles layer:
 
 ```json
 {
     "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
-    "layers": ["https://example.com/tileset-pathname/tileset.json"],
+    "layers": ["My 3D Tiles Layer"],
     "sources": [{ "type":"3dtiles", "url":"https://example.com/tileset-pathname/tileset.json" }]
 }
 ```
 
-GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["https://example.com/tileset-pathname/tileset.json"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json"}]}]`
-
-- Use the `title` property in the source object to assign the name to the layer
-
-```json
-{
-    "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
-    "layers": ["My Layer"],
-    "sources": [{ "type":"3dtiles", "url":"https://example.com/tileset-pathname/tileset.json", "title": "My Layer" }]
-}
-```
-
-GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My Layer"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json","title":"My Layer"}]}]`
+GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My 3D Tiles Layer"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json"}]}]`

@@ -23,6 +23,9 @@ function validateUrl(serviceUrl) {
 }
 
 const recordToLayer = (record) => {
+    if (!record) {
+        return null;
+    }
     const { bbox, format, properties } = record;
     return {
         type: '3dtiles',
@@ -53,11 +56,7 @@ const getRecords = (url, startPosition, maxRecords, text, info) => {
                 type: '3dtiles',
                 tileset,
                 ...properties
-            }].filter(({ title }) =>
-                !text
-                || title?.toLowerCase().includes(text?.toLowerCase() || '')
-                || url?.toLowerCase().includes(text?.toLowerCase() || '')
-            );
+            }];
             return {
                 numberOfRecordsMatched: records.length,
                 numberOfRecordsReturned: records.length,
