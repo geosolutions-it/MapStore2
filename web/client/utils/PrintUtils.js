@@ -21,6 +21,7 @@ import { get as getProjection } from 'ol/proj';
 import { isArray, filter, find, isEmpty, toNumber, castArray, reverse } from 'lodash';
 import { getFeature } from '../api/WFS';
 import { generateEnvString } from './LayerLocalizationUtils';
+import { ServerTypes } from './LayersUtils';
 import url from 'url';
 
 import { getStore } from "./StateUtils";
@@ -496,6 +497,17 @@ export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAUL
 }
 
 /**
+ * Returns vendor params that can be used when calling wms server for print requests
+ * @param {layer} the layer object
+ */
+export const getPrintVendorParams = (layer) => {
+    if (layer?.serverType === ServerTypes.NO_VENDOR) {
+        return {};
+    }
+    return { "TILED": true };
+};
+
+/**
  * Generate the layers (or legend) specification for print.
  * @param  {array} layers  the layers configurations
  * @param  {spec} spec    the print configurations
@@ -523,7 +535,7 @@ export const specCreators = {
             ],
             "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
                 "TRANSPARENT": true,
-                "TILED": true,
+                ...getPrintVendorParams(layer),
                 "EXCEPTIONS": "application/vnd.ogc.se_inimage",
                 "scaleMethod": "accurate",
                 "ENV": generateEnvString(spec.env)

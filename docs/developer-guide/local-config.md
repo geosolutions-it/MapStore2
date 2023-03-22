@@ -210,6 +210,7 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   "format": "image/png8" // the image format to use by default for layers coming from this catalog (or tiles).
   "layerOptions": { // optional
       "format": "image/png8", // image format needs to be configured also inside layerOptions
+      "serverType": "geoserver or no-vendor, depending on this some geoserver vendor extensions will be used for WMS requests.",
       "tileSize": 512 // determine the default tile size for the catalog, valid for WMS and CSW catalogs
   },
   "filter": { // applicable only for CSW service
