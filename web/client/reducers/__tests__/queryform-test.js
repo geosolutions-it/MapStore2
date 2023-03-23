@@ -1030,7 +1030,7 @@ describe('Test the queryform reducer', () => {
         let newState = queryform({crossLayerFilter: {attribute: "ATTRIBUTE"}}, action);
         expect(newState.crossLayerFilter.attribute).toBe("ATTRIBUTE");
     });
-    it.only('test loadFilter', () => {
+    it('test loadFilter', () => {
         const newFilter = {
             crossLayerFilter: {
                 collectGeometries: {
