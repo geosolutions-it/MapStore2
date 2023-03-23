@@ -39,7 +39,8 @@ const recordToLayer = (record, {
     map = {},
     layerBaseConfig,
     localizedLayerStyles,
-    allowUnsecureLayers
+    allowUnsecureLayers,
+    service
 } = {}) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
@@ -103,6 +104,7 @@ const recordToLayer = (record, {
         allowedSRS: allowedSRS,
         catalogURL,
         ...layerBaseConfig,
+        ...service?.layerOptions,
         ...record.layerOptions,
         localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
         ...(!isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats}),

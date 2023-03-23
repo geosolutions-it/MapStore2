@@ -161,13 +161,13 @@ export default (API) => ({
                         const text = layers[i];
                         return Rx.Observable.defer(() =>
                             API[format].textSearch(url, startPosition, maxRecords, text, {...layerOptions, ...service}).catch(() => ({ results: [] }))
-                        ).map(r => ({ ...r, format, url, text, layerOptions }));
+                        ).map(r => ({ ...r, format, url, text, layerOptions, service }));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
                             return Rx.Observable.of(results.map(r => {
-                                const { format, url, text, layerOptions, ...result } = r;
+                                const { format, url, text, layerOptions, service, ...result } = r;
                                 const locales = currentMessagesSelector(state);
                                 const records = API[format].getCatalogRecords(result, layerOptions, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
@@ -183,6 +183,7 @@ export default (API) => ({
                                 const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
                                 const authkeyParamName = authkeyParamNameSelector(state);
                                 const layer = API[format].getLayerFromRecord(record, {
+                                    service,
                                     removeParams: authkeyParamName,
                                     catalogURL: format === 'csw' && url
                                         ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier
