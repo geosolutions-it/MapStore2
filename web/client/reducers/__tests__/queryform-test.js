@@ -1030,7 +1030,7 @@ describe('Test the queryform reducer', () => {
         let newState = queryform({crossLayerFilter: {attribute: "ATTRIBUTE"}}, action);
         expect(newState.crossLayerFilter.attribute).toBe("ATTRIBUTE");
     });
-    it('test loadFilter', () => {
+    it.only('test loadFilter', () => {
         const newFilter = {
             crossLayerFilter: {
                 collectGeometries: {
@@ -1039,6 +1039,14 @@ describe('Test the queryform reducer', () => {
                     }
                 }
             },
+            filters: [{
+                format: "logic",
+                logic: "AND",
+                filters: [{
+                    format: 'cql',
+                    body: 'ATTRIBUTE1 = \'VALUE1\''
+                }]
+            }],
             spatialField: {
                 method: "BBOX",
                 operation: "DWITHIN",
@@ -1059,6 +1067,7 @@ describe('Test the queryform reducer', () => {
         expect(newState.crossLayerFilter.attribute).toBe("ATTRIBUTE1");
         expect(newState.spatialField.attribute).toBe("GEOMETRY");
         expect(newState.spatialField.method).toBe("BBOX");
+        expect(newState.filters).toEqual(newFilter.filters);
     });
     it('attribute property on load an undefied filter', () => {
         const initialState = {
