@@ -574,7 +574,7 @@ function queryform(state = initialState, action) {
     case LOAD_FILTER:
         const {attribute, ...other} = initialState.spatialField;
         const cleanInitialState = assign({}, initialState, {spatialField: {...other}});
-        const {spatialField, filterFields, groupFields, crossLayerFilter, attributePanelExpanded, spatialPanelExpanded, crossLayerExpanded} = (action.filter || cleanInitialState);
+        const {spatialField, filterFields, groupFields, crossLayerFilter, attributePanelExpanded, spatialPanelExpanded, crossLayerExpanded, filters} = (action.filter || cleanInitialState);
         return {...state,
             ...{
                 attributePanelExpanded,
@@ -586,6 +586,7 @@ function queryform(state = initialState, action) {
                     attribute: spatialField && spatialField.attribute || state.spatialField && state.spatialField.attribute
 
                 },
+                filters: filters ?? [],
                 filterFields,
                 groupFields,
                 crossLayerFilter: {
