@@ -1501,6 +1501,10 @@
                 "label": "Set Visibility Limit",
                 "tooltip": "Automatically applies the visibility limits suggested by the server"
            },
+           "singleTile": {
+                "label": "Single Tile",
+                "tooltip": "The layer is rendered as a single tile image when added to the map with this option enabled"
+            },
            "allowUnsecureLayers": {
                 "label": "Allow not secure layers",
                 "tooltip": "Adding layer to map with this option enabled, forces the application to apply proxy"

@@ -24,6 +24,7 @@ import {
     getMapTransformerChain,
     getSpecTransformerChain,
     getValidatorsChain,
+    getPrintVendorParams,
     resetDefaultPrintingService,
     getDefaultPrintingService
 } from '../PrintUtils';
@@ -39,6 +40,13 @@ const layer = {
     name: "my:layer",
     type: "wms",
     params: { myparam: "myvalue" }
+};
+
+const noVendorLayer = {
+    url: "http://mapproxy",
+    name: "some_layer",
+    type: "wms",
+    serverType: "no-vendor"
 };
 
 const layerSottoPasso = {
@@ -519,6 +527,17 @@ describe('PrintUtils', () => {
         expect(rgb).toExist();
         expect(rgb).toBe("rgb(255, 255, 255)");
     });
+    it('getPrintVendorParams default', () => {
+        const params = getPrintVendorParams(layer);
+        expect(params).toExist();
+        expect(params.TILED).toBe(true);
+    });
+    it('getPrintVendorParams no-vendor', () => {
+        const params = getPrintVendorParams(noVendorLayer);
+        expect(params).toExist();
+        expect(params).toEqual({});
+    });
+
     describe('specCreators', () => {
         describe('opacity', () => {
             const testBase = {

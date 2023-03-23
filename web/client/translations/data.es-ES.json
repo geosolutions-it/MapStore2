@@ -1501,6 +1501,10 @@
                 "label": "Establecer límite de visibilidad",
                 "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
             },
+            "singleTile": {
+                "label": "Single Tile",
+                "tooltip": "La capa se representa como una sola imagen de mosaico cuando se agrega al mapa con esta opción habilitada"
+            },
             "domainAliases": {
               "title": "Alias de dominio",
               "helpTooltip": "Esta opción se utiliza para dividir el contenido en varios subdominios",

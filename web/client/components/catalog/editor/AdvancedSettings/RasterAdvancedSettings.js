@@ -15,6 +15,7 @@ const Select = localizedProps('noResultsText')(RS);
 import CommonAdvancedSettings from './CommonAdvancedSettings';
 import {isNil} from "lodash";
 import ReactQuill from '../../../../libs/quill/react-quill-suspense';
+import { ServerTypes } from '../../../../utils/LayersUtils';
 
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
@@ -27,6 +28,9 @@ import WMSDomainAliases from "./WMSDomainAliases";
  */
 const getTileSizeSelectOptions = (opts) => {
     return opts.map(opt => ({label: `${opt}x${opt}`, value: opt}));
+};
+const getServerTypeOptions = () => {
+    return Object.keys(ServerTypes).map((key) => ({ label: key, value: ServerTypes[key] }));
 };
 
 /**
@@ -46,6 +50,7 @@ const getTileSizeSelectOptions = (opts) => {
  *
  * **WMS|CSW**
  * - tileSize: Option allows to select and configure the default tile size of the layer to be requested with
+ * - serverType: Option allows to specify whether some geoserver vendor options can be used or should be avoided
  * - format: Option allows to select and configure the default format of the layer to be requested with
  * - autoload: Option allows automatic fetching of the results upon selecting the service from Service dropdown
  * - hideThumbnail: Options allows to hide the thumbnail on the result
@@ -72,6 +77,7 @@ export default ({
     }, [props.autoSetVisibilityLimits]);
 
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
+    const serverTypeOptions = getServerTypeOptions();
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
         {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
             <Col xs={12}>
@@ -91,6 +97,15 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>
+        {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="singleTile" key="singleTile">
+            <Col xs={12}>
+                <Checkbox
+                    onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, singleTile: e.target.checked })}
+                    checked={!isNil(service?.layerOptions?.singleTile) ? service.layerOptions.singleTile : false}>
+                    <Message msgId="catalog.singleTile.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
+                </Checkbox>
+            </Col>
+        </FormGroup>}
         {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
             <Col xs={12}>
                 <Checkbox
@@ -167,7 +182,18 @@ export default ({
                 <Select
                     value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
                     options={tileSelectOptions}
-                    onChange={event => onChangeServiceProperty("layerOptions", { tileSize: event && event.value })} />
+                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
+            </Col >
+        </FormGroup>
+        <FormGroup style={advancedRasterSettingsStyles}>
+            <Col xs={6} >
+                <ControlLabel>Server Type</ControlLabel>
+            </Col >
+            <Col xs={6} style={{marginBottom: '5px'}}>
+                <Select
+                    value={service.layerOptions?.serverType}
+                    options={serverTypeOptions}
+                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
             </Col >
         </FormGroup>
         {!isNil(service.type) && service.type === "csw" &&

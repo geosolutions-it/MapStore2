@@ -20,7 +20,7 @@ import { getConfigProp } from '../../../../utils/ConfigUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
-import { creditsToAttribution } from '../../../../utils/LayersUtils';
+import { creditsToAttribution, getWMSVendorParams } from '../../../../utils/LayersUtils';
 
 import MapUtils from '../../../../utils/MapUtils';
 import  {loadTile, getElevation as getElevationFunc} from '../../../../utils/ElevationUtils';
@@ -123,7 +123,7 @@ function wmsToOpenlayersOptions(options) {
         TRANSPARENT: options.transparent !== undefined ? options.transparent : true,
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        TILED: options.singleTile ? false : (!isNil(options.tiled) ? options.tiled : true),
+        ...getWMSVendorParams(options),
         VERSION: options.version || "1.3.0"
     }, assign(
         {},
