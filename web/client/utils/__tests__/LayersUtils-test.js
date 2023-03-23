@@ -32,6 +32,10 @@ const mapquestLayerWithoutApikey = {
 const wmsLayer = {
     type: 'wms'
 };
+const noVendorWmsLayer = {
+    type: 'wms',
+    serverType: 'no-vendor'
+};
 describe('LayersUtils', () => {
     it('getLayerUrl supports single and multiple url layers', () => {
         expect(['a', 'b']).toContain(LayersUtils.getLayerUrl({url: ['a', 'b']}));
@@ -1408,5 +1412,10 @@ describe('LayersUtils', () => {
     it('removeWorkspace', ()=>{
         expect(LayersUtils.removeWorkspace('workspace:layerName')).toBe('layerName');
         expect(LayersUtils.removeWorkspace('layerName')).toBe('layerName');
+    });
+    it('getWMSVendorParams', () => {
+        const params = LayersUtils.getWMSVendorParams(wmsLayer);
+        expect(params.TILED).toBe(true);
+        expect(LayersUtils.getWMSVendorParams(noVendorWmsLayer)).toEqual({});
     });
 });

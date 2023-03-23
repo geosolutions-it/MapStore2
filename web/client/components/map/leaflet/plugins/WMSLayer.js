@@ -15,7 +15,7 @@ import objectAssign from 'object-assign';
 import {isArray, isNil} from 'lodash';
 import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 import { loadTile, getElevation } from '../../../../utils/ElevationUtils';
-import { creditsToAttribution } from '../../../../utils/LayersUtils';
+import { creditsToAttribution, getWMSVendorParams } from '../../../../utils/LayersUtils';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
@@ -170,7 +170,7 @@ function wmsToLeafletOptions(options) {
         styles: options.style || "",
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
-        tiled: options.tiled !== undefined ? options.tiled : true,
+        ...getWMSVendorParams(options),
         opacity: opacity,
         zIndex: options.zIndex,
         version: options.version || "1.3.0",

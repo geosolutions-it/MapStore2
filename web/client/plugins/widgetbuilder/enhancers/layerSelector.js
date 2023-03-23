@@ -16,7 +16,7 @@ import API from '../../../api/catalog';
 export const toLayer = (r, service) => ["tms", "wfs"].includes(service?.type) // for tms and wfs the layer is ready
     ? r
     // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
-    : API[service?.type || 'wms'].getLayerFromRecord(r);
+    : API[service?.type || 'wms'].getLayerFromRecord(r, { service });
 
 // checks for tms wmts in order to addSearch() to skip addSearch
 export const addSearchObservable = (selected, service) => ["tms", "wmts"].includes(service?.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));

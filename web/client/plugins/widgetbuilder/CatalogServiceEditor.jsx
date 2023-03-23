@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
 
 import uuid from 'uuid';
-import {set} from "../../utils/ImmutableUtils";
 import CatalogServiceEditorComponent from '../../components/catalog/CatalogServiceEditor';
 import { DEFAULT_ALLOWED_PROVIDERS } from '../MetadataExplorer';
 
@@ -41,17 +40,8 @@ export default ({service: defaultService, catalogServices,
         onAddService(newService, existingServices, isNew);
     };
 
-    const handleChangeServiceFormat = (property, value) => {
-        let currentData = service;
-        if (property === "provider") {
-            currentData.provider = value;
-        }
-        if (currentData[property]) {
-            currentData[property] = typeof value === 'boolean' ? !(currentData[property]) : value;
-        } else {
-            currentData = set(`${property}`, value, currentData);
-        }
-        setService(currentData);
+    const handleChangeServiceProperty = (property, value) => {
+        setService({ ...service, [property]: value });
     };
 
     return (<div style={{padding: '1rem', height: '100%'}}>
@@ -63,7 +53,7 @@ export default ({service: defaultService, catalogServices,
             onChangeServiceFormat={(format) => setService({...service, format})}
             onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}
             onAddService={addNewService}
-            onChangeServiceProperty={handleChangeServiceFormat}
+            onChangeServiceProperty={handleChangeServiceProperty}
             onToggleTemplate={() => setService({...service, showTemplate: !service.showTemplate})}
             onToggleThumbnail={() => setService({...service, hideThumbnail: !service.hideThumbnail})}
             serviceTypes={[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" },

@@ -90,12 +90,14 @@ describe('Test correctness of the WMS APIs', () => {
         }, {
             url: 'http://sample',
             layerOptions: {
-                tileSize: 512
+                tileSize: 512,
+                serverType: "no-vendor"
             }
         });
         expect(records.length).toBe(1);
         const layer = getLayerFromRecord(records[0]);
         expect(layer.tileSize).toBe(512);
+        expect(layer.serverType).toBe("no-vendor");
     });
 
     it('wms layer with visibility limits', () => {
