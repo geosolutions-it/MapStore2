@@ -752,21 +752,25 @@ describe('catalog Epics', () => {
         const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
         testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((action) => {
-                switch (action.type) {
-                case SET_FORMAT_OPTIONS:
-                    expect(action.formats).toBeTruthy();
-                    expect(action.formats.imageFormats).toEqual([{"label": "image/png", "value": "image/png"}, {"label": "image/gif", "value": "image/gif"}, {"label": "image/jpeg", "value": "image/jpeg"}, {"label": "image/png8", "value": "image/png8"}, {"label": "image/vnd.jpeg-png", "value": "image/vnd.jpeg-png"}]);
-                    expect(action.formats.infoFormats).toEqual(["text/plain", "text/html", "application/json"]);
-                    break;
-                case FORMAT_OPTIONS_LOADING:
-                    break;
-                case TEST_TIMEOUT:
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SET_FORMAT_OPTIONS:
+                        expect(action.formats).toBeTruthy();
+                        expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/gif;subtype=animated', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
+                        expect(action.formats.infoFormats).toEqual(['text/plain', 'text/html', 'application/json']);
+                        break;
+                    case FORMAT_OPTIONS_LOADING:
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
             done();
         }, {
             catalog: {}

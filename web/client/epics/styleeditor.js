@@ -15,7 +15,8 @@ import { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } fr
 import { getDescribeLayer } from '../actions/layerCapabilities';
 import { getLayerCapabilities } from '../observables/wms';
 import { setControlProperty } from '../actions/controls';
-import { findGeoServerName, formatCapabitiliesOptions } from '../utils/LayersUtils';
+import { findGeoServerName } from '../utils/LayersUtils';
+import { formatCapabilitiesOptions } from '../api/WMS';
 
 import {
     SELECT_STYLE_TEMPLATE,
@@ -201,7 +202,7 @@ function getAvailableStylesFromLayerCapabilities(layer, reset) {
     }
     return getLayerCapabilities(layer)
         .switchMap((capabilities) => {
-            const layerCapabilities = formatCapabitiliesOptions(capabilities);
+            const layerCapabilities = formatCapabilitiesOptions(capabilities);
             if (!layerCapabilities.availableStyles) {
                 return Rx.Observable.of(
                     errorStyle('availableStyles', { status: 401 }),
@@ -305,7 +306,7 @@ export const toggleStyleEditorEpic = (action$, store) =>
                                         ])
                                     )
                                         .switchMap(([availableStylesRest, capabilities]) => {
-                                            const layerCapabilities = capabilities && formatCapabitiliesOptions(capabilities);
+                                            const layerCapabilities = capabilities && formatCapabilitiesOptions(capabilities);
                                             const availableStylesCap = (layerCapabilities?.availableStyles || [])
                                                 .map((style) => ({ ...style, ...getNameParts(style.name) }))
                                                 .filter(({ name } = {}) => name);

@@ -10,6 +10,7 @@ import { createEventHandler, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
 
 import { getLayerCapabilities } from '../../../../../../observables/wms';
+import { formatCapabilitiesOptions } from '../../../../../../api/WMS';
 
 export default mapPropsStream(props$ => {
     const { stream: retrieveLayerData$, handler: retrieveLayerData} = createEventHandler();
@@ -19,13 +20,8 @@ export default mapPropsStream(props$ => {
         .switchMap(() =>
             retrieveLayerData$.switchMap((element) =>
                 getLayerCapabilities(element)
-                    .map(layerCapability => ({
-                        capabilities: layerCapability,
-                        capabilitiesLoading: null,
-                        description: layerCapability._abstract,
-                        boundingBox: layerCapability.latLonBoundingBox,
-                        availableStyles: layerCapability.style && (Array.isArray(layerCapability.style) ? layerCapability.style : [layerCapability.style])
-                    })).startWith({
+                    .map(layerCapability => formatCapabilitiesOptions(layerCapability))
+                    .startWith({
                         capabilitiesLoading: true
                     }))
                 .catch((error) => Rx.Observable.of({ capabilitiesLoading: null, capabilities: { error: "error getting capabilities", details: error }, description: null }))

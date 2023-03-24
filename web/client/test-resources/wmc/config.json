@@ -135,9 +135,9 @@
         "hidden": false,
         "params": {},
         "capabilities": {
-            "style": [{
-                "name": "stylename",
-                "title": "A boring default style"
+            "Style": [{
+                "Name": "stylename",
+                "Title": "A boring default style"
             }]
         }
       },
@@ -187,15 +187,17 @@
           "time": "2013-01-01T00:00:00.000Z"
         },
         "capabilities": {
-            "style": [{
-                "name": "mapstore:meteorites",
-                "title": "Meteorite"
+            "Style": [{
+                "Name": "mapstore:meteorites",
+                "Title": "Meteorite"
             }],
-            "dimension": [{
+            "Dimension": [{
+              "$": {
                 "name": "time",
                 "units": "ISO8601",
-                "_default": "2101-01-01T00:00:00Z",
-                "value": "1583-01-01T00:00:00.000Z/2101-01-01T00:00:00.000Z/PT1S"
+                "default": "2101-01-01T00:00:00Z"
+              },
+              "_": "1583-01-01T00:00:00.000Z/2101-01-01T00:00:00.000Z/PT1S"
             }]
         }
       },

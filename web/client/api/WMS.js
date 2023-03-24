@@ -8,8 +8,7 @@
 
 import urlUtil from 'url';
 
-import { isArray, castArray, get, isEmpty, includes, uniq } from 'lodash';
-import assign from 'object-assign';
+import { isObject, isArray, castArray, get, uniq } from 'lodash';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
@@ -17,17 +16,31 @@ import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { getAvailableInfoFormat } from "../utils/MapInfoUtils";
 const capabilitiesCache = {};
 
+export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
+export const WMS_DESCRIBE_LAYER_VERSION = '1.1.1';
 
-export const parseUrl = (urls) => {
+export const getCapabilityRoot = (json) => (json.WMS_Capabilities || json.WMT_MS_Capabilities || {});
+
+export const parseUrl = (
+    urls,
+    query = {
+        service: "WMS",
+        version: WMS_GET_CAPABILITIES_VERSION,
+        request: "GetCapabilities"
+    },
+    options
+) => {
     const url = (isArray(urls) && urls || urls.split(','))[0];
     const parsed = urlUtil.parse(url, true);
-    return urlUtil.format(assign({}, parsed, {search: null}, {
-        query: assign({
-            service: "WMS",
-            version: "1.3.0",
-            request: "GetCapabilities"
-        }, parsed.query)
-    }));
+    return urlUtil.format({
+        ...parsed,
+        search: null,
+        query: {
+            ...query,
+            ...parsed.query,
+            ...(options?.query || {})
+        }
+    });
 };
 
 /**
@@ -63,9 +76,93 @@ export const extractCredits = attribution => {
     };
 };
 
+/**
+ * Get unique array of supported info formats
+ * @return {array} info formats
+ */
+export const getUniqueInfoFormats = () => {
+    return uniq(Object.values(getAvailableInfoFormat()));
+};
+
+export const DEFAULT_GET_MAP_FORMAT_WMS = [
+    'image/png',
+    'image/png8',
+    'image/jpeg',
+    'image/vnd.jpeg-png',
+    'image/vnd.jpeg-png8',
+    'image/gif'
+];
+
+const UNSUPPORTED_GET_MAP_FORMATS_WMS = [
+    "application/atom xml",
+    "application/atom+xml",
+    "application/json;type=geojson",
+    "application/json;type=topojson",
+    "application/json;type=utfgrid",
+    "application/openlayers",
+    "application/openlayers2",
+    "application/openlayers3",
+    "application/pdf",
+    "application/rss xml",
+    "application/rss+xml",
+    "application/vnd.google-earth.kml",
+    "application/vnd.google-earth.kml xml",
+    "application/vnd.google-earth.kml+xml",
+    "application/vnd.google-earth.kml+xml;mode=networklink",
+    "application/vnd.google-earth.kmz",
+    "application/vnd.google-earth.kmz xml",
+    "application/vnd.google-earth.kmz+xml",
+    "application/vnd.google-earth.kmz;mode=networklink",
+    "application/vnd.mapbox-vector-tile",
+    "application/x-protobuf;type=mapbox-vector",
+    "atom",
+    "geojson",
+    "image/geotiff",
+    "image/geotiff8",
+    "image/svg",
+    "image/svg xml",
+    "image/svg+xml",
+    "image/tiff",
+    "image/tiff8",
+    "kml",
+    "kmz",
+    "openlayers",
+    "pbf",
+    "rss",
+    "text/html; subtype=openlayers",
+    "text/html; subtype=openlayers2",
+    "text/html; subtype=openlayers3",
+    "topojson",
+    "utfgrid"
+];
+/**
+ * Validate GetMap format from WMS capabilities
+ * @param {string} format GetMap format
+ * @return {boolean}
+ */
+export const isValidGetMapFormat = (format) => {
+    if (UNSUPPORTED_GET_MAP_FORMATS_WMS.includes(format)) {
+        return false;
+    }
+    if (DEFAULT_GET_MAP_FORMAT_WMS.includes(format)) {
+        return true;
+    }
+    // check if mime type is image
+    const parts = format.split('/');
+    return parts[0] === 'image';
+};
+/**
+ * Validate GetFeatureInfo format from WMS capabilities
+ * @param {string} format GetFeatureInfo format
+ * @return {boolean}
+ */
+export const isValidGetInfoFormat = (format) => {
+    return getUniqueInfoFormats().includes(format);
+};
+
 export const flatLayers = (root) => {
-    const rootLayer = root.Layer ?? root.layer;
-    const rootName = root.Name ?? root.name;
+    const rootLayer = root?.Layer ?? root?.layer;
+    const rootName = root?.Name ?? root?.name;
     return rootLayer
         ? (castArray(rootLayer))
             .reduce((acc, current) => {
@@ -84,12 +181,13 @@ export const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
 export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
-    const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Capability;
-    const service = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Service;
+    const root = getCapabilityRoot(json).Capability;
+    const service = getCapabilityRoot(json).Service;
     const onlineResource = getOnlineResource(root);
     const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS)?.map((crs) => crs.toUpperCase()) || [];
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
-    const rootFormats = root.Request && root.Request.GetMap && root.Request.GetMap.Format || [];
+    const supportedGetMapFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
+    const supportedGetFeatureInfoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetInfoFormat);
     const layersObj = flatLayers(root);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
@@ -100,11 +198,18 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         service,
         layerOptions: {
-            version: (json.WMS_Capabilities || json.WMT_MS_Capabilities)?.$?.version || '1.3.0'
+            version: getCapabilityRoot(json)?.$?.version || WMS_GET_CAPABILITIES_VERSION
         },
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
-            .map((layer) => assign({}, layer, { formats: rootFormats, onlineResource, SRS: SRSList, credits: layer.Attribution ? extractCredits(layer.Attribution) : credits}))
+            .map((layer) => ({
+                ...layer,
+                supportedGetMapFormats,
+                supportedGetFeatureInfoFormats,
+                onlineResource,
+                SRS: SRSList,
+                credits: layer.Attribution ? extractCredits(layer.Attribution) : credits
+            }))
     };
 };
 
@@ -116,57 +221,87 @@ export const getDimensions = (layer) => {
             units: dim.$.units,
             unitSymbol: dim.$.unitSymbol,
             "default": dim.$.default || (extent && extent.$.default),
-            values: dim._ && dim.split(',') || extent && extent._ && extent.split(',')
+            values: dim._ && dim._.split(',') || extent && extent._ && extent._.split(',')
         };
     });
 };
-export const getCapabilities = (url, raw) => {
-    const parsed = urlUtil.parse(url, true);
-    const getCapabilitiesUrl = urlUtil.format(assign({}, parsed, {
-        query: assign({
-            service: "WMS",
-            version: "1.1.1",
-            request: "GetCapabilities"
-        }, parsed.query)
-    }));
-    return new Promise((resolve) => {
-        require.ensure(['../utils/ogc/WMS'], () => {
-            const {unmarshaller} = require('../utils/ogc/WMS');
-            resolve(axios.get(parseUrl(getCapabilitiesUrl)).then((response) => {
-                if (raw) {
-                    let json;
-                    xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
-                        json = result;
-                    });
-                    return json;
-                }
-                let json = unmarshaller.unmarshalString(response.data);
-                return json && json.value;
-            }));
+
+export const getCapabilities = (url) => {
+    return axios.get(parseUrl(url, {
+        service: "WMS",
+        version: WMS_GET_CAPABILITIES_VERSION,
+        request: "GetCapabilities"
+    })).then((response) => {
+        let json;
+        xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+            json = result;
         });
+        return json;
     });
 };
-export const describeLayer = (url, layers, options = {}) => {
-    const parsed = urlUtil.parse(url, true);
-    const describeLayerUrl = urlUtil.format(assign({}, parsed, {
-        query: assign({
-            service: "WMS",
-            version: "1.1.1",
-            layers: layers,
-            request: "DescribeLayer"
-        },
-        parsed.query,
-        options.query || {})
-    }));
-    return new Promise((resolve) => {
-        require.ensure(['../utils/ogc/WMS'], () => {
-            const {unmarshaller} = require('../utils/ogc/WMS');
-            resolve(axios.get(parseUrl(describeLayerUrl)).then((response) => {
-                let json = unmarshaller.unmarshalString(response.data);
-                return json && json.value && json.value.layerDescription && json.value.layerDescription[0];
 
-            }));
+/**
+ * Return capabilities valid for the layer object
+ */
+export const formatCapabilitiesOptions = function(capabilities) {
+    return isObject(capabilities)
+        ? {
+            capabilities,
+            capabilitiesLoading: null,
+            description: capabilities.Abstract,
+            boundingBox: capabilities?.EX_GeographicBoundingBox
+                ? {
+                    minx: capabilities.EX_GeographicBoundingBox?.westBoundLongitude,
+                    miny: capabilities.EX_GeographicBoundingBox?.southBoundLatitude,
+                    maxx: capabilities.EX_GeographicBoundingBox?.eastBoundLongitude,
+                    maxy: capabilities.EX_GeographicBoundingBox?.northBoundLatitude
+                }
+                : capabilities?.LatLonBoundingBox?.$,
+            availableStyles: capabilities?.Style && castArray(capabilities.Style)
+                .map((capStyle) => ({
+                    name: capStyle.Name,
+                    ...(capStyle.Title && { title: capStyle.Title }),
+                    ...(capStyle.Abstract && { _abstract: capStyle.Abstract }),
+                    ...(capStyle.LegendURL && {
+                        legendURL: castArray(capStyle.LegendURL)
+                            .map((capLegendURL) => ({
+                                width: capLegendURL?.$?.width ? parseFloat(capLegendURL.$.width) : undefined,
+                                height: capLegendURL?.$?.height ? parseFloat(capLegendURL.$.height) : undefined,
+                                format: capLegendURL?.Format,
+                                ...(capLegendURL?.OnlineResource?.$?.['xlink:type'] &&
+                                capLegendURL?.OnlineResource?.$?.['xlink:href'] && {
+                                    onlineResource: {
+                                        type: capLegendURL.OnlineResource.$['xlink:type'],
+                                        href: capLegendURL.OnlineResource.$['xlink:href']
+                                    }
+                                })
+                            }))
+                    })
+                }))
+        }
+        : {};
+};
+
+export const describeLayer = (url, layer, options = {}) => {
+    return axios.get(parseUrl(url, {
+        service: "WMS",
+        version: WMS_DESCRIBE_LAYER_VERSION,
+        layers: layer,
+        request: "DescribeLayer"
+    }, options)).then((response) => {
+        let json;
+        xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+            json = result;
         });
+        const layerDescription = json?.WMS_DescribeLayerResponse?.LayerDescription && castArray(json.WMS_DescribeLayerResponse.LayerDescription)[0];
+        return layerDescription && {
+            ...layerDescription?.$,
+            ...(layerDescription?.Query && {
+                query: castArray(layerDescription.Query).map(query => ({
+                    ...query?.$
+                }))
+            })
+        };
     });
 };
 export const getRecords = (url, startPosition, maxRecords, text) => {
@@ -176,29 +311,22 @@ export const getRecords = (url, startPosition, maxRecords, text) => {
             resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
         });
     }
-    return axios.get(parseUrl(url)).then((response) => {
-        let json;
-        xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
-            json = result;
+    return getCapabilities(url)
+        .then((json) => {
+            capabilitiesCache[url] = {
+                timestamp: new Date().getTime(),
+                data: json
+            };
+            return searchAndPaginate(json, startPosition, maxRecords, text);
         });
-        capabilitiesCache[url] = {
-            timestamp: new Date().getTime(),
-            data: json
-        };
-        return searchAndPaginate(json, startPosition, maxRecords, text);
-    });
 };
 export const describeLayers = (url, layers) => {
-    const parsed = urlUtil.parse(url, true);
-    const describeLayerUrl = urlUtil.format(assign({}, parsed, {
-        query: assign({
-            service: "WMS",
-            version: "1.1.1",
-            layers: layers,
-            request: "DescribeLayer"
-        }, parsed.query)
-    }));
-    return axios.get(parseUrl(describeLayerUrl)).then((response) => {
+    return axios.get(parseUrl(url, {
+        service: "WMS",
+        version: WMS_DESCRIBE_LAYER_VERSION,
+        layers: layers,
+        request: "DescribeLayer"
+    })).then((response) => {
         let decriptions;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
             decriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
@@ -217,23 +345,22 @@ export const describeLayers = (url, layers) => {
 export const textSearch = (url, startPosition, maxRecords, text) => {
     return getRecords(url, startPosition, maxRecords, text);
 };
-export const parseLayerCapabilities = (capabilities, layer, lyrs) => {
-    const layers = castArray(lyrs || get(capabilities, "capability.layer.layer"));
-    return layers.reduce((previous, capability) => {
-        if (previous) {
-            return previous;
+export const parseLayerCapabilities = (json, layer) => {
+    const root = getCapabilityRoot(json).Capability;
+    const layersCapabilities = flatLayers(root);
+    return layersCapabilities.find((layerCapability) => {
+        const capabilityName = layerCapability.Name;
+        if (layer.name.split(":").length === 2 && capabilityName && capabilityName.split(":").length === 2) {
+            return layer.name === capabilityName && layerCapability;
         }
-        if (!capability.name && capability.layer) {
-            return parseLayerCapabilities(capabilities, layer, castArray(capability.layer));
-        } else if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2) {
-            return layer.name === capability.name && capability;
-        } else if (capability.name && capability.name.split(":").length === 2) {
-            return (layer.name === capability.name.split(":")[1]) && capability;
-        } else if (layer.name.split(":").length === 2) {
-            return layer.name.split(":")[1] === capability.name && capability;
+        if (capabilityName && capabilityName.split(":").length === 2) {
+            return (layer.name === capabilityName.split(":")[1]) && layerCapability;
         }
-        return layer.name === capability.name && capability;
-    }, null);
+        if (layer.name.split(":").length === 2) {
+            return layer.name.split(":")[1] === capabilityName && layerCapability;
+        }
+        return layer.name === capabilityName && layerCapability;
+    });
 };
 export const getBBox = (record, bounds) => {
     let layer = record;
@@ -278,34 +405,6 @@ export const reset = () => {
     });
 };
 
-export const DEFAULT_FORMAT_WMS = [{
-    label: 'image/png',
-    value: 'image/png'
-}, {
-    label: 'image/png8',
-    value: 'image/png8'
-}, {
-    label: 'image/jpeg',
-    value: 'image/jpeg'
-}, {
-    label: 'image/vnd.jpeg-png',
-    value: 'image/vnd.jpeg-png'
-}, {
-    label: 'image/vnd.jpeg-png8',
-    value: 'image/vnd.jpeg-png8'
-}, {
-    label: 'image/gif',
-    value: 'image/gif'
-}];
-
-/**
- * Get unique array of supported info formats
- * @return {array} info formats
- */
-export const getUniqueInfoFormats = () => {
-    return uniq(Object.values(getAvailableInfoFormat()));
-};
-
 /**
  * Fetch the supported formats of the WMS service
  * @param url
@@ -313,35 +412,21 @@ export const getUniqueInfoFormats = () => {
  * @return {object|string} formats
  */
 export const getSupportedFormat = (url, includeGFIFormats = false) => {
-    return getCapabilities(url).then((caps) => {
-        let getMapFormats = get(caps, 'capability.request.getMap.format', []);
-        let imageFormats;
-        if (!isEmpty(getMapFormats)) {
-            const defaultFormats = DEFAULT_FORMAT_WMS.map(({value}) => value);
-            getMapFormats = getMapFormats.map(({value})=> ({label: value, value}));
-            imageFormats = getMapFormats.filter(({value})=> includes(defaultFormats, value)) || [];
-        } else {
-            imageFormats = DEFAULT_FORMAT_WMS;
-        }
-
-        let infoFormats;
-        if (includeGFIFormats) {
-            let getFeatureInfoFormats = get(caps, 'capability.request.getFeatureInfo.format', []);
-            const defaultFormats = getUniqueInfoFormats();
-            if (!isEmpty(getFeatureInfoFormats)) {
-                getFeatureInfoFormats = getFeatureInfoFormats.map(({value})=> value);
-                infoFormats = uniq(getFeatureInfoFormats.filter((value)=> includes(defaultFormats, value))) || [];
-            } else {
-                infoFormats = defaultFormats;
+    return getCapabilities(url)
+        .then((response) => {
+            const root = getCapabilityRoot(response).Capability;
+            const imageFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
+            if (includeGFIFormats) {
+                const infoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetInfoFormat);
+                return { imageFormats, infoFormats };
             }
-        }
-        return includeGFIFormats ? {imageFormats, infoFormats} : imageFormats;
-    }).catch(()=>
-        // Fallback to default formats on exception
-        includeGFIFormats ? {imageFormats: DEFAULT_FORMAT_WMS, infoFormats: getUniqueInfoFormats()} : DEFAULT_FORMAT_WMS);
+            return imageFormats;
+        })
+        .catch(() => includeGFIFormats ? { imageFormats: [], infoFormats: [] } : []);
 };
 
 const Api = {
+    getCapabilityRoot,
     flatLayers,
     parseUrl,
     getDimensions,
@@ -354,7 +439,8 @@ const Api = {
     getBBox,
     reset,
     getUniqueInfoFormats,
-    getSupportedFormat
+    getSupportedFormat,
+    formatCapabilitiesOptions
 };
 
 export default Api;

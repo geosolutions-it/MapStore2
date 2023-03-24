@@ -64,6 +64,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
                 requestEncoding: requestEncoding,
                 style: getDefaultStyleIdentifier(layer), // it must be collected because it can be used in RESTful version to create the path
                 format: getDefaultFormat(layer),
+                formats: castArray(layer.Format),
                 GetTileURL: getOperation(operations, "GetTile", requestEncoding),
                 capabilitiesURL: url
             }))

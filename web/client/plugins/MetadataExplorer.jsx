@@ -81,7 +81,6 @@ import {burgerMenuSelector} from "../selectors/controls";
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
-import { DEFAULT_FORMAT_WMS } from '../api/WMS';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
@@ -133,7 +132,7 @@ const Catalog = compose(
             marginBottom: "10px",
             marginRight: "5px"
         },
-        formatOptions: DEFAULT_FORMAT_WMS,
+        formatOptions: [],
         advancedRasterStyles: {
             display: 'flex',
             alignItems: 'center',

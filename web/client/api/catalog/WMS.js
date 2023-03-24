@@ -32,15 +32,11 @@ import {
 
 const recordToLayer = (record, {
     removeParams = [],
-    format,
+    service,
     catalogURL,
     url,
-    formats = {},
     map = {},
-    layerBaseConfig,
-    localizedLayerStyles,
-    allowUnsecureLayers,
-    service
+    layerBaseConfig
 } = {}) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
@@ -76,6 +72,19 @@ const recordToLayer = (record, {
         MinScaleDenominator: minScaleDenominator
     } = record?.capabilities ?? {};
 
+    const {
+        format: defaultFormat,
+        localizedLayerStyles,
+        allowUnsecureLayers,
+        autoSetVisibilityLimits,
+        layerOptions
+    } = service || {};
+
+    const validGetMapFormats = record.supportedGetMapFormats || [];
+    const format = validGetMapFormats?.find((value) => value === defaultFormat)
+        || validGetMapFormats[0]
+        || defaultFormat;
+
     let layer = {
         type: 'wms',
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
@@ -104,14 +113,15 @@ const recordToLayer = (record, {
         allowedSRS: allowedSRS,
         catalogURL,
         ...layerBaseConfig,
-        ...service?.layerOptions,
+        ...layerOptions,
         ...record.layerOptions,
         localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
-        ...(!isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats}),
+        imageFormats: record.supportedGetMapFormats,
+        infoFormats: record.supportedGetFeatureInfoFormats,
         ...(!isNil(allowUnsecureLayers) && { forceProxy: allowUnsecureLayers })
     };
 
-    if (!isEmpty(map) && (maxScaleDenominator || minScaleDenominator)) {
+    if (autoSetVisibilityLimits && !isEmpty(map) && (maxScaleDenominator || minScaleDenominator)) {
         const {resolution: minResolution} = !isNil(minScaleDenominator)
         && getResolutionObject(minScaleDenominator, 'scale', map) || {};
         const {resolution: maxResolution} = !isNil(maxScaleDenominator)
@@ -157,7 +167,8 @@ export const getCatalogRecords = (records, options) => {
                     ...(records?.layerOptions || {})
                 },
                 title: getLayerTitleTranslations(record) || record.Name,
-                formats: castArray(record.formats || []),
+                supportedGetMapFormats: record.supportedGetMapFormats,
+                supportedGetFeatureInfoFormats: record.supportedGetFeatureInfoFormats,
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                     values: dim._ && dim._.split(',') || []
                 }, dim.$ || {}))

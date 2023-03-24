@@ -12,7 +12,7 @@ import { head } from 'lodash';
 import Proj4js from 'proj4';
 import { Observable } from 'rxjs';
 
-import WMS from '../api/WMS';
+import WMS, { WMS_DESCRIBE_LAYER_VERSION } from '../api/WMS';
 import axios from '../libs/ajax';
 import { determineCrs, fetchProjRemotely, getProjUrl } from '../utils/CoordinatesUtils';
 import { getCapabilitiesUrl } from '../utils/LayersUtils';
@@ -31,7 +31,7 @@ export const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
                 ...parsed.query,
 
                 service: "WMS",
-                version: "1.1.1",
+                version: WMS_DESCRIBE_LAYER_VERSION,
                 layers: name,
                 outputFormat: 'application/json',
                 request: "DescribeLayer"
@@ -58,7 +58,7 @@ export const getNativeCrs = (layer) => Observable.of(layer).filter(({nativeCrs})
     .switchMap((l) => {
         return getLayerCapabilities(l)
             .switchMap((layerCapability = {}) => {
-                const nativeCrs = head(layerCapability.crs) || "EPSG:3587";
+                const nativeCrs = head(layerCapability.CRS) || "EPSG:3587";
                 if (!determineCrs(nativeCrs)) {
                     const EPSG = nativeCrs.split(":").length === 2 ? nativeCrs.split(":")[1] : "3857";
                     return Observable.fromPromise(fetchProjRemotely(nativeCrs, getProjUrl(EPSG))

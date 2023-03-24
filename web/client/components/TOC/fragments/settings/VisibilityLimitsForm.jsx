@@ -190,8 +190,8 @@ function VisibilityLimitsForm({
                 .then((capabilities) => {
                     if (isMounted.current) {
                         const {
-                            maxScaleDenominator,
-                            minScaleDenominator
+                            MaxScaleDenominator: maxScaleDenominator,
+                            MinScaleDenominator: minScaleDenominator
                         } = capabilities;
                         const newMaxValue = !isNil(maxScaleDenominator)
                             && getResolutionObject(maxScaleDenominator, 'scale');

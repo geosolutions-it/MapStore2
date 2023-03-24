@@ -777,20 +777,7 @@ export const creditsToAttribution = ({ imageUrl, link, title }) => {
     const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
     return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
 };
-/**
- * Return capabilities valid for the layer object
- */
-export const formatCapabitiliesOptions = function(capabilities) {
-    return isObject(capabilities)
-        ? {
-            capabilities,
-            capabilitiesLoading: null,
-            description: capabilities._abstract,
-            boundingBox: capabilities.latLonBoundingBox,
-            availableStyles: capabilities.style && (Array.isArray(capabilities.style) ? capabilities.style : [capabilities.style])
-        }
-        : {};
-};
+
 export const getLayerTitle = ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name;
 
 /**

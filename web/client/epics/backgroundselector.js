@@ -33,7 +33,7 @@ import {ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
 import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
 import { backgroundLayersSelector } from '../selectors/backgroundselector';
 import { getLayerCapabilities } from '../observables/wms';
-import { formatCapabitiliesOptions } from '../utils/LayersUtils';
+import { formatCapabilitiesOptions } from '../api/WMS';
 
 const accessMetadataExplorer = (action$) =>
     action$.ofType(ADD_BACKGROUND)
@@ -51,7 +51,7 @@ const addBackgroundPropertiesEpic = (action$) =>
                 Rx.Observable.of(setBackgroundModalParams({...modalParams, loading: true}))
                     .concat(getLayerCapabilities(modalParams.layer)
                         .switchMap(capabilities => Rx.Observable.of(
-                            setBackgroundModalParams({...modalParams, loading: false, capabilities: formatCapabitiliesOptions(capabilities)})
+                            setBackgroundModalParams({...modalParams, loading: false, capabilities: formatCapabilitiesOptions(capabilities)})
                         ))
                         .catch(() => defaultAction)
                     )

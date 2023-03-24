@@ -30,7 +30,6 @@ import { getMessageById } from '../../utils/LocaleUtils';
 import Message from '../I18N/Message';
 import RecordGrid from './RecordGrid';
 import Loader from '../misc/Loader';
-import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../../api/WMS';
 import { buildServiceUrl } from "../../utils/CatalogUtils";
 
 class Catalog extends React.Component {
@@ -79,8 +78,6 @@ class Catalog extends React.Component {
         modalParams: PropTypes.object,
         layers: PropTypes.array,
         clearModal: PropTypes.func,
-        formatOptions: PropTypes.array,
-        infoFormatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object,
         service: PropTypes.object,
         isNewServiceAdded: PropTypes.bool,
@@ -119,7 +116,6 @@ class Catalog extends React.Component {
         services: {},
         wrapOptions: false,
         zoomToLayer: true,
-        formatOptions: DEFAULT_FORMAT_WMS,
         layerBaseConfig: {},
         crs: "EPSG:3857",
         service: {}
@@ -276,8 +272,6 @@ class Catalog extends React.Component {
                 hideExpand={this.props.hideExpand}
                 onAddBackground={this.props.onAddBackground}
                 defaultFormat={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].format}
-                formatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.formatOptions : DEFAULT_FORMAT_WMS}
-                infoFormatOptions={this.props.services[this.props.selectedService]?.url === this.props.service?.url ? this.props.infoFormatOptions : getUniqueInfoFormats()}
                 layerBaseConfig={this.props.layerBaseConfig}
                 onAdd={() => {
                     this.search({ services: this.props.services, selectedService: this.props.selectedService });

@@ -154,6 +154,7 @@ describe('Test Raster advanced settings', () => {
         };
         const spyOn = expect.spyOn(action, 'onChangeServiceFormat');
         ReactDOM.render(<RasterAdvancedSettings
+            formatOptions={['image/png', 'image/png8', 'image/jpeg']}
             onChangeServiceFormat={action.onChangeServiceFormat}
             service={{type: "wms"}}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");

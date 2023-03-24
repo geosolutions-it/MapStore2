@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useEffect} from 'react';
-import {FormGroup, Col, ControlLabel, Checkbox} from "react-bootstrap";
+import {FormGroup, Col, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon } from "react-bootstrap";
 import RS from 'react-select';
-import { DEFAULT_FORMAT_WMS } from '../../../../api/WMS';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 const Select = localizedProps('noResultsText')(RS);
 
@@ -21,6 +20,8 @@ import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
 import WMSDomainAliases from "./WMSDomainAliases";
+import tooltip from '../../../misc/enhancers/buttonTooltip';
+const Button = tooltip(ButtonRB);
 
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
@@ -58,7 +59,7 @@ const getServerTypeOptions = () => {
  */
 export default ({
     service,
-    formatOptions =  DEFAULT_FORMAT_WMS,
+    formatOptions = [],
     onChangeServiceFormat = () => { },
     onChangeServiceProperty = () => {},
     currentWMSCatalogLayerSize,
@@ -162,16 +163,26 @@ export default ({
             <Col xs={6}>
                 <ControlLabel>Format</ControlLabel>
             </Col >
-            <Col xs={6} style={{marginBottom: '5px'}}>
-                <Select
-                    isLoading={props.formatsLoading}
-                    onOpen={() => onFormatOptionsFetch(service.url)}
-                    value={service && service.format}
-                    clearable
-                    noResultsText={props.formatsLoading
-                        ? "catalog.format.loading" : "catalog.format.noOption"}
-                    options={props.formatsLoading ? [] : formatOptions}
-                    onChange={event => onChangeServiceFormat(event && event.value)} />
+            <Col xs={6} style={{marginBottom: '5px', display: 'flex', alignItems: 'center' }}>
+                <div style={{ flex: 1 }}>
+                    <Select
+                        isLoading={props.formatsLoading}
+                        onOpen={() => onFormatOptionsFetch(service.url)}
+                        value={service && service.format}
+                        clearable
+                        noResultsText={props.formatsLoading
+                            ? "catalog.format.loading" : "catalog.format.noOption"}
+                        options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
+                        onChange={event => onChangeServiceFormat(event && event.value)} />
+                </div>
+                <Button
+                    disabled={props.formatsLoading}
+                    tooltipId="catalog.format.refresh"
+                    className="square-button-md no-border"
+                    onClick={() => onFormatOptionsFetch(service.url, true)}
+                    key="format-refresh">
+                    <Glyphicon glyph="refresh" />
+                </Button>
             </Col >
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles}>

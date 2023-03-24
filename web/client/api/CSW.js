@@ -207,7 +207,7 @@ const addCapabilitiesToRecords = (_dcRef, result, options) => {
         isCached
             ? cached
             : WMS.getCapabilities(parsedUrl + '?version=')
-                .then((caps)=> get(caps, 'capability.layer.layer', []))
+                .then((caps)=> WMS.flatLayers(WMS.getCapabilityRoot(caps)?.Capability))
                 .catch(()=> []))
         .then((layers) => {
             if (!isCached) {
@@ -219,9 +219,9 @@ const addCapabilitiesToRecords = (_dcRef, result, options) => {
                 records: result?.records?.map(record=> {
                     const name = get(getLayerReferenceFromDc(record?.dc, null, false), 'params.name', '');
                     const {
-                        minScaleDenominator: MinScaleDenominator,
-                        maxScaleDenominator: MaxScaleDenominator
-                    } = layers.find(l=> l.name === name) || {};
+                        MinScaleDenominator,
+                        MaxScaleDenominator
+                    } = layers.find(l=> l.Name === name) || {};
                     return {
                         ...record,
                         ...((!isNil(MinScaleDenominator) || !isNil(MaxScaleDenominator))

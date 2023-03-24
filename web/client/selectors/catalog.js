@@ -10,7 +10,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { get } from 'lodash';
 
 import { projectionSelector } from './map';
-import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../api/WMS';
+import { getUniqueInfoFormats } from '../api/WMS';
 
 export const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
 export const servicesSelector = (state) => get(state, "catalog.services");
@@ -56,7 +56,9 @@ export const catalogSearchInfoSelector = createStructuredSelector({
     projection: projectionSelector
 });
 export const formatsLoadingSelector = (state) => get(state, "catalog.formatsLoading", false);
-export const getSupportedFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.imageFormats", DEFAULT_FORMAT_WMS);
+export const getSupportedFormatsSelector = (state) => modeSelector(state) === 'edit'
+    ? get(state, "catalog.newService.supportedFormats.imageFormats", [])
+    : selectedCatalogSelector(state)?.supportedFormats?.imageFormats || [];
 export const getSupportedGFIFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.infoFormats", getUniqueInfoFormats());
 export const getFormatUrlUsedSelector = (state) => get(state, "catalog.newService.formatUrlUsed", '');
 export const getNewServiceStatusSelector = (state) => get(state, "catalog.isNewServiceAdded", false);
