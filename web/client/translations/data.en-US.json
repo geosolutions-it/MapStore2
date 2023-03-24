@@ -113,6 +113,12 @@
             "templateError": "There was an error applying the template to the information returned by the server, please check the template",
             "templatePreview": "Template preview",
             "heightOffset": "Height offset (m)",
+            "wmsLayerTileSize": "Tile size (WMS)",
+            "serverType": "Server Type",
+            "serverTypeOption": {
+                "noVendor": "No Vendor",
+                "geoserver": "GeoServer"
+            },
             "visibilityLimits": {
                 "title": "Visibility limits",
                 "serverValuesUpdateUndefined": "The server did not provided scale visibility limits for this layer",
@@ -1502,7 +1508,6 @@
                 "tooltip": "Automatically applies the visibility limits suggested by the server"
            },
            "singleTile": {
-                "label": "Single Tile",
                 "tooltip": "The layer is rendered as a single tile image when added to the map with this option enabled"
             },
            "allowUnsecureLayers": {

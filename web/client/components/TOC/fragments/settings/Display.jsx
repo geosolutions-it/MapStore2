@@ -156,7 +156,7 @@ export default class extends React.Component {
                     </Col>
                     <Col xs={12}>
                         <FormGroup>
-                            <ControlLabel><Message msgId="WMS Layer tile size" /></ControlLabel>
+                            <ControlLabel><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
                             <Select
                                 key="wsm-layersize-dropdown"
                                 clearable={false}
