@@ -347,9 +347,9 @@ class Catalog extends React.Component {
                             </InputGroup.Addon>
                         </InputGroup>
                     </FormGroup>
-                    <FormGroup controlId="searchText" key="searchText">
+                    {this.props.services?.[this.props.selectedService]?.type !== '3dtiles' && <FormGroup controlId="searchText" key="searchText">
                         {this.renderTextSearch()}
-                    </FormGroup>
+                    </FormGroup>}
                     <FormGroup controlId="buttons" key="buttons">
                         {this.renderButtons()}
                         {this.props.layerError ? this.renderError(this.props.layerError) : null}

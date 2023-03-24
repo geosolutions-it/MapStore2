@@ -151,16 +151,31 @@ export default (API) => ({
                 const state = store.getState();
                 const services = servicesSelectorWithBackgrounds(state);
                 const actions = layers
-                    .filter((l, i) => !!services[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
+                    .filter((l, i) => !!services?.[sources[i]] || typeof sources[i] === 'object') // check for catalog name or object definition
                     .map((l, i) => {
-                        const layerOptions = get(options, i, searchOptionsSelector(state));
                         const source = sources[i];
                         const service = typeof source === 'object' ? source : services[source];
                         const format = service.type.toLowerCase();
                         const url = service.url;
                         const text = layers[i];
+                        const layerOptionsParam = get(options, i, searchOptionsSelector(state));
+                        // use the selected layer text as title for 3d tiles
+                        // because currently we get only a single record for this service type
+                        const layerOptions = format === '3dtiles'
+                            ? {
+                                ...layerOptionsParam,
+                                title: isObject(layerOptionsParam?.title)
+                                    ? {
+                                        ...layerOptionsParam?.title,
+                                        "default": layerOptionsParam?.title?.default || text
+                                    }
+                                    : layerOptionsParam?.title || text
+                            }
+                            : layerOptionsParam;
                         return Rx.Observable.defer(() =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, {...layerOptions, ...service}).catch(() => ({ results: [] }))
+                            API[format]
+                                .textSearch(url, startPosition, maxRecords, text, { ...layerOptions, ...service, options: { service } })
+                                .catch(() => ({ records: [] }))
                         ).map(r => ({ ...r, format, url, text, layerOptions }));
                     });
                 return Rx.Observable.forkJoin(actions)
@@ -206,12 +221,15 @@ export default (API) => ({
                         // return one notification for all records that have not been found
                         actions = [recordsNotFound(allRecordsNotFound)];
                     }
+
+                    const layers = results
+                        .filter(r => isObject(r[0]))
+                        .map(r => merge({}, r[0], r[1]));
+
                     // add all layers found to the map
                     actions = [
                         ...actions,
-                        ...results.filter(r => isObject(r[0])).map(r => {
-                            return addLayer(merge({}, r[0], r[1]));
-                        })
+                        ...layers.map(layer => addLayer(layer))
                     ];
                     return Rx.Observable.from(actions);
                 }
