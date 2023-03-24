@@ -62,7 +62,7 @@ describe('Test CatalogServiceEditor', () => {
 
         const formatFormGroups = [...document.querySelectorAll('.form-group')].filter(fg => {
             const labels = [...fg.querySelectorAll('label')];
-            return labels.length === 1 && labels[0].textContent === 'Format';
+            return labels.length === 1 && labels[0].textContent === 'layerProperties.format.title';
         });
         expect(formatFormGroups.length).toBe(1);
         const formatSelect = formatFormGroups[0].querySelector('.Select-value-label');
@@ -95,7 +95,7 @@ describe('Test CatalogServiceEditor', () => {
 
         const wmstileSizeFormGroups = [...document.querySelectorAll('.form-group')].filter(fg => {
             const labels = [...fg.querySelectorAll('label')];
-            return labels.length === 1 && labels[0].textContent === 'WMS Layer tile size';
+            return labels.length === 1 && labels[0].textContent === 'layerProperties.wmsLayerTileSize';
         });
         expect(wmstileSizeFormGroups.length).toBe(1);
         const tileSizeSelect = wmstileSizeFormGroups[0].querySelector('.Select-value-label');

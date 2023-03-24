@@ -217,7 +217,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
         const formGroup = document.querySelectorAll('.form-group')[3];
-        expect(formGroup.textContent.trim()).toBe('catalog.singleTile.label');
+        expect(formGroup.textContent.trim()).toBe('layerProperties.singleTile');
         const singleTileLayer = formGroup.querySelector('input[type="checkbox"]');
         expect(singleTileLayer).toBeTruthy();
         TestUtils.Simulate.change(singleTileLayer, { "target": { "checked": true }});
