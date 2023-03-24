@@ -113,6 +113,12 @@
             "templateError": "Beim Anwenden der Vorlage auf die vom Server zurückgegebenen Informationen ist ein Fehler aufgetreten. Bitte überprüfen Sie die Vorlage",
             "templatePreview": "Vorschau template",
             "heightOffset": "Höhenversatz (m)",
+            "wmsLayerTileSize": "Kachelgröße (WMS)",
+            "serverType": "Servertyp",
+            "serverTypeOption": {
+                "noVendor": "No Vendor",
+                "geoserver": "GeoServer"
+            },
             "visibilityLimits": {
                 "title": "Sichtbarkeitsgrenzen",
                 "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",
@@ -1540,7 +1546,6 @@
                 "tooltip": "Wendet automatisch die vom Server vorgeschlagenen Sichtbarkeitsgrenzen an"
             },
             "singleTile": {
-                "label": "Single Tile",
                 "tooltip": "Die Ebene wird als einzelnes Kachelbild gerendert, wenn sie mit aktivierter Option zur Karte hinzugefügt wird."
             },
           "domainAliases": {

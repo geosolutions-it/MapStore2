@@ -13,7 +13,7 @@ import localizedProps from '../../../misc/enhancers/localizedProps';
 const Select = localizedProps('noResultsText')(RS);
 
 import CommonAdvancedSettings from './CommonAdvancedSettings';
-import {isNil} from "lodash";
+import {isNil, camelCase} from "lodash";
 import ReactQuill from '../../../../libs/quill/react-quill-suspense';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 
@@ -30,7 +30,7 @@ const getTileSizeSelectOptions = (opts) => {
     return opts.map(opt => ({label: `${opt}x${opt}`, value: opt}));
 };
 const getServerTypeOptions = () => {
-    return Object.keys(ServerTypes).map((key) => ({ label: key, value: ServerTypes[key] }));
+    return Object.keys(ServerTypes).map((key) => ({ label: <Message msgId={`layerProperties.serverTypeOption.${camelCase(key)}`} />, value: ServerTypes[key] }));
 };
 
 /**
@@ -102,7 +102,7 @@ export default ({
                 <Checkbox
                     onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, singleTile: e.target.checked })}
                     checked={!isNil(service?.layerOptions?.singleTile) ? service.layerOptions.singleTile : false}>
-                    <Message msgId="catalog.singleTile.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
+                    <Message msgId="layerProperties.singleTile" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
                 </Checkbox>
             </Col>
         </FormGroup>}
@@ -160,7 +160,7 @@ export default ({
         </FormGroup>)}
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6}>
-                <ControlLabel>Format</ControlLabel>
+                <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
@@ -176,7 +176,7 @@ export default ({
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6} >
-                <ControlLabel>WMS Layer tile size</ControlLabel>
+                <ControlLabel><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
@@ -187,7 +187,7 @@ export default ({
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6} >
-                <ControlLabel>Server Type</ControlLabel>
+                <ControlLabel><Message msgId="layerProperties.serverType" /></ControlLabel>
             </Col >
             <Col xs={6} style={{marginBottom: '5px'}}>
                 <Select
