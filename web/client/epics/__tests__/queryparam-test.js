@@ -596,7 +596,7 @@ describe('queryparam epics', () => {
                 done();
             }, state, false, true);
     });
-    it('switch map type to cesium if cesium viewer options are found', (done) => {
+    it('switch map type to 3D if cesium viewer options are found', (done) => {
         const state = {
             maptype: {
                 mapType: 'openlayers'
@@ -604,6 +604,66 @@ describe('queryparam epics', () => {
             router: {
                 location: {
                     search: "?center=-74.2,40.7&zoom=16.5&heading=0.1&pitch=-0.7&roll=6.2"
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
+            onLocationChanged({}),
+            configureMap()
+        ], (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
+                expect(actions[0].visualizationMode).toBe(VisualizationModes._3D);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
+    });
+    it('switch map type to 3D if actions param includes 3d tiles service', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: '?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["Layer"],"sources":[{"type":"3dtiles","url":"https://tileset.org/tileset.json"}]}]'
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
+            onLocationChanged({}),
+            configureMap()
+        ], (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
+                expect(actions[0].visualizationMode).toBe(VisualizationModes._3D);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, state);
+    });
+    it('switch map type to 3D if addLayers param includes 3d tiles service', (done) => {
+        const state = {
+            maptype: {
+                mapType: 'openlayers'
+            },
+            router: {
+                location: {
+                    search: '?addLayers=Layer;serviceId3DTiles'
+                }
+            },
+            catalog: {
+                services: {
+                    serviceId3DTiles: {
+                        type: "3dtiles",
+                        url: "https://tileset.org/tileset.json"
+                    }
                 }
             }
         };

@@ -8,7 +8,7 @@
 
 import * as Rx from 'rxjs';
 import {LOCATION_CHANGE} from 'connected-react-router';
-import {get, head, isUndefined} from 'lodash';
+import {get, head, isUndefined, castArray, isString} from 'lodash';
 
 import { CHANGE_MAP_VIEW, CLICK_ON_MAP } from '../actions/map';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -24,6 +24,8 @@ import { changeVisualizationMode } from '../actions/maptype';
 import {getCesiumViewerOptions, getParametersValues, getQueryActions, paramActions} from "../utils/QueryParamsUtils";
 import {semaphore} from "../utils/EpicsUtils";
 import { VisualizationModes, MapLibraries } from '../utils/MapTypeUtils';
+import { servicesSelectorWithBackgrounds, selectedServiceSelector } from '../selectors/catalog';
+import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
@@ -51,9 +53,26 @@ export const readQueryParamsOnMapEpic = (action$, store) => {
                     .take(1)
                     .switchMap(() => {
                         // On map initialization, query params containing cesium viewer options
-                        // is used to determine cesium map type
+                        // or 3d tiles services
+                        // are used to determine 3D visualization mode
                         const cesiumViewerOptions = getCesiumViewerOptions(parameters);
-                        if (cesiumViewerOptions) {
+                        const services = servicesSelectorWithBackgrounds(store.getState());
+                        const defaultSource = selectedServiceSelector(store.getState());
+                        const hasAction3DTileService = parameters?.actions
+                            ? !!castArray(parameters.actions)
+                                .find(({ type, sources = [] }) =>
+                                    type === ADD_LAYERS_FROM_CATALOGS
+                                    && !!sources.find((source) =>
+                                        (isString(source) ? services[source] : source)?.type === '3dtiles'
+                                    ))
+                            : false;
+                        const hasAddLayers3DTileService = parameters?.addLayers
+                            ? !!parameters.addLayers.split(',')
+                                .find((parsed) =>
+                                    (services[parsed?.split(';')?.[1]] || defaultSource)?.type === '3dtiles'
+                                )
+                            : false;
+                        if (cesiumViewerOptions || hasAction3DTileService || hasAddLayers3DTileService) {
                             skipProcessing = true;
                             return Rx.Observable.of(changeVisualizationMode(VisualizationModes._3D));
                         }

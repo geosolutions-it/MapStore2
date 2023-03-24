@@ -45,7 +45,10 @@ import {
     ADD_CATALOG_SERVICE,
     addService
 } from '../../actions/catalog';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
 
+let mockAxios;
 
 describe('catalog Epics', () => {
     it('getMetadataRecordById', (done) => {
@@ -807,5 +810,132 @@ describe('catalog Epics', () => {
                 done(error);
             }
         }, state, done);
+    });
+
+    describe('addLayersFromCatalogsEpic 3d tiles', () => {
+
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+
+        afterEach(done => {
+            mockAxios.restore();
+            setTimeout(done);
+        });
+        it('should add layer with title', (done) => {
+            const NUM_ACTIONS = 1;
+            const tileset = {
+                "asset": {
+                    "version": "1.0"
+                },
+                "properties": {
+                    "Height": {
+                        "minimum": 0,
+                        "maximum": 7
+                    }
+                },
+                "geometricError": 70,
+                "root": {
+                    "refine": "ADD",
+                    "boundingVolume": {
+                        "region": [
+                            -1.3197004795898053,
+                            0.6988582109,
+                            -1.3196595204101946,
+                            0.6988897891,
+                            0,
+                            20
+                        ]
+                    },
+                    "geometricError": 0,
+                    "content": {
+                        "uri": "model.b3dm"
+                    }
+                }
+            };
+            mockAxios.onGet(/tileset\.json/).reply(() => ([ 200, tileset ]));
+            testEpic(
+                addLayersFromCatalogsEpic,
+                NUM_ACTIONS,
+                addLayersMapViewerUrl(["Title"], [{ url: 'https://server.org/name/tileset.json', type: '3dtiles' }]),
+                (actions) => {
+                    try {
+                        const [
+                            addLayerAndDescribeAction
+                        ] = actions;
+                        expect(addLayerAndDescribeAction.type).toBe(ADD_LAYER_AND_DESCRIBE);
+                        expect(addLayerAndDescribeAction.layer).toBeTruthy();
+                        expect(addLayerAndDescribeAction.layer.type).toBe("3dtiles");
+                        expect(addLayerAndDescribeAction.layer.url).toBe("https://server.org/name/tileset.json");
+                        expect(addLayerAndDescribeAction.layer.title).toBe("Title");
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {});
+        });
+        it('should add layer with catalog id', (done) => {
+            const NUM_ACTIONS = 1;
+            const tileset = {
+                "asset": {
+                    "version": "1.0"
+                },
+                "properties": {
+                    "Height": {
+                        "minimum": 0,
+                        "maximum": 7
+                    }
+                },
+                "geometricError": 70,
+                "root": {
+                    "refine": "ADD",
+                    "boundingVolume": {
+                        "region": [
+                            -1.3197004795898053,
+                            0.6988582109,
+                            -1.3196595204101946,
+                            0.6988897891,
+                            0,
+                            20
+                        ]
+                    },
+                    "geometricError": 0,
+                    "content": {
+                        "uri": "model.b3dm"
+                    }
+                }
+            };
+            mockAxios.onGet(/tileset\.json/).reply(() => ([ 200, tileset ]));
+            testEpic(
+                addLayersFromCatalogsEpic,
+                NUM_ACTIONS,
+                addLayersMapViewerUrl(["name"], ["3dTilesCatalog"]),
+                (actions) => {
+                    try {
+                        const [
+                            addLayerAndDescribeAction
+                        ] = actions;
+                        expect(addLayerAndDescribeAction.type).toBe(ADD_LAYER_AND_DESCRIBE);
+                        expect(addLayerAndDescribeAction.layer).toBeTruthy();
+                        expect(addLayerAndDescribeAction.layer.type).toBe("3dtiles");
+                        expect(addLayerAndDescribeAction.layer.url).toBe("https://server.org/name/tileset.json");
+                        expect(addLayerAndDescribeAction.layer.title).toBe("name");
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {
+                    catalog: {
+                        selectedService: "3dTilesCatalog",
+                        services: {
+                            "3dTilesCatalog": {
+                                url: 'https://server.org/name/tileset.json',
+                                type: '3dtiles'
+                            }
+                        }
+                    }
+                });
+        });
     });
 });
