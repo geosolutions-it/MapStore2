@@ -162,7 +162,15 @@ export default (API) => ({
                         // use the selected layer text as title for 3d tiles
                         // because currently we get only a single record for this service type
                         const layerOptions = format === '3dtiles'
-                            ? { title: text, ...layerOptionsParam }
+                            ? {
+                                ...layerOptionsParam,
+                                title: isObject(layerOptionsParam?.title)
+                                    ? {
+                                        ...layerOptionsParam?.title,
+                                        "default": layerOptionsParam?.title?.default || text
+                                    }
+                                    : layerOptionsParam?.title || text
+                            }
                             : layerOptionsParam;
                         return Rx.Observable.defer(() =>
                             API[format]

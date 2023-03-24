@@ -383,3 +383,16 @@ The 3D tiles service endpoint does not contain a default property for the name o
 ```
 
 GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My 3D Tiles Layer"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json"}]}]`
+
+If the 3D Tiles needs title with different translation is still possible to include the `options` parameter with the desired translation:
+
+```json
+{
+    "type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
+    "layers": ["My 3D Tiles Layer"],
+    "sources": [{ "type":"3dtiles", "url":"https://example.com/tileset-pathname/tileset.json" }],
+    "options":[{ "title": { "en-US": "LayerTitle", "it-IT": "TitoloLivello" }}]
+}
+```
+
+GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My 3D Tiles Layer"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json"}],"options":[{"title":{"en-US":"LayerTitle","it-IT":"TitoloLivello"}}]}]`
