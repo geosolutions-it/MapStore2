@@ -207,7 +207,7 @@ const addCapabilitiesToRecords = (_dcRef, result, options) => {
         isCached
             ? cached
             : WMS.getCapabilities(parsedUrl + '?version=')
-                .then((caps)=> WMS.flatLayers(WMS.getCapabilityRoot(caps)?.Capability))
+                .then((caps)=> WMS.flatLayers(caps.Capability))
                 .catch(()=> []))
         .then((layers) => {
             if (!isCached) {

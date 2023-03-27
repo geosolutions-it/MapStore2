@@ -64,7 +64,7 @@ import {
     buildSRSMap,
     extractOGCServicesReferences
 } from '../utils/CatalogUtils';
-import { getSupportedFormat, getCapabilities, describeLayers, flatLayers, getCapabilityRoot } from '../api/WMS';
+import { getSupportedFormat, getCapabilities, describeLayers, flatLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../utils/LayersUtils';
@@ -363,7 +363,7 @@ export default (API) => ({
 
                 return Rx.Observable.defer(() => getCapabilities(getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
-                        const layersXml = flatLayers(getCapabilityRoot(caps)?.Capability);
+                        const layersXml = flatLayers(caps?.Capability);
                         const metadataUrls = castArray((layersXml.length === 1
                             ? layersXml[0].MetadataURL
                             : find(layersXml, l => removeWorkspace(l.Name) === removeWorkspace(layer.name))?.MetadataURL)

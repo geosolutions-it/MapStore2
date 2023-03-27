@@ -19,8 +19,6 @@ const capabilitiesCache = {};
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
 export const WMS_DESCRIBE_LAYER_VERSION = '1.1.1';
 
-export const getCapabilityRoot = (json) => (json.WMS_Capabilities || json.WMT_MS_Capabilities || {});
-
 export const parseUrl = (
     urls,
     query = {
@@ -181,8 +179,8 @@ export const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
 export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
-    const root = getCapabilityRoot(json).Capability;
-    const service = getCapabilityRoot(json).Service;
+    const root = json.Capability;
+    const service = json.Service;
     const onlineResource = getOnlineResource(root);
     const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS)?.map((crs) => crs.toUpperCase()) || [];
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
@@ -198,7 +196,7 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         service,
         layerOptions: {
-            version: getCapabilityRoot(json)?.$?.version || WMS_GET_CAPABILITIES_VERSION
+            version: json?.$?.version || WMS_GET_CAPABILITIES_VERSION
         },
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
@@ -236,7 +234,7 @@ export const getCapabilities = (url) => {
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
             json = result;
         });
-        return json;
+        return (json.WMS_Capabilities || json.WMT_MS_Capabilities || {});
     });
 };
 
@@ -346,7 +344,7 @@ export const textSearch = (url, startPosition, maxRecords, text) => {
     return getRecords(url, startPosition, maxRecords, text);
 };
 export const parseLayerCapabilities = (json, layer) => {
-    const root = getCapabilityRoot(json).Capability;
+    const root = json.Capability;
     const layersCapabilities = flatLayers(root);
     return layersCapabilities.find((layerCapability) => {
         const capabilityName = layerCapability.Name;
@@ -414,7 +412,7 @@ export const reset = () => {
 export const getSupportedFormat = (url, includeGFIFormats = false) => {
     return getCapabilities(url)
         .then((response) => {
-            const root = getCapabilityRoot(response).Capability;
+            const root = response.Capability;
             const imageFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
             if (includeGFIFormats) {
                 const infoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetInfoFormat);
@@ -426,7 +424,6 @@ export const getSupportedFormat = (url, includeGFIFormats = false) => {
 };
 
 const Api = {
-    getCapabilityRoot,
     flatLayers,
     parseUrl,
     getDimensions,

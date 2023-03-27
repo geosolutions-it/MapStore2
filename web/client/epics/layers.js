@@ -54,7 +54,7 @@ export const refresh = action$ =>
                     Rx.Observable.forkJoin(
                         Api.getCapabilities(getCapabilitiesUrl(layer))
                             .then( (json) => {
-                                const root = Api.getCapabilityRoot(json)?.Capability;
+                                const root = json?.Capability;
                                 const layersObj = Api.flatLayers(root);
                                 const layers = isArray(layersObj) ? layersObj : [layersObj];
                                 return head(layers.filter((l) => l.Name === removeWorkspace(layer.name) || l.Name === layer.name));
