@@ -196,20 +196,20 @@ describe('Test correctness of the WMS APIs', () => {
         expect(records[0].references[0].url).toBe(url);
     });
     it('wms layer with formats', () => {
-        const supportedGetMapFormats = ["png"];
-        const supportedGetFeatureInfoFormats = ["text/plain"];
+        const getMapFormats = ["image/png"];
+        const getFeatureInfoFormats = ["text/plain"];
         const records = getCatalogRecords({
             records: [{
-                supportedGetMapFormats,
-                supportedGetFeatureInfoFormats
+                getMapFormats,
+                getFeatureInfoFormats
             }]
         }, {
             url: 'http://sample'
         });
         expect(records.length).toBe(1);
         const layer = getLayerFromRecord(records[0]);
-        expect(layer.imageFormats).toEqual(supportedGetMapFormats);
-        expect(layer.infoFormats).toEqual(supportedGetFeatureInfoFormats);
+        expect(layer.imageFormats).toEqual(getMapFormats);
+        expect(layer.infoFormats).toEqual(getFeatureInfoFormats);
     });
     it('wms layer with force proxy', () => {
         const records = getCatalogRecords({

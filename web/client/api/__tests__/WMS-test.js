@@ -46,10 +46,9 @@ describe('Test correctness of the WMS APIs', () => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.3.0.xml').then((result) => {
             try {
                 expect(result).toBeTruthy();
-                expect(result.WMS_Capabilities).toBeTruthy();
-                expect(result.WMS_Capabilities.Capability).toBeTruthy();
-                expect(result.WMS_Capabilities.$.version).toBe("1.3.0");
-                expect(result.WMS_Capabilities.Capability.Layer).toBeTruthy();
+                expect(result.Capability).toBeTruthy();
+                expect(result.$.version).toBe("1.3.0");
+                expect(result.Capability.Layer).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -60,10 +59,9 @@ describe('Test correctness of the WMS APIs', () => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
             try {
                 expect(result).toBeTruthy();
-                expect(result.WMT_MS_Capabilities).toBeTruthy();
-                expect(result.WMT_MS_Capabilities.Capability).toBeTruthy();
-                expect(result.WMT_MS_Capabilities.$.version).toBe("1.1.1");
-                expect(result.WMT_MS_Capabilities.Capability.Layer).toBeTruthy();
+                expect(result.Capability).toBeTruthy();
+                expect(result.$.version).toBe("1.1.1");
+                expect(result.Capability.Layer).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -74,11 +72,10 @@ describe('Test correctness of the WMS APIs', () => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
             try {
                 expect(result).toBeTruthy();
-                expect(result.WMT_MS_Capabilities).toBeTruthy();
-                expect(result.WMT_MS_Capabilities.Capability).toBeTruthy();
-                expect(result.WMT_MS_Capabilities.$.version).toBe("1.1.1");
-                expect(result.WMT_MS_Capabilities.Capability.Layer).toBeTruthy();
-                const bbox = API.getBBox(result.WMT_MS_Capabilities.Capability.Layer);
+                expect(result.Capability).toBeTruthy();
+                expect(result.$.version).toBe("1.1.1");
+                expect(result.Capability.Layer).toBeTruthy();
+                const bbox = API.getBBox(result.Capability.Layer);
                 expect(bbox.extent).toBeTruthy();
                 expect(bbox.crs).toBeTruthy();
                 done();
@@ -91,11 +88,10 @@ describe('Test correctness of the WMS APIs', () => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
             try {
                 expect(result).toBeTruthy();
-                expect(result.WMT_MS_Capabilities).toBeTruthy();
-                expect(result.WMT_MS_Capabilities.Capability).toBeTruthy();
-                expect(result.WMT_MS_Capabilities.$.version).toBe("1.1.1");
-                expect(result.WMT_MS_Capabilities.Capability.Layer).toBeTruthy();
-                const bbox = API.getBBox(result.WMT_MS_Capabilities.Capability.Layer, true);
+                expect(result.Capability).toBeTruthy();
+                expect(result.$.version).toBe("1.1.1");
+                expect(result.Capability.Layer).toBeTruthy();
+                const bbox = API.getBBox(result.Capability.Layer, true);
                 expect(bbox.bounds).toBeTruthy();
                 expect(bbox.bounds.minx).toBeTruthy();
                 expect(bbox.crs).toBeTruthy();
@@ -110,7 +106,7 @@ describe('Test correctness of the WMS APIs', () => {
             try {
                 expect(result).toBeTruthy();
                 expect(result.service).toBeTruthy();
-                expect(result.records[0].supportedGetMapFormats.length).toBe(5);
+                expect(result.records[0].getMapFormats.length).toBe(20);
                 expect(result.numberOfRecordsMatched).toBe(5);
                 expect(result.layerOptions).toBeTruthy();
                 expect(result.layerOptions.version).toBe('1.3.0');
@@ -141,7 +137,7 @@ describe('Test correctness of the WMS APIs', () => {
             try {
                 expect(result).toBeTruthy();
                 expect(result.service).toBeTruthy();
-                expect(result.records[0].supportedGetMapFormats.length).toBe(7);
+                expect(result.records[0].getMapFormats.length).toBe(42);
                 expect(result.numberOfRecordsMatched).toBe(7);
                 expect(result.layerOptions).toBeTruthy();
                 expect(result.layerOptions.version).toBe('1.1.1');
@@ -165,19 +161,17 @@ describe('Test correctness of the WMS APIs', () => {
 
     it('parseLayerCapabilities nested', () => {
         const capabilities = {
-            WMS_Capabilities: {
-                Capability: {
+            Capability: {
+                Layer: {
                     Layer: {
-                        Layer: {
-                            Layer: [
-                                {
-                                    Name: "mytest"
-                                },
-                                {
-                                    Name: "mytest2"
-                                }
-                            ]
-                        }
+                        Layer: [
+                            {
+                                Name: "mytest"
+                            },
+                            {
+                                Name: "mytest2"
+                            }
+                        ]
                     }
                 }
             }
@@ -233,24 +227,6 @@ describe('Test correctness of the WMS APIs', () => {
             { name: 'layer2', layer: { name: 'layer3', layer: { name: 'layer4', layer: { name: 'layer5' } } } },
             { name: 'layer1', layer: { name: 'layer2', layer: { name: 'layer3', layer: { name: 'layer4', layer: { name: 'layer5' } } } } }
         ]);
-    });
-    it('test formatCapabilitiesOptions', () => {
-
-        expect(API.formatCapabilitiesOptions()).toEqual({});
-
-        const capabilities = {
-            Style: { Name: 'generic' },
-            Abstract: 'description',
-            LatLonBoundingBox: {$: { minx: -180, miny: -90, maxx: 180, maxy: 90 }}
-        };
-        expect(API.formatCapabilitiesOptions(capabilities))
-            .toEqual({
-                capabilities,
-                capabilitiesLoading: null,
-                description: 'description',
-                boundingBox: { minx: -180, miny: -90, maxx: 180, maxy: 90 },
-                availableStyles: [{ name: 'generic' }]
-            });
     });
 });
 

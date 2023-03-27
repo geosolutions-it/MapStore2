@@ -8,7 +8,8 @@
 
 import { updateNode } from './layers';
 
-import WMS, { formatCapabilitiesOptions } from '../api/WMS';
+import WMS from '../api/WMS';
+import { getLayerOptions } from '../utils/WMSUtils';
 import * as WFS from '../api/WFS';
 import WCS from '../api/WCS';
 import {getCapabilitiesUrl} from '../utils/LayersUtils';
@@ -63,7 +64,7 @@ export function getLayerCapabilities(layer) {
             const layerCapability = WMS.parseLayerCapabilities(capabilities, layer);
 
             if (layerCapability) {
-                dispatch(updateNode(layer.id, "id", formatCapabilitiesOptions(layerCapability)));
+                dispatch(updateNode(layer.id, "id", { ...getLayerOptions(layerCapability), capabilitiesLoading: null }));
             } else {
                 dispatch(updateNode(layer.id, "id", { capabilitiesLoading: null, capabilities: { error: "error getting capabilities", details: "no layer info" }, description: null }));
             }

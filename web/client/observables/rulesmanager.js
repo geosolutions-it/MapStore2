@@ -15,6 +15,7 @@ import WMS from '../api/WMS';
 import ConfigUtils from '../utils/ConfigUtils';
 import { describeFeatureType } from './wfs';
 import { describeLayer, getLayerCapabilities } from './wms';
+import { getLayerOptions } from '../utils/WMSUtils';
 
 const fixUrl = (url) => {
     const u = trim(url, "/");
@@ -125,7 +126,7 @@ export const getStylesAndAttributes = (layer, workspace) => {
     const l = {url: `${fixUrl(url)}wms`, name};
     return Rx.Observable.combineLatest(getLayerCapabilities(l)
         .map((cp) => {
-            const { availableStyles = [] } = WMS.formatCapabilitiesOptions(cp);
+            const { availableStyles = [] } = getLayerOptions(cp);
             return {
                 style: availableStyles,
                 ly: {

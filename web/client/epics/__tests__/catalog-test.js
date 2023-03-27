@@ -757,7 +757,7 @@ describe('catalog Epics', () => {
                     switch (action.type) {
                     case SET_FORMAT_OPTIONS:
                         expect(action.formats).toBeTruthy();
-                        expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/gif;subtype=animated', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
+                        expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
                         expect(action.formats.infoFormats).toEqual(['text/plain', 'text/html', 'application/json']);
                         break;
                     case FORMAT_OPTIONS_LOADING:

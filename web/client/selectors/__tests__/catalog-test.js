@@ -37,7 +37,7 @@ import {
 } from '../catalog';
 
 import { set } from '../../utils/ImmutableUtils';
-import { getUniqueInfoFormats } from '../../api/WMS';
+import { getDefaultSupportedGetFeatureInfoFormats } from '../../utils/WMSUtils';
 
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
@@ -311,7 +311,7 @@ describe('Test catalog selectors', () => {
     });
     it('test getSupportedGFIFormatsSelector with default value', () => {
         const defaultInfoFormats = getSupportedGFIFormatsSelector(state);
-        expect(defaultInfoFormats).toEqual(getUniqueInfoFormats());
+        expect(defaultInfoFormats).toEqual(getDefaultSupportedGetFeatureInfoFormats());
     });
     it('test getSupportedGFIFormatsSelector ', () => {
         const defaultInfoFormats = getSupportedGFIFormatsSelector({

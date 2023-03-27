@@ -10,7 +10,7 @@ import { createEventHandler, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
 
 import { getLayerCapabilities } from '../../../../../../observables/wms';
-import { formatCapabilitiesOptions } from '../../../../../../api/WMS';
+import { getLayerOptions } from '../../../../../../utils/WMSUtils';
 
 export default mapPropsStream(props$ => {
     const { stream: retrieveLayerData$, handler: retrieveLayerData} = createEventHandler();
@@ -20,7 +20,7 @@ export default mapPropsStream(props$ => {
         .switchMap(() =>
             retrieveLayerData$.switchMap((element) =>
                 getLayerCapabilities(element)
-                    .map(layerCapability => formatCapabilitiesOptions(layerCapability))
+                    .map(layerCapability => ({ ...getLayerOptions(layerCapability), capabilitiesLoading: null }))
                     .startWith({
                         capabilitiesLoading: true
                     }))

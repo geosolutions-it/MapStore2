@@ -12,6 +12,7 @@ import { getResolutionObject } from "../../utils/MapUtils";
 import { Observable } from 'rxjs';
 import { getConfigProp, cleanDuplicatedQuestionMarks } from '../../utils/ConfigUtils';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
+import { isValidGetFeatureInfoFormat, isValidGetMapFormat } from '../../utils/WMSUtils';
 import {
     extractOGCServicesReferences,
     toURLArray,
@@ -80,9 +81,10 @@ const recordToLayer = (record, {
         layerOptions
     } = service || {};
 
-    const validGetMapFormats = record.supportedGetMapFormats || [];
-    const format = validGetMapFormats?.find((value) => value === defaultFormat)
-        || validGetMapFormats[0]
+    const supportedGetMapFormats = (record.getMapFormats || []).filter(isValidGetMapFormat);
+    const supportedGetFeatureInfoFormats = (record.getFeatureInfoFormats || []).filter(isValidGetFeatureInfoFormat);
+    const format = supportedGetMapFormats?.find((value) => value === defaultFormat)
+        || supportedGetMapFormats[0]
         || defaultFormat;
 
     let layer = {
@@ -116,8 +118,8 @@ const recordToLayer = (record, {
         ...layerOptions,
         ...record.layerOptions,
         localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
-        imageFormats: record.supportedGetMapFormats,
-        infoFormats: record.supportedGetFeatureInfoFormats,
+        imageFormats: supportedGetMapFormats,
+        infoFormats: supportedGetFeatureInfoFormats,
         ...(!isNil(allowUnsecureLayers) && { forceProxy: allowUnsecureLayers })
     };
 
@@ -167,8 +169,8 @@ export const getCatalogRecords = (records, options) => {
                     ...(records?.layerOptions || {})
                 },
                 title: getLayerTitleTranslations(record) || record.Name,
-                supportedGetMapFormats: record.supportedGetMapFormats,
-                supportedGetFeatureInfoFormats: record.supportedGetFeatureInfoFormats,
+                getMapFormats: record.getMapFormats,
+                getFeatureInfoFormats: record.getFeatureInfoFormats,
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                     values: dim._ && dim._.split(',') || []
                 }, dim.$ || {}))

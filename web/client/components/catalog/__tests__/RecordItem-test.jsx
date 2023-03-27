@@ -373,7 +373,7 @@ describe('This test for RecordItem', () => {
             }
         };
         const item = ReactDOM.render(<RecordItem
-            record={{...sampleRecord, supportedGetMapFormats: ["image/jpeg"]}}
+            record={{...sampleRecord, getMapFormats: ["image/jpeg"]}}
             onLayerAdd={actions.onLayerAdd}
             catalogURL="fakeURL"
             catalogType="wms"
@@ -880,14 +880,14 @@ describe('This test for RecordItem', () => {
     });
     it('check formats are added to layer props (WMS)', (done) => {
         const defaultFormat = 'image/jpeg';
-        const supportedGetMapFormats = ["image/png", "image/jpeg", "image/png8"];
-        const supportedGetFeatureInfoFormats = ["text/html", "text/plain"];
+        const getMapFormats = ["image/png", "image/jpeg", "image/png8"];
+        const getFeatureInfoFormats = ["text/html", "text/plain"];
         let actions = {
             onLayerAdd: (layer) => {
                 try {
                     expect(layer.format).toBe(defaultFormat);
-                    expect(layer.imageFormats).toEqual(supportedGetMapFormats);
-                    expect(layer.infoFormats).toBe(supportedGetFeatureInfoFormats);
+                    expect(layer.imageFormats).toEqual(getMapFormats);
+                    expect(layer.infoFormats).toEqual(getFeatureInfoFormats);
                 } catch (e) {
                     done(e);
                 }
@@ -897,7 +897,7 @@ describe('This test for RecordItem', () => {
 
         const item = ReactDOM.render(<RecordItem
             defaultFormat={defaultFormat}
-            record={{ ...sampleRecord, supportedGetMapFormats, supportedGetFeatureInfoFormats }}
+            record={{ ...sampleRecord, getMapFormats, getFeatureInfoFormats }}
             onLayerAdd={actions.onLayerAdd}/>, document.getElementById("container"));
         expect(item).toBeTruthy();
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,13 +7,12 @@
  */
 
 import urlUtil from 'url';
-
-import { isObject, isArray, castArray, get, uniq } from 'lodash';
+import { isArray, castArray, get } from 'lodash';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
-import { getAvailableInfoFormat } from "../utils/MapInfoUtils";
+import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
 const capabilitiesCache = {};
 
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
@@ -74,90 +73,6 @@ export const extractCredits = attribution => {
     };
 };
 
-/**
- * Get unique array of supported info formats
- * @return {array} info formats
- */
-export const getUniqueInfoFormats = () => {
-    return uniq(Object.values(getAvailableInfoFormat()));
-};
-
-export const DEFAULT_GET_MAP_FORMAT_WMS = [
-    'image/png',
-    'image/png8',
-    'image/jpeg',
-    'image/vnd.jpeg-png',
-    'image/vnd.jpeg-png8',
-    'image/gif'
-];
-
-const UNSUPPORTED_GET_MAP_FORMATS_WMS = [
-    "application/atom xml",
-    "application/atom+xml",
-    "application/json;type=geojson",
-    "application/json;type=topojson",
-    "application/json;type=utfgrid",
-    "application/openlayers",
-    "application/openlayers2",
-    "application/openlayers3",
-    "application/pdf",
-    "application/rss xml",
-    "application/rss+xml",
-    "application/vnd.google-earth.kml",
-    "application/vnd.google-earth.kml xml",
-    "application/vnd.google-earth.kml+xml",
-    "application/vnd.google-earth.kml+xml;mode=networklink",
-    "application/vnd.google-earth.kmz",
-    "application/vnd.google-earth.kmz xml",
-    "application/vnd.google-earth.kmz+xml",
-    "application/vnd.google-earth.kmz;mode=networklink",
-    "application/vnd.mapbox-vector-tile",
-    "application/x-protobuf;type=mapbox-vector",
-    "atom",
-    "geojson",
-    "image/geotiff",
-    "image/geotiff8",
-    "image/svg",
-    "image/svg xml",
-    "image/svg+xml",
-    "image/tiff",
-    "image/tiff8",
-    "kml",
-    "kmz",
-    "openlayers",
-    "pbf",
-    "rss",
-    "text/html; subtype=openlayers",
-    "text/html; subtype=openlayers2",
-    "text/html; subtype=openlayers3",
-    "topojson",
-    "utfgrid"
-];
-/**
- * Validate GetMap format from WMS capabilities
- * @param {string} format GetMap format
- * @return {boolean}
- */
-export const isValidGetMapFormat = (format) => {
-    if (UNSUPPORTED_GET_MAP_FORMATS_WMS.includes(format)) {
-        return false;
-    }
-    if (DEFAULT_GET_MAP_FORMAT_WMS.includes(format)) {
-        return true;
-    }
-    // check if mime type is image
-    const parts = format.split('/');
-    return parts[0] === 'image';
-};
-/**
- * Validate GetFeatureInfo format from WMS capabilities
- * @param {string} format GetFeatureInfo format
- * @return {boolean}
- */
-export const isValidGetInfoFormat = (format) => {
-    return getUniqueInfoFormats().includes(format);
-};
-
 export const flatLayers = (root) => {
     const rootLayer = root?.Layer ?? root?.layer;
     const rootName = root?.Name ?? root?.name;
@@ -184,8 +99,8 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
     const onlineResource = getOnlineResource(root);
     const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS)?.map((crs) => crs.toUpperCase()) || [];
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
-    const supportedGetMapFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
-    const supportedGetFeatureInfoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetInfoFormat);
+    const getMapFormats = castArray(root?.Request?.GetMap?.Format || []);
+    const getFeatureInfoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []);
     const layersObj = flatLayers(root);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
@@ -202,8 +117,8 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
             .map((layer) => ({
                 ...layer,
-                supportedGetMapFormats,
-                supportedGetFeatureInfoFormats,
+                getMapFormats,
+                getFeatureInfoFormats,
                 onlineResource,
                 SRS: SRSList,
                 credits: layer.Attribution ? extractCredits(layer.Attribution) : credits
@@ -236,48 +151,6 @@ export const getCapabilities = (url) => {
         });
         return (json.WMS_Capabilities || json.WMT_MS_Capabilities || {});
     });
-};
-
-/**
- * Return capabilities valid for the layer object
- */
-export const formatCapabilitiesOptions = function(capabilities) {
-    return isObject(capabilities)
-        ? {
-            capabilities,
-            capabilitiesLoading: null,
-            description: capabilities.Abstract,
-            boundingBox: capabilities?.EX_GeographicBoundingBox
-                ? {
-                    minx: capabilities.EX_GeographicBoundingBox?.westBoundLongitude,
-                    miny: capabilities.EX_GeographicBoundingBox?.southBoundLatitude,
-                    maxx: capabilities.EX_GeographicBoundingBox?.eastBoundLongitude,
-                    maxy: capabilities.EX_GeographicBoundingBox?.northBoundLatitude
-                }
-                : capabilities?.LatLonBoundingBox?.$,
-            availableStyles: capabilities?.Style && castArray(capabilities.Style)
-                .map((capStyle) => ({
-                    name: capStyle.Name,
-                    ...(capStyle.Title && { title: capStyle.Title }),
-                    ...(capStyle.Abstract && { _abstract: capStyle.Abstract }),
-                    ...(capStyle.LegendURL && {
-                        legendURL: castArray(capStyle.LegendURL)
-                            .map((capLegendURL) => ({
-                                width: capLegendURL?.$?.width ? parseFloat(capLegendURL.$.width) : undefined,
-                                height: capLegendURL?.$?.height ? parseFloat(capLegendURL.$.height) : undefined,
-                                format: capLegendURL?.Format,
-                                ...(capLegendURL?.OnlineResource?.$?.['xlink:type'] &&
-                                capLegendURL?.OnlineResource?.$?.['xlink:href'] && {
-                                    onlineResource: {
-                                        type: capLegendURL.OnlineResource.$['xlink:type'],
-                                        href: capLegendURL.OnlineResource.$['xlink:href']
-                                    }
-                                })
-                            }))
-                    })
-                }))
-        }
-        : {};
 };
 
 export const describeLayer = (url, layer, options = {}) => {
@@ -415,7 +288,7 @@ export const getSupportedFormat = (url, includeGFIFormats = false) => {
             const root = response.Capability;
             const imageFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
             if (includeGFIFormats) {
-                const infoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetInfoFormat);
+                const infoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetFeatureInfoFormat);
                 return { imageFormats, infoFormats };
             }
             return imageFormats;
@@ -435,9 +308,7 @@ const Api = {
     parseLayerCapabilities,
     getBBox,
     reset,
-    getUniqueInfoFormats,
-    getSupportedFormat,
-    formatCapabilitiesOptions
+    getSupportedFormat
 };
 
 export default Api;
