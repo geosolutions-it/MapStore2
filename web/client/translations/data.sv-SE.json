@@ -1437,7 +1437,8 @@
             },
             "format": {
                 "noOption": "Inget alternativ",
-                "loading": "Läser in ..."
+                "loading": "Läser in ...",
+                "refresh": "Hämta format som stöds"
             }
         },
         "uploader": {

@@ -1483,7 +1483,8 @@
             },
             "format": {
                 "noOption": "Nessuna opzione",
-                "loading": "Caricamento in corso..."
+                "loading": "Caricamento in corso...",
+                "refresh": "Recupera il formato supportato"
             },
             "filter": {
                 "static": {

@@ -1458,7 +1458,8 @@
             },
             "format": {
                 "noOption": "Žiadna možnosť",
-                "loading": "Načítanie..."
+                "loading": "Načítanie...",
+                "refresh": "Načítať podporovaný formát"
             }
         },
         "uploader": {

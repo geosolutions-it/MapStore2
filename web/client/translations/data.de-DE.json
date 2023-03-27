@@ -1521,7 +1521,8 @@
             },
             "format": {
                 "noOption": "Keine Option",
-                "loading": "Wird geladen..."
+                "loading": "Wird geladen...",
+                "refresh": "Unterstütztes Format abrufen"
             },
             "filter": {
                 "static": {

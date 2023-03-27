@@ -1484,7 +1484,8 @@
             },
             "format": {
                 "noOption": "Pas d'option",
-                "loading": "Chargement..."
+                "loading": "Chargement...",
+                "refresh": "Récupérer le format pris en charge"
             },
             "filter": {
                 "static": {
