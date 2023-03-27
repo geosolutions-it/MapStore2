@@ -91,6 +91,11 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
+* *Server Type*: to choose the type of server from which the url of the entered CSW service comes. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
+
+!!! note
+    If set on **No Vendor** then *TILED* query parameter, for all layers added to the map from this source, is not sent to the remote csw server, and the `tiled` and `localizedLayerStyles` options are hidden in the layer parameters.
+
 * *Set Visibility Limit*: if checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source.
 
 * *Show metadata template*: this can be enabled when the user wants to insert in the layer description a text with metadata information
@@ -219,6 +224,11 @@ Enabling that option, all layers added to the map from this catalog source will 
     In case of WMS services, the list of available formats is retrieved from the WMS server
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Server Type*: to choose the type of server from which the url of the entered CSW service comes. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
+
+!!! note
+    If set on **No Vendor** then *TILED* query parameter, for all layers added to the map from this source, is not sent to the remote wms server, and the `tiled` and `localizedLayerStyles` options are hidden in the layer parameters.
 
 * *Domain aliases*: available only for WMS catalogs type. This option is used to improve the performances of the application for tiled layer requests when multiple domains can be defined server side for the configured catalog source in MapStore (domain sharding). The user can configure multiple URLs referring to the same WMS service through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button. Useful information about other kind of performance improvements can be found in the [MapStore online training documentation](https://training.mapstore.geosolutionsgroup.com/administration/best.html#performances).
 
