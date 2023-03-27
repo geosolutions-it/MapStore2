@@ -158,7 +158,7 @@
             },
             "format": {
                 "title": "Format",
-                "refresh": "Récupérer le format pris en charge",
+                "refresh": "Récupérer les formats pris en charge",
                 "loading": "Chargement...",
                 "noOption": "Pas d'option",
                 "error": {
@@ -1485,7 +1485,7 @@
             "format": {
                 "noOption": "Pas d'option",
                 "loading": "Chargement...",
-                "refresh": "Récupérer le format pris en charge"
+                "refresh": "Récupérer les formats pris en charge"
             },
             "filter": {
                 "static": {
