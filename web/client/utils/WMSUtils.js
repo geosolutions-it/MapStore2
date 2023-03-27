@@ -7,7 +7,19 @@
  */
 import { uniq, isObject, castArray } from 'lodash';
 import { getAvailableInfoFormat } from "./MapInfoUtils";
-import { getConfigProp } from './ConfigUtils';
+
+// this list provides the supported GetMap formats
+// and it will be used to validate GetMap formats coming from capabilities
+export const DEFAULT_SUPPORTED_GET_MAP_FORMAT = [
+    "image/png",
+    "image/gif",
+    "image/jpeg",
+    "image/png8",
+    "image/png; mode=8bit",
+    "image/png; mode=24bit",
+    "image/vnd.jpeg-png",
+    "image/vnd.jpeg-png8"
+];
 
 /**
  * Get unique array of supported GetFeatureInfo formats
@@ -17,29 +29,12 @@ export const getDefaultSupportedGetFeatureInfoFormats = () => {
     return uniq(Object.values(getAvailableInfoFormat()));
 };
 /**
- * Get unique array of supported GetMap formats
- * @return {array} GetMap formats
- */
-export const getDefaultSupportedGetMapFormat = () => {
-    return uniq([
-        "image/png",
-        "image/gif",
-        "image/jpeg",
-        "image/png8",
-        "image/png; mode=8bit",
-        "image/png; mode=24bit",
-        "image/vnd.jpeg-png",
-        "image/vnd.jpeg-png8",
-        ...(getConfigProp('supportedGetMapFormats') || [])
-    ]);
-};
-/**
  * Validate GetMap format from WMS capabilities
  * @param {string} format GetMap format
  * @return {boolean}
  */
 export const isValidGetMapFormat = (format) => {
-    return getDefaultSupportedGetMapFormat().includes(format);
+    return DEFAULT_SUPPORTED_GET_MAP_FORMAT.includes(format);
 };
 /**
  * Validate GetFeatureInfo format from WMS capabilities
