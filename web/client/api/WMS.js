@@ -16,6 +16,8 @@ import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUt
 const capabilitiesCache = {};
 
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
+// The describe layer request is used to detect the OWS type, WFS or WCS type (eg: get additional information for the styling)
+// The default version is 1.1.1 because GeoServer is not fully supporting the version 1.3.0
 export const WMS_DESCRIBE_LAYER_VERSION = '1.1.1';
 
 export const parseUrl = (
@@ -138,7 +140,14 @@ export const getDimensions = (layer) => {
         };
     });
 };
-
+/**
+ * Get the WMS capabilities given a valid url endpoint
+ * @param {string} url WMS endpoint
+ * @return {object} root object of the capabilities
+ * - `$`: object with additional information of the capability (eg: $.version)
+ * - `Capability`: capability object that contains layers and requests formats
+ * - `Service`: service information object
+ */
 export const getCapabilities = (url) => {
     return axios.get(parseUrl(url, {
         service: "WMS",

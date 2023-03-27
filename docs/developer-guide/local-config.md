@@ -119,6 +119,9 @@ This is the main structure:
       }
     }
   },
+  // allow to extend the default GetMap supported formats
+  // is an array of mime type string eg. ["image/format"]
+  "supportedGetMapFormats": [],
   "plugins": {
       // plugins to load for the mobile mode
       "mobile": [...]
