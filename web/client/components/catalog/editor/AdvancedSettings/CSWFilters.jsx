@@ -116,7 +116,7 @@ export default ({
     }, [code.dynamicFilter]);
 
     return (
-        <div className={"catalog-csw-filters"}>
+        <div className={"catalog-csw-filters"} style={{ position: 'relative', zIndex: 0 }}>
             <FilterCode type={"static"} {...cmProps} />
             <FilterCode type={"dynamic"} {...cmProps} />
         </div>

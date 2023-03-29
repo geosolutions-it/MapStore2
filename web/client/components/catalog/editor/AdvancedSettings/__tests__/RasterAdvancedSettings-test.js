@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(10);
+        expect(fields.length).toBe(11);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -41,7 +41,7 @@ describe('Test Raster advanced settings', () => {
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
         const cswFilters = document.getElementsByClassName("catalog-csw-filters");
-        expect(fields.length).toBe(8);
+        expect(fields.length).toBe(9);
         expect(cswFilters).toBeTruthy();
     });
     it('test component onChangeServiceProperty autoload', () => {
@@ -217,11 +217,29 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
         const formGroup = document.querySelectorAll('.form-group')[3];
-        expect(formGroup.textContent.trim()).toBe('catalog.singleTile.label');
+        expect(formGroup.textContent.trim()).toBe('layerProperties.singleTile');
         const singleTileLayer = formGroup.querySelector('input[type="checkbox"]');
         expect(singleTileLayer).toBeTruthy();
         TestUtils.Simulate.change(singleTileLayer, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'layerOptions', { singleTile: true } ]);
+    });
+    it('test component onChangeServiceProperty serverType', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+        ReactDOM.render(<RasterAdvancedSettings
+            onChangeServiceProperty={action.onChangeServiceProperty}
+            service={{ type: "wms", layerOptions: {serverType: 'no-vendor'} }}
+        />, document.getElementById("container"));
+        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingsPanel).toBeTruthy();
+        const serverTypeOption = document.querySelectorAll('input[role="combobox"]')[2];
+        expect(serverTypeOption).toBeTruthy();
+        TestUtils.Simulate.change(serverTypeOption, { target: { value: "geoserver" }});
+        TestUtils.Simulate.keyDown(serverTypeOption, { keyCode: 9, key: 'Tab' });
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'layerOptions', { serverType: "geoserver" } ]);
     });
 });

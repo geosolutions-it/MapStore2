@@ -17,6 +17,7 @@ import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../legend/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
+import { ServerTypes } from '../../../../utils/LayersUtils';
 import Select from 'react-select';
 import { DEFAULT_FORMAT_WMS, getSupportedFormat } from '../../../../api/WMS';
 export default class extends React.Component {
@@ -155,7 +156,7 @@ export default class extends React.Component {
                     </Col>
                     <Col xs={12}>
                         <FormGroup>
-                            <ControlLabel><Message msgId="WMS Layer tile size" /></ControlLabel>
+                            <ControlLabel><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
                             <Select
                                 key="wsm-layersize-dropdown"
                                 clearable={false}
@@ -218,18 +219,19 @@ export default class extends React.Component {
                         <FormGroup>
                             <Checkbox key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)} onChange={(event) => {this.props.onChange("transparent", event.target.checked); }}>
                                 <Message msgId="layerProperties.transparent"/></Checkbox>
-                            <Checkbox value="tiled" key="tiled"
-                                disabled={!!this.props.element.singleTile}
-                                onChange={(e) => this.props.onChange("tiled", e.target.checked)}
-                                checked={this.props.element && this.props.element.tiled !== undefined ? this.props.element.tiled : true} >
-                                <Message msgId="layerProperties.cached"/>
-                            </Checkbox>
+                            {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
+                                <Checkbox value="tiled" key="tiled"
+                                    disabled={!!this.props.element.singleTile}
+                                    onChange={(e) => this.props.onChange("tiled", e.target.checked)}
+                                    checked={this.props.element && this.props.element.tiled !== undefined ? this.props.element.tiled : true} >
+                                    <Message msgId="layerProperties.cached"/>
+                                </Checkbox>))}
                             <Checkbox key="singleTile" value="singleTile"
                                 checked={this.props.element && (this.props.element.singleTile !== undefined ? this.props.element.singleTile : false )}
                                 onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
                                 <Message msgId="layerProperties.singleTile"/>
                             </Checkbox>
-                            {(this.props.isLocalizedLayerStylesEnabled && (
+                            {(this.props.isLocalizedLayerStylesEnabled && this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
                                 <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
                                     data-qa="display-lacalized-layer-styles-option"
                                     checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false )}

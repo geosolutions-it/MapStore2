@@ -110,6 +110,12 @@
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "heightOffset": "Desplazamiento de altura (m)",
+            "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
+            "serverType": "Tipo de servidor",
+            "serverTypeOption": {
+                "noVendor": "No Vendor",
+                "geoserver": "GeoServer"
+            },
             "visibilityLimits": {
                 "title": "Límites de visibilidad",
                 "serverValuesUpdateUndefined": "El servidor no proporcionó límites de visibilidad de escala para esta capa",
@@ -1502,7 +1508,6 @@
                 "tooltip": "Aplica automáticamente los límites de visibilidad sugeridos por el servidor"
             },
             "singleTile": {
-                "label": "Single Tile",
                 "tooltip": "La capa se representa como una sola imagen de mosaico cuando se agrega al mapa con esta opción habilitada"
             },
             "domainAliases": {

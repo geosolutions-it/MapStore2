@@ -628,6 +628,7 @@ export const saveLayer = (layer) => {
         featureInfo: layer.featureInfo,
         catalogURL: layer.catalogURL,
         capabilitiesURL: layer.capabilitiesURL,
+        serverType: layer.serverType,
         useForElevation: layer.useForElevation || false,
         hidden: layer.hidden || false,
         origin: layer.origin,
@@ -646,6 +647,16 @@ export const saveLayer = (layer) => {
     layer.credits ? { credits: layer.credits } : {},
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {});
 };
+
+/**
+ * constants to specify whether we can use some geoserver vendor extensions of if they
+ * should rather be avoided
+*/
+export const ServerTypes = {
+    GEOSERVER: 'geoserver',
+    NO_VENDOR: 'no-vendor'
+};
+
 /**
  * default initial constant regex rule for searching for a /geoserver/ string in a url
  * useful for a reset to an initial state of the rule
@@ -835,6 +846,17 @@ export const removeWorkspace = (layer) => {
         return layer.split(':')[1];
     }
     return layer;
+};
+
+/**
+ * Returns vendor params that can be used when calling wms server for display requests
+ * @param {layer} the layer object
+ */
+export const getWMSVendorParams = (layer) =>  {
+    if (layer?.serverType === ServerTypes.NO_VENDOR) {
+        return {};
+    }
+    return { TILED: layer.singleTile ? false : (!isNil(layer.tiled) ? layer.tiled : true)};
 };
 
 LayersUtils = {

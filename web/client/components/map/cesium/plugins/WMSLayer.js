@@ -12,7 +12,7 @@ import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTe
 import assign from 'object-assign';
 import {isArray, isEqual} from 'lodash';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
-import { getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
+import { getAuthenticationParam, getURLs, getWMSVendorParams } from '../../../../utils/LayersUtils';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { addAuthenticationToSLD, getAuthenticationHeaders } from '../../../../utils/SecurityUtils';
 
@@ -30,7 +30,7 @@ function wmsToCesiumOptionsSingleTile(options) {
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
         opacity: opacity,
-        tiled: options.tiled !== undefined ? options.tiled : true,
+        ...getWMSVendorParams(options),
         layers: options.name,
         width: options.size || 2000,
         height: options.size || 2000,

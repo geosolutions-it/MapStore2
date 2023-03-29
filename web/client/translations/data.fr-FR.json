@@ -113,6 +113,12 @@
             "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
             "heightOffset": "Décalage en hauteur (m)",
+            "wmsLayerTileSize": "Taille de la tuile (WMS)",
+            "serverType": "Type de serveur",
+            "serverTypeOption": {
+                "noVendor": "No Vendor",
+                "geoserver": "GeoServer"
+            },
             "visibilityLimits": {
                 "title": "Limites de visibilité",
                 "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",
@@ -1503,7 +1509,6 @@
                 "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             },
             "singleTile": {
-                "label": "Single Tile",
                 "tooltip": "Lorsque cette option est activée, la couche ajoutée à la carte est rendue sous la forme d'une seule image"
             },
             "domainAliases": {
