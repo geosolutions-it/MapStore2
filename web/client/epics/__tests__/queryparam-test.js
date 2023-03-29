@@ -634,12 +634,12 @@ describe('queryparam epics', () => {
         const NUMBER_OF_ACTIONS = 2;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
-            configureMap()
+            initMap(true)
         ], (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
-                expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
-                expect(actions[0].visualizationMode).toBe(VisualizationModes._3D);
+                expect(actions[0].type).toBe(MAP_TYPE_CHANGED);
+                expect(actions[0].mapType).toBe('cesium');
                 done();
             } catch (e) {
                 done(e);
@@ -668,12 +668,12 @@ describe('queryparam epics', () => {
         const NUMBER_OF_ACTIONS = 2;
         testEpic(addTimeoutEpic(readQueryParamsOnMapEpic, 10), NUMBER_OF_ACTIONS, [
             onLocationChanged({}),
-            configureMap()
+            initMap(true)
         ], (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
-                expect(actions[0].type).toBe(VISUALIZATION_MODE_CHANGED);
-                expect(actions[0].visualizationMode).toBe(VisualizationModes._3D);
+                expect(actions[0].type).toBe(MAP_TYPE_CHANGED);
+                expect(actions[0].mapType).toBe('cesium');
                 done();
             } catch (e) {
                 done(e);
