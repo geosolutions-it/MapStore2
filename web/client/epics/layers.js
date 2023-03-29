@@ -26,7 +26,7 @@ import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '..
 import { setControlProperty } from '../actions/controls';
 import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { basicError } from '../utils/NotificationUtils';
-import { getCapabilitiesUrl, getLayerTitleTranslations} from '../utils/LayersUtils';
+import { getCapabilitiesUrl, getLayerTitleTranslations, removeWorkspace } from '../utils/LayersUtils';
 import assign from 'object-assign';
 import { isArray, head } from 'lodash';
 
@@ -36,13 +36,6 @@ export const getUpdates = (updates, options) => {
             [current]: updates[current]
         });
     }, {});
-};
-
-export const removeWorkspace = (layer) => {
-    if (layer.indexOf(':') !== -1) {
-        return layer.split(':')[1];
-    }
-    return layer;
 };
 
 /**

@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
+  <gmd:fileIdentifier>
+    <gco:CharacterString>opendata_raw</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language>
+    <gco:CharacterString>en-US</gco:CharacterString>
+  </gmd:language>
+  <gmd:hierarchyLevel>
+    <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+  </gmd:hierarchyLevel>
+  <gmd:contact>
+    <gmd:CI_ResponsibleParty id="contact">
+      <gmd:individualName>
+        <gco:CharacterString>Landry BREUIL</gco:CharacterString>
+      </gmd:individualName>
+      <gmd:organisationName>
+        <gco:CharacterString>CRAIG</gco:CharacterString>
+      </gmd:organisationName>
+      <gmd:positionName>
+        <gco:CharacterString>root</gco:CharacterString>
+      </gmd:positionName>
+      <gmd:contactInfo>
+        <gmd:CI_Contact>
+          <gmd:phone>
+            <gmd:CI_Telephone>
+              <gmd:voice>
+                <gco:CharacterString>04 73 40 54 09</gco:CharacterString>
+              </gmd:voice>
+              <gmd:facsimile>
+                <gco:CharacterString>04 73 40 54 06</gco:CharacterString>
+              </gmd:facsimile>
+            </gmd:CI_Telephone>
+          </gmd:phone>
+          <gmd:address>
+            <gmd:CI_Address>
+              <gmd:deliveryPoint>
+                <gco:CharacterString>7, avenue Blaise Pascal</gco:CharacterString>
+              </gmd:deliveryPoint>
+              <gmd:city>
+                <gco:CharacterString>Aubi&#xE8;re</gco:CharacterString>
+              </gmd:city>
+              <gmd:administrativeArea>
+                <gco:CharacterString>Auvergne</gco:CharacterString>
+              </gmd:administrativeArea>
+              <gmd:postalCode>
+                <gco:CharacterString>63117</gco:CharacterString>
+              </gmd:postalCode>
+              <gmd:country>
+                <gco:CharacterString>France</gco:CharacterString>
+              </gmd:country>
+              <gmd:electronicMailAddress>
+                <gco:CharacterString>admin@craig.fr</gco:CharacterString>
+              </gmd:electronicMailAddress>
+            </gmd:CI_Address>
+          </gmd:address>
+          <gmd:onlineResource>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>https://wfs.craig.fr/ortho</gmd:URL>
+              </gmd:linkage>
+            </gmd:CI_OnlineResource>
+          </gmd:onlineResource>
+        </gmd:CI_Contact>
+      </gmd:contactInfo>
+      <gmd:role>
+        <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode>
+      </gmd:role>
+    </gmd:CI_ResponsibleParty>
+  </gmd:contact>
+  <gmd:dateStamp gco:nilReason="missing"/>
+  <gmd:metadataStandardName>
+    <gco:CharacterString>ISO 19115:2003 - Geographic information - Metadata</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:metadataStandardVersion>
+    <gco:CharacterString>ISO 19115:2003</gco:CharacterString>
+  </gmd:metadataStandardVersion>
+  <gmd:spatialRepresentationInfo>
+    <gmd:MD_VectorSpatialRepresentation>
+      <gmd:topologyLevel>
+        <gmd:MD_TopologyLevelCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopologyLevelCode" codeListValue="geometryOnly">geometryOnly</gmd:MD_TopologyLevelCode>
+      </gmd:topologyLevel>
+      <gmd:geometricObjects>
+        <gmd:MD_GeometricObjects>
+          <gmd:geometricObjectType>
+            <gmd:MD_GeometricObjectTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="surface">surface</gmd:MD_GeometricObjectTypeCode>
+          </gmd:geometricObjectType>
+        </gmd:MD_GeometricObjects>
+      </gmd:geometricObjects>
+    </gmd:MD_VectorSpatialRepresentation>
+  </gmd:spatialRepresentationInfo>
+  <gmd:referenceSystemInfo>
+    <gmd:MD_ReferenceSystem>
+      <gmd:referenceSystemIdentifier>
+        <gmd:RS_Identifier>
+          <gmd:code>
+            <gco:CharacterString>EPSG:2154</gco:CharacterString>
+          </gmd:code>
+          <gmd:codeSpace>
+            <gco:CharacterString>http://www.epsg-registry.org</gco:CharacterString>
+          </gmd:codeSpace>
+          <gmd:version>
+            <gco:CharacterString>6.14</gco:CharacterString>
+          </gmd:version>
+        </gmd:RS_Identifier>
+      </gmd:referenceSystemIdentifier>
+    </gmd:MD_ReferenceSystem>
+  </gmd:referenceSystemInfo>
+  <gmd:identificationInfo>
+    <gmd:MD_DataIdentification id="opendata_raw">
+      <gmd:citation>
+        <gmd:CI_Citation>
+          <gmd:title>
+            <gco:CharacterString>Images brutes en open data</gco:CharacterString>
+          </gmd:title>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date>2011</gco:Date>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+        </gmd:CI_Citation>
+      </gmd:citation>
+      <gmd:abstract>
+        <gco:CharacterString>Dallage des images brutes en open data</gco:CharacterString>
+      </gmd:abstract>
+      <gmd:language>
+        <gco:CharacterString>en-US</gco:CharacterString>
+      </gmd:language>
+      <gmd:extent>
+        <gmd:EX_Extent>
+          <gmd:geographicElement>
+            <gmd:EX_GeographicBoundingBox>
+              <gmd:westBoundLongitude>
+                <gco:Decimal>1.974054</gco:Decimal>
+              </gmd:westBoundLongitude>
+              <gmd:eastBoundLongitude>
+                <gco:Decimal>4.590701</gco:Decimal>
+              </gmd:eastBoundLongitude>
+              <gmd:southBoundLatitude>
+                <gco:Decimal>44.548020</gco:Decimal>
+              </gmd:southBoundLatitude>
+              <gmd:northBoundLatitude>
+                <gco:Decimal>46.843671</gco:Decimal>
+              </gmd:northBoundLatitude>
+            </gmd:EX_GeographicBoundingBox>
+          </gmd:geographicElement>
+        </gmd:EX_Extent>
+      </gmd:extent>
+    </gmd:MD_DataIdentification>
+  </gmd:identificationInfo>
+  <gmd:distributionInfo>
+    <gmd:MD_Distribution>
+      <gmd:distributor>
+        <gmd:MD_Distributor>
+          <gmd:distributorContact>
+            <gmd:CI_ResponsibleParty id="distributorContact">
+              <gmd:individualName>
+                <gco:CharacterString>Landry BREUIL</gco:CharacterString>
+              </gmd:individualName>
+              <gmd:organisationName>
+                <gco:CharacterString>CRAIG</gco:CharacterString>
+              </gmd:organisationName>
+              <gmd:positionName>
+                <gco:CharacterString>root</gco:CharacterString>
+              </gmd:positionName>
+              <gmd:contactInfo>
+                <gmd:CI_Contact>
+                  <gmd:phone>
+                    <gmd:CI_Telephone>
+                      <gmd:voice>
+                        <gco:CharacterString>04 73 40 54 09</gco:CharacterString>
+                      </gmd:voice>
+                      <gmd:facsimile>
+                        <gco:CharacterString>04 73 40 54 06</gco:CharacterString>
+                      </gmd:facsimile>
+                    </gmd:CI_Telephone>
+                  </gmd:phone>
+                  <gmd:address>
+                    <gmd:CI_Address>
+                      <gmd:deliveryPoint>
+                        <gco:CharacterString>7, avenue Blaise Pascal</gco:CharacterString>
+                      </gmd:deliveryPoint>
+                      <gmd:city>
+                        <gco:CharacterString>Aubi&#xE8;re</gco:CharacterString>
+                      </gmd:city>
+                      <gmd:administrativeArea>
+                        <gco:CharacterString>Auvergne</gco:CharacterString>
+                      </gmd:administrativeArea>
+                      <gmd:postalCode>
+                        <gco:CharacterString>63117</gco:CharacterString>
+                      </gmd:postalCode>
+                      <gmd:country>
+                        <gco:CharacterString>France</gco:CharacterString>
+                      </gmd:country>
+                      <gmd:electronicMailAddress>
+                        <gco:CharacterString>admin@craig.fr</gco:CharacterString>
+                      </gmd:electronicMailAddress>
+                    </gmd:CI_Address>
+                  </gmd:address>
+                  <gmd:onlineResource>
+                    <gmd:CI_OnlineResource>
+                      <gmd:linkage>
+                        <gmd:URL>https://wfs.craig.fr/ortho</gmd:URL>
+                      </gmd:linkage>
+                    </gmd:CI_OnlineResource>
+                  </gmd:onlineResource>
+                </gmd:CI_Contact>
+              </gmd:contactInfo>
+              <gmd:role>
+                <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode>
+              </gmd:role>
+            </gmd:CI_ResponsibleParty>
+          </gmd:distributorContact>
+        </gmd:MD_Distributor>
+      </gmd:distributor>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <gmd:unitsOfDistribution>
+            <gco:CharacterString>KB</gco:CharacterString>
+          </gmd:unitsOfDistribution>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>https://wfs.craig.fr/ortho?service=WMS&amp;version=1.3.0&amp;request=GetMap&amp;width=500&amp;height=300&amp;styles=&amp;layers=opendata_raw&amp;format=image/png&amp;crs=EPSG:2154&amp;bbox=6384388.000000,621812.000000,6638168.000000,821238.000000</gmd:URL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:DOWNLOAD-1.0-http-get-map</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name>
+                <gco:CharacterString>opendata_raw</gco:CharacterString>
+              </gmd:name>
+              <gmd:description>
+                <gco:CharacterString>PNG Format</gco:CharacterString>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>https://wfs.craig.fr/ortho?service=WMS&amp;version=1.3.0&amp;request=GetMap&amp;width=500&amp;height=300&amp;styles=&amp;layers=opendata_raw&amp;format=image/jpeg&amp;crs=EPSG:2154&amp;bbox=6384388.000000,621812.000000,6638168.000000,821238.000000</gmd:URL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:DOWNLOAD-1.0-http-get-map</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name>
+                <gco:CharacterString>opendata_raw</gco:CharacterString>
+              </gmd:name>
+              <gmd:description>
+                <gco:CharacterString>JPEG Format</gco:CharacterString>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>https://wfs.craig.fr/ortho?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;typename=opendata_raw&amp;outputformat=GML2</gmd:URL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name>
+                <gco:CharacterString>opendata_raw</gco:CharacterString>
+              </gmd:name>
+              <gmd:description>
+                <gco:CharacterString>GML2 Format</gco:CharacterString>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>https://wfs.craig.fr/ortho?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;typename=opendata_raw&amp;outputformat=GML3</gmd:URL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name>
+                <gco:CharacterString>opendata_raw</gco:CharacterString>
+              </gmd:name>
+              <gmd:description>
+                <gco:CharacterString>GML3 Format</gco:CharacterString>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+    </gmd:MD_Distribution>
+  </gmd:distributionInfo>
+</gmd:MD_Metadata>

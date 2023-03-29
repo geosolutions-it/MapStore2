@@ -64,10 +64,10 @@ import {
     buildSRSMap,
     extractOGCServicesReferences
 } from '../utils/CatalogUtils';
-import { getSupportedFormat, getCapabilities, describeLayers } from '../api/WMS';
+import { getSupportedFormat, getCapabilities, describeLayers, flatLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
-import {getCapabilitiesUrl, getLayerId, getLayerUrl} from '../utils/LayersUtils';
+import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace } from '../utils/LayersUtils';
 import { wrapStartStop } from '../observables/epics';
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
@@ -356,13 +356,16 @@ export default (API) => ({
 
                 return Rx.Observable.defer(() => getCapabilities(getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
-                        const layersXml = get(caps, 'capability.layer.layer', []);
-                        const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === layer.name.split(':')[1]);
+                        const layersXml = flatLayers(caps.capability);
+                        const metadataUrls = (layersXml.length === 1
+                            ? layersXml[0].metadataURL
+                            : find(layersXml, l => removeWorkspace(l.name) === removeWorkspace(layer.name))?.metadataURL)
+                            || [];
                         const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
-                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            (mUrl.type.toLowerCase() === 'iso19115:2003' || mUrl.type.toLowerCase() === 'tc211') &&
                             (mUrl.format === 'application/xml' || mUrl.format === 'text/xml')), 'onlineResource.href');
                         const metadataUrlHTML = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
-                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            (mUrl.type.toLowerCase() === 'iso19115:2003' || mUrl.type.toLowerCase() === 'tc211') &&
                             mUrl.format === 'text/html'), 'onlineResource.href');
                         const extractor = find(get(metadataOptions, 'extractors', []),
                             ({properties, layersRegex}) => {
