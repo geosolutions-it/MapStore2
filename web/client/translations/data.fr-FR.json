@@ -1502,6 +1502,10 @@
                 "label": "Définir la limite de visibilité",
                 "tooltip": "Applique automatiquement les limites de visibilité suggérées par le serveur"
             },
+            "singleTile": {
+                "label": "Single Tile",
+                "tooltip": "Lorsque cette option est activée, la couche ajoutée à la carte est rendue sous la forme d'une seule image"
+            },
             "domainAliases": {
               "title": "Alias de domaine",
               "helpTooltip": "Cette option est utilisée pour diviser le contenu sur plusieurs sous-domaines",
