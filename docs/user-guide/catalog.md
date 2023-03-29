@@ -91,10 +91,10 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-* *Server Type*: to choose the type of server from which the url of the entered CSW service comes. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
+* *Server Type*: to specify the type of server the entered CSW service url comes from. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
 
 !!! note
-    If set on **No Vendor** then *TILED* query parameter, for all layers added to the map from this source, is not sent to the remote csw server, and the `tiled` and `localizedLayerStyles` options are hidden in the layer parameters.
+    If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
 
 * *Set Visibility Limit*: if checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source.
 
@@ -204,11 +204,11 @@ In addition to the standard options, only for WMS catalog sources, through the *
 
 * *Localized styles* (only for the WMS service) if enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server so that the WMS server, if properly configured, can use that locale to:
 
-  * Use localized lables for Tiles in case of vector layers (the layer's style must be properly configured for this using the [ENV variable support](https://docs.geoserver.org/stable/en/user/styling/sld/extensions/substitution.html))
+      - Use localized lables for Tiles in case of vector layers (the layer's style must be properly configured for this using the [ENV variable support](https://docs.geoserver.org/stable/en/user/styling/sld/extensions/substitution.html))
 
-  * Produce a localized layer legend in case of vector layers (the layer's style must be properly configured to use the [Localized tag for rule titles](https://docs.geoserver.org/stable/en/user/styling/sld/language.html))
+      - Produce a localized layer legend in case of vector layers (the layer's style must be properly configured to use the [Localized tag for rule titles](https://docs.geoserver.org/stable/en/user/styling/sld/language.html))
 
-  * Produce a localized output for GetFeatureInfo requests (the freemarker template need to be properly configured to retrieve [the locale from the request](https://docs.geoserver.org/stable/en/user/tutorials/freemarker.html))
+      - Produce a localized output for GetFeatureInfo requests (the freemarker template need to be properly configured to retrieve [the locale from the request](https://docs.geoserver.org/stable/en/user/tutorials/freemarker.html))
 
 * *Set Visibility Limit*: available only for WMS layers coming from CSW or WMS catalog sources type. If checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source
 
@@ -225,10 +225,10 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-* *Server Type*: to choose the type of server from which the url of the entered CSW service comes. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
+* *Server Type*: to specify the type of server the entered WMS service url comes from. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
 
 !!! note
-    If set on **No Vendor** then *TILED* query parameter, for all layers added to the map from this source, is not sent to the remote wms server, and the `tiled` and `localizedLayerStyles` options are hidden in the layer parameters.
+    If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
 
 * *Domain aliases*: available only for WMS catalogs type. This option is used to improve the performances of the application for tiled layer requests when multiple domains can be defined server side for the configured catalog source in MapStore (domain sharding). The user can configure multiple URLs referring to the same WMS service through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button. Useful information about other kind of performance improvements can be found in the [MapStore online training documentation](https://training.mapstore.geosolutionsgroup.com/administration/best.html#performances).
 
