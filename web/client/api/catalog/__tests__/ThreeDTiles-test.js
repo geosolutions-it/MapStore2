@@ -85,11 +85,11 @@ describe('Test 3D tiles catalog API', () => {
                 done();
             });
     });
-    it('should not return a single record if  title not match the filter', (done) => {
+    it('should always return a single record even if  title not match the filter', (done) => {
         mockAxios.onGet().reply(200, TILSET_JSON);
         textSearch('http://service.org/tileset.json', undefined, undefined, 'filter')
             .then((response) => {
-                expect(response.records.length).toBe(0);
+                expect(response.records.length).toBe(1);
                 done();
             });
     });
