@@ -10,6 +10,7 @@ import expect from 'expect';
 import { find, get } from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
 import MetadataModal from '../Save';
 
@@ -165,5 +166,57 @@ describe('This test for dashboard save form', () => {
         expect(saveButton).toExist();
         expect(saveButton.classList.contains('disabled')).toBe(false);
     });
+    it('modal save button is disabled when resource is loading', () => {
+        const user = {role: 'ADMIN'};
+        const Modal = ReactDOM.render(<MetadataModal user={user} show loading  id="map-save"/>, document.getElementById('container'));
+        expect(Modal).toBeTruthy();
 
+        const buttons = document.getElementsByTagName('button');
+        const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
+            get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
+        const closeButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'close' ||
+            get(button.childNodes[0].childNodes[0], 'textContent') === 'close'));
+        const closeButtonModal = document.querySelector('.glyphicon-1-close');
+
+        // Save button
+        expect(saveButton).toBeTruthy();
+        expect(saveButton.classList.contains('disabled')).toBe(true);
+        // Close button
+        expect(closeButton).toBeTruthy();
+        expect(closeButton.classList.contains('disabled')).toBe(true);
+        // Close button on modal header
+        expect(closeButtonModal).toBeFalsy();
+    });
+    it('modal save button is disabled when save is in progress', () => {
+        const user = {role: 'ADMIN'};
+        const Modal = ReactDOM.render(<MetadataModal user={user} show  id="map-save"/>, document.getElementById('container'));
+        expect(Modal).toBeTruthy();
+
+        const buttons = document.getElementsByTagName('button');
+        const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
+            get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
+        expect(saveButton).toBeTruthy();
+        TestUtils.Simulate.click(saveButton);
+        expect(saveButton.classList.contains('disabled')).toBe(true);
+    });
+    it('modal display spinner when loading', () => {
+        const user = {role: 'ADMIN'};
+        const Modal = ReactDOM.render(<MetadataModal user={user} loading show  id="map-save"/>, document.getElementById('container'));
+        expect(Modal).toBeTruthy();
+        const [spinner] = document.getElementsByClassName('mapstore-inline-loader');
+        expect(spinner).toBeTruthy();
+    });
+    it('modal hide spinner when error', () => {
+        const user = {role: 'ADMIN'};
+        let Modal = ReactDOM.render(<MetadataModal  user={user} show  id="map-save"/>, document.getElementById('container'));
+        expect(Modal).toBeTruthy();
+        const buttons = document.getElementsByTagName('button');
+        const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
+            get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
+        TestUtils.Simulate.click(saveButton);
+        Modal = ReactDOM.render(<MetadataModal errors={["Network error"]}  user={user} show  id="map-save"/>, document.getElementById('container'));
+        expect(Modal).toBeTruthy();
+        const [spinner] = document.getElementsByClassName('mapstore-inline-loader');
+        expect(spinner).toBeFalsy();
+    });
 });
