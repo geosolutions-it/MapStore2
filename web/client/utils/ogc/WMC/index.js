@@ -7,7 +7,7 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs } from 'lodash';
+import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs, castArray } from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import {
@@ -456,22 +456,38 @@ export const toWMC = (
             const dimensionsSource = (layer.dimensions || []).filter(({source}) => !!source);
             const dimensionsWMS = [
                 ...(layer.dimensions || []).filter(({source}) => !source),
-                ...get(layerCaps, 'dimension', []).filter(({name}) => findIndex(dimensionsSource, dim => dim.name === name) > -1)
-                    .map(({_default, name, units, unitSymbol, value = ''}) => ({
-                        name,
-                        units,
-                        unitSymbol,
-                        values: value.split(','),
-                        'default': _default
-                    }))
+                ...castArray(layerCaps?.Dimension || [])
+                    .filter((dimCap) => findIndex(dimensionsSource, dim => dim.name === dimCap?.$?.name) > -1)
+                    .map((dimCap) => {
+                        return {
+                            name: dimCap?.$?.name,
+                            units: dimCap?.$?.units,
+                            unitSymbol: dimCap?.$?.unitSymbol,
+                            values: dimCap?._?.split(','),
+                            "default": dimCap?.$?.default
+                        };
+                    })
             ];
-            const styles = get(layerCaps, 'style', []).map(({name, title: styleTitle, legendURL = []}) => ({
-                name,
-                title: styleTitle,
-                legendURL: legendURL[0] && pick(legendURL[0], 'width', 'height', 'format', 'onlineResource'),
-                current: name === layer.style
-            }));
-
+            const styles = castArray(layerCaps?.Style || []).map((capStyle) => {
+                const capLegendURL = castArray(capStyle?.LegendURL || [])[0];
+                return {
+                    name: capStyle.Name,
+                    title: capStyle.Title,
+                    legendURL: capLegendURL && {
+                        width: capLegendURL?.$?.width ? parseFloat(capLegendURL.$.width) : undefined,
+                        height: capLegendURL?.$?.height ? parseFloat(capLegendURL.$.height) : undefined,
+                        format: capLegendURL?.Format,
+                        ...(capLegendURL?.OnlineResource?.$?.['xlink:type'] &&
+                        capLegendURL?.OnlineResource?.$?.['xlink:href'] && {
+                            onlineResource: {
+                                type: capLegendURL.OnlineResource.$['xlink:type'],
+                                href: capLegendURL.OnlineResource.$['xlink:href']
+                            }
+                        })
+                    },
+                    current: capStyle.Name === layer.style
+                };
+            });
             const olExtensions = assignNamespace([
                 layer.bbox ? makeMaxExtentFromBbox(layer.bbox) : null, {
                     name: 'singleTile',

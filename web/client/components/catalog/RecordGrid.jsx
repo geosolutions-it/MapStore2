@@ -40,8 +40,6 @@ class RecordGrid extends React.Component {
         showTemplate: PropTypes.bool,
         service: PropTypes.object,
         defaultFormat: PropTypes.string,
-        formatOptions: PropTypes.array,
-        infoFormatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object
     };
 
@@ -87,8 +85,6 @@ class RecordGrid extends React.Component {
                     addAuthentication={this.props.addAuthentication}
                     currentLocale={this.props.currentLocale}
                     defaultFormat={this.props.defaultFormat}
-                    formatOptions={this.props.formatOptions}
-                    infoFormatOptions={this.props.infoFormatOptions}
                     layerBaseConfig={this.props.layerBaseConfig}
                 />
             </Col>

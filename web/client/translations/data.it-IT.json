@@ -164,7 +164,7 @@
             },
             "format": {
                 "title": "Formato",
-                "refresh": "Recupera il formato supportato",
+                "refresh": "Recupera i formati supportati",
                 "loading": "Caricamento in corso...",
                 "noOption": "Nessuna opzione",
                 "error": {
@@ -1489,7 +1489,8 @@
             },
             "format": {
                 "noOption": "Nessuna opzione",
-                "loading": "Caricamento in corso..."
+                "loading": "Caricamento in corso...",
+                "refresh": "Recupera i formati supportati"
             },
             "filter": {
                 "static": {

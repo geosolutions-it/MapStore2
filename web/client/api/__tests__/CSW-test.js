@@ -105,7 +105,7 @@ describe('Test capabilities data in CSW records', () => {
             .then((result) => {
                 try {
                     expect(result).toBeTruthy();
-                    expect(result.records).toBeTruthy();
+                    expect(result.records[0]).toBeTruthy();
                     expect(result.records[0].capabilities).toBeTruthy();
                     done();
                 } catch (ex) {

@@ -30,13 +30,10 @@ describe('Test CatalogServiceEditor', () => {
         setTimeout(done);
     });
     it('test service format', () => {
-        const formatOptions = [{
-            label: "image/png8",
-            value: "image/png8"
-        }, {
-            label: "image/jpeg",
-            value: "image/jpeg"
-        }];
+        const formatOptions = [
+            "image/png8",
+            "image/jpeg"
+        ];
         ReactDOM.render(<CatalogServiceEditor
             services={{
                 "csw": {

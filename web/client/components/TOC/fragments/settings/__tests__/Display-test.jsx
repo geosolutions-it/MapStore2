@@ -100,7 +100,7 @@ describe('test Layer Properties Display module component', () => {
                 try {
                     expect(prop).toBe("imageFormats");
                     expect(value).toBeTruthy();
-                    expect(value[0]).toEqual({"label": "image/png", "value": "image/png"});
+                    expect(value[0]).toEqual("image/png");
                     done();
                 } catch (e) {
                     done(e);

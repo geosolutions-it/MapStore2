@@ -53,11 +53,10 @@ const filterOnMatrix = (SRS, matrixIds) => {
 
 const recordToLayer = (record, {
     removeParams = [],
-    format,
+    service,
     catalogURL,
     url,
-    layerBaseConfig,
-    localizedLayerStyles
+    layerBaseConfig
 } = {}) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
@@ -87,7 +86,16 @@ const recordToLayer = (record, {
     const toLayerURL = u => isArray(u) && u.length === 1 ? u[0] : u;
     const layerURL = toLayerURL(url || originalUrl);
 
+    const {
+        format: serviceFormat,
+        localizedLayerStyles
+    } = service || {};
+
     const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
+    const defaultFormat = record.format || serviceFormat;
+    const format = record.formats
+        ? record.formats.find(value => value === defaultFormat) || record.format
+        : defaultFormat;
 
     return {
         type: 'wmts',
@@ -193,6 +201,7 @@ export const getCatalogRecords = (records, options) => {
                 requestEncoding: record.requestEncoding,
                 availableTileMatrixSets,
                 format: record.format,
+                formats: record.formats,
                 TileMatrixSetLink: castArray(record.TileMatrixSetLink),
                 boundingBox: {
                     extent: [

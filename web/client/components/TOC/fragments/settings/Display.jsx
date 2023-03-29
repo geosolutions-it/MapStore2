@@ -19,7 +19,7 @@ import Legend from '../legend/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 import Select from 'react-select';
-import { DEFAULT_FORMAT_WMS, getSupportedFormat } from '../../../../api/WMS';
+import { getSupportedFormat } from '../../../../api/WMS';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -136,15 +136,14 @@ export default class extends React.Component {
                                     isLoading={!!this.state.formatLoading}
                                     options={this.state.formatLoading
                                         ? []
-                                        : (this.props.formats?.map((value) => ({ value, label: value }))
-                                    || this.props.element?.imageFormats
-                                    || DEFAULT_FORMAT_WMS)
+                                        : (this.props.element?.imageFormats || this.props.formats || []).map((format) => format?.value ? format : ({ value: format, label: format }))
                                     }
                                     value={this.props.element && this.props.element.format || "image/png"}
                                     onChange={({ value }) => {
                                         this.props.onChange("format", value);
                                     }}/>
                                 <Button
+                                    disabled={!!this.state.formatLoading}
                                     tooltipId="layerProperties.format.refresh"
                                     className="square-button-md no-border format-refresh"
                                     onClick={() => {this.onFormatOptionsFetch(this.props.element?.url);}}

@@ -164,7 +164,7 @@
             },
             "format": {
                 "title": "Format",
-                "refresh": "Fetch supported format",
+                "refresh": "Fetch supported formats",
                 "loading": "Loading...",
                 "noOption": "No option",
                 "error": {
@@ -1489,7 +1489,8 @@
             },
             "format": {
                 "noOption": "No option",
-                "loading": "Loading..."
+                "loading": "Loading...",
+                "refresh": "Fetch supported formats"
             },
             "filter": {
                 "static": {

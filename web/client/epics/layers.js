@@ -52,9 +52,9 @@ export const refresh = action$ =>
             return Rx.Observable.from(
                 action.layers.map((layer) =>
                     Rx.Observable.forkJoin(
-                        Api.getCapabilities(getCapabilitiesUrl(layer), true)
+                        Api.getCapabilities(getCapabilitiesUrl(layer))
                             .then( (json) => {
-                                const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
+                                const root = json?.Capability;
                                 const layersObj = Api.flatLayers(root);
                                 const layers = isArray(layersObj) ? layersObj : [layersObj];
                                 return head(layers.filter((l) => l.Name === removeWorkspace(layer.name) || l.Name === layer.name));

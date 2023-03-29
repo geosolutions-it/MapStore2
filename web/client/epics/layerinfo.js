@@ -60,7 +60,9 @@ export const layerInfoSyncLayersEpic = (action$, store) => action$
     .ofType(SYNC_LAYERS)
     .switchMap(({layers}) => {
         const getCapabilities = {
-            wms: layer => layer.catalogURL ? Observable.defer(() => CSWApi.getRecordById(layer.catalogURL)) : getLayerCapabilities(layer),
+            wms: layer => layer.catalogURL
+                ? Observable.defer(() => CSWApi.getRecordById(layer.catalogURL))
+                : getLayerCapabilities(layer),
             wmts: layer => Observable.defer(() => WMTSApi.getCapabilities(layer.capabilitiesURL || layer.url)).map(result => {
                 const capLayers = castArray(result.Capabilities?.Contents?.Layer ?? []);
                 const targetLayer = find(capLayers, {'ows:Identifier': layer.name});
@@ -81,7 +83,7 @@ export const layerInfoSyncLayersEpic = (action$, store) => action$
             Observable.merge(
                 ...layers.map(({layerObj}) => getCapabilities[layerObj.type](layerObj)
                     .map(caps => {
-                        const title = caps.title ?? caps.dc?.title;
+                        const title = caps.title ?? caps.Title ?? caps.dc?.title;
 
                         if (title) {
                             return ['success', {
@@ -90,7 +92,7 @@ export const layerInfoSyncLayersEpic = (action$, store) => action$
                                     ...layerObj.title,
                                     'default': title
                                 } : title,
-                                description: caps._abstract ?? caps.dc?.abstract ?? caps.dc?.description
+                                description: caps._abstract ?? caps.Abstract ?? caps.dc?.abstract ?? caps.dc?.description
                             }];
                         }
                         return  ['error', layerObj];

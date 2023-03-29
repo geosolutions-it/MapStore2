@@ -10,7 +10,7 @@ import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
 import { DOMParser } from 'xmldom';
-import {head, get, find, isArray, isString, isObject, keys, toPairs, merge} from 'lodash';
+import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -71,6 +71,8 @@ import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../u
 import { wrapStartStop } from '../observables/epics';
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
+import { projectionSelector } from '../selectors/map';
+import { getResolutions } from "../utils/MapUtils";
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     if (isNewService) {
@@ -184,7 +186,7 @@ export default (API) => ({
                             return Rx.Observable.of(results.map(r => {
                                 const { format, url, text, layerOptions, service, ...result } = r;
                                 const locales = currentMessagesSelector(state);
-                                const records = API[format].getCatalogRecords(result, layerOptions, locales) || [];
+                                const records = API[format].getCatalogRecords(result, { layerOptions, url: service?.url, service }, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier || rec.name === text)); // exact match of text and record identifier
                                 const { wms, wmts } = extractOGCServicesReferences(record);
                                 const servicesReferences = wms || wmts;
@@ -203,7 +205,11 @@ export default (API) => ({
                                     catalogURL: format === 'csw' && url
                                         ? url + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + record.identifier
                                         : url,
-                                    layerBaseConfig
+                                    layerBaseConfig,
+                                    map: {
+                                        projection: projectionSelector(state),
+                                        resolutions: getResolutions()
+                                    }
                                 });
                                 if (!record) {
                                     return [text];
@@ -357,11 +363,20 @@ export default (API) => ({
 
                 return Rx.Observable.defer(() => getCapabilities(getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
-                        const layersXml = flatLayers(caps.capability);
-                        const metadataUrls = (layersXml.length === 1
-                            ? layersXml[0].metadataURL
-                            : find(layersXml, l => removeWorkspace(l.name) === removeWorkspace(layer.name))?.metadataURL)
-                            || [];
+                        const layersXml = flatLayers(caps?.Capability);
+                        const metadataUrls = castArray((layersXml.length === 1
+                            ? layersXml[0].MetadataURL
+                            : find(layersXml, l => removeWorkspace(l.Name) === removeWorkspace(layer.name))?.MetadataURL)
+                            || [])
+                            .map((capMetadataUrl) => ({
+                                ...capMetadataUrl?.$,
+                                format: capMetadataUrl?.Format,
+                                onlineResource: {
+                                    type: capMetadataUrl?.OnlineResource?.$?.['xlink:type'],
+                                    href: capMetadataUrl?.OnlineResource?.$?.['xlink:href'],
+                                    xlink: capMetadataUrl?.OnlineResource?.$?.['xmlns:xlink']
+                                }
+                            }));
                         const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
                             (mUrl.type.toLowerCase() === 'iso19115:2003' || mUrl.type.toLowerCase() === 'tc211') &&
                             (mUrl.format === 'application/xml' || mUrl.format === 'text/xml')), 'onlineResource.href');
@@ -495,7 +510,7 @@ export default (API) => ({
      */
     getSupportedFormatsEpic: (action$, {getState = ()=> {}} = {}) =>
         action$.ofType(FORMAT_OPTIONS_FETCH)
-            .filter((action)=> getFormatUrlUsedSelector(getState()) !== action?.url)
+            .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
             .switchMap(({url = ''} = {})=> {
                 return Rx.Observable.defer(() => getSupportedFormat(url, true))
                     .switchMap((supportedFormats) => Rx.Observable.of(setSupportedFormats(supportedFormats, url)))

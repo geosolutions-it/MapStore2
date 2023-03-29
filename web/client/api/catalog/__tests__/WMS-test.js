@@ -111,7 +111,7 @@ describe('Test correctness of the WMS APIs', () => {
         });
         const resolutions = [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
         expect(records.length).toBe(1);
-        const layer = getLayerFromRecord(records[0], { map: { projection: "EPSG:900913", resolutions } });
+        const layer = getLayerFromRecord(records[0], { map: { projection: "EPSG:900913", resolutions }, service: { autoSetVisibilityLimits: true } });
         expect(Math.ceil(layer.minResolution)).toBe(1);
         expect(Math.ceil(layer.maxResolution)).toBe(21);
     });
@@ -196,17 +196,20 @@ describe('Test correctness of the WMS APIs', () => {
         expect(records[0].references[0].url).toBe(url);
     });
     it('wms layer with formats', () => {
+        const getMapFormats = ["image/png"];
+        const getFeatureInfoFormats = ["text/plain"];
         const records = getCatalogRecords({
-            records: [{}]
+            records: [{
+                getMapFormats,
+                getFeatureInfoFormats
+            }]
         }, {
             url: 'http://sample'
         });
-        const imageFormats = ["png"];
-        const infoFormats = ["text/plain"];
         expect(records.length).toBe(1);
-        const layer = getLayerFromRecord(records[0], { formats: {imageFormats, infoFormats} });
-        expect(layer.imageFormats).toEqual(imageFormats);
-        expect(layer.infoFormats).toEqual(infoFormats);
+        const layer = getLayerFromRecord(records[0]);
+        expect(layer.imageFormats).toEqual(getMapFormats);
+        expect(layer.infoFormats).toEqual(getFeatureInfoFormats);
     });
     it('wms layer with force proxy', () => {
         const records = getCatalogRecords({
@@ -215,7 +218,7 @@ describe('Test correctness of the WMS APIs', () => {
             url: 'http://sample'
         });
         expect(records.length).toBe(1);
-        const layer = getLayerFromRecord(records[0], { allowUnsecureLayers: true });
+        const layer = getLayerFromRecord(records[0], { service: { allowUnsecureLayers: true } });
         expect(layer.forceProxy).toBeTruthy();
     });
 });

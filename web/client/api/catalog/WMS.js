@@ -12,6 +12,7 @@ import { getResolutionObject } from "../../utils/MapUtils";
 import { Observable } from 'rxjs';
 import { getConfigProp, cleanDuplicatedQuestionMarks } from '../../utils/ConfigUtils';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
+import { isValidGetFeatureInfoFormat, isValidGetMapFormat } from '../../utils/WMSUtils';
 import {
     extractOGCServicesReferences,
     toURLArray,
@@ -32,15 +33,11 @@ import {
 
 const recordToLayer = (record, {
     removeParams = [],
-    format,
+    service,
     catalogURL,
     url,
-    formats = {},
     map = {},
-    layerBaseConfig,
-    localizedLayerStyles,
-    allowUnsecureLayers,
-    service
+    layerBaseConfig
 } = {}) => {
     if (!record || !record.references) {
         // we don't have a valid record so no buttons to add
@@ -76,6 +73,20 @@ const recordToLayer = (record, {
         MinScaleDenominator: minScaleDenominator
     } = record?.capabilities ?? {};
 
+    const {
+        format: defaultFormat,
+        localizedLayerStyles,
+        allowUnsecureLayers,
+        autoSetVisibilityLimits,
+        layerOptions
+    } = service || {};
+
+    const supportedGetMapFormats = (record.getMapFormats || []).filter(isValidGetMapFormat);
+    const supportedGetFeatureInfoFormats = (record.getFeatureInfoFormats || []).filter(isValidGetFeatureInfoFormat);
+    const format = supportedGetMapFormats?.find((value) => value === defaultFormat)
+        || supportedGetMapFormats[0]
+        || defaultFormat;
+
     let layer = {
         type: 'wms',
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
@@ -104,14 +115,15 @@ const recordToLayer = (record, {
         allowedSRS: allowedSRS,
         catalogURL,
         ...layerBaseConfig,
-        ...service?.layerOptions,
+        ...layerOptions,
         ...record.layerOptions,
         localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined,
-        ...(!isEmpty(formats) && {imageFormats: formats.imageFormats, infoFormats: formats.infoFormats}),
+        imageFormats: supportedGetMapFormats,
+        infoFormats: supportedGetFeatureInfoFormats,
         ...(!isNil(allowUnsecureLayers) && { forceProxy: allowUnsecureLayers })
     };
 
-    if (!isEmpty(map) && (maxScaleDenominator || minScaleDenominator)) {
+    if (autoSetVisibilityLimits && !isEmpty(map) && (maxScaleDenominator || minScaleDenominator)) {
         const {resolution: minResolution} = !isNil(minScaleDenominator)
         && getResolutionObject(minScaleDenominator, 'scale', map) || {};
         const {resolution: maxResolution} = !isNil(maxScaleDenominator)
@@ -157,7 +169,8 @@ export const getCatalogRecords = (records, options) => {
                     ...(records?.layerOptions || {})
                 },
                 title: getLayerTitleTranslations(record) || record.Name,
-                formats: castArray(record.formats || []),
+                getMapFormats: record.getMapFormats,
+                getFeatureInfoFormats: record.getFeatureInfoFormats,
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                     values: dim._ && dim._.split(',') || []
                 }, dim.$ || {}))

@@ -164,7 +164,7 @@
             },
             "format": {
                 "title": "Formato",
-                "refresh": "Obtener formato compatible",
+                "refresh": "Obtener formatos admitidos",
                 "loading": "Cargando...",
                 "noOption": "Sin opcion",
                 "error": {
@@ -1489,7 +1489,8 @@
             },
             "format": {
                 "noOption": "Sin opcion",
-                "loading": "Cargando..."
+                "loading": "Cargando...",
+                "refresh": "Obtener formatos admitidos"
             },
             "filter": {
                 "static": {

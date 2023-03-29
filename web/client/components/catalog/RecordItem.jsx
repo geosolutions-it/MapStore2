@@ -58,9 +58,7 @@ class RecordItem extends React.Component {
         clearModal: PropTypes.func,
         service: PropTypes.service,
         showTemplate: PropTypes.bool,
-        defaultFormat: PropTypes.string,
-        formatOptions: PropTypes.array,
-        infoFormatOptions: PropTypes.array
+        defaultFormat: PropTypes.string
     };
 
     static defaultProps = {
@@ -127,20 +125,8 @@ class RecordItem extends React.Component {
 
     };
 
-    getFormats = (type, record) => {
-        let formats;
-        if (type === 'wms') {
-            formats = this.props?.service?.format && [this.props.service.format];
-        }
-        return formats ? formats : record.format && [record.format] || record.formats;
-    }
-
     getButtons = (record) => {
         const links = this.props.showGetCapLinks ? getRecordLinks(record) : [];
-        const formats = this.getFormats(record.layerType || record.serviceType, record) || [];
-        const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
-        const autoSetVisibilityLimits = this.props?.service?.autoSetVisibilityLimits;
-        const allowUnsecureLayers = this.props?.service?.allowUnsecureLayers;
         return [
             {
                 tooltipId: 'catalog.addToMap',
@@ -157,7 +143,10 @@ class RecordItem extends React.Component {
                     }
                     this.setState({ loading: true });
                     return API[record.serviceType].getLayerFromRecord(record, {
-                        service: this.props.service,
+                        service: {
+                            ...this.props.service,
+                            format: this.props?.service?.format ?? this.props.defaultFormat
+                        },
                         layerBaseConfig: this.props.layerBaseConfig,
                         removeParams: this.props.authkeyParamNames,
                         catalogURL: this.props.catalogType === "csw" && this.props.catalogURL
@@ -165,21 +154,10 @@ class RecordItem extends React.Component {
                             "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
                             record.identifier
                             : null,
-                        format: this.getLayerFormat(
-                            formats.filter(f => f.indexOf("image/") === 0)
-                        ),
-                        formats: {
-                            imageFormats: this.props.formatOptions,
-                            infoFormats: this.props.infoFormatOptions
-                        },
-                        ...(autoSetVisibilityLimits && {
-                            map: {
-                                projection: this.props.crs,
-                                resolutions: getResolutions()
-                            }
-                        }),
-                        localizedLayerStyles,
-                        allowUnsecureLayers
+                        map: {
+                            projection: this.props.crs,
+                            resolutions: getResolutions()
+                        }
                     }, true)
                         .then((layer) => {
                             if (layer) {
@@ -286,13 +264,6 @@ class RecordItem extends React.Component {
 
     setLinkCopiedStatus = (key, status) => {
         this.setState({[key]: status});
-    };
-
-    getLayerFormat = (formats) => {
-        if (formats.length === 0 || formats.filter(f => f === this.props.defaultFormat).length > 0) {
-            return this.props.defaultFormat;
-        }
-        return formats[0];
     };
 
     addLayer = (layer, {background} = {}) => {

@@ -37,7 +37,7 @@ import {
 } from '../catalog';
 
 import { set } from '../../utils/ImmutableUtils';
-import { DEFAULT_FORMAT_WMS, getUniqueInfoFormats } from '../../api/WMS';
+import { getDefaultSupportedGetFeatureInfoFormats } from '../../utils/WMSUtils';
 
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
@@ -283,23 +283,35 @@ describe('Test catalog selectors', () => {
     });
     it('test getSupportedFormatsSelector with default value', () => {
         const defaultImageFormats = getSupportedFormatsSelector(state);
-        expect(defaultImageFormats).toEqual(DEFAULT_FORMAT_WMS);
+        expect(defaultImageFormats).toEqual([]);
     });
     it('test getSupportedFormatsSelector ', () => {
-        const defaultImageFormats = getSupportedFormatsSelector({
+        expect(getSupportedFormatsSelector({
             catalog: {
+                mode: 'edit',
                 newService: {
                     supportedFormats: {
                         imageFormats: ["image/png"]
                     }
                 }
             }
-        });
-        expect(defaultImageFormats).toEqual(["image/png"]);
+        })).toEqual(["image/png"]);
+        expect(getSupportedFormatsSelector({
+            catalog: {
+                selectedService: 'wmsCatalogId',
+                services: {
+                    wmsCatalogId: {
+                        supportedFormats: {
+                            imageFormats: ["image/png"]
+                        }
+                    }
+                }
+            }
+        })).toEqual(["image/png"]);
     });
     it('test getSupportedGFIFormatsSelector with default value', () => {
         const defaultInfoFormats = getSupportedGFIFormatsSelector(state);
-        expect(defaultInfoFormats).toEqual(getUniqueInfoFormats());
+        expect(defaultInfoFormats).toEqual(getDefaultSupportedGetFeatureInfoFormats());
     });
     it('test getSupportedGFIFormatsSelector ', () => {
         const defaultInfoFormats = getSupportedGFIFormatsSelector({

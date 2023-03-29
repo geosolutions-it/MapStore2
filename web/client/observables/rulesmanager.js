@@ -15,6 +15,7 @@ import WMS from '../api/WMS';
 import ConfigUtils from '../utils/ConfigUtils';
 import { describeFeatureType } from './wfs';
 import { describeLayer, getLayerCapabilities } from './wms';
+import { getLayerOptions } from '../utils/WMSUtils';
 
 const fixUrl = (url) => {
     const u = trim(url, "/");
@@ -124,7 +125,21 @@ export const getStylesAndAttributes = (layer, workspace) => {
     const name = `${workspace}:${layer}`;
     const l = {url: `${fixUrl(url)}wms`, name};
     return Rx.Observable.combineLatest(getLayerCapabilities(l)
-        .map((cp) => ({style: cp.style, ly: {bbox: WMS.getBBox(cp), name, url: `${fixUrl(url)}wms`, type: "wms", visibility: true, format: "image/png", title: cp.title}})),
+        .map((cp) => {
+            const { availableStyles = [] } = getLayerOptions(cp);
+            return {
+                style: availableStyles,
+                ly: {
+                    bbox: WMS.getBBox(cp),
+                    name,
+                    url: `${fixUrl(url)}wms`,
+                    type: "wms",
+                    visibility: true,
+                    format: "image/png",
+                    title: cp.Title
+                }
+            };
+        }),
     describeLayer(l).map(({data}) => data.layerDescriptions[0])
         .switchMap(({owsType}) => {
             return owsType === "WCS" ? Rx.Observable.of({properties: [], type: "RASTER"}) : describeFeatureType({layer: l})

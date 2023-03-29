@@ -9,9 +9,10 @@
 import { updateNode } from './layers';
 
 import WMS from '../api/WMS';
+import { getLayerOptions } from '../utils/WMSUtils';
 import * as WFS from '../api/WFS';
 import WCS from '../api/WCS';
-import {getCapabilitiesUrl, formatCapabitiliesOptions} from '../utils/LayersUtils';
+import {getCapabilitiesUrl} from '../utils/LayersUtils';
 import { get } from 'lodash';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 
@@ -51,7 +52,7 @@ export function getDescribeLayer(url, layer, options) {
     };
 }
 
-export function getLayerCapabilities(layer, options) {
+export function getLayerCapabilities(layer) {
     // geoserver's specific. TODO parse layer.capabilitiesURL.
     const reqUrl = getCapabilitiesUrl(layer);
     return (dispatch) => {
@@ -59,11 +60,11 @@ export function getLayerCapabilities(layer, options) {
         dispatch(updateNode(layer.id, "id", {
             capabilitiesLoading: true
         }));
-        return WMS.getCapabilities(reqUrl, options).then((capabilities) => {
+        return WMS.getCapabilities(reqUrl).then((capabilities) => {
             const layerCapability = WMS.parseLayerCapabilities(capabilities, layer);
 
             if (layerCapability) {
-                dispatch(updateNode(layer.id, "id", formatCapabitiliesOptions(layerCapability)));
+                dispatch(updateNode(layer.id, "id", { ...getLayerOptions(layerCapability), capabilitiesLoading: null }));
             } else {
                 dispatch(updateNode(layer.id, "id", { capabilitiesLoading: null, capabilities: { error: "error getting capabilities", details: "no layer info" }, description: null }));
             }
