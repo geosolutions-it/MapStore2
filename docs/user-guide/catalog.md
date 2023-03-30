@@ -91,11 +91,7 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-<<<<<<< HEAD
-* *Server Type*: to specify the type of server the entered CSW service url comes from. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
-=======
-* *Server Type*: to specify the server type of WMS online resources referred by metadata exposed by CSW service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
->>>>>>> 33f7621a3 (3_review)
+* *Server Type*: to specify the server type of WMS online resources referred by metadata exposed by the CSW service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
@@ -229,11 +225,7 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
-<<<<<<< HEAD
-* *Server Type*: to specify the type of server the entered WMS service url comes from. The options are two: `Geoserver` or `No Vendor`which can be mapproxy, mapserver or other.
-=======
 * *Server Type*: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
->>>>>>> 33f7621a3 (3_review)
 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
