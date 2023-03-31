@@ -12,7 +12,7 @@
       <spring.security.version>5.3.10.RELEASE</spring.security.version>
       <spring.version>5.3.18</spring.version>
       <log4j-version>2.19.0</log4j-version>
-      <jackson-version>2.13.1</jackson-version>
+      <jackson-version>2.13.4.2</jackson-version>
   </properties>
 
     <dependencyManagement>
