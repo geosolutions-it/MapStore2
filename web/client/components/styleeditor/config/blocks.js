@@ -1,15 +1,16 @@
 /*
- * Copyright 2020, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-import property from './property';
-import omit from 'lodash/omit';
+* Copyright 2020, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
+import omit from 'lodash/omit';
+
+import property from './property';
+
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const vector3dStyleOptions = ({ label = 'styleeditor.clampToGround', isDisabled }) => ({
@@ -69,7 +70,7 @@ const point3dStyleOptions = ({ isDisabled }) =>  ({
 const polygon3dStyleOptions = ({ isDisabled }) =>  ({
     msClassificationType: property.msClassificationType({
         label: 'styleeditor.classificationtype',
-        isDisabled
+        isDisabled: (value, properties) => !properties?.msClampToGround || isDisabled
     })
 });
 
@@ -277,11 +278,11 @@ const getBlocks = ({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
                 }),
-                ...(!shouldHide3DOptions && polygon3dStyleOptions({
-                    isDisabled: () => !enable3dStyleOptions
-                })),
                 ...(!shouldHide3DOptions && vector3dStyleOptions({
                     label: 'styleeditor.clampOutlineToGround',
+                    isDisabled: () => !enable3dStyleOptions
+                })),
+                ...(!shouldHide3DOptions && polygon3dStyleOptions({
                     isDisabled: () => !enable3dStyleOptions
                 }))
             },
