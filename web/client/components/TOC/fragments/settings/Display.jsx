@@ -115,6 +115,7 @@ export default class extends React.Component {
         return null;
     };
     render() {
+        const formatValue = this.props.element && this.props.element.format || "image/png";
         return (
             <Grid
                 fluid
@@ -138,7 +139,13 @@ export default class extends React.Component {
                                         ? []
                                         : (this.props.element?.imageFormats || this.props.formats || []).map((format) => format?.value ? format : ({ value: format, label: format }))
                                     }
-                                    value={this.props.element && this.props.element.format || "image/png"}
+                                    value={{ value: formatValue, label: formatValue }}
+                                    onOpen={() => {
+                                        if (!this.props.element?.imageFormats
+                                        || this.props.element?.imageFormats?.length === 0) {
+                                            this.onFormatOptionsFetch(this.props.element?.url);
+                                        }
+                                    }}
                                     onChange={({ value }) => {
                                         this.props.onChange("format", value);
                                     }}/>
