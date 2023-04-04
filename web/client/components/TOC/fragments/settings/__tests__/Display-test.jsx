@@ -114,6 +114,43 @@ describe('test Layer Properties Display module component', () => {
         ReactTestUtils.Simulate.click(formatRefresh[0]);
     });
 
+    it('tests Display component for wms with format fetch on select open if the imageFormats options is empty', (done) => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'some url'
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        mockAxios.onGet().reply(() => {
+            return [200, GET_CAP_RESPONSE];
+        });
+        const handlers = {
+            onChange: (prop, value) =>{
+                try {
+                    expect(prop).toBe("imageFormats");
+                    expect(value).toBeTruthy();
+                    expect(value[0]).toEqual("image/png");
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const selectFormat = document.querySelector('.format-select .Select-input > input');
+        expect(selectFormat).toBeTruthy();
+        ReactTestUtils.act(() => {
+            ReactTestUtils.Simulate.focus(selectFormat);
+            ReactTestUtils.Simulate.keyDown(selectFormat, { key: 'ArrowDown', keyCode: 40 });
+        });
+    });
+
     it('tests Display component for wms with localized layer styles enabled', () => {
         const l = {
             name: 'layer00',
