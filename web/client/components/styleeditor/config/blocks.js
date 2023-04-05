@@ -229,7 +229,7 @@ const getBlocks = ({
                 }),
                 ...(!shouldHide3DOptions && vector3dStyleOptions({
                     label: 'styleeditor.clampToGround',
-                    isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
+                    isDisabled: () => !enable3dStyleOptions
                 }))
             },
             defaultProperties: {
