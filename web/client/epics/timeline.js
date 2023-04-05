@@ -202,22 +202,41 @@ const loadRangeData = (id, timeData, getState) => {
 /**
  * Update timeline with current, offset and the range data
  * on range initialization
- * @param state
- * @param {string} value
+ * @param state application state
+ * @param {string|string[]} values the range values. It can be an array or a domain string. (`start--end`, `start,x1,x2,x3,end` or `start,end`)
  * @param {string} [currentTime]
  * @returns {Observable}
  */
 const updateRangeOnInit = (state, value, currentTime) => {
     const { isFullRange, offsetTime } = state;
     // The startTime and endTime is full range of the layer
-    let [startTime, endTime] = value?.filter(v => !!v) || [];
-    const start = isFullRange ? startTime : currentTime;
+    let values;
+
+    // convert to array
+    if (isString(value)) {
+        if (value.indexOf('--') > 0) {
+            values = value.split('--');
+        } else if (value.indexOf(',') > 0) {
+            values = value.split(',');
+        } else {
+            values = [value]; // single value is the last chance
+        }
+    } else {
+        values = value;
+    }
+
+    if (values.length > 2) {
+        values = [values[0], values[values.length - 1]]; // more than 2 values, start and end are the first and last values
+    }
+
+    let [startTime, endTime] = values?.filter(v => !!v) || [];
+    const start = isFullRange ? startTime ?? currentTime : currentTime;
 
     // Set the offset 1 day by default
     const rangeDistance = moment(1000 * 60 * 60 * 24 * RATIO).diff(0);
     const defaultOffset = moment(new Date()).add(rangeDistance / RATIO).toISOString();
 
-    const end = isFullRange ? endTime : (offsetTime ?? defaultOffset);
+    const end = isFullRange ? endTime ?? defaultOffset : (offsetTime ?? defaultOffset);
     const difference = moment(end).diff(moment(start));
     const nextEnd = moment(start).add(difference).toISOString();
     // Set current, offset and the range of the timeline
@@ -456,7 +475,7 @@ export const setRangeOnInit = (action$, { getState = () => { } } = {}) =>
 
             if (!isEmpty(domain) && !isEmpty(currentTime)) {
                 // Update range when domain and current time present
-                return updateRangeOnInit(rangeState, domain?.split("--"), currentTime);
+                return updateRangeOnInit(rangeState, domain, currentTime);
             } else if ((isEmpty(domain) && !isEmpty(currentTime)) || rangeState.isFullRange) {
                 //  Get time domain and set range
                 return updateRangeObs(currentTime);

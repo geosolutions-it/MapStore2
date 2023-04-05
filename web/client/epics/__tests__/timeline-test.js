@@ -617,6 +617,169 @@ describe('timeline Epics', () => {
                 }
             });
         });
+        it("setRangeOnInit on domain returned as list", (done) => {
+            testEpic(setRangeOnInit, 3, initializeRange(), ([action1, action2, action3]) => {
+                const { time, type } = action1;
+                const { offsetTime, type: typeOff} = action2;
+                const { type: typeRange } = action3;
+                expect(time).toEqual("2000-01-01T00:00:00.000Z");
+                expect(offsetTime).toBeTruthy();
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    }
+                },
+                dimension: {
+                    currentTime: "2000-01-01T00:00:00.000Z",
+                    offsetTime: "2001-12-31T00:00:00.000Z",
+                    data: {
+                        time: {
+                            TEST_LAYER: {
+                                name: "time",
+                                domain: "2000-01-01T00:00:00.000Z,2001-12-31T00:00:00.000Z"
+                            }
+                        }
+                    }
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+        it("setRangeOnInit on domain returned as single time", (done) => {
+            testEpic(setRangeOnInit, 3, initializeRange(), ([action1, action2, action3]) => {
+                const { time, type } = action1;
+                const { offsetTime, type: typeOff} = action2;
+                const { type: typeRange } = action3;
+                expect(time).toBeTruthy();
+                expect(offsetTime).toBeTruthy();
+                expect(time).toBe("2000-01-01T00:00:00.000Z");
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    }
+                },
+                dimension: {
+                    currentTime: "2000-01-01T00:00:00.000Z",
+                    offsetTime: "2001-12-31T00:00:00.000Z",
+                    data: {
+                        time: {
+                            TEST_LAYER: {
+                                name: "time",
+                                domain: "2000-01-01T00:00:00.000Z"
+                            }
+                        }
+                    }
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
+        it("setRangeOnInit on domain returned empty", (done) => {
+            testEpic(setRangeOnInit, 3, initializeRange(), ([action1, action2, action3]) => {
+                const { time, type } = action1;
+                const { offsetTime, type: typeOff} = action2;
+                const { type: typeRange } = action3;
+                expect(time).toBeTruthy();
+                expect(offsetTime).toBeTruthy();
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                done();
+            }, {
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    settings: {
+                        initialMode: 'range',
+                        initialSnap: 'fullRange'
+                    }
+                },
+                dimension: {
+                    currentTime: "2000-01-01T00:00:00.000Z",
+                    offsetTime: "2001-12-31T00:00:00.000Z",
+                    data: {
+                        time: {
+                            TEST_LAYER: {
+                                name: "time",
+                                domain: ""
+                            }
+                        }
+                    }
+                },
+                layers: {
+                    flat: [{
+                        id: 'TEST_LAYER',
+                        name: 'TEST_LAYER',
+                        type: 'wms',
+                        visibility: true,
+                        url: 'base/web/client/test-resources/wmts/DomainValues.xml',
+                        dimensions: [
+                            {
+                                source: {
+                                    type: 'multidim-extension',
+                                    url: 'base/web/client/test-resources/wmts/DomainValues.xml'
+                                },
+                                name: 'time'
+                            }
+                        ],
+                        params: {
+                            time: '2000-06-08T00:00:00.000Z'
+                        }
+                    }]
+                }
+            });
+        });
     });
     it("updateTimelineDataOnMapLoad", (done) =>{
         const config = {
