@@ -5,12 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as Cesium from 'cesium';
 import expect from 'expect';
-import CesiumStyleParser from '../CesiumStyleParser';
-import { getImageIdFromSymbolizer, geoStylerStyleFilter } from '../../VectorStyleUtils';
 
+import { getImageIdFromSymbolizer, geoStylerStyleFilter } from '../../VectorStyleUtils';
+import CesiumStyleParser from '../CesiumStyleParser';
 
 let images = [];
 
@@ -75,9 +74,57 @@ describe('CesiumStyleParser', () => {
                             .then(() => {
                                 expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
                                 expect(entities[0].polygon.classificationType.getValue()).toEqual(Cesium.ClassificationType.TERRAIN);
+                                expect(entities[0].polygon.classificationType).toBeTruthy();
+                                expect(entities[0].polyline.classificationType).toBeTruthy();
                                 expect(entities[0].polyline.width.getValue()).toBe(2);
                                 expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
                                 expect(entities[0].polyline.clampToGround.getValue()).toBe(true);
+                                done();
+                            }).catch(done);
+                    });
+                });
+        });
+        it('should write a style function with fill symbolizer, clampToGround=false', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineOpacity: 0.25,
+                                outlineWidth: 2,
+                                msClassificationType: 'terrain',
+                                msClampToGround: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => {
+                    Cesium.GeoJsonDataSource.load({
+                        type: 'Feature',
+                        properties: {},
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                        }
+                    }).then((dataSource) => {
+                        const entities = dataSource?.entities?.values;
+                        return styleFunc({ entities })
+                            .then(() => {
+                                expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
+                                expect(entities[0].polygon.classificationType).toBeFalsy();
+                                expect(entities[0].polyline.classificationType).toBeFalsy();
+                                expect(entities[0].polyline.width.getValue()).toBe(2);
+                                expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
+                                expect(entities[0].polyline.clampToGround.getValue()).toBe(false);
                                 done();
                             }).catch(done);
                     });

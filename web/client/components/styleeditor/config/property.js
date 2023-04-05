@@ -5,11 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import isNil from 'lodash/isNil';
-import isObject from 'lodash/isObject';
 import isEqual from 'lodash/isEqual';
 import isNaN from 'lodash/isNaN';
+import isNil from 'lodash/isNil';
+import isObject from 'lodash/isObject';
 import tinycolor from 'tinycolor2';
 
 const property = {
@@ -338,7 +337,11 @@ const property = {
         setValue: (value) => !!value,
         isDisabled
     }),
-    msClassificationType: ({ key = 'msClassificationType', label = 'PolygonType', isDisabled }) => ({
+    msClassificationType: ({
+        key = 'msClassificationType',
+        label = 'PolygonType',
+        isDisabled
+    }) => ({
         type: 'toolbar',
         label,
         config: {

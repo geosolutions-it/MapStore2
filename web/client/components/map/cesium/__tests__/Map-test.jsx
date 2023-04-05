@@ -6,22 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import CesiumMap from '../Map';
-import CesiumLayer from '../Layer';
-import expect from 'expect';
 import * as Cesium from 'cesium';
+import expect from 'expect';
+import ReactDOM from 'react-dom';
+import { act } from 'react-dom/test-utils';
+
+import { waitFor } from '@testing-library/react';
+import { simulateClick } from './CesiumSimulate';
+import CesiumLayer from '../Layer';
+import CesiumMap from '../Map';
+import '../plugins/OSMLayer';
+
+import '../../../../utils/cesium/Layers';
 import {
     getHook,
     ZOOM_TO_EXTENT_HOOK,
     registerHook,
     createRegisterHooks, GET_PIXEL_FROM_COORDINATES_HOOK, GET_COORDINATES_FROM_PIXEL_HOOK
 } from '../../../../utils/MapUtils';
-import { act } from 'react-dom/test-utils';
-import { simulateClick } from './CesiumSimulate';
-import { waitFor } from '@testing-library/react';
-import '../../../../utils/cesium/Layers';
-import '../plugins/OSMLayer';
 
 describe('CesiumMap', () => {
 
@@ -242,11 +244,11 @@ describe('CesiumMap', () => {
                                         id: 'vector',
                                         features: [
                                             {
-                                                type: 'Feature', properties: { category: 'area' },
+                                                type: 'Feature', properties: { category: 'boundary' },
                                                 geometry: null
                                             },
                                             {
-                                                type: 'Feature', properties: { category: 'boundary' },
+                                                type: 'Feature', properties: { category: 'area' },
                                                 geometry: null
                                             }
                                         ]
