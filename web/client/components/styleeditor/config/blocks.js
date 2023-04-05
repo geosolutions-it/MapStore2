@@ -1,15 +1,16 @@
 /*
- * Copyright 2020, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-import property from './property';
-import omit from 'lodash/omit';
+* Copyright 2020, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 import includes from 'lodash/includes';
 import isObject from 'lodash/isObject';
+import omit from 'lodash/omit';
+
+import property from './property';
+
 import {SUPPORTED_MIME_TYPES} from "../../../utils/StyleEditorUtils";
 
 const vector3dStyleOptions = {
@@ -63,7 +64,8 @@ const point3dStyleOptions = {
 
 const polygon3dStyleOptions = {
     msClassificationType: property.msClassificationType({
-        label: 'styleeditor.classificationtype'
+        label: 'styleeditor.classificationtype',
+        isDisabled: (value, properties) => !properties?.msClampToGround
     })
 };
 
@@ -259,7 +261,10 @@ const getBlocks = ({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
                 }),
-                ...(enable3dStyleOptions ? {...polygon3dStyleOptions, ...vector3dStyleOptions} : {})
+                ...(enable3dStyleOptions ? {
+                    ...vector3dStyleOptions,
+                    ...polygon3dStyleOptions
+                } : {})
             },
             defaultProperties: {
                 kind: 'Fill',

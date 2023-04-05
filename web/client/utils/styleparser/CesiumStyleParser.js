@@ -5,10 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
 import { castArray, isNumber, isEmpty, isEqual, pick, range } from 'lodash';
+
 import { needProxy, getProxyUrl } from '../ProxyUtils';
 
 function getCesiumColor({ color, opacity }) {
@@ -460,11 +460,12 @@ const getGraphics = ({
             hierarchy: entity._msStoredCoordinates.polygon,
             // height should be introduced with concept of extrusion
             // height: 0,
-            classificationType: symbolizer.msClassificationType === 'terrain' ?
+            perPositionHeight: !symbolizer.msClampToGround,
+            ...(!symbolizer.msClampToGround ? undefined : {classificationType: symbolizer.msClassificationType === 'terrain' ?
                 Cesium.ClassificationType.TERRAIN :
                 symbolizer.msClassificationType === '3d' ?
                     Cesium.ClassificationType.CESIUM_3D_TILE :
-                    Cesium.ClassificationType.BOTH
+                    Cesium.ClassificationType.BOTH} )
         });
 
         let polyline;
@@ -479,7 +480,12 @@ const getGraphics = ({
                 }),
                 width: symbolizer.outlineWidth,
                 positions: entity._msStoredCoordinates.polygon.getValue().positions,
-                clampToGround: symbolizer.msClampToGround
+                clampToGround: symbolizer.msClampToGround,
+                ...(!symbolizer.msClampToGround ? undefined : {classificationType: symbolizer.msClassificationType === 'terrain' ?
+                    Cesium.ClassificationType.TERRAIN :
+                    symbolizer.msClassificationType === '3d' ?
+                        Cesium.ClassificationType.CESIUM_3D_TILE :
+                        Cesium.ClassificationType.BOTH} )
             });
         }
         return Promise.resolve({
