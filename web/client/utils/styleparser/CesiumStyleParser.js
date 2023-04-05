@@ -460,7 +460,7 @@ const getGraphics = ({
             hierarchy: entity._msStoredCoordinates.polygon,
             // height should be introduced with concept of extrusion
             // height: 0,
-            perPositionHeight: symbolizer.msClampToGround,
+            perPositionHeight: !symbolizer.msClampToGround,
             ...(!symbolizer.msClampToGround ? undefined : {classificationType: symbolizer.msClassificationType === 'terrain' ?
                 Cesium.ClassificationType.TERRAIN :
                 symbolizer.msClassificationType === '3d' ?
