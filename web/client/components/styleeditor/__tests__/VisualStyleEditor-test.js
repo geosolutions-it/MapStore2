@@ -5,15 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import React from 'react';
-import ReactDOM from 'react-dom';
-import VisualStyleEditorComponent from '../VisualStyleEditor';
 import expect from 'expect';
-import { Simulate, act } from 'react-dom/test-utils';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import testBackend from 'react-dnd-test-backend';
+import ReactDOM from 'react-dom';
+import { Simulate, act } from 'react-dom/test-utils';
+
 import { waitFor } from '@testing-library/react';
+import VisualStyleEditorComponent from '../VisualStyleEditor';
 
 const VisualStyleEditor = dragDropContext(testBackend)(VisualStyleEditorComponent);
 
@@ -666,8 +666,8 @@ describe('VisualStyleEditor', () => {
             .then(() => {
                 const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
                 expect([...disabledFields].map(node => node.innerHTML)).toEqual([
-                    'styleeditor.classificationtype',
-                    'styleeditor.clampOutlineToGround'
+                    'styleeditor.clampOutlineToGround',
+                    'styleeditor.classificationtype'
                 ]);
                 done();
             }).catch(done);
