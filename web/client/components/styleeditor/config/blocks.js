@@ -70,7 +70,7 @@ const point3dStyleOptions = ({ isDisabled }) =>  ({
 const polygon3dStyleOptions = ({ isDisabled }) =>  ({
     msClassificationType: property.msClassificationType({
         label: 'styleeditor.classificationtype',
-        isDisabled: (value, properties) => !properties?.msClampToGround || isDisabled
+        isDisabled
     })
 });
 
@@ -229,7 +229,7 @@ const getBlocks = ({
                 }),
                 ...(!shouldHide3DOptions && vector3dStyleOptions({
                     label: 'styleeditor.clampToGround',
-                    isDisabled: () => !enable3dStyleOptions
+                    isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
                 }))
             },
             defaultProperties: {
@@ -283,7 +283,7 @@ const getBlocks = ({
                     isDisabled: () => !enable3dStyleOptions
                 })),
                 ...(!shouldHide3DOptions && polygon3dStyleOptions({
-                    isDisabled: () => !enable3dStyleOptions
+                    isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
                 }))
             },
             defaultProperties: {
