@@ -203,7 +203,7 @@ const loadRangeData = (id, timeData, getState) => {
  * Update timeline with current, offset and the range data
  * on range initialization
  * @param state application state
- * @param {string|string[]} values the range values. It can be an array or a domain string. (`start--end`, `start,x1,x2,x3,end` or `start,end`)
+ * @param {string|string[]} value the range values. It can be an array or a domain string. (`start--end`, `start,x1,x2,x3,end` or `start,end`)
  * @param {string} [currentTime]
  * @returns {Observable}
  */
