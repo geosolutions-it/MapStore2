@@ -2256,7 +2256,7 @@
             "shape": "Forme",
             "fill": "Fill color",
             "clampToGround": "S'adapter au terrain",
-            "clampOutlineToGround": "Fixer le contour au sol",
+            "clampOutlineToGround": "S'adapter au terrain",
             "msBringToFront": "Mettre en avant",
             "heightReferenceFromGround": "Référence de hauteur à partir du sol",
             "height": "Hauteur",

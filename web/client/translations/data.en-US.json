@@ -2256,7 +2256,7 @@
             "shape": "Shape",
             "fill": "Fill color",
             "clampToGround": "Clamp to ground",
-            "clampOutlineToGround": "Clamp outline to ground",
+            "clampOutlineToGround": "Clamp to ground",
             "msBringToFront": "Bring to front",
             "heightReferenceFromGround": "Height reference from ground",
             "height": "Height",
