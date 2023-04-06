@@ -2282,6 +2282,7 @@
             "shape": "Form",
             "fill": "Füllfarbe",
             "clampToGround": "Klemme an Masse",
+            "clampOutlineToGround": "Klemme an Masse",
             "msBringToFront": "In den Vordergrund bringen",
             "heightReferenceFromGround": "Höhenbezug vom boden",
             "height": "Höhe",
