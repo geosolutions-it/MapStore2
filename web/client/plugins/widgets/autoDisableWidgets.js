@@ -10,18 +10,16 @@ import { createSelector } from 'reselect';
 
 import { connect } from 'react-redux';
 import { rightPanelOpenSelector, bottomPanelOpenSelector } from '../../selectors/maplayout';
-import { isCesium } from '../../selectors/maptype';
 
 /**
- * enhances the component disabling it (setting `enabled` property to `false`) when rightPanel, bottomPanel are open or when the maptype is cesium.
+ * enhances the component disabling it (setting `enabled` property to `false`) when rightPanel or when bottomPanel are open
  */
 const autoDisableWidgets = connect(
     createSelector(
         rightPanelOpenSelector,
         bottomPanelOpenSelector,
-        isCesium,
-        (rightPanel, bottomPanel, cesium) => ({
-            enabled: !rightPanel && !bottomPanel && !cesium
+        (rightPanel, bottomPanel) => ({
+            enabled: !rightPanel && !bottomPanel
         })
     )
 );
