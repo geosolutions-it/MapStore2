@@ -24,7 +24,7 @@ import withSelectedNode from './withSelectedNode';
 const WMSStyle = withCapabilitiesRetrieval(WMSStyleComp);
 
 const withDefaultTabs = withProps((props) => ({
-    tabs: props.tabs || [{
+    tabs: (props.tabs || [{
         id: 'general',
         titleId: 'layerProperties.general',
         tooltipId: 'layerProperties.general',
@@ -47,7 +47,7 @@ const withDefaultTabs = withProps((props) => ({
         glyph: 'dropper',
         visible: props.settings && props.settings.nodeType === 'layers' && props.element && props.element.type === "wms",
         Component: WMSStyle
-    }]
+    }]).filter(({ visible }) => !!visible)
 }));
 
 /**
