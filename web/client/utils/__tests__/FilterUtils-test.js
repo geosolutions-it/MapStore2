@@ -1419,6 +1419,51 @@ describe('FilterUtils', () => {
         };
         expect(toCQLFilter(filterObject)).toBe("(\"STATE_NAME\"='Alabama' OR (\"STATE_NAME\"='Arizona' OR \"STATE_NAME\"='Arkansas'))");
     });
+    it('isNull operator in CQL filter', () => {
+        const filterObj = {
+            "searchUrl": null,
+            "featureTypeConfigUrl": null,
+            "showGeneratedFilter": false,
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "showDetailsPanel": false,
+            "groupLevels": 5,
+            "useMapProjection": false,
+            "toolbarEnabled": true,
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "NOR",
+                    "index": 0
+                }
+            ],
+            "maxFeaturesWPS": 5,
+            "filterFields": [
+                {
+                    "rowId": 1680880641587,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "isNull",
+                    "value": null,
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null
+                }
+            ],
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            }
+        };
+        expect(toCQLFilter(filterObj)).toBe('(NOT (isNull("STATE_NAME")=true))');
+
+    });
     it('getCrossLayerCqlFilter', () => {
         const filter = getCrossLayerCqlFilter({
             collectGeometries: {

@@ -43,7 +43,7 @@ export const wrapIfNoWildcards = (value) => {
 export const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
 
 export const checkOperatorValidity = (value, operator) => {
-    return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
+    return ( operator === "isNull" || !isNil(value) );
 };
 /**
  * Test if crossLayer filter is valid.
@@ -960,9 +960,7 @@ export const cqlStringField = function(attribute, operator, value) {
     const wrappedAttr = wrapAttributeWithDoubleQuotes(attribute);
     if (!isNil(value)) {
         const processedValue = processCqlWildcards(value, operator);
-        if (operator === "isNull") {
-            fieldFilter = "isNull(" + wrappedAttr + ")=true";
-        } else if (["<>", "="].includes(operator)) {
+        if (["<>", "="].includes(operator)) {
             fieldFilter = wrappedAttr + operator + processedValue;
         } else if (operator === "ilike") {
             fieldFilter = "strToLowerCase(" + wrappedAttr + ") LIKE " + processedValue;
@@ -1029,30 +1027,34 @@ export const processCQLFilterFields = function(group, objFilter) {
     if (fields) {
         fields.forEach((field) => {
             let fieldFilter;
-
-            switch (field.type) {
-            case "date":
-            case "time":
-            case "date-time":
-                fieldFilter = FilterUtils.cqlDateField(field.attribute, field.operator, field.value);
-                break;
-            case "number":
-                fieldFilter = FilterUtils.cqlNumberField(field.attribute, field.operator, field.value);
-                break;
-            case "string":
-                fieldFilter = FilterUtils.cqlStringField(field.attribute, field.operator, field.value);
-                break;
-            case "boolean":
-                fieldFilter = FilterUtils.cqlBooleanField(field.attribute, field.operator, field.value);
-                break;
-            case "list":
-                fieldFilter = FilterUtils.cqlListField(field.attribute, field.operator, field.value);
-                break;
-            case "array":
-                fieldFilter = FilterUtils.cqlArrayField(field.attribute, field.operator, field.value);
-                break;
-            default:
-                break;
+            if (field.operator === "isNull") {
+                const wrappedAttr = wrapAttributeWithDoubleQuotes(field.attribute);
+                fieldFilter = "isNull(" + wrappedAttr + ")=true";
+            } else {
+                switch (field.type) {
+                case "date":
+                case "time":
+                case "date-time":
+                    fieldFilter = FilterUtils.cqlDateField(field.attribute, field.operator, field.value);
+                    break;
+                case "number":
+                    fieldFilter = FilterUtils.cqlNumberField(field.attribute, field.operator, field.value);
+                    break;
+                case "string":
+                    fieldFilter = FilterUtils.cqlStringField(field.attribute, field.operator, field.value);
+                    break;
+                case "boolean":
+                    fieldFilter = FilterUtils.cqlBooleanField(field.attribute, field.operator, field.value);
+                    break;
+                case "list":
+                    fieldFilter = FilterUtils.cqlListField(field.attribute, field.operator, field.value);
+                    break;
+                case "array":
+                    fieldFilter = FilterUtils.cqlArrayField(field.attribute, field.operator, field.value);
+                    break;
+                default:
+                    break;
+                }
             }
             if (fieldFilter) {
                 filter.push(group.negateAll ? 'NOT (' + fieldFilter + ')' : fieldFilter);
@@ -1139,7 +1141,7 @@ export const getWFSFilterData = (filterObj, options) => {
 };
 export const isLikeOrIlike = (operator) => operator === "ilike" || operator === "like";
 export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) =>
-    !(filterFields.filter((field) => field.value || field.value === 0).length > 0)
+    !(filterFields.filter((field) => field.value || field.value === 0 || field.operator === "isNull").length > 0)
     && !spatialField.geometry
     && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation)
     && !(filters && filters.length > 0);

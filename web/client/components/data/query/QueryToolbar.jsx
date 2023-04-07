@@ -126,7 +126,7 @@ class QueryToolbar extends React.Component {
         const allowEmpty = (this.props.allowEmptyFilter && !this.props.advancedToolbar);
 
         // this flag checks if there is any valid attribute fields (with value)
-        let hasValidAttributeFields = this.props.filterFields.filter((field) => field.value || field.value === 0).length > 0;
+        let hasValidAttributeFields = this.props.filterFields.filter((field) => field.value || field.value === 0 || field.operator === "isNull").length > 0;
 
         const isCurrentFilterEmpty = isFilterEmpty(this.props);
         const isAppliedFilterEmpty = isFilterEmpty(this.props.appliedFilter);
