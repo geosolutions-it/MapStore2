@@ -70,5 +70,25 @@ describe('nodeEditor enhancer', () => {
             map={{ groups: [{ id: 'GROUP' }], layers: [{ id: "LAYER", group: "GROUP", options: {} }] }} />, document.getElementById("container"));
         expect(spyonChange).toHaveBeenCalledWith("map.layers[0].something", "newValue");
     });
+    it('should return only the visible tabs based on node type', () => {
 
+        const defaultMap = { groups: [{ id: 'GROUP' }], layers: [{ id: "LAYER:WMS", type: 'wms', group: "GROUP", options: {} }, { id: "LAYER", group: "GROUP", options: {} }] };
+
+        const TestComponent = nodeEditor(({ tabs }) => {
+            return (<ul>{tabs.map(({ id }) => <li key={id}>{id}</li>)}</ul>);
+        });
+
+        ReactDOM.render(<TestComponent editNode={"GROUP"}  map={defaultMap}/>, document.getElementById("container"));
+
+        expect([...document.querySelectorAll('li')].map(node => node.innerHTML)).toEqual(['general']);
+
+        ReactDOM.render(<TestComponent editNode={"LAYER"}  map={defaultMap}/>, document.getElementById("container"));
+
+        expect([...document.querySelectorAll('li')].map(node => node.innerHTML)).toEqual(['general', 'display']);
+
+        ReactDOM.render(<TestComponent editNode={"LAYER:WMS"}  map={defaultMap}/>, document.getElementById("container"));
+
+        expect([...document.querySelectorAll('li')].map(node => node.innerHTML)).toEqual(['general', 'display', 'style']);
+
+    });
 });
