@@ -29,7 +29,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
     return toFilter(read(cqlFilter));
 };
 
-import { get, isNil, isUndefined, isArray, find, findIndex, isString, flatten } from 'lodash';
+import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
 let FilterUtils;
 
 const wrapValueWithWildcard = (value, condition) => {
