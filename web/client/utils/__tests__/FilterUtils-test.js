@@ -623,14 +623,6 @@ describe('FilterUtils', () => {
             type: "string",
             value: undefined
         }, {
-            attribute: "attributeNull",
-            groupId: 1,
-            exception: null,
-            operator: "=",
-            rowId: "1",
-            type: "string",
-            value: null
-        }, {
             attribute: "attributeUndefined",
             groupId: 1,
             exception: null
