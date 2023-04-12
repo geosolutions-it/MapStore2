@@ -210,13 +210,13 @@ In addition to the standard options, only for WMS catalog sources, through the *
 
       - Produce a localized output for GetFeatureInfo requests (the freemarker template need to be properly configured to retrieve [the locale from the request](https://docs.geoserver.org/stable/en/user/tutorials/freemarker.html))
 
+Enabling that option, all layers added to the map from this catalog source will be localized as described above (it is possible to tune again that setting for each single layer by opening the [Layer Settings](layer-settings.md#display) in TOC).
+
 * *Set Visibility Limit*: available only for WMS layers coming from CSW or WMS catalog sources type. If checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source
 
 * *Single Tile* (only for the WMS service): if checked, the layers loaded from the involved catalog source are rendered as a single tile. For layers already loaded on the map, it is possible to disable this option through the [Layer Settings](layer-settings.md#display) tool as usual.
 
 * *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser.
-
-Enabling that option, all layers added to the map from this catalog source will be localized as described above (it is possible to tune again that setting for each single layer by opening the [Layer Settings](layer-settings.md#display) in TOC).
 
 * *Format*: the default image format for layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](layer-settings.md#display) tool as usual.
 
