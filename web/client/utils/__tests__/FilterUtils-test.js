@@ -27,7 +27,8 @@ import {
     wrapIfNoWildcards,
     mergeFiltersToOGC,
     convertFiltersToOGC,
-    convertFiltersToCQL
+    convertFiltersToCQL,
+    isFilterEmpty
 } from '../FilterUtils';
 
 
@@ -577,49 +578,57 @@ describe('FilterUtils', () => {
         expect(filter).toEqual(expected);
     });
     it('Test checkOperatorValidity', () => {
-        let filterObj = {
-            filterFields: [{
-                attribute: "attributeNull",
-                groupId: 1,
-                exception: null,
-                operator: "=",
-                rowId: "1",
-                type: "string",
-                value: null
-            }, {
-                attribute: "attributeUndefined",
-                groupId: 1,
-                exception: null,
-                operator: "=",
-                rowId: "2",
-                type: "string",
-                value: undefined
-            }, {
-                attribute: "attributeNull2",
-                groupId: 1,
-                exception: null,
-                operator: "isNull",
-                rowId: "3",
-                type: "string",
-                value: undefined
-            }, {
-                attribute: "attributeUndefined2",
-                groupId: 1,
-                exception: null,
-                operator: "isNull",
-                rowId: "4",
-                type: "string",
-                value: null // valid value for isnull operator
-            }]
-        };
-
-        filterObj.filterFields.forEach((f, i) => {
-            let valid = checkOperatorValidity(f.value, f.operator);
-            if (i <= 2) {
-                expect(valid).toEqual(false);
-            } else {
-                expect(valid).toEqual(true);
-            }
+        const validFilterFields = [{
+            attribute: "operatorIsEqaual",
+            groupId: 1,
+            exception: null,
+            operator: "=",
+            rowId: "1",
+            type: "string",
+            value: "value"
+        }, {
+            attribute: "attributeNull2",
+            groupId: 1,
+            exception: null,
+            operator: "isNull",
+            rowId: "3",
+            type: "string",
+            value: undefined
+        }, {
+            attribute: "attributeUndefined2",
+            groupId: 1,
+            exception: null,
+            operator: "isNull",
+            rowId: "4",
+            type: "string",
+            value: null // valid value for isnull operator
+        }];
+        validFilterFields.forEach((f, i) => {
+            expect(checkOperatorValidity(f.value, f.operator)).toBe(true, `Failed on ${i}` );
+        });
+        const invalidFilterFields = [{
+            attribute: "attributeNull",
+            groupId: 1,
+            exception: null,
+            operator: "=",
+            rowId: "1",
+            type: "string",
+            value: null
+        }, {
+            attribute: "attributeUndefined",
+            groupId: 1,
+            exception: null,
+            operator: "=",
+            rowId: "2",
+            type: "string",
+            value: undefined
+        }, {
+            attribute: "attributeUndefined",
+            groupId: 1,
+            exception: null
+        }];
+        invalidFilterFields.forEach((f, i) => {
+            expect(checkOperatorValidity(f.value, f.operator)).toBe(false, `Failed on ${i}` );
         });
     });
     it('getGetFeatureBase gets viewParams', () => {
@@ -811,7 +820,24 @@ describe('FilterUtils', () => {
                 value: "isNull"
             }]
         };
-        let expected = '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter><fes:PropertyIsNull><fes:ValueReference>attributeNull</fes:ValueReference></fes:PropertyIsNull><fes:PropertyIsNull><fes:ValueReference>attributeValid</fes:ValueReference></fes:PropertyIsNull></fes:Filter></wfs:Query></wfs:GetFeature>';
+        let expected = '<wfs:GetFeature service="WFS" version="2.0" '
+            + 'xmlns:wfs="http://www.opengis.net/wfs/2.0" '
+            + 'xmlns:fes="http://www.opengis.net/fes/2.0" '
+            + 'xmlns:gml="http://www.opengis.net/gml/3.2" '
+            + 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+            + 'xsi:schemaLocation="http://www.opengis.net/wfs/2.0 '
+            + 'http://schemas.opengis.net/wfs/2.0/wfs.xsd '
+            + 'http://www.opengis.net/gml/3.2 '
+            + 'http://schemas.opengis.net/gml/3.2.1/gml.xsd">'
+            + '<wfs:Query '
+                + 'typeNames="ft_name_test" srsName="EPSG:4326">'
+                + '<fes:Filter>'
+                    + '<fes:PropertyIsNull><fes:ValueReference>attributeNull</fes:ValueReference></fes:PropertyIsNull>'
+                    + '<fes:PropertyIsNull><fes:ValueReference>attributeUndefined</fes:ValueReference></fes:PropertyIsNull>'
+                    + '<fes:PropertyIsNull><fes:ValueReference>attributeValid</fes:ValueReference></fes:PropertyIsNull>'
+                    + '</fes:Filter>'
+                + '</wfs:Query>'
+            + '</wfs:GetFeature>';
         let filter = toOGCFilter("ft_name_test", filterObj);
         expect(filter).toEqual(expected);
     });
@@ -1196,8 +1222,6 @@ describe('FilterUtils', () => {
         expect(cqlStringField("attribute_1", "=", "PRE'")).toBe("\"attribute_1\"='PRE'''");
         // test <>
         expect(cqlStringField("attribute_1", "<>", "Alabama")).toBe("\"attribute_1\"<>'Alabama'");
-        // test isNull
-        expect(cqlStringField("attribute_1", "isNull", "")).toBe("isNull(\"attribute_1\")=true");
         // test ilike
         expect(cqlStringField("attribute_1", "ilike", "A")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
         // test LIKE
@@ -1418,6 +1442,51 @@ describe('FilterUtils', () => {
             "hits": false
         };
         expect(toCQLFilter(filterObject)).toBe("(\"STATE_NAME\"='Alabama' OR (\"STATE_NAME\"='Arizona' OR \"STATE_NAME\"='Arkansas'))");
+    });
+    it('isNull operator in CQL filter', () => {
+        const filterObj = {
+            "searchUrl": null,
+            "featureTypeConfigUrl": null,
+            "showGeneratedFilter": false,
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "showDetailsPanel": false,
+            "groupLevels": 5,
+            "useMapProjection": false,
+            "toolbarEnabled": true,
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "NOR",
+                    "index": 0
+                }
+            ],
+            "maxFeaturesWPS": 5,
+            "filterFields": [
+                {
+                    "rowId": 1680880641587,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "isNull",
+                    "value": null,
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null
+                }
+            ],
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            }
+        };
+        expect(toCQLFilter(filterObj)).toBe('(NOT (isNull("STATE_NAME")=true))');
+
     });
     it('getCrossLayerCqlFilter', () => {
         const filter = getCrossLayerCqlFilter({
@@ -2042,6 +2111,26 @@ describe('FilterUtils', () => {
         };
         filter = processCQLFilterFields(group, objFilter);
         expect(filter).toEqual("");
+        // test one operator
+        expect(processCQLFilterFields(group, {
+            filterFields: [{
+                groupId: 1,
+                attribute: "test",
+                type: "string",
+                operator: "=",
+                value: "test"
+            }]
+        })).toEqual(`"test"='test'`);
+        // test is null
+        expect(processCQLFilterFields(group, {
+            filterFields: [{
+                groupId: 1,
+                attribute: "test",
+                type: "string",
+                operator: "isNull"
+            }]
+        })).toEqual(`isNull("test")=true`);
+
     });
 
     it('wrapIfNoWildcards', () => {
@@ -2174,5 +2263,44 @@ describe('FilterUtils', () => {
                 expect(cql).toEqual(test.cql);
             });
         });
+    });
+    it('isFilterEmpty', () => {
+        expect(isFilterEmpty({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: []
+        })).toBe(true);
+        expect(isFilterEmpty({
+            filterFields: [{value: 1}],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: []
+        })).toBe(false);
+        expect(isFilterEmpty({
+            filterFields: [{value: 1}],
+            spatialField: {geometry: {type: 'Point', coordinates: [1, 2]}},
+            crossLayerFilter: {},
+            filters: []
+        })).toBe(false);
+        expect(isFilterEmpty({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {attribute: 'attr', operation: 'op'},
+            filters: []
+        })).toBe(false);
+        expect(isFilterEmpty({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: [{format: 'logic', logic: 'AND', filters: []}]
+        })).toBe(false);
+        expect(isFilterEmpty({
+            filterFields: [{operator: "isNull"}],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: []
+        })).toBe(false);
+
     });
 });
