@@ -121,9 +121,8 @@ class QueryToolbar extends React.Component {
         let fieldsExceptions = this.props.filterFields.filter((field) => field.exception).length > 0;
         // option allowEmptyFilter available only for the base toolbar, not advanced TODO: externalize this behaviour
         const allowEmpty = (this.props.allowEmptyFilter && !this.props.advancedToolbar);
-
         // this flag checks if there is any valid attribute fields (with value)
-        let hasValidAttributeFields = this.props.filterFields.filter((field) => field.value || field.value === 0).length > 0;
+        let hasValidAttributeFields = this.props.filterFields.filter((field) => checkOperatorValidity(field.value, field.operator)).length > 0;
 
         const isCurrentFilterEmpty = isFilterEmpty(this.props);
         const isAppliedFilterEmpty = isFilterEmpty(this.props.appliedFilter);
