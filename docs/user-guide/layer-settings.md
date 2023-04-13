@@ -313,11 +313,11 @@ Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.c
 
 <img src="../img/layer-settings/leader-line.jpg" class="ms-docimage">
 
-* **Clamp to ground** to enable/disable the boolean property specifying whether the polyline should be clamped to the ground (This option is available for Line and Fill symbolizers).
+* **Clamp to ground** to enable/disable the boolean property specifying whether the line or polygon features should be clamped to the ground (this option is available for Line and Fill symbolizers).
 
 <img src="../img/layer-settings/clamp-to-ground.jpg" class="ms-docimage">
 
-* **Clamp to ground reference** to choose whether the classification, drape effect, should affect `3D Tiles`, `Terrain` or `Both`. (This option is available for Fill symbolizers and is only enabled when the *Clamp to ground* option is set to `True`)
+* **Clamp to ground reference** to choose whether the drape effect, should affect `3D Tiles`, `Terrain` or `Both`. This option is available for Fill symbolizers and it is only enabled when the *Clamp to ground* option is set to `True`
 
 <img src="../img/layer-settings/polygon-type.jpg" class="ms-docimage">
 
