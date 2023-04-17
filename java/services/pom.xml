@@ -273,7 +273,7 @@
         <repository>
             <id>spring-release</id>
             <name>Spring Portfolio Release Repository</name>
-            <url>http://repo.spring.io/release</url>
+            <url>https://maven.springframework.org/release</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
