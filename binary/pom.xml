@@ -10,7 +10,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomcat.version>8.5.69</tomcat.version>
+    <tomcat.version>8.5.86</tomcat.version>
     <binary.number>${project.version}</binary.number>
   </properties>
   <dependencies>
