@@ -608,6 +608,7 @@ export const saveLayer = (layer) => {
         tiled: layer.tiled,
         type: layer.type,
         url: layer.url,
+        refresh: layer.refresh,
         bbox: layer.bbox,
         visibility: layer.visibility,
         singleTile: layer.singleTile || false,
