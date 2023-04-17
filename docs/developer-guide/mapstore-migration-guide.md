@@ -68,6 +68,31 @@ const appConfig = {
 };
 ```
 
+### Clean up of old maven repositories
+
+The old spring maven repositories that do not exist anymore have been removed from the `pom.xml` files. They are not needed anymore, so you can remove them from your `pom.xml` files too.
+
+```diff
+
+-        <!-- Spring -->
+-        <repository>
+-            <id>spring-release</id>
+-            <name>Spring Portfolio Release Repository</name>
+-            <url>https://maven.springframework.org/release</url>
+-            <snapshots>
+-                <enabled>false</enabled>
+-            </snapshots>
+-        </repository>
+-        <repository>
+-            <id>spring-external</id>
+-            <name>Spring Portfolio External Repository</name>
+-            <url>https://maven.springframework.org/external</url>
+-            <snapshots>
+-                <enabled>false</enabled>
+-            </snapshots>
+-        </repository>
+```
+
 ## Migration from 2022.02.02 to 2023.01.00
 
 ### Log4j update to Log4j2
