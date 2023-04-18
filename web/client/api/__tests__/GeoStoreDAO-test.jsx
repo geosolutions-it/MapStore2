@@ -385,4 +385,40 @@ describe('Test correctness of the GeoStore APIs', () => {
                 done(e);
             });
     });
+    it('putResource with string data', (done) => {
+        // check the request contains the correct data and headers
+        mockAxios.onPut().reply((data) => {
+            expect(data.baseURL).toEqual("/rest/geostore/");
+            expect(data.url).toEqual("data/1");
+            expect(data.data).toEqual("data");
+            expect(data.headers["Content-Type"]).toEqual("text/plain; charset=utf-8");
+            return [200, "10"];
+        });
+        API.putResource(1, "data").then(data => {
+            expect(data.data).toEqual("10");
+            done();
+        }).catch(e => {
+            done(e);
+        });
+    });
+    it('putResource with json data', (done) => {
+        // check the request contains the correct data and headers
+        mockAxios.onPut().reply((data) => {
+            try {
+                expect(data.baseURL).toEqual("/rest/geostore/");
+                expect(data.url).toEqual("data/1");
+                expect(data.data).toEqual('{"some":"thing"}');
+                expect(data.headers["Content-Type"]).toEqual("application/json; charset=utf-8");
+            } catch (e) {
+                done(e);
+            }
+            return [200, "10"];
+        });
+        API.putResource(1, {"some": "thing"}).then(data => {
+            expect(data.data).toEqual("10");
+            done();
+        }).catch(e => {
+            done(e);
+        });
+    });
 });
