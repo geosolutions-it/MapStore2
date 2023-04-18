@@ -292,7 +292,7 @@ const Api = {
             content,
             this.addBaseUrl(merge({
                 headers: {
-                    'Content-Type': typeof content === 'string' ? "text/plain; charset=utf-8" : 'application/json; charset=utf-8"'
+                    'Content-Type': typeof content === 'string' ? "text/plain; charset=utf-8" : 'application/json; charset=utf-8'
                 }
             }, options)));
     },
