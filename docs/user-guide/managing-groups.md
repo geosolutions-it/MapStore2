@@ -4,7 +4,7 @@
 
 The *Groups Manager* section displays like the following:
 
-<img src="../img/managing-groups/groups-man.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/managing-groups/groups-man.jpg" class="ms-docimage"  style="max-width:700px;"/>
 
 Similar to what happens for the [Users Manager](managing-users.md#managing-users), in this page the Admin can:
 
