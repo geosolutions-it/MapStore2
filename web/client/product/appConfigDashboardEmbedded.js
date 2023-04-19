@@ -11,6 +11,7 @@ import version from '../reducers/version';
 
 import dashboard from '../reducers/dashboard';
 import widgets from '../reducers/widgets';
+import maptype from '../reducers/maptype';
 
 export default {
     pages: [{
@@ -28,7 +29,8 @@ export default {
     baseReducers: {
         version,
         dashboard,
-        widgets
+        widgets,
+        maptype
     },
     storeOpts: {
         persist: {
