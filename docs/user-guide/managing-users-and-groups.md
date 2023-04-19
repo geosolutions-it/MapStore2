@@ -24,7 +24,7 @@ Through these options it is possible to:
 
 Once logged as Admin, become possible to manage users and groups and the **Manage Accounts** option appears in [Homepage](home-page.md#home-page):
 
-<img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage"/>
+<img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage" style="max-width:300px"/>
 
 Selecting **Manage Accounts** options, the *Account Manager* opens:
 
