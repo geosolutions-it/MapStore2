@@ -177,7 +177,7 @@
         "localizedInput": {
           "localize": "Localizar cadena...",
           "title": "Localizar cadena",
-          "default": "valor predeterminado"
+          "default": "Predeterminado"
         },
         "longitude": "Lon",
         "latitude": "Lat",
