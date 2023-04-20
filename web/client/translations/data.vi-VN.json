@@ -688,7 +688,6 @@
             "textFormatDescription": "Hiển thị kết quả thông tin tính năng dưới dạng văn bản thuần túy",
             "textFormatTitle": "VĂN BẢN",
             "title": "Tiêu đề",
-            "titleTranslations": "Bản dịch tiêu đề",
             "heightOffset": "Height offset (m)",
             "tooltip": {
                 "both": "Tiêu đề và mô tả",

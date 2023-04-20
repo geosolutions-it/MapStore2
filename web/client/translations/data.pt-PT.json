@@ -70,7 +70,6 @@
             "featureTypeError": "Não foi possível ler os atributos do tema",
             "featureTypeErrorInvalidJSON": "Não é possível ler os atributos do tema. Resposta não é válida.",
             "elevation": "Elevação",
-            "titleTranslations": "Título Traduções",
             "groupProperties": "Propriedade do Grupo",
             "featureInfo": "Informação do Tema",
             "featureInfoFormatLbl": "Identificar formato da resposta",

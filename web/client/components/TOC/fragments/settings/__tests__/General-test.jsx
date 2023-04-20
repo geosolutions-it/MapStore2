@@ -44,7 +44,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(17);
+        expect(inputs.length).toBe(4);
     });
     it('tests General component show LayerNameEditField = TRUE', () => {
         const l = {
@@ -65,7 +65,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(18);
+        expect(inputs.length).toBe(5);
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
@@ -89,7 +89,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(18);
+        expect(inputs.length).toBe(5);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
         expect(spy.calls.length).toBe(1);
@@ -136,10 +136,10 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(7);
-        expect(labels[4].innerText).toBe("layerProperties.group");
-        expect(labels[5].innerText).toBe("layerProperties.tooltip.label");
-        expect(labels[6].innerText).toBe("layerProperties.tooltip.labelPlacement");
+        expect(labels.length).toBe(6);
+        expect(labels[3].innerText).toBe("layerProperties.group");
+        expect(labels[4].innerText).toBe("layerProperties.tooltip.label");
+        expect(labels[5].innerText).toBe("layerProperties.tooltip.labelPlacement");
     });
 
     it('TEST showTooltipOptions = false', () => {
@@ -157,8 +157,8 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(5);
-        expect(labels[4].innerText).toBe("layerProperties.group");
+        expect(labels.length).toBe(4);
+        expect(labels[3].innerText).toBe("layerProperties.group");
     });
     it('TEST layer group dropdown', () => {
         const layer = {
@@ -202,8 +202,8 @@ describe('test  Layer Properties General module component', () => {
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} groups={groups} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        expect(labels.length).toBe(5);
-        expect(labels[4].innerText).toBe("layerProperties.group");
+        expect(labels.length).toBe(4);
+        expect(labels[3].innerText).toBe("layerProperties.group");
         const cmp = document.getElementById('container');
         let selectValue = cmp.querySelector('.Select-value-label');
         let input = cmp.querySelector('.Select-input > input');

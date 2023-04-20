@@ -83,7 +83,6 @@
             "featureTypeError": "Kan inte ladda lagerattribut",
             "featureTypeErrorInvalidJSON": "Kan inte ladda lagerattribut. Svaret är ogiltigt",
             "elevation": "Höjd",
-            "titleTranslations": "Titelöversättningar",
             "groupProperties": "Gruppegenskaper",
             "featureInfo": "Objektinformation",
             "featureInfoFormatLbl": "Identifiera svarsformat",

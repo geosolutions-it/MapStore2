@@ -87,7 +87,6 @@
             "featureTypeError": "De atributen van de laag kunnen niet geladen worden",
             "featureTypeErrorInvalidJSON": "De attributen van de laag kunnen niet geladen worden wegens foutieve respons",
             "elevation": "hoogte",
-            "titleTranslations": "Titel vertalingen",
             "groupProperties": "Groep eigenschappen",
             "featureInfo": "object informatie",
             "featureInfoFormatLbl": "identificeer formaat respons",

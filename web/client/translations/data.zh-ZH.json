@@ -69,7 +69,6 @@
             "featureTypeError": "无法加载图层属性",
             "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "海拔",
-            "titleTranslations": "标题 translations",
             "groupProperties": "组属性",
             "featureInfo": "特征信息",
             "featureInfoFormatLbl": "确定响应格式",
