@@ -73,7 +73,7 @@ describe('TOCItemsSettings Plugin', () => {
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
         const tabIndexes = document.querySelectorAll(TAB_INDEX_SELECTOR);
-        expect(tabIndexes.length).toBe(3);
+        expect(tabIndexes.length).toBe(4);
         expect(tabIndexes[0].className).toBe("active"); // general tab active
         expect(document.querySelectorAll(`${TAB_CONTENT_SELECTOR} div.form-group`).length).toBe(4); // check content is general settings tab.
 
