@@ -5,8 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-
+import React, {Suspense} from 'react';
 import assign from 'object-assign';
+import { connect, createPlugin } from '../utils/PluginsUtils';
+import LoadingView from '../components/misc/LoadingView';
 
 import { changeLayerParams } from '../actions/layers';
 import {
@@ -20,10 +22,48 @@ import {
 } from '../actions/thematic';
 import API from '../api/SLDService';
 import epics from '../epics/thematic';
+import thematic from '../reducers/thematic';
 import { getSelectedLayer } from '../selectors/layers';
 import { isAdminUserSelector } from '../selectors/security';
-import { connect } from '../utils/PluginsUtils';
 
+const ThematicLayerComponent = React.lazy(() => import('../components/TOC/fragments/settings/ThematicLayer'));
+const enhancer = connect((state) => {
+    const customColors = state.thematic && state.thematic.colors;
+    return {
+        layer: getSelectedLayer(state),
+        fields: state?.thematic?.fields || [],
+        fieldsLoading: {
+            status: state?.thematic?.loadingFields || false,
+            error: state?.thematic?.errorFields || null
+        },
+        classification: state?.thematic?.classification || [],
+        classificationLoading: {
+            status: state?.thematic?.loadingClassification || false,
+            error: state?.thematic?.errorClassification || null
+        },
+        canEditThematic: isAdminUserSelector(state),
+        initialParams: assign(API.defaultParams, customColors ? {
+            ramp: customColors[0].name
+        } : {}),
+        methods: API.methods,
+        colors: customColors,
+        adminCfg: state?.thematic?.adminCfg,
+        applyEnabled: state?.thematic?.dirty || false,
+        invalidInputs: state?.thematic?.invalidInputs || {},
+        geometryType: state?.thematic?.classification?.[0]?.type || 'Polygon',
+        ...API
+    };
+}, {
+    onChangeConfiguration: changeConfiguration,
+    onChangeLayerParams: changeLayerParams,
+    onSwitchLayer: loadFields,
+    onClassify: loadClassification,
+    onApplyStyle: cancelDirty,
+    onDirtyStyle: setDirty,
+    onInvalidInput: setInvalidInput,
+    onValidInput: resetInvalidInput
+});
+const ConnectedComponent = enhancer(ThematicLayerComponent);
 /**
  * Plugin that adds thematic styles for wms layers, through attribute classification.
  *
@@ -91,50 +131,15 @@ import { connect } from '../utils/PluginsUtils';
  */
 
 
-export default {
-    ThematicLayerPlugin: assign({
-        loadPlugin: (resolve)=> {
-            import('../components/TOC/fragments/settings/ThematicLayer').then((thematicLayerMod) => {
-                const ThematicLayer = connect((state) => {
-                    const customColors = state.thematic && state.thematic.colors;
-                    return assign({}, {
-                        layer: getSelectedLayer(state),
-                        fields: state && state.thematic && state.thematic.fields || [],
-                        fieldsLoading: {
-                            status: state && state.thematic && state.thematic.loadingFields || false,
-                            error: state && state.thematic && state.thematic.errorFields || null
-                        },
-                        classification: state && state.thematic && state.thematic.classification || [],
-                        classificationLoading: {
-                            status: state && state.thematic && state.thematic.loadingClassification || false,
-                            error: state && state.thematic && state.thematic.errorClassification || null
-                        },
-                        canEditThematic: isAdminUserSelector(state),
-                        initialParams: assign(API.defaultParams, customColors ? {
-                            ramp: customColors[0].name
-                        } : {}),
-                        methods: API.methods,
-                        colors: customColors,
-                        adminCfg: state && state.thematic && state.thematic.adminCfg,
-                        applyEnabled: state && state.thematic && state.thematic.dirty || false,
-                        invalidInputs: state && state.thematic && state.thematic.invalidInputs || {},
-                        geometryType: state && state.thematic && state.thematic.classification
-                            && state.thematic.classification.length && state.thematic.classification[0].type || 'Polygon'
-                    }, API);
-                }, {
-                    onChangeConfiguration: changeConfiguration,
-                    onChangeLayerParams: changeLayerParams,
-                    onSwitchLayer: loadFields,
-                    onClassify: loadClassification,
-                    onApplyStyle: cancelDirty,
-                    onDirtyStyle: setDirty,
-                    onInvalidInput: setInvalidInput,
-                    onValidInput: resetInvalidInput
-                })(thematicLayerMod.default);
-                resolve(ThematicLayer);
-            });
-        }, enabler: (state) => state.layerSettings && state.layerSettings.expanded
-    }, {
+export default createPlugin('ThematicLayer', {
+    component: connect(
+        state => ({expanded: state.layerSettings && state.layerSettings.expanded})
+    )(props => <Suspense fallback={<LoadingView width={100} height={100} />}><ConnectedComponent {...props} /></Suspense>),
+    reducers: {
+        thematic
+    },
+    epics: epics(API),
+    containers: {
         TOCItemsSettings: {
             priority: 1,
             name: 'ThematicLayer',
@@ -144,9 +149,6 @@ export default {
             container: "TOCItemSettings",
             target: "style"
         }
-    }),
-    reducers: {
-        thematic: require('../reducers/thematic').default
-    },
-    epics: epics(require('../api/SLDService').default)
-};
+    }
+});
+

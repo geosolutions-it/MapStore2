@@ -189,7 +189,7 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
         ];
         if (thematicConfig) {
             return {
-                Component: props.activeTab === 'style' && thematicPlugin.plugin && getConfiguredPlugin(thematicPlugin, loadedPlugins, <LoadingView width={100} height={100} />),
+                Component: props.activeTab === 'style' && thematicPlugin.plugin,
                 toolbar
             };
         }

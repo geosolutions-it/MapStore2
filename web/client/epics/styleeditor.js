@@ -14,7 +14,6 @@ import { UPDATE_NODE, updateNode, updateSettingsParams } from '../actions/layers
 import { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } from '../actions/additionallayers';
 import { getDescribeLayer } from '../actions/layerCapabilities';
 import { getLayerCapabilities } from '../observables/wms';
-import { setControlProperty } from '../actions/controls';
 import { findGeoServerName } from '../utils/LayersUtils';
 import { getLayerOptions } from '../utils/WMSUtils';
 
@@ -59,7 +58,6 @@ import {
 
 import { getSelectedLayer, layerSettingSelector } from '../selectors/layers';
 import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts, detectStyleCodeChanges } from '../utils/StyleEditorUtils';
-import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { updateStyleService } from '../api/StyleEditor';
 
 /*
@@ -682,8 +680,6 @@ export const deleteStyleEpic = (action$, store) =>
             const state = store.getState();
             const layer = getUpdatedLayer(state);
             const { baseUrl = '' } = styleServiceSelector(state);
-            const originalSettings = originalSettingsSelector(state);
-            const initialSettings = initialSettingsSelector(state);
 
             return Rx.Observable.defer(() =>
                 LayersAPI.removeStyles({
@@ -697,10 +693,7 @@ export const deleteStyleEpic = (action$, store) =>
                     return Rx.Observable.concat(
                         Rx.Observable.of(
                             updateSettingsParams({style: '', availableStyles}, true),
-                            loadedStyle(),
-                            // style has been deleted so original and initial settings must be overrided
-                            setControlProperty('layersettings', 'originalSettings', {...originalSettings, style: ''}),
-                            setControlProperty('layersettings', 'initialSettings', {...initialSettings, style: ''})
+                            loadedStyle()
                         ),
                         deleteStyle({
                             styleName,

@@ -17,8 +17,8 @@ import {hideSettings, updateNode, updateSettings, updateSettingsParams} from '..
 import {toggleStyleEditor} from '../actions/styleeditor';
 import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
 import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
-import { activeTabSettingsSelector, initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
-import {elementSelector, groupsSelector, layerSettingSelector, layersSelector} from '../selectors/layers';
+import { activeTabSettingsSelector, originalSettingsSelector } from '../selectors/controls';
+import {elementSelector, groupsSelector, layerSettingSelector} from '../selectors/layers';
 import {currentLocaleLanguageSelector, currentLocaleSelector} from '../selectors/locale';
 import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
@@ -32,19 +32,16 @@ import { isCesium } from '../selectors/maptype';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
-    layersSelector,
     groupsSelector,
     currentLocaleSelector,
     currentLocaleLanguageSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
     isAdminUserSelector,
-    initialSettingsSelector,
-    originalSettingsSelector,
     activeTabSettingsSelector,
     elementSelector,
     isLocalizedLayerStylesEnabledSelector,
     isCesium
-], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive) => ({
+], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive) => ({
     settings,
     element,
     groups,
@@ -52,8 +49,6 @@ const tocItemsSettingsSelector = createSelector([
     currentLocaleLanguage,
     dockStyle,
     isAdmin,
-    initialSettings,
-    originalSettings,
     activeTab,
     isLocalizedLayerStylesEnabled,
     isCesiumActive
@@ -91,8 +86,6 @@ const TOCItemsSettingsPlugin = compose(
         onUpdateSettings: updateSettings,
         onUpdateNode: updateNode,
         onRetrieveLayerData: getLayerCapabilities,
-        onUpdateOriginalSettings: setControlProperty.bind(null, 'layersettings', 'originalSettings'),
-        onUpdateInitialSettings: setControlProperty.bind(null, 'layersettings', 'initialSettings'),
         onSetTab: setControlProperty.bind(null, 'layersettings', 'activeTab'),
         onUpdateParams: updateSettingsParams,
         onToggleStyleEditor: toggleStyleEditor
@@ -105,9 +98,7 @@ const TOCItemsSettingsPlugin = compose(
     getContext({
         loadedPlugins: PropTypes.object
     }),
-    withPropsOnChange(({items = []} = {}, {items: nextItems} = {}) => {
-        return items !== nextItems; // TODO: check if equal
-    }, (props) => ({
+    withPropsOnChange(["items", "settings"], (props) => ({
         tabs: defaultSettingsTabs(props)
     }))
 )(TOCItemsSettings);

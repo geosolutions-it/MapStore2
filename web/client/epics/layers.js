@@ -23,8 +23,6 @@ import {
 } from '../actions/layers';
 
 import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '../selectors/layers';
-import { setControlProperty } from '../actions/controls';
-import { initialSettingsSelector, originalSettingsSelector } from '../selectors/controls';
 import { basicError } from '../utils/NotificationUtils';
 import { getCapabilitiesUrl, getLayerTitleTranslations, removeWorkspace } from '../utils/LayersUtils';
 import assign from 'object-assign';
@@ -116,10 +114,7 @@ export const updateDimension = (action$, {getState = () => {}} = {}) =>
         );
 
 /**
- * Update original and initial state of layer settings.
- * Initial settings is the layer object before settings session started.
- * Original settings contains only changed properties keys with initial value stored during settings session.
- * Action performed: updateSettings, setControlProperty and updateNode (updateNode only if action.update is true)
+  * Action performed: `updateSettings`, `setControlProperty` and `updateNode` (`updateNode` only if action.update is true)
  * @memberof epics.layers
  * @param {external:Observable} action$ manages `UPDATE_SETTINGS_PARAMS`
  * @return {external:Observable}
@@ -130,20 +125,10 @@ export const updateSettingsParamsEpic = (action$, store) =>
 
             const state = store.getState();
             const settings = layerSettingSelector(state);
-            const initialSettings = initialSettingsSelector(state);
-            const orig = originalSettingsSelector(state);
             const layer = settings?.nodeType === 'layers' ? getLayerFromId(state, settings?.node) : null;
-
-            let originalSettings = { ...(orig || {}) };
-            // TODO one level only storage of original settings for the moment
-            Object.keys(newParams).forEach((key) => {
-                originalSettings[key] = initialSettings && initialSettings[key];
-            });
-
             return Rx.Observable.of(
                 updateSettings(newParams),
                 // update changed keys to verify only modified values (internal state)
-                setControlProperty('layersettings', 'originalSettings', originalSettings),
                 ...(update ? [updateNode(
                     settings.node,
                     settings.nodeType,
