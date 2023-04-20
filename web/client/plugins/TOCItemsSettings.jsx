@@ -17,6 +17,7 @@ import {hideSettings, updateNode, updateSettings, updateSettingsParams} from '..
 import {toggleStyleEditor} from '../actions/styleeditor';
 import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
 import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
+import { activeTabSettingsSelector } from '../selectors/controls';
 import {elementSelector, groupsSelector, layerSettingSelector} from '../selectors/layers';
 import {currentLocaleLanguageSelector, currentLocaleSelector} from '../selectors/locale';
 import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
