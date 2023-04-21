@@ -87,7 +87,6 @@
             "featureTypeError": "Cannot load layer attributes",
             "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Elevation",
-            "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identify response format",
@@ -173,6 +172,11 @@
                 }
             },
             "forceProxy": "Force proxy"
+        },
+        "localizedInput": {
+          "localize": "Localize this text...",
+          "title": "Localize text",
+          "default": "Default"
         },
         "longitude": "Lon",
         "latitude": "Lat",

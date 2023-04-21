@@ -87,7 +87,6 @@
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
             "elevation": "Elevazione",
-            "titleTranslations": "Traduzioni di titoli",
             "groupProperties": "Proprietà del gruppo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
@@ -173,6 +172,11 @@
                 }
             },
             "forceProxy": "Forza proxy"
+        },
+        "localizedInput": {
+          "localize": "Traduci questo testo...",
+          "title": "Traduci testo",
+          "default": "Predefinito"
         },
         "longitude": "Lon",
         "latitude": "Lat",

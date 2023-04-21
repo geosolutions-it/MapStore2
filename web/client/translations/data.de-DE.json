@@ -87,7 +87,6 @@
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
-            "titleTranslations": "Titel Übersetzungen",
             "groupProperties": "Gruppeneigenschaften",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Antwortformat festlegen",
@@ -173,6 +172,11 @@
                 }
             },
             "forceProxy": "Proxy erzwingen"
+        },
+        "localizedInput": {
+          "localize": "Diesen Text lokalisieren...",
+          "title": "Text lokalisieren",
+          "default": "Standard"
         },
         "longitude": "Längengrad",
         "latitude": "Breitengrad",

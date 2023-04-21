@@ -87,7 +87,6 @@
             "featureTypeError": "Impossible de charger les attributs de la couche",
             "featureTypeErrorInvalidJSON": "Impossible de charger les attributs de la couche. La réponse n'est pas valide",
             "elevation": "Élévation",
-            "titleTranslations": "Traductions du titre",
             "groupProperties": "Propriétés du groupe",
             "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
@@ -173,6 +172,11 @@
                 }
             },
             "forceProxy": "Forcer le proxy"
+        },
+         "localizedInput": {
+          "localize": "Localiser ce texte...",
+          "title": "Localiser le texte",
+          "default": "Par défaut"
         },
         "longitude": "Lon",
         "latitude": "Lat",

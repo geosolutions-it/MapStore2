@@ -87,7 +87,6 @@
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es válida",
             "elevation": "Elevación",
-            "titleTranslations": "Traducciones de títulos",
             "groupProperties": "Propiedades del grupo",
             "featureInfo": "Información de la capa",
             "featureInfoFormatLbl": "Identificar el formato de respuesta",
@@ -173,6 +172,11 @@
                 }
             },
             "forceProxy": "Forzar proxy"
+        },
+        "localizedInput": {
+          "localize": "Localizar cadena...",
+          "title": "Localizar cadena",
+          "default": "Predeterminado"
         },
         "longitude": "Lon",
         "latitude": "Lat",

@@ -68,7 +68,6 @@
             "featureTypeError": "Nije moguće učitavanje atributa sloja",
             "featureTypeErrorInvalidJSON": "Nije moguće učitavanje atributa sloja. Odziv nije ispravan",
             "elevation": "Nadmorska visina",
-            "titleTranslations": "Prijevodi naslova",
             "groupProperties": "Svojstva grupe",
             "featureInfo": "Informacije o objektu",
             "featureInfoFormatLbl": "Format odziva informacija o objektima",

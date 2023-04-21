@@ -69,7 +69,6 @@
       "featureTypeError": "Tasoattribuutteja ei voi ladata",
       "featureTypeErrorInvalidJSON": "Tasoattribuutteja ei voi ladata. Vastaus ei ole kelvollinen",
       "elevation": "Korkeus",
-      "titleTranslations": "Otsikkokäännökset",
       "groupProperties": "Ryhmäominaisuudet",
       "featureInfo": "Ominaisuustiedot",
       "featureInfoFormatLbl": "Tunnista vastausmuoto",
