@@ -80,7 +80,6 @@
             "featureTypeError": "Nepodarilo sa načítať vlastnosti vrstvy",
             "featureTypeErrorInvalidJSON": "Nie je možné načítať atribúty vrstvy. Odpoveď je neplatná.",
             "elevation": "Výškopis",
-            "titleTranslations": "Preklady názvov",
             "groupProperties": "Nastavenia skupiny",
             "featureInfo": "Podrobnosti prvku",
             "featureInfoFormatLbl": "Identify response format",
