@@ -7,15 +7,12 @@
  */
 
 import expect from 'expect';
+import {find} from 'lodash';
 
 import {
     UPDATE_NODE,
     UPDATE_SETTINGS_PARAMS
 } from '../../actions/layers';
-
-import {
-    SET_CONTROL_PROPERTY
-} from '../../actions/controls';
 
 import {
     SHOW_NOTIFICATION
@@ -695,17 +692,13 @@ describe('Test styleeditor epics', () => {
                 code: '* { stroke: #ff0000; }'
             }
         };
-        const NUMBER_OF_ACTIONS = 6;
+        const NUMBER_OF_ACTIONS = 4;
         const results = (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
                 expect(actions[1].type).toBe(UPDATE_SETTINGS_PARAMS);
-                expect(actions[2].type).toBe(LOADED_STYLE);
-                expect(actions[3].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[4].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[5].type).toBe(SHOW_NOTIFICATION);
-
-                expect(actions[5].level).toBe('success');
+                expect(find(actions, {type: SHOW_NOTIFICATION}).level).toBe('success');
+                expect(find(actions, {type: LOADED_STYLE})).toBeTruthy();
             } catch (e) {
                 done(e);
             }

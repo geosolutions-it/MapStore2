@@ -23,7 +23,6 @@ import {
     layerLoad
 } from '../../actions/layers';
 
-import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { testEpic } from './epicTestUtils';
 import { refresh, updateDimension, updateSettingsParamsEpic } from '../layers';
@@ -144,9 +143,6 @@ describe('layers Epics', () => {
                         id: 'layerid',
                         name: 'layerName',
                         style: ''
-                    },
-                    originalSettings: {
-
                     }
                 }
             }
@@ -154,17 +150,12 @@ describe('layers Epics', () => {
 
         testEpic(
             updateSettingsParamsEpic,
-            2,
+            1,
             updateSettingsParams({style: 'generic'}),
             actions => {
-                expect(actions.length).toBe(2);
+                expect(actions.length).toBe(1);
                 actions.map((action) => {
                     switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        expect(action.control).toBe('layersettings');
-                        expect(action.property).toBe('originalSettings');
-                        expect(action.value).toEqual({ style: '' });
-                        break;
                     case UPDATE_SETTINGS:
                         expect(action.options).toEqual({style: 'generic'});
                         break;
@@ -185,9 +176,6 @@ describe('layers Epics', () => {
                         id: 'layerId',
                         name: 'layerName',
                         style: ''
-                    },
-                    originalSettings: {
-
                     }
                 }
             },
@@ -203,17 +191,12 @@ describe('layers Epics', () => {
 
         testEpic(
             updateSettingsParamsEpic,
-            3,
+            2,
             updateSettingsParams({style: 'generic'}, true),
             actions => {
-                expect(actions.length).toBe(3);
+                expect(actions.length).toBe(2);
                 actions.map((action) => {
                     switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        expect(action.control).toBe('layersettings');
-                        expect(action.property).toBe('originalSettings');
-                        expect(action.value).toEqual({ style: '' });
-                        break;
                     case UPDATE_SETTINGS:
                         expect(action.options).toEqual({style: 'generic'});
                         break;
@@ -238,9 +221,47 @@ describe('layers Epics', () => {
                         id: 'layerId',
                         name: 'layerName',
                         style: ''
-                    },
-                    originalSettings: {
+                    }
+                }
+            },
+            layers: {
+                settings: {
+                    expanded: true,
+                    node: 'layerId',
+                    nodeType: 'layers',
+                    options: { opacity: 1 }
+                },
+                flat: [{
+                    id: 'layerId',
+                    name: 'layerName',
+                    opacity: 1
+                }]
+            }
+        };
 
+        testEpic(
+            updateSettingsParamsEpic,
+            2,
+            [updateSettingsParams({name: 'layerName_changed'}, true), layerLoad('layerId')],
+            actions => {
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe(UPDATE_SETTINGS);
+                expect(actions[0].options).toEqual({name: 'layerName_changed'});
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                expect(actions[1].node).toEqual('layerId');
+                expect(actions[1].nodeType).toEqual('layers');
+                expect(actions[1].options).toEqual({opacity: 1, name: 'layerName_changed'});
+            }, state, done);
+    });
+
+    it('test updateSettingsParamsEpic with layer name with layer load error', done => {
+        const state = {
+            controls: {
+                layersettings: {
+                    initialSettings: {
+                        id: 'layerId',
+                        name: 'layerName',
+                        style: ''
                     }
                 }
             },
@@ -262,69 +283,18 @@ describe('layers Epics', () => {
         testEpic(
             updateSettingsParamsEpic,
             3,
-            [updateSettingsParams({name: 'layerName_changed'}, true), layerLoad('layerId')],
+            [updateSettingsParams({name: 'layerName_changed'}, true), layerLoad('layerId', true)],
             actions => {
                 expect(actions.length).toBe(3);
                 expect(actions[0].type).toBe(UPDATE_SETTINGS);
                 expect(actions[0].options).toEqual({name: 'layerName_changed'});
-                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[1].control).toBe('layersettings');
-                expect(actions[1].property).toBe('originalSettings');
-                expect(actions[1].value).toEqual({name: 'layerName'});
-                expect(actions[2].type).toBe(UPDATE_NODE);
-                expect(actions[2].node).toEqual('layerId');
-                expect(actions[2].nodeType).toEqual('layers');
-                expect(actions[2].options).toEqual({opacity: 1, name: 'layerName_changed'});
-            }, state, done);
-    });
 
-    it('test updateSettingsParamsEpic with layer name with layer load error', done => {
-        const state = {
-            controls: {
-                layersettings: {
-                    initialSettings: {
-                        id: 'layerId',
-                        name: 'layerName',
-                        style: ''
-                    },
-                    originalSettings: {
-
-                    }
-                }
-            },
-            layers: {
-                settings: {
-                    expanded: true,
-                    node: 'layerId',
-                    nodeType: 'layers',
-                    options: { opacity: 1 }
-                },
-                flat: [{
-                    id: 'layerId',
-                    name: 'layerName',
-                    opacity: 1
-                }]
-            }
-        };
-
-        testEpic(
-            updateSettingsParamsEpic,
-            4,
-            [updateSettingsParams({name: 'layerName_changed'}, true), layerLoad('layerId', true)],
-            actions => {
-                expect(actions.length).toBe(4);
-                expect(actions[0].type).toBe(UPDATE_SETTINGS);
-                expect(actions[0].options).toEqual({name: 'layerName_changed'});
-                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[1].control).toBe('layersettings');
-                expect(actions[1].property).toBe('originalSettings');
-                expect(actions[1].value).toEqual({name: 'layerName'});
-                expect(actions[2].type).toBe(UPDATE_NODE);
-                expect(actions[2].node).toEqual('layerId');
-                expect(actions[2].nodeType).toEqual('layers');
-                expect(actions[2].options).toEqual({opacity: 1, name: 'layerName_changed'});
-                expect(actions[3].type).toBe(SHOW_NOTIFICATION);
-                expect(actions[3].level).toBe('error');
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                expect(actions[1].node).toEqual('layerId');
+                expect(actions[1].nodeType).toEqual('layers');
+                expect(actions[1].options).toEqual({opacity: 1, name: 'layerName_changed'});
+                expect(actions[2].type).toBe(SHOW_NOTIFICATION);
+                expect(actions[2].level).toBe('error');
             }, state, done);
     });
 });

@@ -24,15 +24,11 @@ const PluginsContainer = connect(
         state => state.mode,
         state => state?.browser?.mobile,
         state => state.controls,
-        state => state?.layers?.settings,
         state => getMonitoredState(state, ConfigUtils.getConfigProp('monitorState')),
-        (statePluginsConfig, stateMode, mobile, controls, layerSettings, monitoredState) => ({
+        (statePluginsConfig, stateMode, mobile, controls, monitoredState) => ({
             statePluginsConfig,
             mode: urlQuery.mode || stateMode || (mobile ? 'mobile' : 'desktop'),
-            pluginsState: {
-                ...controls,
-                ...(layerSettings && { layerSettings })
-            },
+            pluginsState: controls,
             monitoredState
         })
     )

@@ -13,8 +13,6 @@ import {
     wfsDownloadSelector,
     widgetBuilderAvailable,
     widgetBuilderSelector,
-    initialSettingsSelector,
-    originalSettingsSelector,
     activeTabSettingsSelector,
     drawerEnabledControlSelector,
     showCoordinateEditorSelector,
@@ -43,9 +41,6 @@ const state = {
                 id: 'layerId',
                 name: 'layerName',
                 style: ''
-            },
-            originalSettings: {
-                style: 'generic'
             },
             activeTab: 'style'
         },
@@ -81,22 +76,7 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
-    it('test initialSettingsSelector', () => {
-        const retVal = initialSettingsSelector(state);
-        expect(retVal).toExist();
-        expect(retVal).toEqual({
-            id: 'layerId',
-            name: 'layerName',
-            style: ''
-        });
-    });
-    it('test originalSettingsSelector', () => {
-        const retVal = originalSettingsSelector(state);
-        expect(retVal).toExist();
-        expect(retVal).toEqual({
-            style: 'generic'
-        });
-    });
+
     it('test activeTabSettingsSelector', () => {
         const retVal = activeTabSettingsSelector(state);
         expect(retVal).toExist();

@@ -34,7 +34,7 @@ export const settingsState = compose(
  */
 export const settingsLifecycle = compose(
     withHandlers({
-        onClose: ({ onUpdateInitialSettings = () => {}, onHideSettings = () => {}, onUpdateOriginalSettings = () => {} }) => (tabsCloseActions = []) => {
+        onClose: ({ onHideSettings = () => {}}) => (tabsCloseActions = []) => {
             if (isArray(tabsCloseActions)) {
                 tabsCloseActions.forEach(tabOnClose => {
                     if (isFunction(tabOnClose)) {
@@ -42,25 +42,12 @@ export const settingsLifecycle = compose(
                     }
                 });
             }
-            onUpdateOriginalSettings({});
             onHideSettings();
             // clean up internal settings state
-            onUpdateInitialSettings({});
+
         }
     }),
     lifecycle({
-        UNSAFE_componentWillMount() {
-            const {
-                element = {},
-                onUpdateOriginalSettings = () => { },
-                onUpdateInitialSettings = () => { }
-            } = this.props;
-
-            // store changed keys
-            onUpdateOriginalSettings({ });
-            // store initial settings (internal state)
-            onUpdateInitialSettings({ ...element });
-        },
         componentWillReceiveProps(newProps) {
             // an empty description does not trigger the single layer getCapabilites,
             // it does only for missing description
@@ -77,15 +64,11 @@ export const settingsLifecycle = compose(
             const {
                 initialActiveTab = 'general',
                 settings = {},
-                onUpdateOriginalSettings = () => { },
-                onUpdateInitialSettings = () => { },
+
                 onSetTab = () => { }
             } = this.props;
 
             if (!settings.expanded && newProps.settings && newProps.settings.expanded) {
-                // update initial and original settings
-                onUpdateOriginalSettings({ });
-                onUpdateInitialSettings({ ...newProps.element });
                 onSetTab(initialActiveTab);
             }
         }

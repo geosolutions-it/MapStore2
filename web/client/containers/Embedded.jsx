@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import assign from 'object-assign';
 import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
 import { connect } from 'react-redux';
 
@@ -18,9 +17,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
-    pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
-        layerSettings: state.layers.settings
-    }),
+    pluginsState: state && state.controls,
     monitoredState: getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(ModulePluginsContainer);
 
