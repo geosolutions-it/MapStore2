@@ -28,7 +28,6 @@ export const printSelector = (state) => get(state, "controls.print.enabled");
 export const wfsDownloadSelector = state => !!get(state, "controls.layerdownload.enabled");
 export const widgetBuilderAvailable = state => get(state, "controls.widgetBuilder.available", false);
 export const widgetBuilderSelector = (state) => get(state, "controls.widgetBuilder.enabled");
-export const originalSettingsSelector = state => get(state, "controls.layersettings.originalSettings") || {};
 export const activeTabSettingsSelector = state => get(state, "controls.layersettings.activeTab") || 'general';
 export const drawerEnabledControlSelector = (state) => get(state, "controls.drawer.enabled", false);
 export const unsavedMapSelector = (state) => get(state, "controls.unsavedMap.enabled", false);
