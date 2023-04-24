@@ -20,7 +20,7 @@ import { toChangesMap} from '../../utils/FeatureGridUtils';
 import { initPlugin, sizeChange, setUp, setSyncTool} from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../../selectors/query';
-import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
+import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
 import {gridTools, gridEvents, pageEvents, toolbarEvents} from './index';
@@ -230,6 +230,7 @@ const FeatureDock = (props = {
                         select={props.select}
                         key={"feature-grid-container"}
                         columnSettings={props.attributes}
+                        fields={props.fields}
                         gridEvents={props.gridEvents}
                         pageEvents={props.pageEvents}
                         describeFeatureType={props.describe}
@@ -252,48 +253,29 @@ const FeatureDock = (props = {
             }
         </Dock>);
 };
-const selector = createSelector(
-    state => get(state, "featuregrid.open"),
-    state => get(state, "featuregrid.customEditorsOptions"),
-    state => get(state, "queryform.autocompleteEnabled"),
-    state => wfsURLSelector(state),
-    state => typeNameSelector(state),
-    state => get(state, 'featuregrid.features') || EMPTY_ARR,
-    describeSelector,
-    state => get(state, "featuregrid.attributes"),
-    state => get(state, "featuregrid.tools"),
-    selectedFeaturesSelector,
-    modeSelector,
-    changesSelector,
-    newFeaturesSelector,
-    hasChangesSelector,
-    state => get(state, 'featuregrid.focusOnEdit', false),
-    state => get(state, 'featuregrid.enableColumnFilters'),
-    createStructuredSelector(paginationInfo),
-    state => get(state, 'featuregrid.pages'),
-    state => get(state, 'featuregrid.pagination.size'),
-    (open, customEditorsOptions, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, pagination, pages, size) => ({
-        open,
-        customEditorsOptions,
-        autocompleteEnabled,
-        url,
-        typeName,
-        hasChanges,
-        newFeatures,
-        features,
-        describe,
-        attributes,
-        tools,
-        select,
-        mode,
-        focusOnEdit,
-        enableColumnFilters,
-        changes: toChangesMap(changes),
-        pagination,
-        pages,
-        size
-    })
-);
+export const selector = createStructuredSelector({
+    open: state => get(state, "featuregrid.open"),
+    customEditorsOptions: state => get(state, "featuregrid.customEditorsOptions"),
+    autocompleteEnabled: state => get(state, "queryform.autocompleteEnabled"),
+    url: state => wfsURLSelector(state),
+    typeName: state => typeNameSelector(state),
+    features: state => get(state, 'featuregrid.features') || EMPTY_ARR,
+    describe: describeSelector,
+    fields: selectedLayerFieldsSelector,
+    attributes: state => get(state, "featuregrid.attributes"),
+    tools: state => get(state, "featuregrid.tools"),
+    select: selectedFeaturesSelector,
+    mode: modeSelector,
+    changes: state => toChangesMap(changesSelector(state)),
+    newFeatures: state => newFeaturesSelector(state) || EMPTY_ARR,
+    hasChanges: hasChangesSelector,
+    focusOnEdit: state => get(state, 'featuregrid.focusOnEdit', false),
+    enableColumnFilters: state => get(state, 'featuregrid.enableColumnFilters'),
+    pagination: createStructuredSelector(paginationInfo),
+    pages: state => get(state, 'featuregrid.pages'),
+    size: state => get(state, 'featuregrid.pagination.size')
+});
+
 const EditorPlugin = compose(
     connect(() => ({}),
         (dispatch) => ({

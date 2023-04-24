@@ -245,7 +245,7 @@ describe('FeatureGridUtils', () => {
         const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
         const columnSettings = {name: 'Test1', hide: false};
         const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
-        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, {options});
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, [], {options});
         expect(featureGridColumns.length).toBe(2);
         featureGridColumns.forEach((fgColumns, index) => {
             if (index === 0) {
@@ -259,6 +259,31 @@ describe('FeatureGridUtils', () => {
             expect(fgColumns.editable).toBeFalsy();
             expect(fgColumns.sortable).toBeTruthy();
             expect(fgColumns.width).toBe(200);
+        });
+    });
+    it('test featureTypeToGridColumns with headerRenderer, filterRenderer, formatter and editor', () => {
+        const DUMMY = () => {};
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const columnSettings = {name: 'Test1', hide: false};
+        const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => DUMMY, getEditor: () => DUMMY});
+        expect(featureGridColumns.length).toBe(2);
+        featureGridColumns.forEach((fgColumns, index) => {
+            if (index === 0) {
+                expect(fgColumns.description).toBe('Some description');
+                expect(fgColumns.title).toBe('Some title');
+                expect(fgColumns.showTitleTooltip).toBeTruthy();
+            }
+            expect(['Test1', 'Test2'].includes(fgColumns.name)).toBeTruthy();
+            expect(fgColumns.resizable).toBeTruthy();
+            expect(fgColumns.filterable).toBeTruthy();
+            expect(fgColumns.editable).toBeFalsy();
+            expect(fgColumns.sortable).toBeTruthy();
+            expect(fgColumns.width).toBe(200);
+            expect(fgColumns.headerRenderer).toBeTruthy();
+            expect(fgColumns.filterRenderer).toBeTruthy();
+            expect(fgColumns.formatter).toBeTruthy();
+            expect(fgColumns.editor).toBeTruthy();
         });
     });
 });
