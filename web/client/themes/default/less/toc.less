@@ -149,7 +149,7 @@
                             margin-right: @padding-left-square-md;
                             display: flex;
                             align-items: center;
-                            
+
                             svg {
                                 width: 16px;
                                 height: 16px;
@@ -1152,3 +1152,47 @@
        width: 100%;
     }
 }
+
+/* style of the layer fields table */
+.layer-fields {
+    .layer-fields-header {
+        position: relative;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
+        .layer-fields-toolbar {
+            text-align: center;
+            margin: 15px;
+        }
+        .layer-fields-row-header {
+            height: 25px;
+            margin: 5px;
+        }
+    }
+
+    .layer-fields-row, .layer-fields-row-header {
+        display: flex;
+        flex-direction: row;
+        margin: 5px;
+        gap: 5px;
+        .layer-field-alias {
+            flex: 1;
+        }
+        .layer-field-name {
+            width: 150px;
+        }
+        .layer-field-type {
+            width: 120px;
+        }
+    }
+    .layer-fields-footer {
+        min-height: 30px;
+        box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
+        .layer-field-loading {
+            display: flex;
+            align-items: center;
+        }
+        .layer-fields-error {
+            margin-bottom: 0;
+        }
+    }
+}
+

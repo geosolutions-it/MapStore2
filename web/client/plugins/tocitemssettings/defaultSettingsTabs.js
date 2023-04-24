@@ -23,6 +23,7 @@ import Display from '../../components/TOC/fragments/settings/Display';
 
 import Elevation from '../../components/TOC/fragments/settings/Elevation';
 import LoadingView from '../../components/misc/LoadingView';
+import Fields, { hasFields } from './tabs/Fields';
 import FeatureInfo from './tabs/FeatureInfo';
 
 
@@ -150,6 +151,13 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             glyph: 'eye-open',
             visible: isLayerNode(props),
             Component: ConnectedDisplay
+        }, {
+            id: 'fields',
+            titleId: 'layerProperties.fields.title',
+            tooltipId: 'layerProperties.fields.tooltip',
+            glyph: 'th-list',
+            visible: isLayerNode(props) && hasFields(props?.element),
+            Component: Fields
         },
         {
             id: 'style',

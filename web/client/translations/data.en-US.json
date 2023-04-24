@@ -171,7 +171,18 @@
                     "message": "Failed to fetch format"
                 }
             },
-            "forceProxy": "Force proxy"
+            "forceProxy": "Force proxy",
+            "fields": {
+              "refresh": "Reload fields from the data source",
+              "title": "Fields",
+              "tooltip": "Fields",
+              "name": "Name",
+              "alias": "Alias",
+              "type": "Type",
+              "clearCustomization": "Clear customization",
+              "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
+              "error": "It was not possible to automatically load the fields"
+            }
         },
         "localizedInput": {
           "localize": "Localize this text...",
