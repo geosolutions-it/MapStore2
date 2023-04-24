@@ -41,6 +41,25 @@ export default class extends React.Component {
         formatCards: {}
     };
 
+    state = {
+        loading: false
+    };
+
+    componentDidMount() {
+        // we dont know supported infoFormats yet
+        if (!this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
+            this.setState({ loading: true });
+            getSupportedFormat(this.props.element.url, true)
+                .then(({ infoFormats }) => {
+                    this.props.onChange("infoFormats", infoFormats);
+                    this.setState({ loading: false });
+                })
+                .catch(() => {
+                    this.setState({ loading: false });
+                })
+        }
+    }
+
     getInfoFormat = (infoFormats) => {
         return Object.keys(infoFormats).map((infoFormat) => {
             const Body = this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].body;
