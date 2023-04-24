@@ -48,6 +48,7 @@ export default ({
     tileSizeOptions = [256, 512],
     formatsLoading,
     layerOptions = {},
+    infoFormatOptions,
     services,
     autoSetVisibilityLimits = false
 }) => {
@@ -86,6 +87,7 @@ export default ({
                 selectedService={selectedService}
                 onFormatOptionsFetch={onFormatOptionsFetch}
                 formatsLoading={formatsLoading}
+                infoFormatOptions={infoFormatOptions}
                 autoSetVisibilityLimits={autoSetVisibilityLimits}
             />
             <FormGroup controlId="buttons" key="buttons">
