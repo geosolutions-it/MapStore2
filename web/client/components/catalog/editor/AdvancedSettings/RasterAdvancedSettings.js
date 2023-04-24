@@ -60,6 +60,7 @@ const getServerTypeOptions = () => {
 export default ({
     service,
     formatOptions = [],
+    infoFormatOptions = [],
     onChangeServiceFormat = () => { },
     onChangeServiceProperty = () => {},
     currentWMSCatalogLayerSize,
