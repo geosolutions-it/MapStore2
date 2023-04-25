@@ -10,6 +10,8 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import Accordion from '../../../misc/panels/Accordion';
+import { getSupportedFormat } from '../../../../api/WMS';
+import Loader from '../../../misc/Loader';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
