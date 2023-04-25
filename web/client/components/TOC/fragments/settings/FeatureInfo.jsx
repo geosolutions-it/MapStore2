@@ -56,7 +56,7 @@ export default class extends React.Component {
                 })
                 .catch(() => {
                     this.setState({ loading: false });
-                })
+                });
         }
     }
 
