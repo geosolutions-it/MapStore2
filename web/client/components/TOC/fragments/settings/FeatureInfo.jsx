@@ -49,7 +49,7 @@ export default class extends React.Component {
 
     componentDidMount() {
         // we dont know supported infoFormats yet
-        if (!this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
+        if (this.props.element.url && !this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
             this.setState({ loading: true });
             getSupportedFormat(this.props.element.url, true)
                 .then(({ infoFormats }) => {
