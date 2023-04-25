@@ -181,6 +181,7 @@ describe('Test Raster advanced settings', () => {
         TestUtils.Simulate.change(layerOption, { target: { value: "512" }});
         TestUtils.Simulate.keyDown(layerOption, { keyCode: 9, key: 'Tab' });
         expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'layerOptions', { tileSize: 512 } ]);
     });
     it('test component onChangeServiceProperty allowUnsecureLayers', () => {
         const action = {
