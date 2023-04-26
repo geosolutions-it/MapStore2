@@ -63,7 +63,7 @@ export default {
                 id: layer.id,
                 layers: layer.name,
                 query_layers: queryLayers,
-                styles: layer.style,
+                styles: (layer.style ? layer.style : ''),
                 x: widthBBox % 2 === 1 ? Math.ceil(widthBBox / 2) : widthBBox / 2,
                 y: widthBBox % 2 === 1 ? Math.ceil(widthBBox / 2) : widthBBox / 2,
                 height: heightBBox,
