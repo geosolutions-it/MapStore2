@@ -75,6 +75,7 @@ export default {
                       bounds.maxy,
                 feature_count: maxItems,
                 info_format: infoFormat,
+                format: layer.format,
                 ENV,
                 ...assign({}, params)
             }, layer),
