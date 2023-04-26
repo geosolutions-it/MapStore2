@@ -324,7 +324,7 @@ export default createPlugin('Annotations', {
             name: "Annotations",
             target: 'toolbar',
             selector: () => true,
-            Component: connect(() => {}, {
+            Component: connect(() => ({}), {
                 onClick: conditionalToggle
             })(({onClick, layers, selectedLayers, status}) => {
                 if (status === 'DESELECT' && layers.filter(l => l.id === 'annotations').length === 0) {

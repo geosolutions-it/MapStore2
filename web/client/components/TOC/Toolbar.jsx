@@ -330,7 +330,7 @@ class Toolbar extends React.Component {
                     : null}
                 {this.props.items
                     .filter(({ selector = () => true }) => selector({ ...this.props, status })) // filter items that should not show
-                    .map(({ Component }) => <Component {...this.props} status={status} />)}
+                    .map(({ Component, name }, i) => <Component key={name ?? `item-${i}`} {...this.props} status={status} />)}
                 <ConfirmModal
                     ref="removelayer"
                     options={{
