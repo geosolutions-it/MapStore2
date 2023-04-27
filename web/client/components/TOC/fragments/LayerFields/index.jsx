@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Fields from './Fields';
 import { describeFeatureType } from '../../../../observables/wfs';
@@ -49,6 +49,16 @@ const LayerFields = ({ layer, updateFields = () => {}, ...props }) => {
     const [fields, setFields] = useState(layer.fields ?? []);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState();
+    const mounted = useRef(false);
+
+    useEffect(() => {
+        mounted.current = true;
+
+        return () => {
+            mounted.current = false;
+        };
+    }, []);
+
     const onChange = (name, attribute, value) => {
         const newFields = fields.map((field) => {
             if (field.name === name) {
@@ -66,12 +76,16 @@ const LayerFields = ({ layer, updateFields = () => {}, ...props }) => {
         setLoading(true);
         loadFields(layer, merge)
             .then((newFields) => {
-                setLoading(false);
-                setFields(newFields);
+                if (mounted.current) {
+                    setLoading(false);
+                    setFields(newFields);
+                }
             })
             .catch((e) => {
-                setLoading(false);
-                setError(e);
+                if (mounted.current) {
+                    setLoading(false);
+                    setError(e);
+                }
             });
     };
     const onClear = () => {
