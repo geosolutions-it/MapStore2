@@ -181,3 +181,4 @@ Here below is a small list of organizations using MapStore either directly or th
 - Earth-i - UK
 - MapStand - UK
 - [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)
+- [Nordeste Municipality - Portugal](https://sigweb.cmnordeste.pt/mapstore/#/)
