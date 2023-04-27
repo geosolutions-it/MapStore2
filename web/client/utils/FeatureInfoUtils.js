@@ -21,7 +21,7 @@ export const INFO_FORMATS_BY_MIME_TYPE = {
     "text/plain": "TEXT",
     "text/html": "HTML",
     "text/javascript": "JSONP",
-    "application/json": "JSON",
+    "application/json": "PROPERTIES",
     "application/vnd.ogc.gml": "GML2",
     "application/vnd.ogc.gml/3.1.1": "GML3"
 };
