@@ -10,6 +10,8 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import Accordion from '../../../misc/panels/Accordion';
+import { getSupportedFormat } from '../../../../api/WMS';
+import Loader from '../../../misc/Loader';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
@@ -41,6 +43,25 @@ export default class extends React.Component {
         formatCards: {}
     };
 
+    state = {
+        loading: false
+    };
+
+    componentDidMount() {
+        // we dont know supported infoFormats yet
+        if (this.props.element.url && !this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
+            this.setState({ loading: true });
+            getSupportedFormat(this.props.element.url, true)
+                .then(({ infoFormats }) => {
+                    this.props.onChange("infoFormats", infoFormats);
+                    this.setState({ loading: false });
+                })
+                .catch(() => {
+                    this.setState({ loading: false });
+                });
+        }
+    }
+
     getInfoFormat = (infoFormats) => {
         return Object.keys(infoFormats).map((infoFormat) => {
             const Body = this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].body;
@@ -60,7 +81,19 @@ export default class extends React.Component {
     render() {
         // the selected value if missing on that layer should be set to the general info format value and not the first one.
         const data = this.getInfoFormat(this.supportedInfoFormats());
-        return (
+        return this.state.loading ? (
+            <div
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                <Loader size={150}/>
+            </div>
+        ) : (
             <span>
                 <Accordion
                     fillContainer

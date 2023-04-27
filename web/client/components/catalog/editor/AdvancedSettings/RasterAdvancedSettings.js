@@ -60,6 +60,7 @@ const getServerTypeOptions = () => {
 export default ({
     service,
     formatOptions = [],
+    infoFormatOptions = [],
     onChangeServiceFormat = () => { },
     onChangeServiceProperty = () => {},
     currentWMSCatalogLayerSize,
@@ -174,6 +175,30 @@ export default ({
                             ? "catalog.format.loading" : "catalog.format.noOption"}
                         options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
                         onChange={event => onChangeServiceFormat(event && event.value)} />
+                </div>
+                <Button
+                    disabled={props.formatsLoading}
+                    tooltipId="catalog.format.refresh"
+                    className="square-button-md no-border"
+                    onClick={() => onFormatOptionsFetch(service.url, true)}
+                    key="format-refresh">
+                    <Glyphicon glyph="refresh" />
+                </Button>
+            </Col >
+        </FormGroup>
+        <FormGroup style={advancedRasterSettingsStyles}>
+            <Col xs={6}>
+                <ControlLabel><Message msgId="infoFormatLbl" /></ControlLabel>
+            </Col >
+            <Col xs={6} style={{marginBottom: '5px', display: 'flex', alignItems: 'center' }}>
+                <div style={{ flex: 1 }}>
+                    <Select
+                        isLoading={props.formatsLoading}
+                        onOpen={() => onFormatOptionsFetch(service.url)}
+                        value={service && service.infoFormat}
+                        clearable
+                        options={props.formatsLoading ? [] : infoFormatOptions.map((format) => ({ value: format, label: format }))}
+                        onChange={event => onChangeServiceProperty("infoFormat", event && event.value)} />
                 </div>
                 <Button
                     disabled={props.formatsLoading}

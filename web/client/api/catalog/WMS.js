@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { getConfigProp, cleanDuplicatedQuestionMarks } from '../../utils/ConfigUtils';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
 import { isValidGetFeatureInfoFormat, isValidGetMapFormat } from '../../utils/WMSUtils';
+import { INFO_FORMATS_BY_MIME_TYPE } from '../../utils/FeatureInfoUtils';
 import {
     extractOGCServicesReferences,
     toURLArray,
@@ -75,6 +76,7 @@ const recordToLayer = (record, {
 
     const {
         format: defaultFormat,
+        infoFormat,
         localizedLayerStyles,
         allowUnsecureLayers,
         autoSetVisibilityLimits,
@@ -86,12 +88,16 @@ const recordToLayer = (record, {
     const format = supportedGetMapFormats?.find((value) => value === defaultFormat)
         || supportedGetMapFormats[0]
         || defaultFormat;
+    const featureInfo = infoFormat && INFO_FORMATS_BY_MIME_TYPE[infoFormat]
+        ? { format: INFO_FORMATS_BY_MIME_TYPE[infoFormat] }
+        : null;
 
     let layer = {
         type: 'wms',
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
         style: record.style,
         format,
+        featureInfo: featureInfo,
         url: layerURL,
         capabilitiesURL: record.capabilitiesURL,
         queryable: record.queryable,
