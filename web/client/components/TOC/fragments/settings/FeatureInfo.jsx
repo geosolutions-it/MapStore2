@@ -81,7 +81,19 @@ export default class extends React.Component {
     render() {
         // the selected value if missing on that layer should be set to the general info format value and not the first one.
         const data = this.getInfoFormat(this.supportedInfoFormats());
-        return this.state.loading ? <Loader /> : (
+        return this.state.loading ? (
+            <div
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                <Loader size={150}/>
+            </div>
+        ) : (
             <span>
                 <Accordion
                     fillContainer
