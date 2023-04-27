@@ -12,6 +12,9 @@ import localizedProps from '../../../misc/enhancers/localizedProps';
 
 const ConfirmButton = localizedProps("tooltip")(withTooltip(withConfirm(Button)));
 
+const isGeometryType = (type) =>
+    ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'Geometry'].includes(type);
+
 /**
  * Fields component.
  * Shows the fields of a layer and allows to edit the alias and display the type (not editable) It is used in TOCItemsSettings
@@ -77,19 +80,21 @@ const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onCl
             {error && <Alert bsStyle="danger" className="layer-fields-error"><Message msgId="layerProperties.fields.error"/></Alert>}
         </div>}
     >
-        {fields.map(({name, alias, type}) => {
-            return (<div key={`field-${name}`} className="layer-fields-row">
-                <FormGroup className="layer-field-name">
-                    <FormControl disabled value={name} />
-                </FormGroup>
-                <FormGroup className="layer-field-alias">
-                    <LocalizedInput disabled={loading} onChange={(value) => onChange(name, "alias", value)} value={alias} currentLocale={currentLocale} />
-                </FormGroup>
-                <FormGroup className="layer-field-type">
-                    <FormControl disabled value={type}/>
-                </FormGroup>
-            </div>);
-        })}
+        {fields
+            .filter(({type}) => !isGeometryType(type)) // exclude geometry fields
+            .map(({name, alias, type}) => {
+                return (<div key={`field-${name}`} className="layer-fields-row">
+                    <FormGroup className="layer-field-name">
+                        <FormControl disabled value={name} />
+                    </FormGroup>
+                    <FormGroup className="layer-field-alias">
+                        <LocalizedInput disabled={loading} onChange={(value) => onChange(name, "alias", value)} value={alias} currentLocale={currentLocale} />
+                    </FormGroup>
+                    <FormGroup className="layer-field-type">
+                        <FormControl disabled value={type}/>
+                    </FormGroup>
+                </div>);
+            })}
     </BorderLayout>
     );
 };

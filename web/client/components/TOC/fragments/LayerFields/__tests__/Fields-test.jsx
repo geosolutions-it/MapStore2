@@ -127,4 +127,11 @@ describe('TOC Settings - Fields component', () => {
         expect(spy2.calls.length).toBe(1);
         spy2.restore();
     });
+    it('Fields of type geometry are not listed', () => {
+        const fields = [{name: "field1", type: "string"}, {name: "field2", alias: "alias", type: "number"}, {name: "geometry", type: "MultiPolygon"}];
+        ReactDOM.render(<Fields fields={fields}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const rows = container.querySelectorAll('.ms2-border-layout-body .layer-fields-row');
+        expect(rows.length).toBe(2);
+    });
 });
