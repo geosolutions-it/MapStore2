@@ -594,6 +594,7 @@ export const saveLayer = (layer) => {
         thumbURL: layer.thumbURL && layer.thumbURL.split(':')[0] === 'blob' ? undefined : layer.thumbURL,
         group: layer.group,
         search: layer.search,
+        fields: layer.fields,
         source: layer.source,
         name: layer.name,
         opacity: layer.opacity,
