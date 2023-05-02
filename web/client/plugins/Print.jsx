@@ -380,7 +380,7 @@ export default {
                         const map = this.props.printingService.getMapConfiguration();
                         return {
                             ...map,
-                            layers: this.filterLayers(map.layers, map.zoom, map.projection)
+                            layers: this.filterLayers(map.layers, this.props.useFixedScales ? map.scaleZoom : map.zoom, map.projection)
                         };
                     };
                     getMapSize = (layout) => {
@@ -390,16 +390,11 @@ export default {
                             height: currentLayout && currentLayout.map.height / currentLayout.map.width * this.props.mapWidth || 270
                         };
                     };
-                    getPreviewZoom = (mapZoom) => {
-                        if (this.props.useFixedScales) {
-                            const scales = getPrintScales(this.props.capabilities);
-                            return getNearestZoom(mapZoom, scales);
-                        }
-                        return mapZoom;
-                    };
                     getPreviewResolution = (zoom, projection) => {
                         const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
-                        const scale = this.props.scales[this.getPreviewZoom(zoom)];
+                        const scale = this.props.useFixedScales
+                            ? getPrintScales(this.props.capabilities)[zoom]
+                            : this.props.scales[zoom];
                         return scale / dpu;
                     };
                     getLayout = (props) => {
