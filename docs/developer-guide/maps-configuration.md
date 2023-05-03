@@ -226,6 +226,7 @@ i.e.
     "params": {}, // can be used to add parameters to the request, or override the default ones
     "layerFilter": {} // a layer filter object, to filter the layer
     "search": {}, // object to configure the features URL in the layer
+    "fields": [{"name": "attr1", "alias": "Attribute 1", "type": "string"},{...}] // array of fields
     "credits": { // optional
         "imageUrl": "somePic.png", // URL for the image to put in attribution
         "link": "http://someURL.org", // URL where attribution have to link to
@@ -242,6 +243,7 @@ Details:
 - `params`: an object with additional parameters to add to the WMS request
 - `layerFilter`: an object to filter the layer. See [LayerFilter](LayerFilter.md) for details.
 - `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs'}`.
+- `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.)
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
 
 ##### Multiple URLs
@@ -913,11 +915,16 @@ This layer differs from the "vector" because all the loading/filtering/querying 
         "url":"https://myserver.org/geoserver/wfs",
         "type":"wfs"
     },
+    "fields": [{"name": "attr1", "alias": "Attribute 1", "type": "string"}],
     "name":"workspace:layer",
     "styleName":"marker",
     "url":"https://myserver.org/geoserver/wfs"
 }
 ```
+
+- `name`: the name of the layer in the WFS service.
+- `url`: the url of the WFS service.
+- `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.)
 
 #### Vector Style
 

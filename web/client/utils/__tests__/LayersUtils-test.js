@@ -1188,6 +1188,23 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.forceProxy).toBeTruthy();
                 }
+            ],
+            // save fields
+            [
+                {
+                    fields: [
+                        {
+                            name: "test",
+                            alias: "test"
+                        }
+                    ]
+                },
+                l => {
+                    expect(l.fields).toExist();
+                    expect(l.fields.length).toBe(1);
+                    expect(l.fields[0].name).toBe("test");
+                    expect(l.fields[0].alias).toBe("test");
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
