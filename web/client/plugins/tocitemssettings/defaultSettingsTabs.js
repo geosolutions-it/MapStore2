@@ -7,40 +7,29 @@
  */
 
 import React from 'react';
-import Message from '../../components/I18N/Message';
-import HTML from '../../components/I18N/HTML';
+
 import { filter, head, sortBy } from 'lodash';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { defaultProps } from 'recompose';
-import { Glyphicon } from 'react-bootstrap';
 
-import HTMLViewer from '../../components/data/identify/viewers/HTMLViewer';
-import TextViewer from '../../components/data/identify/viewers/TextViewer';
-import JSONViewer from '../../components/data/identify/viewers/JSONViewer';
-import HtmlRenderer from '../../components/misc/HtmlRenderer';
+
 import { isCesium } from '../../selectors/maptype';
 
-import {getAvailableInfoFormat} from '../../utils/MapInfoUtils';
 import {getConfiguredPlugin as getConfiguredPluginUtil } from '../../utils/PluginsUtils';
 
 import General from '../../components/TOC/fragments/settings/General';
 import Display from '../../components/TOC/fragments/settings/Display';
 
 import Elevation from '../../components/TOC/fragments/settings/Elevation';
-import FeatureInfoEditor from '../../components/TOC/fragments/settings/FeatureInfoEditor';
 import LoadingView from '../../components/misc/LoadingView';
-import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
-import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
-import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
+import Fields, { hasFields } from './tabs/Fields';
+import FeatureInfo from './tabs/FeatureInfo';
+
+
 import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
 import { mapSelector } from '../../selectors/map';
 
-const responses = {
-    html,
-    json: JSON.parse(json),
-    text
-};
 
 import { StyleSelector } from '../styleeditor/index';
 
@@ -63,79 +52,6 @@ const isStylableLayer = (props) =>
     isLayerNode(props)
     && (isWMS(props) || isVectorStylableLayer(props));
 
-
-const formatCards = {
-    HIDDEN: {
-        titleId: 'layerProperties.hideFormatTitle',
-        descId: 'layerProperties.hideFormatDescription',
-        glyph: 'hide-marker'
-    },
-    TEXT: {
-        titleId: 'layerProperties.textFormatTitle',
-        descId: 'layerProperties.textFormatDescription',
-        glyph: 'ext-txt',
-        body: () => (
-            <div>
-                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
-                <br />
-                <TextViewer response={responses.text} />
-            </div>
-        )
-    },
-    HTML: {
-        titleId: 'layerProperties.htmlFormatTitle',
-        descId: 'layerProperties.htmlFormatDescription',
-        glyph: 'ext-html',
-        body: () => (
-            <div>
-                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
-                <br />
-                <HTMLViewer response={responses.html} />
-            </div>
-        )
-    },
-    PROPERTIES: {
-        titleId: 'layerProperties.propertiesFormatTitle',
-        descId: 'layerProperties.propertiesFormatDescription',
-        glyph: 'ext-json',
-        body: () => (
-            <div>
-                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
-                <br />
-                <JSONViewer response={responses.json} />
-            </div>
-        )
-    },
-    TEMPLATE: {
-        titleId: 'layerProperties.templateFormatTitle',
-        descId: 'layerProperties.templateFormatDescription',
-        glyph: 'ext-empty',
-        body: ({ template = '', ...props }) => (
-            <div>
-                <div>{template && template !== '<p><br></p>' ? <Message msgId="layerProperties.templatePreview" /> : null}</div>
-                <br />
-                <div>
-                    {template && template !== '<p><br></p>' ?
-                        <HtmlRenderer html={template} />
-                        :
-                        <span>
-                            <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }' }} /></p>
-                            <pre>
-                                <HTML msgId="layerProperties.templateFormatInfoAlertExample"/>
-                            </pre>
-                            <p><small><Message msgId="layerProperties.templateFormatInfoAlert1" /></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil" />&nbsp;)</p>
-                        </span>}
-                    <FeatureInfoEditor template={template} {...props} />
-                </div>
-            </div>
-        )
-    }
-};
-import FeatureInfoCmp from '../../components/TOC/fragments/settings/FeatureInfo';
-const FeatureInfo = defaultProps({
-    formatCards,
-    defaultInfoFormat: Object.assign({ "HIDDEN": "text/html"}, getAvailableInfoFormat())
-})(FeatureInfoCmp);
 
 const configuredPlugins = {};
 
@@ -235,6 +151,13 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             glyph: 'eye-open',
             visible: isLayerNode(props),
             Component: ConnectedDisplay
+        }, {
+            id: 'fields',
+            titleId: 'layerProperties.fields.title',
+            tooltipId: 'layerProperties.fields.tooltip',
+            glyph: 'th-list',
+            visible: isLayerNode(props) && hasFields(props?.element),
+            Component: Fields
         },
         {
             id: 'style',

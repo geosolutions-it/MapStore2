@@ -5,13 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-
-import React from 'react';
 import { isNil } from 'lodash';
-import { Tooltip } from "react-bootstrap";
-import { compose, createEventHandler, defaultProps, withHandlers, withProps, withPropsOnChange } from 'recompose';
+import { compose, createEventHandler, defaultProps, withHandlers, withPropsOnChange } from 'recompose';
 
-import OverlayTrigger from "../../../misc/OverlayTrigger";
 import EditorRegistry from '../../../../utils/featuregrid/EditorRegistry';
 import {
     applyAllChanges,
@@ -28,6 +24,7 @@ import editors from '../editors';
 import { manageFilterRendererState } from '../enhancers/filterRenderers';
 import { getFilterRenderer } from '../filterRenderers';
 import { getFormatter } from '../formatters';
+import {getHeaderRenderer} from './headerRenderers';
 
 const loadMoreFeaturesStream = $props => {
     return $props
@@ -136,7 +133,7 @@ const featuresToGrid = compose(
     ),
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
-        ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
+        ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
         props => {
             const getFilterRendererFunc = ({localType = ""} = {}, name) => {
                 if (props.filterRenderers && props.filterRenderers[name]) {
@@ -147,12 +144,13 @@ const featuresToGrid = compose(
 
             const result = ({
                 columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts, getFilterRendererFunc)
-                    .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {
+                    .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, props.fields, {
                         editable: props.mode === "EDIT",
                         sortable: props.sortable && !props.isFocused,
                         defaultSize: props.defaultSize,
                         options: props.options?.propertyName
                     }, {
+                        getHeaderRenderer,
                         getEditor: (desc) => {
                             const generalProps = {
                                 onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
@@ -218,17 +216,7 @@ const featuresToGrid = compose(
             };
         }
     ),
-    propsStreamFactory,
-    withProps(({columns}) => ({
-        columns: columns?.map(c => ({
-            ...c,
-            name: !c.showTitleTooltip
-                ? (c.title || c.name)
-                : <OverlayTrigger  placement="top" overlay={<Tooltip id={c.name}>{c.description}</Tooltip>}>
-                    <span>{c.title}</span>
-                </OverlayTrigger>
-        }))
-    }))
+    propsStreamFactory
 );
 
 export default featuresToGrid;

@@ -171,7 +171,18 @@
                     "message": "Format konnte nicht abgerufen werden"
                 }
             },
-            "forceProxy": "Proxy erzwingen"
+            "forceProxy": "Proxy erzwingen",
+            "fields": {
+              "refresh": "Felder aus der Datenquelle neu laden",
+              "title": "Felder",
+              "tooltip": "Felder",
+              "name": "Name",
+              "alias": "Alias",
+              "type": "Typ",
+              "clearCustomization": "Alle Anpassungen entfernen",
+              "clearCustomizationConfirm": "Möchten Sie wirklich alle Anpassungen entfernen?",
+              "error": "Die Felder konnten nicht automatisch geladen werden"
+            }
         },
         "localizedInput": {
           "localize": "Diesen Text lokalisieren...",

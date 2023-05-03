@@ -37,7 +37,8 @@ import {
     queryOptionsSelector,
     showTimeSync,
     timeSyncActive,
-    multiSelect, isViewportFilterActive, viewportFilter, isFilterByViewportSupported
+    multiSelect, isViewportFilterActive, viewportFilter, isFilterByViewportSupported,
+    selectedLayerFieldsSelector
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -644,5 +645,26 @@ describe('Test featuregrid selectors', () => {
             }
         };
         expect(isFilterByViewportSupported(state)).toBe(false);
+    });
+    it('selectedLayerFieldsSelector', () => {
+        const FIELD = {
+            name: 'name',
+            type: 'string',
+            alias: 'Name'
+        };
+        const state = {
+            featuregrid: {
+                selectedLayer: 'TEST_LAYER'
+            },
+            layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons.test',
+                    fields: [FIELD]
+                }]
+            }
+        };
+        expect(selectedLayerFieldsSelector(state)).toEqual([FIELD]);
     });
 });

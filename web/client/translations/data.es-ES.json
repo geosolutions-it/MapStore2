@@ -171,7 +171,18 @@
                     "message": "No se pudo recuperar el formato"
                 }
             },
-            "forceProxy": "Forzar proxy"
+            "forceProxy": "Forzar proxy",
+            "fields": {
+              "refresh": "Obtener campos",
+              "title": "Campos",
+              "tooltip": "Campos",
+              "name": "Nombre",
+              "alias": "Alias",
+              "type": "Tipo",
+              "clearCustomization": "Borrar personalización",
+              "clearCustomizationConfirm": "¿Está seguro de que desea borrar la personalización de los campos?",
+              "error": "Error al recuperar los campos"
+            }
         },
         "localizedInput": {
           "localize": "Localizar cadena...",

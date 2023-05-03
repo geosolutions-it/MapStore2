@@ -171,7 +171,18 @@
                     "message": "Impossibile recuperare il formato"
                 }
             },
-            "forceProxy": "Forza proxy"
+            "forceProxy": "Forza proxy",
+            "fields": {
+              "refresh": "Recupera i campi dalla sorgente dati",
+              "title": "Campi",
+              "tooltip": "Campi",
+              "name": "Nome",
+              "alias": "Alias",
+              "type": "Tipo",
+              "clearCustomization": "Rimuovi modifiche",
+              "clearCustomizationConfirm": "Sei sicuro di voler rimuovere tutte le modifiche effettuate ai campi?",
+              "error": "Non è stato possibile recuperare i campi dalla sorgente dati"
+            }
         },
         "localizedInput": {
           "localize": "Traduci questo testo...",

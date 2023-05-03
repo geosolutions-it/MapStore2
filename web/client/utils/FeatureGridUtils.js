@@ -113,21 +113,32 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
     return { startIndex: nPs[0] * size, maxFeatures: needPages * size };
 };
 
-
+/**
+ * Utility function to get from a describeFeatureType response the columns to use in the react-data-grid
+ * @param {object} describe describeFeatureType response
+ * @param {object} columnSettings column settings a set of column configuration (Includes `hide` `width`, `label`)
+ * @param {object[]} fields fields configuration (Includes `name` `alias`)
+ * @param {object} getters getters functions for creating header, filterRenderer, formatter, heditor ( Includes `getEditor` `getFilterRenderer` `getFormatter` `getHeaderRenderer`)
+ * @param {*} param4
+ * @returns
+ */
 export const featureTypeToGridColumns = (
     describe,
     columnSettings = {},
+    fields = [],
     {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
-    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}} = {}) =>
+    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}} = {}) =>
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
+        const field = fields.find(f => f.name === desc.name);
         return {
             sortable,
             key: desc.name,
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
             name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
             description: option?.description || '',
-            title: option?.title || desc.name,
+            title: option?.title || field?.alias || desc.name,
+            headerRenderer: getHeaderRenderer(),
             showTitleTooltip: !!option?.description,
             resizable,
             editable,

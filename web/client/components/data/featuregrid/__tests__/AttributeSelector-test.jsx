@@ -51,7 +51,23 @@ describe('Test for AttributeSelector component', () => {
         expect(checks.length).toBe(1);
         checks[0].click();
         expect(events.onChange).toHaveBeenCalled();
+        expect(document.getElementsByTagName('label')[0].innerText).toBe("label");
 
     });
-
+    it('use alias', () => {
+        ReactDOM.render(<AttributeSelector fields={[{name: 'attr', alias: "alias"}]} attributes={[{label: "label", attribute: "attr", hide: true}]}/>, document.getElementById("container"));
+        const checks = document.getElementsByTagName("input");
+        expect(checks.length).toBe(1);
+        expect(checks[0].checked).toBe(false);
+        expect(checks[0].value).toBe("on");
+        expect(document.getElementsByTagName('label')[0].innerText).toBe("alias");
+    });
+    it('alias can be localized', () => {
+        ReactDOM.render(<AttributeSelector fields={[{name: 'attr', alias: {"default": "default-alias"}}]} attributes={[{label: "label", attribute: "attr", hide: true}]}/>, document.getElementById("container"));
+        const checks = document.getElementsByTagName("input");
+        expect(checks.length).toBe(1);
+        expect(checks[0].checked).toBe(false);
+        expect(checks[0].value).toBe("on");
+        expect(document.getElementsByTagName('label')[0].innerText).toBe("default-alias");
+    });
 });

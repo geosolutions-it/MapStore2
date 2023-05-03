@@ -171,7 +171,18 @@
                     "message": "Échec de la récupération du format"
                 }
             },
-            "forceProxy": "Forcer le proxy"
+            "forceProxy": "Forcer le proxy",
+            "fields": {
+              "refresh":"Récupérer les formats pris en charge",
+              "title": "Champs",
+              "tooltip": "Champs",
+              "name": "Nom",
+              "alias": "Alias",
+              "type": "Type",
+              "clearCustomization": "Supprimer les personnalisations",
+              "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
+              "error":  "Échec de la récupération des champs"
+            }
         },
          "localizedInput": {
           "localize": "Localiser ce texte...",
