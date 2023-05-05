@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get } from 'lodash';
+import { get, find } from 'lodash';
 
 const types = {
     // string
@@ -67,11 +67,19 @@ const types = {
     'xsd:float': 'number',
     'xsd:array': 'array'
 };
-export const describeFeatureTypeToAttributes = (data) => get(data, "featureTypes[0].properties")
+
+/**
+ * Transforms the DescribeFeatureType response to an array of attributes.
+ * @param {object} data JSON response of DescribeFeatureType
+ * @param {object[]} [fields=[]] optional `fields` array of the layer, to get the alias of the attributes, for customize/localize labels.
+ * @returns {object[]} attributes with `label`, `attribute`, `type`, `valueId`, `valueLabel`, `values`.
+ */
+export const describeFeatureTypeToAttributes = (data, fields = []) => get(data, "featureTypes[0].properties")
     .filter((attribute) => attribute.type.indexOf('gml:') !== 0 && types[attribute.type])
     .map((attribute) => {
+        const field = find(fields, {name: attribute.name}) ?? {};
         return {
-            label: attribute.name,
+            label: field.alias ?? attribute.name,
             attribute: attribute.name,
             type: types[attribute.type],
             valueId: "id",

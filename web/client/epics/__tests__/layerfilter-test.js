@@ -39,20 +39,26 @@ describe('layerFilter Epics', () => {
 
         // State need a selected layers
         const state = {layers: {
-            flat: [{id: "topp:states__5", name: "topp:states", url: "url"}],
+            flat: [{id: "topp:states__5", name: "topp:states", url: "url", fields: [{name: "STATE_NAME", type: "string", alias: "State Name"}]}],
             selected: ["topp:states__5"]}
         };
-        testEpic(handleLayerFilterPanel, 6, action, (actions) => {
-            expect(actions[0].type).toBe("FEATURE_TYPE_SELECTED");
-            expect(actions[0].url).toBe("url");
-            expect(actions[1].type).toBe("QUERYFORM:LOAD_FILTER");
-            expect(actions[2].type).toBe("LAYER_FILTER:INIT_LAYER_FILTER");
-            expect(actions[3].type).toBe("SET_CONTROL_PROPERTY");
-            expect(actions[4].type).toBe("QUERY:TOGGLE_LAYER_FILTER");
-            expect(actions[5].type).toBe("CHANGE_LAYER_PROPERTIES");
+        testEpic(handleLayerFilterPanel, 6, action, ([featureTypeSelected, loadFilter, initLayerFilter, setControlProperty, toggleLayerFilter, changeLayerProperties]) => {
+            expect(featureTypeSelected.type).toBe("FEATURE_TYPE_SELECTED");
+            expect(featureTypeSelected.url).toBe("url");
+            expect(featureTypeSelected.typeName).toBe("topp:states");
+            expect(featureTypeSelected.fields).toEqual([{name: "STATE_NAME", type: "string", alias: "State Name"}]);
+
+            expect(loadFilter.type).toBe("QUERYFORM:LOAD_FILTER");
+            expect(initLayerFilter.type).toBe("LAYER_FILTER:INIT_LAYER_FILTER");
+            expect(setControlProperty.type).toBe("SET_CONTROL_PROPERTY");
+            expect(toggleLayerFilter.type).toBe("QUERY:TOGGLE_LAYER_FILTER");
+            expect(changeLayerProperties.type).toBe("CHANGE_LAYER_PROPERTIES");
             done();
 
         }, state);
+    });
+    it('handleLayerFilterPanel with fields', () => {
+
     });
     it("restoreSavedFilter throws correct action", (done) => {
         let action = discardCurrentFilter();

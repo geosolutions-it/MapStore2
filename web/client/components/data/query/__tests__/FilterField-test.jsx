@@ -8,7 +8,10 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom';
-import FilterField from '../FilterField.jsx';
+import {Simulate, act} from 'react-dom/test-utils';
+import Localized from '../../../I18N/Localized';
+
+import FilterField, {AttributeNameField} from '../FilterField.jsx';
 import ComboField from '../ComboField.jsx';
 import DateField from '../DateField.jsx';
 import expect from 'expect';
@@ -24,6 +27,39 @@ describe('FilterField', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
+    });
+    it('AttributeNameField localization of labels and placeholders', () => {
+        const attributes = [{
+            attribute: "Attribute",
+            label: {
+                "default": "Attribute-default",
+                "en-US": "Attribute1-en-US"
+            }
+        }];
+        let attributeField;
+        act(() => {
+
+            attributeField = ReactDOM.render(<Localized locale="en-US" messages={{path: "TEST"}}>
+                <AttributeNameField
+                    fieldOptions={attributes}
+                    valueField={'attribute'}
+                    textField={'label'}
+                    placeholder={'path'}
+                /></Localized>, document.getElementById("container"));
+            expect(attributeField).toExist();
+
+        });
+        const attributeFieldDOMNode = expect(ReactDOM.findDOMNode(attributeField));
+        expect(attributeFieldDOMNode).toExist();
+        // check the localized placeholder
+        expect(attributeFieldDOMNode.actual.querySelector('.rw-placeholder').innerHTML).toBe("TEST");
+        // check the localized label
+        // click on the arrow to open the dropdown
+        act(() => {
+            Simulate.click(attributeFieldDOMNode.actual.querySelector('.rw-i-caret-down'));
+        });
+        // check the localized label
+        expect(attributeFieldDOMNode.actual.querySelector('.rw-list-option.rw-state-focus').innerHTML).toBe("Attribute1-en-US");
     });
 
     it('creates the FilterField component', () => {

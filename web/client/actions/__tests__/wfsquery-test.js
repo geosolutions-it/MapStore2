@@ -48,10 +48,11 @@ describe('wfsquery actions', () => {
         expect(type).toBe(INIT_QUERY_PANEL);
     });
     it('featureTypeSelected', () => {
-        let {type, url, typeName} = featureTypeSelected("/geoserver/", "topp:states");
+        let {type, url, typeName, fields} = featureTypeSelected("/geoserver/", "topp:states", [{name: "name", alias: "alias"}]);
         expect(type).toBe(FEATURE_TYPE_SELECTED);
         expect(url).toBe("/geoserver/");
         expect(typeName).toBe("topp:states");
+        expect(fields).toEqual([{name: "name", alias: "alias"}]);
     });
     it('featureTypeError', () => {
         let {type, error, typeName} = featureTypeError("topp:states", "ERROR");

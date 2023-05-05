@@ -10,7 +10,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ComboField from './ComboField';
 import assign from 'object-assign';
-import { getMessageById } from '../../../utils/LocaleUtils';
+
+import localizedProps from '../../misc/enhancers/localizedProps';
+
+// support for localized attribute names and placeholder
+export const AttributeNameField = localizedProps('placeholder')(localizedProps('fieldOptions', 'label', 'object')(ComboField));
 
 class FilterField extends React.Component {
     static propTypes = {
@@ -78,12 +82,12 @@ class FilterField extends React.Component {
         return (
             <div className="filter-field-row">
                 <div className="filter-field-attribute">
-                    <ComboField
+                    <AttributeNameField
                         dropUp={this.props.dropUp}
-                        valueField={'id'}
-                        textField={'name'}
-                        fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
-                        placeholder={getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder")}
+                        valueField={'attribute'}
+                        textField={'label'}
+                        fieldOptions={this.props.attributes}
+                        placeholder="queryform.attributefilter.combo_placeholder"
                         fieldValue={this.props.filterField.attribute}
                         attType={selectedAttribute && selectedAttribute.type}
                         fieldName="attribute"

@@ -58,10 +58,10 @@ const addFilterToLayer = (layer, filter) => {
 export const handleLayerFilterPanel = (action$, {getState}) =>
     action$.ofType(OPEN_QUERY_BUILDER).switchMap(() => {
         const layer = getSelectedLayer(getState());
-        const {url, name, layerFilter} = layer || {};
+        const {url, name, layerFilter, fields} = layer || {};
         const searchUrl = layer && layer.search && layer.search.url;
         return Rx.Observable.of(
-            featureTypeSelected(searchUrl || url, name),
+            featureTypeSelected(searchUrl || url, name, fields),
             // Load the filter from the layer if it exist
             loadFilter(layerFilter),
             initLayerFilter(layerFilter),

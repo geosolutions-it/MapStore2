@@ -86,4 +86,50 @@ describe('crossLayerFilter enhancer', () => {
             searchUrl="base/web/client/test-resources/wfs/states-capabilities.xml"
         />), document.getElementById("container"));
     });
+    it('layer with fields', (done) => {
+        const actions = {
+            setCrossLayerFilterParameter: () => { }
+        };
+        const spysetCrossLayerFilterParameter = expect.spyOn(actions, 'setCrossLayerFilterParameter');
+        const Sink = crossLayerFilter(createSink( props => {
+            try {
+                expect(props).toExist();
+                if (!props.loadingAttributes) {
+                    expect(props.attributes).toExist();
+                    expect(props.attributes.length).toBe(22);
+                    // check alias is used as label for the field "STATE_NAME"
+                    expect(props.attributes[0].label).toBe("State Name");
+                    expect(spysetCrossLayerFilterParameter).toHaveBeenCalledWith("collectGeometries.queryCollection[geometryName]", "the_geom");
+                    done();
+                }
+            } catch (e) {
+                done(e);
+            }
+
+        }));
+        ReactDOM.render((<Sink
+            setCrossLayerFilterParameter={actions.setCrossLayerFilterParameter}
+            crossLayerExpanded
+            layers={[{
+                name: "topp:states",
+                fields: [{
+                    name: "STATE_NAME",
+                    alias: "State Name"
+                }, {
+                    name: "STATE_FIPS"
+                }],
+                search: {
+                    url: "base/web/client/test-resources/wfs/describe-states.json"
+                }
+            }]}
+            crossLayerFilter={{
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "topp:states"
+                    }
+                }
+            }}
+            searchUrl="base/web/client/test-resources/wfs/states-capabilities.xml"
+        />), document.getElementById("container"));
+    });
 });
