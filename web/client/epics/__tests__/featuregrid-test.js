@@ -525,7 +525,12 @@ const state = {
             id: "TEST_LAYER",
             title: "Test Layer",
             filterObj,
-            nativeCrs: "EPSG:4326"
+            nativeCrs: "EPSG:4326",
+            fields: [{
+                name: "attribute1",
+                type: "string",
+                alias: "Attribute 1"
+            }]
         }]
     },
     highlight: {
@@ -637,25 +642,31 @@ describe('featuregrid Epics', () => {
 
     describe('featureGridBrowseData epic', () => {
         const LAYER = state.layers.flat[0];
-        const checkInitActions = ([a1, a2, a3]) => {
-            // close TOC
-            expect(a1.type).toBe(SET_CONTROL_PROPERTY);
-            expect(a1.control).toBe('drawer');
-            expect(a1.property).toBe('enabled');
-            expect(a1.value).toBe(false);
-            // set feature grid layer
-            expect(a2.type).toBe(SET_LAYER);
-            expect(a2.id).toBe(LAYER.id);
-            // open feature grid
-            expect(a3.type).toBe(OPEN_FEATURE_GRID);
-        };
+
         it('browseData action initializes featuregrid', done => {
             testEpic(featureGridBrowseData, 5, browseData(LAYER), ([ a1, a2, a3, a4, a5 ]) => {
-                expect(a1.type).toBe(QUERY_FORM_RESET);
-                checkInitActions([a2, a3, a4]);
-                // sets the feature type selected for search
-                expect(a5.type).toBe(FEATURE_TYPE_SELECTED);
-                done();
+                try {
+                    expect(a1.type).toBe(QUERY_FORM_RESET);
+                    // close TOC
+                    expect(a2.type).toBe(SET_CONTROL_PROPERTY);
+                    expect(a2.control).toBe('drawer');
+                    expect(a2.property).toBe('enabled');
+                    expect(a2.value).toBe(false);
+                    // set feature grid layer
+                    expect(a3.type).toBe(SET_LAYER);
+                    expect(a3.id).toBe(LAYER.id);
+                    // open feature grid
+                    expect(a4.type).toBe(OPEN_FEATURE_GRID);
+                    // sets the feature type selected for search
+                    expect(a5.type).toBe(FEATURE_TYPE_SELECTED);
+                    // check fields of layer are passed if any
+                    expect(a5.fields.length).toBe(1);
+                    expect(a5.fields).toBe(LAYER.fields);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+
             }, state);
         });
     });
