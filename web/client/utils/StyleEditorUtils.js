@@ -593,7 +593,14 @@ export function detectStyleCodeChanges({ metadata = {}, format, code } = {}) {
         });
 }
 
-export function getAttributes(properties) {
+/**
+ * Internal function for handling attributes in the style editor.
+ * Parses the properties object (that maps for each attribute name the information about hte type) and checks the type of each property (if it is a string or a number)
+ * @param {object} properties object with properties (`{key: {localType: "..."}}`)
+ * @param {object[]} [fields=[]] optional array of fields to get the alias from. If not provided, the alias will be the key
+ * @returns {object[]} returns an array of attributes (`{attribute: key, label: alias, type: 'string' | 'number'}`) where `alias` is the alias of the field if present, otherwise the key
+ */
+export function getAttributes(properties, fields = []) {
     const stringTypeToCheck = [ 'string'];
     const numberTypeToCheck = ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal', 'number', 'int'];
     return Object.keys(properties)
@@ -601,9 +608,10 @@ export function getAttributes(properties) {
             .indexOf(properties[key].localType.toLowerCase()) !== -1)
         .map((key) => {
             const { localType } = properties[key];
+            const field = fields.find(f => f.name === key) || {};
             return {
                 attribute: key,
-                label: key,
+                label: field?.alias ?? key,
                 type: numberTypeToCheck
                     .indexOf(localType.toLowerCase()) !== -1
                     ? 'number'
@@ -635,7 +643,7 @@ export function getVectorLayerAttributes(layer) {
         return attributes;
     }
     if (layer?.type === 'wfs') {
-        return getAttributes(layer.properties);
+        return getAttributes(layer.properties, layer?.fields);
     }
     if (layer?.type === 'vector') {
         const propertiesKeys = Object.keys(layer.properties || {});

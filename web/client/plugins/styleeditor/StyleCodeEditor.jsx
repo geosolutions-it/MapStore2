@@ -60,9 +60,9 @@ const styleUpdateTypes = {
     'classification-raster': classificationRaster
 };
 
-function getAttributesFromHintProperties(hintProperties, geometryType) {
+function getAttributesFromHintProperties(hintProperties, geometryType, fields) {
     return hintProperties && geometryType !== 'raster'
-        ? getAttributes(hintProperties)
+        ? getAttributes(hintProperties, fields)
         : [];
 }
 
@@ -84,7 +84,7 @@ const ConnectedVisualStyleEditor = connect(
             code,
             mode: getEditorMode(format),
             bands: isArray(hintProperties) && geometryType === 'raster' && hintProperties || [],
-            attributes: getAttributesFromHintProperties(hintProperties, geometryType),
+            attributes: getAttributesFromHintProperties(hintProperties, geometryType, layer?.fields),
             error: error.edit || null,
             loading,
             format,

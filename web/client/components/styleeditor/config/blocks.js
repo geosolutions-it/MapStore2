@@ -441,7 +441,7 @@ const getBlocks = ({
                     getOptions: ({ attributes }) => {
                         return attributes?.map((option) => ({
                             value: '{{' + option.attribute + '}}',
-                            label: option.attribute
+                            label: option.label || option.attribute
                         })) || [];
                     }
                 }),
@@ -561,7 +561,7 @@ const getBlocks = ({
                         getOptions: ({ attributes }) => {
                             return attributes?.map((option) => ({
                                 value: option.attribute,
-                                label: option.attribute,
+                                label: option.label || option.attribute,
                                 disabled: option.disabled
                             }));
                         }

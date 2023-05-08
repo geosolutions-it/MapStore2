@@ -53,6 +53,31 @@ describe('MultiInput component', () => {
         const selectNode = document.querySelector('.Select');
         expect(selectNode).toBeTruthy();
     });
+    it('should render localized labels in select', () => {
+        const INITIAL_OPTION_VALUE = 'original_option_value';
+        const config = {
+            initialOptionValue: INITIAL_OPTION_VALUE,
+            getSelectOptions: () => [
+                { label: {"default": "Localized"}, value: 'height' },
+                { label: 'Id', value: 'id' },
+                { label: 'Original value', value: INITIAL_OPTION_VALUE }
+            ]
+        };
+        ReactDOM.render(<MultiInput value={{ type: 'attributes', name: 'height' }} config={config} />, document.getElementById("container"));
+        const selectNode = document.querySelector('.Select');
+        const selectInputNode = selectNode.querySelector('input');
+        act(() => {
+
+            Simulate.focus(selectInputNode);
+            Simulate.keyDown(selectInputNode, { key: 'ArrowDown', keyCode: 40 });
+            Simulate.keyDown(selectInputNode, { key: 'Enter', keyCode: 13 });
+        });
+        const selectMenuOptionNodes = selectNode.querySelectorAll('.Select-option');
+        expect(selectMenuOptionNodes.length).toBe(3);
+        expect(selectMenuOptionNodes[0].textContent).toBe('Localized');
+        expect(selectMenuOptionNodes[1].textContent).toBe('Id');
+        expect(selectMenuOptionNodes[2].textContent).toBe('Original value');
+    });
 
     it('should handle onChange', (done) => {
         act(() => {

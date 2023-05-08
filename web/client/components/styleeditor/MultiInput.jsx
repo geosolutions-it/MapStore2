@@ -13,7 +13,7 @@ import localizedProps from '../misc/enhancers/localizedProps';
 import Message from '../I18N/Message';
 import DebouncedFormControl from '../misc/DebouncedFormControl';
 
-const ReactSelect = localizedProps(['placeholder', 'noResultsText'])(Select);
+const ReactSelect = localizedProps('options', 'label', "object")(localizedProps(['placeholder', 'noResultsText'])(Select));
 
 function MultiInput({
     label,

@@ -57,4 +57,31 @@ describe('SelectInput component', () => {
         expect(selectInputOptions.length).toBe(3);
         expect([...selectInputOptions].map((node) => node.innerHTML)).toEqual([ 'a', '1', '2' ]);
     });
+    it('should support localized labels in getOptions', () => {
+        act(() => {
+            ReactDOM.render(<SelectInput
+                value={'a'}
+                config={{
+                    getOptions: () => [{ value: '1', label: '1' }]
+                }}
+            />, document.getElementById("container"));
+        });
+        let selectInputControlNode = document.querySelector('.Select-control');
+        expect(selectInputControlNode).toBeTruthy();
+        act(() => {
+            ReactDOM.render(<SelectInput
+                value={'a'}
+                config={{
+                    getOptions: () => [{ value: '1', label: '1' }, { value: '2', label: {"default": '2-localized'} }]
+                }}
+            />, document.getElementById("container"));
+        });
+        selectInputControlNode = document.querySelector('.Select-control');
+        act(() => {
+            Simulate.keyDown(selectInputControlNode, { keyCode: 40 });
+        });
+        const selectInputOptions = document.querySelectorAll('.Select-option');
+        expect(selectInputOptions.length).toBe(3);
+        expect([...selectInputOptions].map((node) => node.innerHTML)).toEqual([ 'a', '1', '2-localized' ]);
+    });
 });
