@@ -11,7 +11,7 @@ import React from 'react';
 import expect from 'expect';
 import ReactDOM from 'react-dom';
 import IdentifyContainer from '../IdentifyContainer';
-import TestUtils from 'react-dom/test-utils';
+import TestUtils, {act} from 'react-dom/test-utils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import getFeatureButtons from '../../../../plugins/identify/featureButtons';
 
@@ -300,5 +300,42 @@ describe("test IdentifyContainer", () => {
         />, document.getElementById("container"));
         let coordinateEditorContainer = document.querySelectorAll('.coordinate-editor');
         expect(coordinateEditorContainer[0].style['z-index']).toBe('1');
+    });
+    it('onEdit handler', () => {
+        const handlers = {
+            onEdit: () => {}
+        };
+        const onEditSpy = expect.spyOn(handlers, 'onEdit');
+        // TODO: refactor identifyContainer to avoid onEdit association with edit button
+        // to be so messy
+        const bt = {
+            glyph: 'pencil',
+            tooltipId: 'identify.edit',
+            onClick: handlers.onEdit
+        };
+        const RESPONSE1 = {layer: {search: {url: 'search_url'}, fields: []}};
+        act(() => {
+
+            ReactDOM.render(<IdentifyContainer
+                getToolButtons={({onEdit: f}) => [{...bt, onClick: () => f()}] }
+                enabled
+                index={0}
+                showEdit
+                isEditingAllowed
+                requests={[{}]}
+                responses={[RESPONSE1]}
+                onEdit={handlers.onEdit}
+            />, document.getElementById("container"));
+        });
+        const editButton = document.querySelector('.glyphicon-pencil');
+        TestUtils.Simulate.click(editButton);
+        expect(onEditSpy).toHaveBeenCalled();
+        expect(onEditSpy.calls[0].arguments[0]).toEqual({
+            ...RESPONSE1.layer,
+            // the call of onEdit overrides the layer URL with the search URL
+            url: RESPONSE1.layer.search.url
+        });
+
+
     });
 });

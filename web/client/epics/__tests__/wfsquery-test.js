@@ -386,7 +386,12 @@ describe('wfsquery Epics', () => {
             name: 'poi',
             title: 'layer2 title',
             description: 'layer2 description',
-            type: 'wms'
+            type: 'wms',
+            fields: [{
+                name: "NAME",
+                alias: "Name Alias",
+                type: "string"
+            }]
         }];
         it('vector layer', (done) => {
             const mockState = {
@@ -447,7 +452,7 @@ describe('wfsquery Epics', () => {
             );
         });
 
-        it('featureTypeSelectedEpic', (done) => {
+        it('wms layer', (done) => {
             const mockState = {
                 query: {
                     data: {},
@@ -481,12 +486,12 @@ describe('wfsquery Epics', () => {
             const wfsResults = require('../../test-resources/wfs/describe-pois.json');
             mockAxios.onGet().reply(() => [200, wfsResults]);
             testEpic(featureTypeSelectedEpic, 2,
-                featureTypeSelected('/dummy', 'poi'), ([changeSpatialAttribute, featureTypeLoaded]) => {
+                featureTypeSelected('/dummy', 'poi', wmsLayer[0].fields), ([changeSpatialAttribute, featureTypeLoaded]) => {
                     try {
                         expect(featureTypeLoaded.type).toBe(FEATURE_TYPE_LOADED);
                         expect(changeSpatialAttribute.type).toBe(CHANGE_SPATIAL_ATTRIBUTE);
                         expect(featureTypeLoaded.featureType.attributes).toEqual([{
-                            label: "NAME",
+                            label: "Name Alias",
                             attribute: "NAME",
                             type: "string",
                             valueId: "id",

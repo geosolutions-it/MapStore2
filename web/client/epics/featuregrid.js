@@ -271,7 +271,7 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
     ));
 };
 
-const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
+const createInitialQueryFlow = (action$, store, {url, name, id, fields} = {}) => {
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     const createInitialQuery = () => createQuery(url, filterObj || {
         featureTypeName: name,
@@ -279,7 +279,7 @@ const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
         ogcVersion: '1.1.0'
     });
 
-    return Rx.Observable.of(featureTypeSelected(url, name)).merge(
+    return Rx.Observable.of(featureTypeSelected(url, name, fields)).merge(
         action$.ofType(FEATURE_TYPE_LOADED).filter(({typeName} = {}) => typeName === name)
             .map(createInitialQuery)
     );

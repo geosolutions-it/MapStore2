@@ -112,10 +112,9 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[3]);
         expect(spyLayerFilter).toHaveBeenCalled();
-        expect(spyBrowseData).toHaveBeenCalledWith({
-            url: selectedLayers[0].search.url,
-            name: selectedLayers[0].name,
-            id: selectedLayers[0].id
+        expect(spyBrowseData.calls[0].arguments[0]).toEqual({
+            ...selectedLayers[0],
+            url: selectedLayers[0].search.url
         });
         TestUtils.Simulate.click(btn[5]);
         expect(spyDownload).toHaveBeenCalled();

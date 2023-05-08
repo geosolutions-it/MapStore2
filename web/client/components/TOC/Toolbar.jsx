@@ -350,10 +350,10 @@ class Toolbar extends React.Component {
     }
 
     browseData = () => {
+        const layer = this.props.selectedLayers[0] || {};
         this.props.onToolsActions.onBrowseData({
-            url: this.props.selectedLayers[0].search.url || this.props.selectedLayers[0].url,
-            name: this.props.selectedLayers[0].name,
-            id: this.props.selectedLayers[0].id
+            ...layer,
+            url: layer?.search?.url || layer.url
         });
     }
 

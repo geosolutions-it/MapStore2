@@ -57,13 +57,14 @@ import {layerLoad} from '../actions/layers';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
 
-const extractInfo = (data) => {
+const extractInfo = (data, fields = []) => {
     return {
         geometry: data.featureTypes[0].properties
             .filter((attribute) => attribute.type.indexOf('gml:') === 0)
             .map((attribute) => {
+                const label = find(fields, {name: attribute.name}) ?? attribute.name;
                 let conf = {
-                    label: attribute.name,
+                    label,
                     attribute: attribute.name,
                     type: 'geometry',
                     valueId: "id",
@@ -73,7 +74,7 @@ const extractInfo = (data) => {
                 return conf;
             }),
         original: data,
-        attributes: describeFeatureTypeToAttributes(data)
+        attributes: describeFeatureTypeToAttributes(data, fields)
     };
 };
 
@@ -98,8 +99,9 @@ export const featureTypeSelectedEpic = (action$, store) =>
         .switchMap(action => {
             const state = store.getState();
             if (isDescribeLoaded(state, action.typeName)) {
-                const info = extractInfo(layerDescribeSelector(state, action.typeName));
+                const info = extractInfo(layerDescribeSelector(state, action.typeName), action.fields);
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
+
                 return Rx.Observable.of(featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry), Rx.Scheduler.async); // async scheduler is needed to allow invokers of `FEATURE_TYPE_SELECTED` to intercept `FEATURE_TYPE_LOADED` action as response.
             }
 
@@ -117,7 +119,7 @@ export const featureTypeSelectedEpic = (action$, store) =>
                                 .map((attribute) => attribute
                                 ),
                             original: originalData,
-                            attributes: describeFeatureTypeToAttributes(originalData)
+                            attributes: describeFeatureTypeToAttributes(originalData, action.fields)
                         };
 
                         const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
@@ -138,7 +140,7 @@ export const featureTypeSelectedEpic = (action$, store) =>
             return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
-                        const info = extractInfo(response.data);
+                        const info = extractInfo(response.data, action.fields);
                         const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
                         return Rx.Observable.from([changeSpatialAttribute(geometry), featureTypeLoaded(action.typeName, info)]);
                     }

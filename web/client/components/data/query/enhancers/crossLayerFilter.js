@@ -58,7 +58,7 @@ const retrieveCrossLayerAttributes = ($props, setQueryCollectionParameter) => $p
                     setQueryCollectionParameter("geometryName", geomProp);
                 }
             })
-            .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data))
+            .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data, layer?.fields))
             .map(attributes => ({
                 attributes,
                 loadingAttributes: false

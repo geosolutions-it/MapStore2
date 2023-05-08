@@ -99,8 +99,7 @@ export default props => {
         latlng,
         showEdit: showEdit && isEditingAllowed && !!targetResponse && responseValidForEdit(targetResponse),
         onEdit: onEdit.bind(null, layer && {
-            id: layer.id,
-            name: layer.name,
+            ...layer,
             url: get(layer, 'search.url')
         })
     });

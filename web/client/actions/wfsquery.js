@@ -46,11 +46,12 @@ export function initQueryPanel() {
         type: INIT_QUERY_PANEL
     };
 }
-export function featureTypeSelected(url, typeName) {
+export function featureTypeSelected(url, typeName, fields = []) {
     return {
         type: FEATURE_TYPE_SELECTED,
         url,
-        typeName
+        typeName,
+        fields
     };
 }
 export function featureTypeLoaded(typeName, featureType) {

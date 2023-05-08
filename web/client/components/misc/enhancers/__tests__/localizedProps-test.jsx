@@ -13,7 +13,7 @@ import {createSink, withContext, compose} from 'recompose';
 import expect from 'expect';
 import localizedProps from '../localizedProps';
 
-describe('localizedProps enhancher', () => {
+describe('localizedProps enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -103,8 +103,9 @@ describe('localizedProps enhancher', () => {
 
         const Sink = compose(
             withContext(
-                {messages: {}},
+                {messages: {}, locale: "it-IT"},
                 () => ({
+                    locale: "it-IT",
                     messages: { path: { to: { msg1: "localized", msg2: "localized2" } } }
                 })
             ),
@@ -116,6 +117,113 @@ describe('localizedProps enhancher', () => {
             expect(props.options[1].label).toBe("localized2");
         }));
         ReactDOM.render((<Sink options={["path.to.msg1", "path.to.msg2"]}/>), document.getElementById("container"));
+    });
+    describe('object mode', () => {
+        it('localize normal string (render the string)', () => {
+            const Sink = compose(
+                withContext(
+                    {messages: {}, locale: "it-IT"},
+                    () => ({
+                        locale: "it-IT",
+                        messages: { }
+                    })
+                ),
+                localizedProps("options", undefined, "object")
+            )(createSink( props => {
+                expect(props).toExist();
+                expect(props.options).toExist();
+                expect(props.options).toBe("localized");
+            }));
+            ReactDOM.render((<Sink options={"localized"}/>), document.getElementById("container"));
+        });
+        it('localize with a valid rect element (render the element)', () => {
+            const EL = <div>localized</div>;
+            const Sink = compose(
+                withContext(
+                    {messages: {}, locale: "it-IT"},
+                    () => ({
+                        locale: "it-IT",
+                        messages: { }
+                    })
+                ),
+                localizedProps("options", undefined, "object")
+            )(createSink( props => {
+                expect(props).toExist();
+                expect(props.options).toExist();
+                expect(props.options).toBe(EL);
+            }));
+            ReactDOM.render((<Sink options={EL}/>), document.getElementById("container"));
+        });
+        it('localize object with locale present', () => {
+            const localizedString = {
+                "en-US": "localized",
+                "it-IT": "localized-IT"
+            };
+            const Sink = compose(
+                withContext(
+                    {locale: "it-IT", messages: {}},
+                    () => ({
+                        locale: "it-IT",
+                        messages: { }
+                    })
+                ),
+                localizedProps("options", undefined, "object")
+            )(createSink( props => {
+                expect(props).toExist();
+                expect(props.options).toExist();
+                expect(props.options).toBe("localized-IT");
+            }));
+            ReactDOM.render((<Sink options={localizedString}/>), document.getElementById("container"));
+        });
+        it('localizedProps with mode "object" and default', () => {
+            const localizedString = {
+                "default": "default",
+                "en-US": "localized"
+            };
+            const Sink = compose(
+                withContext(
+                    {messages: {}, locale: "it-IT"},
+                    () => ({
+                        locale: "it-IT",
+                        messages: { }
+                    })
+                ),
+                localizedProps("options", undefined, "object")
+            )(createSink( props => {
+                expect(props).toExist();
+                expect(props.options).toExist();
+                expect(props.options).toBe("default");
+            }));
+            ReactDOM.render((<Sink options={localizedString}/>), document.getElementById("container"));
+        });
+        it('localizedProps with mode "object" using an array', () => {
+            const localizedString = {
+                "en-US": "localized",
+                "it-IT": "localized-IT"
+            };
+            const localizedString2 = {
+                "en-US": "localized2",
+                "it-IT": "localized-IT2"
+            };
+            const options = [{label: localizedString}, {label: localizedString2}];
+            const Sink = compose(
+                withContext(
+                    {locale: "it-IT", messages: {}},
+                    () => ({
+                        locale: "it-IT",
+                        messages: {}
+                    })
+                ),
+                localizedProps("options", "label", "object")
+            )(createSink( props => {
+                expect(props).toExist();
+                expect(props.options).toExist();
+                expect(props.options[0].label).toBe("localized-IT");
+                expect(props.options[1].label).toBe("localized-IT2");
+
+            }));
+            ReactDOM.render((<Sink options={options}/>), document.getElementById("container"));
+        });
     });
 
 });
