@@ -268,7 +268,7 @@ const RulesEditor = forwardRef(({
                     // before to look if the current selected attribute is of type number
                     // the attribute select of the classification rule changes the disabled attribute based on type
                     const isCustomNumber =  isArray(attributes)
-                        ? (attributes.find(({ label }) => label === rule?.attribute) || {})?.type === 'number'
+                        ? (attributes.find(({ attribute }) => attribute === rule?.attribute) || {})?.type === 'number'
                         : false;
                     return (
                         <Rule
@@ -348,7 +348,7 @@ const RulesEditor = forwardRef(({
                                     attributes={attributes && attributes.map((attribute) => ({
                                         ...attribute,
                                         ...( rule.method === "customInterval"
-                                            ? { disabled: isCustomNumber ? attribute.type !== 'number' : attribute.label !== rule.attribute }
+                                            ? { disabled: isCustomNumber ? attribute.type !== 'number' : attribute.attribute !== rule.attribute }
                                             : rule.method !== "uniqueInterval" && { disabled: attribute.type !== 'number' }
                                         )
                                     }))}

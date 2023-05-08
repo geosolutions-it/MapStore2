@@ -1269,5 +1269,10 @@ describe('StyleEditorUtils test', () => {
             { attribute: 'name', label: 'name', type: 'string' },
             { attribute: 'count', label: 'count', type: 'number' }
         ]);
+        // support for optionals fields for alias
+        expect(getAttributes(properties, [{"name": "name", "alias": "alias"}])).toEqual([
+            { attribute: 'name', label: 'alias', type: 'string' },
+            { attribute: 'count', label: 'count', type: 'number' }
+        ]);
     });
 });

@@ -13,8 +13,8 @@ import Message from '../I18N/Message';
 import Select from 'react-select';
 import localizedProps from '../misc/enhancers/localizedProps';
 
-const ReactSelect = localizedProps(['placeholder', 'noResultsText'])(Select);
-const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Select.Creatable);
+const ReactSelect = localizedProps('options', 'label', 'object')(localizedProps(['placeholder', 'noResultsText'])(Select));
+const ReactSelectCreatable = localizedProps('options', 'label', 'object')(localizedProps(['placeholder', 'noResultsText'])(Select.Creatable));
 
 function SelectInput({
     label,
