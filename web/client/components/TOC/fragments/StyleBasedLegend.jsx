@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import MarkIcon from './MarkIcon';
 import { Glyphicon } from 'react-bootstrap';
 
-function WFSLegend({ style }) {
+function StyleBasedLegend({ style }) {
     const renderIcon = (symbolizer) => {
         const {
             color,
@@ -64,16 +64,33 @@ function WFSLegend({ style }) {
             </svg>);
         case 'Model':
             return <Glyphicon glyph="model"/>;
+        case 'Text':
+            return (<svg viewBox="0 0 16 16">
+                <text x="8" y="8" text-anchor="middle" alignment-baseline="middle"  style={{
+                    fontSize: symbolizer.size < 14 ? symbolizer.size : 14,
+                    fill: symbolizer.color,
+                    fontFamily: symbolizer?.font?.join(', '),
+                    fontStyle: symbolizer.fontStyle,
+                    fontWeight: symbolizer.fontWeight,
+                    ...((symbolizer.haloWidth && symbolizer.haloColor) && {
+                        paintOrder: 'stroke',
+                        stroke: symbolizer.haloColor,
+                        strokeWidth: 1,
+                        strokeLinecap: 'round',
+                        strokeLinejoin: 'round'
+                    })
+                }} >La</text>
+            </svg>);
         default:
             return null;
         }
     };
 
     const renderRules = (rules) => {
-        return rules.map((rule) => {
+        return (rules || []).map((rule) => {
             return (<div className="wfs-legend-rule" key={rule.ruleId}>
                 <div className="wfs-legend-icon">{renderIcon(rule.symbolizers[0])}</div>
-                <span>{rule.name || ''}</span>
+                <span>{rule?.name || ''}</span>
             </div>);
         });
     };
@@ -87,8 +104,8 @@ function WFSLegend({ style }) {
     </>;
 }
 
-WFSLegend.propTypes = {
+StyleBasedLegend.propTypes = {
     style: PropTypes.object
 };
 
-export default WFSLegend;
+export default StyleBasedLegend;
