@@ -6,19 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {getCurrentResolution} = require('../MapUtils');
-const isNil = require('lodash/isNil');
+import { Observable } from 'rxjs';
+import isObject from 'lodash/isObject';
+import { getCurrentResolution } from '../MapUtils';
+import isNil from 'lodash/isNil';
 
-module.exports = {
+export default {
     buildRequest: (layer, props) => {
+        const { features = [] } = props?.point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
         return {
             request: {
+                features: [...features],
+                outputFormat: 'application/json',
                 lat: props.point.latlng.lat,
                 lng: props.point.latlng.lng
             },
             metadata: {
                 fields: layer.features?.[0]?.properties && Object.keys(layer.features[0].properties) || [],
-                title: layer.name,
+                title: isObject(layer.title)
+                    ? layer.title[props?.currentLocale] || layer.title.default
+                    : layer.title,
                 resolution: isNil(props?.map?.resolution)
                     ? props?.map?.zoom && getCurrentResolution(props.map.zoom, 0, 21, 96)
                     : props.map.resolution,
@@ -28,7 +35,17 @@ module.exports = {
                 viewer: layer.viewer,
                 layerId: layer.id
             },
-            url: ""
+            // this will force to use the getIdentifyFlow
+            // instead of the getVectorInfo action
+            // when a layer is not an annotation
+            url: layer.id === 'annotations' ? undefined : 'client'
         };
+    },
+    getIdentifyFlow: (layer, baseURL, { features = [] } = {}) => {
+        return Observable.of({
+            data: {
+                features
+            }
+        });
     }
 };
