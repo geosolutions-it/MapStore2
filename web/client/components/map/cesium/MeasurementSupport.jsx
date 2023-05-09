@@ -18,6 +18,8 @@ import MeasureToolbar from '../../mapcontrols/measure/MeasureToolbar';
 import { MeasureTypes, defaultUnitOfMeasureOptions, measureIcons } from '../../../utils/MeasureUtils';
 import tooltip from '../../misc/enhancers/tooltip';
 import { getMessageById } from '../../../utils/LocaleUtils';
+import { download } from '../../../utils/FileUtils';
+import { convertMeasuresToGeoJSON } from '../../../utils/MeasurementUtils';
 
 const Button = tooltip(MSButton);
 
@@ -174,6 +176,19 @@ function MeasurementSupport({
                         </Button>
                     </ButtonGroup>
                     <ButtonGroup>
+                        <Button
+                            className="square-button-md"
+                            bsStyle="primary"
+                            tooltipId="measureComponent.exportToGeoJSON"
+                            disabled={(measurement?.features?.length || 0) === 0}
+                            onClick={() => download(
+                                JSON.stringify(convertMeasuresToGeoJSON(measurement.features)),
+                                'measurements.json',
+                                'application/geo+json'
+                            )}
+                        >
+                            <Glyphicon glyph="ext-json" />
+                        </Button>
                         {onAddAsLayer && <Button
                             className="square-button-md"
                             bsStyle="primary"

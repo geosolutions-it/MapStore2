@@ -12,7 +12,7 @@ import {getStyle} from '../VectorStyle';
 import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
-import { applyDefaultStyleToLayer } from '../../../../utils/VectorStyleUtils';
+import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
 Layers.registerType('vector', {
     create: (options, map) => {
@@ -32,7 +32,7 @@ Layers.registerType('vector', {
             maxResolution: options.maxResolution
         });
 
-        getStyle(applyDefaultStyleToLayer({ ...options, asPromise: true }))
+        getStyle(applyDefaultStyleToVectorLayer({ ...options, asPromise: true }))
             .then((style) => {
                 if (style) {
                     const olStyle = style.__geoStylerStyle
@@ -54,7 +54,7 @@ Layers.registerType('vector', {
         }
 
         if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
-            getStyle(applyDefaultStyleToLayer({ ...newOptions, asPromise: true }))
+            getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, asPromise: true }))
                 .then((style) => {
                     if (style) {
                         const olStyle = style.__geoStylerStyle

@@ -34,8 +34,7 @@ import {
     getSymbolsStyles,
     getStyleParser,
     flattenFeatures,
-    layerToGeoStylerStyle,
-    applyDefaultStyleToLayer
+    layerToGeoStylerStyle
 } from '../VectorStyleUtils';
 
 const LENGTH_OF_OBJECT_DATA_URL = "blob:http://localhost:9876/87844744-f879-4f5b-90bc-2cc6e70ba3cd".length;
@@ -637,60 +636,6 @@ describe("VectorStyleUtils ", () => {
                 }
                 done();
             });
-    });
-
-    it('should add default style if the layer id providing an empty style object with applyDefaultStyleToLayer', () => {
-        const layer = {};
-        const newLayerWithStyle = applyDefaultStyleToLayer(layer);
-        expect(newLayerWithStyle.style).toEqual({
-            format: 'geostyler',
-            body: {
-                name: 'Default Style',
-                rules: [
-                    {
-                        name: 'Default Point Style',
-                        symbolizers: [
-                            {
-                                kind: 'Mark',
-                                color: '#f2f2f2',
-                                fillOpacity: 0.3,
-                                opacity: 0.5,
-                                strokeColor: '#3075e9',
-                                strokeOpacity: 1,
-                                strokeWidth: 2,
-                                wellKnownName: 'Circle',
-                                radius: 10,
-                                msBringToFront: true
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Default Line Style',
-                        symbolizers: [
-                            {
-                                kind: 'Line',
-                                color: '#3075e9',
-                                opacity: 1,
-                                width: 2
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Default Polygon Style',
-                        symbolizers: [
-                            {
-                                kind: 'Fill',
-                                color: '#f2f2f2',
-                                fillOpacity: 0.3,
-                                outlineColor: '#3075e9',
-                                outlineOpacity: 1,
-                                outlineWidth: 2
-                            }
-                        ]
-                    }
-                ]
-            }
-        });
     });
 
 });

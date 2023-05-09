@@ -583,7 +583,10 @@ export const geoJSONToLayer = (geoJSON, id) => {
             },
             crs: "EPSG:4326"
         },
-        features
+        features,
+        ...(['geostyler'].includes(geoJSON?.style?.format) && geoJSON?.style?.body && {
+            style: geoJSON.style
+        })
     };
 };
 export const saveLayer = (layer) => {

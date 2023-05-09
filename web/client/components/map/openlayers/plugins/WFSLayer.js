@@ -16,7 +16,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { getFeature, describeFeatureType } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { needsReload, extractGeometryType } from '../../../../utils/WFSLayerUtils';
-import { applyDefaultStyleToLayer } from '../../../../utils/VectorStyleUtils';
+import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
 const createLoader = (source, options) => (extent, resolution, projection) => {
     const params = optionsToVendorParams(options);
@@ -49,7 +49,7 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
  * @param {object} layer the openlayers layer
  */
 const getWFSStyle = (layer, options, geometryType, map) => {
-    return getStyle(applyDefaultStyleToLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
+    return getStyle(applyDefaultStyleToVectorLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
         .then((style) => {
             if (style) {
                 const olStyle = style.__geoStylerStyle

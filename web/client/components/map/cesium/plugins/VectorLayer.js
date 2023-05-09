@@ -12,9 +12,9 @@ import isEqual from 'lodash/isEqual';
 import {
     getStyle,
     layerToGeoStylerStyle,
-    flattenFeatures,
-    applyDefaultStyleToLayer
+    flattenFeatures
 } from '../../../../utils/VectorStyleUtils';
+import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
 const createLayer = (options, map) => {
 
@@ -38,7 +38,7 @@ const createLayer = (options, map) => {
             map.dataSources.add(dataSource);
             layerToGeoStylerStyle(options)
                 .then((style) => {
-                    getStyle(applyDefaultStyleToLayer({ ...options, style }), 'cesium')
+                    getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
                         .then((styleFunc) => {
                             if (styleFunc) {
                                 styleFunc({
@@ -86,7 +86,7 @@ Layers.registerType('vector', {
         ) {
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
-                    getStyle(applyDefaultStyleToLayer({ ...newOptions, style }), 'cesium')
+                    getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, style }), 'cesium')
                         .then((styleFunc) => {
                             if (styleFunc) {
                                 styleFunc({
