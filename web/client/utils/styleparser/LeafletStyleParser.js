@@ -8,6 +8,12 @@
 
 import L from 'leaflet';
 import { castArray } from 'lodash';
+import {
+    resolveAttributeTemplate,
+    geoStylerStyleFilter,
+    drawIcons,
+    getImageIdFromSymbolizer
+} from './StyleParserUtils';
 
 const geometryTypeToKind = {
     'Point': ['Mark', 'Icon', 'Text'],
@@ -18,21 +24,8 @@ const geometryTypeToKind = {
     'MultiPolygon': ['Fill']
 };
 
-function parseLabel(feature, label = '') {
-    if (!feature.properties) {
-        return label;
-    }
-    return Object.keys(feature.properties)
-        .reduce((str, key) => {
-            const regExp = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
-            return str.replace(regExp, feature.properties[key] ?? '');
-        }, label);
-}
-
 function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
-    geoStylerStyleFilter,
-    images,
-    getImageIdFromSymbolizer
+    images
 }) {
 
     // the last rules of the array should the one we'll apply
@@ -115,7 +108,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     }
                 }
                 if (firstValidSymbolizer.kind === 'Text') {
-                    const label = parseLabel(feature, firstValidSymbolizer.label);
+                    const label = resolveAttributeTemplate(feature, firstValidSymbolizer.label, '');
                     const haloProperties = `
                         -webkit-text-stroke-width:${firstValidSymbolizer.haloWidth}px;
                         -webkit-text-stroke-color:${firstValidSymbolizer.haloColor || ''};
@@ -189,14 +182,6 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
 
 class LeafletStyleParser {
 
-    constructor({ drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter } = {}) {
-        this._drawIcons = drawIcons ? drawIcons : () => Promise.resolve(null);
-        this._getImageIdFromSymbolizer = getImageIdFromSymbolizer
-            ? getImageIdFromSymbolizer
-            : (symbolizer) => symbolizer.symbolizerId;
-        this._geoStylerStyleFilter = geoStylerStyleFilter ? geoStylerStyleFilter : () => true;
-    }
-
     readStyle() {
         return new Promise((resolve, reject) => {
             try {
@@ -210,13 +195,9 @@ class LeafletStyleParser {
     writeStyle(geoStylerStyle) {
         return new Promise((resolve, reject) => {
             try {
-                this._drawIcons(geoStylerStyle)
+                drawIcons(geoStylerStyle)
                     .then((images = []) => {
-                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, {
-                            images,
-                            getImageIdFromSymbolizer: this._getImageIdFromSymbolizer,
-                            geoStylerStyleFilter: this._geoStylerStyleFilter
-                        });
+                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, { images });
                         resolve(styleFunc);
                     });
             } catch (error) {

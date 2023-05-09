@@ -8,14 +8,8 @@
 
 import expect from 'expect';
 import OLStyleParser from '../OLStyleParser';
-import { getImageIdFromSymbolizer } from '../../VectorStyleUtils';
 
-const parser = new OLStyleParser({
-    getImageIdFromSymbolizer,
-    drawIcons: () => Promise.resolve([
-        { id: 'path/to/image', image: new Image(), width: 256, height: 256 }
-    ])
-});
+const parser = new OLStyleParser();
 
 describe('OLStyleParser', () => {
     describe('writeStyle', () => {
@@ -56,7 +50,8 @@ describe('OLStyleParser', () => {
                         symbolizers: [
                             {
                                 kind: 'Icon',
-                                image: 'path/to/image',
+                                /* png 1px x 1px */
+                                image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=',
                                 size: 32
                             }
                         ]
@@ -66,7 +61,7 @@ describe('OLStyleParser', () => {
             parser.writeStyle(style)
                 .then((parsed) => {
                     try {
-                        expect(parsed.image_.scale_).toBe(32 / 256);
+                        expect(parsed.image_.scale_).toBe(32);
                     } catch (e) {
                         done(e);
                     }

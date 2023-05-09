@@ -7,14 +7,13 @@
  */
 
 import GeoStylerOLStyleParser  from "geostyler-openlayers-parser";
-
+import {
+    drawIcons,
+    getImageIdFromSymbolizer
+} from './StyleParserUtils';
 class OLStyleParser {
-    constructor({ drawIcons, getImageIdFromSymbolizer } = {}) {
+    constructor() {
         this._parser = new GeoStylerOLStyleParser();
-        this._drawIcons = drawIcons ? drawIcons : () => Promise.resolve(null);
-        this._getImageIdFromSymbolizer = getImageIdFromSymbolizer
-            ? getImageIdFromSymbolizer
-            : (symbolizer) => symbolizer.symbolizerId;
     }
 
     readStyle(olStyle) {
@@ -27,7 +26,7 @@ class OLStyleParser {
     writeStyle(geoStylerStyle) {
         if (geoStylerStyle) {
             // preload all the images
-            return this._drawIcons(geoStylerStyle)
+            return drawIcons(geoStylerStyle)
                 .then((images = []) => {
                     // here we need to make additional checks to the style
                     // because some rules are not applied as expected
@@ -42,7 +41,7 @@ class OLStyleParser {
                                             // the icon use scale as value inside the mapstore style
                                             // we can only compute it if the image as been preloaded and we got all size info
                                             if (symbolizer.kind === 'Icon') {
-                                                const { image, width, height } = images.find(({ id }) => id === this._getImageIdFromSymbolizer(symbolizer)) || {};
+                                                const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
                                                 if (image && width && height) {
                                                     const side = width > height ? width : height;
                                                     const scale = symbolizer.size / side;

@@ -8,21 +8,11 @@
 import * as Cesium from 'cesium';
 import expect from 'expect';
 
-import { getImageIdFromSymbolizer, geoStylerStyleFilter } from '../../VectorStyleUtils';
 import CesiumStyleParser from '../CesiumStyleParser';
 
-let images = [];
-
-const parser = new CesiumStyleParser({
-    getImageIdFromSymbolizer,
-    drawIcons: () => Promise.resolve(images),
-    geoStylerStyleFilter
-});
+const parser = new CesiumStyleParser();
 
 describe('CesiumStyleParser', () => {
-    afterEach(() => {
-        images = [];
-    });
     describe('readStyle', () => {
         it('should return null, read function not implemented', (done) => {
             parser.readStyle()
@@ -236,15 +226,6 @@ describe('CesiumStyleParser', () => {
                 ]
             };
 
-            const canvas = document.createElement('canvas');
-
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: canvas,
-                width: 32,
-                height: 32
-            });
-
             parser.writeStyle(style)
                 .then((styleFunc) => {
                     Cesium.GeoJsonDataSource.load({
@@ -258,7 +239,7 @@ describe('CesiumStyleParser', () => {
                         const entities = dataSource?.entities?.values;
                         return styleFunc({ entities })
                             .then(() => {
-                                expect(entities[0].billboard.image.getValue()).toBe(canvas);
+                                expect(entities[0].billboard.image.getValue().tagName).toBe('CANVAS');
                                 expect(entities[0].billboard.scale.getValue()).toBe(1);
                                 expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
                                 expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
@@ -279,7 +260,8 @@ describe('CesiumStyleParser', () => {
                         symbolizers: [
                             {
                                 kind: 'Icon',
-                                image: 'path/to/image',
+                                /* png 1px x 1px */
+                                image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=',
                                 opacity: 0.5,
                                 size: 32,
                                 rotate: 90,
@@ -289,15 +271,6 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
-
-            const img = new Image();
-
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: img,
-                width: 256,
-                height: 256
-            });
 
             parser.writeStyle(style)
                 .then((styleFunc) => {
@@ -312,9 +285,9 @@ describe('CesiumStyleParser', () => {
                         const entities = dataSource?.entities?.values;
                         return styleFunc({ entities })
                             .then(() => {
-                                expect(entities[0].billboard.image.getValue()).toBe(img);
+                                expect(entities[0].billboard.image.getValue().src).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
                                 expect({ ...entities[0].billboard.color.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 0.5 });
-                                expect(entities[0].billboard.scale.getValue()).toBe(0.125);
+                                expect(entities[0].billboard.scale.getValue()).toBe(32);
                                 expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
                                 expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
                                 expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
@@ -462,7 +435,8 @@ describe('CesiumStyleParser', () => {
                         symbolizers: [
                             {
                                 kind: 'Icon',
-                                image: 'path/to/image',
+                                /* png 1px x 1px */
+                                image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=',
                                 opacity: 0.5,
                                 size: 32,
                                 rotate: 90,
@@ -512,24 +486,6 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
-
-            const canvas = document.createElement('canvas');
-
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: canvas,
-                width: 32,
-                height: 32
-            });
-
-            const img = new Image();
-
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[1].symbolizers[0]),
-                image: img,
-                width: 256,
-                height: 256
-            });
 
             parser.writeStyle(style)
                 .then((styleFunc) => {
@@ -613,13 +569,7 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
-            const canvas = document.createElement('canvas');
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: canvas,
-                width: 32,
-                height: 32
-            });
+
             const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
             parser.writeStyle(style).then((styleFunc) => {
                 return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
@@ -671,13 +621,6 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
-            const canvas = document.createElement('canvas');
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: canvas,
-                width: 32,
-                height: 32
-            });
             const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
             parser.writeStyle(style).then((styleFunc) => {
                 return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
@@ -729,13 +672,6 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
-            const canvas = document.createElement('canvas');
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: canvas,
-                width: 32,
-                height: 32
-            });
             const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
             parser.writeStyle(style).then((styleFunc) => {
                 return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})

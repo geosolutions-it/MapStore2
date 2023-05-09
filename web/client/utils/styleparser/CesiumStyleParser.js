@@ -10,6 +10,12 @@ import chroma from 'chroma-js';
 import { castArray, isNumber, isEmpty, isEqual, pick, range } from 'lodash';
 
 import { needProxy, getProxyUrl } from '../ProxyUtils';
+import {
+    resolveAttributeTemplate,
+    geoStylerStyleFilter,
+    drawIcons,
+    getImageIdFromSymbolizer
+} from './StyleParserUtils';
 
 function getCesiumColor({ color, opacity }) {
     const [r, g, b, a] = chroma(color).gl();
@@ -244,17 +250,6 @@ function modifyPointHeight({ entity, symbolizer, properties }) {
     return;
 }
 
-function parseLabel(feature, label = '') {
-    if (!feature.properties) {
-        return label;
-    }
-    return Object.keys(feature.properties)
-        .reduce((str, key) => {
-            const regExp = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
-            return str.replace(regExp, feature.properties[key] ?? '');
-        }, label);
-}
-
 const HEIGHT_REFERENCE_CONSTANTS_MAP = {
     none: 'NONE',
     relative: 'RELATIVE_TO_GROUND',
@@ -284,7 +279,6 @@ const GRAPHIC_KEYS = [
 const getGraphics = ({
     symbolizer,
     images,
-    getImageIdFromSymbolizer,
     entity,
     globalOpacity,
     properties,
@@ -359,7 +353,7 @@ const getGraphics = ({
             billboard,
             polyline,
             label: new Cesium.LabelGraphics({
-                text: parseLabel({ properties }, symbolizer.label),
+                text: resolveAttributeTemplate({ properties }, symbolizer.label, ''),
                 font: [symbolizer.fontStyle, symbolizer.fontWeight,  `${symbolizer.size}px`, castArray(symbolizer.font || ['serif']).join(', ')]
                     .filter(val => val)
                     .join(' '),
@@ -499,9 +493,7 @@ const getGraphics = ({
 function getStyleFuncFromRules({
     rules = []
 } = {}, {
-    images = [],
-    getImageIdFromSymbolizer,
-    geoStylerStyleFilter = () => true
+    images = []
 }) {
     return ({
         entities,
@@ -584,14 +576,6 @@ function getStyleFuncFromRules({
 
 class CesiumStyleParser {
 
-    constructor({ drawIcons, getImageIdFromSymbolizer, geoStylerStyleFilter } = {}) {
-        this._drawIcons = drawIcons ? drawIcons : () => Promise.resolve(null);
-        this._getImageIdFromSymbolizer = getImageIdFromSymbolizer
-            ? getImageIdFromSymbolizer
-            : (symbolizer) => symbolizer.symbolizerId;
-        this._geoStylerStyleFilter = geoStylerStyleFilter ? geoStylerStyleFilter : () => true;
-    }
-
     readStyle() {
         return new Promise((resolve, reject) => {
             try {
@@ -605,13 +589,9 @@ class CesiumStyleParser {
     writeStyle(geoStylerStyle) {
         return new Promise((resolve, reject) => {
             try {
-                this._drawIcons(geoStylerStyle)
+                drawIcons(geoStylerStyle)
                     .then((images = []) => {
-                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, {
-                            images,
-                            getImageIdFromSymbolizer: this._getImageIdFromSymbolizer,
-                            geoStylerStyleFilter: this._geoStylerStyleFilter
-                        });
+                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, { images });
                         resolve(styleFunc);
                     });
             } catch (error) {
