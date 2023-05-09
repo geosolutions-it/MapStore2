@@ -42,6 +42,7 @@ function RowViewer({
     const Row = layerRowViewer || component || PropertiesViewer;
     return (
         <Row
+            fields={layer?.fields}
             {...omit(feature.properties, ['ref'])}
             feature={feature}
             labelIds={labelIds}

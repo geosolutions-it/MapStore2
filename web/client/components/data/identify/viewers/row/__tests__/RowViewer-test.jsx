@@ -69,4 +69,22 @@ describe('RowViewer', () => {
 
         registerRowViewer(ANNOTATIONS, undefined);
     });
+    it('passes layer\'s fields to the row viewer', () => {
+        const TestComponent = ({
+            fields
+        }) => {
+            return <div id="annotation-fields">{fields.map(({alias}) => alias).join()}</div>;
+        };
+
+        ReactDOM.render(
+            <RowViewer
+                layer={{ layerId: ANNOTATIONS, fields: [{alias: "field1"}, {alias: "field2"}] }}
+                component={TestComponent}
+                feature={{ properties: {}, id: 'feature' }}
+            />,
+            document.getElementById("container"));
+
+        const fieldsNode = document.querySelector('#annotation-fields');
+        expect(fieldsNode.innerHTML).toBe('field1,field2');
+    });
 });

@@ -83,6 +83,7 @@ export default {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,
                 regex: layer.featureInfoRegex,
                 viewer,
+                fields: layer.fields,
                 featureInfo
             },
             url: getLayerUrl(layer).replace(/[?].*$/g, '')
