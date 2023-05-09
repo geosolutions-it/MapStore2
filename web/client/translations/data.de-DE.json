@@ -2469,7 +2469,13 @@
             "color": "Farbe",
             "pointHeight": "Punkthöhe",
             "leaderLineColor": "Farbe der Führungslinie",
-            "leaderLineWidth": "Breite der Führungslinie"
+            "leaderLineWidth": "Breite der Führungslinie",
+            "geometryTransformation": "Geometrietransformation",
+            "center": "Mitte",
+            "startPoint": "Startpunkt",
+            "endPoint": "Endpunkt",
+            "line": "Linie",
+            "geodesicLine": "Geodätische Linie"
         },
         "playback": {
             "settings": {

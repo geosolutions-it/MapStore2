@@ -46,7 +46,10 @@ import OlStyleFill from 'ol/style/Fill';
 import OlStyleIcon from 'ol/style/Icon';
 import OlStyleRegularshape from 'ol/style/RegularShape';
 import { METERS_PER_UNIT } from 'ol/proj/Units';
+import { getCenter } from 'ol/extent';
+import OlGeomLineString from 'ol/geom/LineString';
 import { toContext } from 'ol/render';
+import GeoJSON from 'ol/format/GeoJSON';
 import {
     expressionsUtils,
     resolveAttributeTemplate,
@@ -58,6 +61,14 @@ import {
     getImageIdFromSymbolizer
 } from './StyleParserUtils';
 import isString from 'lodash/isString';
+import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+
+const getGeometryFunction = geometryFunctionsLibrary.openlayers({
+    Point: OlGeomPoint,
+    LineString: OlGeomLineString,
+    GeoJSON,
+    getCenter
+});
 
 const WELLKNOWNNAME_TTF_REGEXP = /^ttf:\/\/(.+)#(.+)$/;
 const DUMMY_MARK_SYMBOLIZER_FONT = 'geostyler-mark-symbolizer';
@@ -515,6 +526,7 @@ export class OlStyleParser {
                 width: markSymbolizer.strokeWidth
             });
         }
+        const { geometry } = getGeometryFunction(markSymbolizer, feature, this._getMap()) || {};
         const color = markSymbolizer.color;
         const opacity = markSymbolizer.opacity;
         const radius = markSymbolizer.radius;
@@ -704,6 +716,9 @@ export class OlStyleParser {
             olStyle.getImage().setOpacity(opacity);
         }
 
+        if (geometry) {
+            olStyle.setGeometry(geometry);
+        }
         return olStyle;
     }
 
@@ -722,6 +737,7 @@ export class OlStyleParser {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
             }
         }
+        const geometryFunc = getGeometryFunction(symbolizer, feat, this._getMap());
         const baseProps = {
             src: symbolizer.image,
             crossOrigin: 'anonymous',
@@ -762,7 +778,8 @@ export class OlStyleParser {
                     this.olIconStyleCache[src] = image;
                 }
                 const style = new this.OlStyleConstructor({
-                    image
+                    image,
+                    ...geometryFunc
                 });
                 return style;
             };
@@ -772,7 +789,8 @@ export class OlStyleParser {
         return new this.OlStyleConstructor({
             image: new this.OlStyleIconConstructor({
                 ...baseProps
-            })
+            }),
+            ...geometryFunc
         });
     }
 
@@ -793,7 +811,10 @@ export class OlStyleParser {
         const sColor = (color && opacity !== null && opacity !== undefined) ?
             getRgbaColor(color, opacity) : color;
 
+        const geometryFunc = getGeometryFunction(symbolizer, feat, this._getMap());
+
         return new this.OlStyleConstructor({
+            ...geometryFunc,
             stroke: new this.OlStyleStrokeConstructor({
                 color: sColor,
                 width: symbolizer.width,
@@ -933,6 +954,7 @@ export class OlStyleParser {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
             }
         }
+        const geometryFunc = getGeometryFunction(symbolizer, feat, this._getMap());
         const color = symbolizer.color;
         const opacity = symbolizer.opacity;
         const fColor = color && Number.isFinite(opacity)
@@ -985,6 +1007,7 @@ export class OlStyleParser {
                 });
 
                 const style = new this.OlStyleConstructor({
+                    ...geometryFunc,
                     text: text
                 });
 
@@ -995,6 +1018,7 @@ export class OlStyleParser {
         // if TextSymbolizer does not contain a placeholder
         // return OlStyle
         return new this.OlStyleConstructor({
+            ...geometryFunc,
             text: new this.OlStyleTextConstructor({
                 text: symbolizer.label,
                 ...baseProps

@@ -2432,7 +2432,13 @@
             "color": "Couleur",
             "pointHeight": "Hauteur du point",
             "leaderLineColor": "Couleur de la ligne de repère",
-            "leaderLineWidth": "Largeur de la ligne de repère"
+            "leaderLineWidth": "Largeur de la ligne de repère",
+            "geometryTransformation": "Transformation géométrique",
+            "center": "Centre",
+            "startPoint": "Point de départ",
+            "endPoint": "Point final",
+            "line": "Ligne",
+            "geodesicLine": "Ligne géodésique"
         },
         "playback": {
             "settings": {

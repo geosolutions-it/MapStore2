@@ -14,6 +14,9 @@ import {
     drawWellKnownNameImageFromSymbolizer,
     drawIcons
 } from './StyleParserUtils';
+import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+
+const getGeometryFunction = geometryFunctionsLibrary.geojson();
 
 const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
     const globalOpacity = layer.opacity === undefined ? 1 : layer.opacity;
@@ -120,18 +123,57 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                         symbolizer.kind === 'Fill' && ['Polygon'].includes(geometryType)
                     );
 
+                    const additionalPointSymbolizers = symbolizers.filter((symbolizer, idx) =>
+                        ['Mark', 'Icon', 'Text', 'Model'].includes(symbolizer.kind)
+                        && (
+                            ['Polygon'].includes(geometryType)
+                            || ['LineString'].includes(geometryType)
+                            || ['Point'].includes(geometryType) && idx < pointGeometrySymbolizers.length - 1
+                        )
+                    );
+
                     const symbolizer = pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
                         || polylineGeometrySymbolizers[polylineGeometrySymbolizers.length - 1]
                         || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1];
 
+                    let geometry = feature.geometry;
+                    const geometryFunction = getGeometryFunction(symbolizer);
+                    if (geometryFunction && geometryType === 'LineString') {
+                        geometry = {
+                            type: 'LineString',
+                            coordinates: geometryFunction(feature)
+                        };
+                    }
+
                     return [
                         {
                             ...feature,
+                            geometry,
                             properties: {
                                 ...feature?.properties,
                                 ms_style: symbolizerToPrintMSStyle(symbolizer, feature, layer)
                             }
-                        }
+                        },
+                        ...additionalPointSymbolizers.map((additionalSymbolizer) => {
+                            const geomFunction = getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...additionalSymbolizer});
+                            if (geomFunction) {
+                                const coordinates = geomFunction(feature);
+                                if (coordinates) {
+                                    return {
+                                        ...feature,
+                                        geometry: {
+                                            type: 'Point',
+                                            coordinates
+                                        },
+                                        properties: {
+                                            ...feature?.properties,
+                                            ms_style: symbolizerToPrintMSStyle(additionalSymbolizer, feature, layer)
+                                        }
+                                    };
+                                }
+                            }
+                            return null;
+                        }).filter((feat) => !!feat)
                     ];
                 }
                 return [];

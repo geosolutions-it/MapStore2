@@ -64,7 +64,7 @@ const createLayer = (options) => {
                 style: styleFunc,
                 pointToLayer = () => null,
                 filter: filterFunc = () => true
-            } = styleUtils && styleUtils({ opacity: options.opacity }) || {};
+            } = styleUtils && styleUtils({ opacity: options.opacity, layer }) || {};
             layer.clearLayers();
             layer.options.pointToLayer = pointToLayer;
             layer.options.filter = filterFunc;
@@ -95,7 +95,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
                     style: styleFunc,
                     pointToLayer = () => null,
                     filter: filterFunc = () => true
-                } = styleUtils && styleUtils({ opacity: newOptions.opacity }) || {};
+                } = styleUtils && styleUtils({ opacity: newOptions.opacity, layer }) || {};
                 layer.clearLayers();
                 layer.options.pointToLayer = pointToLayer;
                 layer.options.filter = filterFunc;

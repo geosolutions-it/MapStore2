@@ -2442,7 +2442,13 @@
             "color": "Color",
             "pointHeight": "Point height",
             "leaderLineColor": "Leader line color",
-            "leaderLineWidth": "Leader line width"
+            "leaderLineWidth": "Leader line width",
+            "geometryTransformation": "Geometry transformation",
+            "center": "Center",
+            "startPoint": "Start point",
+            "endPoint": "End point",
+            "line": "Line",
+            "geodesicLine": "Geodesic line"
         },
         "playback": {
             "settings": {

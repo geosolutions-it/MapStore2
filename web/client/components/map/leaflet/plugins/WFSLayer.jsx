@@ -30,7 +30,7 @@ const setStyle = (layer, options) => {
                         style: styleFunc,
                         pointToLayer = () => null,
                         filter: filterFunc = () => true
-                    } = styleUtils && styleUtils({ opacity: options.opacity }) || {};
+                    } = styleUtils && styleUtils({ opacity: options.opacity, layer }) || {};
                     layer.clearLayers();
                     layer.options.pointToLayer = pointToLayer;
                     layer.options.filter = filterFunc;
