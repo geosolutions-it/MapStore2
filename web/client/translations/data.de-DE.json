@@ -1911,6 +1911,11 @@
                     "errorChart": "Mindestens ein Diagramm ist ungültig",
                     "backToTableOptions": "Zurück zu den Tabellenoptionen",
                     "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
+                    "attributeEditorColumns": {
+                      "name": "Name",
+                      "title": "Titel",
+                      "tooltip": "Tooltip"
+                    },
                     "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
                     "updateWidget": "Aktualisieren Sie das Widget",
                     "addTheWidget": "Hinzufügen des Widget",

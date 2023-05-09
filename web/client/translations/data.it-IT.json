@@ -1873,6 +1873,11 @@
                     "errorChart": "Uno o più grafici non sono validi",
                     "backToTableOptions": "Torna alle opzioni della tabella",
                     "configureTableOptions": "Configura le opzioni della tabella",
+                    "attributeEditorColumns": {
+                      "name": "Nome",
+                      "title": "Titolo",
+                      "tooltip": "Tooltip"
+                    },
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
                     "addTheWidget": "Aggiungi il widget",

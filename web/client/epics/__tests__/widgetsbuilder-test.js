@@ -221,6 +221,11 @@ describe('widgetsbuilder epic', () => {
                     }
                     break;
                 case FEATURE_TYPE_SELECTED:
+                    expect(action.fields).toEqual([{
+                        name: "x",
+                        type: "string",
+                        alias: "X alias"
+                    }]);
                     break;
                 case LOAD_FILTER:
                     break;
@@ -241,6 +246,11 @@ describe('widgetsbuilder epic', () => {
                 builder: {
                     editor: {
                         layer: {
+                            fields: [{
+                                name: "x",
+                                type: "string",
+                                alias: "X alias"
+                            }],
                             search: {
                                 url: "test"
                             }

@@ -1874,6 +1874,11 @@
                     "errorChart": "One or more chart(s) is invalid",
                     "backToTableOptions": "Back to table options",
                     "configureTableOptions": "Configure table options",
+                    "attributeEditorColumns": {
+                      "name": "Name",
+                      "title": "Title",
+                      "tooltip": "Tooltip"
+                    },
                     "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
                     "addTheWidget": "Add the widget",

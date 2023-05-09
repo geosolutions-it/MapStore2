@@ -311,7 +311,7 @@ export default ({
                                 onChange("autoColorOptions.classification", formatAutoColorOptions(newClassification, attributeType) || []);
                             }
                         }}
-                        options={typedOptions}
+                        options={typedOptions.filter(item => item.type === 'string' || item.type === 'number')}
                         placeHolder={placeHolder}
                         classification={classification}
                         rangeClassification={rangeClassification}
