@@ -325,7 +325,7 @@ function DrawGeometrySupport({
                 coordinates: currentCoordinates,
                 feature: cesiumCoordinatesToGeoJSONFeature(geometryType, currentCoordinates, {
                     area,
-                    areaUom: 'm²',
+                    areaUom: 'sqm',
                     length: distance,
                     lengthUom: 'm'
                 })

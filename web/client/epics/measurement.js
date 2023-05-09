@@ -9,7 +9,11 @@
 import Rx from 'rxjs';
 import uuidv1 from 'uuid/v1';
 
-import {convertMeasuresToGeoJSON, getGeomTypeSelected} from '../utils/MeasurementUtils';
+import {
+    convertMeasuresToGeoJSON,
+    convertMeasuresToAnnotation,
+    getGeomTypeSelected
+} from '../utils/MeasurementUtils';
 import {validateCoord} from '../utils/MeasureUtils';
 import {
     ADD_MEASURE_AS_ANNOTATION,
@@ -47,7 +51,7 @@ export const addAnnotationFromMeasureEpic = (action$, store) =>
             const {features, textLabels, uom, save, properties} = a;
             const {id = uuidv1(), visibility = true} = properties || {};
             const newFeature = {
-                ...convertMeasuresToGeoJSON(features, textLabels, uom, id, 'Annotations created from measurements', STYLE_TEXT),
+                ...convertMeasuresToAnnotation(features, textLabels, uom, id, 'Annotations created from measurements', STYLE_TEXT),
                 newFeature: save,
                 visibility
             };
@@ -62,18 +66,29 @@ export const addAnnotationFromMeasureEpic = (action$, store) =>
 
 export const addAsLayerEpic = (action$) =>
     action$.ofType(ADD_AS_LAYER)
-        .switchMap(({features, textLabels, uom}) => {
-            const layerFeature = convertMeasuresToGeoJSON(features, textLabels, uom, uuidv1());
-            return Rx.Observable.of(
-                addLayer({
-                    type: 'vector',
-                    id: uuidv1(),
-                    name: 'Measurements',
-                    hideLoading: true,
-                    features: [layerFeature],
-                    visibility: true
-                })
-            );
+        .switchMap(({ features, uom, textLabels }) => {
+            return Rx.Observable.defer(() => import('@turf/bbox').then(mod => mod.default))
+                .switchMap((turfBbox) => {
+                    const collection = convertMeasuresToGeoJSON(features, textLabels, uom);
+                    const bbox = turfBbox(collection);
+                    const [minx, miny, maxx, maxy] = bbox || [-180, -90, 180, 90];
+                    return Rx.Observable.of(
+                        addLayer({
+                            type: 'vector',
+                            id: uuidv1(),
+                            name: 'measurements',
+                            title: 'Measurements',
+                            hideLoading: true,
+                            features: collection?.features || [],
+                            visibility: true,
+                            style: collection.style,
+                            bbox: {
+                                crs: 'EPSG:4326',
+                                bounds: { minx, miny, maxx, maxy }
+                            }
+                        })
+                    );
+                });
         });
 
 export const openMeasureEpic = (action$, store) =>

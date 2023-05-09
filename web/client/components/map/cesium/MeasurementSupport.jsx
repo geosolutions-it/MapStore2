@@ -56,7 +56,9 @@ function MeasurementSupport({
         MeasureTypes.ANGLE_3D,
         MeasureTypes.SLOPE
     ],
-    onClose
+    onClose,
+    measurement,
+    onAddAsLayer
 }, { messages }) {
 
     const [clearId, setClearId] = useState(0);
@@ -170,6 +172,17 @@ function MeasurementSupport({
                         >
                             <Glyphicon glyph="trash" />
                         </Button>
+                    </ButtonGroup>
+                    <ButtonGroup>
+                        {onAddAsLayer && <Button
+                            className="square-button-md"
+                            bsStyle="primary"
+                            tooltipId="measureComponent.addAsLayer"
+                            disabled={(measurement?.features?.length || 0) === 0}
+                            onClick={() => onAddAsLayer(measurement.features)}
+                        >
+                            <Glyphicon glyph="add-layer" />
+                        </Button>}
                     </ButtonGroup>
                 </ButtonToolbar>
             </MeasureToolbar>
