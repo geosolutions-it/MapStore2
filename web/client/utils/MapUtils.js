@@ -28,7 +28,8 @@ import {
 
 import uuidv1 from 'uuid/v1';
 
-import { getExtentForProjection, getUnits, normalizeSRS, reproject } from './CoordinatesUtils';
+import { getUnits, normalizeSRS, reproject } from './CoordinatesUtils';
+import { getProjection } from './ProjectionUtils';
 import { set } from './ImmutableUtils';
 import {
     saveLayer,
@@ -230,7 +231,7 @@ export function getResolutionsForProjection(srs, minRes, maxRes, minZ, maxZ, zoo
 
     const projection = proj4.defs(srs);
 
-    const extent = ext ?? getExtentForProjection(srs)?.extent;
+    const extent = ext ?? getProjection(srs)?.extent;
 
     const extentWidth = !extent ? 360 * METERS_PER_UNIT.degrees /
         METERS_PER_UNIT[projection.getUnits()] :

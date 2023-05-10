@@ -35,7 +35,7 @@ import bboxPolygon from '@turf/bbox-polygon';
 import overlap from '@turf/boolean-overlap';
 import contains from '@turf/boolean-contains';
 import turfBbox from '@turf/bbox';
-import { getConfigProp } from './ConfigUtils';
+import { getProjection } from './ProjectionUtils';
 
 let CoordinatesUtils;
 
@@ -1036,26 +1036,56 @@ export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 
     }
     return turfCircle(center, radius, {steps, units});
 };
+/*
+const DEFAULT_PROJECTIONS = {
+    'EPSG:3857': {
+        def: '+proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs',
+        extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+        worldExtent: [-180.0, -85.06, 180.0, 85.06]
+    },
+    'EPSG:4326': {
+        def: '+proj=longlat +datum=WGS84 +no_defs +type=crs',
+        extent: [-180.0, -90.0, 180.0, 90.0],
+        worldExtent: [-180.0, -90.0, 180.0, 90.0]
+    }
+};
 
+const getAlternativeProjectionCode = (code) => {
+    if (['EPSG:900913', 'EPSG:3785', 'GOOGLE', 'EPSG:102113', 'ESRI:102113'].includes(code)) {
+        return 'EPSG:3857';
+    }
+    return code;
+};
+*/
 /**
  * Returns an array of projections
  * @return {array} of projection Definitions [{code, extent}]
  */
+/*
 export const getProjections = () => {
-    const projections = (getConfigProp('projectionDefs') || []).concat([{code: "EPSG:3857", extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]},
-        {code: "EPSG:4326", extent: [-180, -90, 180, 90]}
-    ]);
-    return projections;
+    return (getConfigProp('projectionDefs') || [])
+        .reduce((acc, { code, ...options }) => ({
+            ...acc,
+            [code]: {
+                ...options,
+                proj4Def: { ...proj4.defs(code) }
+            }
+        }),
+        { ...DEFAULT_PROJECTIONS });
 };
+*/
 
 /**
  * Return a projection from a list of projections
- * @param code {string} code for the projection EPSG:3857
- * @return {object} {extent, code} fallsback to default {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]}
+ * @param code {string} code for the projection, default EPSG:3857
+ * @return {object} {extent, code} fallback to default EPSG:3857
  */
-export const getExtentForProjection = (code = "EPSG:3857") => {
-    return getProjections().find(project => project.code === code) || {extent: [-20026376.39, -20048966.10, 20026376.39, 20048966.10]};
+/*
+export const getProjection = (code = 'EPSG:3857') => {
+    const projection = getAlternativeProjectionCode(code);
+    return getProjections()[projection || 'EPSG:3857'];
 };
+*/
 
 /**
  * Return a boolean to show if a layer fits within a boundary/extent
@@ -1064,7 +1094,7 @@ export const getExtentForProjection = (code = "EPSG:3857") => {
  */
 export const checkIfLayerFitsExtentForProjection = (layer = {}) => {
     const crs = layer.bbox?.crs || "EPSG:3857";
-    const [crsMinX, crsMinY, crsMaxX, crsMaxY] = getExtentForProjection(crs).extent;
+    const [crsMinX, crsMinY, crsMaxX, crsMaxY] = getProjection(crs).extent;
     const [minx, minY, maxX, maxY] = turfBbox({type: 'FeatureCollection', features: layer.features || []});
     return ((minx >= crsMinX) && (minY >= crsMinY) && (maxX <= crsMaxX) && (maxY <= crsMaxY));
 };
@@ -1165,7 +1195,7 @@ CoordinatesUtils = {
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
     getLonLatFromPoint,
-    getExtentForProjection,
+    // getProjection,
     convertRadianToDegrees,
     convertDegreesToRadian
 };

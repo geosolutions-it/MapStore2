@@ -15,6 +15,7 @@ import isArray from 'lodash/isArray';
 import assign from 'object-assign';
 import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import { getProjection } from '../../../../utils/ProjectionUtils';
 import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 import { getConfigProp } from '../../../../utils/ConfigUtils';
 
@@ -217,7 +218,7 @@ const createLayer = (options, map) => {
     }
     const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
     const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
-    const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
+    const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
     const sourceOptions = addTileLoadFunction({
         attributions: toOLAttributions(options.credits),
         urls: urls,
@@ -308,7 +309,7 @@ Layers.registerType('wms', {
 
         if (oldOptions.srs !== newOptions.srs) {
             const normalizedSrs = CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS);
-            const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
+            const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
             if (newOptions.singleTile && !newIsVector) {
                 layer.setExtent(extent);
             } else {
