@@ -23,7 +23,7 @@ import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution, getWMSVendorParams } from '../../../../utils/LayersUtils';
 
-import MapUtils from '../../../../utils/MapUtils';
+import { getResolutionsForProjection } from '../../../../utils/MapUtils';
 import  {loadTile, getElevation as getElevationFunc} from '../../../../utils/ElevationUtils';
 
 import ImageLayer from 'ol/layer/Image';
@@ -190,6 +190,20 @@ function getElevation(pos) {
 }
 const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;
 
+const generateTileGrid = (options, map) => {
+    const mapSrs = map?.getView()?.getProjection()?.getCode() || 'EPSG:3857';
+    const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
+    const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
+    const tileSize = options.tileSize ? options.tileSize : 256;
+    const resolutions = options.resolutions || getResolutionsForProjection(normalizedSrs);
+    const origin = options.origin ? options.origin : [extent[0], extent[1]];
+    return new TileGrid({
+        extent,
+        resolutions,
+        tileSize,
+        origin
+    });
+};
 
 const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
@@ -216,20 +230,12 @@ const createLayer = (options, map) => {
             })
         });
     }
-    const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-    const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
-    const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
     const sourceOptions = addTileLoadFunction({
         attributions: toOLAttributions(options.credits),
         urls: urls,
         crossOrigin: options.crossOrigin,
         params: queryParameters,
-        tileGrid: new TileGrid({
-            extent: extent,
-            resolutions: options.resolutions || MapUtils.getResolutions(),
-            tileSize: options.tileSize ? options.tileSize : 256,
-            origin: options.origin ? options.origin : [extent[0], extent[1]]
-        }),
+        tileGrid: generateTileGrid(options, map),
         tileLoadFunction: loadFunction(options, headers)
     }, options);
     const wmsSource = new TileWMS({ ...sourceOptions });
@@ -313,12 +319,7 @@ Layers.registerType('wms', {
             if (newOptions.singleTile && !newIsVector) {
                 layer.setExtent(extent);
             } else {
-                const tileGrid = new TileGrid({
-                    extent: extent,
-                    resolutions: newOptions.resolutions || MapUtils.getResolutions(),
-                    tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
-                });
+                const tileGrid = generateTileGrid(newOptions, map);
                 wmsSource.tileGrid = tileGrid;
                 if (vectorSource) {
                     vectorSource.tileGrid = tileGrid;
