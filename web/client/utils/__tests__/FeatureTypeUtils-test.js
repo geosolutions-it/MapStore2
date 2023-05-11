@@ -37,4 +37,22 @@ describe('Test the FeatureTypeUtils', () => {
             values: []
         }]);
     });
+    it('describeFeatureTypeToAttributes with empty default string', () => {
+        const attributes = describeFeatureTypeToAttributes(data1, [{
+            name: "name",
+            alias: {
+                "default": "",
+                "it-IT": "test"
+            }
+        }]);
+        expect(attributes).toEqual([{
+            label: {"default": "name",
+                "it-IT": "test"},
+            attribute: "name",
+            type: "string",
+            valueId: "id",
+            valueLabel: "name",
+            values: []
+        }]);
+    });
 });

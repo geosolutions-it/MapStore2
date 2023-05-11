@@ -8,11 +8,13 @@
 
 import {compose, withProps} from 'recompose';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
+import { applyDefaultToLocalizedString } from '../../../../I18N/LocalizedString';
+
 import { getDefaultAggregationOperations } from '../../../../../utils/WidgetsUtils';
 import {find} from 'lodash';
 
 const propsToOptions = (props, fields = []) => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
-    .map( ({name, localType} = {}) => ({label: find(fields, {name})?.alias ?? name, value: name, type: localType}));
+    .map( ({name, localType} = {}) => ({label: applyDefaultToLocalizedString(find(fields, {name})?.alias, name), value: name, type: localType}));
 
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});

@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { containsHTML } from '../../../../../utils/StringUtils';
 import Message from '../../../../I18N/Message';
-import LocalizedString from '../../../../I18N/LocalizedString';
+import LocalizedString, {applyDefaultToLocalizedString} from '../../../../I18N/LocalizedString';
 class PropertiesViewer extends React.Component {
     static displayName = 'PropertiesViewer';
 
@@ -41,7 +41,7 @@ class PropertiesViewer extends React.Component {
             .filter(this.props?.include?.length > 0 ? this.toInclude : this.toExclude)
             .map((key) => {
                 const val = this.renderProperty(this.props.feature.properties[key]);
-                const label = this.props.fields?.find(field => field.name === key)?.alias || (this.props.labelIds[key] ? <Message msgId={this.props.labelIds[key]}/> : key);
+                const label = applyDefaultToLocalizedString(this.props.fields?.find(field => field.name === key)?.alias, (this.props.labelIds[key] ? <Message msgId={this.props.labelIds[key]}/> : key));
                 return (
                     <li
                         key={key}

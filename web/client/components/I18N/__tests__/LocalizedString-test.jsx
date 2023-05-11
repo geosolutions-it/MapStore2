@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import LocalizedString from '../LocalizedString';
+import LocalizedString, {applyDefaultToLocalizedString} from '../LocalizedString';
 import { IntlProvider, addLocaleData } from 'react-intl';
 
 import { act } from 'react-dom/test-utils';
@@ -48,5 +48,12 @@ describe('component', () => {
         expect(container).toBeTruthy();
         expect(container.querySelector('#TEST')).toBeTruthy();
         expect(container.querySelector('#TEST').innerText).toBe('test');
+    });
+    it('applyDefaultToLocalizedString', () => {
+        expect(applyDefaultToLocalizedString({"default": ""}, "default")).toEqual({"default": "default"});
+        expect(applyDefaultToLocalizedString({"default": "test"}, "default")).toEqual({"default": "test"});
+        expect(applyDefaultToLocalizedString({"default": "test"}, "")).toEqual({"default": "test"});
+        expect(applyDefaultToLocalizedString({"default": ""}, "")).toEqual({"default": ""});
+        expect(applyDefaultToLocalizedString("", "default")).toEqual("default");
     });
 });

@@ -13,6 +13,7 @@ import {compose, withProps} from 'recompose';
 import { isGeometryType } from '../../../../../utils/ogc/WFS/base';
 import AttributeTable from '../../../../data/featuregrid/AttributeTable';
 import Message from '../../../../I18N/Message';
+import { applyDefaultToLocalizedString } from '../../../../I18N/LocalizedString';
 import StepHeader from '../../../../misc/wizard/StepHeader';
 import noAttributes from '../common/noAttributesEmptyView';
 import Button from '../../../../misc/Button';
@@ -35,7 +36,7 @@ const AttributeSelector = compose(
                     const field = layer.fields?.find(f => f.name === a.name);
                     return {
                         ...a,
-                        label: field?.alias || a.name,
+                        label: applyDefaultToLocalizedString(field?.alias, a.name),
                         attribute: a.name,
                         hide: propertyNames?.indexOf( a.name ) < 0,
                         title: currPropertyName?.title || '',

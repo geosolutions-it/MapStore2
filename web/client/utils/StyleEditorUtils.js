@@ -29,6 +29,7 @@ import url from 'url';
 
 import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
 import { getStyleParser } from './VectorStyleUtils';
+import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
 
@@ -611,7 +612,7 @@ export function getAttributes(properties, fields = []) {
             const field = fields.find(f => f.name === key) || {};
             return {
                 attribute: key,
-                label: field?.alias ?? key,
+                label: applyDefaultToLocalizedString(field?.alias, key),
                 type: numberTypeToCheck
                     .indexOf(localType.toLowerCase()) !== -1
                     ? 'number'

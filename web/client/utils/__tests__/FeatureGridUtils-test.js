@@ -286,4 +286,19 @@ describe('FeatureGridUtils', () => {
             expect(fgColumns.editor).toBeTruthy();
         });
     });
+    it('featureTypeToGridColumns with fields', () => {
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const columnSettings = {name: 'Test1', hide: false};
+        const fields = [{name: 'Test1', type: "xsd:number", alias: 'Test1 alias'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, fields);
+        expect(featureGridColumns.length).toBe(2);
+        expect(featureGridColumns[0].title).toBe('Test1 alias');
+        // test alias empty string
+        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: ""}])[0].title).toEqual('Test1');
+        // test localized alias
+        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": "XX"}}])[0].title.default).toEqual('XX');
+        // test localized alias with empty default
+        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": ""}}])[0].title.default).toEqual('Test1');
+
+    });
 });
