@@ -106,7 +106,6 @@ export default ({
     data = { options: {}, autoColorOptions: {} },
     onChange = () => { },
     options = [],
-    typedOptions = [],
     showTitle = true,
     formOptions = {
         showGroupBy: true,
@@ -311,7 +310,7 @@ export default ({
                                 onChange("autoColorOptions.classification", formatAutoColorOptions(newClassification, attributeType) || []);
                             }
                         }}
-                        options={typedOptions}
+                        options={options.filter(item => item.type === 'string' || item.type === 'number')}
                         placeHolder={placeHolder}
                         classification={classification}
                         rangeClassification={rangeClassification}

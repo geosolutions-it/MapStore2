@@ -11,7 +11,10 @@ import ReactDataGrid from 'react-data-grid';
 import { castArray, includes, uniqBy, isEmpty } from "lodash";
 
 import Message from '../../I18N/Message';
+import localizedProps from '../../misc/enhancers/localizedProps';
 import FormatEditor from "../../data/featuregrid/editors/FormatEditor";
+
+const DataGrid = localizedProps("columns", "name")(ReactDataGrid);
 
 // Update property name on row selection operation
 const updatePropertyName = (arr, names, hide) => {
@@ -28,17 +31,17 @@ const getEditor = (formatRegex) => <FormatEditor dataType="string" formatRegex={
 
 // Columns for configuring table options
 const columns = [{
-    name: 'Name',
-    key: 'attribute',
+    name: 'widgets.builder.wizard.attributeEditorColumns.name',
+    key: 'label',
     width: 120
 }, {
-    name: 'Title',
+    name: 'widgets.builder.wizard.attributeEditorColumns.title',
     key: 'title',
     editor: getEditor("^[-@.\\/\#&+\\w\\s*]{0,100}$"),
     width: 120,
     editable: (rowData) => !rowData?.hide
 }, {
-    name: 'Description',
+    name: 'widgets.builder.wizard.attributeEditorColumns.tooltip',
     key: 'description',
     editor: getEditor("^[-@.,\\/\#&+\\w\\s*]{0,200}$"),
     width: 150,
@@ -70,7 +73,7 @@ export default ({
 
     return (<div className="bg-body data-attribute-selector" style={style}>
         <h4 className="text-center"><strong><Message msgId={titleMsg}/></strong></h4>
-        <ReactDataGrid
+        <DataGrid
             rowKey="id"
             columns={columns}
             enableCellSelect

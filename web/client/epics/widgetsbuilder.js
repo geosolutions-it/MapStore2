@@ -31,7 +31,7 @@ const getFTSelectedArgs = (state) => {
     let layer = getWidgetLayer(state);
     let url = layer.search && layer.search.url;
     let typeName = layer.name;
-    return [url, typeName];
+    return [url, typeName, layer.fields];
 };
 
 export const openWidgetEditor = (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT, NEW_CHART)

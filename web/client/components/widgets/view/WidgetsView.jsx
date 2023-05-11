@@ -33,7 +33,6 @@ export default pure(({
     widgets = [],
     layouts,
     dependencies,
-    verticalCompact = false,
     compactMode,
     useDefaultWidthProvider = true,
     measureBeforeMount,
@@ -72,7 +71,6 @@ export default pure(({
         className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
         autoSize
-        verticalCompact={verticalCompact}
         compactMode={compactMode}
         breakpoints={breakpoints}
         cols={cols}
