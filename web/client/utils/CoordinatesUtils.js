@@ -1036,56 +1036,6 @@ export const getPolygonFromCircle = (center, radius, units = "degrees", steps = 
     }
     return turfCircle(center, radius, {steps, units});
 };
-/*
-const DEFAULT_PROJECTIONS = {
-    'EPSG:3857': {
-        def: '+proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs',
-        extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-        worldExtent: [-180.0, -85.06, 180.0, 85.06]
-    },
-    'EPSG:4326': {
-        def: '+proj=longlat +datum=WGS84 +no_defs +type=crs',
-        extent: [-180.0, -90.0, 180.0, 90.0],
-        worldExtent: [-180.0, -90.0, 180.0, 90.0]
-    }
-};
-
-const getAlternativeProjectionCode = (code) => {
-    if (['EPSG:900913', 'EPSG:3785', 'GOOGLE', 'EPSG:102113', 'ESRI:102113'].includes(code)) {
-        return 'EPSG:3857';
-    }
-    return code;
-};
-*/
-/**
- * Returns an array of projections
- * @return {array} of projection Definitions [{code, extent}]
- */
-/*
-export const getProjections = () => {
-    return (getConfigProp('projectionDefs') || [])
-        .reduce((acc, { code, ...options }) => ({
-            ...acc,
-            [code]: {
-                ...options,
-                proj4Def: { ...proj4.defs(code) }
-            }
-        }),
-        { ...DEFAULT_PROJECTIONS });
-};
-*/
-
-/**
- * Return a projection from a list of projections
- * @param code {string} code for the projection, default EPSG:3857
- * @return {object} {extent, code} fallback to default EPSG:3857
- */
-/*
-export const getProjection = (code = 'EPSG:3857') => {
-    const projection = getAlternativeProjectionCode(code);
-    return getProjections()[projection || 'EPSG:3857'];
-};
-*/
 
 /**
  * Return a boolean to show if a layer fits within a boundary/extent
@@ -1195,7 +1145,6 @@ CoordinatesUtils = {
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
     getLonLatFromPoint,
-    // getProjection,
     convertRadianToDegrees,
     convertDegreesToRadian
 };
