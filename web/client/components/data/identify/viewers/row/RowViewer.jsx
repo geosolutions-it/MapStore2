@@ -42,8 +42,8 @@ function RowViewer({
     const Row = layerRowViewer || component || PropertiesViewer;
     return (
         <Row
-            fields={layer?.fields}
             {...omit(feature.properties, ['ref'])}
+            fields={layer?.fields}
             feature={feature}
             labelIds={labelIds}
             exclude={excludeProperties}
