@@ -106,6 +106,9 @@ export function newMapInfoRequest(reqId, reqConfig) {
     };
 }
 
+/**
+ * @deprecated
+ */
 export function getVectorInfo(layer, request, metadata, queryableLayers) {
     return {
         type: GET_VECTOR_INFO,

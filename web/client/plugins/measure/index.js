@@ -21,7 +21,8 @@ import {
     setTextLabels,
     changeMeasurement,
     init,
-    changeUom
+    changeUom,
+    addAsLayer
 } from '../../actions/measurement';
 import {
     isActiveSelector,
@@ -125,7 +126,8 @@ export const MeasureSupport = connect(
         setTextLabels,
         changeMeasurement,
         onChangeUnitOfMeasure: changeUom,
-        onClose: setControlProperty.bind(null, 'measure', 'enabled', false)
+        onClose: setControlProperty.bind(null, 'measure', 'enabled', false),
+        onAddAsLayer: addAsLayer
     }
 )(MeasureSupportComponent);
 

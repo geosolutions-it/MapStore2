@@ -22,8 +22,7 @@ const nodeModules = [
 
 function removeModules(nodeModulesPath) {
     const removeModulesList = [
-        'leaflet-simple-graticule/node_modules',
-        'geostyler-openlayers-parser/node_modules/@terrestris'
+        'leaflet-simple-graticule/node_modules'
     ];
     removeModulesList.forEach((removeModule) => {
         const removePath = path.resolve(nodeModulesPath, removeModule);

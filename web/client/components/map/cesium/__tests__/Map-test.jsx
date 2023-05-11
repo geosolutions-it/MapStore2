@@ -266,6 +266,31 @@ describe('CesiumMap', () => {
                         options={{
                             id: 'vector',
                             visibility: true,
+                            style: {
+                                format: 'geostyler',
+                                body: {
+                                    name: 'fill style',
+                                    rules: [
+                                        {
+                                            ruleId: 'rule-01',
+                                            name: 'rule',
+                                            symbolizers: [
+                                                {
+                                                    symbolizerId: 'symbolizer-01',
+                                                    kind: 'Fill',
+                                                    color: '#ffffff',
+                                                    fillOpacity: 0.5,
+                                                    outlineColor: '#7EC058',
+                                                    outlineOpacity: 1,
+                                                    outlineWidth: 3,
+                                                    msClassificationType: 'both',
+                                                    msClampToGround: false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
                             features: [
                                 {
                                     "type": "Feature",
