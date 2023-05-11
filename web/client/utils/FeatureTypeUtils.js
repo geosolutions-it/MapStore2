@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, find } from 'lodash';
+import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
+
 
 const types = {
     // string
@@ -77,9 +79,9 @@ const types = {
 export const describeFeatureTypeToAttributes = (data, fields = []) => get(data, "featureTypes[0].properties")
     .filter((attribute) => attribute.type.indexOf('gml:') !== 0 && types[attribute.type])
     .map((attribute) => {
-        const field = find(fields, {name: attribute.name}) ?? {};
+        const field = find(fields, {name: attribute.name});
         return {
-            label: field.alias ?? attribute.name,
+            label: applyDefaultToLocalizedString(field?.alias, attribute.name),
             attribute: attribute.name,
             type: types[attribute.type],
             valueId: "id",
