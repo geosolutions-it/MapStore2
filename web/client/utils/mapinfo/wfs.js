@@ -39,6 +39,7 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
                     ? layer.title[currentLocale] || layer.title.default
                     : layer.title,
                 regex: layer.featureInfoRegex,
+                fields: layer.fields,
                 viewer,
                 featureInfo
             },
