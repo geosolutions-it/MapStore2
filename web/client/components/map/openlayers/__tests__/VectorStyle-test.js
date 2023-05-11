@@ -660,9 +660,9 @@ describe('Test VectorStyle', () => {
             }
         }, true);
         stylePromise.then(style => {
-            expect(style).toExist();
-            expect(style.getImage()).toExist();
+            expect(style).toBeTruthy();
+            expect(style()()[0].getImage()).toBeTruthy();
             done();
-        });
+        }).catch(done);
     });
 });

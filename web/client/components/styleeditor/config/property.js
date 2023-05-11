@@ -499,7 +499,7 @@ const property = {
             };
         }
     }),
-    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled, isVisible }) => ({
+    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled, isVisible, setValue, getValue }) => ({
         type: 'select',
         label,
         config: {
@@ -507,13 +507,14 @@ const property = {
             selectProps,
             isValid
         },
-        getValue: (value) => {
+        getValue: getValue ? getValue : (value) => {
             return {
                 [key]: value
             };
         },
         isDisabled,
-        isVisible
+        isVisible,
+        setValue
     }),
     multiInput: ({ label, key = '', initialOptionValue, getSelectOptions = () => [], isDisabled, isVisible, fallbackValue = 0 }) => ({
         type: 'multiInput',

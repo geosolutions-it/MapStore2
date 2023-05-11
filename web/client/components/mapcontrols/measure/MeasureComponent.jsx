@@ -367,7 +367,7 @@ class MeasureComponent extends React.Component {
                                             }
                                         },
                                         {
-                                            glyph: '1-layer',
+                                            glyph: 'add-layer',
                                             visible: this.props.showAddAsLayer,
                                             disabled: !measureToolEnabled || toolbarDisabled || exportToAnnotation,
                                             tooltip: <Message msgId="measureComponent.addAsLayer"/>,

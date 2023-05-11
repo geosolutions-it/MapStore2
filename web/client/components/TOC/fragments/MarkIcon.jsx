@@ -7,7 +7,7 @@
  */
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { getWellKnownNameImageFromSymbolizer } from '../../../utils/VectorStyleUtils';
+import { getWellKnownNameImageFromSymbolizer } from '../../../utils/styleparser/StyleParserUtils';
 
 function MarkIcon({ symbolizer }) {
     const [iconData, setIconData] = useState(null);

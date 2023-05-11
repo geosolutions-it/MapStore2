@@ -79,7 +79,7 @@ describe('Cesium MeasurementSupport', () => {
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(7);
+        expect(buttons.length).toBe(8);
         expect([...buttons].map(button => button.querySelector('.glyphicon').getAttribute('class'))).toEqual([
             'glyphicon glyphicon-polyline-3d',
             'glyphicon glyphicon-polygon-3d',
@@ -87,7 +87,8 @@ describe('Cesium MeasurementSupport', () => {
             'glyphicon glyphicon-height-from-terrain',
             'glyphicon glyphicon-angle',
             'glyphicon glyphicon-slope',
-            'glyphicon glyphicon-trash'
+            'glyphicon glyphicon-trash',
+            'glyphicon glyphicon-ext-json'
         ]);
         Simulate.click(buttons[4]);
     });

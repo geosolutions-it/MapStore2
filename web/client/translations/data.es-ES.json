@@ -2436,7 +2436,13 @@
             "color": "Color",
             "pointHeight": "Altura del punto",
             "leaderLineColor": "Color de línea de guía",
-            "leaderLineWidth": "Ancho de la línea guía"
+            "leaderLineWidth": "Ancho de la línea guía",
+            "geometryTransformation": "Transformación de geometría",
+            "center": "Centro",
+            "startPoint": "Punto de inicio",
+            "endPoint": "Punto final",
+            "line": "Línea",
+            "geodesicLine": "Línea geodésica"
         },
         "playback": {
             "settings": {
