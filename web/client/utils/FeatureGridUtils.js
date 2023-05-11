@@ -17,6 +17,8 @@ import {
     isValidValueForPropertyName as isValidValueForPropertyNameBase
 } from './ogc/WFS/base';
 
+import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
+
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
 
@@ -137,7 +139,7 @@ export const featureTypeToGridColumns = (
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
             name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
             description: option?.description || '',
-            title: option?.title || field?.alias || desc.name,
+            title: applyDefaultToLocalizedString(option?.title || field?.alias, desc.name),
             headerRenderer: getHeaderRenderer(),
             showTitleTooltip: !!option?.description,
             resizable,
