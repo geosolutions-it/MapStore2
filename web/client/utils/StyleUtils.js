@@ -18,6 +18,12 @@ import defaultIcon from '../components/map/openlayers/img/marker-icon.png';
 import isEmpty from 'lodash/isEmpty';
 import { flattenFeatures } from './VectorStyleUtils';
 
+/**
+ * get the main geometry type defined in an array of features
+ * @param {object} options options of a layer
+ * @param {array} options.features array of GeoJSON features
+ * @returns {string} the geometry type without the 'Multi' prefix
+ */
 const getFeatureCollectionSingleGeometryType = ({ features } = {}) => {
     const { geometry: validGeometry } = (features || []).find(({ geometry }) => geometry?.type) || {};
     if (!validGeometry) {
@@ -31,6 +37,19 @@ const getFeatureCollectionSingleGeometryType = ({ features } = {}) => {
     return isGeometryCollection ? 'GeometryCollection' : singleGeometryType;
 };
 
+/**
+ * create a default style in geostyler format
+ * @param {object} layer options of a layer
+ * @param {boolean} marker if true creates a marker style
+ * @param {string} fillColor fill color in hex format
+ * @param {number} fillOpacity fill opacity from 0 to 1
+ * @param {string} strokeColor stroke color in hex format
+ * @param {number} strokeOpacity stroke opacity from 0 to 1
+ * @param {number} strokeWidth the width of the stroke or outline
+ * @param {number} radius the radius of the circle representing the default marker for points
+ * @param {string} geometryType one of 'GeometryCollection', 'Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon' or 'MultiPolygon'
+ * @returns {object} style in geostyler format
+ */
 const createDefaultStyle = ({
     marker,
     fillColor = '#f2f2f2',
@@ -114,6 +133,17 @@ const createDefaultStyle = ({
     };
 };
 
+/**
+ * check if a layer contains a custom style
+ * @param {object} layer options of a layer
+ * @param {object} customStyle a simplified custom style configuration
+ * @param {boolean} customStyle.marker if true creates a marker style but the layer features should be of type 'Point' or 'MultiPoint'
+ * @param {object} customStyle.fill an object representing the fill color, eg: { r: 255, g: 0, b: 0, a: 1 }
+ * @param {object} customStyle.color an object representing the stroke or outline color, eg: { r: 255, g: 0, b: 0, a: 1 }
+ * @param {number} customStyle.width the width of the stroke or outline
+ * @param {number} customStyle.radius the radius of the circle representing the default marker for points
+ * @returns {object} layer configuration with the new style
+ */
 export const applyDefaultStyleToVectorLayer = (layer, customStyle) => {
 
     const features = flattenFeatures(layer?.features || []);

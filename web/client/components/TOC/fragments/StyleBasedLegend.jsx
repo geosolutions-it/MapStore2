@@ -90,7 +90,7 @@ function StyleBasedLegend({ style }) {
         return (rules || []).map((rule) => {
             return (<div className="wfs-legend-rule" key={rule.ruleId}>
                 <div className="wfs-legend-icon">{renderIcon(rule.symbolizers[0])}</div>
-                <span>{rule?.name || ''}</span>
+                <span>{rule.name || ''}</span>
             </div>);
         });
     };

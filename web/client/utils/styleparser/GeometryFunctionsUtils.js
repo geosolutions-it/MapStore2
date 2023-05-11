@@ -19,6 +19,12 @@ export const isMSGeometryFunction = (got) => [
 ].includes(got?.name);
 
 export const geometryFunctionsLibrary = {
+    /**
+     * creates geometry function utils for Cesium library
+     * @param {object} options
+     * @param {object} options.Cesium a Cesium lib instance
+     * @returns {function} geometry function utils for cesium
+     */
     cesium: ({ Cesium }) => {
         const getPositions = (entity) => {
             if (entity._msStoredCoordinates.polygon) {
@@ -119,6 +125,15 @@ export const geometryFunctionsLibrary = {
             return null;
         };
     },
+    /**
+     * creates geometry function utils for OpenLayers library
+     * @param {object} options
+     * @param {class} options.Point ol/geom/Point class
+     * @param {class} options.LineString ol/geom/LineString class
+     * @param {class} options.GeoJSON ol/format/GeoJSON class
+     * @param {function} options.getCenter from ol/extent
+     * @returns {function} geometry function utils for OpenLayers
+     */
     openlayers: ({
         Point,
         LineString,
@@ -203,6 +218,10 @@ export const geometryFunctionsLibrary = {
             return null;
         };
     },
+    /**
+     * creates geometry function utils for GeoJSON implementation such as Leaflet of Print parsers
+     * @returns {function} geometry function utils for geojson implementations
+     */
     geojson: () => {
         const geometryFunctions = {
             centerPoint: (feature) => {

@@ -30,10 +30,10 @@ export const getbsStyleForState = function(state) {
 };
 
 /**
- * @param {*} layer
+ * check if a layer contains a custom style
+ * @param {object} layer options of a layer
  * @returns {boolean}
  */
-
 export const checkFeaturesStyle = (layer = {}) => {
     if (['geostyler'].includes(layer?.style?.format) && layer?.style?.body) {
         return true;

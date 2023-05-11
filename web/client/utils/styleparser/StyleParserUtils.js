@@ -286,6 +286,12 @@ export const expressionsUtils = {
         }
     }
 };
+/**
+ * creates geometry function utils for Cesium library
+ * @param {object} feature a GeoJSON feature
+ * @param {array} filter array expresses the filter structure in geostyler format
+ * @returns {boolean} true if the feature should be visualize based on the filter content
+ */
 export const geoStylerStyleFilter = (feature, filter) => {
     const properties = getFeatureProperties(feature);
     const operatorMapping = {
@@ -382,6 +388,13 @@ export const geoStylerStyleFilter = (feature, filter) => {
     }
     return matchesFilter;
 };
+/**
+ * parse a string template and replace the placeholders with feature properties
+ * @param {object} feature a GeoJSON feature
+ * @param {string} template a string with properties placeholder, eg '{{label}} some plain text'
+ * @param {string} noValueFoundText a fallback string for placeholder
+ * @returns {string} true if the feature should be visualize based on the filter content
+ */
 export const resolveAttributeTemplate = (
     feature,
     template,
@@ -436,6 +449,11 @@ export const resolveAttributeTemplate = (
 
 let imagesCache = {};
 
+/**
+ * generate an id based on a Mark symbolizer
+ * @param {object} symbolizer mark symbolizer
+ * @returns {string} an id for the mark symbolizer
+ */
 export const getImageIdFromSymbolizer = ({
     image,
     color,
@@ -452,6 +470,11 @@ export const getImageIdFromSymbolizer = ({
     return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, strokeWidth, radius].join(':');
 };
 
+/**
+ * prefetch images of a icon symbolizer
+ * @param {object} symbolizer icon symbolizer
+ * @returns {promise} returns the image
+ */
 const getImageFromSymbolizer = (symbolizer) => {
     const src = symbolizer.image;
     const id = getImageIdFromSymbolizer(symbolizer);
@@ -513,6 +536,11 @@ const paintCross = (ctx, cx, cy, r, p) => {
     ctx.closePath();
 };
 
+/**
+ * draw on a canvas the mark symbol
+ * @param {object} symbolizer mark symbolizer
+ * @returns {object} { width, height, canvas }
+ */
 export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
     const hasStroke = !!symbolizer?.strokeWidth
         && !!symbolizer?.strokeOpacity;
@@ -658,6 +686,11 @@ export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
     return { width, height, canvas};
 };
 
+/**
+ * prefetch images of a mark symbolizer
+ * @param {object} symbolizer mark symbolizer
+ * @returns {promise} returns the canvas with additional information
+ */
 export const getWellKnownNameImageFromSymbolizer = (symbolizer) => {
     const id = getImageIdFromSymbolizer(symbolizer);
     if (imagesCache[id]) {
@@ -673,6 +706,11 @@ export const getWellKnownNameImageFromSymbolizer = (symbolizer) => {
     });
 };
 
+/**
+ * prefetch all image or mark symbol in a geostyler style
+ * @param {object} geoStylerStyle geostyler style
+ * @returns {promise} all the prefetched images
+ */
 export const drawIcons = (geoStylerStyle) => {
     const { rules = [] } = geoStylerStyle || {};
     const symbolizers = rules.reduce((acc, rule) => [...acc, ...(rule?.symbolizers || [])], []);
