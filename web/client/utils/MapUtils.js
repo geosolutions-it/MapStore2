@@ -216,10 +216,16 @@ export function getGoogleMercatorResolutions(minZoom, maxZoom, dpi) {
  * - custom tile sizes
  *
  */
-export function getResolutionsForProjection(srs, minRes, maxRes, minZ, maxZ, zoomF, ext) {
-    const tileWidth = 256; // TODO: pass as parameters
-    const tileHeight = 256; // TODO: pass as parameters - allow different from tileWidth
-
+export function getResolutionsForProjection(srs, {
+    minResolution: minRes,
+    maxResolution: maxRes,
+    minZoom: minZ,
+    maxZoom: maxZ,
+    zoomFactor: zoomF,
+    extent: ext,
+    tileWidth = 256,
+    tileHeight = 256
+} = {}) {
     const defaultMaxZoom = 28;
     const defaultZoomFactor = 2;
 

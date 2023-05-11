@@ -195,7 +195,11 @@ const generateTileGrid = (options, map) => {
     const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
     const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
     const tileSize = options.tileSize ? options.tileSize : 256;
-    const resolutions = options.resolutions || getResolutionsForProjection(normalizedSrs);
+    const resolutions = options.resolutions || getResolutionsForProjection(normalizedSrs, {
+        tileWidth: tileSize,
+        tileHeight: tileSize,
+        extent
+    });
     const origin = options.origin ? options.origin : [extent[0], extent[1]];
     return new TileGrid({
         extent,

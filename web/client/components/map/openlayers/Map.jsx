@@ -375,12 +375,15 @@ class OpenlayersMap extends React.Component {
         const extent = projection.getExtent();
         return getResolutionsForProjection(
             srs ?? this.map.getView().getProjection().getCode(),
-            this.props.mapOptions.minResolution,
-            this.props.mapOptions.maxResolution,
-            this.props.mapOptions.minZoom,
-            this.props.mapOptions.maxZoom,
-            this.props.mapOptions.zoomFactor,
-            extent);
+            {
+                minResolution: this.props.mapOptions.minResolution,
+                maxResolution: this.props.mapOptions.maxResolution,
+                minZoom: this.props.mapOptions.minZoom,
+                maxZoom: this.props.mapOptions.maxZoom,
+                zoomFactor: this.props.mapOptions.zoomFactor,
+                extent
+            }
+        );
     };
 
     render() {
