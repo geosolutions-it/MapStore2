@@ -14,8 +14,10 @@ import { getCapabilities } from '../ThreeDTiles';
 function validateUrl(serviceUrl) {
     if (isValidURLTemplate(serviceUrl)) {
         const parts = serviceUrl.split(/\./g);
+        // remove query params
+        const ext = (parts[parts.length - 1] || '').split(/\?/g)[0];
         // from spec: Tileset files use the .json extension and the application/json MIME type.
-        return parts[parts.length - 1] === 'json'
+        return ext === 'json'
             ? true
             : false;
     }

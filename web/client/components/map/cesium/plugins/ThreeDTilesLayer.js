@@ -89,6 +89,7 @@ Layers.registerType('3dtiles', {
         if (options.visibility && options.url) {
 
             const tileSet = map.scene.primitives.add(new Cesium.Cesium3DTileset({
+                showCreditsOnScreen: true,
                 url: new Cesium.Resource({
                     url: options.url,
                     proxy: needProxy(options.url) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
