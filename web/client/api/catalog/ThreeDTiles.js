@@ -14,8 +14,10 @@ import { getCapabilities } from '../ThreeDTiles';
 function validateUrl(serviceUrl) {
     if (isValidURLTemplate(serviceUrl)) {
         const parts = serviceUrl.split(/\./g);
+        // remove query params
+        const ext = (parts[parts.length - 1] || '').split(/\?/g)[0];
         // from spec: Tileset files use the .json extension and the application/json MIME type.
-        return parts[parts.length - 1] === 'json'
+        return ext === 'json'
             ? true
             : false;
     }
@@ -72,12 +74,14 @@ export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
             const { version, bbox, format, properties } = record;
+            // remove query from identifier
+            const identifier = (record.url || '').split('?')[0];
             return {
                 serviceType: '3dtiles',
                 isValid: true,
                 description: `v. ${version}`,
                 title: record.title,
-                identifier: record.url,
+                identifier,
                 url: record.url,
                 thumbnail: null,
                 ...(bbox && { bbox }),
