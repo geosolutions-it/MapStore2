@@ -74,12 +74,14 @@ export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
             const { version, bbox, format, properties } = record;
+            // remove query from identifier
+            const identifier = (record.url || '').split('?')[0];
             return {
                 serviceType: '3dtiles',
                 isValid: true,
                 description: `v. ${version}`,
                 title: record.title,
-                identifier: record.url,
+                identifier,
                 url: record.url,
                 thumbnail: null,
                 ...(bbox && { bbox }),
