@@ -180,7 +180,9 @@ export const updateMapViewsLayers = (action$, store) =>
                                                     symbolizers: [{
                                                         kind: 'Fill',
                                                         color: '#ffffff',
-                                                        fillOpacity: 0
+                                                        fillOpacity: 0,
+                                                        msClampToGround: true,
+                                                        msClassificationType: '3d'
                                                     }]
                                                 }
                                             ]
