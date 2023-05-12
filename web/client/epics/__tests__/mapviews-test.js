@@ -89,6 +89,26 @@ describe('mapviews epics', () => {
                     UPDATE_ADDITIONAL_LAYER,
                     UPDATE_ADDITIONAL_LAYER
                 ]);
+
+                expect(actions[4].options.style).toBeTruthy();
+                expect(actions[4].options.style).toEqual({
+                    format: 'geostyler',
+                    body: {
+                        name: '',
+                        rules: [
+                            {
+                                name: '',
+                                symbolizers: [{
+                                    kind: 'Fill',
+                                    color: '#ffffff',
+                                    fillOpacity: 0,
+                                    msClampToGround: true,
+                                    msClassificationType: '3d'
+                                }]
+                            }
+                        ]
+                    }
+                });
             } catch (e) {
                 done(e);
             }
