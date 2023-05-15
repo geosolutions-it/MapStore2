@@ -214,7 +214,17 @@ export function getGoogleMercatorResolutions(minZoom, maxZoom, dpi) {
  * - custom grid set with custom extent. You need to customize the projection definition extent to make it work.
  * - custom grid set is partially supported by mapOptions.view.resolutions but this is not managed by projection change yet
  * - custom tile sizes
- *
+ * @param {string} srs projection code
+ * @param {object} options optional configuration
+ * @param {number} options.minResolution minimum resolution of the tile grid pyramid, default computed based on minimum zoom
+ * @param {number} options.maxResolution maximum resolution of the tile grid pyramid, default computed based on maximum zoom
+ * @param {number} options.minZoom minimum zoom of the tile grid pyramid, default 0
+ * @param {number} options.maxZoom maximum zoom of the tile grid pyramid, default 30
+ * @param {number} options.zoomFactor zoom factor, default 2
+ * @param {array} options.extent extent of the tile grid pyramid in the projection coordinates, [minx, miny, maxx, maxy], default maximum extent of the projection
+ * @param {number} options.tileWidth tile width, default 256
+ * @param {number} options.tileHeight tile height, default 256
+ * @return {array} a list of resolution based on the selected projection
  */
 export function getResolutionsForProjection(srs, {
     minResolution: minRes,
@@ -226,7 +236,7 @@ export function getResolutionsForProjection(srs, {
     tileWidth = 256,
     tileHeight = 256
 } = {}) {
-    const defaultMaxZoom = 28;
+    const defaultMaxZoom = 30;
     const defaultZoomFactor = 2;
 
     let minZoom = minZ ?? 0;
