@@ -96,7 +96,7 @@ From this section of the *Settings* panel, [MapStore](https://mapstore.geosoluti
 
 <img src="../img/layer-settings/fields_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-The panel shows the fields (feature attributes) of the layer: For each field the following are specified:
+The panel shows the fields (feature attributes) of the layer. For each field the following are specified:
 
 * the **Name** of the field
 * the **Alias** of the field, which by default is empty
@@ -104,7 +104,7 @@ The panel shows the fields (feature attributes) of the layer: For each field the
 
 The *Name* and the *Type* of the field cannot be modified, while the alias can be specified by the user.
 
-Using the **Localize** <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button, a popup opens so that it is possible to configure the alias of the field as well as its translation.
+Using the **Localize** <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button, a popup opens so that it is possible to configure the alias of the field as well as its translations.
 
 <img src="../img/layer-settings/localize-popup.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
