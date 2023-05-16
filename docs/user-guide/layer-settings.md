@@ -34,7 +34,7 @@ In this page it is possible to:
 
 * Change the *Title*
 
-* Set the translation of the layer title by opening the *Localize Text* popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. In this way the language of the title changes according to the language that the user has set to [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+* Set the translation of the layer title by opening the *Localize Text* popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. In this way the language of the title changes according to the language that the user has set to [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/layer-settings/lacalize-layer-title.gif" class="ms-docimage"/>
 
@@ -92,25 +92,25 @@ In particular, the user is allowed to:
 
 ## Fields
 
-From this section of the *Settings* panel, [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to add aliases to layer fields.
+From this section of the *Settings* panel, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to add aliases to layer fields.
 
 <img src="../img/layer-settings/fields_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-The panel lists the fields that make up the layer. For each field the following is highlighted:
+The panel shows the fields (feature attributes) of the layer: For each field the following are specified:
 
 * the **Name** of the field
 * the **Alias** of the field, which by default is empty
 * the **Type** of field
 
-The *Name* and the *Type* of the field cannot be modified, while the alias can be added for the user.
+The *Name* and the *Type* of the field cannot be modified, while the alias can be specified by the user.
 
-Using the **Localize** <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button, a popup is opened through which the user can add the translation of the field according to the language.
+Using the **Localize** <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button, a popup opens so that it is possible to configure the alias of the field as well as its translation.
 
 <img src="../img/layer-settings/localize-popup.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-In this case changing the language on [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the title of the layer field is translated into the corresponding language.
+Setting the aliases, it is possible to configure the desired attribute names to be shown in all supported [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tools for this functionality and manage related translations accordingly.
 
-The layer field alias is defined instead of the original attribute name in the following [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tools:
+The aliases configured in Layers Settings will be used for the following supported [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tools:
 
 * [Attribute Table](attributes-table.md)
 
@@ -132,13 +132,13 @@ The layer field alias is defined instead of the original attribute name in the f
 
 <img src="../img/layer-settings/localize-widget.gif" class="ms-docimage"/>
 
-Through the following toolbar, present in the *Fields* panel, the user can:
+Through the toolbar available on the top-center of the *Fields* panel, it is possible to:
 
 <img src="../img/layer-settings/fields_toolbar.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-* The <img src="../img/button/reload_button.jpg" class="ms-docbutton"/> button allows to **Reload** the fields from the data source
+* **Reload** the list of fields from the data source using the <img src="../img/button/reload_button.jpg" class="ms-docbutton"/> button
 
-* The <img src="../img/button/clear_button.jpg" class="ms-docbutton"/> button allows to **Clear all customization** and reload the fields from the data source.
+* **Clear all customization** in the UI by using the <img src="../img/button/clear_button.jpg" class="ms-docbutton"/> button
 
 ## Style
 
