@@ -38,6 +38,7 @@ export default props => {
         onClose = () => {},
         responses = [],
         index,
+        ignorePerformances,
         viewerOptions = {},
         format,
         dock = true,
@@ -133,6 +134,7 @@ export default props => {
                         <LayerSelector
                             responses={responses}
                             index={index}
+                            ignorePerformances={ignorePerformances}
                             loaded={loaded}
                             setIndex={setIndex}
                             missingResponses={missingResponses}
