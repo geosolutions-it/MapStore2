@@ -125,7 +125,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].layerMetadata).toBe("meta");
         expect(state.index).toBe(1);
     });
-    it('creates a feature info data from successful request, with ignorePerformances true', () => {
+    it('creates a feature info data from successful request, with showAllResponses true', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
             data: "data",
@@ -144,7 +144,7 @@ describe('Test the mapInfo reducer', () => {
                 {reqId: 11, request: "test1"},
                 {reqId: 3, request: "test3"}
             ],
-            ignorePerformances: true
+            showAllResponses: true
         }, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
@@ -164,7 +164,7 @@ describe('Test the mapInfo reducer', () => {
                 {reqId: 11, request: "test1"},
                 {reqId: 3, request: "test3"}
             ],
-            ignorePerformances: true
+            showAllResponses: true
         }, {...testAction, reqId: 3, layerMetadata: "meta3"});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(3);

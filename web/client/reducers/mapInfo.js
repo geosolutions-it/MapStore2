@@ -109,7 +109,7 @@ function receiveResponse(state, action, type) {
         }
 
         let indexObj;
-        if (isHover || state.ignorePerformances) {
+        if (isHover || state.showAllResponses) {
             indexObj = {loaded: true, index: 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
             indexObj = {loaded: true, index: requestIndex};

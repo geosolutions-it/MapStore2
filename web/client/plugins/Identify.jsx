@@ -199,7 +199,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
- * @prop cfg.ignorePerformances {bool} if true it will include invalid/empty responses and it will always select the first request/layer
+ * @prop cfg.showAllResponses {bool} if true it will include invalid/empty responses and it will always select the first request/layer
  * @prop cfg.zIndex {number} component z index order
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
  * @prop cfg.maxItems {number} the number of features returned by this tool
