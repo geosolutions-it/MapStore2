@@ -88,20 +88,20 @@ function expectDefaultItems() {
     expect(document.getElementById("mapstore-print-preview-panel")).toNotExist();
 }
 
-function getPrintPlugin({items = [], layers = [], preview = false, projection = "EPSG:3857"} = {}) {
+function getPrintPlugin({items = [], layers = [], preview = false, projection = "EPSG:3857", state = initialState} = {}) {
     return getLazyPluginForTest({
         plugin: Print,
         storeState: {
-            ...initialState,
+            ...state,
             browser: "good",
             layers,
             map: {
-                ...initialState.map,
+                ...state.map,
                 projection
             },
             print: {
                 pdfUrl: preview ? "http://fakepreview" : undefined,
-                ...initialState.print,
+                ...state.print,
                 map: {
                     projection,
                     center: {x: 0, y: 0},
@@ -398,6 +398,42 @@ describe('Print Plugin', () => {
                 setTimeout(() => {
                     expect(spy.calls.length).toBe(1);
                     expect(spy.calls[0].arguments[1].layers.length).toBe(0);
+                    done();
+                }, 0);
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it("test configuration with useFixedScales and visibility limits on layer", (done) => {
+        const actions = {
+            onPrint: () => {}
+        };
+        let spy = expect.spyOn(actions, "onPrint");
+        getPrintPlugin({
+            layers: [{visibility: true, type: "osm"}, {id: "test", url: "/test", name: "test", type: "wms", visibility: true, maxResolution: 500000}],
+            projection: "EPSG:4326",
+            state: {...initialState,
+                print: {...initialState.print,
+                    capabilities: {...initialState.print.capabilities,
+                        scales: [1000000, 500000, 100000].map(value => ({name: value, value}))}
+                }}
+        }).then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    pluginCfg={{
+                        onPrint: actions.onPrint
+                    }}
+                    useFixedScales
+                    defaultBackground={["osm", "empty"]}
+                />, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                ReactTestUtils.Simulate.click(submit);
+                setTimeout(() => {
+                    expect(spy.calls.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers[0].layers).toEqual(["test"]);
                     done();
                 }, 0);
             } catch (ex) {
