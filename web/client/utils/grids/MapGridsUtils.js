@@ -1,6 +1,7 @@
 import proj4 from 'proj4';
 
-import { reprojectBbox, bboxToFeatureGeometry, getExtentForProjection } from "../CoordinatesUtils";
+import { reprojectBbox, bboxToFeatureGeometry } from "../CoordinatesUtils";
+import { getProjection } from "../ProjectionUtils";
 import booleanIntersects from "@turf/boolean-intersects";
 import { getXLabelFormatter, getYLabelFormatter } from './GridLabelsUtils';
 import chunk from "lodash/chunk";
@@ -410,7 +411,7 @@ export function getGridGeoJson({
     const resolution = (resolutions ?? getResolutions(mapProjection))[zoom];
     const mapToGrid = proj4(mapProjection, gridProjection).forward;
     const gridToMap = proj4(gridProjection, mapProjection).forward;
-    const projectionCenter = mapToGrid(getCenter(getExtentForProjection(gridProjection).extent));
+    const projectionCenter = mapToGrid(getCenter(getProjection(gridProjection).extent));
     const interval = getInterval(
         intervals ?? getIntervals(gridProjection),
         projectionCenter,
@@ -425,7 +426,7 @@ export function getGridGeoJson({
         mapProjection,
         gridProjection,
         extent,
-        getExtentForProjection(mapProjection).extent,
+        getProjection(mapProjection).extent,
         center ?? getCenter(extent),
         squaredTolerance,
         maxLines,
