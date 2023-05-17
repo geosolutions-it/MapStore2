@@ -781,6 +781,67 @@ describe('timeline Epics', () => {
             });
         });
     });
+    it("setRangeOnInit when the values stored are intervals", (done) => {
+        testEpic(setRangeOnInit, 3, initializeRange(), ([action1, action2, action3]) => {
+            try {
+                const { time, type } = action1;
+                const { offsetTime, type: typeOff} = action2;
+                const { type: typeRange, start, end } = action3;
+                expect(time).toBeTruthy();
+                expect(offsetTime).toBeTruthy();
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                expect(start).toBe("2001-01-01T00:00:00.000Z");
+                expect(end).toBe("2001-12-31T00:00:00.000Z");
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, {
+            timeline: {
+                selectedLayer: "TEST_LAYER",
+                settings: {
+                    initialMode: 'range',
+                    initialSnap: 'fullRange'
+                }
+            },
+            dimension: {
+                currentTime: "2000-01-01T00:00:00.000Z",
+                offsetTime: "2001-12-31T00:00:00.000Z",
+                data: {
+                    time: {
+                        TEST_LAYER: {
+                            name: "time",
+                            domain: "2001-01-01T00:00:00.000Z/2001-12-31T00:00:00.000Z"
+                        }
+                    }
+                }
+            },
+            layers: {
+                flat: [{
+                    id: 'TEST_LAYER',
+                    name: 'TEST_LAYER',
+                    type: 'wms',
+                    visibility: true,
+                    url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml',
+                    dimensions: [
+                        {
+                            source: {
+                                type: 'multidim-extension',
+                                url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml'
+                            },
+                            name: 'time'
+                        }
+                    ],
+                    params: {
+                        time: '2000-06-08T00:00:00.000Z'
+                    }
+                }]
+            }
+        });
+    });
+
     it("updateTimelineDataOnMapLoad", (done) =>{
         const config = {
             timelineData: {
