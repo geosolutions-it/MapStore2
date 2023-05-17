@@ -181,9 +181,8 @@ class OpenlayersMap extends React.Component {
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
-                let view = this.map.getView();
                 let pos = event.coordinate.slice();
-                let projectionExtent = view.getProjection().getExtent() || msGetProjection(this.props.projection).extent;
+                let projectionExtent = this.getExtent(this.map, this.props);
                 if (this.props.projection === 'EPSG:4326') {
                     pos[0] = normalizeLng(pos[0]);
                 }
@@ -386,6 +385,11 @@ class OpenlayersMap extends React.Component {
         );
     };
 
+    getExtent = (map, props) => {
+        const view = map.getView();
+        return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
+    };
+
     render() {
         const map = this.map;
         const children = map ? React.Children.map(this.props.children, child => {
@@ -443,7 +447,7 @@ class OpenlayersMap extends React.Component {
     updateMapInfoState = () => {
         let view = this.map.getView();
         let tempCenter = view.getCenter();
-        let projectionExtent = view.getProjection().getExtent() || msGetProjection(this.props.projection).extent;
+        let projectionExtent = this.getExtent(this.map, this.props);
         const crs = view.getProjection().getCode();
         // some projections are repeated on the x axis
         // and they need to be updated also if the center is outside of the projection extent
