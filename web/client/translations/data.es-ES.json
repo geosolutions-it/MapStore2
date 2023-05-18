@@ -115,6 +115,17 @@
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
             },
+            "availableTileGrids": "Cuadrículas de mosaicos disponibles",
+            "crsId": "Id",
+            "projection": "Proyección",
+            "tileSize": "Tamaño del mosaico",
+            "tileGridInUse": "La cuadrícula de mosaicos en uso es {id}",
+            "disableCustomTileStrategy": "Deshabilitar la estrategia de cuadrícula de mosaico personalizada",
+            "enableCustomTileStrategy": "Habilitar estrategia de cuadrícula de mosaico personalizada",
+            "updateTileGrids": "Actualizar cuadrículas de mosaicos disponibles",
+            "noTileGridMatchesConfiguration": "No hay una cuadrícula de mosaico entre las disponibles que coincida con la proyección de mapa actual y el tamaño de mosaico. La tabla anterior destaca otras cuadrículas de mosaico disponibles para la proyección de mapa actual. También puede actualizar el lado del servidor de configuración y luego hacer clic en Actualizar botón para actualizar de nuevo las cuadrículas de mosaicos disponibles",
+            "noConfiguredGridSets": "No es posible habilitar la estrategia personalizada porque esta capa no tiene conjuntos de cuadrícula configurados en el lado del servidor compatibles con las proyecciones disponibles. Revise la configuración del lado del servidor y luego vuelva a intentar habilitar la estrategia personalizada nuevamente",
+            "notPossibleToConnectToWMTSService": "No es posible habilitar la estrategia personalizada porque la solicitud enviada a {requestUrl} arroja un error",
             "visibilityLimits": {
                 "title": "Límites de visibilidad",
                 "serverValuesUpdateUndefined": "El servidor no proporcionó límites de visibilidad de escala para esta capa",

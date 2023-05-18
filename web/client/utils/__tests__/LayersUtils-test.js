@@ -1205,6 +1205,32 @@ describe('LayersUtils', () => {
                     expect(l.fields[0].name).toBe("test");
                     expect(l.fields[0].alias).toBe("test");
                 }
+            ],
+            // save tileGrids and tileGridStrategy
+            [
+                {
+                    tileGridStrategy: 'custom',
+                    tileGrids: [
+                        {
+                            id: 'EPSG:32122',
+                            crs: 'EPSG:32122',
+                            scales: [ 2557541.55271451, 1278770.776357255, 639385.3881786275 ],
+                            origins: [ [ 403035.4105968763, 414783 ], [ 403035.4105968763, 414783 ], [ 403035.4105968763, 323121 ] ],
+                            tileSize: [ 512, 512 ]
+                        },
+                        {
+                            id: 'EPSG:900913',
+                            crs: 'EPSG:900913',
+                            scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
+                            origin: [ -20037508.34, 20037508 ],
+                            tileSize: [ 256, 256 ]
+                        }
+                    ]
+                },
+                l => {
+                    expect(l.tileGridStrategy).toBe('custom');
+                    expect(l.tileGrids.length).toBe(2);
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

@@ -118,6 +118,17 @@
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
             },
+            "availableTileGrids": "Verfügbare Kachelgitter",
+            "crsId": "Id",
+            "projection": "Projektion",
+            "tileSize": "Kachelgröße",
+            "tileGridInUse": "Das verwendete Kachelraster ist {id}",
+            "disableCustomTileStrategy": "Benutzerdefinierte Kachelrasterstrategie deaktivieren",
+            "enableCustomTileStrategy": "Benutzerdefinierte Kachelrasterstrategie aktivieren",
+            "updateTileGrids": "Verfügbare Kachelraster aktualisieren",
+            "noTileGridMatchesConfiguration": "Es gibt kein Kachelraster unter den verfügbaren, das mit der aktuellen Kartenprojektion und Kachelgröße übereinstimmt. In der Tabelle oben werden andere Kachelraster hervorgehoben, die für die aktuelle Kartenprojektion verfügbar sind. Sie können die Konfiguration auch serverseitig aktualisieren und dann auf \"Aktualisieren\" klicken Schaltfläche, um die verfügbaren Kachelraster erneut zu aktualisieren",
+            "noConfiguredGridSets": "Es ist nicht möglich, die benutzerdefinierte Strategie zu aktivieren, da diese Ebene keine serverseitig konfigurierten Rastersätze hat, die mit den verfügbaren Projektionen kompatibel sind. Bitte überprüfen Sie die Konfiguration auf der Serverseite und versuchen Sie dann erneut, die benutzerdefinierte Strategie zu aktivieren.",
+            "notPossibleToConnectToWMTSService": "Es ist nicht möglich, eine benutzerdefinierte Strategie zu aktivieren, da die an {requestUrl} gesendete Anfrage einen Fehler auslöst",
             "visibilityLimits": {
                 "title": "Sichtbarkeitsgrenzen",
                 "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",

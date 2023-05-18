@@ -118,6 +118,17 @@
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
             },
+            "availableTileGrids": "Grilles de tuiles disponibles",
+            "crsId": "Id",
+            "projection": "projection",
+            "tileSize": "Taille de la tuile",
+            "tileGridInUse": "La grille de tuiles utilisée est {id}",
+            "disableCustomTileStrategy": "Désactiver la stratégie de grille de tuiles personnalisée",
+            "enableCustomTileStrategy": "Activer la stratégie de grille de tuiles personnalisée",
+            "updateTileGrids": "Mettre à jour les grilles de tuiles disponibles",
+            "noTileGridMatchesConfiguration": "Il n'y a pas de grille de tuiles parmi celles disponibles qui correspondent à la projection cartographique actuelle et à la taille des tuiles. Le tableau ci-dessus met en évidence d'autres grilles de tuiles disponibles pour la projection cartographique actuelle. Vous pouvez également mettre à jour la configuration côté serveur, puis cliquer sur l'actualisation bouton pour mettre à jour à nouveau les grilles de tuiles disponibles",
+            "noConfiguredGridSets": "Il n'est pas possible d'activer la stratégie personnalisée car cette couche n'a pas de grille configurée côté serveur compatible avec les projections disponibles. Veuillez revoir la configuration côté serveur, puis réessayez d'activer à nouveau la stratégie personnalisée.",
+            "notPossibleToConnectToWMTSService": "Il n'est pas possible d'activer la stratégie personnalisée car la requête envoyée à {requestUrl} renvoie une erreur",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
                 "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",

@@ -118,6 +118,17 @@
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
             },
+            "availableTileGrids": "Available Tile Grids",
+            "crsId": "Id",
+            "projection": "Projection",
+            "tileSize": "Tile size",
+            "tileGridInUse": "The tile grid in use is {id}",
+            "disableCustomTileStrategy": "Disable custom tile grid strategy",
+            "enableCustomTileStrategy": "Enable custom tile grid strategy",
+            "updateTileGrids": "Update available tile grids",
+            "noTileGridMatchesConfiguration": "There is not a tile grid among the available ones that matches current map projection and tile size. The table above highlights other tile grids available for the current map projection. You could also update configuration server side and then click the refresh button to update again the available tile grids",
+            "noConfiguredGridSets": "It is not possible to enabled custom strategy because this layer has not grid sets configured server side compatible with the available projections. Please review the configuration server side and then retry to enabled the custom strategy again.",
+            "notPossibleToConnectToWMTSService": "It is not possible to enabled custom strategy because the request sent to {requestUrl} is throwing an error",
             "visibilityLimits": {
                 "title": "Visibility limits",
                 "serverValuesUpdateUndefined": "The server did not provided scale visibility limits for this layer",

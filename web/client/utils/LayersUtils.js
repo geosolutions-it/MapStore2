@@ -649,6 +649,8 @@ export const saveLayer = (layer) => {
     layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {},
     layer.options ? { options: layer.options } : {},
     layer.credits ? { credits: layer.credits } : {},
+    layer.tileGrids ? { tileGrids: layer.tileGrids } : {},
+    layer.tileGridStrategy ? { tileGridStrategy: layer.tileGridStrategy } : {},
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {});
 };
 

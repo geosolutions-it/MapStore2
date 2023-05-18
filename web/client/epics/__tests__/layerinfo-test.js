@@ -45,7 +45,7 @@ const cswRecord = `<?xml version="1.0" encoding="UTF-8"?>
     </csw:Record>
 </csw:GetRecordByIdResponse>`;
 
-const wmsCapabilities = `<?xml version="1.0" encoding="UTF-8"?>
+const wmtsCapabilities = `<?xml version="1.0" encoding="UTF-8"?>
 <Capabilities xmlns="http://www.opengis.net/wmts/1.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.opengis.net/wmts/1.0 http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd" version="1.0.0">
     <Contents>
         <Layer>
@@ -225,7 +225,7 @@ describe('layerinfo epics', () => {
         }];
 
         mockAxios.onGet(/\/layer1catalog.*/).reply(200, cswRecord);
-        mockAxios.onGet(/\/layer2url.*/).reply(200, wmsCapabilities);
+        mockAxios.onGet(/\/layer2url.*/).reply(200, wmtsCapabilities);
 
         testEpic(layerInfoSyncLayersEpic, 15, syncLayers([testLayers[0], testLayers[1]]), actions => {
             expect(actions[0].type).toBe(RESET_SYNC_STATUS);
