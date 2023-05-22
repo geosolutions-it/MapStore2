@@ -1,6 +1,6 @@
 {
   "name": "@mapstore/eslint-config-mapstore",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": false,
   "description": "ESLint Configuration for MapStore project",
   "author": "GeoSolutions S.a.s.",
@@ -29,6 +29,6 @@
     "eslint": ">= 7.5.0",
     "eslint-plugin-import": ">= 2.20.2",
     "eslint-plugin-no-only-tests": ">= 2.3.1",
-    "eslint-plugin-react": ">= 3.3.2"
+    "eslint-plugin-react": ">= 7.31.11"
   }
 }

@@ -1,3 +1,4 @@
+
 module.exports = {
     "parser": "@babel/eslint-parser",          // https://github.com/babel/babel-eslint
     "parserOptions": {
@@ -199,54 +200,60 @@ module.exports = {
         "react/no-did-update-set-state": 2, // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-did-update-set-state.md
         "react/no-multi-comp": 0,        // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-multi-comp.md
         "react/no-unknown-property": 2,  // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-unknown-property.md
+        "react/no-unused-prop-types": 2, // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unused-prop-types.md
         "react/prop-types": [2, { "ignore": ["children"] }],           // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
         "react/react-in-jsx-scope": 2,   // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/react-in-jsx-scope.md
         "react/self-closing-comp": 2,    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md
         "react/wrap-multilines": 2,      // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md
-        "react/sort-comp": [2, {         // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/sort-comp.md
+        "react/sort-comp": [2, {
             "order": [
-                "displayName",
-                "propTypes",
-                "inheritedPropTypes",
-                "contextTypes",
-                "childContextTypes",
-                "mixins",
-                "statics",
-                "defaultProps",
-                "constructor",
-                "getDefaultProps",
-                "/^state$/",
-                "getInitialState",
-                "getChildContext",
-                "UNSAFE_componentWillMount",
-                "componentWillMount",
-                "componentDidMount",
-                "UNSAFE_componentWillReceiveProps",
-                "componentWillReceiveProps",
-                "shouldComponentUpdate",
-                "UNSAFE_componentWillUpdate",
-                "componentWillUpdate",
-                "componentDidUpdate",
-                "componentWillUnmount",
-                "/^on.+$/",
-                "/^get.+$/",
-                "/^render.+$/",
-                "render"
+              'static-methods',
+              'lifecycle',
+              'everything-else',
+              'render'
             ],
-            // CUSTOM
-            // prevent to `import _ from 'lodash';`. Allows `import {get} from 'lodash';` or `import get from 'lodash/get';`
-            // for bundle size
-            "no-restricted-imports": [2,
-                {
-                    "name": "lodash",
-                    "importNames": ["default"],
-                    "message": "Please use the default import from 'lodash/functionName' instead."
-                }
-            ],
-            // prevent to `const _ = require('lodash')`. Allows `const get = require('lodash/get');`
-            // for bundle size
-            "no-restricted-modules": [2, { "paths": ["lodash", "!lodash/*"] }]
-        }]
+            "groups": {
+              "lifecycle": [
+                'displayName',
+                'propTypes',
+                'contextTypes',
+                'childContextTypes',
+                'mixins',
+                'statics',
+                'defaultProps',
+                'constructor',
+                'getDefaultProps',
+                'state',
+                'getInitialState',
+                'getChildContext',
+                'getDerivedStateFromProps',
+                'componentWillMount',
+                'UNSAFE_componentWillMount',
+                'componentDidMount',
+                'componentWillReceiveProps',
+                'UNSAFE_componentWillReceiveProps',
+                'shouldComponentUpdate',
+                'componentWillUpdate',
+                'UNSAFE_componentWillUpdate',
+                'getSnapshotBeforeUpdate',
+                'componentDidUpdate',
+                'componentDidCatch',
+                'componentWillUnmount'
+              ]
+            }
+        }],
+        // CUSTOM
+        // prevent to `import _ from 'lodash';`. Allows `import {get} from 'lodash';` or `import get from 'lodash/get';`
+        // for bundle size
+        "no-restricted-imports": [2,
+            {
+                "name": "lodash",
+                "importNames": ["default"],
+                "message": "Please use the default import from 'lodash/functionName' instead."
+            }
+        ],
+        // prevent to `const _ = require('lodash')`. Allows `const get = require('lodash/get');`
+        // for bundle size
+        "no-restricted-modules": [2, { "paths": ["lodash"], "patterns": ["!lodash/*"]}]
     }
 };
-
