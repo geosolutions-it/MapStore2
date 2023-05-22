@@ -107,7 +107,15 @@ export const formatClippingFeatures = (features) => {
     return features
         ? features
             .filter(({ geometry }) => geometry.type === 'Polygon')
-            .map((feature, idx) => ({ ...feature, id: isNumber(feature?.id) ? `Feature ${feature?.id}` : feature?.id || `Feature ${idx + 1}` }))
+            .map((feature, idx) => ({
+                ...feature,
+                geometry: {
+                    type: 'Polygon',
+                    // remove height because is not needed for clipping
+                    coordinates: feature.geometry.coordinates.map((rings) => rings.map(([lng, lat]) => [lng, lat]))
+                },
+                id: isNumber(feature?.id) ? `Feature ${feature?.id}` : feature?.id || `Feature ${idx + 1}`
+            }))
         : undefined;
 };
 

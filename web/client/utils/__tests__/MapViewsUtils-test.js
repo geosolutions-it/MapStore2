@@ -116,6 +116,79 @@ describe('Test MapViewsUtils', () => {
         };
         expect(formatClippingFeatures([feature])[0].id).toEqual('feature.01');
     });
+    it('formatClippingFeatures should remove height from coordinates', () => {
+        const feature = {
+            type: 'Feature',
+            id: 'feature.01',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [
+                    [
+                        [
+                            8.931329125577776,
+                            44.40689401356852,
+                            10
+                        ],
+                        [
+                            8.931329125577776,
+                            44.40035268585416,
+                            20
+                        ],
+                        [
+                            8.939979994731459,
+                            44.40035268585416,
+                            15
+                        ],
+                        [
+                            8.939979994731459,
+                            44.40689401356852,
+                            7
+                        ],
+                        [
+                            8.931329125577776,
+                            44.40689401356852,
+                            2
+                        ]
+                    ]
+                ]
+            },
+            properties: {}
+        };
+        expect(formatClippingFeatures([feature])).toEqual([
+            {
+                type: 'Feature',
+                id: 'feature.01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [
+                        [
+                            [
+                                8.931329125577776,
+                                44.40689401356852
+                            ],
+                            [
+                                8.931329125577776,
+                                44.40035268585416
+                            ],
+                            [
+                                8.939979994731459,
+                                44.40035268585416
+                            ],
+                            [
+                                8.939979994731459,
+                                44.40689401356852
+                            ],
+                            [
+                                8.931329125577776,
+                                44.40689401356852
+                            ]
+                        ]
+                    ]
+                },
+                properties: {}
+            }
+        ]);
+    });
     it('getZoomFromHeight', () => {
         expect(Math.round(getZoomFromHeight(1000))).toBe(17);
     });
