@@ -651,6 +651,7 @@ export const saveLayer = (layer) => {
     layer.credits ? { credits: layer.credits } : {},
     layer.tileGrids ? { tileGrids: layer.tileGrids } : {},
     layer.tileGridStrategy ? { tileGridStrategy: layer.tileGridStrategy } : {},
+    layer.tileGridCacheSupport ? { tileGridCacheSupport: layer.tileGridCacheSupport } : {},
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {});
 };
 

@@ -158,7 +158,9 @@ export const getLayerTileMatrixSetsInfo = (url, layerName = '', options) => {
             return {
                 tileMatrixSets,
                 tileMatrixSetLinks,
-                tileGrids
+                tileGrids,
+                styles: castArray(wmtsLayer?.Style || []).map((style) => style['ows:Identifier']),
+                formats: castArray(wmtsLayer?.Format || [])
             };
         });
 };

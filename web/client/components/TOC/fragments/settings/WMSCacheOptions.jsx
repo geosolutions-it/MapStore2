@@ -43,6 +43,10 @@ function WMSCacheOptions({
         ...layer,
         projection
     })?.id;
+
+    const supportFormatCache = !layer.format || !!((layer?.tileGridCacheSupport?.formats || []).includes(layer.format));
+    const supportStyleCache = !layer.style || !!((layer?.tileGridCacheSupport?.styles || []).includes(layer.style));
+
     const tiled = layer && layer.tiled !== undefined ? layer.tiled : true;
 
     const requestUrl = generateGeoServerWMTSUrl(layer);
@@ -52,17 +56,23 @@ function WMSCacheOptions({
         setTileGridsResponseMsgId('');
         setTileGridsResponseMsgStyle('');
         return getLayerTileMatrixSetsInfo(requestUrl, options.name, options)
-            .then(({ tileGrids }) => {
+            .then(({ tileGrids, styles, formats }) => {
                 const filteredTileGrids = tileGrids.filter(({ crs }) => isProjectionAvailable(normalizeSRS(crs)));
                 if (filteredTileGrids?.length === 0) {
                     setTileGridsResponseMsgId('layerProperties.noConfiguredGridSets');
                 }
-                return filteredTileGrids;
+                return {
+                    tileGrids: filteredTileGrids,
+                    tileGridCacheSupport: filteredTileGrids?.length > 0 ? {
+                        styles,
+                        formats
+                    } : undefined
+                };
             })
             .catch(() => {
                 setTileGridsResponseMsgId('layerProperties.notPossibleToConnectToWMTSService');
                 setTileGridsResponseMsgStyle('danger');
-                return undefined;
+                return { };
             })
             // delay the loading phase the show the loader and give a feedback to user
             // in particular when the request is cached or too fast
@@ -83,7 +93,9 @@ function WMSCacheOptions({
                     {(layer.tileGridStrategy === 'custom' && layer.tileGrids && tiled && !layer.singleTile) && <InfoPopover
                         glyph="info-sign"
                         placement="top"
-                        bsStyle={!selectedTileGridId ? 'danger' : 'success'}
+                        bsStyle={(!supportFormatCache || !supportStyleCache || !selectedTileGridId)
+                            ? 'danger'
+                            : 'success'}
                         title={<Message msgId="layerProperties.availableTileGrids" />}
                         popoverStyle={{ maxWidth: 'none' }}
                         text={
@@ -99,13 +111,14 @@ function WMSCacheOptions({
                                     <tbody>
                                         {layer?.tileGrids?.map((tileGrid) => {
                                             const size = (tileGrid.tileSize || tileGrid.tileSizes[0] || [])[0];
+                                            const markClassName = supportFormatCache && supportFormatCache ? 'bg-success' : '';
                                             return (
                                                 <tr key={tileGrid.id}>
                                                     {tileGrid.id === selectedTileGridId
                                                         ? <>
-                                                            <td><mark className="bg-success">{tileGrid.id}</mark></td>
-                                                            <td><mark className="bg-success">{tileGrid.crs}</mark></td>
-                                                            <td><mark className="bg-success">{size}</mark></td>
+                                                            <td><mark className={markClassName}>{tileGrid.id}</mark></td>
+                                                            <td><mark className={markClassName}>{tileGrid.crs}</mark></td>
+                                                            <td><mark className={markClassName}>{size}</mark></td>
                                                         </>
                                                         : !selectedTileGridId
                                                             ? <>
@@ -124,14 +137,23 @@ function WMSCacheOptions({
                                     </tbody>
                                 </Table>
                                 <div style={{ maxWidth: 400 }}>
-                                    {selectedTileGridId && <Alert bsStyle="success">
+                                    {(selectedTileGridId && supportFormatCache && supportStyleCache) && <Alert bsStyle="success">
                                         <Message
                                             msgId="layerProperties.tileGridInUse"
                                             msgParams={{ id: selectedTileGridId }} />
                                     </Alert>}
-                                    {!selectedTileGridId && <Alert bsStyle="warning">
-                                        <Message msgId="layerProperties.noTileGridMatchesConfiguration" />
-                                    </Alert>}
+                                    {!selectedTileGridId
+                                        ? <Alert bsStyle="warning">
+                                            <Message msgId="layerProperties.noTileGridMatchesConfiguration" />
+                                        </Alert>
+                                        : (!supportFormatCache || !supportStyleCache)
+                                            ? (
+                                                <Alert bsStyle="warning">
+                                                    {!supportFormatCache && <Message msgId="layerProperties.notSupportedSelectedFormatCache" />}
+                                                    {!supportStyleCache && <Message msgId="layerProperties.notSupportedSelectedStyleCache" />}
+                                                </Alert>
+                                            )
+                                            : null}
                                 </div>
                             </>
                         }
@@ -140,7 +162,9 @@ function WMSCacheOptions({
                         disabled={!!tileGridLoading || !tiled || !!layer.singleTile}
                         tooltipId="layerProperties.updateTileGrids"
                         className="square-button-md no-border format-refresh"
-                        onClick={() => { onTileMatrixSetsFetch({ ...layer, force: true }); }}
+                        onClick={() => {
+                            onTileMatrixSetsFetch({ ...layer, force: true }).then(onChange);
+                        }}
                     >
                         <Glyphicon glyph="refresh" />
                     </Button>}
@@ -148,8 +172,8 @@ function WMSCacheOptions({
                         disabled={tileGridLoading || !tiled || !!layer.singleTile}
                         loading={tileGridLoading}
                         tooltipId={layer.tileGridStrategy === 'custom'
-                            ? 'layerProperties.disableCustomTileStrategy'
-                            : 'layerProperties.enableCustomTileStrategy'}
+                            ? 'layerProperties.useStandardTileGridStrategy'
+                            : 'layerProperties.useCustomTileGridStrategy'}
                         active={layer.tileGridStrategy === 'custom'}
                         glyph={layer.tileGridStrategy === 'custom' ? 'grid-custom' : 'grid-regular'}
                         bsStyle={layer.tileGridStrategy === 'custom' ? 'success' : 'primary'}
@@ -159,15 +183,16 @@ function WMSCacheOptions({
                                 ? 'custom'
                                 : undefined;
                             const promise = newTileGridStrategy === 'custom'
-                                && (layer?.tileGrids?.length || 0) === 0
+                                && ((layer?.tileGrids?.length || 0) === 0 || !layer?.tileGridCacheSupport)
                                 ? onTileMatrixSetsFetch(layer)
                                 : Promise.resolve(undefined);
-                            return promise.then((tileGrids) => {
+                            return promise.then(({ tileGrids, tileGridCacheSupport }) => {
                                 const hasTileGrids = (tileGrids?.length || 0) > 0;
                                 const tileGridStrategy = hasTileGrids
                                     ? newTileGridStrategy
                                     : undefined;
                                 onChange({
+                                    tileGridCacheSupport,
                                     tileGridStrategy,
                                     tileGrids
                                 });

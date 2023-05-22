@@ -1225,11 +1225,19 @@ describe('LayersUtils', () => {
                             origin: [ -20037508.34, 20037508 ],
                             tileSize: [ 256, 256 ]
                         }
-                    ]
+                    ],
+                    tileGridCacheSupport: {
+                        styles: ['polygon'],
+                        formats: ['image/png']
+                    }
                 },
                 l => {
                     expect(l.tileGridStrategy).toBe('custom');
                     expect(l.tileGrids.length).toBe(2);
+                    expect(l.tileGridCacheSupport).toEqual({
+                        styles: ['polygon'],
+                        formats: ['image/png']
+                    });
                 }
             ]
         ];

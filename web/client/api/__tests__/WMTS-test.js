@@ -242,6 +242,10 @@ describe('Test correctness of the WMTS APIs (mock axios)', () => {
                         tileSize: [ 256, 256 ]
                     }
                 ]);
+                expect(response.styles.length).toBe(1);
+                expect(response.styles).toEqual(['population']);
+                expect(response.formats.length).toBe(2);
+                expect(response.formats).toEqual(['image/png', 'image/jpeg']);
                 done();
             })
             .catch(done);
