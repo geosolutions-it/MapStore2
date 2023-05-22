@@ -131,6 +131,7 @@
             "notPossibleToConnectToWMTSService": "Non è stato possibile recuperare le tile grids dal server. La richiesta inviata a {requestUrl} sta generando un errore",
             "notSupportedSelectedFormatCache": "Il formato selezionato non è supportato dalla cache",
             "notSupportedSelectedStyleCache": "Lo stile selezionato non è supportato dalla cache",
+            "customParamsCacheWarning": "Questo livello ha lo stile localizzato abilitato. Verificare la configurazione lato server ed assicurarsi che supporti il parametro ENV personalizzato",
             "visibilityLimits": {
                 "title": "Limiti di visibilità",
                 "serverValuesUpdateUndefined": "Il server non ha fornito limiti di visibilità di scala per questo livello",

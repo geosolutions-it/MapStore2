@@ -131,6 +131,7 @@
             "notPossibleToConnectToWMTSService": "Es war nicht möglich, die Kachelraster vom Server abzurufen. Die an {requestUrl} gesendete Anfrage löst einen Fehler aus.",
             "notSupportedSelectedFormatCache": "Das ausgewählte Format wird vom Cache nicht unterstützt",
             "notSupportedSelectedStyleCache": "Der ausgewählte Stil wird vom Cache nicht unterstützt",
+            "customParamsCacheWarning": "Für diese Ebene ist der lokalisierte Stil aktiviert. Bitte überprüfen Sie die Konfigurationsserverseite und stellen Sie sicher, dass sie den benutzerdefinierten ENV-Parameter unterstützt",
             "visibilityLimits": {
                 "title": "Sichtbarkeitsgrenzen",
                 "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",

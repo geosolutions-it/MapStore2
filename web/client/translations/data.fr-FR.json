@@ -131,6 +131,7 @@
             "notPossibleToConnectToWMTSService": "Il n'a pas été possible de récupérer les grilles de tuiles depuis le serveur. La requête envoyée à {requestUrl} génère une erreur",
             "notSupportedSelectedFormatCache": "Le format sélectionné n'est pas supporté par le cache",
             "notSupportedSelectedStyleCache": "Le style sélectionné n'est pas supporté par le cache",
+            "customParamsCacheWarning": "Ce calque a un style localisé activé. Veuillez vérifier le côté serveur de configuration et vous assurer qu'il prend en charge le paramètre ENV personnalisé",
             "visibilityLimits": {
                 "title": "Limites de visibilité",
                 "serverValuesUpdateUndefined": "Le serveur n'a pas fourni de limites de visibilité d'échelle pour cette couche",

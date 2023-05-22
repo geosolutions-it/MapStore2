@@ -46,7 +46,7 @@ function WMSCacheOptions({
 
     const supportFormatCache = !layer.format || !!((layer?.tileGridCacheSupport?.formats || []).includes(layer.format));
     const supportStyleCache = !layer.style || !!((layer?.tileGridCacheSupport?.styles || []).includes(layer.style));
-
+    const hasCustomParams = !!layer.localizedLayerStyles;
     const tiled = layer && layer.tiled !== undefined ? layer.tiled : true;
 
     const requestUrl = generateGeoServerWMTSUrl(layer);
@@ -154,6 +154,11 @@ function WMSCacheOptions({
                                                 </Alert>
                                             )
                                             : null}
+                                    {hasCustomParams && <Alert bsStyle="warning">
+                                        <Message
+                                            msgId="layerProperties.customParamsCacheWarning"
+                                        />
+                                    </Alert>}
                                 </div>
                             </>
                         }
