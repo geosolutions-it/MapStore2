@@ -190,7 +190,7 @@ module.exports = {
         "react/jsx-no-duplicate-props": 2, // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-duplicate-props.md
         "react/display-name": 0,         // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/display-name.md
         "react/jsx-boolean-value": 2,    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md
-        "react/jsx-quotes": [2, "double"], // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-quotes.md
+        "jsx-quotes": [ 2, "prefer-double" ],  // https://eslint.org/docs/latest/rules/jsx-quotesjsx-quotes.md
         "react/jsx-no-undef": 2,         // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-undef.md
         "react/jsx-sort-props": 0,       // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-sort-props.md
         "react/jsx-sort-prop-types": 0,  // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-sort-prop-types.md
@@ -204,7 +204,7 @@ module.exports = {
         "react/prop-types": [2, { "ignore": ["children"] }],           // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
         "react/react-in-jsx-scope": 2,   // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/react-in-jsx-scope.md
         "react/self-closing-comp": 2,    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md
-        "react/wrap-multilines": 2,      // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md
+        "react/jsx-wrap-multilines": 2, // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md
         "react/sort-comp": [2, {
             "order": [
               'static-methods',
@@ -255,5 +255,6 @@ module.exports = {
         // prevent to `const _ = require('lodash')`. Allows `const get = require('lodash/get');`
         // for bundle size
         "no-restricted-modules": [2, { "paths": ["lodash"], "patterns": ["!lodash/*"]}]
-    }
+
+  }
 };
