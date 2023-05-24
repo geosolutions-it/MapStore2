@@ -122,7 +122,7 @@
             "crsId": "Id",
             "projection": "Proiezione",
             "tileSize": "Dimensione tile",
-            "tileGridInUse": "La tile grid '{id}' corrisponde alla proiezione della mappa corrente e alla dimensione della tila selezionata per questo layer",
+            "tileGridInUse": "La tile grid '{id}' corrisponde alla proiezione della mappa corrente e alla dimensione delle tile selezionata per questo layer",
             "useStandardTileGridStrategy": "Usa tile grid standard",
             "useCustomTileGridStrategy": "Usa tile grid personalizzate remote",
             "updateTileGrids": "Aggiorna le tile grids disponibili",
