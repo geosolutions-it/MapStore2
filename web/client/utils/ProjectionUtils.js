@@ -49,3 +49,10 @@ export const getProjection = (code = 'EPSG:3857') => {
     const projections = getProjections();
     return projections[code] || projections['EPSG:3857'];
 };
+
+/**
+ * Check if a projection is available
+ * @param {string} code for the projection
+ * @return {boolean} true if the projection is available
+ */
+export const isProjectionAvailable = (code) => !!getProjections()[code];

@@ -10,7 +10,8 @@ import expect from 'expect';
 
 import {
     getProjections,
-    getProjection
+    getProjection,
+    isProjectionAvailable
 } from '../ProjectionUtils';
 
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
@@ -56,5 +57,10 @@ describe('CoordinatesUtils', () => {
         const { extent } = getProjection('EPSG:3003');
         expect(extent).toEqual([ 1241482.0019, 973563.1609, 1830078.9331, 5215189.0853 ]);
         removeConfigProp('projectionDefs');
+    });
+    it('should detect if a projection is available or not', () => {
+        expect(isProjectionAvailable('EPSG:4326')).toBe(true);
+        expect(isProjectionAvailable('EPSG:3857')).toBe(true);
+        expect(isProjectionAvailable('EPSG:32122')).toBe(false);
     });
 });

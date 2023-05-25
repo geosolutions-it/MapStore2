@@ -156,4 +156,10 @@ describe('Test the WMTSUtils', () => {
         });
 
     });
+    it('generateGeoServerWMTSUrl', () => {
+        expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/geoserver/wms' })).toBe('/geoserver/gwc/service/wmts?REQUEST=GetCapabilities');
+        expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/geoserver/wms', name: 'workspace:name' })).toBe('/geoserver/workspace/name/gwc/service/wmts?REQUEST=GetCapabilities');
+        expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/geoserver/wms', name: 'name' })).toBe('/geoserver/gwc/service/wmts?REQUEST=GetCapabilities');
+        expect(WMTSUtils.generateGeoServerWMTSUrl({ url: '/wms' })).toBe('');
+    });
 });

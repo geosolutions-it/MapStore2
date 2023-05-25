@@ -1188,6 +1188,40 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.forceProxy).toBeTruthy();
                 }
+            ],
+            // save tileGrids and tileGridStrategy
+            [
+                {
+                    tileGridStrategy: 'custom',
+                    tileGrids: [
+                        {
+                            id: 'EPSG:32122',
+                            crs: 'EPSG:32122',
+                            scales: [ 2557541.55271451, 1278770.776357255, 639385.3881786275 ],
+                            origins: [ [ 403035.4105968763, 414783 ], [ 403035.4105968763, 414783 ], [ 403035.4105968763, 323121 ] ],
+                            tileSize: [ 512, 512 ]
+                        },
+                        {
+                            id: 'EPSG:900913',
+                            crs: 'EPSG:900913',
+                            scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
+                            origin: [ -20037508.34, 20037508 ],
+                            tileSize: [ 256, 256 ]
+                        }
+                    ],
+                    tileGridCacheSupport: {
+                        styles: ['polygon'],
+                        formats: ['image/png']
+                    }
+                },
+                l => {
+                    expect(l.tileGridStrategy).toBe('custom');
+                    expect(l.tileGrids.length).toBe(2);
+                    expect(l.tileGridCacheSupport).toEqual({
+                        styles: ['polygon'],
+                        formats: ['image/png']
+                    });
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
